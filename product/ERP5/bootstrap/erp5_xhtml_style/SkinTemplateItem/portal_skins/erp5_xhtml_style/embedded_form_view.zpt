@@ -1,0 +1,8 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block metal:define-macro="master">
+    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions" />
+    <tal:block metal:use-macro="here/form_render/macros/master" />
+  </tal:block>
+</tal:block>

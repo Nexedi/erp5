@@ -1,0 +1,63 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+           tal:define="dummy python: request.RESPONSE.setHeader('Content-Type', 
+                                                                'text/html;; charset=utf-8');">
+  <div class="fieldset hidden_label">
+    
+    <div>
+      <input type="file" name="file" size="30" />
+    </div>
+
+    <div>
+      <label for="classification" 
+             value="" 
+             i18n:translate="" 
+             i18n:domain="ui">Classification</label>
+      <select size="1" name="classification" id="classification">
+        <option value=""
+                i18n:translate="" 
+                i18n:domain="ui">-- Select Classification --</option>
+        <option tal:repeat="item python:context.portal_categories.classification.getCategoryChildTranslatedLogicalPathItemList(local_sort_id='translated_title', filter_node=True, display_none_category=False)"
+                tal:content="python:item[0]" 
+                tal:attributes="value python:item[1]"/>
+      </select>
+    </div>
+    <div>
+      <label for="follow_up_list" 
+             value="" 
+             i18n:translate="" 
+             i18n:domain="ui">Project</label>
+      <select size="1" 
+              id="follow_up_list" 
+              name="follow_up_list"
+              tal:define="ticket_module nocall:here/ticket_module|nothing;
+                          project_module nocall:here/project_module|nothing;">
+        <option value=""
+                i18n:translate="" 
+                i18n:domain="ui">-- Select Project --</option>
+        <option tal:condition="project_module"
+                tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) 
+                                            for o in project_module.searchFolder(sort_on=(('title', 'ascending')))]" 
+                tal:content="python:item[0]" 
+                tal:attributes="value python:item[1]"/>
+        <option tal:condition="ticket_module"
+                tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) 
+                                           for o in ticket_module.searchFolder(sort_on=(('title', 'ascending')))]" 
+                tal:content="python:item[0]" 
+                tal:attributes="value python:item[1]"/>
+      </select>
+    </div>
+    
+    <p class="clear" />
+
+    <div style="float:none; margin-top:10px;">
+      <input type="hidden"
+             name="redirect_url"
+             tal:attributes="value here/absolute_url"/>
+      <input type="submit" 
+             i18n:attributes="value" 
+             i18n:domain="ui" name="Base_contribute:method" value="Contribute"/>
+    </div>
+
+  </div>
+</tal:block>

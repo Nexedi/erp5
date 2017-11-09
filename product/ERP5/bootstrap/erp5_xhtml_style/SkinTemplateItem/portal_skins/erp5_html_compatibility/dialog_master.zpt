@@ -1,0 +1,7 @@
+<tal:block metal:define-macro="master">
+  <tal:block metal:use-macro="here/dialog_main/macros/master">
+    <tal:block metal:fill-slot="main">
+      <tal:block metal:define-slot="main" />
+    </tal:block>
+  </tal:block>
+</tal:block>

@@ -1,0 +1,25 @@
+<!-- Slider navigation with input  (i.e. first, previous, next, last links)-->
+<tal:block metal:define-macro="page_navigation">
+  <tal:block tal:condition="python: here.total_pages > 1">
+
+    <!-- Non gadget mode -->
+    <tal:block tal:condition="not: is_gadget_mode">
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/first_previous_page_navigation" />
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/type_in_page_navigation" />
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/next_last_page_navigation" />
+    </tal:block>
+
+    <!-- Gadget mode -->
+    <tal:block tal:condition="is_gadget_mode"
+               tal:define="max_lines      python: here.getMaxLineNumber();
+                           total_page     python: here.total_pages;
+                           page_id        python: here.current_page;
+                           current_page   python: page_id + 1;
+                           previous_page  python: current_page - 1;
+                           next_page      python: current_page + 1;">
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/first_previous_page_navigation_asynchronous" />
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/type_in_page_navigation_asynchronous" />
+      <tal:block metal:use-macro="real_context/ListBox_asHTMLLibrary/macros/next_last_page_navigation_asynchronous" />
+    </tal:block>
+  </tal:block>
+</tal:block>

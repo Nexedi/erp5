@@ -1,0 +1,11 @@
+<tal:block tal:replace="nothing"
+           xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block metal:define-macro="breadcrumb">
+    <tal:block tal:repeat="item here/breadcrumbs">
+      <a tal:attributes="href item/url" tal:content="item/title" />
+      /
+    </tal:block>
+  </tal:block>
+</tal:block>

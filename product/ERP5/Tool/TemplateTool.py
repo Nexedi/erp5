@@ -1358,7 +1358,7 @@ class TemplateTool (BaseTool):
 
         if repository.endswith('/bootstrap'):
           property_dict_list.append(bm_dict_1)
-          property_dict_list.append(bm_dict_2)
+          #property_dict_list.append(bm_dict_2)
           property_dict_list.append(bm_dict_3)
           property_dict_list.append(bm_dict_4)
           property_dict_list.append(bm_dict_5)

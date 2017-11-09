@@ -1,0 +1,50 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block tal:replace="nothing">
+<!--
+XXX: each case must be handled separatelly in this precise representation :
+ - both top fields must be in the same div, so they must be identified
+   strictly by their name.
+ - the middle field is rendered like the two top ones, but outside of the
+   top block.
+ - the bottom block is rendered in another way (without its group name) so it
+   must be rendered separatelly.
+This leads to minor code duplication, but it's still code duplication.
+
+Breaks strict compatibility:
+  * Groups must be named one of "left", "right", "center", "bottom" otherwise they will not
+      be rendered.
+  * Group order doesn't matter. Case is sensitive.
+
+It is possible to specify a group id and a group title by naming a group following the
+  "group id (Group Title)" pattern. In this case the group id will be used as fieldset css
+  class and as tag id. The group title will be used as a legend for the fieldset. If no group
+  title is found, we use group id as title.
+-->
+  </tal:block>
+
+  <tal:block metal:define-macro="master">
+    <tal:block
+              tal:define="dummy        python: request.set('here', here);
+              group_list   form/Form_getGroupTitleAndId;
+              field_render nocall: here/field_render/macros/field_render">
+      <tal:block tal:condition="preferred_html_style_developper_mode">
+        <tal:block metal:use-macro="developper_shortcut_render/macros/form" />
+      </tal:block>
+
+      <tal:block tal:repeat="group group_list">
+        <tal:block tal:define="gid     group/gid;">
+          <fieldset tal:condition="python: gid.find('hidden') &lt; 0"
+              tal:attributes="class python:gid + test(request.get('editable_mode', 0), ' editable', ' viewable');">
+            <legend i18n:translate="" i18n:domain="ui" tal:condition="group/gtitle" tal:content="group/gtitle" class="group_title"></legend>
+            <tal:block tal:repeat="field python: form.get_fields_in_group(group['goid'])">
+              <tal:block metal:use-macro="field_render" />
+            </tal:block>
+          </fieldset>
+        </tal:block>
+      </tal:block>
+      <p class="clear"></p>
+    </tal:block>
+  </tal:block>
+</tal:block>

@@ -1,0 +1,13 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+           tal:define="selected_tab options/selected_tab">
+  <ul id="tab_box" 
+      tal:define="current_url here/absolute_url"><li tal:repeat="tab here/ERP5Site_getTabList"
+        id="quick_search_tab" class="selected"
+        tal:attributes="class python:test(selected_tab == tab['id'], 'selected', 'non_selected');
+                        id tab/id"><a href="view"
+                                      tal:attributes="href python:'%s/view?erp5_site_selected_tab=%s' % (current_url, tab['id'])">
+                                       <span>
+                                        <img tal:attributes="src python:tab['icon'] ; alt python:tab['id']" width="16px" height="16px"/>
+                                        <tal:block  i18n:translate="" i18n:domain="ui" tal:content="tab/title" /></span></a></li></ul>
+</tal:block>

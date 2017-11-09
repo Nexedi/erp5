@@ -1,0 +1,510 @@
+/*
+Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
+                   Ivan Tyagov <ivan@nexedi.com>
+
+This program is Free Software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
+/* Search popup fix*/
+div.search_popup{
+  left:200px;
+  position:absolute;
+  top:-120px;
+  width:250px;
+}
+
+div.listbox-container{
+  width: 100%;
+  height: auto;
+  float:left;
+  margin-bottom:5px;
+
+}
+div.listbox-body{
+  float:left;
+  width: 100%;
+}
+
+div.listbox-tree{
+  margin-right: 0.1%;
+  max-width: 10%;
+  float: left;
+}
+
+
+div.listbox-content{
+  float:left;
+  width:100%;
+}
+
+div.maximal-width{
+  width:100%;
+}
+
+div.float-right{
+  float:right;
+}
+
+div.listbox-content-fixed-width{
+   width:89%;
+}
+
+table.listbox td.listbox-table-no-result-row{
+  background-color:#DAE6F6;
+  color:#001730;
+  border: 1px solid #3D6474;
+  text-align:center;
+}
+
+table.listbox tr.listbox-stat-line{
+  background-color:#C1DAEB;
+  color:#001730;
+  border-top: 1px solid #3D6474;
+}
+
+table.listbox tr.listbox-search-line {
+  background-color: #DAE6F6;
+}
+
+div.listbox-head{
+  color:#9D968D;
+}
+
+div.listbox-head-spacer{
+  display: none;
+}
+
+div.listbox-head-content{
+  border-right:1px solid #3D6474;
+  border-top:1px solid #3D6474;
+  border-left:1px solid #3D6474;
+  border-top-left-radius: 10px;
+  -moz-border-top-left-radius: 10px;
+  -webkit-border-top-left-radius: 10px;
+  height:25px;
+  padding-left:10px;
+  padding-top:10px;
+  padding-right: 5px;
+  width:auto;
+  background-color: #e3eafa;
+}
+
+div.listbox-head div.listbox-head-title{
+  float:left;
+  width:auto;
+}
+
+div.listbox-head div.listbox-head-navigation{
+  float:right;
+  width:auto;
+}
+
+div.listbox-head div.listbox-head-results{
+  float: right; 
+  width: auto; 
+  clear: right;
+  text-align:right;
+}
+
+div.listbox-tree-mode-selection{
+  height: 22px;
+  width: auto;
+  float: left;
+}
+
+div.listbox-tree-mode-selection input{
+  width: auto;
+}
+
+th.listbox-table-report-tree-selection-cell{
+  width: 50px; 
+}
+
+/* Listbox header */
+div.listbox-header-box{
+  width: auto;
+  float:left;
+  padding-right: 5px;
+}
+
+table.listbox tr.listbox-label-line th.listbox-table-header-cell span.listbox-table-header-column-title{
+  float:left;
+}
+
+/* Listbox Footer */
+div.listbox-footer{
+  float:left;
+  width:100%;
+  text-align: center; 
+  background-color: #BDD0F0;
+  margin-left:-1px;
+}
+
+div.listbox-footer-box{
+  margin-top:3px;
+  margin-bottom:3px;
+}
+
+/* Listbox Footer in gadget mode */
+div.block div.listbox-footer{
+   background-color: transparent;
+}
+
+div.block div.listbox-head-content{
+  font-size: 90%;
+}
+
+div.listbox-title,
+div.listbox-number-of-records{
+  padding-top: 5px;
+}
+
+/* List style selection */
+div.listbox-list-style-selection {
+  padding-top:1px;
+  padding-left: 5px;
+}
+
+div.listbox-list-style-selection span{
+  vertical-align:-4px;
+}
+
+div.block div.listbox-list-style-selection span{
+  padding-left: 0px;
+}
+div.listbox-list-style-selection ul{
+  display:inline;
+  padding-left:0;
+  margin: 0;
+  vertical-align: -4px;
+}
+div.listbox-list-style-selection li{
+  display: inline;
+  margin-left: 0.1em;
+}
+  
+div.listbox-list-style-selection li a{
+  cursor: pointer;
+}
+div.listbox-list-style-selection li a.selected,
+.listbox-table-report-tree-selection-cell a.selected,
+.listbox-table-domain-tree-cell a.selected,
+.listbox-page-navigation-text a.selected,
+table.listbox td.listbox-table-summary-cell {
+  font-weight: bold;
+}
+
+/* Domain / Report tree buttons */
+button.tree-open,
+button.tree-closed{
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding-left: 15px;
+  text-align: left;
+}
+button.tree-open{
+  background: url("./images/tree_open.png") no-repeat scroll left 4px transparent;
+  font-weight: bold;
+}
+
+button.tree-closed{
+  background: url("./images/tree_closed.png") no-repeat scroll left 4px transparent;
+}
+
+
+/* Listbox full text search bar */
+div.listbox-full-text-search {
+}
+
+div.listbox-full-text-search input{
+  width: 250px;
+}
+
+div.listbox-full-text-search input.button{
+ background-color: #97B0D1;
+ border: 0 none;
+ color:#000;
+ width: auto;
+ padding-left: 10px;
+ padding-right: 10px;
+ cursor: pointer;
+
+}
+
+/* Listbox Navigation */
+div.listbox-page-navigation input.listbox_set_page, 
+div.listbox-page-navigation button.listbox_next_page, 
+div.listbox-page-navigation button.listbox_last_page, 
+div.listbox-page-navigation button.listbox_first_page, 
+div.listbox-page-navigation button.listbox_previous_page{
+  margin: 0em;
+  padding: 0em;
+}
+
+div.listbox-page-navigation button{
+  background-color:transparent;
+  border: none;
+  cursor: pointer;
+}
+div.listbox-page-navigation button span.image{
+  display:block;
+  height:22px;
+  width:22px;
+  background-repeat:no-repeat;
+}
+
+div.listbox-page-navigation button.listbox_first_page span.image {
+  background-image:url("images/2leftarrowv.png");
+}
+div.listbox-page-navigation button.listbox_previous_page span.image {
+  background-image:url("images/1leftarrowv.png");
+}
+
+div.listbox-page-navigation button.listbox_next_page span.image {
+  background-image:url("images/1rightarrowv.png");
+}
+
+div.listbox-page-navigation button.listbox_last_page span.image {
+  background-image:url("images/2rightarrowv.png");
+}
+
+div.listbox-page-navigation-slider{
+  min-width: 200px;
+  margin:auto;
+  padding-right: 0.5em;
+  float:right;
+}
+
+div.listbox-page-navigation-slider input{
+  max-width: 30px;
+}
+
+div.listbox-page-navigation-text{
+  width:100%;
+  float:left;
+  text-align:center;
+}
+
+div.listbox-page-navigation-text a{
+  padding-right: 1px;
+  color: #000;
+  cursor: pointer;
+}
+
+/* Report tree */
+a.tree-closed {
+  background:transparent url('./images/tree_closed.png') no-repeat scroll left center;
+  padding-left:15px;
+}
+
+a.tree-open {
+  background:transparent url('./images/tree_open.png') no-repeat scroll left center;
+  padding-left:15px;
+  font-weight: bold;
+}
+
+div.listbox-tree select{
+/*   max-width:120px; */
+}
+
+/* Table Listbox elements */
+table.listbox{
+  border-collapse:collapse;
+  width:100%;
+  border-color:#3D6474;
+  border-style:solid;
+  border-width:0 1px 1px;
+  margin-bottom: 0em;
+}
+
+table.listbox th,
+table.listbox td {
+  text-align:left;
+  vertical-align: top;
+  border-color:#3D6474;
+  border-style:solid;
+  border-width:0 1px;
+  padding: 0em;
+  padding-left:1px;
+  padding-right:1px;
+  font-weight: normal;
+}
+
+table.listbox tr.listbox-label-line{
+  background-color:#C1DAEB;
+  color:#001730;
+  border-top: 1px solid #3D6474;
+}
+
+table.listbox tr.listbox-search-line th{
+  margin: 0em;
+  padding: 0em;
+  padding-right:5px;
+  padding-left:1px;
+}
+
+/* Select columns */
+table.listbox tr.listbox-label-line th.listbox-table-select-cell,
+table.listbox tr.listbox-search-line th.listbox-table-select-cell,
+table.listbox tr td.listbox-table-select-cell{
+  width: 50px; 
+  text-align: center; 
+  vertical-align: middle;
+  padding:0;
+  margin:0;
+}
+
+table.listbox tr.DataA {
+  color: inherit;
+  background-color: <dtml-var listbox_odd_background_color>;
+}
+
+table.listbox tr.DataB {
+  color: inherit;
+  background-color: <dtml-var listbox_even_background_color>;
+}
+
+table.listbox tr.DataA:hover,
+table.listbox tr.DataB:hover,
+table.listbox.table tr.tbody:hover{
+  color: inherit;
+  background-color: <dtml-var listbox_hover_background_color>;
+}
+
+table.listbox tr.listbox-search-line th.listbox-table-filter-cell input{
+  width: 100%;
+  vertical-align:middle;
+}
+
+table.listbox input{
+  float:none;
+}
+
+table.listbox button.listbox-check-all,
+table.listbox button.listbox-uncheck-all,
+table.listbox input.listbox-select-action{
+  width:auto;
+  padding:0;
+  float:none;
+}
+
+.listbox-table-data-cell > .figure{
+  float:right;
+  display:block;
+}
+
+.listbox-table-data-cell > a > .figure{
+  float:right;
+  display:block;
+}
+
+.listbox-table-summary-cell > .figure{
+  float:right;
+  display:block;
+}
+
+table.listbox th button{
+  border-width:0;
+  cursor:pointer;
+  float:left;
+  padding:0 6px 0 0;
+  background: transparent;
+}
+
+table.listbox th button.sort-button {
+  text-decoration: underline;
+  padding: 0px;
+}
+
+table.listbox th button.sort-button:hover{
+  color: #FFF;
+}
+
+/* in ERP5 mode no need to have a switch for not clicked sort button */
+table.listbox th button.sort-button-asc,
+table.listbox th button.sort-button-desc{
+  background: none;
+}
+
+table.listbox th img.sort-button-desc,
+table.listbox th img.sort-button-asc{
+  width: 13px;
+  height: 13px;
+  margin:0;
+  padding:0;
+}
+
+table.listbox th img.sort-button-arrow{
+  width: 13px;
+  height: 13px;
+  margin:0;
+  padding:0;
+}
+
+table.listbox th img.sort-button-desc{
+  background: url('images/1toparrow.png') no-repeat scroll 100% 100%;
+}
+
+table.listbox th img.sort-button-asc{
+  background: url('images/1bottomarrow.png') no-repeat scroll 100% 100%;
+}
+
+table.listbox th img.sort-button-asc-not-selected{
+  background: url('images/1toparrow.png') no-repeat scroll 100% 100%;
+}
+
+table.listbox th img.sort-button-desc-not-selected{
+  background: url('images/1bottomarrow.png') no-repeat scroll 100% 100%;
+}
+
+table.listbox th img.sort-button-asc-selected{
+  background: url('images/1toparrow_red.png') no-repeat scroll 100% 100%;
+}
+
+table.listbox th img.sort-button-desc-selected{
+  background: url('images/1bottomarrow_red.png') no-repeat scroll 100% 100%;
+}
+/* listbox table in thumbnail style 
+   In thumbnail style we usually have only one thumbnail colum which through CSS
+   we show as floating box table row.
+*/
+table.listbox-thumbnail tbody tr{
+  display:block;
+  min-width: 128px; /* nano image width. XXX: dynamically generate. */
+  min-height:128px; /* nano image height. XXX: dynamically generate. */
+  float:left;
+  margin: 10px;
+}
+table.listbox-thumbnail tr.DataA, table.listbox-thumbnail tr.DataB,
+table.listbox-thumbnail tr.DataA:hover, table.listbox-thumbnail tr.DataB:hover{
+  background-color: transparent; /* in thumbnail mode we don't care for hoover */
+}
+table.listbox-thumbnail td{
+  border:none;
+}
+
+/* in search mode listbox may contain top/bottom quick search inputs */
+div.search-text-listbox{
+  text-align: center;
+  float:left;
+  height:auto; 
+  margin-bottom:0.5em;
+  margin-top:0.5em;
+}
+
+div.search-text-listbox input{
+  width: auto;
+}

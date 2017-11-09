@@ -1,0 +1,390 @@
+2013-12-10 arnaud.fontaine
+* Support properly HTML5 implicit form submission.
+
+2012-10-16 yusei
+* Improve error handling on Workflow_statusModify. If divergence is solved by other user, then show a nice message.
+
+2012-10-16 yusei
+* Improve error handling on Workflow_statusModify. If requested transition is not available, then show a nice message.
+
+2012-9-12 yusei
+* Improve listbox sort feature. Now both ascending arrow and descending arrow are displayed in title column and user can sort in specific order explicitly. User also can sort multiple columns by click without using sort-on-dialog.
+
+2013-01-28 Kazuhiko
+* update RequireJS 2.1.4.
+
+2013-01-14 Kazuhiko
+* add RequireJS 2.1.2.
+
+2012-10-16 arnaud.fontaine
+* Fix background color of stat and no cell ListBox lines.
+
+2012-08-07 Kazuhiko
+* update FCKeditor to 2.6.8.
+
+2011-01-20 Ivan
+* Remove contained MochiKit Javascript library
+
+2010-09-07 Kazuhiko
+* update FCKeditor to 2.6.6.
+
+2010-09-02 ivan
+* Make universal Listbox_asHTML rendering which uses heavily CSS.
+
+2010-07-20 yo
+* Make it easier to override CSS and JavaScript. Now, you can tweak CSS and JavaScript by overriding ERP5Site_getCssRelativeUrlList and ERP5Site_getJavaScriptRelativeUrlList, respectively.
+
+2010-06-10 kazuhiko
+* Typing Enter key in listbox search fields invokes Base_doSelect instead of the page's form action.
+
+2010-05-28 yo
+* Make it possible to customize the behavior after a new content is added.
+
+2010-03-09
+* Display title in breadcrumb if getCompactTranslatedTitle does not exist.
+
+2010-03-02 yusei
+* Remove short title.
+
+2010-02-25 yusuke
+* Fix a front page broken.
+
+2010-02-22 yo
+* Stop form_render from relying on the type of editable_mode (i.e. int).
+
+2010-02-02 yo
+* Add classes into buttons defined in dialog_main.
+
+2010-02-01 fabien
+* don't display action buttons (like copy/paste, ...) in dialog_mode
+
+2010-02-01 yo
+* Add classes into elements which have ids set in page templates, so that we could get rid of the ids potentially (but we can't because of tests).
+
+2010-02-01 yo
+* Switch to class-based completely instead of id-based styling in erp5.css. The old way is kept for backward compatibility.
+
+2010-2-1 Yusei
+* Update erp5.css and set hidden_fieldset.border 0.
+
+2010-1-31 Yusei
+* Update erp5.css and replace "display:none" with "visibility:hidden" to fix webkit based browser problem.
+
+2009-12-11 Kazuhiko
+* update FCKeditor to 2.6.5.
+
+2009-11-19 yo
+* Use preferred user interface languages to choose which languages should be displayed in the navigation box. If not defined, display all.
+
+2009-08-12 Jerome
+* add an onbeforeunload event to warn the user when he is about to leave the page without saving.
+
+2009-08-12 Kazuhiko
+* add resizeIFrameOnLoad that can be used to adjust the height of iframe according to its content.
+
+2009-08-05 Kazuhiko
+* escape LINE SEPARATOR (U+2028) and PARAGRAPH SEPARATOR (U+2029) in fckeditor_wysiwyg_support otherwise FCKeditor will raise an error.
+
+2009-06-23 Kazuhiko
+* update FCKeditor to 2.6.4.1.
+
+2009-06-23 Kazuhiko
+* import FCKeditor 2.6.4. FCKeditor Product is no longer required.
+
+2009-06-18 Kazuhiko
+* add a simple file browser for fckeditor, that allows to upload only in the current document.
+
+2009-04-30 Tatuya
+* append a condition to ListBox_asStandardHTML to set a CSS class name in a table row using 'Row CSS Method'.
+
+2009-04-18 Kazuhiko
+* Version 5.4.1
+
+2009-03-31 Kazuhiko
+* update MochiKit.js to 1.4.2.
+
+2009-03-24 fabien
+* split ListBox_asHTML page template. Now there is 3 PT : ListBox_asSearchStyleHTML, ListBox_asTableStyleHTML and ListBox_asStandardHTML
+* add css selectors to handle listbox search and table style
+* change the method called in the top right search box
+* move some form and scripts from erp5_web and erp5_new_km to here
+
+2009-02-20 yusei
+* Move ERP5Site_setSkinCache to erp5_forge and set http_cache as default cache manager to all image/css/js files in skin folders.
+
+2009-02-20 yusei
+* Add a utility script to associate files in skin folder to cache manager.
+
+2009-01-14 yusei
+* Fixed a wrong link to activity tool under virtual host environment.
+
+2008/12/12 nicolas
+* Add Page Template for FormBox
+
+2008/11/13 yusei
+* Start to develop version 5.4.
+
+2008-10-29 yusei
+* Classification field in the contribution tab is now translatable.
+
+2008-10-14 yusei
+* Start to develop version 5.3.
+
+2008-09-24 yusei
+* Update xml format.
+
+2008-09-24 fabien
+* Add file fckstyles.xml to have one more style : "Python code" wich improve python code blocks displaying.
+* Modify erp5_editor.css file to display this new div class in a nice way.
+
+2008-09-15 yusei
+* Add i18n mark to access tab templates.
+
+2008-09-07 yusei
+* Replace "+" with " " in translation messages.
+
+2008-09-05 yusei
+* Fixed wrong i18n:name.
+
+2008-09-04 yusei
+* Update English messages.
+
+2008-09-03 yusei
+* Fixed i18n markup in login_form.
+* Remove text which is not suitable for translation.
+
+2008-08-28 yusei
+* Use Base_translateString instead of using Localizer method directly.
+* Use Base_translateString or translateString instead of N_ for translation message.
+* Fixed text in ERP5Site_renderContributionDialog.
+
+2008-06-27 yusei
+* Start to develop version 5.2.
+
+2008-06-26 yusei
+* Revise version to 5.1.
+
+2008-06-18 yusei
+* Updated erp5.css. Remove overflow:auto to avoid a firefox bug and set max-width instead.
+
+2008-06-17 yusei
+* Revert previous changes of Base_doLanguage, because this causes another problem.
+
+2008-06-16 yusei
+* Fixed tabber_style.css to display border line under unselected tabs in the front page.
+
+2008-06-16 jerome
+* use getTitle to show title of current document in <title> in view mode.
+
+2008-06-12 ivan
+* Catch pressed Enter key and submit form for top,right fulltext search input field
+
+
+2008-06-09 kazuhiko
+* Add icons for domain tree.
+
+2008-05-22 yo
+* Remove "-- Directory --" from Quick Search.
+
+2008-05-22 yo
+* Add a small padding right after an icon so that it looks slightly better.
+
+2008-04-17 yusei
+* Revise version to 5.0.
+
+2008-04-11 yo
+* Disable auto focus for forms which do not have an element with the autofocus class.
+
+2008-03-27 ivan
+* Update MochiKit JS library to 1.4
+
+2008-03-18 fabien
+* change the autoFocus() function of the erp5.js file to give the focus to the first text input of the view.
+
+2008-03-17 fabien
+* Add new selector for matrixbox style attribute wich were hardcoded (and not valid) before r19976.
+
+2008-03-06 jerome
+* Add new CSS classes in erp5.css for new MatrixBox classes introduced in r19721.
+
+2008-01-28 yusei
+* Update ListBox_asHTML and erp5.css for new listbox option(anchor mode).
+
+2008-01-16 aurel
+* sort on listbox column is now a POST and no  longer a GET
+
+2007-12-19 yo
+* Put ListBox_asHTML as a Page Template. It has been present as a Filesystem Page Template for a long time.
+
+2007-12-18 yo
+* Acquire skins and tools from a portal, whenever possible.
+
+2007-11-21 kazuhiko
+* Make Page Templates themselves valid XML (except DOCTYPE definition).
+
+2007-11-14 yusei
+* Fix tab style on konqueror
+
+2007-11-08 kazuhiko
+* Enlarge link area to whole tab
+
+2007-10-22 jerome
+* Restore link to favicon, directly as favicon.ico, not in /images. This way, if a favicon.ico already exists, it will have priority.
+
+2007-09-23 yo
+* Remove the links to the favicon, as it breaks existing settings.
+* Ignore an error if form is None. This may happen when standard_error_message is called.
+
+2007-09-23 Kazuhiko
+* Add favicon
+* Output better XHTML/1.0
+
+2007-09-19 yo
+* Use absolute_url instead of absolute_url_path.
+
+2007-09-17 Kazuhiko
+* Revise design.
+
+2007-09-06 yo
+* Obtain a listbox with Form_getListbox instead of from a fixed localtion in configure_list_dialog and sort_list_dialog.
+
+2007-09-04 Kazuhiko
+* use portal_url.getPortalObject().absolute_url_path() instead of portal_url.getPortalPath() for better virtual host support.
+
+2007-08-29 Yusei
+* Add module_view action in context box.
+
+2007-08-29 Rafael
+* Updated Planning Box related stuff
+
+2007-08-18 yo
+* ERP5Site does not have getPortalType, so avoid calling getPortalType if not present.
+
+2007-07-02 Yusei
+* Fixed a invalid xhtml template.
+
+2007-06-12 JPS
+* Added MochiKit by default to handle onload events
+
+2007-01-11 Kevin
+* Fix widget alignment in bottom fieldset.
+
+2006-09-14 Aurel
+* fix removeUnpickableObject in Base_callDialogMethod to take listbox into account
+
+2006-09-13 Kevin
+* Fix developper mode rendering bug.
+* erp5.js is needed in web mode by admin toolbox which display context_box_render.
+* Split context macro in more macros.
+
+2006-09-12 Kevin
+* Refactor login_form screen to match new xhtml style form structure.
+
+2006-09-08 Kevin
+* Don't display action box in default web view and factorize conditions.
+
+2006-09-07 jerome
+* fix <title>s
+
+2006-09-07 Kevin
+* Render field CSS classes on the div.field instead on the label for better styling.
+* Fix JP "missing" statement.
+
+2006-09-04 Kevin
+* Don't render non-editable fields in span.
+
+2006-09-01 Kevin
+* Fix hidden developper shortcuts.
+* Add support for title _and_ id on groups (see form_render and ERP5XhtmlStyle_getFormGroupTitleAndId comments for details).
+
+2006-08-31 Kevin
+* Render non editable field in a span.
+* Display edit tabs in web editable_mode.
+
+2006-08-29 Chris
+* Added an easy way to customize erp5 using new CSS/JS files. You just need to redefine ERP5Site_getCSSList and ERP5Site_getJSList to return your new files too.
+
+2006-08-29 Kevin
+* erp5.css and erp5.js are not authoritative over others CSS and JS (this let let user override default CSS and JS definitions).
+
+2006-08-28 Kevin
+* Test form accessibility earlier in developper_shortcut_render to let login_form be rendered in erp5_web when anonymous.
+* Try to get form from 'form' variable before 'current_form_id'.
+
+2006-08-28 JP
+* Trash widget_render. field_render should be used instead.
+
+2006-08-25 Kevin
+* Move hidden input and globals definition code to separate file.
+* Move planning box generic header stuff to global_definition.
+* Only add default erp5 javascript and css file if we are not in web mode.
+* Add new is_web_mode variable to differentiate web mode and standard erp5_mode.
+* Always return default erp5 xhtml_style template if not in web_mode.
+* One liner editable_mode setter.
+* Delete &nbsp; in dummy <p> tags used to clear.
+* Don't show actions tabs in web_mode.
+
+2006-08-24 Kevin
+* Add a specific div wrapper class to differenciate editable mode.
+* Fix generator xhtml tag.
+
+2006-08-23 Romain
+* Translate tab name.
+
+2006-08-22 Kevin
+* Unset editable_mode when viewing an object through Web Site object.
+* Let the website form be editable even if no form layout found.
+
+2006-08-21 Kevin
+* Include support for editable_mode parameter in main_template.
+* Remove default value (by jp).
+* Do not render empty groups in forms.
+* Do not use <h6> tags to clear box flow.
+* Introduce widget_render page template (not used yet).
+
+2006-08-21 Chris
+* Made form_render code a lot lighter with same final result using a loop
+
+2006-08-02 Romain
+* Add documentation_view to fix Inspector with xhtml_style.
+
+2006-07-24 vincent
+* Re-implement parameters propagation. Allows to remove most of the previously hardcoded value names from the style.
+* Keep parameters when going through a workflow transition (ex : "follow bug" in bug module)
+* Fixes bugs about form_id & dialog_id not generated the way they are supposed to.
+* Move "list mode" button between "previous" and "next" buttons.
+* Use "contextual help" preference to display or not the help button on top right - it's the only purpose of this preference.
+* Follow the field naming convention for menus.
+* Rename all scripts designed for xhtml style to "ERP5XhtmlStyle_" to make it clear. Some are rewrite of "Base_" scripts.
+* !BUG!: listbox search fields require quite a lot of work to be cleanly filtered out. This will be hopefully corrected in next version.
+
+2006-07-17 jerome
+* fix object_jump actions that were not displayed.
+
+2006-06-28 Kevin
+* Fix default string.
+
+2006-06-28 vincent
+* Add compatibility layer to support forms designed for html_style.
+
+2006-06-27 vincent
+* Add an error message when login fails.
+* Fix various compatibility bugs with old browsers.
+
+2006-06-27 chris
+* Replaced hr.clear by h6.clear to fix a problem with firefox 1.0.6
+
+2006-06-26 vincent
+* Rename page templates to follow a consistent naming scheme.
+* Add another layer to unify web mode handling.
+
+2006-06-23 yo
+* Put id on each div in form_sort. Otherwise, functional testing is too difficult.
+* Likewise, put id on each tr in form_list_ui.
+
+2006-06-20 Vincent
+* Correct form button values when in a dialog.
+
+2006-06-15 Vincent
+* Initial commit.
+* Valid XHTML1.0 Strict + CSS 2.0.

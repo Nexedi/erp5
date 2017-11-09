@@ -1,0 +1,91 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block metal:define-macro="master">
+    <tal:block metal:use-macro="here/dialog_main/macros/master">
+      <tal:block metal:fill-slot="main">
+        <div class="dialog_box">
+          <tal:block tal:condition="preferred_html_style_developper_mode">
+            <tal:block metal:use-macro="developper_shortcut_render/macros/form" />
+          </tal:block>
+          <table tal:define="selection_name request/selection_name;
+                 base_form python: getattr(here, request['form_id']);
+                 groups base_form/get_groups;
+                 listbox python: base_form.Form_getListbox();
+                 default_columns python: listbox.get_value('columns');
+                 columns python: here.portal_selections.getSelectionColumns(selection_name, REQUEST=request, columns=default_columns);
+                 selected_stats  python: here.portal_selections.getSelectionStats(selection_name, REQUEST=request);
+                 global row_index python: 0;
+                 global row_keys python: ['None'];
+                 global stats python: [' ','count','sum','max','min','avg'];
+                 all_columns python: default_columns + [x for x in listbox.get_value('all_columns') if x not in default_columns]">
+            <tbody class="configure_list_table">
+            <tal:block tal:repeat="item columns">
+              <tr tal:define="global row_index python:row_index+1;
+                  dummy python:row_keys.append(item[0])"
+                  tal:attributes="id string:column_${row_index}">
+                <td>
+                  <tal:block i18n:translate="" i18n:domain="ui">Column</tal:block>
+                  <tal:block tal:replace="row_index" />
+                </td>
+                <td>
+                  <select name="field_columns">
+                    <tal:block tal:repeat="option python: [('None','None')] + all_columns">
+                      <option tal:content="python: option[1]"
+                              tal:attributes="value python:option[0];
+                              selected python: option[0]==item[0] and 'selected' or nothing"
+                              i18n:translate="" i18n:domain="ui" />
+                    </tal:block>
+                  </select>
+                </td>
+                <td>
+                  <select name="stat_columns">
+                    <tal:block tal:repeat="stat stats">
+                      <option tal:content="stat"
+                              tal:attributes="value stat;
+                              selected python: (len(selected_stats) >= row_index and stat == selected_stats[row_index - 1]) and 'selected' or nothing"
+                        i18n:translate="" i18n:domain="ui" />
+                    </tal:block>
+                  </select>
+                </td>
+              </tr>
+            </tal:block>
+            <tal:block tal:repeat="item all_columns">
+              <tal:block tal:condition="python: item[0] not in row_keys">
+                <tr tal:define="global row_index python:row_index+1"
+                    tal:attributes="id string:column_${row_index}">
+                  <td>
+                    <tal:block i18n:translate="" i18n:domain="ui">Column</tal:block>
+                    <tal:block tal:replace="row_index" />
+                  </td>
+                  <td>
+                    <select name="field_columns">
+                      <option selected="selected"
+                              value="None"
+                              i18n:translate="" i18n:domain="ui"></option>
+                      <option tal:repeat="option all_columns"
+                              tal:content="python: option[1]"
+                              tal:attributes="value python:option[0]"
+                              i18n:translate="" i18n:domain="ui" />
+                    </select>
+                  </td>
+                  <td>
+                    <select name="stat_columns">
+                      <tal:block tal:repeat="stat stats">
+                        <option tal:content="stat"
+                                tal:attributes="value stat;
+                                selected python: len(selected_stats) >= row_index and stat == selected_stats[row_index - 1] and 'selected or nothing'"
+                          i18n:translate="" i18n:domain="ui" />
+                      </tal:block>
+                    </select>
+                  </td>
+                </tr>
+              </tal:block>
+            </tal:block>
+          </tbody>
+          </table>
+        </div>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>

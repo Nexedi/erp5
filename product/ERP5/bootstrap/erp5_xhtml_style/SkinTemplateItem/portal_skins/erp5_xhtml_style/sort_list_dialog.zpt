@@ -1,0 +1,68 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block metal:define-macro="master">
+    <tal:block metal:use-macro="here/dialog_main/macros/master">
+      <tal:block metal:fill-slot="main">
+        <div class="dialog_box">
+          <tal:block tal:condition="preferred_html_style_developper_mode">
+            <tal:block metal:use-macro="developper_shortcut_render/macros/form" />
+          </tal:block>
+          <div class="content"
+               tal:define="items python:here.portal_selections.getSelectionSortOrder(request['selection_name'], REQUEST=request);
+               base_form python:getattr(here,request['form_id']);
+               groups base_form/get_groups;
+               listbox python:base_form.Form_getListbox();
+               default_columns python: listbox.get_value('columns');
+               columns python: default_columns + [x for x in listbox.get_value('sort_columns') if x not in default_columns];
+               global row_index python:0;
+               global row_keys python:['None'];
+               all_columns python: [('None','')] + columns;">
+            <div tal:repeat="item items"
+                 class="field">
+              <label tal:define="global row_index python:row_index+1">
+                <tal:block i18n:translate="" i18n:domain="ui">Sort</tal:block>
+                <tal:block tal:replace="row_index" />
+              </label>
+              <div class="input" tal:attributes="id string:sort_${row_index}"
+                   tal:define="sort_type python:((len(item) &gt; 2) and item[2]) or ''">
+                <select name="field_sort_on">
+                  <tal:block tal:repeat="option all_columns">
+                    <option tal:content="python:option[1]"
+                            tal:attributes="value python:option[0];
+                            selected python:option[0]==item[0] and 'selected' or nothing"
+                            i18n:translate="" i18n:domain="ui"></option>
+                  </tal:block>
+                </select>
+                <tal:block tal:replace="structure python:form.sort_order.render(item[1], request)" />
+                <tal:block tal:replace="structure python:form.sort_type.render(sort_type, request)" />
+              </div>
+              <p class="clear"></p>
+            </div>
+            <div tal:repeat="item columns"
+                 class="field">
+              <tal:block tal:condition="python: item[0] not in row_keys">
+                <label tal:define="global row_index python:row_index+1">
+                  <tal:block i18n:translate="" i18n:domain="ui">Sort</tal:block>
+                  <tal:block tal:replace="row_index" />
+                </label>
+                <div class="input" tal:attributes="id string:sort_${row_index}">
+                  <select name="field_sort_on">
+                    <option selected="selected" value="None"></option>
+                    <option tal:repeat="option columns"
+                            tal:content="python:option[1]"
+                            tal:attributes="value python:option[0]"
+                            i18n:translate="" i18n:domain="ui"></option>
+                  </select>
+                  <span tal:replace="structure python:form.sort_order.render('', request)" />
+                  <tal:block tal:replace="structure python:form.sort_type.render('', request)" />
+                </div>
+              </tal:block>
+              <p class="clear"></p>
+            </div>
+          </div>
+        </div>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>
