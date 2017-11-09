@@ -2154,8 +2154,10 @@ class TemplateTool (BaseTool):
 
           # Calculate hash for value at ZODB
           obj_sha = self.calculateComparableHash(obj, item.isProperty)
-          # Calculate hash for value at property_value
-          item_sha = self.calculateComparableHash(value, item.isProperty)
+
+          # Update hash for value at property_value
+          self.updateHash(item)
+          item_sha = item.getProperty('item_sha')
 
           # Compare the hash with the item hash
           if obj_sha != item_sha:
@@ -2419,7 +2421,7 @@ class TemplateTool (BaseTool):
                     'last_id', 'uid', '_mt_index', '_count', '_tree',
                     '__ac_local_roles__', '__ac_local_roles_group_id_dict__',
                     'workflow_history', 'subject_set_uid_dict', 'security_uid_dict',
-                    'filter_dict'}
+                    'filter_dict', '_max_uid'}
 
         attr_set.update(('isIndexable',))
 
