@@ -9,8 +9,7 @@
     this._manifest = spec.manifest;
     this._gadget = spec.gadget;
     this._take_installer = spec.take_installer || false;
-    this._origin_url = spec.origin_url !== undefined ?
-        spec.origin_url : window.location.href;
+    this._origin_url = spec.origin_url;
     this._version = spec.version || "";
     this._gadget_list = [];
     this._prefix = spec.prefix || "./";

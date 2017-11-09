@@ -18,13 +18,6 @@ var repair = false;
       check_local_creation: false,
       check_local_deletion: false,
       check_local_modification: false,
-      signature_sub_storage: {
-        type: "query",
-        sub_storage: {
-          type: "indexeddb",
-          database: "officejs-hash"
-        }
-      },
       local_sub_storage: {
         type: "query",
         sub_storage: {
@@ -39,6 +32,7 @@ var repair = false;
         type: "appcache",
         manifest: gadget.state.cache_file,
         version: gadget.state.version_url,
+        origin_url: window.location.href,
         take_installer: true
       }
     });
@@ -164,6 +158,7 @@ var repair = false;
     .declareMethod("install", function () {
       var gadget = this,
         storage = createStorage(gadget);
+      console.log('install: ' + gadget.state.app_name);
       if (navigator.serviceWorker !== undefined) {
         return storage.repair()
           .push(function () {
