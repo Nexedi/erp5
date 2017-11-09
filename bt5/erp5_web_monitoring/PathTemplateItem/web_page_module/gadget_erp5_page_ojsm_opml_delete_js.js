@@ -21,7 +21,7 @@
           return gadget.jio_remove(options.jio_key);
         })
         .push(function () {
-          return gadget.notifySubmitted("Document Deleted");
+          return gadget.notifySubmitted({message: "Document Deleted", status: "success"});
         })
         .push(function () {
           return gadget.redirect({command: 'change', options: {

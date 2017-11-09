@@ -1,7 +1,6 @@
-/*global window, rJS, RSVP, URI, location, $,
-    loopEventListener, btoa */
+/*global window, rJS, RSVP, Handlebars */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, $, RSVP) {
+(function (window, rJS, RSVP, Handlebars) {
   "use strict";
 
   var gadget_klass = rJS(window),
@@ -71,16 +70,13 @@
             .get(gadget.property_dict.monitor_process_state);
         })
         .push(undefined, function (error) {
-          console.error(error);
-          $.notify(
-            "Error: Failed to download data files!", 
-            {
-              position: "top right",
-              autoHideDelay: 7000,
-              className: "error"
-            }
-          );
-          return undefined;
+          return gadget.notifySubmitted({
+              message: "Error: Failed to download data files!",
+              status: "error"
+            })
+            .push(function () {
+              return undefined;
+            });
         })
         .push(function (average_result) {
           if (average_result !== undefined) {
@@ -93,6 +89,7 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod('jio_get', 'jio_get')
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
 
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this,
@@ -225,8 +222,7 @@
 
       return gadget.property_dict.jio_gadget
         .get(gadget.property_dict.monitor_process_state)
-          .push(undefined, function (error) {
-            console.error(error);
+          .push(undefined, function () {
             return undefined;
           })
           .push(function (average_result) {
@@ -238,4 +234,4 @@
           });
     }, 65000);
 
-}(window, rJS, $, RSVP));
+}(window, rJS, RSVP, Handlebars));

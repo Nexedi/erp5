@@ -148,11 +148,14 @@
           }
           if (msg_list.length > 0) {
             return RSVP.all([
-              gadget.notifySubmitted('Error while ' + msg_list.join('; '))
+              gadget.notifySubmitted({
+                message: 'Error while ' + msg_list.join('; '),
+                status: 'error'
+              })
             ]);
           }
           return RSVP.all([
-            gadget.notifySubmitted('Parameters Updated')
+            gadget.notifySubmitted({message: 'Parameters Updated', status: 'success'})
           ]);
         });
     })

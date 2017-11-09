@@ -548,7 +548,8 @@
               .push(function (select_limit) {
                 return getInstanceOPMLListFromMaster(gadget, select_limit);
               })
-              .push(undefined, function () {
+              .push(undefined, function (error) {
+                console.log(error);
                 gadget.state.message
                   .innerHTML = notify_msg_template({
                     status: 'error',
@@ -587,10 +588,16 @@
                 has_failed = true;
               })
               .push(function () {
-                if (!has_failed) {
-                  return gadget.notifySubmitted("Failed to import Configurations");
+                if (has_failed) {
+                  return gadget.notifySubmitted({
+                    message: "Failed to import Configurations",
+                    status: "error"
+                  });
                 } else {
-                  return gadget.notifySubmitted("Configuration Saved!");
+                  return gadget.notifySubmitted({
+                    message: "Configuration Saved!",
+                    status: "success"
+                  });
                 }
               })
               .push(function () {

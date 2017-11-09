@@ -83,9 +83,9 @@
                   doc.title === "" || doc.title === undefined || doc.verify_password === 1);
               })
               .push(function (status) {
-                var msg = 'Document Updated';
+                var msg = {message: 'Document Updated', status: 'success'};
                 if (!status) {
-                  msg = 'Document update failed';
+                  msg = {message: 'Document update failed', status: "error"};
                 }
                 return RSVP.all([
                   gadget.notifySubmitted(msg),
@@ -117,7 +117,7 @@
             "opml_title": doc.title || "",
             "opml_key": options.jio_key,
             "password": doc.password
-            });
+          });
         })
         .push(function () {
           return RSVP.all([

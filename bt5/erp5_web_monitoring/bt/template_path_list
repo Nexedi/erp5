@@ -1,4 +1,3 @@
-web_page_module/Notify_min_js
 web_page_module/gadget_erp5_field_status_*
 web_page_module/gadget_erp5_page_ojsm_*
 web_page_module/gadget_erp5_page_settings_configurator_*
@@ -15,6 +14,5 @@ web_page_module/monitoring_jio_parser_storage_js
 web_page_module/monitoring_jio_storage_js
 web_page_module/monitoring_jio_web_storage_js
 web_page_module/ojsm_gadget_erp5_statusfield_*
-web_page_module/rjs_jquery_js
 web_site_module/officejs_monitoring
 web_site_module/officejs_monitoring/**

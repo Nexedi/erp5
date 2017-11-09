@@ -107,7 +107,7 @@
           })
           .push(function () {
             return RSVP.all([
-              gadget.notifySubmitted('All OPML removed')
+              gadget.notifySubmitted({message: 'All OPML removed', status: 'success'})
             ]);
           })
           .push(function () {
@@ -115,8 +115,7 @@
             return gadget.redirect({"command": "reload"});
           });
       }
-      event.returnValue = true;
-    })
+    }, false, false)
     .onEvent('submit', function () {
       var gadget = this,
         doc;
@@ -146,7 +145,7 @@
         })
         .push(function () {
           return RSVP.all([
-            gadget.notifySubmitted('Parameters Updated')
+            gadget.notifySubmitted({message: 'Parameters Updated', status: 'success'})
           ]);
         });
     })

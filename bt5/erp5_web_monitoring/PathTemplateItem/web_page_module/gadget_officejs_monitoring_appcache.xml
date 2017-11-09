@@ -137,11 +137,9 @@ monitoring_jio_http_storage.js\n
 monitoring_jio_parser_storage.js\n
 monitoring_jio_storage.js\n
 monitoring_jio_web_storage.js\n
-jquery.js\n
 jsen.min.js\n
 renderjs.js\n
 rsvp.js\n
-notify.min.js\n
 \n
 # shared\n
 gadget_erp5_notification.html\n
@@ -197,6 +195,8 @@ gadget_erp5_field_integer.html\n
 gadget_erp5_field_integer.js\n
 gadget_erp5_jio.html\n
 gadget_erp5_jio.js\n
+gadget_erp5_search_editor.html\n
+gadget_erp5_search_editor.js\n
 \n
 # monitoring\n
 gadget_officejs_monitoring.appcache\n
@@ -383,7 +383,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>963.17891.16389.10547</string> </value>
+                <value> <string>963.22437.57747.1757</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -401,7 +401,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1509980460.49</float>
+                        <float>1510327329.0</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

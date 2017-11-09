@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars, $, console */
+/*global window, rJS, RSVP, console */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP, $, console) {
+(function (window, rJS, RSVP, console) {
   "use strict";
 
   var gadget_klass = rJS(window);
@@ -9,20 +9,15 @@
   function loadGraphData(gadget, key) {
     var resource_key = gadget.property_dict.ressource_dict[key];
     return gadget.property_dict.jio_gadget.get(resource_key)
-      .push(undefined, function (error) {
-        console.log(error);
-        $.notify(
-          "Error: Failed to download resource file '" + resource_key +
-            "' from URL: " + gadget.state.opml_outline.url,
-          {
-              position: "top right",
-              autoHideDelay: 7000,
-              className: "error"
-            }
-        );
-        return {
-          data: []
-        };
+      .push(undefined, function () {
+        return gadget.notifySubmitted({
+            message: "Error: Failed to download resource file '" + resource_key +
+              "' from URL: " + gadget.state.opml_outline.url,
+            status: "error"
+          })
+          .push(function () {
+            return {data: []};
+          });
       })
       .push(function (jio_element) {
         gadget.property_dict.date_window = getDateWindow(gadget.property_dict.mem_data.data);
@@ -98,7 +93,7 @@
       }
     }
     return {
-      value:{
+      value: {
         data: data_list,
         layout: {
           axis_dict : axis_dict,
@@ -117,13 +112,13 @@
       max_date = data[data.length - 1].split(',')[0];
       begin_date = new Date(max_date);
       end_date = new Date(max_date);
-      begin_date.setHours(begin_date.getHours() -2);
+      begin_date.setHours(begin_date.getHours() - 2);
       date_window = [Date.parse(begin_date), Date.parse(end_date)];
     }
     return date_window;
   }
 
-  function updateGraph (gadget) {
+  function updateGraph(gadget) {
     return new RSVP.Queue()
       .push(function () {
         var key,
@@ -178,7 +173,7 @@
           data_list[0].value_dict["1"].push(line_list[2]);
         }
         return gadget.property_dict.graph_mem_used.render({
-          value:{
+          value: {
             data: data_list,
             layout: {
               axis_dict : axis_dict,
@@ -246,7 +241,7 @@
           }
         }
         return gadget.property_dict.graph_cpu.render({
-          value:{
+          value: {
             data: data_list,
             layout: {
               axis_dict : axis_dict,
@@ -345,6 +340,7 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod('jio_get', 'jio_get')
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
 
     .onLoop(function () {
       return updateGraph(this);
@@ -443,4 +439,4 @@
         });
     });
 
-}(window, rJS, RSVP, $, console));
+}(window, rJS, RSVP, console));

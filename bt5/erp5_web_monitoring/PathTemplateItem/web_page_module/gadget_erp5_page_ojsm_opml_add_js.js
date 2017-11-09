@@ -85,9 +85,9 @@
                 return opml_global.saveOPML(doc, true);
               })
               .push(function (status) {
-                var msg = 'Document Updated';
+                var msg = {message: 'OPML document added', status: 'success'};
                 if (!status) {
-                  msg = 'Document update failed';
+                  msg = {message: 'Failed to add OPML document', status: "error"};
                 }
                 return RSVP.all([
                   gadget.notifySubmitted(msg),

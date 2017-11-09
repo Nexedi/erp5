@@ -14,6 +14,8 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("jio_repair", "jio_repair")
+    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
 
     .declareMethod("registerSync", function (options) {
       var gadget = this;
@@ -74,15 +76,6 @@
                     return syncAllStorage();
                   }
                   gadget.props.offline = true;
-                  return $.notify(
-                    "Sync aborted, no internet access...",
-                    {
-                      position: "bottom right",
-                      autoHide: true,
-                      className: "error",
-                      autoHideDelay: 10000
-                    }
-                  );
                 });
             }
             return syncAllStorage();
@@ -98,15 +91,13 @@
             return gadget.setSetting('sync_start_time', new Date().getTime());
           })
           .push(function () {
-            $(".notifyjs-wrapper").remove();
-            return $.notify(
-              "Synchronizing Data...",
-              {
-                position: "bottom right",
-                autoHide: false,
-                className: "info"
-              }
-            );
+            return gadget.notifySubmitting();
+          })
+          .push(function () {
+            return gadget.notifySubmitted({
+              message: "Synchronizing Data...",
+              status: "success"
+            });
           })
           .push(function () {
             // call repair on storage
@@ -119,36 +110,33 @@
           })
           .push(function () {
             last_sync_time = new Date().getTime();
-            return gadget.setSetting('latest_sync_time', last_sync_time);
+            return RSVP.all([
+              gadget.setSetting('latest_sync_time', last_sync_time),
+              gadget.notifySubmitting()
+            ]);
           })
           .push(function () {
             var time = 3000,
-              classname = "info",
+              classname = "success",
               message = "Synchronisation finished.",
               //log_message = '',
               log_title = "OK: " + message;
 
             if (has_error) {
-              classname = "warning";
+              classname = "error";
               time = 5000;
               //log_message = getErrorLog(gadget.props.error_list);
               log_title = "Synchronisation finished with error(s).";
               message = log_title + "\nYou can retry with manual sync.";
             }
-            $(".notifyjs-wrapper").remove();
-            return RSVP.all([$.notify(
-              message,
-              {
-                position: "bottom right",
-                autoHide: true,
-                className: classname,
-                autoHideDelay: time
-              }
-            )]);
+            return gadget.notifySubmitted({
+              message: message,
+              status: classname
+            });
           })
           .push(function () {
             gadget.props.started = false;
-            return $.notify(
+            /*return $.notify(
               "Last Sync: " + formatDate(new Date(last_sync_time)),
               {
                 position: "bottom right",
@@ -156,7 +144,7 @@
                 className: "success",
                 autoHideDelay: 30000
               }
-            );
+            );*/
           });
       }
 
