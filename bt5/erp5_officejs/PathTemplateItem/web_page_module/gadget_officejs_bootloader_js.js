@@ -19,10 +19,14 @@ var repair = false;
       check_local_deletion: false,
       check_local_modification: false,
       signature_sub_storage: {
-        type: "query",
+        type: "limitalldocs",
+        document: window.location.href,
         sub_storage: {
-          type: "indexeddb",
-          database: "officejs-hash"
+          type: "query",
+          sub_storage: {
+            type: "indexeddb",
+            database: "officejs-hash"
+          }
         }
       },
       local_sub_storage: {
