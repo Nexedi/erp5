@@ -170,7 +170,7 @@
         }
       }
 
-      result[this.state.key] = path_list;
+      result[this.state.key] = JSON.stringify(path_list);
       return result;
     });
 

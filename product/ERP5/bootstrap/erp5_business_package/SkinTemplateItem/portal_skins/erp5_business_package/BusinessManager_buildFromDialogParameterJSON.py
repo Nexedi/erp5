@@ -1,6 +1,7 @@
-# Convert the item_path_list from str to list type
-if isinstance(item_path_list, str):
-  item_path_list = item_path_list.split(',')
+import json
+
+# Load the JSON value for item_path_list
+item_path_list = json.loads(item_path_list)
 
 kwargs = {
   'checkNeeded': check_needed,
