@@ -1,0 +1,129 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Title Line</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Title Line</td></tr>
+</thead><tbody>
+<!-- XXX listbox_title is not displayed in mobile mode unless there is one or many records 
+     XXX report_tree, domain_tree does not exist in mobile mode
+     So this test is skipped -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>verifyText</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td>exact:Foos</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>0 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-item-number"]</td>
+  <td>- 0 items selected</td>
+</tr>
+<!--<tr>
+  <td>verifyElementNotPresent</td>
+  <td>id=listbox_page_selection</td>
+  <td></td>
+</tr>-->
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//input[@class="listbox-tree-flat-list-mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//input[@class="listbox-tree-domain-tree-mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//input[@class="listbox-tree-report-tree-mode"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_domain_tree=checked&amp;field_domain_root_list=source</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//input[@class="listbox-tree-flat-list-mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//input[@class="listbox-tree-domain-tree-mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//input[@class="listbox-tree-report-tree-mode"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_report_tree=checked&amp;field_report_root_list=source</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//input[@class="listbox-tree-flat-list-mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//input[@class="listbox-tree-domain-tree-mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//input[@class="listbox-tree-report-tree-mode"]</td>
+  <td></td>
+</tr>
+</tal:block>
+
+</tbody></table>
+</body>
+</html>
+

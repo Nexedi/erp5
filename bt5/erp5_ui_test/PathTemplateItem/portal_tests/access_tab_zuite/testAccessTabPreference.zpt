@@ -1,0 +1,120 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Bread Crumbs</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Access Tab Front Page Preference</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_preferences/AccessTabZuite_setPreference</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Preference Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_preferences/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_preferences/access_tab_test_preference/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=User Interface</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='field_my_preferred_html_style_access_tab']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='Base_edit:method']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<!-- 
+  Asserts goes here 
+  Notes that access tab are visible only if dms, base or express are installed.
+  So it can be included here different conditions and assert for all cases.
+-->
+<tal:block tal:condition="python:getattr(context,'document_module',None)" >
+  <tr>
+    <td>assertText</td>
+    <td>//li[@id="quick_search_tab"]/a/span</td>
+    <td>Quick Search</td>
+  </tr>
+</tal:block>
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_preferences/access_tab_test_preference/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=User Interface</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='field_my_preferred_html_style_access_tab']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='Base_edit:method']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<!-- Asserts goes here -->
+<tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+  <td>assertText</td>
+  <td>//div[@class="index_html"]/h2</td>
+  <td>Welcome to ERP5</td>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+   <td>assertText</td>
+   <td>//div[@class="title_index"]/span</td>
+   <td>ERP5</td>
+</tal:block>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_preferences/AccessTabZuite_disablePreference</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Disabled Preference Successfully.</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

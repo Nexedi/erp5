@@ -1,0 +1,48 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Exchange Actions</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test field class generation</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/1/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_quantity</td>
+  <td>A</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='Base_edit:method']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@class, 'error')][.//@name='field_my_quantity']</td>
+  <td></td>
+</tr>
+
+<!-- cleanup -->
+<tr>
+  <td>type</td>
+  <td>field_my_quantity</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='Base_edit:method']</td>
+  <td></td>
+</tr>
+
+
+</body>
+</html>

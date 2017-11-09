@@ -1,0 +1,154 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Folder Workflow Action With Nothing Selected</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Folder Workflow Action With Nothing Selected<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/foo_module/1/Foo_validate">Validate the first document</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Validated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=2&amp;start:int=2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/view">/erp5/foo_module/view</td>
+  <td></td>
+</tr>
+
+<!-- first case, the user select nothing -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Change State</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>You must select one action.</td>
+  <td></td>
+</tr>
+
+<!-- second case, the user select two actions, this is not possible -->
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/view">/erp5/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Change State</td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//tr[@class='workflow_action_listbox-data-line-0 DataA']/td[5]/select</td>
+  <td>label=Validate Action</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@class='workflow_action_listbox-data-line-1 DataB']/td[5]/select</td>
+  <td>label=Invalidate Action</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>You must select only one action.</td>
+  <td></td>
+</tr>
+
+<!-- third case, no document in selection -->
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/view">/erp5/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>listbox_title</td>
+  <td>THIS_TITLE_DOES_NOT_EXIST</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Change State</td>
+</tr>
+
+<!-- we have a listbox with 0 lines -->
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number workflow_action_listbox-current-page-total-number"]</td>
+  <td>0 records</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>You must select one action.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+</body>
+</html>

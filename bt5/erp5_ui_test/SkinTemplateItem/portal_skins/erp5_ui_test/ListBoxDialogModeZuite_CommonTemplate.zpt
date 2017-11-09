@@ -1,0 +1,143 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="init">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>open</td>
+      <td>${base_url}/foo_module/ListBoxDialogModeZuite_reset</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Reset Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+
+  <tr>
+    <td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertTextPresent</td>
+    <td>Created Successfully.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>open</td>
+    <td>${base_url}/bar_module/FooModule_createObjects?num:int=3;portal_type=Bar</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertTextPresent</td>
+    <td>Created Successfully.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>open</td>
+    <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+    <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+
+
+    <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/goto_dialog" />
+    <tr>
+      <td>verifyText</td>
+      <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)][1]</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>verifyText</td>
+      <td>//*[@class="listbox-data-line-1 DataB"]//a[not(@title)][1]</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>verifyText</td>
+      <td>//*[@class="listbox-data-line-2 DataA"]//a[not(@title)][1]</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>verifyElementNotPresent</td>
+      <td>//*[@class="listbox-data-line-3 DataB"]</td>
+      <td></td>
+    </tr>
+
+
+    </tal:block>
+
+  <tal:block metal:define-macro="goto_dialog">
+
+        <tr>
+          <td>open</td>
+          <td>${base_url}/foo_module/0</td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>selectAndWait</td>
+          <td>select_action</td>
+          <td>Select Bar</td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Useless Field in Bar Selection Dialog</td>
+          <td></td>
+        </tr>
+    <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/enter_dialog_value" />
+  </tal:block>
+
+  <tal:block metal:define-macro="enter_dialog_value">
+    <tr>
+      <td>type</td>
+      <td>field_your_extra_text</td>
+      <td>Hardcoded text value</td>
+    </tr>
+
+
+  <tr>
+    <td>click</td>
+    <td>//*[@class='listbox-data-line-1 DataB']//input[@type="checkbox"]</td>
+    <td></td>
+  </tr>
+    <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" />
+
+  </tal:block>
+
+
+  <tal:block metal:define-macro="verify_dialog">
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Useless Field in Bar Selection Dialog</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_your_extra_text</td>
+  <td>Hardcoded text value</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+
+  </tal:block>
+
+
+  </tal:block>

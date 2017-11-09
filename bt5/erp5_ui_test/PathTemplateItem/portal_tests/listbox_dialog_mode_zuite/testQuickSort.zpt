@@ -1,0 +1,113 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Quick Sort</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Quick Sort</td></tr>
+</thead><tbody>
+<!-- Mobile listbox columns label are not clickable for quick sorting
+     So this test is skipped -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>assertElementPresent</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.id:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.id:desc']</td>
+  <td></td>
+</tr>
+<!-- click the ID -->
+<tr>
+  <td>clickAndWait</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.id:asc']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" />
+<tr>
+  <td>assertElementPresent</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.id:desc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Ascending Display"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Descending Display"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+<!-- click the ID again -->
+<tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" />
+<tr>
+  <td>clickAndWait</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.id:desc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.id:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Ascending Display"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Descending Display"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+</tal:block>
+</tbody></table>
+</body>
+</html>

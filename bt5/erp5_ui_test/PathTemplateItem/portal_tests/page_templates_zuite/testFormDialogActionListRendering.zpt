@@ -1,0 +1,62 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test form_dialog Action List Rendering</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test form_dialog Action List Rendering</td></tr>
+</thead><tbody>
+<!--
+  === PART 0 ===
+  This part delete the second action if present, in order to reach the initial state
+    of this test. This is required to re-run the test in the same erp5 instance.
+-->
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo%20Module/PortalType_deleteAction?id=search2">Delete second action if exist</td>
+  <td></td>
+</tr>
+<!--
+  === PART 1 ===
+  This part make sure form_dialog Page Template don't render <select> widget
+    if only one action exist.
+-->
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/FooModule_viewSearchDialog?dialog_category=object_search">/erp5/foo_module/foo_module/FooModule_viewSearchDialog?dialog_category=object_search</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//select[@id="dialog_selector"]</td>
+  <td></td>
+</tr>
+<!--
+  === PART 2 ===
+  This part test that a <select> input is rendered when more than one action exist.
+-->
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo%20Module/PortalType_addAction?id=search2&name=Search2&category=object_search&action=string:%24{object_url}/FooModule_viewSearchDialog">Create a second dummy search action to test the dynamic creation of select action drop-down list</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/FooModule_viewSearchDialog?dialog_category=object_search">/erp5/foo_module/foo_module/FooModule_viewSearchDialog?dialog_category=object_search</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//select[@id="dialog_selector"]/option[1]</td>
+  <td>Search</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//select[@id="dialog_selector"]/option[2]</td>
+  <td>Search2</td>
+</tr>
+</body>
+</html>

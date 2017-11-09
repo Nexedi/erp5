@@ -1,0 +1,21 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="init">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>open</td>
+      <td>${base_url}/foo_module/BTZuite_reset</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Reset Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>setTimeout</td>
+      <td>360000</td> <!-- business template operation takes time, so we use a larger timeout -->
+      <td></td>
+    </tr>
+  </tal:block>
+</tal:block>

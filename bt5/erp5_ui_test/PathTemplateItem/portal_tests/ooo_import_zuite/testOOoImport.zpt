@@ -1,0 +1,171 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OOo Importing</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OOo Importing<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody>
+<tr>
+  <td>store</td>
+  <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
+  <td>base_url</td>
+</tr>
+<tr>
+  <td>setTimeout</td>
+  <td>600000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/OOoImportZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/OOoImportZuite_importFile</td>
+  <td></td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>select</td>
+  <td>field_listbox_portal_type_property_list_new_0000001</td>
+  <td>title</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_listbox_portal_type_property_list_new_0000002</td>
+  <td>quantity</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_listbox_portal_type_property_list_new_0000003</td>
+  <td>description</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>OpenOffice document importing report.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']</td>
+  <td></td>
+</tr>
+<tr> 
+  <td>verifyElementPresent</td> 
+  <td>//tr[@class='listbox-data-line-1 DataB']</td> 
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>101 records</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Report']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>//select[@name='select_dialog']</td>
+  <td>label=Import Report</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>101 records</td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']</td>
+  <td></td>
+</tr>
+<tr> 
+  <td>verifyElementPresent</td> 
+  <td>//tr[@class='listbox-data-line-1 DataB']</td> 
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[1]</td>
+  <td>Object created successfully - Type: Foo</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[1]</td>
+  <td>Object created successfully - Type: Foo</td>
+</tr>
+</tbody></table>
+</body>
+</html>

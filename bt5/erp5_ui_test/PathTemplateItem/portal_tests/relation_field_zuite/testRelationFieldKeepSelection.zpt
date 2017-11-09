@@ -1,0 +1,116 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test relation field keep selection</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test relation field keep selection<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Title 0</td>
+  <td></td>
+</tr>
+
+
+<!-- first case, we select in the relation field dialog -->
+<tr>
+  <td>type</td>
+  <td>field_my_foo_category_title</td>
+  <td>a1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <!-- XXX maybe a better locator for relation field -->
+  <td>//input[@value='update...' and @type='image']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//*[@class='listbox-data-line-0 DataA']//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>id=dialog_submit_button</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='context_bar']//a[@title='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/1/Foo_view*" />
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Site Error</td>
+  <td></td>
+</tr>
+
+
+<!-- second case, we cancel in the relation field dialog -->
+<tr>
+  <td>clickAndWait</td>
+  <!-- XXX maybe a better locator for relation field -->
+  <td>//input[@value='update...' and @type='image']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_cancel:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@id='context_bar']//a[@title='Previous']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0/Foo_view*" />
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Site Error</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

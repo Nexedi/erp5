@@ -1,0 +1,65 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test List Action</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test List Action</td></tr>
+</thead><tbody>
+<!-- XXX listbox_title is not displayed in mobile mode unless there is one or many records 
+     So this test is skipped -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>assertElementPresent</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td>exact:Contents</td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_list_action=FooModule_viewFooList</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td>exact:Foos</td>
+</tr>
+</tal:block>
+</tbody></table>
+</body>
+</html>

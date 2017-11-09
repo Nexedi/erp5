@@ -1,0 +1,84 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Print Actions</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Print Actions</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_action&name=Print Portal&category=object_print&action=string:%24{portal_url}/view">Create a dummy action that redirects to the portal</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_action2&name=Print Portal 2&category=object_print&action=string:%24{portal_url}/view%3Fportal_status_message=This%20was%20second%20action">Create another dummy action that redirects to the portal</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/1/view">/erp5/foo_module/1/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Print']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//select[@name='select_dialog']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//select[@name='select_dialog']</td>
+  <td>Print Portal</td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>//select[@name='select_dialog']</td>
+  <td>label=Print Portal 2</td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//select[@name='select_dialog']</td>
+  <td>Print Portal 2</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Welcome to ERP5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>This was second action</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_deleteAction?id=test_action"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_deleteAction?id=test_action2"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+</body>
+</html>

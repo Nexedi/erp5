@@ -1,0 +1,50 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Fast Input</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Fast Input</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<!-- Purpose is to make sure the dialog in list mode generates its own selection name -->
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_fastinput&name=fast_input&category=object_fast_input&action=string:%24{object_url}/Foo_viewFastInput"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/1/view">/erp5/foo_module/1/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//input[@name="selection_name"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Fast Input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name="selection_name"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@name="selection_name"]</td>
+  <td>selection_foo_fastinput</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_deleteAction?id=test_fastinput"></td>
+  <td></td>
+</tr>
+</body>
+</html>

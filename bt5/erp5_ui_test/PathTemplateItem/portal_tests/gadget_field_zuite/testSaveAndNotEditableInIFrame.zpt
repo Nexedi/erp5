@@ -1,0 +1,151 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Gadget Field</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Gadget Field</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+ <tr>
+   <td>open</td>
+   <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+   <td></td>
+</tr>
+    
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+   <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/FooModule_createObjects?num:int=1;portal_type=Bar</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/0/Bar_viewGadgetField/my_language/manage_main</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_js_sandbox']</td>
+  <td>iframe</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@type='submit']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/0/Bar_viewGadgetField</td>
+  <td></td>
+</tr>
+<!-- Initialize -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@title='field_my_right']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@title='null']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@title='field_my_right']</td>
+  <td>couscous</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@title='null']</td>
+  <td>couscous</td>
+</tr>
+
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@title='field_my_right']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@title='null']/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='field_my_right']</td>
+  <td>couscous</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='null']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/0/Bar_viewGadgetField/my_language/manage_main</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_js_sandbox']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@type='submit']</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

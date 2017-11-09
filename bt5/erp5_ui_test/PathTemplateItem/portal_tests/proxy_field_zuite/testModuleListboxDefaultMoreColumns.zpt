@@ -1,0 +1,297 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title tal:content="template/title"></title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3"><tal:block tal:content="template/title"/> <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/FooModule_createObjects?num:int=1;portal_type=Bar</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module</td>
+  <td></td>
+</tr>
+
+<!-- Configure to add creation date, modification date & owner title fields -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Configure']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_4"]//select[@name="field_columns"]</td>
+  <td>Creation Date</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_5"]//select[@name="field_columns"]</td>
+  <td>Modification Date</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_6"]//select[@name="field_columns"]</td>
+  <td>Owner</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/0/Bar_viewCreationDateModificationDateAndOwner</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeText</td>
+  <td>creation_date</td>
+  <td>creation_date</td>
+</tr>
+<tr>
+  <td>storeText</td>
+  <td>modification_date</td>
+  <td>modification_date</td>
+</tr>
+<tr>
+  <td>storeText</td>
+  <td>owner</td>
+  <td>owner</td>
+</tr>
+
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/</td>
+  <td></td>
+</tr>
+<!-- check the columns displayed values -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>
+  <td>Title 0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
+  <td>${creation_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
+  <td>${modification_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
+  <td>${owner}</td>
+</tr>
+
+<!-- Check that the columns are searchable.
+XXX To be complete, this test would need to create data that should not match this search query...
+-->
+<tr>
+  <td>type</td>
+  <td>//tr[@class="listbox-search-line"]/th[5]//input</td>
+  <td>${creation_date}</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
+  <td>${creation_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
+  <td>${modification_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
+  <td>${owner}</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class="listbox-search-line"]/th[6]//input</td>
+  <td>${modification_date}</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
+  <td>${creation_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
+  <td>${modification_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
+  <td>${owner}</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class="listbox-search-line"]/th[7]//input</td>
+  <td>${owner}</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
+  <td>${creation_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
+  <td>${modification_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
+  <td>${owner}</td>
+</tr>
+
+
+<!-- Check that the columns are sortable.
+-->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.creation_date:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
+  <td>${creation_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
+  <td>${modification_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
+  <td>${owner}</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.modification_date:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
+  <td>${creation_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
+  <td>${modification_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
+  <td>${owner}</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.owner_title:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[5]</td>
+  <td>${creation_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[6]</td>
+  <td>${modification_date}</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[7]</td>
+  <td>${owner}</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

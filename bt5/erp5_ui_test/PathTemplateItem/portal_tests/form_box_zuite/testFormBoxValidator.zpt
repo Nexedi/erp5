@@ -1,0 +1,130 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form Box Validator</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Form Box Validator</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewFormBox</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>type</td>
+  <td>field_my_id</td>
+  <td>55</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_formbox_my_title</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_formbox_my_quantity</td>
+  <td>99</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_formbox_my_description</td>
+  <td>Default description</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Input is required but no input given.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_id</td>
+  <td>55</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_formbox_my_title</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_formbox_my_quantity</td>
+  <td>99.0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_formbox_my_description</td>
+  <td>Default description</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>field_my_formbox_my_title</td>
+  <td>Default title</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_id</td>
+  <td>55</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_formbox_my_title</td>
+  <td>Default title</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_formbox_my_quantity</td>
+  <td>99.0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_formbox_my_description</td>
+  <td>Default description</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

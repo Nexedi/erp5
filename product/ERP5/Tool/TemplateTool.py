@@ -1257,7 +1257,7 @@ class TemplateTool (BaseTool):
           property_dict_list.append(bp_dict_1)
           property_dict_list.append(bp_dict_2)
           property_dict_list.append(bp_dict_3)
-          property_dict_list.append(bp_dict_4)
+          #property_dict_list.append(bp_dict_4)
           property_dict_list.append(bp_dict_5)
           property_dict_list.append(bp_dict_6)
           property_dict_list.append(bp_dict_7)

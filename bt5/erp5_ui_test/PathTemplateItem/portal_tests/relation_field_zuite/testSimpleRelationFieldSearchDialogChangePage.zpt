@@ -1,0 +1,203 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Simple Relation Field Search Dialog Change Page</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Simple Relation Field Search Dialog Change Page</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_foo_category_title</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_foo_big_category_title</td>
+  <td>%c%</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[preceding-sibling::input[@name="field_my_foo_big_category_title"]][@value='update...']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertValue</td>
+  <td>listbox_title</td>
+  <td>%c%</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="prefix string:listbox; 
+                       set_page python:2;
+                       lines_per_pages python:10">
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />
+</tal:block>
+
+<tr>
+  <td>assertValue</td>
+  <td>listbox_title</td>
+  <td>%c%</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="prefix string:listbox; 
+                       set_page python:3;
+                       lines_per_pages python:10">
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />
+</tal:block>
+
+<tr>
+  <td>assertValue</td>
+  <td>listbox_title</td>
+  <td>%c%</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="prefix string:listbox; 
+                       set_page python:2;
+                       lines_per_pages python:10">
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />
+</tal:block>
+
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>type</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>keyPressAndWait</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>\13</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>listbox_title</td>
+  <td>%c%</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>keyPressAndWait</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>\13</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>3</td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>select</td>
+  <td>id=listbox_page_selection</td>
+  <td>1 of 91</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>id=listbox_page_selection</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>listbox_title</td>
+  <td>%c%</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id=listbox_page_selection</td>
+  <td>3 of 91</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>id=listbox_page_selection</td>
+  <td>20</td>
+</tr>
+</tal:block>
+
+
+<tr>
+  <td>assertValue</td>
+  <td>listbox_title</td>
+  <td>%c%</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//*[@class='listbox-data-line-0 DataA']//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>id=dialog_submit_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name="field_my_foo_big_category_title"][@value!=""]</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

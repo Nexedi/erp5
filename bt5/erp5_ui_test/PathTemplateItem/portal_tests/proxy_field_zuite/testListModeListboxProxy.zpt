@@ -1,0 +1,134 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test List Mode Listbox proxy (expected failure)</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test List Mode Listbox Proxy (expected failure)</td></tr>
+</thead><tbody>
+<!-- XXX listbox_title is not displayed in mobile mode
+     So this test is skipped -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewListBoxProxyField</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td></td>
+</tr>
+
+<!-- editable fields are here -->
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]/input</td>
+  <td></td>
+</tr>
+
+<!-- proxyfield should retrieve TALES recursively -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[6]</td>
+  <td>a constant of forty-two is still the answer</td>
+</tr>
+
+<!-- Search row is here -->
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>listbox_title</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>listbox_title</td>
+  <td>Title 0</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>listbox_title</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>listbox_start_date</td>
+  <td>2009/01/01</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+</tal:block>
+
+</tbody></table>
+</body>
+</html>

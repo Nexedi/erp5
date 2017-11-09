@@ -1,0 +1,401 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test ListBox Redirections</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test ListBox Redirections</td></tr>
+</thead><tbody>
+<!-- XXX Report tree mode doesn't exists in mobile
+     So this test is skipped in mobile ui tests-->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+
+<!--
+  === PART 0 ===
+  Initialize the test.
+-->
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+
+<!--
+  === PART 1 ===
+  Test which cover bug #372 (Wrong redirect after listbox sort).
+    1. Go to a listbox in an alternate view (= not the default view).
+    2. Sort listbox lines by title.
+    3. Test that we are redirected to the right view, not the default.
+-->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.id:asc']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]/span</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/setSelectionQuickSortOrder?selection_name=foo_line_selection&amp;sort_on=title&amp;form_id=Foo_viewRelationField</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0/setSelectionQuickSortOrder*" />
+  <td></td>
+</tr>
+
+
+<!--
+  === PART 2 ===
+  Test which cover bug #497 (Page Flicker in Listbox is not tested against redirection).
+    0. Create 10 sublines.
+    1. Go to a listbox in an alternate view (= not the default view).
+    2. Go to next page.
+    3. Test that we are redirected to the right view, not the default.
+    4. Go to last page.
+    5. Test that we are redirected to the right view, not the default.
+    6. Go to previous page.
+    7. Test that we are redirected to the right view, not the default.
+    8. Go to first page.
+    9. Test that we are redirected to the right view, not the default.
+-->
+<!-- Create sublines -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_createObjects</td>
+  <td></td>
+</tr>
+<!-- Go to next and verify -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]//input[@type="text"]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[1]//input[@type="text"]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[1]//input[@type="text"]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0" />
+  <td></td>
+</tr>
+<!-- Go to last and verify -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]//input[@type="text"]</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[1]//input[@type="text"]</td>
+  <td>4</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[1]//input[@type="text"]</td>
+  <td>5</td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>4</td>
+</tr>
+<tr>
+  <td>keyPressAndWait</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>\13</td>
+</tr>
+<tr>
+  <td>verifyAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0" />
+  <td></td>
+</tr>
+<!-- Go to previous and verify -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>4</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]//input[@type="text"]</td>
+  <td>9</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0" />
+  <td></td>
+</tr>
+<!-- Go to first and verify -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]//input[@type="text"]</td>
+  <td>6</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[1]//input[@type="text"]</td>
+  <td>7</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[1]//input[@type="text"]</td>
+  <td>8</td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>keyPressAndWait</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>\13</td>
+</tr>
+<tr>
+  <td>verifyAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0" />
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]//input[@type="text"]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[1]//input[@type="text"]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[1]//input[@type="text"]</td>
+  <td>2</td>
+</tr>
+
+
+<!--
+  === PART 3 ===
+  Test which cover bug #206 (Redirection when changing the listbox display mode are broken in view mode).
+    1. Enable multiple display mode on listbox of an alternate view (= not the default view).
+    2. Go to the alternative view.
+    3. Change listbox display mode.
+    4. Test that we are redirected to the right view, not the default.
+-->
+<!-- START of code strongly inspired by (to not said "copied from") listbox_zuite/testDomainTree test.
+           Don't forget to update the code below if listbox_zuite/testDomainTree change. -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewRelationField/listbox/ListBox_setPropertyList?field_domain_tree=checked;field_domain_root_list=foo_category%7CFoo%20Category</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-tree-domain-tree-mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>domain_root_url</td>
+  <td>Foo Category</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-closed"]</td>
+  <td>a</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>
+  <td>b</td>
+</tr>
+<!-- Click on "+ a" link -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-closed"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>domain_root_url</td>
+  <td>Foo Category</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-open"]</td>
+  <td>a</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>
+  <td>a1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[3]//button[@class="tree-closed"]</td>
+  <td>a2</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[@class="listbox-table-domain-tree"]//tr[4]//button[@class="tree-closed"]</td>
+  <td>b</td>
+</tr>
+<!-- END of inspired code -->
+<tr>
+  <td>verifyAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0" />
+  <td></td>
+</tr>
+</tal:block>
+
+
+</tbody>
+</table>
+</body>
+</html>

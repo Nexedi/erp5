@@ -1,0 +1,50 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Drop Down List Action when Nothing is Selected</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Drop Down List Action when Nothing is
+Selected</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/1</td>
+  <td></td>
+</tr>
+<!-- when clicking on the action button of a drop down when nothing is selected
+shouldn't do anything. -->
+<tal:block tal:repeat="button_title python:['Select Favourite',
+                                            'Select Module',
+                                            'Select Language',
+                                            'Jump',
+                                            'Action']">
+  <tr>
+    <td>click</td>
+    <td tal:content="string://button[@title='${button_title}']"/>
+    <td></td>
+  </tr>
+  <!-- FIXME: we cannot use clickAndWait in the previous action, because if no
+  redirection occurs, selenium hangs... -->
+  <tr>
+    <td>pause</td>
+    <td>1000</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertAbsoluteLocation</td>
+    <td>${base_url}/foo_module/1</td>
+    <td/>
+  </tr>
+  <tr>
+    <td>assertTextNotPresent</td>
+    <td>Site Error</td>
+    <td/>
+  </tr>
+</tal:block>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test checked uids</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test checked uids</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_types/Foo Module/PortalType_addAction?id=test_action&amp;name=Dummy Action&amp;category=object_action&amp;action=string:%24{object_url}/ListBoxZuite_getSelectionCheckedUidsAsHtml</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<!-- If the list is filtered when invoking an action from object_action, the
+selection's checked uids are set to the uids of the filtered objects. -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_filter:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_filter:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Dummy Action</td>
+</tr>
+<tr>
+  <td>assertTitle</td>
+  <td>len(checked_uids) == 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[1]/td[2]</td>
+  <td>1</td>
+</tr>
+
+<!-- If selection is not in filtered mode, when selection an action from
+object_action, selection checked uids will be updated to the list of selected
+uids.
+-->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Dummy Action</td>
+</tr>
+<tr>
+  <td>assertTitle</td>
+  <td>len(checked_uids) == 2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[1]/td[2]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[2]/td[2]</td>
+  <td>2</td>
+</tr>
+
+<!-- paranoia. Select some uids, filter, unselect some uids and check we
+only have selected uids.
+-->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_filter:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <!-- unselect 1 -->
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Dummy Action</td>
+</tr>
+<tr>
+  <td>assertTitle</td>
+  <td>len(checked_uids) == 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[1]/td[2]</td>
+  <td>2</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

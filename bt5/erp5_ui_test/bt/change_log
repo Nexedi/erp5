@@ -1,0 +1,158 @@
+2014-06-13 tatuya
+* Add a test for folder workflow with a no dialog transition.
+
+2010-06-07 yusei
+* Remove short title.
+
+2009-09-07 yusuke
+* Replace ERP5Report to ERP5Form and ReportBox
+
+2009-08-25 Mohamadou
+* Refactor erp_ui_test to reduce "If mobile" statments.
+
+2009-08-20 Mohamadou
+* Skip business_template_zuite in mobile ui tests.
+
+2009-04-30 Tatuya
+* add a field 'row_css_method' according as the Listbox.
+
+2009-03-24
+* add proxy role to Base_clearCache because worklist are cached.
+
+2009-03-19 Mohamadou
+* add functional tests for erp5_ooo_import .
+
+2008-10-01 fabien
+* redefine Selenium.prototype.doType function in user-extensions.js. This is made to be able to test file upload.
+* move all things used by other ui_test in erp5_ui_test_core framework
+
+2008-08-29 yusei
+* Replace N_ with translateString.
+
+2008-06-17 rafael
+* Access Tab has your own scripts to handle preference.
+
+2008-06-16 jerome
+* Stop calling BTZuite_setPreference in test and add a docstring to explain its purpose.
+
+2008-06-16 yusei
+* Update listbox_zuite/testRedirect for recent changes of domain tree rendering.
+
+2008-06-13 kazuhiko
+* modify tests according to the changes of domain tree rendering.
+
+2008-06-10 nicolas
+* test custom Relation Form Dialog
+
+2008-05-14 rafael
+* Initial zuite for access tab
+
+2008-05-13 jerome
+* Initial zuite for matrixbox
+
+2008-02-22 jerome
+* Add Zuite_setBaseUrl script which will be called before tests by test runner to set the erp5_ui_test_base_url property, and uses this in templates instead of portal ID.
+
+2008-02-21 kazuhiko
+* Add lines_field_zuite.
+
+2007-10-30 yo
+* Set pricing_interaction_workflow to Foo Line.
+
+2007-10-09 Fabien
+* add setPreferredListboxListModeLineCount(10) to ListBoxZuite_reset to diplay the correct lines number
+
+2007-10-02 Yusei
+* Fix planingbox test name.
+
+2007-09-04 Kazuhiko
+* use portal_url.getPortalObject().absolute_url() instead of portal_url.getPortalPath() for better virtual host support.
+
+2007-02-13 rafael
+* Add planningbox_field_zuite.
+
+2007-02-13 yo
+* Add datetime_field_zuite.
+
+2006-12-12 yo
+* Add integer_field_zuite.
+
+2006-11-13 Seb
+* Add testWorklist
+
+2006-11-09 yo
+* Add testReportTreeWithStatMethod.
+
+2006-11-07 Kevin
+* New listbox redirection tests.
+
+2006-11-02 aurel
+* Call sleep while waiting for activities thus we  reduce cpu and mysql usage to let activities run
+
+2006-09-15 Kevin
+* Add new test to check that redirections triggered by the listbox are ok.
+
+2006-09-09 jerome
+* Add a form that shows a multi relation field and a relation field for Foo.
+* A few more tests for relation fields.
+
+2006-09-08 Seb
+* Define a new variable so we can user ${base_url} instead of /erp5/
+
+2006-08-14 jerome
+* More tests for workflow transitions / dialog forms
+* Tests for Prev / Next button from selection
+
+2006-08-12 jerome
+* Add foo_workflow for Foo objects
+* Add tests for passing workflow transitions
+
+2006-08-02 yo
+* Check for an empty report tree.
+
+2006-07-31 chris
+* Added tests for dependency handling in usiness template install
+
+2006-07-31 jerome
+* Add a new suite "relation_field_zuite"
+* Add checkPortalStatusMessage to user-extensions.js
+
+2006-07-27 yo
+* Add a new suite "check_box_field_zuite".
+* Add my_frozen to Foo_view.
+
+2006-07-26 Kevin
+* Test form_dialog Action List Rendering.
+* Extract PortalType_addAction delete part to new PortalType_deleteAction script.
+
+2006-07-26 yo
+* Test a validation error with an editable float field in a listbox.
+
+2006-07-26 yo
+* Add a new suite "document_zuite".
+
+2006-07-19 yo
+* Fix testReportTree, since the default is "Hide" but not "Show" in report tree mode.
+* Add testDynamicReportTree which tests dynamically generated domains with report tree mode.
+
+2006-07-19 jerome
+* add user-extension.js for Selenium extensions
+
+2006-07-18 yo
+* Add a test for listbox with dynamically generated domains.
+
+2006-07-17 jerome
+* Added incomplete tests suite for page templates. For now, only checks that page templates use actions slots correctly.
+
+2006-07-17 yo
+* Add testMetaTypes.
+
+2006-07-12 yo
+* Do not reset selections if not present in ListBoxZuite_reset.
+* Accept keyword parameters in ListBox_setPropertyList.
+
+2006-07-12 yo
+* Add missing properties to Listbox_setPropertyList.
+
+2006-06-30 yo
+* initial version

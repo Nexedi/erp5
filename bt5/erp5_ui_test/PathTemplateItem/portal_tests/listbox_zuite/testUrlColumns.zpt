@@ -1,0 +1,116 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test URL Columns</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test URL Columns</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_url_columns=id%7CFoo_getIdUrl%0Atitle%7C</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyAttribute</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]//a@href</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]//a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]//a@href</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[3]//a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyAttribute</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]//a@href</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[3]//a</td>
+  <td></td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@id="listbox_data_line_0"]/div[2]//span[@id='data_short']//a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@id="listbox_data_line_1"]/div[2]//span[@id='data_short']//a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@id="listbox_data_line_2"]/div[2]//span[@id='data_short']//a</td>
+  <td></td>
+</tr>
+</tal:block>
+
+
+</tbody></table>
+</body>
+</html>

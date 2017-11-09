@@ -1,0 +1,83 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Dialog Main</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test that the content of LinesField textarea doesn't change when sort button in sub document list is clicked</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/1/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//textarea[@name='field_my_lines_list']</td>
+  <td>foo<br/>bar</td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@value='listbox.title:desc']</td>
+  <td></td>
+</tr>
+</tal:block>
+<tr>
+  <td>assertValue</td>
+  <td>//textarea[@name='field_my_lines_list']</td>
+  <td>foo<br/>bar</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//textarea[@name='field_my_lines_list']</td>
+  <td>foo<br/>bar</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//textarea[@name='field_my_lines_list']</td>
+  <td>foo bar</td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@value='listbox.title:asc']</td>
+  <td></td>
+</tr>
+</tal:block>
+<tr>
+  <td>assertValue</td>
+  <td>//textarea[@name='field_my_lines_list']</td>
+  <td>foo bar</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//textarea[@name='field_my_lines_list']</td>
+  <td>foo bar</td>
+</tr>
+</body>
+</html>

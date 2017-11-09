@@ -1,0 +1,177 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test title</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1" tal:define="site_title python:here.getPortalObject().getTitle()">
+<thead>
+<tr><td rowspan="1" colspan="3">Test title</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_skins/erp5_ui_test/Base_createUITestLanguages"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>New Languages Added</td>
+  <td></td>
+</tr>
+<tal:block tal:repeat="param_dict python: [
+  {'message': 'Foo', 'translation': 'Woo', 'language': 'wo', 'catalog_id': 'erp5_ui'},
+  {'message': 'Foos', 'translation': 'Woos', 'language': 'wo', 'catalog_id': 'erp5_ui'},
+  {'message': 'Dummy Workflow Action', 'translation': 'Muumu Workflow Action', 'language': 'wo', 'catalog_id': 'erp5_ui'},
+  {'message': 'History', 'translation': 'Leeb', 'language': 'wo', 'catalog_id': 'erp5_ui'},
+  {'message': 'Business Template Definition', 'translation': 'Afeer Template Definition', 'language': 'wo', 'catalog_id': 'erp5_ui'},
+]">
+  <tr tal:define="dummy python: param_dict.update({'root': here.portal_url()})">
+    <td>open</td>
+    <td tal:content="python: '%(root)s/portal_skins/erp5_ui_test/Base_addUITestTranslation?message=%(message)s&translation=%(translation)s&language=%(language)s&catalog_id=%(catalog_id)s' % param_dict"></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertTextPresent</td>
+    <td tal:content="python: 'Translation of %(message)s updated' % param_dict"/>
+    <td></td>
+  </tr>
+</tal:block>
+
+<tal:block tal:repeat="language python:[
+  ('', {
+    'view': 'Foo',
+    'list': 'Foos',
+    'dialog': 'Dummy Workflow Action',
+    'report': 'History',
+    'quad': 'Business Template Definition',
+  }),
+  ('wo', {
+    'view': 'Woo',
+    'list': 'Woos',
+    'dialog': 'Muumu Workflow Action',
+    'report': 'Leeb',
+    'quad': 'Afeer Template Definition',
+  }),
+]">
+
+<!-- View mode: title of the form - title of the object -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>selectAndWait</td>
+  <td>select_language</td>
+  <td tal:content="python: 'value=%s' % (language[0], )"/>
+</tr>
+
+<tr>
+  <td>verifyTitle</td>
+  <td tal:content="python:'%s - Title 0 | %s' % (language[1]['view'], site_title)"/>
+  <td></td>
+</tr>
+
+
+<!-- List mode: title of the form -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTitle</td>
+  <td tal:content="python:'%s | %s' % (language[1]['list'], site_title)"/>
+  <td></td>
+</tr>
+
+<!-- Dialog mode: title of the form -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td tal:content="python: language[1]['dialog']"/>
+</tr>
+<tr>
+  <td>verifyTitle</td>
+  <td tal:content="python:'%s | %s' % (language[1]['dialog'], site_title)"/>
+  <td></td>
+</tr>
+
+<!-- Report view mode: title of the form - title of the object -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Base_viewHistory</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTitle</td>
+  <td tal:content="python:'%s - Title 0 | %s' % (language[1]['report'], site_title)"/>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/BusinessTemplate_view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTitle</td>
+  <td tal:content="python:'%s - Title 0 | %s' % (language[1]['quad'], site_title)"/>
+  <td></td>
+</tr>
+</tal:block>
+
+<!-- portal: title of the portal -->
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTitle</td>
+  <td tal:content="python:'ERP5 | %s' % site_title">ERP5 | ERP5</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_language</td>
+  <td>label=English</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

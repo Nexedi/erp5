@@ -1,0 +1,257 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Custom Sort</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Custom Sort<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<!-- XXX bug compatibility; all_columns are used for sortable columns. -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_sort_columns=id%0Atitle;field_all_columns=id%0Atitle</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<!-- List cannot be sorted using the title link
+     So this part is skipped -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@class="sort-button sort-button-arrow sort-button-asc-not-selected"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@class="sort-button sort-button-arrow sort-button-desc-not-selected"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[3]/button/img[@class="sort-button sort-button-arrow sort-button-asc-not-selected"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[4]/button/img[@class="sort-button sort-button-arrow sort-button-asc-not-selected"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[4]/button/img[@class="sort-button sort-button-arrow sort-button-desc-not-selected"]</td>
+  <td></td>
+</tr>
+</tal:block>
+
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]</td>
+  <td>2</td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>
+  <td>2</td>
+</tr>
+</tal:block>
+
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+<!-- Go to the sort dialog -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Sort']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//div[@id="sort_1"]/select[@name="field_sort_on"]</td>
+  <td>id</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//div[@id="sort_1"]/select[@name="field_sort_order"]</td>
+  <td>Descending</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//div[@id="sort_2"]/select[@name="field_sort_on"]</td>
+  <td>title</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<!-- Check the result -->
+<!-- List cannot be sorted using the title link
+     So this part is skipped -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Ascending Display"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@class="sort-button sort-button-arrow sort-button-asc-not-selected"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@class="sort-button sort-button-arrow sort-button-desc-selected"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]/button/img[@title="Descending Display"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[3]/button/img[@title="Ascending Display"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[3]/button/img[@title="Descending Display"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[4]/button</td>
+  <td></td>
+</tr>
+</tal:block>
+
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td>9</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]</td>
+  <td>8</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]</td>
+  <td>7</td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>
+  <td>9</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>
+  <td>8</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_2"]//a[not(@title)]</td>
+  <td>7</td>
+</tr>
+</tal:block>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

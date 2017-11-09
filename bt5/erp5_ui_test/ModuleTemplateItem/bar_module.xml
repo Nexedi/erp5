@@ -1,0 +1,15 @@
+<module>
+ <id>bar_module</id>
+ <permission_list>
+  <permission type='tuple'>
+   <name>View</name>
+   <role>Assignee</role>
+   <role>Assignor</role>
+   <role>Associate</role>
+   <role>Auditor</role>
+   <role>Manager</role>
+  </permission>
+ </permission_list>
+ <portal_type>Bar Module</portal_type>
+ <title>Bars</title>
+</module>

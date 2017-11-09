@@ -1,0 +1,34 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test first empty line on lines field</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test first empty line on lines field</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/1/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_lines_list</td>
+  <td>javascript{"\na\nb\n"}</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertEval</td>
+  <td>this.browserbot.findElement('field_my_lines_list').value</td>
+  <td>javascript{"\na\nb\n"}</td>
+</tr>
+</body>
+</html>

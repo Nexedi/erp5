@@ -1,0 +1,46 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test install from repository dialog category propagation</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Check that the script used to reset the selection for install from repository dialog transmits correctly the dialog_category.</td></tr>
+</thead><tbody>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>open</td>
+  <td tal:content="here/portal_url"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_favorite</td>
+  <td>label=Manage Business Templates</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title="Import / Export"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name='dialog_category' and @value='object_exchange']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>dialog_selector</td>
+  <td>label=Install Business Templates from Repositories</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name='dialog_category' and @value='object_exchange']</td>
+  <td></td>
+</tr>
+</tal:block>
+</tbody></table>
+</body>
+</html>

@@ -1,0 +1,479 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Filter</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Filter</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<!-- Checked rows must be remembered -->
+<tr>
+  <td>click</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<!-- Filter on the second page -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_filter:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//a[not(@title)]</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]</td>
+  <td></td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//input[@class="listbox_set_page"]</td>
+  <td></td>
+</tr>
+</tal:block>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<!-- Sort by id -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.id:asc']</td>
+<!--  <td>link=ID</td> -->
+  <td></td>
+</tr>
+</tal:block>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//a[not(@title)]</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]</td>
+  <td></td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>clickAndWait</td>
+    <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.id:desc']</td>
+<!--  <td>link=ID</td> -->
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//a[not(@title)]</td>
+  <td>0</td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_1"]//a[not(@title)]</td>
+  <td>3</td>
+</tr>
+</tal:block>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+<!-- Search by id -->
+<tr>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+  <td>type</td>
+  <td>//tr[@class="listbox-search-line"]/th[2]//input</td>
+  <td>3</td>
+  </tal:block>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <td>type</td>
+  <td>//*[@id="listbox_search_line"]//div[@id='0']//input</td>
+  <td>3</td>
+  </tal:block>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//a[not(@title)]</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]</td>
+  <td></td>
+</tr>
+<!-- Reset -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+<!-- Check all -->
+<tr>
+  <td>clickAndWait</td>
+  <td>listbox_checkAll:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>listbox_checkAll:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<!-- Uncheck all -->
+<tr>
+  <td>clickAndWait</td>
+  <td>listbox_uncheckAll:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>listbox_uncheckAll:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+
+<!-- Clicking again on the filter button reset the filter, and selected items
+and search parameters are remembered -->
+<tr>
+  <td>type</td>
+  <td>listbox_title</td>
+  <td>%Title%</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_doSelect:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_filter:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-item-number"]</td>
+  <td>- 2 items selected</td>
+</tr>
+<!-- reset the filter -->
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_filter:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>10 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-item-number"]</td>
+  <td>- 2 items selected</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>listbox_title</td>
+  <td>%Title%</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

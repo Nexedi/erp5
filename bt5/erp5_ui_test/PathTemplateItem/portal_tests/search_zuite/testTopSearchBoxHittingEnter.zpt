@@ -1,0 +1,51 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Search Top Box hitting Enter</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test a search on the top box hitting enter</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_search_text</td>
+  <td>Title portal_type:Foo</td>
+</tr>
+<tr>
+  <td>keyPressAndWait</td>
+  <td>field_your_search_text</td>
+  <td>\13</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']//td[3]</td>
+  <td>Title 1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']//a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id='breadcrumb']</td>
+  <td>ERP5  / Foos  / Title 1  / </td>
+</tr>
+</tbody></table>
+</body>
+</html>

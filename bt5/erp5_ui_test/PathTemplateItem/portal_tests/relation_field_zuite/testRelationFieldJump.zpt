@@ -1,0 +1,185 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Relation Field Jump</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Relation Field Jump</td></tr>
+</thead>
+<tbody>
+<tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<!-- jump when there is exactly one relation, we jump directly to the object
+-->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Base_viewMetadata</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_category_list</td>
+  <td>bar_category/foo_module/1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//fieldset[@class='left editable']/div[4]/div/a/img[@alt="jump"]</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td>${base_url}/foo_module/1</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<!-- jump when there are more than one relation, then an intermediate listbox
+will be shown
+-->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Base_viewMetadata</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_category_list</td>
+  <td>bar_category/foo_module/0<br />bar_category/foo_module/1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//fieldset[@class='left editable']/div[4]/div/a/img[@alt="jump"]</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<!-- this is the jump listbox -->
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+
+<!-- the title of the listbox is the title of the relation field -->
+<tr>
+  <td>verifyText</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td>exact:Bar Titles</td>
+</tr>
+
+<!-- the columns are the one defined in the relation field. -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-label-line"]/th[1]</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]</td>
+  <td>Quantity</td>
+</tr>
+
+<!-- it has links to the related objects -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[1]/a</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td tal:content="string:regexp:${here/portal_url}/foo_module/1(\?|$$)"/>
+  <td></td>
+  <td></td>
+</tr>
+
+<!-- go back to the multi relation field -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>
+  <td></td>
+</tr>
+<!-- select again the jump -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//fieldset[@class='left editable']/div[4]/div/a/img[@alt="jump"]</td>
+  <td></td>
+  <td></td>
+</tr>
+<!-- do sort on the title column default sort bring Title 0 in first place-->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.title:asc']</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[1]</td>
+  <td>Title 0</td>
+</tr>
+<!-- do revert sort on the title column, it will bring Title 1 in first place-->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='setSelectionQuickSortOrder:method' and @value='listbox.title:desc']</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[1]</td>
+  <td>Title 1</td>
+</tr>
+</tbody></table>
+</body>
+</html>

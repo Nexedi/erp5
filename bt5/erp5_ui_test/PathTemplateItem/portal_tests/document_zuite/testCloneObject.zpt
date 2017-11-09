@@ -1,0 +1,142 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Add Object</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Clone Object</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<!-- First, try object creation using the "Action ..." menu -->
+<!-- from list mode -->
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/view">/erp5/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Foo</td>
+</tr>
+<!-- as the init macro create 1 Foo, we assume that our newly created foo will
+have id "2". This is probably a bit too stupid. -->
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td tal:content="string:regexp:${here/portal_url}/foo_module/2(\?|$$)" />
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Site Error</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Object created.</td>
+  <td></td>
+</tr>
+<!-- then from view mode -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Add Foo Line</td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td tal:content="string:regexp:${here/portal_url}/foo_module/2/1(\?|$$)" />
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Site Error</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Object created.</td>
+  <td></td>
+</tr>
+<!-- then from view mode, view mode doesn't create a subobject, but create
+another object of the same type. -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Clone']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/2/2/FooLine_view*" />
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Site Error</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Created Clone Foo Line.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/2/view">/erp5/foo_module/2/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=History</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="actions"]/ul/*[@class="selected"]</td>
+  <td>History</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Edit Workflow</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Clone']</td>
+  <td></td>
+</tr>
+<tr>
+  <!-- Check that clone action keep current form view on clone object -->
+  <td>assertAbsoluteLocation</td>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/3/Base_viewHistory*" />
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Site Error</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Created Clone Foo.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=History</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number x0_listbox-current-page-total-number"]</td>
+  <td>2 records</td> <!-- Creation + paste notification -->
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="x0_listbox-data-line-1 DataB"]/td[5]</td>
+  <td tal:content="string:regexp:Object copied from /.*/foo_module/2$$"/>
+</tr>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Planning Box Edition without Drag and Drop</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test PlanningBox Data Info<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody tal:define="t python:DateTime();
+                           datestring python:'%04d/%02d/%02d ' % (t.year(),t.month(), t.day())">
+<!-- Planning Box is not displayed in mobile skin
+     So this test is skipped -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_createObjects?num:int=3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_editObjectLineDates</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Modified Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@alt='Planning']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>PlanningBoxError</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//select[@name='report_root_url']</td>
+  <td>parent</td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.isElementPresent("//*[@class='planning_content']/div[@title='Title 0']")</td>
+  <td>10000</td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>SiteError</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@name='JumpToCurrentDay']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_1"]</td>
+  <td>[+] Title 0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_2"]</td>
+  <td>[+] Title 1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_3"]</td>
+  <td>[+] Title 2</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_1_activity_1_block_1"]/div[@class="planning_box_center"]</td>
+  <td>Title 0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_2_activity_1_block_1"]/div[@class="planning_box_center"]</td>
+  <td>Title 1</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@id="group_3_activity_1_block_1"]/div[@class="planning_box_center"]</td>
+  <td>Title 2</td>
+</tr>
+<!-- Simulate movement of the blocs editing directly the field-->
+<tr>
+  <td>type</td>
+  <td>//input[@name="block_moved"]</td>
+  <td>group_1_activity_1_block_1,552,266,287,267,320,72*group_2_activity_1_block_1,552,346,551,346,146,72*group_3_activity_1_block_1,552,426,769,425,215,72</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="save"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>PlanningBoxError</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/0/getStartDate</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td tal:content="string:${datestring}01:39:00"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/0/getStopDate</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td tal:content="string:${datestring}11:15:00"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/1/getStartDate</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td tal:content="string:${datestring}09:34:12"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/1/getStopDate</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td tal:content="string:${datestring}13:57:00"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/2/getStartDate</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td tal:content="string:${datestring}16:06:36"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/2/getStopDate</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td tal:content="string:${datestring}22:33:36"></td>
+  <td></td>
+</tr>
+</tal:block>
+
+</tbody></table>
+</body>
+</html>

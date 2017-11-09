@@ -1,0 +1,92 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test form_dialog Action List Rendering</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test: Folder_viewSearchDialog</td></tr>
+</thead><tbody>
+
+<!--
+  Add Folder_viewSearchDialog on the module.
+-->
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo%20Module/PortalType_deleteAction?id=generic_search">Delete Folder_viewSearchDialog action if exists.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo%20Module/PortalType_addAction?id=search2&name=generic_search&category=object_search&action=string:%24{object_url}/Folder_viewSearchDialog">Configure Folder_viewSearchDialog.</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/foo_module/view"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Foos</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Find</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_dialog</td>
+  <td>generic_search</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_title</td>
+  <td>title_value</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_id</td>
+  <td>id_value</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-search-line"]/th[2]//input</td>
+  <td>id_value</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-search-line"]/th[3]//input</td>
+  <td>title_value</td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@id="0"]//input</td>
+  <td>id_value</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@id="1"]//input</td>
+  <td>title_value</td>
+</tr>
+</tal:block>
+
+<tr>
+  <td>open</td>
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo%20Module/PortalType_deleteAction?id=generic_search">Delete Folder_viewSearchDialog action if exists.</td>
+  <td></td>
+</tr>

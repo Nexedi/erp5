@@ -1,0 +1,370 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Configure</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Configure<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<!-- XXX bug compatibility; all columns must be set explicitly -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_all_columns=id%7CID%0Atitle%7CTitle%0Adelivery.quantity%7CQuantity;field_stat_method=portal_catalog</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]</td>
+  <td>ID</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-label-line"]/th[3]</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-label-line"]/th[4]</td>
+  <td>Quantity</td>
+</tr> 
+<tr>
+  <td>verifyEditable</td>
+  <td>//tr[@class="listbox-search-line"]/th[2]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//tr[@class="listbox-search-line"]/th[3]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-search-line"]/th[4]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-search-line"]/th[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>
+  <td>Title 0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[4]</td>
+  <td>10.0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[4]</td>
+  <td></td>
+</tr>
+<!-- Go to the configure dialog -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Configure']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_1"]//select[@name="field_columns"]</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_1"]//select[@name="stat_columns"]</td>
+  <td>count</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_2"]//select[@name="field_columns"]</td>
+  <td>ID</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_2"]//select[@name="stat_columns"]</td>
+  <td>count</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_3"]//select[@name="field_columns"]</td>
+  <td>None</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<!-- Check the result -->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-label-line"]/th[2]</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-label-line"]/th[3]</td>
+  <td>ID</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//tr[@class="listbox-search-line"]/th[2]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//tr[@class="listbox-search-line"]/th[3]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-search-line"]/th[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td>Title 0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[2]</td>
+  <td>10</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[3]</td>
+  <td>10</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[4]</td>
+  <td></td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]/div[2]//span[1]</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]/div[3]//span[1]</td>
+  <td>Quantity</td>
+</tr> 
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@id="listbox_search_line"]//div[@id='0']//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@id="listbox_search_line"]//div[@id='1']//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@id="listbox_search_line"]//div[@id='2']//input</td>
+  <td></td>
+</tr>
+<!-- <tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@id="listbox_search_line"]/td[4]</td>
+  <td></td>
+</tr> -->
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]/div[2]//span[@id='data_short']</td>
+  <td>Title 0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]/div[3]//span[@id='data_short']</td>
+  <td>10.0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_stat_line"]/div[2]//span[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_stat_line"]/div[3]//span[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_stat_line"]/div[4]//span[3]</td>
+  <td></td>
+</tr>
+<!-- Go to the configure dialog -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Configure']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_1"]//select[@name="field_columns"]</td>
+  <td>ID</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_1"]//select[@name="stat_columns"]</td>
+  <td>count</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_2"]//select[@name="field_columns"]</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_2"]//select[@name="stat_columns"]</td>
+  <td>count</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_3"]//select[@name="field_columns"]</td>
+  <td>None</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+<!-- Check the result -->
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]/div[2]//span[1]</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@id="listbox_data_line_0"]/div[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@id="listbox_search_line"]//div[@id='0']//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@id="listbox_search_line"]//div[@id='1']//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@id="listbox_search_line"]//div[@id='3']//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]/div[2]//span[@id='data_short']</td>
+  <td>Title 0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]//a[not(@title)][1]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@id="listbox_data_line_0"]/div[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_stat_line"]/div[2]//span[3]</td>
+  <td>10</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_stat_line"]/div[3]//span[3]</td>
+  <td>10</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//*[@id="listbox_stat_line"]/div[4]</td>
+  <td></td>
+</tr>
+</tal:block>
+
+</tbody></table>
+</body>
+</html>

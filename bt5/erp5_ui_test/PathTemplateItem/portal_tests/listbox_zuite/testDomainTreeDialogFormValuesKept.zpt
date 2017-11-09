@@ -1,0 +1,116 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Dynamic Domain Tree</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Dynamic Domain Tree</td></tr>
+</thead><tbody>
+<!-- Domain tree are not avalaible in mobile skin 
+     So this part is skipped -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_viewListboxAsDomainTreeDialog</td>
+  <td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>setDomainTreeMode:method</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_id</td>
+	<td>test_id</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>field_your_title</td>
+	<td>test_title</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>unfoldDomain:method</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>field_your_id</td>
+	<td>test_id</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>field_your_title</td>
+	<td>test_title</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>foldDomain:method</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>field_your_id</td>
+	<td>test_id</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>field_your_title</td>
+	<td>test_title</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>document.forms[0].elements['unfoldDomain:method'][1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>field_your_id</td>
+	<td>test_id</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>field_your_title</td>
+	<td>test_title</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>foldDomain:method</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>listbox_nextPage:method</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>field_your_id</td>
+	<td>test_id</td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>field_your_title</td>
+	<td>test_title</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>listbox_firstPage:method</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>setFlatListMode:method</td>
+	<td></td>
+</tr>
+
+</tal:block>
+</tbody></table>
+</body>
+</html>

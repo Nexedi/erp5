@@ -1,0 +1,758 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test View Mode</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test View Mode<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_createObjects?num:int=15</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>Title 0</td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td>Foo Lines</td>
+</tr>
+</tal:block>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>15 records</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//span[@class="listbox-current-item-number"]</td>
+  <td></td>
+</tr>
+<!-- 
+  To check page number use ListBoxZuite_CommonTemplate/macros/checkCurrentPage to reduce 
+  "if TestTool_getSkinName()!='Mobile'" statements
+  - prefix is gives the prefix of the id of the element containing the page number
+  - set_page the number of the page
+  - lines_per_page is used in mobile because there isn't "listbox_set_page" element
+-->
+<tal:block tal:define="prefix string:listbox; 
+                       set_page python:1;
+                       lines_per_pages python:3">
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />
+</tal:block>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//input[@class="listbox-tree-flat-list-mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//input[@class="listbox-tree-domain-tree-mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//input[@class="listbox-tree-report-tree-mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="text"][1]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="text"][1]</td>
+  <td></td>
+</tr>
+<tr>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]//input[@type="text"]</td>
+  <td>Title 0</td> 
+  </tal:block>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <td>verifyValue</td>
+  <td>//*[@id="listbox_data_line_0"]//div[@id="listbox_0data1"]//input[@type="text"]</td>
+  <td>Title 0</td>   
+  </tal:block>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="text"][2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="text"][1]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="text"][1]</td>
+  <td></td>
+</tr>
+<tr>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]//input[@type="text"]</td>
+  <td>Title 1</td> 
+  </tal:block>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <td>verifyValue</td>
+  <td>//*[@id="listbox_data_line_1"]//div[@id="listbox_1data1"]//input[@type="text"]</td>
+  <td>Title 1</td>   
+  </tal:block>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="text"][2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="text"][1]</td>
+  <td>10</td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="text"][1]</td>
+  <td></td>
+</tr>
+<tr>
+ <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]//input[@type="text"]</td>
+  <td>Title 10</td>
+  </tal:block>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <td>verifyValue</td>
+  <td>//*[@id="listbox_data_line_2"]//div[@id="listbox_2data1"]//input[@type="text"]</td>
+  <td>Title 10</td>
+  </tal:block>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="text"][2]</td>
+  <td></td>
+</tr>
+<!-- Go to next page -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="prefix string:listbox; 
+                       set_page python:2;
+                       lines_per_pages python:3">
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />
+</tal:block>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="text"][1]</td>
+  <td>11</td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="text"][1]</td>
+  <td></td>
+</tr>
+<tr>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]//input[@type="text"]</td>
+  <td>Title 11</td>
+  </tal:block>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <td>verifyValue</td>
+  <td>//*[@id="listbox_data_line_0"]//div[@id="listbox_0data1"]//input[@type="text"]</td>
+  <td>Title 11</td>
+  </tal:block>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="text"][2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="text"][1]</td>
+  <td>12</td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="text"][1]</td>
+  <td></td>
+</tr>
+<tr>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]//input[@type="text"]</td>
+  <td>Title 12</td>
+  </tal:block>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <td>verifyValue</td>
+  <td>//*[@id="listbox_data_line_1"]//div[@id="listbox_1data1"]//input[@type="text"]</td>
+  <td>Title 12</td>
+  </tal:block>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="text"][2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="text"][1]</td>
+  <td>13</td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="text"][1]</td>
+  <td></td>
+</tr>
+<tr>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]//input[@type="text"]</td>
+  <td>Title 13</td>
+  </tal:block>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <td>verifyValue</td>
+  <td>//*[@id="listbox_data_line_2"]//div[@id="listbox_2data1"]//input[@type="text"]</td>
+  <td>Title 13</td>
+  </tal:block>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="text"][2]</td>
+  <td></td>
+</tr>
+<!-- Edit some values -->
+<tr>
+  <td>type</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="text"][1]</td>
+  <td>111</td>
+</tr>
+<tr>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+  <td>type</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]//input[@type="text"]</td>
+  <td>Another Title 11</td>
+  </tal:block>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <td>type</td>
+  <td>//*[@id="listbox_data_line_0"]//div[@id="listbox_0data1"]//input[@type="text"]</td>
+  <td>Another Title 11</td>
+  </tal:block>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="text"][1]</td>
+  <td>9999999</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="prefix string:listbox; 
+                       set_page python:2;
+                       lines_per_pages python:3">
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />
+</tal:block>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="text"][1]</td>
+  <td>111</td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="text"][1]</td>
+  <td></td>
+</tr>
+<tr>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]//input[@type="text"]</td>
+  <td>Another Title 11</td>
+  </tal:block>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <td>verifyValue</td>
+  <td>//*[@id="listbox_data_line_0"]//div[@id="listbox_0data1"]//input[@type="text"]</td>
+  <td>Another Title 11</td>
+  </tal:block>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="text"][2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="text"][1]</td>
+  <td>13</td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="text"][1]</td>
+  <td></td>
+</tr>
+<tr>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]//input[@type="text"]</td>
+  <td>Title 13</td>
+  </tal:block>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <td>verifyValue</td>
+  <td>//*[@id="listbox_data_line_1"]//div[@id="listbox_1data1"]//input[@type="text"]</td>
+  <td>Title 13</td>
+  </tal:block>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="text"][2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="text"][1]</td>
+  <td>14</td>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="text"][1]</td>
+  <td></td>
+</tr>
+<tr>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]//input[@type="text"]</td>
+  <td>Title 14</td>
+  </tal:block>
+  <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <td>verifyValue</td>
+  <td>//*[@id="listbox_data_line_2"]//div[@id="listbox_2data1"]//input[@type="text"]</td>
+  <td>Title 14</td>
+  </tal:block>
+</tr>
+<tr>
+  <td>verifyEditable</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="text"][2]</td>
+  <td></td>
+</tr>
+
+<!-- Check validation error messages. -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>type</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]//input[@type="text"]</td>
+  <td>abc</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[4]/input[1]</td>
+  <td>yyyy</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[4]/input[2]</td>
+  <td>mm</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]/td[4]/input[3]</td>
+  <td>dd</td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>type</td>
+  <td>//*[@id="listbox_data_line_0"]//div[@id="listbox_0data2"]//input[@type="text"]</td>
+  <td>abc</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//*[@id='listbox_data_line_1']//div[@id="listbox_1data3"]//input[1]</td>
+  <td>yyyy</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//*[@id='listbox_data_line_1']//div[@id="listbox_1data3"]//input[2]</td>
+  <td>mm</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//*[@id='listbox_data_line_1']//div[@id="listbox_1data3"]//input[3]</td>
+  <td>dd</td>
+</tr>
+</tal:block>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]//input[@type="text"]</td>
+  <td>abc</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>
+  <td>*You did not enter a floating point*</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[4]/input[1]</td>
+  <td>yyyy</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[4]/input[2]</td>
+  <td>mm</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[4]/input[3]</td>
+  <td>dd</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[4]</td>
+  <td>*You did not enter a valid date and time.*</td>
+</tr>
+
+<!-- cleanup and save not to trigger unbefore unload -->
+<tr>
+  <td>type</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]//input[@type="text"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[4]/input[1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[4]/input[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]/td[4]/input[3]</td>
+  <td></td>
+</tr>
+</tal:block>
+
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@id="listbox_data_line_0"]//div[@id="listbox_0data2"]//input[@type="text"]</td>
+  <td>abc</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_data_line_0"]//div[@id="listbox_0data2"]//span[@class="error"]</td>
+  <td>*You did not enter a floating point*</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@id='listbox_data_line_1']//div[@id="listbox_1data3"]//input[1]</td>
+  <td>yyyy</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@id='listbox_data_line_1']//div[@id="listbox_1data3"]//input[2]</td>
+  <td>mm</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@id='listbox_data_line_1']//div[@id="listbox_1data3"]//input[3]</td>
+  <td>dd</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@id='listbox_data_line_1']//div[@id="listbox_1data3"]//span[@class="error"]</td>
+  <td>*You did not enter a valid date and time.*</td>
+</tr>
+<!-- cleanup and save not to trigger unbefore unload -->
+<tr>
+  <td>type</td>
+  <td>//*[@id="listbox_data_line_0"]//div[@id="listbox_0data2"]//input[@type="text"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//*[@id='listbox_data_line_1']//div[@id="listbox_1data3"]//input[1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//*[@id='listbox_data_line_1']//div[@id="listbox_1data3"]//input[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//*[@id='listbox_data_line_1']//div[@id="listbox_1data3"]//input[3]</td>
+  <td></td>
+</tr>
+</tal:block>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+
+<!-- Test show listbox of a form in "view" mode -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Base_viewListMode?proxy_form_id=Foo_view&amp;proxy_field_id=listbox&amp;proxy_field_selection_name=foo_line_selection</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="ID"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Quantity"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Date"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyText</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td>Foo Lines</td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="ID"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Quantity"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Date"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="text"][1]</td>
+  <td>6</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Base_viewListMode?proxy_form_id=Foo_viewWithListModeRenderer&amp;proxy_field_id=listbox&amp;proxy_field_selection_name=Foo_viewWithListModeRenderer_listbox_selection&amp;reset=1&amp;ignore_layout:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="ID"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Quantity"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Date"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyText</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td>Foo Lines</td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="ID"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Quantity"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-label-line"]/th/span[normalize-space(.)="Date"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="text"][1]</td>
+  <td>6</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_previous_page"]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

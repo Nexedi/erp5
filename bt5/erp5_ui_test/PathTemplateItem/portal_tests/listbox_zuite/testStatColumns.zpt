@@ -1,0 +1,111 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Stat Columns</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Stat Columns</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_columns=id%7CFooModule_statId%0Atitle%7CFooModule_statTitle;field_stat_method=portal_catalog</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[2]</td>
+  <td>foo_module</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[3]</td>
+  <td>Foos</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[4]</td>
+  <td></td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox_stat_line listbox-stat-line"]/div[2]//span[3]</td>
+  <td>foo_module</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//*[@class="listbox_stat_line listbox-stat-line"]/div[3]//span[3]</td>
+  <td>Foos</td>
+</tr>
+</tal:block>
+
+<!-- view mode with editable field -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/view</td>
+  <td></td>
+</tr>
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox_stat_line listbox-stat-line"]/td[3]</td>
+  <td>1 234.5</td>
+</tr>
+</tal:block>
+<tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
+  <tr>
+  <td>verifyText</td>
+  <td>//*[@id="listbox_stat_line"]/div[3]//span[3]</td>
+  <td>1 234.5</td>
+</tr>
+</tal:block>
+
+</tbody></table>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Dynamic Report Tree</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Dynamic Report Tree</td></tr>
+</thead><tbody>
+<!-- Domain tree are not avalaible in mobile skin 
+     So this part is skipped -->
+<tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_report_tree=checked;field_report_root_list=foo_domain%7CFoo%20Domain</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>report_root_url</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-tree-report-tree-mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>report_root_url</td>
+  <td>Foo Domain</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-label-line"]/th[1]</td>
+  <td>Foo Domain</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-label-line"]/th[3]</td>
+  <td>ID</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-label-line"]/th[4]</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-label-line"]/th[5]</td>
+  <td>Quantity</td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>4</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Hide</td>
+  <td></td>
+</tr>
+<!-- Click on Hide -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Hide</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>4</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Show</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]/a[@class="tree-closed"]</td>
+  <td>a</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[1]/a[@class="tree-closed"]</td>
+  <td>b</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<!-- Click on + a -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>report_root_url</td>
+  <td>Foo Domain</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]/a[@class="tree-open"]</td>
+  <td>a</td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[3]</td>
+  <td>4</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[3]</td>
+  <td>8</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>6 records</td>
+</tr>
+<!-- Go to next page -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>report_root_url</td>
+  <td>Foo Domain</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]/a[@class="tree-closed"]</td>
+  <td>a1</td>
+</tr>
+<!--<tr> 
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]/input</td>
+  <td></td>
+  <td>it exists actually</td>
+</tr>-->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[1]/a[@class="tree-closed"]</td>
+  <td>a2</td>
+</tr>
+<!--<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]/input</td>
+  <td></td>
+  <td>it exists actually</td>
+</tr>-->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[1]/a[@class="tree-closed"]</td>
+  <td>b</td>
+</tr>
+<!--<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]/input</td>
+  <td></td>
+  <td>it exists actually</td>
+</tr>-->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>6 records</td>
+</tr>
+<!-- Show all the 1st level -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>report_root_url</td>
+  <td>Foo Domain</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]/a[@class="tree-closed"]</td>
+  <td>a1</td>
+</tr>
+<!--<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]/input</td>
+  <td></td>
+  <td> it exists actually</td>
+</tr>-->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[1]/a[@class="tree-closed"]</td>
+  <td>a2</td>
+</tr>
+<!--<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]/input</td>
+  <td></td>
+  <td> it exists actually</td>
+</tr>-->
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[1]/a[@class="tree-open"]</td>
+  <td>b</td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[3]</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-3 DataB"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>8 records</td>
+</tr>
+<!-- Go to next page -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="listbox_next_page"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>report_root_url</td>
+  <td>Foo Domain</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[3]</td>
+  <td>5</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[3]</td>
+  <td>9</td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//tr[@class="listbox-data-line-2 DataA"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>8 records</td>
+</tr>
+<!-- Still very far from complete. Show/Hide should be tested, closing a tree should be tested, sorting should be tested. -->
+</tal:block>
+</tbody></table>
+</body>
+</html>

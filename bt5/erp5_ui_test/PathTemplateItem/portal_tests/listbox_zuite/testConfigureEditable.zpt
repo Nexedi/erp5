@@ -1,0 +1,87 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Configure and editable fields</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Configure and editable fields<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody>
+<!-- Configure listbox to unselect an editable field and make sure we can still edit the listbox. -->
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?create_line=1</td>
+  <td></td>
+  <td>Create a new object</td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewListBoxProxyField</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@class="listbox_title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[@title='Configure']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//tr[@id="column_3"]//select[@name="field_columns"]</td>
+  <td>None</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0/Foo_viewListBoxProxyField</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]/input[@type="text"]</td>
+  <td>New Title</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name='Base_edit:method']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]/input[@type="text"]</td>
+  <td>New Title</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+
+</body>
+</html>

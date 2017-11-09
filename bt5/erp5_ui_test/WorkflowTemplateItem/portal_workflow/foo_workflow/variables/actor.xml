@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="VariableDefinition" module="Products.DCWorkflow.Variables"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_expr</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_value</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The name of the user who performed the last transition</string> </value>
+        </item>
+        <item>
+            <key> <string>for_catalog</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>for_status</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>actor</string> </value>
+        </item>
+        <item>
+            <key> <string>info_guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>update_always</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <tuple>
+          <string>Products.CMFCore.Expression</string>
+          <string>Expression</string>
+        </tuple>
+        <none/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>user/getIdOrUserName</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
