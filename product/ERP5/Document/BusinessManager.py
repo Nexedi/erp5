@@ -1174,7 +1174,7 @@ class BusinessPatchItem(XMLObject):
     Override _edit to create Business Item and BusinessPropertyItem for old and
     new value
     """
-    dependency_list = kw.get('dependency_list', [])
+    dependency_list = kw.get('dependency_list', self.getProperty('dependency_list'))
 
     # Raise error if no dependency_list, this way we ensure there are no useless
     # patch_item objects
