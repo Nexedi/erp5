@@ -50,6 +50,13 @@
         });
     })
 
+    .declareMethod('checkValidity', function () {
+      return this.getDeclaredGadget('sub')
+        .push(function (subgadget) {
+          return subgadget.checkValidity();
+        });
+    })
+
     .declareMethod('getContent', function () {
       if (this.state.editable) {
         return this.getDeclaredGadget('sub')
