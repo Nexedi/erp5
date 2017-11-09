@@ -25,12 +25,7 @@
     <td>a
 b
 </td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//button[@data-i18n='Save']</td><td></td></tr>
-<tr><td>click</td>
-    <td>//button[@data-i18n='Save']</td><td></td></tr>
-<tr><td>waitForTextPresent</td>
-    <td>Data updated.</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 <!-- Force unloading of Form and its content from the memory by going back -->
 <tr><td>click</td>
     <td>//div[@data-role='header']//h1/a</td><td></td></tr>
@@ -46,5 +41,18 @@ b
     <td>a
 b
 </td></tr>
+
+<tr><td>click</td>
+    <td>//button[@name='panel']</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_panel.html"]//input[@name='editable' and @type='checkbox']</td><td></td></tr>
+<tr><td>click</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_panel.html"]//input[@name='editable' and @type='checkbox']</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_lines.html"]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/pre</td><td></td></tr>
+<tr><td>assertText</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_lines.html"]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/pre</td>
+    <td>a
+b</td></tr>
 </body>
 </html>
