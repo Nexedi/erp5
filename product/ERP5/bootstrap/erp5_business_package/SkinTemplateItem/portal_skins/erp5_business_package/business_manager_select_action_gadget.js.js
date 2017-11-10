@@ -59,6 +59,11 @@
       subid,
       node;
 
+    // checked_list should be an empty array if it is undefined
+    if (!checked_list) {
+      checked_list = [];
+    }
+
     if (tree.hasOwnProperty('sub')) {
       for (key in tree.sub) {
         if (tree.sub.hasOwnProperty(key)) {
@@ -70,7 +75,7 @@
             node['data-path'] = tree.sub[key].path;
             // If the path is in checked_list, put checked to True so that we
             // can update it in HTML directly
-            if (id in checked_list) {
+            if (key in checked_list) {
               node['data-checked'] = true;
             }
           }
