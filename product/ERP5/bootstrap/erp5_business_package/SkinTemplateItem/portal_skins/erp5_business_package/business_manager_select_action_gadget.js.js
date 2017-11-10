@@ -52,7 +52,7 @@
     return tree;
   }
 
-  function buildTreeHTML(id, tree) {
+  function buildTreeHTML(id, tree, checked_list) {
     var html = '',
       key,
       node_list = [],
@@ -68,6 +68,11 @@
             // class is a reserved keyword
             node['class'] = tree.sub[key].value;
             node['data-path'] = tree.sub[key].path;
+            // If the path is in checked_list, put checked to True so that we
+            // can update it in HTML directly
+            if (id in checked_list) {
+              node['data-checked'] = true;
+            }
           }
           else {
             node['class'] = 'Unchanged';
@@ -87,7 +92,11 @@
 
     .declareMethod('render', function (options) {
       var item_path_list = JSON.parse(options.couscous),
-        html_tree = buildTreeHTML('tree', convertPathListToTree(item_path_list)),
+        checked_list = JSON.parse(options.value).map(
+          function(element) {return element[0];}
+          ),
+        html_tree = buildTreeHTML('tree', convertPathListToTree(item_path_list,
+                                  checked_list)),
         state_dict = {
           key: options.key,
           value: options.value,
