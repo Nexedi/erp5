@@ -10,6 +10,7 @@ var global = self, window = self;
   self.localStorage = {};
   self.openDatabase = {};
   self.DOMError = {};
+  self.Node = {};
   self.postMessage = function () {return; };
 
   self.importScripts('app/rsvp.js', 'app/jiodev.js');
