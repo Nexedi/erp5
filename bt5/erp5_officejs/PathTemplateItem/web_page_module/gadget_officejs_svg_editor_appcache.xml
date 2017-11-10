@@ -352,6 +352,7 @@ method-draw/method-draw.compiled.css\n
 method-draw/method-draw.compiled.js\n
 method-draw/method-draw.gadget.js\n
 method-draw/method-draw.html\n
+method-draw/method-draw.appcache\n
 method-draw/src/browser.js\n
 method-draw/src/dialog.js\n
 method-draw/src/dragupload.js\n
@@ -367,7 +368,7 @@ method-draw/src/svgutils.js\n
 method-draw/src/units.js\n
 method-draw/src/method-draw.js\n
 method-draw/src/svgcanvas.js\n
-method-draw/method-draw.gadget.html\n
+\n
 NETWORK:\n
 *</string> </value>
         </item>
@@ -496,7 +497,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -510,7 +511,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.47786.31692.33024</string> </value>
+                <value> <string>963.23389.7554.44134</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -528,7 +529,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497440463.36</float>
+                        <float>1510310804.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
