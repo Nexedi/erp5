@@ -167,3 +167,9 @@ class ERP5_XHTML_Only(_ERP5):
   def _getAllTestList(self):
     path = sys.path[0]
     return ['%s/product/ERP5/tests/testXHTML.py' % path]
+
+class FunctionalTests(ERP5):
+
+  def _getAllTestList(self):
+    return [x for x in super(FunctionalTests, self)._getAllTestList()
+      if x.startswith('testFunctional') or ':testFunctional' in x]
