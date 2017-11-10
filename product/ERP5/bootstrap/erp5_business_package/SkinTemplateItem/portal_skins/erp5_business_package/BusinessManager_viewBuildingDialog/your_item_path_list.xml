@@ -104,6 +104,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -204,7 +208,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [[\'couscous\', here.BusinessManager_getBuildingDialogParameterJSON()]]</string> </value>
+            <value> <string>python: [[\'built_path_list\', here.BusinessManager_getBuildingDialogParameterJSON()]]</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -91,7 +91,7 @@
   rJS(window)
 
     .declareMethod('render', function (options) {
-      var item_path_list = JSON.parse(options.couscous),
+      var item_path_list = JSON.parse(options.built_path_list),
         checked_list = JSON.parse(options.value).map(
           function(element) {return element[0];}
           ),
@@ -100,7 +100,7 @@
         state_dict = {
           key: options.key,
           value: options.value,
-          couscous: options.couscous
+          built_path_list: options.built_path_list
         };
 
       this.item_path_list = item_path_list;
