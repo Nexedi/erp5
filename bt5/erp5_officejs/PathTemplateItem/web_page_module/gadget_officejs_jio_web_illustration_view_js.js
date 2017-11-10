@@ -117,7 +117,8 @@
                 "key": "text_content",
                 "hidden": 0,
                 "type": editable === 1 ? "GadgetField" : "EditorField",
-                "url": "../officejs_svg_editor_gadget/app/",
+                "url": "../officejs_svg_editor_gadget/" +
+                  "app/method-draw/method-draw.gadget.html",
                 "sandbox": "iframe"
               }
             }},
