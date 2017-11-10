@@ -352,6 +352,7 @@ method-draw/method-draw.compiled.css\n
 method-draw/method-draw.compiled.js\n
 method-draw/method-draw.gadget.js\n
 method-draw/method-draw.html\n
+method-draw/method-draw.gadget.html\n
 method-draw/method-draw.appcache\n
 method-draw/src/browser.js\n
 method-draw/src/dialog.js\n
@@ -511,7 +512,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>963.23389.7554.44134</string> </value>
+                <value> <string>963.23398.49179.1621</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -529,7 +530,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1510310804.96</float>
+                        <float>1510317715.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
