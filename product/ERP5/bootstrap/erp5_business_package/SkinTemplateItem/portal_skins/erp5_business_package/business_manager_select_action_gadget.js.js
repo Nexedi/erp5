@@ -86,13 +86,15 @@
   rJS(window)
 
     .declareMethod('render', function (options) {
-      var parameter_dict = JSON.parse(options.value),
-        item_path_list = parameter_dict.item_path_list,
+      var item_path_list = JSON.parse(options.couscous),
         html_tree = buildTreeHTML('tree', convertPathListToTree(item_path_list)),
         state_dict = {
-          key: options.key
+          key: options.key,
+          value: options.value,
+          couscous: options.couscous
         };
 
+      this.item_path_list = item_path_list;
       this.element.innerHTML = html_tree;
       return this.changeState(state_dict);
     })
@@ -165,13 +167,17 @@
       // Filter all paths except for those 'Unchanged'
       for (i = 0; i < checkedInputList.length; ++i) {
         nextLabelElement = checkedInputList[i].nextElementSibling;
+        var path_state = [];
         if (nextLabelElement.className !== "Unchanged") {
-          path_list.push(nextLabelElement.dataset.path);
+          path_state.push(nextLabelElement.dataset.path);
+          path_state.push(nextLabelElement.className);
+          path_list.push(path_state);
         }
       }
+      this.state.value = JSON.stringify(path_list);
+      result[this.state.key] = this.state.value;
 
-      result[this.state.key] = JSON.stringify(path_list);
-      return result;
+      return result
     });
 
 }(rJS, jIO, Handlebars, RSVP, window));
