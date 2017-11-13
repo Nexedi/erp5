@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, rJS, Handlebars */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, rJS, Handlebars) {
   "use strict";
 
   var gadget_klass = rJS(window),
@@ -32,7 +32,6 @@
             page_title: "Jump to Object"
           });
         });
-      
     });
 
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS, Handlebars));

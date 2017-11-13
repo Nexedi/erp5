@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars, RegExp */
+/*global window, rJS, RSVP, Handlebars, RegExp, document, atob */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, RegExp) {
+(function (window, rJS, RSVP, Handlebars, RegExp, document, atob) {
   "use strict";
 
   var gadget_klass = rJS(window),
@@ -10,20 +10,22 @@
     link_template = Handlebars.compile(source);
 
   function getPromiseTextContent(content, private_url) {
+    /*jslint regexp: true*/
     var regex = /(https?:\/\/[^\s]+)/g,
       i,
       parser,
       private_parser = document.createElement('a'),
       result_list = content.match(regex),
       url_list = [];
+    /*jslint regexp: false*/
 
     function makeUnique(array_list) {
       var temp = {},
-        i,
+        l,
         r = [],
         k;
-      for (i = 0; i < array_list.length; i += 1) {
-        temp[array_list[i]] = true;
+      for (l = 0; l < array_list.length; l += 1) {
+        temp[array_list[l]] = true;
       }
       for (k in temp) {
         if (temp.hasOwnProperty(k)) {
@@ -57,14 +59,15 @@
     for (i = 0; i < url_list.length; i += 1) {
       content = content.replace(
         new RegExp(url_list[i].url, 'g'),
-        url_list[i].next);
+        url_list[i].next
+      );
     }
     return content;
   }
 
   gadget_klass
     .setState({
-      jio_gadget: "",
+      jio_gadget: ""
     })
     .ready(function (gadget) {
       return gadget.getDeclaredGadget("jio_gadget")
@@ -80,7 +83,6 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("jio_get", "jio_get")
-    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("redirect", "redirect")
@@ -90,9 +92,7 @@
 
     .declareMethod("render", function (options) {
       var gadget = this,
-        hosting_subscription,
         software_instance,
-        opml_outline,
         opml_doc;
 
       return new RSVP.Queue()
@@ -105,22 +105,19 @@
         })
         .push(function () {
           return gadget.jio_allDocs({
-              select_list: [
-                "parent_url",
-                "parent_id",
-                "title",
-                "opml_title",
-                "portal_type",
-                "_links",
-                "_embedded",
-                "reference"
-              ],
-              query: '(portal_type:"global") AND (parent_id:"' +
-                options.doc.parent_id + '")'
-            }, function (error) {
-              console.log(error);
-              return {};
-            });
+            select_list: [
+              "parent_url",
+              "parent_id",
+              "title",
+              "opml_title",
+              "portal_type",
+              "_links",
+              "_embedded",
+              "reference"
+            ],
+            query: '(portal_type:"global") AND (parent_id:"' +
+              options.doc.parent_id + '")'
+          });
         })
         .push(function (result) {
           var i;
@@ -131,7 +128,6 @@
           return gadget.jio_get(options.doc.parent_id);
         })
         .push(function (outline_doc) {
-          opml_outline = outline_doc;
           // get opml
           return gadget.jio_get(outline_doc.parent_url);
         })
@@ -153,10 +149,10 @@
                                  _embedded: {instance: {}}};
           }
           // fix URLs
-          software_instance._links.private_url.href = software_instance.
-            _links.private_url.href.replace("jio_private", "private");
-          software_instance._links.public_url.href = software_instance.
-            _links.public_url.href.replace("jio_public", "public");
+          software_instance._links.private_url.href = software_instance
+            ._links.private_url.href.replace("jio_private", "private");
+          software_instance._links.public_url.href = software_instance
+            ._links.public_url.href.replace("jio_public", "public");
 
           pass_url = "https://" + atob(opml_doc.basic_login) +
             "@" + software_instance._links.private_url.href.split("//")[1];
@@ -202,8 +198,14 @@
           gadget.state.promise.source + ".history"
         )
           .push(undefined, function (error) {
-            console.log(error);
-            return undefined;
+            return gadget.notifySubmitted({
+              status: "error",
+              message: "Failed to get promise history content! \n" +
+                error.message || ''
+            })
+              .push(function () {
+                return undefined;
+              });
           })
           .push(function (status_history) {
             var i,
@@ -223,7 +225,7 @@
               //if (lines > len) {
               //  lines = len - start;
               //}
-              for (i = start; i >= 0; i-= 1) {
+              for (i = start; i >= 0; i -= 1) {
                 message = status_history.data[i].message.slice(0, 60);
                 if (message.length >= 60) {
                   message += "...";
@@ -266,7 +268,8 @@
                       editable: 0,
                       hidden: 0,
                       hidden_day_is_last_day: 0,
-                      "default": new Date(status_history.data[i]['change-time']*1000).toUTCString(),
+                      "default": new Date(status_history.data[i]['change-time'] * 1000)
+                        .toUTCString(),
                       key: "change_date",
                       required: 0,
                       timezone_style: 0,
@@ -506,23 +509,31 @@
               }
             },
             form_definition: {
-              group_list: [[
-                "left",
-                [["your_title"], ["your_status"], ["your_status_date"], ["your_report_date"], ["your_public_url"], ["your_private_url"]]
-              ],
-              [
-                "right",
-                [["your_hosting_title"], ["your_instance_title"], ["your_computer_reference"], ["your_computer_partition"],
-                 ["your_partition_ipv6"], ["your_software_release_url"]]
-              ],
-              [
-                "center",
-                [["your_promise_output"]]
-              ],
-              [
-                "bottom",
-                [["your_promise_history"]]
-              ]]
+              group_list: [
+                [
+                  "left",
+                  [
+                    ["your_title"], ["your_status"], ["your_status_date"],
+                    ["your_report_date"], ["your_public_url"], ["your_private_url"]
+                  ]
+                ],
+                [
+                  "right",
+                  [
+                    ["your_hosting_title"], ["your_instance_title"],
+                    ["your_computer_reference"], ["your_computer_partition"],
+                    ["your_partition_ipv6"], ["your_software_release_url"]
+                  ]
+                ],
+                [
+                  "center",
+                  [["your_promise_output"]]
+                ],
+                [
+                  "bottom",
+                  [["your_promise_history"]]
+                ]
+              ]
             }
           });
         })
@@ -543,4 +554,4 @@
           });
         });
     });
-}(window, rJS, RSVP, Handlebars, RegExp));
+}(window, rJS, RSVP, Handlebars, RegExp, document, atob));

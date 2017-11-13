@@ -273,7 +273,7 @@
     .declareService(function () {
       return this.getDeclaredGadget("sync_gadget")
         .push(function (sync_gadget) {
-          return sync_gadget.registerSync();
+          return sync_gadget.register();
         });
     })
 

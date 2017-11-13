@@ -1,7 +1,7 @@
-/*global window, rJS, RSVP, jsen, Rusha, Handlebars, atob, btoa, DOMParser,
+/*global window, rJS, RSVP, jsen, Handlebars, atob, btoa, DOMParser,
   URLSearchParams */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP, jsen, Rusha, Handlebars, atob, btoa, DOMParser,
+(function (window, rJS, RSVP, jsen, Handlebars, atob, btoa, DOMParser,
            URLSearchParams) {
   "use strict";
 
@@ -22,14 +22,14 @@
       select_list: ["basic_login", "url", "title", "active"],
       query: '(portal_type:"opml")'
     })
-    .push(function (opml_result) {
-      var i,
-        opml_dict = {opml_description_list: []};
-      for (i = 0; i < opml_result.data.total_rows; i += 1) {
-        opml_dict.opml_description_list.push(opml_result.data.rows[i].value);
-      }
-      return opml_dict;
-    });
+      .push(function (opml_result) {
+        var i,
+          opml_dict = {opml_description_list: []};
+        for (i = 0; i < opml_result.data.total_rows; i += 1) {
+          opml_dict.opml_description_list.push(opml_result.data.rows[i].value);
+        }
+        return opml_dict;
+      });
   }
 
   function validateJsonConfiguration(json_value, uses_old_schema) {
@@ -139,7 +139,7 @@
     var is_old_schema = false;
     gadget.state.message.textContent = "";
     return new RSVP.Queue()
-      .push(function (form_doc) {
+      .push(function () {
         var configuration_dict;
         if (typeof config === 'string') {
           try {
@@ -231,14 +231,13 @@
                   }
                   return true;
                 });
-            } else {
-              gadget.state.message
-                .innerHTML = notify_msg_template({
-                  status: 'error',
-                  message: 'Error: Content is not a valid Monitoring Json configuration!'
-                });
-              return false;
             }
+            gadget.state.message
+              .innerHTML = notify_msg_template({
+                status: 'error',
+                message: 'Error: Content is not a valid Monitoring Json configuration!'
+              });
+            return false;
           })
           .push(function (status) {
             if (status) {
@@ -297,13 +296,13 @@
       limit = 100;
     }
     return gadget.state.erp5_gadget.allDocs({
-        query: '(portal_type:"Hosting Subscription") AND (validation_state:"validated")',
-        select_list: ['title', 'default_predecessor_uid', 'uid'],
-        limit: [0, limit],
-        sort_on: [
-          ["creation_date", "descending"]
-        ]
-      })
+      query: '(portal_type:"Hosting Subscription") AND (validation_state:"validated")',
+      select_list: ['title', 'default_predecessor_uid', 'uid'],
+      limit: [0, limit],
+      sort_on: [
+        ["creation_date", "descending"]
+      ]
+    })
       .push(function (result) {
         var i,
           uid_search_list = [];
@@ -530,9 +529,7 @@
             });
         })
         .push(function () {
-          var hosting_subscription_list = [],
-            has_failed = false,
-            uid_dict = {};
+          var has_failed = false;
           if (gadget.state.sync === "erp5" && gadget.state.storage_url) {
             // start import from erp5 now
             return gadget.notifySubmitting()
@@ -548,8 +545,7 @@
               .push(function (select_limit) {
                 return getInstanceOPMLListFromMaster(gadget, select_limit);
               })
-              .push(undefined, function (error) {
-                console.log(error);
+              .push(undefined, function () {
                 gadget.state.message
                   .innerHTML = notify_msg_template({
                     status: 'error',
@@ -593,12 +589,11 @@
                     message: "Failed to import Configurations",
                     status: "error"
                   });
-                } else {
-                  return gadget.notifySubmitted({
-                    message: "Configuration Saved!",
-                    status: "success"
-                  });
                 }
+                return gadget.notifySubmitted({
+                  message: "Configuration Saved!",
+                  status: "success"
+                });
               })
               .push(function () {
                 if (!has_failed) {
@@ -611,5 +606,4 @@
           }
         });
     });
-}(window, rJS, RSVP, jsen, Rusha, Handlebars, atob, btoa, DOMParser,
-  URLSearchParams));
+}(window, rJS, RSVP, jsen, Handlebars, atob, btoa, DOMParser, URLSearchParams));

@@ -40,8 +40,7 @@
           return RSVP.all(promise_list);
         })
         .push(function (result_list) {
-          var i,
-            tab_list = [];
+          var tab_list = [];
 
           tab_list.push({
             title: options.view_title || options.jio_key,

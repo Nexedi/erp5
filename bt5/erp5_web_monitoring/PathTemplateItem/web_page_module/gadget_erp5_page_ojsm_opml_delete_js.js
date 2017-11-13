@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, rJS */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, rJS) {
   "use strict";
 
   rJS(window)
@@ -29,4 +29,4 @@
           }});
         });
     });
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS));

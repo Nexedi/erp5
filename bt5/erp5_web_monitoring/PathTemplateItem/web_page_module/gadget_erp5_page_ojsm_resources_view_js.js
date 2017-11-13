@@ -1,20 +1,34 @@
-/*global window, rJS, RSVP, console */
+/*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP, console) {
+(function (window, rJS, RSVP) {
   "use strict";
 
   var gadget_klass = rJS(window);
 
+  function getDateWindow(data) {
+    var max_date,
+      begin_date,
+      end_date,
+      date_window = [];
+    if (data.length > 0) {
+      max_date = data[data.length - 1].split(',')[0];
+      begin_date = new Date(max_date);
+      end_date = new Date(max_date);
+      begin_date.setHours(begin_date.getHours() - 2);
+      date_window = [Date.parse(begin_date), Date.parse(end_date)];
+    }
+    return date_window;
+  }
 
   function loadGraphData(gadget, key) {
-    var resource_key = gadget.property_dict.ressource_dict[key];
+    var resource_key = gadget.property_dict.resource_dict[key];
     return gadget.property_dict.jio_gadget.get(resource_key)
       .push(undefined, function () {
         return gadget.notifySubmitted({
-            message: "Error: Failed to download resource file '" + resource_key +
-              "' from URL: " + gadget.state.opml_outline.url,
-            status: "error"
-          })
+          message: "Error: Failed to download resource file '" + resource_key +
+            "' from URL: " + gadget.state.opml_outline.url,
+          status: "error"
+        })
           .push(function () {
             return {data: []};
           });
@@ -103,28 +117,15 @@
     };
   }
 
-  function getDateWindow(data) {
-    var max_date,
-      begin_date,
-      end_date,
-      date_window = [];
-    if (data.length > 0) {
-      max_date = data[data.length - 1].split(',')[0];
-      begin_date = new Date(max_date);
-      end_date = new Date(max_date);
-      begin_date.setHours(begin_date.getHours() - 2);
-      date_window = [Date.parse(begin_date), Date.parse(end_date)];
-    }
-    return date_window;
-  }
-
   function updateGraph(gadget) {
     return new RSVP.Queue()
       .push(function () {
         var key,
           promise_list = [];
-        for (key in gadget.property_dict.ressource_dict) {
-          promise_list.push(loadGraphData(gadget, key));
+        for (key in gadget.property_dict.resource_dict) {
+          if (gadget.property_dict.resource_dict.hasOwnProperty(key)) {
+            promise_list.push(loadGraphData(gadget, key));
+          }
         }
         return RSVP.all(promise_list);
       })
@@ -136,8 +137,7 @@
         var data_list = [],
           axis_dict = {},
           line_list,
-          i,
-          j;
+          i;
 
         axis_dict = {
           "0": {
@@ -259,8 +259,7 @@
     })
     .ready(function (gadget) {
       gadget.property_dict = {};
-      gadget.property_dict.render_deferred = RSVP.defer();
-      gadget.property_dict.ressource_dict = {
+      gadget.property_dict.resource_dict = {
         memory_resource: "monitor_resource_memory.data",
         cpu_resource: "monitor_resource_process.data",
         io_resource: "monitor_resource_io.data"
@@ -276,7 +275,6 @@
       return gadget.getDeclaredGadget("graph_cpu")
         .push(function (graph_cpu) {
           gadget.property_dict.graph_cpu = graph_cpu;
-          gadget.property_dict.graph_cpu_label_list = [];
         });
     })
     .ready(function (gadget) {
@@ -333,7 +331,7 @@
           gadget.property_dict.mem_data = {data: []};
           gadget.property_dict.process_data = {data: []};
           gadget.property_dict.io_data = {data: []};
-          return gadget.property_dict.render_deferred.resolve();
+          return gadget.deferUpdateGraph();
         });
     })
 
@@ -349,9 +347,9 @@
     /////////////////////////////////////////////////////////////////
     // declared service
     /////////////////////////////////////////////////////////////////
-    .declareService(function () {
-      var gadget = this,
-        date_window = [];
+    .declareJob("deferUpdateGraph", function () {
+
+      return updateGraph(this);
 
       /*function toggleSerieVisibility(evt) {
         var checkbox = evt.target.nextSibling,
@@ -367,10 +365,6 @@
           });
       }*/
 
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.property_dict.render_deferred.promise;
-        })
         /**.push(function () {
           return gadget.property_dict.graph_cpu.render(
             gadget.property_dict.process_data.data.join('\n'),
@@ -434,9 +428,6 @@
           RSVP.all(promise_list);
           return updateGraphTimer();
         })**/
-        .push(function () {
-          return updateGraph(gadget);
-        });
     });
 
-}(window, rJS, RSVP, console));
+}(window, rJS, RSVP));

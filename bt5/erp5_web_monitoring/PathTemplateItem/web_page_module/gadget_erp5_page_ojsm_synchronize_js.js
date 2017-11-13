@@ -13,17 +13,20 @@
     .declareMethod("render", function () {
       var gadget = this;
       return this.updateHeader({
-          page_title: "Monitoring Synchronization"
-        })
+        page_title: "Monitoring Synchronization"
+      })
         .push(function () {
           return gadget.getDeclaredGadget('sync_gadget')
             .push(function (sync_gadget) {
               // start synchronization now if possible (not running already)
-              return sync_gadget.registerSync({now: true});
+              return sync_gadget.register({now: true});
             });
         })
         .push(function () {
-          gadget.redirect({command: "change", options: {page: "ojsm_status_list"}});
+          return gadget.redirect({
+            command: "change",
+            options: {page: "ojsm_status_list"}
+          });
         });
     });
 }(window, rJS));

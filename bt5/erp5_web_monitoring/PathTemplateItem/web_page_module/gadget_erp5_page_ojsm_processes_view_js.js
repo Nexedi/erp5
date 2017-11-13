@@ -56,9 +56,7 @@
           });
         })
         .push(function () {
-          var key,
-            promise_list = [];
-          gadget.property_dict.jio_gadget.createJio({
+          return gadget.property_dict.jio_gadget.createJio({
             type: "webhttp",
             // XXX fix URL
             url: (gadget.state.opml_outline.url
@@ -66,14 +64,16 @@
               'documents/'),
             basic_login: gadget.state.opml.basic_login
           });
+        })
+        .push(function () {
           return gadget.property_dict.jio_gadget
             .get(gadget.property_dict.monitor_process_state);
         })
-        .push(undefined, function (error) {
+        .push(undefined, function () {
           return gadget.notifySubmitted({
-              message: "Error: Failed to download data files!",
-              status: "error"
-            })
+            message: "Error: Failed to download data files!",
+            status: "error"
+          })
             .push(function () {
               return undefined;
             });
@@ -91,7 +91,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
 
-    .allowPublicAcquisition("jio_allDocs", function (param_list) {
+    .allowPublicAcquisition("jio_allDocs", function () {
       var gadget = this,
         result = {data: {total_rows: 0, rows: []}};
       return gadget.property_dict.jio_gadget.get(gadget.property_dict.process_state)
@@ -222,16 +222,22 @@
 
       return gadget.property_dict.jio_gadget
         .get(gadget.property_dict.monitor_process_state)
-          .push(undefined, function () {
-            return undefined;
+        .push(undefined, function () {
+          return gadget.notifySubmitted({
+            message: "Error: Failed to download data files!",
+            status: "error"
           })
-          .push(function (average_result) {
-            if (average_result !== undefined) {
-              return gadget.changeState({
-                average_state: average_result
-              });
-            }
-          });
+            .push(function () {
+              return undefined;
+            });
+        })
+        .push(function (average_result) {
+          if (average_result !== undefined) {
+            return gadget.changeState({
+              average_state: average_result
+            });
+          }
+        });
     }, 65000);
 
 }(window, rJS, RSVP, Handlebars));

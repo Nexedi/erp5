@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_monitoring_global.js</string> </value>
+            <value> <string>gadget_officejs_monitoring_opml_edit.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_monitoring_global_js</string> </value>
+            <value> <string>gadget_officejs_monitoring_opml_edit_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Monitoring Global Js</string> </value>
+            <value> <string>Monitoring OPML edit widget Js</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -242,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>963.1892.25677.55654</string> </value>
+                <value> <string>963.29541.62889.7577</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1509020867.3</float>
+                        <float>1510680916.21</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

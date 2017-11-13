@@ -1,37 +1,15 @@
-/*global window, rJS, RSVP, Handlebars, OPMLManage */
+/*global window, rJS, RSVP, Handlebars */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, OPMLManage) {
+(function (window, rJS, RSVP) {
   "use strict";
 
-  var gadget_klass = rJS(window),
-    templater = gadget_klass.__template_element,
-    notify_msg_template = Handlebars.compile(
-      templater.getElementById("template-message-error").innerHTML
-    ),
-    opml_global = OPMLManage;
-
-  gadget_klass
-    /////////////////////////////
-    // state
-    /////////////////////////////
-    .setState({
-      message: "",
-      redirect: false
-    })
-    /////////////////////////////
-    // ready
-    /////////////////////////////
-    .ready(function (gadget) {
-      return opml_global.init(gadget, notify_msg_template);
-    })
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
 
@@ -40,47 +18,39 @@
     /////////////////////////////////////////////////////////////////
     .onEvent('submit', function () {
       var gadget = this,
-        doc;
+        doc,
+        opml_gadget;
       return new RSVP.Queue()
         .push(function () {
-          return  gadget.getDeclaredGadget('form_view');
+          return gadget.getDeclaredGadget('opml_gadget');
+        })
+        .push(function (g) {
+          opml_gadget = g;
+          return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
           return form_gadget.getContent();
         })
         .push(function (form_doc) {
           doc = form_doc;
-          if (!opml_global.validateHttpUrl(form_doc.url)) {
-            gadget.state.message
-              .innerHTML = notify_msg_template({
-                status: 'error',
-                message: "'" + form_doc.url + "' is not a valid OPML URL"
-              });
-            return false;
-          }
-          if (!form_doc.username || !form_doc.password) {
-            gadget.state.message
-              .innerHTML = notify_msg_template({
-                status: 'error',
-                message: 'Username and password fields are required!'
-              });
-            return false;
-          }
           if (doc.password !== gadget.state.password) {
             // password was modified, update on backend
             doc.new_password = doc.password;
+            doc.confirm_new_password = doc.new_password;
             doc.password = gadget.state.password;
             doc.verify_password = 1;
           }
-          return true;
+          return opml_gadget.checkOPMLForm(doc);
         })
         .push(function (state) {
           if (state) {
             return gadget.notifySubmitting()
               .push(function () {
                 doc.title = gadget.state.opml_title;
-                return opml_global.saveOPML(doc,
-                  doc.title === "" || doc.title === undefined || doc.verify_password === 1);
+                return opml_gadget.saveOPML(
+                  doc,
+                  doc.title === "" || doc.title === undefined || doc.verify_password === 1
+                );
               })
               .push(function (status) {
                 var msg = {message: 'Document Updated', status: 'success'};
@@ -92,11 +62,10 @@
                   status
                 ]);
               })
-              .push(function (result_list) {
-                if (result_list[1] && gadget.state.redirect) {
-                  return gadget.redirect({
-                    "command": "change",
-                    "options": {"page": "ojsm_status_list"}
+              .push(function (result) {
+                if (result[1]) {
+                  return gadget.changeState({
+                    "password": doc.password
                   });
                 }
               });
@@ -224,7 +193,7 @@
           });
         })
         .push(function () {
-          return gadget.changeState({redirect: false})
+          return new RSVP.Queue()
             .push(function () {
               return RSVP.all([
                 gadget.getUrlFor({command: 'history_previous'}),
@@ -258,4 +227,4 @@
             });
         });
     });
-}(window, rJS, RSVP, Handlebars, OPMLManage));
+}(window, rJS, RSVP));

@@ -1,29 +1,10 @@
-/*global window, rJS, RSVP, Handlebars, OPMLManage */
+/*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, OPMLManage) {
+(function (window, rJS, RSVP) {
   "use strict";
 
-  var gadget_klass = rJS(window),
-    templater = gadget_klass.__template_element,
-    notify_msg_template = Handlebars.compile(
-      templater.getElementById("template-message-error").innerHTML
-    ),
-    opml_global = OPMLManage;
+  rJS(window)
 
-  gadget_klass
-    /////////////////////////////
-    // state
-    /////////////////////////////
-    .setState({
-      message: "",
-      redirect: true
-    })
-    /////////////////////////////
-    // ready
-    /////////////////////////////
-    .ready(function (gadget) {
-      return opml_global.init(gadget, notify_msg_template);
-    })
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
@@ -31,7 +12,6 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
 
@@ -40,49 +20,29 @@
     /////////////////////////////////////////////////////////////////
     .onEvent('submit', function () {
       var gadget = this,
+        opml_gadget,
         doc;
       return new RSVP.Queue()
         .push(function () {
-          return  gadget.getDeclaredGadget('form_view');
+          return gadget.getDeclaredGadget('opml_gadget');
+        })
+        .push(function (g) {
+          opml_gadget = g;
+          return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
           return form_gadget.getContent();
         })
         .push(function (form_doc) {
           doc = form_doc;
-          if (!opml_global.validateHttpUrl(form_doc.url)) {
-            gadget.state.message
-              .innerHTML = notify_msg_template({
-                status: 'error',
-                message: "'" + form_doc.url + "' is not a valid OPML URL"
-              });
-            return false;
-          }
-          if (!form_doc.username || !form_doc.password) {
-            gadget.state.message
-              .innerHTML = notify_msg_template({
-                status: 'error',
-                message: 'Username and password fields are required!'
-              });
-            return false;
-          }
-          if (form_doc.new_password &&
-              form_doc.new_password !== form_doc.confirm_new_password) {
-            gadget.state.message
-              .innerHTML = notify_msg_template({
-                status: 'error',
-                message: 'The new password and it confirmation are differents!'
-              });
-            return false;
-          }
-          return true;
+          return opml_gadget.checkOPMLForm(doc);
         })
         .push(function (state) {
           if (state) {
             return gadget.notifySubmitting()
               .push(function () {
                 doc.title = "";
-                return opml_global.saveOPML(doc, true);
+                return opml_gadget.saveOPML(doc, true);
               })
               .push(function (status) {
                 var msg = {message: 'OPML document added', status: 'success'};
@@ -95,10 +55,10 @@
                 ]);
               })
               .push(function (result_list) {
-                if (result_list[1] && gadget.state.redirect) {
+                if (result_list[1]) {
                   return gadget.redirect({
-                    "command": "change",
-                    "options": {"page": "ojsm_status_list"}
+                    "command": "display",
+                    "options": {"page": "settings_configurator"}
                   });
                 }
               });
@@ -169,13 +129,13 @@
                 },
                 "my_active": {
                   "description": "Sync this opml or not",
-                  "title": "Active (Auto Sync)",
+                  "title": "Active (Enable Sync)",
                   "default": 1,
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
                   "key": "active",
-                  "hidden": 1,
+                  "hidden": 0,
                   "type": "CheckBoxField"
                 },
                 "my_new_password": {
@@ -199,7 +159,7 @@
                   "key": "confirm_new_password",
                   "hidden": (options.chg_passwd || '' === true) ? 0 : 1,
                   "type": "PasswordField"
-                },
+                }
               }},
               "_links": {
                 "type": {
@@ -236,4 +196,4 @@
           });
         });
     });
-}(window, rJS, RSVP, Handlebars, OPMLManage));
+}(window, rJS, RSVP));

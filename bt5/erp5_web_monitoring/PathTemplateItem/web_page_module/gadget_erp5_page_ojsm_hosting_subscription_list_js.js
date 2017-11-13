@@ -104,7 +104,8 @@
       var gadget = this;
       return getHostingData(gadget, param_list[0])
         .push(function (result) {
-          var i, value, len = result.data.total_rows;
+          var i,
+            len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {
             if (result.data.rows[i].value.hasOwnProperty("date")) {
               result.data.rows[i].value.date = {
@@ -171,7 +172,7 @@
         lines_limit;
       return new RSVP.Queue()
         .push(function () {
-          return gadget.getSetting("listbox_lines_limit", 100);
+          return gadget.getSetting("listbox_lines_limit", 20);
         })
         .push(function (listbox_lines_limit) {
           lines_limit = listbox_lines_limit;
@@ -224,7 +225,7 @@
             }
           });
         })
-        .push(function (result) {
+        .push(function () {
           return gadget.updateHeader({
             page_title: "Hosting Subscriptions Status",
             filter_action: true

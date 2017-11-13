@@ -86,7 +86,7 @@
 
       return new RSVP.Queue()
         .push(function () {
-          return gadget.getSetting("listbox_lines_limit", 100);
+          return gadget.getSetting("listbox_lines_limit", 20);
         })
         .push(function (listbox_lines_limit) {
           lines_limit = listbox_lines_limit;
@@ -136,7 +136,7 @@
             }
           });
         })
-        .push(function (result) {
+        .push(function () {
           return gadget.updateHeader({
             page_title: "Software Instances Status",
             filter_action: true
@@ -147,7 +147,6 @@
     .onLoop(function () {
       var gadget = this;
 
-      console.log("ONloop...");
       return gadget.getSetting('latest_sync_time')
         .push(function (latest_sync_time) {
           if (latest_sync_time > gadget.state.latest_reload_time) {

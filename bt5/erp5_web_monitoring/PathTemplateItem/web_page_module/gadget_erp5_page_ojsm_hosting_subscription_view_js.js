@@ -1,10 +1,9 @@
-/*global window, rJS, document, Handlebars, Rusha */
+/*global window, rJS, document, RSVP, Rusha, escape */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, document, Handlebars, Rusha) {
+(function (window, rJS, document, RSVP, Rusha, escape) {
   "use strict";
 
   var gadget_klass = rJS(window),
-    templater = gadget_klass.__template_element,
     rusha = new Rusha();
 
   function generateHash(str) {
@@ -41,7 +40,9 @@
         })
         .push(function () {
           var result = gadget.state.instance_dict,
-            i, value, len = result.data.total_rows;
+            i,
+            value,
+            len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {
             if (result.data.rows[i].value.hasOwnProperty("date")) {
               value = new Date(result.data.rows[i].value.date);
@@ -91,8 +92,8 @@
     .declareMethod("render", function (options) {
       var gadget = this;
       return gadget.updateHeader({
-          title: 'Hosting Subscriptions View'
-        })
+        title: 'Hosting Subscriptions View'
+      })
         .push(function () {
           return gadget.jio_get(options.opml_key);
         })
@@ -101,8 +102,8 @@
         })
         .push(function () {
           return gadget.jio_allDocs({
-              query: '(portal_type:"opml-outline") AND (parent_id:"' +
-                generateHash(options.opml_key) + '")'
+            query: '(portal_type:"opml-outline") AND (parent_id:"' +
+              generateHash(options.opml_key) + '")'
           });
         })
         .push(function (ouline_list) {
@@ -122,28 +123,28 @@
           return RSVP.all(promise_list);
         })
         .push(function (result_list) {
-          var i,
+          var j,
             ok_to_save = true,
-            promise_list = [];
-          for (i = 0; i < result_list.length; i += 1) {
-            if (result_list[i].status !== 'OK') {
+            return_list = [];
+          for (j = 0; j < result_list.length; j += 1) {
+            if (result_list[j].status !== 'OK') {
               ok_to_save = false;
               break;
             }
-            promise_list.push(gadget.props.parameter_form_list[i].saveContent());
+            return_list.push(gadget.props.parameter_form_list[j].saveContent());
           }
           if (ok_to_save) {
-            return RSVP.all(promise_list);
+            return RSVP.all(return_list);
           }
           // One of storage failed, cancel save to be consistent
           return result_list;
         })
         .push(function (result_list) {
           var msg_list = [],
-            i;
-          for (i = 0; i < result_list.length; i += 1) {
-            if (result_list[i].status !== "OK") {
-              msg_list.push(result_list[i].stage + " from " + result_list[i].url);
+            j;
+          for (j = 0; j < result_list.length; j += 1) {
+            if (result_list[j].status !== "OK") {
+              msg_list.push(result_list[j].stage + " from " + result_list[j].url);
             }
           }
           if (msg_list.length > 0) {
@@ -172,7 +173,6 @@
       }
       if (modification_dict.hasOwnProperty('instance_dict')) {
         // render parameter form
-        
         return new RSVP.Queue()
           .push(function () {
             var promise_list = [],
@@ -190,12 +190,10 @@
               element.appendChild(gadget_element);
               promise_list.push(
                 gadget.declareGadget("gadget_officejs_monitoring_parameter_view.html",
-                  {
-                    element: gadget_element,
+                  {element: gadget_element,
                     scope: 'p_' + gadget.state.instance_dict.data.rows[i].id,
-                    sandbox: "public"
-                  }
-                )
+                    sandbox: "public"}
+                  )
               );
             }
             return RSVP.all(promise_list);
@@ -224,13 +222,13 @@
         })
         .push(function (form_list) {
           var column_list = [
-            ['title', 'Instance Title'],
-            ['date', 'Status Date'],
-            ['status', 'Status']
-          ],
-          j,
-          key_list = [],
-          instance_query = '(portal_type:"global")';
+              ['title', 'Instance Title'],
+              ['date', 'Status Date'],
+              ['status', 'Status']
+            ],
+            j,
+            key_list = [],
+            instance_query = '(portal_type:"global")';
 
           if (gadget.state.ouline_list.length === 0) {
             return;
@@ -309,4 +307,4 @@
         });
     });
 
-}(window, rJS, document, Handlebars, Rusha));
+}(window, rJS, document, RSVP, Rusha, escape));

@@ -1,10 +1,10 @@
-/*global window, rJS */
+/*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS) {
+(function (window, rJS, RSVP) {
   "use strict";
 
 
-rJS(window)
+  rJS(window)
     .ready(function (gadget) {
       gadget.props = {};
       return gadget.getDeclaredGadget("jio_gadget")
@@ -16,8 +16,8 @@ rJS(window)
     .declareMethod("render", function (options) {
       var gadget = this;
       return new RSVP.Queue()
-      .push(function () {
-          gadget.props.jio_gadget.createJio({
+        .push(function () {
+          return gadget.props.jio_gadget.createJio({
             type: "query",
             sub_storage: {
               type: "drivetojiomapping",
@@ -28,6 +28,8 @@ rJS(window)
               }
             }
           });
+        })
+        .push(function () {
           return gadget.changeState({
             parameter_list: options.parameters,
             save_to: 'config.tmp',
@@ -51,14 +53,10 @@ rJS(window)
         .push(function (form_gadget) {
           var i,
             parameter_dict = {},
-            group_list = [[
-                "left",
-                []
-              ],
-              [
-                "right",
-                []
-              ]];
+            group_list = [
+              ["left", []],
+              ["right", []]
+            ];
           for (i = 0; i < gadget.state.parameter_list.length; i += 1) {
             parameter_dict[gadget.state.parameter_list[i].title] = {
               "description": "",
@@ -73,7 +71,7 @@ rJS(window)
               "hidden": 0,
               "type": "StringField" // for now everything are stringField
             };
-            group_list[i%2][1].push([gadget.state.parameter_list[i].title]);
+            group_list[i % 2][1].push([gadget.state.parameter_list[i].title]);
           }
           return form_gadget.render({
             erp5_document: {
@@ -117,9 +115,8 @@ rJS(window)
           return form_gadget.getContent();
         })
         .push(function (doc) {
-          var parameter_dict = {},
+          var key,
             parameter_list = JSON.parse(JSON.stringify(gadget.state.parameter_list)),
-            key,
             i;
           for (i = 0; i < parameter_list.length; i += 1) {
             key = gadget.state.key + '_' + parameter_list[i].title;
@@ -132,10 +129,10 @@ rJS(window)
         .push(function () {
           return {status: 'OK'};
         }, function (error) {
-          console.log(error);
+          //console.log(error);
           return {status: 'ERROR', code: error.target.status,
                   url: gadget.state.url, stage: "Saving file"};
         });
     });
 
-}(window, rJS));
+}(window, rJS, RSVP));
