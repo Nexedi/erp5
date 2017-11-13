@@ -198,13 +198,9 @@
   <td>//div[@role='main']//div[@data-gadget-scope='erp5_searchfield']//button[@type='submit']</td>
   <td></td>
 </tr>
-<tr> <!-- Poor cats ... find another way -->
-  <td>pause</td>
-  <td>2000</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded_in_menu_page" />
 <tr>
-  <td>verifyElementPresent</td>
+  <td>waitForElementPresent</td>
   <td>link=${title_2}</td>
   <td></td>
 </tr>
