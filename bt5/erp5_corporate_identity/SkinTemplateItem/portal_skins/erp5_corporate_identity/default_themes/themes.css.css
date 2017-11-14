@@ -1,0 +1,88 @@
+/* ========================================================================== */
+/* =======================  Default THEME =================================== */
+/* ========================================================================== */
+
+/* ------------------------  Slideshow -------------------------------------- */
+.ci-default .ci-slideshow .ci-slideshow-header h2,
+.ci-default .ci-slideshow .ci-slideshow-footer, 
+.ci-default .ci-slideshow .ci-slideshow-intro.present > h2,
+.ci-default .ci-slideshow .ci-slideshow-intro.present:before,
+.ci-default .ci-slideshow h1,
+.ci-default .ci-slideshow h2,
+.ci-default .ci-slideshow h3,
+.ci-default .ci-slideshow ul li,
+.ci-default .ci-slideshow p,
+.ci-default .ci-slideshow div,
+.ci-default .ci-slideshow details,
+.ci-default .ci-slideshow summary,
+.ci-default .ci-slideshow footer {
+  color: #C3C7C6;
+}
+.ci-default .ci-slideshow section.ci-slideshow-intro.present {
+  background: #C3C7C6;
+  color: #fff;
+}
+.ci-default .ci-slideshow section.ci-slideshow-intro.present > h2 {
+  background: #fff;
+}
+.ci-default .ci-slideshow .reveal .slide-number {
+  background-color: #C3C7C6;
+}
+.ci-default .ci-slideshow .reveal .slide-number span {
+  color: #fff;
+}
+.ci-default .ci-slideshow .reveal .controls .navigate-left,
+.ci-default .ci-slideshow .reveal .controls .navigate-left.enabled {
+  border-right-color: #C3C7C6;
+}
+.ci-default .ci-slideshow .reveal .controls .navigate-right,
+.ci-default .ci-slideshow .reveal .controls .navigate-right.enabled {
+  border-left-color: #C3C7C6;
+}
+.ci-default .ci-slideshow .reveal .controls .navigate-up,
+.ci-default .ci-slideshow .reveal .controls .navigate-up.enabled {
+  border-bottom-color: #C3C7C6;
+}
+.ci-default .ci-slideshow .reveal .controls .navigate-down,
+.ci-default .ci-slideshow .reveal .controls .navigate-down.enabled {
+  border-top-color: #C3C7C6;
+}
+.ci-default .ci-slideshow .reveal .controls .navigate-left.enabled:hover {
+  border-right-color: #71B8E2;
+}
+.ci-default .ci-slideshow .reveal .controls .navigate-right.enabled:hover {
+  border-left-color: #71B8E2;
+}
+.ci-default .ci-slideshow .reveal .controls .navigate-up.enabled:hover {
+  border-bottom-color: #71B8E2;
+}
+.ci-default .ci-slideshow .reveal .controls .navigate-down.enabled:hover {
+  border-top-color: #71B8E2;
+}
+.ci-default .ci-slideshow .reveal .progress {
+  background: rgba(0, 0, 0, 0.2);
+}
+.ci-default .ci-slideshow .reveal .progress span {
+  background: #C3C7C6;
+  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+}
+
+/* -------------------------  Two Pager ------------------------------------- */
+.ci-default .ci-two-page .ci-two-page-header {
+  background-color: #C3C7C6;
+  color: #ffffff;
+}
+
+/* --------------------------  Letter --------------------------------------- */
+.ci-default .ci-letter .ci-letter-header {
+  background: #C3C7C6;
+  color: #ffffff;
+}
+.ci-default .ci-letter .ci-letter-footer {
+  border-color: #C3C7C6; 
+}
+.ci-default .ci-letter .ci-letter-bar-logo img {
+  background: #ffffff;
+}

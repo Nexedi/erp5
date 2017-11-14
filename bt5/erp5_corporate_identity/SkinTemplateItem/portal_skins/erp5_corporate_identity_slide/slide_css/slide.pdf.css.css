@@ -1,0 +1,384 @@
+/* === pre-sets === */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+html {
+   width: 100%;
+   height: 100%;
+}
+
+/* === font family === */
+.ci-slideshow h1,
+.ci-slideshow h2,
+.ci-slideshow-handout .ci-slideshow-handout-header,
+.ci-slideshow-handout h1,
+.ci-slideshow-handout h2,
+.ci-slideshow h1 ~ *,
+.ci-slideshow h2 ~ *,
+.ci-slideshow-footer div,
+.ci-slideshow .ci-slideshow-intro:before {
+  font-family: 'Roboto', Arial, sans-serif;
+}
+.ci-slideshow details,
+.ci-slideshow-handout details {
+  font-family: 'Heuristica', 'Helvetica', Times, serif;
+}
+.ci-slideshow pre,
+.ci-slideshow code {
+  font-family: "Courier New", Courier, monospace, sans-serif;
+}
+
+/* === font size === */
+.ci-slideshow h1,
+.ci-slideshow h2,
+.ci-slideshow-handout .ci-slideshow-handout-header {
+  font-size: 42px;
+}
+.ci-slideshow h1 ~ *,
+.ci-slideshow h2 ~ * {
+  font-size: 28px;
+}
+.ci-slideshow h1 ~ table {
+  font-size: 14px;
+}
+.ci-slideshow pre,
+.ci-slideshow code {
+  font-size: 20px;
+}
+.ci-slideshow-handout h1,
+.ci-slideshow-handout h2 {
+  font-size: 24px;
+}
+.ci-slideshow details,
+.ci-slideshow-handout details,
+.ci-slideshow .ci-slideshow-intro:before {
+  font-size: 28px;
+}
+.ci-slideshow-footer div,
+.ci-slideshow-handout section h1 ~ ul {
+  font-size: 16px;
+}
+
+/* === page breaks === */
+.ci-slideshow section {
+  page-break-inside: always;
+}
+
+/*
+.ci-slideshow.ci-zh * {
+  font-family: 'Noto Sans Sc', SimHei, STXihei, sans-serif;
+  font-weight: normal;
+}
+.ci-slideshow section pre,
+.ci-slideshow section code {
+  font-family: "Courier New", Courier, monospace, sans-serif;
+}
+
+.ci-slideshow {
+  font-weight: 400;
+}
+.ci-slideshow .ci-slideshow-intro.present:before {
+  font-weight: 100;
+}
+
+.ci-slideshow section pre,
+.ci-slideshow section code {
+  color: #555;
+}
+*/
+
+
+/* inherit height, else slide height is 0 with pos:absolute content */
+section {
+  height: inherit !important;
+}
+
+/* introductory slide*/
+.ci-slideshow .ci-slideshow-intro.present {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0;
+  position: absolute;
+  height: 100%;
+  padding-top: 55%;
+}
+.ci-slideshow .ci-slideshow-intro.present > h2 {
+  width: 100%;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: #fff;
+}
+.ci-slideshow .ci-slideshow-intro.present:before {
+  position: absolute;
+  width: 30%;
+  left: 5%;
+  height: 80mm;
+  line-height: 45mm;
+  vertical-align: bottom;
+  top: -6%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-top: 6.5em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ci-slideshow .ci-slideshow-intro.present > h2 {
+  letter-spacing: normal;
+  text-align: center;
+  width: inherit;
+}
+
+
+
+/* page breaks (elements must be childs of <body> */
+.ci-slideshow section {
+  page-break-after: always;
+}
+.ci-slideshow section:last-child {
+  page-break-after: avoid;
+}
+
+/* hide details */
+.ci-slideshow details {
+  display: none;
+}
+
+/* footer */
+.ci-slideshow-footer {
+  position: static;
+}
+.ci-slideshow-footer div {
+  display: inline-block;
+  vertical-align: middle;
+  width: 32%;
+  text-align: center;
+}
+.ci-slideshow-footer .ci-slideshow-container-left img {
+  max-width: 120px;
+  height: 54px;
+}
+.ci-slideshow-footer .ci-slideshow-container-left {
+  text-align: left;
+}
+.ci-slideshow-footer .ci-slideshow-container-right {
+  text-align: right;
+}
+
+/* content */
+.ci-slideshow h1 {
+  text-align: center;
+  text-transform: capitalize;
+}
+.ci-slideshow section {
+  display: table;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+}
+.ci-slideshow section h1 ~ div {
+  display: inline-block;
+  width: 49%;
+  vertical-align: middle;
+}
+.ci-slideshow section h1 ~ div:only-of-type {
+  display: block;
+  margin: 0 auto;
+  width: auto;
+}
+/* code */
+html .ci-slideshow code {
+  background-color: #eee;
+}
+html .ci-slideshow pre {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background-color: #eee;
+  text-align: left;
+  padding: 16px;
+}
+
+
+/* override browser margin on h1 */
+.ci-slideshow section h1 {
+  margin-bottom: 2%;
+}
+.ci-slideshow section h1:only-child {
+  padding-top: 30%;
+}
+/* margin on non image slides */
+.ci-slideshow section ul,
+.ci-slideshow section ol {
+  text-align: left;
+  display: inline-block;
+  margin-top: 10%;
+}
+/* no margin after subheader, images */
+.ci-slideshow section h2 + *,
+.ci-slideshow section h3 + *,
+.ci-slideshow section img + ul,
+.ci-slideshow section img + ol {
+  margin-top: 0%;
+} 
+.ci-slideshow section h1 ~ *,
+.ci-slideshow section h2 ~ *,
+.ci-slideshow section h3 ~ * {
+  vertical-align: top;
+}
+.ci-slideshow section ul li,
+.ci-slideshow section ol li {
+  padding: 0 !important;
+}
+.ci-slideshow section img {
+  /* used to be width: 80%, Cedric width: 70%;*/
+  width: 57%;
+}
+.ci-slideshow section h1 + img,
+.ci-slideshow section h1 + h2 + img {
+  display: block;
+  margin: 0 auto;
+}
+/* object fit does not work in wkhtmltopdf, find workaround
+html .ci-slideshow img {
+  border: 0 none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  width: auto;
+  max-height: 80%;
+  min-width: auto;
+}
+html .ci-slideshow section img:last-child {
+  object-fit: contain;
+}
+html .ci-slideshow section img + img:last-child {
+  object-fit: initial;
+}
+*/
+
+
+
+.ci-slideshow section section *:only-child {
+  width: 100%;
+}
+.ci-slideshow section pre {
+  background: #D3D3D3;
+  text-align: left;
+  padding: 10px;
+}
+
+/* notes header */
+.ci-slideshow-handout .ci-slideshow-handout-header {
+  text-align: center;
+  padding-top: 30%;
+}
+/* notes page break */
+.ci-slideshow-handout section {
+  page-break-after: always;
+  page-break-inside: avoid;
+}
+.ci-slideshow-handout section section,
+.ci-slideshow-handout section:last-child{
+  page-break-after: avoid;
+  page-break-inside: avoid;
+}
+.ci-slideshow-handout details + details {
+  page-break-before: always;
+}
+
+/* notes shrink, grayscale slide */
+.ci-slideshow-handout section section {
+  -webkit-transform:scale(0.4);
+  -moz-transform:scale(0.4);
+  -ms-transform:scale(0.4);
+  transform:scale(0.4);
+  -webkit-transform-origin: 50% 15%;
+  -moz-transform-origin: 50% 15%;
+  -ms-transform-origin: 50% 15%;
+  transform-origin: 50% 15%;
+  
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #a1a1a1;
+  display: table;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+  padding: 10mm;
+}
+/* details grayscale */
+.ci-slideshow-handout section section * {
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: grayscale(100%);
+  filter: gray;
+}
+
+/* notes re-size header */
+.ci-slideshow-handout section section h1 {
+  text-align: center;
+  -webkit-transform:scale(5);
+  -moz-transform:scale(5);
+  -ms-transform:scale(5);
+  transform:scale(5);
+  position: relative;
+  top: 0;
+}
+.ci-slideshow-handout section {
+  position: relative;
+}
+.ci-slideshow-handout section details {
+  position: absolute;
+  top: 50%;
+}
+.ci-slideshow-handout section h1 + img,
+.ci-slideshow-handout section h1 + h2 + img {
+  display: block;
+  height: 100mm;
+  width: auto;
+  text-align: center;
+  margin-top: 20mm;
+  margin-left: auto;
+  margin-right: auto;
+}
+.ci-slideshow-handout section h1 ~ ul {
+  text-align: left;
+  display: inline-block;
+  margin-top: 20mm;
+}
+.ci-slideshow-handout section h1 ~ div {
+  display: inline-block;
+  width: 49%;
+  vertical-align: middle;
+}
+.ci-slideshow-handout section h1 ~ div:only-of-type {
+  display: block;
+  margin: 0 auto;
+  width: auto;
+}
+.ci-slideshow-handout summary::-webkit-details-marker {
+  display: none;
+}
+.ci-slideshow-handout details summary:after {
+  content: "";
+}
+.ci-slideshow-handout,
+.ci-slideshow-handout h1,
+.ci-slideshow-handout details {
+  color: #969696;
+}
+.ci-slideshow-handout section section ul,
+.ci-slideshow-handout section section ol {
+  text-align: left;
+}

@@ -1,0 +1,86 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Generates the complete slideshow
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="doc_format                         python: options.get('doc_format');
+                       doc_theme                          python: options.get('doc_theme');
+                       doc_title                          python: options.get('doc_title');
+                       doc_language                       python: options.get('doc_language');
+                       doc_template_css_url               python: options.get('doc_template_css_url');
+                       doc_theme_css_font_list            python: options.get('doc_theme_css_font_list');
+                       doc_theme_css_url                  python: options.get('doc_theme_css_url');
+                       doc_theme_footer_url               python: options.get('doc_theme_footer_url');
+                       doc_description                    python: options.get('doc_description');
+                       doc_creation_year                  python: options.get('doc_creation_year');
+                       doc_copyright                      python: options.get('doc_copyright');
+                       doc_author_list                    python: options.get('doc_author_list');
+                       doc_css                            python: options.get('doc_css');
+                       doc_content                        python: options.get('doc_content');">
+  <!DOCTYPE html>
+  <html tal:attributes="class python: ''.join(['ci-', doc_theme, ' ci-', doc_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="python: doc_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url doc_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <tal:block tal:condition="python: doc_format == 'html'">
+      <link rel="stylesheet" tal:attributes="href python: 'slide_css/reveal.custom.css?portal_skin=Slide'" />
+    </tal:block>
+    <link rel="stylesheet" href="slide_css/white_theme.custom.css?portal_skin=Slide" id="theme" />
+    <link rel="stylesheet" href="slide_css/zenburn.css?portal_skin=Slide" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([doc_theme_css_url, '?portal_skin=Slide'])" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([doc_template_css_url, '?portal_skin=Slide'])" />
+    <style type="text/css" tal:content="structure doc_css"></style>
+    <script type="text/javascript">
+      function setPlaceholdersWithUrlParameters() {
+        var vars={};
+        var x=window.location.search.substring(1).split('&');
+        for (var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+        var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+        for (var i in x) {
+          var y = document.getElementsByClassName(x[i]);
+          for (var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+        }
+      }
+    </script>
+    </head>
+  	<body class="ci-slideshow" onload="setPlaceholdersWithUrlParameters()">
+  	  <div class="reveal">
+        <!-- section elements inside this container are displayed as slides -->
+			  <div class="slides">
+          <tal:block metal:use-macro="context/WebPage_createSlideshowFooter/macros/slide_footer" />
+          <tal:block metal:use-macro="context/WebPage_createSlideshowCover/macros/slide_cover" />
+          <tal:block metal:use-macro="context/WebPage_createSlideshowContent/macros/slide_content" />
+        </div>
+      </div>
+      <script src="slide_js/head.min.js?portal_skin=Slide"></script>
+		<script src="slide_js/reveal.custom.js?portal_skin=Slide"></script>
+		<script>
+			Reveal.initialize({
+			  width: 1280,
+			  height: 920,
+				controls: true,
+				progress: true,
+				history: true,
+				center: false,
+				transition: 'slide',
+				// Exposes the reveal.js API through window.postMessage
+        postMessage: true,
+        // Dispatches all reveal.js events to the parent window through postMessage
+        postMessageEvents: false,
+				dependencies: [
+					{ src: 'slide_js/classList.min.js?portal_skin=Slide', condition: function() { return !document.body.classList; } },
+					{ src: 'slide_js/highlight.js?portal_skin=Slide', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'slide_js/zoom.js?portal_skin=Slide', async: true }
+				]
+			});
+			Reveal.configure({ slideNumber: 'c / t' });
+		</script>
+    </body>
+  </html>
+</tal:block>

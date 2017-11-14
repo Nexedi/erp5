@@ -1,0 +1,71 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Creates the Slideshow footer section.
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="doc_format                        python: options.get('doc_format');
+                       doc_theme                         python: options.get('doc_theme');
+                       doc_title                         python: options.get('doc_title');
+                       doc_language                      python: options.get('doc_language');
+                       doc_theme_css_font_list           python: options.get('doc_theme_css_font_list');
+                       doc_theme_css_url                 python: options.get('doc_theme_css_url');
+                       doc_template_css_url              python: options.get('doc_template_css_url');
+                       doc_theme_footer_url              python: options.get('doc_theme_footer_url');
+                       doc_description                   python: options.get('doc_description');
+                       doc_creation_year                 python: options.get('doc_creation_year');
+                       doc_copyright                     python: options.get('doc_copyright');
+                       doc_author_list                   python: options.get('doc_author_list');">
+  <!DOCTYPE html>
+  <html tal:attributes="class python: ''.join(['ci-', doc_theme, ' ci-', doc_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="python: doc_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url doc_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <tal:block tal:condition="python: doc_format == 'html'">
+      <link rel="stylesheet" tal:attributes="href python: 'slide_css/reveal.custom.css?portal_skin=Slide'" />
+    </tal:block>
+    <link rel="stylesheet" href="slide_css/white_theme.custom.css?portal_skin=Slide" id="theme" />
+    <link rel="stylesheet" href="slide_css/zenburn.css?portal_skin=Slide" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([doc_theme_css_url, '?portal_skin=Slide'])" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([doc_template_css_url, '?portal_skin=Slide'])" />
+    <script type="text/javascript">
+      function setPlaceholdersWithUrlParameters() {
+        var vars={};
+        var x=window.location.search.substring(1).split('&');
+        for (var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+        var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+        for (var i in x) {
+          var y = document.getElementsByClassName(x[i]);
+          for (var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+        }
+      }
+    </script>
+    </head>
+    	<body class="ci-slideshow" onload="setPlaceholdersWithUrlParameters()">
+    	  <tal:block metal:use-macro="context/WebPage_createSlideshowFooter/macros/slide_footer" />
+      </body>
+	 </html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="slide_footer">
+    <div class="ci-slideshow-footer">
+	    <div class="ci-slideshow-container-left">
+	      <img tal:attributes="src python: ''.join([doc_theme_footer_url, '?format=png&amp;display=xsmall'])" alt="Logo" />
+	    </div>
+	    <div class="ci-slideshow-container-center" tal:content="doc_description"></div>
+	    <div class="ci-slideshow-container-right">
+	      &copy;
+	      <span tal:content="doc_creation_year"></span>&nbsp;
+        <span tal:content="doc_copyright"></span><br/>
+	      <span tal:content="doc_author_list"></span>&nbsp;
+	      <span class="page"></span> | <span class="topage"></span>
+	    </div>
+	  </div>
+  </tal:block>
+</tal:block>

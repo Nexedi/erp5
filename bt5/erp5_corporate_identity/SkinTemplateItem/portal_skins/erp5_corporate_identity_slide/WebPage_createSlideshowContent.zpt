@@ -1,0 +1,47 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Creates the Slideshow content section.
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="doc_format                        python: options.get('doc_format');
+                       doc_theme                         python: options.get('doc_theme');
+                       doc_title                         python: options.get('doc_title');
+                       doc_language                      python: options.get('doc_language');
+                       doc_theme_css_font_list           python: options.get('doc_theme_css_font_list');
+                       doc_theme_css_url                 python: options.get('doc_theme_css_url');
+                       doc_template_css_url              python: options.get('doc_template_css_url');
+                       doc_content                       python: options.get('doc_content');">
+  <!DOCTYPE html>
+  <html tal:attributes="class python: ''.join(['ci-', doc_theme, ' ci-', doc_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="python: doc_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url doc_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <tal:block tal:condition="python: doc_format == 'html'">
+      <link rel="stylesheet" tal:attributes="href python: 'slide_css/reveal.custom.css?portal_skin=Slide'" />
+    </tal:block>
+    <link rel="stylesheet" href="slide_css/white_theme.custom.css?portal_skin=Slide" id="theme" />
+    <link rel="stylesheet" href="slide_css/zenburn.css?portal_skin=Slide" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([doc_theme_css_url, '?portal_skin=Slide'])" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([doc_template_css_url, '?portal_skin=Slide'])" />
+    </head>
+    	<body class="ci-slideshow">
+    	  <tal:block metal:use-macro="context/WebPage_createSlideshowContent/macros/slide_content" />
+      </body>
+	 </html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="slide_content">
+    <!--div class="reveal">
+  			<div class="slides"-->
+  			  <tal:block tal:content="structure python: doc_content"></tal:block>
+  			<!--/div>
+  		</div-->
+  </tal:block>
+</tal:block>

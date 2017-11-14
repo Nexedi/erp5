@@ -1,0 +1,312 @@
+/* === font family === */
+.ci-slideshow h1,
+.ci-slideshow h2,
+.ci-slideshow .ci-slideshow-handout h1,
+.ci-slideshow .ci-slideshow-handout h2,
+.ci-slideshow .ci-slideshow-intro:before,
+.ci-slideshow h1 ~ *,
+.ci-slideshow h2 ~ *,
+.ci-slideshow-footer div {
+  font-family: 'Roboto', Arial, sans-serif;
+}
+.ci-slideshow details,
+.ci-slideshow-handout details {
+  font-family: 'Heuristica', 'Helvetica', Times, serif;
+}
+html .ci-slideshow pre,
+html .ci-slideshow code {
+  font-family: "Courier New", Courier, monospace, sans-serif;
+}
+
+/* === font size === */
+.ci-slideshow .ci-slideshow-intro:before {
+  font-size: 28px;
+}
+.ci-slideshow h1,
+.ci-slideshow h2 {
+  font-size: 1.5em;
+}
+.ci-slideshow .ci-slideshow-handout h1,
+.ci-slideshow .ci-slideshow-handout h2 {
+  font-size: 1.25em;
+}
+.ci-slideshow h1 ~ *,
+.ci-slideshow h2 ~ * {
+  font-size: 1em;
+}
+.ci-slideshow h1 ~ table {
+  font-size: .7em;
+}
+html .ci-slideshow pre,
+html .ci-slideshow code {
+  font-size: .8em;
+}
+.ci-slideshow details,
+.ci-slideshow-handout details {
+  font-size: .8em;
+}
+.ci-slideshow-footer div {
+  font-size: .4em;
+}
+
+
+
+
+/*
+
+
+.ci-slideshow.ci-zh * {
+  font-family: 'Noto Sans Sc', SimHei, STXihei, sans-serif;
+  font-weight: normal;
+}
+.ci-slideshow section pre,
+.ci-slideshow section code {
+  font-family: "Courier New", Courier, monospace, sans-serif;
+}
+
+
+.ci-slideshow {
+  font-weight: 400;
+}
+.ci-slideshow .ci-slideshow-intro.present:before {
+  font-weight: 100;
+}
+
+.ci-slideshow section h1 {
+  font-size: 1.5em;
+}
+.ci-slideshow section ul li,
+.ci-slideshow section ol li {
+  font-size: 1.25em;
+}
+.ci-slideshow section ul li ul li,
+.ci-slideshow section ol li ul li {
+  font-size: .9em;
+}
+html .ci-slideshow img + ul li,
+html .ci-slideshow div + ul li,
+html .ci-slideshow img + ol li,
+html .ci-slideshow div + ol li {
+  font-size: 1em;
+}
+html .ci-slideshow li code {
+  font-size: .6em;
+}
+html .ci-slideshow details ul li,
+html .ci-slideshow details p {
+  font-size: 60%;
+}
+*/
+
+/* unset */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+/* inherit height, else slide height is 0 with pos:absolute content */
+section {
+  height: inherit !important;
+}
+
+/* introductory slide */
+html .ci-slideshow .ci-slideshow-intro.present {
+  width: 100%;
+  height: 96% !important;
+  padding: 0 .5em;
+  top: 0 !important; /* overwrite reveal-js */
+}
+html .ci-slideshow .ci-slideshow-intro.present > h2 {
+  width: 100%;
+  text-transform: uppercase;;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: absolute;
+  letter-spacing: normal;
+  bottom: 1em;
+  bottom: -20px;
+  padding: .75em 0 1.25em;
+  background: #fff;
+}
+.ci-slideshow .ci-slideshow-intro.present:before {
+  position: absolute;
+  width: 30%;
+  left: 5%;
+  height: 10em;
+  line-height: 4em;
+  vertical-align: bottom;
+  top: -6%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-top: 6.5em;
+}
+html .ci-slideshow .ci-slideshow-intro.present + .ci-slideshow-header {
+  display: none;
+}
+
+
+
+/* header */
+html .ci-slideshow .reveal .slides > section {
+  padding: 0;
+}
+html .ci-slideshow .ci-slideshow-header {
+  display: none;
+}
+html .ci-slideshow .ci-slideshow-header h2 {
+  text-align: center;
+}
+html .ci-slideshow h1 {
+  margin-top: -.5em;
+  text-transform: capitalize;
+  text-align: center;
+}
+
+/* image handling */
+html .ci-slideshow img {
+  border: 0 none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  width: auto;
+  max-height: 80%;
+  min-width: auto;
+}
+/* stretch images where possible, why is it on the last image anyway? */
+html .ci-slideshow section img:last-child {
+  width: 100%;
+  object-fit: contain;
+}
+html .ci-slideshow section img + img:last-child {
+  width: auto;
+  object-fit: initial;
+}
+html .ci-slideshow section section *:only-child {
+  width: 100%;
+}
+
+/* margin on slider header */
+.ci-slideshow section h1 {
+  margin-bottom: 2%;
+}
+.ci-slideshow section h1:only-child {
+  margin-top: 30%;
+}
+
+/* link next to header 
+.ci-slideshow section h1 {
+  display: inline-block;
+}
+.ci-slideshow section h1 + span {
+  padding-left: .5em;
+}
+*/
+
+.ci-slideshow section h1 + img,
+.ci-slideshow section h1 + h2 + img {
+  display: block;
+  margin: 0 auto;
+}
+
+/* margin on no-image-slides */
+.ci-slideshow section h1 + ul,
+.ci-slideshow section h1 + ol,
+.ci-slideshow section h1 + span + ul,
+.ci-slideshow section h1 + span + ol {
+  margin-top: 10%;
+}
+
+.ci-slideshow section h1 ~ div:nth-of-type(2),
+.ci-slideshow section h1 ~ div:nth-of-type(1) {
+  display: inline-block;
+  width: 49%;
+  vertical-align: middle;
+}
+
+.ci-slideshow section ul,
+.ci-slideshow section ol {
+  text-align: left;
+  display: inline-block;
+}
+/* margin subheader, screenshots */
+.ci-slideshow section h2 + *,
+.ci-slideshow section h3 + *,
+.ci-slidewhow section img + ul,
+.ci-slidewhow section img + ol,
+.ci-slideshow section div + ul,
+.ci-slideshow section div + ol {
+  margin: 0;
+}
+.ci-slideshow section h1 ~ *,
+.ci-slideshow section h2 ~ *,
+.ci-slideshow section h3 ~ * {
+  vertical-align: top;
+}
+html .ci-slideshow ul li,
+html .ci-slideshow ol li {
+  padding: 0 !important;
+}
+
+/* code */
+html .ci-slideshow code {
+  background-color: #eee;
+}
+html .ci-slideshow pre {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background-color: #eee;
+  text-align: left;
+  padding: /*16px;*/ .25em;
+}
+
+/* details */
+html .ci-slideshow details {
+  text-align: justify;
+  -moz-text-align-last: left;
+  text-align-last: left;
+}
+html .ci-slideshow details ul {
+  margin-top: 5%;
+}
+html .ci-slideshow details p + ul {
+  margin-top: 0;
+}
+.ci-slideshow details summary::-webkit-details-marker {
+  display: none;
+}
+.ci-slideshow details summary {
+
+}
+.ci-slideshow details summary::after {
+  content: "";
+}
+
+/* footer */
+html .ci-slideshow .ci-slideshow-footer {
+  position:absolute;
+  bottom: -3%;
+  width: 100%;
+  margin: 0 auto;
+}
+
+html .ci-slideshow .ci-slideshow-header > div,
+html .ci-slideshow .ci-slideshow-footer > div {
+  display: inline-block;
+  width: 32%;
+  vertical-align: middle;
+}
+html .ci-slideshow .ci-slideshow-header > div img,
+html .ci-slideshow .ci-slideshow-footer > div img {
+  max-width: 8em;
+  min-width: initial;
+  height: 4em;
+}
+html .ci-slideshow .ci-slideshow-container-left {
+  text-align: left; 
+}
+html .ci-slideshow .ci-slideshow-container-right  {
+  text-align: right;
+}
