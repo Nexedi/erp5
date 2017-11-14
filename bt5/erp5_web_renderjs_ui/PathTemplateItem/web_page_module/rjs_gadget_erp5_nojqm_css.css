@@ -816,30 +816,43 @@ div[data-gadget-scope='header'] .ui-header h1 > span::before {
     margin-right: 6pt;
   }
 }
-div[data-gadget-scope='header'] .ui-header h1 a {
+div[data-gadget-scope='header'] .ui-header h1 form {
+  height: 100%;
+}
+div[data-gadget-scope='header'] .ui-header h1 form button {
+  text-align: left;
+  height: 100%;
+  width: 100%;
+}
+div[data-gadget-scope='header'] .ui-header h1 a,
+div[data-gadget-scope='header'] .ui-header h1 form button {
   display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-div[data-gadget-scope='header'] .ui-header h1 a::before {
+div[data-gadget-scope='header'] .ui-header h1 a::before,
+div[data-gadget-scope='header'] .ui-header h1 form button::before {
   display: inline-block;
   width: 42pt;
 }
 @media only screen and (min-width: 45em) and (max-width: 85em), not screen and (min-width: 45em) {
-  div[data-gadget-scope='header'] .ui-header h1 a::before {
+  div[data-gadget-scope='header'] .ui-header h1 a::before,
+  div[data-gadget-scope='header'] .ui-header h1 form button::before {
     text-align: center;
   }
 }
 @media not screen and (max-width: 85em) {
-  div[data-gadget-scope='header'] .ui-header h1 a::before {
+  div[data-gadget-scope='header'] .ui-header h1 a::before,
+  div[data-gadget-scope='header'] .ui-header h1 form button::before {
     width: 12pt;
     margin-left: 24pt;
     margin-right: 6pt;
   }
 }
 @media not screen and (min-width: 45em) {
-  div[data-gadget-scope='header'] .ui-header h1 a::before {
+  div[data-gadget-scope='header'] .ui-header h1 a::before,
+  div[data-gadget-scope='header'] .ui-header h1 form button::before {
     width: 30pt;
   }
 }
@@ -1482,38 +1495,39 @@ div[data-gadget-scope='notification'] button.error {
   }
 }
 /**********************************************
-* Class
+* Maximize
 **********************************************/
-.content-iframe-maximize {
-  position: fixed;
+div[data-gadget-scope='header'].maximize-mode .ui-header {
+  margin-left: 0;
+}
+div[data-gadget-scope='header'].maximize-mode .ui-header .ui-subheader {
+  display: none;
+}
+div[data-gadget-scope='header'].maximize-mode .ui-header h1 {
+  flex: 1;
+}
+div[data-gadget-scope='header'].maximize-mode .ui-header .ui-controlgroup-controls button,
+div[data-gadget-scope='header'].maximize-mode .ui-header .ui-controlgroup-controls a {
+  background-color: #085078;
+}
+div[data-gadget-scope='header'].maximize-mode .ui-header > .ui-btn-right {
+  border-left: 1px solid rgba(255, 255, 255, 0.55);
+}
+div[data-gadget-scope='header'].maximize-mode .ui-icon-arrow-up::before {
+  content: "\f00d";
 }
 @media not screen and (max-width: 85em) {
-  .content-iframe-maximize {
-    left: 180pt;
-    top: 60pt;
-  }
-  .content-iframe-maximize iframe {
-    width: calc(100vw -  180pt );
-    height: calc(100vh -  60pt );
+  div[data-gadget-scope='panel'].maximize-mode {
+    display: none;
   }
 }
-@media only screen and (min-width: 45em) and (max-width: 85em) {
-  .content-iframe-maximize {
-    left: 0;
-    top: 73pt;
-  }
-  .content-iframe-maximize iframe {
-    height: calc(100vh -  73pt );
-  }
+.content-iframe-maximize div {
+  position: fixed;
+  left: 0;
+  top: 30pt;
 }
-@media not screen and (min-width: 45em) {
-  .content-iframe-maximize {
-    left: 0;
-    top: 67pt;
-  }
-  .content-iframe-maximize iframe {
-    height: calc(100vh -  67pt );
-  }
+.content-iframe-maximize div iframe {
+  height: calc(100vh -  30pt );
 }
 /**********************************************
 * Icons

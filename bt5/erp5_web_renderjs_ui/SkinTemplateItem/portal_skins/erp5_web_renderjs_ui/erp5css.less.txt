@@ -951,8 +951,16 @@ div[data-gadget-scope='header'] .ui-header {
          }
       }
     }
-    // Clickable title
-    a {
+    // Clickable title and button
+    form {
+      height: 100%;
+      button {
+        text-align: left;
+        height: 100%;
+        width: 100%;
+      }
+    }
+    a, form button {
       display: block;
 
       // Do not put link on multi line in case of small screen
@@ -1696,30 +1704,45 @@ div[data-gadget-scope='notification'] {
 }
 
 /**********************************************
-* Class
+* Maximize
 **********************************************/
-.content-iframe-maximize {
-  position: fixed;
+div[data-gadget-scope='header'].maximize-mode {
+  .ui-header {
+    margin-left: 0;
+    .ui-subheader {
+      display: none;
+    }
+    h1 {
+      flex: 1;
+    }
+    .ui-controlgroup-controls {
+      // Left, right button next to the page title
+
+      button, a {
+        background-color: @colorheaderbackground;
+      }
+    }
+    & > .ui-btn-right {
+      border-left: 1px solid rgba(255, 255, 255, 0.55);
+    }
+  }
+  .ui-icon-arrow-up::before {
+    content: "\f00d";
+  }
+}
+div[data-gadget-scope='panel'].maximize-mode {
   @media @desktop {
-    left: @panelwidth;
-    top: 2 * @headerheight;
-    iframe {
-      width: ~"calc(100vw - "@panelwidth~")";
-      height: ~"calc(100vh - "2 * @headerheight~")";
-    }
+    display: none;
   }
-  @media @tablet {
+}
+
+.content-iframe-maximize {
+  div {
+    position: fixed;
     left: 0;
-    top: @headerheight-tablet;
+    top: @headerheight;
     iframe {
-      height: ~"calc(100vh - "@headerheight-tablet~")";
-    }
-  }
-  @media @smartphone {
-    left: 0;
-    top: @headerheight-smartphone;
-    iframe {
-      height: ~"calc(100vh - "@headerheight-smartphone~")";
+      height: ~"calc(100vh - "@headerheight~")";
     }
   }
 }
