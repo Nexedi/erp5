@@ -965,7 +965,7 @@ define([
                             allowDepress: true,
                             toggleGroup : 'halignGroup',
                             checked     : true,
-                            value       : 'left'
+                            value       : AscCommon.align_Left
                         },
                         {
                             caption     : me.tipAlignCenter,
@@ -974,7 +974,7 @@ define([
                             checkable   : true,
                             allowDepress: true,
                             toggleGroup : 'halignGroup',
-                            value       : 'center'
+                            value       : AscCommon.align_Center
                         },
                         {
                             caption     : me.tipAlignRight,
@@ -983,7 +983,7 @@ define([
                             checkable   : true,
                             allowDepress: true,
                             toggleGroup : 'halignGroup',
-                            value       : 'right'
+                            value       : AscCommon.align_Right
                         },
                         {
                             caption     : me.tipAlignJust,
@@ -992,7 +992,7 @@ define([
                             checkable   : true,
                             allowDepress: true,
                             toggleGroup : 'halignGroup',
-                            value       : 'justify'
+                            value       : AscCommon.align_Justify
                         }
                     ]
                 })
@@ -1013,7 +1013,7 @@ define([
                             checkable   : true,
                             allowDepress: true,
                             toggleGroup : 'valignGroup',
-                            value       : 'top'
+                            value       : Asc.c_oAscVAlign.Top
                         },
                         {
                             caption     : me.tipAlignMiddle,
@@ -1022,7 +1022,7 @@ define([
                             checkable   : true,
                             allowDepress: true,
                             toggleGroup : 'valignGroup',
-                            value       : 'center'
+                            value       : Asc.c_oAscVAlign.Center
                         },
                         {
                             caption     : me.tipAlignBottom,
@@ -1032,7 +1032,7 @@ define([
                             allowDepress: true,
                             checked     : true,
                             toggleGroup : 'valignGroup',
-                            value       : 'bottom'
+                            value       : Asc.c_oAscVAlign.Bottom
                         }
                     ]
                 })

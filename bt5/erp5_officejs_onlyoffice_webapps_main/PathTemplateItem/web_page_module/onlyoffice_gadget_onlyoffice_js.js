@@ -31,6 +31,7 @@ DocsAPI.DocEditor.version = function () {
     display_error_element.innerHTML =
       '<br/><p style="color: red"></p><br/><br/>';
     display_error_element.querySelector('p').textContent = error;
+    console.error(error);
     throw error;
   }
 
@@ -244,6 +245,7 @@ DocsAPI.DocEditor.version = function () {
         })
         .push(function (portal_type) {
           var value;
+          g.props.binary_loader = false;
           g.props.jio_key = options.jio_key;
           g.props.key = options.key || "text_content";
           g.props.documentType = portal_type.toLowerCase();
@@ -289,10 +291,7 @@ DocsAPI.DocEditor.version = function () {
         })
         .push(function (value) {
           var magic, documentType,
-            sdkPath,
-            nameSpace,
-            backboneControllers,
-            styles;
+            app_url, sdk_deps = ["promise!sdk_async_loader"];
           g.props.value = value;
           if (!g.props.documentType && value === "") {
             throw "can not create empty document " +
@@ -327,254 +326,54 @@ DocsAPI.DocEditor.version = function () {
           }
           switch (g.props.documentType) {
           case 'spreadsheet':
-            sdkPath = 'cell';
-            nameSpace = 'SSE';
-            backboneControllers = [
-              'Viewport',
-              'DocumentHolder',
-              'CellEditor',
-              'FormulaDialog',
-              'Print',
-              'Toolbar',
-              'Statusbar',
-              'RightMenu',
-              'LeftMenu',
-              'Main',
-              'Common.Controllers.Fonts',
-              'Common.Controllers.Chat',
-              'Common.Controllers.Comments',
-              'Common.Controllers.Plugins'
-            ];
+            app_url = "web-apps/apps/spreadsheeteditor/main/app.js";
             define("sdk_files", [], function () {
               return "webexcel.json";
             });
-            styles = [
-              'css!../sdkjs/cell/css/main.css',
-              'css!spreadsheeteditor/main/resources/css/app.css'
-            ];
+            sdk_deps.push('window!Xmla');
             break;
           case 'text':
-            sdkPath = 'word';
-            nameSpace = 'DE';
-            backboneControllers = [
-              'Viewport',
-              'DocumentHolder',
-              'Toolbar',
-              'Statusbar',
-              'RightMenu',
-              'LeftMenu',
-              'Main',
-              'Common.Controllers.Fonts',
-              'Common.Controllers.History',
-              'Common.Controllers.Chat',
-              'Common.Controllers.Comments',
-              'Common.Controllers.Plugins',
-              'Common.Controllers.ExternalDiagramEditor',
-              'Common.Controllers.ExternalMergeEditor',
-              'Common.Controllers.ReviewChanges'
-            ];
+            app_url = "web-apps/apps/documenteditor/main/app.js";
             define("sdk_files", [], function () {
               return "webword.json";
             });
-            styles = [
-              'css!documenteditor/main/resources/css/app.css'
-            ];
             break;
           case 'presentation':
-            sdkPath = 'slide';
-            nameSpace = 'PE';
-            backboneControllers = [
-              'Viewport',
-              'DocumentHolder',
-              'Toolbar',
-              'Statusbar',
-              'RightMenu',
-              'LeftMenu',
-              'Main',
-              'Common.Controllers.Fonts',
-              'Common.Controllers.Chat',
-              'Common.Controllers.Comments',
-              'Common.Controllers.Plugins',
-              'Common.Controllers.ExternalDiagramEditor'
-            ];
+            app_url = "web-apps/apps/presentationeditor/main/app.js";
             define("sdk_files", [], function () {
               return "webpowerpoint.json";
             });
-            styles = [
-              'css!presentationeditor/main/resources/css/app.css'
-            ];
             break;
           }
 
           Common.Gateway = g;
-          define("sdk", [
-            "promise!sdk_async_loader"
-          ], function () {
-          });
-          require.config({
-            baseUrl: "apps/",
-            waitSeconds: 360,
-            paths: {
-              jquery: '../vendor/jquery/jquery',
-              underscore: '../vendor/underscore/underscore',
-              backbone: '../vendor/backbone/backbone',
-              bootstrap: '../vendor/bootstrap/dist/js/bootstrap',
-              text: '../vendor/requirejs-text/text',
-              promise: '../vendor/requirejs-promise/requirejs-promise',
-              perfectscrollbar: 'common/main/lib/mods/perfect-scrollbar',
-              jmousewheel: '../vendor/perfect-scrollbar/src/jquery.mousewheel',
-              xregexp: '../vendor/xregexp/xregexp-all-min',
-              sockjs: '../vendor/sockjs/sockjs.min',
-              jsziputils: '../vendor/jszip-utils/jszip-utils.min',
-              jsrsasign: '../vendor/jsrsasign/jsrsasign-latest-all-min',
-              allfonts: '../fonts/AllFonts',
-              api: 'api/documents/api',
-              core: 'common/main/lib/core/application',
-              notification: 'common/main/lib/core/NotificationCenter',
-              keymaster: 'common/main/lib/core/keymaster',
-              tip: 'common/main/lib/util/Tip',
-              localstorage: 'common/main/lib/util/LocalStorage',
-              analytics: 'common/Analytics',
-              locale: 'common/locale',
-              irregularstack: 'common/IrregularStack'
-            },
-            shim: {
-              underscore: {
-                exports: "_"
-              },
-              backbone: {
-                deps: [
-                  "underscore",
-                  "jquery"
-                ],
-                exports: "Backbone"
-              },
-              bootstrap: {
-                deps: [
-                  'jquery'
-                ]
-              },
-              perfectscrollbar: {
-                deps: [
-                  'jmousewheel'
-                ]
-              },
-              notification: {
-                deps: [
-                  'backbone'
-                ]
-              },
-              core: {
-                deps: [
-                  'backbone',
-                  'notification',
-                  'irregularstack'
-                ]
-              }
-            }
-          });
-          require([
-            'backbone',
-            'bootstrap',
-            'core',
-            'analytics',
-            'locale'
-          ].concat(styles), function (Backbone) {
-            Backbone.history.start();
-            var app = new Backbone.Application({
-              nameSpace: nameSpace,
-              autoCreate: false,
-              controllers: backboneControllers
+
+          require.onError = function (error) {
+            console.error(error);
+          };
+          require.config({catchError:true});
+
+          if (g.props.binary_loader) {
+            g.props.base_url = "onlyoffice-bin/";
+          } else {
+            g.props.base_url = "onlyoffice/";
+            define("sdk", sdk_deps, function () {
             });
-            Common.Locale.apply();
-            switch (g.props.documentType) {
-            case 'spreadsheet':
-              require([
-                'spreadsheeteditor/main/app/controller/Viewport',
-                'spreadsheeteditor/main/app/controller/DocumentHolder',
-                'spreadsheeteditor/main/app/controller/CellEditor',
-                'spreadsheeteditor/main/app/controller/Toolbar',
-                'spreadsheeteditor/main/app/controller/Statusbar',
-                'spreadsheeteditor/main/app/controller/RightMenu',
-                'spreadsheeteditor/main/app/controller/LeftMenu',
-                'spreadsheeteditor/main/app/controller/Main',
-                'spreadsheeteditor/main/app/controller/Print',
-                'spreadsheeteditor/main/app/view/ParagraphSettings',
-                'spreadsheeteditor/main/app/view/ImageSettings',
-                'spreadsheeteditor/main/app/view/ChartSettings',
-                'spreadsheeteditor/main/app/view/ShapeSettings',
-                'spreadsheeteditor/main/app/view/TextArtSettings',
-                'common/main/lib/util/utils',
-                'common/main/lib/util/LocalStorage',
-                'common/main/lib/controller/Fonts',
-                'common/main/lib/controller/Comments',
-                'common/main/lib/controller/Chat',
-                'common/main/lib/controller/Plugins'
-              ], function () {
-                app.start();
-              });
-              break;
-            case 'text':
-              require([
-                'documenteditor/main/app/controller/Viewport',
-                'documenteditor/main/app/controller/DocumentHolder',
-                'documenteditor/main/app/controller/Toolbar',
-                'documenteditor/main/app/controller/Statusbar',
-                'documenteditor/main/app/controller/RightMenu',
-                'documenteditor/main/app/controller/LeftMenu',
-                'documenteditor/main/app/controller/Main',
-                'documenteditor/main/app/view/ParagraphSettings',
-                'documenteditor/main/app/view/HeaderFooterSettings',
-                'documenteditor/main/app/view/ImageSettings',
-                'documenteditor/main/app/view/TableSettings',
-                'documenteditor/main/app/view/ShapeSettings',
-                'common/main/lib/util/utils',
-                'common/main/lib/util/LocalStorage',
-                'common/main/lib/controller/Fonts',
-                'common/main/lib/controller/History',
-                'common/main/lib/controller/Comments',
-                'common/main/lib/controller/Chat',
-                'common/main/lib/controller/Plugins',
-                'documenteditor/main/app/view/ChartSettings',
-                'common/main/lib/controller/ExternalDiagramEditor',
-                'common/main/lib/controller/ExternalMergeEditor',
-                'common/main/lib/controller/ReviewChanges'
-              ], function () {
-                app.start();
-              });
-              break;
-            case 'presentation':
-              require([
-                'presentationeditor/main/app/controller/Viewport',
-                'presentationeditor/main/app/controller/DocumentHolder',
-                'presentationeditor/main/app/controller/Toolbar',
-                'presentationeditor/main/app/controller/Statusbar',
-                'presentationeditor/main/app/controller/RightMenu',
-                'presentationeditor/main/app/controller/LeftMenu',
-                'presentationeditor/main/app/controller/Main',
-                'presentationeditor/main/app/view/ParagraphSettings',
-                'presentationeditor/main/app/view/ImageSettings',
-                'presentationeditor/main/app/view/ShapeSettings',
-                'presentationeditor/main/app/view/SlideSettings',
-                'presentationeditor/main/app/view/TableSettings',
-                'presentationeditor/main/app/view/TextArtSettings',
-                'common/main/lib/util/utils',
-                'common/main/lib/util/LocalStorage',
-                'common/main/lib/controller/Fonts',
-                'common/main/lib/controller/Comments',
-                'common/main/lib/controller/Chat',
-                'presentationeditor/main/app/view/ChartSettings',
-                'common/main/lib/controller/ExternalDiagramEditor'
-              ], function () {
-                window.compareVersions = true;
-                app.start();
-              });
-              break;
-            }
-          }, function (err) {
-            throw err;
-          });
-          return {};
+          }
+          app_url = g.props.base_url + app_url;
+
+          function loadScript(src) {
+            return new RSVP.Promise(function (resolve, reject) {
+              var s;
+              s = document.createElement('script');
+              s.src = src;
+              s.onload = resolve;
+              s.onerror = reject;
+              document.head.appendChild(s);
+            });
+          }
+
+          return loadScript(app_url);
         })
         .push(undefined, function (error) {
           display_error(g, error);

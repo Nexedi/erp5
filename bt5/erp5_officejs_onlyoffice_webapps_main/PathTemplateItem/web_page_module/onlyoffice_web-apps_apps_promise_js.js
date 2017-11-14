@@ -55,12 +55,12 @@ define(function () {
         }
       });
     }/*,
-    write: function () {
-      // TODO: what needs to be done for write() ??
-    }, */
-/*        pluginBuilder: function () {
-      // TODO: what needs to be done for pluginBuilder() ??
-    } */
+     write: function () {
+     // TODO: what needs to be done for write() ??
+     }, */
+    /*        pluginBuilder: function () {
+     // TODO: what needs to be done for pluginBuilder() ??
+     } */
     /*
      * Note: we explicitly do NOT implement normalize(), as the simpler
      * default implementation is sufficient for current use cases.

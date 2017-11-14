@@ -683,6 +683,40 @@ Common.Utils.fillUserInfo = function(info, lang, defname) {
     return _user;
 };
 
+Common.Utils.createXhr = function () {
+    var xmlhttp;
+    try {
+        xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (e) {
+        try {
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (E) {
+            xmlhttp = false;
+        }
+    }
+    if (!xmlhttp && typeof XMLHttpRequest != 'undefined') {
+        xmlhttp = new XMLHttpRequest();
+    }
+
+    return xmlhttp;
+};
+
+Common.Utils.getConfigJson = function (url) {
+    if ( url ) {
+        try {
+            var xhrObj = Common.Utils.createXhr();
+            if ( xhrObj ) {
+                xhrObj.open('GET', url, false);
+                xhrObj.send('');
+
+                return JSON.parse(xhrObj.responseText);
+            }
+        } catch (e) {}
+    }
+
+    return null;
+};
+
 // Extend javascript String type
 String.prototype.strongMatch = function(regExp){
     if (regExp && regExp instanceof RegExp) {

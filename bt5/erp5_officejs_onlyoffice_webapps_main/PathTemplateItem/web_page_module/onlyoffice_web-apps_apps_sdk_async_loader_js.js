@@ -18,12 +18,13 @@ define([
       return jIO.util.ajax({
         type: "GET",
         dataType: "json",
-        url: "sdkjs/build/configs/" + config_file
+        url: "onlyoffice/sdkjs/build/configs/" + config_file
       });
     })
     .push(function (response) {
       var script_src = "",
-        queue = new RSVP.Queue();
+        queue = new RSVP.Queue(),
+        list = response.target.response.compile.sdk.min;
 
       function loadScript(src) {
         return new RSVP.Promise(function (resolve, reject) {
@@ -36,8 +37,9 @@ define([
         });
       }
 
-      response.target.response.compile.sdk.min.forEach(function (url) {
-        url = url.replace('../', './sdkjs/');
+      list.concat(response.target.response
+        .compile.sdk.desktop.min).forEach(function (url) {
+        url = url.replace('../', 'onlyoffice/sdkjs/');
         queue
           .push(function () {
             return jIO.util.ajax({

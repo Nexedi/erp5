@@ -183,7 +183,7 @@ define([
         },
 
         closeNotVisualMode: function() {
-            this.viewPluginsList.cmpEl.find('.selected').removeClass('selected');
+            this.viewPluginsList && this.viewPluginsList.cmpEl.find('.selected').removeClass('selected');
         },
 
         _onLoad: function() {

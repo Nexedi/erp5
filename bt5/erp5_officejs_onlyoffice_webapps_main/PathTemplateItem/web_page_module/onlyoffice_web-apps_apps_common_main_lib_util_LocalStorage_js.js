@@ -38,7 +38,7 @@
  *
  */
 
-define([], function () {
+define(['gateway'], function () {
     Common.localStorage = new (function() {
         var _storeName, _filter;
         var _store = {};

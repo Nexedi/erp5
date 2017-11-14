@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="File" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -62,19 +62,23 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/javascript</string> </value>
+            <value> <string>application/json</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/gadget_ooffice.js</string> </value>
+            <value> <string>onlyoffice/web-apps/apps/spreadsheeteditor/main/locale/vi.json</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_gadget_ooffice_js</string> </value>
+            <value> <string>onlyoffice_web-apps_apps_spreadsheeteditor_main_locale_vi_json</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>File</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>vi.json</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>

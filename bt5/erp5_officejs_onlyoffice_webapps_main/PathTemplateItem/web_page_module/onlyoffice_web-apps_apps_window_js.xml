@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/vendor/xmla4js/Xmla.js</string> </value>
+            <value> <string>onlyoffice/web-apps/apps/window.js</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_vendor_xmla4js_Xmla_js</string> </value>
+            <value> <string>onlyoffice_web-apps_apps_window_js</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

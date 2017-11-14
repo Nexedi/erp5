@@ -33,6 +33,8 @@
 define([
 ], function () {
     'use strict';
+    var FormulaResourcePath = Common.Gateway.props.base_url +
+      'web-apps/apps/spreadsheeteditor/main/resources/formula-lang/';
 
     SSE.Views = SSE.Views || {};
 
@@ -71,7 +73,7 @@ define([
                 try {
                     var xhrObj = _createXMLHTTPObject();
                     if (xhrObj && lang) {
-                        xhrObj.open('GET', 'apps/spreadsheeteditor/main/resources/formula-lang/' + lang + '.json', false);
+                        xhrObj.open('GET', FormulaResourcePath + lang + '.json', false);
                         xhrObj.send('');
                         langJson[lang] = eval("(" + xhrObj.responseText + ")");
                         return langJson[lang];
@@ -95,12 +97,12 @@ define([
                 try {
                     var xhrObj = _createXMLHTTPObject();
                     if (xhrObj && lang) {
-                        xhrObj.open('GET', 'apps/spreadsheeteditor/main/resources/formula-lang/' + lang + '_desc.json', false);
+                        xhrObj.open('GET', FormulaResourcePath + lang + '_desc.json', false);
                         xhrObj.send('');
                         if (xhrObj.status == 200)
                             langDescJson[lang] = eval("(" + xhrObj.responseText + ")");
                         else {
-                            xhrObj.open('GET', 'apps/spreadsheeteditor/main/resources/formula-lang/en_desc.json', false);
+                            xhrObj.open('GET', FormulaResourcePath + 'en_desc.json', false);
                             xhrObj.send('');
                             langDescJson[lang] = eval("(" + xhrObj.responseText + ")");
                         }

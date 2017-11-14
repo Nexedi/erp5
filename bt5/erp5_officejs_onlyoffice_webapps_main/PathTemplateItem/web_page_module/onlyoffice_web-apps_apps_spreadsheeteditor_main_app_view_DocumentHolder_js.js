@@ -44,11 +44,12 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'gateway',
     'common/main/lib/component/Menu'
 //    'spreadsheeteditor/main/app/view/HyperlinkSettingsDialog',
 //    'spreadsheeteditor/main/app/view/ParagraphSettingsAdvanced',
 //    'spreadsheeteditor/main/app/view/TableSettingsAdvanced'
-], function ($, _, Backbone) { 'use strict';
+], function ($, _, Backbone, gateway) { 'use strict';
 
     SSE.Views.DocumentHolder =  Backbone.View.extend(_.extend({
         el: '#editor_sdk',

@@ -368,7 +368,7 @@ define([
             if ( !this.$el.is(':visible') ) return;
 
             if (!this.developerHint) {
-                this.developerHint = $('<div id="developer-hint">' + this.txtDeveloper + '</div>').appendTo(this.$el);
+                this.developerHint = $('<div id="developer-hint">' + ((mode == Asc.c_oLicenseMode.Trial) ? this.txtTrial : this.txtDeveloper) + '</div>').appendTo(this.$el);
                 this.devHeight = this.developerHint.outerHeight();
                 $(window).on('resize', _.bind(this.onWindowResize, this));
             }
@@ -391,6 +391,7 @@ define([
         tipFile     : 'File',
         tipSearch   : 'Search',
         tipPlugins  : 'Plugins',
-        txtDeveloper: 'DEVELOPER MODE'
+        txtDeveloper: 'DEVELOPER MODE',
+        txtTrial: 'TRIAL MODE'
     }, DE.Views.LeftMenu || {}));
 });

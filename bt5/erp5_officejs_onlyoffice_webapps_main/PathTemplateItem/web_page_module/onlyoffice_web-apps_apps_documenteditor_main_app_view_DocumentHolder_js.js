@@ -44,6 +44,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'gateway',
     'common/main/lib/util/utils',
     'common/main/lib/component/Menu',
     'common/main/lib/view/InsertTableDialog',
@@ -52,7 +53,7 @@ define([
     'documenteditor/main/app/view/HyperlinkSettingsDialog',
     'documenteditor/main/app/view/ParagraphSettingsAdvanced',
     'documenteditor/main/app/view/TableSettingsAdvanced'
-], function ($, _, Backbone) { 'use strict';
+], function ($, _, Backbone, gateway) { 'use strict';
 
     DE.Views.DocumentHolder =  Backbone.View.extend(_.extend({
         el: '#editor_sdk',
