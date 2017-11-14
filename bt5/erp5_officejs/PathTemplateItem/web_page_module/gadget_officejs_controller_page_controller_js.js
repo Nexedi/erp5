@@ -56,8 +56,7 @@
           return gadget.changeState({
             jio_key: options.jio_key,
             doc: result,
-            child_gadget_url: child_gadget_url,
-            editable: options.editable
+            child_gadget_url: child_gadget_url
           });
         });
     })
@@ -76,8 +75,7 @@
         .push(function (form_gadget) {
           return form_gadget.render({
             jio_key: gadget.state.jio_key,
-            doc: gadget.state.doc,
-            editable: gadget.state.editable
+            doc: gadget.state.doc
           });
         });
     });
