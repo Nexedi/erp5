@@ -1482,38 +1482,48 @@ div[data-gadget-scope='notification'] button.error {
   }
 }
 /**********************************************
-* Class
+* Maximize
 **********************************************/
-.content-iframe-maximize {
+div[data-gadget-scope='header'].maximize-mode .ui-header {
+  margin-left: 0;
+}
+div[data-gadget-scope='header'].maximize-mode .ui-header .ui-subheader {
+  display: none;
+}
+div[data-gadget-scope='header'].maximize-mode .ui-header h1 {
+  flex: 1;
+}
+div[data-gadget-scope='header'].maximize-mode .ui-header h1 form {
+  height: 100%;
+}
+div[data-gadget-scope='header'].maximize-mode .ui-header h1 form button {
+  width: 100%;
+  height: 100%;
+}
+div[data-gadget-scope='header'].maximize-mode .ui-header .ui-controlgroup-controls button,
+div[data-gadget-scope='header'].maximize-mode .ui-header .ui-controlgroup-controls a {
+  background-color: #085078;
+}
+div[data-gadget-scope='header'].maximize-mode .ui-header .ui-controlgroup-controls button[name="panel"],
+div[data-gadget-scope='header'].maximize-mode .ui-header .ui-controlgroup-controls a[name="panel"] {
+  display: none;
+}
+div[data-gadget-scope='header'].maximize-mode .ui-header > .ui-btn-right {
+  border-left: 1px solid rgba(255, 255, 255, 0.55);
+}
+div[data-gadget-scope='header'].maximize-mode .ui-icon-arrow-up::before {
+  content: "\f00d";
+}
+div[data-gadget-scope='panel'].maximize-mode {
+  display: none;
+}
+.content-iframe-maximize div {
   position: fixed;
+  left: 0;
+  top: 30pt;
 }
-@media not screen and (max-width: 85em) {
-  .content-iframe-maximize {
-    left: 180pt;
-    top: 60pt;
-  }
-  .content-iframe-maximize iframe {
-    width: calc(100vw -  180pt );
-    height: calc(100vh -  60pt );
-  }
-}
-@media only screen and (min-width: 45em) and (max-width: 85em) {
-  .content-iframe-maximize {
-    left: 0;
-    top: 73pt;
-  }
-  .content-iframe-maximize iframe {
-    height: calc(100vh -  73pt );
-  }
-}
-@media not screen and (min-width: 45em) {
-  .content-iframe-maximize {
-    left: 0;
-    top: 67pt;
-  }
-  .content-iframe-maximize iframe {
-    height: calc(100vh -  67pt );
-  }
+.content-iframe-maximize div iframe {
+  height: calc(100vh -  30pt );
 }
 /**********************************************
 * Icons
