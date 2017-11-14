@@ -23,7 +23,6 @@
       return this.changeState({
         jio_key: options.jio_key,
         doc: options.doc,
-        editable: options.editable ? 1 : 0,
         content_editable: options.doc.content_type === undefined ||
             options.doc.content_type.indexOf("application/x-asc") === 0
       });
@@ -39,12 +38,17 @@
           return form_gadget.getContent();
         })
         .push(function (content) {
-          if (gadget.state.editable) {
+          if (gadget.state.content_editable) {
+            var data = content.text_content;
+            content.text_content = undefined;
             return gadget.jio_putAttachment(
               gadget.state.jio_key,
               "data",
-              jIO.util.dataURItoBlob(content.text_content)
-            );
+              jIO.util.dataURItoBlob(data)
+            )
+            .push(function () {
+              return gadget.updateDocument(content);
+            });
           }
           return gadget.updateDocument(content);
         })
@@ -80,7 +84,6 @@
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
-          var editable = gadget.state.editable && gadget.state.content_editable;
           return form_gadget.render({
             erp5_document: {
               "_embedded": {"_view": {
@@ -90,9 +93,9 @@
                   "default": gadget.state.doc.title,
                   "css_class": "",
                   "required": 1,
-                  "editable": 1 - editable,
+                  "editable": 1,
                   "key": "title",
-                  "hidden": editable,
+                  "hidden": 0,
                   "type": "StringField"
                 },
                 "my_reference": {
@@ -101,9 +104,9 @@
                   "default": gadget.state.doc.reference,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1 - editable,
+                  "editable": 1,
                   "key": "reference",
-                  "hidden": editable,
+                  "hidden": 0,
                   "type": "StringField"
                 },
                 "my_version": {
@@ -112,9 +115,9 @@
                   "default": gadget.state.doc.version,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1 - editable,
+                  "editable": 1,
                   "key": "version",
-                  "hidden": editable,
+                  "hidden": 0,
                   "type": "StringField"
                 },
                 "my_language": {
@@ -123,9 +126,9 @@
                   "default": gadget.state.doc.language,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1 - editable,
+                  "editable": 1,
                   "key": "language",
-                  "hidden": editable,
+                  "hidden": 0,
                   "type": "StringField"
                 },
                 "my_description": {
@@ -134,19 +137,19 @@
                   "default": gadget.state.doc.description,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1 - editable,
+                  "editable": 1,
                   "key": "description",
-                  "hidden": editable,
+                  "hidden": 0,
                   "type": "TextAreaField"
                 },
                 "my_content": {
-                  "default": gadget.state.editable || !gadget.state.content_editable ? data: "",
-                  "css_class": editable ? "content-iframe-maximize" : "",
+                  "default": data,
+                  "css_class": "",
                   "required": 0,
-                  "editable": editable,
+                  "editable": 1,
                   "key": "text_content",
                   "hidden": 0,
-                  "type": editable ? "GadgetField" : "EditorField",
+                  "type": gadget.state.content_editable ? "GadgetField" : "EditorField",
                   "url": "../ooffice_text_gadget/app/",
                   "sandbox": "iframe"
                 }
@@ -173,26 +176,17 @@
           return RSVP.all([
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'selection_previous'}),
-            gadget.getUrlFor({command: 'selection_next'}),
-            gadget.getUrlFor({command: "change", options: {editable: true}})
+            gadget.getUrlFor({command: 'selection_next'})
           ]);
         })
         .push(function (url_list) {
-          var header_dict = {
+          return gadget.updateHeader({
             page_title: gadget.state.doc.title,
             selection_url: url_list[0],
             previous_url: url_list[1],
             next_url: url_list[2],
             save_action: true
-          };
-          if (gadget.state.content_editable) {
-            if (gadget.state.editable) {
-              header_dict.edit_properties = url_list[3].replace("n.editable=true", "").replace("p.editable=true", "");
-            } else {
-              header_dict.edit_content = url_list[3];
-            }
-          }
-          return gadget.updateHeader(header_dict);
+          });
         });
     });
 }(window, rJS, RSVP, jIO, Blob));
