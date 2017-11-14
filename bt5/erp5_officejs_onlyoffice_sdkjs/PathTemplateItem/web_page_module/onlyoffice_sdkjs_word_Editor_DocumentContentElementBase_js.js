@@ -385,6 +385,9 @@ CDocumentContentElementBase.prototype.GetNumberingInfo = function(oNumberingEngi
 CDocumentContentElementBase.prototype.AddInlineImage = function(W, H, Img, Chart, bFlow)
 {
 };
+CDocumentContentElementBase.prototype.AddImages = function(aImages)
+{
+};
 CDocumentContentElementBase.prototype.AddOleObject = function(W, H, nWidthPix, nHeightPix, Img, Data, sApplicationId)
 {
 };
@@ -497,7 +500,7 @@ CDocumentContentElementBase.prototype.GetSelectedText = function(bClearText, oPr
 {
 	return null;
 };
-CDocumentContentElementBase.prototype.GetCurrentParagraph = function()
+CDocumentContentElementBase.prototype.GetCurrentParagraph = function(bIgnoreSelection, arrSelectedParagraphs)
 {
 	return null;
 };
@@ -690,6 +693,9 @@ CDocumentContentElementBase.prototype.Get_Index = function()
 
 	return this.Index;
 };
+CDocumentContentElementBase.prototype.GetOutlineParagraphs = function(arrOutline)
+{
+};
 //----------------------------------------------------------------------------------------------------------------------
 // Функции для работы с номерами страниц
 //----------------------------------------------------------------------------------------------------------------------
@@ -805,7 +811,9 @@ CDocumentContentElementBase.prototype.GetAllComments = function(AllComments)
 CDocumentContentElementBase.prototype.GetAllMaths = function(AllMaths)
 {
 };
-
+CDocumentContentElementBase.prototype.UpdateBookmarks = function(oManager)
+{
+};
 //--------------------------------------------------------export--------------------------------------------------------
 window['AscCommonWord'] = window['AscCommonWord'] || {};
 window['AscCommonWord'].CDocumentContentElementBase = CDocumentContentElementBase;

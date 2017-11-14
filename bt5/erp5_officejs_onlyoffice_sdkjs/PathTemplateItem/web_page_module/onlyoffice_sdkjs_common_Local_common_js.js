@@ -32,65 +32,65 @@
 
 "use strict";
 
-/////////////////////////////////////////////////////////
-//////////////       FONTS       ////////////////////////
-/////////////////////////////////////////////////////////
-AscFonts.CFontFileLoader.prototype.LoadFontAsync = function(basePath, _callback, isEmbed)
-{
-	this.callback = _callback;
-    if (-1 != this.Status)
-        return true;
-		
-	var oThis = this;
-	this.Status = 2;
-	if (window["AscDesktopEditor"] !== undefined && !this.CanUseOriginalFormat)
-	{
-		this.callback = null;		
-		window["AscDesktopEditor"]["LoadFontBase64"](this.Id);
-		this._callback_font_load();
-		return;
-	}
-
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', "ascdesktop://fonts/" + this.Id, true);
-	xhr.responseType = 'arraybuffer';
-
-	if (xhr.overrideMimeType)
-		xhr.overrideMimeType('text/plain; charset=x-user-defined');
-	else
-		xhr.setRequestHeader('Accept-Charset', 'x-user-defined');
-
-	xhr.onload = function()
-	{
-		if (this.status != 200)
-		{
-			oThis.Status = 1;
-			return;
-		}
-
-		oThis.Status = 0;
-
-		var fontStreams = AscFonts.g_fonts_streams;
-		if (this.response)
-		{
-			var __font_data_idx = fontStreams.length;
-			var _uintData = new Uint8Array(this.response);
-			fontStreams[__font_data_idx] = new AscFonts.FT_Stream(_uintData, _uintData.length);
-			oThis.SetStreamIndex(__font_data_idx);
-		}
-		else
-		{
-			var __font_data_idx = fontStreams.length;
-			fontStreams[__font_data_idx] = AscFonts.CreateFontData3(this.responseText);
-			oThis.SetStreamIndex(__font_data_idx);
-
-			if (null != oThis.callback)
-				oThis.callback();
-		}
-	};
-
-	xhr.send(null);
-};
+///////////////////////////////////////////////////////
+////////////       FONTS       ////////////////////////
+///////////////////////////////////////////////////////
+//AscFonts.CFontFileLoader.prototype.LoadFontAsync = function(basePath, _callback, isEmbed)
+//{
+//	this.callback = _callback;
+//    if (-1 != this.Status)
+//        return true;
+//
+//	var oThis = this;
+//	this.Status = 2;
+//	if (window["AscDesktopEditor"] !== undefined && !this.CanUseOriginalFormat)
+//	{
+//		this.callback = null;
+//		window["AscDesktopEditor"]["LoadFontBase64"](this.Id);
+//		this._callback_font_load();
+//		return;
+//	}
+//
+//	var xhr = new XMLHttpRequest();
+//	xhr.open('GET', "ascdesktop://fonts/" + this.Id, true);
+//	xhr.responseType = 'arraybuffer';
+//
+//	if (xhr.overrideMimeType)
+//		xhr.overrideMimeType('text/plain; charset=x-user-defined');
+//	else
+//		xhr.setRequestHeader('Accept-Charset', 'x-user-defined');
+//
+//	xhr.onload = function()
+//	{
+//		if (this.status != 200)
+//		{
+//			oThis.Status = 1;
+//			return;
+//		}
+//
+//		oThis.Status = 0;
+//
+//		var fontStreams = AscFonts.g_fonts_streams;
+//		if (this.response)
+//		{
+//			var __font_data_idx = fontStreams.length;
+//			var _uintData = new Uint8Array(this.response);
+//			fontStreams[__font_data_idx] = new AscFonts.FT_Stream(_uintData, _uintData.length);
+//			oThis.SetStreamIndex(__font_data_idx);
+//		}
+//		else
+//		{
+//			var __font_data_idx = fontStreams.length;
+//			fontStreams[__font_data_idx] = AscFonts.CreateFontData3(this.responseText);
+//			oThis.SetStreamIndex(__font_data_idx);
+//
+//			if (null != oThis.callback)
+//				oThis.callback();
+//		}
+//	};
+//
+//	xhr.send(null);
+//};
 
 /////////////////////////////////////////////////////////
 //////////////       IMAGES      ////////////////////////
@@ -106,18 +106,24 @@ prot.addUrls = function(urls){
 };
 prot.addImageUrl = function(strPath, url){
 };
-prot.getImageUrl = function(strPath){
-	if (0 === strPath.indexOf('theme'))
+prot.getImageUrl = function(url){
+	var _first = "jio:";
+	if (0 === url.indexOf(_first))
+		return url;
+
+	if (0 === url.indexOf('theme'))
 		return null;
 
-	if (window.editor && window.editor.ThemeLoader && window.editor.ThemeLoader.ThemesUrl != "" && strPath.indexOf(window.editor.ThemeLoader.ThemesUrl) == 0)
+	if (window.editor && window.editor.ThemeLoader && window.editor.ThemeLoader.ThemesUrl !== "" && url.indexOf(window.editor.ThemeLoader.ThemesUrl) === 0)
 		return null;
 
-	return this.documentUrl + "/media/" + strPath;
+	return _first + url;
+	//return this.documentUrl + "/media/" + strPath;
 };
 prot.getImageLocal = function(url){
-	var _first = this.documentUrl + "/media/";
-	if (0 == url.indexOf(_first))
+	//var _first = this.documentUrl + "/media/";
+	var _first = "jio:";
+	if (0 === url.indexOf(_first))
 		return url.substring(_first.length);
 
 	if (window.editor && window.editor.ThemeLoader && 0 == url.indexOf(editor.ThemeLoader.ThemesUrlAbs)) {
@@ -135,6 +141,9 @@ prot.getUrl = function(strPath){
 
 	if (window.editor && window.editor.ThemeLoader && window.editor.ThemeLoader.ThemesUrl != "" && strPath.indexOf(window.editor.ThemeLoader.ThemesUrl) == 0)
 		return null;
+
+	if (strPath == "Editor.xlsx")
+		return this.documentUrl + "/" + strPath;
 
 	return this.documentUrl + "/media/" + strPath;
 };
@@ -158,23 +167,23 @@ AscCommon.sendImgUrls = function(api, images, callback)
 /////////////////////////////////////////////////////////
 function DesktopOfflineUpdateLocalName(_api)
 {
-	var _name = window["AscDesktopEditor"]["LocalFileGetSourcePath"]();
-	
-	var _ind1 = _name.lastIndexOf("\\");
-	var _ind2 = _name.lastIndexOf("/");
-	
-	if (_ind1 == -1)
-		_ind1 = 1000000;
-	if (_ind2 == -1)
-		_ind2 = 1000000;
-	
-	var _ind = Math.min(_ind1, _ind2);
-	if (_ind != 1000000)
-		_name = _name.substring(_ind + 1);
-	
-	_api.documentTitle = _name;
-	_api.sendEvent("asc_onDocumentName", _name);
-	window["AscDesktopEditor"]["SetDocumentName"](_name);
+	//var _name = window["AscDesktopEditor"]["LocalFileGetSourcePath"]();
+	//
+	//var _ind1 = _name.lastIndexOf("\\");
+	//var _ind2 = _name.lastIndexOf("/");
+	//
+	//if (_ind1 == -1)
+	//	_ind1 = 1000000;
+	//if (_ind2 == -1)
+	//	_ind2 = 1000000;
+	//
+	//var _ind = Math.min(_ind1, _ind2);
+	//if (_ind != 1000000)
+	//	_name = _name.substring(_ind + 1);
+	//
+	//_api.documentTitle = _name;
+	//_api.sendEvent("asc_onDocumentName", _name);
+	//window["AscDesktopEditor"]["SetDocumentName"](_name);
 }
 
 AscCommon.CDocsCoApi.prototype.askSaveChanges = function(callback)
@@ -183,250 +192,134 @@ AscCommon.CDocsCoApi.prototype.askSaveChanges = function(callback)
 };
 AscCommon.CDocsCoApi.prototype.saveChanges = function(arrayChanges, deleteIndex, excelAdditionalInfo)
 {
-	window["AscDesktopEditor"]["LocalFileSaveChanges"](arrayChanges.join("\",\""), deleteIndex, arrayChanges.length);
-	//this.onUnSaveLock();
+	//window["AscDesktopEditor"]["LocalFileSaveChanges"](arrayChanges.join("\",\""), deleteIndex, arrayChanges.length);
+	this.onUnSaveLock();
 };
 
-window["NativeCorrectImageUrlOnCopy"] = function(url)
-{
-	AscCommon.g_oDocumentUrls.getImageUrl(url);
-};
-window["NativeCorrectImageUrlOnPaste"] = function(url)
-{
-	return window["AscDesktopEditor"]["LocalFileGetImageUrl"](url);
-};
+//window["NativeCorrectImageUrlOnCopy"] = function(url)
+//{
+//	AscCommon.g_oDocumentUrls.getImageUrl(url);
+//};
+//window["NativeCorrectImageUrlOnPaste"] = function(url)
+//{
+//	return window["AscDesktopEditor"]["LocalFileGetImageUrl"](url);
+//};
 
-window["UpdateInstallPlugins"] = function()
-{
-	var _plugins = JSON.parse(window["AscDesktopEditor"]["GetInstallPlugins"]());
-	_plugins["url"] = _plugins["url"].replace(" ", "%20");
+//window["UpdateInstallPlugins"] = function()
+//{
+//	var _plugins = JSON.parse(window["AscDesktopEditor"]["GetInstallPlugins"]());
+//	var _editor = window["Asc"]["editor"] ? window["Asc"]["editor"] : window.editor;
+//	_editor.asc_fireCallback("asc_onPluginsInit", _plugins);
+//};
 
-	var _len = _plugins["pluginsData"].length;
-	for (var i = 0; i < _len; i++)
-		_plugins["pluginsData"][i]["baseUrl"] = _plugins["url"] + _plugins["pluginsData"][i]["guid"].substring(4) + "/";
-
-	var _editor = window["Asc"]["editor"] ? window["Asc"]["editor"] : window.editor;
-	_editor.sendEvent("asc_onPluginsInit", _plugins);
-};
-
-AscCommon.InitDragAndDrop = function(oHtmlElement, callback) {
-	if ("undefined" != typeof(FileReader) && null != oHtmlElement) {
-		oHtmlElement["ondragover"] = function (e) {
-			e.preventDefault();
-			e.dataTransfer.dropEffect = AscCommon.CanDropFiles(e) ? 'copy' : 'none';
-			return false;
-		};
-		oHtmlElement["ondrop"] = function (e) {
-			e.preventDefault();
-			
-			var _files = window["AscDesktopEditor"]["GetDropFiles"]();
-			for (var i = 0; i < _files.length; i++)
-			{
-				if (window["AscDesktopEditor"]["IsImageFile"](_files[i]))
-				{
-					window["DesktopOfflineAppDocumentAddImageEnd"](_files[i]);
-					break;
-				}
-			}
-		};
-	}
-}
-
-window["asc_initAdvancedOptions"] = function(_code)
-{
-    var _editor = window["Asc"]["editor"] ? window["Asc"]["editor"] : window.editor;
-	_editor._onNeedParams(undefined, (_code == 90 || _code == 91) ? true : undefined);
-};
-
-window["DesktopOfflineAppDocumentSignatures"] = function(_json)
-{
-	var _editor = window["Asc"]["editor"] ? window["Asc"]["editor"] : window.editor;
-
-	_editor.signatures = [];
-
-	var _signatures = null;
-
-	try
-	{
-		_signatures = JSON.parse(_json);
-	}
-	catch (err)
-	{
-		return;
-	}
-
-	if (!_signatures)
-		return;
-
-	var _count = _signatures["count"];
-	var _data = _signatures["data"];
-	var _sign;
-	var _add_sign;
-
-	var _images_loading = [];
-	for (var i = 0; i < _count; i++)
-	{
-		_sign = _data[i];
-		_add_sign = new window["AscCommon"].asc_CSignatureLine();
-
-		_add_sign.guid = _sign["guid"];
-		_add_sign.valid = _sign["valid"];
-		_add_sign.image = (_add_sign.valid == 0) ? _sign["image_valid"] : _sign["image_invalid"];
-		_add_sign.image = "data:image/png;base64," + _add_sign.image;
-		_add_sign.signer1 = _sign["name"];
-		_add_sign.id = i;
-
-		_editor.signatures.push(_add_sign);
-
-		_images_loading.push(_add_sign.image);
-	}
-
-	if (!window.FirstSignaturesCall)
-	{
-		_editor.asc_registerCallback("asc_onAddSignature", function (guid)
-		{
-
-			var _api = window["Asc"]["editor"] ? window["Asc"]["editor"] : window.editor;
-			_api.sendEvent("asc_onUpdateSignatures", _api.asc_getSignatures(), _api.asc_getRequestSignatures());
-
-		});
-		_editor.asc_registerCallback("asc_onRemoveSignature", function (guid)
-		{
-
-			var _api = window["Asc"]["editor"] ? window["Asc"]["editor"] : window.editor;
-			_api.sendEvent("asc_onUpdateSignatures", _api.asc_getSignatures(), _api.asc_getRequestSignatures());
-
-		});
-	}
-	window.FirstSignaturesCall = true;
-
-	_editor.ImageLoader.LoadImagesWithCallback(_images_loading, function() {
-		if (this.WordControl)
-			this.WordControl.OnRePaintAttack();
-	}, null);
-
-	_editor.sendEvent("asc_onUpdateSignatures", _editor.asc_getSignatures(), _editor.asc_getRequestSignatures());
-};
-
-window["DesktopSaveQuestionReturn"] = function(isNeedSaved)
-{
-	if (isNeedSaved)
-	{
-		var _editor = window["Asc"]["editor"] ? window["Asc"]["editor"] : window.editor;
-		_editor.asc_Save(false);
-	}
-};
-
-window["OnNativeReturnCallback"] = function(name, obj)
-{
-	var _api = window["Asc"]["editor"] ? window["Asc"]["editor"] : window.editor;
-	_api.sendEvent(name, obj);
-};
-
-window["OnNativeOpenFilenameDialog"] = function(file)
-{
-	window.on_native_open_filename_dialog(file);
-	delete window.on_native_open_filename_dialog;
-};
-
-window["DesktopAfterOpen"] = function(_api)
-{
-	_api.asc_registerCallback("asc_onSignatureDblClick", function (guid, width, height)
-	{
-		var _length = _api.signatures.length;
-		for (var i = 0; i < _length; i++)
-		{
-			if (_api.signatures[i].guid == guid)
-			{
-				window["AscDesktopEditor"]["ViewCertificate"](_api.signatures[i].id);
-				return;
-			}
-		}
-
-		if (!_api.isDocumentModify)
-		{
-			_api.sendEvent("asc_onSignatureClick", guid, width, height);
-			return;
-		}
-
-		window.SaveQuestionObjectBeforeSign = { guid : guid, width : width, height : height };
-		window["AscDesktopEditor"]["SaveQuestion"]();
-	});
-
-	_api.sendEvent('asc_onSpellCheckInit', [
-		"1027",
-		"1029",
-		"1030",
-		"1031",
-		"1032",
-		"1033",
-		"1036",
-		"1038",
-		"1040",
-		"1042",
-		"1043",
-		"1044",
-		"1045",
-		"1046",
-		"1048",
-		"1049",
-		"1051",
-		"1053",
-		"1055",
-		"1058",
-		"1062",
-		"1063",
-		"1066",
-		"1068",
-		"2055",
-		"2057",
-		"2068",
-		"2070",
-		"3079",
-		"3081",
-		"3082"
-	]);
-};
-
-function getBinaryArray(_data, _len)
-{
-	var _array = new Uint8Array(_len);
-	var _index = 0;
-	var _written = 0;
-
-	var _data_len = _data.length;
-	while (_index < _data_len)
-	{
-		var dwCurr = 0;
-		var i;
-		var nBits = 0;
-		for (i=0; i<4; i++)
-		{
-			if (_index >= _data_len)
-				break;
-			var nCh = DecodeBase64Char(_data.charCodeAt(_index++));
-			if (nCh == -1)
-			{
-				i--;
-				continue;
-			}
-			dwCurr <<= 6;
-			dwCurr |= nCh;
-			nBits += 6;
-		}
-
-		dwCurr <<= 24-nBits;
-		for (i=0; i<nBits/8; i++)
-		{
-			_array[_written++] = ((dwCurr & 0x00ff0000) >>> 16);
-			dwCurr <<= 8;
-		}
-	}
-
-	return _array;
-}
+//AscCommon.InitDragAndDrop = function(oHtmlElement, callback) {
+//	if ("undefined" != typeof(FileReader) && null != oHtmlElement) {
+//		oHtmlElement["ondragover"] = function (e) {
+//			e.preventDefault();
+//			e.dataTransfer.dropEffect = AscCommon.CanDropFiles(e) ? 'copy' : 'none';
+//			return false;
+//		};
+//		oHtmlElement["ondrop"] = function (e) {
+//			e.preventDefault();
+//
+//			var _files = window["AscDesktopEditor"]["GetDropFiles"]();
+//			for (var i = 0; i < _files.length; i++)
+//			{
+//				if (window["AscDesktopEditor"]["IsImageFile"](_files[i]))
+//				{
+//					window["DesktopOfflineAppDocumentAddImageEnd"](_files[i]);
+//					break;
+//				}
+//			}
+//		};
+//	}
+//};
 
 // меняем среду
 //AscBrowser.isSafari = false;
 //AscBrowser.isSafariMacOs = false;
 //window.USER_AGENT_SAFARI_MACOS = false;
+
+
+AscCommon.readBlobAsDataURL = function (blob) {
+	var fr = new FileReader();
+	return new RSVP.Promise(function (resolve, reject, notify) {
+		fr.addEventListener("load", function () {
+			resolve(fr.result);
+		});
+		fr.addEventListener("error", reject);
+		fr.addEventListener("progress", notify);
+		fr.readAsDataURL(blob);
+	}, function () {
+		fr.abort();
+	});
+};
+
+AscCommon.downloadUrlAsBlob = function (url) {
+	var xhr = new XMLHttpRequest();
+	return new RSVP.Promise(function (resolve, reject) {
+		xhr.open("GET", url);
+		xhr.responseType = "blob";//force the HTTP response, response-type header to be blob
+		xhr.onload = function () {
+			if (this.status === 200) {
+				resolve(xhr.response);
+			} else {
+				reject(this.status);
+			}
+		};
+		xhr.onerror = reject;
+		xhr.send();
+	}, function () {
+		xhr.abort();
+	});
+};
+
+AscCommon.baseEditorsApi.prototype.jio_open = function () {
+	var t = this,
+		g = Common.Gateway;
+	return g.jio_getAttachment('/', 'body.txt')
+		.push(undefined, function (error) {
+			if (error["status_code"] === 404) {
+				return g.props.value;
+			}
+			throw error;
+		})
+		.push(function (doc) {
+			if (!doc) {
+				switch (g.props.documentType) {
+					case "presentation":
+						doc = t.getEmpty();
+						break;
+					case "spreadsheet":
+						doc = "XLSY;v2;2286;BAKAAgAAA+cHAAAEAwgAAADqCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGMFAAAAEQAAAAEMAAAABwEAAAAACAEAAAAABAoAAAAFAAAAAAUAAAAABnwAAAAHGgAAAAQGCgAAAEEAcgBpAGEAbAAGBQAAAAAAACRABxoAAAAEBgoAAABBAHIAaQBhAGwABgUAAAAAAAAkQAcaAAAABAYKAAAAQQByAGkAYQBsAAYFAAAAAAAAJEAHGgAAAAQGCgAAAEEAcgBpAGEAbAAGBQAAAAAAACRACB8AAAAJGgAAAAAGDgAAAEcARQBOAEUAUgBBAEwAAQSkAAAADhYDAAADPwAAAAABAQEBAQMBAQYEAAAAAAcEAAAAAAgEAAAAAAkEpAAAAA0GGAAAAAABBAEEAAAAAAUBAAYEAAAAAAcBAAgBAAMhAAAAAAEAAQEAAwEBBgQAAAAABwQAAAAACAQBAAAACQQAAAAAAyEAAAAAAQABAQADAQEGBAAAAAAHBAAAAAAIBAEAAAAJBAAAAAADIQAAAAABAAEBAAMBAQYEAAAAAAcEAAAAAAgEAgAAAAkEAAAAAAMhAAAAAAEAAQEAAwEBBgQAAAAABwQAAAAACAQCAAAACQQAAAAAAyEAAAAAAQABAQADAQEGBAAAAAAHBAAAAAAIBAAAAAAJBAAAAAADIQAAAAABAAEBAAMBAQYEAAAAAAcEAAAAAAgEAAAAAAkEAAAAAAMhAAAAAAEAAQEAAwEBBgQAAAAABwQAAAAACAQAAAAACQQAAAAAAyEAAAAAAQABAQADAQEGBAAAAAAHBAAAAAAIBAAAAAAJBAAAAAADIQAAAAABAAEBAAMBAQYEAAAAAAcEAAAAAAgEAAAAAAkEAAAAAAMhAAAAAAEAAQEAAwEBBgQAAAAABwQAAAAACAQAAAAACQQAAAAAAyEAAAAAAQABAQADAQEGBAAAAAAHBAAAAAAIBAAAAAAJBAAAAAADIQAAAAABAAEBAAMBAQYEAAAAAAcEAAAAAAgEAAAAAAkEAAAAAAMhAAAAAAEAAQEAAwEBBgQAAAAABwQAAAAACAQAAAAACQQAAAAAAyEAAAAAAQABAQADAQEGBAAAAAAHBAAAAAAIBAAAAAAJBAAAAAADIQAAAAABAAEBAAMBAQYEAAAAAAcEAAAAAAgEAQAAAAkEKwAAAAMhAAAAAAEAAQEAAwEBBgQAAAAABwQAAAAACAQBAAAACQQpAAAAAyEAAAAAAQABAQADAQEGBAAAAAAHBAAAAAAIBAEAAAAJBCwAAAADIQAAAAABAAEBAAMBAQYEAAAAAAcEAAAAAAgEAQAAAAkEKgAAAAMhAAAAAAEAAQEAAwEBBgQAAAAABwQAAAAACAQBAAAACQQJAAAAAkoAAAADRQAAAAABAAEBAAMBAAYEAAAAAAcEAAAAAAgEAAAAAAkEpAAAAAwEAAAAAA0GGAAAAAABBAEEAAAAAAUBAAYEAAAAAAcBAAgBAA8qAQAAECkAAAAABAAAAAAAAAABAQAAAAAEDAAAAE4AbwByAG0AYQBsAAUEAAAAAAAAABAnAAAAAAQAAAADAAAAAQEAAAAABAoAAABDAG8AbQBtAGEABQQAAAAPAAAAEC8AAAAABAAAAAYAAAABAQAAAAAEEgAAAEMAbwBtAG0AYQAgAFsAMABdAAUEAAAAEAAAABAtAAAAAAQAAAAEAAAAAQEAAAAABBAAAABDAHUAcgByAGUAbgBjAHkABQQAAAARAAAAEDUAAAAABAAAAAcAAAABAQAAAAAEGAAAAEMAdQByAHIAZQBuAGMAeQAgAFsAMABdAAUEAAAAEgAAABArAAAAAAQAAAAFAAAAAQEAAAAABA4AAABQAGUAcgBjAGUAbgB0AAUEAAAAEwAAABgAAAAAAwAAAAEBAAELAAAAAgYAAAAABAAAAADjAAAAAN4AAAABGwAAAAAGDAAAAFMAaABlAGUAdAAxAAEEAQAAAAIBAgIkAAAAAx8AAAABAQACBAEEAAADBAEAAAAEBAAAAAAFBXnalahdiStABAQAAABBADEAFhEAAAAXDAAAAAQBAAAAAQYBAAAAAQsKAAAAAQWamZmZmZkpQA48AAAAAAVxPQrXowA0QAEFKFyPwvUIOkACBXE9CtejADRAAwUoXI/C9Qg6QAQFcT0K16MANEAFBXE9CtejADRADwYAAAAAAQEBAQkQBgAAAAABAQEBAAkAAAAAGAYAAAACAQAAAAAAAAAA";
+						break;
+					case "text":
+						doc = window.g_sEmpty_bin;
+						break;
+				}
+			}
+			t._OfflineAppDocumentEndLoad('', doc);
+		})
+		.push(undefined, function (error) {
+			console.log(error);
+		});
+};
+
+AscCommon.baseEditorsApi.prototype.jio_save = function () {
+	var t = this,
+		g = Common.Gateway,
+		result = {},
+		data = t.asc_nativeGetFile();
+	if (g.props.save_defer) {
+		// if we are run from getContent
+		result[g.props.key] = data;
+		g.props.save_defer.resolve(result);
+		g.props.save_defer = null;
+	} else {
+		// TODO: rewrite to put_attachment
+		return g.jio_putAttachment('/', 'body.txt', data)
+			.push(undefined, function (error) {
+				console.log(error);
+			});
+	}
+};

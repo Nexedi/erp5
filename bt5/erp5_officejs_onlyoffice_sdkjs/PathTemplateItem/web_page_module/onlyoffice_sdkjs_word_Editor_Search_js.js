@@ -286,7 +286,7 @@ CDocument.prototype.Search_Select = function(Id)
     this.Document_UpdateSelectionState();
     this.Document_UpdateRulersState();
 };
-CDocument.prototype.Search_Replace = function(NewStr, bAll, Id)
+CDocument.prototype.Search_Replace = function(NewStr, bAll, Id, bInterfaceEvent)
 {
     var bResult = false;
 
@@ -340,13 +340,13 @@ CDocument.prototype.Search_Replace = function(NewStr, bAll, Id)
 
         bResult = true;
 
-        if ( true === bAll )
-            editor.sync_ReplaceAllCallback(AllCount, AllCount);
+		if (true === bAll && false !== bInterfaceEvent)
+			editor.sync_ReplaceAllCallback(AllCount, AllCount);
     }
     else
     {
-        if ( true === bAll )
-            editor.sync_ReplaceAllCallback(0, AllCount);
+		if (true === bAll && false !== bInterfaceEvent)
+			editor.sync_ReplaceAllCallback(0, AllCount);
     }
 
     this.Document_UpdateInterfaceState();
@@ -1243,7 +1243,7 @@ ParaRun.prototype.Search_GetId = function(bNext, bUseContentPos, ContentPos, Dep
             var Mark = this.SearchMarks[SPos];
             var MarkPos = Mark.SearchResult.StartPos.Get(Mark.Depth);
 
-            if ( MarkPos >= StartPos && MarkPos < NearPos )
+            if (Mark.SearchResult.ClassesS.length > 0 && this === Mark.SearchResult.ClassesS[Mark.SearchResult.ClassesS.length - 1] && MarkPos >= StartPos && MarkPos < NearPos)
             {
                 NearElementId = Mark.SearchResult.Id;
                 NearPos       = MarkPos;
@@ -1271,7 +1271,7 @@ ParaRun.prototype.Search_GetId = function(bNext, bUseContentPos, ContentPos, Dep
             var Mark = this.SearchMarks[SPos];
             var MarkPos = Mark.SearchResult.StartPos.Get(Mark.Depth);
 
-            if ( MarkPos < StartPos && MarkPos > NearPos )
+            if (Mark.SearchResult.ClassesS.length > 0 && this === Mark.SearchResult.ClassesS[Mark.SearchResult.ClassesS.length - 1] && MarkPos < StartPos && MarkPos > NearPos)
             {
                 NearElementId = Mark.SearchResult.Id;
                 NearPos       = MarkPos;

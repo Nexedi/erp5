@@ -207,11 +207,11 @@
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cDAVERAGE() {
-		cBaseFunction.call(this, "DAVERAGE");
 	}
 
 	cDAVERAGE.prototype = Object.create(cBaseFunction.prototype);
 	cDAVERAGE.prototype.constructor = cDAVERAGE;
+	cDAVERAGE.prototype.name = "DAVERAGE";
 	cDAVERAGE.prototype.argumentsMin = 3;
 	cDAVERAGE.prototype.argumentsMax = 3;
 	cDAVERAGE.prototype.Calculate = function (arg) {
@@ -227,7 +227,7 @@
 
 		var argError;
 		if (argError = this._checkErrorArg(argClone)) {
-			return this.value = argError;
+			return argError;
 		}
 
 		var resArr = getNeedValuesFromDataBase(argClone[0], argClone[1], argClone[2]);
@@ -250,7 +250,7 @@
 		}
 
 		 var res = new cNumber(summ / count);
-		 return this.value = cElementType.error === res.type ? new cNumber(0) : res;
+		 return cElementType.error === res.type ? new cNumber(0) : res;
 	 };
 
 
@@ -259,11 +259,11 @@
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cDCOUNT() {
-		cBaseFunction.call(this, "DCOUNT");
 	}
 
 	cDCOUNT.prototype = Object.create(cBaseFunction.prototype);
 	cDCOUNT.prototype.constructor = cDCOUNT;
+	cDCOUNT.prototype.name = "DCOUNT";
 	cDCOUNT.prototype.argumentsMin = 3;
 	cDCOUNT.prototype.argumentsMax = 3;
 	cDCOUNT.prototype.Calculate = function (arg) {
@@ -275,7 +275,7 @@
 
 		var argError;
 		if (argError = this._checkErrorArg(argClone)) {
-			return this.value = argError;
+			return argError;
 		}
 
 		var resArr = getNeedValuesFromDataBase(argClone[0], argClone[1], argClone[2]);
@@ -291,7 +291,7 @@
 			}
 		}
 
-		return this.value = new cNumber(count);
+		return new cNumber(count);
 	};
 
 
@@ -300,11 +300,11 @@
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cDCOUNTA() {
-		cBaseFunction.call(this, "DCOUNTA");
 	}
 
 	cDCOUNTA.prototype = Object.create(cBaseFunction.prototype);
 	cDCOUNTA.prototype.constructor = cDCOUNTA;
+	cDCOUNTA.prototype.name = "DCOUNTA";
 	cDCOUNTA.prototype.argumentsMin = 3;
 	cDCOUNTA.prototype.argumentsMax = 3;
 	cDCOUNTA.prototype.Calculate = function (arg) {
@@ -316,7 +316,7 @@
 
 		var argError;
 		if (argError = this._checkErrorArg(argClone)) {
-			return this.value = argError;
+			return argError;
 		}
 
 		var resArr = getNeedValuesFromDataBase(argClone[0], argClone[1], argClone[2], true);
@@ -331,7 +331,7 @@
 			}
 		}
 
-		return this.value = new cNumber(count);
+		return new cNumber(count);
 	};
 
 	/**
@@ -339,11 +339,11 @@
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cDGET() {
-		cBaseFunction.call(this, "DGET");
 	}
 
 	cDGET.prototype = Object.create(cBaseFunction.prototype);
 	cDGET.prototype.constructor = cDGET;
+	cDGET.prototype.name = "DGET";
 	cDGET.prototype.argumentsMin = 3;
 	cDGET.prototype.argumentsMax = 3;
 	cDGET.prototype.Calculate = function (arg) {
@@ -359,7 +359,7 @@
 
 		var argError;
 		if (argError = this._checkErrorArg(argClone)) {
-			return this.value = argError;
+			return argError;
 		}
 
 		var resArr = getNeedValuesFromDataBase(argClone[0], argClone[1], argClone[2]);
@@ -367,11 +367,11 @@
 			return resArr;
 		}
 		if(1 !== resArr.length){
-			return this.value =  new cError(cErrorType.not_numeric);
+			return  new cError(cErrorType.not_numeric);
 		}
 
 		var res = new cNumber(resArr[0]);
-		return this.value = cElementType.error === res.type ? new cNumber(0) : res;
+		return cElementType.error === res.type ? new cNumber(0) : res;
 	};
 
 	/**
@@ -379,11 +379,11 @@
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cDMAX() {
-		cBaseFunction.call(this, "DMAX");
 	}
 
 	cDMAX.prototype = Object.create(cBaseFunction.prototype);
 	cDMAX.prototype.constructor = cDMAX;
+	cDMAX.prototype.name = "DMAX";
 	cDMAX.prototype.argumentsMin = 3;
 	cDMAX.prototype.argumentsMax = 3;
 	cDMAX.prototype.Calculate = function (arg) {
@@ -399,7 +399,7 @@
 
 		var argError;
 		if (argError = this._checkErrorArg(argClone)) {
-			return this.value = argError;
+			return argError;
 		}
 
 		var resArr = getNeedValuesFromDataBase(argClone[0], argClone[1], argClone[2]);
@@ -412,7 +412,7 @@
 		});
 
 		var res = new cNumber(resArr[0]);
-		return this.value = cElementType.error === res.type ? new cNumber(0) : res;
+		return cElementType.error === res.type ? new cNumber(0) : res;
 	};
 
 	/**
@@ -420,11 +420,11 @@
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cDMIN() {
-		cBaseFunction.call(this, "DMIN");
 	}
 
 	cDMIN.prototype = Object.create(cBaseFunction.prototype);
 	cDMIN.prototype.constructor = cDMIN;
+	cDMIN.prototype.name = "DMIN";
 	cDMIN.prototype.argumentsMin = 3;
 	cDMIN.prototype.argumentsMax = 3;
 	cDMIN.prototype.Calculate = function (arg) {
@@ -440,7 +440,7 @@
 
 		var argError;
 		if (argError = this._checkErrorArg(argClone)) {
-			return this.value = argError;
+			return argError;
 		}
 
 		var resArr = getNeedValuesFromDataBase(argClone[0], argClone[1], argClone[2]);
@@ -453,7 +453,7 @@
 		});
 
 		var res = new cNumber(resArr[0]);
-		return this.value = cElementType.error === res.type ? new cNumber(0) : res;
+		return cElementType.error === res.type ? new cNumber(0) : res;
 	};
 
 
@@ -462,11 +462,11 @@
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cDPRODUCT() {
-		cBaseFunction.call(this, "DPRODUCT");
 	}
 
 	cDPRODUCT.prototype = Object.create(cBaseFunction.prototype);
 	cDPRODUCT.prototype.constructor = cDPRODUCT;
+	cDPRODUCT.prototype.name = "DPRODUCT";
 	cDPRODUCT.prototype.argumentsMin = 3;
 	cDPRODUCT.prototype.argumentsMax = 3;
 	cDPRODUCT.prototype.Calculate = function (arg) {
@@ -482,7 +482,7 @@
 
 		var argError;
 		if (argError = this._checkErrorArg(argClone)) {
-			return this.value = argError;
+			return argError;
 		}
 
 		var resArr = getNeedValuesFromDataBase(argClone[0], argClone[1], argClone[2]);
@@ -503,7 +503,7 @@
 		}
 
 		res = new cNumber(res);
-		return this.value = cElementType.error === res.type ? new cNumber(0) : res;
+		return cElementType.error === res.type ? new cNumber(0) : res;
 	};
 
 	/**
@@ -511,11 +511,11 @@
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cDSTDEV() {
-		cBaseFunction.call(this, "DSTDEV");
 	}
 
 	cDSTDEV.prototype = Object.create(cBaseFunction.prototype);
 	cDSTDEV.prototype.constructor = cDSTDEV;
+	cDSTDEV.prototype.name = "DSTDEV";
 	cDSTDEV.prototype.argumentsMin = 3;
 	cDSTDEV.prototype.argumentsMax = 3;
 	cDSTDEV.prototype.Calculate = function (arg) {
@@ -531,7 +531,7 @@
 
 		var argError;
 		if (argError = this._checkErrorArg(argClone)) {
-			return this.value = argError;
+			return argError;
 		}
 
 		var resArr = getNeedValuesFromDataBase(argClone[0], argClone[1], argClone[2]);
@@ -560,7 +560,7 @@
 			av = member[i] - average;
 			res += av * av;
 		}
-		return this.value = new cNumber(Math.sqrt(res / (count - 1)));
+		return new cNumber(Math.sqrt(res / (count - 1)));
 	 };
 
 	/**
@@ -568,11 +568,11 @@
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cDSTDEVP() {
-		cBaseFunction.call(this, "DSTDEVP");
 	}
 
 	cDSTDEVP.prototype = Object.create(cBaseFunction.prototype);
 	cDSTDEVP.prototype.constructor = cDSTDEVP;
+	cDSTDEVP.prototype.name = "DSTDEVP";
 	cDSTDEVP.prototype.argumentsMin = 3;
 	cDSTDEVP.prototype.argumentsMax = 3;
 	cDSTDEVP.prototype.Calculate = function (arg) {
@@ -588,7 +588,7 @@
 
 		var argError;
 		if (argError = this._checkErrorArg(argClone)) {
-			return this.value = argError;
+			return argError;
 		}
 
 		var resArr = getNeedValuesFromDataBase(argClone[0], argClone[1], argClone[2], true);
@@ -617,7 +617,7 @@
 			return new cNumber(isNaN(_x) ? new cError(cErrorType.division_by_zero) : Math.sqrt(sumSQRDeltaX / xLength));
 		}
 
-		return this.value = _var(resArr);
+		return _var(resArr);
 	};
 
 
@@ -626,11 +626,11 @@
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cDSUM() {
-		cBaseFunction.call(this, "DSUM");
 	}
 
 	cDSUM.prototype = Object.create(cBaseFunction.prototype);
 	cDSUM.prototype.constructor = cDSUM;
+	cDSUM.prototype.name = "DSUM";
 	cDSUM.prototype.argumentsMin = 3;
 	cDSUM.prototype.argumentsMax = 3;
 	cDSUM.prototype.Calculate = function (arg) {
@@ -646,7 +646,7 @@
 
 		var argError;
 		if (argError = this._checkErrorArg(argClone)) {
-			return this.value = argError;
+			return argError;
 		}
 
 		var resArr = getNeedValuesFromDataBase(argClone[0], argClone[1], argClone[2]);
@@ -663,7 +663,7 @@
 		}
 
 		var res = new cNumber(summ);
-		return this.value = cElementType.error === res.type ? new cNumber(0) : res;
+		return cElementType.error === res.type ? new cNumber(0) : res;
 	};
 
 	/**
@@ -671,11 +671,11 @@
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cDVAR() {
-		cBaseFunction.call(this, "DVAR");
 	}
 
 	cDVAR.prototype = Object.create(cBaseFunction.prototype);
 	cDVAR.prototype.constructor = cDVAR;
+	cDVAR.prototype.name = "DVAR";
 	cDVAR.prototype.argumentsMin = 3;
 	cDVAR.prototype.argumentsMax = 3;
 	cDVAR.prototype.Calculate = function (arg) {
@@ -691,7 +691,7 @@
 
 		var argError;
 		if (argError = this._checkErrorArg(argClone)) {
-			return this.value = argError;
+			return argError;
 		}
 
 		var resArr = getNeedValuesFromDataBase(argClone[0], argClone[1], argClone[2], true);
@@ -727,7 +727,7 @@
 		}
 
 		var res = _var(resArr);
-		return this.value = /*cElementType.error === res.type ? new cNumber(0) :*/ res;
+		return /*cElementType.error === res.type ? new cNumber(0) :*/ res;
 	};
 
 	/**
@@ -735,11 +735,11 @@
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cDVARP() {
-		cBaseFunction.call(this, "DVARP");
 	}
 
 	cDVARP.prototype = Object.create(cBaseFunction.prototype);
 	cDVARP.prototype.constructor = cDVARP;
+	cDVARP.prototype.name = "DVARP";
 	cDVARP.prototype.argumentsMin = 3;
 	cDVARP.prototype.argumentsMax = 3;
 	cDVARP.prototype.Calculate = function (arg) {
@@ -755,7 +755,7 @@
 
 		var argError;
 		if (argError = this._checkErrorArg(argClone)) {
-			return this.value = argError;
+			return argError;
 		}
 
 		var resArr = getNeedValuesFromDataBase(argClone[0], argClone[1], argClone[2], true);
@@ -792,7 +792,7 @@
 		}
 
 		var res = _var(resArr);
-		return this.value = /*cElementType.error === res.type ? new cNumber(0) :*/ res;
+		return /*cElementType.error === res.type ? new cNumber(0) :*/ res;
 	};
 
 })(window);

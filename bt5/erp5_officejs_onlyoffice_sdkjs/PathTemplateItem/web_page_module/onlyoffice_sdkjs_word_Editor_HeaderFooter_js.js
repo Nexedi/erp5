@@ -672,6 +672,10 @@ CHeaderFooter.prototype =
     {
         this.Content.AddInlineImage(W,H,Img, Chart, bFlow);
     },
+	AddImages : function(aImages)
+    {
+        this.Content.AddImages(aImages);
+    },
     AddSignatureLine : function(oSignatureDrawing)
     {
         this.Content.AddSignatureLine(oSignatureDrawing);
@@ -992,9 +996,9 @@ CHeaderFooter.prototype =
 		return this.Content.SelectAll();
 	},
 
-	GetCurrentParagraph : function()
+	GetCurrentParagraph : function(bIgnoreSelection, arrSelectedParagraphs)
 	{
-		return this.Content.GetCurrentParagraph();
+		return this.Content.GetCurrentParagraph(bIgnoreSelection, arrSelectedParagraphs);
 	},
 
 	StartSelectionFromCurPos : function()
@@ -1850,6 +1854,11 @@ CHeaderFooterController.prototype =
         if ( null != this.CurHdrFtr )
             return this.CurHdrFtr.AddInlineImage(W,H,Img, Chart, bFlow);
     },
+	AddImages : function(aImages)
+    {
+        if ( null != this.CurHdrFtr )
+            return this.CurHdrFtr.AddImages(aImages);
+    },
     AddSignatureLine : function(oSignatureDrawing)
     {
         if ( null != this.CurHdrFtr )
@@ -2326,9 +2335,9 @@ CHeaderFooterController.prototype =
             return { X : -1, Y : -1, Height : -1 };
     },
 
-	GetCurrentParagraph : function()
+	GetCurrentParagraph : function(bIgnoreSelection, arrSelectedParagraphs)
 	{
-		return this.CurHdrFtr.GetCurrentParagraph();
+		return this.CurHdrFtr.GetCurrentParagraph(bIgnoreSelection, arrSelectedParagraphs);
 	},
 
 	StartSelectionFromCurPos : function()

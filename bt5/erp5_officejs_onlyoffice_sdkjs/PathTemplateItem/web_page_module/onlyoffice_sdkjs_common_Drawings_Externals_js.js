@@ -426,7 +426,7 @@ function CFontFileLoader(id)
         //var _name = this.Id;
         var _name = g_fontNamesEncoder.Encode(this.Id) + ".ttf";
 
-        xhr.open('GET', basePath + "/" + _name, true); // TODO:
+        xhr.open('GET', basePath + "ttf/" + _name, true); // TODO:
 
         if (typeof ArrayBuffer !== 'undefined' && !window.opera)
             xhr.responseType = 'arraybuffer';
@@ -590,7 +590,7 @@ function GenerateMapId(api, name, style, size)
     var fontInfo = api.FontLoader.fontInfos[api.FontLoader.map_font_index[name]];
     var index = -1;
 
-    // ��������� ����� �� �����
+	// подбираем шрифт по стилю
     var bNeedBold   = false;
     var bNeedItalic = false;
 
@@ -772,7 +772,7 @@ CFontInfo.prototype =
         {
             if ((this.NeedStyles & 1) != 0)
             {
-                // ����� ����� regular
+				// нужен стиль regular
                 if (false === this.needR)
                 {
                     this.needR = true;
@@ -795,7 +795,7 @@ CFontInfo.prototype =
             }
             if ((this.NeedStyles & 2) != 0)
             {
-                // ����� ����� italic
+				// нужен стиль italic
                 if (false === this.needI)
                 {
                     this.needI = true;

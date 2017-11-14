@@ -1227,9 +1227,8 @@
 						}
 						else if (data.type === "onExternalPluginMessage")
 						{
-							var _iframe = document.getElementById("plugin_iframe");
-							if (_iframe)
-								_iframe.contentWindow.postMessage(event.data, "*");
+							if (window.g_asc_plugins)
+								window.g_asc_plugins.sendToAllPlugins(event.data);
 						}
 					} catch (err)
 					{
@@ -1327,7 +1326,7 @@
 			Common.Gateway.jio_putAttachment(documentId, undefined, file)
 				.push(function (image_url)
 				{
-					callback(Asc.c_oAscError.ID.No, 'jio:' + image_url);
+					callback(Asc.c_oAscError.ID.No, ['jio:' + image_url]);
 				})
 				.push(undefined, function (error)
 				{
@@ -2827,13 +2826,65 @@
 
 	function loadSdk(sdkName, callback)
 	{
+		var config_file;
+		function loadScriptPromise(src) {
+			return new RSVP.Promise(function (resolve, reject) {
+				var s;
+				s = document.createElement('script');
+				s.src = src;
+				s.onload = resolve;
+				s.onerror = reject;
+				document.head.appendChild(s);
+			});
+		}
+
 		if (window['AscNotLoadAllScript'])
 		{
 			callback();
 		}
 		else
 		{
-			loadScript('./../../../../sdkjs/' + sdkName + '/sdk-all.js', callback);
+			if (!Common.Gateway.props.binary_loader) {
+				switch (sdkName) {
+					case 'word':
+						config_file = "webword.json";
+						break;
+					case 'cell':
+						config_file = "webexcel.json";
+						break;
+					case 'slide':
+						config_file = "webpowerpoint.json";
+						break;
+				}
+
+				return new RSVP.Queue()
+					.push(function () {
+						return jIO.util.ajax({
+							type: "GET",
+							dataType: "json",
+							url: Common.Gateway.props.base_url +
+							"sdkjs/build/configs/" +
+							config_file
+						});
+					})
+					.push(function (response) {
+						var queue = new RSVP.Queue(),
+							sdk = response.target.response.compile.sdk,
+							list = sdk.common;
+						list = list.concat(sdk.private);
+						list.concat(sdk.desktop.common).forEach(function (url) {
+							url = url.replace('../', Common.Gateway.props.base_url +
+								'sdkjs/');
+							queue.push(function () {
+								return loadScriptPromise(url);
+							});
+						});
+						return queue;
+					})
+					.push(callback);
+			}
+
+			loadScript(Common.Gateway.props.base_url + '/sdkjs/' + sdkName + '/sdk-all.js', callback);
 		}
 	}
 

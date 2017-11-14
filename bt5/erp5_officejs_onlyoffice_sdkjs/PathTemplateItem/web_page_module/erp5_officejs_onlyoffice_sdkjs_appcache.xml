@@ -87,7 +87,6 @@ onlyoffice/sdkjs/build/configs/webexcel.json\n
 onlyoffice/sdkjs/build/configs/webpowerpoint.json\n
 onlyoffice/sdkjs/build/configs/webword.json\n
 onlyoffice/sdkjs/cell/Local/api.js\n
-onlyoffice/sdkjs/cell/Local/api_jio.js\n
 onlyoffice/sdkjs/cell/Private/comments.js\n
 onlyoffice/sdkjs/cell/api.js\n
 onlyoffice/sdkjs/cell/apiBuilder.js\n
@@ -207,9 +206,6 @@ onlyoffice/sdkjs/common/Images/plus_copy_2x.png\n
 onlyoffice/sdkjs/common/Images/text_copy.png\n
 onlyoffice/sdkjs/common/Images/text_copy_2x.png\n
 onlyoffice/sdkjs/common/Local/common.js\n
-onlyoffice/sdkjs/common/Local/common_jio.js\n
-onlyoffice/sdkjs/common/Local/empty_slide.js\n
-onlyoffice/sdkjs/common/Local/jio.js\n
 onlyoffice/sdkjs/common/Local/license.js\n
 onlyoffice/sdkjs/common/Merge/NodejsEnv.js\n
 onlyoffice/sdkjs/common/Native/Wrappers/DrawingDocument.js\n
@@ -248,12 +244,6 @@ onlyoffice/sdkjs/common/docscoapicommon.js\n
 onlyoffice/sdkjs/common/downloaderfiles.js\n
 onlyoffice/sdkjs/common/easysax.js\n
 onlyoffice/sdkjs/common/editorscommon.js\n
-onlyoffice/sdkjs/common/externs/global.js\n
-onlyoffice/sdkjs/common/externs/jquery-3.2.js\n
-onlyoffice/sdkjs/common/externs/jszip-utils.js\n
-onlyoffice/sdkjs/common/externs/jszip.min.js\n
-onlyoffice/sdkjs/common/externs/sockjs.js\n
-onlyoffice/sdkjs/common/externs/xregexp-3.0.0.js\n
 onlyoffice/sdkjs/common/openxml.js\n
 onlyoffice/sdkjs/common/pluginBase.js\n
 onlyoffice/sdkjs/common/plugins.js\n
@@ -282,11 +272,9 @@ onlyoffice/sdkjs/slide/Editor/Format/SlideMaster.js\n
 onlyoffice/sdkjs/slide/Editor/Format/StylesPrototype.js\n
 onlyoffice/sdkjs/slide/Editor/Format/TextBodyPrototype.js\n
 onlyoffice/sdkjs/slide/Local/api.js\n
-onlyoffice/sdkjs/slide/Local/api_jio.js\n
 onlyoffice/sdkjs/slide/Native/Wrappers/DrawingDocument.js\n
 onlyoffice/sdkjs/slide/Native/Wrappers/HtmlPage.js\n
 onlyoffice/sdkjs/slide/Native/Wrappers/api.js\n
-onlyoffice/sdkjs/slide/Native/native.js\n
 onlyoffice/sdkjs/slide/Private/comments.js\n
 onlyoffice/sdkjs/slide/Texture/Canvas.png\n
 onlyoffice/sdkjs/slide/Texture/Carton.png\n
@@ -344,6 +332,7 @@ onlyoffice/sdkjs/word/Drawing/ShapeDrawer.js\n
 onlyoffice/sdkjs/word/Drawing/documentrenderer.js\n
 onlyoffice/sdkjs/word/Drawing/mobileTouchManager.js\n
 onlyoffice/sdkjs/word/Drawing/translations.js\n
+onlyoffice/sdkjs/word/Editor/Bookmarks.js\n
 onlyoffice/sdkjs/word/Editor/CollaborativeEditing.js\n
 onlyoffice/sdkjs/word/Editor/Comments.js\n
 onlyoffice/sdkjs/word/Editor/CommentsChanges.js\n
@@ -382,6 +371,8 @@ onlyoffice/sdkjs/word/Editor/MathChanges.js\n
 onlyoffice/sdkjs/word/Editor/Numbering.js\n
 onlyoffice/sdkjs/word/Editor/NumberingChanges.js\n
 onlyoffice/sdkjs/word/Editor/Paragraph.js\n
+onlyoffice/sdkjs/word/Editor/Paragraph/ComplexField.js\n
+onlyoffice/sdkjs/word/Editor/Paragraph/ComplexFieldInstruction.js\n
 onlyoffice/sdkjs/word/Editor/Paragraph/ParaDrawing.js\n
 onlyoffice/sdkjs/word/Editor/Paragraph/ParaDrawingChanges.js\n
 onlyoffice/sdkjs/word/Editor/Paragraph/ParaTextPr.js\n
@@ -413,7 +404,6 @@ onlyoffice/sdkjs/word/Editor/Table/TableRecalculate.js\n
 onlyoffice/sdkjs/word/Editor/Table/TableRow.js\n
 onlyoffice/sdkjs/word/Editor/Table/TableRowChanges.js\n
 onlyoffice/sdkjs/word/Local/api.js\n
-onlyoffice/sdkjs/word/Local/api_jio.js\n
 onlyoffice/sdkjs/word/Local/documentrenderer.js\n
 onlyoffice/sdkjs/word/Local/local.html\n
 onlyoffice/sdkjs/word/Math/accent.js\n

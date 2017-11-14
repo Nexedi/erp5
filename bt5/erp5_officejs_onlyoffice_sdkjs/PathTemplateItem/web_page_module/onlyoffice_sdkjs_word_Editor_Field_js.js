@@ -35,12 +35,6 @@
 // Import
 var History = AscCommon.History;
 
-var fieldtype_UNKNOWN    = 0x0000;
-var fieldtype_MERGEFIELD = 0x0001;
-var fieldtype_PAGENUM    = 0x0002;
-var fieldtype_PAGECOUNT  = 0x0003;
-var fieldtype_FORMTEXT   = 0x0004;
-
 /**
  *
  * @param FieldType

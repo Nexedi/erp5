@@ -1,4 +1,4 @@
-﻿/*
+/*
  * (c) Copyright Ascensio System SIA 2010-2017
  *
  * This program is a free software product. You can redistribute it and/or
@@ -120,6 +120,7 @@ var editor;
     this.isImageChangeUrl = false;
     this.isShapeImageChangeUrl = false;
     this.isTextArtChangeUrl = false;
+    this.textureType = null;
 
 
 	  // Styles sizes
@@ -228,12 +229,13 @@ var editor;
 		if (null == value) {
 			var ws = this.wbModel.getActiveWs();
 			var activeCell = ws.selectionRange.activeCell;
-			var cell = ws._getCellNoEmpty(activeCell.row, activeCell.col);
-			if (cell) {
-				res = cell.getValueForExample(numFormat, cultureInfo);
-			} else {
-				res = '';
-			}
+			ws._getCellNoEmpty(activeCell.row, activeCell.col, function(cell) {
+              if (cell) {
+                res = cell.getValueForExample(numFormat, cultureInfo);
+              } else {
+                res = '';
+              }
+            });
 		} else {
 			res = numFormat.formatToChart(value, cultureInfo);
 		}
@@ -283,11 +285,6 @@ var editor;
 	spreadsheet_api.prototype.asc_getLocale = function() {
 		return AscCommon.g_oDefaultCultureInfo.LCID;
 	};
-
-  spreadsheet_api.prototype.asc_LoadEmptyDocument = function() {
-    this.CoAuthoringApi.auth(this.getViewMode());
-    this.onEndLoadFile(true);
-  };
 
   spreadsheet_api.prototype._openDocument = function(data) {
     var wb = new AscCommonExcel.Workbook(this.handlers, this);
@@ -575,6 +572,10 @@ var editor;
     }
   };
 
+	  spreadsheet_api.prototype.asc_setFilteringMode = function (mode) {
+		  window['AscCommonExcel'].filteringMode = !!mode;
+	  };
+
   /*
    idOption идентификатор дополнительного параметра, пока c_oAscAdvancedOptionsID.CSV.
    option - какие свойства применить, пока массив. для CSV объект asc_CCSVAdvancedOptions(codepage, delimiter)
@@ -659,7 +660,7 @@ var editor;
         t.handlers.trigger("asc_onAdvancedOptions", new AscCommon.asc_CAdvancedOptions(c_oAscAdvancedOptionsID.CSV, cp), t.advancedOptionsAction);
       });
     } else {
-      t.handlers.trigger("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
+      t.handlers.trigger("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.Critical);
     }
   };
   spreadsheet_api.prototype._onOpenCommand = function(data) {
@@ -676,11 +677,8 @@ var editor;
   };
 
   spreadsheet_api.prototype._OfflineAppDocumentEndLoad = function() {
-    var data = getTestWorkbook();
-    var sData = data + "";
-    if (AscCommon.c_oSerFormat.Signature === sData.substring(0, AscCommon.c_oSerFormat.Signature.length)) {
-      this.openDocument(sData);
-    }
+    this.isChartEditor = true;
+    this.onEndLoadFile(AscCommonExcel.getEmptyWorkbook());
   };
 
   spreadsheet_api.prototype._asc_save2 = function () {
@@ -876,11 +874,6 @@ var editor;
     this.handlers.remove(name, callback);
   };
 
-  spreadsheet_api.prototype.asc_getController = function() {
-    return this.controller;
-//				return null;
-  };
-
   spreadsheet_api.prototype.asc_SetDocumentPlaceChangedEnabled = function(val) {
     this.wb.setDocumentPlaceChangedEnabled(val);
   };
@@ -942,15 +935,6 @@ var editor;
 
   spreadsheet_api.prototype.openDocument = function(sData) {
     var t = this;
-    if (true === sData) {
-      // Empty Document
-      sData = AscCommonExcel.getEmptyWorkbook() + "";
-      if (sData.length && (AscCommon.c_oSerFormat.Signature === sData.substring(0, AscCommon.c_oSerFormat.Signature.length))) {
-        this.isChartEditor = true;
-      } else {
-        return;
-      }
-    }
 	this.wbModel = this._openDocument(sData);
 	this.openDocumentFromZip(this.wbModel, AscCommon.g_oDocumentUrls.getUrl('Editor.xlsx')).then(function() {
 		t.FontLoader.LoadDocumentFonts(t.wbModel.generateFontMap2());
@@ -2362,7 +2346,7 @@ var editor;
       callback = function (url) {
         //g_oDocumentUrls.addUrls(urls);
         var ws = t.wb.getWorksheet();
-        ws.objectRender.addImageDrawingObject('jio:' + url, null);
+        ws.objectRender.addImageDrawingObject(['jio:' + url], null);
       };
     }
     //this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
@@ -2407,13 +2391,13 @@ var editor;
     // ToDo заменить на общую функцию для всех
     this.asc_addImage();
   };
-  spreadsheet_api.prototype._addImageUrl = function(url) {
+  spreadsheet_api.prototype._addImageUrl = function(urls) {
     var ws = this.wb.getWorksheet();
     if (ws) {
       if (this.isImageChangeUrl || this.isShapeImageChangeUrl || this.isTextArtChangeUrl) {
-        ws.objectRender.editImageDrawingObject(url);
+        ws.objectRender.editImageDrawingObject(urls[0]);
       } else {
-        ws.objectRender.addImageDrawingObject(url, null);
+        ws.objectRender.addImageDrawingObject(urls, null);
       }
     }
   };
@@ -2668,13 +2652,15 @@ var editor;
     this.asc_addImage();
   };
 
-  spreadsheet_api.prototype.asc_changeShapeImageFromFile = function() {
+  spreadsheet_api.prototype.asc_changeShapeImageFromFile = function(type) {
     this.isShapeImageChangeUrl = true;
+    this.textureType = type;
     this.asc_addImage();
   };
 
-  spreadsheet_api.prototype.asc_changeArtImageFromFile = function() {
+  spreadsheet_api.prototype.asc_changeArtImageFromFile = function(type) {
     this.isTextArtChangeUrl = true;
+    this.textureType = type;
     this.asc_addImage();
   };
 
@@ -2894,23 +2880,21 @@ var editor;
   };
 
   spreadsheet_api.prototype.asc_setCellAlign = function(align) {
-    var ha = AscCommonExcel.horizontalAlignFromString(align);
     var ws = this.wb.getWorksheet();
     if (ws.objectRender.selectedGraphicObjectsExists() && ws.objectRender.controller.setCellAlign) {
-      ws.objectRender.controller.setCellAlign(ha);
+      ws.objectRender.controller.setCellAlign(align);
     } else {
-      this.wb.getWorksheet().setSelectionInfo("a", ha);
+      this.wb.getWorksheet().setSelectionInfo("a", align);
       this.wb.restoreFocus();
     }
   };
 
   spreadsheet_api.prototype.asc_setCellVertAlign = function(align) {
-    var va = AscCommonExcel.verticalAlignFromString(align);
     var ws = this.wb.getWorksheet();
     if (ws.objectRender.selectedGraphicObjectsExists() && ws.objectRender.controller.setCellVertAlign) {
-      ws.objectRender.controller.setCellVertAlign(va);
+      ws.objectRender.controller.setCellVertAlign(align);
     } else {
-      this.wb.getWorksheet().setSelectionInfo("va", va);
+      this.wb.getWorksheet().setSelectionInfo("va", align);
       this.wb.restoreFocus();
     }
   };
@@ -3147,16 +3131,22 @@ var editor;
   /////////////////////////////////////////////////////////////////////////
 	spreadsheet_api.prototype._autoSave = function () {
 		if (!this.DocumentLoadComplete || (!this.canUnlockDocument && 0 === this.autoSaveGap &&
-			(!this.collaborativeEditing.getFast() || !this.collaborativeEditing.getCollaborativeEditing())) ||
-			this.asc_getCellEditMode() || this.asc_getIsTrackShape() || this.isOpenedChartFrame ||
-			!History.IsEndTransaction() || !this.canSave) {
+				(!this.collaborativeEditing.getFast() || !this.collaborativeEditing.getCollaborativeEditing())) ||
+			this.asc_getIsTrackShape() || this.isOpenedChartFrame || !History.IsEndTransaction() || !this.canSave) {
 			return;
 		}
 
+		// Check edit mode after unlock document http://bugzilla.onlyoffice.com/show_bug.cgi?id=35971
 		if (this.canUnlockDocument) {
-			this.asc_Save(true);
+			this.lastSaveTime = new Date();
+			// Close cell edit without errors (isIdle = true)
+			this.asc_Save(true, false, true);
 			return;
 		}
+
+		if (this.asc_getCellEditMode()) {
+		  return;
+        }
 
 		if (!History.Have_Changes(true) && !(this.collaborativeEditing.getCollaborativeEditing() &&
 			0 !== this.collaborativeEditing.getOwnLocksLength())) {
@@ -3508,7 +3498,6 @@ var editor;
   prot["asc_getLocale"] = prot.asc_getLocale;
   prot["asc_getEditorPermissions"] = prot.asc_getEditorPermissions;
   prot["asc_LoadDocument"] = prot.asc_LoadDocument;
-  prot["asc_LoadEmptyDocument"] = prot.asc_LoadEmptyDocument;
   prot["asc_DownloadAs"] = prot.asc_DownloadAs;
   prot["asc_Save"] = prot.asc_Save;
   prot["forceSave"] = prot.forceSave;
@@ -3531,6 +3520,7 @@ var editor;
   prot["asc_setAutoSaveGap"] = prot.asc_setAutoSaveGap;
 
 	prot["asc_setViewMode"] = prot.asc_setViewMode;
+	prot["asc_setFilteringMode"] = prot.asc_setFilteringMode;
 	prot["asc_setRestriction"] = prot.asc_setRestriction;
   prot["asc_setAdvancedOptions"] = prot.asc_setAdvancedOptions;
   prot["asc_setPageOptions"] = prot.asc_setPageOptions;
@@ -3539,7 +3529,6 @@ var editor;
   prot["asc_registerCallback"] = prot.asc_registerCallback;
   prot["asc_unregisterCallback"] = prot.asc_unregisterCallback;
 
-  prot["asc_getController"] = prot.asc_getController;
   prot["asc_changeArtImageFromFile"] = prot.asc_changeArtImageFromFile;
 
   prot["asc_SetDocumentPlaceChangedEnabled"] = prot.asc_SetDocumentPlaceChangedEnabled;

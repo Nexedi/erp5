@@ -394,6 +394,10 @@ CBlockLevelSdt.prototype.AddInlineImage = function(W, H, Img, Chart, bFlow)
 {
 	this.Content.AddInlineImage(W, H, Img, Chart, bFlow);
 };
+CBlockLevelSdt.prototype.AddImages = function(aImages)
+{
+	this.Content.AddImages(aImages);
+};
 CBlockLevelSdt.prototype.AddSignatureLine = function(oSignatureDrawing)
 {
 	this.Content.AddSignatureLine(oSignatureDrawing);
@@ -544,9 +548,9 @@ CBlockLevelSdt.prototype.GetSelectedText = function(bClearText, oPr)
 {
 	return this.Content.GetSelectedText(bClearText, oPr);
 };
-CBlockLevelSdt.prototype.GetCurrentParagraph = function()
+CBlockLevelSdt.prototype.GetCurrentParagraph = function(bIgnoreSelection, arrSelectedParagraphs)
 {
-	return this.Content.GetCurrentParagraph();
+	return this.Content.GetCurrentParagraph(bIgnoreSelection, arrSelectedParagraphs);
 };
 CBlockLevelSdt.prototype.AddTableRow = function(bBefore)
 {
@@ -798,9 +802,9 @@ CBlockLevelSdt.prototype.GetPrevElementEndInfo = function()
 {
 	return this.Parent.GetPrevElementEndInfo(this);
 };
-CBlockLevelSdt.prototype.Get_EndInfo = function()
+CBlockLevelSdt.prototype.GetEndInfo = function()
 {
-	return this.Content.Get_EndInfo();
+	return this.Content.GetEndInfo();
 };
 CBlockLevelSdt.prototype.Is_UseInDocument = function(Id)
 {

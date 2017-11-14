@@ -293,6 +293,12 @@ CDocumentControllerBase.prototype.AddNewParagraph = function(bRecalculate, bForc
  * @param {boolean} bFlow - инлайн объект или "плавающий"
  */
 CDocumentControllerBase.prototype.AddInlineImage = function(nW, nH, oImage, oChart, bFlow){};
+
+/**
+ * Добавляем несколько изображений
+ * @param {Array} aImages - массив объектов типа CImage
+ * */
+CDocumentControllerBase.prototype.AddImages = function(aImages){};
 /**
  * Добавляем OLE-объект.
  * @param nW
@@ -600,7 +606,7 @@ CDocumentControllerBase.prototype.GetSelectedText = function(bClearText, oPr){re
  * Получаем текущий параграф.
  * @returns {?Paragraph}
  */
-CDocumentControllerBase.prototype.GetCurrentParagraph = function(){return null};
+CDocumentControllerBase.prototype.GetCurrentParagraph = function(bIgnoreSelection, arrSelectedParagraphs){return null};
 /**
  * Собираем информацию о выделенной части документа.
  * @param oInfo

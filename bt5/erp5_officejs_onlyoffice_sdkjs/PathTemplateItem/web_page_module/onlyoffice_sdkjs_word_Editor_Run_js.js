@@ -430,7 +430,7 @@ ParaRun.prototype.Add = function(Item, bMath)
 
 		// Специальный код с обработкой выделения (highlight)
 		// Текст, который пишем до или после выделенного текста делаем без выделения.
-		if (!this.Is_Empty() && (0 === this.State.ContentPos || this.Content.length === this.State.ContentPos) && highlight_None !== this.Get_CompiledPr(false).HighLight)
+		if ((0 === this.State.ContentPos || this.Content.length === this.State.ContentPos) && highlight_None !== this.Get_CompiledPr(false).HighLight)
 		{
 			var Parent = this.Get_Parent();
 			var RunPos = this.private_GetPosInParent(Parent);
@@ -1079,6 +1079,13 @@ ParaRun.prototype.private_UpdateCompositeInputPositionsOnRemove = function(Pos, 
 	}
 };
 
+ParaRun.prototype.GetLogicDocument = function()
+{
+	if (this.Paragraph && this.Paragraph.LogicDocument)
+		return this.Paragraph.LogicDocument;
+
+	return editor.WordControl.m_oLogicDocument;
+};
 
 // Добавляем элемент в позицию с сохранием в историю
 ParaRun.prototype.Add_ToContent = function(Pos, Item, UpdatePosition)
@@ -1551,10 +1558,11 @@ ParaRun.prototype.Is_SimpleChanges = function(Changes)
             return false;
 
         // Добавление/удаление картинок может изменить размер строки. Добавление/удаление переноса строки/страницы/колонки
-        // нельзя обсчитывать функцией Recalculate_Fast.
+        // нельзя обсчитывать функцией Recalculate_Fast. Добавление и удаление разметок сложных полей тоже нельзя
+		// обсчитывать в быстром пересчете.
         // TODO: Но на самом деле стоило бы сделать нормальную проверку на высоту строки в функции Recalculate_Fast
         var ItemType = Item.Type;
-        if (para_Drawing === ItemType || para_NewLine === ItemType || para_FootnoteRef === ItemType || para_FootnoteReference === ItemType)
+        if (para_Drawing === ItemType || para_NewLine === ItemType || para_FootnoteRef === ItemType || para_FootnoteReference === ItemType || para_FieldChar === ItemType || para_InstrText === ItemType)
             return false;
 
         // Проверяем, что все изменения произошли в одном и том же отрезке
@@ -1573,7 +1581,8 @@ ParaRun.prototype.Is_SimpleChanges = function(Changes)
 
 /**
  * Проверяем произошло ли простое изменение параграфа, сейчас главное, чтобы это было не добавлениe/удаление картинки
- * или ссылки на сноску. На вход приходит либо массив изменений, либо одно изменение (можно не в массиве).
+ * или ссылки на сноску или разметки сложного поля. На вход приходит либо массив изменений, либо одно изменение
+ * (можно не в массиве).
  */
 ParaRun.prototype.Is_ParagraphSimpleChanges = function(_Changes)
 {
@@ -1592,7 +1601,7 @@ ParaRun.prototype.Is_ParagraphSimpleChanges = function(_Changes)
             for (var ItemIndex = 0, ItemsCount = Data.Items.length; ItemIndex < ItemsCount; ItemIndex++)
             {
                 var Item = Data.Items[ItemIndex];
-                if (para_Drawing === Item.Type || para_FootnoteReference === Item.Type)
+                if (para_Drawing === Item.Type || para_FootnoteReference === Item.Type || para_FieldChar === Item.Type || para_InstrText === Item.Type)
                     return false;
             }
         }
@@ -3088,9 +3097,11 @@ ParaRun.prototype.Recalculate_Range = function(PRS, ParaPr, Depth)
                     SpaceLen = 0;
                     WordLen = 0;
 
-                    var TabPos = Para.private_RecalculateGetTabPos(X, ParaPr, PRS.Page, false);
-                    var NewX = TabPos.NewX;
+                    var TabPos   = Para.private_RecalculateGetTabPos(X, ParaPr, PRS.Page, false);
+                    var NewX     = TabPos.NewX;
                     var TabValue = TabPos.TabValue;
+
+                    Item.SetLeader(TabPos.TabLeader);
 
                     // Если таб не левый, значит он не может быть сразу рассчитан, а если левый, тогда
                     // рассчитываем его сразу здесь
@@ -3230,6 +3241,69 @@ ParaRun.prototype.Recalculate_Range = function(PRS, ParaPr, Depth)
 
                     break;
                 }
+				case para_FieldChar:
+				{
+					if (PRS.IsFastRecalculate())
+						break;
+
+					Item.SetXY(X + SpaceLen + WordLen, PRS.Y);
+					Item.SetPage(Para.Get_AbsolutePage(CurPage));
+
+					Item.SetRun(this);
+					if (Item.IsBegin())
+					{
+						var oComplexField = Item.GetComplexField();
+						if (!oComplexField)
+						{
+							Item.SetUse(false);
+						}
+						else
+						{
+							Item.SetUse(true);
+							oComplexField.SetBeginChar(Item);
+							PRS.ComplexFields.push(oComplexField);
+						}
+					}
+					else if (Item.IsEnd())
+					{
+						if (PRS.ComplexFields.length > 0)
+						{
+							Item.SetUse(true);
+							var oComplexField = PRS.ComplexFields[PRS.ComplexFields.length - 1];
+							oComplexField.SetEndChar(Item);
+							PRS.ComplexFields.splice(PRS.ComplexFields.length - 1, 1);
+						}
+						else
+						{
+							Item.SetUse(false);
+						}
+					}
+					else if (Item.IsSeparate())
+					{
+						if (PRS.ComplexFields.length > 0)
+						{
+							Item.SetUse(true);
+							var oComplexField = PRS.ComplexFields[PRS.ComplexFields.length - 1];
+							oComplexField.SetSeparateChar(Item);
+						}
+						else
+						{
+							Item.SetUse(false);
+						}
+					}
+
+					break;
+				}
+				case para_InstrText:
+				{
+					var oComplexField = PRS.ComplexFields[PRS.ComplexFields.length - 1];
+					if (oComplexField && null === oComplexField.GetSeparateChar())
+					{
+						oComplexField.SetInstruction(Item);
+					}
+
+					break;
+				}
             }
 
 
@@ -3918,6 +3992,20 @@ ParaRun.prototype.Recalculate_Range_Spaces = function(PRSA, _CurLine, _CurRange,
 
 ParaRun.prototype.Recalculate_PageEndInfo = function(PRSI, _CurLine, _CurRange)
 {
+	var CurLine  = _CurLine - this.StartLine;
+	var CurRange = ( 0 === CurLine ? _CurRange - this.StartRange : _CurRange );
+
+	var StartPos = this.protected_GetRangeStartPos(CurLine, CurRange);
+	var EndPos   = this.protected_GetRangeEndPos(CurLine, CurRange);
+
+	for (var Pos = StartPos; Pos < EndPos; ++Pos)
+	{
+		var Item = this.Content[Pos];
+		if (para_FieldChar === Item.Type)
+		{
+			PRSI.ProcessFieldChar(Item);
+		}
+	}
 };
 
 ParaRun.prototype.private_RecalculateNumbering = function(PRS, Item, ParaPr, _X)
@@ -4425,6 +4513,13 @@ ParaRun.prototype.Get_Range_VisibleWidth = function(RangeW, _CurLine, _CurRange)
 
                 break;
             }
+			default:
+			{
+				if (Item.Get_WidthVisible())
+					RangeW.W += Item.Get_WidthVisible();
+
+				break;
+			}
         }
     }
 };
@@ -4460,6 +4555,7 @@ ParaRun.prototype.Draw_HighLights = function(PDSH)
     var aFind     = PDSH.Find;
     var aComm     = PDSH.Comm;
     var aShd      = PDSH.Shd;
+    var aFields   = PDSH.MMFields;
 
     var StartPos = this.protected_GetRangeStartPos(CurLine, CurRange);
     var EndPos   = this.protected_GetRangeEndPos(CurLine, CurRange);
@@ -4516,6 +4612,9 @@ ParaRun.prototype.Draw_HighLights = function(PDSH)
 
         if ( true === bDrawShd )
             aShd.Add( Y0, Y1, X, X + ItemWidthVisible, 0, ShdColor.r, ShdColor.g, ShdColor.b, undefined, oShd );
+
+		if (PDSH.IsComplexField() && !PDSH.IsComplexFieldCode())
+			PDSH.CFields.Add(Y0, Y1, X, X + ItemWidthVisible, 0, 0, 0, 0);
 
         switch( ItemType )
         {
@@ -4587,6 +4686,11 @@ ParaRun.prototype.Draw_HighLights = function(PDSH)
                 X += ItemWidthVisible;
                 break;
             }
+			case para_FieldChar:
+			{
+				PDSH.ProcessFieldChar(Item);
+				break;
+			}
         }
 
         for ( var SPos = 0; SPos < SearchMarksCount; SPos++)
@@ -4892,15 +4996,28 @@ ParaRun.prototype.Draw_Lines = function(PDSL)
         fontCoeff   = MatGetKoeffArgSize(CurTextPr.FontSize, ArgSize.value);
     }
 
+	var UnderlineY = Y + UndOff - this.YOffset;
+	var LineW      = (CurTextPr.FontSize / 18) * g_dKoef_pt_to_mm;
+
     switch(CurTextPr.VertAlign)
     {
-        case AscCommon.vertalign_Baseline   : StrikeoutY += -CurTextPr.FontSize * fontCoeff * g_dKoef_pt_to_mm * 0.27; break;
-        case AscCommon.vertalign_SubScript  : StrikeoutY += -CurTextPr.FontSize * fontCoeff * vertalign_Koef_Size * g_dKoef_pt_to_mm * 0.27 - vertalign_Koef_Sub * CurTextPr.FontSize  * fontCoeff * g_dKoef_pt_to_mm; break;
-        case AscCommon.vertalign_SuperScript: StrikeoutY += -CurTextPr.FontSize * fontCoeff * vertalign_Koef_Size * g_dKoef_pt_to_mm * 0.27 - vertalign_Koef_Super * CurTextPr.FontSize * fontCoeff * g_dKoef_pt_to_mm; break;
+        case AscCommon.vertalign_Baseline   :
+		{
+			StrikeoutY += -CurTextPr.FontSize * fontCoeff * g_dKoef_pt_to_mm * 0.27;
+			break;
+		}
+        case AscCommon.vertalign_SubScript  :
+		{
+			StrikeoutY += -CurTextPr.FontSize * fontCoeff * vertalign_Koef_Size * g_dKoef_pt_to_mm * 0.27 - vertalign_Koef_Sub * CurTextPr.FontSize  * fontCoeff * g_dKoef_pt_to_mm;
+			UnderlineY -= vertalign_Koef_Sub * CurTextPr.FontSize  * fontCoeff * g_dKoef_pt_to_mm;
+			break;
+		}
+        case AscCommon.vertalign_SuperScript:
+		{
+			StrikeoutY += -CurTextPr.FontSize * fontCoeff * vertalign_Koef_Size * g_dKoef_pt_to_mm * 0.27 - vertalign_Koef_Super * CurTextPr.FontSize * fontCoeff * g_dKoef_pt_to_mm;
+			break;
+		}
     }
-
-    var UnderlineY = Y + UndOff -  this.YOffset;
-    var LineW      = (CurTextPr.FontSize / 18) * g_dKoef_pt_to_mm;
 
 
     var BgColor = PDSL.BgColor;
@@ -5415,11 +5532,25 @@ ParaRun.prototype.Get_LeftPos = function(SearchPos, ContentPos, Depth, UseConten
 {
 	var CurPos = true === UseContentPos ? ContentPos.Get(Depth) : this.Content.length;
 
+	var isFieldCode  = SearchPos.IsComplexFieldCode();
+	var isFieldValue = SearchPos.IsComplexFieldValue();
+
 	while (true)
 	{
 		CurPos--;
 
 		var Item = this.Content[CurPos];
+
+		if (CurPos >= 0 && para_FieldChar === Item.Type)
+		{
+			SearchPos.ProcessComplexFieldChar(-1, Item);
+			isFieldCode  = SearchPos.IsComplexFieldCode();
+			isFieldValue = SearchPos.IsComplexFieldValue();
+		}
+
+		if (CurPos >= 0 && isFieldCode)
+			continue;
+
 		if (CurPos < 0 || (!(para_Drawing === Item.Type && false === Item.Is_Inline() && false === SearchPos.IsCheckAnchors()) && !(para_FootnoteReference === Item.Type && true === Item.IsCustomMarkFollows())))
 			break;
 	}
@@ -5434,6 +5565,9 @@ ParaRun.prototype.Get_LeftPos = function(SearchPos, ContentPos, Depth, UseConten
 ParaRun.prototype.Get_RightPos = function(SearchPos, ContentPos, Depth, UseContentPos, StepEnd)
 {
 	var CurPos = ( true === UseContentPos ? ContentPos.Get(Depth) : 0 );
+
+	var isFieldCode  = SearchPos.IsComplexFieldCode();
+	var isFieldValue = SearchPos.IsComplexFieldValue();
 
 	var Count = this.Content.length;
 	while (true)
@@ -5450,6 +5584,17 @@ ParaRun.prototype.Get_RightPos = function(SearchPos, ContentPos, Depth, UseConte
 
 			var PrevItem     = this.Content[CurPos - 1];
 			var PrevItemType = PrevItem.Type;
+
+			if (para_FieldChar === PrevItem.Type)
+			{
+				SearchPos.ProcessComplexFieldChar(1, PrevItem);
+				isFieldCode  = SearchPos.IsComplexFieldCode();
+				isFieldValue = SearchPos.IsComplexFieldValue();
+			}
+
+			if (isFieldCode)
+				return;
+
 			if ((true !== StepEnd && para_End === PrevItemType) || (para_Drawing === PrevItemType && false === PrevItem.Is_Inline() && false === SearchPos.IsCheckAnchors()) || (para_FootnoteReference === PrevItemType && true === PrevItem.IsCustomMarkFollows()))
 				return;
 
@@ -5462,6 +5607,16 @@ ParaRun.prototype.Get_RightPos = function(SearchPos, ContentPos, Depth, UseConte
 		// Минимальное значение CurPos = 1, т.к. мы начинаем со значния >= 0 и добавляем 1
 		var Item     = this.Content[CurPos - 1];
 		var ItemType = Item.Type;
+
+		if (para_FieldChar === Item.Type)
+		{
+			SearchPos.ProcessComplexFieldChar(1, Item);
+			isFieldCode  = SearchPos.IsComplexFieldCode();
+			isFieldValue = SearchPos.IsComplexFieldValue();
+		}
+
+		if (isFieldCode)
+			continue;
 
 		if (!(true !== StepEnd && para_End === ItemType)
 			&& !(para_Drawing === Item.Type && false === Item.Is_Inline())
@@ -5487,6 +5642,9 @@ ParaRun.prototype.Get_WordStartPos = function(SearchPos, ContentPos, Depth, UseC
 
     var NeedUpdate = false;
 
+	var isFieldCode  = SearchPos.IsComplexFieldCode();
+	var isFieldValue = SearchPos.IsComplexFieldValue();
+
     // На первом этапе ищем позицию первого непробельного элемента
     if ( 0 === SearchPos.Stage )
     {
@@ -5497,10 +5655,17 @@ ParaRun.prototype.Get_WordStartPos = function(SearchPos, ContentPos, Depth, UseC
 
             var bSpace = false;
 
+			if (para_FieldChar === Type)
+			{
+				SearchPos.ProcessComplexFieldChar(-1, Item);
+				isFieldCode  = SearchPos.IsComplexFieldCode();
+				isFieldValue = SearchPos.IsComplexFieldValue();
+			}
+
             if ( para_Space === Type || para_Tab === Type || ( para_Text === Type && true === Item.Is_NBSP() ) || ( para_Drawing === Type && true !== Item.Is_Inline() ) )
                 bSpace = true;
 
-            if ( true === bSpace )
+            if ( true === bSpace || isFieldCode )
             {
                 CurPos--;
 
@@ -5542,6 +5707,16 @@ ParaRun.prototype.Get_WordStartPos = function(SearchPos, ContentPos, Depth, UseC
         var Item = this.Content[CurPos];
         var TempType = Item.Type;
 
+		if (para_FieldChar === Item.Type)
+		{
+			SearchPos.ProcessComplexFieldChar(-1, Item);
+			isFieldCode  = SearchPos.IsComplexFieldCode();
+			isFieldValue = SearchPos.IsComplexFieldValue();
+		}
+
+		if (isFieldCode)
+			continue;
+
         if ( (para_Text !== TempType && para_Math_Text !== TempType) || true === Item.Is_NBSP() || ( true === SearchPos.Punctuation && true !== Item.Is_Punctuation() ) || ( false === SearchPos.Punctuation && false !== Item.Is_Punctuation() ) )
         {
             SearchPos.Found = true;
@@ -5567,6 +5742,9 @@ ParaRun.prototype.Get_WordEndPos = function(SearchPos, ContentPos, Depth, UseCon
 
     var NeedUpdate = false;
 
+	var isFieldCode  = SearchPos.IsComplexFieldCode();
+	var isFieldValue = SearchPos.IsComplexFieldValue();
+
     if ( 0 === SearchPos.Stage )
     {
         // На первом этапе ищем первый нетекстовый ( и не таб ) элемент
@@ -5576,21 +5754,31 @@ ParaRun.prototype.Get_WordEndPos = function(SearchPos, ContentPos, Depth, UseCon
             var Type = Item.Type;
             var bText = false;
 
+			if (para_FieldChar === Type)
+			{
+				SearchPos.ProcessComplexFieldChar(1, Item);
+				isFieldCode  = SearchPos.IsComplexFieldCode();
+				isFieldValue = SearchPos.IsComplexFieldValue();
+			}
+
             if ( (para_Text === Type || para_Math_Text === Type) && true != Item.Is_NBSP() && ( true === SearchPos.First || ( SearchPos.Punctuation === Item.Is_Punctuation() ) ) )
                 bText = true;
 
-            if ( true === bText )
+            if ( true === bText || isFieldCode )
             {
-                if ( true === SearchPos.First )
-                {
-                    SearchPos.First       = false;
-                    SearchPos.Punctuation = Item.Is_Punctuation();
-                }
+            	if (!isFieldCode)
+				{
+					if (true === SearchPos.First)
+					{
+						SearchPos.First       = false;
+						SearchPos.Punctuation = Item.Is_Punctuation();
+					}
+
+					// Отмечаем, что сдвиг уже произошел
+					SearchPos.Shift = true;
+				}
 
                 CurPos++;
-
-                // Отмечаем, что сдвиг уже произошел
-                SearchPos.Shift = true;
 
                 // Выходим из рана
                 if ( CurPos >= ContentLen )
@@ -5647,6 +5835,16 @@ ParaRun.prototype.Get_WordEndPos = function(SearchPos, ContentPos, Depth, UseCon
             CurPos++;
             var Item = this.Content[CurPos];
             var TempType = Item.Type;
+
+			if (para_FieldChar === Item.Type)
+			{
+				SearchPos.ProcessComplexFieldChar(1, Item);
+				isFieldCode  = SearchPos.IsComplexFieldCode();
+				isFieldValue = SearchPos.IsComplexFieldValue();
+			}
+
+			if (isFieldCode)
+				continue;
 
             if ( (true !== StepEnd && para_End === TempType) || !( para_Space === TempType || ( para_Text === TempType && true === Item.Is_NBSP() ) ) )
             {
@@ -8648,34 +8846,11 @@ ParaRun.prototype.Set_ReviewTypeWithInfo = function(ReviewType, ReviewInfo)
 };
 ParaRun.prototype.Get_Parent = function()
 {
-    if (!this.Paragraph)
-        return null;
-
-    var ContentPos = this.Paragraph.Get_PosByElement(this);
-    if (null == ContentPos || undefined == ContentPos || ContentPos.Get_Depth() < 0)
-        return null;
-
-    ContentPos.Decrease_Depth(1);
-    return this.Paragraph.Get_ElementByPos(ContentPos);
+	return this.GetParent();
 };
 ParaRun.prototype.private_GetPosInParent = function(_Parent)
 {
-    var Parent = (_Parent? _Parent : this.Get_Parent());
-    if (!Parent)
-        return -1;
-
-    // Ищем данный элемент в родительском классе
-    var RunPos = -1;
-    for (var Pos = 0, Count = Parent.Content.length; Pos < Count; Pos++)
-    {
-        if (this === Parent.Content[Pos])
-        {
-            RunPos = Pos;
-            break;
-        }
-    }
-
-    return RunPos;
+	return this.GetPosInParent(_Parent);
 };
 ParaRun.prototype.Make_ThisElementCurrent = function(bUpdateStates)
 {
@@ -8683,7 +8858,7 @@ ParaRun.prototype.Make_ThisElementCurrent = function(bUpdateStates)
     {
         var ContentPos = this.Paragraph.Get_PosByElement(this);
         ContentPos.Add(this.State.ContentPos);
-        this.Paragraph.Set_ParaContentPos(ContentPos, true, -1, -1);
+        this.Paragraph.Set_ParaContentPos(ContentPos, true, -1, -1, false);
         this.Paragraph.Document_SetThisElementCurrent(true === bUpdateStates ? true : false);
     }
 };
@@ -9204,6 +9379,102 @@ ParaRun.prototype.GetAllContentControls = function(arrContentControls)
 		if (para_Drawing === oItem.Type || para_FootnoteReference === oItem.Type)
 		{
 			oItem.GetAllContentControls(arrContentControls);
+		}
+	}
+};
+/**
+ * Получаем позицию заданного элемента
+ * @param oElement
+ * @returns {number} позиция, либо -1, если заданного элемента нет
+ */
+ParaRun.prototype.GetElementPosition = function(oElement)
+{
+	for (var nPos = 0, nCount = this.Content.length; nPos < nCount; ++nPos)
+	{
+		if (oElement === this.Content[nPos])
+			return nPos;
+	}
+
+	return -1;
+};
+/**
+ * Устанавливаем текущее положение позиции курсора в данном ране
+ * @param nPos
+ */
+ParaRun.prototype.SetCursorPosition = function(nPos)
+{
+	this.State.ContentPos = Math.max(0, Math.min(nPos, this.Content.length));
+};
+/**
+ * Получаем номер строки по заданной позиции.
+ * @param nPos
+ */
+ParaRun.prototype.GetLineByPosition = function(nPos)
+{
+	for (var nLineIndex = 0, nLinesCount = this.protected_GetLinesCount(); nLineIndex < nLinesCount; ++nLineIndex)
+	{
+		for (var nRangeIndex = 0, nRangesCount = this.protected_GetRangesCount(nLineIndex); nRangeIndex < nRangesCount; ++nRangeIndex)
+		{
+			var nStartPos = this.protected_GetRangeStartPos(nLineIndex, nRangeIndex);
+			var nEndPos   = this.protected_GetRangeEndPos(nLineIndex, nRangeIndex);
+
+			if (nPos >= nStartPos && nPos < nEndPos)
+				return nLineIndex + this.StartLine;
+		}
+	}
+
+	return this.StartLine;
+};
+/**
+ * Данная функция вызывается перед удалением данного рана из родительского класса.
+ */
+ParaRun.prototype.PreDelete = function()
+{
+};
+ParaRun.prototype.GetCurrentComplexFields = function(arrComplexFields, isCurrent, isFieldPos)
+{
+	var nEndPos = isCurrent ? this.State.ContentPos : this.Content.length;
+	for (var nPos = 0; nPos < nEndPos; ++nPos)
+	{
+		var oItem = this.Content[nPos];
+		if (oItem.Type !== para_FieldChar)
+			continue;
+
+		if (isFieldPos)
+		{
+			var oComplexField = oItem.GetComplexField();
+			if (oItem.IsBegin())
+			{
+				arrComplexFields.push(new CComplexFieldStatePos(oComplexField, true));
+			}
+			else if (oItem.IsSeparate())
+			{
+				if (arrComplexFields.length > 0)
+				{
+					arrComplexFields[arrComplexFields.length - 1].SetFieldCode(false)
+				}
+			}
+			else if (oItem.IsEnd())
+			{
+				if (arrComplexFields.length > 0)
+				{
+					arrComplexFields.splice(arrComplexFields.length - 1, 1);
+				}
+			}
+		}
+		else
+		{
+			if (oItem.IsBegin())
+			{
+				arrComplexFields.push(oItem.GetComplexField());
+			}
+			else if (oItem.IsEnd())
+			{
+				if (arrComplexFields.length > 0)
+				{
+					arrComplexFields.splice(arrComplexFields.length - 1, 1);
+				}
+			}
 		}
 	}
 };

@@ -1028,6 +1028,9 @@
 			case AscDFH.historydescription_Document_ChangeContentControlProperties:
 				sString = "Document_ChangeContentControlProperties";
 				break;
+			case AscDFH.historydescription_Document_AddBookmark:
+				sString = "Document_AddBookmark";
+				break;
 		}
 		return sString;
 	}
@@ -1120,6 +1123,7 @@
 	window['AscDFH'].historyitem_type_BlockLevelSdt    = 59 << 16;
 	window['AscDFH'].historyitem_type_SdtPr            = 60 << 16;
 	window['AscDFH'].historyitem_type_InlineLevelSdt   = 61 << 16;
+	window['AscDFH'].historyitem_type_ParaBookmark     = 62 << 16;
 
 	window['AscDFH'].historyitem_type_CommonShape            = 1000 << 16; // Этот класс добавлен для элементов, у которых нет конкретного класса
 
@@ -1315,6 +1319,7 @@
 	window['AscDFH'].historyitem_Paragraph_SectionPr                 = window['AscDFH'].historyitem_type_Paragraph | 34;
 	window['AscDFH'].historyitem_Paragraph_PrChange                  = window['AscDFH'].historyitem_type_Paragraph | 35;
 	window['AscDFH'].historyitem_Paragraph_PrReviewInfo              = window['AscDFH'].historyitem_type_Paragraph | 36;
+	window['AscDFH'].historyitem_Paragraph_OutlineLvl                = window['AscDFH'].historyitem_type_Paragraph | 37;
 	//------------------------------------------------------------------------------------------------------------------
 	// Типы изменений в классе ParaTextPr
 	//------------------------------------------------------------------------------------------------------------------
@@ -2933,6 +2938,7 @@
 	window['AscDFH'].historydescription_Document_RemoveContentControlWrapper        = 0x0144;
 	window['AscDFH'].historydescription_Document_ChangeContentControlProperties     = 0x0145;
     window['AscDFH'].historydescription_Presentation_HideSlides                     = 0x0146;
+    window['AscDFH'].historydescription_Document_AddBookmark                        = 0x0147;
 
 
 

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * (c) Copyright Ascensio System SIA 2010-2017
  *
  * This program is a free software product. You can redistribute it and/or
@@ -245,6 +245,10 @@
 			{
 				this["recordTo"] = obj.recordTo;
 			}
+			if (typeof obj.isJson != 'undefined')
+			{
+				this["isJson"] = obj.isJson;
+			}
 		}
 		else
 		{
@@ -258,6 +262,7 @@
 			this["recordTo"]    = null;
 			this["recordCount"] = null;
 			this["userId"]      = null;
+			this["isJson"]      = null;
 		}
 	}
 
@@ -341,6 +346,14 @@
 	{
 		this["userId"] = v;
 	};
+	CMailMergeSendData.prototype.get_IsJson      = function()
+	{
+		return this["isJson"]
+	};
+	CMailMergeSendData.prototype.put_IsJson      = function(v)
+	{
+		this["isJson"] = v;
+	};
 
 	function CAscFootnotePr(obj)
 	{
@@ -396,6 +409,7 @@
 		this.documents = _docs;
 		this.returnDocuments = [];
 		this.current = -1;
+		this.guid = "";
 
 		this.start = function()
 		{
@@ -404,14 +418,14 @@
 			this.api.incrementCounterLongAction();
 
 			if (window.g_asc_plugins)
-				window.g_asc_plugins.setPluginMethodReturnAsync();
+				this.guid = window.g_asc_plugins.setPluginMethodReturnAsync();
 
 			this.run();
 		};
 		this.end = function()
 		{
 			if (window.g_asc_plugins)
-				window.g_asc_plugins.onPluginMethodReturn(this.returnDocuments);
+				window.g_asc_plugins.onPluginMethodReturn(this.guid, this.returnDocuments);
 
 			delete this.api.__content_control_worker;
 			this.api.decrementCounterLongAction();
@@ -760,6 +774,7 @@
 
 		this.isImageChangeUrl      = false;
 		this.isShapeImageChangeUrl = false;
+		this.textureType           = null;
 
 		this.tmpFontRenderingMode = null;
 		this.FontAsyncLoadType    = 0;
@@ -4483,9 +4498,10 @@ background-repeat: no-repeat;\
 		this.isImageChangeUrl = true;
 		this.asc_addImage();
 	};
-	asc_docs_api.prototype.ChangeShapeImageFromFile = function()
+	asc_docs_api.prototype.ChangeShapeImageFromFile = function(type)
 	{
 		this.isShapeImageChangeUrl = true;
+		this.textureType = type;
 		this.asc_addImage();
 	};
 
@@ -4498,10 +4514,32 @@ background-repeat: no-repeat;\
 		this.AddImageUrl(AscCommon.getFullImageSrc2(url));
 	};
 
-	asc_docs_api.prototype._addImageUrl      = function(url)
+	asc_docs_api.prototype._addImageUrl      = function(urls)
 	{
-		// ToDo пока временная функция для стыковки.
-		this.AddImageUrl(url);
+        if(this.isImageChangeUrl || this.isShapeImageChangeUrl){
+            this.AddImageUrl(urls[0]);
+        }
+        else{
+            if(this.ImageLoader){
+                var oApi = this;
+                this.ImageLoader.LoadImagesWithCallback(urls, function(){
+                    if (false === this.WordControl.m_oLogicDocument.Document_Is_SelectionLocked(changestype_Paragraph_Content)){
+                        var aImages = [];
+                        for(var i = 0; i < urls.length; ++i){
+                            var _image = oApi.ImageLoader.LoadImage(urls[i], 1);
+                            if(_image){
+                                aImages.push(_image);
+                            }
+                        }
+                        if(aImages.length){
+                        	History.Create_NewPoint();
+                            oApi.WordControl.m_oLogicDocument.AddImages(aImages);
+						}
+
+                    }
+                }, []);
+            }
+        }
 	};
 	asc_docs_api.prototype.AddImageUrl       = function(url, imgProp, callback)
 	{
@@ -4561,8 +4599,12 @@ background-repeat: no-repeat;\
 				AscShapeProp.fill.type = c_oAscFill.FILL_TYPE_BLIP;
 				AscShapeProp.fill.fill = new asc_CFillBlip();
 				AscShapeProp.fill.fill.asc_putUrl(src);
+				if(this.textureType !== null && this.textureType !== undefined){
+                    AscShapeProp.fill.fill.asc_putType(this.textureType);
+				}
 				this.ImgApply(new asc_CImgProperty({ShapeProperties : AscShapeProp}));
 				this.isShapeImageChangeUrl = false;
+				this.textureType = null;
 			}
 			else if (this.isImageChangeUrl)
 			{
@@ -4614,6 +4656,11 @@ background-repeat: no-repeat;\
 					AscShapeProp.fill.type = c_oAscFill.FILL_TYPE_BLIP;
 					AscShapeProp.fill.fill = new asc_CFillBlip();
 					AscShapeProp.fill.fill.asc_putUrl(src);
+
+                    if(this.textureType !== null && this.textureType !== undefined){
+                        AscShapeProp.fill.fill.asc_putType(this.textureType);
+                    }
+                    this.textureType = null;
 					this.ImgApply(new asc_CImgProperty({ShapeProperties : AscShapeProp}));
 					this.isShapeImageChangeUrl = false;
 				}
@@ -6801,6 +6848,7 @@ background-repeat: no-repeat;\
 		// Меняем тип состояния (на сохранение)
 		this.advancedOptionsAction = c_oAscAdvancedOptionsAction.Save;
 		var isNoBase64 = typeof ArrayBuffer !== 'undefined';
+		var _fCallbackRequest = fCallbackRequest;
 
 		var dataContainer               = {data : null, part : null, index : 0, count : 0};
 		var oAdditionalData             = {};
@@ -6910,7 +6958,19 @@ background-repeat: no-repeat;\
 					aRowOut.push(oRow[j]);
 				aJsonOut.push(aRowOut);
 			}
-			dataContainer.data = dataContainer.data.length + ';' + dataContainer.data + JSON.stringify(aJsonOut);
+			var editorData = dataContainer.data;
+			dataContainer.data = JSON.stringify(aJsonOut);
+			options.oMailMergeSendData.put_IsJson(true);
+			//save Editor.bin after json
+			_fCallbackRequest = function(incomeObject){
+				oAdditionalData["savekey"] = incomeObject["data"];
+				dataContainer = {data : editorData, part : null, index : 0, count : 0};
+				options.oMailMergeSendData.put_IsJson(false);
+
+				AscCommon.saveWithParts(function(fCallback1, oAdditionalData1, dataContainer1) {
+					sendCommand(t, fCallback1, oAdditionalData1, dataContainer1);
+				}, fCallback, fCallbackRequest, oAdditionalData, dataContainer);
+			}
 		}
 		var fCallback = null;
 		if (!options.isNoCallback)
@@ -6960,7 +7020,7 @@ background-repeat: no-repeat;\
 		AscCommon.saveWithParts(function(fCallback1, oAdditionalData1, dataContainer1)
 		{
 			sendCommand(t, fCallback1, oAdditionalData1, dataContainer1);
-		}, fCallback, fCallbackRequest, oAdditionalData, dataContainer);
+		}, fCallback, _fCallbackRequest, oAdditionalData, dataContainer);
 	}
 
 	// Вставка диаграмм
@@ -7209,6 +7269,8 @@ background-repeat: no-repeat;\
 	};
 	asc_docs_api.prototype.asc_SetFastCollaborative = function(isOn)
 	{
+		if (!this.WordControl || !this.WordControl.m_oLogicDocument)
+			return;
 		if (AscCommon.CollaborativeEditing){
 			AscCommon.CollaborativeEditing.Set_Fast(isOn);
 			if(window['AscCommon'].g_clipboardBase && isOn && !AscCommon.CollaborativeEditing.Is_SingleUser()){
@@ -8188,6 +8250,31 @@ background-repeat: no-repeat;\
 	{
 		return this.asc_GetCurrentContentControl();
 	};
+	/**
+	 * Find and replace text.
+	 * @param {Object} oProperties The properties for find and replace.
+	 * @param {string} oProperties.searchString Search string.
+	 * @param {string} oProperties.replaceString Replacement string.
+	 * @param {string} [oProperties.matchCase=true]
+	 *
+	 */
+	window["asc_docs_api"].prototype["pluginMethod_SearchAndReplace"] = function(oProperties)
+	{
+		var sSearch     = oProperties["searchString"];
+		var sReplace    = oProperties["replaceString"];
+		var isMatchCase = undefined !== oProperties["matchCase"] ? oProperties.matchCase : true;
+
+		var oSearchEngine = this.WordControl.m_oLogicDocument.Search(sSearch, {MatchCase : isMatchCase});
+		if (!oSearchEngine)
+			return;
+
+		this.WordControl.m_oLogicDocument.Search_Replace(sReplace, true, null, false);
+	};
+
+	window["asc_docs_api"].prototype["pluginMethod_GetFileHTML"] = function()
+	{
+		return this.ContentToHTML(true);
+	};
 
 	/********************************************************************/
 
@@ -8604,7 +8691,6 @@ background-repeat: no-repeat;\
 	asc_docs_api.prototype['pre_Save']                                  = asc_docs_api.prototype.pre_Save;
 	asc_docs_api.prototype['SyncLoadImages']                            = asc_docs_api.prototype.SyncLoadImages;
 	asc_docs_api.prototype['SyncLoadImages_callback']                   = asc_docs_api.prototype.SyncLoadImages_callback;
-	asc_docs_api.prototype['pre_SaveCallback']                          = asc_docs_api.prototype.pre_SaveCallback;
 	asc_docs_api.prototype['initEvents2MobileAdvances']                 = asc_docs_api.prototype.initEvents2MobileAdvances;
 	asc_docs_api.prototype['ViewScrollToX']                             = asc_docs_api.prototype.ViewScrollToX;
 	asc_docs_api.prototype['ViewScrollToY']                             = asc_docs_api.prototype.ViewScrollToY;

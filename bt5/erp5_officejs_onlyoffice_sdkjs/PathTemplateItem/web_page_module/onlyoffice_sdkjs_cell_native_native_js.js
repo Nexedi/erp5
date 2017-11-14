@@ -422,7 +422,7 @@ function asc_menu_WriteAscFill_grad(_type, _fill, _stream){
                 if (_fill.Positions[i] !== undefined && _fill.Positions[i] !== null)
                 {
                     _stream["WriteByte"](1);
-                    _stream["WriteDouble2"](_fill.Positions[i]);
+                    _stream["WriteLong"](_fill.Positions[i]);
                 }
 
                 _stream["WriteByte"](255);
@@ -577,17 +577,17 @@ function asc_menu_WriteAscFill(_type, _fill, _stream){
             }
             case Asc.c_oAscFill.FILL_TYPE_PATT:
             {
-                _fill.fill = asc_menu_ReadAscFill_patt(1, _fill.fill, _stream);
+                _fill.fill = asc_menu_WriteAscFill_patt(1, _fill.fill, _stream);
                 break;
             }
             case Asc.c_oAscFill.FILL_TYPE_GRAD:
             {
-                _fill.fill = asc_menu_ReadAscFill_grad(1, _fill.fill, _stream);
+                _fill.fill = asc_menu_WriteAscFill_grad(1, _fill.fill, _stream);
                 break;
             }
             case Asc.c_oAscFill.FILL_TYPE_BLIP:
             {
-                _fill.fill = asc_menu_ReadAscFill_blip(1, _fill.fill, _stream);
+                _fill.fill = asc_menu_WriteAscFill_blip(1, _fill.fill, _stream);
                 break;
             }
             default:
@@ -3704,7 +3704,7 @@ function OfflineEditor () {
 
             var isChangeSelectionShape = false;
             if (isCoord) {
-                isChangeSelectionShape = this._checkSelectionShape();
+                isChangeSelectionShape = this._endSelectionShape();
             }
 
             var isMoveActiveCellToLeftTop = false;
@@ -4112,6 +4112,11 @@ function OfflineEditor () {
         docInfo.put_Format("xlsx");
         docInfo.put_UserInfo(userInfo);
         docInfo.put_Token(this.initSettings["token"]);
+
+        var permissions = this.initSettings["permissions"];
+        if (undefined != permissions && null != permissions && permissions.length > 0) {    
+            docInfo.put_Permissions(JSON.parse(permissions));
+        }
 
         _api.asc_setDocInfo(docInfo);
 
@@ -4903,7 +4908,9 @@ function OfflineEditor () {
                                                 if (bLock !== true)
                                                 return;
                                                 _this.controller.resetSelection();
+                                                History.Create_NewPoint();
                                                 _this.controller.addImageFromParams(_image.src, pxToMm(coordsFrom.x) + MOVE_DELTA, pxToMm(coordsFrom.y) + MOVE_DELTA, pxToMm(coordsTo.x - coordsFrom.x), pxToMm(coordsTo.y - coordsFrom.y));
+                                                _this.controller.startRecalculate();
                                                 });
 
                 worksheet.setSelectionShape(true);
@@ -7422,11 +7429,7 @@ window["native"]["offline_apply_event"] = function(type,params) {
 
         case 10000: // ASC_SOCKET_EVENT_TYPE_OPEN
         {
-            var t = _api.CoAuthoringApi._CoAuthoringApi;
-
-            t._state = AscCommon.ConnectionState.WaitAuth;
-            t.onFirstConnect();
-
+            _api.CoAuthoringApi._CoAuthoringApi._onServerOpen();
             break;
         }
 
@@ -7438,74 +7441,7 @@ window["native"]["offline_apply_event"] = function(type,params) {
 
         case 10020: // ASC_SOCKET_EVENT_TYPE_MESSAGE
         {
-            var t = _api.CoAuthoringApi._CoAuthoringApi;
-
-            var dataObject = JSON.parse(params);
-
-            // console.log("JS - " + dataObject['type']);
-
-            switch (dataObject['type']) {
-              case 'auth'        :
-                t._onAuth(dataObject);
-                break;
-              case 'message'      :
-                t._onMessages(dataObject, false);
-                break;
-              case 'cursor'       :
-                t._onCursor(dataObject);
-                break;
-              case 'meta' :
-                t._onMeta(dataObject);
-                break;
-              case 'getLock'      :
-                t._onGetLock(dataObject);
-                break;
-              case 'releaseLock'    :
-                t._onReleaseLock(dataObject);
-                break;
-              case 'connectState'    :
-                t._onConnectionStateChanged(dataObject);
-                break;
-              case 'saveChanges'    :
-                t._onSaveChanges(dataObject);
-                break;
-              case 'saveLock'      :
-                t._onSaveLock(dataObject);
-                break;
-              case 'unSaveLock'    :
-                t._onUnSaveLock(dataObject);
-                break;
-              case 'savePartChanges'  :
-                t._onSavePartChanges(dataObject);
-                break;
-              case 'drop'        :
-                t._onDrop(dataObject);
-                break;
-              case 'waitAuth'      : /*Ждем, когда придет auth, документ залочен*/
-                break;
-              case 'error'      : /*Старая версия sdk*/
-                t._onDrop(dataObject);
-                break;
-              case 'documentOpen'    :
-                t._documentOpen(dataObject);
-                break;
-              case 'warning':
-                t._onWarning(dataObject);
-                break;
-              case 'license':
-                t._onLicense(dataObject);
-                break;
-              case 'session' :
-                t._onSession(dataObject);
-                break;
-              case 'refreshToken' :
-                t._onRefreshToken(dataObject["messages"]);
-                break;
-              case 'expiredToken' :
-                t._onExpiredToken();
-                break;
-              }
-
+            _api.CoAuthoringApi._CoAuthoringApi._onServerMessage(params);
             break;
         }
 
@@ -7516,9 +7452,7 @@ window["native"]["offline_apply_event"] = function(type,params) {
 
         case 11020: // ASC_SOCKET_EVENT_TYPE_TRY_RECONNECT
         {
-            var t = _api.CoAuthoringApi._CoAuthoringApi;
-            delete t.sockjs;
-            t._initSocksJs();
+            _api.CoAuthoringApi._CoAuthoringApi._reconnect();
             break;
         }
 
@@ -7723,25 +7657,15 @@ window["Asc"]["spreadsheet_api"].prototype.openDocument = function(sData) {
                //console.log("JS - openDocument()");
                
                t.wbModel = t._openDocument(sData);
-               t.wb = new AscCommonExcel.WorkbookView(t.wbModel, t.controller, t.handlers,
+
+               var thenCallback = function() {
+                   t.wb = new AscCommonExcel.WorkbookView(t.wbModel, t.controller, t.handlers,
                                                       window["_null_object"], window["_null_object"], t,
                                                       t.collaborativeEditing, t.fontRenderingMode);
-               
-               t.openDocumentFromZip(t.wbModel, AscCommon.g_oDocumentUrls.getUrl('Editor.xlsx')).then(function() {
-                                                                                                      t.FontLoader.LoadDocumentFonts(t.wbModel.generateFontMap2());
-                                                                                                      
-                                                                                                      // Какая-то непонятная заглушка, чтобы не падало в ipad
-                                                                                                      if (t.isMobileVersion) {
-                                                                                                      AscCommon.AscBrowser.isSafariMacOs = false;
-                                                                                                      AscCommon.PasteElementsId.PASTE_ELEMENT_ID = "wrd_pastebin";
-                                                                                                      AscCommon.PasteElementsId.ELEMENT_DISPAY_STYLE = "none";
-                                                                                                      }
-                                                                                                      }).catch(function(err) {
-                                                                                                               if (window.console && window.console.log) {
-                                                                                                               window.console.log(err);
-                                                                                                               }
-                                                                                                               t.sendEvent('asc_onError', c_oAscError.ID.Unknown, c_oAscError.Level.Critical);
-                                                                                                               });
+               };
+
+               t.openDocumentFromZip(t.wbModel, undefined, window["native"]["GetXlsxPath"]()).then(thenCallback, thenCallback);
+
                t.DocumentLoadComplete = true;
                
                if (!sdkCheck) {

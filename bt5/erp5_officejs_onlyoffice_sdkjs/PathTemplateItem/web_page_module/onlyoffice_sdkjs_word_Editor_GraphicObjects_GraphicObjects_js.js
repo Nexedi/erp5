@@ -1500,6 +1500,19 @@ CGraphicObjects.prototype =
         }
     },
 
+    addImages: function( aImages )
+    {
+        var content = this.getTargetDocContent();
+        if(content && !content.bPresentation)
+        {
+            content.AddImages(aImages);
+        }
+        else{
+            this.resetSelection2();
+            this.document.AddImages(aImages);
+        }
+    },
+
 
     canAddComment: function()
     {
@@ -2088,12 +2101,12 @@ CGraphicObjects.prototype =
     selectNextObject: DrawingObjectsController.prototype.selectNextObject,
 
 
-    getCurrentParagraph: function()
+    getCurrentParagraph: function(bIgnoreSelection, arrSelectedParagraphs)
     {
         var content = this.getTargetDocContent();
         if(content)
         {
-            return content.GetCurrentParagraph();
+            return content.GetCurrentParagraph(bIgnoreSelection, arrSelectedParagraphs);
         }
         else
         {

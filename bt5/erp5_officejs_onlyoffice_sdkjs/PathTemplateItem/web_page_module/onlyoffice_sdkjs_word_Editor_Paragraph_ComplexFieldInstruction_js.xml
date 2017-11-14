@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/sdkjs/slide/Native/native.js</string> </value>
+            <value> <string>onlyoffice/sdkjs/word/Editor/Paragraph/ComplexFieldInstruction.js</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_sdkjs_slide_Native_native_js</string> </value>
+            <value> <string>onlyoffice_sdkjs_word_Editor_Paragraph_ComplexFieldInstruction_js</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

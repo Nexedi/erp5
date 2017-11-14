@@ -675,6 +675,9 @@ function CEditorPage(api)
 			styleContent += ".btn-pointer:active { background-position: -20px -100px; }";
 			styleContent += ".btn-text-default-img2 { background-repeat: no-repeat; position: absolute; background-color: #7d858c; border: none; color: #7d858c; font-size: 11px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; height: 22px; cursor: pointer; }";
 			styleContent += ".btn-text-default-img2:focus { outline: 0; outline-offset: 0; }";
+			styleContent += ".btn-text-default::-moz-focus-inner { border: 0; padding: 0; }";
+			styleContent += ".btn-text-default-img::-moz-focus-inner { border: 0; padding: 0; }";
+			styleContent += ".btn-text-default-img2::-moz-focus-inner { border: 0; padding: 0; }";
 
 
 			var style		 = document.createElement('style');
@@ -1787,7 +1790,7 @@ function CEditorPage(api)
 		else
 		{
 			Splitter.style.left   = parseInt((this.Splitter1Pos + GlobalSkin.SplitterWidthMM) * g_dKoef_mm_to_pix) + "px";
-			Splitter.style.top    = this.Height - parseInt((this.Splitter2Pos + GlobalSkin.SplitterWidthMM) * g_dKoef_mm_to_pix) + "px";
+			Splitter.style.top    = (this.Height - parseInt((this.Splitter2Pos + GlobalSkin.SplitterWidthMM) * g_dKoef_mm_to_pix) + 1) + "px";
 			Splitter.style.width  = this.Width - parseInt((this.Splitter1Pos + GlobalSkin.SplitterWidthMM) * g_dKoef_mm_to_pix) + "px";
 			Splitter.style.height = parseInt(GlobalSkin.SplitterWidthMM * g_dKoef_mm_to_pix) + "px";
 			this.SplitterType     = 2;
@@ -1850,8 +1853,10 @@ function CEditorPage(api)
 
 		if (_isCatch)
 		{
-			if (oWordControl.m_oApi.isReporterMode && oWordControl.m_oMainParent && oWordControl.m_oMainParent.HtmlElement)
+			if (oWordControl.m_oMainParent && oWordControl.m_oMainParent.HtmlElement)
 				oWordControl.m_oMainParent.HtmlElement.style.pointerEvents = "none";
+			if (oWordControl.m_oThumbnailsContainer && oWordControl.m_oThumbnailsContainer.HtmlElement)
+				oWordControl.m_oThumbnailsContainer.HtmlElement.style.pointerEvents = "none";
 			AscCommon.stopEvent(e);
 		}
 	};
@@ -2008,8 +2013,10 @@ function CEditorPage(api)
 		var oWordControl = oThis;
 		oWordControl.m_oDrawingDocument.UnlockCursorType();
 
-		if (oWordControl.m_oApi.isReporterMode && oWordControl.m_oMainParent && oWordControl.m_oMainParent.HtmlElement)
+		if (oWordControl.m_oMainParent && oWordControl.m_oMainParent.HtmlElement)
 			oWordControl.m_oMainParent.HtmlElement.style.pointerEvents = "";
+		if (oWordControl.m_oThumbnailsContainer && oWordControl.m_oThumbnailsContainer.HtmlElement)
+			oWordControl.m_oThumbnailsContainer.HtmlElement.style.pointerEvents = "";
 
 		if (null != oWordControl.SplitterDiv)
 		{
@@ -2747,23 +2754,15 @@ function CEditorPage(api)
 		}
 	};
 
-	this.UpdateScrolls = function()
+	this.CreateScrollSettings = function()
 	{
-		if (window["NATIVE_EDITOR_ENJINE"])
-			return;
-
-		var settings = {
-			showArrows    : true,
-			animateScroll : false,
-			screenW       : this.m_oEditor.HtmlElement.width,
-			screenH       : this.m_oEditor.HtmlElement.height,
-			screenAddW    : 0,
-			screenAddH    : 0,
-			vsscrollStep  : 45,
-			hsscrollStep  : 45,
-			contentH      : this.m_dDocumentHeight,
-			contentW      : this.m_dDocumentWidth
-		};
+		var settings = new AscCommon.ScrollSettings();
+		settings.screenW = this.m_oEditor.HtmlElement.width;
+		settings.screenH = this.m_oEditor.HtmlElement.height;
+		settings.vscrollStep = 45;
+		settings.hscrollStep = 45;
+		settings.contentH = this.m_dDocumentHeight;
+		settings.contentW = this.m_dDocumentWidth;
 
 		if (this.m_bIsRuler)
 		{
@@ -2774,13 +2773,21 @@ function CEditorPage(api)
 		{
 			settings.screenW = AscCommon.AscBrowser.convertToRetinaValue(settings.screenW);
 			settings.screenH = AscCommon.AscBrowser.convertToRetinaValue(settings.screenH);
-
 			settings.screenAddH = AscCommon.AscBrowser.convertToRetinaValue(settings.screenAddH);
 		}
+		return settings;
+	};
 
+	this.UpdateScrolls = function()
+	{
+		var settings;
+		if (window["NATIVE_EDITOR_ENJINE"])
+			return;
+
+		settings = this.CreateScrollSettings();
+		settings.alwaysVisible = true;
 		if (this.m_bIsHorScrollVisible)
 		{
-			settings.alwaysVisible = true;
 			if (this.m_oScrollHor_)
 				this.m_oScrollHor_.Repos(settings, true, undefined);//unbind("scrollhorizontal")
 			else
@@ -2803,9 +2810,9 @@ function CEditorPage(api)
 
 				this.m_oScrollHorApi = this.m_oScrollHor_;
 			}
-			settings.alwaysVisible = undefined;
 		}
 
+		settings = this.CreateScrollSettings();
 		if (this.m_oScrollVer_)
 		{
 			this.m_oScrollVer_.Repos(settings, undefined, true);//unbind("scrollvertical")
@@ -2813,9 +2820,7 @@ function CEditorPage(api)
 		else
 		{
 
-			this.m_oScrollVer_ = new AscCommon.ScrollObject("id_vertical_scroll",
-				settings
-			);
+			this.m_oScrollVer_ = new AscCommon.ScrollObject("id_vertical_scroll", settings);
 
 			this.m_oScrollVer_.onLockMouse  = function(evt)
 			{
@@ -2886,6 +2891,34 @@ function CEditorPage(api)
 
 		//console.log("resize");
 		this.CheckRetinaDisplay();
+
+		if (GlobalSkin.SupportNotes)
+		{
+			var _pos = this.Height - ((this.Splitter2Pos * g_dKoef_mm_to_pix) >> 0);
+			var _min = 30 * g_dKoef_mm_to_pix;
+			if (_pos < _min)
+			{
+				this.Splitter2Pos = (this.Height - _min) / g_dKoef_mm_to_pix;
+				if (this.Splitter2Pos < this.Splitter2PosMin)
+					this.Splitter2Pos = 1;
+
+				if (this.Splitter2Pos <= 1)
+				{
+					this.m_oNotes.HtmlElement.style.display = "none";
+					this.m_oNotes_scroll.HtmlElement.style.display = "none";
+				}
+				else
+				{
+					this.m_oNotes.HtmlElement.style.display = "block";
+					this.m_oNotes_scroll.HtmlElement.style.display = "block";
+				}
+
+				this.m_oMainContent.Bounds.B = this.Splitter2Pos + GlobalSkin.SplitterWidthMM;
+				this.m_oMainContent.Bounds.isAbsB = true;
+				this.m_oNotesContainer.Bounds.AbsH = this.Splitter2Pos;
+			}
+		}
+
 		this.m_oBody.Resize(this.Width * g_dKoef_pix_to_mm, this.Height * g_dKoef_pix_to_mm, this);
 		if (this.m_oApi.isReporterMode)
 			this.OnResizeReporter();
@@ -2978,34 +3011,99 @@ function CEditorPage(api)
 			var _labelMain = document.getElementById("dem_id_slides");
 			var _buttonSeparator2 = document.getElementById("dem_id_sep2");
 			var _buttonPointer = document.getElementById("dem_id_pointer");
+			var _buttonEnd = document.getElementById("dem_id_end");
+
+			_label1.style.display = "block";
+			_buttonPlay.style.display = "block";
+			_buttonReset.style.display = "block";
+			_buttonEnd.style.display = "block";
+
+			var _label1_width = _label1.offsetWidth;
+			var _main_width = _labelMain.offsetWidth;
+			var _buttonReset_width = _buttonReset.offsetWidth;
+			var _buttonEnd_width = _buttonEnd.offsetWidth;
+
+			if (0 == _label1_width)
+				_label1_width = 45;
+			if (0 == _main_width)
+				_main_width = 55;
+			if (0 == _buttonReset_width)
+				_buttonReset_width = 45;
+			if (0 == _buttonEnd_width)
+				_buttonEnd_width = 60;
 
 			var _width = parseInt(this.m_oMainView.HtmlElement.style.width);
-			var _posStart = 10;
-			if (_width >= 340)
+
+			// test first mode
+			// [10][time][6][play/pause(20)][6][reset]----[10]----[prev(20)][next(20)][15][slide x of x][15][pointer(20)]----[10]----[end][10]
+			var _widthCenter = (20 + 20 + 15 + _main_width + 15 + 20);
+			var _posCenter = (_width - _widthCenter) >> 1;
+
+			var _test_width1 = 10 + _label1_width + 6 + 20 + 6 + _buttonReset_width + 10 + 20 + 20 + 15 + _main_width + 15 + 20 + 10 + _buttonEnd_width + 10;
+			var _is1 = ((10 + _label1_width + 6 + 20 + 6 + _buttonReset_width + 10) <= _posCenter) ? true : false;
+			var _is2 = ((_posCenter + _widthCenter) <= (_width - 20 - _buttonEnd_width)) ? true : false;
+			if (_is2 && (_test_width1 <= _width))
 			{
 				_label1.style.display = "block";
 				_buttonPlay.style.display = "block";
 				_buttonReset.style.display = "block";
+				_buttonEnd.style.display = "block";
 
-				_posStart = (_width >> 1) - 60;
+				_label1.style.left = "10px";
+				_buttonPlay.style.left = (10 + _label1_width + 6) + "px";
+				_buttonReset.style.left = (10 + _label1_width + 6 + 20 + 6) + "px";
+
+				if (!_is1)
+				{
+					_posCenter = 10 + _label1_width + 6 + 20 + 6 + _buttonReset_width + 10 + ((_width - _test_width1) >> 1);
+				}
+
+				_buttonPrev.style.left = _posCenter + "px";
+				_buttonNext.style.left = (_posCenter + 20) + "px";
+				_buttonSeparator.style.left = (_posCenter + 48 - 10) + "px";
+				_labelMain.style.left = (_posCenter + 55) + "px";
+				_buttonSeparator2.style.left = (_posCenter + 55 + _main_width + 7 - 10) + "px";
+				_buttonPointer.style.left = (_posCenter + 70 + _main_width) + "px";
+
+				return;
 			}
-			else
+
+			// test second mode
+			// [10][prev(20)][next(20)][15][slide x of x][15][pointer(20)]----[10]----[end][10]
+			var _test_width2 = 10 + 20 + 20 + 15 + _main_width + 15 + 20 + 10 + _buttonEnd_width + 10;
+			if (_test_width2 <= _width)
 			{
 				_label1.style.display = "none";
 				_buttonPlay.style.display = "none";
 				_buttonReset.style.display = "none";
+				_buttonEnd.style.display = "block";
+
+				_buttonPrev.style.left = "10px";
+				_buttonNext.style.left = "30px";
+				_buttonSeparator.style.left = (58 - 10) + "px";
+				_labelMain.style.left = "65px";
+				_buttonSeparator2.style.left = (65 + _main_width + 7 - 10) + "px";
+				_buttonPointer.style.left = (80 + _main_width) + "px";
+				return;
 			}
 
-			_buttonPrev.style.left = _posStart + "px";
-			_buttonNext.style.left = _posStart + 20 + "px";
-			_buttonSeparator.style.left = _posStart + 35 + "px";
-			_labelMain.style.left = _posStart + 57 + "px";
-			var _mainW = _labelMain.offsetWidth;
-			if (_mainW == 0)
-				_mainW = 55;
-			var _leftPos = _posStart + 57 + _mainW + 2;
-			_buttonSeparator2.style.left = _leftPos + "px";
-			_buttonPointer.style.left = _leftPos + 15 + "px";
+			// test third mode
+			// ---------[prev(20)][next(20)][15][slide x of x][15][pointer(20)]---------
+			// var _test_width3 = 20 + 20 + 15 + _main_width + 15 + 20;
+			if (_posCenter < 0)
+				_posCenter = 0;
+
+			_label1.style.display = "none";
+			_buttonPlay.style.display = "none";
+			_buttonReset.style.display = "none";
+			_buttonEnd.style.display = "none";
+
+			_buttonPrev.style.left = _posCenter + "px";
+			_buttonNext.style.left = (_posCenter + 20) + "px";
+			_buttonSeparator.style.left = (_posCenter + 48 - 10) + "px";
+			_labelMain.style.left = (_posCenter + 55) + "px";
+			_buttonSeparator2.style.left = (_posCenter + 55 + _main_width + 7 - 10) + "px";
+			_buttonPointer.style.left = (_posCenter + 70 + _main_width) + "px";
 		}
 	};
 
@@ -3442,7 +3540,7 @@ function CEditorPage(api)
 	{
 		var _c = oThis;
 		_c.m_nCurrentTimeClearCache++;
-		if (_c.m_nCurrentTimeClearCache > 750) // 30 ������. �������������� ��� ����� ��������� �������� �������!!!
+		if (_c.m_nCurrentTimeClearCache > 750) // 30 секунд. корректировать при смене интервала главного таймера!!!
 		{
 			_c.m_nCurrentTimeClearCache = 0;
 			_c.m_oDrawingDocument.CheckFontCache();

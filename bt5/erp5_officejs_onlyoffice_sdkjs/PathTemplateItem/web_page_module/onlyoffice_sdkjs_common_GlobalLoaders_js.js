@@ -51,7 +51,7 @@
         this.fonts_streams = [];
 
         // теперь вся информация о всех возможных шрифтах. Они во всех редакторах должны быть одни и те же
-        this.fontFilesPath = "fonts/ttf";
+        this.fontFilesPath = "onlyoffice/fonts/";
         this.fontFiles = AscFonts.g_font_files;
         this.fontInfos = AscFonts.g_font_infos;
         this.map_font_index = AscFonts.g_map_font_index;
@@ -78,7 +78,7 @@
         {
             this.Api = _api;
         };
-
+                
         this.LoadEmbeddedFonts = function(url, _fonts)
         {
             this.embeddedFilesPath = url;
@@ -347,7 +347,7 @@
                     oThis.Api.OpenDocumentProgress.CurrentFont++;
                     oThis.Api.SendOpenProgress();
                 }
-
+                
                 oThis.fonts_loading_after_style[oThis.fonts_loading_after_style.length] = oThis.fonts_loading[0];
                 oThis.fonts_loading.shift();
                 oThis._LoadFonts();
@@ -460,12 +460,12 @@
         {
             var oThis = this,
               images = [],
-			  id;
+			        id;
             if (this.ThemeLoader === null)
                 this.Api.asyncImagesDocumentStartLoaded();
             else
                 this.ThemeLoader.asyncImagesStartLoaded();
-			// Always load images as foreground
+      			// Always load images as foreground
             if (true || !this.bIsAsyncLoadDocumentImages) {
                 for (id in _images) {
                     images.push(AscCommon.getFullImageSrc2(_images[id]));
@@ -511,7 +511,7 @@
             if (0 === start.indexOf('jio:')) {
                 queue = Common.Gateway.jio_getAttachment(this.Api.documentId, image_id.slice(4), 'asBlobURL')
                   .push(undefined, function (error) {
-                      console.log(error);
+                      console.error(error);
                       return "";
                   });
             } else {
@@ -573,11 +573,11 @@
 
             if (arrAsync.length === 0)
             {
-				loadImageCallBack.call(this.Api, loadImageCallBackArgs);
-				return;
-			}
+				         loadImageCallBack.call(this.Api, loadImageCallBackArgs);
+				         return;
+			      }
 
-			return RSVP.all(arrAsync.map(this._LoadImage))
+			return RSVP.all(arrAsync.map(this._LoadImage, this))
 				.then(function ()
 				{
 					loadImageCallBack.call(oThis.Api, loadImageCallBackArgs);

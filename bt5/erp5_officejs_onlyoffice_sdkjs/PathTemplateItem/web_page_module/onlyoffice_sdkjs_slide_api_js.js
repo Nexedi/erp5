@@ -607,6 +607,7 @@
 		this.isImageChangeUrl      = false;
 		this.isShapeImageChangeUrl = false;
 		this.isSlideImageChangeUrl = false;
+		this.textureType = null;
 
 		this.isPasteFonts_Images = false;
 
@@ -3620,19 +3621,22 @@ background-repeat: no-repeat;\
 		this.isImageChangeUrl = true;
 		this.asc_addImage();
 	};
-	asc_docs_api.prototype.ChangeShapeImageFromFile = function()
+	asc_docs_api.prototype.ChangeShapeImageFromFile = function(type)
 	{
 		this.isShapeImageChangeUrl = true;
+		this.textureType = type;
 		this.asc_addImage();
 	};
-	asc_docs_api.prototype.ChangeSlideImageFromFile = function()
+	asc_docs_api.prototype.ChangeSlideImageFromFile = function(type)
 	{
 		this.isSlideImageChangeUrl = true;
+        this.textureType = type;
 		this.asc_addImage();
 	};
-	asc_docs_api.prototype.ChangeArtImageFromFile   = function()
+	asc_docs_api.prototype.ChangeArtImageFromFile   = function(type)
 	{
 		this.isTextArtChangeUrl = true;
+        this.textureType = type;
 		this.asc_addImage();
 	};
 
@@ -3693,10 +3697,26 @@ background-repeat: no-repeat;\
 		return this.WordControl.m_oLogicDocument.canUnGroup();
 	};
 
-	asc_docs_api.prototype._addImageUrl = function(url)
+	asc_docs_api.prototype._addImageUrl = function(urls)
 	{
-		// ToDo пока временная функция для стыковки.
-		this.AddImageUrl(url);
+		if(this.isImageChangeUrl || this.isShapeImageChangeUrl || this.isSlideImageChangeUrl || this.isTextArtChangeUrl){
+            this.AddImageUrl(urls[0]);
+		}
+		else{
+			if(this.ImageLoader){
+				var oApi = this;
+                this.ImageLoader.LoadImagesWithCallback(urls, function(){
+                	var aImages = [];
+                	for(var i = 0; i < urls.length; ++i){
+                        var _image = oApi.ImageLoader.LoadImage(urls[i], 1);
+                      	if(_image){
+                            aImages.push(_image);
+						}
+					}
+                    oApi.WordControl.m_oLogicDocument.addImages(aImages);
+                }, []);
+			}
+		}
 	};
 	asc_docs_api.prototype.AddImageUrl  = function(url, callback)
 	{
@@ -3755,8 +3775,12 @@ background-repeat: no-repeat;\
 			AscShapeProp.fill.type = c_oAscFill.FILL_TYPE_BLIP;
 			AscShapeProp.fill.fill = new asc_CFillBlip();
 			AscShapeProp.fill.fill.asc_putUrl(src);
+			if(this.textureType !== null && this.textureType !== undefined){
+                AscShapeProp.fill.fill.asc_putType(this.textureType);
+			}
 			this.ShapeApply(AscShapeProp);
 			this.isShapeImageChangeUrl = false;
+			this.textureType = null;
 		}
 		else if (this.isSlideImageChangeUrl)
 		{
@@ -3765,8 +3789,12 @@ background-repeat: no-repeat;\
 			AscSlideProp.Background.type = c_oAscFill.FILL_TYPE_BLIP;
 			AscSlideProp.Background.fill = new asc_CFillBlip();
 			AscSlideProp.Background.fill.asc_putUrl(src);
+			if(this.textureType !== null && this.textureType !== undefined){
+                AscSlideProp.Background.fill.asc_putType(this.textureType);
+			}
 			this.SetSlideProps(AscSlideProp);
 			this.isSlideImageChangeUrl = false;
+			this.textureType = null;
 		}
 		else if (this.isImageChangeUrl)
 		{
@@ -3782,10 +3810,14 @@ background-repeat: no-repeat;\
 			oFill.type       = c_oAscFill.FILL_TYPE_BLIP;
 			oFill.fill       = new asc_CFillBlip();
 			oFill.fill.asc_putUrl(src);
+            if(this.textureType !== null && this.textureType !== undefined){
+				oFill.fill.asc_putType(this.textureType);
+            }
 			AscShapeProp.textArtProperties = new Asc.asc_TextArtProperties();
 			AscShapeProp.textArtProperties.asc_putFill(oFill);
 			this.ShapeApply(AscShapeProp);
 			this.isTextArtChangeUrl = false;
+			this.textureType = null;
 		}
 		else
 		{
@@ -5776,7 +5808,7 @@ background-repeat: no-repeat;\
 		var top = ((height / 2) - (h / 2)) + dualScreenTop;
 
 		var _windowPos = "width=" + w + ",height=" + h + ",left=" + left + ",top=" + top;
-		this.reporterWindow = window.open("index.reporter.html", "_blank", "resizable=0,status=0,toolbar=0,location=0,menubar=0,directories=0,scrollbars=0," + _windowPos);
+		this.reporterWindow = window.open("index.reporter.html", "_blank", "resizable=yes,status=0,toolbar=0,location=0,menubar=0,directories=0,scrollbars=0," + _windowPos);
 
 		if (!this.reporterWindow)
 			return;
@@ -5814,18 +5846,26 @@ background-repeat: no-repeat;\
 			return;
 		}
 
-		this.reporterWindowCounter = 0;
-		if (!this.reporterWindow)
-			return;
+		try
+		{
+			this.reporterWindowCounter = 0;
+			if (!this.reporterWindow)
+				return;
 
-		if ( this.reporterWindow.attachEvent )
-			this.reporterWindow.detachEvent('onmessage', this.DemonstrationReporterMessages);
-		else
-			this.reporterWindow.removeEventListener('message', this.DemonstrationReporterMessages, false);
+			if (this.reporterWindow.attachEvent)
+				this.reporterWindow.detachEvent('onmessage', this.DemonstrationReporterMessages);
+			else
+				this.reporterWindow.removeEventListener('message', this.DemonstrationReporterMessages, false);
 
-		this.reporterWindow.close();
-		this.reporterWindow = null;
-		this.reporterStartObject = null;
+			this.reporterWindow.close();
+			this.reporterWindow = null;
+			this.reporterStartObject = null;
+		}
+		catch (err)
+		{
+			this.reporterWindow = null;
+			this.reporterStartObject = null;
+		}
 	};
 
 	asc_docs_api.prototype.DemonstrationReporterMessages = function(e)
@@ -5986,7 +6026,7 @@ background-repeat: no-repeat;\
 			}
 			else if (undefined !== _obj["mouseUp"])
 			{
-				_this.WordControl.DemonstrationManager.onMouseUp({}, true);
+				_this.WordControl.DemonstrationManager.onMouseUp({}, true, true);
 			}
 			else if (undefined !== _obj["mouseWhell"])
 			{
@@ -7091,7 +7131,6 @@ background-repeat: no-repeat;\
 	asc_docs_api.prototype['get_PresentationWidth']               = asc_docs_api.prototype.get_PresentationWidth;
 	asc_docs_api.prototype['get_PresentationHeight']              = asc_docs_api.prototype.get_PresentationHeight;
 	asc_docs_api.prototype['pre_Paste']                           = asc_docs_api.prototype.pre_Paste;
-	asc_docs_api.prototype['pre_SaveCallback']                    = asc_docs_api.prototype.pre_SaveCallback;
 	asc_docs_api.prototype['initEvents2MobileAdvances']           = asc_docs_api.prototype.initEvents2MobileAdvances;
 	asc_docs_api.prototype['ViewScrollToX']                       = asc_docs_api.prototype.ViewScrollToX;
 	asc_docs_api.prototype['ViewScrollToY']                       = asc_docs_api.prototype.ViewScrollToY;

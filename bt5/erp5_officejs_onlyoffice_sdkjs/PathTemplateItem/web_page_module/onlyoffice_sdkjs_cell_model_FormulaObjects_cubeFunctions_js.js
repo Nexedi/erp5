@@ -1,20 +1,20 @@
 /* jshint -W040 */
 /*
- * (c) Copyright Ascensio System SIA 2010-2017
+ * Copyright (c) 2017 Nexedi SA and Contributors. All Rights Reserved.
+ * Author: Boris Kocherov
+ *
+ * This extension was developed by Nexedi as part of
+ * OpenPaaS::NG PSPC collaborative R&D project financed by BPI France
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at Lubanas st. 125a-25, Riga, Latvia,
- * EU, LV-1021.
+ * You can contact jp@nexedi.com.
  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
@@ -35,9 +35,12 @@
 
 (/**
  * @param {Window} window
+ * @param {Object} RSVP
+ * @param {Xmla} Xmla
+ * @param {console} console
  * @param {undefined} undefined
  */
-	function (window, console, Xmla, undefined) {
+	function (window, RSVP, Xmla, console, undefined) {
 	var cBaseFunction = AscCommonExcel.cBaseFunction;
 	var cFormulaFunctionGroup = AscCommonExcel.cFormulaFunctionGroup,
 		cElementType = AscCommonExcel.cElementType,
@@ -101,9 +104,10 @@
 			.push(undefined, function (response) {
 				// fix mondrian Internal and Sql errors
 				if (response) {
-					switch (response.code) {
+					switch (response["code"]) {
 						case "SOAP-ENV:Server.00HSBE02":
 						case "SOAP-ENV:00UE001.Internal Error":
+							// rarely server error, so try again
 							return xmla_request(func, prop);
 					}
 				}
@@ -118,7 +122,7 @@
 //      'CATALOG_NAME': 'FoodMart',
 // 			'HIERARCHY_NAME': hierarchy_name,
 // 			'HIERARCHY_UNIQUE_NAME': hierarchy_name,
-			'CUBE_NAME': settings.cube
+			'CUBE_NAME': settings["cube"]
 		};
 		return xmla_request_retry("discoverMDHierarchies", prop)
 			.push(function (response) {
@@ -131,15 +135,15 @@
 					dimension,
 					dimensions = {};
 				while (response.hasMoreRows()) {
-					uname = response.getHierarchyUniqueName();
-					caption = response.getHierarchyCaption();
-					all_member = response.getAllMember();
-					dimension_uname = response.getDimensionUniqueName();
+					uname = response["getHierarchyUniqueName"]();
+					caption = response["getHierarchyCaption"]();
+					all_member = response["getAllMember"]();
+					dimension_uname = response["getDimensionUniqueName"]();
 					dimension = dimensions[dimension_uname];
 					if (!dimension) {
 						dimension = {
-							uname: dimension_uname,
-							all_member: all_member
+							"uname": dimension_uname,
+							"all_member": all_member
 						};
 						dimensions[dimension_uname] = dimension;
 					}
@@ -147,44 +151,44 @@
 						dimension.all_member = all_member;
 					}
 					hierarchy = {
-						uname: uname,
-						caption: caption,
-						all_member: all_member,
-						dimension_uname: dimension_uname,
-						dimension: dimension
+						"uname": uname,
+						"caption": caption,
+						"all_member": all_member,
+						"dimension_uname": dimension_uname,
+						"dimension": dimension
 					};
 					hierarchies[uname] = hierarchy;
 					hierarchies[caption] = hierarchy;
 					response.nextRow();
 				}
 				return {
-					hierarchies: hierarchies,
-					dimensions: dimensions
+					"hierarchies": hierarchies,
+					"dimensions": dimensions
 				};
 			});
 	}
 
 	function getProperties(connection) {
 		var connections = {
-			xmla: {
-				prop: {
-					url: "https://d1.erp5.ru/saiku/xmla",
-					properties: {
-						DataSourceInfo: "FoodMart",
-						Catalog: "FoodMart"
+			"xmla": {
+				"prop": {
+					"url": "https://d1.erp5.ru/saiku/xmla",
+					"properties": {
+						"DataSourceInfo": "FoodMart",
+						"Catalog": "FoodMart"
 					}
 				},
-				cube: "Sales"
+				"cube": "Sales"
 			},
-			olapy: {
-				prop: {
-					url: "https://d1.erp5.ru/olapy/xmla",
-					properties: {
-						DataSourceInfo: "-",
-						Catalog: "sales"
+			"olapy": {
+				"prop": {
+					"url": "https://d1.erp5.ru/olapy/xmla",
+					"properties": {
+						"DataSourceInfo": "-",
+						"Catalog": "sales"
 					}
 				},
-				cube: "Sales"
+				"cube": "Sales"
 			}
 		};
 		connection = connections[connection];
@@ -199,26 +203,24 @@
 		var scheme = cubeScheme[connection],
 			queue = new RSVP.Queue();
 		if (scheme) {
-			queue.push(function () {
+			return queue.push(function () {
 				return scheme;
 			});
-		} else {
-			queue
-				.push(function () {
-					return discover_hierarchies(connection);
-				})
-				.push(function (arg) {
-					scheme = {
-						members: {},
-						hierarchies: arg.hierarchies,
-						dimensions: arg.dimensions
-					};
-					cubeScheme[connection] = scheme;
-					return scheme;
-				});
-			cubeScheme[connection] = queue;
 		}
-		return queue;
+		cubeScheme[connection] = queue;
+		return queue
+			.push(function () {
+				return discover_hierarchies(connection);
+			})
+			.push(function (arg) {
+				scheme = {
+					members: {},
+					hierarchies: arg.hierarchies,
+					dimensions: arg.dimensions
+				};
+				cubeScheme[connection] = scheme;
+				return scheme;
+			});
 	}
 
 	function getExecutionScheme(connection) {
@@ -269,7 +271,7 @@
 
 			function cellForge(cell) {
 				if (cell) {
-					if (cell.oValue.type === cElementType.error) {
+					if (cell.type === cElementType.error) {
 						// debugger;
 						throw "referenced cell contain error";
 					}
@@ -322,7 +324,7 @@
 			scheme;
 		if (!execution_scheme.execute) {
 			execution_scheme.execute = RSVP.defer();
-			getScheme(connection)
+			return getScheme(connection)
 				.push(function (s) {
 					var settings = getProperties(connection),
 						prop = settings.prop,
@@ -334,14 +336,14 @@
 					scheme = s;
 					for (hierarchy in hierarchies) {
 						tuple_str = hierarchies[hierarchy].join(",");
-						all_member = scheme.hierarchies[hierarchy].all_member;
+						all_member = scheme.hierarchies[hierarchy]["all_member"];
 						if (all_member) {
 							tuple_str = tuple_str + ',' + all_member;
 						}
 						mdx.push("{" + tuple_str + "}");
 					}
 					prop.statement = "SELECT " + mdx.join("*") +
-						" ON 0 FROM [" + settings.cube + "]";
+						" ON 0 FROM [" + settings["cube"] + "]";
 					return xmla_request("execute", prop);
 				})
 				.push(function (dataset) {
@@ -350,11 +352,11 @@
 						axis_array = [],
 						axis_id,
 						cube = {
-							axes: {length: axis_count},
-							members: {},
-							hierarchies: {length: 0},
-							hierarchies_info: scheme.hierarchies,
-							cells: []
+							"axes": {"length": axis_count},
+							"members": {},
+							"hierarchies": {"length": 0},
+							"hierarchies_info": scheme.hierarchies,
+							"cells": []
 						};
 
 
@@ -371,10 +373,10 @@
 							var coordinate_tuple = [];
 							axis.eachHierarchy(function () {
 								var member = this.member();
-								if (!cube.members.hasOwnProperty(member.UName)) {
-									cube.members[member.UName] = member;
+								if (!cube.members.hasOwnProperty(member["UName"])) {
+									cube.members[member["UName"]] = member;
 								}
-								coordinate_tuple.push(member.UName);
+								coordinate_tuple.push(member["UName"]);
 							});
 							cube.axes[axis_id].tuples[coordinate_tuple.join(',')] = tuple.index;
 							cube.axes[axis_id].length++;
@@ -390,12 +392,13 @@
 					});
 
 					do {
-						cube.cells[cellset.cellOrdinal()] = cellset.cellValue();
+						cube.cells[cellset.cellOrdinal()] = cellset["cellValue"]();
 					} while (cellset.nextCell() > 0);
 					execution_scheme.cube = cube;
 					execution_scheme.execute.resolve(cube);
 					execution_scheme.execute = null;
 					execution_scheme.hierarchies = [];
+					return cube;
 				})
 				.push(undefined, function (error) {
 					console.error(error);
@@ -415,17 +418,17 @@
 					scheme = getExecutionScheme(connection);
 				prop.restrictions = {
 //      'CATALOG_NAME': 'FoodMart',
-					'CUBE_NAME': settings.cube
+					'CUBE_NAME': settings["cube"]
 				};
 				if (!opt) {
 					opt = {};
 				}
 				if (opt.member_uname) {
-					prop.restrictions.MEMBER_UNIQUE_NAME = opt.member_uname;
+					prop.restrictions["MEMBER_UNIQUE_NAME"] = opt.member_uname;
 					cached_member = scheme.members[opt.member_uname];
 				}
 				if (opt.level_uname) {
-					prop.restrictions.LEVEL_UNIQUE_NAME = opt.level_uname;
+					prop.restrictions["LEVEL_UNIQUE_NAME"] = opt.level_uname;
 				}
 				if (cached_member) {
 					return [cached_member];
@@ -437,17 +440,17 @@
 								level,
 								cached_member;
 							while (r.hasMoreRows()) {
-								uname = r.getMemberUniqueName();
-								level = r.getLevelUniqueName();
+								uname = r["getMemberUniqueName"]();
+								level = r["getLevelUniqueName"]();
 								// we can check cache twice because fist check
 								// only if discover by member_uname
 								if (!scheme.members.hasOwnProperty(uname)) {
 									cached_member = {
 										uname: uname,
-										h: r.getHierarchyUniqueName(),
-										level: r.getLevelUniqueName(),
-										caption: r.getMemberCaption(),
-										type: r.getMemberType()
+										h: r["getHierarchyUniqueName"](),
+										level: r["getLevelUniqueName"](),
+										caption: r["getMemberCaption"](),
+										type: r["getMemberType"]()
 									};
 									scheme.members[uname] = cached_member;
 								} else {
@@ -471,7 +474,8 @@
 		})
 			.push(function (members) {
 				var i;
-				function compare(a,b) {
+
+				function compare(a, b) {
 					if (a.uname < b.uname)
 						return -1;
 					if (a.uname > b.uname)
@@ -543,32 +547,28 @@
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cCUBEKPIMEMBER() {
-		this.name = "CUBEKPIMEMBER";
-		this.value = null;
-		this.argumentsCurrent = 0;
 	}
 
 	cCUBEKPIMEMBER.prototype = Object.create(cBaseFunction.prototype);
 	cCUBEKPIMEMBER.prototype.constructor = cCUBEKPIMEMBER;
+	cCUBEKPIMEMBER.prototype.name = 'CUBEKPIMEMBER';
 
 	/**
 	 * @constructor
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cCUBEMEMBER() {
-		this.name = "CUBEMEMBER";
-		this.value = null;
-		this.argumentsCurrent = 0;
 	}
 
 	cCUBEMEMBER.prototype = Object.create(cBaseFunction.prototype);
 	cCUBEMEMBER.prototype.constructor = cCUBEMEMBER;
+	cCUBEMEMBER.prototype.name = 'CUBEMEMBER';
 	cCUBEMEMBER.prototype.argumentsMin = 2;
 	cCUBEMEMBER.prototype.argumentsMax = 3;
 	cCUBEMEMBER.prototype.ca = true;
 	cCUBEMEMBER.prototype.CalculateLazy = function (queue, bbox, isDefName, ws) {
 		var connection,
-			current_cell_id = ws._getCell(bbox.r1, bbox.c2).getId(),
+			current_cell_id = [ws.getId(),bbox.r1,bbox.c2].join(";"),
 			caption;
 		return queue
 			.push(function (arg) {
@@ -627,79 +627,68 @@
 		};
 	};
 
-
 	/**
 	 * @constructor
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cCUBEMEMBERPROPERTY() {
-		this.name = "CUBEMEMBERPROPERTY";
-		this.value = null;
-		this.argumentsCurrent = 0;
 	}
 
 	cCUBEMEMBERPROPERTY.prototype = Object.create(cBaseFunction.prototype);
 	cCUBEMEMBERPROPERTY.prototype.constructor = cCUBEMEMBERPROPERTY;
+	cCUBEMEMBERPROPERTY.prototype.name = 'CUBEMEMBERPROPERTY';
 
 	/**
 	 * @constructor
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cCUBERANKEDMEMBER() {
-		this.name = "CUBERANKEDMEMBER";
-		this.value = null;
-		this.argumentsCurrent = 0;
 	}
 
 	cCUBERANKEDMEMBER.prototype = Object.create(cBaseFunction.prototype);
 	cCUBERANKEDMEMBER.prototype.constructor = cCUBERANKEDMEMBER;
+	cCUBERANKEDMEMBER.prototype.name = 'CUBERANKEDMEMBER';
 
 	/**
 	 * @constructor
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cCUBESET() {
-		this.name = "CUBESET";
-		this.value = null;
-		this.argumentsCurrent = 0;
 	}
 
 	cCUBESET.prototype = Object.create(cBaseFunction.prototype);
 	cCUBESET.prototype.constructor = cCUBESET;
+	cCUBESET.prototype.name = 'CUBESET';
 
 	/**
 	 * @constructor
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cCUBESETCOUNT() {
-		this.name = "CUBESETCOUNT";
-		this.value = null;
-		this.argumentsCurrent = 0;
 	}
 
 	cCUBESETCOUNT.prototype = Object.create(cBaseFunction.prototype);
 	cCUBESETCOUNT.prototype.constructor = cCUBESETCOUNT;
+	cCUBESETCOUNT.prototype.name = 'CUBESETCOUNT';
 
 	/**
 	 * @constructor
 	 * @extends {AscCommonExcel.cBaseFunction}
 	 */
 	function cCUBEVALUE() {
-		this.name = "CUBEVALUE";
-		this.value = null;
-		this.argumentsCurrent = 0;
 	}
 
 	cCUBEVALUE.prototype = Object.create(cBaseFunction.prototype);
 	cCUBEVALUE.prototype.constructor = cCUBEVALUE;
+	cCUBEVALUE.prototype.name = 'CUBEVALUE';
 	cCUBEVALUE.prototype.argumentsMin = 2;
 	cCUBEVALUE.prototype.argumentsMax = 5;
-  cCUBEVALUE.prototype.ca = true;
+	cCUBEVALUE.prototype.ca = true;
 	cCUBEVALUE.prototype.CalculateLazy = function (queue, bbox, isDefName, ws) {
 		var scheme,
 			connection,
 			members = [],
-      current_cell_id = ws._getCell(bbox.r1, bbox.c2).getId(),
+			current_cell_id = [ws.getId(),bbox.r1,bbox.c2].join(";"),
 			waiter = AddCubeValueCalculate(current_cell_id);
 		return queue
 			.push(function (arg) {
@@ -774,7 +763,7 @@
 							all_member;
 						if (!h) {
 							hierarchy_name = cube.hierarchies[axis_id + ',' + h_id].name;
-							all_member = cube.hierarchies_info[hierarchy_name].all_member;
+							all_member = cube["hierarchies_info"][hierarchy_name]["all_member"];
 							if (all_member) {
 								h = getHierarchyByMember(all_member);
 								if (h) {
@@ -813,5 +802,4 @@
 			name: this.name, args: "( connection, member1, member2, .. )"
 		};
 	};
-})
-(window, console, Xmla);
+})(window, RSVP, Xmla, console);

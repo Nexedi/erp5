@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/sdkjs/common/Local/empty_slide.js</string> </value>
+            <value> <string>onlyoffice/sdkjs/word/Editor/Bookmarks.js</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_sdkjs_common_Local_empty_slide_js</string> </value>
+            <value> <string>onlyoffice_sdkjs_word_Editor_Bookmarks_js</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

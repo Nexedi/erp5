@@ -45,6 +45,10 @@ CDrawingsController.prototype.AddInlineImage = function(nW, nH, oImage, oChart, 
 {
 	return this.DrawingObjects.addInlineImage(nW, nH, oImage, oChart, bFlow);
 };
+CDrawingsController.prototype.AddImages = function(aImages)
+{
+	return this.DrawingObjects.addImages(aImages);
+};
 CDrawingsController.prototype.AddSignatureLine = function(oSignatureDrawing)
 {
 	return this.DrawingObjects.addSignatureLine(oSignatureDrawing);
@@ -339,9 +343,9 @@ CDrawingsController.prototype.GetSelectedText = function(bClearText, oPr)
 {
 	return this.DrawingObjects.getSelectedText(bClearText, oPr);
 };
-CDrawingsController.prototype.GetCurrentParagraph = function()
+CDrawingsController.prototype.GetCurrentParagraph = function(bIgnoreSelection, arrSelectedParagraphs)
 {
-	return this.DrawingObjects.getCurrentParagraph();
+	return this.DrawingObjects.getCurrentParagraph(bIgnoreSelection, arrSelectedParagraphs);
 };
 CDrawingsController.prototype.GetSelectedElementsInfo = function(oInfo)
 {

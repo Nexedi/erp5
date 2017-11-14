@@ -142,11 +142,12 @@ function CTable(DrawingDocument, Parent, Inline, Rows, Cols, TableGrid, bPresent
     this.TableRowsBottom = [];
     this.HeaderInfo =
     {
-        Count     : 0, // Количество строк, входящих в заголовок
-        H         : 0, // Суммарная высота, занимаемая заголовком
-        PageIndex : 0, // Страница, на которой лежит исходный заголовок (либо 0, либо 1)
-        Pages     : []
-    };
+		HeaderRecalculate : false, // В данный момент идет пересчет самих заголовков
+		Count             : 0,     // Количество строк, входящих в заголовок
+		H                 : 0,     // Суммарная высота, занимаемая заголовком
+		PageIndex         : 0,     // Страница, на которой лежит исходный заголовок (либо 0, либо 1)
+		Pages             : []
+	};
 
     this.Selection =
     {
@@ -1215,6 +1216,8 @@ CTable.prototype.Set_Props = function(Props)
 			if (undefined === Props.TablePaddings)
 				this.Set_Distance(3.2, 0, 3.2, 0);
 
+			this.Set_TableInd(0);
+
 			bRecalc_All = true;
 		}
 	}
@@ -2170,7 +2173,7 @@ CTable.prototype.Get_PageContentStartPos = function(CurPage, RowIndex, CellIndex
 
 	var bHeader = false;
 	var Y       = Pos.Y;
-	if (-1 != this.HeaderInfo.PageIndex && this.HeaderInfo.Count > 0 && CurPage > this.HeaderInfo.PageIndex && true === this.HeaderInfo.Pages[CurPage].Draw)
+	if (true !== this.HeaderInfo.HeaderRecalculate && -1 != this.HeaderInfo.PageIndex && this.HeaderInfo.Count > 0 && CurPage > this.HeaderInfo.PageIndex && true === this.HeaderInfo.Pages[CurPage].Draw)
 	{
 		Y       = this.HeaderInfo.Pages[CurPage].RowsInfo[this.HeaderInfo.Count - 1].TableRowsBottom;
 		bHeader = true;
@@ -2378,11 +2381,11 @@ CTable.prototype.GetAllParagraphs = function(Props, ParaArray)
 		}
 	}
 };
-CTable.prototype.Get_EndInfo = function()
+CTable.prototype.GetEndInfo = function()
 {
 	var RowsCount = this.Content.length;
 	if (RowsCount > 0)
-		return this.Content[RowsCount - 1].Get_EndInfo();
+		return this.Content[RowsCount - 1].GetEndInfo();
 
 	return null;
 };
@@ -2391,7 +2394,7 @@ CTable.prototype.GetPrevElementEndInfo = function(RowIndex)
 	if (0 === RowIndex)
 		return this.Parent.GetPrevElementEndInfo(this);
 	else
-		return this.Content[RowIndex - 1].Get_EndInfo();
+		return this.Content[RowIndex - 1].GetEndInfo();
 };
 //----------------------------------------------------------------------------------------------------------------------
 // Функции к которым идет обращение из родительского класса
@@ -2589,6 +2592,10 @@ CTable.prototype.Move = function(X, Y, PageNum, NearestPos)
 			oTargetTable.PositionV.Value        = Y;
 
 			oTargetTable.PageNum = PageNum;
+
+			var nTableInd = oTargetTable.Get_TableInd();
+			if (Math.abs(nTableInd) > 0.001)
+				oTargetTable.Set_TableInd(0);
 
 			editor.WordControl.m_oLogicDocument.Recalculate();
 			oTargetTable.Start_TrackTable();
@@ -4957,7 +4964,7 @@ CTable.prototype.Selection_SetEnd = function(X, Y, CurPage, MouseEvent)
 	this.Selection.CurRow            = Pos.Row;
 
 	// При селекте внутри ячейки мы селектим содержимое ячейки
-	if (0 === this.Parent.GetSelectDirection() && this.Selection.StartPos.Pos.Row === this.Selection.EndPos.Pos.Row && this.Selection.StartPos.Pos.Cell === this.Selection.EndPos.Pos.Cell)
+	if (this.Parent.IsSelectedSingleElement() && this.Selection.StartPos.Pos.Row === this.Selection.EndPos.Pos.Row && this.Selection.StartPos.Pos.Cell === this.Selection.EndPos.Pos.Cell)
 	{
 		this.CurCell.Content_Selection_SetStart(this.Selection.StartPos.X, this.Selection.StartPos.Y, this.Selection.StartPos.PageIndex - this.CurCell.Content.Get_StartPage_Relative(), this.Selection.StartPos.MouseEvent);
 
@@ -5376,6 +5383,12 @@ CTable.prototype.AddInlineImage = function(W, H, Img, Chart, bFlow)
 	this.Selection.Type = table_Selection_Text;
 	this.CurCell.Content.AddInlineImage(W, H, Img, Chart, bFlow);
 };
+CTable.prototype.AddImages = function(aImages)
+{
+	this.Selection.Use  = true;
+	this.Selection.Type = table_Selection_Text;
+	this.CurCell.Content.AddImages(aImages);
+};
 CTable.prototype.AddSignatureLine = function(oSignatureDrawing)
 {
 	this.Selection.Use  = true;
@@ -5587,7 +5600,7 @@ CTable.prototype.MoveCursorLeft = function(AddToSelect, Word)
 			var StartPos = this.Selection.StartPos.Pos;
 			var EndPos   = this.Selection.EndPos.Pos;
 
-			if (StartPos.Cell == EndPos.Cell && StartPos.Row == EndPos.Row && 0 === this.Parent.GetSelectDirection())
+			if (StartPos.Cell == EndPos.Cell && StartPos.Row == EndPos.Row && this.Parent.IsSelectedSingleElement())
 			{
 				// Если была выделена одна ячейка, тогда мы убираем выделение по ячейкам
 				this.Selection.Type = table_Selection_Text;
@@ -5604,17 +5617,12 @@ CTable.prototype.MoveCursorLeft = function(AddToSelect, Word)
 				// тогда мы выделаяем первую строку
 
 				var bRet = true;
-				if (0 == EndPos.Cell && 0 == EndPos.Row || ( 0 !== this.Parent.GetSelectDirection() && 0 == EndPos.Row && 0 == StartPos.Row ))
+				if (0 == EndPos.Cell && 0 == EndPos.Row || ( !this.Parent.IsSelectedSingleElement() && 0 == EndPos.Row && 0 == StartPos.Row ))
 				{
 					this.Selection.EndPos.Pos = {Cell : 0, Row : 0};
 					bRet                      = false;
 				}
-				//else if ( EndPos.Cell > 0 && EndPos.Cell > StartPos.Cell && 0 ===
-				// this.Parent.GetSelectDirection() ) this.Selection.EndPos.Pos = { Cell : EndPos.Cell - 1, Row :
-				// EndPos.Row }; else if ( EndPos.Row > 0 && EndPos.Row > StartPos.Row && 0 ===
-				// this.Parent.GetSelectDirection() ) this.Selection.EndPos.Pos = { Cell : Math.min( EndPos.Cell,
-				// this.Content[EndPos.Row - 1].Get_CellsCount() - 1 ), Row : EndPos.Row - 1 };
-				else if (EndPos.Cell > 0 && 0 === this.Parent.GetSelectDirection())
+				else if (EndPos.Cell > 0 && this.Parent.IsSelectedSingleElement())
 					this.Selection.EndPos.Pos = {Cell : EndPos.Cell - 1, Row : EndPos.Row};
 				else
 					this.Selection.EndPos.Pos = {Cell : 0, Row : EndPos.Row - 1};
@@ -5745,7 +5753,7 @@ CTable.prototype.MoveCursorRight = function(AddToSelect, Word, FromPaste)
 			var StartPos = this.Selection.StartPos.Pos;
 			var EndPos   = this.Selection.EndPos.Pos;
 
-			if (StartPos.Cell == EndPos.Cell && StartPos.Row == EndPos.Row && 0 === this.Parent.GetSelectDirection())
+			if (StartPos.Cell == EndPos.Cell && StartPos.Row == EndPos.Row && this.Parent.IsSelectedSingleElement())
 			{
 				// Если была выделена одна ячейка, тогда мы убираем выделение по ячейкам
 				this.Selection.Type = table_Selection_Text;
@@ -5758,17 +5766,12 @@ CTable.prototype.MoveCursorRight = function(AddToSelect, Word, FromPaste)
 				var EndRow  = this.Content[EndPos.Row];
 
 				var bRet = true;
-				if ((LastRow.Get_CellsCount() - 1 == EndPos.Cell && this.Content.length - 1 == EndPos.Row) || ( 0 !== this.Parent.GetSelectDirection() && this.Content.length - 1 == EndPos.Row && this.Content.length - 1 == StartPos.Row ))
+				if ((LastRow.Get_CellsCount() - 1 == EndPos.Cell && this.Content.length - 1 == EndPos.Row) || (!this.Parent.IsSelectedSingleElement() && this.Content.length - 1 == EndPos.Row && this.Content.length - 1 == StartPos.Row ))
 				{
 					this.Selection.EndPos.Pos = {Cell : LastRow.Get_CellsCount() - 1, Row : LastRow.Index};
 					bRet                      = false;
 				}
-				//else if ( EndPos.Cell < EndRow.Get_CellsCount() - 1 && EndPos.Cell < StartPos.Cell && 0 ===
-				// this.Parent.GetSelectDirection() ) this.Selection.EndPos.Pos = { Cell : EndPos.Cell + 1, Row :
-				// EndPos.Row }; else if ( EndPos.Row < this.Content.length - 1 && EndPos.Row < StartPos.Row && 0 ===
-				// this.Parent.GetSelectDirection() ) this.Selection.EndPos.Pos = { Cell : Math.min( EndPos.Cell,
-				// this.Content[EndPos.Row + 1].Get_CellsCount() - 1 ), Row : EndPos.Row + 1 };
-				else if (EndPos.Cell < EndRow.Get_CellsCount() - 1 && 0 === this.Parent.GetSelectDirection())
+				else if (EndPos.Cell < EndRow.Get_CellsCount() - 1 && this.Parent.IsSelectedSingleElement())
 					this.Selection.EndPos.Pos = {Cell : EndPos.Cell + 1, Row : EndPos.Row};
 				else
 					this.Selection.EndPos.Pos = {
@@ -7421,15 +7424,35 @@ CTable.prototype.GetDirectParaPr = function()
 
 	return this.CurCell.Content.GetDirectParaPr();
 };
-CTable.prototype.GetCurrentParagraph = function()
+CTable.prototype.GetCurrentParagraph = function(bIgnoreSelection, arrSelectedParagraphs)
 {
-	var SelectionArray = this.Internal_Get_SelectionArray();
-	if (SelectionArray.length > 0)
+	if (arrSelectedParagraphs)
 	{
-		var CurCell = SelectionArray[0].Cell;
-		var CurRow  = SelectionArray[0].Row;
+		var SelectionArray = this.Internal_Get_SelectionArray();
+		for (var nIndex = 0, nCount = SelectionArray.length; nIndex < nCount; ++nIndex)
+		{
+			var CurCell = SelectionArray[nIndex].Cell;
+			var CurRow  = SelectionArray[nIndex].Row;
+			this.Get_Row(CurRow).Get_Cell(CurCell).Content.GetCurrentParagraph(false, arrSelectedParagraphs);
+		}
+	}
+	else if (true === bIgnoreSelection)
+	{
+		if (this.CurCell)
+			return this.CurCell.Content.GetCurrentParagraph(bIgnoreSelection, null);
+		else
+			null;
+	}
+	else
+	{
+		var SelectionArray = this.Internal_Get_SelectionArray();
+		if (SelectionArray.length > 0)
+		{
+			var CurCell = SelectionArray[0].Cell;
+			var CurRow  = SelectionArray[0].Row;
 
-		return this.Get_Row(CurRow).Get_Cell(CurCell).Content.GetCurrentParagraph();
+			return this.Get_Row(CurRow).Get_Cell(CurCell).Content.GetCurrentParagraph(bIgnoreSelection, null);
+		}
 	}
 
 	return null;
@@ -10766,7 +10789,7 @@ CTable.prototype.Internal_Selection_UpdateCells = function(bForceSelectByLines)
 	this.Selection.Type = table_Selection_Cell;
 	this.Selection.Data = [];
 
-	if (0 === this.Parent.GetSelectDirection() && false == bForceSelectByLines)
+	if (this.Parent.IsSelectedSingleElement() && false == bForceSelectByLines)
 	{
 		// Определяем ячейки, которые попали в наш селект
 		// Алгоритм следующий:
@@ -12080,6 +12103,30 @@ CTable.prototype.GetAllContentControls = function(arrContentControls)
 		{
 			var oCell = oRow.Get_Cell(nCurCell);
 			oCell.Content.GetAllContentControls(arrContentControls);
+		}
+	}
+};
+CTable.prototype.GetOutlineParagraphs = function(arrOutline)
+{
+	for (var nCurRow = 0, nRowsCount = this.Content.length; nCurRow < nRowsCount; ++nCurRow)
+	{
+		var oRow = this.Content[nCurRow];
+		for (var nCurCell = 0, nCellsCount = oRow.Get_CellsCount(); nCurCell < nCellsCount; ++nCurCell)
+		{
+			var oCell = oRow.Get_Cell(nCurCell);
+			if (oCell)
+				oCell.Content.GetOutlineParagraphs(arrOutline);
+		}
+	}
+};
+CTable.prototype.UpdateBookmarks = function(oManager)
+{
+	for (var nCurRow = 0, nRowsCount = this.Content.length; nCurRow < nRowsCount; ++nCurRow)
+	{
+		var oRow = this.Content[nCurRow];
+		for (var nCurCell = 0, nCellsCount = oRow.Get_CellsCount(); nCurCell < nCellsCount; ++nCurCell)
+		{
+			oRow.Get_Cell(nCurCell).Content.UpdateBookmarks(oManager);
 		}
 	}
 };

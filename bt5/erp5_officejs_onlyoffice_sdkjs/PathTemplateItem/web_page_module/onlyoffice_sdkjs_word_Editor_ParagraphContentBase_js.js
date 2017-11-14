@@ -33,6 +33,13 @@
 "use strict";
 function CParagraphContentBase()
 {
+	this.Paragraph = null;
+
+	this.StartLine  = -1;
+	this.StartRange = -1;
+
+	this.Lines       = [];
+	this.LinesLength = 0;
 }
 CParagraphContentBase.prototype.CanSplit = function()
 {
@@ -45,6 +52,379 @@ CParagraphContentBase.prototype.IsParagraphContentElement = function()
 CParagraphContentBase.prototype.IsStopCursorOnEntryExit = function()
 {
 	return false;
+};
+CParagraphContentBase.prototype.PreDelete = function()
+{
+};
+CParagraphContentBase.prototype.SetParagraph = function(Paragraph)
+{
+	this.Paragraph = Paragraph;
+};
+CParagraphContentBase.prototype.GetParagraph = function()
+{
+	return this.Paragraph;
+};
+CParagraphContentBase.prototype.Is_Empty = function()
+{
+	return true;
+};
+CParagraphContentBase.prototype.IsEmpty = function()
+{
+	return this.Is_Empty();
+};
+CParagraphContentBase.prototype.Is_CheckingNearestPos = function()
+{
+	return false;
+};
+CParagraphContentBase.prototype.Get_CompiledTextPr = function()
+{
+	return null;
+};
+CParagraphContentBase.prototype.Clear_TextPr = function()
+{
+
+};
+CParagraphContentBase.prototype.Remove = function()
+{
+	return false;
+};
+CParagraphContentBase.prototype.Get_DrawingObjectRun = function(Id)
+{
+	return null;
+};
+CParagraphContentBase.prototype.Get_DrawingObjectContentPos = function(Id, ContentPos, Depth)
+{
+	return false;
+};
+CParagraphContentBase.prototype.Get_Layout = function(DrawingLayout, UseContentPos, ContentPos, Depth)
+{
+};
+CParagraphContentBase.prototype.Get_NextRunElements = function(RunElements, UseContentPos, Depth)
+{
+};
+CParagraphContentBase.prototype.Get_PrevRunElements = function(RunElements, UseContentPos, Depth)
+{
+};
+CParagraphContentBase.prototype.CollectDocumentStatistics = function(ParaStats)
+{
+};
+CParagraphContentBase.prototype.Create_FontMap = function(Map)
+{
+};
+CParagraphContentBase.prototype.Get_AllFontNames = function(AllFonts)
+{
+};
+CParagraphContentBase.prototype.GetSelectedText = function(bAll, bClearText, oPr)
+{
+	return "";
+};
+CParagraphContentBase.prototype.Get_SelectionDirection = function()
+{
+	return 1;
+};
+CParagraphContentBase.prototype.Clear_TextFormatting = function( DefHyper )
+{
+};
+CParagraphContentBase.prototype.Can_AddDropCap = function()
+{
+	return null;
+};
+CParagraphContentBase.prototype.Get_TextForDropCap = function(DropCapText, UseContentPos, ContentPos, Depth)
+{
+};
+CParagraphContentBase.prototype.Get_StartTabsCount = function(TabsCounter)
+{
+	return true;
+};
+CParagraphContentBase.prototype.Remove_StartTabs = function(TabsCounter)
+{
+	return true;
+};
+CParagraphContentBase.prototype.Copy = function(Selected)
+{
+	return new this.constructor();
+};
+CParagraphContentBase.prototype.CopyContent = function(Selected)
+{
+	return [];
+};
+CParagraphContentBase.prototype.Split = function()
+{
+	return new ParaRun();
+};
+CParagraphContentBase.prototype.Apply_TextPr = function()
+{
+};
+CParagraphContentBase.prototype.Get_ParaPosByContentPos = function(ContentPos, Depth)
+{
+	return new CParaPos(this.StartRange, this.StartLine, 0, 0);
+};
+CParagraphContentBase.prototype.UpdateBookmarks = function(oManager)
+{
+};
+CParagraphContentBase.prototype.Check_Spelling = function(SpellCheckerEngine, Depth)
+{
+};
+CParagraphContentBase.prototype.GetParent = function()
+{
+	if (!this.Paragraph)
+		return null;
+
+	var oContentPos = this.Paragraph.Get_PosByElement(this);
+	if (!oContentPos || oContentPos.Get_Depth() < 0)
+		return null;
+
+	oContentPos.Decrease_Depth(1);
+	return this.Paragraph.Get_ElementByPos(oContentPos);
+};
+CParagraphContentBase.prototype.GetPosInParent = function(_oParent)
+{
+	var oParent = (_oParent? _oParent : this.GetParent());
+	if (!oParent || !oParent.Content)
+		return -1;
+
+	for (var nPos = 0, nCount = oParent.Content.length; nPos < nCount; ++nPos)
+	{
+		if (this === oParent.Content[nPos])
+			return nPos;
+	}
+
+	return -1;
+};
+//----------------------------------------------------------------------------------------------------------------------
+// Функции пересчета
+//----------------------------------------------------------------------------------------------------------------------
+CParagraphContentBase.prototype.Recalculate_Reset = function(StartRange, StartLine)
+{
+	this.StartLine   = StartLine;
+	this.StartRange  = StartRange;
+};
+CParagraphContentBase.prototype.Recalculate_Range = function(PRS, ParaPr)
+{
+};
+CParagraphContentBase.prototype.Recalculate_Set_RangeEndPos = function(PRS, PRP, Depth)
+{
+};
+CParagraphContentBase.prototype.Recalculate_LineMetrics = function(PRS, ParaPr, _CurLine, _CurRange)
+{
+};
+CParagraphContentBase.prototype.Recalculate_Range_Width = function(PRSC, _CurLine, _CurRange)
+{
+};
+CParagraphContentBase.prototype.Recalculate_Range_Spaces = function(PRSA, CurLine, CurRange, CurPage)
+{
+};
+CParagraphContentBase.prototype.Recalculate_PageEndInfo = function(PRSI, _CurLine, _CurRange)
+{
+};
+CParagraphContentBase.prototype.SaveRecalculateObject = function(Copy)
+{
+	var RecalcObj = new CRunRecalculateObject(this.StartLine, this.StartRange);
+	return RecalcObj;
+};
+CParagraphContentBase.prototype.LoadRecalculateObject = function(RecalcObj, Parent)
+{
+	this.StartLine  = RecalcObj.StartLine;
+	this.StartRange = RecalcObj.StartRange;
+};
+CParagraphContentBase.prototype.PrepareRecalculateObject = function()
+{
+};
+CParagraphContentBase.prototype.Is_EmptyRange = function(_CurLine, _CurRange)
+{
+	return true;
+};
+CParagraphContentBase.prototype.Check_Range_OnlyMath = function(Checker, CurRange, CurLine)
+{
+};
+CParagraphContentBase.prototype.Check_MathPara = function(Checker)
+{
+};
+CParagraphContentBase.prototype.Check_PageBreak = function()
+{
+	return false;
+};
+CParagraphContentBase.prototype.Check_BreakPageEnd = function(PBChecker)
+{
+	return true;
+};
+CParagraphContentBase.prototype.Recalculate_CurPos = function(X, Y, CurrentRun, _CurRange, _CurLine, CurPage, UpdateCurPos, UpdateTarget, ReturnTarget)
+{
+	return { X : X };
+};
+CParagraphContentBase.prototype.RecalculateMinMaxContentWidth = function(MinMax)
+{
+};
+CParagraphContentBase.prototype.Get_Range_VisibleWidth = function(RangeW, _CurLine, _CurRange)
+{
+};
+CParagraphContentBase.prototype.Shift_Range = function(Dx, Dy, _CurLine, _CurRange)
+{
+};
+//----------------------------------------------------------------------------------------------------------------------
+// Функции отрисовки
+//----------------------------------------------------------------------------------------------------------------------
+CParagraphContentBase.prototype.Draw_HighLights = function(PDSH)
+{
+};
+CParagraphContentBase.prototype.Draw_Elements = function(PDSE)
+{
+};
+CParagraphContentBase.prototype.Draw_Lines = function(PDSL)
+{
+};
+//----------------------------------------------------------------------------------------------------------------------
+// Функции для работы с курсором
+//----------------------------------------------------------------------------------------------------------------------
+CParagraphContentBase.prototype.Is_CursorPlaceable = function()
+{
+	return false;
+};
+CParagraphContentBase.prototype.Cursor_Is_Start = function()
+{
+	return true;
+};
+CParagraphContentBase.prototype.Cursor_Is_NeededCorrectPos = function()
+{
+	return true;
+};
+CParagraphContentBase.prototype.Cursor_Is_End = function()
+{
+	return true;
+};
+CParagraphContentBase.prototype.MoveCursorToStartPos = function()
+{
+};
+CParagraphContentBase.prototype.MoveCursorToEndPos = function(SelectFromEnd)
+{
+};
+CParagraphContentBase.prototype.Get_ParaContentPosByXY = function(SearchPos, Depth, _CurLine, _CurRange, StepEnd)
+{
+	return false;
+};
+CParagraphContentBase.prototype.Get_ParaContentPos = function(bSelection, bStart, ContentPos, bUseCorrection)
+{
+};
+CParagraphContentBase.prototype.Set_ParaContentPos = function(ContentPos, Depth)
+{
+};
+CParagraphContentBase.prototype.Get_PosByElement = function(Class, ContentPos, Depth, UseRange, Range, Line)
+{
+	if (this === Class)
+		return true;
+
+	return false;
+};
+CParagraphContentBase.prototype.Get_ElementByPos = function(ContentPos, Depth)
+{
+	return this;
+};
+CParagraphContentBase.prototype.Get_ClassesByPos = function(Classes, ContentPos, Depth)
+{
+	Classes.push(this);
+};
+CParagraphContentBase.prototype.Get_PosByDrawing = function(Id, ContentPos, Depth)
+{
+	return false;
+};
+CParagraphContentBase.prototype.Get_RunElementByPos = function(ContentPos, Depth)
+{
+	return null;
+};
+CParagraphContentBase.prototype.Get_LastRunInRange = function(_CurLine, _CurRange)
+{
+	return null;
+};
+CParagraphContentBase.prototype.Get_LeftPos = function(SearchPos, ContentPos, Depth, UseContentPos)
+{
+};
+CParagraphContentBase.prototype.Get_RightPos = function(SearchPos, ContentPos, Depth, UseContentPos, StepEnd)
+{
+};
+CParagraphContentBase.prototype.Get_WordStartPos = function(SearchPos, ContentPos, Depth, UseContentPos)
+{
+};
+CParagraphContentBase.prototype.Get_WordEndPos = function(SearchPos, ContentPos, Depth, UseContentPos, StepEnd)
+{
+};
+CParagraphContentBase.prototype.Get_EndRangePos = function(_CurLine, _CurRange, SearchPos, Depth)
+{
+	return false;
+};
+CParagraphContentBase.prototype.Get_StartRangePos = function(_CurLine, _CurRange, SearchPos, Depth)
+{
+	return false;
+};
+CParagraphContentBase.prototype.Get_StartRangePos2 = function(_CurLine, _CurRange, ContentPos, Depth)
+{
+};
+CParagraphContentBase.prototype.Get_EndRangePos2 = function(_CurLine, _CurRange, ContentPos, Depth)
+{
+};
+CParagraphContentBase.prototype.Get_StartPos = function(ContentPos, Depth)
+{
+};
+CParagraphContentBase.prototype.Get_EndPos = function(BehindEnd, ContentPos, Depth)
+{
+};
+//----------------------------------------------------------------------------------------------------------------------
+// Функции для работы с селектом
+//----------------------------------------------------------------------------------------------------------------------
+CParagraphContentBase.prototype.Set_SelectionContentPos = function(StartContentPos, EndContentPos, Depth, StartFlag, EndFlag)
+{
+};
+CParagraphContentBase.prototype.RemoveSelection = function()
+{
+};
+CParagraphContentBase.prototype.SelectAll = function(Direction)
+{
+};
+CParagraphContentBase.prototype.Selection_DrawRange = function(_CurLine, _CurRange, SelectionDraw)
+{
+};
+CParagraphContentBase.prototype.IsSelectionEmpty = function(CheckEnd)
+{
+	return true;
+};
+CParagraphContentBase.prototype.Selection_CheckParaEnd = function()
+{
+	return false;
+};
+CParagraphContentBase.prototype.IsSelectedAll = function(Props)
+{
+	return true;
+};
+CParagraphContentBase.prototype.Selection_CorrectLeftPos = function(Direction)
+{
+	return true;
+};
+CParagraphContentBase.prototype.Selection_CheckParaContentPos = function(ContentPos)
+{
+	return true;
+};
+//----------------------------------------------------------------------------------------------------------------------
+CParagraphContentBase.prototype.Get_CurrentParaPos = function()
+{
+	return new CParaPos(this.StartRange, this.StartLine, 0, 0);
+};
+CParagraphContentBase.prototype.Get_TextPr = function(ContentPos, Depth)
+{
+	return new CTextPr();
+};
+CParagraphContentBase.prototype.Set_ReviewType = function(ReviewType, RemovePrChange)
+{
+};
+CParagraphContentBase.prototype.Set_ReviewTypeWithInfo = function(ReviewType, ReviewInfo)
+{
+};
+CParagraphContentBase.prototype.Check_RevisionsChanges = function(Checker, ContentPos, Depth)
+{
+};
+CParagraphContentBase.prototype.AcceptRevisionChanges = function(Type, bAll)
+{
+};
+CParagraphContentBase.prototype.RejectRevisionChanges = function(Type, bAll)
+{
 };
 
 /**
@@ -212,6 +592,9 @@ CParagraphContentWithContentBase.prototype.CanSplit = function()
 {
 	return true;
 };
+CParagraphContentWithContentBase.prototype.PreDelete = function()
+{
+};
 /**
  * Это базовый класс для элементов параграфа, которые сами по себе могут содержать элементы параграфа.
  * @constructor
@@ -308,10 +691,6 @@ CParagraphContentWithParagraphLikeContent.prototype.CopyContent = function(Selec
     }
 
     return CopyContent;
-};
-CParagraphContentWithParagraphLikeContent.prototype.GetParagraph = function()
-{
-	return this.Paragraph;
 };
 CParagraphContentWithParagraphLikeContent.prototype.Clear_ContentChanges = function()
 {
@@ -517,6 +896,7 @@ CParagraphContentWithParagraphLikeContent.prototype.Add_ToContent = function(Pos
 {
     this.Content.splice(Pos, 0, Item);
     this.private_UpdateTrackRevisions();
+    this.private_CheckUpdateBookmarks([Item]);
 
     if (false !== UpdatePosition)
     {
@@ -587,8 +967,15 @@ CParagraphContentWithParagraphLikeContent.prototype.Add_ToContent = function(Pos
 };
 CParagraphContentWithParagraphLikeContent.prototype.Remove_FromContent = function(Pos, Count, UpdatePosition)
 {
-    this.Content.splice(Pos, Count);
+	for (var nIndex = Pos; nIndex < Pos + Count; ++nIndex)
+	{
+		this.Content[nIndex].PreDelete();
+	}
+
+	var DeletedItems = this.Content.slice(Pos, Pos + Count);
+	this.Content.splice(Pos, Count);
     this.private_UpdateTrackRevisions();
+	this.private_CheckUpdateBookmarks(DeletedItems);
 
     if (false !== UpdatePosition)
     {
@@ -1213,6 +1600,13 @@ CParagraphContentWithParagraphLikeContent.prototype.Correct_Content = function()
 {
     if (this.Content.length < 0)
         this.Add_ToContent(0, new ParaRun(this.Paragraph, false));
+};
+CParagraphContentWithParagraphLikeContent.prototype.UpdateBookmarks = function(oManager)
+{
+	for (var nIndex = 0, nCount = this.Content.length; nIndex < nCount; ++nIndex)
+	{
+		this.Content[nIndex].UpdateBookmarks(oManager);
+	}
 };
 //----------------------------------------------------------------------------------------------------------------------
 // Функции пересчета
@@ -2635,6 +3029,21 @@ CParagraphContentWithParagraphLikeContent.prototype.private_UpdateTrackRevisions
         RevisionsManager.Check_Paragraph(this.Paragraph);
     }
 };
+CParagraphContentWithParagraphLikeContent.prototype.private_CheckUpdateBookmarks = function(Items)
+{
+	if (!Items)
+		return;
+
+	for (var nIndex = 0, nCount = Items.length; nIndex < nCount; ++nIndex)
+	{
+		if (para_Bookmark === Items[nIndex].Type)
+		{
+			var oLogicDocument = this.Paragraph && this.Paragraph.LogicDocument ? this.Paragraph.LogicDocument : editor.WordControl.m_oLogicDocument;
+			oLogicDocument.GetBookmarksManager().SetNeedUpdate(true);
+			return;
+		}
+	}
+};
 CParagraphContentWithParagraphLikeContent.prototype.Get_FootnotesList = function(oEngine)
 {
 	for (var nIndex = 0, nCount = this.Content.length; nIndex < nCount; ++nIndex)
@@ -2949,6 +3358,23 @@ CParagraphContentWithParagraphLikeContent.prototype.AddContentControl = function
 CParagraphContentWithParagraphLikeContent.prototype.GetElementsCount = function()
 {
 	return this.Content.length;
+};
+CParagraphContentWithParagraphLikeContent.prototype.PreDelete = function()
+{
+	for (var nIndex = 0, nCount = this.Content.length; nIndex < nCount; ++nIndex)
+	{
+		if (this.Content[nIndex] && this.Content[nIndex].PreDelete)
+			this.Content[nIndex].PreDelete();
+	}
+};
+CParagraphContentWithParagraphLikeContent.prototype.GetCurrentComplexFields = function(arrComplexFields, isCurrent, isFieldPos)
+{
+	var nEndPos = isCurrent ? this.State.ContentPos : this.Content.length - 1;
+	for (var nIndex = 0; nIndex <= nEndPos; ++nIndex)
+	{
+		if (this.Content[nIndex] && this.Content[nIndex].GetCurrentComplexFields)
+			this.Content[nIndex].GetCurrentComplexFields(arrComplexFields, isCurrent && nIndex === nEndPos, isFieldPos);
+	}
 };
 //----------------------------------------------------------------------------------------------------------------------
 // Функции, которые должны быть реализованы в классах наследниках

@@ -611,7 +611,7 @@ function CCacheManager()
 
 		_cache_image.image_locked      = 0;
 		_cache_image.image_unusedCount = 0;
-		// ����� ����� �������� ������ � ���� (_cache_image = null) <- ��� ����������� !!!!!!!
+		// затем нужно сбросить ссылку в ноль (_cache_image = null) <- это обязательно !!!!!!!
 	}
 
 	this.Lock = function(_w, _h)
@@ -3388,6 +3388,7 @@ function CThPage()
 
 		if (null != this.cachedImage)
 		{
+			// потом посмотреть на кусочную отрисовку
 			context.drawImage(this.cachedImage.image, xDst, yDst, wDst, hDst);
 		}
 		else
@@ -3472,7 +3473,7 @@ function CThumbnailsManager()
 		}
 
 		this.initEvents2MobileAdvances();
-	}
+	};
 
 	this.initEvents2MobileAdvances = function()
 	{
@@ -3495,7 +3496,7 @@ function CThumbnailsManager()
 			oThis.onMouseUp(e.changedTouches[0]);
 			return false;
 		};
-	}
+	};
 
 	this.GetThumbnailPagePosition = function(pageIndex)
 	{
@@ -3510,7 +3511,7 @@ function CThumbnailsManager()
 			H : drawRect.bottom - drawRect.top + 1
 		};
 		return _ret;
-	}
+	};
 
 	this.ConvertCoords  = function(x, y, isPage, isFixed)
 	{
@@ -3560,7 +3561,7 @@ function CThumbnailsManager()
 			}
 		}
 		return Pos;
-	}
+	};
 	this.ConvertCoords2 = function(x, y)
 	{
 		var Pos = {X : x, Y : y};
@@ -3599,7 +3600,7 @@ function CThumbnailsManager()
 		}
 
 		return _MinPositionPage;
-	}
+	};
 
 	this.IsSlideHidden = function(aSelected){
         var oPresentation = oThis.m_oWordControl.m_oLogicDocument;
@@ -3616,10 +3617,7 @@ function CThumbnailsManager()
 		if (oThis.m_oWordControl)
 			oThis.m_oWordControl.m_oApi.checkLastWork();
 
-		if (e.preventDefault)
-			e.preventDefault();
-		else
-			e.returnValue = false;
+		AscCommon.stopEvent(e);
 
 		if (AscCommon.g_inputContext && AscCommon.g_inputContext.externalChangeFocus())
 			return;
@@ -3778,7 +3776,7 @@ function CThumbnailsManager()
 		}
 
 		return false;
-	}
+	};
 
 	this.ShowPage = function(pageNum)
 	{
@@ -3794,7 +3792,7 @@ function CThumbnailsManager()
 		{
 			this.m_oWordControl.m_oScrollThumbApi.scrollByY(y2 - this.m_oWordControl.m_oThumbnails.HtmlElement.height);
 		}
-	}
+	};
 
 	this.SelectPage = function(pageNum)
 	{
@@ -3835,7 +3833,7 @@ function CThumbnailsManager()
 				}
 			}
 		}
-	}
+	};
 
 	this.ClearCacheAttack = function()
 	{
@@ -3847,7 +3845,7 @@ function CThumbnailsManager()
 		}
 
 		this.m_bIsUpdate = true;
-	}
+	};
 	this.RecalculateAll   = function()
 	{
 		this.SlideWidth  = this.m_oWordControl.m_oLogicDocument.Width;
@@ -3856,7 +3854,7 @@ function CThumbnailsManager()
 		this.CheckSizes();
 
 		this.ClearCacheAttack();
-	}
+	};
 
 	this.onMouseMove = function(e)
 	{
@@ -3956,7 +3954,7 @@ function CThumbnailsManager()
 		}
 
 		oThis.m_oWordControl.m_oThumbnails.HtmlElement.style.cursor = cursor_moved;
-	}
+	};
 
 	this.CheckNeedAnimateScrolls = function(type)
 	{
@@ -4004,30 +4002,34 @@ function CThumbnailsManager()
 			}
 			return;
 		}
-	}
+	};
 
 	this.OnScrollTrackTop    = function()
 	{
 		oThis.m_oWordControl.m_oScrollThumbApi.scrollByY(-45);
-	}
+	};
 	this.OnScrollTrackBottom = function()
 	{
 		oThis.m_oWordControl.m_oScrollThumbApi.scrollByY(45);
-	}
+	};
 
-	this.onMouseUp = function(e)
+	this.onMouseUp = function(e, bIsWindow)
 	{
 		if (oThis.m_oWordControl)
 			oThis.m_oWordControl.m_oApi.checkLastWork();
 
+		var _oldSender = global_mouseEvent.Sender;
 		AscCommon.check_MouseUpEvent(e);
 		global_mouseEvent.UnLockMouse();
 
 		var control = oThis.m_oWordControl.m_oThumbnails.HtmlElement;
 		if (global_mouseEvent.Sender != control)
 		{
-			// такого быть не должно
-			return;
+			if (_oldSender != control || true !== bIsWindow)
+			{
+				// такого быть не должно
+				return;
+			}
 		}
 
 		oThis.CheckNeedAnimateScrolls(-1);
@@ -4081,7 +4083,9 @@ function CThumbnailsManager()
 		oThis.MouseDownTrackX        = -1;
 		oThis.MouseDownTrackY        = -1;
 		oThis.MouseDownTrackPosition = -1;
-	}
+
+		oThis.onMouseMove(e);
+	};
 
 	this.onMouseLeave = function(e)
 	{
@@ -4091,7 +4095,7 @@ function CThumbnailsManager()
 			oThis.m_arrPages[i].IsFocused = false;
 		}
 		oThis.OnUpdateOverlay();
-	}
+	};
 
 	this.onMouseWhell = function(e)
 	{
@@ -4124,7 +4128,7 @@ function CThumbnailsManager()
 		else
 			e.returnValue = false;
 		return false;
-	}
+	};
 
 	// инициализация шрифта
 	this.SetFont = function(font)
@@ -4149,7 +4153,7 @@ function CThumbnailsManager()
 			oFontStyle = FontStyle.FontStyleBoldItalic;
 
 		g_fontApplication.LoadFont(font.FontFamily.Name, AscCommon.g_font_loader, this.m_oFontManager, font.FontSize, oFontStyle, 96, 96);
-	}
+	};
 
 	this.Init = function()
 	{
@@ -4213,7 +4217,7 @@ function CThumbnailsManager()
 		}
 
 		_ctx.putImageData(_data, 0, 0);
-	}
+	};
 
 	this.CheckSizes = function()
 	{
@@ -4306,17 +4310,15 @@ function CThumbnailsManager()
 				nHeightPix += (this.SlidesCount - 1) * 3 * this.const_border_w;
 
 			// теперь нужно выставить размеры
-			var settings = {
-				showArrows                  : false,
-				animateScroll               : false,
-				screenW                     : word_control.m_oThumbnails.HtmlElement.width,
-				screenH                     : word_control.m_oThumbnails.HtmlElement.height,
-				cornerRadius                : 1,
-				slimScroll                  : true,
-				scrollBackgroundColor       : GlobalSkin.BackgroundColorThumbnails,
-				scrollBackgroundColorHover  : GlobalSkin.BackgroundColorThumbnails,
-				scrollBackgroundColorActive : GlobalSkin.BackgroundColorThumbnails
-			};
+			var settings = new AscCommon.ScrollSettings();
+			settings.showArrows = false;
+			settings.screenW = word_control.m_oThumbnails.HtmlElement.width;
+			settings.screenH = word_control.m_oThumbnails.HtmlElement.height;
+			settings.cornerRadius = 1;
+			settings.slimScroll = true;
+			settings.scrollBackgroundColor = GlobalSkin.BackgroundColorThumbnails;
+			settings.scrollBackgroundColorHover = GlobalSkin.BackgroundColorThumbnails;
+			settings.scrollBackgroundColorActive = GlobalSkin.BackgroundColorThumbnails;
 
 			document.getElementById('panel_right_scroll_thmbnl').style.height = parseInt(nHeightPix) + "px";
 
@@ -4351,7 +4353,7 @@ function CThumbnailsManager()
 
 		this.CalculatePlaces();
 		this.m_bIsUpdate = true;
-	}
+	};
 
 	this.verticalScroll = function(sender, scrollPositionY, maxY, isAtTop, isAtBottom)
 	{
@@ -4366,7 +4368,7 @@ function CThumbnailsManager()
 
 		if (!this.m_oWordControl.m_oApi.isMobileVersion)
 			this.SetFocusElement(FOCUS_OBJECT_THUMBNAILS);
-	}
+	};
 
 	this.CalculatePlaces = function()
 	{
@@ -4443,7 +4445,7 @@ function CThumbnailsManager()
 		{
 			this.m_lDrawingEnd = this.SlidesCount - 1;
 		}
-	}
+	};
 
 	this.OnPaint = function()
 	{
@@ -4527,7 +4529,7 @@ function CThumbnailsManager()
 		}
 
 		this.OnUpdateOverlay();
-	}
+	};
 
 	this.OnUpdateOverlay = function()
 	{
@@ -4651,12 +4653,12 @@ function CThumbnailsManager()
 					(this.MouseTrackCommonImage.width + 1) >> 1, this.MouseTrackCommonImage.height);
 			}
 		}
-	}
+	};
 
 	this.FocusRectDraw = function(ctx, x, y, r, b)
 	{
 		ctx.rect(x - this.const_border_w, y, r - x + this.const_border_w, b - y);
-	}
+	};
 	this.FocusRectFlat = function(_color, ctx, x, y, r, b)
 	{
 		ctx.beginPath();
@@ -4676,7 +4678,7 @@ function CThumbnailsManager()
 			ctx.stroke();
 			ctx.beginPath();
 		}
-	}
+	};
 
 	this.onCheckUpdate = function()
 	{
@@ -4767,7 +4769,7 @@ function CThumbnailsManager()
 
 		this.OnPaint();
 		this.m_bIsUpdate = false;
-	}
+	};
 
 
 	this.SetFocusElement = function(type)
@@ -4795,7 +4797,7 @@ function CThumbnailsManager()
 			default:
 				break;
 		}
-	}
+	};
 
 	this.GetSelectedSlidesRange = function()
 	{
@@ -4813,7 +4815,7 @@ function CThumbnailsManager()
 			}
 		}
 		return {Min : _min, Max : _max};
-	}
+	};
 
 	this.GetSelectedArray = function()
 	{
@@ -4827,7 +4829,7 @@ function CThumbnailsManager()
 			}
 		}
 		return _array;
-	}
+	};
 
 	this.CorrectShiftSelect = function(isTop, isEnd)
 	{
@@ -4895,7 +4897,7 @@ function CThumbnailsManager()
 
 		this.OnUpdateOverlay();
 		this.ShowPage(_page);
-	}
+	};
 
 	this.onKeyDown = function(e)
 	{
@@ -5299,7 +5301,7 @@ function CThumbnailsManager()
 
 		e.preventDefault();
 		return false;
-	}
+	};
 }
 
 function DrawBackground(graphics, unifill, w, h)
@@ -5752,26 +5754,19 @@ function CNotesDrawer(page)
 			return;
 
 		var element = this.HtmlPage.m_oNotes.HtmlElement;
-		var settings = {
-			showArrows:        true,
-			animateScroll:     false,
-			screenW:           element.width,
-			screenH:           element.height,
-			screenAddW:        0,
-			screenAddH:        0,
-			vsscrollStep:      45,
-			hsscrollStep:      45,
-			contentW:          1,
-			contentH:          2 * this.OffsetY + ((height * g_dKoef_mm_to_pix) >> 0),
-			scrollerMinHeight: 5
-		};
+		var settings = new AscCommon.ScrollSettings();
+		settings.screenW = element.width;
+		settings.screenH = element.height;
+		settings.vsscrollStep = 45;
+		settings.hsscrollStep = 45;
+		settings.contentW = 1;
+		settings.contentH = 2 * this.OffsetY + ((height * g_dKoef_mm_to_pix) >> 0);
+		settings.scrollerMinHeight = 5;
 
 		if (this.HtmlPage.bIsRetinaSupport)
 		{
 			settings.screenW = AscCommon.AscBrowser.convertToRetinaValue(settings.screenW);
 			settings.screenH = AscCommon.AscBrowser.convertToRetinaValue(settings.screenH);
-
-			settings.screenAddH = AscCommon.AscBrowser.convertToRetinaValue(settings.screenAddH);
 		}
 
 		this.ScrollMax = Math.max(0, settings.contentH - settings.screenH);

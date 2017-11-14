@@ -35,6 +35,11 @@
 // Import
 var g_oTextMeasurer = AscCommon.g_oTextMeasurer;
 
+function CorrectToTwips(Value)
+{
+	return (((Value * 20 * 72 / 25.4) + 0.5) | 0) * 25.4 / 20 / 72;
+}
+
 // TODO: В колонтитулах быстрые пересчеты отключены. Надо реализовать.
 
 /**
@@ -596,7 +601,10 @@ Paragraph.prototype.private_RecalculatePage            = function(CurPage, bFirs
     // Делаем проверки, не нужно ли сразу перенести параграф на новую страницу
     //-------------------------------------------------------------------------------------------------------------
     if (false === this.private_RecalculatePageBreak(CurLine, CurPage, PRS,ParaPr))
-        return PRS.RecalcResult;
+	{
+		this.Recalculate_PageEndInfo(null, CurPage);
+		return PRS.RecalcResult;
+	}
 
     // Изначально обнуляем промежутки обтекания и наличие переноса строки
     PRS.Reset_Ranges();
@@ -1201,7 +1209,7 @@ Paragraph.prototype.private_RecalculateLinePosition    = function(CurLine, CurPa
         if (0 === CurLine)
         {
 			// Добавляем расстояние до параграфа (Pr.Spacing.Before)
-			if (this.private_CheckNeedBeforeSpacing(CurPage, PRS))
+			if (this.private_CheckNeedBeforeSpacing(CurPage, PRS, ParaPr))
 				BaseLineOffset += ParaPr.Spacing.Before;
 
             // Добавляем толщину границы параграфа (если граница задана)
@@ -1233,7 +1241,7 @@ Paragraph.prototype.private_RecalculateLinePosition    = function(CurLine, CurPa
 
         if ( 0 === CurLine )
         {
-			if (this.private_CheckNeedBeforeSpacing(CurPage, PRS))
+			if (this.private_CheckNeedBeforeSpacing(CurPage, PRS, ParaPr))
             {
                 Top2    = Top + ParaPr.Spacing.Before;
                 Bottom2 = Top + ParaPr.Spacing.Before + this.Lines[0].Metrics.Ascent + this.Lines[0].Metrics.Descent;
@@ -1288,7 +1296,7 @@ Paragraph.prototype.private_RecalculateLinePosition    = function(CurLine, CurPa
             Top  = PRS.Y;
             Top2 = PRS.Y;
 
-			if (this.private_CheckNeedBeforeSpacing(CurPage, PRS))
+			if (this.private_CheckNeedBeforeSpacing(CurPage, PRS, ParaPr))
             {
                 Top2    = Top + ParaPr.Spacing.Before;
                 Bottom2 = Top + ParaPr.Spacing.Before + this.Lines[0].Metrics.Ascent + this.Lines[0].Metrics.Descent;
@@ -1352,11 +1360,11 @@ Paragraph.prototype.private_RecalculateLinePosition    = function(CurLine, CurPa
     this.Lines[CurLine].Top    = Top    - this.Pages[CurPage].Y;
     this.Lines[CurLine].Bottom = Bottom - this.Pages[CurPage].Y;
 
-    PRS.LineTop        = Top;
-    PRS.LineBottom     = Bottom;
-    PRS.LineTop2       = Top2;
-    PRS.LineBottom2    = Bottom2;
-    PRS.LinePrevBottom = PrevBottom
+    PRS.LineTop        = CorrectToTwips(Top);
+    PRS.LineBottom     = CorrectToTwips(Bottom);
+    PRS.LineTop2       = CorrectToTwips(Top2);
+    PRS.LineBottom2    = CorrectToTwips(Bottom2);
+    PRS.LinePrevBottom = CorrectToTwips(PrevBottom);
 };
 
 Paragraph.prototype.private_RecalculateLineBottomBound = function(CurLine, CurPage, PRS, ParaPr)
@@ -1430,6 +1438,11 @@ Paragraph.prototype.private_RecalculateLineCheckRanges = function(CurLine, CurPa
 
     var Ranges = PRS.Ranges;
     var Ranges2;
+
+    for (var nIndex = 0, nCount = Ranges.length; nIndex < nCount; ++nIndex)
+	{
+		Ranges[nIndex].Y1 = CorrectToTwips(Ranges[nIndex].Y1);
+	}
 
     if ( true === this.Use_Wrap() )
         Ranges2 = this.Parent.CheckRange(Left, Top, Right, Bottom, Top2, Bottom2, PageFields.X, PageFields.XLimit, this.private_GetRelativePageIndex(CurPage), true, PRS.MathNotInline);
@@ -1523,7 +1536,7 @@ Paragraph.prototype.private_RecalculateLineCheckRangeY = function(CurLine, CurPa
         if (Math.abs(RangesMaxY - PRS.Y) < 0.001)
             PRS.Y = RangesMaxY + 1; // смещаемся по 1мм
         else
-            PRS.Y = RangesMaxY + 0.001; // Добавляем 0.001, чтобы избавиться от погрешности
+            PRS.Y = RangesMaxY + (25.4 / 1440) + 0.001; // Добавляем 0.001, чтобы избавиться от погрешности
 
         // Отмечаем, что данная строка переносится по Y из-за обтекания
         PRS.RangeY = true;
@@ -2043,7 +2056,12 @@ Paragraph.prototype.private_RecalculateGetTabPos = function(X, ParaPr, CurPage, 
         NewX = Tab.Pos + PageStart.X;
     }
 
-    return { NewX : NewX, TabValue : ( null === Tab ? tab_Left : Tab.Value ), DefaultTab : (null === Tab ? true : false) };
+	return {
+		NewX       : NewX,
+		TabValue   : Tab ? Tab.Value : tab_Left,
+		DefaultTab : Tab ? false : true,
+		TabLeader  : Tab ? Tab.Leader : Asc.c_oAscTabLeader.None
+	};
 };
 
 Paragraph.prototype.private_CheckSkipKeepLinesAndWidowControl = function(CurPage)
@@ -2151,13 +2169,16 @@ Paragraph.prototype.private_RecalculateMoveLineToNextPage = function(CurLine, Cu
 	}
 };
 
-Paragraph.prototype.private_CheckNeedBeforeSpacing = function(CurPage, PRS)
+Paragraph.prototype.private_CheckNeedBeforeSpacing = function(CurPage, PRS, ParaPr)
 {
 	if (CurPage <= 0)
 		return true;
 
 	if (!this.Check_FirstPage(CurPage))
 		return false;
+
+	if (true === ParaPr.PageBreakBefore)
+		return true;
 
 	if (!(PRS.Parent instanceof CDocument))
 	{
@@ -2618,7 +2639,9 @@ function CParagraphRecalculateStateWrap(Para)
     this.BreakRealPageLine  = false; // Разрыв страницы документа (не только параграфа) в данной строке
     this.BadLeftTab         = false; // Левый таб правее правой границы
 
-    this.WordLen         = 0;
+	this.ComplexFields = [];
+
+	this.WordLen         = 0;
     this.SpaceLen        = 0;
     this.SpacesCount     = 0;
     this.LastTab         = new CParagraphRecalculateTabInfo();
@@ -2721,6 +2744,12 @@ CParagraphRecalculateStateWrap.prototype =
 		this.Page               = CurPage;
 		this.RunRecalcInfoLast  = (0 === CurPage ? null : Paragraph.Pages[CurPage - 1].EndInfo.RunRecalcInfo);
 		this.RunRecalcInfoBreak = this.RunRecalcInfoLast;
+
+		var PageEndInfo = Paragraph.GetEndInfoByPage(CurPage - 1);
+		if (PageEndInfo)
+			this.ComplexFields = PageEndInfo.GetComplexFields();
+		else
+			this.ComplexFields = [];
 	},
 
     // Обнуляем некоторые параметры перед новой строкой
@@ -3155,41 +3184,102 @@ function CParagraphRecalculateStateAlign()
 
 function CParagraphRecalculateStateInfo()
 {
-    this.Comments = [];
+    this.Comments      = [];
+    this.ComplexFields = [];
 }
-
-CParagraphRecalculateStateInfo.prototype =
+CParagraphRecalculateStateInfo.prototype.Reset = function(PrevInfo)
 {
-    Reset : function(PrevInfo)
-    {
-        if ( null !== PrevInfo && undefined !== PrevInfo )
-        {
-            this.Comments = PrevInfo.Comments;
-        }
-        else
-        {
-            this.Comments = [];
-        }
-    },
+	if (null !== PrevInfo && undefined !== PrevInfo)
+	{
+		this.Comments      = PrevInfo.Comments;
+		this.ComplexFields = [];
 
-	AddComment : function(Id)
-    {
-        this.Comments.push( Id );
-    },
-
-	RemoveComment : function(Id)
-    {
-        var CommentsLen = this.Comments.length;
-        for (var CurPos = 0; CurPos < CommentsLen; CurPos++)
-        {
-            if ( this.Comments[CurPos] === Id )
-            {
-                this.Comments.splice( CurPos, 1 );
-                break;
-            }
-        }
-    }
+		if (PrevInfo.ComplexFields)
+		{
+			for (var nIndex = 0, nCount = PrevInfo.ComplexFields.length; nIndex < nCount; ++nIndex)
+			{
+				this.ComplexFields[nIndex] = PrevInfo.ComplexFields[nIndex].Copy();
+			}
+		}
+	}
+	else
+	{
+		this.Comments      = [];
+		this.ComplexFields = [];
+	}
 };
+CParagraphRecalculateStateInfo.prototype.AddComment = function(Id)
+{
+	this.Comments.push(Id);
+};
+CParagraphRecalculateStateInfo.prototype.RemoveComment = function(Id)
+{
+	var CommentsLen = this.Comments.length;
+	for (var CurPos = 0; CurPos < CommentsLen; CurPos++)
+	{
+		if (this.Comments[CurPos] === Id)
+		{
+			this.Comments.splice(CurPos, 1);
+			break;
+		}
+	}
+};
+CParagraphRecalculateStateInfo.prototype.ProcessFieldChar = function(oFieldChar)
+{
+	if (!oFieldChar || !oFieldChar.IsUse())
+		return;
+
+	var oComplexField = oFieldChar.GetComplexField();
+
+	if (oFieldChar.IsBegin())
+	{
+		this.ComplexFields.push(new CComplexFieldStatePos(oComplexField, true));
+	}
+	else if (oFieldChar.IsSeparate())
+	{
+		for (var nIndex = 0, nCount = this.ComplexFields.length; nIndex < nCount; ++nIndex)
+		{
+			if (oComplexField === this.ComplexFields[nIndex].ComplexField)
+			{
+				this.ComplexFields[nIndex].SetFieldCode(false);
+				break;
+			}
+		}
+	}
+	else if (oFieldChar.IsEnd())
+	{
+		for (var nIndex = 0, nCount = this.ComplexFields.length; nIndex < nCount; ++nIndex)
+		{
+			if (oComplexField === this.ComplexFields[nIndex].ComplexField)
+			{
+				this.ComplexFields.splice(nIndex, 1);
+				break;
+			}
+		}
+	}
+};
+CParagraphRecalculateStateInfo.prototype.IsComplexField = function()
+{
+	return (this.ComplexFields.length > 0 ? true : false);
+};
+CParagraphRecalculateStateInfo.prototype.IsComplexFieldCode = function()
+{
+	if (!this.IsComplexField())
+		return false;
+
+	for (var nIndex = 0, nCount = this.ComplexFields.length; nIndex < nCount; ++nIndex)
+	{
+		if (this.ComplexFields[nIndex].IsFieldCode())
+			return true;
+	}
+
+	return false;
+};
+
+CParagraphDrawStateHightlights.prototype.ProcessFieldChar   = CParagraphRecalculateStateInfo.prototype.ProcessFieldChar;
+CParagraphDrawStateHightlights.prototype.IsComplexField     = CParagraphRecalculateStateInfo.prototype.IsComplexField;
+CParagraphDrawStateHightlights.prototype.IsComplexFieldCode = CParagraphRecalculateStateInfo.prototype.IsComplexFieldCode;
+
 
 function CParagraphRecalculateObject()
 {

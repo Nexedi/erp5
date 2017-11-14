@@ -52,6 +52,10 @@ CHdrFtrController.prototype.AddInlineImage = function(nW, nH, oImage, oChart, bF
 {
 	this.HdrFtr.AddInlineImage(nW, nH, oImage, oChart, bFlow);
 };
+CHdrFtrController.prototype.AddImages = function(aImages)
+{
+	this.HdrFtr.AddImages(aImages);
+};
 CHdrFtrController.prototype.AddOleObject = function(W, H, nWidthPix, nHeightPix, Img, Data, sApplicationId)
 {
 	this.HdrFtr.AddOleObject(W, H, nWidthPix, nHeightPix, Img, Data, sApplicationId);
@@ -287,9 +291,9 @@ CHdrFtrController.prototype.GetSelectedText = function(bClearText, oPr)
 {
 	return this.HdrFtr.GetSelectedText(bClearText, oPr);
 };
-CHdrFtrController.prototype.GetCurrentParagraph = function()
+CHdrFtrController.prototype.GetCurrentParagraph = function(bIgnoreSelection, arrSelectedParagraphs)
 {
-	return this.HdrFtr.GetCurrentParagraph();
+	return this.HdrFtr.GetCurrentParagraph(bIgnoreSelection, arrSelectedParagraphs);
 };
 CHdrFtrController.prototype.GetSelectedElementsInfo = function(oInfo)
 {

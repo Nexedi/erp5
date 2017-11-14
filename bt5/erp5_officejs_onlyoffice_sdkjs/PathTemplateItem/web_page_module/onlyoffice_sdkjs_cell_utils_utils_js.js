@@ -45,6 +45,12 @@
 
 		var c_oAscSelectionType = Asc.c_oAscSelectionType;
 
+		var c_oAscShiftType = {
+			None  : 0,
+			Move  : 1,
+			Change: 2
+		};
+
 
 		/** @const */
 		var kLeftLim1 = .999999999999999;
@@ -70,49 +76,6 @@
 			newLines: 2  // пересчитываем новые строки
 
 		};
-
-		function horizontalAlignFromString(val) {
-			var ha = null;
-			switch (val) {
-				case "left": ha = AscCommon.align_Left;break;
-				case "right": ha = AscCommon.align_Right;break;
-				case "center": ha = AscCommon.align_Center;break;
-				case "justify": ha = AscCommon.align_Justify;break;
-			}
-			return ha;
-		}
-		function horizontalAlignToString(val) {
-			var ha = "none";
-			switch (val) {
-				case AscCommon.align_Left: ha = "left";break;
-				case AscCommon.align_Right: ha = "right";break;
-				case AscCommon.align_Center: ha = "center";break;
-				case AscCommon.align_Justify: ha = "justify";break;
-			}
-			return ha;
-		}
-		function verticalAlignFromString(val) {
-			var va = null;
-			switch (val) {
-				case "bottom": va = Asc.c_oAscVAlign.Bottom;break;
-				case "center": va = Asc.c_oAscVAlign.Center;break;
-				case "distributed": va = Asc.c_oAscVAlign.Dist;break;
-				case "justify": va = Asc.c_oAscVAlign.Just;break;
-				case "top": va = Asc.c_oAscVAlign.Top;break;
-			}
-			return va;
-		}
-		function verticalAlignToString(val) {
-			var va = "none";
-			switch (val) {
-				case Asc.c_oAscVAlign.Bottom: va = "bottom";break;
-				case Asc.c_oAscVAlign.Center: va = "center";break;
-				case Asc.c_oAscVAlign.Dist: va = "distributed";break;
-				case Asc.c_oAscVAlign.Just: va = "justify";break;
-				case Asc.c_oAscVAlign.Top: va = "top";break;
-			}
-			return va;
-		}
 
 		function applyFunction(callback) {
 			if (kFunctionL === typeof callback) {
@@ -410,29 +373,28 @@
 		};
 
 		Range.prototype.isIntersectForShift = function(range, offset) {
-			var isHor = offset && 0 != offset.offsetCol;
-			var toDelete = offset && (offset.offsetCol < 0 || offset.offsetRow < 0);
+			var isHor = offset && offset.offsetCol;
+			var isDelete = offset && (offset.offsetCol < 0 || offset.offsetRow < 0);
 			if (isHor) {
 				if (this.r1 <= range.r1 && range.r2 <= this.r2 && this.c1 <= range.c2) {
-					return true;
-				} else if (toDelete && this.c1 <= range.c1 && range.c2 <= this.c2) {
+					return (this.c1 < range.c1 || (!isDelete && this.c1 === range.c1 && this.c2 === range.c1)) ?
+						c_oAscShiftType.Move : c_oAscShiftType.Change;
+				} else if (isDelete && this.c1 <= range.c1 && range.c2 <= this.c2) {
 					var topIn = this.r1 <= range.r1 && range.r1 <= this.r2;
 					var bottomIn = this.r1 <= range.r2 && range.r2 <= this.r2;
 					return topIn || bottomIn;
-				} else {
-					return false;
 				}
 			} else {
 				if (this.c1 <= range.c1 && range.c2 <= this.c2 && this.r1 <= range.r2) {
-					return true;
-				} else if (toDelete && this.r1 <= range.r1 && range.r2 <= this.r2) {
+					return (this.r1 < range.r1 || (!isDelete && this.r1 === range.r1 && this.r2 === range.r1)) ?
+						c_oAscShiftType.Move : c_oAscShiftType.Change;
+				} else if (isDelete && this.r1 <= range.r1 && range.r2 <= this.r2) {
 					var leftIn = this.c1 <= range.c1 && range.c1 <= this.c2;
 					var rightIn = this.c1 <= range.c2 && range.c2 <= this.c2;
 					return leftIn || rightIn;
-				} else {
-					return false;
 				}
 			}
+			return c_oAscShiftType.None;
 		};
 
 		Range.prototype.isIntersectForShiftCell = function(col, row, offset) {
@@ -2351,12 +2313,9 @@
 		var prot;
 		window['Asc'] = window['Asc'] || {};
 		window['AscCommonExcel'] = window['AscCommonExcel'] || {};
+		window["AscCommonExcel"].c_oAscShiftType = c_oAscShiftType;
 		window["AscCommonExcel"].recalcType = recalcType;
 		window["AscCommonExcel"].applyFunction = applyFunction;
-		window["AscCommonExcel"].horizontalAlignFromString = horizontalAlignFromString;
-		window["AscCommonExcel"].horizontalAlignToString = horizontalAlignToString;
-		window["AscCommonExcel"].verticalAlignFromString = verticalAlignFromString;
-		window["AscCommonExcel"].verticalAlignToString = verticalAlignToString;
 		window["Asc"].typeOf = typeOf;
 		window["Asc"].lastIndexOf = lastIndexOf;
 		window["Asc"].search = search;

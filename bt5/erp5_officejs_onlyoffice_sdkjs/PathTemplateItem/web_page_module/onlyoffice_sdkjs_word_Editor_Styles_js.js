@@ -3167,6 +3167,41 @@ CStyle.prototype.CreateFootnoteReference = function()
 	this.Set_UnhideWhenUsed(true);
 	this.Set_TextPr(oTextPr);
 };
+CStyle.prototype.CreateTOC = function(nLvl)
+{
+	var ParaPr = {
+		Spacing : {
+			After  : 57 / 20 * g_dKoef_pt_to_mm
+		},
+
+		Ind : {
+			Left      : 0,
+			Right     : 0,
+			FirstLine : 0
+		}
+	};
+
+	if (1 === nLvl)
+		ParaPr.Ind.Left = 283 / 20 * g_dKoef_pt_to_mm;
+	else if (2 === nLvl)
+		ParaPr.Ind.Left = 567 / 20 * g_dKoef_pt_to_mm;
+	else if (3 === nLvl)
+		ParaPr.Ind.Left = 850 / 20 * g_dKoef_pt_to_mm;
+	else if (4 === nLvl)
+		ParaPr.Ind.Left = 1134 / 20 * g_dKoef_pt_to_mm;
+	else if (5 === nLvl)
+		ParaPr.Ind.Left = 1417 / 20 * g_dKoef_pt_to_mm;
+	else if (6 === nLvl)
+		ParaPr.Ind.Left = 1701 / 20 * g_dKoef_pt_to_mm;
+	else if (7 === nLvl)
+		ParaPr.Ind.Left = 1984 / 20 * g_dKoef_pt_to_mm;
+	else if (8 === nLvl)
+		ParaPr.Ind.Left = 2268 / 20 * g_dKoef_pt_to_mm;
+
+	this.Set_UiPriority(39);
+	this.Set_UnhideWhenUsed(true);
+	this.Set_ParaPr(ParaPr);
+};
 
 function CStyles(bCreateDefault)
 {
@@ -3199,7 +3234,8 @@ function CStyles(bCreateDefault)
 			Title             : null,
 			Subtitle          : null,
 			Quote             : null,
-			IntenseQuote      : null
+			IntenseQuote      : null,
+			TOC               : []
 		};
 
         // Заполняем значения по умолчанию
@@ -3440,6 +3476,13 @@ function CStyles(bCreateDefault)
 		var StyleFootnoteReference = new CStyle("footnote reference", this.Default.Character, null, styletype_Character);
 		StyleFootnoteReference.CreateFootnoteReference();
 		this.Default.FootnoteReference = this.Add(StyleFootnoteReference);
+
+		for (var nLvl = 0; nLvl <= 8; ++nLvl)
+		{
+			var oStyleTOC = new CStyle("toc " + (nLvl + 1), this.Default.Paragraph, this.Default.Paragraph, styletype_Paragraph);
+			oStyleTOC.CreateTOC(nLvl);
+			this.Default.TOC[nLvl] = this.Add(oStyleTOC);
+		}
 
         // Добавляем данный класс в таблицу Id (обязательно в конце конструктора)
         g_oTableId.Add( this, this.Id );
@@ -4482,6 +4525,11 @@ CStyles.prototype.GetDefaultFootnoteTextChar = function()
 CStyles.prototype.GetDefaultFootnoteReference = function()
 {
 	return this.Default.FootnoteReference;
+};
+CStyles.prototype.GetDefaultTOC = function(nLvl)
+{
+	nLvl = Math.max(Math.min(nLvl, 8), 0);
+	return this.Default.TOC[nLvl];
 };
 
 function CDocumentColor(r,g,b, Auto)
@@ -8370,184 +8418,183 @@ CTextPr.prototype['Get_Lang']       = CTextPr.prototype.Get_Lang;
 CTextPr.prototype['Get_Shd']        = CTextPr.prototype.Get_Shd;
 //----------------------------------------------------------------------------------------------------------------------
 
-function CParaTab(Value, Pos)
+function CParaTab(Value, Pos, Leader)
 {
-    this.Value = Value;
-    this.Pos   = Pos;
+	this.Value  = Value;
+	this.Pos    = Pos;
+	this.Leader = undefined !== Leader ? Leader : Asc.c_oAscTabLeader.None;
 }
-
-CParaTab.prototype =
+CParaTab.prototype.Copy = function()
 {
-    Copy : function()
-    {
-        return new CParaTab(this.Value, this.Pos);
-    },
+	return new CParaTab(this.Value, this.Pos, this.Leader);
+};
+CParaTab.prototype.Is_Equal = function(Tab)
+{
+	return this.IsEqual(Tab);
+};
+CParaTab.prototype.IsEqual = function(Tab)
+{
+	// TODO: Если таб точно такого же типа и в той же позиции, то неясно нужно ли проверять совпадение Tab.Leader
+	if (this.Value !== Tab.Value
+		|| this.Pos !== Tab.Pos)
+		return false;
 
-    Is_Equal : function(Tab)
-    {
-        if (this.Value !== Tab.Value
-            || this.Pos !== Tab.Pos)
-            return false;
-
-        return true;
-    }
+	return true;
 };
 
 function CParaTabs()
 {
-    this.Tabs = [];
+	this.Tabs = [];
 }
-
-CParaTabs.prototype =
+CParaTabs.prototype.Add = function(_Tab)
 {
-    Add : function(_Tab)
-    {
-        var Index = 0;
-        for (Index = 0; Index < this.Tabs.length; Index++ )
-        {
-            var Tab = this.Tabs[Index];
+	var Index = 0;
+	for (Index = 0; Index < this.Tabs.length; Index++)
+	{
+		var Tab = this.Tabs[Index];
 
-            if ( Math.abs( Tab.Pos - _Tab.Pos ) < 0.001 )
-            {
-                this.Tabs.splice( Index, 1, _Tab );
-                break;
-            }
+		if (Math.abs(Tab.Pos - _Tab.Pos) < 0.001)
+		{
+			this.Tabs.splice(Index, 1, _Tab);
+			break;
+		}
 
-            if ( Tab.Pos > _Tab.Pos )
-                break;
-        }
+		if (Tab.Pos > _Tab.Pos)
+			break;
+	}
 
-        if ( -1 != Index )
-            this.Tabs.splice( Index, 0, _Tab );
-    },
+	if (-1 != Index)
+		this.Tabs.splice(Index, 0, _Tab);
+};
+CParaTabs.prototype.Merge = function(Tabs)
+{
+	var _Tabs = Tabs.Tabs;
 
-    Merge : function(Tabs)
-    {
-        var _Tabs = Tabs.Tabs;
+	for (var Index = 0; Index < _Tabs.length; Index++)
+	{
+		var _Tab = _Tabs[Index];
 
-        for ( var Index = 0; Index < _Tabs.length; Index++ )
-        {
-            var _Tab = _Tabs[Index];
+		var Index2 = 0;
+		var Flag   = 0;
+		for (Index2 = 0; Index2 < this.Tabs.length; Index2++)
+		{
+			var Tab = this.Tabs[Index2];
 
-            var Index2 = 0;
-            var Flag   = 0;
-            for (Index2 = 0; Index2 < this.Tabs.length; Index2++ )
-            {
-                var Tab = this.Tabs[Index2];
+			if (Math.abs(Tab.Pos - _Tab.Pos) < 0.001)
+			{
+				if (tab_Clear === _Tab.Value)
+					Flag = -2; // таб нужно удалить
+				else
+					Flag = -1; // табы совпали, не надо новый добавлять
 
-                if ( Math.abs(  Tab.Pos - _Tab.Pos ) < 0.001 )
-                {
-                    if ( tab_Clear === _Tab.Value )
-                        Flag = -2; // таб нужно удалить
-                    else
-                        Flag = -1; // табы совпали, не надо новый добавлять
+				break;
+			}
 
-                    break;
-                }
+			if (Tab.Pos > _Tab.Pos)
+				break;
+		}
 
-                if ( Tab.Pos > _Tab.Pos )
-                    break;
-            }
+		if (-2 === Flag)
+			this.Tabs.splice(Index2, 1);
+		else if (-1 != Flag)
+			this.Tabs.splice(Index2, 0, _Tab);
+	}
+};
+CParaTabs.prototype.IsEqual = function(Tabs)
+{
+	if (this.Tabs.length !== Tabs.Tabs.length)
+		return false;
 
-            if ( -2 === Flag )
-                this.Tabs.splice( Index2, 1 );
-            else if ( -1 != Flag )
-                this.Tabs.splice( Index2, 0, _Tab );
-        }
-    },
+	for (var CurTab = 0, TabsCount = this.Tabs.length; CurTab < TabsCount; CurTab++)
+	{
+		if (true !== this.Tabs[CurTab].IsEqual(Tabs.Tabs[CurTab]))
+			return false;
+	}
 
-    Is_Equal : function(Tabs)
-    {
-        if (this.Tabs.length !== Tabs.Tabs.length)
-            return false;
+	return true;
+};
+CParaTabs.prototype.Is_Equal = function(Tabs)
+{
+	return this.IsEqual(Tabs);
+};
+CParaTabs.prototype.Copy = function()
+{
+	var Tabs  = new CParaTabs();
+	var Count = this.Tabs.length;
 
-        for(var CurTab = 0, TabsCount = this.Tabs.length; CurTab < TabsCount; CurTab++)
-        {
-            if (true !== this.Tabs[CurTab].Is_Equal(Tabs.Tabs[CurTab]))
-                return false;
-        }
+	for (var Index = 0; Index < Count; Index++)
+		Tabs.Add(this.Tabs[Index].Copy());
 
-        return true;
-    },
+	return Tabs;
+};
+CParaTabs.prototype.Set_FromObject = function(Tabs)
+{
+	if (Tabs instanceof Array)
+	{
+		for (var nIndex = 0, nCount = Tabs.length; nIndex < nCount; ++nIndex)
+			this.Add(new CParaTab(Tabs[nIndex].Value, Tabs[nIndex].Pos, Tabs[nIndex].Leader));
+	}
+};
+CParaTabs.prototype.GetCount = function()
+{
+	return this.Tabs.length;
+};
+CParaTabs.prototype.Get_Count = function()
+{
+	return this.GetCount();
+};
+CParaTabs.prototype.Get = function(Index)
+{
+	return this.Tabs[Index];
+};
+CParaTabs.prototype.Get_Value = function(Pos)
+{
+	var Count = this.Tabs.length;
+	for (var Index = 0; Index < Count; Index++)
+	{
+		var Tab = this.Tabs[Index];
+		if (Math.abs(Tab.Pos - Pos) < 0.001)
+			return Tab.Value;
+	}
 
-    Copy : function()
-    {
-        var Tabs = new CParaTabs();
-        var Count = this.Tabs.length;
+	return -1;
+};
+CParaTabs.prototype.Write_ToBinary = function(Writer)
+{
+	// Long : количество (если 0, удаляем элемент)
+	// Массив
+	// Byte   : Value
+	// Double : Pos
+	// Long   : Leader
 
-        for ( var Index = 0; Index < Count; Index++ )
-            Tabs.Add( this.Tabs[Index].Copy() );
+	var Count = this.Tabs.length;
+	Writer.WriteLong(Count);
 
-        return Tabs;
-    },
+	for (var Index = 0; Index < Count; Index++)
+	{
+		Writer.WriteByte(this.Tabs[Index].Value);
+		Writer.WriteDouble(this.Tabs[Index].Pos);
+		Writer.WriteLong(this.Tabs[Index].Leader);
+	}
+};
+CParaTabs.prototype.Read_FromBinary = function(Reader)
+{
+	// Long : количество (если 0, удаляем элемент)
+	// Массив
+	// Byte   : Value
+	// Double : Pos
+	// Long   : Leader
 
-    Set_FromObject : function(Tabs)
-    {
-        if ( Tabs instanceof Array )
-        {
-            var Count = Tabs.length;
-            for ( var Index = 0; Index < Count; Index++ )
-                this.Add( new CParaTab( Tabs[Index].Value, Tabs[Index].Pos ) );
-        }
-    },
+	var Count = Reader.GetLong();
+	this.Tabs = [];
 
-    Get_Count : function()
-    {
-        return this.Tabs.length;
-    },
-
-    Get : function(Index)
-    {
-        return this.Tabs[Index];
-    },
-
-    Get_Value : function(Pos)
-    {
-        var Count = this.Tabs.length;
-        for ( var Index = 0; Index < Count; Index++ )
-        {
-            var Tab = this.Tabs[Index];
-            if ( Math.abs(Tab.Pos - Pos) < 0.001 )
-                return Tab.Value;
-        }
-
-        return -1;
-    },
-
-    Write_ToBinary : function(Writer)
-    {
-        // Long : количество (если 0, удаляем элемент)
-        // Массив
-        // Byte   : Value
-        // Double : Pos
-
-        var Count = this.Tabs.length;
-        Writer.WriteLong( Count );
-
-        for ( var Index = 0; Index < Count; Index++ )
-        {
-            Writer.WriteByte( this.Tabs[Index].Value );
-            Writer.WriteDouble( this.Tabs[Index].Pos );
-        }
-    },
-
-    Read_FromBinary : function(Reader)
-    {
-        // Long : количество (если 0, удаляем элемент)
-        // Массив
-        // Byte   : Value
-        // Double : Pos
-
-        var Count = Reader.GetLong();
-        this.Tabs = [];
-
-        for ( var Index = 0; Index < Count; Index++ )
-        {
-            var Value = Reader.GetByte();
-            var Pos   = Reader.GetDouble();
-            this.Add( new CParaTab( Value, Pos ) );
-        }
-    }
+	for (var Index = 0; Index < Count; Index++)
+	{
+		var Value  = Reader.GetByte();
+		var Pos    = Reader.GetDouble();
+		var Leader = Reader.GetLong();
+		this.Add(new CParaTab(Value, Pos, Leader));
+	}
 };
 
 function CParaInd()
@@ -9243,6 +9290,7 @@ function CParaPr()
     this.NumPr             = undefined; // Нумерация
     this.PStyle            = undefined; // Стиль параграфа
     this.FramePr           = undefined;
+    this.OutlineLvl        = undefined; // Для TableOfContents
 
     this.DefaultRunPr      = undefined;
     this.Bullet            = undefined;
@@ -9325,6 +9373,9 @@ CParaPr.prototype =
             ParaPr.PrChange   = this.PrChange.Copy();
             ParaPr.ReviewInfo = this.ReviewInfo.Copy();
         }
+
+        if (undefined !== this.OutlineLvl)
+        	ParaPr.OutlineLvl = this.OutlineLvl;
 
         return ParaPr;
     },
@@ -9414,7 +9465,29 @@ CParaPr.prototype =
         {
             if(ParaPr.Bullet.isBullet())
             {
-                this.Bullet = ParaPr.Bullet.createDuplicate();
+                if(!this.Bullet)
+                {
+                    this.Bullet = new AscFormat.CBullet();
+                }
+                var PrBullet = ParaPr.Bullet;
+                if(PrBullet.bulletColor)
+                {
+                    this.Bullet.bulletColor = PrBullet.bulletColor.createDuplicate();
+                }
+                if(PrBullet.bulletSize)
+                {
+                    this.Bullet.bulletSize = PrBullet.bulletSize.createDuplicate();
+                }
+                if(PrBullet.bulletTypeface)
+                {
+                    this.Bullet.bulletTypeface = PrBullet.bulletTypeface.createDuplicate();
+                }
+                if(PrBullet.bulletType)
+                {
+                    this.Bullet.bulletType = PrBullet.bulletType.createDuplicate();
+                }
+                this.Bullet.Bullet = PrBullet.Bullet;
+
             }
             else
             {
@@ -9438,6 +9511,8 @@ CParaPr.prototype =
         if(undefined != ParaPr.DefaultTabSize)
             this.DefaultTabSize = ParaPr.DefaultTabSize;
 
+        if (undefined !== ParaPr.OutlineLvl)
+        	this.OutlineLvl = ParaPr.OutlineLvl;
     },
 
     Init_Default : function()
@@ -9471,6 +9546,7 @@ CParaPr.prototype =
         this.NumPr                     = undefined;
         this.PStyle                    = undefined;
         this.FramePr                   = undefined;
+        this.OutlineLvl                = undefined;
 
         this.DefaultRunPr              = undefined;
         this.Bullet                    = undefined;
@@ -9595,6 +9671,9 @@ CParaPr.prototype =
         {
             this.DefaultTabSize = ParaPr.DefaultTabSize;
         }
+
+        if (undefined !== ParaPr.OutlineLvl)
+        	this.OutlineLvl = ParaPr.OutlineLvl;
     },
 
     Compare : function(ParaPr)
@@ -9715,6 +9794,8 @@ CParaPr.prototype =
         if (undefined !== this.Tabs && undefined !== ParaPr.Tabs && this.Tabs.Is_Equal(ParaPr.Tabs))
         	Result_ParaPr.Tabs = this.Tabs.Copy();
 
+        if (this.OutlineLvl === ParaPr.OutlineLvl)
+        	Result_ParaPr.OutlineLvl = this.OutlineLvl;
 
         return Result_ParaPr;
     },
@@ -9857,6 +9938,12 @@ CParaPr.prototype =
             Flags |= 2097152;
         }
 
+        if (undefined !== this.OutlineLvl)
+		{
+			Writer.WriteByte(this.OutlineLvl);
+			Flags |= 4194304;
+		}
+
         var EndPos = Writer.GetCurPosition();
         Writer.Seek( StartPos );
         Writer.WriteLong( Flags );
@@ -9975,6 +10062,9 @@ CParaPr.prototype =
         {
             this.DefaultTabSize = Reader.GetDouble();
         }
+
+        if (Flags & 4194304)
+			this.OutlineLvl = Reader.GetByte();
     },
 
     isEqual: function(ParaPrUOld,ParaPrNew)
@@ -10021,7 +10111,8 @@ CParaPr.prototype =
             || true !== IsEqualStyleObjects(this.Tabs, ParaPr.Tabs)
             || true !== IsEqualStyleObjects(this.NumPr, ParaPr.NumPr)
             || this.PStyle !== ParaPr.PStyle
-            || true !== IsEqualStyleObjects(this.FramePr, ParaPr.FramePr))
+            || true !== IsEqualStyleObjects(this.FramePr, ParaPr.FramePr)
+			|| this.OutlineLvl !== ParaPr.OutlineLvl)
             return false;
 
         return true;
@@ -10280,6 +10371,10 @@ CParaPr.prototype.Get_PStyle = function()
 {
     return this.PStyle;
 };
+CParaPr.prototype.Get_OutlineLvl = function()
+{
+	return this.OutlineLvl;
+};
 //----------------------------------------------------------------------------------------------------------------------
 // CParaPr Export
 //----------------------------------------------------------------------------------------------------------------------
@@ -10301,6 +10396,7 @@ CParaPr.prototype['Get_WidowControl']             = CParaPr.prototype.Get_WidowC
 CParaPr.prototype['Get_Tabs']                     = CParaPr.prototype.Get_Tabs;
 CParaPr.prototype['Get_NumPr']                    = CParaPr.prototype.Get_NumPr;
 CParaPr.prototype['Get_PStyle']                   = CParaPr.prototype.Get_PStyle;
+CParaPr.prototype['Get_OutlineLvl']               = CParaPr.prototype.Get_OutlineLvl;
 //----------------------------------------------------------------------------------------------------------------------
 
 function Copy_Bounds(Bounds)

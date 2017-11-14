@@ -1610,7 +1610,11 @@ CTable.prototype.private_RecalculatePositionX = function(CurPage)
             this.X = this.X_origin + this.Get_TableOffsetCorrection();
             this.AnchorPosition.Set_X(this.TableSumGrid[this.TableSumGrid.length - 1], this.X_origin, PageFields.X - OffsetCorrection_Left, PageFields.XLimit + OffsetCorrection_Right, LD_PageLimits.XLimit, PageLimits.X - OffsetCorrection_Left, PageLimits.XLimit + OffsetCorrection_Right);
 
-            this.X        = this.AnchorPosition.Calculate_X(this.PositionH.RelativeFrom, this.PositionH.Align, this.PositionH.Value);
+            // Непонятно по какой причине, но Word для плавающих таблиц добаляется значение TableInd
+			this.AnchorPosition.Calculate_X(this.PositionH.RelativeFrom, this.PositionH.Align, this.PositionH.Value);
+			this.AnchorPosition.CalcX += TablePr.TableInd;
+
+            this.X        = this.AnchorPosition.CalcX;
             this.X_origin = this.X - this.Get_TableOffsetCorrection();
 
             if (undefined != this.PositionH_Old)
@@ -1623,8 +1627,9 @@ CTable.prototype.private_RecalculatePositionX = function(CurPage)
                 // Рассчитаем сдвиг с учетом старой привязки
                 var Value = this.AnchorPosition.Calculate_X_Value(this.PositionH_Old.RelativeFrom);
                 this.Set_PositionH(this.PositionH_Old.RelativeFrom, false, Value);
+
                 // На всякий случай пересчитаем заново координату
-                this.X        = this.AnchorPosition.Calculate_X(this.PositionH.RelativeFrom, this.PositionH.Align, this.PositionH.Value);
+				this.X        = this.AnchorPosition.Calculate_X(this.PositionH.RelativeFrom, this.PositionH.Align, this.PositionH.Value);
                 this.X_origin = this.X - this.Get_TableOffsetCorrection();
 
                 this.PositionH_Old = undefined;
@@ -1704,6 +1709,7 @@ CTable.prototype.private_RecalculatePage = function(CurPage)
     var X_min = -1;
     if ( this.HeaderInfo.Count > 0 && this.HeaderInfo.PageIndex != -1 && CurPage > this.HeaderInfo.PageIndex )
     {
+    	this.HeaderInfo.HeaderRecalculate = true;
         this.HeaderInfo.Pages[CurPage] = {};
         this.HeaderInfo.Pages[CurPage].RowsInfo = [];
         var HeaderPage = this.HeaderInfo.Pages[CurPage];
@@ -2124,6 +2130,7 @@ CTable.prototype.private_RecalculatePage = function(CurPage)
         this.HeaderInfo.Pages[CurPage] = {};
         this.HeaderInfo.Pages[CurPage].Draw = false;
     }
+    this.HeaderInfo.HeaderRecalculate = false;
 
     var bNextPage = false;
 
@@ -2702,7 +2709,7 @@ CTable.prototype.private_RecalculatePage = function(CurPage)
 
 		// TODO: улучшить проверку на высоту строки (для строк разбитых на страницы)
 		// Условие Y + RowHValue < Y_content_end добавлено из-за сносок.
-		if (false === bNextPage && Asc.linerule_AtLeast === RowH.HRule && CellHeight < RowHValue && Y + RowHValue < Y_content_end)
+		if (false === bNextPage && Asc.linerule_AtLeast === RowH.HRule && CellHeight < RowHValue && (nFootnotesHeight < 0.001 || Y + RowHValue < Y_content_end))
 		{
 			CellHeight                            = RowHValue;
 			this.TableRowsBottom[CurRow][CurPage] = Y + CellHeight;

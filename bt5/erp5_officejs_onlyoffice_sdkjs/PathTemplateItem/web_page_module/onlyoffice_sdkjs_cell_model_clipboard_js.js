@@ -419,7 +419,7 @@
 								});
 
 							}else{
-								var text = data1.innerText;
+								var text = text_data ? text_data : data1.innerText;
 								if(text)
 								{
 									window["Asc"]["editor"].wb.cellEditor.pasteText(text);
@@ -1504,6 +1504,7 @@
 				{
 					var NearPos = {Paragraph: paragraph, ContentPos: paragraph.Get_ParaContentPos(false, false)};
 
+                    selectedContent.On_EndCollectElements(target_doc_content, false);
 
                     NearPos = { Paragraph: paragraph, ContentPos: paragraph.Get_ParaContentPos(false, false) };
                     paragraph.Check_NearestPos(NearPos);
@@ -1520,15 +1521,16 @@
                         if (1 !== selectedContent.Elements.length || type_Paragraph !== Element.Get_Type() || null === LastClass.Parent)
                             return;
 
-                        var Math  = null;
-                        var Count = Element.Content.length;
-                        for (var Index = 0; Index < Count; Index++)
-                        {
-                            var Item = Element.Content[Index];
-                            if (para_Math === Item.Type && null === Math)
-                                Math = Element.Content[Index];
-                            else if (true !== Item.Is_Empty({SkipEnd : true}))
-                                return;
+                        if(!selectedContent.CanConvertToMath) {
+                            var Math = null;
+                            var Count = Element.Content.length;
+                            for (var Index = 0; Index < Count; Index++) {
+                                var Item = Element.Content[Index];
+                                if (para_Math === Item.Type && null === Math)
+                                    Math = Element.Content[Index];
+                                else if (true !== Item.Is_Empty({SkipEnd: true}))
+                                    return;
+                            }
                         }
                     }
                     else if (para_Run !== LastClass.Type)
@@ -1537,8 +1539,45 @@
                     if (null === paragraph.Parent || undefined === paragraph.Parent)
                         return;
 
-                    paragraph.Check_NearestPos(NearPos);
-					target_doc_content.Insert_Content(selectedContent, NearPos);
+                    var Para        = NearPos.Paragraph;
+                    var ParaNearPos = Para.Get_ParaNearestPos(NearPos);
+                    var LastClass   = ParaNearPos.Classes[ParaNearPos.Classes.length - 1];
+                    var bInsertMath = false;
+                    if (para_Math_Run === LastClass.Type)
+                    {
+                        var MathRun        = LastClass;
+                        var NewMathRun     = MathRun.Split(ParaNearPos.NearPos.ContentPos, ParaNearPos.Classes.length - 1);
+                        var MathContent    = ParaNearPos.Classes[ParaNearPos.Classes.length - 2];
+                        var MathContentPos = ParaNearPos.NearPos.ContentPos.Data[ParaNearPos.Classes.length - 2];
+                        var Element        = selectedContent.Elements[0].Element;
+
+                        var InsertMathContent = null;
+                        for (var nPos = 0, nParaLen = Element.Content.length; nPos < nParaLen; nPos++)
+                        {
+                            if (para_Math === Element.Content[nPos].Type)
+                            {
+                                InsertMathContent = Element.Content[nPos];
+                                break;
+                            }
+                        }
+
+                        if(null === InsertMathContent)
+                        {
+                            //try to convert content to ParaMath in simple cases.
+                            InsertMathContent = selectedContent.ConvertToMath();
+                        }
+
+                        if (null !== InsertMathContent)
+                        {
+                            MathContent.Add_ToContent(MathContentPos + 1, NewMathRun);
+                            MathContent.Insert_MathContent(InsertMathContent.Root, MathContentPos + 1, true);
+                            bInsertMath = true;
+                        }
+                    }
+                    if(!bInsertMath){
+                        paragraph.Check_NearestPos(NearPos);
+                        target_doc_content.Insert_Content(selectedContent, NearPos);
+                    }
 					
 					worksheet.objectRender.controller.cursorMoveRight(false, false);
 					
@@ -2476,11 +2515,7 @@
 				var getElem = function(text, format, isAddSpace, isHyperLink)
 				{
 					var result = null;
-					var value = "";
-					if(null != cell)
-					{
-						value += text;
-					}
+					var value = text;
 					if(isAddSpace)
 					{
 						value += " ";
@@ -2563,60 +2598,41 @@
 				};
 				
 				var n = 0;
-				for(var i in aContentExcel.aGCells)
-				{
-					var row = aContentExcel.aGCells[i];
-					for(var j in row.c)
+				aContentExcel._forEachCell(function(cell){
+					var isHyperlink = aContentExcel.getCell3(cell.nRow, cell.nCol).getHyperlink();
+
+					var multiText = cell.getValueMultiText();
+					if(multiText)
 					{
-						var cell = row.c[j];
-						
-						var isHyperlink = aContentExcel.getCell3( i, j ).getHyperlink();
-						var isAddSpace = row.c[parseInt(j) + 1] || (!row.c[parseInt(j) + 1] && aContentExcel.aGCells[parseInt(i) + 1]) ? true : false;
-						
-						if(cell.oValue && cell.oValue.multiText)
+						for(var m = 0; m < multiText.length; m++)
 						{
-							for(var m = 0; m < cell.oValue.multiText.length; m++)
-							{
-								var curMultiText = cell.oValue.multiText[m];
-								var format = curMultiText.format;
-								
-								var elem = getElem(curMultiText.text, format);
-								if(null !== elem)
-								{
-									oCurPar.Internal_Content_Add(n, elem, false);
-									n++;
-								}
-							}
-							
-							if(isAddSpace)
-							{
-								elem = getElem("", null, true);
-								oCurPar.Internal_Content_Add(n, elem, false);
-								n++;
-							}
-							
-						}
-						else
-						{
-							var format = cell.xfs && cell.xfs.font ? cell.xfs.font : null;
-							
-							var elem = getElem(cell.getValue(), format, null, isHyperlink);
+							var curMultiText = multiText[m];
+							var format = curMultiText.format;
+
+							var elem = getElem(curMultiText.text, format);
 							if(null !== elem)
-							{	
+							{
 								oCurPar.Internal_Content_Add(n, elem, false);
 								n++;
-								
-								//add space
-								if(isAddSpace)
-								{
-									elem = getElem("", null, true);
-									oCurPar.Internal_Content_Add(n, elem, false);
-									n++;
-								}
 							}
 						}
 					}
-				}
+					else
+					{
+						var format = cell.xfs && cell.xfs.font ? cell.xfs.font : null;
+
+						var elem = getElem(cell.getValue(), format, null, isHyperlink);
+						if(null !== elem)
+						{
+							oCurPar.Internal_Content_Add(n, elem, false);
+							n++;
+						}
+					}
+					//add space
+					elem = getElem("", null, true);
+					oCurPar.Internal_Content_Add(n, elem, false);
+					n++;
+				});
 				
 				return oCurPar;
 			},
@@ -2723,25 +2739,17 @@
 			_getTextFromWorksheet: function(worksheet)
 			{
 				var res = "";
-				
-				for(var i in worksheet.aGCells)
-				{
-					var row = worksheet.aGCells[i];
-					
-					for(var j in row.c)
-					{
-						var cell = row.c[j];
-						if(null != cell)
-						{
-							res += cell.getValue();
+				var curRow = -1;
+				worksheet._forEachCell(function(cell) {
+					if (curRow !== cell.nRow) {
+						if (-1 !== curRow) {
+							res += "\n";
 						}
-						
-						res += " ";
+						curRow = cell.nRow;
 					}
-					
-					res += "\n";
-				}
-				
+					res += cell.getValue();
+					res += " ";
+				});
 				return res;
 			},
 			
@@ -4193,7 +4201,7 @@
 						if(Asc.linerule_Exact === Item_pPr.Spacing.LineRule)
 							apPr.push("mso-line-height-rule:exactly");
 					}
-					//��� ������� � word ����� ����� ��� �������� ������������ ������
+					//При вставке в word лучше чтобы эти значения выставлялись всегда
 					//if(Def_pPr.Spacing.Before != Item_pPr.Spacing.Before)
 					apPr.push("margin-top:" + (Item_pPr.Spacing.Before * g_dKoef_mm_to_pt) + "pt");
 					//if(Def_pPr.Spacing.After != Item_pPr.Spacing.After)
@@ -4253,7 +4261,7 @@
 				}
 				if (null != Value.FontSize) {
 					//if (!this.api.DocumentReaderMode)
-						aProp.push("font-size:" + Value.FontSize + "pt");//font-size � pt ��� ��������� ������� � mm
+						aProp.push("font-size:" + Value.FontSize + "pt");//font-size в pt все остальные метрики в mm
 					/*else
 						aProp.push("font-size:" + this.api.DocumentReaderMode.CorrectFontSize(Value.FontSize));*/
 				}
@@ -4309,7 +4317,7 @@
 				switch ( ParaItem.Type )
 				{
 					case para_Text:
-						//���������� �����������
+						//экранируем спецсимволы
 						var sValue = String.fromCharCode(ParaItem.Value);
 						if(sValue)
 							sRes += CopyPasteCorrectString(sValue);
@@ -4319,13 +4327,13 @@
 					case para_NewLine:
 						if( break_Page === ParaItem.BreakType)
 						{
-							//todo ��������� ���� �������� � ������ �����
+							//todo закончить этот параграф и начать новый
 							sRes += "<br clear=\"all\" style=\"mso-special-character:line-break;page-break-before:always;\" />";
 						}
 						else
 							sRes += "<br style=\"mso-special-character:line-break;\" />";
 						break;
-					//������� ������� ����� ��������� ������ �� ���������� ��������
+					//добавил неразрвной пробел для того, чтобы информация попадала в буфер обмена
 					case para_End:        this.bOccurEndPar = true; break;
 					case para_Drawing:
 						var oGraphicObj = ParaItem.GraphicObj;
@@ -4425,12 +4433,12 @@
 			{
 				var oDocument = this.oDocument;
 				this.Para = null;
-				//��� heading ����� � h1
+				//Для heading пишем в h1
 				var styleId = Item.Style_Get();
 				if(styleId)
 				{
 					var styleName = oDocument.Styles.Get_Name( styleId ).toLowerCase();
-					//������ "heading n" (n=1:6)
+					//шаблон "heading n" (n=1:6)
 					if(0 === styleName.indexOf("heading"))
 					{
 						var nLevel = parseInt(styleName.substring("heading".length));
@@ -4495,7 +4503,7 @@
 				{
 					if(false === bIsNullNumPr)
 					{
-						//������ �������� � ������. ������� ������� �� ������. ���������� ����� ��� span
+						//Значит параграф в списке. Удаляем элемент из списка. Записываем текст как span
 						var li = this.Para.parentNode;
 						var ul = li.parentNode;
 						ul.removeChild(li);
@@ -4506,7 +4514,7 @@
 				}
 				else
 				{
-					//����� ��������� ������ ���������
+					//Иначе пропадают пустые параграфы
 					if(this.Para.childNodes.length === 0)
 						this.Para.appendChild( document.createTextNode( '\xa0' ) );
 					if(bIsNullNumPr)
@@ -4555,7 +4563,7 @@
 
 					if ( type_Paragraph === Item.GetType() )
 					{
-						//todo ����� ������ ��� �������� ������ ���� Index == End
+						//todo может только для верхнего уровня надо Index == End
 						this.oBinaryFileWriter.WriteParagraph(Item);
 						this.CopyParagraph(oDomTarget, Item, Index == End, bUseSelection, oDocument.Content, Index);
 					}

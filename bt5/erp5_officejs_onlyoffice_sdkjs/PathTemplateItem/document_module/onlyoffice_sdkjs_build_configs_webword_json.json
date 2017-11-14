@@ -20,10 +20,8 @@
 		"../common/apiBase.js",
 		"../common/Private/license.js",
 		"../word/apiCommon.js",
-		"../word/api.js",
-        "../common/Local/license.js",
-        "../common/Local/jio.js"
-      ],
+		"../word/api.js"
+	  ],
 	  "common": [
 		"../common/downloaderfiles.js",
         "../common/NumFormat.js",
@@ -109,18 +107,21 @@
         "../word/Editor/GraphicObjects/GraphicPage.js",
         "../word/Editor/GraphicObjects/WrapManager.js",
 		"../word/Editor/DocumentContentElementBase.js",
+		"../word/Editor/ParagraphContentBase.js",
         "../word/Editor/Comments.js",
         "../word/Editor/CommentsChanges.js",
+		"../word/Editor/Bookmarks.js",
         "../word/Editor/Styles.js",
         "../word/Editor/StylesChanges.js",
 		"../word/Editor/RevisionsChange.js",
         "../word/Editor/FlowObjects.js",
-        "../word/Editor/ParagraphContent.js",
-        "../word/Editor/ParagraphContentBase.js",
+        "../word/Editor/ParagraphContent.js",        
         "../word/Editor/Paragraph/ParaTextPr.js",
         "../word/Editor/Paragraph/ParaTextPrChanges.js",
         "../word/Editor/Paragraph/ParaDrawing.js",
         "../word/Editor/Paragraph/ParaDrawingChanges.js",
+		"../word/Editor/Paragraph/ComplexFieldInstruction.js",
+		"../word/Editor/Paragraph/ComplexField.js",
         "../word/Editor/Hyperlink.js",
         "../word/Editor/HyperlinkChanges.js",
         "../word/Editor/Field.js",
@@ -195,9 +196,7 @@
 		"../common/text_input.js",
 		"../common/Drawings/Format/OleObject.js",
 		"../common/Drawings/Format/DrawingContent.js",
-		"../common/plugins.js",
-        "../common/Local/common_jio.js",
-        "../word/Local/api_jio.js"
+		"../common/plugins.js"
       ],
       "private": [
         "../common/Private/versionHistory.js",

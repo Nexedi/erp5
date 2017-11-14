@@ -20,9 +20,7 @@
 		"../common/apiBase.js",
 		"../common/Private/license.js",
 		"../word/apiCommon.js",
-        "../cell/api.js",
-        "../common/Local/license.js",
-        "../common/Local/jio.js"
+		"../cell/api.js"
 	  ],
 	  "common": [		
         "../common/downloaderfiles.js",
@@ -140,18 +138,21 @@
 		"../cell/model/PivotTables.js",
 		
 		"../word/Editor/DocumentContentElementBase.js",
+		"../word/Editor/ParagraphContentBase.js",
+		"../word/Editor/Bookmarks.js",
         "../word/Editor/Comments.js",
         "../word/Editor/CommentsChanges.js",
         "../word/Editor/Styles.js",
         "../word/Editor/StylesChanges.js",
 		"../word/Editor/RevisionsChange.js",
         "../word/Editor/FlowObjects.js",
-        "../word/Editor/ParagraphContent.js",
-        "../word/Editor/ParagraphContentBase.js",
+        "../word/Editor/ParagraphContent.js",        
         "../word/Editor/Paragraph/ParaTextPr.js",
         "../word/Editor/Paragraph/ParaTextPrChanges.js",
         "../word/Editor/Paragraph/ParaDrawing.js",
         "../word/Editor/Paragraph/ParaDrawingChanges.js",
+		"../word/Editor/Paragraph/ComplexFieldInstruction.js",
+		"../word/Editor/Paragraph/ComplexField.js",
         "../word/Editor/Hyperlink.js",
         "../word/Editor/HyperlinkChanges.js",
         "../word/Editor/Field.js",
@@ -218,9 +219,7 @@
 		"../common/text_input.js",
 		"../common/Drawings/Format/OleObject.js",
 		"../common/Drawings/Format/DrawingContent.js",
-		"../common/plugins.js",
-	    "../common/Local/common_jio.js",
-        "../cell/Local/api_jio.js"
+		"../common/plugins.js"
       ],
       "private": [
         "../cell/Private/comments.js"
@@ -276,6 +275,8 @@
         "../common/externs/jquery-3.2.js",
         "../common/externs/xregexp-3.0.0.js",
         "../common/externs/sockjs.js",
+        "../common/externs/Xmla.js",
+        "../common/externs/rsvp-2.0.4.js",
         "../common/externs/jszip.min.js",
         "../common/externs/jszip-utils.js"
       ],

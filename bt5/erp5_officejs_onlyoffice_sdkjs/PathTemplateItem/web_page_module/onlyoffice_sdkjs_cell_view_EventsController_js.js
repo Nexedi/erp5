@@ -52,28 +52,19 @@
 		 * @memberOf Asc
 		 */
 		function asc_CEventsController() {
-			if ( !(this instanceof asc_CEventsController) ) {
-				return new asc_CEventsController();
-			}
-
 			//----- declaration -----
-			this.defaults = {
+			this.settings = {
 				vscrollStep: 10,
 				hscrollStep: 10,
 				scrollTimeout: 20,
-				showArrows: true,//показывать или нет стрелки у скролла
-				//scrollBackgroundColor:"#DDDDDD",//цвет фона скролла
-				//scrollerColor:"#EDEDED",//цвет ползунка скрола
 				isViewerMode: false,
-				wheelScrollLines: 3,
-                isNeedInvertOnActive: false
+				wheelScrollLinesV: 3
 			};
 
 			this.view     = undefined;
 			this.widget   = undefined;
 			this.element  = undefined;
 			this.handlers = undefined;
-			this.settings = $.extend(true, {}, this.defaults);
 			this.vsb	= undefined;
 			this.vsbHSt	= undefined;
 			this.vsbApi	= undefined;
@@ -357,7 +348,7 @@
 		};
 
 		asc_CEventsController.prototype._createScrollBars = function () {
-			var self = this, opt = this.settings;
+			var self = this, settings, opt = this.settings;
 
 			// vertical scroll bar
 			this.vsb = document.createElement('div');
@@ -367,9 +358,14 @@
 			this.vsbHSt = document.getElementById("ws-v-scroll-helper").style;
 
 			if (!this.vsbApi) {
-				this.vsbApi = new AscCommon.ScrollObject(this.vsb.id, opt);
+				settings = new AscCommon.ScrollSettings();
+				settings.vscrollStep = opt.vscrollStep;
+				settings.hscrollStep = opt.hscrollStep;
+				settings.wheelScrollLines = opt.wheelScrollLinesV;
+
+				this.vsbApi = new AscCommon.ScrollObject(this.vsb.id, settings);
 				this.vsbApi.bind("scrollvertical", function(evt) {
-					self.handlers.trigger("scrollY", evt.scrollPositionY / opt.vscrollStep);
+					self.handlers.trigger("scrollY", evt.scrollPositionY / self.settings.vscrollStep);
 				});
 				this.vsbApi.bind("scrollVEnd", function(evt) {
 					self.handlers.trigger("addRow");
@@ -390,9 +386,13 @@
 			this.hsbHSt = document.getElementById("ws-h-scroll-helper").style;
 
 			if (!this.hsbApi) {
-				this.hsbApi = new AscCommon.ScrollObject(this.hsb.id, $.extend(true, {}, opt, {wheelScrollLines: 1}));
+				settings = new AscCommon.ScrollSettings();
+				settings.vscrollStep = opt.vscrollStep;
+				settings.hscrollStep = opt.hscrollStep;
+
+				this.hsbApi = new AscCommon.ScrollObject(this.hsb.id, settings);
 				this.hsbApi.bind("scrollhorizontal",function(evt) {
-					self.handlers.trigger("scrollX", evt.scrollPositionX / opt.hscrollStep);
+					self.handlers.trigger("scrollX", evt.scrollPositionX / self.settings.hscrollStep);
 				});
 				this.hsbApi.bind("scrollHEnd",function(evt) {
 						self.handlers.trigger("addColumn");
@@ -1315,9 +1315,9 @@
 				t.handlers.trigger("graphicObjectMouseDown", event, coord.x, coord.y);
 				t.handlers.trigger("updateSelectionShape", /*isSelectOnShape*/true);
 				return;
-			} else {
-				t.isShapeAction = false;
 			}
+
+			this.isShapeAction = false;
 
 			if (2 === event.detail) {
 				// Это означает, что это MouseDown для dblClick эвента (его обрабатывать не нужно)
@@ -1438,15 +1438,17 @@
 
 			// Если нажали правую кнопку мыши, то сменим выделение только если мы не в выделенной области
 			if (2 === event.button) {
-				t.handlers.trigger("changeSelectionRightClick", coord.x, coord.y);
+				this.handlers.trigger("changeSelectionRightClick", coord.x, coord.y);
+				this.handlers.trigger('onContextMenu', event);
 			} else {
-				if (t.targetInfo && t.targetInfo.target === c_oTargetType.FillHandle && false === this.settings.isViewerMode) {
+				if (this.targetInfo && this.targetInfo.target === c_oTargetType.FillHandle &&
+					false === this.settings.isViewerMode) {
 					// В режиме автозаполнения
-					t.isFillHandleMode = true;
-					t._changeFillHandle(event);
+					this.isFillHandleMode = true;
+					this._changeFillHandle(event);
 				} else {
-					t.isSelectMode = true;
-					t.handlers.trigger("changeSelection", /*isStartPoint*/true, coord.x, coord.y, /*isCoord*/true,
+					this.isSelectMode = true;
+					this.handlers.trigger("changeSelection", /*isStartPoint*/true, coord.x, coord.y, /*isCoord*/true,
 						/*isSelectMode*/true, ctrlKey);
 				}
 			}
@@ -1455,7 +1457,9 @@
 		/** @param event {MouseEvent} */
 		asc_CEventsController.prototype._onMouseUp = function (event) {
 			if (2 === event.button) {
-				this.handlers.trigger('onContextMenu', event);
+				if (this.isShapeAction) {
+					this.handlers.trigger('onContextMenu', event);
+				}
 				return true;
 			}
 
@@ -1645,7 +1649,7 @@
 						self.scrollHorizontal(deltaX, event);
 					}
 					if (deltaY) {
-						deltaY = Math.sign(deltaY) * Math.ceil(Math.abs(deltaY * self.settings.wheelScrollLines / 3));
+						deltaY = Math.sign(deltaY) * Math.ceil(Math.abs(deltaY * self.settings.wheelScrollLinesV / 3));
 						self.scrollVertical(deltaY, event);
 					}
 					self._onMouseMove(event);

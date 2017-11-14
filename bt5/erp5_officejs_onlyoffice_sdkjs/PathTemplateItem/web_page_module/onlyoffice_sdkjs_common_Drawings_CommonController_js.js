@@ -2273,14 +2273,15 @@ DrawingObjectsController.prototype =
 
     },
 
-    deleteSelectedObjects: function()
-    {
-        var content = this.getTargetDocContent();
-        if(content && !content.Selection.Use)
-        {
+    deleteSelectedObjects: function(){
+        if(Asc["editor"] && Asc["editor"].isChartEditor && (!this.selection.chartSelection)){
             return;
         }
-        this.remove(-1);
+        var oThis = this;
+        this.checkSelectedObjectsAndCallback(function(){
+            oThis.resetTextSelection();
+            oThis.removeCallback(-1);
+        }, [], false, AscDFH.historydescription_Spreadsheet_Remove);
     },
 
 
@@ -3114,6 +3115,19 @@ DrawingObjectsController.prototype =
         if(oPr.isEqual(chartSettings)){
             return;
         }
+
+        //for bug http://bugzilla.onlyoffice.com/show_bug.cgi?id=35570
+        var type = chartSettings.getType();
+        if(oPr.getType() === type){
+            chartSettings.type = null;
+            var testChartSettings = new AscCommon.asc_ChartSettings();
+            if(testChartSettings.isEqual(chartSettings)){
+                chartSettings.type = type;
+                return;
+            }
+            chartSettings.type = type;
+        }
+
         //Title Settings
         chart_space.setChart(chart_space.chart.createDuplicate());
 
@@ -3128,10 +3142,9 @@ DrawingObjectsController.prototype =
 
         var chart = chart_space.chart;
         var plot_area = chart.plotArea;
-        var type = chartSettings.getType();
         if(AscFormat.isRealNumber(style_index)){
             --style_index;
-            var oCurChartSettings = this.getPropsFromChart(chartSpace);
+            var oCurChartSettings = oPr;
             var _cur_type = oCurChartSettings.type;
             if(AscCommon.g_oChartPresets[_cur_type] && AscCommon.g_oChartPresets[_cur_type][style_index]){
 
@@ -5866,10 +5879,9 @@ DrawingObjectsController.prototype =
             {
                 if(!this.checkEndAddShape())
                 {
-
                     this.resetSelection();
                     var ws = drawingObjectsController.drawingObjects.getWorksheet();
-                    var isChangeSelectionShape = ws._checkSelectionShape();
+                    var isChangeSelectionShape = ws._endSelectionShape();
                     if (isChangeSelectionShape) {
                         ws._drawSelection();
                         ws._updateSelectionNameAndInfo();
@@ -6752,12 +6764,15 @@ DrawingObjectsController.prototype =
 
 
                 sp_tree = cur_group.spTree;
+                var xc, yc;
                 for(j = 0; j < sp_tree.length; ++j)
                 {
                     sp = sp_tree[j];
                     sp.spPr.xfrm.setRot(AscFormat.normalizeRotate(sp.rot + cur_group.rot));
-                    sp.spPr.xfrm.setOffX(sp.spPr.xfrm.offX + cur_group.spPr.xfrm.offX);
-                    sp.spPr.xfrm.setOffY(sp.spPr.xfrm.offY + cur_group.spPr.xfrm.offY);
+                    xc = sp.transform.TransformPointX(sp.extX/2.0, sp.extY/2.0);
+                    yc = sp.transform.TransformPointY(sp.extX/2.0, sp.extY/2.0);
+                    sp.spPr.xfrm.setOffX(xc - sp.extX/2.0);
+                    sp.spPr.xfrm.setOffY(yc - sp.extY/2.0);
                     sp.spPr.xfrm.setFlipH(cur_group.spPr.xfrm.flipH === true ? !(sp.spPr.xfrm.flipH === true) : sp.spPr.xfrm.flipH === true);
                     sp.spPr.xfrm.setFlipV(cur_group.spPr.xfrm.flipV === true ? !(sp.spPr.xfrm.flipV === true) : sp.spPr.xfrm.flipV === true);
                     sp.setGroup(null);
@@ -7049,7 +7064,7 @@ DrawingObjectsController.prototype =
             }
             else if(oDrawingSelectionState.groupObject)
             {
-                if(oDrawingSelectionState.groupObject.Is_UseInDocument())
+                if(oDrawingSelectionState.groupObject.Is_UseInDocument() && !oDrawingSelectionState.groupObject.group)
                 {
                     this.selectObject(oDrawingSelectionState.groupObject, bDocument ? (oDrawingSelectionState.groupObject.parent ? oDrawingSelectionState.groupObject.parent.PageNum : nPageIndex) : nPageIndex);
                     oDrawingSelectionState.groupObject.resetSelection(this);

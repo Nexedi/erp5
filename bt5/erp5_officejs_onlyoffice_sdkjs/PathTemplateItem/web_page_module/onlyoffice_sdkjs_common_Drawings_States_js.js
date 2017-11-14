@@ -64,7 +64,7 @@ StartAddNewShape.prototype =
     onMouseDown: function(e, x, y)
     {
         if(this.drawingObjects.handleEventMode === HANDLE_EVENT_MODE_CURSOR)
-            return {objectId: "1", bMarker: true};
+            return {objectId: "1", bMarker: true, cursorType: "crosshair"};
         this.startX = x;
         this.startY = y;
         this.drawingObjects.arrPreTrackObjects.length = 0;
@@ -1074,25 +1074,53 @@ MoveState.prototype =
         var start_arr = this.drawingObjects.getAllObjectsOnPage(0);
         var min_dx = null, min_dy = null;
         var dx, dy;
-        var snap_x = null, snap_y = null;
+        var snap_x = [], snap_y = [];
 
         var snapHorArray = [], snapVerArray = [];
-        if(result_x === this.startX)
+
+
+        //-------------------------------------------------
+        for(var track_index = 0; track_index < _arr_track_objects.length; ++track_index)
         {
-            min_dx = 0;
-        }
-        else
-        {
-            for(var track_index = 0; track_index < _arr_track_objects.length; ++track_index)
+            var cur_track_original_shape = _arr_track_objects[track_index].originalObject;
+            var trackSnapArrayX = cur_track_original_shape.snapArrayX;
+            var curDX =  result_x - startPos.x;
+
+
+            for(snap_index = 0; snap_index < trackSnapArrayX.length; ++snap_index)
             {
-                var cur_track_original_shape = _arr_track_objects[track_index].originalObject;
-                var trackSnapArrayX = cur_track_original_shape.snapArrayX;
-                var curDX =  result_x - startPos.x;
-
-
-                for(snap_index = 0; snap_index < trackSnapArrayX.length; ++snap_index)
+                var snap_obj = AscFormat.GetMinSnapDistanceXObjectByArrays(trackSnapArrayX[snap_index] + curDX, snapHorArray);
+                if(isRealObject(snap_obj))
                 {
-                    var snap_obj = AscFormat.GetMinSnapDistanceXObjectByArrays(trackSnapArrayX[snap_index] + curDX, snapHorArray);
+                    dx = snap_obj.dist;
+                    if(dx !== null)
+                    {
+                        if(min_dx === null)
+                        {
+                            min_dx = dx;
+                            snap_x.push(snap_obj.pos);
+                        }
+                        else
+                        {
+                            if(AscFormat.fApproxEqual(min_dx, dx, 0.01)){
+                                snap_x.push(snap_obj.pos);
+                            }
+                            else if(Math.abs(min_dx) > Math.abs(dx))
+                            {
+                                min_dx = dx;
+                                snap_x.length = 0;
+                                snap_x.push(snap_obj.pos);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(start_arr.length > 0)
+            {
+                for(var snap_index = 0; snap_index < trackSnapArrayX.length; ++snap_index)
+                {
+                    var snap_obj = AscFormat.GetMinSnapDistanceXObject(trackSnapArrayX[snap_index] + curDX, start_arr);
                     if(isRealObject(snap_obj))
                     {
                         dx = snap_obj.dist;
@@ -1101,42 +1129,18 @@ MoveState.prototype =
                             if(min_dx === null)
                             {
                                 min_dx = dx;
-                                snap_x = snap_obj.pos;
+                                snap_x.push(snap_obj.pos);
                             }
                             else
                             {
-                                if(Math.abs(min_dx) > Math.abs(dx))
+                                if(AscFormat.fApproxEqual(min_dx, dx, 0.01)){
+                                    snap_x.push(snap_obj.pos);
+                                }
+                                else if(Math.abs(min_dx) > Math.abs(dx))
                                 {
                                     min_dx = dx;
-                                    snap_x = snap_obj.pos;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if(start_arr.length > 0)
-                {
-                    for(var snap_index = 0; snap_index < trackSnapArrayX.length; ++snap_index)
-                    {
-                        var snap_obj = AscFormat.GetMinSnapDistanceXObject(trackSnapArrayX[snap_index] + curDX, start_arr);
-                        if(isRealObject(snap_obj))
-                        {
-                            dx = snap_obj.dist;
-                            if(dx !== null)
-                            {
-                                if(min_dx === null)
-                                {
-                                    snap_x = snap_obj.pos;
-                                    min_dx = dx;
-                                }
-                                else
-                                {
-                                    if(Math.abs(min_dx) > Math.abs(dx))
-                                    {
-                                        min_dx = dx;
-                                        snap_x = snap_obj.pos;
-                                    }
+                                    snap_x.length = 0;
+                                    snap_x.push(snap_obj.pos);
                                 }
                             }
                         }
@@ -1144,23 +1148,53 @@ MoveState.prototype =
                 }
             }
         }
-
-        if(result_y === this.startY)
+        if(result_x === this.startX)
         {
-            min_dy = 0;
+            min_dx = 0;
         }
-        else
+
+        //-----------------------------
+        for(track_index = 0; track_index < _arr_track_objects.length; ++track_index)
         {
-            for(track_index = 0; track_index < _arr_track_objects.length; ++track_index)
+            cur_track_original_shape = _arr_track_objects[track_index].originalObject;
+            var trackSnapArrayY = cur_track_original_shape.snapArrayY;
+            var curDY =  result_y - startPos.y;
+
+
+            for(snap_index = 0; snap_index < trackSnapArrayY.length; ++snap_index)
             {
-                cur_track_original_shape = _arr_track_objects[track_index].originalObject;
-                var trackSnapArrayY = cur_track_original_shape.snapArrayY;
-                var curDY =  result_y - startPos.y;
+                var snap_obj = AscFormat.GetMinSnapDistanceYObjectByArrays(trackSnapArrayY[snap_index] + curDY, snapVerArray);
+                if(isRealObject(snap_obj))
+                {
+                    dy = snap_obj.dist;
+                    if(dy !== null)
+                    {
+                        if(min_dy === null)
+                        {
+                            min_dy = dy;
+                            snap_y.push(snap_obj.pos);
+                        }
+                        else
+                        {
+                            if(AscFormat.fApproxEqual(min_dy, dy, 0.01)){
+                                snap_y.push(snap_obj.pos);
+                            }
+                            else if(Math.abs(min_dy) > Math.abs(dy))
+                            {
+                                min_dy = dy;
+                                snap_y.length = 0;
+                                snap_y.push(snap_obj.pos);
+                            }
+                        }
+                    }
+                }
+            }
 
-
+            if(start_arr.length > 0)
+            {
                 for(snap_index = 0; snap_index < trackSnapArrayY.length; ++snap_index)
                 {
-                    var snap_obj = AscFormat.GetMinSnapDistanceYObjectByArrays(trackSnapArrayY[snap_index] + curDY, snapVerArray);
+                    var snap_obj = AscFormat.GetMinSnapDistanceYObject(trackSnapArrayY[snap_index] + curDY, start_arr);
                     if(isRealObject(snap_obj))
                     {
                         dy = snap_obj.dist;
@@ -1169,42 +1203,18 @@ MoveState.prototype =
                             if(min_dy === null)
                             {
                                 min_dy = dy;
-                                snap_y = snap_obj.pos;
+                                snap_y.push(snap_obj.pos);
                             }
                             else
                             {
-                                if(Math.abs(min_dy) > Math.abs(dy))
+                                if(AscFormat.fApproxEqual(min_dy, dy, 0.01)){
+                                    snap_y.push(snap_obj.pos);
+                                }
+                                else if(Math.abs(min_dy) > Math.abs(dy))
                                 {
                                     min_dy = dy;
-                                    snap_y = snap_obj.pos;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if(start_arr.length > 0)
-                {
-                    for(snap_index = 0; snap_index < trackSnapArrayY.length; ++snap_index)
-                    {
-                        var snap_obj = AscFormat.GetMinSnapDistanceYObject(trackSnapArrayY[snap_index] + curDY, start_arr);
-                        if(isRealObject(snap_obj))
-                        {
-                            dy = snap_obj.dist;
-                            if(dy !== null)
-                            {
-                                if(min_dy === null)
-                                {
-                                    min_dy = dy;
-                                    snap_y = snap_obj.pos;
-                                }
-                                else
-                                {
-                                    if(Math.abs(min_dy) > Math.abs(dy))
-                                    {
-                                        min_dy = dy;
-                                        snap_y = snap_obj.pos;
-                                    }
+                                    snap_y.length = 0;
+                                    snap_y.push(snap_obj.pos);
                                 }
                             }
                         }
@@ -1212,15 +1222,21 @@ MoveState.prototype =
                 }
             }
         }
-
+        if(result_y === this.startY)
+        {
+            min_dy = 0;
+        }
 
         if(min_dx === null || Math.abs(min_dx) > SNAP_DISTANCE)
             min_dx = 0;
         else
         {
-            if(AscFormat.isRealNumber(snap_x) && this.drawingObjects.drawingObjects.cSld)
+            if(this.drawingObjects.drawingObjects.cSld)
             {
-                this.drawingObjects.getDrawingDocument().DrawVerAnchor(pageIndex, snap_x);
+                for(var i = 0; i < snap_x.length; ++i){
+                    this.drawingObjects.getDrawingDocument().DrawVerAnchor(pageIndex, snap_x[i]);
+                }
+
             }
         }
 
@@ -1228,9 +1244,11 @@ MoveState.prototype =
             min_dy = 0;
         else
         {
-            if(AscFormat.isRealNumber(snap_y) && this.drawingObjects.drawingObjects.cSld)
+            if(this.drawingObjects.drawingObjects.cSld)
             {
-                this.drawingObjects.getDrawingDocument().DrawHorAnchor(pageIndex, snap_y);
+                for(var i = 0; i < snap_y.length; ++i){
+                    this.drawingObjects.getDrawingDocument().DrawHorAnchor(pageIndex, snap_y[i]);
+                }
             }
         }
 
@@ -1551,7 +1569,7 @@ SplineBezierState.prototype =
     onMouseDown: function(e, x, y, pageIndex)
     {
         if(this.drawingObjects.handleEventMode === HANDLE_EVENT_MODE_CURSOR)
-            return {objectId: "1", bMarker: true};
+            return {objectId: "1", bMarker: true, cursorType: "crosshair"};
         this.drawingObjects.startTrackPos = {x: x, y: y, pageIndex: pageIndex};
         this.drawingObjects.clearTrackObjects();
         this.drawingObjects.addTrackObject(new AscFormat.Spline(this.drawingObjects, this.drawingObjects.getTheme(), null, null, null, pageIndex));
@@ -1596,7 +1614,7 @@ SplineBezierState33.prototype =
     onMouseDown: function(e, x, y, pageIndex)
     {
         if(this.drawingObjects.handleEventMode === HANDLE_EVENT_MODE_CURSOR)
-            return {objectId: "1", bMarker: true};
+            return {objectId: "1", bMarker: true, cursorType: "crosshair"};
     },
 
     onMouseMove: function(e, x, y, pageIndex)
@@ -1640,7 +1658,7 @@ SplineBezierState2.prototype =
     onMouseDown: function(e, x, y, pageIndex)
     {
         if(this.drawingObjects.handleEventMode === HANDLE_EVENT_MODE_CURSOR)
-            return {objectId: "1", bMarker: true};
+            return {objectId: "1", bMarker: true, cursorType: "crosshair"};
         if(e.ClickCount >= 2)
         {
             this.bStart = true;
@@ -1713,7 +1731,7 @@ SplineBezierState3.prototype =
     onMouseDown: function(e, x, y, pageIndex)
     {
         if(this.drawingObjects.handleEventMode === HANDLE_EVENT_MODE_CURSOR)
-            return {objectId: "1", bMarker: true};
+            return {objectId: "1", bMarker: true, cursorType: "crosshair"};
         if(e.ClickCount >= 2)
         {
             this.bStart = true;
@@ -1811,7 +1829,7 @@ SplineBezierState4.prototype =
     onMouseDown: function(e, x, y, pageIndex)
     {
         if(this.drawingObjects.handleEventMode === HANDLE_EVENT_MODE_CURSOR)
-            return {objectId: "1", bMarker: true};
+            return {objectId: "1", bMarker: true, cursorType: "crosshair"};
         if(e.ClickCount >= 2)
         {
             this.bStart = true;
@@ -1933,7 +1951,7 @@ SplineBezierState5.prototype =
     onMouseDown: function(e, x, y, pageIndex)
     {
         if(this.drawingObjects.handleEventMode === HANDLE_EVENT_MODE_CURSOR)
-            return {objectId: "1", bMarker: true};
+            return {objectId: "1", bMarker: true, cursorType: "crosshair"};
         if(e.ClickCount >= 2)
         {
             this.bStart = true;
@@ -2035,7 +2053,7 @@ PolyLineAddState.prototype =
     onMouseDown: function(e, x, y, pageIndex)
     {
         if(this.drawingObjects.handleEventMode === HANDLE_EVENT_MODE_CURSOR)
-            return {objectId: "1", bMarker: true};
+            return {objectId: "1", bMarker: true, cursorType: "crosshair"};
         this.drawingObjects.startTrackPos = {x: x, y: y, pageIndex:pageIndex};
         this.drawingObjects.clearTrackObjects();
         this.drawingObjects.addTrackObject(new AscFormat.PolyLine(this.drawingObjects, this.drawingObjects.getTheme(), null, null, null, pageIndex));
@@ -2079,7 +2097,7 @@ PolyLineAddState2.prototype =
     onMouseDown: function(e, x, y, pageIndex)
     {
         if(this.drawingObjects.handleEventMode === HANDLE_EVENT_MODE_CURSOR)
-            return {objectId: "1", bMarker: true};
+            return {objectId: "1", bMarker: true, cursorType: "crosshair"};
     },
 
     onMouseMove: function(e, x, y, pageIndex)
@@ -2148,7 +2166,7 @@ AddPolyLine2State.prototype =
     onMouseDown: function(e, x, y, pageIndex)
     {
         if(this.drawingObjects.handleEventMode === HANDLE_EVENT_MODE_CURSOR)
-            return {objectId: "1", bMarker: true};
+            return {objectId: "1", bMarker: true, cursorType: "crosshair"};
         this.drawingObjects.startTrackPos = {x: x, y: y, pageIndex : pageIndex};
         this.drawingObjects.checkChartTextSelection();
         this.drawingObjects.resetSelection();
@@ -2181,7 +2199,7 @@ AddPolyLine2State2.prototype =
     onMouseDown: function(e, x, y, pageIndex)
     {
         if(this.drawingObjects.handleEventMode === HANDLE_EVENT_MODE_CURSOR)
-            return {objectId: "1", bMarker: true};
+            return {objectId: "1", bMarker: true, cursorType: "crosshair"};
         if(e.ClickCount > 1)
         {
             if(Asc["editor"])
@@ -2235,7 +2253,7 @@ AddPolyLine2State3.prototype =
     onMouseDown: function(e, x, y, pageIndex)
     {
         if(this.drawingObjects.handleEventMode === HANDLE_EVENT_MODE_CURSOR)
-            return {objectId: "1", bMarker: true};
+            return {objectId: "1", bMarker: true, cursorType: "crosshair"};
         var tr_x, tr_y;
         if(pageIndex === this.drawingObjects.startTrackPos.pageIndex)
         {

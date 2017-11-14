@@ -1370,6 +1370,13 @@ CFootnotesController.prototype.AddInlineImage = function(nW, nH, oImage, oChart,
 
 	return this.CurFootnote.AddInlineImage(nW, nH, oImage, oChart, bFlow);
 };
+CFootnotesController.prototype.AddImages = function(aImages)
+{
+	if (false === this.private_CheckFootnotesSelectionBeforeAction())
+		return false;
+
+	return this.CurFootnote.AddImages(aImages);
+};
 CFootnotesController.prototype.AddSignatureLine = function(oSignatureDrawing)
 {
 	if (false === this.private_CheckFootnotesSelectionBeforeAction())
@@ -2663,9 +2670,9 @@ CFootnotesController.prototype.GetSelectedText = function(bClearText, oPr)
 		return sResult;
 	}
 };
-CFootnotesController.prototype.GetCurrentParagraph = function()
+CFootnotesController.prototype.GetCurrentParagraph = function(bIgnoreSelection, arrSelectedParagraphs)
 {
-	return this.CurFootnote.GetCurrentParagraph();
+	return this.CurFootnote.GetCurrentParagraph(bIgnoreSelection, arrSelectedParagraphs);
 };
 CFootnotesController.prototype.GetSelectedElementsInfo = function(oInfo)
 {
