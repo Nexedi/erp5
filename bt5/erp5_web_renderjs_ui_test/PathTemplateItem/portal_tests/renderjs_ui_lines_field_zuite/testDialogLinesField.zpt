@@ -35,12 +35,7 @@
     <td>foo<br/>bar</td></tr>
 
 <!-- Save and force unloading of Form and its content from the memory by going back -->
-<tr><td>waitForElementPresent</td>
-    <td>//button[@data-i18n='Save']</td><td></td></tr>
-<tr><td>click</td>
-    <td>//button[@data-i18n='Save']</td><td></td></tr>
-<tr><td>waitForTextPresent</td>
-    <td>Data updated.</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 <tr><td>click</td>
     <td>//div[@data-role='header']//h1/a</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
@@ -72,12 +67,8 @@
     <td>foo bar</td></tr>
 
 <!-- Save and force unloading of Form and its content from the memory by going back -->
-<tr><td>waitForElementPresent</td>
-    <td>//button[@data-i18n='Save']</td><td></td></tr>
-<tr><td>click</td>
-    <td>//button[@data-i18n='Save']</td><td></td></tr>
-<tr><td>waitForTextPresent</td>
-    <td>Data updated.</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
 <tr><td>click</td>
     <td>//div[@data-role='header']//h1/a</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
