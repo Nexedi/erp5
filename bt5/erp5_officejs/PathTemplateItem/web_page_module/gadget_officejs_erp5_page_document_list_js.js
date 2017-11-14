@@ -51,6 +51,10 @@
         });
     })
 
+    .allowPublicAcquisition('notifySubmit', function () {
+      return this.triggerSubmit();
+    })
+
     .declareMethod("triggerSubmit", function () {
       var argument_list = arguments;
       return this.getDeclaredGadget('form_list')
