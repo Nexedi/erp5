@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/apps/documenteditor/main/locale/en.json</string> </value>
+            <value> <string>onlyoffice/web-apps/apps/documenteditor/main/locale/en.json</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_apps_documenteditor_main_locale_en_json</string> </value>
+            <value> <string>onlyoffice_web-apps_apps_documenteditor_main_locale_en_json</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

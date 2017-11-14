@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/apps/common/main/lib/model/Comment.js</string> </value>
+            <value> <string>onlyoffice/web-apps/apps/common/main/lib/model/Comment.js</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_apps_common_main_lib_model_Comment_js</string> </value>
+            <value> <string>onlyoffice_web-apps_apps_common_main_lib_model_Comment_js</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/apps/spreadsheeteditor/main/app/controller/DocumentHolder.js</string> </value>
+            <value> <string>onlyoffice/web-apps/apps/spreadsheeteditor/main/app/controller/DocumentHolder.js</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_apps_spreadsheeteditor_main_app_controller_DocumentHolder_js</string> </value>
+            <value> <string>onlyoffice_web-apps_apps_spreadsheeteditor_main_app_controller_DocumentHolder_js</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

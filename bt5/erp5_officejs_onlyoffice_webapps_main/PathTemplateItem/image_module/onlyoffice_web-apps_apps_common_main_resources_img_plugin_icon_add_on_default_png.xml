@@ -84,7 +84,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/apps/common/main/resources/img/plugin/icon_add_on_default.png</string> </value>
+            <value> <string>onlyoffice/web-apps/apps/common/main/resources/img/plugin/icon_add_on_default.png</string> </value>
         </item>
         <item>
             <key> <string>filename</string> </key>
@@ -92,7 +92,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_apps_common_main_resources_img_plugin_icon_add_on_default_png</string> </value>
+            <value> <string>onlyoffice_web-apps_apps_common_main_resources_img_plugin_icon_add_on_default_png</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

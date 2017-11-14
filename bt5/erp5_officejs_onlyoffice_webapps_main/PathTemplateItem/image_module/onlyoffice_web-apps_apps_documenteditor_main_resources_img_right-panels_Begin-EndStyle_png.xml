@@ -84,7 +84,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/apps/documenteditor/main/resources/img/right-panels/Begin-EndStyle.png</string> </value>
+            <value> <string>onlyoffice/web-apps/apps/documenteditor/main/resources/img/right-panels/Begin-EndStyle.png</string> </value>
         </item>
         <item>
             <key> <string>filename</string> </key>
@@ -92,7 +92,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_apps_documenteditor_main_resources_img_right-panels_Begin-EndStyle_png</string> </value>
+            <value> <string>onlyoffice_web-apps_apps_documenteditor_main_resources_img_right-panels_Begin-EndStyle_png</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

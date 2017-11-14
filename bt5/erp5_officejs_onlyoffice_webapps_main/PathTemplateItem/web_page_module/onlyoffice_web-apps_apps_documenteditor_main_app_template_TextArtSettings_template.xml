@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/apps/documenteditor/main/app/template/TextArtSettings.template</string> </value>
+            <value> <string>onlyoffice/web-apps/apps/documenteditor/main/app/template/TextArtSettings.template</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_apps_documenteditor_main_app_template_TextArtSettings_template</string> </value>
+            <value> <string>onlyoffice_web-apps_apps_documenteditor_main_app_template_TextArtSettings_template</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

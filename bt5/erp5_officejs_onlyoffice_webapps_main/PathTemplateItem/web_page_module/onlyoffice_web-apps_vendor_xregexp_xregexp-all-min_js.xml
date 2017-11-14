@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/vendor/xregexp/xregexp-all-min.js</string> </value>
+            <value> <string>onlyoffice/web-apps/vendor/xregexp/xregexp-all-min.js</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_vendor_xregexp_xregexp-all-min_js</string> </value>
+            <value> <string>onlyoffice_web-apps_vendor_xregexp_xregexp-all-min_js</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

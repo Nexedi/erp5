@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/apps/spreadsheeteditor/main/locale/pt.json</string> </value>
+            <value> <string>onlyoffice/web-apps/apps/spreadsheeteditor/main/locale/pt.json</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_apps_spreadsheeteditor_main_locale_pt_json</string> </value>
+            <value> <string>onlyoffice_web-apps_apps_spreadsheeteditor_main_locale_pt_json</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

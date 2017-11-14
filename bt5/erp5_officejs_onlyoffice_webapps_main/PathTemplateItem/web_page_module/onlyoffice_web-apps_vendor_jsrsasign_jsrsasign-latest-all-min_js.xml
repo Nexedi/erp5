@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/vendor/jsrsasign/jsrsasign-latest-all-min.js</string> </value>
+            <value> <string>onlyoffice/web-apps/vendor/jsrsasign/jsrsasign-latest-all-min.js</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_vendor_jsrsasign_jsrsasign-latest-all-min_js</string> </value>
+            <value> <string>onlyoffice_web-apps_vendor_jsrsasign_jsrsasign-latest-all-min_js</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

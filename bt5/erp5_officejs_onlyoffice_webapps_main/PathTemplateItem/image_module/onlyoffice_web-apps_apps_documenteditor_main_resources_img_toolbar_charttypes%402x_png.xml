@@ -84,19 +84,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/apps/documenteditor/main/resources/img/toolbar/charttypes@2x.png</string> </value>
+            <value> <string>onlyoffice/web-apps/apps/documenteditor/main/resources/img/toolbar/charttypes@2x.png</string> </value>
         </item>
         <item>
             <key> <string>filename</string> </key>
             <value> <string>charttypes@2x.png</string> </value>
         </item>
         <item>
-            <key> <string>height</string> </key>
-            <value> <int>700</int> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_apps_documenteditor_main_resources_img_toolbar_charttypes@2x_png</string> </value>
+            <value> <string>onlyoffice_web-apps_apps_documenteditor_main_resources_img_toolbar_charttypes@2x_png</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -109,10 +105,6 @@
         <item>
             <key> <string>version</string> </key>
             <value> <string>001</string> </value>
-        </item>
-        <item>
-            <key> <string>width</string> </key>
-            <value> <int>500</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>

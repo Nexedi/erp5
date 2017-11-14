@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/apps/sdk_async_loader.js</string> </value>
+            <value> <string>onlyoffice/web-apps/apps/sdk_async_loader.js</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_apps_sdk_async_loader_js</string> </value>
+            <value> <string>onlyoffice_web-apps_apps_sdk_async_loader_js</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

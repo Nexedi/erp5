@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/vendor/jquery/jquery.js</string> </value>
+            <value> <string>onlyoffice/web-apps/vendor/jquery/jquery.js</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_vendor_jquery_jquery_js</string> </value>
+            <value> <string>onlyoffice_web-apps_vendor_jquery_jquery_js</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

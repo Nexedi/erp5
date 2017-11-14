@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/apps/common/IrregularStack.js</string> </value>
+            <value> <string>onlyoffice/web-apps/apps/common/IrregularStack.js</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_apps_common_IrregularStack_js</string> </value>
+            <value> <string>onlyoffice_web-apps_apps_common_IrregularStack_js</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

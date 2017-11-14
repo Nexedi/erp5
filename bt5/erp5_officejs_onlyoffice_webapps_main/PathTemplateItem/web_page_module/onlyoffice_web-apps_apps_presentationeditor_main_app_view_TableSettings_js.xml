@@ -66,11 +66,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>onlyoffice/apps/presentationeditor/main/app/view/TableSettings.js</string> </value>
+            <value> <string>onlyoffice/web-apps/apps/presentationeditor/main/app/view/TableSettings.js</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>onlyoffice_apps_presentationeditor_main_app_view_TableSettings_js</string> </value>
+            <value> <string>onlyoffice_web-apps_apps_presentationeditor_main_app_view_TableSettings_js</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
