@@ -28,17 +28,6 @@
 <tal:block tal:define="search_query python: 'title'">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
 </tal:block>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Title 1</td>
-  <td></td>
-</tr>
 
 <!-- Go to the module page -->
 <tr>
@@ -58,6 +47,7 @@
 </tr>
 
 <!-- Wait for gadget to be loaded -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_front.html']</td>
@@ -75,6 +65,7 @@
   <td></td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForTextPresent</td>
   <td>Foo Module</td>
