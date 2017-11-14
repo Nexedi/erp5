@@ -48,6 +48,29 @@ var repair = false;
     });
   }
 
+  function waitForServiceWorkerActive(registration) {
+    var serviceWorker;
+    if (registration.installing) {
+      serviceWorker = registration.installing;
+    } else if (registration.waiting) {
+      serviceWorker = registration.waiting;
+    } else if (registration.active) {
+      serviceWorker = registration.active;
+    }
+    if (serviceWorker.state !== "activated") {
+      RSVP.Promise(function (resolve, reject) {
+        serviceWorker.addEventListener('statechange', function (e) {
+          if (e.target.state === "activated") {
+            resolve();
+          }
+        });
+        RSVP.delay(500).then(function () {
+          reject(new Error("Timeout service worker install"));
+        });
+      });
+    }
+  }
+
   rJS(window)
     .setState({error_amount: 0})
     .ready(function (gadget) {
@@ -174,6 +197,9 @@ var repair = false;
             return navigator.serviceWorker.register(
               "gadget_officejs_bootloader_serviceworker.js"
             );
+          })
+          .push(function (registration) {
+            return waitForServiceWorkerActive(registration);
           })
           .push(undefined, function (error) {
             return gadget.changeState({
