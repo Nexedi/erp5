@@ -1,0 +1,216 @@
+/* === unset === */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+html{
+   width: 100%;
+   height: 100%;
+}
+
+/* === font-size === */
+.ci-letter .ci-letter-header .ci-letter-bar-purporse,
+.ci-letter .ci-letter-head table tr td:last-child span,
+.ci-letter .ci-letter-destination span,
+.ci-letter .ci-letter-body p b i,
+.ci-letter .ci-letter-body p,
+.ci-letter .ci-letter-body {
+  font-size: 18px;
+}
+.ci-letter .ci-letter-header .ci-letter-bar-logo span {
+  font-size: 14px;
+}
+.ci-letter .ci-letter-head .ci-letter-source span,
+.ci-letter .ci-letter-footer table {
+  font-size: 12px;
+}
+
+/* === header === */
+.ci-letter .ci-letter-head-simple-left,
+.ci-letter .ci-letter-head-simple-right {
+  width: 44%;
+  text-align: left;
+  display: inline-block;
+  padding-top: 20mm;
+  vertical-align: middle;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.ci-letter .ci-letter-head-simple-left {
+  padding-left: 18mm;
+}
+.ci-letter .ci-letter-head-simple-left img {
+  height: 20mm;
+  vertical-align: middle;
+  padding-right: 1em;
+}
+.ci-letter .ci-letter-head-simple-right .ci-letter-head-simple-location {
+  padding-left: 4.5em;
+}
+.ci-letter .ci-letter-header .ci-letter-bar-logo {
+  margin-left: 5%;
+}
+.ci-letter .ci-letter-bar-logo {
+  padding: .5em .5em .5em 0;
+}
+.ci-letter .ci-letter-bar-logo {
+  text-align: left;
+  height: 10mm;
+  display: inline-block;
+}
+.ci-letter .ci-letter-bar-logo img,
+.ci-letter .ci-letter-bar-logo span {
+  vertical-align: middle;
+}
+.ci-letter .ci-letter-bar-logo img {
+  height: 8mm;
+  padding: 1mm;
+  -webkit-border-radius: 1mm;
+  border-radius: 1mm;
+}
+.ci-letter .ci-letter-bar-logo span {
+  padding-left: .5em;
+  vertical-align: middle;
+}
+.ci-letter .ci-letter-bar-purporse {
+  float: right;
+  vertical-align: bottom;
+  padding: 4mm 4mm 0 0;
+  margin-right: 5%;
+}
+
+/* === head === */
+.ci-letter .ci-letter-head table {
+  width: 100%;
+  margin-top: 1em;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+.ci-letter .ci-letter-head table tr td:first-child {
+  width: 70%;
+}
+.ci-letter .ci-letter-head table tr td:last-child {
+  width: 30%;
+}
+.ci-letter .ci-letter-head table tr td:nth-child(1) span:first-child {
+  display: inline-block;
+  min-width: 20mm;
+  padding-right: 10mm;
+}
+.ci-letter .ci-letter-head .ci-letter-source {
+  padding-top: 5%;
+}
+.ci-letter .ci-letter-head .ci-letter-source .ci-letter-separator {
+  padding: 0 1mm;
+}
+.ci-letter .ci-letter-head .ci-letter-source + td {
+  vertical-align: top;
+}
+.ci-letter .ci-letter-head .ci-letter-source span:not(.ci-letter-separator) {
+  margin-left: -1mm;
+}
+.ci-letter .ci-letter-destination {
+  padding-top: 3mm;
+}
+.ci-letter .ci-letter-destination span {
+  display: block;
+  margin-left: -1mm;
+  padding-top: 2px;
+  line-height: 20px;
+}
+
+/* === adress-right === */
+.ci-letter .ci-letter-head-right table tr td:nth-child(1) {
+  width: 50%;
+}
+.ci-letter .ci-letter-head-right table tr td:nth-child(2) {
+  width: 48%;
+}
+.ci-letter .ci-letter-head-right table tr td:nth-child(3) {
+  width: .5%;
+}
+.ci-letter .ci-letter-head-right .ci-letter-timestamp,
+.ci-letter .ci-letter-head-right .ci-letter-page{
+  text-align: right;
+}
+.ci-letter .ci-letter-head-right .ci-letter-timestamp > span:last-child,
+.ci-letter .ci-letter-head-right .ci-letter-page > span:last-child {
+  width: 50mm;
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* === footer === */
+.ci-letter .ci-letter-simple-adress {
+  text-align: center;  
+}
+.ci-letter .ci-letter-footer {
+  margin-bottom: 10mm;
+  border-top: 1px solid;
+}
+.ci-letter .ci-letter-footer-simple {
+  border-top: 0 none;
+}
+.ci-letter .ci-letter-footer table {
+  width: 100%;
+  margin-top: .5em;
+}
+.ci-letter .ci-letter-footer table tr {
+  text-align: center;
+}
+.ci-letter .ci-letter-footer {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+.ci-letter .ci-letter-footer table td {
+  margin: 0 auto;
+  vertical-align: top;
+}
+.ci-letter .ci-letter-footer table td div {
+  display: inline-block;
+  text-align: left;
+}
+.ci-letter .ci-letter-footer table td div span {
+  display: inline-block
+}
+.ci-letter .ci-letter-footer table td div .ci-letter-footer-title {
+  width: 35%;
+}
+.ci-letter .ci-letter-footer table td div .ci-letter-footer-title + span {
+  width: 58%;
+}
+
+/* === Body === */
+.ci-letter .ci-letter-body {
+  padding-left: 5%;
+  padding-top: 10%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  text-align: justify;
+  padding-right: 5%;
+}
+.ci-letter .ci-letter-body p b i {
+  font-weight: bold;
+}
+.ci-letter .ci-letter-body p {
+  -moz-text-align-last: left;
+  text-align-last: left;
+  text-align: justify;
+}
+.ci-letter .ci-letter-body p:first-of-type {
+  margin-bottom: 4%;
+  padding-bottom: 2%;
+}
+.ci-letter .ci-letter-body p:nth-last-child(2) {
+  margin-bottom: 0;
+}
+.ci-letter .ci-letter-body p:last-child {
+  margin-top: 0;
+  margin-bottom: 2%;
+}

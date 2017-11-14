@@ -1,0 +1,67 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Generate the leaflet footer
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="leaflet_theme                          python: options.get('leaflet_theme');
+                       leaflet_title                          python: options.get('leaflet_title');
+                       leaflet_language                       python: options.get('leaflet_language');
+                       leaflet_theme_css_font_list            python: options.get('leaflet_theme_css_font_list');
+                       leaflet_theme_css_url                  python: options.get('leaflet_theme_css_url');
+                       leaflet_template_css_url               python: options.get('leaflet_template_css_url');
+                       leaflet_logo_url                       python: options.get('leaflet_logo_url');
+                       leaflet_copyright                      python: options.get('leaflet_copyright');
+                       leaflet_full_reference                 python: options.get('leaflet_full_reference');
+                       leaflet_year                           python: options.get('leaflet_year');
+                       leaflet_contributor_list               python: options.get('leaflet_contributor_list');">
+  <!DOCTYPE html>
+  <html tal:attributes="class                               python: ''.join(['ci-', leaflet_theme, ' ci-', leaflet_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="leaflet_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url leaflet_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href leaflet_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href leaflet_template_css_url" />
+    <script type="text/javascript">
+      function setPlaceholdersWithUrlParameters() {
+        var vars={};
+        var x=window.location.search.substring(1).split('&');
+        for (var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+        var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+        for (var i in x) {
+          var y = document.getElementsByClassName(x[i]);
+          for (var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+        }
+      }
+    </script>
+  </head>
+  <body class="ci-leaflet" onload="setPlaceholdersWithUrlParameters()">
+    <tal:block metal:use-macro="context/WebPage_createLeafletFooter/macros/leaflet_footer" />
+  </body>
+</html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="leaflet_footer">
+    <div class="ci-leaflet-footer">
+	    <div class="ci-leaflet-container-left">
+	      <tal:block tal:condition="python: leaflet_logo_url != ''">
+	      <div class="ci-leaflet-footer-image-wrapper">
+          <img tal:attributes="src python: leaflet_logo_url" alt="Logo" />
+        </div>
+	      </tal:block>
+	    </div>
+	    <div class="ci-leaflet-container-center" tal:content="python: leaflet_full_reference"></div>
+	    <div class="ci-leaflet-container-right">
+	      <span>&copy;</span><span tal:content="python: leaflet_year + ' ' + leaflet_copyright"></span>
+	      <br/>
+	      <span tal:content="python: leaflet_contributor_list"></span> <span class="page"></span> | <span class="topage"></span>
+	    </div>
+	  </div>
+  </tal:block>
+</tal:block>

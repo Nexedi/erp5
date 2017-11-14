@@ -1,0 +1,41 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Generates the leaflet header
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="leaflet_theme                          python: options.get('leaflet_theme');
+                       leaflet_title                          python: options.get('leaflet_title');
+                       leaflet_language                       python: options.get('leaflet_language');
+                       leaflet_theme_css_font_list            python: options.get('leaflet_theme_css_font_list');
+                       leaflet_theme_css_url                  python: options.get('leaflet_theme_css_url');
+                       leaflet_template_css_url               python: options.get('leaflet_template_css_url');
+                       leaflet_organisation                   python: options.get('leaflet_organisation');
+                       leaflet_organisation_claim             python: options.get('leaflet_organisation_claim');">
+  <!DOCTYPE html>
+  <html tal:attributes="class                               python: ''.join(['ci-', leaflet_theme, ' ci-', leaflet_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="leaflet_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url leaflet_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href leaflet_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href leaflet_template_css_url" />
+  </head>
+  <body class="ci-leaflet">
+    <tal:block metal:use-macro="context/WebPage_createLeafletHeader/macros/leaflet_header" />
+  </body>
+</html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="leaflet_header">
+    <div class="ci-leaflet-header">
+	    <p class="ci-leaflet-source-header" tal:content="python: ''.join([leaflet_organisation, ':', leaflet_organisation_claim])"></p>
+	    <p class="ci-leaflet-sheet-header" i18n:translate="" i18n:domain="erp5_ui">Data Sheet</p>
+	  </div>
+  </tal:block>
+</tal:block>

@@ -1,0 +1,162 @@
+/* highlightjs */
+.hljs {
+    display: block;
+    overflow-x: auto;
+    background: #F0F0F0
+}
+.hljs,
+.hljs-subst {
+    color: #444
+}
+.hljs-comment {
+    color: #888888
+}
+.hljs-keyword,
+.hljs-attribute,
+.hljs-selector-tag,
+.hljs-meta-keyword,
+.hljs-doctag,
+.hljs-name {
+    font-weight: bold
+}
+.hljs-type,
+.hljs-string,
+.hljs-number,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-quote,
+.hljs-template-tag,
+.hljs-deletion {
+    color: #880000
+}
+.hljs-title,
+.hljs-section {
+    color: #880000;
+    font-weight: bold
+}
+.hljs-regexp,
+.hljs-symbol,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-link,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+    color: #BC6060
+}
+.hljs-literal {
+    color: #78A960
+}
+.hljs-built_in,
+.hljs-bullet,
+.hljs-code,
+.hljs-addition {
+    color: #397300
+}
+.hljs-meta {
+    color: #1f7199
+}
+.hljs-meta-string {
+    color: #4d99bf
+}
+.hljs-emphasis {
+    font-style: italic
+}
+.hljs-strong {
+    font-weight: bold
+}
+/* line numbers from experimental branch: https://github.com/isagalaev/highlight.js/compare/line-numbers */
+/* line numbers */
+pre {
+  counter-reset: lines;
+}
+pre .line {
+  counter-increment: lines;
+}
+pre .line::before {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
+  -o-user-select: none;
+  user-select: none;
+
+  content: counter(lines);
+  text-align: right;
+  display: inline-block;
+  width: 2em;
+  padding-right: 0.5em;
+  margin-right: 0.5em;
+  color: #BBB;
+  border-right: solid 1px;
+}
+/* hanging indent, removed per request of Vincent *//*
+pre .line {
+  padding-left: 1.5em;
+  text-indent: -2em;
+  display: block;
+}
+
+pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+*/
+/* customized colors */
+/* coloring from prismjs */
+.hljs-comment,
+.hljs-doctag,
+.hljs-meta,
+.hljs-meta-string {
+  color: slategray;
+}
+.hljs-keyword {
+  color: #07a;
+}
+.hljs-attribute,
+.hljs-string,
+.hljs-selector-tag,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #690;
+}
+.hljs-number,
+.hljs-deletion,
+.hljs-symbol,
+.hljs-code {
+  color: #905;
+}
+.hljs-regexp,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-strong {
+  color: #e90;
+}
+.hljs-link {
+  color: #a67f59;
+}
+ /* don't exist */
+.hljs-name,
+.hljs-type,
+.hljs-quote,
+.hljs-template-tag,
+.hljs-title,
+.hljs-section,
+.hljs-literal,
+.hljs-built_in,
+.hljs-addition,
+.hljs-bullet {
+  color: inherit;
+  font-weight: normal;
+}
+/* overriding of line breaks with scrolling,  added per request of Vincent */
+.ci-web .ci-web-page-content pre {
+  overflow-x: scroll;
+}
+.ci-web .ci-web-page-content pre code {
+  white-space: pre;
+}

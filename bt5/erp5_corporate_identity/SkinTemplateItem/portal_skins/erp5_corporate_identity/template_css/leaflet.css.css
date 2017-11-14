@@ -1,0 +1,289 @@
+/* === font size === */
+.ci-leaflet h1,
+.ci-leaflet #left-summary .title,
+.ci-leaflet p.ci-leaflet-source-header,
+.ci-leaflet p.ci-leaflet-sheet-header {
+  font-size: /*42px;*/ 28px; 
+}
+.ci-leaflet h2,
+.ci-leaflet #main-content .summary,
+.ci-leaflet #legalese .bottom {
+  font-size: /*30px;*/ 18px;
+}
+.ci-leaflet p,
+.ci-leaflet li,
+.ci-leaflet div p:last-child {
+  font-size: /*26px;*/ 16px;
+}
+.ci-leaflet #left-summary li {
+  font-size: /*24px;*/ 16px;
+}
+.ci-leaflet-footer div {
+  font-size: /*18px;*/ 14px;
+}
+.ci-leaflet #legalese p,
+.ci-leaflet #legalese span,
+.ci-leaflet #left-summary .excerpt,
+.ci-leaflet #main-content .left-icon .excerpt {
+  font-size: /*20px;*/ 14px;
+}
+
+/* === font style === */
+.ci-leaflet #main-content .summary {
+  font-style: italic;
+}
+
+/* === pre set === */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+html{
+   width: 100%;
+   height: 100%;
+}
+
+
+/* === header === */
+.ci-leaflet .ci-leaflet-header {
+  position: static;
+  width: 100%;
+  min-height: 52mm;
+  text-align: right;
+}
+.ci-leaflet .ci-leaflet-header {
+  vertical-align: middle;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 5mm 10mm 5mm 5mm;
+}
+.ci-leaflet .ci-leaflet-header p {
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}
+
+/* ===== footer =====  */
+.ci-leaflet .ci-leaflet-footer {
+  position: static;
+}
+.ci-leaflet .ci-leaflet-footer .ci-leaflet-container-left,
+.ci-leaflet .ci-leaflet-footer .ci-leaflet-container-center,
+.ci-leaflet .ci-leaflet-footer .ci-leaflet-container-right {
+  display: inline-block;
+  vertical-align: middle;
+  width: 33%;
+  text-align: center;
+}
+@media(max-width: 720px) {
+  .ci-leaflet .ci-leaflet-footer .ci-leaflet-container-left,
+  .ci-leaflet .ci-leaflet-footer .ci-leaflet-container-center,
+  .ci-leaflet .ci-leaflet-footer .ci-leaflet-container-right{
+    width: 31%;
+  }
+}
+.ci-leaflet-footer .ci-leaflet-footer-image-wrapper {
+  min-height: 20mm;
+  display: inline;
+  vertical-align: middle;
+}
+.ci-leaflet-footer .ci-leaflet-footer-image-wrapper img {
+  display: inline-block;
+  max-width: 100px;
+  height: auto;
+  max-height: 50px;
+}
+/*
+.ci-leaflet .ci-leaflet-container-left img {
+  max-height: 2.5em;
+  min-width: initial;
+}
+*/
+.ci-leaflet .ci-leaflet-container-left {
+  text-align: left;
+}
+.ci-leaflet .ci-leaflet-container-right {
+  text-align: right;
+}
+
+
+/* ===== body =====  */
+.ci-leaflet #main-content img {
+  display: block;
+}
+@media(max-width: 720px) {
+  .ci-leaflet .ci-leaflet-main {
+    padding: 0 1em;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  }
+}
+.ci-leaflet h1 {
+  text-align: left;
+  padding-left: 33% /* width left-summary + padding main-content */;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+@media(max-width: 720px) {
+  .ci-leaflet h1 {
+    width: 100%;
+    text-align: center;
+    padding: 0;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    display: block;
+  }
+}
+/* ----- legalese ----- */
+.ci-leaflet #legalese {
+  width: 32%;
+  vertical-align: bottom;
+  display: inline-block;
+  padding: 0 2em;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  text-align: justify;
+  text-align-last: left;
+}
+.ci-leaflet #legalese .bottom img {
+  max-height: 1em;
+  vertical-align: middle;
+}
+@media(max-width: 720px) {
+  .ci-leaflet #legalese {
+    width: 100%;
+    display: block;
+    float: right;
+  }
+}
+/* ----- summary ----- */
+.ci-leaflet #left-summary {
+  width: 32%;
+  vertical-align: top;
+  display: inline-block;
+  padding-left: 3em;
+  padding-right: 3em;
+  margin-top: -4em;
+  margin-bottom: 3em;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+}
+@media(max-width: 720px) {
+  .ci-leaflet #left-summary {
+    display: block;
+    width: 100%;
+    margin-top: 0;
+    position: static;
+    left: auto;
+  }
+}
+.ci-leaflet #left-summary ul {
+  padding-bottom: 1.5em;
+  border-bottom: 2px solid #a1a1a1;
+  list-style-position: outside;
+  padding-left: 0;
+  list-style-type: square; /* inconsistent text-document uses custom circles! */
+}
+.ci-leaflet #left-summary ul li {
+  margin: .5em 0;
+}
+.ci-leaflet #left-summary .title {
+  padding-top: 1em;
+  border-top: 2px solid #a1a1a1;
+}
+
+
+/* ----- content ----- */
+.ci-leaflet #main-content {
+  display: inline-block;
+  vertical-align: bottom;
+}
+@media(max-width: 720px) {
+  .ci-leaflet #main-content {
+    display: block;
+    width: 100%;
+  } 
+}
+
+/* === fullwidth === */
+.ci-leaflet .ci-leaflet-body-fullwidth #left-summary,
+.ci-leaflet .ci-leaflet-body-fullwidth #legalese {
+  display: none;
+}
+.ci-leaflet .ci-leaflet-body-fullwidth #main-content {
+  width: auto;
+  padding: 15px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* ===== logo =====  */
+.ci-leaflet #left-summary:before {
+  content: "";
+  display: block;
+  background-size: 60%;
+  background-position: center;
+  width: 100%;
+  height: 18em;
+}
+.ci-leaflet #main-content {
+  width: 63%;
+  display: inline-block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-right: 0;
+  padding-left: 1%; /* to align with <h1>*/
+  text-align: justify;
+  text-align-last: left;
+  vertical-align: top;
+}
+.ci-leaflet #main-content .excerpt {
+  text-align: center;
+  text-align-last: center;
+}
+@media(max-width: 720px) {
+  .ci-leaflet #main-content {
+    display: block;
+    width: 100%;
+  }
+}
+/* WARNING: copy these before modifying because changes seem to
+   resize all fonts in the whole document */
+/*
+.ci-leaflet #main-content > .left-icon {
+  position: absolute;
+  margin-top: 20mm;
+  margin-bottom: 10mm;
+  width: 30%;
+  left: 10mm;
+  text-align: center;
+  padding-right: 1%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+*/
+/* just place your images correctly... *//*
+.ci-leaflet #main-content > .left-icon ~ .left-icon {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+*/
+.ci-leaflet #main-content .left-icon img {
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 1em;
+}

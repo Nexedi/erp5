@@ -1,0 +1,47 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Generate leaflet content
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="leaflet_theme                          python: options.get('leaflet_theme');
+                       leaflet_title                          python: options.get('leaflet_title');
+                       leaflet_language                       python: options.get('leaflet_language');
+                       leaflet_theme_css_font_list            python: options.get('leaflet_theme_css_font_list');
+                       leaflet_theme_css_url                  python: options.get('leaflet_theme_css_url');
+                       leaflet_template_css_url               python: options.get('leaflet_template_css_url');
+                       leaflet_display_side                   python: options.get('leaflet_display_side');
+                       leaflet_content                        python: options.get('leaflet_content');
+                       leaflet_css                            python: options.get('leaflet_css');">
+  <!DOCTYPE html>
+  <html tal:attributes="class                               python: ''.join(['ci-', leaflet_theme, ' ci-', leaflet_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="leaflet_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url leaflet_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href leaflet_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href leaflet_template_css_url" />
+    <tal:block tal:condition="python: leaflet_css is not None">
+      <style type="text/css" tal:content="python: leaflet_css"></style>
+    </tal:block>
+  </head>
+  <body class="ci-leaflet">
+    <tal:block metal:use-macro="context/WebPage_createLeafletContent/macros/leaflet_content" />
+  </body>
+</html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="leaflet_content">
+    <div class="ci-two-page-main">
+        <h1 tal:content="python: leaflet_title"></h1>
+        <div tal:attributes="class python: 'ci-leaflet-body ' + ('' if leaflet_display_side else 'ci-leaflet-body-fullwidth')">
+          <tal:block tal:content="structure leaflet_content"></tal:block>
+        </div>
+      </div>
+  </tal:block>
+</tal:block>

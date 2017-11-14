@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Embedded File" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts11195493.27</string> </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>2e19efd5f43dfcebdbd4477fc1307bd1</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">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
+YII=</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>144</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default_image</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Embedded File</string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2624</int> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>144</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

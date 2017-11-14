@@ -1,0 +1,76 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Generate press release about section
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="release_word_count                  python: options['release_word_count'];
+                       release_character_count             python: options['release_character_count'];
+                       release_relative_url                python: options['release_relative_url'];
+                       release_organisation_list           python: options['release_organisation_list'];
+                       release_contributor_list            python: options['release_contributor_list'];">
+  <div class="ci-press-release-about">
+    <div class="ci-press-release-summary">
+      (<span tal:content="python: release_word_count"></span>&nbsp;<span i18n:translate="" i18n:domain="erp5_ui">Words</span>,
+       <span tal:content="python: release_character_count"></span>&nbsp;<span i18n:translate="" i18n:domain="erp5_ui">Characters</span>)
+    </div>
+    <h2 class="ci-press-release-subheader" i18n:translate="" i18n:domain="erp5_ui">Permanent Link</h2>
+    <ul class="ci-press-release-contact-list">
+      <li><span class="ci-press-release-permalink"><a tal:attributes="href python: release_relative_url;" tal:content="python: release_relative_url"></a></span></li>
+    </ul>
+    <h2 class="ci-press-release-subheader" i18n:translate="" i18n:domain="erp5_ui">Contact</h2>
+    <tal:block tal:condition="python: len(release_contributor_list)">
+      <div class="ci-press-release-author">
+        <ul class="ci-press-release-contact-list">
+        <tal:block tal:repeat="contributor release_contributor_list">
+          <li>
+            <span tal:content="python: contributor.get('name')"></span>&nbsp;-&nbsp;
+            <span i18n:translate="" i18n:domain="erp5_ui">Telephone:</span>&nbsp;<span tal:content="python: contributor.get('phone')"></span>&nbsp;-&nbsp;
+            <span i18n:translate="" i18n:domain="erp5_ui">Email:</span>&nbsp;
+            <a tal:attributes="mailto python: contributor.get('email')" tal:content="python: contributor.get('email')"></a>
+          </li>
+        </tal:block>
+        </ul>
+      </div>
+    </tal:block>
+    <tal:block tal:repeat="organisation release_organisation_list">
+      <h2 class="ci-press-release-subheader"><span i18n:translate="" i18n:domain="erp5_ui">About</span>&nbsp;<span tal:content="python: organisation.get('organisation_title')"></span></h2>
+      <span class="ci-press-release-about-description" tal:content="python: organisation.get('description')"></span>
+      <tal:block tal:condition="python: organisation.get('website') != ''">
+        &nbsp;<span i18n:translate="" i18n:domain="erp5_ui">More information on</span>:&nbsp;<a tal:content="python: organisation.get('website')" tal:attributes="href python: organisation.get('website')"></a>
+      </tal:block>
+      <div class="ci-press-release-company-info">
+        <div class="ci-press-release-container ci-press-release-container-left">
+          <tal:block tal:condition="python: organisation.get('logo_url') is not ''">
+            <img tal:attributes="src python: ''.join([organisation.get('logo_url'), '?format=png'])" alt="" />
+          </tal:block>
+        </div>
+        <div class="ci-press-release-container ci-press-release-container-center">
+          <span tal:content="python: organisation.get('organisation_title')"></span><br />
+          <span tal:content="python: organisation.get('address')"></span><br />
+          <span tal:content="python: ''.join([organisation.get('postal_code'), ' ', organisation.get('city')])"></span><br />
+          <span tal:content="python: organisation.get('country')"></span><br />
+        </div>
+        <div class="ci-press-release-container ci-press-release-container-right">
+          <span tal:content="python: organisation.get('email')"></span><br />
+          <span tal:content="python: organisation.get('phone')"></span>
+        </div>
+      </div>
+      <tal:block tal:define="representative_list            python: organisation.get('representative_list');">
+        <tal:block tal:condition="python: representative_list is not None">
+          <ul class="ci-press-release-contact-list">
+            <tal:block tal:repeat="representative representative_list">
+              <li>
+                <span tal:content="python: representative.get('name')"></span>&nbsp;-&nbsp;
+                <span i18n:translate="" i18n:domain="erp5_ui">Telephone:</span>&nbsp;<span tal:content="python: representative.get('phone')"></span>&nbsp;-&nbsp;
+                <span i18n:translate="" i18n:domain="erp5_ui">Email:</span>&nbsp;
+                <a tal:attributes="mailto python: representative.get('email')" tal:content="python: representative.get('email')"></a>
+              </li>
+            </tal:block>
+          </ul>
+        </tal:block>
+      </tal:block>
+    </tal:block>
+  </div>
+</tal:block>

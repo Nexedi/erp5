@@ -1,0 +1,265 @@
+/* === pre set === */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+html{
+   width: 100%;
+   height: 100%;
+}
+
+/* === font size === */
+.ci-leaflet h1,
+.ci-leaflet #left-summary .title,
+.ci-leaflet p.ci-leaflet-source-header,
+.ci-leaflet p.ci-leaflet-sheet-header {
+  font-size: 28px; 
+}
+.ci-leaflet h2,
+.ci-leaflet #main-content .summary,
+.ci-leaflet #legalese .bottom {
+  font-size: 18px;
+}
+.ci-leaflet p,
+.ci-leaflet li,
+.ci-leaflet div p:last-child {
+  font-size: 16px;
+}
+.ci-leaflet #left-summary li {
+  font-size: 16px;
+}
+.ci-leaflet-footer div {
+  font-size: 14px;
+}
+.ci-leaflet #legalese p,
+.ci-leaflet #legalese span,
+.ci-leaflet #left-summary .excerpt,
+.ci-leaflet #main-content .left-icon .excerpt {
+  font-size: 11px;
+}
+/* === font style === */
+.ci-leaflet #main-content .summary {
+  font-style: italic;
+}
+
+/* === page breaks === */
+.ci-leaflet img,
+.ci-leaflet table {
+  page-break-inside: avoid;
+}
+.ci-leaflet .ci-leaflet-main p,
+.ci-leaflet .ci-leaflet-main h2 {
+  page-break-inside: avoid;
+}
+
+/* === header === */
+.ci-leaflet .ci-leaflet-header {
+  position: static;
+  width: 100%;
+  min-height: 52mm;
+  text-align: right;
+}
+.ci-leaflet .ci-leaflet-header {
+  vertical-align: middle;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 5mm 10mm 5mm 5mm;
+}
+.ci-leaflet .ci-leaflet-header p {
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}
+
+
+
+/* ===== footer =====  */
+.ci-leaflet .ci-leaflet-footer {
+  position: static;
+}
+.ci-leaflet .ci-leaflet-footer .ci-leaflet-container-left,
+.ci-leaflet .ci-leaflet-footer .ci-leaflet-container-center,
+.ci-leaflet .ci-leaflet-footer .ci-leaflet-container-right {
+  display: inline-block;
+  vertical-align: middle;
+  width: 33%;
+  text-align: center;
+}
+.ci-leaflet-footer .ci-leaflet-footer-image-wrapper {
+  min-height: 20mm;
+  vertical-align: middle;
+  width: 100%;
+  line-height: 20mm;
+}
+.ci-leaflet-footer .ci-leaflet-footer-image-wrapper img {
+  max-width: 28mm;
+  height: auto;
+  max-height: 14mm;
+  vertical-align: middle;
+}
+
+.ci-leaflet .ci-leaflet-container-left {
+  text-align: left;
+}
+.ci-leaflet .ci-leaflet-container-right {
+  text-align: right;
+}
+
+
+/* ===== content =====  */
+.ci-leaflet .ci-leaflet-main {
+  padding-left: 20mm;
+  padding-right: 20mm;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.ci-leaflet h1 {
+  text-align: left;
+  padding-left: 33% /* width left-summary + padding main-content */;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.ci-leaflet #left-summary {
+  width: 28%;
+  position: absolute;
+  left: 5mm;
+  top: 0;
+  padding-left: 10mm;
+  padding-right: 10mm;
+  margin-top: 10mm;
+  margin-bottom: 10mm;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.ci-leaflet #left-summary ul {
+  padding-bottom: 6mm;
+  border-bottom: 2px solid #a1a1a1;
+  list-style-position: outside;
+  padding-left: 0;
+  list-style-type: square; /* inconsistent text-document uses custom circles! */
+}
+.ci-leaflet #left-summary ul li {
+  margin: 1mm 0;
+}
+.ci-leaflet #left-summary .title {
+  padding-top: 2mm;
+  border-top: 2px solid #a1a1a1;
+} 
+
+/* === fullwidth === */
+.ci-leaflet .ci-leaflet-body-fullwidth #left-summary,
+.ci-leaflet .ci-leaflet-body-fullwidth #legalese {
+  display: none;
+}
+.ci-leaflet .ci-leaflet-body-fullwidth #main-content {
+  width: auto;
+  padding: 15px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.ci-leaflet .ci-leaflet-body-fullwidth #main-content .left-icon {
+  position: static;
+  margin: 0 auto;
+  padding: 0;
+  width: 70%;
+  text-align: center;
+}
+
+/* ===== logo =====  */
+.ci-leaflet #left-summary:before {
+  content: "";
+  display: block;
+  background-size: 60%;
+  background-position: center;
+  width: 100%;
+  height: 50mm;
+}
+.ci-leaflet #main-content {
+  width: 63%;
+  display: inline-block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-right: 0;
+  padding-left: 1%; /* to align with <h1>*/
+  text-align: justify;
+  text-align-last: left;
+  vertical-align: bottom;
+  min-height: 552mm;
+}
+/* WARNING: copy these before modifying because changes seem to
+   resize all fonts in the whole document */
+.ci-leaflet #main-content > .left-icon {
+  position: absolute;
+  margin-top: 0;
+  margin-bottom: 0;
+  width: 28%;
+  left: 5mm;
+  text-align: center;
+  padding-right: 1%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.ci-leaflet #main-content .left-icon {
+  padding-top: 12%;
+}
+.ci-leaflet #main-content .left-icon ~ .left-icon {
+  padding-top: 0%;
+}
+.ci-leaflet #main-content .left-icon img {
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 2mm;
+}
+.ci-leaflet #main-content .left-icon .excerpt {
+  line-height: 14px;
+}
+.ci-leaflet #main-content p img {
+  max-width: 100%;
+  display: block;
+}
+
+/* === legalse === */
+.ci-leaflet #legalese {
+  width: 28%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: bottom;
+  margin:0;
+  padding: 1em;
+  text-align: left;
+  text-align: justify;
+  text-align-last: left;
+}
+.ci-leaflet #legalese .top {
+  border-top: 2px solid #a1a1a1;
+  padding-top: 4mm;
+}
+.ci-leaflet #legalese .bottom {
+  margin: 0;
+  padding: 3mm 0;
+  padding-left: 12mm;
+  display:block;
+  border-bottom: 2px solid #a1a1a1;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.ci-leaflet #legalese .bottom img {
+  max-height: 1em;
+  vertical-align: middle;
+}

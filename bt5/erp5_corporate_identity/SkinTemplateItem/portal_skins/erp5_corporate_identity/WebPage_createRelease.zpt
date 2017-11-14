@@ -1,0 +1,60 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Generates the complete press release
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="release_theme                          python: options.get('release_theme');
+                       release_title                          python: options.get('release_title');
+                       release_language                       python: options.get('release_language');
+                       release_theme_css_font_list            python: options.get('release_theme_css_font_list');
+                       release_theme_css_url                  python: options.get('release_theme_css_url');
+                       release_template_css_url               python: options.get('release_template_css_url');
+                       release_full_reference                 python: options.get('release_full_reference');
+                       release_theme_logo_url                 python: options.get('release_theme_logo_url');
+                       release_css                            python: options.get('release_css');
+                       release_creation_year                  python: options.get('release_creation_year');
+                       release_copyright                      python: options.get('release_copyright');
+                       release_contributor_list               python: options.get('release_contributor_list');
+                       release_description                    python: options.get('release_description');
+                       release_short_title                    python: options.get('release_short_title');
+                       release_organisation                   python: options.get('release_organisation');
+                       release_organisation_logo              python: options.get('release_organisation_logo');
+                       release_organisation_claim             python: options.get('release_organisation_claim');
+                       release_content                        python: options.get('release_content');">
+
+  <!DOCTYPE html>
+  <html tal:attributes="class                               python: ''.join(['ci-', release_theme, ' ci-', release_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="release_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url release_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href release_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href release_template_css_url" />
+    <tal:block tal:condition="python: release_css is not None">
+      <style type="text/css" tal:content="python: release_css"></style>
+    </tal:block>
+    <script type="text/javascript">
+      function setPlaceholdersWithUrlParameters() {
+        var vars={};
+        var x=window.location.search.substring(1).split('&');
+        for (var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+        var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+        for (var i in x) {
+          var y = document.getElementsByClassName(x[i]);
+          for (var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+        }
+      }
+  </script>
+  </head>
+  <body class="ci-press-release" onload="setPlaceholdersWithUrlParameters()">
+    <tal:block metal:use-macro="context/WebPage_createReleaseHeader/macros/release_header" />
+    <tal:block metal:use-macro="context/WebPage_createReleaseContent/macros/release_content" />
+    <tal:block metal:use-macro="context/WebPage_createReleaseFooter/macros/release_footer" />
+  </body>
+</html>
+</tal:block>
