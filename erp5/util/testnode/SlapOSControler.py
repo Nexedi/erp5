@@ -30,39 +30,13 @@ import slapos.slap
 import subprocess
 import time
 import xml_marshaller
-import shutil
 import sys
-import glob
 import argparse
-import json
 from slapos import client
+from .Utils import createFolder
 
-MAX_PARTIONS = 10
+MAX_PARTITIONS = 10
 MAX_SR_RETRIES = 3
-
-def createFolder(folder, clean=False):
-  if clean and os.path.exists(folder):
-    shutil.rmtree(folder)
-  if not(os.path.exists(folder)):
-    os.mkdir(folder)
-
-def createFolders(folder):
-  if not(os.path.exists(folder)):
-    os.makedirs(folder)
-
-def isDir(folder):
-  return os.path.isdir(folder)
-
-def createFile(path, mode, content):
-  f = open(path, mode)
-  if os.path.exists(path):
-    f.write(content)
-    f.close()
-  else:
-    # error
-    pass
-
-
 
 class SlapOSControler(object):
 
@@ -91,9 +65,12 @@ class SlapOSControler(object):
                                   slapos_url,
                                   slapos_account_certificate_path,
                                   slapos_account_key_path)
-    createFile(slapos_account_key_path, "w", key)
-    createFile(slapos_account_certificate_path, "w", certificate)
-    createFile(configuration_file_path, "w", configuration_file_value)
+    with open(slapos_account_key_path, "w") as f:
+      f.write(key)
+    with open(slapos_account_certificate_path, "w") as f:
+      f.write(certificate)
+    with open(configuration_file_path, "w") as f:
+      f.write(configuration_file_value)
     self.configuration_file_path = configuration_file_path
     return slapos_account_key_path, slapos_account_certificate_path, configuration_file_path
 
@@ -115,26 +92,17 @@ class SlapOSControler(object):
       try:
         local = client.init(config)
         local['supply'](software_url, computer_guid=computer_id, state=state)
-        self.log('SlapOSControler : supply %s %s %s' %(software_url, computer_id, state))
-      except:
-        self.log("SlapOSControler.supply, \
-                 exception in registerOpenOrder", exc_info=sys.exc_info())
+        self.log('SlapOSControler : supply %s %s %s', software_url, computer_id, state)
+      except Exception:
+        self.log("SlapOSControler.supply", exc_info=sys.exc_info())
         raise ValueError("Unable to supply (or remove)")
     else:
       raise ValueError("Configuration file not found.")
 
-  def destroy(self, software_url, computer_id):
-    """
-    Request Deletetion of a software release on a specific node
-    Ex :
-    my_controler.destroy('kvm.cfg', 'COMP-726')
-    """
-    self.supply(self, software_url, computer_id, state="destroyed")
-    
   def getInstanceRequestedState(self, reference):
     try:
       return self.instance_config[reference]['requested_state']
-    except:
+    except Exception:
       raise ValueError("Instance '%s' not exist" %self.instance_config[reference])
       
   def request(self, reference, software_url, software_type=None,
@@ -182,11 +150,11 @@ class SlapOSControler(object):
         self.instance_config[reference]['partition'] = partition
         if state == 'destroyed':
           del self.instance_config[reference]
-        if state == 'started':
-          self.log('Instance started with configuration: %s' %str(software_configuration))
-      except:
-        self.log("SlapOSControler.request, \
-              exception in registerOpenOrder", exc_info=sys.exc_info())
+        elif state == 'started':
+          self.log('Instance started with configuration: %s',
+                   software_configuration)
+      except Exception:
+        self.log("SlapOSControler.request", exc_info=sys.exc_info())
         raise ValueError("Unable to do this request")
     else:
       raise ValueError("Configuration file not found.")
@@ -204,31 +172,30 @@ class SlapOSControler(object):
     self.log('SlapOSControler : delete instance')
     try:
       self._requestSpecificState(reference, 'destroyed')
-    except:
-      raise ValueError("Can't delete instance '%s' (instance may not been created?)" %reference)
+    except Exception:
+      raise ValueError("Can't delete instance %r (instance not created?)" % reference)
     
   def stopInstance(self, reference):
     self.log('SlapOSControler : stop instance')
     try:
       self._requestSpecificState(reference, 'stopped')
-    except:
-      raise ValueError("Can't stop instance '%s' (instance may not been created?)" %reference)
+    except Exception:
+      raise ValueError("Can't stop instance %r (instance not created?)" % reference)
   
   def startInstance(self, reference):
     self.log('SlapOSControler : start instance')
     try:
       self._requestSpecificState(reference, 'started')
-    except:
-      raise ValueError("Can't start instance '%s' (instance may not been created?)" %reference)
+    except Exception:
+      raise ValueError("Can't start instance %r (instance not created?)" % reference)
 
   def updateInstanceXML(self, reference, software_configuration):
     """
     Update the XML configuration of an instance
     # Request same instance with different parameters.
     """
-    self.log('SlapOSControler : updateInstanceXML')
     self.log('SlapOSControler : updateInstanceXML will request same'
-             'instance with new XML configuration...')
+             ' instance with new XML configuration...')
 
     try:
       self.request(reference,
@@ -238,32 +205,28 @@ class SlapOSControler(object):
         self.instance_config[reference]['computer_guid'],
         state='started'
       )
-    except:
+    except Exception:
       raise ValueError("Can't update instance '%s' (may not exist?)" %reference)
 
   def _resetSoftware(self):
-    self.log('SlapOSControler : GOING TO RESET ALL SOFTWARE : %r' %
-             (self.software_root,))
-    if os.path.exists(self.software_root):
-      shutil.rmtree(self.software_root)
-    os.mkdir(self.software_root)
-    os.chmod(self.software_root, 0750)
+    self.log('SlapOSControler : GOING TO RESET ALL SOFTWARE : %r',
+             self.software_root)
+    createFolder(self.software_root, True)
 
   def initializeSlapOSControler(self, slapproxy_log=None, process_manager=None,
         reset_software=False, software_path_list=None):
     self.process_manager = process_manager
     self.software_path_list = software_path_list
-    self.log('SlapOSControler, initialize, reset_software: %r' % reset_software)
+    self.log('SlapOSControler, initialize, reset_software: %r', reset_software)
     config = self.config
     slapos_config_dict = self.config.copy()
     slapos_config_dict.update(software_root=self.software_root,
                               instance_root=self.instance_root,
                               proxy_database=self.proxy_database)
-    open(self.slapos_config, 'w').write(pkg_resources.resource_string(
+    with open(self.slapos_config, 'w') as f:
+      f.write(pkg_resources.resource_string(
          'erp5.util.testnode', 'template/slapos.cfg.in') %
            slapos_config_dict)
-    createFolder(self.software_root)
-    createFolder(self.instance_root)
     # By erasing everything, we make sure that we are able to "update"
     # existing profiles. This is quite dirty way to do updates...
     if os.path.exists(self.proxy_database):
@@ -282,32 +245,29 @@ class SlapOSControler(object):
     # connections
     time.sleep(10)
     try:
-      slap = slapos.slap.slap()
-      self.slap = slap
-      self.slap.initializeConnection(config['master_url'])
+      slap = self.slap = slapos.slap.slap()
+      slap.initializeConnection(config['master_url'])
       # register software profile
       for path in self.software_path_list:
         slap.registerSupply().supply(
             path,
             computer_guid=config['computer_id'])
       computer = slap.registerComputer(config['computer_id'])
-    except:
-        self.log("SlapOSControler.initializeSlapOSControler, \
-                 exception in registerSupply", exc_info=sys.exc_info())
+    except Exception:
+        self.log("SlapOSControler.initializeSlapOSControler",
+                 exc_info=sys.exc_info())
         raise ValueError("Unable to registerSupply")
     # Reset all previously generated software if needed
     if reset_software:
       self._resetSoftware()
+    else:
+      createFolder(self.software_root)
     instance_root = self.instance_root
-    if os.path.exists(instance_root):
-      # delete old paritions which may exists in order to not get its data
-      # (ex. MySQL db content) from previous testnode's runs
-      # In order to be able to change partition naming scheme, do this at
-      # instance_root level (such change happened already, causing problems).
-      shutil.rmtree(instance_root)
-    if not(os.path.exists(instance_root)):
-      os.mkdir(instance_root)
-    for i in range(0, MAX_PARTIONS):
+    # Delete any existing partition in order to not get its data (ex.
+    # MySQL DB content) from previous runs. To support changes of partition
+    # naming scheme (which already happened), do this at instance_root level.
+    createFolder(instance_root, True)
+    for i in xrange(MAX_PARTITIONS):
       # create partition and configure computer
       # XXX: at the moment all partitions do share same virtual interface address
       # this is not a problem as usually all services are on different ports
@@ -336,17 +296,17 @@ class SlapOSControler(object):
 
   def runSoftwareRelease(self, config, environment, **kw):
     self.log("SlapOSControler.runSoftwareRelease")
-    cpu_count = os.sysconf("SC_NPROCESSORS_ONLN")
-    os.putenv('MAKEFLAGS', '-j%s' % cpu_count)
-    os.putenv('NPY_NUM_BUILD_JOBS', '%s' % cpu_count)
-    os.putenv('BUNDLE_JOBS', '%s' % cpu_count)
+    cpu_count = str(os.sysconf("SC_NPROCESSORS_ONLN"))
+    os.environ['MAKEFLAGS'] = '-j' + cpu_count
+    os.environ['NPY_NUM_BUILD_JOBS'] = cpu_count
+    os.environ['BUNDLE_JOBS'] = cpu_count
     os.environ['PATH'] = environment['PATH']
     # a SR may fail for number of reasons (incl. network failures)
     # so be tolerant and run it a few times before giving up
-    for runs in range(0, MAX_SR_RETRIES):
+    for _ in xrange(MAX_SR_RETRIES):
       status_dict = self.spawn(config['slapos_binary'],
                  'node', 'software', '--all', 
-                 '--pidfile', '%s/software.pid' % self.software_root,
+                 '--pidfile', os.path.join(self.software_root, 'slapos-node.pid'),
                  '--cfg', self.slapos_config, raise_error_if_fail=False,
                  log_prefix='slapgrid_sr', get_output=False)
       if status_dict['status_code'] == 0:
@@ -355,32 +315,32 @@ class SlapOSControler(object):
 
   def runComputerPartition(self, config, environment,
                            stdout=None, stderr=None, cluster_configuration=None, **kw):
-    self.log("SlapOSControler.runComputerPartition with cluster_config: %r" % (cluster_configuration,))
+    self.log("SlapOSControler.runComputerPartition with cluster_config: %r",
+             cluster_configuration)
     for path in self.software_path_list:
       try:
         self.slap.registerOpenOrder().request(path,
           partition_reference='testing partition %s' % \
             self.software_path_list.index(path),
           partition_parameter_kw=cluster_configuration)
-      except:
-        self.log("SlapOSControler.runComputerPartition, \
-                 exception in registerOpenOrder", exc_info=sys.exc_info())
+      except Exception:
+        self.log("SlapOSControler.runComputerPartition", exc_info=sys.exc_info())
         raise ValueError("Unable to registerOpenOrder")
 
     # try to run for all partitions as one partition may in theory request another one 
     # this not always is required but curently no way to know how "tree" of partitions
     # may "expand"
-    sleep_time = 0
-    for runs in range(0, MAX_PARTIONS):
+    for _ in xrange(MAX_PARTITIONS):
       status_dict = self.spawn(config['slapos_binary'], 'node', 'instance', 
-                 '--pidfile', '%s/instance.pid' % self.software_root,
+                 '--pidfile', os.path.join(self.instance_root, 'slapos-node.pid'),
                  '--cfg', self.slapos_config, raise_error_if_fail=False,
                  log_prefix='slapgrid_cp', get_output=False)
-      self.log('slapgrid_cp status_dict : %r' % (status_dict,))
-      if status_dict['status_code'] in (0,):
+      self.log('slapgrid_cp status_dict : %r', status_dict)
+      if not status_dict['status_code']:
         break
-    # some hack to handle promise issues (should be only one of the two
-    # codes, but depending on slapos versions, we have inconsistent status
-    if status_dict['status_code'] in (1,2):
-      status_dict['status_code'] = 0
+    else:
+      # some hack to handle promise issues (should be only one of the two
+      # codes, but depending on slapos versions, we have inconsistent status
+      if status_dict['status_code'] in (1,2):
+        status_dict['status_code'] = 0
     return status_dict

@@ -24,28 +24,22 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from datetime import datetime,timedelta
 import os
-import subprocess
-import sys
-import time
 import glob
-import SlapOSControler
 import json
-import time
-import shutil
-import logging
-import string
-import random
-from ProcessManager import SubprocessError, ProcessManager, CancellationError
-from subprocess import CalledProcessError
-from NodeTestSuite import SlapOSInstance
-from Updater import Updater
-from Utils import dealShebang
-from erp5.util import taskdistribution
+from .ProcessManager import SubprocessError
+from .SlapOSControler import SlapOSControler
+from .Utils import createFolder
 from slapos.grid.utils import md5digest
 
-class UnitTestRunner():
+def dealShebang(run_test_suite_path):
+  with open(run_test_suite_path) as f:
+    if f.read(2) == '#!':
+      return f.readline().split(None, 1)
+  return []
+
+class UnitTestRunner(object):
+
   def __init__(self, testnode):
     self.testnode = testnode
 
@@ -53,12 +47,11 @@ class UnitTestRunner():
     """
     Create a SlapOSControler
     """
-    return SlapOSControler.SlapOSControler(
+    return SlapOSControler(
                working_directory,
                self.testnode.config,
                self.testnode.log)
  
-
   def _prepareSlapOS(self, working_directory, slapos_instance, log,
           create_partition=1, software_path_list=None, **kw):
     """
@@ -66,11 +59,11 @@ class UnitTestRunner():
     """
     slapproxy_log = os.path.join(self.testnode.config['log_directory'],
                                   'slapproxy.log')
-    log('Configured slapproxy log to %r' % slapproxy_log)
+    log('Configured slapproxy log to %r', slapproxy_log)
     reset_software = slapos_instance.retry_software_count > 10
     if reset_software:
       slapos_instance.retry_software_count = 0
-    log('testnode, retry_software_count : %r' % \
+    log('testnode, retry_software_count : %r',
              slapos_instance.retry_software_count)
 
     # XXX Create a new controler because working_directory can be
@@ -108,26 +101,22 @@ class UnitTestRunner():
     """
     # report-url, report-project and suite-url are required to seleniumrunner
     # instance. This is a hack which must be removed.
-    cluster_configuration = {}
     config = self.testnode.config
-    cluster_configuration['report-url'] = config.get("report-url", "")
-    cluster_configuration['report-project'] = config.get("report-project", "")
-    cluster_configuration['suite-url'] = config.get("suite-url", "")
-    return self._prepareSlapOS(self.testnode.config['slapos_directory'],
+    return self._prepareSlapOS(config['slapos_directory'],
               test_node_slapos, self.testnode.log, create_partition=0,
-              software_path_list=self.testnode.config.get("software_list"),
-              cluster_configuration=cluster_configuration
-              )
+              software_path_list=config.get("software_list"),
+              cluster_configuration={
+                'report-url': config.get("report-url", ""),
+                'report-project': config.get("report-project", ""),
+                'suite-url': config.get("suite-url", ""),
+              })
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
     Build softwares needed by testsuites
     """
-    log = self.testnode.log
-    if log is None:
-      log = self.testnode.log
     return self._prepareSlapOS(node_test_suite.working_directory,
-              node_test_suite, log,
+              node_test_suite, self.testnode.log,
               software_path_list=[node_test_suite.custom_profile_path],
               cluster_configuration={'_': json.dumps(node_test_suite.cluster_configuration)})
 
@@ -173,8 +162,7 @@ class UnitTestRunner():
     # From this point, test runner becomes responsible for updating test
     # result. We only do cleanup if the test runner itself is not able
     # to run.
-    SlapOSControler.createFolder(node_test_suite.test_suite_directory,
-                                 clean=True)
+    createFolder(node_test_suite.test_suite_directory, clean=True)
     self.testnode.process_manager.spawn(*invocation_list,
                           cwd=node_test_suite.test_suite_directory,
                           log_prefix='runTestSuite', get_output=False)

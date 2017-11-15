@@ -26,30 +26,24 @@
 ##############################################################################
 import os
 import sys
-import time
 import json
 import time
 import shutil
 import logging
-import Utils
 from slapos.slap.slap import ConnectionError
 
-import traceback
-
-from ProcessManager import SubprocessError, ProcessManager, CancellationError
+from .ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
-from Updater import Updater
-from NodeTestSuite import NodeTestSuite, SlapOSInstance
-from ScalabilityTestRunner import ScalabilityTestRunner
-from UnitTestRunner import UnitTestRunner
-from erp5.util import taskdistribution
+from .Updater import Updater
+from .NodeTestSuite import NodeTestSuite, SlapOSInstance
+from .ScalabilityTestRunner import ScalabilityTestRunner
+from .UnitTestRunner import UnitTestRunner
+from .Utils import deunicodeData
+from .. import taskdistribution
 
-
-DEFAULT_SLEEP_TIMEOUT = 120 # time in seconds to sleep
 MAX_LOG_TIME = 15 # time in days we should keep logs that we can see through
                   # httd
 MAX_TEMP_TIME = 0.01 # time in days we should keep temp files
-supervisord_pid_file = None
 
 PROFILE_PATH_KEY = 'profile_path'
 
@@ -76,7 +70,6 @@ class TestNode(object):
 
 
   def checkOldTestSuite(self,test_suite_data):
-    config = self.config
     installed_reference_set = set(os.listdir(self.working_directory))
     wished_reference_set = set([x['test_suite_reference'] for x in test_suite_data])
     to_remove_reference_set = installed_reference_set.difference(
@@ -84,11 +77,11 @@ class TestNode(object):
     for y in to_remove_reference_set:
       fpath = os.path.join(self.working_directory,y)
       self.delNodeTestSuite(y)
-      self.log("testnode.checkOldTestSuite, DELETING : %r" % (fpath,))
+      self.log("testnode.checkOldTestSuite, DELETING : %r", fpath)
       if os.path.isdir(fpath):
-       shutil.rmtree(fpath)
+        shutil.rmtree(fpath)
       else:
-       os.remove(fpath)
+        os.remove(fpath)
   
   def getNodeTestSuite(self, reference):
     node_test_suite = self.node_test_suite_dict.get(reference)
@@ -103,26 +96,21 @@ class TestNode(object):
     return node_test_suite
 
   def delNodeTestSuite(self, reference):
-    if self.node_test_suite_dict.has_key(reference):
-      self.node_test_suite_dict.pop(reference)
+    self.node_test_suite_dict.pop(reference, None)
 
   def constructProfile(self, node_test_suite, test_type, use_relative_path=False):
-    config = self.config
-    profile_content = ''
     assert len(node_test_suite.vcs_repository_list), "we must have at least one repository"
-    profile_path_count = 0
+    software_config_path = None
     profile_content_list = []
     for vcs_repository in node_test_suite.vcs_repository_list:
-      url = vcs_repository['url']
-      buildout_section_id = vcs_repository.get('buildout_section_id', None)
+      buildout_section_id = vcs_repository.get('buildout_section_id')
       repository_path = vcs_repository['repository_path']
       try:
         profile_path = vcs_repository[PROFILE_PATH_KEY]
       except KeyError:
         pass
       else:
-        profile_path_count += 1
-        if profile_path_count > 1:
+        if software_config_path is not None:
           raise ValueError(PROFILE_PATH_KEY + ' defined more than once')
 
         # Absolute path to relative path
@@ -131,12 +119,6 @@ class TestNode(object):
           from_path = os.path.join(self.working_directory,
                                     node_test_suite.reference)
           software_config_path = os.path.relpath(software_config_path, from_path)
-
-
-        profile_content_list.append("""
-[buildout]
-extends = %(software_config_path)s
-""" %  {'software_config_path': software_config_path})
 
       # Construct sections
       if not(buildout_section_id is None):
@@ -175,14 +157,14 @@ develop = false
 """ %     {'buildout_section_id': buildout_section_id,
           'repository_path' : repository_path,
           'branch' : vcs_repository.get('branch','master')})
-    if not profile_path_count:
+    if software_config_path is None:
       raise ValueError(PROFILE_PATH_KEY + ' not defined')
+    profile_content_list.sort()
     # Write file
-    custom_profile = open(node_test_suite.custom_profile_path, 'w')
-    # sort to have buildout section first
-    profile_content_list.sort(key=lambda x: [x, ''][x.startswith('\n[buildout]')])
-    custom_profile.write(''.join(profile_content_list))
-    custom_profile.close()
+    with open(node_test_suite.custom_profile_path, 'w') as f:
+      f.write("[buildout]\nextends = %s\n%s" % (
+        software_config_path,
+        ''.join(profile_content_list)))
     sys.path.append(repository_path)
 
   def getAndUpdateFullRevisionList(self, node_test_suite):
@@ -200,13 +182,13 @@ develop = false
            working_directory=node_test_suite.working_directory,
            url=vcs_repository["url"])
         updater.checkout()
-        revision = "-".join(updater.getRevision())
-        full_revision_list.append('%s=%s' % (repository_id, revision))
-      node_test_suite.revision = ','.join(full_revision_list)
-    except SubprocessError, e:
-      log("Error while getting repository, ignoring this test suite : %r" % (e,), exc_info=sys.exc_info())
-      full_revision_list = None
-    return full_revision_list
+        revision_list.append((repository_id, updater.getRevision()))
+    except SubprocessError:
+      log("Error while getting repository, ignoring this test suite",
+          exc_info=1)
+      return False
+    node_test_suite.revision_list = revision_list
+    return True
 
   def registerSuiteLog(self, test_result, node_test_suite):
     """
@@ -218,7 +200,7 @@ develop = false
     # TODO make the path into url
     test_result.reportStatus('LOG url', "%s/%s" % (self.config.get('httpd_url'),
                              folder_id), '')
-    self.log("going to switch to log %r" % suite_log_path)
+    self.log("going to switch to log %r", suite_log_path)
     self.process_manager.log = self.log = self.getSuiteLog()
     return suite_log_path
 
@@ -237,7 +219,7 @@ develop = false
     self.file_handler = logging.FileHandler(filename=suite_log_path)
     self.file_handler.setFormatter(formatter)
     logger.addHandler(self.file_handler)
-    logger.info('Activated logfile %r output' % suite_log_path)
+    logger.info('Activated logfile %r output', suite_log_path)
     self.suite_log = logger.info
 
   def checkRevision(self, test_result, node_test_suite):
@@ -264,14 +246,13 @@ develop = false
       node_test_suite.revision = test_result.revision
 
   def _cleanupLog(self):
-    config = self.config
     log_directory = self.config['log_directory']
-    now = time.time()
+    prune_time = time.time() - 86400 * self.max_log_time
     for log_folder in os.listdir(log_directory):
       folder_path = os.path.join(log_directory, log_folder)
       if os.path.isdir(folder_path):
-        if (now - os.stat(folder_path).st_mtime)/86400 > self.max_log_time:
-          self.log("deleting log directory %r" % (folder_path,))
+        if os.stat(folder_path).st_mtime < prune_time:
+          self.log("deleting log directory %r", folder_path)
           shutil.rmtree(folder_path)
 
   def _cleanupTemporaryFiles(self):
@@ -280,17 +261,16 @@ develop = false
     missing disk space, remove old logs
     """
     temp_directory = self.config["system_temp_folder"]
-    now = time.time()
     user_id = os.geteuid()
+    prune_time = time.time() - 86400 * self.max_temp_time
     for temp_folder in os.listdir(temp_directory):
       folder_path = os.path.join(temp_directory, temp_folder)
       if (temp_folder.startswith("tmp") or
           temp_folder.startswith("buildout")):
         try:
           stat = os.stat(folder_path)
-          if stat.st_uid == user_id and \
-              (now - stat.st_mtime)/86400 > self.max_temp_time:
-            self.log("deleting temp directory %r" % (folder_path,))
+          if stat.st_uid == user_id and stat.st_mtime < prune_time:
+            self.log("deleting temp directory %r", folder_path)
             if os.path.isdir(folder_path):
               shutil.rmtree(folder_path)
             else:
@@ -298,9 +278,8 @@ develop = false
         except OSError:
           self.log("_cleanupTemporaryFiles exception", exc_info=sys.exc_info())
 
-  def cleanUp(self,test_result):
-    log = self.log
-    log('Testnode.cleanUp')
+  def cleanUp(self):
+    self.log('Testnode.cleanUp')
     self.process_manager.killPreviousRun()
     self._cleanupLog()
     self._cleanupTemporaryFiles()
@@ -308,19 +287,15 @@ develop = false
   def run(self):
     log = self.log
     config = self.config
-    slapgrid = None
-    previous_revision_dict = {}
-    revision_dict = {}
-    test_result = None
     test_node_slapos = SlapOSInstance()
-    test_node_slapos.edit(working_directory=self.config['slapos_directory'])
+    test_node_slapos.edit(working_directory=config['slapos_directory'])
     try:
       while True:
+        test_result = None
         try:
           node_test_suite = None
           self.log = self.process_manager.log = self.testnode_log
-          self.cleanUp(None)
-          remote_test_result_needs_cleanup = False
+          self.cleanUp()
           begin = time.time()
           portal_url = config['test_suite_master_url']
           self.taskdistribution = taskdistribution.TaskDistributor(
@@ -328,25 +303,25 @@ develop = false
                                                         logger=DummyLogger(log))
           node_configuration = self.taskdistribution.subscribeNode(node_title=config['test_node_title'],
                                                computer_guid=config['computer_id'])
-          if type(node_configuration) == str:
+          if type(node_configuration) is str:
             # Backward compatiblity
             node_configuration = json.loads(node_configuration)
           if node_configuration is not None and \
               'process_timeout' in node_configuration \
               and node_configuration['process_timeout'] is not None:
             process_timeout = node_configuration['process_timeout']
-            log('Received and using process timeout from master: %i' % (
-              process_timeout))
+            log('Received and using process timeout from master: %i',
+              process_timeout)
             self.process_manager.max_timeout = process_timeout
           test_suite_data = self.taskdistribution.startTestSuite(
                                                node_title=config['test_node_title'],
                                                computer_guid=config['computer_id'])
-          if type(test_suite_data) == str:
+          if type(test_suite_data) is str:
             # Backward compatiblity
             test_suite_data = json.loads(test_suite_data)
-          test_suite_data = Utils.deunicodeData(test_suite_data)
-          log("Got following test suite data from master : %r" % \
-              (test_suite_data,))
+          test_suite_data = deunicodeData(test_suite_data)
+          log("Got following test suite data from master : %r",
+              test_suite_data)
           try:
             my_test_type = self.taskdistribution.getTestType()
           except Exception:
@@ -367,19 +342,18 @@ develop = false
           # Clean-up test suites
           self.checkOldTestSuite(test_suite_data)
           for test_suite in test_suite_data:
-            remote_test_result_needs_cleanup = False
             node_test_suite = self.getNodeTestSuite(
                test_suite["test_suite_reference"])
 
             node_test_suite.edit(
-               working_directory=self.config['working_directory'],
-               log_directory=self.config['log_directory'])
+               working_directory=config['working_directory'],
+               log_directory=config['log_directory'])
 
             node_test_suite.edit(**test_suite)
             if my_test_type == 'UnitTest':
               runner = UnitTestRunner(node_test_suite)
             elif my_test_type == 'ScalabilityTest':
-	      runner = ScalabilityTestRunner(self)
+              runner = ScalabilityTestRunner(self)
             else:
               log("testnode, Runner type %s not implemented.", my_test_type)
               raise NotImplementedError
@@ -387,7 +361,6 @@ develop = false
             # XXX: temporary hack to prevent empty test_suite
             if not hasattr(node_test_suite, 'test_suite'):
               node_test_suite.edit(test_suite='')
-            run_software = True
             # kill processes from previous loop if any
             self.process_manager.killPreviousRun()
             revision_list = self.getAndUpdateFullRevisionList(node_test_suite)
@@ -402,18 +375,17 @@ develop = false
                      config['test_node_title'], False,
                      node_test_suite.test_suite_title,
                      node_test_suite.project_title)
-            remote_test_result_needs_cleanup = True
-            log("testnode, test_result : %r" % (test_result, ))
+            log("testnode, test_result : %r", test_result)
             if test_result is not None:
               self.registerSuiteLog(test_result, node_test_suite)
               self.checkRevision(test_result,node_test_suite)
               node_test_suite.edit(test_result=test_result)
               # get cluster configuration for this test suite, this is needed to
               # know slapos parameters to user for creating instances
-	      log("Getting configuration from test suite " + str(node_test_suite.test_suite_title))        
+              log("Getting configuration from test suite %s", node_test_suite.test_suite_title)
               generated_config = self.taskdistribution.generateConfiguration(node_test_suite.test_suite_title)
               json_data = json.loads(generated_config)
-              cluster_configuration = Utils.deunicodeData(json_data['configuration_list'][0])
+              cluster_configuration = deunicodeData(json_data['configuration_list'][0])
               node_test_suite.edit(cluster_configuration=cluster_configuration)
               # Now prepare the installation of SlapOS and create instance
               status_dict = runner.prepareSlapOSForTestSuite(node_test_suite)
@@ -446,11 +418,12 @@ develop = false
                   
               # break the loop to get latest priorities from master
               break
-            self.cleanUp(test_result)
+            self.cleanUp()
         except (SubprocessError, CalledProcessError, ConnectionError) as e:
-          log("SubprocessError or ConnectionError : %r" % (e,), exc_info=sys.exc_info())
-          if remote_test_result_needs_cleanup:
-            status_dict = e.status_dict or {}
+          log("", exc_info=1)
+          if test_result is not None:
+            status_dict = getattr(e, "status_dict", None) or {
+              'stderr': "%s: %s" % (e.__class__.__name__, e)}
             test_result.reportFailure(
               command=status_dict.get('command'),
               stdout=status_dict.get('stdout'),
@@ -462,7 +435,7 @@ develop = false
           log("ValueError : %r" % (e,), exc_info=sys.exc_info())
           if node_test_suite is not None:
             node_test_suite.retry_software_count += 1
-          if remote_test_result_needs_cleanup:
+          if test_result is not None:
             test_result.reportFailure(
               command='', stdout='',
               stderr="ValueError was raised : %s" % (e,),
@@ -472,16 +445,10 @@ develop = false
           self.process_manager.under_cancellation = False
           node_test_suite.retry = True
           continue
-        except:
-          ex_type, ex, tb = sys.exc_info()
-          traceback.print_tb(tb)
-          log("erp5testnode exception", exc_info=sys.exc_info())
-          raise
-        now = time.time()
-        self.cleanUp(test_result)
-        if (now-begin) < 120:
-          sleep_time = 120 - (now-begin)
-          log("End of processing, going to sleep %s" % sleep_time)
+        self.cleanUp()
+        sleep_time = 120 - (time.time() - begin)
+        if sleep_time > 0:
+          log("End of processing, going to sleep %s", sleep_time)
           time.sleep(sleep_time)
     except Exception as e:
       log("Exception in error handling : %r" % (e,), exc_info=sys.exc_info())
@@ -492,5 +459,5 @@ develop = false
       # groups working only in POSIX compilant systems
       # Exceptions are swallowed during cleanup phase
       log("GENERAL EXCEPTION, QUITING")
-      self.cleanUp(test_result)
+      self.cleanUp()
       log("GENERAL EXCEPTION, QUITING, cleanup finished")
