@@ -186,7 +186,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>aggregate/web_page_module/gadget_ooffice_onlyoffice_landing_html</string>
+                <string>aggregate/web_page_module/onlyoffice_gadget_onlyoffice_html</string>
               </tuple>
             </value>
         </item>
@@ -397,7 +397,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.33307.9661.63522</string> </value>
+                <value> <string>962.52047.51303.58743</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -415,7 +415,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1506973174.73</float>
+                        <float>1510527028.81</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
