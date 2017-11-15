@@ -147,7 +147,7 @@
                   "key": "text_content",
                   "hidden": 0,
                   "type": editable ? "GadgetField" : "EditorField",
-                  "url": "../ooffice_onlyoffice_gadget/app/",
+                  "url": "../../ooffice_onlyoffice_gadget/app/",
                   "sandbox": "iframe"
                 }
               }},

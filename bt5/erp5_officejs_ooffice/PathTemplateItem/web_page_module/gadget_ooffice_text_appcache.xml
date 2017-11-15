@@ -205,7 +205,7 @@ gadget_ooffice_text_router.html\n
 gadget_officejs_jio_text_view.html\n
 gadget_officejs_jio_text_view.js\n
 GADGET:\n
-ooffice_onlyoffice_gadget/\n
+../ooffice_onlyoffice_gadget/\n
 officejs_setting_gadget/\n
 NETWORK:\n
 *</string> </value>
@@ -335,7 +335,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>vincent</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -349,7 +349,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.42966.4115.56900</string> </value>
+                <value> <string>962.52047.51303.58743</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -367,7 +367,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1507639011.94</float>
+                        <float>1510603506.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
