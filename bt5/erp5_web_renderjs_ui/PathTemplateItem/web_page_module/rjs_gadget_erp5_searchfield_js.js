@@ -20,16 +20,9 @@
       var gadget = this;
       return gadget.getDeclaredGadget('input')
         .push(function (input_gadget) {
-          var focus = gadget.state.focus; // undefined focus is fine as well
-
-          if (gadget.state.focus === undefined && !gadget.state.extended_search) {
-            focus = true;
-          }
-
           return input_gadget.render({
             type: "search",
             value: gadget.state.extended_search,
-            focus: focus,
             name: "search",
             editable: true
           });
