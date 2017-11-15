@@ -46,6 +46,7 @@ from erp5.util import taskdistribution
 # for dummy slapos answer
 import signal
 import slapos.slap
+import requests
 
 # max time to instance changing state: 2 hour
 MAX_INSTANCE_TIME = 60*60*2
@@ -96,6 +97,7 @@ class ScalabilityTestRunner():
     # Used to simulate SlapOS answer (used as a queue)
     self.last_slapos_answer = []
     self.last_slapos_answer_request = []
+    self.isInstanceBootstrapped = False
     
   def _prepareSlapOS(self, software_path, computer_guid, create_partition=0):
     # create_partition is kept for compatibility
@@ -132,7 +134,7 @@ class ScalabilityTestRunner():
     """
     config = software_configuration.copy()
     config.update({'scalability-launcher-computer-guid':self.launcher_nodes_computer_guid[0]})
-    config.update({'scalability-launcher-title':'MyTestNodeTitle'})
+    config.update({'scalability-launcher-title':self.testnode.config['test_node_title']})
     config.update({'test-result-path':test_result.test_result_path})
     config.update({'test-suite-revision':test_result.revision})
     config.update({'test-suite':test_suite})
@@ -282,7 +284,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     self.reachable_profile = os.path.join(self.reachable_address, "software.cfg")
     # ROQUE XXX: below urls are hardcoded until we find ways to make buildout extending through unsafe https 
     self.reachable_address = "https://lab.nexedi.com/rporchetto/telecom/tree/master"
-    self.reachable_profile = "https://lab.nexedi.com/rporchetto/telecom/raw/master/software_release/software.cfg"
+    self.reachable_profile = "https://lab.nexedi.com/rporchetto/telecom/raw/master/software_release/software_scalability.cfg"
+    self.reachable_profile = "https://lab.nexedi.com/nexedi/slapos/raw/master/software/erp5/software.cfg"
     # Write the reachable address in the software.cfg file,
     # by replacing <obfuscated_url> occurences by the current reachable address.
     software_file = open(node_test_suite.custom_profile_path, "r")
@@ -380,7 +383,6 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       return {'status_code' : 0}
     return {'status_code' : 1}
 
-
   def runTestSuite(self, node_test_suite, portal_url):
     if not self.launchable:
       self.log("Current test_suite is not actually launchable.")
@@ -411,6 +413,51 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
 
       self.slapos_communicator.waitInstanceStarted(self.instance_title)
       self.log("[DEBUG] INSTANCE CORRECTLY STARTED")
+
+      instance_information = self.slapos_communicator.getInstanceUrlDict()[0]
+      erp5_user = instance_information['user']
+      erp5_password = instance_information['password']
+      erp5_address = instance_information['zope-address']
+      erp5_url = "http://%s/erp5" % erp5_address
+      self.log("Instance url: " + str(erp5_url))
+      if requests.get(erp5_url).status_code != 200:
+        error_message = "Site error. %s not found. ERP5 site not properly created?" % erp5_url
+        return {'status_code' : 1, 'error_message': error_message }
+
+      # XXX : the instance must be bootstrapped every time (configuration) or just one?
+      if not self.isInstanceBootstrapped:
+        result = self.slapos_communicator.bootstrapInstance(instance_information)
+        if result["status_code"] != 0:
+          self.log("An error occurred while bootstrapping the site.")
+          return {'status_code' : result["status_code"], 'error_message': result["error_message"]}
+        self.isInstanceBootstrapped = True
+
+      software_bin_directory = self.testnode.config['slapos_binary'].rsplit("slapos", 1)[0]
+      runner = software_bin_directory + "performance_tester_erp5"
+      scalabilityRunner = software_bin_directory + "runScalabilityTestSuite"
+
+      slappart_directory = self.testnode.config['srv_directory'].rsplit("srv", 1)[0]
+      log_path = slappart_directory + "var/log/"
+
+      # XXX hardcoded erp location. Find it. From testnode?
+      erp5_location = slappart_directory + "srv/testnode/cp/telecom/scalability_test/"
+
+      command = [ scalabilityRunner,
+                  "--erp5-url", erp5_address,
+                  "--erp5-user", erp5_user,
+                  "--erp5-password", erp5_password,
+                  "--test-result-path", node_test_suite.test_result.test_result_path,
+                  "--revision", node_test_suite.revision,
+                  "--node-title", self.testnode.config['test_node_title'],
+                  "--test-suite-master-url", self.testnode.config["test_suite_master_url"],
+                  "--test-suite", node_test_suite.test_suite,
+                  "--runner-path", runner,
+                  "--erp5-location", erp5_location,
+                  "--log-path", log_path,
+                ]
+
+      self.log("[DEBUG] Running runScalabilityTestSuite script...")
+      subprocess.Popen(command)
 
       # ROQUE XXX : for debug
       if True:

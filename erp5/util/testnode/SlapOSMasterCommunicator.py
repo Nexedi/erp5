@@ -3,7 +3,7 @@ import json
 import sys
 import traceback
 import time
-#import feedparser
+import requests
 from uritemplate import expand
 
 import slapos.slap
@@ -239,6 +239,7 @@ class SlapOSMasterCommunicator(object):
       return SOFTWARE_STATE_INSTALLED
 
     message = self.getSoftwareInstallationNews()
+    self._logger(message)
     if message.startswith("#error no data found"):
       return SOFTWARE_STATE_UNKNOWN
 
@@ -448,6 +449,40 @@ class SlapOSTester(SlapOSMasterCommunicator):
       self._logger(error_message)
       self._logger("Do you use instance state propagation in your project?")
       raise ValueError(error_message)
+
+  def getInstanceUrlDict(self):
+    url_list = []
+    for instance in self.getInstanceUrlList():
+      information = self.getInformationFromInstance(instance["href"])
+      try:
+        connection_dict = information["connection_dict"]["_"]
+        address = json.loads(connection_dict)["zope-address-list"][0][0]
+        parameter_dict = information['parameter_dict']['_']
+        user = json.loads(parameter_dict)['inituser-login']
+        password = json.loads(parameter_dict)['inituser-password']
+        url_list.append({'zope-address' : address, 'user' : user, 'password' : password })
+      except Exception as e:
+        pass # ignore instances whitout zope-address-list
+    return url_list
+
+  def bootstrapInstance(self, instance_information):
+    url = "http://%s:%s@%s/erp5" % (instance_information['user'],
+                                    instance_information['password'],
+                                    instance_information['zope-address'])
+    self._logger("Bootstrapping site...")
+    response = requests.get(url + '/ERP5Site_bootstrapScalabilityTest')
+    if response.status_code != 200:
+      error_message = "Could not finde ERP5Site_bootstrapScalabilityTest script in instance. Response: " + str(response.status_code)
+      return {'status_code' : 1, 'error_message': error_message}
+    try:
+      status_code = eval(response.text)["status_code"]
+    except:
+      error_message = "ERP5Site_bootstrapScalabilityTest script did not return a dictionary response."
+      return {'status_code' : 1, 'error_message': error_message}
+    if status_code != 0:
+      return {'status_code' : 1, 'error_message': response.text["error_message"]}
+    self._logger("Site bootstrapped.")
+    return {'status_code' : 0 }
 
 class SoftwareReleaseTester(SlapOSTester):
   deadline = None
