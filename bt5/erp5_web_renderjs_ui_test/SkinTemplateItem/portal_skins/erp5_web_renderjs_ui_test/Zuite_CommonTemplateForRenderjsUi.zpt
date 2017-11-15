@@ -221,13 +221,13 @@
 
     <tr>
       <td>waitForElementPresent</td>
-      <td>//h1[@class="ui-title"]//a[contains(@class, "ui-icon-spinner")]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1[@class="ui-title"]//*[contains(@class, "ui-icon-spinner")]</td>
       <td></td>
     </tr>
 
     <tr>
       <td>waitForElementNotPresent</td>
-      <td>//h1[@class="ui-title"]//a[contains(@class, "ui-icon-spinner")]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1[@class="ui-title"]//*[contains(@class, "ui-icon-spinner")]</td>
       <td></td>
     </tr>
     
