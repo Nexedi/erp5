@@ -25,7 +25,6 @@
 #
 ##############################################################################
 import os
-import getpass
 import psutil
 import re
 import subprocess
@@ -102,38 +101,31 @@ def subprocess_capture(p, log, log_prefix, get_output=True):
 
 def killCommand(pid, log):
   """
-  To avoid letting orphaned childs, we stop the process and all it's
-  child (until childs does not change) and then we brutally kill
-  everyone at the same time
+  To prevent processes from reacting to the KILL of other processes,
+  we STOP them all first, and we repeat until the list of children does not
+  change anymore. Only then, we KILL them all.
   """
   try:
     process = psutil.Process(pid)
-    new_child_set = set([x.pid for x in process.children(recursive=True)])
-    child_set = None
+    process.suspend()
+  except psutil.Error, e:
+    return
+  process_list = [process]
+  new_list = process.children(recursive=True)
+  while new_list:
+    process_list += new_list
+    for child in new_list:
+      try:
+        child.suspend()
+      except psutil.Error, e:
+        log("killCommand/suspend: %s", e)
+    time.sleep(1)
+    new_list = set(process.children(recursive=True)).difference(process_list)
+  for process in process_list:
     try:
-      os.kill(pid, signal.SIGSTOP)
-    except OSError:
-      pass
-    while new_child_set != child_set:
-      child_set = new_child_set
-      log("killCommand, new_child_set : %r, child_set: %r" % (
-          new_child_set, child_set))
-      for child_pid in child_set:
-        try:
-          os.kill(child_pid, signal.SIGSTOP)
-        except OSError:
-          log("killCommand, OSError, %r is already dead" % child_pid)
-          pass
-      time.sleep(1)
-      child_set = new_child_set
-      new_child_set = set([x.pid for x in process.children(recursive=True)])
-    log("killCommand, finishing, child_set : %r" % (child_set,))
-    for child_pid in child_set:
-      os.kill(child_pid, signal.SIGKILL)
-    os.kill(pid, signal.SIGKILL)
-  except psutil.NoSuchProcess:
-    log("killCommand, NoSuchProcess raised")
-    pass
+      process.kill()
+    except psutil.Error, e:
+      log("killCommand/kill: %s", e)
 
 class ProcessManager(object):
 
@@ -200,18 +192,27 @@ class ProcessManager(object):
 
   def killall(self, name):
     """
-    Allow to kill process with given name.
-    Will try to kill only process belonging to current user
+    Kill processes of given name, only if they're orphan or subprocesses of
+    the testnode.
     """
-    user_login = getpass.getuser()
     to_kill_list = []
+    pid = os.getpid()
     for process in psutil.process_iter():
       try:
-        if process.username() == user_login and process.name() == name:
-          self.log('ProcesssManager, killall on %s having pid %s' % (name, process.pid))
-          to_kill_list.append(process.pid)
-      except psutil.NoSuchProcess:
-        pass
+        if process.name() != name:
+          continue
+        p = process.parent()
+        if p is not None:
+          while p is not None:
+            if p.pid == pid:
+              break
+            p = p.parent()
+          else:
+            continue
+      except (psutil.AccessDenied, psutil.NoSuchProcess):
+        continue
+      self.log('ProcesssManager, killall on %s having pid %s' % (name, process.pid))
+      to_kill_list.append(process.pid)
     for pid in to_kill_list:
       killCommand(pid, self.log)
 
@@ -222,10 +223,7 @@ class ProcessManager(object):
     for timer in self.timer_set:
       timer.cancel()
     for pgpid in self.process_pid_set:
-      try:
-        killCommand(pgpid, self.log)
-      except:
-        pass
+      killCommand(pgpid, self.log)
     try:
       if os.path.exists(self.supervisord_pid_file):
         supervisor_pid = int(open(self.supervisord_pid_file).read().strip())
