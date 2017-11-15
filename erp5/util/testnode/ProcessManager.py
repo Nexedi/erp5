@@ -131,14 +131,14 @@ class ProcessManager(object):
 
   stdin = file(os.devnull)
 
-  def __init__(self, log, *args, **kw):
+  def __init__(self, log, max_timeout=MAX_TIMEOUT):
     self.log = log
     self.process_pid_set = set()
     signal.signal(signal.SIGTERM, self.sigterm_handler)
     self.under_cancellation = False
     self.p = None
     self.result = None
-    self.max_timeout = kw.get("max_timeout") or MAX_TIMEOUT
+    self.max_timeout = max_timeout
     self.timer_set = set()
 
   def spawn(self, *args, **kw):
@@ -186,10 +186,9 @@ class ProcessManager(object):
       raise SubprocessError(result)
     return result
 
-  def getSupportedParameterSet(self, program_path ,parameter_list):
-    help_string = self.spawn(*[program_path,'--help'])['stdout']
-    help_words = set(help_string.split())
-    return help_words.intersection(set(parameter_list))
+  def getSupportedParameterList(self, program_path):
+    return re.findall(r'^  (--\w+)',
+      self.spawn(program_path, '--help')['stdout'], re.M)
 
   def killall(self, name):
     """
@@ -212,13 +211,15 @@ class ProcessManager(object):
             continue
       except (psutil.AccessDenied, psutil.NoSuchProcess):
         continue
-      self.log('ProcesssManager, killall on %s having pid %s' % (name, process.pid))
+      self.log('ProcesssManager, killall on %s having pid %s',
+               name, process.pid)
       to_kill_list.append(process.pid)
     for pid in to_kill_list:
       killCommand(pid, self.log)
 
   def killPreviousRun(self, cancellation=False):
-    self.log('ProcessManager killPreviousRun, going to kill %r' % (self.process_pid_set,))
+    self.log('ProcessManager killPreviousRun, going to kill %r',
+             self.process_pid_set)
     if cancellation:
       self.under_cancellation = True
     for timer in self.timer_set:
@@ -227,12 +228,13 @@ class ProcessManager(object):
       killCommand(pgpid, self.log)
     try:
       if os.path.exists(self.supervisord_pid_file):
-        supervisor_pid = int(open(self.supervisord_pid_file).read().strip())
-        self.log('ProcessManager killPreviousRun, going to kill supervisor with pid %r' % supervisor_pid)
+        with open(self.supervisord_pid_file) as f:
+          supervisor_pid = int(f.read().strip())
+        self.log('ProcessManager killPreviousRun, going to kill supervisor with pid %r',
+                 supervisor_pid)
         os.kill(supervisor_pid, signal.SIGTERM)
-    except:
+    except Exception:
       self.log('ProcessManager killPreviousRun, exception when killing supervisor')
-      pass
     self.process_pid_set.clear()
 
   def sigterm_handler(self, signal, frame):

@@ -235,7 +235,7 @@ class ERP5TestNode(TestCase):
                       node_test_suite.custom_profile_path)
     profile = open(node_test_suite.custom_profile_path, 'r')
     if my_test_type=='UnitTest':
-      expected_profile = """
+      expected_profile = """\
 [buildout]
 extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 
@@ -254,7 +254,7 @@ develop = false
     else:
       revision1 = "azerty"
       revision2 = "qwerty"
-      expected_profile = """
+      expected_profile = """\
 [buildout]
 extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 
@@ -818,17 +818,17 @@ develop = false
       test_node.node_test_suite_dict
       rand_part_set = set()
       self.assertEquals(2, len(test_node.node_test_suite_dict))
-      assert(test_node.suite_log is not None)
-      assert(isinstance(test_node.suite_log, types.MethodType))
+      self.assertIsNot(test_node.suite_log, None)
+      self.assertTrue(isinstance(test_node.suite_log, types.MethodType))
       for ref, suite in test_node.node_test_suite_dict.items():
         self.assertTrue('var/log/testnode/%s' % suite.reference in \
                          suite.suite_log_path,
                          "Incorrect suite log path : %r" % suite.suite_log_path)
-        assert(suite.suite_log_path.endswith('suite.log'))
+        self.assertTrue(suite.suite_log_path.endswith('suite.log'))
         m = re.match('.*\-(.*)\/suite.log', suite.suite_log_path)
         rand_part = m.groups()[0]
-        assert(len(rand_part) == 32)
-        assert(rand_part not in rand_part_set)
+        self.assertEqual(len(rand_part), 32)
+        self.assertNotIn(rand_part, rand_part_set)
         rand_part_set.add(rand_part)
         suite_log = open(suite.suite_log_path, 'r')
         self.assertEquals(1, len([x for x in suite_log.readlines() \

@@ -28,11 +28,8 @@ import errno
 import os
 import re
 import shutil
-import subprocess
 import sys
-import threading
-
-from ProcessManager import SubprocessError
+from .ProcessManager import SubprocessError
 
 SVN_UP_REV = re.compile(r'^(?:At|Updated to) revision (\d+).$')
 SVN_CHANGED_REV = re.compile(r'^Last Changed Rev.*:\s*(\d+)', re.MULTILINE)
@@ -44,9 +41,8 @@ SVN_TYPE = 'svn'
 class Updater(object):
 
   _git_cache = {}
-  stdin = file(os.devnull)
 
-  def __init__(self, repository_path, log, revision=None, git_binary=None,
+  def __init__(self, repository_path, log, revision=None, git_binary='git',
       branch=None, realtime_output=True, process_manager=None, url=None,
       working_directory=None):
     self.log = log
@@ -81,7 +77,7 @@ class Updater(object):
 
   def deletePycFiles(self, path):
     """Delete *.pyc files so that deleted/moved files can not be imported"""
-    for path, dir_list, file_list in os.walk(path):
+    for path, _, file_list in os.walk(path):
       for file in file_list:
         if file[-4:] in ('.pyc', '.pyo'):
           # allow several processes clean the same folder at the same time
@@ -115,17 +111,17 @@ class Updater(object):
     git_repository_path = os.path.join(self.getRepositoryPath(), '.git')
     name = os.path.basename(os.path.normpath(self.getRepositoryPath()))
     git_repository_link_path = os.path.join(self.getRepositoryPath(), '%s.git' %name)
-    self.log("checking link %s -> %s.."
-                %(git_repository_link_path,git_repository_path))
+    self.log("checking link %s -> %s..",
+             git_repository_link_path, git_repository_path)
     if ( not os.path.lexists(git_repository_link_path) and \
          not os.path.exists(git_repository_link_path) ):
       try:
         os.symlink(git_repository_path, git_repository_link_path)
-        self.log("link: %s -> %s created"
-                %(git_repository_link_path,git_repository_path))
-      except:
-        self.log("Cannot create link from %s -> %s"
-                %(git_repository_link_path,git_repository_path))
+        self.log("link: %s -> %s created",
+          git_repository_link_path, git_repository_path)
+      except OSError:
+        self.log("Cannot create link from %s -> %s",
+          git_repository_link_path, git_repository_path)
   
   def _git_find_rev(self, ref):
     try:
@@ -152,7 +148,7 @@ class Updater(object):
     raise NotImplementedError
 
   def deleteRepository(self):
-    self.log("Wrong repository or wrong url, deleting repos %s" % \
+    self.log("Wrong repository or wrong url, deleting repos %s",
              self.repository_path)
     shutil.rmtree(self.repository_path)
 
@@ -165,7 +161,7 @@ class Updater(object):
           remote_url = self._git("config", "--get", "remote.origin.url")
           if remote_url == self.url:
             correct_url = True
-        except (SubprocessError,) as e:
+        except SubprocessError:
           self.log("SubprocessError", exc_info=sys.exc_info())
         if not(correct_url):
           self.deleteRepository()
