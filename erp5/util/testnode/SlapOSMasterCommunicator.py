@@ -1,17 +1,15 @@
 import datetime
 import json
-import sys
 import traceback
 import time
 #import feedparser
+from functools import wraps
 from uritemplate import expand
 
 import slapos.slap
 from slapos.slap import SoftwareProductCollection
-
-from slapos.slap.slap import ConnectionError
 from requests.exceptions import HTTPError
-from erp5.util.taskdistribution import SAFE_RPC_EXCEPTION_LIST
+from ..taskdistribution import SAFE_RPC_EXCEPTION_LIST
 
 # max time to instance changing state: 2 hour
 MAX_INSTANCE_TIME = 60*60*2
@@ -41,36 +39,29 @@ TESTER_STATE_INSTANCE_UNINSTALLED = "TESTER_STATE_INSTANCE_UNINSTALLED"
 
 # Simple decorator to prevent raise due small
 # network failures.
-def retryOnNetworkFailure(func):
-  def wrapper(*args, **kwargs):
+def retryOnNetworkFailure(func,
+    _except_list = SAFE_RPC_EXCEPTION_LIST + (
+      HTTPError, slapos.slap.ConnectionError),
+    ):
+  def wrapper(*args, **kw):
     retry_time = 64
     while True:
       try:
-        return func(*args, **kwargs)
-      except SAFE_RPC_EXCEPTION_LIST, e:
-        print 'Network failure: %s , %s' % (sys.exc_info(), e)
-      except HTTPError, e:
-        print 'Network failure: %s , %s' % (sys.exc_info(), e)
-      except ConnectionError, e:
-        print 'Network failure: %s , %s' % (sys.exc_info(), e)
-      except slapos.slap.ConnectionError, e:
-        print 'Network failure: %s , %s' % (sys.exc_info(), e)
+        return func(*args, **kw)
+      except _except_list:
+        traceback.print_exc()
 
-      print 'Retry method %s in %i seconds' % (func, retry_time)
+      print 'Network failure. Retry method %s in %i seconds' % (func, retry_time)
       time.sleep(retry_time)
       retry_time = min(retry_time*1.5, 640)
 
-
-  wrapper.__name__ = func.__name__
-  wrapper.__doc__ = func.__doc__
-  return wrapper
+  return wraps(func)(wrapper)
 
 
 class SlapOSMasterCommunicator(object):
   latest_state = None
 
   def __init__(self, slap, slap_supply, slap_order, url, logger):
-
     self._logger = logger
     self.slap = slap
     self.slap_order = slap_order
@@ -102,8 +93,7 @@ class SlapOSMasterCommunicator(object):
     if instance_title is not None:
       self.name = instance_title 
     if request_kw is not None:
-      if isinstance(request_kw, str) or \
-        isinstance(request_kw, unicode):
+      if isinstance(request_kw, basestring):
         self.request_kw = json.loads(request_kw)
       else:
         self.request_kw = request_kw
@@ -116,12 +106,11 @@ class SlapOSMasterCommunicator(object):
             **self.request_kw)
 
   def isInstanceRequested(self, instance_title):
-    hateoas = getattr(self.slap, '_hateoas_navigator', None)
+    hateoas = self._hateoas_navigator
     return instance_title in hateoas.getHostingSubscriptionDict()
 
   @retryOnNetworkFailure
   def _hateoas_getComputer(self, reference):
-
     root_document = self.hateoas_navigator.getRootDocument()
     search_url = root_document["_links"]['raw_search']['href']
 
@@ -147,7 +136,6 @@ class SlapOSMasterCommunicator(object):
   @retryOnNetworkFailure
   def getSoftwareInstallationList(self):
     # XXX Move me to slap.py API 
-
     computer = self._hateoas_getComputer(self.computer_guid)
 
     # Not a list ?
@@ -191,7 +179,6 @@ class SlapOSMasterCommunicator(object):
 
   @retryOnNetworkFailure
   def getInstanceUrlList(self):
-
     if self.hosting_subscription_url is None:
       hosting_subscription_dict = self.hateoas_navigator._hateoas_getHostingSubscriptionDict()
       for hs in hosting_subscription_dict:
@@ -207,7 +194,6 @@ class SlapOSMasterCommunicator(object):
 
   @retryOnNetworkFailure
   def getNewsFromInstance(self, url):
-
     result = self.hateoas_navigator.GET(url)
     result = json.loads(result)
     if result['_links'].get('action_object_slap', None) is None:
@@ -221,7 +207,6 @@ class SlapOSMasterCommunicator(object):
 
   @retryOnNetworkFailure
   def getInformationFromInstance(self, url):
-
     result = self.hateoas_navigator.GET(url)
     result = json.loads(result)
     if result['_links'].get('action_object_slap', None) is None:
@@ -329,7 +314,7 @@ class SlapOSMasterCommunicator(object):
       self._logger('Got an error requesting partition for '
             'its state')
       return INSTANCE_STATE_UNKNOWN
-    except:
+    except Exception:
       self._logger("ERROR getting instance state")
       return INSTANCE_STATE_UNKNOWN
 
@@ -377,6 +362,7 @@ class SlapOSMasterCommunicator(object):
     return {'error_message' : None}
 
 class SlapOSTester(SlapOSMasterCommunicator):
+
   def __init__(self,
               name,
               logger,
@@ -387,7 +373,6 @@ class SlapOSTester(SlapOSMasterCommunicator):
               computer_guid=None, # computer for supply if desired
               request_kw=None
           ):
-
     super(SlapOSTester, self).__init__(
       slap, slap_supply, slap_order, url, logger)
 
@@ -464,7 +449,6 @@ class SoftwareReleaseTester(SlapOSTester):
               software_timeout=3600,
               instance_timeout=3600,
           ):
-
     super(SoftwareReleaseTester, self).__init__(
       name, logger, slap, slap_order, slap_supply, url, computer_guid, request_kw)
 
