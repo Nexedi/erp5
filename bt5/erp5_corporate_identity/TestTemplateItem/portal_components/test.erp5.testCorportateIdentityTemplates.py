@@ -65,7 +65,11 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return (
       'erp5_base',
-      'erp5_corporate_identity'
+      'erp5_font',
+      'erp5_web',
+      'erp5_dms',
+      'erp5_corporate_identity',
+      'erp5_ui_test_core'
     )
 
   def afterSetUp(self):
