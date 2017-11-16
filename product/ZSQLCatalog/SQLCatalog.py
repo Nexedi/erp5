@@ -765,61 +765,6 @@ class Catalog(Folder,
                           'inline;filename=properties.xml')
     return f.getvalue()
 
-  security.declareProtected(import_export_objects, 'manage_importProperties')
-  def manage_importProperties(self, file):
-    """
-      Import properties from an XML file.
-    """
-    with open(file) as f:
-      doc = parse(f)
-      root = doc.documentElement
-      try:
-        for prop in root.getElementsByTagName("property"):
-          id = prop.getAttribute("id")
-          type = prop.getAttribute("type")
-          if not id or not hasattr(self, id):
-            raise CatalogError, 'unknown property id %r' % (id,)
-          if type not in ('str', 'tuple'):
-            raise CatalogError, 'unknown property type %r' % (type,)
-          if type == 'str':
-            value = ''
-            for text in prop.childNodes:
-              if text.nodeType == text.TEXT_NODE:
-                value = str(text.data)
-                break
-          else:
-            value = []
-            for item in prop.getElementsByTagName("item"):
-              item_type = item.getAttribute("type")
-              if item_type != 'str':
-                raise CatalogError, 'unknown item type %r' % (item_type,)
-              for text in item.childNodes:
-                if text.nodeType == text.TEXT_NODE:
-                  value.append(str(text.data))
-                  break
-            value = tuple(value)
-
-          setattr(self, id, value)
-
-        if not hasattr(self, 'filter_dict'):
-          self.filter_dict = PersistentMapping()
-        for filt in root.getElementsByTagName("filter"):
-          id = str(filt.getAttribute("id"))
-          expression = filt.getAttribute("expression")
-          if id not in self.filter_dict:
-            self.filter_dict[id] = PersistentMapping()
-          self.filter_dict[id]['filtered'] = 1
-          self.filter_dict[id]['type'] = []
-          if expression:
-            expr_instance = Expression(expression)
-            self.filter_dict[id]['expression'] = expression
-            self.filter_dict[id]['expression_instance'] = expr_instance
-          else:
-            self.filter_dict[id]['expression'] = ""
-            self.filter_dict[id]['expression_instance'] = None
-      finally:
-        doc.unlink()
-
   security.declareProtected(manage_zcatalog_entries, 'manage_historyCompare')
   def manage_historyCompare(self, rev1, rev2, REQUEST,
                             historyComparisonResults=''):

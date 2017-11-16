@@ -229,15 +229,6 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       return catalog.manage_exportProperties(REQUEST=REQUEST, RESPONSE=RESPONSE)
 
-  security.declareProtected(import_export_objects, 'manage_catalogImportProperties')
-  def manage_catalogImportProperties(self, file, sql_catalog_id=None):
-    """
-      Import properties from an XML file.
-    """
-    catalog = self.getSQLCatalog(sql_catalog_id)
-    if catalog is not None:
-      return catalog.manage_importProperties(file)
-
   def __len__(self):
     catalog = self.getSQLCatalog()
     if catalog is None:
