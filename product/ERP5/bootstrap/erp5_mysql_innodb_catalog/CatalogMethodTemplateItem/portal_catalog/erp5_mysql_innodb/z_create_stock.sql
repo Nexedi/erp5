@@ -17,6 +17,8 @@ CREATE TABLE `stock` (
   `mirror_section_uid` BIGINT UNSIGNED,
   `mirror_node_uid` BIGINT UNSIGNED,
   `resource_uid` BIGINT UNSIGNED,
+  `aggregate_bank_reconciliation_uid` BIGINT UNSIGNED,
+  `aggregate_bank_reconciliation_date` datetime,
   `quantity` real,
   `is_cancellation` BOOLEAN,
   `is_accountable` BOOLEAN,

@@ -17,6 +17,10 @@
             <value> <string>uid\r\n
 getExplanationUid\r\n
 getResourceUid\r\n
+Movement_getSourceAggregateBankReconciliationUid\r\n
+Movement_getSourceAggregateBankReconciliationDate\r\n
+Movement_getDestinationAggregateBankReconciliationUid\r\n
+Movement_getDestinationAggregateBankReconciliationDate\r\n
 getInventoriatedQuantity\r\n
 getSourceUid\r\n
 getDestinationUid\r\n

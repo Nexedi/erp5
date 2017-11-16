@@ -1,4 +1,5 @@
 <key_list>
+ <key>aggregate_bank_reconciliation_date</key>
  <key>alarm.alarm_date</key>
  <key>alarm_date</key>
  <key>catalog.creation_date</key>
@@ -24,6 +25,7 @@
  <key>start_date</key>
  <key>start_date_range_max</key>
  <key>start_date_range_min</key>
+ <key>stock.aggregate_bank_reconciliation_date</key>
  <key>stock.date</key>
  <key>stock.mirror_date</key>
  <key>stop_date</key>

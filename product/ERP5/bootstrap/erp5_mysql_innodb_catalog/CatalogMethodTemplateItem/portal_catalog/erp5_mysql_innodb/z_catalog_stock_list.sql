@@ -36,7 +36,10 @@ WHERE
                       getPortalType[loop_item], 
                       getSimulationState[loop_item], 
                       getVariationText[loop_item],
-                      getSubVariationText[loop_item]])">
+                      getSubVariationText[loop_item],
+                      Movement_getDestinationAggregateBankReconciliationUid[loop_item],
+                      Movement_getDestinationAggregateBankReconciliationDate[loop_item],
+                      ])">
         </dtml-if>
         <dtml-if "getSourceUid[loop_item]">
           <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">
@@ -64,7 +67,10 @@ WHERE
                       getPortalType[loop_item], 
                       getSimulationState[loop_item], 
                       getVariationText[loop_item],
-                      getSubVariationText[loop_item]])">
+                      getSubVariationText[loop_item],
+                      Movement_getSourceAggregateBankReconciliationUid[loop_item],
+                      Movement_getSourceAggregateBankReconciliationDate[loop_item],
+                      ])">
         </dtml-if>
         </dtml-let>
      </dtml-in>
@@ -98,7 +104,9 @@ INSERT INTO
   `portal_type`,
   `simulation_state`,
   `variation_text`,
-  `sub_variation_text`
+  `sub_variation_text`,
+  `aggregate_bank_reconciliation_uid`,
+  `aggregate_bank_reconciliation_date`
 )
 VALUES
     <dtml-in prefix="row" expr="row_list">
@@ -126,7 +134,9 @@ VALUES
   <dtml-sqlvar expr="row_item[20]" type="string" optional>,
   <dtml-sqlvar expr="row_item[21]" type="string" optional>,
   <dtml-sqlvar expr="row_item[22]" type="string" optional>,
-  <dtml-sqlvar expr="row_item[23]" type="string" optional>
+  <dtml-sqlvar expr="row_item[23]" type="string" optional>,
+  <dtml-sqlvar expr="row_item[24]" type="int" optional>,
+  <dtml-sqlvar expr="row_item[25]" type="datetime" optional>
 )
 <dtml-if sequence-end><dtml-else>,</dtml-if>
     </dtml-in>

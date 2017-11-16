@@ -23,6 +23,8 @@ start_date_range_max
 start_date_range_min
 stock.date
 stock.mirror_date
+aggregate_bank_reconciliation_date
+stock.aggregate_bank_reconciliation_date
 stop_date
 stop_date_range_max
 stop_date_range_min
