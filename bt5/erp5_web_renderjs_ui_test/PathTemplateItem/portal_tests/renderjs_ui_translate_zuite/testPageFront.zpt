@@ -112,7 +112,7 @@
  
  
  <tr>
-   <td>verifyElementPresent</td>
+   <td>waitForElementPresent</td>
    <td>//a[text() = 'foo_mokuai']</td>
    <td></td>
  </tr>
