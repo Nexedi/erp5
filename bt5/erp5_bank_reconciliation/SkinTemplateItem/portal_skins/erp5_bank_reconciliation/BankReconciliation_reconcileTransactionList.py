@@ -31,8 +31,9 @@ if mode == 'reconcile':
                 'cancel_url': cancel_url,
                 'mode': mode,
                 'field_your_mode': mode})
-    line.AccountingTransactionLine_setBankReconciliation(context,
-      message=translateString("Reconciling Bank Line"))
+    line.AccountingTransactionLine_addBankReconciliation(
+        context.getRelativeUrl(),
+        message=translateString("Reconciling Bank Line"))
   return context.Base_redirect(dialog_id, keep_items={
       'portal_status_message': translateString("Line Reconciled"),
       'reset': 1,
@@ -44,8 +45,9 @@ if mode == 'reconcile':
 assert mode == 'unreconcile'
 for line in portal.portal_catalog(uid=selection_uid_list or -1):
   line = line.getObject()
-  line.AccountingTransactionLine_setBankReconciliation(None,
-    message=translateString("Reconciling Bank Line"))
+  line.AccountingTransactionLine_removeBankReconciliation(
+      context.getRelativeUrl(),
+      message=translateString("Reconciling Bank Line"))
 
 return context.Base_redirect(dialog_id, keep_items={
     'portal_status_message': translateString("Lines Unreconciled"),
