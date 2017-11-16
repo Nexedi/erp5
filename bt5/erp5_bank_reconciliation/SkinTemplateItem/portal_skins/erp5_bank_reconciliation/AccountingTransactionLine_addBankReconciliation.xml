@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>payment_request_value, message</string> </value>
+            <value> <string>bank_reconciliation_relative_url, message</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionLine_setBankReconciliation</string> </value>
+            <value> <string>AccountingTransactionLine_addBankReconciliation</string> </value>
         </item>
       </dictionary>
     </pickle>
