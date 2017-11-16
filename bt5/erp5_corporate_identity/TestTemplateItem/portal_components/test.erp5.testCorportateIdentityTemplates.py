@@ -608,6 +608,12 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         format="pdf"
       )
     )
+
+
+
+
+  '''
+  
   
   @changeSkin('Letter')
   def test_htmlLetter(self):
@@ -800,10 +806,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         use_skin="Letter"
       )
     )
-
-
-
-  '''
+  
+  
   
   def dumpOrCheckPrintout(self, delivery=None, report_name=None, prefix=None):
     """
