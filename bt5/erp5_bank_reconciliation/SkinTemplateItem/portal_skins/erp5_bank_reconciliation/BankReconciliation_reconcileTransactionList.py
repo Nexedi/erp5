@@ -35,7 +35,7 @@ if mode == 'reconcile':
         context.getRelativeUrl(),
         message=translateString("Reconciling Bank Line"))
   return context.Base_redirect(dialog_id, keep_items={
-      'portal_status_message': translateString("Line Reconciled"),
+      'portal_status_message': translateString("Lines Reconciled"),
       'reset': 1,
       'cancel_url': cancel_url,
       'field_your_mode': mode,
