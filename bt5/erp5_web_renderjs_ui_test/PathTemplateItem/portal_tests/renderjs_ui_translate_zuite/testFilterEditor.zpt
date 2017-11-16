@@ -46,18 +46,7 @@
 </tr>
 
 
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/add_new_filter_section" />
 
 <tr>
   <td>waitForElementPresent</td>
