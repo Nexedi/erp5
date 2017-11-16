@@ -398,12 +398,11 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     count = 0
     error_message = None
 
-    self.slapos_communicator.waitInstanceStarted(self.instance_title)
-
     # Each cluster configuration are tested
     for configuration in configuration_list:
       # First configuration doesn't need XML configuration update.
       if count > 0:
+        self.log("Requesting instance with configuration %d" % count)
         self.slapos_communicator.requestInstanceStop()
         self.slapos_communicator.waitInstanceStopped(self.instance_title)
         self._updateInstanceXML(configuration, self.instance_title,
@@ -424,7 +423,6 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         error_message = "Site error. %s not found. ERP5 site not properly created?" % erp5_url
         return {'status_code' : 1, 'error_message': error_message }
 
-      # XXX : the instance must be bootstrapped every time (configuration) or just one?
       if not self.isInstanceBootstrapped:
         result = self.slapos_communicator.bootstrapInstance(instance_information)
         if result["status_code"] != 0:
@@ -438,9 +436,21 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
 
       slappart_directory = self.testnode.config['srv_directory'].rsplit("srv", 1)[0]
       log_path = slappart_directory + "var/log/"
+      # XXX: the following depends on the changes in testnode.py
+      erp5_location = self.testnode.config['repository_path'] + "/scalability_test/"
 
-      # XXX hardcoded erp location. Find it. From testnode?
-      erp5_location = slappart_directory + "srv/testnode/cp/telecom/scalability_test/"
+      # Start only the current test
+      exclude_list=[x for x in test_list if x!=test_list[count]]
+      count += 1
+      test_result_line_proxy = test_result_proxy.start(exclude_list)
+
+      # Loop for getting the running test case
+      current_test = test_result_proxy.getRunningTestCase()
+      while not current_test:
+        time.sleep(15)
+        current_test = test_result_proxy.getRunningTestCase()
+      current_test_data_dict = eval(current_test)
+      current_test_data = "%d,%s,%s" % (current_test_data_dict["count"], current_test_data_dict["title"], current_test_data_dict["relative_path"])
 
       command = [ scalabilityRunner,
                   "--erp5-url", erp5_address,
@@ -448,6 +458,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
                   "--erp5-password", erp5_password,
                   "--test-result-path", node_test_suite.test_result.test_result_path,
                   "--revision", node_test_suite.revision,
+                  "--current-test-data", current_test_data,
                   "--node-title", self.testnode.config['test_node_title'],
                   "--test-suite-master-url", self.testnode.config["test_suite_master_url"],
                   "--test-suite", node_test_suite.test_suite,
@@ -459,50 +470,47 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.log("[DEBUG] Running runScalabilityTestSuite script...")
       subprocess.Popen(command)
 
-      # ROQUE XXX : for debug
-      if True:
-        self.log("RETURN FOR DEBUG")
-        return {'status_code' : 0}
-
-      # Start only the current test
-      exclude_list=[x for x in test_list if x!=test_list[count]]
-      count += 1
-      test_result_line_proxy = test_result_proxy.start(exclude_list)
-
       if test_result_line_proxy == None :
         error_message = "Test case already tested."
+        self.log("ERROR")
+        self.log(error_message)
         break
 
-      self.log("Test for count : %d is in a running state." %count)
+      self.log("Test case for count : %d is in a running state." %count)
 
       # Wait for test case ending
       test_case_start_time = time.time()
       while test_result_line_proxy.isTestCaseAlive() and \
             test_result_proxy.isAlive() and \
             time.time() - test_case_start_time < MAX_TEST_CASE_TIME:
-        time.sleep(15)
+        self.log("Waiting 30 sec for test case...")
+        time.sleep(30)
 
       # Max time limit reach for current test case: failure.
       if test_result_line_proxy.isTestCaseAlive():
         error_message = "Test case during for %s seconds, too long. (max: %s seconds). Test failure." \
                             %(str(time.time() - test_case_start_time), MAX_TEST_CASE_TIME)
+        self.log("ERROR: " + str(error_message))
         break
 
       # Test cancelled, finished or in an undeterminate state.
       if not test_result_proxy.isAlive():
+        self.log("[DEBUG] test case is NOT alive")
         # Test finished
         if count == len(configuration_list):
           break
         # Cancelled or in an undeterminate state.
-        error_message = "Test cancelled or undeterminate state."
+        error_message = "Test case cancelled or undeterminate state."
+        self.log("ERROR: " + str(error_message))
         break
 
     # Stop current instance
-    self.slapos_communicator.requestInstanceStop()
-    self.slapos_communicator.waitInstanceStopped(self.instance_title)
+    # XXX ROQUE: for debug, instance is not stopped
+    #self.slapos_communicator.requestInstanceStop()
+    #self.slapos_communicator.waitInstanceStopped(self.instance_title)
 
     # Delete old instances
-    # ROQUE: for now, the instance is not removed.
+    # XXX ROQUE: for debug, the instance is not removed.
     #self._cleanUpOldInstance()
 
     # If error appears then that's a test failure.    
