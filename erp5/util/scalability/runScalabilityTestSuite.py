@@ -7,23 +7,35 @@ import time
 import sys
 import multiprocessing
 import subprocess
+from subprocess import call
 import signal
 import errno
 import json
 import logging
+import traceback
 import logging.handlers
 import glob
 import urlparse
 import httplib
 import base64
+import requests
 from erp5.util.benchmark.argument import ArgumentType
 from erp5.util.benchmark.performance_tester import PerformanceTester
 from erp5.util import taskdistribution
 from erp5.util.testnode import Utils
+import datetime
 
 MAX_INSTALLATION_TIME = 60*50
 MAX_TESTING_TIME = 60
 MAX_GETTING_CONNECTION_TIME = 60*5
+
+SCALABILITY_LOG_FILENAME = "runScalabilityTestSuite.log"
+LOG_FILE_PREFIX = "scalability-test"
+# Duration of a test case
+TEST_CASE_DURATION = 60
+# Maximum limit of documents to create during a test case
+MAX_DOCUMENTS = 1
+MAX_ERRORS = 1
 
 class DummyLogger(object):
   def __init__(self, func):
@@ -94,7 +106,6 @@ def waitFor0PendingActivities(erp5_url, log):
   if not ok:
     raise ValueError("Cannot waitFor0PendingActivities after %d try (for %s s)" %(count, str(time.time()-start_time)))
 
-
 def getCreatedDocumentNumberFromERP5(erp5_url, log):
   """
   Get the number of created documents from erp5 instance.
@@ -121,20 +132,6 @@ def getCreatedDocumentNumberFromERP5(erp5_url, log):
       time.sleep(15)
   raise ValueError("Impossible to get number of docs from ERP5")
 
-
-# XXX: This import is required, just to populate sys.modules['test_suite'].
-# Even if it's not used in this file. Yuck.
-import product.ERP5Type.tests.ERP5TypeTestSuite
-
-
-from subprocess import call
-
-LOG_FILE_PREFIX = "performance_tester_erp5"
-# Duration of a test case
-TEST_CASE_DURATION = 60
-# Maximum limit of documents to create during a test case
-MAX_DOCUMENTS = 100000
-
 class ScalabilityTest(object):
   def __init__(self, data, test_result):
     self.__dict__ = {}
@@ -144,7 +141,22 @@ class ScalabilityTest(object):
 def doNothing(**kwargs):
   pass
 
-def makeSuite(test_suite=None, log=doNothing, **kwargs):
+def makeSuite(test_suite=None, location=None, log=doNothing, **kwargs):
+  import imp
+  try:
+    module = imp.load_source('scalability_test', location + '__init__.py')
+    suite_class = getattr(module, test_suite)
+    suite = suite_class(**kwargs)
+  except (AttributeError, ImportError) as e:
+    log("[ERROR] AttributeError or ImportError while making suite")
+    log(traceback.format_exc())
+    raise BaseException("AttributeError or ImportError while making suite: " + str(e))
+  except Exception as e:
+    log("[ERROR] While making suite: ")
+    log(traceback.format_exc())
+    raise
+  return suite
+ 
   # BBB tests (plural form) is only checked for backward compatibility
   for k in sys.modules.keys():
     if k in ('tests', 'test',) or k.startswith('tests.') or k.startswith('test.'):
@@ -165,15 +177,13 @@ def makeSuite(test_suite=None, log=doNothing, **kwargs):
   suite = suite_class(max_instance_count=1, **kwargs)
   return suite
 
-
 class ScalabilityLauncher(object):
   def __init__(self):
     # Parse arguments
     self.__argumentNamespace = self._parseArguments(argparse.ArgumentParser(
           description='Run ERP5 benchmarking scalability suites.'))
     # Create Logger
-    log_path = os.path.join(self.__argumentNamespace.log_path,
-                            "runScalabilityTestSuite.log")
+    log_path = os.path.join(self.__argumentNamespace.log_path, SCALABILITY_LOG_FILENAME)
     logger_format = '%(asctime)s %(name)-13s: %(levelname)-8s %(message)s'
     formatter = logging.Formatter(logger_format)
     logging.basicConfig(level=logging.INFO,
@@ -186,10 +196,16 @@ class ScalabilityLauncher(object):
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     self.log = logger.info
+    self.logger = logger
+    self.users_file_original_content = []
+
+    portal_url = self.__argumentNamespace.test_suite_master_url
+    distributor = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(self.log))
 
     # Proxy to with erp5 master test_result
+    self.log(self.__argumentNamespace.test_suite_master_url)
     self.test_result = taskdistribution.TestResultProxy(
-                        self.__argumentNamespace.test_suite_master_url,
+                        distributor,
                         1.0, DummyLogger(self.log),
                         self.__argumentNamespace.test_result_path,
                         self.__argumentNamespace.node_title,
@@ -202,6 +218,14 @@ class ScalabilityLauncher(object):
                         metavar='ERP5_URL',
                         help='Main url of ERP5 instance to test')
 
+    parser.add_argument('--erp5-user',
+                        metavar='ERP5_USER',
+                        help='Main user of ERP5 instance to test')
+
+    parser.add_argument('--erp5-password',
+                        metavar='ERP5_PASSWORD',
+                        help='Main password of ERP5 instance to test')
+
     parser.add_argument('--test-result-path',
                         metavar='ERP5_TEST_RESULT_PATH',
                         help='ERP5 relative path of the test result')
@@ -209,6 +233,10 @@ class ScalabilityLauncher(object):
     parser.add_argument('--revision',
                         metavar='REVISION',
                         help='Revision of the test_suite')
+
+    parser.add_argument('--current-test-data',
+                        metavar='CURRENT_TEST_DATA',
+                        help='Data of the current test')
 
     parser.add_argument('--test-suite',
                         metavar='TEST_SUITE',
@@ -255,21 +283,65 @@ class ScalabilityLauncher(object):
     # Create folder
     new_directory_path = os.path.join(self.__argumentNamespace.log_path,
                                 folder_name)
-    if not os.path.exists(new_directory_path): os.makedirs(new_directory_path)
+    if not os.path.exists(new_directory_path):
+      os.makedirs(new_directory_path)
     # Move files
     for file_to_move in file_to_move_list:
       shutil.move(file_to_move, new_directory_path)
 
   def getRunningTest(self):
     """
-    Return a ScalabilityTest with current running test case informations,
-    or None if no test_case ready
+    Return a ScalabilityTest with current running test case informations
     """
-    data = self.test_result.getRunningTestCase()
-    if not data:
-      return None
+    data_array = self.__argumentNamespace.current_test_data.split(',')
+    data = json.dumps({"count": data_array[0], "title": data_array[1], "relative_path": data_array[2]})
     decoded_data = Utils.deunicodeData(json.loads(data))
     return ScalabilityTest(decoded_data, self.test_result)
+
+  def createScalabilityUsersInInstance(self, user_quantity):
+    # GET request to script for user creation
+    self.log("Creating users")
+    erp5_url = "http://%s:%s@%s/erp5" % (self.__argumentNamespace.erp5_user,
+                                         self.__argumentNamespace.erp5_password,
+                                         self.__argumentNamespace.erp5_url)
+    try:
+      response = requests.get(erp5_url + '/ERP5Site_createScalabilityTestUsers?user_quantity=%i' % user_quantity)
+    except Exception as e:
+      raise BaseException("While creating users: " + str(e))
+    if response.status_code == 200:
+      try:
+        response_dict = eval(response.text)
+      except:
+        raise BaseException("While creating users: dictionary response expected.")
+      if response_dict["status_code"] == 0:
+        return response_dict["password"]
+      else:
+        raise BaseException("While creating users: " + response_dict["error_message"])
+    else:
+      raise BaseException("While creating users: response status " + str(response.status_code))
+
+  def clearUsersFile(self, user_file_path):
+    self.log("Clearing users file: %s" % user_file_path)
+    os.remove(user_file_path)
+    users_file = open(user_file_path, "w")
+    for line in self.users_file_original_content:
+      users_file.write(line)
+    users_file.close()
+
+  def updateUsersFile(self, user_quantity, password, user_file_path):
+    self.log("Updating users file: %s" % user_file_path)
+    users_file = open(user_file_path, "r")
+    file_content = users_file.readlines()
+    self.users_file_original_content = file_content
+    new_file_content = []
+    for line in file_content:
+      new_file_content.append(line.replace('<password>', password).replace('<user_quantity>', str(user_quantity)))
+    users_file.close()
+    os.remove(user_file_path)
+    users_file = open(user_file_path, "w")
+    for line in new_file_content:
+      users_file.write(line)
+    users_file.close()
 
   def run(self):
     self.log("Scalability Launcher started, with:")
@@ -283,128 +355,150 @@ class ScalabilityLauncher(object):
     error_message_set, exit_status = set(), 0
 
     # Get suite informations
-    suite = makeSuite(self.__argumentNamespace.test_suite, self.log)
+    suite = makeSuite(self.__argumentNamespace.test_suite, self.__argumentNamespace.erp5_location, self.log)
     test_suite_list = suite.getTestList()
 
     # Main loop
-    while True:
-
-      # Loop for getting new test case
+    # while True:
+    try:
       current_test = self.getRunningTest()
-      while not current_test:
-        time.sleep(15)
-        current_test = self.getRunningTest()
-      self.log("Test Case %s going to be run." %(current_test.title))
+    except Exception as e:
+      self.log("ERROR while getting current running test")
+      self.log(e)
+    self.log("Test Case %s going to be run." %(current_test.title))
 
-      # Prepare configuration
-      current_test_number = int(current_test.title)
-      test_duration = suite.getTestDuration(current_test_number)
-      benchmarks_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getTestPath())
-      user_file_full_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getUsersFilePath())
-      user_file_path = os.path.split(user_file_full_path)[0]
-      user_file = os.path.split(user_file_full_path)[1]
-      tester_path = self.__argumentNamespace.runner_path
-      user_number = suite.getUserNumber(current_test_number)
-      repetition = suite.getTestRepetition(current_test_number)
+    # Prepare configuration
+    current_test_number = int(current_test.title)
+    test_duration = suite.getTestDuration(current_test_number)
+    benchmarks_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getTestPath())
+    user_file_full_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getUsersFilePath())
+    user_file_path = os.path.split(user_file_full_path)[0]
+    user_file = os.path.split(user_file_full_path)[1]
+    tester_path = self.__argumentNamespace.runner_path
+    user_quantity = suite.getUserNumber(current_test_number)
+    repetition = suite.getTestRepetition(current_test_number)
+    erp5_url = "http://%s/erp5" % self.__argumentNamespace.erp5_url
 
-      self.log("user_number: %s" %str(user_number))
-      self.log("test_duration: %s seconds" %str(test_duration))
+    self.log("user_quantity: %s" %str(user_quantity))
+    self.log("test_duration: %s seconds" %str(test_duration))
 
-      # Store the number of documents generated for each iteration
-      document_number = []
+    # Store the number of documents generated for each iteration
+    document_number = []
 
-      # Repeat the same test several times to accurate test result
-      for i in range(1, repetition+1):
-        self.log("Repetition: %d/%d" %(i, repetition))
+    try:
+      password = self.createScalabilityUsersInInstance(user_quantity)
+    except Exception as e:
+      self.log("ERROR")
+      self.log(e)
+    self.log("Generated password for created users: %s" % password)
+    self.updateUsersFile(user_quantity, password, user_file_full_path + ".py")
+    self.log("Users file updated.")
 
-        # Get the number of documents present before running the test.
-        waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
-        previous_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
-        self.log("previous_document_number: %d" %previous_document_number)
+    now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
+    log_dir = "test-%s_%s" % (current_test.title, now)
+    # Repeat the same test several times to accurate test result
+    for i in range(1, repetition+1):
+      self.log("Repetition: %d/%d" %(i, repetition))
 
-        # Generate commands to run
-        command_list = []
-        user_index = 0
-        for test_suite in test_suite_list:
-          command_list.append([tester_path,
-               self.__argumentNamespace.erp5_url,
-               str(user_number/len(test_suite_list)),
-               test_suite,
-               '--benchmark-path-list', benchmarks_path,
-               '--users-file-path', user_file_path,
-               '--users-file', user_file,
-               '--filename-prefix', "%s_%s_repetition%d" %(LOG_FILE_PREFIX, current_test.title, i),
-               '--report-directory', self.__argumentNamespace.log_path,
-               '--repeat', "%s" %str(MAX_DOCUMENTS),
-               '--max-errors', str(1000000),
-               '--user-index', str(user_index),
-          ])
-          user_index += user_number/len(test_suite_list)
+      # Get the number of documents present before running the test.
+      waitFor0PendingActivities(erp5_url, self.log)
+      #previous_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
+      # Generate commands to run
+      command_list = []
+      user_index = 0
+      for test_suite in test_suite_list:
+        command_list.append([tester_path,
+             erp5_url,
+             str(user_quantity/len(test_suite_list)),
+             test_suite,
+             '--benchmark-path-list', benchmarks_path,
+             '--users-file-path', user_file_path,
+             '--users-file', user_file,
+             '--filename-prefix', "%s_%s_repetition%d" %(LOG_FILE_PREFIX, current_test.title, i),
+             '--report-directory', self.__argumentNamespace.log_path,
+             '--repeat', "%s" %str(MAX_DOCUMENTS),
+             '--max-errors', str(MAX_ERRORS),
+             '--user-index', str(user_index),
+        ])
+        user_index += user_quantity/len(test_suite_list)
 
-        # Launch commands
-        tester_process_list = []
-        for command in command_list:
-          self.log("command: %s" %str(command))
+      # Launch commands
+      tester_process_list = []
+      for command in command_list:
+        try:
+          self.log("[DEBUG] command: %s" %str(command))
           tester_process_list.append(subprocess.Popen(command))
+        except Exception as e:
+          self.log("[ERROR] While running command.")
+          self.log(traceback.format_exc())
+          raise
 
-        # Sleep
-        time.sleep(test_duration)
+      # Sleep
+      self.log("Going to sleep for %s seconds (Test duration)." % str(test_duration))
+      time.sleep(test_duration)
 
-        # Stop
-        for tester_process in tester_process_list:
-          tester_process.send_signal(signal.SIGINT)
-          self.log("End signal sent to the tester.")
+      # Stop
+      for tester_process in tester_process_list:
+        tester_process.send_signal(signal.SIGINT)
+        self.log("End signal sent to the tester.")
 
-        # Count created documents
-        # Wait for 0 pending activities before counting
-        waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
-        current_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
-        created_document_number = current_document_number - previous_document_number
-        self.log("previous_document_number: %d" %previous_document_number)
-        self.log("current_document_number: %d" %current_document_number)
-        self.log("created_document_number: %d" %created_document_number)
-        document_number.append(created_document_number)
-        # Move csv/logs
-        self.moveLogs(current_test.title)
+      # Count created documents
+      # Wait for 0 pending activities before counting
+      waitFor0PendingActivities(erp5_url, self.log)
+      #current_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
+      #created_document_number = current_document_number - previous_document_number
+      #document_number.append(created_document_number)
+      # Move csv/logs
+      self.log("Moving logs to directory '%s'" % log_dir)
+      self.moveLogs(log_dir)
 
-      self.log("Test Case %s is finish" %(current_test.title))
+    self.log("Test Case %s is finish" %(current_test.title))
 
-      # Get the maximum as choice
-      maximum = 0
-      for i in range(0,len(document_number)):
-        if document_number[i] > maximum:
-          maximum = document_number[i]
+    # Get the maximum as choice
+    maximum = 0
+    for i in range(0,len(document_number)):
+      if document_number[i] > maximum:
+        maximum = document_number[i]
 
-      # Send results to ERP5 master
-      retry_time = 2.0
-      proxy = taskdistribution.ServerProxy(
-                  self.__argumentNamespace.test_suite_master_url,
-                  allow_none=True
-              ).portal_task_distribution
-      test_result_line_test = taskdistribution.TestResultLineProxy(
-                                proxy, retry_time, self.log,
-                                current_test.relative_path,
-                                current_test.title
-                              )
-      results = "created docs=%d\n"\
-                "duration=%d\n"\
-                "number of tests=%d\n"\
-                "number of users=%d\n"\
-                "tests=%s\n"\
-                %(
-                  maximum,
-                  test_duration,
-                  len(test_suite_list),
-                  (user_number/len(test_suite_list))*len(test_suite_list),
-                  '_'.join(test_suite_list)
-                )
-      self.log("Results: %s" %results)
+    # Send results to ERP5 master
+    retry_time = 2.0
+    proxy = taskdistribution.ServerProxy(
+                self.__argumentNamespace.test_suite_master_url,
+                allow_none=True
+            ).portal_task_distribution
+    test_result_line_test = taskdistribution.TestResultLineProxy(
+                              proxy, retry_time, self.logger,
+                              current_test.relative_path,
+                              current_test.title
+                            )
+    results = "created docs=%d\n"\
+              "number of repetitions=%d\n"\
+              "duration=%d\n"\
+              "number of tests=%d\n"\
+              "number of users=%d\n"\
+              "tests=%s\n"\
+              %(
+                maximum,
+                repetition,
+                test_duration,
+                len(test_suite_list),
+                (user_quantity/len(test_suite_list))*len(test_suite_list),
+                '_'.join(test_suite_list)
+              )
+    self.log("Results: %s" %results)
+    self.log("Stopping the test case...")
+    try:
       test_result_line_test.stop(stdout=results,
                       test_count=len(test_suite_list),
                       duration=test_duration)
-      self.log("Test Case Stopped")
+    except Exception as e:
+      self.log("ERROR stopping test line")
+      self.log(e)
+      raise e
+    self.log("Test Case Stopped")
+    self.clearUsersFile(user_file_full_path + ".py")
+    # end of the main while
 
-    #
     error_message_set = None
     exit_status = 0
     return error_message_set, exit_status
