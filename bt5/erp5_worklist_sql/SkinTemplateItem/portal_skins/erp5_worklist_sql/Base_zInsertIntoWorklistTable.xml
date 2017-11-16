@@ -8,30 +8,30 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>count\r\n
-security_uid\r\n
-portal_type\r\n
-simulation_state\r\n
-validation_state\r\n
-owner\r\n
-viewable_owner\r\n
-parent_uid\r\n
-title\r\n
-opportunity_state\r\n
-causality_state\r\n
-invoice_state\r\n
-payment_state\r\n
-event_state\r\n
-immobilisation_state\r\n
-reference\r\n
-grouping_reference\r\n
-source_reference\r\n
-destination_reference\r\n
-string_index\r\n
-int_index\r\n
-float_index\r\n
-has_cell_content\r\n
-creation_date\r\n
+            <value> <string>count\n
+security_uid\n
+portal_type\n
+simulation_state\n
+validation_state\n
+owner\n
+viewable_owner\n
+parent_uid\n
+title\n
+opportunity_state\n
+causality_state\n
+invoice_state\n
+payment_state\n
+event_state\n
+immobilisation_state\n
+reference\n
+grouping_reference\n
+source_reference\n
+destination_reference\n
+string_index\n
+int_index\n
+float_index\n
+has_cell_content\n
+creation_date\n
 modification_date</string> </value>
         </item>
         <item>

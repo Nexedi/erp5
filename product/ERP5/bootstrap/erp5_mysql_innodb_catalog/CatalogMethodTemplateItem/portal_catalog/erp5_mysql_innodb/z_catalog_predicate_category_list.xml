@@ -14,9 +14,9 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\r\n
-predicate_property_dict\r\n
-isPredicate\r\n
+            <value> <string>uid\n
+predicate_property_dict\n
+isPredicate\n
 getObject</string> </value>
         </item>
         <item>

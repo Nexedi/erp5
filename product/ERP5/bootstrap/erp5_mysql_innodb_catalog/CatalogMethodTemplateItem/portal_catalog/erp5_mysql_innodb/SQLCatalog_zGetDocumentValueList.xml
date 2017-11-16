@@ -22,10 +22,10 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>search_context\r\n
-language\r\n
-strict_language\r\n
-all_languages\r\n
+            <value> <string>search_context\n
+language\n
+strict_language\n
+all_languages\n
 kw</string> </value>
         </item>
         <item>

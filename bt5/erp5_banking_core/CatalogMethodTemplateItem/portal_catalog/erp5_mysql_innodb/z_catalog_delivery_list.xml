@@ -14,18 +14,18 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>isDelivery\r\n
-uid\r\n
-getSourceUid\r\n
-getDestinationUid\r\n
-getSourceSectionUid\r\n
-getDestinationSectionUid\r\n
-getResourceUid\r\n
-getRecoupDate\r\n
-getSourcePaymentReference\r\n
-getDestinationPaymentReference\r\n
-getSourcePaymentInternalBankAccountNumber\r\n
-getDestinationPaymentInternalBankAccountNumber\r\n
+            <value> <string>isDelivery\n
+uid\n
+getSourceUid\n
+getDestinationUid\n
+getSourceSectionUid\n
+getDestinationSectionUid\n
+getResourceUid\n
+getRecoupDate\n
+getSourcePaymentReference\n
+getDestinationPaymentReference\n
+getSourcePaymentInternalBankAccountNumber\n
+getDestinationPaymentInternalBankAccountNumber\n
 getSourceTotalAssetPrice</string> </value>
         </item>
         <item>

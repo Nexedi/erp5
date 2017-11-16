@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>count:int\r\n
+            <value> <string>count:int\n
 instance_id</string> </value>
         </item>
         <item>

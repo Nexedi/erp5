@@ -14,8 +14,8 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>min_gid\r\n
-max_gid\r\n
+            <value> <string>min_gid\n
+max_gid\n
 path</string> </value>
         </item>
         <item>

@@ -22,10 +22,10 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>node_uid:list\r\n
-section_uid:list\r\n
-simulation_state:list\r\n
-portal_type:list\r\n
+            <value> <string>node_uid:list\n
+section_uid:list\n
+simulation_state:list\n
+portal_type:list\n
 at_date</string> </value>
         </item>
         <item>

@@ -14,26 +14,26 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\r\n
-security_uid\r\n
-getViewPermissionOwner\r\n
-getPath\r\n
-getRelativeUrl\r\n
-getParentUid\r\n
-id\r\n
-getDescription\r\n
-getTitle\r\n
-getPortalType\r\n
-getSimulationState\r\n
-getValidationState\r\n
-getReference\r\n
-getSourceReference\r\n
-getStringIndex\r\n
-getIntIndex\r\n
-hasCellContent\r\n
-getCreationDate\r\n
-getModificationDate\r\n
-getStartDate\r\n
+            <value> <string>uid\n
+security_uid\n
+getViewPermissionOwner\n
+getPath\n
+getRelativeUrl\n
+getParentUid\n
+id\n
+getDescription\n
+getTitle\n
+getPortalType\n
+getSimulationState\n
+getValidationState\n
+getReference\n
+getSourceReference\n
+getStringIndex\n
+getIntIndex\n
+hasCellContent\n
+getCreationDate\n
+getModificationDate\n
+getStartDate\n
 getStopDate</string> </value>
         </item>
         <item>

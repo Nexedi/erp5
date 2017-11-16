@@ -14,10 +14,10 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>strict_min_gid\r\n
-min_gid\r\n
-max_gid\r\n
-path\r\n
+            <value> <string>strict_min_gid\n
+min_gid\n
+max_gid\n
+path\n
 limit</string> </value>
         </item>
         <item>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid_list\r\n
+            <value> <string>uid_list\n
 min_date</string> </value>
         </item>
         <item>

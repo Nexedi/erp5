@@ -65,9 +65,9 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>node_uid\r\n
-at_date\r\n
-section_uid:list\r\n
+            <value> <string>node_uid\n
+at_date\n
+section_uid:list\n
 simulation_state:list</string> </value>
         </item>
         <item>

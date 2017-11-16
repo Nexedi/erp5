@@ -14,21 +14,21 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\r\n
-getSourceSectionUid\r\n
-getDestinationSectionUid\r\n
-getResourceUid\r\n
-getSourceProjectUid\r\n
-getDestinationProjectUid\r\n
-getSourcePaymentUid\r\n
-getDestinationPaymentUid\r\n
-getTitle\r\n
-getReference\r\n
-getSourceReference\r\n
-getDestinationReference\r\n
-getStartDate\r\n
-getStopDate\r\n
-InternalInvoiceTransaction_statInternalTransactionLineList\r\n
+            <value> <string>uid\n
+getSourceSectionUid\n
+getDestinationSectionUid\n
+getResourceUid\n
+getSourceProjectUid\n
+getDestinationProjectUid\n
+getSourcePaymentUid\n
+getDestinationPaymentUid\n
+getTitle\n
+getReference\n
+getSourceReference\n
+getDestinationReference\n
+getStartDate\n
+getStopDate\n
+InternalInvoiceTransaction_statInternalTransactionLineList\n
 </string> </value>
         </item>
         <item>

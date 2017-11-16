@@ -14,8 +14,8 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\r\n
-getStartDate\r\n
+            <value> <string>uid\n
+getStartDate\n
 getBirthplaceAddressCity</string> </value>
         </item>
         <item>

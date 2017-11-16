@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>resource_uid\r\n
+            <value> <string>resource_uid\n
 quantity_unit_uid</string> </value>
         </item>
         <item>

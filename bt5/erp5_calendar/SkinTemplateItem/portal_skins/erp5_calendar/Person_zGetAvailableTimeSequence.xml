@@ -14,9 +14,9 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>period_list:list\r\n
-node:list\r\n
-portal_type:list\r\n
+            <value> <string>period_list:list\n
+node:list\n
+portal_type:list\n
 resource:list</string> </value>
         </item>
         <item>

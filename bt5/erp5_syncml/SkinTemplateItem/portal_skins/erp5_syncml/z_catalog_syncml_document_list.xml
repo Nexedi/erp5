@@ -8,9 +8,9 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>getId\r\n
-getPath\r\n
-getData\r\n
+            <value> <string>getId\n
+getPath\n
+getData\n
 </string> </value>
         </item>
         <item>

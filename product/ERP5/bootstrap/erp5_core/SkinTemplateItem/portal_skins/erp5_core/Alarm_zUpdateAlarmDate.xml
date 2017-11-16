@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\r\n
+            <value> <string>uid\n
 alarm_date</string> </value>
         </item>
         <item>

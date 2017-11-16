@@ -14,8 +14,8 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>path\r\n
-path_list\r\n
+            <value> <string>path\n
+path_list\n
 uid_only</string> </value>
         </item>
         <item>

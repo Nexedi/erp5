@@ -8,8 +8,8 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\r\n
-getUrlString\r\n
+            <value> <string>uid\n
+getUrlString\n
 getPortalType</string> </value>
         </item>
         <item>

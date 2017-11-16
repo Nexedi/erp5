@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>subject_set_uid\r\n
+            <value> <string>subject_set_uid\n
 optimised_subject_list</string> </value>
         </item>
         <item>
