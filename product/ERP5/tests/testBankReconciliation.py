@@ -556,7 +556,154 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     self.tic()
     self.assertEqual(100, bank_reconciliation.BankReconciliation_getReconciledAccountBalance())
 
+  def test_BankReconciliation_internal_transaction(self):
+    # Allow internal invoice in accounting module
+    module_allowed_type_list = self.portal.portal_types[
+        'Accounting Transaction Module'].getTypeAllowedContentTypeList()
+    self.portal.portal_types[
+        'Accounting Transaction Module'].setTypeAllowedContentTypeList(
+          module_allowed_type_list + ['Internal Invoice Transaction',])
+
+    account_module = self.account_module
+    main_section_bank_account = self.main_section.newContent(
+        portal_type='Bank Account',
+        price_currency_value=self.portal.currency_module.euro)
+    main_section_bank_account.validate()
     
+    internal_transaction = self.portal.accounting_module.newContent(
+        portal_type='Internal Invoice Transaction',
+        source_section_value=self.section,
+        source_payment_value=self.bank_account,
+        destination_section_value=self.main_section,
+        destination_payment_value=main_section_bank_account,
+        resource_value=self.portal.currency_module.euro,
+        start_date=DateTime(2014, 1, 1))
+    internal_transaction.newContent(
+        portal_type='Internal Invoice Transaction Line',
+        source_value=account_module.bank,
+        destination_value=account_module.bank,
+        source_debit=100,
+        id='bank')
+
+    internal_transaction.newContent(
+        portal_type='Internal Invoice Transaction Line',
+        destination_value=account_module.payable,
+        source_value=account_module.receivable,
+        source_credit=100)
+    internal_transaction.start()
+    internal_transaction.stop()
+
+    # this internal_transaction.bank line exists in both reconciliation for
+    # `section` and for `main_section` and can be reconciled independently by
+    # each section
+    bank_reconciliation_for_main_section = self.portal.bank_reconciliation_module.newContent(
+        portal_type='Bank Reconciliation',
+        title='Bank Reconcilisation for Main Section',
+        source_section_value=self.main_section,
+        source_payment_value=main_section_bank_account,
+        stop_date=DateTime(2014, 1, 31))
+    self.tic()
+
+    self.assertEqual(-100, bank_reconciliation_for_main_section.BankReconciliation_getAccountBalance())
+    self.assertEqual(
+        [internal_transaction.bank, ],
+        [x.getObject() for x in
+            bank_reconciliation_for_main_section.BankReconciliation_getAccountingTransactionLineList()])
+
+    bank_reconciliation_for_section = self.portal.bank_reconciliation_module.newContent(
+        portal_type='Bank Reconciliation',
+        title='Bank Reconcilisation for Section',
+        source_section_value=self.section,
+        source_payment_value=self.bank_account,
+        stop_date=DateTime(2014, 1, 31))
+    self.tic()
+
+    self.assertEqual(100, bank_reconciliation_for_section.BankReconciliation_getAccountBalance())
+    self.assertEqual(
+        [internal_transaction.bank, ],
+        [x.getObject() for x in
+            bank_reconciliation_for_section.BankReconciliation_getAccountingTransactionLineList()])
+    
+    # if `section` reconciles, the line is not reconciled for `main_section`
+    list_selection_name = bank_reconciliation_for_section\
+        .BankReconciliation_viewBankReconciliationFastInputDialog.listbox.get_value(
+            'selection_name')
+    bank_reconciliation_for_section.BankReconciliation_reconcileTransactionList(
+        list_selection_name=list_selection_name,
+        uids=(internal_transaction.bank.getUid(), ),
+        mode='reconcile')
+    self.tic()
+    # reconciled for `section`
+    self.assertEqual(100, bank_reconciliation_for_section.BankReconciliation_getReconciledAccountBalance())
+    self.assertEqual(
+        [],
+        [x.getObject() for x in
+            bank_reconciliation_for_section.BankReconciliation_getAccountingTransactionLineList()])
+    # Not reconciled for `main_section`
+    self.assertEqual(0, bank_reconciliation_for_main_section.BankReconciliation_getReconciledAccountBalance())
+    self.assertEqual(
+        [internal_transaction.bank, ],
+        [x.getObject() for x in
+            bank_reconciliation_for_main_section.BankReconciliation_getAccountingTransactionLineList()])
+
+    self.assertItemsEqual(
+        [bank_reconciliation_for_section],
+        internal_transaction.bank.getAggregateValueList())
+
+    # if `main_section` also reconcile, line will be reconciled for both
+    list_selection_name = bank_reconciliation_for_main_section\
+        .BankReconciliation_viewBankReconciliationFastInputDialog.listbox.get_value(
+            'selection_name')
+    bank_reconciliation_for_main_section.BankReconciliation_reconcileTransactionList(
+        list_selection_name=list_selection_name,
+        uids=(internal_transaction.bank.getUid(), ),
+        mode='reconcile')
+    self.tic()
+    # Reconciled for `main_section`
+    self.assertEqual(-100, bank_reconciliation_for_main_section.BankReconciliation_getReconciledAccountBalance())
+    self.assertEqual(
+        [],
+        [x.getObject() for x in
+            bank_reconciliation_for_main_section.BankReconciliation_getAccountingTransactionLineList()])
+    # Still reconciled for `section`
+    self.assertEqual(100, bank_reconciliation_for_section.BankReconciliation_getReconciledAccountBalance())
+    self.assertEqual(
+        [],
+        [x.getObject() for x in
+            bank_reconciliation_for_section.BankReconciliation_getAccountingTransactionLineList()])
+
+    self.assertItemsEqual(
+        [bank_reconciliation_for_section, bank_reconciliation_for_main_section],
+        internal_transaction.bank.getAggregateValueList())
+
+
+    # if `section` un-reconcile, line will be not reconciled for `section`, but still reconciled for `main_section`
+    list_selection_name = bank_reconciliation_for_section\
+        .BankReconciliation_viewBankReconciliationFastInputDialog.listbox.get_value(
+            'selection_name')
+    bank_reconciliation_for_section.BankReconciliation_reconcileTransactionList(
+        list_selection_name=list_selection_name,
+        uids=(internal_transaction.bank.getUid(), ),
+        mode='unreconcile')
+    self.tic()
+    # no longer reconciled for `section`
+    self.assertEqual(0, bank_reconciliation_for_section.BankReconciliation_getReconciledAccountBalance())
+    self.assertEqual(
+        [internal_transaction.bank,],
+        [x.getObject() for x in
+            bank_reconciliation_for_section.BankReconciliation_getAccountingTransactionLineList()])
+    # Still reconciled for `main_section`
+    self.assertEqual(-100, bank_reconciliation_for_main_section.BankReconciliation_getReconciledAccountBalance())
+    self.assertEqual(
+        [],
+        [x.getObject() for x in
+            bank_reconciliation_for_main_section.BankReconciliation_getAccountingTransactionLineList()])
+
+    self.assertItemsEqual(
+        [bank_reconciliation_for_main_section],
+        internal_transaction.bank.getAggregateValueList())
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBankReconciliation))
