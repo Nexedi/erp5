@@ -207,7 +207,7 @@ gadget_erp5_page_settings_configurator.html\n
 gadget_erp5_page_ojsm_processes_view.html\n
 gadget_erp5_page_ojsm_hosting_subscription_view.html\n
 gadget_officejs_monitoring_sync.html\n
-gadget_officejs_jio_global_view.html\n
+gadget_officejs_jio_software_instance_view.html\n
 gadget_erp5_page_ojsm_software_instance_list.html\n
 gadget_officejs_monitoring_router.html\n
 gadget_officejs_jio_promise_view.html\n
@@ -232,12 +232,11 @@ gadget_erp5_page_settings_configurator.js\n
 gadget_erp5_page_ojsm_processes_view.js\n
 gadget_officejs_monitoring_custom.css\n
 gadget_erp5_page_ojsm_hosting_subscription_view.js\n
-gadget_global.js\n
 gadget_erp5_global.js\n
 gadget_officejs_monitoring_sync.js\n
 gadget_erp5_page_ojsm_software_instance_list.js\n
 gadget_officejs_monitoring_panel.js\n
-gadget_officejs_jio_global_view.js\n
+gadget_officejs_jio_software_instance_view.js\n
 gadget_erp5_page_ojsm_import_export.js\n
 gadget_erp5_page_ojsm_resources_view.js\n
 gadget_officejs_jio_promise_view.js\n
@@ -384,7 +383,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>963.30985.26464.16281</string> </value>
+                <value> <string>963.33744.19919.32631</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -402,7 +401,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1510766013.21</float>
+                        <float>1510932931.68</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

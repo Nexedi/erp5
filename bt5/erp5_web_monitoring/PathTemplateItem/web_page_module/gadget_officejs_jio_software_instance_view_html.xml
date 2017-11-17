@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_global_view.html</string> </value>
+            <value> <string>gadget_officejs_jio_software_instance_view.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_global_view_html</string> </value>
+            <value> <string>gadget_officejs_jio_software_instance_view_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -250,7 +250,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.47216.7271.9574</string> </value>
+                <value> <string>963.33703.32471.53657</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -268,7 +268,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1507901938.7</float>
+                        <float>1510929101.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

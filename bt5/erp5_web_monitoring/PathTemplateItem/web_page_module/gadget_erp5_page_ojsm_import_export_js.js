@@ -243,7 +243,7 @@
             if (status) {
               return gadget.redirect({
                 "command": "display",
-                "options": {"page": "settings_configurator"}
+                "options": {"page": "ojsm_synchronize"}
               });
             }
           });
@@ -599,7 +599,7 @@
                 if (!has_failed) {
                   return gadget.redirect({
                     "command": "display",
-                    "options": {"page": "settings_configurator"}
+                    "options": {"page": "ojsm_synchronize"}
                   });
                 }
               });
