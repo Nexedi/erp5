@@ -19,6 +19,7 @@
     })
 
     .onStateChange(function (modification_dict) {
+      var gadget = this;
       // Check if a sub gadget has to be regenerated
       if ((modification_dict.hasOwnProperty('url')) ||
           (modification_dict.hasOwnProperty('sandbox')) ||
@@ -66,7 +67,25 @@
           render_kw.value = gadget.state.value;
           render_kw.editable = gadget.state.editable;
           render_kw.hidden = gadget.state.hidden;
-          return result.render(render_kw);
+          return result.render(render_kw)
+            .push(function () {
+              var div;
+              if (render_kw.maximize) {
+                div = document.createElement('div');
+                gadget.element.insertBefore(div, gadget.element.firstChild);
+                return gadget.declareGadget(render_kw.maximize, {
+                  scope: "maximize_button",
+                  sandbox: 'public',
+                  element: div
+                })
+                .push(function (maximize_button) {
+                  return maximize_button.render({
+                    target: gadget,
+                    value: 'Maximize'
+                  });
+                });
+              }
+            });
         });
     })
 
