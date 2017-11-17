@@ -1,6 +1,8 @@
 Attribute Blacklisted Constraint | ConstraintType
 Attribute Equality Constraint | ConstraintType
 Attribute Unicity Constraint | ConstraintType
+Catalog Tool | CatalogTool
+Catalog | Catalog
 Category Acquired Membership State Constraint | ConstraintType
 Category Existence Constraint | ConstraintType
 Category Membership Arity Constraint | ConstraintType

@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ERP5 Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>action</string> </key>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>enctype</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <list>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_title</string>
+                        <string>my_sql_catalog_produce_reserved</string>
+                        <string>my_sql_catalog_reserve_uid</string>
+                        <string>my_sql_catalog_clear_reserved</string>
+                        <string>my_sql_record_object_list</string>
+                        <string>my_sql_catalog_delete_uid</string>
+                        <string>my_sql_read_recorded_object_list</string>
+                        <string>my_sql_catalog_multi_schema</string>
+                        <string>my_sql_catalog_paths</string>
+                        <string>my_sql_unique_values</string>
+                        <string>my_sql_catalog_index</string>
+                        <string>my_sql_catalog_schema</string>
+                        <string>my_sql_delete_recorded_object_list</string>
+                        <string>my_sql_search_results</string>
+                        <string>my_sql_search_security</string>
+                        <string>my_sql_count_results</string>
+                        <string>my_sql_getitem_by_path</string>
+                        <string>my_sql_getitem_by_uid</string>
+                        <string>my_sql_clear_catalog_list</string>
+                        <string>my_sql_search_result_keys_list</string>
+                        <string>my_sql_catalog_search_keys_list</string>
+                        <string>my_sql_catalog_keyword_search_keys_list</string>
+                        <string>my_sql_catalog_multivalue_keys_list</string>
+                        <string>my_sql_catalog_full_text_search_keys_list</string>
+                        <string>my_sql_catalog_request_keys_list</string>
+                        <string>my_sql_catalog_index_on_order_keys_list</string>
+                        <string>my_sql_catalog_table_vote_scripts_list</string>
+                        <string>my_sql_catalog_topic_search_keys_list</string>
+                        <string>my_sql_catalog_role_keys_list</string>
+                        <string>my_sql_catalog_local_role_keys_list</string>
+                        <string>my_sql_catalog_security_uid_columns_list</string>
+                        <string>my_sql_catalog_raise_error_on_uid_check</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list>
+                        <string>my_sql_catalog_object_list_list</string>
+                        <string>my_sql_uncatalog_object_list</string>
+                        <string>my_sql_optimizer_switch</string>
+                        <string>my_sql_delete_translation_list</string>
+                        <string>my_sql_catalog_translation_list</string>
+                        <string>my_sql_search_tables_list</string>
+                        <string>my_sql_catalog_datetime_search_keys_list</string>
+                        <string>my_sql_catalog_related_keys_list</string>
+                        <string>my_sql_catalog_scriptable_keys_list</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Catalog_viewPropertyList</string> </value>
+        </item>
+        <item>
+            <key> <string>method</string> </key>
+            <value> <string>POST</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>Catalog_viewPropertyList</string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view</string> </value>
+        </item>
+        <item>
+            <key> <string>row_length</string> </key>
+            <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>stored_encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Properties</string> </value>
+        </item>
+        <item>
+            <key> <string>unicode_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
