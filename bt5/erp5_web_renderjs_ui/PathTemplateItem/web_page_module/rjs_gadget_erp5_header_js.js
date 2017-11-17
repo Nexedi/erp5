@@ -92,6 +92,7 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
     .declareAcquiredMethod("triggerPanel", "triggerPanel")
+    .declareAcquiredMethod("trigger", "trigger")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -128,6 +129,11 @@
     .declareMethod('notifyChange', function () {
       return this.changeState({
         modified: true
+      });
+    })
+    .declareMethod('setTitleButton', function (name) {
+      return this.changeState({
+        title_button_action: name
       });
     })
 /*
@@ -234,7 +240,8 @@
           modification_dict.hasOwnProperty('submitted') ||
           modification_dict.hasOwnProperty('title_text') ||
           modification_dict.hasOwnProperty('title_icon') ||
-          modification_dict.hasOwnProperty('title_url')) {
+          modification_dict.hasOwnProperty('title_url') ||
+          modification_dict.hasOwnProperty('title_button_action')) {
         if (gadget.state.error) {
           default_title_icon = "exclamation";
         } else if (!gadget.state.loaded) {
@@ -249,7 +256,11 @@
           icon: default_title_icon || gadget.state.title_icon,
           url: gadget.state.title_url
         };
-        if (title_link.url === undefined) {
+        if (gadget.state.title_button_action) {
+          title_link.name = 'trigger';
+          title_link['class'] = "ui-icon-" + title_link.icon;
+          promise_list.push(gadget.translateHtml(header_button_template(title_link)));
+        } else if (title_link.url === undefined) {
           promise_list.push(gadget.translateHtml(header_title_template(title_link)));
         } else {
           promise_list.push(gadget.translateHtml(header_title_link_template(title_link)));
@@ -351,6 +362,9 @@
       }
       if (name === "submit") {
         return this.triggerSubmit();
+      }
+      if (name === 'trigger') {
+        return this.trigger(this.state.title_button_action);
       }
       throw new Error("Unsupported button " + name);
     });
