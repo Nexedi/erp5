@@ -113,6 +113,8 @@
                   "css_class": "",
                   "required": 0,
                   "key": "text_content",
+                  "renderjs_extra":
+                    '{"maximize": "gadget_erp5_button_maximize.html"}',
                   "hidden": 0,
                   "type": "GadgetField",
                   "url": "../officejs_ckeditor_gadget/app/",
