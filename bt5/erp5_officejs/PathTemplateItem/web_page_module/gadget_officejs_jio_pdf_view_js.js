@@ -135,6 +135,8 @@
                   "required": 0,
                   "editable": 1,
                   "key": "text_content",
+                  "renderjs_extra":
+                    '{"maximize": "gadget_erp5_button_maximize.html"}',
                   "hidden": 0,
                   "type": "GadgetField",
                   "url": "../officejs_pdf_viewer_gadget/app/",
