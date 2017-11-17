@@ -243,6 +243,32 @@
       });
   }
 
+  function fixGlobalInstanceDocument(instance) {
+    // Fix some property as backed is old, to keep backward compatibility
+    // XXX - this method should be removed when all backend will be upgraded
+    if (instance._embedded !== undefined) {
+      if (instance._embedded.instance !== undefined) {
+        // set aggregate_reference to the computer reference and make it
+        // searchable
+        instance.aggregate_reference = instance._embedded.instance.computer;
+      }
+      if (instance._embedded.hasOwnProperty('promises')) {
+        // remove useless information from the document
+        delete instance._embedded.promises;
+      }
+    }
+    if (instance.hasOwnProperty('hosting-title')) {
+      // hosting-title should be specialise_title
+      instance.specialise_title = instance['hosting-title'];
+      delete instance['hosting-title'];
+    }
+    // set portal_type is not defined
+    if (!instance.hasOwnProperty('portal_type')) {
+      instance.portal_type = "Software Instance";
+    }
+    return instance;
+  }
+
   function updateSubStorageStatus(context, signature_dict, next_status) {
     var key,
       update_status_queue = new RSVP.Queue();
@@ -488,12 +514,18 @@
           extra_dict,
           item_signature_dict = {};
 
-        function applyItemToTree(item, item_result, portal_type, extra_dict) {
+        function applyItemToTree(item, item_result, extra_dict) {
           var id_hash,
             element = item.doc,
             signature,
             item_id = item.guid || item.id,
             status = (element.status || element.category);
+
+          if (element.type === 'global' &&
+              element.aggregate_reference === undefined) {
+            // XXX - document need to be updated to keep compatibility
+            element = fixGlobalInstanceDocument(element);
+          }
 
           id_hash = generateHash(item_result.parent_id +
                                  item_result.url + item_id);
@@ -520,7 +552,8 @@
           }
           Object.assign(element, {
             parent_id: item_result.parent_id,
-            portal_type: portal_type || element.type || item_result.type,
+            portal_type: element.portal_type || element.type ||
+              item_result.type,
             status: status,
             reference: id_hash,
             active: true
@@ -543,18 +576,12 @@
                 channel: result_list[i].result.data.rows[0].doc.description,
                 channel_item: result_list[i].result.data.rows[0].doc.title
               };
-              applyItemToTree(
-                result_list[i].result.data.rows[0],
-                result_list[i],
-                "rss"
-              );
               start = 1;
             }
             for (j = start; j < result_list[i].result.data.total_rows; j += 1) {
               applyItemToTree(
                 result_list[i].result.data.rows[j],
                 result_list[i],
-                undefined,
                 extra_dict
               );
             }

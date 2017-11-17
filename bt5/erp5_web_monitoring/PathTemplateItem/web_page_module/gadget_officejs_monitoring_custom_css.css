@@ -363,3 +363,11 @@ margin-top: 5px;
   background-color: #af441a;
   opacity: 0.5;
 }
+
+.search-result {
+  font-size: 130%;
+  color: #517286;
+  padding: 20px 10px;
+  margin: 30px 25px 10px 0;
+  border-top: 1px solid #dedede;
+}

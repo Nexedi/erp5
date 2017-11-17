@@ -224,11 +224,12 @@
           var column_list = [
               ['title', 'Instance Title'],
               ['date', 'Status Date'],
+              ['aggregate_reference', 'Computer'],
               ['status', 'Status']
             ],
             j,
             key_list = [],
-            instance_query = '(portal_type:"global")';
+            instance_query = '(portal_type:"Software Instance")';
 
           if (gadget.state.ouline_list.length === 0) {
             return;

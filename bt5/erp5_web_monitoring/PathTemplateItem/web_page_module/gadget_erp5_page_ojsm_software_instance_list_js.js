@@ -5,10 +5,7 @@
 
   rJS(window)
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("reload", "reload")
     .declareAcquiredMethod("getSetting", "getSetting")
-    .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
@@ -95,7 +92,8 @@
         .push(function (form_list) {
           var column_list = [
             ['title', 'Instance Title'],
-            ['hosting-title', 'Hosting Subscription'],
+            ['specialise_title', 'Hosting Subscription'],
+            ['aggregate_reference', 'Computer'],
             ['date', 'Status Date'],
             ['status', 'Status']
           ];
@@ -112,7 +110,7 @@
                   "lines": lines_limit,
                   "list_method": "portal_catalog",
                   "query": "urn:jio:allDocs?query=portal_type%3A%22" +
-                    "global" + "%22",
+                    "Software Instance" + "%22",
                   "portal_type": [],
                   "search_column_list": column_list,
                   "sort_column_list": column_list,
