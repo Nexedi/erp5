@@ -169,6 +169,21 @@
     return displayErrorContent(gadget, error);
   }
 
+  function resetFeatureGadget(gadget, options) {
+    var scope, promise_list = [];
+    function resetFeature(scope) {
+      gadget.getDeclaredGadget(scope)
+        .push(function (feature_gadget) {
+          return feature_gadget.reset(options);
+        });
+    }
+    for (scope in gadget.props.feature_gadget_dict) {
+      if (gadget.props.feature_gadget_dict.hasOwnProperty(scope)) {
+        promise_list.push(resetFeature(scope));
+      }
+    }
+    return RSVP.all(promise_list);
+  }
   //////////////////////////////////////////
   // Page rendering
   //////////////////////////////////////////
@@ -182,7 +197,8 @@
         content_element: this.element.querySelector('.gadget-content'),
         setting_id: "setting/" + document.head.querySelector(
           'script[data-renderjs-configuration="application_title"]'
-        ).textContent
+        ).textContent,
+        feature_gadget_dict: {}
       };
 
       // Configure setting storage
@@ -374,6 +390,12 @@
         });
     })
 
+    .allowPublicAcquisition('trigger', function (param_list) {
+      // param_list : [scope, options]
+      this.props.feature_gadget_dict[param_list[0]] = {};
+      return route(this, param_list[0], 'trigger', [this, param_list[1]]);
+    })
+
     .allowPublicAcquisition("updateHeader", function (param_list) {
       var gadget = this;
       initHeaderOptions(gadget);
@@ -525,7 +547,8 @@
 
               return RSVP.all([
                 updateHeader(gadget),
-                updatePanel(gadget)
+                updatePanel(gadget),
+                resetFeatureGadget(gadget, {})
               ]);
               // XXX Drop notification
               // return header_gadget.notifyLoaded();
