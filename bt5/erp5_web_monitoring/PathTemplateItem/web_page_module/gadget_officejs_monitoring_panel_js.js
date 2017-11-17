@@ -295,10 +295,10 @@
         })
         .push(function (data) {
           var options = {
-            page: "ojsm_status_list"
+            page: "ojsm_dispatch"
           };
           if (data.search) {
-            options.extended_search = data.search;
+            options.query = data.search;
           }
           // Remove focus from the search field
           document.activeElement.blur();

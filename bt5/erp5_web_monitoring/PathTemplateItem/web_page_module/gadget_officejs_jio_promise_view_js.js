@@ -115,7 +115,7 @@
               "_embedded",
               "reference"
             ],
-            query: '(portal_type:"global") AND (parent_id:"' +
+            query: '(portal_type:"Software Instance") AND (parent_id:"' +
               options.doc.parent_id + '")'
           });
         })
