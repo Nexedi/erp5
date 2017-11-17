@@ -611,7 +611,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
     else:
       _getWorklistActionList = CachingMethod(_getWorklistActionList,
         id=('_getWorklistActionList', user, portal_url),
-        cache_factory = 'erp5_ui_short')
+        cache_factory = 'erp5_worklist_cache')
       actions.extend(_getWorklistActionList())
   return actions
 
