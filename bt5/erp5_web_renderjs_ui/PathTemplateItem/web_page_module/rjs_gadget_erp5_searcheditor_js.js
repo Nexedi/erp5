@@ -162,6 +162,21 @@
             for (i = 0; i < query_list.length; i += 1) {
               promise_list.push(createFilterItemTemplate(gadget, "auto", query_list[i]));
             }
+          } else if (gadget.state.search_column_list.length > 0) {
+            // No search query was provided
+            // Add an empty search parameter for the first searchable column
+            promise_list.push(
+              createFilterItemTemplate(
+                gadget,
+                "auto",
+                new SimpleQuery({
+                  key: gadget.state.search_column_list[0][1],
+                  operator: "",
+                  type: "simple",
+                  value: ''
+                })
+              )
+            );
           }
           return RSVP.all(promise_list);
         })
@@ -178,7 +193,15 @@
           }
 
           container.appendChild(div);
+          return gadget.focusOnLastInput();
         });
+    })
+
+    .declareJob('focusOnLastInput', function () {
+      var input_list = this.element.querySelectorAll('input');
+      if (input_list.length) {
+        input_list[input_list.length - 1].focus();
+      }
     })
 
     .declareMethod('render', function (options) {
