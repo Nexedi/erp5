@@ -27,7 +27,7 @@
           };
         }
         return gadget.jio_allDocs({
-          query: '(portal_type:"opml-outline") OR (portal_type:"global")',
+          query: '(portal_type:"opml-outline") OR (portal_type:"Software Instance")',
           select_list: [
             "parent_url",
             "status",
@@ -52,7 +52,7 @@
           }
         }
         for (i = 0; i < result.data.total_rows; i += 1) {
-          if (result.data.rows[i].value.portal_type === 'global') {
+          if (result.data.rows[i].value.portal_type === 'Software Instance') {
             if (instance_dict.hasOwnProperty(result.data.rows[i].value.parent_id)) {
               instance_dict[result.data.rows[i].value.parent_id].date =
                 result.data.rows[i].value.date;

@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, rJS, RSVP, Handlebars, atob */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, rJS, RSVP, Handlebars, atob) {
   "use strict";
 
   var gadget_klass = rJS(window),
@@ -30,7 +30,6 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("redirect", "redirect")
@@ -39,11 +38,7 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
-      var gadget = this,
-        hosting_subscription,
-        software_instance,
-        opml_outline,
-        opml_doc;
+      var gadget = this;
 
       return new RSVP.Queue()
         .push(function () {
@@ -92,8 +87,8 @@
           // fix URLs
           private_url = gadget.state.instance._links
             .private_url.href.replace("jio_private", "private");
-          public_url = gadget.state.instance._links.
-            public_url.href.replace("jio_public", "public");
+          public_url = gadget.state.instance._links
+            .public_url.href.replace("jio_public", "public");
           pass_url = "https://" + atob(gadget.state.opml.basic_login) +
             "@" + private_url.split("//")[1];
 
@@ -214,8 +209,14 @@
             gadget.state.instance.data.state
           )
             .push(undefined, function (error) {
-              console.log(error);
-              return {};
+              return gadget.notifySubmitted({
+                message: "Warning: Failed to download monitoring state history file!\n " +
+                  error.message || "",
+                status: "error"
+              })
+                .push(function () {
+                  return {};
+                });
             })
             .push(function (element_dict) {
               var promise_data = [
@@ -243,7 +244,7 @@
                 line_list = data[i].split(',');
                 data_list[0].value_dict["0"].push(line_list[0]);
                 data_list[0].value_dict["1"].push(line_list[1]);
-    
+
                 // XXX repeating date entry
                 data_list[1].value_dict["0"].push(line_list[0]);
                 data_list[1].value_dict["1"].push(line_list[2]);
@@ -354,7 +355,7 @@
                 "your_error_count": {
                   "description": "",
                   "title": "Promises Error",
-                  "default": "" + gadget.state.error,
+                  "default": String(gadget.state.error),
                   "css_class": "",
                   "required": 0,
                   "editable": 0,
@@ -365,7 +366,7 @@
                 "your_success_count": {
                   "description": "",
                   "title": "Promises OK",
-                  "default": "" + gadget.state.success,
+                  "default": String(gadget.state.success),
                   "css_class": "",
                   "required": 0,
                   "editable": 0,
@@ -482,15 +483,15 @@
                   "type": "ListBox"
                 },
                 "your_graph_status": {
-                css_class: "no_label",
-                description: "The Graph Status",
-                hidden: 0,
-                "default": graph_value || {},
-                key: "graph_status",
-                url: "gadget_field_graph_dygraph.html",
-                title: "",
-                type: "GadgetField"
-              }
+                  css_class: "no_label",
+                  description: "The Graph Status",
+                  hidden: 0,
+                  "default": graph_value || {},
+                  key: "graph_status",
+                  url: "gadget_field_graph_dygraph.html",
+                  title: "",
+                  type: "GadgetField"
+                }
               }},
               "_links": {
                 "type": {
@@ -500,25 +501,34 @@
               }
             },
             form_definition: {
-              group_list: [[
-                "left",
-                [["your_title"], ["your_status"], ["your_status_date"], ["your_report_date"],
-                 ["your_error_count"], ["your_success_count"], ["your_public_url"], ["your_private_url"]]
-              ],
-              [
-                "right",
-                [["your_hosting_title"], ["your_instance_title"], ["your_computer_reference"], ["your_computer_partition"],
-                 ["your_partition_ipv4"], ["your_partition_ipv6"], ["your_software_release_url"],
-                 ["your_rss_url"]]
-              ],
-              [
-                "center",
-                [["your_graph_status"]]
-              ],
-              [
-                "bottom",
-                [["your_instance_promise_list"]]
-              ]]
+              group_list: [
+                [
+                  "left",
+                  [
+                    ["your_title"], ["your_status"], ["your_status_date"],
+                    ["your_report_date"], ["your_error_count"],
+                    ["your_success_count"], ["your_public_url"],
+                    ["your_private_url"]
+                  ]
+                ],
+                [
+                  "right",
+                  [
+                    ["your_hosting_title"], ["your_instance_title"],
+                    ["your_computer_reference"], ["your_computer_partition"],
+                    ["your_partition_ipv4"], ["your_partition_ipv6"],
+                    ["your_software_release_url"], ["your_rss_url"]
+                  ]
+                ],
+                [
+                  "center",
+                  [["your_graph_status"]]
+                ],
+                [
+                  "bottom",
+                  [["your_instance_promise_list"]]
+                ]
+              ]
             }
           });
         })
@@ -549,4 +559,4 @@
           });
         });
     });
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS, RSVP, Handlebars, atob));
