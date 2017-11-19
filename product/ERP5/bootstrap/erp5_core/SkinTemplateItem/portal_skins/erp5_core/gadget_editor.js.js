@@ -103,6 +103,19 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
               );
             });
         } else if (gadget.state.editable &&
+            (gadget.state.editor === 'onlyoffice')) {
+          queue
+            .push(function () {
+              return gadget.declareGadget(
+                "onlyoffice.gadget.html",
+                {
+                  scope: 'editor',
+                  sandbox: 'iframe',
+                  element: div
+                }
+              );
+            });
+        } else if (gadget.state.editable &&
             (gadget.state.editor === 'fck_editor')) {
           queue
             .push(function () {
@@ -124,7 +137,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
       }
 
       if (gadget.state.editable &&
-          ((gadget.state.editor === 'codemirror') || (gadget.state.editor === 'fck_editor'))) {
+          (['codemirror', 'fck_editor', 'onlyoffice'].indexOf(gadget.state.editor) >= 0)) {
         queue
           .push(function () {
             return gadget.getDeclaredGadget('editor');
@@ -150,7 +163,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         gadget = this,
         result;
       if (this.state.editable &&
-          ((this.state.editor === 'codemirror') || (this.state.editor === 'fck_editor'))) {
+          (['codemirror', 'fck_editor', 'onlyoffice'].indexOf(this.state.editor) >= 0)) {
         return lockGadgetInQueue(gadget)()
           .push(function () {
             return gadget.getDeclaredGadget('editor');
