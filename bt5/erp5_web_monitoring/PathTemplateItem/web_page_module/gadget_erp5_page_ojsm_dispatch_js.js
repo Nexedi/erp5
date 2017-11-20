@@ -74,6 +74,7 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("setSetting", "setSetting")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -118,29 +119,50 @@
         } else {
           portal_type = pt_result[1];
         }
-      } else {
-        portal_type = "promise";
       }
 
-      return gadget.changeState({
-        original_query: original_query,
-        query: options.query,
-        page_title: page_title,
-        portal_type: portal_type
-      });
+      return gadget.getUrlFor({command: 'display', options: {page: 'ojsm_status_list'}})
+        .push(function (back_url) {
+          return gadget.updateHeader({
+            page_title: page_title,
+            back_url: back_url
+          });
+        })
+        .push(function () {
+          return gadget.changeState({
+            original_query: original_query,
+            query: options.query,
+            portal_type: portal_type || "promise",
+            import_opml: portal_type === undefined ? false : options.import_opml || true
+          });
+        });
     })
     .onStateChange(function () {
       var gadget = this;
 
       return new RSVP.Queue()
         .push(function () {
-          return gadget.getUrlFor({command: 'display', options: {page: 'ojsm_status_list'}});
-        })
-        .push(function (back_url) {
-          return gadget.updateHeader({
-            page_title: gadget.state.page_title,
-            back_url: back_url
-          });
+          if (gadget.state.import_opml) {
+            return gadget.getSetting('latest_import_date')
+              .push(function (import_date) {
+                // If import was never done, or was done more than 2 weeks ago
+                // 1209600000 = 1000*60*60*24*14
+                var current_date = new Date().getTime();
+                if (import_date === undefined ||
+                    (import_date + 1209600000) < current_date) {
+                  return gadget.setSetting('sync_redirect_options', {
+                    query: gadget.state.original_query,
+                    page: 'ojsm_dispatch'
+                  })
+                    .push(function () {
+                      return gadget.redirect({command: 'change', options: {
+                        page: "ojsm_erp5_configurator",
+                        type: "erp5"
+                      }});
+                    });
+                }
+              });
+          }
         })
         .push(function () {
           return gadget.getDeclaredGadget('erp5_searchfield');
