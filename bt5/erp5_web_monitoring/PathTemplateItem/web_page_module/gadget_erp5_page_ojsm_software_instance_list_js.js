@@ -110,7 +110,7 @@
                   "lines": lines_limit,
                   "list_method": "portal_catalog",
                   "query": "urn:jio:allDocs?query=portal_type%3A%22" +
-                    "Software Instance" + "%22",
+                    "Software%20Instance" + "%22",
                   "portal_type": [],
                   "search_column_list": column_list,
                   "sort_column_list": column_list,

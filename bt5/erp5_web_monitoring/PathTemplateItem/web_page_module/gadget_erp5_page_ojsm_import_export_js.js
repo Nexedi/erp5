@@ -590,10 +590,13 @@
                     status: "error"
                   });
                 }
-                return gadget.notifySubmitted({
-                  message: "Configuration Saved!",
-                  status: "success"
-                });
+                return RSVP.all([
+                  gadget.setSetting("latest_import_date", new Date().getTime()),
+                  gadget.notifySubmitted({
+                    message: "Configuration Saved!",
+                    status: "success"
+                  })
+                ]);
               })
               .push(function () {
                 if (!has_failed) {
