@@ -3,12 +3,31 @@
 (function (window, rJS, Math) {
   "use strict";
 
+  var separator_re = /\d([\., \-_])?\d\d\d/,
+    input_format_re = /(-?)(\d+)(\.\d+)?/;
+
+  /** Slice any slice-able parameter into triplets **/
+  function toTriplets(sliceable) {
+    var parts = [],
+      i = sliceable.length;
+    for (i = sliceable.length; i > 3; i -= 3) {
+      parts.unshift(sliceable.slice(i - 3, i));
+    }
+    parts.unshift(sliceable.slice(0, i));
+    return parts;
+  }
+
   rJS(window)
+    .setState({
+      tag: 'p',  // important for CSS styles - noneditable element must be <p>
+      type: "number"
+    })
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
-        percentage = (field_json.input_style || "").endsWith("%"),
+        input_style = (field_json.input_style || ""),
+        percentage = input_style.endsWith("%"),
+        thousand_sep = separator_re.test(input_style) ? (separator_re.exec(input_style)[1] || "") : "",
         state_dict = {
-          type: "number",
           editable: field_json.editable,
           required: field_json.required,
           hidden: field_json.hidden,
@@ -23,21 +42,28 @@
           step: "any",
           // `append` is a string to display next to the field ("%", "EUR"...)
           append: ''
-        };
-      if (!window.isNaN(state_dict.value)) {
-        state_dict.text_content = state_dict.value.toString();
-      }
+        },
+        tmp;
+
       if (!window.isNaN(state_dict.precision)) {
         state_dict.step = Math.pow(10, -state_dict.precision);
         state_dict.value = state_dict.value.toFixed(state_dict.precision);
       }
       if (percentage) {
-        // ERP5 always devides the value by 100 if it is set to pe percentages
+        // ERP5 always devides the value by 100 if it is set to percentages
         // thus we have to mitigate that in javascript here
         state_dict.value *= 100.0;
         state_dict.append = "%";
       }
-
+      if (!window.isNaN(state_dict.value)) {
+        state_dict.text_content = state_dict.value.toString();
+        if (state_dict.text_content !== "" && thousand_sep !== "") {
+          tmp = input_format_re.exec(state_dict.text_content);
+          // tmp == [full-number, sign, integer-part, .decimal-part, ...]
+          state_dict.text_content = tmp[1] + toTriplets(tmp[2]).join(thousand_sep) + tmp[3];
+          tmp = undefined;
+        }
+      }
       return this.changeState(state_dict);
     })
 
