@@ -1110,6 +1110,11 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       email_from_address = os.environ.get('email_from_address')
       if email_from_address is not None:
         kw['email_from_address'] = email_from_address
+
+      bt5_repository_path_list = self._getBusinessRepositoryPathList(
+                                ['erp5_core'] + self.getBusinessTemplateList())
+
+      kw["bt5_repository_url"] = " ".join(bt5_repository_path_list)
       kw['sql_reset'] = 1
       return kw
 
