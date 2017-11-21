@@ -191,7 +191,6 @@
       if (field_json.search_column_list.length) {
         search_column_list = field_json.search_column_list.filter(is_in_column_list);
       }
-      search_column_list.push(["searchable_text", "Searchable Text"]);
 
       url_query = options.extended_search;
       query_string = new URI(field_json.query).query(true).query;

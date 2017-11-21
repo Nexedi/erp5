@@ -660,4 +660,23 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="check_filter_section">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Check the filter section %(index)i' % filter_section_configuration"></b></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select' % (filter_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: filter_section_configuration['key']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//input' % (filter_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: filter_section_configuration['value']"></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
 </tal:block>

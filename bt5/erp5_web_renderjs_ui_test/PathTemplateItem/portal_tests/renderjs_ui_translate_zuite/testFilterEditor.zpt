@@ -54,13 +54,13 @@
 <tr>
   <td>verifySelectOptions</td>
   <td>//div[@class="filter_item_container"]/div[1]//select[1]</td>
-  <td>ID,biaoti,soushuowenben</td>
+  <td>ID,biaoti,soushuowenben,soushuo</td>
 </tr>
 
 <tr>
   <td>verifySelectOptions</td>
   <td>//div[@class="filter_item_container"]/div[1]//select[2]</td>
-  <td>wangquanfuhe,guanjianchi</td>
+  <td>dengyu,baohang</td>
 </tr>
 
 
@@ -74,7 +74,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//option[@data-i18n='Contain']</td>
+  <td>//option[@data-i18n='Contains']</td>
   <td></td>
 </tr>
 
