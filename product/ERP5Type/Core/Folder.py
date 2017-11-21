@@ -74,7 +74,6 @@ import warnings
 from urlparse import urlparse
 REINDEX_SPLIT_COUNT = 100 # if folder containes more than this, reindexing should be splitted.
 from Products.ERP5Type.Message import translateString
-from ZTUtils import make_query
 
 # Dummy Functions for update / upgrade
 def dummyFilter(object,REQUEST=None):
@@ -496,48 +495,6 @@ class FolderMixIn(ExtensionClass.Base):
     if method_id[0] == '_':
         raise AccessControl_Unauthorized(method_id)
     return self._recurseCallMethod(method_id, restricted=True, *args, **kw)
-
-  security.declarePublic('constructUrlFor')
-  def constructUrlFor(
-    self,
-    form_id=None,
-    document_reference=None,
-    parameter_dict=None,
-    **kw
-  ):
-    '''
-      Utility method to help in the construction of urls.
-      It should be run in the context of a document that we want as base for the url.
-      Arguments:
-      - form_id: the form that is invoked
-      - document_reference: the reference of a document that is rendered,
-      - parameter_dict: dictionary containing all get parameters
-      Other parameters can be used for type based methods.
-    '''
-    # Try to get type based method, but not for ERP5 Site, since
-    # _getTypeBasedMethod is defined in Base so not available for ERP5 Site
-    if self.getPortalType() != 'ERP5 Site':
-      method = self._getTypeBasedMethod('constructUrlFor')
-      if method is not None:
-        return method(
-          form_id=form_id,
-          document_reference=document_reference,
-          parameter_dict=parameter_dict,
-          **kw
-        )
-    url = self.absolute_url()
-    # form_id and document_reference are mutually exclusive,
-    # we should not expect both in a url
-    assert not (form_id and document_reference), 'Not allowed to have both form and document in the same url'
-    # Note that form_id and document_reference are handled the same way,
-    # it is different variable for semantic reasons
-    if form_id:
-      url = '%s/%s' % (url, form_id)
-    elif document_reference:
-      url = '%s/%s' % (url, document_reference)
-    if parameter_dict:
-      url = '%s?%s' % (url, make_query(parameter_dict))
-    return url
 
   security.declarePublic('isURLAncestorOf')
   def isURLAncestorOf(self, given_url):
