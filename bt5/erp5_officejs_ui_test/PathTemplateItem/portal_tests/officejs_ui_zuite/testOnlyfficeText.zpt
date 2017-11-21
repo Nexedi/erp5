@@ -121,16 +121,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>name=editable</td>
-  <td></td>
-</tr>
-<tr>
   <td>store</td>
   <td tal:content="python: 'Test Titre %s' % DateTime()">Titre</td>
   <td>title</td>
@@ -184,6 +174,16 @@
   <td>type</td>
   <td>//textarea[@title='Description']</td>
   <td>${description}</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='asc-loadmask-title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@class='asc-loadmask-title']</td>
+  <td></td>
 </tr>
 <tr>
   <td>click</td>
@@ -245,19 +245,6 @@
   <td>//textarea[@title='Description']</td>
   <td>${description}</td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Content</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Content</td>
-  <td></td>
-</tr>
-<!-- Stop Generic -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>identifier=id_main</td>
-  <td></td>
-</tr>
+</tbody></table>
+</body>
+</html>
