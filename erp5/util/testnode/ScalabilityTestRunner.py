@@ -67,19 +67,19 @@ class ScalabilityTestRunner():
                                   self.testnode.config,
                                   self.log)
     # Create the slapos account configuration file and dir
-    key = self.testnode.test_suite_portal.getSlaposAccountKey()
-    certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
+    key = self.testnode.taskdistribution.getSlaposAccountKey()
+    certificate = self.testnode.taskdistribution.getSlaposAccountCertificate()
     # Get Slapos Master Url
     self.slapos_url = ''
     try:
-      self.slapos_url = self.testnode.test_suite_portal.getSlaposUrl()
+      self.slapos_url = self.testnode.taskdistribution.getSlaposUrl()
       if not self.slapos_url:
         self.slapos_url = self.testnode.config['server_url']
     except:
       self.slapos_url = self.testnode.config['server_url']
     
     # Get Slapos Master url used for api rest (using hateoas)
-    self.slapos_api_rest_url = self.testnode.test_suite_portal.getSlaposHateoasUrl()
+    self.slapos_api_rest_url = self.testnode.taskdistribution.getSlaposHateoasUrl()
 
     self.log("SlapOS Master url is: %s" %self.slapos_url)
     self.log("SlapOS Master hateoas url is: %s" %self.slapos_api_rest_url)
@@ -163,7 +163,7 @@ ces or already launched.")
     """
     We will build slapos software needed by the testnode itself,
     """
-    if self.testnode.test_suite_portal.isMasterTestnode(
+    if self.testnode.taskdistribution.isMasterTestnode(
                            self.testnode.config['test_node_title']):
       pass
     return {'status_code' : 0} 
@@ -313,10 +313,10 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     slap, supply, order = self._initializeSlapOSConnection()
 
     # Only master testnode must order software installation
-    if self.testnode.test_suite_portal.isMasterTestnode(self.testnode.config['test_node_title']):
+    if self.testnode.taskdistribution.isMasterTestnode(self.testnode.config['test_node_title']):
       # Get from ERP5 Master the configuration of the cluster for the test
       test_configuration = Utils.deunicodeData(
-          json.loads(self.testnode.test_suite_portal.generateConfiguration(
+          json.loads(self.testnode.taskdistribution.generateConfiguration(
                      node_test_suite.test_suite_title)))
       self.involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
       self.launchable = test_configuration['launchable']
@@ -389,7 +389,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       return {'status_code' : 1} # Unable to continue due to not realizable configuration
     configuration_list = node_test_suite.configuration_list
     test_list = range(0, len(configuration_list))
-    test_result_proxy = self.testnode.portal.createTestResult(
+    test_result_proxy = self.testnode.taskdistribution.createTestResult(
       node_test_suite.revision, test_list,
       self.testnode.config['test_node_title'],
       True, node_test_suite.test_suite_title,
@@ -436,7 +436,6 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
 
       slappart_directory = self.testnode.config['srv_directory'].rsplit("srv", 1)[0]
       log_path = slappart_directory + "var/log/"
-      # XXX: the following depends on the changes in testnode.py
       erp5_location = self.testnode.config['repository_path'] + "/scalability_test/"
 
       # Start only the current test

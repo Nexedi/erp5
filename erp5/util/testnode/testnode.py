@@ -185,6 +185,7 @@ shared = true
     try:
       for vcs_repository in node_test_suite.vcs_repository_list:
         repository_path = vcs_repository['repository_path']
+        self.config['repository_path'] = repository_path
         repository_id = vcs_repository['repository_id']
         branch = vcs_repository.get('branch')
         # Make sure we have local repository
