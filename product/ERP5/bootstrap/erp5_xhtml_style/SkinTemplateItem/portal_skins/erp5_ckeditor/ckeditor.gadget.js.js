@@ -101,13 +101,19 @@
       toolbar: TOOLBAR_MOBILE,
       disableNativeSpellChecker: false,
       // Disable ACF to not destroy HTML on mobile
-      allowedContent: true
+      allowedContent: true,
+      keystrokes: [
+        [CKEDITOR.CTRL + 83, 'saveRJS']
+      ],
     },
     DESKTOP_CONFIGURATION = {
       toolbar: TOOLBAR_DESKTOP,
       disableNativeSpellChecker: false,
       // Disable ACF to not destroy HTML on mobile
-      allowedContent: true
+      allowedContent: true,
+      keystrokes: [
+        [CKEDITOR.CTRL + 83, 'saveRJS']
+      ],
     },
       MATCH_MEDIA = window.matchMedia("not screen and (min-width: 45em)");
 
