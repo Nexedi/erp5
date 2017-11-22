@@ -2531,8 +2531,13 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     force = kw.get('force')
     installed_bt = kw.get('installed_bt')
     if installed_bt is not None:
-      previous_portal_type_workflow_chain_list = list(installed_bt\
+      try:
+        previous_portal_type_workflow_chain_list = list(installed_bt\
           .getTemplatePortalTypeWorkflowChainList())
+      except Exception:
+        # This will happen in case the `installed_bt` is Business Manager, so
+        # we won't need to goto the further installation process
+        return
     else:
       previous_portal_type_workflow_chain_list = []
     # We now need to setup the list of workflows corresponding to
@@ -4308,15 +4313,8 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
     """
     if self._is_already_migrated(self._objects.keys()):
       ObjectTemplateItem.install(self, context, **kw)
-      # Reset component on the fly, because it is possible that those
-      # components are required in the middle of the transaction. For example:
-      # - A method in a component is called while installing.
-      # - A document component is used in a different business template,
-      #   and those business templates are installed in a single transaction
-      #   by upgrader.
-      # This reset is called at most 3 times in one business template
-      # installation. (for Document, Test, Extension)
-      self.portal_components.reset(force=True)
+      self.portal_components.reset(force=True,
+                                   reset_portal_type_at_transaction_boundary=True)
     else:
       FilesystemDocumentTemplateItem.install(self, context, **kw)
 
@@ -5349,7 +5347,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # always created a trash bin because we may to save object already present
       # but not in a previous business templates apart at creation of a new site
       if trash_tool is not None and (len(object_to_update) > 0 or len(self.portal_templates) > 2):
-        trashbin = trash_tool.newTrashBin(self.getTitle(), self)
+        if self.title == 'erp5_core':
+          trashbin = None
+        else:
+          trashbin = trash_tool.newTrashBin(self.getTitle(), self)
       else:
         trashbin = None
 
