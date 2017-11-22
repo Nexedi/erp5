@@ -226,6 +226,12 @@ class ERP5TypeInformation(XMLObject,
     # Declarative properties
     property_sheets = ( PropertySheet.BaseType, )
 
+    _properties = (
+      { 'id'      : 'type_workflow',
+      'type'    : 'multiple selection',
+      'mode'    : 'w' },
+      )
+
     acquire_local_roles = False
     property_sheet_list = ()
     base_category_list = ()
@@ -329,6 +335,72 @@ class ERP5TypeInformation(XMLObject,
     #
     #   Acquisition editing interface
     #
+
+    def getTypeFilterContentType(self):
+      return
+
+    def getTypeInitScriptId(self):
+      return
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'getTypeWorkflowList')
+    def getTypeWorkflowList(self):
+      """Getter for 'type_workflow_list' property"""
+      pw = self.getPortalObject().portal_workflow
+      cbt = pw._chains_by_type
+      id = self.getId()
+      if cbt is not None and cbt.has_key(id):
+        workflow_list = list(cbt[id])
+      else:
+        workflow_list = None
+      return workflow_list
+
+    def hasTypeWorkflowList(self):
+      """
+      Always return True. Overriden as general accessor is generated after the
+      use of this function while installing Business Manager
+      """
+      return True
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'setTypeWorkflowList')
+    def _setTypeWorkflowList(self, type_workflow_list):
+      """Override Setter for 'type_workflow' property"""
+      # We use setter to update the value for Workflow chain during the
+      # installation of Business Manager. This way, we would be able to
+      # modify workflow chain without the need of saving anything in
+      # type_workflow_list property.
+      portal = self.getPortalObject()
+      pw = portal.portal_workflow
+      cbt = pw._chains_by_type
+      # Create empty chains dict if it is empty
+      if cbt is None:
+        cbt = {}
+      id = self.getId()
+
+      # If the type_workflow_list is empty, delete the key from workflow chains
+      if not type_workflow_list:
+        cbt[id] = []
+        pw._chains_by_type = cbt
+
+      # If type_workflow_list is '(Default)', don't do/update anything
+      elif type_workflow_list[0] != '(Default)':
+
+        # If there is already key existing in cbt, then update it
+        if cbt is not None and cbt.has_key(id):
+          workflow_list = list(cbt[id])
+
+          if not workflow_list:
+            cbt[id] = sorted(type_workflow_list)
+
+          # If the value in cbt is '(Default)', then update it only after removing
+          # default value
+          elif workflow_list[0] != '(Default)':
+            type_workflow_list = type_workflow_list.extend(workflow_list)
+            cbt[id] = sorted(type_workflow_list)
+
+        # Update the chains dictionary for portal_workflow
+        pw._chains_by_type = cbt
 
     security.declarePrivate('_guessMethodAliases')
     def _guessMethodAliases(self):
