@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.50 (unreleased)
+-------------------
+
+ * erp5.util.testnode
+
+   - call only methods on Distributor [Lukasz Nowak]
+
 0.4.49 (2017-05-11)
 -------------------
 
