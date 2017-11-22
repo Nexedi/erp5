@@ -223,6 +223,7 @@ gadget_erp5_page_ojsm_synchronize.html\n
 gadget_erp5_page_ojsm_erp5_configurator.html\n
 gadget_erp5_page_ojsm_jump.html\n
 gadget_officejs_monitoring_opml_edit.html\n
+gadget_erp5_page_ojsm_dispatch.html\n
 \n
 # monitoring js\n
 gadget_officejs_monitoring_jio.js\n
@@ -249,6 +250,7 @@ gadget_erp5_page_ojsm_synchronize.js\n
 gadget_erp5_page_ojsm_jump.js\n
 gadget_erp5_page_ojsm_erp5_configurator.js\n
 gadget_officejs_monitoring_opml_edit.js\n
+gadget_erp5_page_ojsm_dispatch.js\n
 \n
 # erp5_web_renderjs_ui\n
 gadget_erp5_editor_panel.html\n
@@ -383,7 +385,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>963.33744.19919.32631</string> </value>
+                <value> <string>963.40590.4483.37222</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -401,7 +403,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1510932931.68</float>
+                        <float>1511342469.81</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
