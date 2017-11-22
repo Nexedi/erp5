@@ -1,0 +1,20 @@
+<allowed_content_type_list>
+ <portal_type id="Business Commit">
+  <item>Business Item</item>
+  <item>Business Patch Item</item>
+  <item>Business Property Item</item>
+ </portal_type>
+ <portal_type id="Business Patch Item">
+  <item>Business Item</item>
+  <item>Business Property Item</item>
+ </portal_type>
+ <portal_type id="Business Snapshot">
+  <item>Business Item</item>
+  <item>Business Patch Item</item>
+  <item>Business Property Item</item>
+ </portal_type>
+ <portal_type id="Commit Tool">
+  <item>Business Commit</item>
+  <item>Business Snapshot</item>
+ </portal_type>
+</allowed_content_type_list>

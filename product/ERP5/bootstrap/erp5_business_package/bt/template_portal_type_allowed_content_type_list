@@ -1,0 +1,10 @@
+Business Commit | Business Item
+Business Commit | Business Patch Item
+Business Commit | Business Property Item
+Business Patch Item | Business Item
+Business Patch Item | Business Property Item
+Business Snapshot | Business Item
+Business Snapshot | Business Patch Item
+Business Snapshot | Business Property Item
+Commit Tool | Business Commit
+Commit Tool | Business Snapshot

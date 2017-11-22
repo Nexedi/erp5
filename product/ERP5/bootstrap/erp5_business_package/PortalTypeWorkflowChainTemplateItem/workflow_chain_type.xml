@@ -1,0 +1,22 @@
+<workflow_chain>
+ <chain>
+  <type>Business Commit</type>
+  <workflow>business_commit_interaction_workflow, business_commit_validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Business Item</type>
+  <workflow>business_item_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Business Property Item</type>
+  <workflow>business_property_item_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Business Snapshot</type>
+  <workflow>business_snapshot_validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Business Template V2</type>
+  <workflow>business_template_availability_workflow</workflow>
+ </chain>
+</workflow_chain>

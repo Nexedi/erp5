@@ -1,0 +1,13 @@
+Business Commit | content_view
+Business Commit | install
+Business Commit | rebuild_subobjects
+Business Item | content_view
+Business Item | diff_view
+Business Patch Item | content_view
+Business Patch Item | diff_view
+Business Property Item | content_view
+Business Snapshot | content_view
+Business Template V2 | content_view
+Commit Tool | create_snapshot
+Commit Tool | view
+portal_actions | commit_tool

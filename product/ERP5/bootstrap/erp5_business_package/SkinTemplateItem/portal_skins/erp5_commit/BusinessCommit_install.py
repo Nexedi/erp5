@@ -1,0 +1,3 @@
+commit = context
+
+commit.install()
