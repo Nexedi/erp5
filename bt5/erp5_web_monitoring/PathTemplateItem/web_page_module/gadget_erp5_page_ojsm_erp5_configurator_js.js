@@ -5,7 +5,7 @@
 
   rJS(window)
     .setState({
-      erp5_url: "https://vifib.erp5.net/web_site_module/renderjs_runner/hateoas/"
+      erp5_url: "https://slapos.vifib.com/hateoas/"
     })
     /////////////////////////////////////////////////////////////////
     // Acquired methods
