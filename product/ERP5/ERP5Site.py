@@ -242,6 +242,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   # installed, and scalability tests want a reliable way to know when the site
   # is ready to be tortured.
   isPortalBeingCreated = ConstantGetter('isPortalBeingCreated', value=False)
+  isIndexingRequired = ConstantGetter('isIndexingRequired', value=True)
 
   _properties = (
       { 'id':'title',
@@ -1960,6 +1961,35 @@ class ERP5Generator(PortalGenerator):
     return p
 
   @classmethod
+  def bootstrap_bm(cls, context, bm_name, path_list):
+    """
+    Bootstrap Business Item from the paths needed
+    """
+    bm_path = getBootstrapBusinessTemplateUrl(bm_name)
+    portal = context.getPortalObject()
+    try:
+      # If template_tool doesn't exist, do nothing
+      template_tool = portal.portal_templates
+      pt = portal.portal_types
+      # Create dynamic_class for Business Manager if it doesn't exist in
+      # portal_types
+      if pt.getTypeInfo('Business Manager') is None:
+        import erp5
+        BusinessManager = getattr(erp5.portal_type, 'Business Manager')
+        BusinessManager.loadClass()
+        manager = BusinessManager(id='bootstrap_bm')
+        connection = pt._p_jar
+      else:
+        manager = template_tool.newContent(portal_type='Business Manager')
+        connection = None
+      manager.importFile(bm_path + '/' + bm_name + '.zexp', connection)
+      for path in path_list:
+        item = manager.getBusinessItemByPath(path)
+        item.install(manager, portal)
+    except AttributeError:
+      pass
+
+  @classmethod
   def bootstrap(cls, context, bt_name, item_name, content_id_list):
     bt_path = getBootstrapBusinessTemplateUrl(bt_name)
     from Products.ERP5.Document.BusinessTemplate import quote
@@ -1983,9 +2013,9 @@ class ERP5Generator(PortalGenerator):
   def bootstrap_allow_type(types_tool, portal_type):
     from xml.etree.cElementTree import parse
     bt_path = getBootstrapBusinessTemplateUrl('erp5_core')
-    types_tool[portal_type].allowed_content_types = [x.text for x in parse(
+    setattr(types_tool[portal_type], 'allowed_content_types' ,([x.text for x in parse(
       os.path.join(bt_path, 'PortalTypeAllowedContentTypeTemplateItem', 'allowed_content_types.xml')
-      ).iterfind("portal_type[@id='%s']/*" % portal_type)]
+      ).iterfind("portal_type[@id='%s']/*" % portal_type)]))
 
   def setupLastTools(self, p, **kw):
     """
@@ -2053,7 +2083,7 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_memcached', 'Memcached Tool')
 
     # Add erp5 catalog tool
-    addERP5Tool(p, 'portal_catalog', 'Catalog Tool')
+    addERP5Tool(p, 'portal_catalog', 'ERP5 Catalog Tool')
 
     sql_reset = kw.get('sql_reset', 0)
     def addSQLConnection(id, title, **kw):
@@ -2198,10 +2228,21 @@ class ERP5Generator(PortalGenerator):
     """
     workflow_list = ['business_template_building_workflow',
                      'business_template_installation_workflow']
+    manager_workflow_list = ['business_manager_building_workflow',
+                             'business_manager_installation_workflow']
     tool = p.portal_workflow
+    tool.manage_delObjects(filter(tool.hasObject, manager_workflow_list))
     tool.manage_delObjects(filter(tool.hasObject, workflow_list))
-    self.bootstrap(tool, 'erp5_core', 'WorkflowTemplateItem', workflow_list)
-    tool.setChainForPortalTypes(('Business Template',), workflow_list)
+    self.bootstrap_bm(tool, 'erp5_core', (
+      'portal_workflow/business_template_installation_workflow',
+      'portal_workflow/business_template_building_workflow',
+      'portal_types/Business Template#type_workflow_list',
+      ))
+    self.bootstrap(tool, 'erp5_business_package', 'WorkflowTemplateItem', (
+      'business_manager_building_workflow',
+      'business_manager_installation_workflow',
+      ))
+    tool.setChainForPortalTypes(('Business Manager',), manager_workflow_list)
 
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed
@@ -2326,9 +2367,17 @@ class ERP5Generator(PortalGenerator):
     if not p.hasObject('content_type_registry'):
       self.setupMimetypes(p)
 
+    # Explicitly run bootstrap for portal_types and portal_property_sheets
+    # before installing bootstrap Business Template/Manager becuase it needs to
+    # be there for bootstrap portal_types and property_sheets to be used.
+    p.portal_types._bootstrap()
+    p.portal_property_sheets._bootstrap()
+
     if not update:
       self.setupWorkflow(p)
       self.setupERP5Core(p,**kw)
+      # XXX: Force setting of properties setter and getters after bootstrap
+      p.portal_types.resetDynamicDocuments()
       self.setupERP5Promise(p,**kw)
 
     # Make sure the cache is initialized
@@ -2347,13 +2396,25 @@ class ERP5Generator(PortalGenerator):
     """
     template_tool = p.portal_templates
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
-      for bt in ('erp5_property_sheets', 'erp5_core', p.erp5_catalog_storage, 'erp5_jquery',
-                 'erp5_xhtml_style'):
+      for bt in ('erp5_core', 'erp5_business_package', 'erp5_property_sheets',
+                  ):
         if not bt:
           continue
         url = getBootstrapBusinessTemplateUrl(bt)
         bt = template_tool.download(url)
-        bt.install(**kw)
+
+        if bt.getPortalType() == 'Business Manager':
+          template_tool.updateInstallationState([bt])
+        else:
+          bt.install(**kw)
+
+      bt_list = []
+      for bt in (p.erp5_catalog_storage, 'erp5_jquery', 'erp5_xhtml_style',):
+        url = getBootstrapBusinessTemplateUrl(bt)
+        bt = template_tool.download(url)
+        bt_list.append(bt)
+      template_tool.updateInstallationState(bt_list)
+
 
   def setupERP5Promise(self,p,**kw):
     """
