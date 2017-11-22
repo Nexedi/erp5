@@ -116,7 +116,7 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>item_quantity</string>
+                          <string>quantity</string>
                           <string>Quantity</string>
                         </tuple>
                       </list>
