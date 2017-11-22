@@ -33,17 +33,22 @@ from App.config import getConfiguration
 import os
 import shutil
 import sys
+import hashlib
+import pprint
+import transaction
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Products.CMFActivity.ActiveResult import ActiveResult
+from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Cache import transactional_cached
-from Products.ERP5Type import Permissions
+from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.genbt5list import generateInformation
 from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp
@@ -60,6 +65,8 @@ from base64 import b64encode, b64decode
 from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO, WARNING
 from base64 import decodestring
+from difflib import unified_diff
+from operator import attrgetter
 import subprocess
 import time
 
@@ -101,7 +108,10 @@ class TemplateTool (BaseTool):
     title = 'Template Tool'
     meta_type = 'ERP5 Template Tool'
     portal_type = 'Template Tool'
-    allowed_types = ('ERP5 Business Template', )
+    allowed_types = (
+      'ERP5 Business Template',
+      'ERP5 Business Manager',
+      )
 
     # This stores information on repositories.
     repository_dict = {}
@@ -128,7 +138,14 @@ class TemplateTool (BaseTool):
       # potential danger because business templates may exchange catalog
       # methods, so the database could be broken temporarily.
       last_bt = last_time = None
-      for bt in self.objectValues(portal_type='Business Template'):
+      for bt in self.objectValues(portal_type=['Business Template',
+                                               'Business Manager']):
+        if bt.getPortalType() == 'Business Manager':
+          if bt.getInstallationState() == 'installed' and bt.title == title:
+            return bt
+          else:
+            continue
+          return None
         if bt.getTitle() == title or title in bt.getProvisionList():
           state = bt.getInstallationState()
           if state == 'installed':
@@ -150,6 +167,22 @@ class TemplateTool (BaseTool):
       return last_bt
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInstalledBusinessManager')
+    def getInstalledBusinessManager(self, title, strict=False, **kw):
+      """Returns an installed version of business manager of given title.
+
+      Returns None if business manager is not installed or has been uninstalled.
+      """
+      last_bm = None
+      for bm in self.objectValues(portal_type='Business Manager'):
+        if bm.getTitle() == title:
+          state =  bm.getInstallationState()
+          if state == 'installed':
+            return bm
+
+      return last_bm
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInstalledBusinessTemplatesList')
     def getInstalledBusinessTemplatesList(self):
       """Deprecated.
@@ -161,7 +194,8 @@ class TemplateTool (BaseTool):
       """Get the list of installed business templates.
       """
       installed_bts = []
-      for bt in self.contentValues(portal_type='Business Template'):
+      for bt in self.contentValues(portal_type=['Business Template',
+                                                'Business Manager']):
         if bt.getInstallationState() == 'installed':
           bt5 = bt
           if only_title:
@@ -276,7 +310,7 @@ class TemplateTool (BaseTool):
         if RESPONSE is not None:
           RESPONSE.setHeader('Content-type','tar/x-gzip')
           RESPONSE.setHeader('Content-Disposition', 'inline;filename=%s-%s.bt5'
-            % (business_template.getTitle(), business_template.getVersion()))
+              % (business_template.getTitle(), business_template.getVersion()))
         return export_string.getvalue()
       finally:
         export_string.close()
@@ -306,6 +340,7 @@ class TemplateTool (BaseTool):
       self.deleteContent(id)
       self._importObjectFromFile(StringIO(export_string), id=id)
 
+
     security.declareProtected( Permissions.ManagePortal, 'manage_download' )
     def manage_download(self, url, id=None, REQUEST=None):
       """The management interface for download.
@@ -321,9 +356,14 @@ class TemplateTool (BaseTool):
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                     % (ret_url, psm))
 
-    def _download_local(self, path, bt_id):
+    def _download_local(self, path, bt_id, format_version=1):
       """Download Business Template from local directory or file
       """
+      if format_version == 3:
+        bm = self.newContent(bt_id, 'Business Manager')
+        bm.importFile(path)
+        return bm
+
       bt = self.newContent(bt_id, 'Business Template')
       bt.importFile(path)
       return bt
@@ -361,12 +401,17 @@ class TemplateTool (BaseTool):
       # come from the management interface.
       if REQUEST is not None:
         return self.manage_download(url, id=id, REQUEST=REQUEST)
-
       if id is None:
         id = self.generateNewId()
 
-      urltype, path = splittype(url)
-      if WIN and urltype and '\\' in path:
+      urltype, name = splittype(url)
+      # Create a zexp path which would be used for Business Manager files
+      zexp_path = name + '/' + name.split('/')[-1] + '.zexp'
+      # Better to expand path as we now use ~software_release for the software
+      # folder
+      zexp_path = os.path.expanduser(zexp_path)
+
+      if WIN and urltype and '\\' in name:
         urltype = None
         path = url
       if urltype and urltype != 'file':
@@ -377,9 +422,28 @@ class TemplateTool (BaseTool):
           del bt.uid
           return self[self._setObject(id, bt)]
         bt = self._download_url(url, id)
+      elif os.path.exists(zexp_path):
+        # If the path exists, we create a Business Manager object after
+        # downloading it from zexp path
+        bt = self._download_local(os.path.normpath(zexp_path), id, format_version=3)
       else:
-        path = os.path.normpath(os.path.expanduser(path))
-        bt = self._download_local(path, id)
+        template_version_path_list = [
+                                      name+'/bt/template_format_version',
+                                     ]
+
+        for path in template_version_path_list:
+          try:
+            file = open(os.path.normpath(path))
+          except IOError:
+            continue
+        try:
+          format_version = int(file.read())
+          file.close()
+        except UnboundLocalError:
+          # In case none of the above paths do have template_format_version
+          format_version = 1
+        # XXX: Download only needed in case the file is in directory
+        bt = self._download_local(os.path.expanduser(os.path.normpath(name)), id, format_version)
 
       bt.build(no_action=True)
       return bt
@@ -534,6 +598,413 @@ class TemplateTool (BaseTool):
               self.activate(activity='SQLQueue').\
                 importAndReExportBusinessTemplateFromPath(template_path)
 
+    security.declareProtected( 'Import/Export objects', 'migrateBTToBM')
+    def migrateBTToBM(self, template_path, isReduced=False, REQUEST=None, **kw):
+      """
+        Migrate business template repository to Business Manager repo.
+        Business Manager completely rely only on BusinessItem and to show
+        the difference between both of them
+
+        So, the steps should be:
+        1. Install the business template which is going to be migrated
+        2. Create a new Business Manager with random id and title
+        3. Add the path, build and export the template
+        4. Remove the business template from the directory and add the business
+        manager there instead
+        5. Change the ID and title of the business manager
+        6. Export the business manager to the directory, leaving anything in
+        the installed erp5 unchanged
+      """
+      import_template = self.download(url=template_path)
+      if import_template.getPortalType() == 'Business Manager':
+        LOG(import_template.getTitle(),0,'Already migrated')
+        return
+
+      export_dir = mkdtemp()
+
+      removable_property = {}
+      removable_sub_object_path = []
+
+      installed_bt_list = self.getInstalledBusinessTemplatesList()
+      installed_bt_title_list = [bt.title for bt in installed_bt_list]
+
+      is_installed = False
+      if import_template.getTitle() not in installed_bt_title_list:
+        # Install the business template
+        import_template.install(**kw)
+        is_installed = True
+
+      # Make list of object paths which needs to be added in the bm5
+      # This can be decided by looping over every type of items we do have in
+      # bt5 and checking if there have been any changes being made to it via this
+      # bt5 installation or not.
+      # For ex:
+      # CatalogTempalteMethodItem, CatalogResultsKeyItem, etc. do make some
+      # changes in erp5_mysql_innodb(by adding properties, by adding sub-objects),
+      # so we need to add portal_catalog/erp5_mysql_innodb everytime we find
+      # a bt5 making changes in any of these items.
+
+      portal_path = self.getPortalObject()
+      template_path_list = []
+      property_path_list = []
+
+      # For modules, we don't need to create path for the module
+      module_list = import_template.getTemplateModuleIdList()
+      for path in module_list:
+        template_path_list.append(path)
+
+      # For portal_types, we have to add path and subobjects
+      portal_type_id_list = import_template.getTemplatePortalTypeIdList()
+      portal_type_path_list = []
+      portal_type_workflow_chain_path_list = []
+      for id in portal_type_id_list:
+        portal_type_path_list.append('portal_types/'+id)
+        # Add type_worklow list separately in path
+        portal_type_workflow_chain_path_list.append('portal_types/'+id+'#type_workflow_list')
+        # Remove type_workflow_list from the objects, so that we don't end up in
+        # conflict
+        portal_type_path = 'portal_types/' + id
+        removable_property[portal_type_path] = ['type_workflow_list']
+      template_path_list.extend(portal_type_path_list)
+      template_path_list.extend(portal_type_workflow_chain_path_list)
+
+      # For categories, we create path for category objects as well as the subcategories
+      category_list = import_template.getTemplateBaseCategoryList()
+      category_path_list = []
+      for base_category in category_list:
+        category_path_list.append('portal_categories/'+base_category)
+        #category_path_list.append('portal_categories/'+base_category+'/**')
+      template_path_list.extend(category_path_list)
+
+      # Adding tools
+      template_tool_id_list = import_template.getTemplateToolIdList()
+      tool_id_list = []
+      for tool_id in template_tool_id_list:
+        tool_id_list.append(tool_id)
+      template_path_list.extend(tool_id_list)
+
+      # Adding business template skin selection property on the portal_tempaltes
+      template_skin_selection_list = import_template.getTemplateRegisteredSkinSelectionList()
+      selection_list = []
+      for selection in template_skin_selection_list:
+        skin, selection = selection.split(' | ')
+        selection_list.append('portal_skins/%s#business_template_registered_skin_selections'%skin)
+
+      # For portal_skins, we export the folder
+      portal_skin_list = import_template.getTemplateSkinIdList()
+      portal_skin_path_list = []
+      for skin in portal_skin_list:
+        portal_skin_path_list.append('portal_skins/'+skin)
+        #portal_skin_path_list.append('portal_skins/'+skin+'/**')
+      template_path_list.extend(portal_skin_path_list)
+
+      # For workflow chains,
+      # We have 2 objects in the Business Template design where we deal with
+      # workflow objects, we deal with the installation separately:
+      # 1. Workflow_id : We export the whole workflow objects in this case
+      # 2. Portal Workflow chain: It is already being exported via portal_types
+      # XXX: CHECK For 2, keeping in mind the migration of workflow would be merged
+      # before this part where we make workflow_list as property of portal_type
+      workflow_id_list = import_template.getTemplateWorkflowIdList()
+      workflow_path_list = []
+      for workflow in workflow_id_list:
+        workflow_path_list.append('portal_workflow/' + workflow)
+        #workflow_path_list.append('portal_workflow/' + workflow + '/**')
+      template_path_list.extend(workflow_path_list)
+
+      # For tests in portal components add them with portal_components head
+      test_id_list = import_template.getTemplateTestIdList()
+      test_path_list = []
+      for path in test_id_list:
+        test_path_list.append('portal_components/' + path)
+      template_path_list.extend(test_path_list)
+
+      # For documents in portal components add them with portal_components head
+      document_id_list = import_template.getTemplateDocumentIdList()
+      document_path_list = []
+      for path in document_id_list:
+        document_path_list.append('portal_components/' + path)
+      template_path_list.extend(document_path_list)
+
+      # For extensions in portal components add them with portal_components head
+      extension_id_list = import_template.getTemplateExtensionIdList()
+      extension_path_list = []
+      for path in extension_id_list:
+        extension_path_list.append('portal_components/' + path)
+      template_path_list.extend(extension_path_list)
+
+      # For paths, we add them directly to the path list
+      path_list = import_template.getTemplatePathList()
+      for path in path_list:
+        template_path_list.append(path)
+
+      # Catalog methods would be added as sub objects
+      catalog_method_item_list = import_template.getTemplateCatalogMethodIdList()
+      catalog_method_path_list = []
+      for method in catalog_method_item_list:
+        catalog_method_path_list.append('portal_catalog/' + method)
+      template_path_list.extend(catalog_method_path_list)
+
+      # For catalog objects, we check if there is any catalog object, and then
+      # add catalog object also in the path if there is
+      template_catalog_datetime_key   = import_template.getTemplateCatalogDatetimeKeyList()
+      template_catalog_full_text_key  = import_template.getTemplateCatalogFullTextKeyList()
+      template_catalog_keyword_key    = import_template.getTemplateCatalogKeywordKeyList()
+      template_catalog_local_role_key = import_template.getTemplateCatalogLocalRoleKeyList()
+      template_catalog_multivalue_key = import_template.getTemplateCatalogMultivalueKeyList()
+      template_catalog_related_key    = import_template.getTemplateCatalogRelatedKeyList()
+      template_catalog_request_key    = import_template.getTemplateCatalogRequestKeyList()
+      template_catalog_result_key     = import_template.getTemplateCatalogResultKeyList()
+      template_catalog_result_table   = import_template.getTemplateCatalogResultTableList()
+      template_catalog_role_key       = import_template.getTemplateCatalogRoleKeyList()
+      template_catalog_scriptable_key = import_template.getTemplateCatalogScriptableKeyList()
+      template_catalog_search_key     = import_template.getTemplateCatalogSearchKeyList()
+      template_catalog_security_uid_column = import_template.getTemplateCatalogSecurityUidColumnList()
+      template_catalog_topic_key      = import_template.getTemplateCatalogTopicKeyList()
+
+      catalog_property_list = [
+        template_catalog_datetime_key,
+        template_catalog_full_text_key,
+        template_catalog_keyword_key,
+        template_catalog_local_role_key,
+        template_catalog_multivalue_key,
+        template_catalog_related_key,
+        template_catalog_request_key,
+        template_catalog_result_key,
+        template_catalog_result_table,
+        template_catalog_role_key,
+        template_catalog_scriptable_key,
+        template_catalog_search_key,
+        template_catalog_security_uid_column,
+        template_catalog_topic_key,
+        ]
+      is_property_added = any(catalog_property_list)
+
+      properties_removed = [
+        'sql_catalog_datetime_search_keys_list',
+        'sql_catalog_full_text_search_keys_list',
+        'sql_catalog_keyword_search_keys_list',
+        'sql_catalog_local_role_keys_list',
+        'sql_catalog_multivalue_keys_list',
+        'sql_catalog_related_keys_list',
+        'sql_catalog_request_keys_list',
+        'sql_search_result_keys_list',
+        'sql_search_tables_list',
+        'sql_catalog_role_keys_list',
+        'sql_catalog_scriptable_keys_list',
+        'sql_catalog_search_keys_list',
+        'sql_catalog_security_uid_columns_list',
+        'sql_catalog_topic_search_keys_list',
+        ]
+
+      if is_property_added:
+        if catalog_method_path_list:
+          catalog_path = catalog_method_path_list[0].rsplit('/', 1)[0]
+        else:
+          catalog_path = 'portal_catalog/erp5_mysql_innodb'
+          removable_sub_object_path.append(catalog_path)
+        removable_property[catalog_path] = properties_removed
+        for prop in properties_removed:
+            property_path_list.append('%s#%s' % (catalog_path, prop))
+
+      # Add these catalog items in the object_property instead of adding
+      # dummy path item for them
+      if import_template.getTitle() == 'erp5_mysql_innodb_catalog':
+        template_path_list.append('portal_catalog/erp5_mysql_innodb')
+
+      # Add portal_property_sheets
+      property_sheet_id_list = import_template.getTemplatePropertySheetIdList()
+      property_sheet_path_list = []
+      for property_sheet in property_sheet_id_list:
+        property_sheet_path_list.append('portal_property_sheets/' + property_sheet)
+        #property_sheet_path_list.append('portal_property_sheets/' + property_sheet + '/**')
+      template_path_list.extend(property_sheet_path_list)
+
+      # Create new objects for business manager
+      migrated_bm = self.newContent(
+                                    portal_type='Business Manager',
+                                    title=import_template.getTitle()
+                                    )
+
+      template_path_list.extend(property_path_list)
+      template_path_list.extend(selection_list)
+      template_path_list = self.cleanTemplatePathList(template_path_list)
+
+      # XXX: Add layer=1 and sign=1 for default for all paths
+      template_path_list = [l + ' | 1 | 1' for l in template_path_list]
+
+      def reduceDependencyList(bt, template_path_list):
+        """
+          Used for recursive udpation of layer for dependency in a BT
+        """
+        dependency_list = bt.getDependencyList()
+        # XXX: Do not return template_path_list of the new BM incase there is no
+        # dependency_list, instead look for the latest updated version of
+        # new_template_path_list
+        if not dependency_list:
+          return template_path_list
+        else:
+          # Copy of the initial template list to be used to update the layer
+          new_template_path_list = list(template_path_list)
+          for item in dependency_list:
+            dependency = item.split(' ', 1)
+            if len(dependency) > 1:
+              version = dependency[1]
+              if version:
+                version = version[1:-1]
+              base_bt = self.getLastestBTOnRepos(dependency[0], version)
+            else:
+              try:
+                base_bt = self.getLastestBTOnRepos(dependency[0])
+              except BusinessTemplateIsMeta:
+                bt_list = self.getProviderList(dependency[0])
+                # We explicilty use the Business Template which is used the most
+                # while dealing with provision list
+                repository_list = self.getRepositoryList()
+                if dependency[0] == 'erp5_full_text_catalog':
+                  base_bt = [repository_list[1], 'erp5_full_text_mroonga_catalog']
+                if dependency[0] == 'erp5_view_style':
+                  base_bt = [repository_list[0], 'erp5_xhtml_style']
+                if dependency[0] == 'erp5_catalog':
+                  base_bt = [repository_list[0], 'erp5_mysql_innodb_catalog']
+                # XXX: Create path for the BT(s) here
+
+            # Download the base_bt
+            base_bt_path = os.path.join(base_bt[0], base_bt[1])
+            base_bt = self.download(base_bt_path)
+
+            # Check for the item list and if the BT is Business Manager,
+            # if BM, then compare and update layer and if not run migration and
+            # then do it again
+            if base_bt.getPortalType() != 'Business Manager':
+              # If the base_bt is not Business Manager, run the migration on the
+              # base_bt
+              base_bt = self.migrateBTToBM(base_bt_path, isReduced=True)
+
+            # Check for item path which also exists in base_bt
+            base_path_list = base_bt.getPathList()
+
+            copy_of_template_path_list = new_template_path_list[:]
+            # Loop through all the paths in the new_template_path_list and
+            # check for their existence in base_path_list
+            for idx, path in enumerate(new_template_path_list):
+              path_list = path.split(' | ')
+              item_path = path_list[0]
+              item_layer = path_list[2]
+              if item_path in base_path_list:
+                # TODO: Increase the layer of the path item by +1 and save it
+                # back at updated_template_path_list
+                item_layer = int(item_layer) + 1
+                updated_path = item_path + ' | 1 | ' + str(item_layer)
+                copy_of_template_path_list[idx] = updated_path
+            new_template_path_list = copy_of_template_path_list
+
+            if base_bt.getPortalType() != 'Business Manager':
+              # Recursively reduce the base Business Templatem no need to do
+              # this for Business Manager(s) as it had already been migrated
+              # with taking care of layer
+              reduceDependencyList(base_bt, new_template_path_list)
+
+          return new_template_path_list
+
+      # Take care about the the dependency_list also and then update the layer
+      # accordingly for the path(s) that already exists in the dependencies.
+      template_path_list = reduceDependencyList(import_template, template_path_list)
+
+      # Create new sub-objects instead based on template_path_list
+      for path in template_path_list:
+
+        path_list = path.split(' | ')
+
+        # Create Business Property Item for objects with property in path
+        if '#' in path_list[0]:
+          migrated_bm.newContent(
+                portal_type='Business Property Item',
+                item_path=path_list[0],
+                item_sign=path_list[1],
+                item_layer=path_list[2],
+                )
+        else:
+          migrated_bm.newContent(
+                portal_type='Business Item',
+                item_path=path_list[0],
+                item_sign=path_list[1],
+                item_layer=path_list[2],
+                )
+
+      kw['removable_property'] = removable_property
+      kw['removable_sub_object_path'] = removable_sub_object_path
+      migrated_bm.build(**kw)
+
+      # Commit transaction to generate all oids before exporting
+      transaction.commit()
+      # Export the newly built business manager to the export directory
+      migrated_bm.export(path=export_dir, local=True)
+
+      if is_installed:
+        import_template.uninstall()
+
+      if isReduced:
+        return migrated_bm
+
+    def cleanTemplatePathList(self, path_list):
+      """
+      Remove redundant paths and sub-objects' path if the object path already
+      exist.
+      """
+      # Split path into list
+      a2 = [l.split('/') for l in path_list]
+      # Create new list for paths with **
+      a3 = [l for l in a2 if l[-1] in ('**', '*')]
+      # Create new list for paths without **
+      a4 = [l for l in a2 if l[-1] not in ('**', '*')]
+      # Remove ** from paths in a3
+      reserved_id = ('portal_transforms', 'portal_ids')
+      a3 = [l[:-1] for l in a3 if l[0] not in reserved_id] + [l for l in a3 if l[0] in reserved_id]
+      # Create new final path list
+      a2 = a3+a4
+      # Join the path list
+      a2 = [('/').join(l) for l in a2]
+      # Remove the redundant paths
+      seen = set()
+      seen_add = seen.add
+      # XXX: What about redundant signs with different layers
+      # Maybe we will end up reducing them
+      a2 = [x for x in a2 if not (x in seen or seen_add(x))]
+
+      return a2
+
+    security.declareProtected( 'Import/Export objects', 'migrateBTListToBM')
+    def migrateBTToBMRequest(self, bt_title_list, REQUEST=None, **kw):
+      """
+      Run migration for BT5 one by one in a given repository. This will be done
+      via activities.
+      """
+      if REQUEST is None:
+        REQUEST = getattr(self, 'REQUEST', None)
+
+      if len(bt_title_list) == 0 and REQUEST:
+        ret_url = self.absolute_url()
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
+                                  % (ret_url, 'No BT title was given'))
+
+      repository_list = self.getRepositoryList()
+      for title in bt_title_list:
+        title = title.rstrip('\n')
+        title = title.rstrip('\r')
+        for repository in repository_list:
+          if title in os.listdir(repository):
+            template_path = os.path.join(repository, title)
+          else:
+            continue
+          if os.path.isfile(template_path):
+            LOG(title, 0, 'is file, so it is skipped')
+          else:
+            if not os.path.exists((os.path.join(template_path, 'bt'))):
+              LOG(title, 0, 'has no bt sub-folder, so it is skipped')
+            else:
+              self.migrateBTToBM(template_path)
+
     security.declareProtected(Permissions.ManagePortal, 'getFilteredDiff')
     def getFilteredDiff(self, diff):
       """
@@ -675,6 +1146,212 @@ class TemplateTool (BaseTool):
             doc.unlink()
         finally:
           f.close()
+
+        #XXX: Hardcoding 'erp5_core_proxy_field_legacy' BP in the list
+        bp_dict_1 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': [],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_core_proxy_field_legacy',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_core_proxy_field_legacy',
+          'version': '5.4.7'}
+
+        bp_dict_2 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_base',],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_pdm',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_pdm',
+          'version': '5.4.7'}
+
+        bp_dict_3 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_ui_test',],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_performance_test',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_performance_test',
+          'version': '5.4.7'}
+
+        bp_dict_4 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_ui_test_core',],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_ui_test',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_ui_test',
+          'version': '5.4.7'}
+
+        bp_dict_5 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_core', 'erp5_xhtml_style',],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_ui_test_core',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_ui_test_core',
+          'version': '5.4.7'}
+
+        bp_dict_6 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_core (>= 1.0rc12)',
+                              'erp5_full_text_catalog',
+                              'erp5_core_proxy_field_legacy',],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_base',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_base',
+          'version': '5.4.7'}
+
+        bp_dict_7 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': [],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_full_text_mroonga_catalog',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': ['erp5_full_text_catalog'],
+          'title': 'erp5_full_text_mroonga_catalog',
+          'version': '5.4.7'}
+
+        if repository.endswith('/bt5'):
+          property_dict_list.append(bp_dict_1)
+          property_dict_list.append(bp_dict_2)
+          property_dict_list.append(bp_dict_3)
+          #property_dict_list.append(bp_dict_4)
+          property_dict_list.append(bp_dict_5)
+          property_dict_list.append(bp_dict_6)
+          property_dict_list.append(bp_dict_7)
+
+        bm_dict_1 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': [],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_mysql_innodb_catalog',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': ['erp5_catalog'],
+          'title': 'erp5_mysql_innodb_catalog',
+          'version': '5.4.7'}
+
+        bm_dict_2 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_core'],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_xhtml_style',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': ['erp5_view_style'],
+          'title': 'erp5_xhtml_style',
+          'version': '5.4.7'}
+
+        bm_dict_3 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': [],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_mysql_ndb_catalog',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': ['erp5_catalog'],
+          'title': 'erp5_mysql_ndb_catalog',
+          'version': '5.4.7'}
+
+        bm_dict_4 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_view_style',],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_jquery',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_jquery',
+          'version': '5.4.7'}
+
+        bm_dict_5 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': [],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_property_sheets',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_property_sheets',
+          'version': '5.4.7'}
+
+        bm_dict_6 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_catalog (>= 1.1)',
+                              'erp5_core_proxy_field_legacy',
+                              'erp5_property_sheets'],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_core',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': ['erp5_full_text_mroonga_catalog',
+                                    'erp5_base'],
+          'provision_list': ['erp5_auto_logout',],
+          'title': 'erp5_core',
+          'version': '5.4.7'}
+
+        bm_dict_7 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': [],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_business_package',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_business_package',
+          'version': '5.4.7'}
+
+        if repository.endswith('/bootstrap'):
+          property_dict_list.append(bm_dict_1)
+          #property_dict_list.append(bm_dict_2)
+          property_dict_list.append(bm_dict_3)
+          property_dict_list.append(bm_dict_4)
+          property_dict_list.append(bm_dict_5)
+          property_dict_list.append(bm_dict_6)
+          #property_dict_list.append(bm_dict_7)
 
         self.repository_dict[repository] = tuple(property_dict_list)
 
@@ -1141,10 +1818,8 @@ class TemplateTool (BaseTool):
                                               template_title_list,
                                               with_test_dependency_list=False):
       available_bt5_list = self.getRepositoryBusinessTemplateList()
-
       template_title_list = set(template_title_list)
       installed_bt5_title_list = self.getInstalledBusinessTemplateTitleList()
-
       bt5_set = set()
       for available_bt5 in available_bt5_list:
         if available_bt5.title in template_title_list:
@@ -1341,8 +2016,11 @@ class TemplateTool (BaseTool):
       if update_catalog is CATALOG_UPDATABLE and install_kw != {}:
         update_catalog = imported_bt5.isCatalogUpdatable()
 
-      imported_bt5.install(object_to_update=install_kw,
-                           update_catalog=update_catalog)
+      if imported_bt5.getPortalType() == 'Business Manager':
+        self.updateInstallationState([imported_bt5])
+      else:
+        imported_bt5.install(object_to_update=install_kw,
+                             update_catalog=update_catalog)
 
       # Run After script list
       for after_triggered_bt5_id in after_triggered_bt5_id_list:
@@ -1356,6 +2034,598 @@ class TemplateTool (BaseTool):
         log("Updated %s from %s" % (bt_title, download_url))
 
       return imported_bt5
+
+    security.declareProtected(Permissions.ManagePortal,
+            'installBusinessManager')
+    def installBusinessManager(self, bm):
+      """
+      Run installation on flattened Business Manager
+      """
+      # Run install on separate Business Item one by one
+      for path_item in bm._path_item_list:
+        path_item.install(self)
+
+      bm.setStatus('installed')
+
+    def updateHash(self, item):
+      """
+      Function to update hash of Business Item or Business Property Item
+      """
+      # Check for isProperty attribute
+      if item.isProperty:
+        value = item.getProperty('item_property_value')
+      else:
+        value_list = item.objectValues()
+        if value_list:
+          value = value_list[0]
+        else:
+          value = ''
+
+      if value:
+        item.setProperty('item_sha', self.calculateComparableHash(
+                                                              value,
+                                                              item.isProperty,
+                                                              ))
+
+    def rebuildBusinessManager(self, bm):
+      """
+      Compare the sub-objects in the Business Manager to the previous built
+      state to give user powet to decide on which item to rebuild.
+      """
+      checkNeeded = True
+      changed_path_list = []
+
+      if bm.getBuildingState() not in  ['built', 'modified']:
+        # In case the building_state is not built, we build the BM without
+        # comparing anything
+        checkNeeded = False
+        return checkNeeded, changed_path_list
+
+      portal = self.getPortalObject()
+      for item in bm.objectValues():
+        # Check for the change compared to old building state, i.e, if there is
+        # some change made at ZODB state(it also count changes made due to
+        # change while installation of other BM)
+        path = item.getProperty('item_path')
+
+        try:
+          if item.isProperty:
+            # Get the value for Business Property Item
+            value = item.getProperty('item_property_value')
+            # Get the value at ZODB
+            relative_url, property_id = path.split('#')
+            obj = portal.restrictedTraverse(relative_url)
+            property_value = obj.getProperty(property_id)
+
+            # If the value at ZODB for the property is none, raise KeyError
+            # This is important to have compatibility between the way we check
+            # path as well as property. Otherwise, if we install a new property,
+            # we are always be getting an Error that there is change made at
+            # ZODB for this property
+            if not property_value:
+              raise KeyError
+
+            obj = property_value
+          else:
+            # Get the value of the Business Path Item
+            value_list = item.objectValues()
+            if value_list:
+              value = value_list[0]
+            else:
+              # If there is no value, it means the path_item is new, thus no
+              # need to comapre hash and check anything
+              changed_path_list.append((path, 'New'))
+              continue
+
+            # Get the object at ZODB
+            obj = portal.restrictedTraverse(path)
+
+          # Calculate hash for value at ZODB
+          obj_sha = self.calculateComparableHash(obj, item.isProperty)
+
+          # Update hash for value at property_value
+          self.updateHash(item)
+          item_sha = item.getProperty('item_sha')
+
+          # Compare the hash with the item hash
+          if obj_sha != item_sha:
+            changed_path_list.append((path, 'Changed'))
+          else:
+            changed_path_list.append((path, 'Unchanged'))
+
+        # KeyError is raised in case the value/object has been deleted at ZODB
+        except KeyError:
+          changed_path_list.append((path, 'Deleted'))
+
+      return checkNeeded, changed_path_list
+
+    security.declareProtected(Permissions.ManagePortal,
+            'updateInstallationState')
+    def compareInstallationState(self, bm_list):
+      """
+      Run installation after comparing combined Business Manager status
+
+      Steps:
+      1. Create combinedBM for the bm_list
+      2. Get the old combinedBM by checking the 'installed' status for it or
+      by checking timestamp (?? which is better)
+      CombinedBM: Collection of all Business item(s) whether installed or
+      uninstalled
+      3. Build BM from the filesystem
+      4. Compare the combinedBM state to the last combinedBM state
+      5. Compare the installation state to the OFS state
+      6. If conflict while comaprison at 3, raise the error
+      7. In all other case, install the BM List
+      """
+
+      # Create old installation state from Installed Business Manager
+      installed_bm_list = self.getInstalledBusinessManagerList()
+      combined_installed_path_item = [item for bm
+                                      in installed_bm_list
+                                      for item in bm.objectValues()]
+
+      # Create BM for old installation state and update its path item list
+      old_installation_state = self.newContent(
+                                  portal_type='Business Manager',
+                                  title='Old Installation State',
+                                  temp_object=True,
+                                  )
+
+      for item in combined_installed_path_item:
+        item.isIndexable = ConstantGetter('isIndexable', value=False)
+        # Better to use new ids so that we don't end up in conflicts
+        new_id = old_installation_state.generateNewId()
+        old_installation_state._setObject(new_id, aq_base(item),
+                                          suppress_events=True)
+
+      forbidden_bm_title_list = ['Old Installation State',]
+      for bm in bm_list:
+        forbidden_bm_title_list.append(bm.title)
+
+      new_installed_bm_list = [l for l
+                               in self.getInstalledBusinessManagerList()
+                               if l.title not in forbidden_bm_title_list]
+      new_installed_bm_list.extend(bm_list)
+
+      combined_new_path_item = [item for bm
+                                in new_installed_bm_list
+                                for item in bm.objectValues()]
+
+      # Create BM for new installation state and update its path item list
+      new_installation_state = self.newContent(
+                                  portal_type='Business Manager',
+                                  title='New Installation State',
+                                  temp_object=True,
+                                  )
+
+      for item in combined_new_path_item:
+        item.isIndexable = ConstantGetter('isIndexable', value=False)
+        new_id = new_installation_state.generateNewId()
+        new_installation_state._setObject(new_id, aq_base(item),
+                                          suppress_events=True)
+
+      # Create installation process, which have the changes to be made in the
+      # OFS during installation. Importantly, it should also be a Business Manager
+      installation_process = self.newContent(
+                                  portal_type='Business Manager',
+                                  title='Installation Process',
+                                  temp_object=True,
+                                  )
+
+      # Reduce both old and new Installation State
+      old_installation_state.reduceBusinessManager()
+      new_installation_state.reduceBusinessManager()
+
+      # Get path list for old and new states
+      old_state_path_list = old_installation_state.getPathList()
+      new_state_path_list = new_installation_state.getPathList()
+
+      to_install_path_item_list = []
+
+      # Get the path which has been removed in new installation_state
+      removed_path_list = [path for path
+                           in old_state_path_list
+                           if path not in new_state_path_list]
+
+      # Add the removed path with negative sign in the to_install_path_item_list
+      for path in removed_path_list:
+        old_item = old_installation_state.getBusinessItemByPath(path)
+        old_item.setProperty('item_sign', '-1')
+        to_install_path_item_list.append(old_item)
+
+      # Reduce old_installation_state again as changes as new sub-objects maybe
+      # added to the old_installation_state
+      old_installation_state.reduceBusinessManager()
+
+      # XXX: At this point, we expect all the Business Manager objects as 'reduced',
+      # thus all the BusinessItem sub-objects should have single value
+      # Update hashes of item in old state before installation
+      for item in old_installation_state.objectValues():
+
+        # In case of Business Patch Item we need to update hash of both new and
+        # old value
+        if item.getPortalType() == 'Business Patch Item':
+          new_val = item._getOb('new_item')
+          old_val = item._getOb('old_item')
+          self.updateHash(new_val)
+          self.updateHash(old_val)
+        else:
+          self.updateHash(item)
+
+      # Path Item List for installation_process should be the difference between
+      # old and new installation state
+      for item in new_installation_state.objectValues():
+
+        # If the path has been removed, then add it with sign = -1
+        old_item = old_installation_state.getBusinessItemByPath(item.getProperty('item_path'))
+
+        # In case of Business Patch Item we need to update hash of both new and
+        # old value
+        if item.getPortalType() == 'Business Patch Item':
+          new_val = item._getOb('new_item')
+          old_val = item._getOb('old_item')
+          self.updateHash(new_val)
+          self.updateHash(old_val)
+        else:
+          self.updateHash(item)
+
+        if old_item:
+          to_be_installed_item = item
+          if old_item.getPortalType() == 'Business Patch Item':
+            # In case of Business Patch Item, we just need to compare the hash
+            # of old_item
+            old_item = old_item._getOb('old_item')
+            item = item._getOb('old_item')
+
+          # If the old_item exists, we match the hashes and if it differs, then
+          # add the new item
+          if old_item.getProperty('item_sha') != item.getProperty('item_sha'):
+            to_install_path_item_list.append(to_be_installed_item)
+
+        else:
+          to_install_path_item_list.append(item)
+
+      for item in to_install_path_item_list:
+        item.isIndexable = ConstantGetter('isIndexable', value=False)
+        new_id = new_installation_state.generateNewId()
+        installation_process._setObject(new_id, aq_base(item),
+                                        suppress_events=True)
+
+      change_list = self.compareOldStateToOFS(installation_process, old_installation_state)
+
+      if change_list:
+        change_list = [(l[0].item_path, l[1]) for l in change_list]
+
+      return change_list
+
+    def updateInstallationState(self, bm_list, force=1):
+      """
+      First compare installation state and then install the final value
+      """
+      change_list = self.compareInstallationState(bm_list)
+
+      if force:
+        to_install_path_list = [l[0] for l in change_list]
+        to_install_path_list = self.sortPathList(to_install_path_list)
+
+        # Install the path items with bm_list as context
+        self.installBusinessItemList(bm_list, to_install_path_list)
+
+    installMultipleBusinessManager = updateInstallationState
+
+    def installBusinessItemList(self, manager_list, item_path_list):
+      """
+      Install Business Item/Business Property Item from the current Installation
+      Process given the change_list which carries the list of paths to be
+      installed
+      """
+      LOG('INFO', 0, '%s' % [item_path_list])
+
+      # Create BM for new installation state and update its path item list
+      new_installation_state = self.newContent(
+                                  portal_type='Business Manager',
+                                  title='Final Installation State',
+                                  temp_object=True,
+                                  )
+      combined_new_path_item_list = [item for bm
+                                in manager_list
+                                for item in bm.objectValues()]
+
+      for item in combined_new_path_item_list:
+        item.isIndexable = ConstantGetter('isIndexable', value=False)
+        new_id = new_installation_state.generateNewId()
+        new_installation_state._setObject(new_id, aq_base(item),
+                                        suppress_events=True)
+
+      for path in item_path_list:
+        item = new_installation_state.getBusinessItemByPath(path)
+        if item is None:
+          raise ValueError("Couldn't find path in current Installation State")
+        item.install(new_installation_state)
+
+      # Update workflow history of the installed Business Manager(s)
+      # Get the 'business_manager_installation_workflow' as it is already
+      # bootstrapped and installed
+      portal_workflow = self.getPortalObject().portal_workflow
+      wf = portal_workflow._getOb('business_manager_installation_workflow')
+
+      # Change the installation state for all the BM(s) in manager_list.
+      for manager in manager_list:
+        wf._executeMetaTransition(manager, 'installed')
+
+    def calculateComparableHash(self, object, isProperty=False):
+      """
+      Remove some attributes before comparing hashses
+      and return hash of the comparable object dict, in case the object is
+      an erp5 object.
+
+      Use shallow copy of the dict of the object at ZODB after removing
+      attributes which changes at small updation, like workflow_history,
+      uid, volatile attributes(which starts with _v)
+
+      # XXX: Comparable hash shouldn't be used for BusinessPatchItem as whole.
+      We can compare the old_value and new_value, but there shouldn't be hash
+      for the Patch Item.
+      """
+      if isProperty:
+        obj_dict = object
+        # Have compatibilty between tuples and list while comparing as we face
+        # this situation a lot especially for list type properties
+        if isinstance(obj_dict, list):
+          obj_dict = tuple(obj_dict)
+      else:
+
+        klass = object.__class__
+        classname = klass.__name__
+        obj_dict = object.__dict__.copy()
+
+        # If the dict is empty, do calculate hash of None as it stays same on
+        # one platform and in any case its impossiblt to move live python
+        # objects from one seeion to another
+        if not bool(obj_dict):
+          return hash(None)
+
+        attr_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
+                    'last_id', 'uid', '_mt_index', '_count', '_tree',
+                    '__ac_local_roles__', '__ac_local_roles_group_id_dict__',
+                    'workflow_history', 'subject_set_uid_dict', 'security_uid_dict',
+                    'filter_dict', '_max_uid'}
+
+        attr_set.update(('isIndexable',))
+
+        if classname in ('File', 'Image'):
+          attr_set.update(('_EtagSupport__etag', 'size'))
+        elif classname == 'Types Tool' and klass.__module__ == 'erp5.portal_type':
+          attr_set.add('type_provider_list')
+
+        for attr in object.__dict__.keys():
+          if attr in attr_set or attr.startswith('_cache_cookie_') or attr.startswith('_v'):
+            try:
+              del obj_dict[attr]
+            except AttributeError:
+              # XXX: Continue in cases where we want to delete some properties which
+              # are not in attribute list
+              # Raise an error
+              continue
+
+          # Special case for configuration instance attributes
+          if attr in ['_config', '_config_metadata']:
+            import collections
+            # Order the dictionary so that comparison can be correct
+            obj_dict[attr] = collections.OrderedDict(sorted(obj_dict[attr].items()))
+            if 'valid_tags' in obj_dict[attr]:
+              try:
+                obj_dict[attr]['valid_tags'] = collections.OrderedDict(sorted(obj_dict[attr]['valid_tags'].items()))
+              except AttributeError:
+                # This can occur in case the valid_tag object is PersistentList
+                pass
+
+        if 'data' in obj_dict:
+          try:
+            obj_dict['data'] = obj_dict.get('data').__dict__
+          except AttributeError:
+            pass
+
+      obj_sha = hash(pprint.pformat(obj_dict))
+      return obj_sha
+
+    def sortPathList(self, path_list):
+      """
+      Custom sort for path_list according to the priorities of paths
+      """
+      def comparePath(path):
+        split_path_list = path.split('/')
+        # Paths with property item should have the least priority as they should
+        # be installed after installing the object only
+        if '#' in path:
+          return 11
+        if len(split_path_list) == 2 and split_path_list[0] in ('portal_types', 'portal_categories'):
+          return 1
+        # portal_transforms objects needs portal_components installed first so
+        # as to register the modules
+        if len(split_path_list) == 2 and split_path_list[0] == 'portal_transforms':
+          return 12
+        if len(split_path_list) > 2:
+          return 10
+        if len(split_path_list) == 1:
+          return 2
+        return 5
+
+      return sorted(path_list, key=comparePath)
+
+    def compareOldStateToOFS(self, installation_process, old_state):
+
+      # Get the paths about which we are concerned about
+      to_update_path_list = installation_process.getPathList()
+      portal = self.getPortalObject()
+
+      # List to store what changes will be done to which path. Here we compare
+      # with all the states (old version, new version and state of object at ZODB)
+      change_list = []
+
+      to_update_path_list = self.sortPathList(to_update_path_list)
+
+      for path in to_update_path_list:
+        try:
+          # Better to check for status of BusinessPatchItem separately as it
+          # can contain both BusinessItem as well as BusinessPropertyItem
+          new_item = installation_process.getBusinessItemByPath(path)
+          if new_item.getPortalType() == 'Business Patch Item':
+            patch_item = new_item
+            # If the value is in ZODB, then compare it to the old_value
+            if '#' in str(path):
+              isProperty = True
+              relative_url, property_id = path.split('#')
+              obj = portal.restrictedTraverse(relative_url)
+              property_value = obj.getProperty(property_id)
+              if not property_value:
+                raise KeyError
+              property_type = obj.getPropertyType(property_id)
+              obj = property_value
+            else:
+              # If the path is path on an object and not of a property
+              isProperty = False
+              obj = portal.restictedTraverse(path)
+
+            obj_sha = self.calculateComparableHash(obj, isProperty)
+
+            # Get the sha of new_item from the BusinessPatchItem object
+            new_item_sha = patch_item._getOb('new_item').getProperty('item_sha')
+            old_item_sha = patch_item._getOb('old_item').getProperty('item_sha')
+
+            if new_item_sha == obj_sha:
+              # If the new_item in the patch is same as the one at ZODB, do
+              # nothing
+              continue
+            elif old_item_sha == obj_sha:
+              change_list.append((patch_item._getOb('new_item'), 'Adding'))
+            else:
+              change_list.append((patch_item._getOb('new_item'), 'Removing'))
+
+          if '#' in str(path):
+            isProperty = True
+            relative_url, property_id = path.split('#')
+            obj = portal.restrictedTraverse(relative_url)
+            property_value = obj.getProperty(property_id)
+
+            # If the value at ZODB for the property is none, raise KeyError
+            # This is important to have compatibility between the way we check
+            # path as well as property. Otherwise, if we install a new property,
+            # we are always be getting an Error that there is change made at
+            # ZODB for this property
+            if not property_value:
+              raise KeyError
+            property_type = obj.getPropertyType(property_id)
+            obj = property_value
+          else:
+            isProperty = False
+            # XXX: Hardcoding because of problem with 'resource' trying to access
+            # the resource via acqusition. Should be removed completely before
+            # merging (DONT PUSH THIS)
+            if path == 'portal_categories/resource':
+              path_list = path.split('/')
+              container_path = path_list[:-1]
+              object_id = path_list[-1]
+              container = portal.restrictedTraverse(container_path)
+              obj = container._getOb(object_id)
+            else:
+              obj = portal.restrictedTraverse(path)
+
+          obj_sha = self.calculateComparableHash(obj, isProperty)
+
+          # Get item at old state
+          old_item = old_state.getBusinessItemByPath(path)
+          # Check if there is an object at old state at this path
+
+          if old_item:
+            # Compare hash with ZODB
+
+            if old_item.getProperty('item_sha') == obj_sha:
+              # No change at ZODB on old item, so get the new item
+              new_item = installation_process.getBusinessItemByPath(path)
+              # Compare new item hash with ZODB
+
+              if new_item.getProperty('item_sha') == obj_sha:
+                if int(new_item.getProperty('item_sign')) == -1:
+                  # If the sign is negative, remove the value from the path
+                  change_list.append((new_item, 'Removing'))
+                else:
+                  # If same hash, and +1 sign, do nothing
+                  continue
+
+              else:
+                # Install the new_item
+                change_list.append((new_item, 'Adding'))
+
+            else:
+              # Change at ZODB, so get the new item
+              new_item = installation_process.getBusinessItemByPath(path)
+              # Compare new item hash with ZODB
+
+              if new_item.getProperty('item_sha') == obj_sha:
+                # If same hash, do nothing
+                continue
+
+              else:
+                # Trying to update change at ZODB
+                change_list.append((new_item, 'Updating'))
+
+          else:
+            # Object created at ZODB by the user
+            # Compare with the new_item
+
+            new_item = installation_process.getBusinessItemByPath(path)
+            if new_item.getProperty('item_sha') == obj_sha:
+              # If same hash, do nothing
+              continue
+
+            else:
+              # Trying to update change at ZODB
+              change_list.append((new_item, 'Updating'))
+
+        except (AttributeError, KeyError) as e:
+          # Get item at old state
+          old_item = old_state.getBusinessItemByPath(path)
+          # Check if there is an object at old state at this path
+
+          if old_item:
+            # This means that the user had removed the object at this path
+            # Check what the sign is for the new_item
+            new_item = installation_process.getBusinessItemByPath(path)
+            # Check sign of new_item
+
+            if int(new_item.getProperty('item_sign')) == 1:
+              # Object at ZODB has been removed by the user
+              change_list.append((new_item, 'Adding'))
+
+          else:
+            # If there is  no item at old state, install the new_item
+            new_item = installation_process.getBusinessItemByPath(path)
+            # XXX: Hack for not trying to install the sub-objects from zexp,
+            # This should rather be implemented while exporting the object,
+            # where we shouldn't export sub-objects in the zexp
+            if not isProperty:
+              try:
+                value =  new_item.objectValues()[0]
+              except IndexError:
+                continue
+            # Installing a new item
+            change_list.append((new_item, 'Adding'))
+
+      return change_list
+
+    def getInstalledBusinessManagerList(self):
+      bm_list = self.objectValues(portal_type='Business Manager')
+      installed_bm_list = [bm for bm in bm_list
+                          if bm.getInstallationState() == 'installed']
+      return installed_bm_list
+
+    def getInstalledBusinessManagerTitleList(self):
+      installed_bm_list = self.getInstalledBusinessManagerList()
+      if not len(installed_bm_list):
+        return []
+      installed_bm_title_list = [bm.title for bm in installed_bm_list]
+      return installed_bm_title_list
 
     security.declareProtected(Permissions.ManagePortal,
             'getBusinessTemplateUrl')
