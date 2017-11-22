@@ -53,45 +53,34 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
 
-
+<tr>
+  <td colspan="3"><b>Check that a default filter section is displayed</b></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//div[@class='filter_item_container']/div[1]</td>
   <td></td>
 </tr>
-
 <tr>
-  <td>click</td>
-  <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+  <td>verifyValue</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//div[@class='filter_item_container']/div[1]//select</td>
+  <td>id</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//div[@class='filter_item_container']/div[1]//input</td>
   <td></td>
 </tr>
-
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class="filter_item_container"]/div[1]//select</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>select</td>
-  <td>//div[@class="filter_item_container"]/div[1]//select</td>
-  <td>index=0</td>
-</tr>
-
-<tr>
-  <td>type</td>
-  <td>//div[@class="filter_item_container"]/div[1]//input</td>
-  <td>0</td>
+  <td colspan="3"><b></b></td>
 </tr>
 
 
+<tal:block tal:define="filter_section_configuration python: {'key': 'id', 'value': '0', 'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/set_filter_section" />
+</tal:block>
 
-<tr>
-  <td>click</td>
-  <td>//button[@class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check"]</td>
-  <td></td>
-</tr>
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_filter" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
@@ -99,43 +88,17 @@
   <td>link=Title 0</td>
   <td></td>
 </tr>
+<tal:block tal:define="search_query python: '( id:&nbsp; &#34;0&#34; )'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
+</tal:block>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='filter_item_container']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="filter_section_configuration python: {'key': 'title', 'value': 'T%', 'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/set_filter_section" />
+</tal:block>
 
-
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class="filter_item_container"]/div[1]//select</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>select</td>
-  <td>//div[@class="filter_item_container"]/div[1]//select</td>
-  <td>index=1</td>
-</tr>
-
-<tr>
-  <td>type</td>
-  <td>//div[@class="filter_item_container"]/div[1]//input</td>
-  <td>T%</td>
-</tr>
-
-
-
-<tr>
-  <td>click</td>
-  <td>//button[@class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check"]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_filter" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
@@ -163,44 +126,23 @@
   <td>link=Title 0</td>
   <td></td>
 </tr>
+<tal:block tal:define="search_query python: '( title:&nbsp; &#34;T%&#34; )'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
+</tal:block>
 
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
 
+<tal:block tal:define="filter_section_configuration python: {'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/remove_filter_section" />
+</tal:block>
 
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class="filter_item_container"]/div[1]</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>focus</td>
-  <td>//div[@class="filter_item_container"]/div[1]//button</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//div[@class="filter_item_container"]/div[1]//button</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>//div[@class="filter_item_container"]/div[1]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//button[@class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check"]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_filter" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="search_query python: ''">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
+</tal:block>
 
 </tbody></table>
 </body>

@@ -35,6 +35,8 @@ class TestMRPMixin(TestBPMMixin):
   def afterSetUp(self):
     super(TestMRPMixin, self).afterSetUp()
     self._createRule("Transformation Simulation Rule")
+    production_simulation_rule = self._createRule("Production Simulation Rule")
+    production_simulation_rule.setTradePhase("manufacturing/order")
     rule = self._createRule("Transformation Sourcing Simulation Rule")
     rule._setSameTotalQuantity(False)
 
@@ -112,11 +114,11 @@ class TestMRPMixin(TestBPMMixin):
     self.createCategoriesInCategory(category_tool.quantity_unit.weight, ['kg'])
     self.createCategoriesInCategory(category_tool.trade_phase, ['mrp',])
     self.createCategoriesInCategory(category_tool.trade_phase.mrp,
-        ('p' + str(i) for i in xrange(2)))
+        ('manufacturing_step_' + str(i) for i in xrange(2)))
     self.createCategoriesInCategory(category_tool.trade_phase.mrp,
-        ('s' + str(i) for i in xrange(1)))
+        ('sourcing_' + str(i) for i in xrange(1)))
     self.createCategoriesInCategory(category_tool.trade_state,
-        ('s' + str(i) for i in xrange(5)))
+        ('step_' + str(i) for i in xrange(6)))
 
   def createDefaultOrder(self, business_process, transformation=None):
     if transformation is None:
@@ -140,50 +142,116 @@ class TestMRPMixin(TestBPMMixin):
                                    resource_value=self.consumed_resource_1,
                                    quantity=3,
                                    quantity_unit_list=['weight/kg'],
-                                   trade_phase='mrp/p0')
+                                   trade_phase='mrp/manufacturing_step_0')
     self.consumed_resource_2 = resource()
     self.createTransformedResource(transformation=transformation,
                                    resource_value=self.consumed_resource_2,
                                    quantity=1,
                                    quantity_unit_list=['weight/kg'],
-                                   trade_phase='mrp/p0')
+                                   trade_phase='mrp/manufacturing_step_0')
     self.consumed_resource_3 = resource()
     self.createTransformedResource(transformation=transformation,
                                    resource_value=self.consumed_resource_3,
                                    quantity=4,
                                    quantity_unit_list=['weight/kg'],
-                                   trade_phase='mrp/p1')
+                                   trade_phase='mrp/manufacturing_step_1')
     self.consumed_resource_4 = resource()
     self.createTransformedResource(transformation=transformation,
                                    resource_value=self.consumed_resource_4,
                                    quantity=1,
                                    quantity_unit_list=['weight/kg'],
-                                   trade_phase='mrp/p1')
+                                   trade_phase='mrp/manufacturing_step_1')
     return transformation
 
-  def createBusinessProcess1(self, node_p0=None):
+  def createBusinessProcess1(self, node_p0):
     """
-    PPL : Production Packing List
-    PR  : Production Report
+    Terms
+    =====
     PO  : Production Order
-        order      p0      s0      p1     deliver
-       ------- S0 ---- S1 ---- S2 ---- S3 ------- S4
-         PO        PR     PPL      PR       PPL
+      Used to Order the delivery of a final product from a workshop
+    PPL : Production Packing List
+      Production Packing List is used to deliver the final product
+      from the Workshop
+    MO  : Manufacturing Order
+      Used to Order the manufacturing of a product. The Transformation defines
+      the list of products and services needed to manufacture the final product
+    ME  : Manufacturing Execution
+      Oversees the Manufacturing Process on workshop, it is responsible for
+      the movement of product and services consumption
+    IPL : Internal Packing List
+      Used to moves parts inside the factory.
+
+    Context
+    =======
+    The transformation used in this business process is split into two part,
+    this is configured by using transformed resource lines with different
+    trade phases.
+
+    Business Process
+    ================
+    The Business process will proceed this way:
+    1/ Generate Production Order and confirm it
+    2/ Generate Manufacturing Order and confirm it
+    2/ Generate Manufacturing Execution manufacturing_step_0 which generate a
+      the product with a variation to indicate it is a partial product.
+      The variation is trade_phase/mrp/manufacturing_step_0. It takes place in workshop2
+    3/ Delivering the first Manufacturing Execution leads to the build
+      of a Internal Packing List to move the delivered half built product
+      from "workshop2" to "workshop" the next fabrication line.
+    4/ Delivering the IPL will build the second Manufacturing Execution
+      manufacturing_step_1 which takes as input the variated expected product
+      and resource 3 and 4.
+      It takes place in "workshop" node
+    5/ Delivering p1 will build the last production packing List with source
+      "workshop" and destination "destination"
+
+    Business Process Schema
+    =======================
+        order          order       manufacturing_step_0       sourcing_0
+       ------- step_0 ----- step_1 -------------------- step_2 -------- step_3 -->
+         PO             MO              ME1                      IPL
+
+                  manufacturing_step_1        deliver
+        --> step_3 ------------------- step_4 -------- step_5
+                        ME2                     PPL
+    Simulation Tree
+    ===============
+    * PO / new_order_root_simulation_rule
+      * Production Order Line
+        * default_delivering_rule
+          * PPL
+            * default_production_rule
+              * MO
+                * default_transformation_rule
+                  * input ME1
+                  * input ME1
+                  * output ME1 - partial product
+                  * input ME2 - partial product
+                    * default_transformation_source_rule
+                      * IPL
+                  * input ME2
+                    * default_transformation_source_rule
+                  * input ME2
+                    * default_transformation_source_rule
+                  * output ME2
     """
     business_process = self._createDocument("Business Process")
-    builder = 'portal_deliveries/production_packing_list_builder'
+    production_packing_list_builder = 'portal_deliveries/production_packing_list_builder'
+    manufacturing_execution_builder = 'portal_deliveries/manufacturing_execution_builder'
+    manufacturing_order_builder = 'portal_deliveries/manufacturing_order_builder'
+    sourcing_builder = 'portal_deliveries/transformation_sourcing_internal_packing_list_builder'
     completed = 'delivered', 'started', 'stopped'
-    phase_list = [('default/order', None, ('confirmed',)),
-                  ('default/delivery', builder, completed)]
-    phase_list[1:1] = [('mrp/p' + str(i),
-                        'portal_deliveries/production_report_builder',
-                        completed)
-                       for i in xrange(2)]
-    if node_p0 is not None:
-      phase_list.insert(2, ('mrp/s0', builder, completed))
+    phase_list = [
+      ('default/order', None, ('confirmed',)),
+      ('manufacturing/order', manufacturing_order_builder, ('confirmed',)),
+      ('mrp/manufacturing_step_0', manufacturing_execution_builder, completed),
+      ('mrp/sourcing_0', sourcing_builder, completed),
+      ('mrp/manufacturing_step_1', manufacturing_execution_builder, completed),
+      ('default/delivery', production_packing_list_builder, completed)
+    ]
     predecessor = None
     for i, (phase, builder, completed) in enumerate(phase_list):
-      successor = 'trade_state/s' + str(i)
+      successor = 'trade_state/step_' + str(i)
       self.createBusinessLink(business_process,
                               completed_state=completed,
                               predecessor=predecessor,
@@ -192,13 +260,12 @@ class TestMRPMixin(TestBPMMixin):
                               delivery_builder=builder)
       predecessor = successor
     phase_list = [x[0] for x in phase_list]
-    if node_p0 is not None:
-      self.createTradeModelPath(business_process,
-                                destination_value=node_p0,
-                                trade_phase=phase_list.pop(1))
-      self.createTradeModelPath(business_process,
-                                test_tales_expression="here/getSource",
-                                trade_phase=phase_list.pop(1))
+    self.createTradeModelPath(business_process,
+                              destination_value=node_p0,
+                              trade_phase=phase_list.pop(2))
+    self.createTradeModelPath(business_process,
+                              test_tales_expression="here/getSource",
+                              trade_phase=phase_list.pop(2))
     self.createTradeModelPath(business_process, trade_phase_list=phase_list)
     return business_process
 
@@ -231,25 +298,42 @@ class TestMRPImplementation(TestMRPMixin):
     self.tic()
 
   def testSimpleOrder(self):
+    """
+    We test the process implemented in 'createBusinessProcess1' is
+    correctly followed
+    """
     self.createMRPOrder()
     order = self.order
 
+    # new_order_root_simulation_rule
     ar, = order.getCausalityRelatedValueList(portal_type="Applied Rule")
-    sm, = ar.objectValues() # order
+    # Production Order Line
+    sm, = ar.objectValues()
+    # default_delivering_rule
     ar, = sm.objectValues()
+    # The final PPL
     sm, = ar.objectValues() # deliver
+    # default_production_rule
+    ar, = sm.objectValues()
+    # Manufacturing Order Movements
+    sm, = ar.objectValues() # Order
+    # default_transformation_rule
     ar, = sm.objectValues()
 
     movement_list = []
     resource = self.order_line.getResource()
+    # This is the list of movement generated by the transformation rule.
     for sm in ar.objectValues():
       self.assertEqual(sm.getSource(), None)
       self.assertTrue(sm.getDestination())
       # Reference is used to match movements when reexpanding.
       reference = sm.getReference()
+      # Theses are the intermediary movement
       if reference.split('/', 1)[0] in ('pr', 'cr'):
         self.assertEqual(sm.getResource(), resource)
       else:
+        # The reference is the transformation line, so we assert the resource
+        # of the movement is the same as the corresponding line.
         cr = self.portal.unrestrictedTraverse(reference).getResource()
         self.assertTrue(None != sm.getResource() == cr != resource)
         reference = None
@@ -257,50 +341,58 @@ class TestMRPImplementation(TestMRPMixin):
                             reference, sm.getIndustrialPhaseList()))
     movement_list.sort()
     self.assertEqual(movement_list, sorted((
-      ('mrp/p0', -10, None, []),
-      ('mrp/p0', -30, None, []),
-      ('mrp/p0', 10, 'pr/mrp/p0', ['trade_phase/mrp/p0']),
-      ('mrp/p1', -10, 'cr/mrp/p1', ['trade_phase/mrp/p0']),
-      ('mrp/p1', -10, None, []),
-      ('mrp/p1', -40, None, []),
-      ('mrp/p1', 10, 'pr', []),
+      ('mrp/manufacturing_step_0', -10.0, None, []),
+      ('mrp/manufacturing_step_0', -30.0, None, []),
+      ('mrp/manufacturing_step_0', 10.0,
+       'pr/mrp/manufacturing_step_0', ['trade_phase/mrp/manufacturing_step_0']),
+      ('mrp/manufacturing_step_1', -10.0,
+       'cr/mrp/manufacturing_step_1', ['trade_phase/mrp/manufacturing_step_0']),
+      ('mrp/manufacturing_step_1', -10.0, None, []),
+      ('mrp/manufacturing_step_1', -40.0, None, []),
+      ('mrp/manufacturing_step_1', 10.0, 'pr', []),
       )))
 
     order.confirm()
+    # Build Manufacturing Order
     order.localBuild()
     self.tic()
-    self.checkStock(resource)
 
     def getRelatedDeliveryList(portal_type):
       return order.getCausalityRelatedValueList(portal_type=portal_type)
 
-    pr1, = getRelatedDeliveryList("Production Report")
-    pr1.start()
-    pr1.deliver()
+    mo, = getRelatedDeliveryList("Manufacturing Order Line")
+    # Build First Manufacturing Execution
     order.localBuild()
     self.tic()
-    variation = 'industrial_phase/trade_phase/mrp/p0'
+    self.checkStock(resource)
+
+    me1, = getRelatedDeliveryList("Manufacturing Execution")
+    me1.start()
+    me1.deliver()
+    order.localBuild()
+    self.tic()
+    variation = 'industrial_phase/trade_phase/mrp/manufacturing_step_0'
     self.checkStock(resource, (self.workshop2, variation, 10))
 
-    ppl1, = getRelatedDeliveryList("Production Packing List")
-    ppl1.start()
-    ppl1.deliver()
+    ipl, = getRelatedDeliveryList("Internal Packing List")
+    ipl.start()
+    ipl.deliver()
     order.localBuild()
     self.tic()
     self.checkStock(resource, (self.workshop, variation, 10))
 
-    pr2, = (x for x in getRelatedDeliveryList("Production Report")
-              if x.aq_base is not pr1.aq_base)
-    pr2.start()
-    pr2.deliver()
+    me2, = (x for x in getRelatedDeliveryList("Manufacturing Execution")
+              if x.aq_base is not me1.aq_base)
+    me2.start()
+    me2.deliver()
     order.localBuild()
     self.tic()
     self.checkStock(resource, (self.workshop, '', 10))
 
-    ppl2, = (x for x in getRelatedDeliveryList("Production Packing List")
-               if x.aq_base is not ppl1.aq_base)
-    ppl2.start()
-    ppl2.deliver()
+    ppl, = (x for x in getRelatedDeliveryList("Production Packing List")
+               if x.aq_base is not ipl.aq_base)
+    ppl.start()
+    ppl.deliver()
     self.tic()
     self.checkStock(resource, (self.destination, '', 10))
 
@@ -316,7 +408,7 @@ class TestMRPImplementation(TestMRPMixin):
 
   def testOrderWithItem(self):
     """
-    Check item propagation from Production Order to Production Report
+    Check item propagation from Production Order to Manufacturing Execution
     and Production Packing List
     """
     self.createMRPOrder(use_item=True)
@@ -326,14 +418,19 @@ class TestMRPImplementation(TestMRPMixin):
     order_line = self.order_line
     resource = order_line.getResourceValue()
     self.tic()
+    manufacturing_order_line, = order.getCausalityRelatedValueList(
+                            portal_type="Manufacturing Order Line")
+    self.assertEquals(self.item, manufacturing_order_line.getAggregateValue())
+    order.localBuild()
+    self.tic()
 
-    production_report, = order.getCausalityRelatedValueList(
-                                portal_type="Production Report")
+    manufacturing_execution, = order.getCausalityRelatedValueList(
+                                portal_type="Manufacturing Execution")
     #                        resource,            quantity, item
     expected_line_list = [(self.produced_resource, 10.0, self.item),
                           (self.consumed_resource_1, -30.0, None),
                           (self.consumed_resource_2, -10.0, None)]
-    self.checkExpectedLineList(production_report, expected_line_list)
+    self.checkExpectedLineList(manufacturing_execution, expected_line_list)
 
   def _test_add_and_clone_tranformed_resource(self, portal_type):
     test_product = self.portal.product_module.newContent()

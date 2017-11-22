@@ -87,6 +87,9 @@ class PythonScript(XMLObject, ZopePythonScript):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.PythonScript
+                      # CatalogFilter property_sheet needed for bootstrapping
+                      # some Python Script during ERP5 Catalog installation
+                      , PropertySheet.CatalogFilter
                       )
 
     def __init__(self, *args, **kw):

@@ -130,7 +130,10 @@ class TypesTool(TypeProvider):
       'Acquired Property',
       # the following ones are required to upgrade an existing site
       'Category Property',
+      # the following is needed to bootstrap Catalog Tool and default catalog
+      'Catalog Tool',
     ))
+    ERP5Generator.bootstrap_allow_type(self, 'Catalog Tool')
 
   def listContentTypes(self, container=None):
     """List content types from all providers

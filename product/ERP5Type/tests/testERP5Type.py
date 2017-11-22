@@ -3244,54 +3244,6 @@ return [
       # but this did not affect the other role
       self.assertTrue(hasRole(role2))
 
-    def test_constructUrlFor(self):
-      portal_url = self.portal.absolute_url()
-      # check url built for portal
-      portal_url = self.portal.absolute_url()
-      self.assertEqual(self.portal.constructUrlFor(), '%s' % portal_url)
-      # check urls built for a module
-      module_id = 'test_module'
-      module = self.portal.newContent(portal_type='Folder', id=module_id)
-      module_url = module.absolute_url()
-      self.assertEqual(
-        module.constructUrlFor(),
-        '%s/%s' % (portal_url, module_id)
-      )
-      # check url built for a form
-      form_id = 'view'
-      self.assertEqual(
-        module.constructUrlFor(form_id=form_id),
-        '%s/%s' % (module_url, form_id)
-      )
-      # check url built for a document reference
-      file_reference = 'test_file_reference'
-      self.portal.test_module.newContent(
-        portal_type='File',
-        reference=file_reference
-      )
-      self.assertEqual(
-        module.constructUrlFor(document_reference=file_reference),
-        '%s/%s' % (module_url, file_reference)
-      )
-      # check that form_id and document_reference are exclusive
-      # check url built with GET parameters
-      self.assertRaises(
-        AssertionError,
-        module.constructUrlFor,
-        form_id=form_id,
-        document_reference=file_reference
-      )
-      parameter_dict = {'ignore_layout': 1, 'came_from': 'foo/bar'}
-      self.assertIn(
-        module.constructUrlFor(
-          parameter_dict=parameter_dict,
-        ),
-        (
-          '%s/%s?came_from=foo/bar&ignore_layout:int=1' % (portal_url, module_id),
-          '%s/%s?ignore_layout:int=1&came_from=foo/bar' % (portal_url, module_id),
-        )
-      )
-
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
   # when this one fails.
@@ -3306,9 +3258,10 @@ class TestAccessControl(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
 
-    self.getCatalogTool().getSQLCatalog().filter_dict['z_catalog_object_list'] \
-      = dict(filtered=1, type=[], expression=self.expression,
-             expression_instance=Expression(self.expression))
+    method = self.getCatalogTool().getSQLCatalog()._getOb('z_catalog_object_list')
+    method.setFiltered(1)
+    method.setExpression(self.expression)
+    method.setExpressionInstance(Expression(self.expression))
 
     createZODBPythonScript(self.getSkinsTool().custom,
                            'Base_immediateReindexObject',

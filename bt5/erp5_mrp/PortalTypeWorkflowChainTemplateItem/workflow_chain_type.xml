@@ -1,5 +1,29 @@
 <workflow_chain>
  <chain>
+  <type>Manufacturing Execution</type>
+  <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, production_packing_list_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Manufacturing Execution Cell</type>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Manufacturing Execution Line</type>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, production_matrix_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Manufacturing Order</type>
+  <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, production_order_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Manufacturing Order Cell</type>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Manufacturing Order Line</type>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, production_matrix_workflow, production_order_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Production Order</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, production_order_workflow</workflow>
  </chain>
@@ -24,16 +48,12 @@
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, production_matrix_workflow</workflow>
  </chain>
  <chain>
-  <type>Production Report</type>
-  <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, production_packing_list_workflow</workflow>
+  <type>Production Packing List Module</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Production Report Cell</type>
-  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
- </chain>
- <chain>
-  <type>Production Report Line</type>
-  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, production_matrix_workflow</workflow>
+  <type>Production Simulation Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Transformation Simulation Rule</type>

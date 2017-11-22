@@ -76,8 +76,8 @@
       "sub_gadget": ["connection"]
     },
     "Monitoring App": {
-      "url": "monitoring_render_js/",
-      "cache" : "gadget_monitoring.appcache",
+      "url": "officejs_monitoring/",
+      "cache" : "gadget_officejs_monitoring.appcache",
       "sub_gadget": []
     },
     "App Store": {

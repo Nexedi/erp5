@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>ERP5 Panel</title>
+    <!--
+      data-i18n=Editable
+    -->
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="handlebars.js" type="text/javascript"></script>
+    <script src="gadget_global.js" type="text/javascript"></script>
+
+    <script id="panel-template-header" type="text/x-handlebars-template">
+      <div data-role="header" class="ui-bar-inherit">
+        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">
+          <div class="ui-controlgroup-controls">
+            <button data-i18n="Close" class="ui-btn ui-btn-icon-notext ui-icon-delete">Close</button>
+          </div>
+        </div>
+        <div class="panel_img" style="height: 40px; padding: 5px;">
+          <img alt="Officejs Monitoring App" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAxIiBoZWlnaHQ9IjI2MSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KCiA8Zz4KICA8dGl0bGU+YmFja2dyb3VuZDwvdGl0bGU+CiAgPHJlY3QgZmlsbD0ibm9uZSIgaWQ9ImNhbnZhc19iYWNrZ3JvdW5kIiBoZWlnaHQ9IjI2MyIgd2lkdGg9IjQwMyIgeT0iLTEiIHg9Ii0xIi8+CiA8L2c+CiA8Zz4KICA8dGl0bGU+TGF5ZXIgMTwvdGl0bGU+CiAgPHJlY3QgaWQ9InN2Z181IiBmaWxsPSIjRkZGRkZGIiB5PSIyMTcuNzk1NDA2IiB4PSIxNDIuODAwNjE0IiB3aWR0aD0iMTA4LjMwOCIgaGVpZ2h0PSIxOC45OTgiLz4KICA8cGF0aCBpZD0ic3ZnXzYiIGZpbGw9IiNGRkZGRkYiIGQ9Im0xNDEuOTkzODkyLDI0MC4zNDcxMjlsLTQuNzA2LDEwLjA5MmMwLDAgMC41MDIsMi45NTkgMi40NjUsMi45NTljMS45NywwIDExMS4yNzQsMCAxMTMuMjI5LDBjMS45NzgsMCAxLjk3OCwtMi45NTkgMS45NzgsLTIuOTU5bC00LjY4OCwtMTAuMDkybC0xMDguMjc4LDB6Ii8+CiAgPHBhdGggc3Ryb2tlPSJudWxsIiBpZD0ic3ZnXzciIGZpbGw9IiNGRkZGRkYiIGQ9Im0zMzguMzY2Mzg3LDc5LjM1NTAzN2M1LjUxMzgzNSwwIDEwLjgzNTA5MywwLjczODQwNiAxNS45MzgzODksMS45OTAxOTVsMCwtNjIuNzAxMTQxYzAsLTQuNTIzNzc2IC0zLjg3ODY4LC04LjIxMDgwNCAtOC42MTA4MjcsLTguMjEwODA0bC0yOTMuMDYxMzUxLDBjLTQuNzUxNDA1LDAgLTguNjI5MjA5LDMuNjg3MDI4IC04LjYyOTIwOSw4LjIxMDgwNGwwLDE2NC4zNzQ0MzNsMCwzLjg1Nzg3OGwwLDE5LjIyNjg4M2MwLDUuMDUzODI4IDMuODc4NjgsOS4yMTc1NjkgOC42MjkyMDksOS4yMTc1NjlsMjkzLjA2MTM1MSwwYzQuNzMyMTQ3LDAgOC42MTA4MjcsLTQuMTYzNzQxIDguNjEwODI3LC05LjIxNzU2OWwwLC03LjU0NDkwNmMtNS4xMDMyOTYsMS4yNTg0NTcgLTEwLjQyNDU1NCwyLjAwMTg2MyAtMTUuOTM4Mzg5LDIuMDAxODYzYy0xOS42NTY4OCwwIC0zNy4yNDM1NTQsLTguNTMyNTAyIC00OC45MzAzNjQsLTIxLjkwMTMxMmwtMjI4LjA5NzE4NSwwbDAsLTE0Ny44MDExNDNsMjc0Ljk0MzMzOSwwbDAsNDguNTg4OTI2YzAuNjk5NDA1LC0wLjAyNTAwMiAxLjM3ODY3OCwtMC4wOTE2NzYgMi4wODQyMSwtMC4wOTE2NzZ6Ii8+CiAgPHBhdGggc3Ryb2tlPSJudWxsIiBpZD0ic3ZnXzgiIGZpbGw9IiNGRkZGRkYiIGQ9Im0zNTIuNjYyNzIyLDg3Ljk4MzY0NGMtNC45MjE3NTEsLTEuMzg4NzUxIC0xMC4xMDU0OTYsLTIuMTU1NDY1IC0xNS40ODgyODksLTIuMTU1NDY1Yy0wLjY4NTYwOSwwIC0xLjM0NTY5OCwwLjA2NjIwOSAtMi4wMjUzNTIsMC4wOTU2MzVjLTI5LjU2MTk3OSwxLjAyOTkxNSAtNTMuMjEyMDcyLDI0LjMxMjUzNiAtNTMuMjEyMDcyLDUyLjk2ODY5OGMwLDE0Ljg5NTM1MiA2LjQwNDQwMSwyOC4zMjkyMDUgMTYuNjg0Mjc2LDM3Ljk2NzA4NWM5Ljk1NTc4NSw5LjMzOTUzMiAyMy41NDM3NjUsMTUuMDk5NyAzOC41NTIyOTgsMTUuMDk5N2M1LjM4Mjc5MywwIDEwLjU2NjUzOCwtMC43NjY3MTUgMTUuNDg4Mjg5LC0yLjE0NDAyMmMyMi45NjQ0ODUsLTYuNDQxODc0IDM5Ljc0OTEzNiwtMjYuNzcyODg5IDM5Ljc0OTEzNiwtNTAuOTIyNzYzYzAsLTI0LjEzNTk3OSAtMTYuNzgzOCwtNDQuNDc5MjU0IC0zOS43NDgyODUsLTUwLjkwODg2N3oiLz4KICA8cGF0aCBpZD0ic3ZnXzEwIiBmaWxsPSIjM0Q1NzZCIiBkPSJtMzM2Ljg3ODM0MSwxNjcuMzA5MTgzbC0zLjcyOCwwYy0wLjgyLDAgLTEuNDk0LDAuNjc0IC0xLjQ5NCwxLjUxbDAsMTIuMTQzYzAsMC44MzYgMC42NzQsMS41MjMgMS40OTQsMS41MjNsMy43MjgsMGMwLjg0MiwwIDEuNTIzLC0wLjY4OCAxLjUyMywtMS41MjNsMCwtMTIuMTQzYzAuMDAxLC0wLjgzNiAtMC42ODEsLTEuNTEgLTEuNTIzLC0xLjUxeiIvPgogIDxwYXRoIGlkPSJzdmdfMTEiIGZpbGw9IiMzRDU3NkIiIGQ9Im0zMDQuMTQ2MzkzLDE0MC4xNzAxMjdsLTEyLjE2NSwwYy0wLjg0MywwIC0xLjUwMiwwLjY2IC0xLjUwMiwxLjQ5NGwwLDMuNzM2YzAsMC44MiAwLjY1OSwxLjUwOCAxLjUwMiwxLjUwOGwxMi4xNjUsMGMwLjgyLDAgMS41MDksLTAuNjg4IDEuNTA5LC0xLjUwOGwwLC0zLjczNmMwLC0wLjgzNCAtMC42ODksLTEuNDk0IC0xLjUwOSwtMS40OTR6Ii8+CiAgPHBhdGggaWQ9InN2Z18xMiIgZmlsbD0iIzNENTc2QiIgZD0ibTMzNi4zODM1MDQsMTExLjU2MzAxNWwzLjcyOCwwYzAuODQyLDAgMS41MjMsLTAuNjc0IDEuNTIzLC0xLjUwOWwwLC0xMi4xNThjMCwtMC44MzUgLTAuNjgyLC0xLjUxNyAtMS41MjMsLTEuNTE3bC0zLjcyOCwwYy0wLjgyLDAgLTEuNDk0LDAuNjgyIC0xLjQ5NCwxLjUxN2wwLDEyLjE1OGMwLDAuODM1IDAuNjczLDEuNTA5IDEuNDk0LDEuNTA5eiIvPgogIDxwYXRoIHN0cm9rZT0ibnVsbCIgaWQ9InN2Z18xMyIgZmlsbD0iIzNENTc2QiIgZD0ibTM1MS43MDI3MzEsMTQ3LjczODc2M2wtNy4yNTE3MzIsLTMuODUxMzk5YzAuMTI2NjU3LC0wLjUyMTIwNiAwLjIwNjEyOCwtMS4wNjQ1MjUgMC4yMDYxMjgsLTEuNjE5Njg4YzAsLTMuODY3MTk0IC0zLjMwNDY3MSwtNy4wMDIzMjkgLTcuMzU1MjEsLTcuMDAyMzI5Yy0wLjYzNjU5NiwwIC0xLjI1NDk4LDAuMDkyMzk2IC0xLjg0ODUyOSwwLjIyNjY0NmwtMC43OTQ3MSwtMC45NzEzMzlsLTE2Ljk4Mjc5NCwtMjAuODIyOTg1Yy0wLjM4ODI0OSwtMC40OTc1MTUgLTEuMTM5OTEzLC0wLjU3MjUzNyAtMS42NDkwMjQsLTAuMjAyMTY1bC0yLjI5MjI0MywxLjcwNTc2NmMtMC41MDkxMTEsMC4zNjQ4NDQgLTAuNjAwMTcyLDEuMDc1NTggLTAuMjA2MTI4LDEuNTYyMDRsMTcuNjQzMzk3LDIxLjY0OTAxOWMtMC43NjQwODEsMS4xMTM0ODYgLTEuMjEyNzYxLDIuNDMyMjk3IC0xLjIxMjc2MSwzLjg1NjEzOGMwLDIuOTcyNDU2IDEuOTU3ODAyLDUuNDgyOTMzIDQuNjk4NzI1LDYuNTAxNjU1YzAuODMxMTM1LDAuMzExOTM0IDEuNzA0NDg4LDAuNTA5MzYxIDIuNjQzMjQsMC41MDkzNjFjMS41NTg3OTEsMCAyLjk5NTg5MiwtMC40NjI3NjggNC4xNzgwMjQsLTEuMjM4MjZsMTAuMjIyNzksNS40MjYwNzVsMTUuNDI0ODMxLDguMjEyOTQ5YzAuNTU3OTUzLDAuMzExOTM0IDEuMjczMTkyLDAuMTE1Mjk3IDEuNTg4NTkzLC0wLjQzOTg2N2wxLjQxODg4OSwtMi40MDYyMzZjMC4zMTU0MDEsLTAuNTMyMjYyIDAuMTA5MjczLC0xLjIxNTM1OSAtMC40NTUzMDMsLTEuNTI3MjkzbC0xNy45NzYxODIsLTkuNTY4MDg2eiIvPgogIDxwYXRoIGlkPSJzdmdfMTQiIGZpbGw9IiMzRDU3NkIiIGQ9Im0zODIuMzc1NjE2LDEzOC4wMTQ2ODJsLTEyLjE1OCwwYy0wLjgzNSwwIC0xLjUwOSwwLjY2IC0xLjUwOSwxLjQ5NGwwLDMuNzM2YzAsMC44MiAwLjY3NCwxLjUwOCAxLjUwOSwxLjUwOGwxMi4xNTgsMGMwLjgzNSwwIDEuNTA5LC0wLjY4OCAxLjUwOSwtMS41MDhsMCwtMy43MzZjLTAuMDAxLC0wLjgzNCAtMC42NzQsLTEuNDk0IC0xLjUwOSwtMS40OTR6Ii8+CiAgPHBhdGggaWQ9InN2Z18xNSIgZmlsbD0iI0ZGRkZGRiIgZD0ibTIzOS43MzIxNjgsMTE1LjU1MDEyN2wtMTIwLjQsMGwwLC0yMi43NDlsMTIwLjQsMGwwLDIyLjc0OXptMzkuMjYxLC00MS40NjJsMCw5LjY1M2wwLDQwLjg2MWwwLDguODI1bDAsMC44NDRsLTE3OC44NjEsMGwwLC02MC4xODRsMTY3LjkzMywwbDEwLjkyOCwwbDAsMC4wMDF6bS0xMC45MjgsOS42NTNsLTE1Ni4xNjcsMGwwLDQwLjg2MWwxNTYuMTY3LDBsMCwtNDAuODYxeiIvPgogPC9nPgo8L3N2Zz4=">
+        </div>
+      </div>
+    </script>
+
+    <script id="panel-template-body" type="text/x-handlebars-template">
+      <div class="ui-content">
+
+        <form class="dialog_form">
+          <button type="submit" class="ui-btn ui-btn-b ui-btn-inline
+                                       ui-icon-action ui-btn-icon-right ui-screen-hidden">Submit</button>
+          <div data-gadget-url="gadget_erp5_searchfield.html"
+               data-gadget-scope="erp5_searchfield"
+               data-gadget-sandbox="public"></div>
+        </form>
+        <ul data-role="listview" class="ui-listview" data-enhanced="true"></ul>
+        <dl></dl>
+      </div>
+    </script>
+
+    <script id="panel-template-body-list" type="text/x-handlebars-template">
+          <li class="ui-first-child"><a href="{{promise_list_href}}" class="ui-btn ui-btn-icon-left ui-icon-check" data-i18n="Promises" accesskey="p">Promises</a></li>
+          <li><a href="{{instance_list_href}}" class="ui-btn ui-btn-icon-left ui-icon-cube" data-i18n="Software Instances">Software Instances</a></li>
+          <li><a href="{{hosting_list_href}}" class="ui-btn ui-btn-icon-left ui-icon-cubes" data-i18n="Hosting Subscriptions">Hosting Subscriptions</a></li>
+          <li><a href="{{configurator_href}}" class="ui-btn ui-btn-icon-left ui-icon-gear" data-i18n="Monitoring Configurations">Monitoring Configurations</a></li>
+          <li><a href="{{synchronize_href}}" class="ui-btn ui-btn-icon-left ui-icon-refresh" data-i18n="Synchronize" accesskey="r">Synchronize</a></li>
+          <li class="ui-last-child"><a href="{{import_export_href}}" class="ui-btn ui-btn-icon-left ui-icon-exchange" data-i18n="OPML Import / Export">OPML Import / Export</a></li>
+    </script>
+
+    <script id="panel-template-body-desktop" type="text/x-handlebars-template">
+        <dt class="ui-content-title ui-body-c ui-btn ui-btn-icon-left ui-icon-eye" data-i18n="Views">Views</dt>
+        {{#each view_list}}
+        <dd data-role="listview" data-theme="c" data-inset="true" class="document-listview">
+          <a data-i18n="{{title}}" class="ui-body-inherit" href="{{href}}">{{title}}</a>
+        </dd>
+        {{/each}}
+        <dt class="ui-content-title ui-body-c  ui-btn ui-btn-icon-left ui-icon-cogs" data-i18n="Decisions">Decisions</dt>
+        {{#each workflow_list}}
+        <dd data-role="listview" data-theme="c" data-inset="true" class="document-listview">
+          <a data-i18n="{{title}}" class="ui-body-inherit" href="{{href}}">{{title}}</a>
+        </dd>
+        {{/each}}
+    </script>
+
+    <!-- custom script -->
+    <script src="gadget_officejs_monitoring_panel.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+  <div data-gadget-url="gadget_officejs_monitoring_sync.html" data-gadget-scope="sync_gadget" data-gadget-sandbox="public"></div>
+  <div class="jqm-navmenu-panel"></div>
+  </body>
+</html>

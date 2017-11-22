@@ -1,3 +1,11 @@
+Manufacturing Execution
+Manufacturing Execution Cell
+Manufacturing Execution Line
+Manufacturing Execution Module
+Manufacturing Order
+Manufacturing Order Cell
+Manufacturing Order Line
+Manufacturing Order Module
 Production Order
 Production Order Cell
 Production Order Line
@@ -6,9 +14,6 @@ Production Packing List
 Production Packing List Cell
 Production Packing List Line
 Production Packing List Module
-Production Report
-Production Report Cell
-Production Report Line
-Production Report Module
+Production Simulation Rule
 Transformation Simulation Rule
 Transformation Sourcing Simulation Rule

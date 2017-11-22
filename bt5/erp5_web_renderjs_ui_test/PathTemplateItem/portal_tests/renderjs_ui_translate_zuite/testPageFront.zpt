@@ -70,18 +70,6 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
   <td>//div[@class="filter_item_container"]/div[1]//select</td>
   <td></td>
 </tr>
@@ -112,7 +100,7 @@
  
  
  <tr>
-   <td>verifyElementPresent</td>
+   <td>waitForElementPresent</td>
    <td>//a[text() = 'foo_mokuai']</td>
    <td></td>
  </tr>
