@@ -124,16 +124,19 @@ class TypesTool(TypeProvider):
 
   def _bootstrap(self):
     from Products.ERP5.ERP5Site import ERP5Generator
-    ERP5Generator.bootstrap(self, 'erp5_core', 'PortalTypeTemplateItem', (
-      'Business Template',
-      'Standard Property',
-      'Acquired Property',
+    ERP5Generator.bootstrap_bm(self, 'erp5_core', (
+      'portal_types/Business Template',
+      'portal_types/Standard Property',
+      'portal_types/Acquired Property',
       # the following ones are required to upgrade an existing site
-      'Category Property',
-      # the following is needed to bootstrap Catalog Tool and default catalog
-      'Catalog Tool',
+      'portal_types/Category Property',
     ))
-    ERP5Generator.bootstrap_allow_type(self, 'Catalog Tool')
+    # Bootstrap Business Manager as it'll be needed while installation
+    ERP5Generator.bootstrap(self, 'erp5_business_package', 'PortalTypeTemplateItem', (
+      'Business Manager',
+      'Business Item',
+      'Business Property Item'
+    ))
 
   def listContentTypes(self, container=None):
     """List content types from all providers
