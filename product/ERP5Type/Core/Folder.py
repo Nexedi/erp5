@@ -627,6 +627,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn,
   Title = Base.Title
   _setPropValue = Base._setPropValue
   _propertyMap = Base._propertyMap # are there any others XXX ?
+  # Required while Business Manager installation. Better to rely on properties
+  # from property sheet than on the attributes
+  _delPropValue = Base._delPropValue
   PUT_factory = None
   # XXX Prevent inheritance from PortalFolderBase
   description = None
