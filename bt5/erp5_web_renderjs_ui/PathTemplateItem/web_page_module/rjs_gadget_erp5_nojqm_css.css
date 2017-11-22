@@ -433,24 +433,19 @@ div[data-gadget-scope='panel'] {
   overflow-y: auto;
   position: fixed;
   top: 0;
-  left: 0;
   display: block;
   z-index: 2000;
+  left: -186pt;
+  transition: transform 200ms ease-out;
+  transform: translate3d(0, 0, 0);
 }
 @media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 85em) {
   div[data-gadget-scope='panel'] {
     box-shadow: 5px 0 5px rgba(0, 0, 0, 0.15);
   }
 }
-@media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 85em) {
-  div[data-gadget-scope='panel'] {
-    left: -186pt;
-    transition: transform 200ms ease-out;
-    transform: translate3d(0, 0, 0);
-  }
-  div[data-gadget-scope='panel'].visible {
-    transform: translate3d(186pt, 0, 0);
-  }
+div[data-gadget-scope='panel'].visible {
+  transform: translate3d(186pt, 0, 0);
 }
 div[data-gadget-scope='panel'] div[data-role="header"] {
   display: flex;
@@ -477,12 +472,6 @@ div[data-gadget-scope='panel'] div[data-role="header"] a::before {
   float: left;
   text-indent: 0;
   margin-left: 12pt;
-}
-@media not screen and (max-width: 85em) {
-  div[data-gadget-scope='panel'] div[data-role="header"] button[data-i18n="Close"],
-  div[data-gadget-scope='panel'] div[data-role="header"] a[data-i18n="Close"] {
-    display: none;
-  }
 }
 div[data-gadget-scope='panel'] div[data-gadget-scope='erp5_searchfield'] {
   padding: 3pt 12pt;
@@ -686,7 +675,9 @@ div[data-gadget-scope='header'] .ui-header {
 }
 @media not screen and (max-width: 85em) {
   div[data-gadget-scope='header'] .ui-header {
-    margin-left: 180pt;
+    transition: transform 200ms ease-out;
+    transform: translate3d(180pt, 0, 0);
+    mergin-left: 180pt;
   }
 }
 div[data-gadget-scope='header'] .ui-header button,
@@ -816,30 +807,43 @@ div[data-gadget-scope='header'] .ui-header h1 > span::before {
     margin-right: 6pt;
   }
 }
-div[data-gadget-scope='header'] .ui-header h1 a {
+div[data-gadget-scope='header'] .ui-header h1 form {
+  height: 100%;
+}
+div[data-gadget-scope='header'] .ui-header h1 form button {
+  text-align: left;
+  height: 100%;
+  width: 100%;
+}
+div[data-gadget-scope='header'] .ui-header h1 a,
+div[data-gadget-scope='header'] .ui-header h1 form button {
   display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-div[data-gadget-scope='header'] .ui-header h1 a::before {
+div[data-gadget-scope='header'] .ui-header h1 a::before,
+div[data-gadget-scope='header'] .ui-header h1 form button::before {
   display: inline-block;
   width: 42pt;
 }
 @media only screen and (min-width: 45em) and (max-width: 85em), not screen and (min-width: 45em) {
-  div[data-gadget-scope='header'] .ui-header h1 a::before {
+  div[data-gadget-scope='header'] .ui-header h1 a::before,
+  div[data-gadget-scope='header'] .ui-header h1 form button::before {
     text-align: center;
   }
 }
 @media not screen and (max-width: 85em) {
-  div[data-gadget-scope='header'] .ui-header h1 a::before {
+  div[data-gadget-scope='header'] .ui-header h1 a::before,
+  div[data-gadget-scope='header'] .ui-header h1 form button::before {
     width: 12pt;
     margin-left: 24pt;
     margin-right: 6pt;
   }
 }
 @media not screen and (min-width: 45em) {
-  div[data-gadget-scope='header'] .ui-header h1 a::before {
+  div[data-gadget-scope='header'] .ui-header h1 a::before,
+  div[data-gadget-scope='header'] .ui-header h1 form button::before {
     width: 30pt;
   }
 }
@@ -873,6 +877,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   div[data-gadget-scope='header'] .ui-header ul li a {
     padding-top: 3pt;
     padding-bottom: 3pt;
+    line-height: inherit;
     white-space: nowrap;
     overflow: hidden;
   }
@@ -911,6 +916,61 @@ div[data-gadget-scope='header'] .ui-header ul {
   div[data-gadget-scope='header'] .ui-header ul li a::before {
     display: none;
   }
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header {
+  margin-left: 0;
+  transform: translate3d(0, 0, 0);
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header .ui-controlgroup-controls button,
+div[data-gadget-scope="header"].tablet-mode .ui-header .ui-controlgroup-controls a {
+  background-color: #085078;
+  width: 8em;
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header .ui-controlgroup-controls button[name="panel"],
+div[data-gadget-scope="header"].tablet-mode .ui-header .ui-controlgroup-controls a[name="panel"] {
+  display: block;
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header > .ui-btn-right button,
+div[data-gadget-scope="header"].tablet-mode .ui-header > .ui-btn-right a {
+  border-left: 1px solid rgba(255, 255, 255, 0.55);
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header h1 {
+  flex: 1;
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header h1 > span {
+  padding-left: 16pt;
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header h1 > span::before {
+  margin-right: 14pt;
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header h1 a::before,
+div[data-gadget-scope="header"].tablet-mode .ui-header h1 form button::before {
+  text-align: center;
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header .ui-subheader {
+  text-align: center;
+  flex: 1 100%;
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header ul > li {
+  flex: 1;
+  border-left: 1px solid rgba(0, 0, 0, 0.55);
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header ul > li:first-child {
+  border-left: none;
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header ul > li a {
+  display: block;
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header ul > li a {
+  padding-top: 3pt;
+  padding-bottom: 3pt;
+  line-height: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header ul > li a::before {
+  font-size: 1.2em;
+  display: block;
 }
 /**********************************************
 * Gadget: main
@@ -963,6 +1023,10 @@ div[data-gadget-scope='header'] .ui-header ul {
   .gadget-content {
     padding-top: 7em;
   }
+}
+.gadget-content.tablet-mode {
+  margin-left: 0;
+  padding-top: 7em;
 }
 @media not screen and (min-width: 45em) {
   .gadget-content {

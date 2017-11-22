@@ -54,7 +54,6 @@
 @headertitlespanleftlargepadding: @quadruple-margin-size;
 @headertitlespanleftmiddlepadding: @triple-margin-size - 2;
 @headertitlespanleftsmallpadding: @double-margin-size;
-
 // XXX desktop: 12em
 @panelwidth: @margin-size * 30;
 // @panelwidth: 15em;
@@ -527,6 +526,7 @@ img {
 * Gadget: panel
 **********************************************/
 div[data-gadget-scope='panel'] {
+  
 
   background-color: @panelbackgroundcolor;
 
@@ -541,17 +541,13 @@ div[data-gadget-scope='panel'] {
   overflow-y: auto;
   position: fixed;
   top: 0;
-  left: 0;
   display: block;
   z-index: 2000;
-
-  @media @smartphone, @tablet {
-    left: -@panelwidth - @margin-size;
-    transition: transform 200ms ease-out;
-    transform: translate3d(0, 0, 0);
-    &.visible {
-      transform: translate3d(@panelwidth + @margin-size, 0, 0);
-    }
+  left: -@panelwidth - @margin-size;
+  transition: transform 200ms ease-out;
+  transform: translate3d(0, 0, 0);
+  &.visible {
+    transform: translate3d(@panelwidth + @margin-size, 0, 0);
   }
 
   div[data-role="header"] {
@@ -572,12 +568,6 @@ div[data-gadget-scope='panel'] {
         float: left;
         text-indent: 0;
         margin-left: @double-margin-size;
-      }
-
-      @media @desktop {
-        &[data-i18n="Close"] {
-          display: none;
-        }
       }
 
       display: block;
@@ -813,8 +803,39 @@ div[data-gadget-scope='editor_panel'] {
   min-width: @sub-line-min-width-desktop;
 }
 
-div[data-gadget-scope='header'] .ui-header {
+.renderTabletSubLink() {
+  padding-top: @half-margin-size;
+  padding-bottom: @half-margin-size;
+  line-height: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  &::before {
+    font-size: 1.2em;
+    display: block;
+  }
+}
 
+.renderTabletSubListElement() {
+  flex: 1;
+  // XXX TODO Hardcoded color
+  border-left: 1px solid rgba(0, 0, 0, 0.55);
+  &:first-child {
+    border-left: none;
+  }
+
+  a {
+    display: block;
+  }
+}
+
+.renderTabletNotALinkTitle() {
+  padding-left: @headertitlespanleftmiddlepadding;
+  &::before {
+    margin-right:@headertitlespanleftlargemargin;
+  }
+}
+
+div[data-gadget-scope='header'] .ui-header {
   position: fixed;
   z-index: 1000;
   text-align: center;
@@ -825,7 +846,9 @@ div[data-gadget-scope='header'] .ui-header {
   width: 100%;
 
   @media @desktop {
-    margin-left: @panelwidth;
+    transition: transform 200ms ease-out;
+    transform: translate3d(@panelwidth, 0, 0);
+    mergin-left: @panelwidth;
   }
 
   color: @white;
@@ -860,7 +883,7 @@ div[data-gadget-scope='header'] .ui-header {
       line-height: @headerheight;
 
       @media @tablet {
-      // https://css-tricks.com/forums/topic/hide-text-but-not-the-before-pseudo-class/
+        // https://css-tricks.com/forums/topic/hide-text-but-not-the-before-pseudo-class/
         // Default size
         width: 8em;
       }
@@ -938,21 +961,26 @@ div[data-gadget-scope='header'] .ui-header {
       }
 
       @media @tablet {
-         padding-left: @headertitlespanleftmiddlepadding;
-         &::before {
-           margin-right:@headertitlespanleftlargemargin;
-         }
+        .renderTabletNotALinkTitle();
       }
 
       @media @smartphone {
-         padding-left: @headertitlespanleftsmallpadding;
-         &::before {
-           margin-right:@headertitlespanleftsmallmargin;
-         }
+        padding-left: @headertitlespanleftsmallpadding;
+        &::before {
+          margin-right:@headertitlespanleftsmallmargin;
+        }
       }
     }
-    // Clickable title
-    a {
+    // Clickable title and button
+    form {
+      height: 100%;
+      button {
+        text-align: left;
+        height: 100%;
+        width: 100%;
+      }
+    }
+    a, form button {
       display: block;
 
       // Do not put link on multi line in case of small screen
@@ -999,28 +1027,12 @@ div[data-gadget-scope='header'] .ui-header {
 
     li {
       @media @tablet, @smartphone {
-        flex: 1;
-        // XXX TODO Hardcoded color
-        border-left: 1px solid rgba(0, 0, 0, 0.55);
-        &:first-child {
-          border-left: none;
-        }
-
-        a {
-          display: block;
-        }
+        .renderTabletSubListElement();
       }
 
       @media @tablet {
         a {
-          padding-top: @half-margin-size;
-          padding-bottom: @half-margin-size;
-          white-space: nowrap;
-          overflow: hidden;
-          &::before {
-            font-size: 1.2em;
-            display: block;
-          }
+          .renderTabletSubLink();
         }
       }
 
@@ -1055,11 +1067,53 @@ div[data-gadget-scope='header'] .ui-header {
       }
 
     }
+  }
+}
+div[data-gadget-scope="header"].tablet-mode .ui-header {
+  margin-left: 0;
+  transform: translate3d(0, 0, 0);
 
+  .ui-controlgroup-controls {
+    button, a {
+      background-color: @colorheaderbackground;
+      width: 8em;
+      &[name="panel"] {
+        display: block;
+      }
+    }
   }
 
-}
+  & > .ui-btn-right {
+    button, a {
+      border-left: 1px solid rgba(255, 255, 255, 0.55);
+    }
+  }
 
+  h1 {
+    flex: 1;
+    & > span {
+      .renderTabletNotALinkTitle();
+    }
+    a, form button {
+      &::before {
+        text-align: center;
+      }
+    }
+  }
+
+
+  .ui-subheader {
+    text-align: center;
+    flex: 1 100%;
+  }
+
+  ul > li {
+    .renderTabletSubListElement();
+    a {
+      .renderTabletSubLink();
+    }
+  }
+}
 /**********************************************
 * Gadget: main
 **********************************************/
@@ -1101,6 +1155,10 @@ div[data-gadget-scope='header'] .ui-header {
   // XXX TODO: replace em by pt, to have exact position
   padding-top: 2 * @headerheight + @margin-size;
   @media @tablet {
+    padding-top: 7em;
+  }
+  &.tablet-mode {
+    margin-left: 0;
     padding-top: 7em;
   }
   @media @smartphone {
@@ -1302,7 +1360,6 @@ div[data-gadget-scope='header'] .ui-header {
     }
   }
 }
-
 /**********************************************
 * Gadget: HTML5 input field
 **********************************************/
@@ -1694,6 +1751,7 @@ div[data-gadget-scope='notification'] {
     from {opacity:0;}
     to {opacity:1;}
 }
+
 
 /**********************************************
 * Class
