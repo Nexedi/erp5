@@ -25,7 +25,7 @@
   gadget_klass
     .setState({
       visible: false,
-      desktop: false
+      desktop: window.matchMedia("(min-width: 85em)").matches
     })
     //////////////////////////////////////////////
     // acquired method
@@ -35,6 +35,7 @@
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("changeScreenMode", "changeScreenMode")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -95,6 +96,11 @@
           if (this.element.classList.contains('visible')) {
             this.element.classList.remove('visible');
           }
+        }
+        if (this.state.desktop) {
+          queue.push(function () {
+            return gadget.changeScreenMode(gadget.state.visible);
+          });
         }
       }
 
@@ -282,11 +288,13 @@
       function extractSizeAndDispatch() {
         if (window.matchMedia("(min-width: 85em)").matches) {
           return context.changeState({
-            desktop: true
+            desktop: true,
+            visible: true
           });
         }
         return context.changeState({
-          desktop: false
+          desktop: false,
+          visible: false
         });
       }
       result = loopEventListener(window, 'resize', false,

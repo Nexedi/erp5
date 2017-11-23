@@ -130,6 +130,11 @@
         modified: true
       });
     })
+    .declareMethod('changeScreenMode', function (mode) {
+      return this.changeState({
+        desktop: mode
+      });
+    })
 /*
     .declareMethod('notifyUpdate', function () {
       return this.render(this.stats.options);
@@ -228,6 +233,17 @@
         default_right_icon = "",
         title_link,
         promise_list = [];
+      if (modification_dict.hasOwnProperty('desktop')) {
+        if (this.state.desktop) {
+          if (this.element.classList.contains('tablet-mode')) {
+            this.element.classList.remove('tablet-mode');
+          }
+        } else {
+          if (!this.element.classList.contains('tablet-mode')) {
+            this.element.classList.toggle('tablet-mode');
+          }
+        }
+      }
       // Main title
       if (modification_dict.hasOwnProperty('error') ||
           modification_dict.hasOwnProperty('loaded') ||

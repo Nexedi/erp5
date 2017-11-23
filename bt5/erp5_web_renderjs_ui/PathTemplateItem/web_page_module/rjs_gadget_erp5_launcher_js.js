@@ -429,6 +429,9 @@
     .allowPublicAcquisition('triggerPanel', function () {
       return route(this, "panel", "toggle");
     })
+    .allowPublicAcquisition('changeScreenMode', function (param_list) {
+      return this.changeState({desktop: param_list[0]});
+    })
     .allowPublicAcquisition('renderEditorPanel', function (param_list) {
       return route(this, "editor_panel", 'render', param_list);
     })
@@ -533,6 +536,19 @@
           });
       }
 
+      if (modification_dict.hasOwnProperty('desktop')) {
+        if (this.state.desktop) {
+          if (this.props.content_element.classList.contains('tablet-mode')) {
+            this.props.content_element.classList.remove('tablet-mode');
+          }
+        } else {
+          if (!this.props.content_element.classList.contains('tablet-mode')) {
+            this.props.content_element.classList.toggle('tablet-mode');
+          }
+        }
+        return route(this, "header", "changeScreenMode", [this.state.desktop]);
+      }
+
       // Same subgadget
       return gadget.getDeclaredGadget(MAIN_SCOPE)
         .push(function (page_gadget) {
@@ -561,9 +577,11 @@
         })
         .push(function () {
           var promise_list = [
-            route(gadget, 'panel', 'close'),
             route(gadget, 'editor_panel', 'close')
           ];
+          if (!gadget.state.desktop) {
+            promise_list.push(route(gadget, 'panel', 'close'));
+          }
           if (keep_message !== true) {
             promise_list.push(route(gadget, 'notification', 'close'));
           }
