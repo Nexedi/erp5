@@ -152,8 +152,8 @@ class FunctionalTestRunner:
       firefox_driver = firefox_bin.replace("firefox-slapos", "geckodriver")
       firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
       firefox_capabilities['marionette'] = True
-      firefox_capabilities['binary'] = firefox_bin
       browser = webdriver.Firefox(
+        firefox_binary=firefox_bin,
         capabilities=firefox_capabilities,
         executable_path=firefox_driver)
       start_time = time.time()
