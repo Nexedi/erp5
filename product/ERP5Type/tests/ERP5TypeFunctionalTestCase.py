@@ -155,6 +155,7 @@ class FunctionalTestRunner:
       firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
       firefox_capabilities['marionette'] = True
       browser = webdriver.Firefox(
+        firefox_binary=firefox_bin,
         capabilities=firefox_capabilities,
         executable_path=firefox_driver,
         firefox_binary=FirefoxBinary(firefox_bin))
