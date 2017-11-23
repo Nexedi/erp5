@@ -1,4 +1,4 @@
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 from Products.PythonScripts.standard import Object
 portal = context.getPortalObject()
 
@@ -13,10 +13,10 @@ section_uid = portal.Base_getSectionUidListForSectionCategory(
   section_category, section_category_strict)
 
 grouping_query = ComplexQuery(
-      Query(grouping_reference=None),
-      Query(grouping_date=at_date, range="min"),
+      SimpleQuery(grouping_reference=None),
+      SimpleQuery(grouping_date=at_date, comparison_operator=">="),
       logical_operator="OR")
-      
+
 account_number_memo = {}
 def getAccountNumber(account_url):
   try:
