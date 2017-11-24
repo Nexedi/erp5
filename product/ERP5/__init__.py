@@ -52,7 +52,7 @@ from Tool import CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool,\
                  AcknowledgementTool, SolverTool, SolverProcessTool,\
                  ConversionTool, RoundingTool, UrlRegistryTool, InterfaceTool,\
                  CertificateAuthorityTool, InotifyTool, TaskDistributionTool,\
-                 DiffTool
+                 DiffTool, CommitTool
 import ERP5Site
 from Document import PythonScript, BusinessManager
 object_classes = ( ERP5Site.ERP5Site,
@@ -88,7 +88,8 @@ portal_tools = ( CategoryTool.CategoryTool,
                  InotifyTool.InotifyTool,
                  TaskDistributionTool.TaskDistributionTool,
                  InterfaceTool.InterfaceTool,
-                 DiffTool.DiffTool
+                 DiffTool.DiffTool,
+                 CommitTool.CommitTool,
                 )
 content_classes = ()
 content_constructors = ()

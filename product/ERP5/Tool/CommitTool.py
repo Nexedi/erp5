@@ -31,6 +31,7 @@ from webdav.client import Resource
 
 from App.config import getConfiguration
 import os
+import time
 import shutil
 import sys
 import hashlib
@@ -131,6 +132,26 @@ class CommitTool (BaseTool):
         - portal_commits/387897938794876-9 (Snapshort of erp5_trade)
         - portal_commits/387897938794876-10 (Snapshot of erp5_base)
 
+      Draft -> Commited -> Pushed (to repo)  |Commit]
+      Draft -> Installed <-> Uninstalled |Snapshot]
+
+      Developer mode: make commits and push them (nothing else)
+      Developer mode: make snapshots and push them (nothing else)
+
+      Installation:
+      - create an empty snapshot that that's similar to a Commit
+      - fill it with hard links to commits and snapshots
+      - install it
+
+      Only Draft can be modified
+
+      3 types
+      - Commit - partial state (pushed)
+      - Save Point - complete state with copies of a single bt (only for
+      optimisation) (really needed ?) (pushed)
+      - Snapshort - complete state with hard link for all bt (installed)
+
+      We should try first with Commit and Snapshot
     """
     id = 'portal_commits'
     title = 'Commit Tool'
@@ -148,6 +169,20 @@ class CommitTool (BaseTool):
     security = ClassSecurityInfo()
 
     security.declareProtected(Permissions.ManagePortal, 'manage_overview')
-    manage_overview = DTMLFile('explainCommitTool', _dtmldir)
+    #manage_overview = DTMLFile('explainCommitTool', _dtmldir)
+
+    def getCommitList(self):
+      return self.objectValues(portal_type='Business Commit')
+
+    security.declarePublic('newContent')
+    def newContent(self, id=None, **kw):
+      """
+      Override newContent so as to use 'id' generated like hash
+      """
+      if id is None:
+        id = self.generateNewId()
+
+      id = str(str(id) + '_' + str(time.time())).replace('.', '')
+      return super(CommitTool, self).newContent(id, **kw)
 
 InitializeClass(CommitTool)
