@@ -37,4 +37,4 @@ else:
   if not select_language:
     select_language = portal.Localizer.get_selected_language()
 
-  portal.Localizer.changeLanguage(select_language)
+  portal.Localizer.changeLanguage(select_language, expires=(DateTime() + 365).toZone('GMT').rfc822())
