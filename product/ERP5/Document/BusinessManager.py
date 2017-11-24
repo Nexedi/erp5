@@ -719,10 +719,17 @@ class BusinessItem(XMLObject):
     """
     Overriden function so that we can update attributes for BusinessItem objects
     """
-    return super(BusinessItem, self)._edit(item_path=item_path,
-                                           item_sign=item_sign,
-                                           item_layer=item_layer,
-                                           **kw)
+
+    super(BusinessItem, self)._edit(item_path=item_path,
+                                    item_sign=item_sign,
+                                    item_layer=item_layer,
+                                    **kw)
+
+    # Build the object here, if the item_path has been added/updated
+    # XXX: We also need to add attribute to ensure that this doesn't happen
+    # while in tests or while creating them on the fly
+    if 'item_path' in self._v_modified_property_dict:
+      self.build(self.aq_parent)
 
   def build(self, context, **kw):
     """

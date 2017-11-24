@@ -31,11 +31,13 @@ from webdav.client import Resource
 
 from App.config import getConfiguration
 import os
+import time
 import shutil
 import sys
 import hashlib
 import pprint
 import transaction
+import uuid
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
@@ -131,6 +133,26 @@ class CommitTool (BaseTool):
         - portal_commits/387897938794876-9 (Snapshort of erp5_trade)
         - portal_commits/387897938794876-10 (Snapshot of erp5_base)
 
+      Draft -> Commited -> Pushed (to repo)  |Commit]
+      Draft -> Installed <-> Uninstalled |Snapshot]
+
+      Developer mode: make commits and push them (nothing else)
+      Developer mode: make snapshots and push them (nothing else)
+
+      Installation:
+      - create an empty snapshot that that's similar to a Commit
+      - fill it with hard links to commits and snapshots
+      - install it
+
+      Only Draft can be modified
+
+      3 types
+      - Commit - partial state (pushed)
+      - Save Point - complete state with copies of a single bt (only for
+      optimisation) (really needed ?) (pushed)
+      - Snapshort - complete state with hard link for all bt (installed)
+
+      We should try first with Commit and Snapshot
     """
     id = 'portal_commits'
     title = 'Commit Tool'
@@ -148,6 +170,39 @@ class CommitTool (BaseTool):
     security = ClassSecurityInfo()
 
     security.declareProtected(Permissions.ManagePortal, 'manage_overview')
-    manage_overview = DTMLFile('explainCommitTool', _dtmldir)
+    #manage_overview = DTMLFile('explainCommitTool', _dtmldir)
+
+    def getCommitList(self):
+      return self.objectValues(portal_type='Business Commit')
+
+    def getSnapshotList(self):
+      return self.objectValues(portal_type='Business Snapshot')
+
+    security.declarePublic('newContent')
+    def newContent(self, id=None, **kw):
+      """
+      Override newContent so as to use 'id' generated like hash
+      """
+      if id is None:
+        id = uuid.uuid1()
+
+      new_obj =  super(CommitTool, self).newContent(id, **kw)
+
+      # Add the last commit as its predecessor
+      commit_list = [l for l
+                     in self.objectValues(portal_type='Business Commit')
+                     if l != new_obj]
+      latest_commit = max(commit_list, key=(lambda x: x.getCreationDate()))
+
+      if new_obj.getPortalType() == 'Business Commit':
+        # TODO: Add check for no latest_commit. Usable especially for 1st BM
+        new_obj.setPredecessorValue(latest_commit)
+      else:
+        # If the new_obj is Business Snapshot, create a similar value for the
+        # latest commit
+        new_obj.setSimilarValue(latest_commit)
+        latest_commit.setSimilarValue(new_obj)
+
+      return new_obj
 
 InitializeClass(CommitTool)
