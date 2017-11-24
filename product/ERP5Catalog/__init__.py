@@ -38,9 +38,9 @@ document_classes = updateGlobals( this_module, globals(), permissions_module = P
 
 # Define object classes and tools
 from Tool import ArchiveTool, ERP5CatalogTool
-from Document import ERP5Catalog
+
 import CatalogTool
-object_classes = (ERP5Catalog.ERP5Catalog,)
+object_classes = ()
 portal_tools = (CatalogTool.CatalogTool,
                 ERP5CatalogTool.ERP5CatalogTool,
                 ArchiveTool.ArchiveTool)
