@@ -175,7 +175,7 @@ class DummyLocalizer:
 
   get_languages = get_supported_languages
 
-  def changeLanguage(self, lang):
+  def changeLanguage(self, lang, expires=None):
     self.lang = lang
 
   def translate(self, domain, msgid, lang=None, mapping=None, *args, **kw):
