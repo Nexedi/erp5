@@ -308,7 +308,7 @@
         </item>
         <item>
             <key> <string>skin_selection_name</string> </key>
-            <value> <string>Officejs</string> </value>
+            <value> <string>RJS</string> </value>
         </item>
         <item>
             <key> <string>static_language_selection</string> </key>
@@ -486,7 +486,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -500,7 +500,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.56401.19702.50705</string> </value>
+                <value> <string>963.43492.48664.41045</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -518,7 +518,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1504515999.0</float>
+                        <float>1511516774.99</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
