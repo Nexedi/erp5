@@ -1,4 +1,4 @@
-"""Adds the bank reconciliation to the already aggregated bank reconciliation on this line.
+"""Removes the bank reconciliation from the already aggregated bank reconciliation on this line.
 
 This script has a proxy role to be able to modify delivered lines
 """
