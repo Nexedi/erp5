@@ -8,7 +8,6 @@
   from the context update logic
 """
 from Products.Formulator.Errors import FormValidationError
-from Products.CMFActivity.Errors import ActivityPendingError
 
 request=container.REQUEST
 portal = context.getPortalObject()
@@ -215,33 +214,31 @@ encapsulated_editor_list = []
 MARKER = []
 message = Base_translateString("Data updated.")
 
-try:
-  # We process all the field in form and
-  # we check if they are in the request,
-  # then we edit them
-  for field in form.get_fields():
-    parseField(field)
 
-    ## XXX We need to find a way not to use meta_type.
-    field_meta_type = field.meta_type
-    if field_meta_type == 'ProxyField':
-      field_meta_type = field.getRecursiveTemplateField().meta_type
+# We process all the field in form and
+# we check if they are in the request,
+# then we edit them
+for field in form.get_fields():
+  parseField(field)
 
-    if(field_meta_type == 'ListBox'):
-      editListBox(field, request.get(field.id))
-    elif(field_meta_type == 'MatrixBox'):
-      editMatrixBox(field, request.get(field.id))
+  ## XXX We need to find a way not to use meta_type.
+  field_meta_type = field.meta_type
+  if field_meta_type == 'ProxyField':
+    field_meta_type = field.getRecursiveTemplateField().meta_type
 
-  # Return parsed values 
-  if silent_mode: return (kw, encapsulated_editor_list), 'edit'
+  if(field_meta_type == 'ListBox'):
+    editListBox(field, request.get(field.id))
+  elif(field_meta_type == 'MatrixBox'):
+    editMatrixBox(field, request.get(field.id))
 
-  # Maybe we should build a list of objects we need
-  # Update basic attributes
-  context.edit(REQUEST=request, edit_order=edit_order, **kw)
-  for encapsulated_editor in encapsulated_editor_list:
-    encapsulated_editor.edit(context)
-except ActivityPendingError,e:
-  message = Base_translateString("%s" % e)
+# Return parsed values 
+if silent_mode: return (kw, encapsulated_editor_list), 'edit'
+
+# Maybe we should build a list of objects we need
+# Update basic attributes
+context.edit(REQUEST=request, edit_order=edit_order, **kw)
+for encapsulated_editor in encapsulated_editor_list:
+  encapsulated_editor.edit(context)
 
 if message_only:
   return message
