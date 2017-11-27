@@ -5364,7 +5364,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       if update_catalog:
         catalog = _getCatalogValue(self)
-        if (catalog is None) or (not site.isIndexable):
+        if (catalog is None) or (not site.isIndexingRequired()):
           LOG('Business Template', 0, 'no SQL Catalog available')
           update_catalog = 0
         else:
