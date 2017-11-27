@@ -792,7 +792,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['pt'], 'form_view')
     self.assertEqual(result_dict['action'], 'Base_edit')
     self.assertEqual(result_dict['group_list'][0][0], 'left')
-    self.assertEqual(result_dict['group_list'][0][1][0], ['my_id', {'meta_type': 'StringField'}])
+    self.assertEqual(result_dict['group_list'][0][1][0], ['my_id', {'meta_type': 'ProxyField'}])
     self.assertEqual(result_dict['_debug'], "traverse")
 
 class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
