@@ -38,6 +38,7 @@ from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
+from Products.ZSQLMethods.SQL import SQL
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.Message import translateString
@@ -621,7 +622,8 @@ class BaseTemplateItem(Implicit, Persistent):
             delattr(obj, attr)
       elif classname in ('File', 'Image'):
         attr_set.update(('_EtagSupport__etag', 'size'))
-      elif classname == 'SQL' and klass.__module__== 'Products.ZSQLMethods.SQL':
+      # SQL covers both ZSQL Methods and ERP5 SQL Methods
+      elif isinstance(obj, SQL):
         attr_set.update(('_arg', 'template'))
       elif interfaces.IIdGenerator.providedBy(obj):
         attr_set.update(('last_max_id_dict', 'last_id_dict'))
