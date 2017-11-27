@@ -12,6 +12,7 @@
               <list>
                 <string>date_only</string>
                 <string>required</string>
+                <string>timezone_style</string>
                 <string>title</string>
               </list>
             </value>
@@ -92,6 +93,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>timezone_style</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
