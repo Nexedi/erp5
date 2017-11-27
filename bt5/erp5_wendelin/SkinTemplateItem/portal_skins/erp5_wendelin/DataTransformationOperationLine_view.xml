@@ -95,6 +95,7 @@
                         <string>my_reference</string>
                         <string>my_int_index</string>
                         <string>my_resource_title</string>
+                        <string>my_aggregated_portal_type_list</string>
                         <string>my_trade_phase</string>
                         <string>my_use</string>
                       </list>

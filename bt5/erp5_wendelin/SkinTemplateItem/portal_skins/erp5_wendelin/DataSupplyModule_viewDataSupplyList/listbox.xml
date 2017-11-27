@@ -105,6 +105,10 @@
                           <string>Source</string>
                         </tuple>
                         <tuple>
+                          <string>source_section_title</string>
+                          <string>Source Section</string>
+                        </tuple>
+                        <tuple>
                           <string>destination_title</string>
                           <string>Destination</string>
                         </tuple>
