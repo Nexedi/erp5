@@ -22,5 +22,6 @@ portal = context.getPortalObject()
 
 for data_analysis in portal.portal_catalog(portal_type = "Data Analysis",
                                            simulation_state = "started"):
-  data_analysis.activate(serialization_tag=str(data_analysis.getUid()))\
-    .DataAnalysis_executeDataOperation()
+  if not data_analysis.hasActivity():
+    data_analysis.activate(serialization_tag=str(data_analysis.getUid()))\
+      .DataAnalysis_executeDataOperation()
