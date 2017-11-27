@@ -53,7 +53,7 @@ def CMFCoreSkinnableSkinnableObjectManager_initializeCache(self):
   if portal_skins is None:
     return
   portal_skins = portal_skins.aq_base
-  portal_callables = getattr(self, 'portal_callables', None)
+  portal_callables = getattr(self, 'portal_callables', None) if hasattr(self, 'portal_callables') else None
   if portal_callables is not None:
     portal_callables = portal_callables.aq_base
   skin_selection_mapping = {}
@@ -71,7 +71,8 @@ def skinResolve(self, selection, name):
   except AttributeError:
     raise AttributeError, name
   try:
-    portal_callables = aq_base(self.portal_callables)
+    if hasattr(self, 'portal_callables') and hasattr(self.portal_callables, 'aq_base'):
+      portal_callables = aq_base(self.portal_callables)
   except AttributeError:
     # backwards compatability for ERP5 sites without this tool
     portal_callables = None
