@@ -4,7 +4,7 @@ import Widget, Validator
 from Persistence import Persistent
 import Acquisition
 from Field import ZMIField
-from AccessControl import getSecurityManager
+from AccessControl import getSecurityManager, ClassSecurityInfo
 
 class MethodWidget(Widget.TextWidget):
     default = fields.MethodField('default',
@@ -27,8 +27,14 @@ MethodWidgetInstance = MethodWidget()
 class Method(Persistent, Acquisition.Implicit):
     """A method object; calls method name in acquisition context.
     """
+    security = ClassSecurityInfo()
+
     def __init__(self, method_name):
         self.method_name = method_name
+
+    security.declarePublic('getMethodName')
+    def getMethodName(self):
+      return self.method_name
 
     def __call__(self, *arg, **kw):
         # get method from acquisition path
