@@ -40,6 +40,10 @@
   <workflow>business_template_building_workflow, business_template_installation_workflow</workflow>
  </chain>
  <chain>
+  <type>Catalog</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Category</type>
   <workflow>edit_workflow</workflow>
  </chain>
@@ -134,6 +138,14 @@
  <chain>
   <type>Property Type Validity Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Python Script</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>SQL Method</type>
+  <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Standard Property</type>
