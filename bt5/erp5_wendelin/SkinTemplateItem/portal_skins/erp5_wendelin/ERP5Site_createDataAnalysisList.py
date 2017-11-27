@@ -25,7 +25,7 @@ for movement in portal_catalog(query):
   if movement.DataIngestionLine_hasMissingRequiredItem():
     raise ValueError("Transformation requires movement to have " +
                      "aggregated data ingestion batch")
-  data_ingestion = movement.getParentValue()
+  delivery = movement.getParentValue()
   # Get applicable transformation
   for transformation in portal_catalog(
                   portal_type = "Data Transformation",
@@ -35,23 +35,24 @@ for movement in portal_catalog(query):
     data_analysis = portal_catalog.getResultValue(
       portal_type="Data Analysis",
       specialise_relative_url = transformation.getRelativeUrl(),
-      causality_relative_url = data_ingestion.getRelativeUrl())
+      causality_relative_url = delivery.getRelativeUrl())
     if data_analysis is not None:
       continue
+    data_supply = delivery.getSpecialiseValueList(portal_type="Data Supply")
     # Create Analysis
     data_analysis = portal.data_analysis_module.newContent(
                   portal_type = "Data Analysis",
                   title = transformation.getTitle(),
-                  reference = data_ingestion.getReference(),
+                  reference = delivery.getReference(),
                   start_date = now,
-                  specialise_value = transformation,
-                  causality_value = data_ingestion,
-                  source = data_ingestion.getSource(),
-                  source_section = data_ingestion.getSourceSection(),
-                  source_project = data_ingestion.getSourceProject(),
-                  destination = data_ingestion.getDestination(),
-                  destination_section = data_ingestion.getDestinationSection(),
-                  destination_project = data_ingestion.getDestinationProject())
+                  specialise_value_list = [transformation] + data_supply,
+                  causality_value = delivery,
+                  source = delivery.getSource(),
+                  source_section = delivery.getSourceSection(),
+                  source_project = delivery.getSourceProject(),
+                  destination = delivery.getDestination(),
+                  destination_section = delivery.getDestinationSection(),
+                  destination_project = delivery.getDestinationProject())
 
     # create input and output lines
     for transformation_line in transformation.objectValues(
@@ -62,14 +63,8 @@ for movement in portal_catalog(query):
       if isinstance(quantity, tuple):
         quantity = quantity[0]
       aggregate_set = set()
-      # manually add device and device configuration to every line
+      # manually add device to every line
       aggregate_set.add(movement.getAggregateDevice())
-      # workaround the case that no device configuration portal type exists
-      # without this work around aggregate from any portal type
-      # would be returned, because getAggregateValue(portal_type=[]) does not
-      # return  None as expected. This must be fixed properly in generic erp5
-      if portal.getPortalDeviceConfigurationTypeList():
-        aggregate_set.add(movement.getAggregateDeviceConfiguration())
       if transformation_line.getPortalType() == \
           "Data Transformation Resource Line":
         # at the moment, we only check for positive or negative quantity
@@ -107,13 +102,23 @@ for movement in portal_catalog(query):
             item = module.newContent(portal_type = item_type,
                               title = transformation.getTitle(),
                               reference = "%s-%s" %(transformation.getTitle(),
-                                                   data_ingestion.getReference()),
+                                                    delivery.getReference()),
                               version = '001')
             try:
               item.validate()
             except AttributeError:
               pass
             aggregate_set.add(item.getRelativeUrl())
+      elif transformation_line.getPortalType() == \
+          "Data Transformation Operation Line":
+        # find other items such as device configuration and data configuration
+        # from data ingestion and data supply
+        composed = data_analysis.asComposedDocument()
+        line_list = [l for l in delivery.objectValues(portal_type="Data Ingestion Line")]
+        line_list +=  [l for l in composed.objectValues(portal_type="Data Supply Line")]
+        for line in line_list:
+          if line.getResourceValue().getPortalType() == "Data Operation":
+            aggregate_set.update(line.getAggregateList())
 
       data_analysis.newContent(
         portal_type = "Data Analysis Line",
