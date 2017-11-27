@@ -20,6 +20,7 @@ document.erp5.TransformOdpToPptx
 document.erp5.TransformOdpToSxi
 document.erp5.TransformSxiToOdp
 document.erp5.TransformSxiToHtml
+document.erp5.TransformPdfToBmp
 document.erp5.TransformPptToPptx
 document.erp5.TransformPptxToOdp
 document.erp5.TransformPptxToPpty
