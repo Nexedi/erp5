@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>lineCallback=None, reportCallback=None, **kw</string> </value>
+            <value> <string>at_date, section_category, section_category_strict, simulation_state, period_list, account_type, lineCallback, reportCallback=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionModule_getDetailedAgedBalanceLineList</string> </value>
+            <value> <string>AccountingTransactionModule_getAgedBalanceLineList</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>at_date, section_category, section_category_strict, simulation_state, period_list, account_type, **kw</string> </value>
+            <value> <string>lineCallback=None, reportCallback=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
