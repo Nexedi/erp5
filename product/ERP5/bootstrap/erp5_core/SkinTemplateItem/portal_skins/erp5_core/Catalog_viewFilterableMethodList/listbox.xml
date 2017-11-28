@@ -60,6 +60,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -86,12 +90,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>url_columns</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
                 </item>
               </dictionary>
             </value>
@@ -122,7 +120,7 @@
                         </tuple>
                         <tuple>
                           <string>translated_portal_type</string>
-                          <string>Portal Type</string>
+                          <string>Type</string>
                         </tuple>
                       </list>
                     </value>
@@ -165,7 +163,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -184,7 +182,11 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>ID</string>
+                          <string>Catalog_getObjectViewUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>
@@ -196,19 +198,6 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [(\'id\', \'Catalog_getObjectViewUrl\'),]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
