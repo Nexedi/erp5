@@ -573,6 +573,54 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     for property_id, property_value in method_document_kw.iteritems():
       self.assertEqual(getattr(method_page, property_id), property_value)
 
+  def test_twoFileImportExportForERP5SQLMethodInCatalog(self):
+    """Test Business Template Import And Export With ERP5 SQL Method In Catalog"""
+    catalog_tool = self.getCatalogTool()
+    catalog = catalog_tool.getSQLCatalog()
+    catalog_id = catalog.id
+
+    self.assertTrue(catalog is not None)
+    method_id = "z_another_dummy_method"
+    if method_id in catalog.objectIds():
+      catalog.manage_delObjects([method_id])
+
+    method_document_kw = {'id': method_id, 'title': 'dummy_method_title',
+                         'connection_id': 'erp5_sql_connection',
+                         'arguments_src': 'args', 'src': 'dummy_method_template'}
+
+    addSQLMethod = catalog.newContent
+    addSQLMethod(portal_type='SQL Method', id=method_id,
+                 title='dummy_method_title',
+                 connection_id='erp5_sql_connection',
+                 arguments_src = 'args',
+                 src='dummy_method_template',
+                )
+    zsql_method = catalog._getOb(method_id, None)
+    self.assertTrue(zsql_method is not None)
+
+    self.template.edit(template_catalog_method_id_list=[catalog_id+'/'+method_id])
+    self._buildAndExportBusinessTemplate()
+
+    method_document_path = os.path.join(self.export_dir,
+                                     'CatalogMethodTemplateItem',
+                                     'portal_catalog',
+                                      catalog_id, method_id)
+
+    import_template = self._exportAndReImport(
+                                  method_document_path,
+                                  ".sql",
+                                  'dummy_method_template',
+                                  ['src'])
+
+    catalog.manage_delObjects([method_id])
+
+    import_template.install()
+
+    method_page = catalog[method_id]
+
+    for property_id, property_value in method_document_kw.iteritems():
+      self.assertEqual(getattr(method_page, property_id), property_value)
+
   def test_twoFileImportExportForCatalogMethodInPortalSkins(self):
     """Test Business Template Import And Export With Catalog Method In Portal Skins"""
 

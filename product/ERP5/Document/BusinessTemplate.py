@@ -144,6 +144,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "PythonScript":        ("py",   0, "_body"),
   "Spreadsheet":         (None,   0, "data"),
   "SQL":                 ("sql",  0, "src"),
+  "SQL Method":          ("sql",  0, "src"),
   "Test Component":      ("py",   0, "text_content"),
   "Test Page":           (None,   0, "text_content"),
   "Web Page":            (None,   0, "text_content"),
