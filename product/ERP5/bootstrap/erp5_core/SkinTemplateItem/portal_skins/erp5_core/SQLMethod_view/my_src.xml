@@ -265,7 +265,7 @@
                 </item>
                 <item>
                     <key> <string>text_editor</string> </key>
-                    <value> <string>text_area</string> </value>
+                    <value> <string>codemirror</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

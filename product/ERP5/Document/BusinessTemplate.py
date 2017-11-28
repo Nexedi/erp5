@@ -38,6 +38,7 @@ from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
+from Products.ZSQLMethods.SQL import SQL
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.Message import translateString
@@ -143,6 +144,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "PythonScript":        ("py",   0, "_body"),
   "Spreadsheet":         (None,   0, "data"),
   "SQL":                 ("sql",  0, "src"),
+  "SQL Method":          ("sql",  0, "src"),
   "Test Component":      ("py",   0, "text_content"),
   "Test Page":           (None,   0, "text_content"),
   "Web Page":            (None,   0, "text_content"),
@@ -621,7 +623,8 @@ class BaseTemplateItem(Implicit, Persistent):
             delattr(obj, attr)
       elif classname in ('File', 'Image'):
         attr_set.update(('_EtagSupport__etag', 'size'))
-      elif classname == 'SQL' and klass.__module__== 'Products.ZSQLMethods.SQL':
+      # SQL covers both ZSQL Methods and ERP5 SQL Methods
+      elif isinstance(obj, SQL):
         attr_set.update(('_arg', 'template'))
       elif interfaces.IIdGenerator.providedBy(obj):
         attr_set.update(('last_max_id_dict', 'last_id_dict'))
@@ -2915,18 +2918,28 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
     for prop in property_list:
       if prop.get('select_variable') == 'getCatalogMethodIds':
+
         # In case the properties are defined via property sheet 'Catalog', the
         # object would have two IDs if it is of type 'selection' or
         # 'multiple_selection': 'id' and 'base_id', usage of base_id is preferred
         # while building objects as it maintains consistency between the old
         # catalog and new erp5 catalog
         prop_id = prop.get('base_id', prop['id'])
-        if prop['type'] == 'selection' and \
+
+        # IMPORTANT: After migration of Catalog, the properties which were of
+        # 'selection' type in ZSQL Catalog made more sense to be of 'string'
+        # type as they only contained one value. Also, putting them in
+        # 'selection' type, we would've ended up having to deal with accessors
+        # which end with '_list' which would've made no sense. So, we decided
+        # to move them to 'string' type
+        if prop['type'] in ('string', 'selection') and \
             getattr(catalog, prop_id) == method_id:
           method_properties[prop_id] = 1
+
         elif prop['type'] == 'multiple selection' and \
             method_id in getattr(catalog, prop_id):
           method_properties[prop_id] = 1
+
     return method_properties
 
   def build(self, context, **kw):
@@ -2943,16 +2956,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
     for obj in self._objects.values():
       method_id = obj.id
-      # Check if the method exists in catalog before getting filter dict
+      # Check if the method is sub-object of Catalog
       if method_id in catalog.objectIds():
         self._method_properties[method_id] = self._extractMethodProperties(
                                                             catalog, method_id)
-        filter = catalog._getFilterDict().get(method_id, {})
-        self._is_filtered_archive[method_id] = filter.get('filtered', 0)
-        for method in catalog_method_filter_list:
-          property = method[8:-8]
-          if property in filter:
-            getattr(self, method)[method_id] = filter[property]
 
   def generateXml(self, path):
     obj = self._objects[path]
@@ -2964,22 +2971,6 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         xml_data += '\n  <value>%s</value>' %(value,)
         xml_data += '\n </item>'
 
-      if self._is_filtered_archive.get(method_id):
-          xml_data += '\n <item key="_is_filtered_archive" type="int">'
-          xml_data += '\n  <value>1</value>'
-          xml_data += '\n </item>'
-          for method in catalog_method_filter_list:
-            if method != '_filter_expression_instance_archive':
-              value = getattr(self, method, {}).get(method_id)
-              if isinstance(value, basestring):
-                xml_data += '\n <item key="%s" type="str">' %(method,)
-                xml_data += '\n  <value>%s</value>' %(str(value))
-                xml_data += '\n </item>'
-              elif value:
-                xml_data += '\n <item key="%s" type="tuple">'%(method)
-                for item in value:
-                  xml_data += '\n  <value>%s</value>' %(str(item))
-                xml_data += '\n </item>'
     xml_data += '\n</catalog_method>\n'
     return xml_data
 
@@ -3066,7 +3057,16 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
               setattr(catalog, key, tuple(new_value))
 
       method = catalog._getOb(method_id)
-      # Restore filter
+
+      # Restore filter:
+      #
+      # Here we have to handle two cases:
+      # 1. CatalogMethodTemplateItem with _is_filtered_archive (possible for
+      #    methods who still have filter attributes in `_catalog_keys.xml` file).
+      # 2. CatalogMethodTemplateItem where methods have filter properties
+      #    directly on xml file of method rather than in `_catalog_keys.xml`.
+      #    This would be case for BT which have been exported after catalog
+      #    migration.
       if self._is_filtered_archive.get(method_id, 0):
         expression = self._filter_expression_archive[method_id]
         if expression and expression.strip():
@@ -3080,7 +3080,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         method.setExpressionCacheKey(
           self._filter_expression_cache_key_archive.get(method_id, ()))
         method.setTypeList(self._filter_type_archive.get(method_id, ()))
-      else:
+      # If there is no filter archive and the the meta_type of the catalog
+      # method isn't one of the ERP5-ified Catalog Method Document, then
+      # set the filter to 0
+      elif method.meta_type not in ('ERP5 SQL Method', 'ERP5 Python Script'):
         method.setFiltered(0)
 
       # backward compatibility

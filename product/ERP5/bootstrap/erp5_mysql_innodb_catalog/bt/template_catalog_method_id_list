@@ -137,7 +137,6 @@ erp5_mysql_innodb/z_select_optimizer_switch
 erp5_mysql_innodb/z_show_category_columns
 erp5_mysql_innodb/z_show_columns
 erp5_mysql_innodb/z_show_index
-erp5_mysql_innodb/z_show_tables
 erp5_mysql_innodb/z_uncatalog_delivery
 erp5_mysql_innodb/z_uncatalog_object
 erp5_mysql_innodb/z_unique_values
