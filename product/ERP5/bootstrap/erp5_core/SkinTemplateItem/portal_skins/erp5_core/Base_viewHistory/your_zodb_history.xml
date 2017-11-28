@@ -313,7 +313,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>string:${here/absolute_url}/Base_viewZODBHistory</string> </value>
+            <value> <string>python: context.constructUrlFor(form_id=\'Base_viewZODBHistory\', parameter_dict={\'ignore_layout\': request.get(\'ignore_layout\', 0)})</string> </value>
         </item>
       </dictionary>
     </pickle>
