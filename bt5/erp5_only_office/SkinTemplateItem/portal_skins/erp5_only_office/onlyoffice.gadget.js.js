@@ -244,7 +244,7 @@ DocsAPI.DocEditor.version = function () {
           return "";
         })
         .push(function (portal_type) {
-          var value;
+          var value, documentType, magic;
           portal_type = portal_type || options.portal_type;
           g.props.binary_loader = false;
           g.props.jio_key = options.jio_key;
@@ -288,11 +288,6 @@ DocsAPI.DocEditor.version = function () {
                 });
             }
           }
-          return value;
-        })
-        .push(function (value) {
-          var magic, documentType,
-            app_url, sdk_deps = ["promise!sdk_async_loader"];
           g.props.value = value;
           if (!g.props.documentType && value === "") {
             throw "can not create empty document " +
@@ -322,6 +317,54 @@ DocsAPI.DocEditor.version = function () {
               g.props.documentType = documentType;
             }
           }
+        })
+        .push(function () {
+          return jIO.util.ajax({
+            type: "GET",
+            url: "onlyoffice.gadget.appcache"
+          });
+        })
+        .push(function (response) {
+          /*configure requeryjs for rename
+          view and edit to view_folder and edit_folder
+          in dependencies
+          */
+          var text = response.target.responseText,
+            relative_url_list = text.split('\r\n'),
+            i,
+            new_url,
+            old_url,
+            config = {};
+          if (relative_url_list.length === 1) {
+            relative_url_list = text.split('\n');
+          }
+          if (relative_url_list.length === 1) {
+            relative_url_list = text.split('\r');
+          }
+          for (i = 0; i < relative_url_list.length; i += 1) {
+            if (
+              relative_url_list[i] !== "" &&
+              relative_url_list[i].charAt(0) !== '#' &&
+              relative_url_list[i].charAt(0) !== ' ') {
+              relative_url_list[i].replace("\r", "");
+              new_url = relative_url_list[i]
+                .replace('onlyoffice/web-apps/apps/', '')
+                .replace(/\.[^.]*$/, '');
+              old_url = new_url
+                .replace(/(^|\/)view_folder\//g,"$1view/")
+                .replace(/(^|\/)edit_folder\//g,"$1edit/");
+              if (old_url !== new_url) {
+                config[old_url] = [
+                    new_url,
+                    old_url
+                  ];
+              }
+            }
+          }
+          require.config({paths: config});
+        })
+        .push(function () {
+          var app_url, sdk_deps = ["promise!sdk_async_loader"];
           if (!g.props.value_zip_storage) {
             g.props.value_zip_storage = jIO.createJIO({type: "zipfile"});
           }
