@@ -712,58 +712,6 @@ class Catalog(Folder,
       local_role_key_dict[role.strip()] = column.strip()
     return local_role_key_dict.items()
 
-  security.declareProtected(import_export_objects, 'manage_exportProperties')
-  def manage_exportProperties(self, REQUEST=None, RESPONSE=None):
-    """
-      Export properties to an XML file.
-    """
-    f = StringIO()
-    f.write('<?xml version="1.0"?>\n<SQLCatalogData>\n')
-    property_id_list = self.propertyIds()
-    # Get properties and values
-    property_list = []
-    for property_id in property_id_list:
-      value = self.getProperty(property_id)
-      if value is not None:
-        property_list.append((property_id, value))
-    # Sort for easy diff
-    property_list.sort(key=lambda x: x[0])
-    for property in property_list:
-      property_id = property[0]
-      value       = property[1]
-      if isinstance(value, basestring):
-        f.write('  <property id=%s type="str">%s</property>\n' % (quoteattr(property_id), escape(value)))
-      elif isinstance(value, (tuple, list)):
-        f.write('  <property id=%s type="tuple">\n' % quoteattr(property_id))
-        # Sort for easy diff
-        item_list = []
-        for item in value:
-          if isinstance(item, basestring):
-            item_list.append(item)
-        item_list.sort()
-        for item in item_list:
-          f.write('    <item type="str">%s</item>\n' % escape(str(item)))
-        f.write('  </property>\n')
-    # Filters are now propeties in ERP5 SQL Method(s)
-    filter_dict = self._getFilterDict()
-    if filter_dict:
-      for filter_id, filter_def in sorted(filter_dict.iteritems()):
-        if not filter_def['filtered']:
-          # If a filter is not activated, no need to output it.
-          continue
-        if not filter_def['expression']:
-          # If the expression is not specified, meaningless to specify it.
-          continue
-        f.write('  <filter id=%s expression=%s />\n' % (quoteattr(filter_id), quoteattr(filter_def['expression'])))
-        # For now, portal types are not exported, because portal types are too specific to each site.
-    f.write('</SQLCatalogData>\n')
-
-    if RESPONSE is not None:
-      RESPONSE.setHeader('Content-type','application/data')
-      RESPONSE.setHeader('Content-Disposition',
-                          'inline;filename=properties.xml')
-    return f.getvalue()
-
   security.declareProtected(manage_zcatalog_entries, 'manage_historyCompare')
   def manage_historyCompare(self, rev1, rev2, REQUEST,
                             historyComparisonResults=''):
