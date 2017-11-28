@@ -82,7 +82,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_workflow_history</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -96,9 +98,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_workflow_history</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
