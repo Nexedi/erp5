@@ -122,7 +122,7 @@ class TestZODBHistory(ERP5TypeTestCase):
     # should be: create(1) + edit(60) = 61
     self.assertEqual(len(history_list), 61)
 
-  def test_testZODBHistorySecurity(self):
+  def test_ZODBHistorySecurity(self):
     """
      Make sure ZODB History is not available when user does not have "View History" permission.
     """
