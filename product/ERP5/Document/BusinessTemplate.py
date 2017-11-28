@@ -2946,16 +2946,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
     for obj in self._objects.values():
       method_id = obj.id
-      # Check if the method exists in catalog before getting filter dict
+      # Check if the method is sub-object of Catalog
       if method_id in catalog.objectIds():
         self._method_properties[method_id] = self._extractMethodProperties(
                                                             catalog, method_id)
-        filter = catalog._getFilterDict().get(method_id, {})
-        self._is_filtered_archive[method_id] = filter.get('filtered', 0)
-        for method in catalog_method_filter_list:
-          property = method[8:-8]
-          if property in filter:
-            getattr(self, method)[method_id] = filter[property]
 
   def generateXml(self, path):
     obj = self._objects[path]
@@ -2967,22 +2961,6 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         xml_data += '\n  <value>%s</value>' %(value,)
         xml_data += '\n </item>'
 
-      if self._is_filtered_archive.get(method_id):
-          xml_data += '\n <item key="_is_filtered_archive" type="int">'
-          xml_data += '\n  <value>1</value>'
-          xml_data += '\n </item>'
-          for method in catalog_method_filter_list:
-            if method != '_filter_expression_instance_archive':
-              value = getattr(self, method, {}).get(method_id)
-              if isinstance(value, basestring):
-                xml_data += '\n <item key="%s" type="str">' %(method,)
-                xml_data += '\n  <value>%s</value>' %(str(value))
-                xml_data += '\n </item>'
-              elif value:
-                xml_data += '\n <item key="%s" type="tuple">'%(method)
-                for item in value:
-                  xml_data += '\n  <value>%s</value>' %(str(item))
-                xml_data += '\n </item>'
     xml_data += '\n</catalog_method>\n'
     return xml_data
 
@@ -3069,7 +3047,16 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
               setattr(catalog, key, tuple(new_value))
 
       method = catalog._getOb(method_id)
-      # Restore filter
+
+      # Restore filter:
+      #
+      # Here we have to handle two cases:
+      # 1. CatalogMethodTemplateItem with _is_filtered_archive (possible for
+      #    methods who still have filter attributes in `_catalog_keys.xml` file).
+      # 2. CatalogMethodTemplateItem where methods have filter properties
+      #    directly on xml file of method rather than in `_catalog_keys.xml`.
+      #    This would be case for BT which have been exported after catalog
+      #    migration.
       if self._is_filtered_archive.get(method_id, 0):
         expression = self._filter_expression_archive[method_id]
         if expression and expression.strip():
@@ -3083,7 +3070,10 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         method.setExpressionCacheKey(
           self._filter_expression_cache_key_archive.get(method_id, ()))
         method.setTypeList(self._filter_type_archive.get(method_id, ()))
-      else:
+      # If there is no filter archive and the the meta_type of the catalog
+      # method isn't one of the ERP5-ified Catalog Method Document, then
+      # set the filter to 0
+      elif method.meta_type not in ('ERP5 SQL Method', 'ERP5 Python Script'):
         method.setFiltered(0)
 
       # backward compatibility
