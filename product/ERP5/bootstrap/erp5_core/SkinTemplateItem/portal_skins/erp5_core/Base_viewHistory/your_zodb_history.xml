@@ -313,7 +313,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>string:${here/absolute_url}/Base_viewZODBHistory</string> </value>
+            <value> <string>python:\'{}/Base_viewZODBHistory?{}\'.format(context.absolute_url(), modules[\'ZTUtils\'].make_query(ignore_layout=request.get(\'ignore_layout\', 0)))</string> </value>
         </item>
       </dictionary>
     </pickle>
