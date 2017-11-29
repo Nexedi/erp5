@@ -48,11 +48,10 @@
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@value='portal_type:("Bar" OR "Foo") AND simulation_state:"draft"' and @type='search' and @name='search']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="search_query python: '';
+                       parsed_query python: '( ( portal_type:&nbsp; &#34;Bar&#34; OR portal_type:&nbsp; &#34;Foo&#34; ) AND simulation_state:&nbsp; &#34;draft&#34; )'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
+</tal:block>
 
 </tbody></table>
 </body>

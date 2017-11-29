@@ -465,7 +465,7 @@
     .allowPublicAcquisition("triggerSubmit", function (param_list) {
       return this.getDeclaredGadget(MAIN_SCOPE)
         .push(function (main_gadget) {
-          return main_gadget.triggerSubmit(param_list);
+          return main_gadget.triggerSubmit.apply(main_gadget, param_list);
         });
     })
     /////////////////////////////////////////////////////////////////

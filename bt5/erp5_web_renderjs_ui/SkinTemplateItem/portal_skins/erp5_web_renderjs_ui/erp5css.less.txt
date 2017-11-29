@@ -1409,6 +1409,24 @@ div[data-gadget-scope='erp5_searchfield'] {
   button {
     padding: @half-margin-size;
   }
+  div.search_parsed_value {
+    display: flex;
+    flex-direction: row;
+    button {
+      // padding: @half-margin-size;
+      border: 1px solid rgba(0, 0, 0, 0.14);
+      border-radius: @radius;
+
+      margin-right: @margin-size;
+      max-width: 6em;
+      // Do not put title on multi line in case of small screen
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -o-text-overflow: ellipsis;
+      -ms-text-overflow: ellipsis;
+    }
+  }
 }
 
 .document_table {

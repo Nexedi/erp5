@@ -258,7 +258,8 @@
         // [{key: 'title', value: 'Foo', operator: 'like'}]
         query_list: query_list,
         // and/or
-        operator: operator
+        operator: operator,
+        focus_on: options.focus_on
       });
     })
 
@@ -295,14 +296,17 @@
           }
 
           container.appendChild(div);
-          return gadget.focusOnLastInput();
+          return gadget.focusOnLastInput(gadget.state.focus_on);
         });
     })
 
-    .declareJob('focusOnLastInput', function () {
+    .declareJob('focusOnLastInput', function (index) {
       var input_list = this.element.querySelectorAll('input');
+      if (index === undefined) {
+        index = input_list.length - 1;
+      }
       if (input_list.length) {
-        input_list[input_list.length - 1].focus();
+        input_list[index].focus();
       }
     })
 

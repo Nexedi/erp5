@@ -85,11 +85,10 @@
   <td>//span[@data-i18n='Records 1 - 3']</td>
   <td></td>
 </tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//input[@name='search' and @value='%']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="parsed_query python: '';
+                       search_query python: '%'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
+</tal:block>
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Next']</td>
@@ -100,11 +99,10 @@
   <td>//span[@data-i18n='Records 4 - 6']</td>
   <td></td>
 </tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//input[@name='search' and @value='%']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="parsed_query python: '';
+                       search_query python: '%'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
+</tal:block>
 
 </tbody></table>
 </body>

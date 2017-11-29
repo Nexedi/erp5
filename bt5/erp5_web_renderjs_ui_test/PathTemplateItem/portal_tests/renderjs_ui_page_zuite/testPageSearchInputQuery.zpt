@@ -60,11 +60,10 @@
   <td>//div[@data-gadget-url='${runner_url}gadget_erp5_panel.html']//div[@data-gadget-url='${runner_url}gadget_erp5_searchfield.html']//input[@name='search']</td>
   <td></td>
 </tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//div[@role="main"]//div[@data-gadget-url='${runner_url}gadget_erp5_searchfield.html']//input[@name='search']</td>
-  <td>Title 1</td>
-</tr>
+<tal:block tal:define="search_query python: 'Title 1';
+                       parsed_query python: ''">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
+</tal:block>
 
 </tbody></table>
 </body>

@@ -122,9 +122,13 @@
 
     })
 
-    .declareMethod('triggerSubmit', function () {
+    .declareMethod('triggerSubmit', function (options) {
       var gadget = this,
-        extended_search = '';
+        extended_search = '',
+        focus_on;
+      if (options !== undefined) {
+        focus_on = options.focus_on;
+      }
       return gadget.getDeclaredGadget("erp5_searchfield")
         .push(function (search_gadget) {
           return search_gadget.getContent();
@@ -141,7 +145,8 @@
           return gadget.renderEditorPanel("gadget_erp5_search_editor.html", {
             extended_search: extended_search,
             begin_from: result.begin_from,
-            search_column_list: result.search_column_list
+            search_column_list: result.search_column_list,
+            focus_on: focus_on
           });
         });
     })

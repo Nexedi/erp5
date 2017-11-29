@@ -199,12 +199,17 @@
 
   <tal:block metal:define-macro="check_search_in_form_list">
     <tr>
-      <td colspan="3"><b tal:content="python: 'Check the search query: %s' % search_query"></b></td>
+      <td colspan="3"><b tal:content="python: 'Check the search query: %s %s' % (parsed_query, search_query)"></b></td>
     </tr>
     <tr>
       <td>waitForElementPresent</td>
       <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope='erp5_searchfield']//input[@name='search']</td>
       <td></td>
+    </tr>
+    <tr>
+      <td>assertValue</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope='erp5_searchfield']//input[@type='hidden']</td>
+      <td tal:content="parsed_query"></td>
     </tr>
     <tr>
       <td>assertValue</td>

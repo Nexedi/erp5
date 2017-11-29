@@ -55,7 +55,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//input[contains(@value, 'portal_type:"Query" AND default_agent_uid:') and @name='search']</td>
+  <td>//input[contains(@value, '( portal_type:&nbsp; "Query" AND default_agent_uid:&nbsp; ') and @type='hidden']</td>
   <td></td>
 </tr>
 

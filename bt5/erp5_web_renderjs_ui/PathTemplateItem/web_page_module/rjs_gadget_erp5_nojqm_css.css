@@ -1221,6 +1221,21 @@ div[data-gadget-scope='erp5_searchfield'] .ui-input-text div[data-gadget-scope='
 div[data-gadget-scope='erp5_searchfield'] button {
   padding: 3pt;
 }
+div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value {
+  display: flex;
+  flex-direction: row;
+}
+div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 0.325em;
+  margin-right: 6pt;
+  max-width: 6em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+}
 .document_table .ui-table-header {
   display: flex;
   padding-bottom: 6pt;
