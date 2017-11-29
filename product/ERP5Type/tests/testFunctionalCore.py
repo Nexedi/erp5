@@ -44,7 +44,6 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
                 'erp5_dhtml_style', 'erp5_dhtml_ui_test',
                 'erp5_jquery', 'erp5_jquery_ui',
                 'erp5_knowledge_pad',
-                'erp5_pdm',
                 'erp5_simulation',
                 'erp5_trade',
                 'erp5_ooo_import',
