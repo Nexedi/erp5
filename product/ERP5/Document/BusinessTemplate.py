@@ -2918,18 +2918,28 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
 
     for prop in property_list:
       if prop.get('select_variable') == 'getCatalogMethodIds':
+
         # In case the properties are defined via property sheet 'Catalog', the
         # object would have two IDs if it is of type 'selection' or
         # 'multiple_selection': 'id' and 'base_id', usage of base_id is preferred
         # while building objects as it maintains consistency between the old
         # catalog and new erp5 catalog
         prop_id = prop.get('base_id', prop['id'])
-        if prop['type'] == 'selection' and \
+
+        # IMPORTANT: After migration of Catalog, the properties which were of
+        # 'selection' type in ZSQL Catalog made more sense to be of 'string'
+        # type as they only contained one value. Also, putting them in
+        # 'selection' type, we would've ended up having to deal with accessors
+        # which end with '_list' which would've made no sense. So, we decided
+        # to move them to 'string' type
+        if prop['type'] in ('string', 'selection') and \
             getattr(catalog, prop_id) == method_id:
           method_properties[prop_id] = 1
+
         elif prop['type'] == 'multiple selection' and \
             method_id in getattr(catalog, prop_id):
           method_properties[prop_id] = 1
+
     return method_properties
 
   def build(self, context, **kw):
