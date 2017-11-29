@@ -143,6 +143,11 @@
           }
         }
       }
+      // Change the value state in place
+      // This will prevent the gadget to be changed if
+      // its parent call render with the same value
+      // (as ERP5 does in case of formulator error)
+      this.state.value = result[input.getAttribute('name')];
       return result;
     })
 

@@ -82,14 +82,7 @@
         mode = 'python';
       }
       state_dict.mode = mode;
-      //The if below is not good, we should look for a general improvements
-      //to make sure all fields do not loose focus. But it is unsure now if
-      //this change could be applied globally (like we might have cases where
-      //the backend slightly change data).
-      //state_dict.value = options.value || "";
-      if (!this.editor.hasFocus()) {
-        state_dict.value = options.value || "";
-      }
+      state_dict.value = options.value || "";
       return this.changeState(state_dict);
     })
 
@@ -109,6 +102,11 @@
       var form_data = {};
       if (this.state.editable) {
         form_data[this.state.key] = this.editor.getValue();
+        // Change the value state in place
+        // This will prevent the gadget to be changed if
+        // its parent call render with the same value
+        // (as ERP5 does in case of formulator error)
+        this.state.value = form_data[this.state.key];
       }
       return form_data;
     });

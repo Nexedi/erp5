@@ -152,6 +152,11 @@
       var result = {};
       if (this.state.editable) {
         result[this.state.key] = this.ckeditor.getData();
+        // Change the value state in place
+        // This will prevent the gadget to be changed if
+        // its parent call render with the same value
+        // (as ERP5 does in case of formulator error)
+        this.state.value = result[this.state.key];
       }
       return result;
     })

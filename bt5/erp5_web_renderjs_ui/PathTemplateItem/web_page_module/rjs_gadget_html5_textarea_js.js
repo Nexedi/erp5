@@ -5,13 +5,10 @@
 
   function checkChange() {
     var gadget = this;
-    return gadget.changeState({value: gadget.element.querySelector('textarea').value})
-      .push(function () {
-        return RSVP.all([
-          gadget.checkValidity(),
-          gadget.notifyChange()
-        ]);
-      });
+    return RSVP.all([
+      gadget.checkValidity(),
+      gadget.notifyChange()
+    ]);
   }
 
   rJS(window)
@@ -66,6 +63,11 @@
       if (this.state.editable) {
         input = this.element.querySelector('textarea');
         result[input.getAttribute('name')] = input.value;
+        // Change the value state in place
+        // This will prevent the gadget to be changed if
+        // its parent call render with the same value
+        // (as ERP5 does in case of formulator error)
+        this.state.value = input.value;
       }
       return result;
     })
