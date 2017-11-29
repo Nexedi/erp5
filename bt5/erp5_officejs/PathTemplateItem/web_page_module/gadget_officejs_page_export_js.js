@@ -35,17 +35,17 @@
     "Onlyoffice Text": {
       "url": "ooffice_text/",
       "cache": "gadget_ooffice_text.appcache",
-      "sub_gadget": ["ooffice_text_gadget", "officejs_setting_gadget"]
+      "sub_gadget": ["ooffice_onlyoffice_gadget", "officejs_setting_gadget"]
     },
     "Onlyoffice Spreadsheet": {
       "url": "ooffice_spreadsheet/",
       "cache": "gadget_ooffice_spreadsheet.appcache",
-      "sub_gadget": ["ooffice_spreadsheet_gadget", "officejs_setting_gadget"]
+      "sub_gadget": ["ooffice_onlyoffice_gadget", "officejs_setting_gadget"]
     },
     "Onlyoffice Presentation": {
       "url": "ooffice_presentation/",
       "cache": "gadget_ooffice_presentation.appcache",
-      "sub_gadget": ["ooffice_presentation_gadget", "officejs_setting_gadget"]
+      "sub_gadget": ["ooffice_onlyoffice_gadget", "officejs_setting_gadget"]
     },
     "Web Table Editor": {
       "url": "officejs_web_table_editor/",
@@ -133,14 +133,8 @@
     "officejs_codemirror": {
       "cache": "gadget_officejs_codemirror.appcache"
     },
-    "ooffice_text_gadget": {
-      "cache": "gadget_ooffice_text_gadget.appcache"
-    },
-    "ooffice_spreadsheet_gadget": {
-      "cache": "gadget_ooffice_spreadsheet_gadget.appcache"
-    },
-    "ooffice_presentation_gadget": {
-      "cache": "gadget_ooffice_presentation_gadget.appcache"
+    "ooffice_onlyoffice_gadget": {
+      "cache": "onlyoffice.gadget.appcache"
     },
     "officejs_web_table_editor_gadget": {
       "cache": "gadget_officejs_web_table_editor.appcache"
