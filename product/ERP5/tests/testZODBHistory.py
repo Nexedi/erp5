@@ -28,6 +28,7 @@
 ##############################################################################
 
 import unittest
+import os
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
@@ -122,7 +123,7 @@ class TestZODBHistory(ERP5TypeTestCase):
     # should be: create(1) + edit(60) = 61
     self.assertEqual(len(history_list), 61)
 
-  def test_testZODBHistorySecurity(self):
+  def test_ZODBHistorySecurity(self):
     """
      Make sure ZODB History is not available when user does not have "View History" permission.
     """
@@ -143,6 +144,31 @@ class TestZODBHistory(ERP5TypeTestCase):
     # accessing the form directly is not allowed either
     from zExceptions import Unauthorized
     self.assertRaises(Unauthorized, document.Base_viewZODBHistory)
+
+  def test_ZODBHistoryBinaryData(self):
+    """
+     Make sure ZODB History view works with binary content
+    """
+    self.loginByUserName('tatuya')
+    document = self.addOrganisation(self.id()).newContent(
+        portal_type='Embedded File')
+
+    document.setFile(
+        open(os.path.join(
+          os.path.dirname(__file__),
+          'test_data',
+          'images',
+          'erp5_logo.png')))
+    document.setTitle("ロゴ")
+    self.commit()
+
+    # no encoding error
+    document.Base_viewZODBHistory()
+
+    change, = document.Base_getZODBHistoryList()
+    self.assertIn('data:(binary)', change.getProperty('changes'))
+    self.assertIn('content_type:image/png', change.getProperty('changes'))
+    self.assertIn('title:ロゴ', change.getProperty('changes'))
 
 
 def test_suite():

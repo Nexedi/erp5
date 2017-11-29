@@ -8,7 +8,15 @@ if not getSecurityManager().getUser().has_permission('View History', context):
   raise Unauthorized()
 
 def beautifyChange(change_dict):
-  return ["%s:%s" % (k,change_dict[k]) for k in sorted(change_dict.keys())]
+  change_list = []
+  for property_name, property_value in sorted(change_dict.items()):
+    if isinstance(property_value, basestring):
+      try:
+        unicode(property_value, 'utf-8')
+      except UnicodeDecodeError:
+        property_value = '(binary)'
+    change_list.append('%s:%s' % (property_name, property_value))
+  return change_list
 
 try:
   history_size = portal.portal_preferences.getPreferredHtmlStyleZodbHistorySize()
