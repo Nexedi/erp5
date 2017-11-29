@@ -174,6 +174,9 @@ class CommitTool (BaseTool):
     def getCommitList(self):
       return self.objectValues(portal_type='Business Commit')
 
+    def getSnapshotList(self):
+      return self.objectValues(portal_type='Business Snapshot')
+
     security.declarePublic('newContent')
     def newContent(self, id=None, **kw):
       """

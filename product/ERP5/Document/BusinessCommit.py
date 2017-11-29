@@ -108,19 +108,17 @@ class BusinessCommit(Folder):
                       PropertySheet.Version,
                     )
 
-  def getPreviousCommit(self):
-    return self.prev_commit
-
   security.declarePublic('newContent')
   def newContent(self, id=None, **kw):
     """
-    Override newContent so as to use 'id' generated like hash
+    Override newContent so as to use 'id' generated like hash.
+    Also, copy the objects in the Business Commit after creating new object
     """
     if id is None:
       id = self.generateNewId()
 
     id = str(str(id) + '_' + str(time.time())).replace('.', '')
-    return super(CommitTool, self).newContent(id, **kw)
+    new_object = super(BusinessCommit, self).newContent(id, **kw)
+    import pdb; pdb.set_trace()
 
-  def getCommitHash(self):
-    return self.commit_hash
+    return new_object
