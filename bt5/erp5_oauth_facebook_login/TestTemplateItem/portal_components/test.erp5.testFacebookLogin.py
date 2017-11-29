@@ -30,16 +30,25 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.extension import FacebookLoginUtility
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
+CLIENT_ID = "a1b2c3"
+SECRET_KEY = "3c2ba1"
+ACCESS_TOKEN = "EAAF10h0gIiQZDZD"
+CODE = "1235"
+
 def getUserId(access_token):
-  return "1209832093821098102938120938129381"
+  return "1234567890123456"
 
 def getAccessTokenFromCode(code, redirect_uri):
   assert code == CODE, "Invalid code"
   # This is an example of a Facebook response
-  return  {}
+  return  {u'access_token': u'EAAF10h0gIiQZDZD',
+           u'token_type': u'bearer',
+           u'expires_in': 5138578}
 
 def getUserEntry(access_token):
-  return {}
+  return {'name': 'John Doe',
+          'reference': getUserId(None),
+          'email': "dummy@example.org"}
 
 FacebookLoginUtility_getAccessTokenFromCode = FacebookLoginUtility.getAccessTokenFromCode
 FacebookLoginUtility_getUserEntry = FacebookLoginUtility.getUserEntry
@@ -97,11 +106,11 @@ class TestFacebookLogin(ERP5TypeTestCase):
     self.logout()
     self.portal.ERP5Site_redirectToFacebookLoginPage()
     location = self.portal.REQUEST.RESPONSE.getHeader("Location")
-    self.assertIn("XXXX", location)
-    self.assertIn("response_type=code", location)
+    self.assertIn("https://www.facebook.com/v2.10/dialog/oauth?", location)
+    self.assertIn("scope=email&redirect_uri=", location)
     self.assertIn("client_id=%s" % CLIENT_ID, location)
     self.assertNotIn("secret_key=", location)
-    self.assertIn("ERP5Site_receiveFacebookCallback", location)
+    self.assertIn("ERP5Site_callbackFacebookLogin", location)
 
   def test_create_user_in_ERP5Site_createFacebookUserToOAuth(self):
     """
@@ -143,8 +152,7 @@ return reference, None
 module = context.getPortalObject().getDefaultModule(portal_type='Credential Request')
 credential_request = module.newContent(
   portal_type="Credential Request",
-  first_name=user_dict["first_name"],
-  last_name=user_dict["last_name"],
+  first_name=user_dict["name"],
   reference=user_reference,
   default_email_text=user_dict["email"],
 )
@@ -153,12 +161,11 @@ context.portal_alarms.accept_submitted_credentials.activeSense()
 return credential_request
 """)
     self.logout()
-    response = self.portal.ERP5Site_receiveFacebookCallback(code=CODE)
+    response = self.portal.ERP5Site_callbackFacebookLogin(code=CODE)
     facebook_hash = self.portal.REQUEST.RESPONSE.cookies.get("__ac_facebook_hash")["value"]
-    self.assertEqual("b01533abb684a658dc71c81da4e67546", facebook_hash)
+    self.assertEqual("8cec04e21e927f1023f4f4980ec11a77", facebook_hash)
     self.assertEqual(self.portal.absolute_url(), response)
     cache_dict = self.portal.Base_getBearerToken(facebook_hash, "facebook_server_auth_token_cache_factory")
-    self.assertEqual(CLIENT_ID, cache_dict["client_id"])
     self.assertEqual(ACCESS_TOKEN, cache_dict["access_token"])
     self.assertEqual({'reference': getUserId(None)},
       self.portal.Base_getBearerToken(ACCESS_TOKEN, "facebook_server_auth_token_cache_factory")
@@ -173,7 +180,8 @@ return credential_request
     self.login()
     credential_request = self.portal.portal_catalog(portal_type="Credential Request",
                                                     reference=getUserId(None))[0].getObject()
-    credential_request.accept()
+    if credential_request.getValidationState() != "accepted":
+      credential_request.accept()
     person = credential_request.getDestinationDecisionValue()
     facebook_login = person.objectValues(portal_types="Facebook Login")[0]
     self.assertEqual(getUserId(None), facebook_login.getReference())

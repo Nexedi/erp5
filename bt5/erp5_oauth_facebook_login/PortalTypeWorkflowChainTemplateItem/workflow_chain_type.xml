@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>Facebook Connector</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Facebook Login</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>

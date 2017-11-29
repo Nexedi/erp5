@@ -1,0 +1,8 @@
+<property_sheet_list>
+ <portal_type id="Facebook Connector">
+  <item>OAuthClient</item>
+ </portal_type>
+ <portal_type id="Template Tool">
+  <item>TemplateToolERP5FacebookExtractionPluginConstraint</item>
+ </portal_type>
+</property_sheet_list>

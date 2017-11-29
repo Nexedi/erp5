@@ -1,8 +1,10 @@
 from ZTUtils import make_query
 
+client_id, _ = context.ERP5Site_getFacebookClientIdAndSecretKey()
+
 query = make_query({
    # Call at he context of the appropriate web_service.
-   'client_id': context.getClientId(),
+   'client_id': client_id,
    'redirect_uri': "{0}/ERP5Site_callbackFacebookLogin".format(came_from or context.absolute_url()),
    'scope': 'email'
 })

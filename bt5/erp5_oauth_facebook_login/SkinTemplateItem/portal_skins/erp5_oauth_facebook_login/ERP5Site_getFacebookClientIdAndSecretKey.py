@@ -11,7 +11,7 @@ result_list = context.getPortalObject().portal_catalog(
 assert result_list, "Facebook Connector not found"
 
 if len(result_list) == 2:
-  raise ValueError("Impossible to select one Google Connector")
+  raise ValueError("Impossible to select one Facebook Connector")
 
 facebook_connector = result_list[0]
 return facebook_connector.getClientId(), facebook_connector.getSecretKey()

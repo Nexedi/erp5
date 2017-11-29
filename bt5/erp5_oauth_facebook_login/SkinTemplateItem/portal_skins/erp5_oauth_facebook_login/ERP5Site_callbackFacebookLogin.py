@@ -36,11 +36,11 @@ elif code is not None:
                                 {"reference": user_reference},
                                 "facebook_server_auth_token_cache_factory")
 
-    method = getattr(context, "Base_createOAuth2User", None)
+    method = getattr(context, "ERP5Site_createFacebookUserToOAuth", None)
     if method is not None:
-      pass #method("Facebook Login", user_reference, user_dict)
+      method(user_reference, user_dict)
 
-    return context.REQUEST.RESPONSE.redirect(
-      context.REQUEST.get("came_from") or portal.absolute_url())
+    came_from = context.REQUEST.get("came_from",  portal.absolute_url() + "#")
+    return context.REQUEST.RESPONSE.redirect(came_from)
 
 return handleError('')
