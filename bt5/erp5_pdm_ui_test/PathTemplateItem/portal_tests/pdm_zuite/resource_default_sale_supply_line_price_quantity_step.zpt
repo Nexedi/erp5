@@ -21,7 +21,8 @@ Test quantity steps for price on sale supply line
 <tr>
   <td>type</td>
   <td>field_my_sale_supply_line_quantity_step_list</td>
-  <td>10<br />20</td>
+  <td>10<br />
+20</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -29,7 +30,7 @@ Test quantity steps for price on sale supply line
   <td></td>
 </tr>
 <tr>
-  <td>assertText</td>
+  <td>assertValue</td>
   <td>field_my_sale_supply_line_quantity_step_list</td>
   <td>10.0
 20.0</td>
@@ -94,7 +95,8 @@ Test quantity steps for price on sale supply line
 <tr>
   <td>type</td>
   <td>field_my_sale_supply_line_quantity_step_list</td>
-  <td>foo<br />bar</td>
+  <td>foo<br />
+bar</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -102,13 +104,7 @@ Test quantity steps for price on sale supply line
   <td></td>
 </tr>
 <tr>
-  <td>assertText</td>
-  <td>field_my_sale_supply_line_quantity_step_list</td>
-  <td>foo
-bar</td>
-</tr>
-<tr>
-  <td>assertText</td>
+  <td>assertValue</td>
   <td>field_my_sale_supply_line_quantity_step_list</td>
   <td>foo
 bar</td>
@@ -118,8 +114,6 @@ bar</td>
   <td>//textarea[@name="field_my_sale_supply_line_quantity_step_list"]/parent::div/following-sibling::span</td>
   <td>You did not enter a floating point number.</td>
 </tr>
-
-
 
 <tr>
   <td>type</td>
