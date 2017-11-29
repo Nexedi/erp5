@@ -131,7 +131,6 @@ class ERP5GroupManager(BasePlugin):
         # Fetch category values from defined scripts
         for (method_name, base_category_list) in security_definition_list:
           base_category_list = tuple(base_category_list)
-          method = getattr(self, method_name)
           security_category_list = security_category_dict.setdefault(
                                             base_category_list, [])
           try:
@@ -139,6 +138,7 @@ class ERP5GroupManager(BasePlugin):
             # from here or from _updateLocalRolesOnSecurityGroups.
             # Currently, passing portal_type='' (instead of 'Person')
             # is the only way to make the difference.
+            method = getattr(self, method_name)
             security_category_list.extend(
               method(base_category_list, user_id, person_object, '')
             )
@@ -155,7 +155,7 @@ class ERP5GroupManager(BasePlugin):
         group_id_list_generator = getattr(self, generator_name, None)
         if group_id_list_generator is None:
           generator_name = ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
-          group_id_list_generator = getattr(self, generator_name)
+          group_id_list_generator = getattr(self, generator_name, None)
         for base_category_list, category_value_list in \
             security_category_dict.iteritems():
           for category_dict in category_value_list:
