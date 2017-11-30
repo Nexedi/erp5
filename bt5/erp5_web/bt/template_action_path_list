@@ -9,6 +9,9 @@ Static Web Section | predicate
 Static Web Section | section_content
 Static Web Section | view
 Static Web Section | web_view
+Web JSON | notebook_jio_view
+Web JSON | view
+Web JSON | view_editor
 Web Page Module | list_ui
 Web Page Module | sort_on
 Web Page Module | view
