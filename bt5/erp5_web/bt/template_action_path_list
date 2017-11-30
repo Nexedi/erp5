@@ -11,6 +11,9 @@ Static Web Section | view
 Static Web Section | web_view
 Static Web Site | layout_configuration
 Static Web Site | view
+Web JSON | notebook_jio_view
+Web JSON | view
+Web JSON | view_editor
 Web Page Module | view
 Web Page | list
 Web Page | local_permission
