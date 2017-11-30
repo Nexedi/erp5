@@ -451,6 +451,7 @@ class SlapOSTester(SlapOSMasterCommunicator):
       raise ValueError(error_message)
 
   def getInstanceUrlDict(self):
+    # XXX: until frontend issue is solved, this returns the address for one of the zopes
     url_list = []
     for instance in self.getInstanceUrlList():
       information = self.getInformationFromInstance(instance["href"])
@@ -462,27 +463,8 @@ class SlapOSTester(SlapOSMasterCommunicator):
         password = json.loads(parameter_dict)['inituser-password']
         url_list.append({'zope-address' : address, 'user' : user, 'password' : password })
       except Exception as e:
-        pass # ignore instances whitout zope-address-list
-    return url_list
-
-  def bootstrapInstance(self, instance_information):
-    url = "http://%s:%s@%s/erp5" % (instance_information['user'],
-                                    instance_information['password'],
-                                    instance_information['zope-address'])
-    self._logger("Bootstrapping site...")
-    response = requests.get(url + '/ERP5Site_bootstrapScalabilityTest')
-    if response.status_code != 200:
-      error_message = "Could not finde ERP5Site_bootstrapScalabilityTest script in instance. Response: " + str(response.status_code)
-      return {'status_code' : 1, 'error_message': error_message}
-    try:
-      status_code = eval(response.text)["status_code"]
-    except:
-      error_message = "ERP5Site_bootstrapScalabilityTest script did not return a dictionary response."
-      return {'status_code' : 1, 'error_message': error_message}
-    if status_code != 0:
-      return {'status_code' : 1, 'error_message': response.text["error_message"]}
-    self._logger("Site bootstrapped.")
-    return {'status_code' : 0 }
+        pass # ignore instances without zope-address-list
+    return url_list[0]
 
 class SoftwareReleaseTester(SlapOSTester):
   deadline = None
