@@ -113,10 +113,12 @@ class TestNode(object):
     profile_path_count = 0
     profile_content_list = []
     revision_dict = dict(node_test_suite.revision_list)
+    self.config['repository_path_list'] = []
     for vcs_repository in node_test_suite.vcs_repository_list:
       url = vcs_repository['url']
       buildout_section_id = vcs_repository.get('buildout_section_id', None)
       repository_path = vcs_repository['repository_path']
+      self.config['repository_path_list'].append(repository_path)
       try:
         profile_path = vcs_repository[PROFILE_PATH_KEY]
       except KeyError:
@@ -185,7 +187,6 @@ shared = true
     try:
       for vcs_repository in node_test_suite.vcs_repository_list:
         repository_path = vcs_repository['repository_path']
-        self.config['repository_path'] = repository_path
         repository_id = vcs_repository['repository_id']
         branch = vcs_repository.get('branch')
         # Make sure we have local repository
