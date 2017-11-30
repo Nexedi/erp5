@@ -10,8 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -85,8 +85,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Production Order</string>
-                          <string>Production Order</string>
+                          <string>Manufacturing Order</string>
+                          <string>Manufacturing Order</string>
                         </tuple>
                       </list>
                     </value>
