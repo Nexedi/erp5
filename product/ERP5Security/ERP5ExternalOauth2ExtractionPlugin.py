@@ -233,10 +233,11 @@ def getFacebookUserEntry(token):
           'Authentication disabled.')
     return None
   timeout = socket.getdefaulttimeout()
+  args = {'fields' : 'id,name,email', }
   try:
     # require really fast interaction
     socket.setdefaulttimeout(5)
-    facebook_entry = facebook.GraphAPI(token).get_object("me")
+    facebook_entry = facebook.GraphAPI(token).get_object("me", **args)
   finally:
     socket.setdefaulttimeout(timeout)
 
