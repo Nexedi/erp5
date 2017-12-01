@@ -70,17 +70,22 @@
       })
       .push(function (delivery_list) {
         var causality_uid_list = [0], // Initiliaze with 0 to make sure to have at least one uid to search for
-            i, delivery, query;
+            i, delivery, query, empty_causality_delivery_list = [];
 
         delivery_list = delivery_list.data.rows;
         for (i = 0; i < delivery_list.length; i = i + 1) {
           delivery = delivery_list[i].value;
-          if (causality_uid_list.indexOf(delivery.causality_uid) === -1) {
-            causality_uid_list.push(delivery.causality_uid);
+          if (delivery.causality_uid !== undefined) {
+            if (causality_uid_list.indexOf(delivery.causality_uid) === -1) {
+              causality_uid_list.push(delivery.causality_uid);
+            }
+          } else {
+            empty_causality_delivery_list.push(delivery);
           }
         }
         query = 'portal_type:="Manufacturing Execution" AND causality_uid: (' + causality_uid_list.join(', ') + ') AND NOT simulation_state: ("draft", "cancelled")';
         console.log("QUERY", query);
+        gadget.property_dict.empty_causality_delivery_list = empty_causality_delivery_list;
         return gadget.jio_allDocs({
           query: query,
           limit: 10000,
@@ -95,10 +100,18 @@
             tree_list = [],
             data_list = [],
             sale_order_uid,
+            initial_delivery_list = [],
             delivery_data, tree_data;
-        delivery_list = delivery_list.data.rows;
+        initial_delivery_list = delivery_list.data.rows;
+        delivery_list = [];
+        for (i = 0; i < initial_delivery_list.length; i = i + 1) {
+          delivery_list.push(initial_delivery_list[i].value);
+        }
+        for (i = 0; i < gadget.property_dict.empty_causality_delivery_list.length; i = i + 1) {
+          delivery_list.push(gadget.property_dict.empty_causality_delivery_list[i]);
+        }
         for (i = 0; i < delivery_list.length; i = i + 1) {
-          delivery = delivery_list[i].value;
+          delivery = delivery_list[i];
           if (delivery.causality_uid !== undefined) {
             if (causality_list.indexOf(delivery.causality_uid) === -1) {
               causality_list.push(delivery.causality_uid);
@@ -121,10 +134,11 @@
           if (delivery.start_date !== undefined && delivery.stop_date !== undefined) {
             delivery_data = {'title': delivery.title,
                          'id': delivery.uid,
-                         //'tree_id': delivery.uid,
-                         'parent_id': delivery.causality_uid,
                          'start_date': delivery.start_date,
                          'stop_date': delivery.stop_date};
+            if (delivery.causality_uid !== undefined) {
+              delivery_data.parent_id = delivery.causality_uid;
+            }
             if (delivery.parent_uid !== sale_order_uid) {
               delivery_data.parent_id = delivery.parent_uid;
             }
