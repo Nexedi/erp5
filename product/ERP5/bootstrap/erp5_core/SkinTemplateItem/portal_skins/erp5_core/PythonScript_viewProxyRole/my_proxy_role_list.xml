@@ -10,11 +10,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>required</string>
-                <string>view_separator</string>
                 <string>items</string>
                 <string>size</string>
+                <string>title</string>
+                <string>view_separator</string>
               </list>
             </value>
         </item>
@@ -105,10 +104,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
