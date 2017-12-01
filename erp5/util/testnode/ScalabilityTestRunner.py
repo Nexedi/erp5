@@ -64,6 +64,10 @@ PERFORMANCE_RUNNER_SCRIPT = "performance_tester_erp5"
 SCALABILITY_RUNNER_SCRIPT = "runScalabilityTestSuite"
 SCALABILITY_TEST = "scalability_test"
 TEST_SUITE_INIT = "__init__.py"
+# access SR by password
+TESTNODE_USER = "testnode"
+HTACCESS = "/.htaccess"
+HTPASSWD = "/.htpasswd"
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
@@ -265,6 +269,25 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     order = slap.registerOpenOrder()
     return slap, supply, order
 
+  def generateProfilePasswordAccess(self):
+    software_hash_directory = self.testnode.config['slapos_binary'].rsplit("bin/slapos", 1)[0]
+    apache_htpasswd = software_hash_directory + "parts/apache/bin/htpasswd"
+    testsuite_directory = self.testnode.config['repository_path_list'][0].rsplit('/', 1)[0]
+    htaccess_file = open(testsuite_directory + HTACCESS, "w")
+    file_content = """
+AuthType Basic
+AuthName "Password Protected Area"
+AuthUserFile "%s%s"
+Require valid-user
+""" % (testsuite_directory, HTPASSWD)
+    htaccess_file.write(file_content)
+    htaccess_file.close()
+    user = TESTNODE_USER
+    password = ''.join(random.choice(string.digits + string.letters) for i in xrange(10))
+    command = [apache_htpasswd, "-bc", testsuite_directory + HTPASSWD, user, password]
+    self.testnode.process_manager.spawn(*command)
+    return user, password
+
   def createSoftwareReachableProfilePath(self, node_test_suite):
     # Create an obfuscated link to the testsuite directory
     path_to_suite = os.path.join(
@@ -284,10 +307,11 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         raise ValueError("testnode, Unable to create symbolic link to the testsuite.")
     self.log("Sym link : %s %s" %(path_to_suite, self.obfuscated_link_path))
 
+    user, password = self.generateProfilePasswordAccess()
     # Construct the ipv6 obfuscated url of the software profile reachable from outside
-    self.reachable_address = os.path.join(
-      "http://","["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
-      "software",self.randomized_path)
+    self.reachable_address = "http://%s:%s@%s" % (user, password,
+      os.path.join("["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
+      "software",self.randomized_path))
     self.reachable_profile = os.path.join(self.reachable_address, "software.cfg")
     # Write the reachable address in the software.cfg file,
     # by replacing <obfuscated_url> occurences by the current reachable address.
@@ -335,7 +359,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       node_test_suite.edit(configuration_list=configuration_list)
       self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
       self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
-      
+
       self.createSoftwareReachableProfilePath(node_test_suite)
       self.log("Software reachable profile path is : %s " %(self.reachable_profile))
 

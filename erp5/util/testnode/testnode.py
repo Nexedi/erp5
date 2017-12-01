@@ -152,7 +152,6 @@ extends = %(software_config_path)s
           # <obfuscated_url> word is modified by in runner.prepareSlapOSForTestSuite()
           profile_content_list.append("""
 [%(buildout_section_id)s]
-repository = <obfuscated_url>/%(buildout_section_id)s/%(buildout_section_id)s.git
 revision = %(revision)s
 ignore-ssl-certificate = true
 develop = false
