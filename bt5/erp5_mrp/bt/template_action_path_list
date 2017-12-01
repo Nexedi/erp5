@@ -12,6 +12,7 @@ Manufacturing Order Line | jump_to_transformation
 Manufacturing Order Line | price_view
 Manufacturing Order Line | quantity_view
 Manufacturing Order Line | view
+Manufacturing Order Module | manufacturing_order_module_view_gantt
 Manufacturing Order Module | view
 Manufacturing Order | jump_to_related_internal_packing_list
 Manufacturing Order | jump_to_related_manufacturing_execution
