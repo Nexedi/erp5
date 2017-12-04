@@ -12,7 +12,7 @@ if password:
   notification_type = "with-password"
 
 #Get message from catalog
-notification_reference = 'crendential_request-confirmation-%s' % notification_type
+notification_reference = 'credential_request-confirmation-%s' % notification_type
 notification_message = portal.portal_notifications.getDocumentValue(reference=notification_reference, 
                                                                     language=recipient.getLanguage())
 if notification_message is None:
