@@ -119,6 +119,5 @@ class BusinessCommit(Folder):
 
     id = str(str(id) + '_' + str(time.time())).replace('.', '')
     new_object = super(BusinessCommit, self).newContent(id, **kw)
-    import pdb; pdb.set_trace()
 
     return new_object

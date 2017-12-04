@@ -722,7 +722,6 @@ class BusinessItem(XMLObject):
     # Build the object here, if the item_path has been added/updated
     # XXX: We also need to add attribute to ensure that this doesn't happen
     # while in tests or while creating them on the fly
-    import pdb; pdb.set_trace()
     if 'item_path' in self._v_modified_property_dict:
       self.build(self.aq_parent)
 
