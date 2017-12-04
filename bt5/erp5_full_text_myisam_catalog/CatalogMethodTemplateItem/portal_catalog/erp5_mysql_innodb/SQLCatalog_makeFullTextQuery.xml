@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Python Script" module="erp5.portal_type"/>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -55,10 +55,6 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>SQLCatalog_makeFullTextQuery</string> </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Python Script</string> </value>
         </item>
       </dictionary>
     </pickle>
