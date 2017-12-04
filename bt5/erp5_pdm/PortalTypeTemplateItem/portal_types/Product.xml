@@ -11,15 +11,27 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>short_title</string> </key>
+                    <key> <string>comment</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key> <string>description</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>short_title</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -95,7 +107,7 @@
         </item>
         <item>
             <key> <string>property_name</string> </key>
-            <value> <string>short_title</string> </value>
+            <value> <string>comment</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -108,9 +120,43 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
+            <value> <string>content_translation</string> </value>
+        </item>
+        <item>
+            <key> <string>property_name</string> </key>
+            <value> <string>description</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>domain_name</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>property_name</string> </key>
+            <value> <string>short_title</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>domain_name</string> </key>
+            <value> <string>content_translation</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
