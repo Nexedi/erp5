@@ -31,7 +31,7 @@ if organisation:
       while group_value.getPortalType() != 'Base Category':
         uid_list.append(group_value.getUid())
         group_value = group_value.getParentValue()
-      search_kw['parent_strict_group_uid'] = uid_list
+      search_kw['strict_parent_group_uid'] = uid_list
       search_kw['parent_portal_type'] = 'Organisation'
       bank_account_list = portal.portal_catalog(**search_kw)
 
