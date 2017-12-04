@@ -3,6 +3,7 @@ CACHE:
 rsvp.js
 renderjs.js
 jio.js
+jiodev.js
 jquerymobile.js
 jquerymobile.css
 jquery.js
