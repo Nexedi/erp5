@@ -7,10 +7,10 @@ class ERP5_scalability():
     return ['createPerson']
 
   def getTestPath(self):
-    return 'examples/'
+    return 'example/'
 
   def getUsersFilePath(self):
-    return 'examples/scalabilityUsers'
+    return 'example/scalabilityUsers'
 
   def getUserQuantity(self, test_number):
     return [20, 30, 40, 50, 75][test_number]
