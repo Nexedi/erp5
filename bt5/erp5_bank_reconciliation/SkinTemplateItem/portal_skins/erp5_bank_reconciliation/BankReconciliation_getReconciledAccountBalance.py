@@ -2,7 +2,9 @@ from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery
 portal = context.getPortalObject()
 
 kw = {
-  'section_uid': context.getSourceSectionUid(),
+  'section_uid': context.getSourceSection()
+     and portal.Base_getSectionUidListForSectionCategory(
+       context.getSourceSectionValue().getGroup(base=True)),
   'payment_uid': context.getSourcePaymentUid(),
   'node_category': 'account_type/asset/cash/bank',
   'simulation_state': ('stopped', 'delivered', ),

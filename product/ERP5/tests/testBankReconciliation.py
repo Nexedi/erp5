@@ -503,8 +503,61 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(bank_reconciliation, payment1.bank.getAggregateValue())
     self.assertEqual(None, payment2.bank.getAggregateValue())
 
+  def test_BankReconciliation_multiple_section_using_same_bank_account(self):
+    account_module = self.account_module
+    self.bank_account.invalidate()
+    main_section_bank_account = self.main_section.newContent(
+        portal_type='Bank Account',
+        price_currency_value=self.portal.currency_module.euro)
+    main_section_bank_account.validate()
+    
+    payment1 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              source_payment_value=main_section_bank_account,
+              start_date=DateTime(2014, 1, 1),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=100,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=100)))
+
+    payment2 = self._makeOne(
+              portal_type='Payment Transaction',
+              simulation_state='delivered',
+              source_section_value=self.main_section,
+              source_payment_value=main_section_bank_account,
+              start_date=DateTime(2014, 1, 2),
+              lines=(dict(source_value=account_module.bank,
+                          source_debit=200,
+                          id='bank'),
+                     dict(source_value=account_module.receivable,
+                          source_credit=200)))
+
+    bank_reconciliation = self.portal.bank_reconciliation_module.newContent(
+        portal_type='Bank Reconciliation',
+        source_section_value=self.main_section,
+        source_payment_value=main_section_bank_account,
+        stop_date=DateTime(2014, 1, 31))
+    self.tic()
+
+    self.assertEqual(300, bank_reconciliation.BankReconciliation_getAccountBalance())
+    self.assertEqual(
+      [payment1.bank, payment2.bank],
+      [x.getObject() for x in bank_reconciliation.BankReconciliation_getAccountingTransactionLineList()])
+    
+    list_selection_name = bank_reconciliation\
+        .BankReconciliation_viewBankReconciliationFastInputDialog.listbox.get_value(
+            'selection_name')
+    bank_reconciliation.BankReconciliation_reconcileTransactionList(
+        list_selection_name=list_selection_name,
+        uids=(payment1.bank.getUid(), ),
+        mode='reconcile')
+    self.tic()
+    self.assertEqual(100, bank_reconciliation.BankReconciliation_getReconciledAccountBalance())
+
+    
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBankReconciliation))
   return suite
-

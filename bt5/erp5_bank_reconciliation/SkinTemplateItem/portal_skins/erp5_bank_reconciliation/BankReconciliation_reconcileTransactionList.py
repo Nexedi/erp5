@@ -6,8 +6,8 @@ portal.portal_selections.updateSelectionCheckedUidList(list_selection_name, list
 selection_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(list_selection_name)
 
 if mode == 'reconcile':
-  for uid in selection_uid_list:
-    line = portal.portal_catalog.getObject(uid)
+  for line in portal.portal_catalog(uid=selection_uid_list or -1):
+    line = line.getObject()
     if line.getAggregate(portal_type='Bank Reconciliation'):
       return context.Base_redirect(dialog_id,
                   abort_transaction=True,
@@ -27,8 +27,8 @@ if mode == 'reconcile':
       'reconciled_uid_list': selection_uid_list})
 
 assert mode == 'unreconcile'
-for uid in selection_uid_list:
-  line = portal.portal_catalog.getObject(uid)
+for line in portal.portal_catalog(uid=selection_uid_list or -1):
+  line = line.getObject()
   line.AccountingTransactionLine_setBankReconciliation(None,
     message=translateString("Reconciling Bank Line"))
 
