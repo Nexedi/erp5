@@ -8,26 +8,6 @@ TMIN_SLEEP_LONG = 10
 TMAX_SLEEP_LONG = 30
 
 def createPerson(result, browser):
-  """
-  Create a Person and add a  telephone number.  It can be ran infinitely (e.g.
-  until it  is interrupted by  the end user)  with 1 concurrent  user, through
-  performance_tester_erp5 with the following command:
-
-  performance_tester_erp5 http://foo.bar:4242/erp5/ 1 createPerson
-
-  Please note that  you must run this command from the  same directory of this
-  script  and userInfo.py.  Further information  about performance_tester_erp5
-  options and arguments are available by specifying ``--help''.
-
-  This test requires the  bt5 erp5_simulation_performance_test to be installed
-  for relation with organisation.
-
-  Also, in order  to get more realistic results  with concurrent users, random
-  sleep must be introduced to simulate a "real" user. This can be done through
-  'sleep' parameter  (a tuple  giving the minimum  and maximum sleep  time) to
-  open*()  (Browser instance),  submit*() (Form  instance) and  click*() (Link
-  instance).
-  """
   # Open ERP5 homepage
   browser.open(sleep=(TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT))
 
@@ -49,7 +29,7 @@ def createPerson(result, browser):
   browser.mainForm.getControl(name='field_my_first_name').value = 'Create'
   browser.mainForm.getControl(name='field_my_last_name').value = 'Person'
 
-result('Save', browser.mainForm.submitSave(sleep=(TMIN_SLEEP, TMAX_SLEEP)))
+  result('Save', browser.mainForm.submitSave(sleep=(TMIN_SLEEP, TMAX_SLEEP)))
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
