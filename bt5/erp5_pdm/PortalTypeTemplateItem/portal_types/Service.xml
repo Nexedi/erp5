@@ -7,6 +7,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_property_domain_dict</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>acquire_local_roles</string> </key>
             <value> <int>0</int> </value>
         </item>
@@ -60,6 +66,118 @@
         <item>
             <key> <string>type_class</string> </key>
             <value> <string>Resource</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>comment</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>short_title</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>domain_name</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>property_name</string> </key>
+            <value> <string>comment</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>domain_name</string> </key>
+            <value> <string>content_translation</string> </value>
+        </item>
+        <item>
+            <key> <string>property_name</string> </key>
+            <value> <string>description</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>domain_name</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>property_name</string> </key>
+            <value> <string>short_title</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>domain_name</string> </key>
+            <value> <string>content_translation</string> </value>
+        </item>
+        <item>
+            <key> <string>property_name</string> </key>
+            <value> <string>title</string> </value>
         </item>
       </dictionary>
     </pickle>
