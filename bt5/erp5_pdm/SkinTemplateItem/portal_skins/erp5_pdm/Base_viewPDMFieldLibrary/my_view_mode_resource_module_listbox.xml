@@ -156,6 +156,14 @@
                           <string>Use</string>
                         </tuple>
                         <tuple>
+                          <string>translated_title</string>
+                          <string>Translated Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_description</string>
+                          <string>Translated Description</string>
+                        </tuple>
+                        <tuple>
                           <string>owner_title</string>
                           <string>Owner</string>
                         </tuple>
