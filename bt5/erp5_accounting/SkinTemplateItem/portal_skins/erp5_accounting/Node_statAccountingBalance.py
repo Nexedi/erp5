@@ -1,4 +1,4 @@
-from Products.ZSQLCatalog.SQLCatalog import Query
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 portal = context.getPortalObject()
 
 params = portal.ERP5Site_getAccountingSelectionParameterDict(selection_name=selection_name)
@@ -28,20 +28,20 @@ for category_uid in category_uid_list:
     # that specific project, or select a special value "None" which means
     # transactions that are not related to a project. For that we need a
     # query that will be translated as stock.project_uid IS NULL.
-      params[category_uid] = Query(**{category_uid: None})
+      params[category_uid] = SimpleQuery(**{category_uid: None})
     else:
       params[category_uid] = category_uid_value
 
 funding_category = kw.get('funding_category')
 if funding_category:
   if funding_category == 'None':
-    params['funding_uid'] = Query(funding_uid=None)
+    params['funding_uid'] = SimpleQuery(funding_uid=None)
   else:
     params['funding_category'] = funding_category
 function_category = kw.get('function_category')
 if function_category:
   if function_category == 'None':
-    params['function_uid'] = Query(function_uid=None)
+    params['function_uid'] = SimpleQuery(function_uid=None)
   else:
     params['function_category'] = function_category
 

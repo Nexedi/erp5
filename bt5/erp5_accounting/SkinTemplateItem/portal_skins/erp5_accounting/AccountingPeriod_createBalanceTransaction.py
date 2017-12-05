@@ -1,7 +1,7 @@
 """Creates a balance transaction to open the next period.
 
 """
-from Products.ZSQLCatalog.SQLCatalog import Query
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
@@ -102,7 +102,7 @@ with context.defaultActivateParameterDict({'tag': activity_tag}, placeless=True)
       ledger_uid = ledger.getUid()
       ledger_url = ledger.getCategoryRelativeUrl()
     else:
-      ledger_uid = Query(ledger_uid=None)
+      ledger_uid = SimpleQuery(ledger_uid=None)
       ledger_url = ''
 
     for section in section_list:

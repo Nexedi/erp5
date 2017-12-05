@@ -1,4 +1,4 @@
-from Products.ZSQLCatalog.SQLCatalog import Query
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from Products.CMFActivity.ActiveResult import ActiveResult
 portal = context.getPortalObject()
 
@@ -12,7 +12,7 @@ precision_by_section_uid = {}
 def check(node_uid, section_uid, mirror_section_uid):
   precision = precision_by_section_uid[section_uid]
   if mirror_section_uid is None:
-    mirror_section_uid = Query(mirror_section_uid=None)
+    mirror_section_uid = SimpleQuery(mirror_section_uid=None)
   line_list = portal.portal_simulation.getMovementHistoryList(
                   portal_type=portal.getPortalAccountingMovementTypeList(),
                   grouping_reference=context.getGroupingReference(),

@@ -1,6 +1,6 @@
 """Get the report sections for general ledger
 """
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 from Products.ERP5Form.Report import ReportSection
 portal   = context.portal_url.getPortalObject()
 request  = portal.REQUEST
@@ -49,14 +49,14 @@ params = dict(precision=precision,
 project = request.get('project')
 if project:
   if project == 'None':
-    params['project_uid'] = Query(project_uid=None)
+    params['project_uid'] = SimpleQuery(project_uid=None)
   else:
     params['project_uid'] = portal.portal_categories.restrictedTraverse(project).getUid()
 
 funding_category = request.get('funding')
 if funding_category:
   if funding_category == 'None':
-    params['funding_uid'] = Query(funding_uid=None)
+    params['funding_uid'] = SimpleQuery(funding_uid=None)
   else:
     funding_value = portal.restrictedTraverse(funding_category, None)
     if funding_value is not None and funding_value.getPortalType() != 'Category':
@@ -67,7 +67,7 @@ if funding_category:
 function_category = request.get('function')
 if function_category:
   if function_category == 'None':
-    params['function_uid'] = Query(function_uid=None)
+    params['function_uid'] = SimpleQuery(function_uid=None)
   else:
     function_value = portal.restrictedTraverse(function_category, None)
     if function_value is not None and function_value.getPortalType() != 'Category':
@@ -99,8 +99,8 @@ default_selection_params['no_mirror_section_uid_cache'] = 1
 if request.get('omit_grouping_reference', False):
   if at_date:
     params['grouping_query'] = ComplexQuery(
-      Query(grouping_reference=None),
-      Query(grouping_date=at_date, range="min"),
+      SimpleQuery(grouping_reference=None),
+      SimpleQuery(grouping_date=at_date, comparison_operator=">="),
       logical_operator="OR")
   else:
     params['grouping_reference'] = None
@@ -318,7 +318,7 @@ for inventory in portal.portal_simulation.getInventoryList(
   selection_params['at_date'] = at_date
   selection_params['node_uid'] = inventory.node_uid
   selection_params['payment_uid'] = None
-  selection_params['mirror_section_uid'] = inventory.mirror_section_uid or Query(mirror_section_uid=None)
+  selection_params['mirror_section_uid'] = inventory.mirror_section_uid or SimpleQuery(mirror_section_uid=None)
   addReportSection(path=inventory.node_relative_url,
                    selection_params=selection_params,
                    title=getFullAccountName(key))
@@ -347,7 +347,7 @@ for inventory in portal.portal_simulation.getInventoryList(
   selection_params['at_date'] = at_date
   selection_params['node_uid'] = inventory.node_uid
   selection_params['payment_uid'] = None
-  selection_params['mirror_section_uid'] = inventory.mirror_section_uid or Query(mirror_section_uid=None)
+  selection_params['mirror_section_uid'] = inventory.mirror_section_uid or SimpleQuery(mirror_section_uid=None)
   addReportSection(path=inventory.node_relative_url,
                    selection_params=selection_params,
                    title=getFullAccountName(key))
@@ -372,7 +372,7 @@ for inventory in portal.portal_simulation.getInventoryList(
   selection_params['from_date'] = from_date
   selection_params['at_date'] = at_date
   selection_params['node_uid'] = inventory.node_uid
-  selection_params['payment_uid'] = inventory.payment_uid or Query(payment_uid=None)
+  selection_params['payment_uid'] = inventory.payment_uid or SimpleQuery(payment_uid=None)
   selection_params.setdefault('mirror_section_uid', None)
   addReportSection(path=inventory.node_relative_url,
                    selection_params=selection_params,
@@ -400,7 +400,7 @@ for inventory in portal.portal_simulation.getInventoryList(
   selection_params['from_date'] = from_date
   selection_params['at_date'] = at_date
   selection_params['node_uid'] = inventory.node_uid
-  selection_params['payment_uid'] = inventory.payment_uid or Query(payment_uid=None)
+  selection_params['payment_uid'] = inventory.payment_uid or SimpleQuery(payment_uid=None)
   selection_params.setdefault('mirror_section_uid', None)
   addReportSection(path=inventory.node_relative_url,
                    selection_params=selection_params,

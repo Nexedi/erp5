@@ -1,6 +1,6 @@
 """Returns the list of columns to use in accounting reports (GL, account statement, journal)
 """
-from Products.ZSQLCatalog.SQLCatalog import Query
+from Products.ZSQLCatalog.SQLCatalog import BaseQuery
 portal = context.getPortalObject()
 request = portal.REQUEST
 
@@ -19,7 +19,7 @@ if funding_item_list:
   analytic_column_list += (('funding', context.AccountingTransactionLine_getFundingBaseCategoryTitle()),)
 for v, k in funding_item_list:
   if k:
-    if k == 'None' or isinstance(k, Query):
+    if k == 'None' or isinstance(k, BaseQuery):
       funding_title_dict[None] = ''
     else:
       funding_title_dict[portal.portal_categories.restrictedTraverse(k).getUid()] = v
@@ -29,7 +29,7 @@ if function_item_list:
   analytic_column_list += (('function', context.AccountingTransactionLine_getFunctionBaseCategoryTitle()),)
 for v, k in function_item_list:
   if k:
-    if k == 'None' or isinstance(k, Query):
+    if k == 'None' or isinstance(k, BaseQuery):
       function_title_dict[None] = ''
     else:
       function_title_dict[portal.portal_categories.restrictedTraverse(k).getUid()] = v
@@ -39,7 +39,7 @@ if project_item_list:
   analytic_column_list += (('project', 'Project'),)
 for v, k in project_item_list:
   if k:
-    if k == 'None' or isinstance(k, Query):
+    if k == 'None' or isinstance(k, BaseQuery):
       project_title_dict[None] = ''
     else:
       project_title_dict[portal.portal_categories.restrictedTraverse(k).getUid()] = v

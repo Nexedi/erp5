@@ -1,4 +1,4 @@
-from Products.ZSQLCatalog.SQLCatalog import Query
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from Products.PythonScripts.standard import Object
 from ZTUtils import LazyFilter
 
@@ -67,7 +67,7 @@ if portal_type and set(portal_type) != set(portal.getPortalAccountingTransaction
   inventory_params['parent_portal_type'] = portal_type
 if function:
   if function == 'None':
-    inventory_params['function_uid'] = Query(function_uid=None)
+    inventory_params['function_uid'] = SimpleQuery(function_uid=None)
   else:
     function_value = portal.restrictedTraverse(function, None)
     if function_value is not None and function_value.getPortalType() != 'Category':
@@ -76,7 +76,7 @@ if function:
       inventory_params['function_category'] = function
 if funding:
   if funding == 'None':
-    inventory_params['funding_uid'] = Query(funding_uid=None)
+    inventory_params['funding_uid'] = SimpleQuery(funding_uid=None)
   else:
     funding_value = portal.restrictedTraverse(funding, None)
     if funding_value is not None and funding_value.getPortalType() != 'Category':
@@ -85,7 +85,7 @@ if funding:
       inventory_params['funding_category'] = funding
 if project:
   if project == 'None':
-    inventory_params['project_uid'] = Query(project_uid=None)
+    inventory_params['project_uid'] = SimpleQuery(project_uid=None)
   else:
     inventory_params['project'] = project
 if mirror_section_category:
@@ -93,7 +93,7 @@ if mirror_section_category:
 
 if ledger:
   if ledger == 'None':
-    inventory_params['ledger_uid'] = Query(ledger_uid=None)
+    inventory_params['ledger_uid'] = SimpleQuery(ledger_uid=None)
   else:
     if not isinstance(ledger, list):
       # Allows the generation of reports on different ledgers as the same time

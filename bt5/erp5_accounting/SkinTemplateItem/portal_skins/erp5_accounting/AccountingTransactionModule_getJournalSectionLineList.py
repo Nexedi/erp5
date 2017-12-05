@@ -1,4 +1,4 @@
-from Products.ZSQLCatalog.SQLCatalog import Query
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from Products.PythonScripts.standard import Object
 request = container.REQUEST
 portal = context.getPortalObject()
@@ -15,7 +15,7 @@ if group_by:
 
 if project_uid:
   if project_uid == 'None':
-    extra_kw['project_uid'] = Query(project_uid=None)
+    extra_kw['project_uid'] = SimpleQuery(project_uid=None)
   else:
     extra_kw['project_uid'] = project_uid
 

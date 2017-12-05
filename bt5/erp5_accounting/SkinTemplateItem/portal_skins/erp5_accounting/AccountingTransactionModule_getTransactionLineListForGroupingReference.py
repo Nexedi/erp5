@@ -1,4 +1,4 @@
-from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery, ComplexQuery
 
 request = container.REQUEST
 portal = context.getPortalObject()
@@ -62,11 +62,11 @@ if grouping == 'grouping':
   search_kw['grouping_reference'] = None
 else:
   assert grouping == 'ungrouping', grouping
-  search_kw['grouping_reference'] = NegatedQuery(Query(grouping_reference=None))
+  search_kw['grouping_reference'] = NegatedQuery(SimpleQuery(grouping_reference=None))
 
 if title:
-  search_kw['title_query'] = ComplexQuery(Query(title=title),
-                                          Query(parent_title=title),
+  search_kw['title_query'] = ComplexQuery(SimpleQuery(title=title),
+                                          SimpleQuery(parent_title=title),
                                           logical_operator='OR')
 if delivery_reference:
   search_kw['parent_reference'] = delivery_reference
