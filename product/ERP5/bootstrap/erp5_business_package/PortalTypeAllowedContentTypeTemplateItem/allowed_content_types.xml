@@ -18,4 +18,8 @@
   <item>Business Patch Item</item>
   <item>Business Property Item</item>
  </portal_type>
+ <portal_type id="Commit Tool">
+  <item>Business Commit</item>
+  <item>Business Snapshot</item>
+ </portal_type>
 </allowed_content_type_list>
