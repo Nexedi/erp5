@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>columns</string>
-                <string>list_method</string>
                 <string>title</string>
               </list>
             </value>
@@ -70,12 +69,16 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
                           <string>id</string>
                           <string>ID</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
                         </tuple>
                       </list>
                     </value>
@@ -89,30 +92,11 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Item Values</string> </value>
+                    <value> <string>Items</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>objectValues</string> </value>
         </item>
       </dictionary>
     </pickle>

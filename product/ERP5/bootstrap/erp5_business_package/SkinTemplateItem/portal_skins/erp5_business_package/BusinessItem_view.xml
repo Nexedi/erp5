@@ -84,6 +84,7 @@
                     <value>
                       <list>
                         <string>my_item_layer</string>
+                        <string>my_follow_up_title</string>
                       </list>
                     </value>
                 </item>
