@@ -1,6 +1,6 @@
 """Get the report sections for general ledger
 """
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from Products.ERP5Form.Report import ReportSection
 portal   = context.portal_url.getPortalObject()
 request  = portal.REQUEST
@@ -98,10 +98,7 @@ default_selection_params['no_mirror_section_uid_cache'] = 1
 # if user request report without grouping reference, don't show accounts that only have grouped lines in the period.
 if request.get('omit_grouping_reference', False):
   if at_date:
-    params['grouping_query'] = ComplexQuery(
-      SimpleQuery(grouping_reference=None),
-      SimpleQuery(grouping_date=at_date, comparison_operator=">="),
-      logical_operator="OR")
+    params['grouping_query'] = portal.ERP5Site_getNotGroupedAtDateSQLQuery(at_date)
   else:
     params['grouping_reference'] = None
 

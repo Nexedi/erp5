@@ -1,5 +1,5 @@
 from Products.ERP5Type.Document import newTempBase
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Log import log
 portal = context.getPortalObject()
@@ -89,10 +89,7 @@ if is_pl_account and not from_date:
 
 if portal.portal_selections.getSelectionParamsFor(selection_name).get('omit_grouping_reference'):
   if params.get('at_date'):
-    params['grouping_query'] = ComplexQuery(
-      SimpleQuery(grouping_reference=None),
-      SimpleQuery(grouping_date=params['at_date'], comparison_operator=">="),
-      logical_operator="OR")
+    params['grouping_query'] = portal.ERP5Site_getNotGroupedAtDateSQLQuery(params['at_date'])
   else:
     params['grouping_reference'] = None
 

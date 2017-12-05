@@ -38,7 +38,6 @@ reportCallback ((line_list) -> list of dict)
   line_list.
 """
 from collections import defaultdict
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 from Products.PythonScripts.standard import Object
 if reportCallback is None:
   reportCallback = lambda x: x
@@ -86,11 +85,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(
     section_category,
     section_category_strict,
   ),
-  grouping_query=ComplexQuery(
-    SimpleQuery(grouping_reference=None),
-    SimpleQuery(grouping_date=at_date, comparison_operator=">="),
-    logical_operator="OR",
-  ),
+  grouping_query=portal.ERP5Site_getNotGroupedAtDateSQLQuery(at_date),
   **extra_kw
 ):
   total_price = brain.total_price or 0

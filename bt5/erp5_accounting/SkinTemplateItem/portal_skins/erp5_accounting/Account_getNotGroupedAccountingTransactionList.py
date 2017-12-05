@@ -1,4 +1,3 @@
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 from Products.PythonScripts.standard import Object
 portal = context.getPortalObject()
 params = portal.ERP5Site_getAccountingSelectionParameterDict(selection_name)
@@ -14,10 +13,7 @@ total_credit_price = 0
 at_date = (from_date - 1).latestTime()
 inventory_query = {
   'at_date': at_date, # this is not to_date
-  'grouping_query': ComplexQuery(
-    SimpleQuery(grouping_reference=None),
-    SimpleQuery(grouping_date=at_date, comparison_operator=">="),
-    logical_operator="OR"),
+  'grouping_query': portal.ERP5Site_getNotGroupedAtDateSQLQuery(at_date),
   'simulation_state': params['simulation_state'],
   'node_uid': kw['node_uid'],
   'portal_type': portal.getPortalAccountingMovementTypeList(),
