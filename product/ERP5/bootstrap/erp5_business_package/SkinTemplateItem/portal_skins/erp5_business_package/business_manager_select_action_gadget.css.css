@@ -56,17 +56,19 @@ li > input:first-child:checked + label:before {
   content: '-';
 }
 
-/* if state is Unchanged, turn the color orange of child and parent path */
-.Unchanged{
-  color: green;
+/* if state is Unchanged, turn the color black of child and parent path */
+.Unchanged {
+  color: black;
 }
 
 /* if state is Changed, turn the color orange of child and parent path */
-.Changed{
+.Changed {
   color: orange;
 }
 
 /* if state is Deleted, turn the color red of child and parent path */
-.Deleted{
+.Deleted {
   color: red;
 }
+
+/* Hide the Unchanged element with no child or all unchanged child*/

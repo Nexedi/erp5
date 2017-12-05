@@ -1,0 +1,14 @@
+<base_category_list>
+ <portal_type id="Business Commit">
+  <item>predecessor</item>
+ </portal_type>
+ <portal_type id="Business Item">
+  <item>follow_up</item>
+ </portal_type>
+ <portal_type id="Business Patch Item">
+  <item>follow_up</item>
+ </portal_type>
+ <portal_type id="Business Property Item">
+  <item>follow_up</item>
+ </portal_type>
+</base_category_list>
