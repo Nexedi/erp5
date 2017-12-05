@@ -2211,7 +2211,7 @@ class Catalog(Folder,
           # as "RawKey"
           elif search_key_name == 'ExactMatch':
             search_key_name = value['key'] = 'RawKey'
-        if isinstance(value, _Query):
+        if isinstance(value, BaseQuery):
           # Query instance: use as such, ignore key.
           result = value
         elif script is not None:
@@ -2720,7 +2720,7 @@ InitializeClass(Catalog)
 
 class CatalogError(Exception): pass
 
-from Query.Query import Query as _Query
+from Query.Query import Query as BaseQuery
 from Query.SimpleQuery import SimpleQuery
 from Query.ComplexQuery import ComplexQuery
 from Query.AutoQuery import AutoQuery
