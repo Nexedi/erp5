@@ -771,8 +771,11 @@ class BusinessItem(XMLObject):
     _recursiveRemoveUid(obj)
     obj = aq_base(obj)
     obj.isIndexable = ConstantGetter('isIndexable', value=False)
-    new_id = self.generateNewId()
-    self._setObject(new_id, obj, suppress_events=True)
+    # In general, one Business Item only has one object in it, so we never end
+    # up in conflict as we'll always be having its unique path(due to GUID of
+    # Business Item), thus we can just use object Id as it is while making it
+    # a sub-object of Business Item
+    self._setObject(obj.id, obj, suppress_events=True)
 
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
