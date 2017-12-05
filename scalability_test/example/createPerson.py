@@ -8,6 +8,9 @@ TMIN_SLEEP_LONG = 10
 TMAX_SLEEP_LONG = 30
 
 def createPerson(result, browser):
+  """
+  Create a Person with some details.
+  """
   # Open ERP5 homepage
   browser.open(sleep=(TMIN_SLEEP_SHORT, TMAX_SLEEP_SHORT))
 
