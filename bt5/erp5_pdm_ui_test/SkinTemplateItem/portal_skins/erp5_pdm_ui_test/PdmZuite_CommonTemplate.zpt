@@ -1,7 +1,6 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
-  <tal:block metal:define-macro="init">
-    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+  <tal:block metal:define-macro="prepare_data">
     <tr>
       <td>setTimeout</td>
       <td>600000</td>
@@ -60,6 +59,11 @@
       <td>Done.</td>
       <td></td>
     </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="init">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+    <tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/prepare_data" />
     <tr>
       <td>open</td>
       <td>${base_url}/product_module/erp5_pdm_ui_test_product/Resource_viewInventory</td>
@@ -71,4 +75,20 @@
       <td></td>
     </tr>
   </tal:block>
+
+  <tal:block metal:define-macro="init_rjs">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+    <tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/prepare_data" />
+    <tr>
+      <td>store</td>
+      <td>${base_url}/web_site_module/renderjs_runner</td>
+      <td>renderjs_url</td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${renderjs_url}/#/product_module/erp5_pdm_ui_test_product</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
 </tal:block>

@@ -1,0 +1,75 @@
+<html>
+<head><title>Test quantity steps for price on internal supply line</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test quantity steps for price on internal supply line
+</td></tr>
+</thead>
+<tbody tal:define="init_method string:PdmZuite_createDelivery?state=ordered">
+
+<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init_rjs" />
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Stock"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Stock"]</td><td></td></tr>
+
+<tr><td>store</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//div[@class="document_table"]</td>
+    <td>container</td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>${container}/nav//span[@data-i18n="2 Records"]</td><td></td></tr>
+
+<tr><td>assertText</td>
+    <td>${container}/table/tbody/tr[1]/td[1]//a</td>
+    <td>erp5_pdm_ui_test_destination_node_title</td></tr>
+<!-- variation is not important -->
+<tr><td>assertFloat</td>
+    <td>${container}/table/tbody/tr[1]/td[3]//p</td>
+    <td>0.0</td></tr>
+<tr><td>assertFloat</td>
+    <td>${container}/table/tbody/tr[1]/td[4]//p</td>
+    <td>0.0</td></tr>
+<tr><td>assertFloat</td>
+    <td>${container}/table/tbody/tr[1]/td[5]//p</td>
+    <td>1.0</td></tr>
+<!-- ListBox shows "wrong" item link thus following it does not make sense
+
+<!-- select explanation for the first stock inventory item ->
+<tr><td>click</td>
+    <td>${container}/table/tbody/tr[1]/td[1]//a</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>${container}/nav//span[@data-i18n="1 Records"]</td><td></td></tr>
+
+<!-- ensure one movement explaining the item ->
+
+<tr><td>assertText</td>
+    <td>${container}/table/tbody/tr[1]/td[1]//a</td>
+    <td>${year}/${month}/${day}</td></tr>
+<tr><td>assertText</td>
+    <td>${container}/table/tbody/tr[1]/td[2]//a</td>
+    <td>Sale Order</td></tr>
+<tr><td>assertText</td>
+    <td>${container}/table/tbody/tr[1]/td[3]//a</td>
+    <td>erp5_pdm_ui_test_delivery_title</td></tr>
+<tr><td>assertText</td>
+    <td>${container}/table/tbody/tr[1]/td[4]//a</td>
+    <td>erp5_pdm_ui_test_destination_node_title</td></tr>
+<tr><td>assertFloat</td>
+    <td>${container}/table/tbody/tr[1]/td[6]//a</td>
+    <td>1.0</td></tr>
+<tr><td>assertText</td>
+    <td>${container}/table/tbody/tr[1]/td[7]//a</td>
+    <td>planned</td></tr>
+-->
+</tbody>
+</table>
+</body>
+</html>
