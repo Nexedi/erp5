@@ -21,14 +21,18 @@ if configurator == None or not configurator.contentValues(portal_type='Configura
   return json.dumps({"status_code" : 1, "error_message": error_message })
 
 # install configurator if not intalled
-if configurator.getSimulationState() == "Draft":
-  try:
-    configurator.buildConfiguration()
-    # wait 15 minutes while configurator is installed
-    time.sleep(15*60)
-  except Exception as e:
-    status_code = 1
-    error_message = "Error during installation: " + str(e)
+if configurator.getSimulationState() == "draft":
+  person = portal_catalog.getResultValue(portal_type="Person", title = 'Scalability company')
+  organisation = portal_catalog.getResultValue(portal_type="Organisation", title = 'Scalability company')
+  if person is None or organisation is None:
+    try:
+      configurator.buildConfiguration()
+      # wait 15 minutes while configurator is installed
+      time.sleep(15*60)
+    except Exception as e:
+      status_code = 1
+      error_message = "Error during installation: " + str(e)
+      return json.dumps({"status_code" : 1, "error_message": error_message })
 
 # create users
 user_quantity = request.get('user_quantity')
