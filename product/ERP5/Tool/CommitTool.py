@@ -186,6 +186,14 @@ class CommitTool (BaseTool):
         id = self.generateNewId()
 
       id = str(str(id) + '_' + str(time.time())).replace('.', '')
-      return super(CommitTool, self).newContent(id, **kw)
+      new_obj =  super(CommitTool, self).newContent(id, **kw)
+
+      # Add the last commit as its predecessor
+      commit_list = [l for l in self.objectValues() if l != new_obj]
+      latest_commit = max(commit_list, key=(lambda x: x.getCreationDate()))
+      # TODO: Add check for no latest_commit
+      new_obj.setPredecessorValue(latest_commit)
+
+      return new_obj
 
 InitializeClass(CommitTool)
