@@ -37,6 +37,7 @@ import sys
 import hashlib
 import pprint
 import transaction
+import uuid
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
@@ -183,9 +184,8 @@ class CommitTool (BaseTool):
       Override newContent so as to use 'id' generated like hash
       """
       if id is None:
-        id = self.generateNewId()
+        id = uuid.uuid1()
 
-      id = str(str(id) + '_' + str(time.time())).replace('.', '')
       new_obj =  super(CommitTool, self).newContent(id, **kw)
 
       # Add the last commit as its predecessor

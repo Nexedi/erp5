@@ -39,6 +39,7 @@ import fnmatch
 import re
 import threading
 import pprint
+import uuid
 
 from copy import deepcopy
 from collections import defaultdict
@@ -115,9 +116,6 @@ class BusinessCommit(Folder):
     Also, copy the objects in the Business Commit after creating new object
     """
     if id is None:
-      id = self.generateNewId()
+      id = uuid.uuid1()
 
-    id = str(str(id) + '_' + str(time.time())).replace('.', '')
-    new_object = super(BusinessCommit, self).newContent(id, **kw)
-
-    return new_object
+    return super(BusinessCommit, self).newContent(id, **kw)
