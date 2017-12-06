@@ -75,8 +75,11 @@
                     <value>
                       <list>
                         <string>format</string>
-                        <string>head_display</string>
                         <string>portal_skin</string>
+                        <string>display_svg</string>
+                        <string>display_head</string>
+                        <string>display_source_address</string>
+                        <string>document_save</string>
                       </list>
                     </value>
                 </item>
@@ -129,7 +132,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>WebPage_updateExportAsLetterDialog</string> </value>
+            <value> <string>WebPage_updateLetterDialog</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>

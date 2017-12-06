@@ -1,0 +1,92 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Generates the letter Content
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="letter_display_head            python: options.get('letter_display_head');
+                       letter_theme                   python: options.get('letter_theme');
+                       letter_title                   python: options.get('letter_title');
+                       letter_language                python: options.get('letter_language');
+                       letter_theme_css_font_list     python: options.get('letter_theme_css_font_list');
+                       letter_theme_css_url           python: options.get('letter_theme_css_url');
+                       letter_theme_logo_url          python: options.get('letter_theme_logo_url');
+                       letter_theme_logo_alt          python: options.get('letter_theme_logo_alt');
+                       letter_template_css_url        python: options.get('letter_template_css_url');
+                       letter_timestamp               python: options.get('letter_timestamp');
+
+                       letter_source_company          python: options.get('letter_source_company');
+                       letter_source_address          python: options.get('letter_source_address');
+                       letter_source_country_code     python: options.get('letter_source_country_code');
+                       letter_source_postal_code      python: options.get('letter_source_postal_code');
+                       letter_source_city             python: options.get('letter_source_city');
+                       letter_destination_company     python: options.get('letter_destination_company');
+                       letter_destination_person      python: options.get('letter_destination_person');
+                       letter_destination_address     python: options.get('letter_destination_address');
+                       letter_destination_postal_code python: options.get('letter_destination_postal_code');
+                       letter_destination_city        python: options.get('letter_destination_city');
+                       letter_destination_country     python: options.get('letter_destination_country');
+                       letter_display_source_address  python: options.get('letter_display_source_address');
+                       letter_content                 python: options.get('letter_content');">
+  <!DOCTYPE html>
+  <html tal:attributes="class                         python: ''.join(['ci-', letter_theme, ' ci-', letter_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="letter_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url letter_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href python: ''.join([letter_theme_css_url, '?portal_skin=Letter'])" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([letter_template_css_url, '?portal_skin=Letter'])" />
+  </head>
+  <body class="ci-letter">
+    <tal:block metal:use-macro="context/Letter_createLetterContent/macros/letter_content" />
+  </body>
+</html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="letter_content">
+    <div class="ci-letter-head ci-letter-head-right">
+	    <table>
+	      <tbody>
+	        <tal:block tal:condition="python: int(letter_display_head)">
+          <tr>
+            <td></td>
+            <td class="ci-letter-source">
+              <tal:block tal:condition="python: letter_display_source_address is not None">
+                <tal:block tal:condition="python: letter_source_company">
+                  <span tal:content="letter_source_company"></span><span class="ci-letter-separator">-</span>
+                </tal:block>
+                <tal:block tal:condition="python: letter_source_address">
+                  <span tal:content="letter_source_address"></span><span class="ci-letter-separator">-</span>
+                </tal:block>
+                <tal:block tal:condition="python: letter_source_country_code">
+                  <span tal:content="letter_source_country_code"></span><span class="ci-letter-separator">-</span>
+                </tal:block>
+  	            <span tal:content="letter_source_postal_code"></span>&nbsp;
+  	            <span tal:content="letter_source_city"></span>
+  	          </tal:block>
+  	        </td>
+	          <td></td>
+          </tr>
+          <tr>
+            <td></td>
+	          <td class="ci-letter-destination">
+              <span tal:content="python: letter_destination_company or ' '"></span>
+	            <span tal:content="python: letter_destination_person or ' '"></span>
+	            <span tal:content="python: letter_destination_address or ' '"></span>
+	            <span tal:content="python: ''.join([letter_destination_postal_code, ' ', letter_destination_city])"></span>
+	            <span tal:content="python: letter_destination_country or ' '"></span>
+            </td>
+            <td></td>
+          </tr>
+          </tal:block>
+	      </tbody>
+	    </table>
+		</div>
+		<div class="ci-letter-body" tal:content="structure letter_content"></div>
+  </tal:block>
+</tal:block>

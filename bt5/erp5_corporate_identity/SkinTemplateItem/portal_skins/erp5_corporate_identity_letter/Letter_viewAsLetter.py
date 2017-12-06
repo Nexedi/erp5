@@ -1,0 +1,304 @@
+"""
+================================================================================
+MAIN FILE: generate letter in different output formats
+================================================================================
+"""
+# kw-parameters   (* default)
+# ------------------------------------------------------------------------------
+# format:                   output in html*, pdf
+# transformation:           convert content into nothing*, book
+# ------
+# override_source_person:   to use instead of the underlying document creator
+# override_source_organisation: to use instead of document creator organisation
+# override_destination_person: to use instead of event destination/null
+# override_destination_organisation: to use instead of event destination/null
+# override_date             to use instead of current date
+# override_batch_mode       used for tests
+# ------
+# document_download:        download file directly (default None)            
+# document_save:            save file in document module (default None)
+# ------
+# display_head:             display letter adress head (1)* or not (0)
+# display_svg               display images in svg or png*
+# display_source_address    display source adress in adress field
+
+import re
+
+from Products.PythonScripts.standard import html_quote
+from base64 import b64encode
+from datetime import datetime
+
+blank = ''
+
+# --------------------------  External parameters ------------------------------
+
+# eg "Nexedi" specific parameters
+customHandler = getattr(context, "WebPage_getCustomParameter", None)
+
+# parameters common to all templates
+commonHandler = getattr(context, "WebPage_getCommonParameter", None)
+commonProxyHandler = getattr(context, "WebPage_getCommonProxyParameter", None)
+
+def getCustomParameter(my_parameter, my_override_data):
+  if customHandler is not None:
+    source_data = my_override_data or letter_uid
+    return customHandler(parameter=my_parameter, source_data=source_data)
+
+def getCommonParameter(my_parameter, my_override_data):
+  if commonHandler is not None:
+    source_data = my_override_data or letter_uid
+    return commonHandler(parameter=my_parameter, source_data=source_data)
+
+def getCommonProxyParameter(my_parameter, my_override_data):
+  if commonProxyHandler is not None:
+    source_data = my_override_data or letter_uid
+    return commonProxyHandler(parameter=my_parameter, source_data=source_data)
+
+def setOverrideParam(my_context, my_override, my_param):
+  if my_override is not None and my_override is not blank:
+    return html_quote(my_override)
+  return getattr(my_context, my_param) or None
+
+# XXX how to set checkbox correctly?
+def setToNone(param):
+  if param == blank or param == None or param == 0 or param == str(0):
+    return None
+  else:
+    return param
+
+# -------------------------- Setup ---------------------------------------------
+letter = context
+letter_format = kw.get('format', 'html')
+letter_display_head = kw.get('dislay_head', 1)
+letter_display_svg = kw.get('display_svg', 'png')
+letter_display_source_adress = kw.get('letter_display_source_adress', None)
+letter_download = kw.get('document_download', None)
+letter_save = kw.get('document_save', None)
+letter_transformation = kw.get('transformation', None)
+
+override_source_person_title = kw.get('override_source_person_title', None)
+override_source_organisation_title = kw.get("override_source_organisation_title", None)
+override_destination_person_title = kw.get("override_destination_person_title", None)
+override_destination_organisation_title = kw.get("override_destination_organisation_title", None)
+override_date = kw.get("override_date", None)
+override_batch_mode = kw.get('batch_mode', False)
+
+# -------------------------- Document Parameters  ------------------------------
+letter_form = letter.REQUEST
+letter_portal_type = letter.getPortalType()
+letter_uid = letter.getUid()
+letter_relative_url = letter.getRelativeUrl()
+letter_source_candidate_uid = None
+letter_prefix = "Letter."
+
+# letter can be Web Page or Event created in Ticket module
+if letter_portal_type == "Web Page":
+  letter_dialog_id = letter_form.get('dialog_id', None)
+  letter_title = letter.getTitle()
+  letter_modification_date = DateTime(override_date) if override_date else letter.getCreationDate()
+  letter_content = letter.getTextContent()
+  letter_language = letter.getLanguage()
+  letter_aggregate_list = []
+  letter_source = None
+  letter_destination = None
+  letter_url = letter.getAbsoluteUrl()
+  letter_reference = letter.getReference()
+  letter_version = letter.getVersion() or "001"
+else:
+  letter_save = setToNone(letter_save) or True
+  letter_dialog_id = None
+  letter_modification_date = letter_form['start_date'] or None or letter.getCreationDate()
+  letter_title = letter_form.get('title')
+  letter_content = letter_form.get('text_content')
+  letter_aggregate_list = letter.getAggregateList()
+  letter_language = letter_form.get('select_language')
+  letter_source = letter_form.get('source') or None
+  letter_destination = letter_form.get('destination') or None
+  # cut corner to retrieve path to css files
+  portal_object = context.getPortalObject()
+  letter_url = portal_object.absolute_url()
+  letter_version = "001"
+  letter_reference = letter_form.get("reference")
+
+if letter_language and letter_format == "pdf":
+  letter.REQUEST['AcceptLanguage'].set(letter_language, 10)
+if letter_reference is None:
+  letter_reference = letter_prefix + letter_title.replace(" ", ".")
+letter_full_reference = '-'.join([letter_reference, letter_version, letter_language])
+
+# --------------------------- Layout Parameters --------------------------------
+letter_theme = letter.Base_getThemeDict(
+  custom_theme=getCustomParameter("theme", None),
+  override_batch_mode=override_batch_mode,
+  format=letter_format,
+  url=letter_url,
+  css_path="/letter_css/letter"
+)
+
+# --------------------------- Source/Destination -------------------------------
+letter_source = letter.Base_getSourceDict(
+  source=letter_source,
+  override_source_person_title=override_source_person_title,
+  override_source_organisation_title=override_source_organisation_title,
+  default_company_title=getCustomParameter("default_company_title", None),
+  default_bank_account_uid=getCustomParameter("default_bank_account_uid", None),
+  override_logo_reference=None,
+  theme_logo_url=letter_theme.get("theme_logo_url", None)
+)
+letter_destination = letter.Base_getDestinationDict(
+  destination=letter_destination,
+  override_destination_person_title=override_destination_person_title,
+  override_destination_organisation_title=override_destination_organisation_title,
+)
+
+# ========================= TRANSFORMATION: book ===============================
+
+# --------------------------- Content Upgrades ---------------------------------
+for image in re.findall('(<img.*?/>)', letter_content):
+  letter_content = letter_content.replace(
+    image,
+    context.WebPage_validateImage(img_string=image, img_svg_format=setToNone(letter_display_svg))
+  )
+
+# ============================= Format: html ===================================
+if letter_format == "html":
+  letter.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
+  return letter.Letter_createLetter(
+    letter_display_head=setToNone(letter_display_head),
+    letter_theme=letter_theme.get("theme"),
+    letter_title=letter_title,
+    letter_language=letter_language,
+    letter_theme_css_font_list=letter_theme.get("theme_css_font_list"),
+    letter_theme_css_url=letter_theme.get("theme_css_url"),
+    letter_template_css_url=letter_theme.get("template_css_url"),
+    letter_theme_logo_url=letter_source.get("enhanced_logo_url"),
+    letter_theme_logo_alt=letter_theme.get("theme_logo_description"),
+    letter_timestamp=letter_modification_date.strftime('%Y-%m-%d'),
+    letter_destination_company=letter_destination.get("organisation_title", blank),
+    letter_destination_person=letter_destination.get("name", blank),
+    letter_destination_address=letter_destination.get("address", blank),
+    letter_destination_postal_code=letter_destination.get("postal_code", blank),
+    letter_destination_city=letter_destination.get("city", blank),
+    letter_destination_country=letter_destination.get("country", blank),
+    letter_source_company=letter_source.get("corporate_name", letter_source.get("organisation_title", blank)),
+    letter_source_company_corporate_name=letter_source.get("corporate_name", blank),
+    letter_source_company_capital=letter_source.get("social_capital", blank),
+    letter_source_company_capital_currency=letter_source.get("social_capital_currency", getCustomParameter("default_source_company_capital_currency", blank)),
+    letter_source_registered_court=letter_source.get("registered_court", getCustomParameter("default_source_registered_court", blank)),
+    letter_source_ape_code=letter_source.get("activity_code", blank),
+    letter_source_address=letter_source.get("address", blank),
+    letter_source_postal_code=letter_source.get("postal_code", blank),
+    letter_source_city=letter_source.get("city", blank),
+    letter_source_country_code=letter_source.get("codification", blank),
+    letter_content = letter_content,
+    letter_display_source_adress=setToNone(letter_display_source_adress),
+    letter_source_vat=letter_source.get("vat", blank),
+    letter_source_corporate_registration=letter_source.get("corporate_registration", blank),
+    letter_source_phone=letter_source.get("phone", blank),
+    letter_source_fax=letter_source.get("fax", blank),
+    letter_source_mail=letter_source.get("email", blank),
+    letter_source_website=letter_source.get("website", blank),
+    letter_source_bank=letter_source.get("bank", blank),
+    letter_source_bic=letter_source.get("bic", blank),
+    letter_source_iban=letter_source.get("iban", blank)
+  )
+
+# ============================= Format: pdf ====================================
+if letter_format == "pdf":
+  letter_head = letter.Letter_createLetterHeader(
+    letter_display_head=setToNone(letter_display_head),
+    letter_theme=letter_theme.get("theme"),
+    letter_title=letter_title,
+    letter_language=letter_language,
+    letter_theme_css_font_list=letter_theme.get("theme_css_font_list"),
+    letter_theme_css_url=letter_theme.get("theme_css_url"),
+    letter_template_css_url=letter_theme.get("template_css_url"),
+    letter_theme_logo_url=letter_source.get("enhanced_logo_url"),
+    letter_theme_logo_alt=letter_theme.get("theme_logo_description"),
+    letter_timestamp=letter_modification_date.strftime('%Y-%m-%d'),
+    letter_source_city=letter_source.get("city", blank)
+  )
+
+  letter_content = letter.Letter_createLetterContent(
+    letter_display_head=setToNone(letter_display_head),
+    letter_theme=letter_theme.get("theme"),
+    letter_title=letter_title,
+    letter_language=letter_language,
+    letter_theme_css_font_list=letter_theme.get("theme_css_font_list"),
+    letter_theme_css_url=letter_theme.get("theme_css_url"),
+    letter_template_css_url=letter_theme.get("template_css_url"),
+    letter_theme_logo_url=letter_source.get("enhanced_logo_url"),
+    letter_theme_logo_alt=letter_theme.get("theme_logo_description"),
+    letter_timestamp=letter_modification_date.strftime('%Y-%m-%d'),
+    letter_destination_company=letter_destination.get("organisation_title", blank),
+    letter_destination_person=letter_destination.get("name", blank),
+    letter_destination_address=letter_destination.get("address", blank),
+    letter_destination_postal_code=letter_destination.get("postal_code", blank),
+    letter_destination_city=letter_destination.get("city", blank),
+    letter_destination_country=letter_destination.get("country", blank),
+    letter_source_company=letter_source.get("corporate_name", letter_source.get("organisation_title", blank)),
+    letter_source_address=letter_source.get("address", blank),
+    letter_source_postal_code=letter_source.get("postal_code", blank),
+    letter_source_city=letter_source.get("city", blank),
+    letter_source_country_code=letter_source.get("codification", blank),
+    letter_display_source_adress=setToNone(letter_display_source_adress),
+    letter_content = letter_content
+  )
+
+  letter_foot = letter.Letter_createLetterFooter(
+    letter_theme=letter_theme.get("theme"),
+    letter_title=letter_title,
+    letter_language=letter_language,
+    letter_theme_css_font_list=letter_theme.get("theme_css_font_list"),
+    letter_theme_css_url=letter_theme.get("theme_css_url"),
+    letter_template_css_url=letter_theme.get("template_css_url"),
+    letter_source_company=letter_source.get("organisation_title", blank),
+    letter_source_company_corporate_name=letter_source.get("corporate_name", blank),
+    letter_source_company_capital=letter_source.get("social_capital", blank),
+    letter_source_company_capital_currency=letter_source.get("social_capital_currency", getCustomParameter("default_source_company_capital_currency", blank)),
+    letter_source_registered_court=letter_source.get("registered_court", getCustomParameter("default_source_registered_court", blank)),
+    letter_source_ape_code=letter_source.get("activity_code", blank),
+    letter_source_address=letter_source.get("address", blank),
+    letter_source_postal_code=letter_source.get("postal_code", blank),
+    letter_source_city=letter_source.get("city", blank),
+    letter_source_country=letter_source.get("country", blank),
+    letter_source_vat=letter_source.get("vat", blank),
+    letter_source_corporate_registration=letter_source.get("corporate_registration", blank),
+    letter_source_phone=letter_source.get("phone", blank),
+    letter_source_fax=letter_source.get("fax", blank),
+    letter_source_mail=letter_source.get("email", blank),
+    letter_source_website=letter_source.get("website", blank),
+    letter_source_bank=letter_source.get("bank", blank),
+    letter_source_bic=letter_source.get("bic", blank),
+    letter_source_iban=letter_source.get("iban", blank),
+  )
+
+  # ================ encode and build cloudoo elements =========================
+  embedded_html_data = letter.Base_convertHtmlToSingleFile(letter_content, allow_script=True)
+  header_embedded_html_data = letter.Base_convertHtmlToSingleFile(letter_head, allow_script=True)
+  footer_embedded_html_data = letter.Base_convertHtmlToSingleFile(letter_foot, allow_script=True)
+  pdf_file = letter.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
+      encoding="utf8",
+      margin_top=26,
+      margin_bottom=30,
+      margin_left=0,
+      margin_right=0,
+      header_spacing=1,
+      header_html_data=b64encode(header_embedded_html_data),
+      footer_html_data=b64encode(footer_embedded_html_data),
+    )
+  )
+
+  return letter.WebPage_finishPdfCreation(
+    doc_download=setToNone(letter_download),
+    doc_save=setToNone(letter_save),
+    doc_version=letter_version,
+    doc_title=letter_title,
+    doc_relative_url=letter_relative_url,
+    doc_aggregate_list=letter_aggregate_list,
+    doc_language=letter_language,
+    doc_modification_date=letter_modification_date,
+    doc_reference=letter_reference,
+    doc_full_reference=letter_full_reference,
+    doc_pdf_file=pdf_file
+  )

@@ -1,0 +1,93 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Generates the letter header
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="letter_display_head            python: options.get('letter_display_head');
+                       letter_theme                   python: options.get('letter_theme');
+                       letter_title                   python: options.get('letter_title');
+                       letter_language                python: options.get('letter_language');
+                       letter_theme_css_font_list     python: options.get('letter_theme_css_font_list');
+                       letter_theme_css_url           python: options.get('letter_theme_css_url');
+                       letter_theme_logo_url          python: options.get('letter_theme_logo_url');
+                       letter_theme_logo_alt          python: options.get('letter_theme_logo_alt');
+                       letter_template_css_url        python: options.get('letter_template_css_url');
+                       letter_timestamp               python: options.get('letter_timestamp');
+                       letter_source_city             python: options.get('letter_source_city');">
+  <!DOCTYPE html>
+  <html tal:attributes="class                         python: ''.join(['ci-', letter_theme, ' ci-', letter_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="letter_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url letter_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href python: ''.join([letter_theme_css_url, '?portal_skin=Letter'])" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([letter_template_css_url, '?portal_skin=Letter'])" />
+    <script type="text/javascript">
+      function setPlaceholdersWithUrlParameters() {
+        var vars={};
+        var x=window.location.search.substring(1).split('&');
+        for (var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+        var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+        for (var i in x) {
+          var y = document.getElementsByClassName(x[i]);
+          for (var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+        }
+      }
+    </script>
+  </head>
+  <body class="ci-letter" onload="setPlaceholdersWithUrlParameters();">
+    <tal:block metal:use-macro="context/Letter_createLetterHeader/macros/letter_header" />
+  </body>
+</html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="letter_standard_header">
+    <div class="ci-letter-head-simple-left">
+      <img tal:attributes="src python: letter_theme_logo_url; alt python: letter_theme_logo_alt" />
+    </div>
+    <div class="ci-letter-head-simple-right">
+      <span class="ci-letter-head-simple-location" tal:content="python: letter_source_city"></span>, <span i18n:translate="" i18n:domain="erp5_ui"></span> <span tal:content="python:letter_timestamp"></span>
+    </div>
+  </tal:block>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="letter_header">
+    <div class="ci-letter-header">
+		  <div class="ci-letter-bar">
+		    <div class="ci-letter-bar-logo">
+  		      <img tal:attributes="src python: letter_theme_logo_url;
+    		                           alt python: letter_theme_logo_alt" />
+            <span tal:content="letter_theme_logo_alt"></span>
+          </div>
+        <div class="ci-letter-bar-purporse"><span></span></div>
+	    </div>
+		</div>
+	  <div class="ci-letter-head ci-letter-head-right">
+  	   <table>
+  	      <tbody>
+  	        <tr>
+  	          <td></td>
+  	          <td class="ci-letter-timestamp">
+  	            <span i18n:translate="" i18n:domain="erp5_ui">Date</span><span tal:content="letter_timestamp"></span>
+               </td>
+  	          <td></td>
+            </tr>
+  	        <tr>
+  	          <td></td>
+  	          <td class="ci-letter-page">
+  	            <span i18n:translate="" i18n:domain="erp5_ui">Page</span><span><span class="page"></span><span>/</span><span class="topage"></span><span>
+              </td>
+  	          <td></td>
+            </tr>
+  	      </tbody>
+  	    </table>
+  		</div>
+  </tal:block>
+</tal:block>

@@ -550,9 +550,6 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       )
     )
   
-  
-
-  '''
   @changeSkin('Letter')
   def test_htmlLetter(self):
     """
@@ -744,6 +741,9 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         use_skin="Letter",
       )
     )
+
+  '''
+  
 
   @changeSkin('Leaflet')
   def test_htmlLeaflet(self):

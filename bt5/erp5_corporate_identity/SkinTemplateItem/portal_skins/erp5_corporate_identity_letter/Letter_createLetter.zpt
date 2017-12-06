@@ -1,0 +1,73 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Generates the complete letter
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="letter_display_head                  python: options.get('letter_display_head');
+                       letter_theme                         python: options.get('letter_theme');
+                       letter_title                         python: options.get('letter_title');
+                       letter_language                      python: options.get('letter_language');
+                       letter_theme_css_font_list           python: options.get('letter_theme_css_font_list');
+                       letter_theme_css_url                 python: options.get('letter_theme_css_url');
+                       letter_theme_logo_url                python: options.get('letter_theme_logo_url');
+                       letter_theme_logo_alt                python: options.get('letter_theme_logo_alt');
+                       letter_template_css_url              python: options.get('letter_template_css_url');
+
+                       letter_timestamp                     python: options.get('letter_timestamp');
+                       letter_source_company                python: options.get('letter_source_company');
+                       letter_source_company_corporate_name python: options.get('letter_source_company_corporate_name');
+                       letter_source_company                python: options.get('letter_source_company');
+                       letter_source_company_capital        python: options.get('letter_source_company_capital');
+                       letter_source_company_capital_currency python: options.get('letter_source_company_capital_currency');
+                       letter_source_registered_court       python: options.get('letter_source_registered_court');
+                       letter_source_ape_code               python: options.get('letter_source_ape_code');
+
+                       letter_source_address                python: options.get('letter_source_address');
+                       letter_source_country_code           python: options.get('letter_source_country_code');
+                       letter_source_postal_code            python: options.get('letter_source_postal_code');
+                       letter_source_city                   python: options.get('letter_source_city');
+                       letter_destination_company           python: options.get('letter_destination_company');
+                       letter_destination_person            python: options.get('letter_destination_person');
+                       letter_destination_address           python: options.get('letter_destination_address');
+                       letter_destination_postal_code       python: options.get('letter_destination_postal_code');
+                       letter_destination_city              python: options.get('letter_destination_city');
+                       letter_destination_country           python: options.get('letter_destination_country');
+
+                       letter_content                       python: options.get('letter_content');
+                       letter_display_source_address        python: options.get('letter_display_source_address');
+
+                       letter_source_company                python: options.get('letter_source_company');
+                       letter_source_address                python: options.get('letter_source_address');
+                       letter_source_postal_code            python: options.get('letter_source_postal_code');
+                       letter_source_city                   python: options.get('letter_source_city');
+                       letter_source_country                python: options.get('letter_source_country');
+                       letter_source_vat                    python: options.get('letter_source_vat');
+                       letter_source_corporate_registration python: options.get('letter_source_corporate_registration');
+                       letter_source_phone                  python: options.get('letter_source_phone');
+                       letter_source_fax                    python: options.get('letter_source_fax');
+                       letter_source_mail                   python: options.get('letter_source_mail');
+                       letter_source_website                python: options.get('letter_source_website');
+                       letter_source_bank                   python: options.get('letter_source_bank');
+                       letter_source_bic                    python: options.get('letter_source_bic');
+                       letter_source_iban                   python: options.get('letter_source_iban');">
+  <!DOCTYPE html>
+  <html tal:attributes="class                               python: ''.join(['ci-', letter_theme, ' ci-', letter_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="letter_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url letter_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href python: ''.join([letter_theme_css_url, '?portal_skin=Letter'])" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([letter_template_css_url, '?portal_skin=Letter'])" />
+  </head>
+  <body class="ci-letter">
+    <tal:block metal:use-macro="context/Letter_createLetterHeader/macros/letter_header" />
+    <tal:block metal:use-macro="context/Letter_createLetterContent/macros/letter_content" />
+    <tal:block metal:use-macro="context/Letter_createLetterFooter/macros/letter_footer" />
+  </body>
+</html>
+</tal:block>
