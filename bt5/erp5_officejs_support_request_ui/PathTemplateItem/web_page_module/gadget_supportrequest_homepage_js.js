@@ -1,7 +1,37 @@
-/*global document, window, Option, rJS, RSVP*/
+/*global document, window, Option, rJS, RSVP, promiseEventListener, loopEventListener */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, promiseEventListener, loopEventListener) {
   "use strict";
+
+  function getActionListByName(action_object, name) {
+    // Usage:
+    //   getActionListByName(erp5_document._links.action_object_view, "view")
+    //   -> [{name: "view", ...}]
+    //   getActionListByName(erp5_document._links.action_object_view, ["web_view", "view"])
+    //   -> [{name: "web_view", ...}, {name: "view", ...}]
+    //   getActionListByName(erp5_document._links.action_object_view, "not found")
+    //   -> throws
+    var iname = 0,
+      iaction = 0,
+      error_list = [],
+      result = null;
+    if (!(Array.isArray(action_object))) { action_object = [action_object]; }
+    if (!(Array.isArray(name))) { name = [name]; }
+    result = new Array(name.length);
+    for (iname = 0; iname < name.length; iname += 1) {
+      for (iaction = 0; iaction < action_object.length; iaction += 1) {
+        if (name[iname] === action_object[iaction].name) {
+          result[iname] = action_object[iaction];
+          break;
+        }
+      }
+      if (!result[iname]) { error_list.push(name[iname]); }
+    }
+    if (error_list.length) {
+      throw new Error("getActionListByName: names not found: " + error_list.join(", "));
+    }
+    return result;
+  }
 
   rJS(window)
     .ready(function (gadget) {
@@ -78,8 +108,9 @@
           throw error;
         })
         .push(function () {
-          var restore = document.getElementById("restoreButton");
-          restore.removeAttribute('disabled');
+          var restore_filter_input = gadget.element.querySelectorAll("input")[2];
+          restore_filter_input.disabled = false;
+          restore_filter_input.classList.remove("ui-disabled");
         });
       // method code
     })
@@ -128,7 +159,7 @@
             gadget.declareGadget(
               option_dict.graph_gadget,
               {
-                scope: "graph",
+                scope: "graph2",
                 sandbox: "iframe",
                 element: gadget.property_dict.element.querySelector("#wrap2")
               }
@@ -237,21 +268,64 @@
           });
         });
     })
-    .declareJob("renderRestoreButton", function () {
+    .declareService(function () {
       var gadget = this,
-        restore = document.getElementById('restoreButton');
+        restore_filter_input = gadget.element.querySelectorAll("input")[2];
       return gadget.getUrlParameter('extended_search')
         .push(function (result) {
           if (result !== undefined) {
-            restore.removeAttribute("disabled");
+            restore_filter_input.disabled = false;
+            restore_filter_input.classList.remove("ui-disabled");
           }
         });
     })
-    .onStateChange(function () {
-      var gadget = this,
-        queue = new RSVP.Queue();
+    .declareService(function () {
+      var gadget = this;
+      return new RSVP.Queue()
+        .push(function () {
+          var generate_rss_input = gadget.element.querySelectorAll("input")[1],
+            restore_filter_input = gadget.element.querySelectorAll("input")[2],
+            one = new RSVP.Queue().push(function () {
+              return promiseEventListener(generate_rss_input, "click", false);
+            }).push(function () {
+              generate_rss_input.disabled = true;
+              generate_rss_input.classList.add("ui-disabled");
+              return gadget.getSetting("hateoas_url")
+                .push(function (hateoas_url) {
+                  return gadget.jio_getAttachment(
+                    'support_request_module',
+                    hateoas_url + 'support_request_module'
+                      + "/SupportRequestModule_generateRSSLinkAsJson"
+                  );
+                })
+                .push(function (result) {
+                  generate_rss_input.parentNode.href = result.restricted_access_url;
+                  generate_rss_input.value = "RSS Link";
+                  generate_rss_input.disabled = false;
+                  generate_rss_input.classList.remove("ui-disabled");
+                });
+            }),
+            two = loopEventListener(restore_filter_input, "click", false, function () {
+              restore_filter_input.disabled = true;
+              restore_filter_input.classList.add("ui-disabled");
+              return gadget.redirect({
+                command: "change",
+                options: {
+                  extended_search: undefined,
+                  field_listbox_begin_from: undefined
+                }
+              });
+            }, true);
 
-      queue
+          generate_rss_input.disabled = false;
+          generate_rss_input.classList.remove("ui-disabled");
+          return RSVP.all([one, two]);
+        });
+    })
+    .onStateChange(function () {
+      var gadget = this;
+
+      return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.jio_getAttachment("support_request_module", "links"),
@@ -260,130 +334,43 @@
           ]);
         })
         .push(function (result_list) {
-          var i,
-            erp5_document = result_list[0],
-            view_list = erp5_document._links.action_object_view || [],
-            last_href;
-
-          if (view_list.constructor !== Array) {
-            view_list = [view_list];
-          }
-
-          for (i = 0; i < view_list.length; i += 1) {
-            if (view_list[i].name === 'view_last_support_request') {
-              last_href = view_list[i].href;
-            }
-          }
-
-          if (last_href === undefined) {
-            throw new Error('Cant find the list document view');
-          }
+          var erp5_document = result_list[0],
+            worklist_gadget = result_list[1],
+            field_listbox_begin_from = result_list[2],
+            view_list = erp5_document._links.action_object_view || [];
 
           gadget.property_dict.option_dict = {
-            graph_gadget: "unsafe/gadget_field_graph_echarts.html",
-            listbox_gadget: last_href,
+            // graph_gadget: Keep ending slash to be consistent with the automatically set "base" tag
+            graph_gadget: "unsafe/gadget_field_graph_echarts.html/",
+            listbox_gadget: getActionListByName(view_list, "view_last_support_request")[0].href,
             listbox_jio_key: "support_request_module",
-            field_listbox_begin_from: result_list[2]
+            field_listbox_begin_from: field_listbox_begin_from
           };
 
           return RSVP.all([
-            result_list[1].render(),
-            gadget.renderRestoreButton(),
-            gadget.renderGraph() //Launched as service, not blocking
-          ]);
-        });
-      return queue;
-    })
-    .onEvent('change', function (evt) {
-      if (evt.target.id === "field_your_project") {
-        var gadget = this;
-        return gadget.getSetting("hateoas_url")
-          .push(function (hateoas_url) {
-            return gadget.jio_getAttachment(
-              'support_request_module',
-              hateoas_url + 'support_request_module'
-                + "/SupportRequest_getSupportTypeList"
-                + "?project_id=" + evt.target.value + "&json_flag=True"
-            );
-          })
-          .push(function (sp_list) {
-            var i,
-              j,
-              sp_select = document.getElementById('field_your_resource');
-            for (i = sp_select.options.length - 1; i >= 0; i -= 1) {
-              sp_select.remove(i);
-            }
-
-            for (j = 0; j < sp_list.length; j += 1) {
-              sp_select.options[j] = new Option(sp_list[j][0], sp_list[j][1]);
-            }
-          });
-      }
-    }, false, false)
-    .onEvent('click', function (event) {
-      var gadget = this, rss_link = gadget.element.querySelector("#generate-rss"),
-        generate_button = gadget.element.querySelector("#generateRSS"),
-        restore = document.getElementById("restoreButton");
-
-      if (event.target.id === "restoreButton") {
-        restore.setAttribute("disabled", "disabled");
-
-        return gadget.redirect({command: 'change', options: {extended_search: undefined,
-          field_listbox_begin_from: undefined}});
-      }
-
-      if (event.target.id === "generateRSS") {
-        if (rss_link.getAttribute("href") === '#') {
-          return gadget.getSetting("hateoas_url")
-            .push(function (hateoas_url) {
-              return gadget.jio_getAttachment(
-                'support_request_module',
-                hateoas_url + 'support_request_module'
-                  + "/SupportRequestModule_generateRSSLinkAsJson"
-              )
-                .push(function (result) {
-                  rss_link.href = result.restricted_access_url;
-                  rss_link.style.display = "inline-block";
-                  generate_button.style.display = "none";
-                });
-            });
-        }
-      } else if (event.target.id === "createSR") {
-        return gadget.jio_getAttachment('support_request_module', 'links')
-          .push(function (links) {
-            var fast_create_url = links._links.view[2].href;
-            return gadget.getUrlFor({
-              command: 'display',
+            worklist_gadget,
+            gadget.renderGraph(), //Launched as service, not blocking
+            gadget.getUrlFor({
+              command: "display",
               options: {
                 jio_key: "support_request_module",
-                view: fast_create_url,
-                page: 'support_request_fast_view_dialog'
+                view: getActionListByName(view_list, "fast_input")[0].href,
+                page: "support_request_fast_view_dialog"
               }
-            });
-          })
-          .push(function (url) {
-            window.location.href = url;
-          });
-      }
-      event.returnValue = true;
-    })
-    .onEvent('submit', function () {
-      var gadget = this;
-      return gadget.jio_getAttachment('support_request_module', 'links')
-        .push(function (links) {
-          var fast_create_url = links._links.view[2].href;
-          return gadget.getUrlFor({
-            command: 'display',
-            options: {
-              jio_key: "support_request_module",
-              view: fast_create_url,
-              page: 'support_request_fast_view_dialog'
-            }
-          });
+            })
+          ]);
         })
-        .push(function (url) {
-          window.location.href = url;
+        .push(function (result_list) {
+          var worklist_gadget = result_list[0],
+            create_sr_href = result_list[2],
+            create_sr_input = gadget.element.querySelectorAll("input")[0];
+
+          create_sr_input.parentNode.href = create_sr_href;
+          create_sr_input.disabled = false;
+          create_sr_input.classList.remove("ui-disabled");
+
+          return worklist_gadget.render();
         });
     });
 
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, promiseEventListener, loopEventListener));
