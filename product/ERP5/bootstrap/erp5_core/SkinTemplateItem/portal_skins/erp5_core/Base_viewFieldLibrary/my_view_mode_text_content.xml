@@ -157,7 +157,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'editor\', context.Base_getEditorFieldPreferredTextEditor()), (\'portal_type\', context.getPortalType()), ]</string> </value>
+            <value> <string>python: [(\'editor\', context.Base_getEditorFieldPreferredTextEditor()), (\'portal_type\', context.getPortalType()), (\'maximize\', \'renderjs_runner\' in container.absolute_url())]</string> </value>
         </item>
       </dictionary>
     </pickle>

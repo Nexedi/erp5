@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, FileReader, Blob*/
-(function (window, rJS, RSVP, document, FileReader, Blob) {
+/*global window, rJS, RSVP, document, FileReader, Blob, XMLHttpRequest*/
+(function (window, rJS, RSVP, document, FileReader, Blob, XMLHttpRequest) {
   "use strict";
 
 /*
@@ -18,12 +18,26 @@
 */
 
   rJS(window)
+    .declareAcquiredMethod('triggerMaximize', 'triggerMaximize')
+    .allowPublicAcquisition('triggerMaximize', function (param_list) {
+      var gadget = this;
+      if (!this.element.classList.contains('editor-maximize')) {
+        this.element.classList.toggle('editor-maximize');
+      }
+      return this.triggerMaximize.apply(this, param_list)
+        .push(function () {
+          if (gadget.element.classList.contains('editor-maximize')) {
+            gadget.element.classList.remove('editor-maximize');
+          }
+        });
+    })
     .declareMethod('render', function (options) {
-      
+
       var state_dict = {
           value: options.value || "",
           editor: options.editor,
           content_type: options.content_type,
+          maximize: options.maximize,
           portal_type: options.portal_type,
           editable: options.editable || false,
           key: options.key
@@ -40,7 +54,8 @@
         gadget = this,
         url,
         div = document.createElement('div'),
-        queue = new RSVP.Queue();
+        queue = new RSVP.Queue(),
+        div_max;
 
       if ((modification_dict.hasOwnProperty('editable')) ||
           (modification_dict.hasOwnProperty('editor'))) {
@@ -48,7 +63,22 @@
         while (element.firstChild) {
           element.removeChild(element.firstChild);
         }
+        if (modification_dict.hasOwnProperty('maximize')) {
+          if (gadget.state.maximize && gadget.state.editable) {
+            div_max = document.createElement('div');
+            element.appendChild(div_max);
+            queue.push(function () {
+              return gadget.declareGadget("gadget_erp5_button_maximize.html", {
+                scope: 'maximize',
+                element: div_max,
+                sandbox: 'public'
+              });
+            });
+          }
+        }
+
         element.appendChild(div);
+
 
         if (gadget.state.editable &&
             (gadget.state.editor === 'codemirror')) {
@@ -134,4 +164,4 @@
       return {};
     });
 
-}(window, rJS, RSVP, document, FileReader, Blob));
+}(window, rJS, RSVP, document, FileReader, Blob, XMLHttpRequest));
