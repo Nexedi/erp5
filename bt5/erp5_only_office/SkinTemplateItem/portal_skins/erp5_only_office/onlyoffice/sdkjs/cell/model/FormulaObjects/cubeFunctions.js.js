@@ -614,8 +614,6 @@
 					new_member = level[member.level_index + offset.offsetCol + offset.offsetRow];
 					if (new_member) {
 						elem.value = new_member.uname;
-					} else {
-						elem.value = "";
 					}
 				}
 			}

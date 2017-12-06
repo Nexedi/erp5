@@ -5543,7 +5543,8 @@ parserFormula.prototype.setFormula = function(formula) {
 	/* Для обратной сборки функции иногда необходимо поменять ссылки на ячейки */
 	parserFormula.prototype.changeOffset = function (offset, canResize) {//offset = AscCommonExcel.CRangeOffset
 		var elemArr = [], currentElement = null, arg,
-			disable_changeOffset_run = false;
+			disable_changeOffset_run = false,
+			argumentsCount;
 		for (var i = 0; i < this.outStack.length; i++) {
 			currentElement = this.outStack[i];
 			this.changeOffsetElem(currentElement, this.outStack, i, offset, canResize);
@@ -5553,14 +5554,24 @@ parserFormula.prototype.setFormula = function(formula) {
 			if (currentElement.name == "(") {
 				continue;
 			}
+			if(currentElement.type === cElementType.specialFunctionStart){
+				continue;
+			}
+			if(currentElement.type === cElementType.specialFunctionEnd){
+				continue;
+			}
+			if("number" === typeof(currentElement)){
+				continue;
+			}
 			if (currentElement.type === cElementType.operator || currentElement.type === cElementType.func) {
-				if (elemArr.length < currentElement.getArguments()) {
+				argumentsCount = "number" === typeof(this.outStack[i - 1]) ? this.outStack[i - 1] : currentElement.argumentsCurrent;
+				if (elemArr.length < argumentsCount) {
 					disable_changeOffset_run = true;
 					continue;
 				} else {
 					if (currentElement && currentElement.changeOffsetElem) {
 						arg = [];
-						for (var ind = 0; ind < currentElement.getArguments(); ind++) {
+						for (var ind = 0; ind < argumentsCount; ind++) {
 							arg.unshift(elemArr.pop());
 						}
 						currentElement.changeOffsetElem(arg, offset);
@@ -5569,9 +5580,9 @@ parserFormula.prototype.setFormula = function(formula) {
 					elemArr.push(new cEmpty());
 				}
 			} else if (currentElement.type === cElementType.name || currentElement.type === cElementType.name3D) {
-				elemArr.push(currentElement.Calculate(null, rangeCell));
+				elemArr.push(currentElement.Calculate(null, null));
 			} else if (currentElement.type === cElementType.table) {
-				elemArr.push(currentElement.toRef(rangeCell.getBBox0()));
+				elemArr.push(currentElement.toRef(null));
 			} else {
 				elemArr.push(currentElement);
 			}
