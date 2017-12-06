@@ -249,8 +249,8 @@ doc_css = ''.join(['.ci-slideshow-intro.present:not(.slide-background):before {'
 # ---------------------------------- Source ------------------------------------
 doc_source = doc.Base_getSourceDict(
   override_source_person_title=override_source_person_title,
-  override_source_organisation_title=html_quote(override_source_organisation_title),
-  override_logo_reference=html_quote(override_logo_reference),
+  override_source_organisation_title=override_source_organisation_title,
+  override_logo_reference=override_logo_reference,
   default_company_title=getCustomParameter("default_company_title", None),
   default_bank_account_uid=getCustomParameter("default_bank_account_uid", None),
   theme_logo_url=doc_theme.get("theme_logo_url", None)

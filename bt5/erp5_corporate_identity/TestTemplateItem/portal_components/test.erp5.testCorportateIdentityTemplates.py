@@ -549,6 +549,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         format="pdf"
       )
     )
+  
+  
 
   '''
   @changeSkin('Letter')
@@ -626,7 +628,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       **dict(
         test_method="WebPage_exportAsLetter",
         use_skin="Letter",
-        head_display=0,
+        display_head=0,
         lang="de",
       )
     )
@@ -719,7 +721,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         test_method="WebPage_exportAsLetter",
         format="pdf",
         lang="de",
-        head_display=0,
+        display_head=0,
         use_skin="Letter",
       )
     )
@@ -738,7 +740,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_letter_input_001_en_pdf",
       **dict(
         page_number=0,
-        test_method="WebPage_PrintAsLetter",
+        test_method="WebPage_printAsLetter",
         use_skin="Letter",
       )
     )

@@ -301,7 +301,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: \'<iframe width="100%%" height="500" style="background-color:#FFFFFF;box-sizing:border-box;-wekbit-box-sizing:border-box;" src="%s/WebPage_viewAsWeb?portal_skin=Slide&amp;override_publisher_title=%s&amp;override_logo_reference=%s&amp;svg_display=%s" name="default_version"></iframe>\' % (here.absolute_url(), context.REQUEST.get("override_publisher_title", ""), context.REQUEST.get("override_logo_reference", ""), context.REQUEST.get("svg_display", "png"))
+python: \'<iframe width="100%%" height="500" style="background-color:#FFFFFF;box-sizing:border-box;-wekbit-box-sizing:border-box;" src="%s/WebPage_viewAsWeb?portal_skin=Slide&amp;override_source_organisation_title=%s&amp;override_logo_reference=%s&amp;display_svg=%s" name="default_version"></iframe>\' % (here.absolute_url(), context.REQUEST.get("override_source_organisation_title", ""), context.REQUEST.get("override_logo_reference", ""), context.REQUEST.get("display_svg", "png"))
 
 ]]></string> </value>
         </item>
