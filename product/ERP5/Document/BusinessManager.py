@@ -189,7 +189,7 @@ class BusinessManager(Folder):
        , 'filter_content_types' : 1
     }
 
-
+  item_path_list = []
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -203,6 +203,15 @@ class BusinessManager(Folder):
                       PropertySheet.Version,
                       PropertySheet.BusinessManager,
                     )
+
+  # XXX: This explicit setter and getter should be replaced using property
+  # sheet.
+
+  def setItemPathList(self, value):
+    self.item_path_list = value
+
+  def getItemPathList(self):
+    return self.item_path_list
 
   def getShortRevision(self):
     return None
@@ -730,6 +739,28 @@ class BusinessItem(XMLObject):
     # while in tests or while creating them on the fly
     if 'item_path' in self._v_modified_property_dict:
       self.build(self.aq_parent)
+
+      # Update the Business Manager with the path list everytime after editing
+      # item_path
+      manager = self.getFollowUpValue()
+
+      # Copy the path list for Business Manager and update it with new path
+      item_path_list = manager.getItemPathList()[:]
+      old_item_path = self._v_modified_property_dict.get('item_path')
+      if old_item_path and item_path_list:
+        if old_item_path in item_path_list:
+          for idx, item in enumerate(item_path_list):
+            if item == old_item_path:
+              item_path_list[idx] = self.getProperty('item_path')
+        else:
+          item_path_list.append(self.getProperty('item_path'))
+      else:
+        # If there is no old_item_path or if path_list is empty, we can just
+        # append the new_path in path_list
+        item_path_list.append(self.getProperty('item_path'))
+
+      # Update the manager with new path list
+      manager.setProperty('item_path_list', item_path_list)
 
   def build(self, context, **kw):
     """
