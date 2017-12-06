@@ -139,7 +139,7 @@
               <tuple>
                 <string>resource/workflow_module/erp5_standard_workflow</string>
                 <string>current_state/workflow_module/erp5_standard_workflow/63</string>
-                <string>specialise/portal_templates/44</string>
+                <string>specialise/portal_templates/50</string>
               </tuple>
             </value>
         </item>
@@ -250,7 +250,7 @@
               <dictionary>
                 <item>
                     <key> <string>business_process_id</string> </key>
-                    <value> <string>1</string> </value>
+                    <value> <string>6</string> </value>
                 </item>
                 <item>
                     <key> <string>categories_spreadsheet_configuration_save_relative_url</string> </key>
@@ -282,7 +282,7 @@
                 </item>
                 <item>
                     <key> <string>organisation_id</string> </key>
-                    <value> <string>2</string> </value>
+                    <value> <string>7</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_type_roles_spreadsheet_configuration_save_relative_url</string> </key>

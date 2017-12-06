@@ -113,11 +113,11 @@
         </item>
         <item>
             <key> <string>default_address_street_address</string> </key>
-            <value> <string>123asd</string> </value>
+            <value> <string>Telecom</string> </value>
         </item>
         <item>
             <key> <string>default_address_zip_code</string> </key>
-            <value> <string>123</string> </value>
+            <value> <string>75013</string> </value>
         </item>
         <item>
             <key> <string>default_email_text</string> </key>
@@ -125,7 +125,7 @@
         </item>
         <item>
             <key> <string>default_telephone_text</string> </key>
-            <value> <string>123</string> </value>
+            <value> <string>1111111111</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -25,7 +25,17 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>function</string> </value>
+                      <value> <string>lang</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>preferred_event_sender_email</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -35,57 +45,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>first_name</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>last_name</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>default_email_text</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>default_telephone_text</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>password</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>password_confirm</string> </value>
+                      <value> <string>preferred_date_order</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -114,48 +74,38 @@
             </value>
         </item>
         <item>
-            <key> <string>default_email_text</string> </key>
-            <value> <string>scalability@nexedi.com</string> </value>
-        </item>
-        <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>scalability</string> </value>
-        </item>
-        <item>
-            <key> <string>default_telephone_text</string> </key>
-            <value> <string>1111111111</string> </value>
-        </item>
-        <item>
-            <key> <string>first_name</string> </key>
-            <value> <string>Scalability</string> </value>
-        </item>
-        <item>
-            <key> <string>function</string> </key>
-            <value> <string>company/manager</string> </value>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>price_currency/EUR;0.01;Euro</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>7</string> </value>
+            <value> <string>9</string> </value>
         </item>
         <item>
-            <key> <string>last_name</string> </key>
-            <value> <string>Company</string> </value>
-        </item>
-        <item>
-            <key> <string>password</string> </key>
-            <value> <string>scalability</string> </value>
-        </item>
-        <item>
-            <key> <string>password_confirm</string> </key>
-            <value> <string>scalability</string> </value>
+            <key> <string>lang</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Configuration Save</string> </value>
         </item>
         <item>
+            <key> <string>preferred_date_order</string> </key>
+            <value> <string>dmy</string> </value>
+        </item>
+        <item>
+            <key> <string>preferred_event_sender_email</string> </key>
+            <value> <string>scalability@nexedi.com</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Number of user accounts</string> </value>
+            <value> <string>Accounting</string> </value>
         </item>
       </dictionary>
     </pickle>
