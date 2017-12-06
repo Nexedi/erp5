@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, FileReader, Blob*/
-(function (window, rJS, RSVP, document, FileReader, Blob) {
+/*global window, rJS, RSVP, document, FileReader, Blob, XMLHttpRequest*/
+(function (window, rJS, RSVP, document, FileReader, Blob, XMLHttpRequest) {
   "use strict";
 
 /*
@@ -18,12 +18,27 @@
 */
 
   rJS(window)
+    .declareAcquiredMethod('triggerMaximize', 'triggerMaximize')
+    .allowPublicAcquisition('triggerMaximize', function (param_list) {
+      var gadget = this;
+      if (!this.element.classList.contains('editor-maximize')) {
+        this.element.classList.toggle('editor-maximize');
+      }
+      return this.triggerMaximize.apply(this, param_list)
+        .push(function () {
+          if (gadget.element.classList.contains('editor-maximize')) {
+            gadget.element.classList.remove('editor-maximize');
+          }
+        });
+    })
     .declareMethod('render', function (options) {
-      
+
       var state_dict = {
           value: options.value || "",
           editor: options.editor,
+          editor_url: options.editor_url,
           content_type: options.content_type,
+          maximize: options.maximize,
           portal_type: options.portal_type,
           editable: options.editable || false,
           key: options.key
@@ -40,17 +55,55 @@
         gadget = this,
         url,
         div = document.createElement('div'),
-        queue = new RSVP.Queue();
+        queue = new RSVP.Queue(),
+        div_max;
 
       if ((modification_dict.hasOwnProperty('editable')) ||
-          (modification_dict.hasOwnProperty('editor'))) {
+          (modification_dict.hasOwnProperty('editor')) ||
+          (modification_dict.hasOwnProperty('editor_url'))) {
         // Clear first to DOM, append after to reduce flickering/manip
         while (element.firstChild) {
           element.removeChild(element.firstChild);
         }
+        if (modification_dict.hasOwnProperty('maximize')) {
+          if (gadget.state.maximize && gadget.state.editable) {
+            div_max = document.createElement('div');
+            element.appendChild(div_max);
+            queue
+              .push(function () {
+                return gadget.triggerMaximize(false);
+              })
+              .push(function () {
+                return gadget.declareGadget("gadget_erp5_button_maximize.html", {
+                  scope: 'maximize',
+                  element: div_max,
+                  sandbox: 'public'
+                });
+              })
+              .push(undefined, function (error) {
+                if (error.name !== "AcquisitionError") {
+                  throw error;
+                }
+              });
+          }
+        }
+
         element.appendChild(div);
 
-        if (gadget.state.editable &&
+
+        if (gadget.state.editable && gadget.state.editor_url) {
+          queue
+            .push(function () {
+              return gadget.declareGadget(
+                gadget.state.editor_url,
+                {
+                  scope: 'editor',
+                  sandbox: 'iframe',
+                  element: div
+                }
+              );
+            });
+        } else if (gadget.state.editable &&
             (gadget.state.editor === 'codemirror')) {
           queue
             .push(function () {
@@ -85,7 +138,9 @@
       }
 
       if (gadget.state.editable &&
-          ((gadget.state.editor === 'codemirror') || (gadget.state.editor === 'fck_editor'))) {
+          ((gadget.state.editor === 'codemirror') ||
+           (gadget.state.editor === 'fck_editor') ||
+           (gadget.state.editor_url))) {
         queue
           .push(function () {
             return gadget.getDeclaredGadget('editor');
@@ -93,6 +148,15 @@
           .push(function (editor_gadget) {
             return editor_gadget.render(gadget.state);
           });
+        if (gadget.state.maximize === 'auto') {
+          queue
+            .push(function () {
+              return gadget.getDeclaredGadget('maximize');
+            })
+            .push(function (maximize_gadget) {
+              return maximize_gadget.element.click();
+            });
+        }
       } else if (gadget.state.editable &&
           (gadget.state.editor === 'text_area')) {
         element.querySelector('textarea').value = gadget.state.value;
@@ -109,7 +173,9 @@
       var argument_list = arguments,
         result;
       if (this.state.editable &&
-          ((this.state.editor === 'codemirror') || (this.state.editor === 'fck_editor'))) {
+          ((this.state.editor === 'codemirror') ||
+           (this.state.editor === 'fck_editor') ||
+           (this.state.editor_url))) {
         return this.getDeclaredGadget('editor')
           .push(function (editor_gadget) {
             return editor_gadget.getContent.apply(editor_gadget, argument_list);
@@ -134,4 +200,4 @@
       return {};
     });
 
-}(window, rJS, RSVP, document, FileReader, Blob));
+}(window, rJS, RSVP, document, FileReader, Blob, XMLHttpRequest));
