@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>svg_display</string> </value>
+            <value> <string>display_svg</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -51,6 +51,10 @@
             <key> <string>tales</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>

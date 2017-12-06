@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>img_string=None, img_wrap=None, img_svg_format=None</string> </value>
+            <value> <string>img_string=None, img_wrap=None, img_svg_format=None, image_caption=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

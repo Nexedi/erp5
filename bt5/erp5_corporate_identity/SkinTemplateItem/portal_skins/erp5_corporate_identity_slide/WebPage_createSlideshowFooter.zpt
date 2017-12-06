@@ -12,7 +12,7 @@ Creates the Slideshow footer section.
                        doc_theme_css_font_list           python: options.get('doc_theme_css_font_list');
                        doc_theme_css_url                 python: options.get('doc_theme_css_url');
                        doc_template_css_url              python: options.get('doc_template_css_url');
-                       doc_theme_footer_url              python: options.get('doc_theme_footer_url');
+                       doc_footer_url                    python: options.get('doc_footer_url');
                        doc_description                   python: options.get('doc_description');
                        doc_creation_year                 python: options.get('doc_creation_year');
                        doc_copyright                     python: options.get('doc_copyright');
@@ -56,7 +56,9 @@ Creates the Slideshow footer section.
   <tal:block metal:define-macro="slide_footer">
     <div class="ci-slideshow-footer">
 	    <div class="ci-slideshow-container-left">
-	      <img tal:attributes="src python: ''.join([doc_theme_footer_url, '?format=png&amp;display=xsmall'])" alt="Logo" />
+	      <tal:block tal:condition="python: doc_footer_url != ''">
+	        <img alt="Logo" tal:attributes="src python: doc_footer_url" />
+	      </tal:block>
 	    </div>
 	    <div class="ci-slideshow-container-center" tal:content="doc_description"></div>
 	    <div class="ci-slideshow-container-right">

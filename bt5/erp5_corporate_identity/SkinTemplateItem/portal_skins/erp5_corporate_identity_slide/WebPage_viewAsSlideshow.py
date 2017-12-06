@@ -6,24 +6,26 @@ MAIN FILE: generate presentation in different output formats
 # kw-parameters   (* default)
 # ------------------------------------------------------------------------------
 # format:                   output in html*, pdf
-# note_display:             display slide notes (1) or not (0)*
-# svg_display:              display svg-images as svg or png*
 # transformation:           convert content into nothing*, book
 # ------
+# override_source_organisation_title: to use instead of default company
 # override_logo_reference:  to use instead of default company logo in footer
-# override_publisher_title: to use instead of default company publisher
 # override_batch_mode:      used for tests
 # ------
-# flag_download:            download file directly (default None)            
-# flag_save:                save file in document module (default None)
-# flag_ooo:                 convert from legacy odp, sxi formats (default None)
+# document_download:        download file directly (default None)            
+# document_save:            save file in document module (default None)
+# ------
+# display_note:             display slide notes (1) or not (0)*
+# display_svg:              display svg-images as svg or png*
+# ------
+# flag_ooo:                 convert legacy odp, sxi formats (not active)
 
 import re
 
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
 
-empty_string = ''
+blank = ''
 
 # --------------------------  External parameters ------------------------------
 
@@ -33,10 +35,6 @@ customHandler = getattr(context, "WebPage_getCustomParameter", None)
 # parameters common to all templates
 commonHandler = getattr(context, "WebPage_getCommonParameter", None)
 commonProxyHandler = getattr(context, "WebPage_getCommonProxyParameter", None)
-
-# parameters specific to this template
-localHandler = getattr(context, "WebPage_getLocalParameter", None)
-localProxyHandler = getattr(context, "WebPage_getLocalProxyParameter", None)
 
 def getCustomParameter(my_parameter, my_override_data):
   if customHandler is not None:
@@ -52,16 +50,6 @@ def getCommonProxyParameter(my_parameter, my_override_data):
   if commonProxyHandler is not None:
     source_data = my_override_data or doc_uid
     return commonProxyHandler(parameter=my_parameter, source_data=source_data)
-
-def getLocalParameter(my_parameter, my_override_data):
-  if localHandler is not None:
-    source_data = my_override_data or doc_uid
-    return localHandler(parameter=my_parameter, source_data=source_data)
-
-def getLocalProxyParameter(my_parameter, my_override_data):
-  if localProxyHandler is not None:
-    source_data = my_override_data or doc_uid
-    return localProxyHandler(parameter=my_parameter, source_data=source_data)
 
 # ------------------ HTML cleanup/converter methods ----------------------------
 def getSlideList(my_content):
@@ -80,29 +68,28 @@ def removeSlidesWithoutDetailsFromNotes(my_content):
   slide_list = getSlideList(my_content)
   for slide in slide_list:
     if getNestedSection(slide) is False:
-      my_content = my_content.replace(slide, empty_string)
-  content = my_content.replace('<section></section>', empty_string)
-  content = re.sub(r'<section class="[^"]*"></section>', empty_string, content)
+      my_content = my_content.replace(slide, blank)
+  content = my_content.replace('<section></section>', blank)
+  content = re.sub(r'<section class="[^"]*"></section>', blank, content)
   return content
 
 def removeSectionTags(my_content):
-  content = re.sub(r'<section class="[^"]*">', empty_string, my_content)
-  content = content.replace('</section>', empty_string)
-  content = content.replace('<section>', empty_string)
+  content = re.sub(r'<section class="[^"]*">', blank, my_content)
+  content = content.replace('</section>', blank)
+  content = content.replace('<section>', blank)
   return content
   
 def removeDetailTags(my_content):
-  content = my_content.replace('</details>', empty_string)
-  content = content.replace('<details>', empty_string)
-  content = content.replace('<details open="open">', empty_string)
+  content = my_content.replace('</details>', blank)
+  content = content.replace('<details>', blank)
+  content = content.replace('<details open="open">', blank)
   return content
 
 def removeEmptyDetails(my_content):
-  content = my_content.replace('<details open="open"></details>', empty_string)
-  content = content.replace('<details></details>', empty_string)
-  content = content.replace('<details>&nbsp;</details>', empty_string)
-  content = content.replace('<details> </details>', empty_string)
-  # more to come
+  content = my_content.replace('<details open="open"></details>', blank)
+  content = content.replace('<details></details>', blank)
+  content = content.replace('<details>&nbsp;</details>', blank)
+  content = content.replace('<details> </details>', blank)
   return content
 
 def getPageList(my_content):
@@ -116,7 +103,7 @@ def getPageTitle(my_full_page):
 def getPageContent(my_full_page):
   result_list = my_full_page.split("</center><br>")
   if len(result_list) == 2:
-    return result_list[1].replace("</body>", "")
+    return result_list[1].replace("</body>", blank)
 
 def addSlideContent(my_content, my_notes):
   return ''.join([
@@ -135,7 +122,7 @@ def sortContent(my_page_list):
     for page in my_page_list:
       page_title = getPageTitle(page)
 
-      # XXX cloudooo html-transformation mixes up slide order! dirty fix
+      # Note cloudooo default html transformation mixes slide order. dirty fix
       if page_title.find("Commercial") > -1:
         page_content = getPageContent(page)
         if page_content.find("<center>") > -1:
@@ -162,24 +149,36 @@ def sortContent(my_page_list):
   except Exception as e:
     raise e
 
+def setOverrideParam(my_context, my_override, my_param):
+  if my_override is not None and my_override is not blank:
+    return html_quote(my_override)
+  return getattr(my_context, my_param) or None
+
+# XXX how to set checkbox correctly?
+def setToNone(param):
+  if param == blank or param == None or param == 0 or param == str(0):
+    return None
+  else:
+    return param
+
 # -------------------------- Setup ---------------------------------------------
 doc = context
+doc_prefix = "Slideshow."
 doc_converted_content = None
 doc_uid = doc.getUid()
 doc_url = doc.getAbsoluteUrl()
 doc_format = kw.get('format', 'html')
 doc_transformation = kw.get('transformation', None)
-doc_display_notes = kw.get('note_display', None)
-doc_display_svg = kw.get('svg_display', None)
-doc_download = kw.get('flag_download', None)
-doc_save = kw.get('flag_save', None)
+doc_display_notes = kw.get('display_note', None)
+doc_display_svg = kw.get('display_svg', 'png')
+doc_download = kw.get('document_download', None)
+doc_save = kw.get('document_save', None)
 doc_ooo = kw.get('flag_ooo', None)
 
-override_doc_logo = kw.get('override_logo_reference', None)
-override_doc_publisher = kw.get("override_publisher_title", None)
+override_logo_reference = kw.get('override_logo_reference', None)
+override_source_organisation_title = kw.get("override_source_organisation_title", None)
 override_batch_mode = kw.get('batch_mode', False)
-
-follow_up_doc_publisher = None
+override_source_person_title = None
 
 # ---------- backward compatability with legacy odp/sxi presentations ----------
 # note: this has to come first to convert file into html and then continue
@@ -188,7 +187,7 @@ if doc_ooo is not None:
   if doc.getPortalType() in ["Presentation"]:
     raw_data = doc_portal.portal_transforms.convertToData(
       "text/html",
-      str(context.getData() or empty_string),
+      str(context.getData() or blank),
       context=context,
       mimetype=context.getContentType()
     )
@@ -199,13 +198,13 @@ if doc_ooo is not None:
     page_list = getPageList(raw_data)
     if len(page_list) > 0:
       page_content = sortContent(page_list)
-      doc_converted_content = empty_string
+      doc_converted_content = blank
       for slide in page_content:
         if slide[1].find("<center>") > -1:
           slide_content_list = slide[1].split("<h3>Notes:</h3>")
           if len(slide_content_list) != 2:
             slide_content = slide[1]
-            slide_notes = empty_string
+            slide_notes = blank
           else:
             slide_content = slide_content_list[0]
             slide_content = slide_content.replace("<center>", "")
@@ -221,104 +220,74 @@ doc_title = doc.getTitle()
 doc_language = doc.getLanguage()
 doc_description = doc.getDescription()
 doc_creation_year = doc.getCreationDate().strftime('%Y')
-doc_full_reference = '-'.join([doc.getReference(), doc.getVersion(), doc_language])
+doc_version = doc.getVersion() or "001"
+doc_reference = doc.getReference()
+doc_relative_url = doc.getRelativeUrl()
+doc_aggregate_list = []
+doc_modification_date = doc.getModificationDate()
 
 if doc_language and doc_format == "pdf":
   doc.REQUEST['AcceptLanguage'].set(doc_language, 10)
+if doc_reference is None:
+  doc_reference = doc_prefix + doc_title.replace(" ", ".")
+doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])
 
 # --------------------------- Layout Parameters --------------------------------
-doc_theme_claim = empty_string
-doc_theme_logo = None
-doc_theme_logo_url = None
-doc_theme_footer_url = override_doc_logo
-doc_pdf = ".pdf" if doc_format == "pdf" else empty_string
-doc_template_css_url = ''.join([doc_url, "/slide_css/slide", doc_pdf, ".css"])
-doc_fallback_img_url = ''.join([doc_url, '/', getCommonParameter("fallback_image", None)])
-doc_logo_prefix = getCustomParameter("default_logo_prefix", None)
-
-# XXX simplify
-doc_theme_css_font_list = getCustomParameter("default_theme_font_css_url_list", None) or []
-doc_theme_css_url = (
-  getCustomParameter("default_theme_css_url", None) or 
-  getCommonParameter("default_theme_css_url", None) or 
-  empty_string
+doc_theme = doc.Base_getThemeDict(
+  custom_theme=getCustomParameter("theme", None),
+  override_batch_mode=override_batch_mode,
+  format=doc_format,
+  url=doc_url,
+  css_path="/slide_css/slide"
 )
-
-doc_publisher_list = getLocalProxyParameter("publisher", None)
-if doc_publisher_list and len(doc_publisher_list) > 0:
-  follow_up_doc_publisher = doc_publisher_list[0].get("organisation") or None
-doc_publisher = (
-  getCustomParameter("default_company_title", None) or
-  empty_string
-)
-doc_copyright = (
-  override_doc_publisher or
-  follow_up_doc_publisher or
-  getCustomParameter("default_company_title", None) or
-  empty_string
-)
-
-# theme
-doc_theme = (
-  getLocalProxyParameter("theme", None) or
-  getCustomParameter("theme", None) or
-  doc_publisher
-)
-if doc_theme and override_batch_mode:
-  doc_theme = "default"
-if doc_theme:
-  doc_theme = doc_theme.lower()
-  if doc_logo_prefix:
-    doc_theme_logo_url = doc_logo_prefix + doc_theme.capitalize()
-    doc_theme_logo = context.restrictedTraverse(doc_theme_logo_url)
-    doc_theme_footer_url = doc_theme_footer_url or (doc_logo_prefix + doc_publisher)
-  if doc_theme_logo:
-    doc_theme_claim = doc_theme_logo.getDescription()
-else:
-  doc_theme = "default"
-  doc_theme_logo_url = doc_fallback_img_url
-
-doc_theme_footer_url = doc_theme_footer_url or doc_fallback_img_url
-doc_author_list = ', '.join(c.get("name") for c in getLocalProxyParameter("author", [])) or empty_string
 doc_css = ''.join(['.ci-slideshow-intro.present:not(.slide-background):before {',
-  'content: "%s";' % (doc_theme_claim),
-  'background: #FFF url("%s?format=png&amp;display=small") center no-repeat;' % (doc_theme_logo_url),
+  'content: "%s";' % (doc_theme.get("theme_logo_description")),
+  'background: #FFF url("%s") center no-repeat;' % (doc_theme.get("theme_logo_url")),
   'background-size: auto 120px;'
 '}'])
 
-# --------------------------- Content Upgrades ---------------------------------
+# ---------------------------------- Source ------------------------------------
+doc_source = doc.Base_getSourceDict(
+  override_source_person_title=override_source_person_title,
+  override_source_organisation_title=html_quote(override_source_organisation_title),
+  override_logo_reference=html_quote(override_logo_reference),
+  default_company_title=getCustomParameter("default_company_title", None),
+  default_bank_account_uid=getCustomParameter("default_bank_account_uid", None),
+  theme_logo_url=doc_theme.get("theme_logo_url", None)
+)
 
+# --------------------------- Content Upgrades ---------------------------------
 for image in re.findall('(<img.*?/>)', doc_content):
-  doc_content = doc_content.replace(image, context.WebPage_validateImage(img_string=image, img_svg_format=doc_display_svg))
+  doc_content = doc_content.replace(
+    image,
+    context.WebPage_validateImage(img_string=image, img_svg_format=setToNone(doc_display_svg))
+  )
 
 # ========================= TRANSFORMATION: book ===============================
-
 # XXX still dirty
-if doc_transformation == "book":
-
-  intro_slide = ''.join([
-    '<h1 i18n:translate="" i18n:domain="erp5_ui">Introduction</h1>',
-    '<p>%s</p>' % doc_description,
-    '${WebPage_insertTableOfReferences}'
-  ])
-  doc_content = ''.join([intro_slide, doc_content])
-
-  for slide in getSectionSlideList(doc_content):
-    mod_slide = removeEmptyDetails(slide)
-    mod_slide = removeDetailTags(mod_slide)
-    if slide.find('class="chapter"') == -1:
-      mod_slide = context.WebPage_downgradeHeaders(mod_slide, 1)
-    mod_slide = removeSectionTags(mod_slide)
-    doc_content = doc_content.replace(slide, mod_slide)
-
-  for table in re.findall('(<table.*?<\/table>)', doc_content):
-    doc_content = doc_content.replace(table, context.WebPage_validateTable(table_string=table))
-
-  for link in re.findall('(<a.*?<\/a>)', document_content):
-    doc_content = doc_content.replace(link, context.WebPage_validateLink(link_string=link, link_toc=true))
-
-  # XXX return?
-  return document_content
+#if doc_transformation == "book":
+#
+#  intro_slide = ''.join([
+#    '<h1 i18n:translate="" i18n:domain="erp5_ui">Introduction</h1>',
+#    '<p>%s</p>' % doc_description,
+#    '${WebPage_insertTableOfReferences}'
+#  ])
+#  doc_content = ''.join([intro_slide, doc_content])
+#
+#  for slide in getSectionSlideList(doc_content):
+#    mod_slide = removeEmptyDetails(slide)
+#    mod_slide = removeDetailTags(mod_slide)
+#    if slide.find('class="chapter"') == -1:
+#      mod_slide = context.WebPage_downgradeHeaders(mod_slide, 1)
+#    mod_slide = removeSectionTags(mod_slide)
+#    doc_content = doc_content.replace(slide, mod_slide)
+#
+#  for table in re.findall('(<table.*?<\/table>)', doc_content):
+#    doc_content = doc_content.replace(table, context.WebPage_validateTable(table_string=table))
+#
+#  for link in re.findall('(<a.*?<\/a>)', document_content):
+#    doc_content = doc_content.replace(link, context.WebPage_validateLink(link_string=link, link_toc=true))
+#
 
 # ------------- backwards compatability with old slideshow ---------------------
 # requires to wrap content of slides that contain <details> into nested 
@@ -334,64 +303,52 @@ if getDetails(doc_content) > -1:
       details = updated.replace('<details>', '<details open="open">')
 
       # XXX split content above 1600 chars into multiple details tags?
-
       doc_content = doc_content.replace(slide, details)
 
 # ============================= Format: html ===================================
 if doc_format == "html":
   doc.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
   return context.WebPage_createSlideshow(
-    # meta
     doc_format=doc_format,
-    doc_theme=doc_theme,
-    doc_title=html_quote(doc_title),
+    doc_theme=doc_theme.get("theme"),
+    doc_title=doc_title,
     doc_language=doc_language,
-    doc_template_css_url=doc_template_css_url,
-    doc_theme_css_font_list=doc_theme_css_font_list,
-    doc_theme_css_url=doc_theme_css_url,
-    #footer
-    doc_theme_footer_url=html_quote(doc_theme_footer_url),
-    doc_description=html_quote(doc_description),
-    doc_creation_year=html_quote(doc_creation_year),
-    doc_copyright=html_quote(doc_copyright),
-    doc_author_list=html_quote(doc_author_list),
-    # cover
+    doc_template_css_url=doc_theme.get("template_css_url"),
+    doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
+    doc_theme_css_url=doc_theme.get("theme_css_url"),
+    doc_footer_url=doc_source.get("enhanced_logo_url"),
+    doc_description=doc_description,
+    doc_creation_year=doc_creation_year,
+    doc_copyright=doc_source.get("organisation_title", blank),
+    doc_author_list=doc_source.get("contributor_title_string"),
     doc_css=doc_css,
-    # content
-    doc_content=doc_content,
-    # notes are on the slide
-    #doc_display_notes=doc_display_notes,
-    #doc_notes=removeSlidesWithoutDetailsFromNotes(doc_content)
+    doc_content=doc_content
   )
 
 # ============================= Format: pdf ====================================
 if doc_format == "pdf":
   doc_slideshow_footer = context.WebPage_createSlideshowFooter(
-    # meta
     doc_format=doc_format,
-    doc_theme=doc_theme,
-    doc_title=html_quote(doc_title),
+    doc_theme=doc_theme.get("theme"),
+    doc_title=doc_title,
     doc_language=doc_language,
-    doc_template_css_url=doc_template_css_url,
-    doc_theme_css_font_list=doc_theme_css_font_list,
-    doc_theme_css_url=doc_theme_css_url,
-    #footer
-    doc_theme_footer_url=html_quote(doc_theme_footer_url),
-    doc_description=html_quote(doc_description),
-    doc_creation_year=html_quote(doc_creation_year),
-    doc_copyright=html_quote(doc_copyright),
-    doc_author_list=html_quote(doc_author_list)
+    doc_template_css_url=doc_theme.get("template_css_url"),
+    doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
+    doc_theme_css_url=doc_theme.get("theme_css_url"),
+    doc_footer_url=doc_source.get("enhanced_logo_url"),
+    doc_description=doc_description,
+    doc_creation_year=doc_creation_year,
+    doc_copyright=doc_source.get("organisation_title", blank),
+    doc_author_list=doc_source.get("contributor_title_string")
   )
   doc_slideshow_cover = context.WebPage_createSlideshowCover(
-    # meta
     doc_format=doc_format,
-    doc_theme=doc_theme,
-    doc_title=html_quote(doc_title),
+    doc_theme=doc_theme.get("theme"),
+    doc_title=doc_title,
     doc_language=doc_language,
-    doc_template_css_url=doc_template_css_url,
-    doc_theme_css_font_list=doc_theme_css_font_list,
-    doc_theme_css_url=doc_theme_css_url,
-    # cover
+    doc_template_css_url=doc_theme.get("template_css_url"),
+    doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
+    doc_theme_css_url=doc_theme.get("theme_css_url"),
     doc_css=doc_css
   )
 
@@ -399,37 +356,28 @@ if doc_format == "pdf":
   # and add extra css to recreate the same layout. so a separate output=content
   # instead of defaulting to None
   doc_slideshow_content = context.WebPage_createSlideshowContent(
-    # meta
     doc_format=doc_format,
-    doc_theme=doc_theme,
-    doc_title=html_quote(doc_title),
+    doc_theme=doc_theme.get("theme"),
+    doc_title=doc_title,
     doc_language=doc_language,
-    doc_template_css_url=doc_template_css_url,
-    doc_theme_css_font_list=doc_theme_css_font_list,
-    doc_theme_css_url=doc_theme_css_url,
-    # content
+    doc_template_css_url=doc_theme.get("template_css_url"),
+    doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
+    doc_theme_css_url=doc_theme.get("theme_css_url"),
     doc_content=doc_content
   )
   if doc_display_notes:
     doc_slideshow_notes = context.WebPage_createSlideshowNotes(
-      # meta
       doc_format=doc_format,
-      doc_theme=doc_theme,
-      doc_title=html_quote(doc_title),
+      doc_theme=doc_theme.get("theme"),
+      doc_title=doc_title,
       doc_language=doc_language,
-      doc_template_css_url=doc_template_css_url,
-      doc_theme_css_font_list=doc_theme_css_font_list,
-      doc_theme_css_url=doc_theme_css_url,
-      # notes
+      doc_template_css_url=doc_theme.get("template_css_url"),
+      doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
+      doc_theme_css_url=doc_theme.get("theme_css_url"),
       doc_notes=removeSlidesWithoutDetailsFromNotes(doc_content)
     )
-
+  
   # ================ encode and build cloudoo elements =========================
-  # parameters => https://lab.nexedi.com/nexedi/cloudooo/blob/master/cloudooo/handler/wkhtmltopdf/handler.py
-  # before_body_data_list
-  # embedded_html_data
-  # after_body_data_list
-  # footer_embedded_html_data
   footer_embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_footer, allow_script=True)
   embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True)
   before_body_data_list = [
@@ -455,36 +403,16 @@ if doc_format == "pdf":
     )
   )
 
-  if doc_save:
-    dms_module = getattr(context, 'document_module', None)
-    if dms_module is not None:
-      save_document = dms_module.newContent(
-        portal_type="PDF",
-        title=doc_title,
-        language=doc_language,
-        reference=doc_full_reference
-      )
-      save_document.edit(
-        source_reference=''.join([doc_reference, '.pdf']), 
-        file=pdf_file
-      )
-    
-      message = context.Base_translateString(
-        '%(portal_type)s created successfully as PDF Document.' % {
-          'portal_type': save_document.getTranslatedPortalType()
-        }
-      )
-    
-      return document.Base_redirect(
-        keep_items=dict(portal_status_message=message)
-      )
-  elif doc_download:
-    doc.REQUEST.RESPONSE.setHeader("Content-Type", "application/pdf;")
-    doc.REQUEST.RESPONSE.setHeader("Content-Disposition", 'attachment; filename="' + doc_full_reference + '.pdf"')
-  else:
-    doc.REQUEST.RESPONSE.setHeader("Content-Type", "application/pdf;")
-    doc.REQUEST.RESPONSE.setHeader("Content-Disposition", 'filename="' + doc_full_reference + '.pdf"')
-  return pdf_file
-
-# XXX throw if all fails?
-raise Exception("No or unsupported format: " + str(doc_format))
+  return doc.WebPage_finishPdfCreation(
+    doc_download=doc_download,
+    doc_save=doc_save,
+    doc_version=doc_version,
+    doc_title=doc_title,
+    doc_relative_url=doc_relative_url,
+    doc_aggregate_list=doc_aggregate_list,
+    doc_language=doc_language,
+    doc_modification_date=doc_modification_date,
+    doc_reference=doc_reference,
+    doc_full_reference=doc_full_reference,
+    doc_pdf_file=pdf_file
+  )

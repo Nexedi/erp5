@@ -14,7 +14,7 @@ img_type = img_obj.getContentType()
 
 # ensure alt attributes are set
 if img_string.find('alt=') == -1:
-  img_string.replace ("src=", 'alt="%s" src=' % img_obj.getTitle())
+  img_string.replace ("src=", 'alt="%s" src=' % img_caption or img_obj.getTitle())
 
 # force svg display as svg or png
 if img_type == "image/svg+xml":

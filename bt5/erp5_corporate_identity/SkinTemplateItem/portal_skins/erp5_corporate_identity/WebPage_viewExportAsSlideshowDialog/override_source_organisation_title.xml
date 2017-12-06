@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>override_publisher_title</string> </value>
+            <value> <string>override_source_organisation_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

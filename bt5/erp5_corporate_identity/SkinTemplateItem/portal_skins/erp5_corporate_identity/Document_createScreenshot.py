@@ -2,6 +2,8 @@ if id is None:
   return "Failed. Missing image id."
 if context.getPortalType() != "PDF":
   return "Failed. Not a pdf."
+if context.getId().find("template_test") == -1:
+  return "Failed. Not a template test item."
 
 pdf_page = context
 portal = pdf_page.getPortalObject()
@@ -14,7 +16,9 @@ preferred_document_conversion_server_url = (
 )
 try:
   system_preference.edit(
-    preferred_document_conversion_server_url="https://cloudooo.erp5.net/",
+    preferred_document_conversion_server_url="https://softinst77579.host.vifib.net/",
+    #https://cloudooo.erp5.net/
+    #https://softinst77579.host.vifib.net/
   )
   content_type, bmp_data = pdf_page.convert("bmp", frame=frame)
   image = portal.portal_catalog(

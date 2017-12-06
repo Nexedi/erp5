@@ -85,9 +85,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Some description</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -242,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>963.19340.52569.29576</string> </value>
+                <value> <string>963.20770.57899.51268</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1510153132.9</float>
+                        <float>1511279847.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

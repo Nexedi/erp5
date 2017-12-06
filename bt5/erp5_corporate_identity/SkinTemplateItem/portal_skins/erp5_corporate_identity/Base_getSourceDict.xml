@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id=None, cancel_url=None, format=None, note_display=None, svg_display=None, override_publisher_title=None, override_logo_reference=None, portal_skin=None, *args,**kw</string> </value>
+            <value> <string>source=None, override_logo_reference=None, override_source_person_title=None, override_source_organisation_title=None, default_company_title=None, default_bank_account_uid=None, theme_logo_url=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebPage_updateExportAsSlideshowDialog</string> </value>
+            <value> <string>Base_getSourceDict</string> </value>
         </item>
       </dictionary>
     </pickle>

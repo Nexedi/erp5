@@ -12,9 +12,11 @@ if dialog_id is not None:
       cancel_url=cancel_url,
       portal_skin=portal_skin,
       override_logo_reference=override_logo_reference,
-      override_publisher_title=override_publisher_title,
-      note_display=note_display,
-      svg_display=svg_display,
+      override_source_organisation_title=override_source_organisation_title,
+      display_note=display_note,
+      display_svg=display_svg,
+      document_save=document_save,
+      document_download=document_download,
       format=format,
     )
   )

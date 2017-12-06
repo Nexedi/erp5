@@ -9,27 +9,6 @@ html {
    height: 100%;
 }
 
-/* === font family === */
-.ci-slideshow h1,
-.ci-slideshow h2,
-.ci-slideshow-handout .ci-slideshow-handout-header,
-.ci-slideshow-handout h1,
-.ci-slideshow-handout h2,
-.ci-slideshow h1 ~ *,
-.ci-slideshow h2 ~ *,
-.ci-slideshow-footer div,
-.ci-slideshow .ci-slideshow-intro:before {
-  font-family: 'Roboto', Arial, sans-serif;
-}
-.ci-slideshow details,
-.ci-slideshow-handout details {
-  font-family: 'Heuristica', 'Helvetica', Times, serif;
-}
-.ci-slideshow pre,
-.ci-slideshow code {
-  font-family: "Courier New", Courier, monospace, sans-serif;
-}
-
 /* === font size === */
 .ci-slideshow h1,
 .ci-slideshow h2,

@@ -75,9 +75,10 @@
                     <value>
                       <list>
                         <string>format</string>
-                        <string>note_display</string>
-                        <string>svg_display</string>
+                        <string>display_note</string>
+                        <string>display_svg</string>
                         <string>portal_skin</string>
+                        <string>document_save</string>
                       </list>
                     </value>
                 </item>
@@ -86,7 +87,7 @@
                     <value>
                       <list>
                         <string>override_logo_reference</string>
-                        <string>override_publisher_title</string>
+                        <string>override_source_organisation_title</string>
                       </list>
                     </value>
                 </item>
@@ -127,7 +128,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>WebPage_updateExportAsSlideshowDialog</string> </value>
+            <value> <string>WebPage_updateSlideshowDialog</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>

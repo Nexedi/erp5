@@ -27,17 +27,39 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.Localizer.itools.i18n.accept import AcceptLanguage
-from Products.ERP5.tests.testERP5WebWithDms import customScript
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from PIL import Image
-from urlparse import urlparse
+import transaction
+import functools
 import cStringIO
-import math, operator
+import math
 import re
 import base64
 
 host_url = r"https?://localhost(?::[0-9]+)?/[^/]+/"
 test_url = "https://softinst73908.host.vifib.net/"
 
+def setDomainDict(script_id, script_param, script_code):
+  def wrapper(func):
+    @functools.wraps(func)
+    def wrapped(self, *args, **kwargs):
+      if script_id in self.portal.portal_skins.custom.objectIds():
+        raise ValueError('Precondition failed: %s exists in custom' % script_id)
+      createZODBPythonScript(
+        self.portal.portal_skins.custom,
+        script_id,
+        script_param,
+        script_code,
+      )
+      try:
+        func(self, *args, **kwargs)
+      finally:
+        if script_id in self.portal.portal_skins.custom.objectIds():
+          self.portal.portal_skins.custom.manage_delObjects(script_id)
+        transaction.commit()
+    return wrapped
+  return wrapper
+  
 def changeSkin(skin_name):
   """
   Change skin for following commands and attribute resolution.
@@ -81,7 +103,9 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     self.message_catalog.message_edit('Notes', 'de', 'Notizen', '')
     self.message_catalog.gettext('VAT ID', add=1)
     self.message_catalog.message_edit('VAT ID', 'de', 'USt-ID', '')
-
+    self.message_catalog.gettext('Data Sheet', add=1)
+    self.message_catalog.message_edit('Data Sheet', 'de', 'Datenblatt', '')
+        
     # Activating a system preference if none is activated
     for preference in self.portal.portal_catalog(portal_type="System Preference"):
       if preference.getPreferenceState() == "global":
@@ -131,8 +155,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       return
     raise AssertionError("%(message)s\nComparing image:\n%(base64_1)s\nWith image:\n%(base64_2)s\nRMS: %(rms)s > %(max_rms)s\nAssertionError: %(message)s" % {
       "message": message,
-      "base64_1": base64.encodestring(test_image_data),
-      "base64_2": base64.encodestring(expected_image_data),
+      "base64_1": "pfff", #base64.encodestring(test_image_data),
+      "base64_2": "pfff", #base64.encodestring(expected_image_data),
       "rms": rms,
       "max_rms": max_rms,
     })
@@ -152,7 +176,9 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     preferred_document_conversion_server_url = system_preference.getPreferredDocumentConversionServerUrl()
     try:
       system_preference.edit(
-        preferred_document_conversion_server_url="https://cloudooo.erp5.net/",
+        preferred_document_conversion_server_url="https://softinst77579.host.vifib.net/",
+        #https://cloudooo.erp5.net/
+        #https://softinst77579.host.vifib.net/
       )
       return args[0](*args[1:], **kw)
     finally:
@@ -203,13 +229,16 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     """
     test_page = getattr(self.portal.web_page_module, id1)
     expected_page = getattr(self.portal.web_page_module, id2)
-
+    dump = getattr(self.portal, 'dump_data')
     kw["override_date"] = kw.get("override_date", test_page.getModificationDate())
 
     html = getattr(test_page, kw.get("test_method"))(portal_skin=kw.get("use_skin"), **kw)
     html = re.sub(host_url, test_url, html)
     html = html.replace(test_page.getReference(), expected_page.getReference())
 
+    # update html test files or run tests
+    if dump is True:
+      expected_page.edit(text_content=html)
     self.assertEquals(html, expected_page.getData())
 
   def runPdfTestPattern(self, id1, id2, id3, **kw):
@@ -219,7 +248,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     test_page = getattr(self.portal.web_page_module, id1)
     expected_image = getattr(self.portal.image_module, id2)
     image_source_pdf_doc = getattr(self.portal.document_module, id3)
-
+    dump = getattr(self.portal, 'dump_data')
     kw["override_date"] = kw.get("override_date", test_page.getModificationDate())
 
     pdf_kw = dict(
@@ -237,12 +266,15 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       **kw
     )
 
+    # XXX don't overwrite file to create image, use temporary-pdf?
     image_source_pdf_doc.setData(pdf_data)
     _, bmp = image_source_pdf_doc.convert("bmp", frame=kw.get("page_number"))
 
+    # update bmp files
+    if dump is True:
+      expected_image.setData(bmp)
     self.assertImageRenderingEquals(str(bmp), str(expected_image.getData()))
 
-    
   ##############################################################################
   # What rendering is tested:
   # - Web Page as Slideshow, Letter, Leaflet (Two Page) and Book
@@ -321,101 +353,6 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       )
     )
 
-  @changeSkin('CI')
-  def test_htmlSlideShowBackcompatSkinCi(self):
-    """
-      Test:
-      - backcompat test for portal_skin "CI"
-      - Web Page as Slideshow
-      - without follow up
-      - without contributor
-      - export as html
-    """
-    self.runHtmlTestPattern(
-      "template_test_slideshow_input_001_en_html",
-      "template_test_slideshow_output_expected_001_en_html",
-      **dict(
-        use_skin="CI",
-        test_method="WebPage_exportAsSlideshow"
-      )
-    )
-
-  @changeSkin('CI_slideshow')
-  def test_htmlSlideShowBackcompatSkinCislideshow(self):
-    """
-      Test:
-      - backcompat test for portal_skin "CI_slideshow"
-      - Web Page as Slideshow
-      - without follow up
-      - without contributor
-      - export as html
-    """
-    self.runHtmlTestPattern(
-      "template_test_slideshow_input_001_en_html",
-      "template_test_slideshow_output_expected_001_en_html",
-      **dict(
-        use_skin="CI_slideshow",
-        test_method="WebPage_exportAsSlideshow"
-      )
-    )
-
-  @changeSkin('CI_Slideshow')
-  def test_htmlSlideShowBackcompatSkinCiSlideshow(self):
-    """
-      Test:
-      - backcompat test for portal_skin "CI_Slideshow"
-      - Web Page as Slideshow
-      - without follow up
-      - without contributor
-      - export as html
-    """
-    self.runHtmlTestPattern(
-      "template_test_slideshow_input_001_en_html",
-      "template_test_slideshow_output_expected_001_en_html",
-      **dict(
-        use_skin="CI_slideshow",
-        test_method="WebPage_exportAsSlideshow"
-      )
-    )
-
-  @changeSkin('SlideShow')
-  def test_htmlSlideShowBackcompatSkinSlideShow(self):
-    """
-      Test:
-      - backcompat test for portal_skin "SlideShow"
-      - Web Page as Slideshow
-      - without follow up
-      - without contributor
-      - export as html
-    """
-    self.runHtmlTestPattern(
-      "template_test_slideshow_input_001_en_html",
-      "template_test_slideshow_output_expected_001_en_html",
-      **dict(
-        use_skin="SlideShow",
-        test_method="WebPage_exportAsSlideshow"
-      )
-    )
-
-  @changeSkin('WhiteSlideShow')
-  def test_htmlSlideShowBackcompatSkinWhiteSlideShow(self):
-    """
-      Test:
-      - backcompat test for portal_skin "WhiteSlideShow"
-      - Web Page as Slideshow
-      - without follow up
-      - without contributor
-      - export as html
-    """
-    self.runHtmlTestPattern(
-      "template_test_slideshow_input_001_en_html",
-      "template_test_slideshow_output_expected_001_en_html",
-      **dict(
-        use_skin="WhiteSlideShow",
-        test_method="WebPage_exportAsSlideshow"
-      )
-    )
-
   @changeSkin('Slide')
   def test_htmlSlideShowOptionsSet(self):
     """
@@ -430,11 +367,11 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_slideshow_input_001_en_html",
       "template_test_slideshow_output_expected_002_en_html",
       **dict(
-        use_skin="WhiteSlideShow",
+        use_skin="Slide",
         test_method="WebPage_exportAsSlideshow",
         override_publisher_title="Foobarbazbam",
         override_logo_reference="Template.Test.Image.Logo.Alternativ",
-        svg_display="svg"
+        display_svg="svg"
       )
     )
 
@@ -451,7 +388,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_slideshow_input_002_en_html",
       "template_test_slideshow_output_expected_003_en_html",
       **dict(
-        use_skin="WhiteSlideShow",
+        use_skin="Slide",
         test_method="WebPage_exportAsSlideshow"
       )
     )
@@ -491,7 +428,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_slideshow_input_004_en_pdf",
       **dict(
         page_number=13,
-        note_display=1,
+        display_note=1,
         use_skin="Slide",
         test_method="WebPage_exportAsSlideshow",
         format="pdf"
@@ -536,7 +473,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
   #    "template_test_slideshow_input_003_en_pdf",
   #    **dict(
   #      page_number=4,
-  #      override_publisher_title="Couscous",
+  #      override_source_organisation_title="Couscous",
   #      override_logo_reference="Template.Test.Image.Erp5.Logo",
   #      use_skin="Slide",
   #      test_method="WebPage_exportAsSlideshow",
@@ -559,7 +496,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_slideshow_input_003_en_pdf",
       **dict(
         page_number=0,
-        override_publisher_title="Couscous",
+        override_source_organisation_title="Couscous",
         override_logo_reference="Template.Test.Image.Erp5.Logo",
         use_skin="Slide",
         test_method="WebPage_exportAsSlideshow",
@@ -582,7 +519,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_slideshow_input_003_en_pdf",
       **dict(
         page_number=0,
-        override_publisher_title="Couscous",
+        override_source_organisation_title="Couscous",
         override_logo_reference="Template.Test.Image.Erp5.Logo",
         use_skin="Slide",
         test_method="WebPage_printAsSlideshow",
@@ -605,7 +542,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_slideshow_input_005_de_pdf",
       **dict(
         page_number=8,
-        note_display=1,
+        display_note=1,
         lang="de",
         test_method="WebPage_exportAsSlideshow",
         use_skin="Slide",
@@ -613,12 +550,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       )
     )
 
-
-
-
   '''
-  
-  
   @changeSkin('Letter')
   def test_htmlLetter(self):
     """
@@ -695,7 +627,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         test_method="WebPage_exportAsLetter",
         use_skin="Letter",
         head_display=0,
-        lang="de"
+        lang="de",
       )
     )
 
@@ -715,7 +647,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         page_number=0,
         test_method="WebPage_exportAsLetter",
         format="pdf",
-        use_skin="Letter"
+        use_skin="Letter",
       )
     )
 
@@ -737,7 +669,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         page_number=0,
         test_method="WebPage_exportAsLetter",
         format="pdf",
-        use_skin="Letter"
+        use_skin="Letter",
       )
     )
 
@@ -765,7 +697,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         override_destination_person_title="Test Association Member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
       )
     )
     
@@ -788,7 +720,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         format="pdf",
         lang="de",
         head_display=0,
-        use_skin="Letter"
+        use_skin="Letter",
       )
     )
 
@@ -807,145 +739,142 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       **dict(
         page_number=0,
         test_method="WebPage_PrintAsLetter",
-        use_skin="Letter"
+        use_skin="Letter",
+      )
+    )
+
+  @changeSkin('Leaflet')
+  def test_htmlLeaflet(self):
+    """
+      Test:
+      - Web Page as Leaflet
+      - as-is
+      - export as html
+    """
+    self.runHtmlTestPattern(
+      "template_test_leaflet_input_001_en_html",
+      "template_test_leaflet_output_expected_001_en_html",
+      **dict(
+        test_method="WebPage_exportAsLeaflet",
+        use_skin="Leaflet"
       )
     )
   
+  @changeSkin('Leaflet')
+  def test_htmlLeafletOverrides(self):
+    """
+      Test:
+      - Web Page as Leaflet
+      - Set all overrides and hide side panel
+      - export as html
+    """
+    self.runHtmlTestPattern(
+      "template_test_leaflet_input_002_en_html",
+      "template_test_leaflet_output_expected_002_en_html",
+      **dict(
+        test_method="WebPage_exportAsLeaflet",
+        side_display=0,
+        override_source_person_title="Test Recipipent",
+        override_source_organisation_title="Test Association",
+        override_leaflet_header_title="Couscous",
+        use_skin="Leaflet"
+      )
+    )
+
+  @changeSkin('Leaflet')
+  def test_htmlLeafletContributorFollowUp(self):
+    """
+      Test:
+      - Web Page as Leaflet
+      - add follow up organisation and contributor
+      - export as html
+    """
+    self.runHtmlTestPattern(
+      "template_test_leaflet_input_003_de_html",
+      "template_test_leaflet_output_expected_003_de_html",
+      **dict(
+        test_method="WebPage_exportAsLeaflet",
+        use_skin="Leaflet"
+      )
+    )
   
+  @changeSkin('Leaflet')
+  def test_pdfLeaflet(self):
+    """
+      Test:
+      - Web Page as Leaflet
+      - as-is
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_leaflet_input_001_en_html",
+      "template_test_leaflet_input_page_1_001_en_bmp",
+      "template_test_leaflet_input_001_en_pdf",
+      **dict(
+        page_number=1,
+        test_method="WebPage_exportAsLeaflet",
+        use_skin="Leaflet"
+      )
+    )
   
-  def dumpOrCheckPrintout(self, delivery=None, report_name=None, prefix=None):
-    """
-    render printout as html, then either compare with previous dumps, or
-    dump value
-    """
-    dump_printout = getattr(self.portal, 'dump_notification', None)
-    printout_content = getattr(delivery, report_name)(batch_mode=True, test_mode=True)
-    printout_name = "%s_%s" % (prefix, report_name)
-    web_page_id = "test_printout_%s" % printout_name
-    if dump_printout:
-      former_web_page = getattr(self.portal.web_page_module, web_page_id, None)
-      if former_web_page is None:
-        former_web_page = self.portal.web_page_module.newContent(id=web_page_id)
-      former_web_page.edit(title=printout_name)
-      former_web_page.setTextContent(printout_content)
-    else:
-      former_web_page = getattr(self.portal.web_page_module, web_page_id)
-      self.assertEqual(former_web_page.getTextContent(),
-                       printout_content)
-    self.tic()
-
-
-
-  def test_CI_twoPage(self):
+  @changeSkin('Leaflet')
+  @setDomainDict("ERP5Site_getWebSiteDomainDict", "", 'return {"test.portal.erp": context.getPortalObject()}')
+  def test_pdfLeafletOverrides(self):
     """
       Test:
-      - Web Page as Two Page
-      - without follow up
-      - without contributor
-      - export as Default
-      - html format
+      - Web Page as Leaflet
+      - Set all overrides and hide side panel, display organisation logo
+      - export as pdf
     """
-    self.runTestPattern1("nexedi_ci_test_twopage_sample_001_en", "nexedi_ci_test_twopage_sample_002_en")
+    self.runPdfTestPattern(
+      "template_test_leaflet_input_002_en_html",
+      "template_test_leaflet_input_page_0_002_en_bmp",
+      "template_test_leaflet_input_002_en_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLeaflet",
+        format="pdf",
+        use_skin="Leaflet",
+        override_source_organisation_title="Test Association",
+        override_source_person_title="Test Recipient",
+        override_leaflet_header_title="Couscous",
+      )
+    )
 
-  def test_CI_twoPageContributor(self):
+  @changeSkin('Leaflet')
+  def test_pdfLeafletContributorFollowUp(self):
     """
       Test:
-      - Web Page as Two Page
-      - without follow up
-      - with contributor (email only)
-      - export as Default
-      - html format
+      - Web Page as Leaflet
+      - add follow up organisation and contributor, test language translation
+      - export as pdf
     """
-    self.runTestPattern1("nexedi_ci_test_twopage_sample_003_en", "nexedi_ci_test_twopage_sample_004_en")
+    self.runPdfTestPattern(
+      "template_test_leaflet_input_003_de_html",
+      "template_test_leaflet_input_page_0_003_de_bmp",
+      "template_test_leaflet_input_003_de_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLeaflet",
+        use_skin="Leaflet"
+      )
+    )
 
-  def test_CI_twoPageContributorFollowUpOrganisation(self):
+  @changeSkin('Leaflet')
+  def test_pdfLeafletPrint(self):
     """
       Test:
-      - Web Page as Two Page
-      - with follow up (organisation)
-      - with contributor (email only)
-      - export as Default
-      - html format
+      - Web Page as Leaflet
+      - print as pdf
     """
-    self.runTestPattern1("nexedi_ci_test_twopage_sample_005_en", "nexedi_ci_test_twopage_sample_006_en")
-
-  def test_CI_twoPageContributorFollowUpOrganisationPerson(self):
-    """
-      Test:
-      - Web Page as Two Page
-      - with follow up (organisation + person)
-      - with contributor (email only)
-      - export as Default
-      - html format
-    """
-    self.runTestPattern1("nexedi_ci_test_twopage_sample_007_en", "nexedi_ci_test_twopage_sample_008_en")
-
-  @customScript("ERP5Site_getWebSiteDomainDict", "", r'return {}')
-  def test_CI_twoPageChapterPdfPage1(self):
-    """
-      Test:
-      - Web Page as Two Page
-      - without follow up
-      - without contributor
-      - export as Chapter
-      - pdf format (page 1)
-    """
-    self.runTestPattern3("nexedi_ci_test_twopage_sample_001_en", "nexedi_ci_test_twopage_sample_001_en_image_p01", 0)
-
-  @customScript("ERP5Site_getWebSiteDomainDict", "", r'return {}')
-  def test_CI_twoPageChapterPdfPage6(self):
-    """
-      Test:
-      - Web Page as Two Page
-      - without follow up
-      - without contributor
-      - export as Chapter
-      - pdf format (page 6)
-    """
-    self.runTestPattern3("nexedi_ci_test_twopage_sample_001_en", "nexedi_ci_test_twopage_sample_001_en_image_p06", 5)
-
-  def test_CI_pressRelease(self):
-    """
-      Test:
-      - Web Page as Press Release
-      - without follow up
-      - without contributor
-      - export as Default
-      - html format
-    """
-    self.runTestPattern1("nexedi_ci_test_pressrelease_sample_001_en", "nexedi_ci_test_pressrelease_sample_002_en")
-
-  def test_CI_pressReleaseContributor(self):
-    """
-      Test:
-      - Web Page as Press Release
-      - without follow up
-      - with contributor (email only)
-      - export as Default
-      - html format
-    """
-    self.runTestPattern1("nexedi_ci_test_pressrelease_sample_003_en", "nexedi_ci_test_pressrelease_sample_004_en")
-
-  def test_CI_pressReleaseContributorFollowUpOrganisation(self):
-    """
-      Test:
-      - Web Page as Press Release
-      - with follow up (organisation)
-      - with contributor (email only)
-      - export as Default
-      - html format
-    """
-    self.runTestPattern2("nexedi_ci_test_pressrelease_sample_005_en", "nexedi_ci_test_pressrelease_sample_006_en", "Nexedi")
-
-  def test_CI_pressReleaseContributorFollowUpOrganisationPerson(self):
-    
-      Test:
-      - Web Page as Press Release
-      - with follow up (organisation + person)
-      - with contributor (email only)
-      - export as Default
-      - html format
-    """
-    self.runTestPattern2("nexedi_ci_test_pressrelease_sample_007_en", "nexedi_ci_test_pressrelease_sample_008_en", "Nexedi")
-
-'''
+    self.runPdfTestPattern(
+      "template_test_leaflet_input_001_en_html",
+      "template_test_leaflet_input_page_1_001_en_bmp",
+      "template_test_leaflet_input_001_en_pdf",
+      **dict(
+        page_number=1,
+        test_method="WebPage_PrintAsLeaflet",
+        use_skin="Leaflet"
+      )
+    )
+  '''

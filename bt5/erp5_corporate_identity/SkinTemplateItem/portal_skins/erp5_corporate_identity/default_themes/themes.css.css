@@ -1,4 +1,143 @@
 /* ========================================================================== */
+/* =====================  Font Declarations ================================= */
+/* ========================================================================== */
+/* fonts are declared in default theme, so any custom themes.css can override */
+.ci-letter .ci-letter-header span,
+.ci-letter .ci-letter-head-right .ci-letter-timestamp span,
+.ci-letter .ci-letter-head-right .ci-letter-page span,
+.ci-letter .ci-letter-head .ci-letter-destination span {
+  font-family: "Roboto", Arial, sans-serif;
+  font-weight: normal;
+}
+.ci-letter span,
+/*.ci-letter .ci-letter-head table tr td:last-child span, */
+/*.ci-letter .ci-letter-head .ci-letter-destination span, */
+.ci-letter .ci-letter-body p b i,
+.ci-letter .ci-letter-body p,
+.ci-letter .ci-letter-body {
+  font-family: "Heuristica", Helvetica, serif;
+  font-weight: normal;
+}
+.ci-letter .ci-letter-head .ci-letter-source span,
+.ci-letter .ci-letter-footer table td div span {
+  font-family: "Roboto Condensed", Arial, sans-serif;
+  font-weight: normal;
+}
+.ci-letter .ci-letter-header td span  {
+  font-family: "Roboto Condensed", Arial, sans-serif !important;
+  font-weight: normal !important;
+}
+
+.ci-leaflet p,
+.ci-leaflet li {
+  font-family: 'Heuristica', 'Helvetica', Times, serif;
+}
+.ci-leaflet h1,
+.ci-leaflet h2,
+.ci-leaflet .ci-leaflet-footer div,
+.ci-leaflet-header p,
+.ci-leaflet p.ci-leaflet-source-header,
+.ci-leaflet p.ci-leaflet-sheet-header,
+.ci-leaflet #left-summary p,
+.ci-leaflet #left-summary li,
+.ci-leaflet #main-content .left-icon .excerpt,
+.ci-leaflet #legalese .bottom {
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+.ci-slideshow h1,
+.ci-slideshow h2,
+.ci-slideshow .ci-slideshow-handout h1,
+.ci-slideshow .ci-slideshow-handout h2,
+.ci-slideshow .ci-slideshow-intro:before,
+.ci-slideshow h1 ~ *,
+.ci-slideshow h2 ~ *,
+.ci-slideshow-footer div {
+  font-family: 'Roboto', Arial, sans-serif;
+}
+.ci-slideshow details,
+.ci-slideshow-handout details {
+  font-family: 'Heuristica', 'Helvetica', Times, serif;
+}
+html .ci-slideshow pre,
+html .ci-slideshow code {
+  font-family: "Courier New", Courier, monospace, sans-serif;
+}
+
+.ci-book * {
+  font-family: "Heuristica", Helvetica, "Times", serif;
+  font-weight: normal;
+  font-style: normal;
+}
+.ci-book caption {
+  font-family: "Heuristica", Helvetica, "Times", serif;
+  font-weight: normal;
+  font-style: normal !important;
+}
+.ci-book  pre,
+.ci-book  code {
+  /* does not load: font-family: "TexGyreCursor", Monospace, Arial; */
+  font-family: "Roboto", Arial, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+}
+.ci-book strong {
+  font-weight: bold;
+  font-style: normal;
+}
+.ci-book table thead th b,
+.ci-book table thead td strong,
+.ci-book table tbody td b,
+.ci-book table tbody td strong,
+.ci-book table tbody td div,
+.ci-book table tbody th div,
+.ci-book table tbody td span,
+.ci-book table tbody th span {
+  font-family: "Roboto Condensed", Arial, 'Noto Sans Sc', SimHei, STXihei, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+}
+/* XXX custom report css */
+.ci-book div.ci-book-box-offer div,
+.ci-book div.ci-book-box-offer-milestone div {
+  font-family: "Roboto Condensed", Arial, 'Noto Sans Sc', SimHei, STXihei, sans-serif;
+}
+.ci-book .ci-book-box-offer *,
+.ci-book .ci-book-box-offer-milestone * {
+  font-family: "Roboto Condensed", Arial, 'Noto Sans Sc', SimHei, STXihei, sans-serif !important;
+}
+.ci-book .ci-book-footer .ci-book-footer-copy,
+.ci-book table th,
+.ci-book table th span,
+.ci-book table td,
+.ci-book table td li,
+.ci-book table tbody td p,
+.ci-book table tbody td p em,
+.ci-book table th a, 
+.ci-book table td a,
+.ci-book table td i {
+  font-family: "Roboto Condensed", Arial, 'Noto Sans Sc', SimHei, STXihei, sans-serif;
+  font-weight: normal;
+}
+
+.ci-book h1,
+.ci-book h2,
+.ci-book h3,
+.ci-book h4,
+.ci-book h5,
+.ci-book h6,
+.ci-book .ci-book-header td div,
+.ci-book .ci-book-header .ci-book-header-key,
+.ci-book .ci-book-header .ci-book-header-value,
+.ci-book .ci-book-header td div span,
+.ci-book .ci-book-footer td span,
+.ci-book .ci-book-header td div,
+.ci-book table td em {
+  font-family: "Roboto", Arial, 'Noto Sans Sc', SimHei, STXihei, sans-serif;
+  font-weight: normal;
+}
+
+/* ========================================================================== */
 /* =======================  Default THEME =================================== */
 /* ========================================================================== */
 
@@ -69,8 +208,8 @@
   transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
 }
 
-/* -------------------------  Two Pager ------------------------------------- */
-.ci-default .ci-two-page .ci-two-page-header {
+/* -------------------------  Leaflet --------------------------------------- */
+.ci-default .ci-leaflet .ci-leaflet-header {
   background-color: #C3C7C6;
   color: #ffffff;
 }

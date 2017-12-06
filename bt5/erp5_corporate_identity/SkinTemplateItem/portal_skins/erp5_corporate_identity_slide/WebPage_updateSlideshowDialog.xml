@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>dialog_id=None, cancel_url=None, document_download=None, document_save=None ,format=None, display_note=None, display_svg=None, override_source_organisation_title=None, override_logo_reference=None, portal_skin=None, *args,**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebPage_getLocalParameter</string> </value>
+            <value> <string>WebPage_updateSlideshowDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

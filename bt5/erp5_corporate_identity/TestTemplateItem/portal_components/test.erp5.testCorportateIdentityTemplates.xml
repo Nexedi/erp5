@@ -44,9 +44,7 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W: 30,  0: Unused customScript imported from Products.ERP5.tests.testERP5WebWithDms (unused-import)</string>
-                <string>W: 32,  0: Unused urlparse imported from urlparse (unused-import)</string>
-                <string>W: 34,  0: Unused import operator (unused-import)</string>
+                <string>W: 37,  0: Unused import base64 (unused-import)</string>
               </tuple>
             </value>
         </item>
