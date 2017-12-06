@@ -2,13 +2,17 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Standard BT5 Configurator Item" module="erp5.portal_type"/>
+      <global name="Currency Configurator Item" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>bt5_id</string> </key>
-            <value> <string>erp5_accounting_l10n_ifrs</string> </value>
+            <key> <string>base_unit_quantity</string> </key>
+            <value> <float>0.01</float> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>EUR</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -16,13 +20,17 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Standard BT5 Configurator Item</string> </value>
+            <value> <string>Currency Configurator Item</string> </value>
         </item>
         <item>
             <key> <string>sid</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Euro</string> </value>
         </item>
       </dictionary>
     </pickle>

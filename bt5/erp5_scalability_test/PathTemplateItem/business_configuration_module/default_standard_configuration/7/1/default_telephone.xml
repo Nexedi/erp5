@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>coordinate_text</string> </key>
-            <value> <string>123</string> </value>
+            <value> <string>1111111111</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>telephone_number</string> </key>
-            <value> <string>123</string> </value>
+            <value> <string>1111111111</string> </value>
         </item>
       </dictionary>
     </pickle>

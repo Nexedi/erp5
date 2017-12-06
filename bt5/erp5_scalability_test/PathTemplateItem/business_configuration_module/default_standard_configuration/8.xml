@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>accounting_plan</string> </key>
-            <value> <string>fr</string> </value>
+            <value> <string>ifrs</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -120,7 +120,7 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1577750400.0</float>
+                    <float>1924905600.0</float>
                     <string>UTC</string>
                   </tuple>
                 </state>
