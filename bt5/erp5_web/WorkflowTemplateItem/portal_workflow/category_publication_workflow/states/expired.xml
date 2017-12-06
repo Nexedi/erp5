@@ -28,6 +28,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>delete</string>
+                <string>delete_action</string>
                 <string>embed</string>
                 <string>embed_action</string>
               </tuple>

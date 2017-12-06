@@ -28,6 +28,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>delete</string>
+                <string>delete_action</string>
                 <string>expire</string>
                 <string>expire_action</string>
                 <string>protect</string>
