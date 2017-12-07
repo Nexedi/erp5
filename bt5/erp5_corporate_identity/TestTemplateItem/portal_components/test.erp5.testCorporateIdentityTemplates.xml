@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test.erp5.testCorportateIdentityTemplates</string> </value>
+            <value> <string>test.erp5.testCorporateIdentityTemplates</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

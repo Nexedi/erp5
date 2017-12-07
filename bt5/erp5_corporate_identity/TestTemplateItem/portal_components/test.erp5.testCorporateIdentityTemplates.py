@@ -231,13 +231,13 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     expected_page = getattr(self.portal.web_page_module, id2)
     dump = getattr(self.portal, 'dump_data')
     kw["override_date"] = kw.get("override_date", test_page.getModificationDate())
-
+    
     html = getattr(test_page, kw.get("test_method"))(portal_skin=kw.get("use_skin"), **kw)
     html = re.sub(host_url, test_url, html)
     html = html.replace(test_page.getReference(), expected_page.getReference())
 
     # update html test files or run tests
-    if dump is True:
+    if dump:
       expected_page.edit(text_content=html)
     self.assertEquals(html, expected_page.getData())
 
@@ -271,7 +271,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     _, bmp = image_source_pdf_doc.convert("bmp", frame=kw.get("page_number"))
 
     # update bmp files
-    if dump is True:
+    if dump:
       expected_image.setData(bmp)
     self.assertImageRenderingEquals(str(bmp), str(expected_image.getData()))
 
@@ -742,9 +742,6 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       )
     )
 
-  '''
-  
-
   @changeSkin('Leaflet')
   def test_htmlLeaflet(self):
     """
@@ -771,11 +768,11 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       - export as html
     """
     self.runHtmlTestPattern(
-      "template_test_leaflet_input_002_en_html",
+      "template_test_leaflet_input_001_en_html",
       "template_test_leaflet_output_expected_002_en_html",
       **dict(
         test_method="WebPage_exportAsLeaflet",
-        side_display=0,
+        display_side=0,
         override_source_person_title="Test Recipipent",
         override_source_organisation_title="Test Association",
         override_leaflet_header_title="Couscous",
@@ -792,7 +789,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       - export as html
     """
     self.runHtmlTestPattern(
-      "template_test_leaflet_input_003_de_html",
+      "template_test_leaflet_input_002_de_html",
       "template_test_leaflet_output_expected_003_de_html",
       **dict(
         test_method="WebPage_exportAsLeaflet",
@@ -814,13 +811,14 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_leaflet_input_001_en_pdf",
       **dict(
         page_number=1,
+        format="pdf",
         test_method="WebPage_exportAsLeaflet",
         use_skin="Leaflet"
       )
     )
-  
-  @changeSkin('Leaflet')
+
   @setDomainDict("ERP5Site_getWebSiteDomainDict", "", 'return {"test.portal.erp": context.getPortalObject()}')
+  @changeSkin('Leaflet')
   def test_pdfLeafletOverrides(self):
     """
       Test:
@@ -829,7 +827,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       - export as pdf
     """
     self.runPdfTestPattern(
-      "template_test_leaflet_input_002_en_html",
+      "template_test_leaflet_input_001_en_html",
       "template_test_leaflet_input_page_0_002_en_bmp",
       "template_test_leaflet_input_002_en_pdf",
       **dict(
@@ -852,13 +850,14 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       - export as pdf
     """
     self.runPdfTestPattern(
-      "template_test_leaflet_input_003_de_html",
+      "template_test_leaflet_input_002_de_html",
       "template_test_leaflet_input_page_0_003_de_bmp",
       "template_test_leaflet_input_003_de_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        format="pdf"
       )
     )
 
@@ -875,8 +874,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_leaflet_input_001_en_pdf",
       **dict(
         page_number=1,
-        test_method="WebPage_PrintAsLeaflet",
+        test_method="WebPage_printAsLeaflet",
         use_skin="Leaflet"
       )
     )
-  '''
