@@ -18,6 +18,7 @@
                 <string>search_columns</string>
                 <string>select</string>
                 <string>selection_name</string>
+                <string>sort</string>
                 <string>title</string>
               </list>
             </value>
@@ -156,6 +157,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Date</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
