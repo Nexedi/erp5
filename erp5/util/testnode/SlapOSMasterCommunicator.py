@@ -13,8 +13,8 @@ from slapos.slap.slap import ConnectionError
 from requests.exceptions import HTTPError
 from erp5.util.taskdistribution import SAFE_RPC_EXCEPTION_LIST
 
-# max time to instance changing state: 2 hour
-MAX_INSTANCE_TIME = 60*60*2
+# max time to instance changing state: 3 hour
+MAX_INSTANCE_TIME = 60*60*3
 
 SOFTWARE_PRODUCT_NAMESPACE = "product."
 

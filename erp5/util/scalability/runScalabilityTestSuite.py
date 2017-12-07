@@ -147,7 +147,7 @@ def createLogger(log_path):
 class ScalabilityLauncher(object):
   def __init__(self):
     self.__argumentNamespace = self._parseArguments(argparse.ArgumentParser(
-          description='Run ERP5 benchmarking scalability suites.'))
+          description='Run benchmarking scalability suites.'))
     logger = createLogger(self.__argumentNamespace.log_path)
     self.log = logger.info
     self.logger = logger
@@ -289,7 +289,9 @@ class ScalabilityLauncher(object):
     try:
       current_test = self.getRunningTest()
     except Exception as e:
-      self.log("ERROR while getting current running test: " + str(e))
+      error_message = "ERROR while getting current running test: " + str(e)
+      self.log(error_message)
+      return error_message, 1
 
     self.log("Test Case %s going to be run." %(current_test.title))
     # Prepare configuration
@@ -311,7 +313,10 @@ class ScalabilityLauncher(object):
     metric_thread.start()
 
     bootstrap_password = self.__argumentNamespace.bootstrap_password
-    self.updateUsersFile(user_quantity, bootstrap_password, user_file_full_path + ".py")
+    try:
+      self.updateUsersFile(user_quantity, bootstrap_password, user_file_full_path + ".py")
+    except Exception as e:
+      self.log("ERROR while updating file: " + str(e))
 
     now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
     log_dir = "test-%s_%s" % (current_test.title, now)

@@ -454,7 +454,6 @@ Require valid-user
         self._updateInstanceXML(configuration, self.instance_title,
                                 node_test_suite.test_result, node_test_suite.test_suite)
         self.slapos_communicator.waitInstanceStarted(self.instance_title)
-        self.slapos_communicator.requestInstanceStart()
 
       self.slapos_communicator.waitInstanceStarted(self.instance_title)
       self.log("[DEBUG] INSTANCE CORRECTLY STARTED")
@@ -472,11 +471,14 @@ Require valid-user
       except Exception as e:
         return {'status_code' : 1, 'error_message': "Connection error: %s" % str(e) }
 
+      bootstrap_password = "insecure"
       if bootstrap_url is not None:
+        self.log("Bootstrapping instance...")
         response = requests.get(bootstrap_url)
-        if response.status_code != 200:
-          return {'status_code' : 1, 'error_message': "ERROR in bootstrap url. Response: " + str(response.text)}
-        result = json.loads(response.text)
+        try:
+          result = json.loads(response.text)
+        except:
+          return {'status_code' : 1, 'error_message': "ERROR bootstrapping: " + str(response.text)}
         if result["status_code"] != 0:
           return {'status_code' : result["status_code"], 'error_message': "ERROR bootstrapping: " + result["error_message"]}
         bootstrap_password = result["password"]
@@ -524,7 +526,7 @@ Require valid-user
                   "--metric-url", metric_url
                 ]
 
-      self.log("[DEBUG] Running runScalabilityTestSuite script...")
+      self.log("Running test case...")
       test_thread = TestThread(self.testnode.process_manager, command, self.log)
       test_thread.start()
 
@@ -533,8 +535,7 @@ Require valid-user
       while test_result_line_proxy.isTestCaseAlive() and \
             test_result_proxy.isAlive() and \
             time.time() - test_case_start_time < MAX_TEST_CASE_TIME:
-        self.log("Waiting 30 seconds for test")
-        time.sleep(30)
+        time.sleep(60)
 
       # Max time limit reach for current test case: failure.
       if test_result_line_proxy.isTestCaseAlive():
