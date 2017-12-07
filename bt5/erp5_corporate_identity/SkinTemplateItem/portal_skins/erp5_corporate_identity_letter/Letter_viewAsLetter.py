@@ -69,12 +69,12 @@ def setToNone(param):
 # -------------------------- Setup ---------------------------------------------
 letter = context
 letter_format = kw.get('format', 'html')
-letter_display_head = kw.get('dislay_head', 1)
-letter_display_svg = kw.get('display_svg', 'png')
 letter_display_source_adress = kw.get('letter_display_source_adress', None)
-letter_download = kw.get('document_download', None)
-letter_save = kw.get('document_save', None)
 letter_transformation = kw.get('transformation', None)
+letter_display_head = setToNone(kw.get('dislay_head', 1))
+letter_display_svg = setToNone(kw.get('display_svg', 'png'))
+letter_download = setToNone(kw.get('document_download', None))
+letter_save = setToNone(kw.get('document_save', None))
 
 override_source_person_title = kw.get('override_source_person_title', None)
 override_source_organisation_title = kw.get("override_source_organisation_title", None)
@@ -105,7 +105,7 @@ if letter_portal_type == "Web Page":
   letter_reference = letter.getReference()
   letter_version = letter.getVersion() or "001"
 else:
-  letter_save = setToNone(letter_save) or True
+  letter_save = letter_save or True
   letter_dialog_id = None
   letter_modification_date = letter_form['start_date'] or None or letter.getCreationDate()
   letter_title = letter_form.get('title')
@@ -157,14 +157,14 @@ letter_destination = letter.Base_getDestinationDict(
 for image in re.findall('(<img.*?/>)', letter_content):
   letter_content = letter_content.replace(
     image,
-    context.WebPage_validateImage(img_string=image, img_svg_format=setToNone(letter_display_svg))
+    context.WebPage_validateImage(img_string=image, img_svg_format=letter_display_svg)
   )
 
 # ============================= Format: html ===================================
 if letter_format == "html":
   letter.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
   return letter.Letter_createLetter(
-    letter_display_head=setToNone(letter_display_head),
+    letter_display_head=letter_display_head,
     letter_theme=letter_theme.get("theme"),
     letter_title=letter_title,
     letter_language=letter_language,
@@ -191,7 +191,7 @@ if letter_format == "html":
     letter_source_city=letter_source.get("city", blank),
     letter_source_country_code=letter_source.get("codification", blank),
     letter_content = letter_content,
-    letter_display_source_adress=setToNone(letter_display_source_adress),
+    letter_display_source_adress=letter_display_source_adress,
     letter_source_vat=letter_source.get("vat", blank),
     letter_source_corporate_registration=letter_source.get("corporate_registration", blank),
     letter_source_phone=letter_source.get("phone", blank),
@@ -206,7 +206,7 @@ if letter_format == "html":
 # ============================= Format: pdf ====================================
 if letter_format == "pdf":
   letter_head = letter.Letter_createLetterHeader(
-    letter_display_head=setToNone(letter_display_head),
+    letter_display_head=letter_display_head,
     letter_theme=letter_theme.get("theme"),
     letter_title=letter_title,
     letter_language=letter_language,
@@ -220,7 +220,7 @@ if letter_format == "pdf":
   )
 
   letter_content = letter.Letter_createLetterContent(
-    letter_display_head=setToNone(letter_display_head),
+    letter_display_head=letter_display_head,
     letter_theme=letter_theme.get("theme"),
     letter_title=letter_title,
     letter_language=letter_language,
@@ -241,7 +241,7 @@ if letter_format == "pdf":
     letter_source_postal_code=letter_source.get("postal_code", blank),
     letter_source_city=letter_source.get("city", blank),
     letter_source_country_code=letter_source.get("codification", blank),
-    letter_display_source_adress=setToNone(letter_display_source_adress),
+    letter_display_source_adress=letter_display_source_adress,
     letter_content = letter_content
   )
 
@@ -290,8 +290,8 @@ if letter_format == "pdf":
   )
 
   return letter.WebPage_finishPdfCreation(
-    doc_download=setToNone(letter_download),
-    doc_save=setToNone(letter_save),
+    doc_download=letter_download,
+    doc_save=letter_save,
     doc_version=letter_version,
     doc_title=letter_title,
     doc_relative_url=letter_relative_url,

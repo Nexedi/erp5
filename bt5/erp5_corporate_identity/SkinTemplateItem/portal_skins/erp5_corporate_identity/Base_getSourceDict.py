@@ -82,12 +82,14 @@ if default_bank_account_uid is not None:
     source["bic"] = override_bank_account.get("bic")
     source["iban"] = override_bank_account.get("iban")
 
-# XXX: logos stored on organisation fail on base_convert or fallback images
-# is not found in skin folder base_convert => drop conversion on fallback image
-source_logo_url = override_logo_reference or source.get("logo_url", blank)
-if source_logo_url != blank:
-  source_logo_url = html_quote(source_logo_url) + "?format=png&display=small"
-if source_logo_url == blank and theme_logo_url is not None:
+# XXX images stored on organisation (as do images in skin folders)
+if override_logo_reference:
+  source_logo_url = html_quote(override_logo_reference) + "?format=png&display=small"
+if source_logo_url is None:
+  source_logo_url = source.get("logo_url", blank)
+if source_logo_url is not blank:
+  source_logo_url = source_logo_url + "?format=png"
+if source_logo_url is blank and theme_logo_url is not None:
   source_logo_url = theme_logo_url
 source["enhanced_logo_url"] = source_logo_url
 

@@ -169,11 +169,11 @@ doc_uid = doc.getUid()
 doc_url = doc.getAbsoluteUrl()
 doc_format = kw.get('format', 'html')
 doc_transformation = kw.get('transformation', None)
-doc_display_notes = kw.get('display_note', None)
-doc_display_svg = kw.get('display_svg', 'png')
-doc_download = kw.get('document_download', None)
-doc_save = kw.get('document_save', None)
-doc_ooo = kw.get('flag_ooo', None)
+doc_display_notes = setToNone(kw.get('display_note', None))
+doc_display_svg = setToNone(kw.get('display_svg', 'png'))
+doc_download = setToNone(kw.get('document_download', None))
+doc_save = setToNone(kw.get('document_save', None))
+doc_ooo = setToNone(kw.get('flag_ooo', None))
 
 override_logo_reference = kw.get('override_logo_reference', None)
 override_source_organisation_title = kw.get("override_source_organisation_title", None)
@@ -260,7 +260,7 @@ doc_source = doc.Base_getSourceDict(
 for image in re.findall('(<img.*?/>)', doc_content):
   doc_content = doc_content.replace(
     image,
-    context.WebPage_validateImage(img_string=image, img_svg_format=setToNone(doc_display_svg))
+    context.WebPage_validateImage(img_string=image, img_svg_format=doc_display_svg)
   )
 
 # ========================= TRANSFORMATION: book ===============================

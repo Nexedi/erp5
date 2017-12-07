@@ -36,7 +36,7 @@ img = getCommonParameter("fallback_image", blank)
 pdf = ".pdf" if format == "pdf" else blank
 css = "default_theme_css_url"
 font = "default_theme_font_css_url_list"
-param = "?display=png"
+param = "?format=png"
 theme_logo_alt = "Default Logo"
 default_company_title = getCustomParameter("default_company_title", None)
 
@@ -65,10 +65,11 @@ if theme is not None:
 if theme is None:
   theme = "default"
 
+# XXX fallback images on portal_skin folders not found on convert
 theme_dict = {}
 theme_dict["theme"] = theme
 theme_dict["theme_logo_description"] = theme_logo_description
-theme_dict["theme_logo_url"] = (theme_logo_url + param) if theme_logo_url is not None else getCommonParameter("fallback_image", None) or blank
+theme_dict["theme_logo_url"] = (theme_logo_url + param) if theme_logo_url is not None else getCommonParameter("fallback_image", None)
 theme_dict["template_css_url"] = ''.join([url, css_path, pdf, ".css"])
 theme_dict["fallback_img_url"] = ''.join([url, '/', img])
 theme_dict["theme_css_font_list"] = getCustomParameter(font, None) or []
