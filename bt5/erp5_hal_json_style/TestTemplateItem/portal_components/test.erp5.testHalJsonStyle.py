@@ -63,18 +63,30 @@ def simulate(script_id, params_string, code_string):
     return decorated
   return upperWrap
 
-def createIndexedDocument():
-  """Create a Foo document inside Foo module and pass it as "document" argument into wrapped function."""
+def wipeFolder(folder):
+  folder.deleteContent(list(folder.objectIds()))
+  transaction.commit()
+
+def createIndexedDocument(quantity=1):
+  """Create `quantity` Foo document(s) in Foo module and pass it as `document(_list)` argument into the wrapped function."""
   def decorator(func):
     def wrapped(self, *args, **kwargs):
-      kwargs.update(document=self._makeDocument())
+      wipeFolder(self.portal.foo_module)
+      if quantity <= 1:
+        kwargs.update(document=self._makeDocument())
+      else:
+        kwargs.update(document_list=[self._makeDocument() for _ in range(quantity)])
       self.portal.portal_caches.clearAllCache()
       self.tic()
-      return func(self, *args, **kwargs)
+      try:
+        return func(self, *args, **kwargs)
+      finally:
+        wipeFolder(self.portal.foo_module)
+        self.tic() # unindex
     return wrapped
   return decorator
 
-def do_fake_request(request_method, headers=None):
+def do_fake_request(request_method, headers=None, data=()):
   __version__ = "0.1"
   if (headers is None):
     headers = {}
@@ -93,7 +105,25 @@ def do_fake_request(request_method, headers=None):
   env['GATEWAY_INTERFACE']='CGI/1.1 '
   env['SCRIPT_NAME']='Main'
   env.update(headers)
-  return HTTPRequest(StringIO.StringIO(), env, HTTPResponse())
+  body_stream = StringIO.StringIO()
+
+  # for some mysterious reason QUERY_STRING does not get parsed into data fields
+  if data and request_method.upper() == 'GET':
+    # see: GET http://www.cgi101.com/book/ch3/text.html
+    env['QUERY_STRING'] = '&'.join(
+      '{}={}'.format(urllib.quote_plus(key), urllib.quote(value))
+      for key, value in data
+    )
+
+  if data and request_method.upper() == 'POST':
+    # see: POST request body https://tools.ietf.org/html/rfc1866#section-8.2.1
+    env['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
+    for key, value in data:
+      body_stream.write('{}={!s}&'.format(
+        urllib.quote_plus(key), urllib.quote(value)))
+
+  return HTTPRequest(body_stream, env, HTTPResponse())
+
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
@@ -952,6 +982,145 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
       mode="search",
       default_param_json='eyJcdTAwZWEiOiAiXHUwMGU4In0=')
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
+  @simulate('Test_listObjects', '*args, **kwargs', """
+from Products.PythonScripts.standard import Object
+return [Object(debit_price=1000.00, credit_price=100.00),
+        Object(debit_price=10.00, credit_price=0.00)]
+""")
+  @simulate('Test_listProducts', '*args, **kwargs', """
+return context.getPortalObject().foo_module.values()
+""")
+  @simulate('Test_listCatalog', '*args, **kwargs', """
+return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id', 'ASC')])
+""")
+  @createIndexedDocument(quantity=2)
+  @changeSkin('Hal')
+  def test_getHateoas_exotic_search_results(self, document_list):
+    """Test that ingestion of `list_method` result does not fail.
+
+    The only limit for the result of `list_method` is that it should be an iterable.
+    Practically, because we code in python, it can be any object.
+    """
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      local_roles=["Assignor", "Assignee"],
+      list_method='Test_listObjects',
+      select_list=['credit_price', 'debit_price']
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(len(result_dict['_embedded']['contents']), 2)
+    self.assertEqual(result_dict['_embedded']['contents'][0]['debit_price'],  1000.0)
+    self.assertEqual(result_dict['_embedded']['contents'][0]['credit_price'],  100.0)
+    self.assertEqual(result_dict['_embedded']['contents'][1]['debit_price'],    10.0)
+    self.assertEqual(result_dict['_embedded']['contents'][1]['credit_price'],    0.0)
+
+    # Render a Document using Form Field template (only for field 'id')
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      local_roles=["Assignor", "Assignee"],
+      list_method='Test_listProducts',
+      select_list=['id'],
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(2, len(result_dict['_embedded']['contents']))
+    self.assertIn("field_listbox", result_dict['_embedded']['contents'][0]['id']['key'])
+    self.assertEqual("StringField", result_dict['_embedded']['contents'][0]['id']['type'])
+    self.assertEqual(document_list[0].getId(), result_dict['_embedded']['contents'][0]['id']['default'])
+    self.assertIn("field_listbox", result_dict['_embedded']['contents'][1]['id']['key'])
+    self.assertEqual("StringField", result_dict['_embedded']['contents'][1]['id']['type'])
+    self.assertEqual(document_list[1].getId(), result_dict['_embedded']['contents'][1]['id']['default'])
+
+    # Test rendering without form template of attribute, getterm and a script
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      local_roles=["Assignor", "Assignee"],
+      list_method='Test_listCatalog',
+      select_list=['title', 'Foo_getLocalTitle', 'getTotalQuantity'] # property, Script, method
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(len(result_dict['_embedded']['contents']), 2)
+    self.assertEqual(result_dict['_embedded']['contents'][0]['title'].encode('utf-8'), document_list[0].getTitle())
+    self.assertEqual(result_dict['_embedded']['contents'][0]['Foo_getLocalTitle'], None)
+    self.assertEqual(result_dict['_embedded']['contents'][0]['getTotalQuantity'], 0)
+    self.assertEqual(result_dict['_embedded']['contents'][1]['title'].encode('utf-8'), document_list[1].getTitle())
+    self.assertEqual(result_dict['_embedded']['contents'][1]['Foo_getLocalTitle'], None)
+    self.assertEqual(result_dict['_embedded']['contents'][1]['getTotalQuantity'], 0)
+
+
+class TestERP5PDM_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
+  """This class allows ticking for Movements to be picked up by activities."""
+
+  def afterSetUp(self):
+    self.folder = getattr(self.portal, 'test_hal_json_folder', None)
+    if self.folder is None:
+      self.folder = self.portal.newContent(portal_type='Folder', id='test_hal_json_folder')
+
+    self.vendor = self.portal.organisation_module.newContent(
+      portal_type='Organisation', title="Test Vendor")
+    self.buyer = self.portal.organisation_module.newContent(
+      portal_type='Organisation', title="Test Buyer")
+    self.product = self.portal.product_module.newContent(
+      portal_type='Product', title="Resource")
+
+    self.movement = self.folder.newContent(portal_type='Dummy Movement')
+    self.movement.edit(
+      resource_value=self.product,
+      destination_section_value=self.buyer,
+      source_section_value=self.vendor,
+      destination_value=self.buyer,
+      source_value=self.vendor,
+    )
+    self.tic()
+
+  def beforeTearDown(self):
+    self.portal.organisation_module.deleteContent([
+      self.buyer.getId(), self.vendor.getId()])
+    self.portal.product_module.deleteContent(self.product.getId())
+    wipeFolder(self.folder)
+    self.portal.deleteContent(self.folder.getId())
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
+  @simulate('Organisation_listInventory', '*args, **kwargs', """
+portal = context.getPortalObject()
+return portal.portal_simulation.getInventoryList(section_uid=context.getUid())
+""")
+  @changeSkin('Hal')
+  def test_getHateoas_getInventoryasListMethod(self):
+    """Test that `list_method` can resolve dynamic objects from Inventory management.
+
+    This test has dependency on erp5_pdm, erp5_trade and base_trade_categories!
+    """
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      relative_url=self.vendor.getRelativeUrl(),
+      local_roles=["Assignor", "Assignee"],
+      list_method='Organisation_listInventory',
+      select_list=['total_price', 'total_quantity']
+    )
+
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'), "application/hal+json")
+
+    result_dict = json.loads(result)
+    self.assertEqual(len(result_dict['_embedded']['contents']), 1)
+    self.assertEqual(result_dict['_embedded']['contents'][0]['total_price'],   0)
+    self.assertEqual(result_dict['_embedded']['contents'][0]['total_quantity'],0)
+
+
 class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
 
   @simulate('Base_getRequestHeader', '*args, **kwargs',
@@ -962,6 +1131,7 @@ class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="bulk")
     self.assertEquals(fake_request.RESPONSE.status, 405)
     self.assertEquals(result, "")
+
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -1071,7 +1241,6 @@ class TestERP5Document_getHateoas_mode_worklist(ERP5HALJSONStyleSkinsMixin):
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="worklist")
     self.assertEquals(fake_request.RESPONSE.status, 405)
     self.assertEquals(result, "")
-
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
