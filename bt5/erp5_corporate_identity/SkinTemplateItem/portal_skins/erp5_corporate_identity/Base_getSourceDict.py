@@ -31,9 +31,9 @@ def getCommonProxyParameter(my_parameter, my_override_data):
     return commonProxyHandler(parameter=my_parameter, source_data=source_data)
 
 # -------------------------------  Set Source ----------------------------------
+source_logo_url = None
 if source is None:
   contributor_title_string = blank
-  source_logo_url = None
   source_person = None
   source_person_list = []
   source_organisation = None

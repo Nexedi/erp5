@@ -64,6 +64,6 @@ if destination is None:
 # destination => event
 else:
   destination_uid = context.restrictedTraverse(destination).getUid()
-  destination = getCommonProxyParameter("destination", destination_uid)
+  destination = getCommonProxyParameter("destination", destination_uid)[0]
 
 return destination

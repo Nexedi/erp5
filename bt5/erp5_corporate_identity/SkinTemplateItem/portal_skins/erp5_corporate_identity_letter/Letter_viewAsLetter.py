@@ -105,6 +105,7 @@ if letter_portal_type == "Web Page":
   letter_reference = letter.getReference()
   letter_version = letter.getVersion() or "001"
 else:
+  letter_format = 'pdf'
   letter_save = letter_save or True
   letter_dialog_id = None
   letter_modification_date = letter_form['start_date'] or None or letter.getCreationDate()

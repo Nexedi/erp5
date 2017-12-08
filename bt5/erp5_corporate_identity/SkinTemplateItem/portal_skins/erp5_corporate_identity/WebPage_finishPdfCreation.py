@@ -19,7 +19,8 @@ if doc_save == 1:
       source_reference=''.join([doc_reference, '.pdf']),
       file=doc_pdf_file
     )
-    #context.setAggregateList((doc_aggregate_list or []) + [doc_relative_url])
+    
+    context.setAggregate(document.getRelativeUrl())
     message = context.Base_translateString(
       '%(portal_type)s created successfully as PDF Document.' % {
         'portal_type': document.getTranslatedPortalType()
