@@ -119,3 +119,27 @@ class BusinessCommit(Folder):
       id = uuid.uuid1()
 
     return super(BusinessCommit, self).newContent(id, **kw)
+
+  def install(self):
+    """
+    Installation:
+    - create an empty snapshot that that's similar to a Commit
+    - fill it with hard links to commits and snapshots
+    - install it
+    """
+    portal_commit = self.aq_parent
+
+    # Create empty snapshot
+    snapshot = portal_commit.newContent(portal_type='Business Commit')
+    # Add the current commit as predecessor. This way we can have the BI
+    # BPI in that commit to the Business Snapshot also.
+    snapshot.setPredecessorValue(self)
+
+    # Build the snapshot
+    snapshot.buildSnapshot()
+
+    for item in snapshot.item_path_list:
+      item.install(self)
+
+  def getPathList(self):
+    return [l.getProperty('item_path') for l in self.objectValues()]

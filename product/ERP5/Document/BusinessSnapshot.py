@@ -114,9 +114,96 @@ class BusinessSnapshot(Folder):
                       PropertySheet.Version,
                     )
 
-  def getEquivalentBusinessCommit(self):
+  # Attribute to store item list which are basically hardlinks
+  item_list = []
+
+  def __init__(self, id):
     """
-    Returns Business Commit which is the HEAD commit for state of Business
-    Snapshot.
+    While creating a new Business Snapshot, we need to create the hardlinks
+    and create a snapshot from the commits.
+    """
+    super(BusinessSnapshot, self).__init__(id)
+
+  def install(self):
+    """
+    Installing a snapshot should be similar to installing an installation_state
+    we used to have for Business Manager(s)
     """
     pass
+
+  def getLastSnapshot(self):
+
+    portal = self.getPortalObject()
+    commit_tool = portal.portal_commits
+
+    # Get the snapshot list except the current snapshot
+    snapshot_list = [l for l
+                     commit_tool.objectValues(portal_type='Business Snapshot')
+                     if l != self]
+
+    if snapshot_list:
+      # Get the last created/installed snapshot comparing creation_date
+      return max(snapshot_list, key=(lambda x: x.getCreationDate()))
+
+    return None
+
+  def getItemList(self):
+    """
+    Returns the collection of all Business Item, Business Property Item and
+    Business Patch item at the given snapshot.
+    """
+    return self.item_list
+
+  def getItemPathList(self):
+    """
+    Returns the path of all Business Item, Business Property Item and
+    Business Patch item at the given snapshot.
+    """
+    return [l.getProperty('item_path') for l in self.getItemList()]
+
+  def buildSnapshot(self):
+    """
+    Using equivalent commit, create a snapshot of ZODB state
+    """
+    new_item_list = []
+    new_item_path_list = []
+
+    # Get the equivalent commit for the snapshot
+    eqv_commit = self.getPredecessorValue()
+
+    # Get last created snapshot
+    last_snapshot = self.getLastSnapshot()
+
+    # [1]: Extend the item_list with list of items from last snapshot
+    new_item_list.extend(last_snapshot.getItemList())
+    new_item_path_list.extend(last_snapshot.getItemPathList())
+
+    # Get next commit list upto the commit to be installed
+    portal_commits = self.aq_parent
+    successor_commit_list = []
+
+    # Get next predecessor commit for this snapshot using the equivalent commit
+    # Notice that we don't use the snapshot to get the next commit as the
+    # snapshot is mere a state which uses `predecessor` just for mentioning the
+    # equivalent commit.
+    next_commit = eqv_commit.getPredecessorRelatedValue()
+
+    while (next_commit.getId() != eqv_commit.getId()):
+      successor_commit_list.append(next_commit)
+      next_commit = next_commit.getPredecessorRelatedValue()
+
+    # Append the equivalent commit to successor commits
+    successor_commit_list.append(eqv_commit)
+
+    for commit in successor_commit_list:
+      for item in commit.objectValues():
+        item_path = item.getProperty('item_path')
+        if item_path in new_item_path_list:
+          # Replace the old item with same path with new item
+          new_item_list = [l if l.getProperty('item_path') != item_path else item for l in new_item_list]
+        else:
+          # Add the item to list if there is no existing item at that path
+          new_item_list.append(item)
+          new_item_path_list.append(item_path)
+
+    self.item_list = new_item_list
