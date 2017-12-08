@@ -784,6 +784,7 @@ span.search button .image {
   list-style: none;
   padding: 0;
   margin: 0;
+  margin-right: 50px;
   position: absolute;
   bottom: -1px;
 }
