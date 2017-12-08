@@ -30,9 +30,9 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
 
-class TestZeleniumCore(ERP5TypeFunctionalTestCase):
+class TestOfficejSUICribjs(ERP5TypeFunctionalTestCase):
   foreground = 0
-  run_only = "officejs_ui_zuite"
+  run_only = "officejs_ui_cribjs_zuite"
 
   def getBusinessTemplateList(self):
     return (
@@ -43,5 +43,5 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestZeleniumCore))
+  suite.addTest(unittest.makeSuite(TestOfficejSUICribjs))
   return suite
