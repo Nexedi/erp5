@@ -18,6 +18,8 @@
 
     // Display a jio document with only the passed parameters
     COMMAND_DISPLAY_STATE = "display",
+    // Display a jio document with only the passed parameters + the history
+    COMMAND_KEEP_HISTORY_AND_DISPLAY_STATE = "display_with_history",
     // Store the jio key for the person document of the user
     COMMAND_LOGIN = "login",
     // Display a raw string URL
@@ -46,6 +48,7 @@
     STICKY_PARAMETER_LIST = ['editable'];
 
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STATE] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STORED_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_CHANGE_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_STORE_AND_CHANGE_STATE] = null;
@@ -401,6 +404,13 @@
       });
   }
 
+  function execKeepHistoryAndDisplayCommand(gadget, previous_options, next_options) {
+    next_options.selection = previous_options.selection;
+    next_options.history = previous_options.history;
+    copyStickyParameterDict(previous_options, next_options);
+    return execDisplayCommand(gadget, next_options);
+  }
+
   function execSelectionNextCommand(gadget, previous_options) {
     if (previous_options.selection === undefined) {
       return synchronousChangeState(
@@ -729,6 +739,9 @@
 
     if (command_options.path === COMMAND_DISPLAY_STATE) {
       return execDisplayCommand(gadget, next_options);
+    }
+    if (command_options.path === COMMAND_KEEP_HISTORY_AND_DISPLAY_STATE) {
+      return execKeepHistoryAndDisplayCommand(gadget, previous_options, next_options);
     }
     if (command_options.path === COMMAND_DISPLAY_STORED_STATE) {
       return execDisplayStoredStateCommand(gadget, next_options);

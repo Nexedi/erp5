@@ -230,7 +230,11 @@
                 // by X-Location HTTP header placed by Base_redirect script
                 var jio_key = new URI(
                   attachment.target.getResponseHeader("X-Location")
-                ).segment(2);
+                ).segment(2),
+                  splitted_jio_key_list,
+                  splitted_current_jio_key_list,
+                  command,
+                  i;
 
                 if (redirect_to_parent) {
                   return form_gadget.redirect({command: 'history_previous'});
@@ -247,9 +251,25 @@
                     }
                   });
                 }
+                // Check if the redirection goes to a same parent's subdocument.
+                // In this case, do not add current document to the history
+                // example: when cloning, do not keep the original document in history
+                splitted_jio_key_list = jio_key.split('/');
+                splitted_current_jio_key_list = form_gadget.state.jio_key.split('/');
+                command = 'display_with_history';
+                if (splitted_jio_key_list.length === splitted_current_jio_key_list.length) {
+                  for (i = 0; i < splitted_jio_key_list.length - 1; i += 1) {
+                    if (splitted_jio_key_list[i] !== splitted_current_jio_key_list[i]) {
+                      command = 'push_history';
+                    }
+                  }
+                } else {
+                  command = 'push_history';
+                }
+
                 // forced document change thus we update history
                 return form_gadget.redirect({
-                  command: 'push_history',
+                  command: command,
                   options: {
                     "jio_key": jio_key
                     // do not mingle with editable because it isn't necessary
