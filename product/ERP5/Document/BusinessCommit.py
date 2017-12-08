@@ -138,7 +138,7 @@ class BusinessCommit(Folder):
     # Build the snapshot
     snapshot.buildSnapshot()
 
-    for item in snapshot.item_path_list:
+    for item in snapshot.item_list:
       item.install(self)
 
   def getPathList(self):

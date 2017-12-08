@@ -138,7 +138,7 @@ class BusinessSnapshot(Folder):
 
     # Get the snapshot list except the current snapshot
     snapshot_list = [l for l
-                     commit_tool.objectValues(portal_type='Business Snapshot')
+                     in commit_tool.objectValues(portal_type='Business Snapshot')
                      if l != self]
 
     if snapshot_list:
@@ -178,8 +178,6 @@ class BusinessSnapshot(Folder):
     new_item_list.extend(last_snapshot.getItemList())
     new_item_path_list.extend(last_snapshot.getItemPathList())
 
-    # Get next commit list upto the commit to be installed
-    portal_commits = self.aq_parent
     successor_commit_list = []
 
     # Get next predecessor commit for this snapshot using the equivalent commit
