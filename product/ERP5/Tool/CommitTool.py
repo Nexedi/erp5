@@ -189,7 +189,9 @@ class CommitTool (BaseTool):
       new_obj =  super(CommitTool, self).newContent(id, **kw)
 
       # Add the last commit as its predecessor
-      commit_list = [l for l in self.objectValues() if l != new_obj]
+      commit_list = [l for l
+                     in self.objectValues(portal_type='Business Commit')
+                     if l != new_obj]
       latest_commit = max(commit_list, key=(lambda x: x.getCreationDate()))
       # TODO: Add check for no latest_commit
       new_obj.setPredecessorValue(latest_commit)
