@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>b69453bf20cd154428d8f75bb23d9db0</string> </value>
+            <value> <string>b34ec9e6f51725e1606d6af188be1072</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -270,7 +270,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>963.63986.18604.16264</string> </value>
+                <value> <string>963.65367.30779.6212</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -288,7 +288,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1512659771.69</float>
+                        <float>1512759642.03</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

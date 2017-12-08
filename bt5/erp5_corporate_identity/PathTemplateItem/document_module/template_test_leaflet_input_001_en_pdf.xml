@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts12742800.76</string> </value>
+            <value> <string>ts12759618.23</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>909e2c80400db0cdce7a3e0634422c61</string> </value>
+            <value> <string>2500e1a1dc8e5c9acefc8d82d5d81559</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>Template.Test.Leaflet-001-en-handmade.pdf</string> </value>
+            <value> <string>Template.Test.Leaflet-001-en.pdf</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -282,7 +282,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>963.63987.5020.46438</string> </value>
+                <value> <string>963.65372.926.50722</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -300,7 +300,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1512742800.77</float>
+                        <float>1512759618.23</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

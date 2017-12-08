@@ -18,7 +18,7 @@ if img_string.find('alt=') == -1:
 
 # force svg display as svg or png
 if img_type == "image/svg+xml":
-  if img_svg_format == "png":
+  if img_svg_format == "png" or img_svg_format == None:
     img_string = img_string.replace('type="image/svg+xml"', '')
     img_string = img_string.replace("type='image/svg+xml'", '')
     img_string = img_string.replace('format=svg', 'format=png')

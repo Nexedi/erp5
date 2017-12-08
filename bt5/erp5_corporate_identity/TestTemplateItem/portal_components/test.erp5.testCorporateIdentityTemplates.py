@@ -234,7 +234,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     
     html = getattr(test_page, kw.get("test_method"))(portal_skin=kw.get("use_skin"), **kw)
     html = re.sub(host_url, test_url, html)
-    html = html.replace(test_page.getReference(), expected_page.getReference())
+    #html = html.replace(test_page.getReference(), expected_page.getReference())
 
     # update html test files or run tests
     if dump:
@@ -773,7 +773,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       **dict(
         test_method="WebPage_exportAsLeaflet",
         display_side=0,
-        override_source_person_title="Test Recipipent",
+        override_source_person_title="Test Recipient",
         override_source_organisation_title="Test Association",
         override_leaflet_header_title="Couscous",
         use_skin="Leaflet"
@@ -817,7 +817,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       )
     )
 
-  @setDomainDict("ERP5Site_getWebSiteDomainDict", "", 'return {"test.portal.erp": context.getPortalObject()}')
+  #@setDomainDict("ERP5Site_getWebSiteDomainDict", "", 'return {"test.portal.erp": context.getPortalObject()}')
   @changeSkin('Leaflet')
   def test_pdfLeafletOverrides(self):
     """
