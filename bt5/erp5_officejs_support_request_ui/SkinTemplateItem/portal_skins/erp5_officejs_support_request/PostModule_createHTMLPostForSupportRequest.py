@@ -1,8 +1,19 @@
-follow_up_object, = context.getPortalObject().portal_catalog(relative_url=follow_up, limit=1)
-follow_up_object.edit()  # update modification date
+portal = context.getPortalObject()
+
+# update modification date
+if follow_up_uid is not None:
+  follow_up_value, = portal.portal_catalog(uid=follow_up_uid, limit=2)
+  follow_up_value = follow_up_value.getObject()
+elif follow_up is not None:
+  follow_up_value, = portal.portal_catalog(relative_url=follow_up, limit=2)
+  follow_up_value = follow_up_value.getObject()
+follow_up_value.edit()
+
 post = context.PostModule_createHTMLPostFromText(
-  follow_up=follow_up,
-  data=data,
+  text_content=data,
+  follow_up_value=follow_up_value,
+  predecessor=predecessor,
+  **post_edit_kw
 )
 
 if file not in ("undefined", None):  # XXX "undefined" ? should also be fixed in javascript side

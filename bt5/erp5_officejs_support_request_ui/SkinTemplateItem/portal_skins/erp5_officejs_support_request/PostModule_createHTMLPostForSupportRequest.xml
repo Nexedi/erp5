@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>follow_up, predecessor, data, file</string> </value>
+            <value> <string>data, file, follow_up_uid=None, follow_up=None, follow_up_value=None, predecessor=None, **post_edit_kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
