@@ -29,7 +29,17 @@ if file not in ("undefined", None):  # XXX "undefined" ? should also be fixed in
   # XXX depending on security model this should be changed accordingly
   document.publish()
 
+def setLastFollowUpRelated(ob, relative_url):
+  prefix = "aggregate/"
+  category_list = []
+  for category in ob.getCategoryList():
+    if category.startswith(prefix):
+      continue
+    category_list.append(category)
+  category_list.append(prefix + relative_url)
+  ob.setCategoryList(category_list)
+
 post.publish()
 # XXX in support request web app interface, discussable page reloads right after
-#     adding a post, searching for new post hoping it is already indexed.
-post.immediateReindexObject()
+#     adding a post, searching for indexed post + this post (as support request aggregate)
+setLastFollowUpRelated(follow_up_value, post.getRelativeUrl())
