@@ -59,8 +59,8 @@
         state_dict.text_content = state_dict.value.toString();
         if (state_dict.text_content !== "" && thousand_sep !== "") {
           tmp = input_format_re.exec(state_dict.text_content);
-          // tmp == [full-number, sign, integer-part, .decimal-part, ...]
-          state_dict.text_content = tmp[1] + toTriplets(tmp[2]).join(thousand_sep) + tmp[3];
+          // tmp == [full-number, sign, integer-part, .decimal-part (can be undefined because of permissive regexp), ...]
+          state_dict.text_content = tmp[1] + toTriplets(tmp[2]).join(thousand_sep) + (tmp[3] || "");
           tmp = undefined;
         }
       }
