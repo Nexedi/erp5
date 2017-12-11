@@ -107,7 +107,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//span[text()='Foo_zhongwen: A new foo']</td>
+  <td>//span[text()=' Foo_zhongwen: A new foo']</td>
   <td></td>
 </tr>
 
