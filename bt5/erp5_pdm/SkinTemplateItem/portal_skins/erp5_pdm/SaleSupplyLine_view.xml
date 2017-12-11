@@ -98,7 +98,7 @@
                         <string>my_product_line</string>
                         <string>my_destination_reference</string>
                         <string>my_priced_quantity</string>
-                        <string>your_quantity_unit</string>
+                        <string>my_quantity_unit</string>
                         <string>my_base_unit_price</string>
                         <string>my_price_currency</string>
                         <string>my_source_account</string>
@@ -110,6 +110,7 @@
                         <string>my_max_flow</string>
                         <string>my_min_stock</string>
                         <string>my_max_stock</string>
+                        <string>my_ledger</string>
                       </list>
                     </value>
                 </item>

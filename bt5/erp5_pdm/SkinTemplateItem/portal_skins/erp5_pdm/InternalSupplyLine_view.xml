@@ -110,6 +110,7 @@
                         <string>my_max_flow</string>
                         <string>my_min_stock</string>
                         <string>my_max_stock</string>
+                        <string>my_ledger</string>
                       </list>
                     </value>
                 </item>

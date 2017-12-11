@@ -101,9 +101,7 @@
                     <value>
                       <list>
                         <string>my_resource_title</string>
-                        <string>my_priced_quantity</string>
                         <string>my_quantity_unit</string>
-                        <string>my_price_currency</string>
                         <string>my_start_date_range_min</string>
                         <string>my_start_date_range_max</string>
                       </list>
@@ -114,7 +112,7 @@
                     <value>
                       <list>
                         <string>my_max_flow</string>
-                        <string>my_p_variation_base_category_list</string>
+                        <string>my_max_flow_variation_base_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -131,7 +129,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SaleSupplyLine_viewMixStock</string> </value>
+            <value> <string>SaleSupplyLine_viewMaxFlow</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -147,7 +145,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Min Flow</string> </value>
+            <value> <string>Max Flow</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

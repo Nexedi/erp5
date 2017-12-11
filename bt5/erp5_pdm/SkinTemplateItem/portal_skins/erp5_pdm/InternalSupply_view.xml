@@ -102,6 +102,7 @@
                         <string>my_source_title</string>
                         <string>my_source_decision_title</string>
                         <string>my_price_currency</string>
+                        <string>my_ledger</string>
                       </list>
                     </value>
                 </item>

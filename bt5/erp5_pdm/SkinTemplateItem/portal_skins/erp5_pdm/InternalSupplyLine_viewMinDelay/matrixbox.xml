@@ -10,15 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>as_cell_range_script_id</string>
+                <string>cell_base_id</string>
                 <string>cell_portal_type</string>
                 <string>editable_attributes</string>
-                <string>title</string>
                 <string>global_attributes</string>
-                <string>cell_base_id</string>
                 <string>update_cell_range</string>
-                <string>tabs</string>
-                <string>lines</string>
-                <string>columns</string>
               </list>
             </value>
         </item>
@@ -61,30 +58,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>lines</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>tabs</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -98,8 +77,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>as_cell_range_script_id</string> </key>
+                    <value> <string>SupplyLine_asCellRange</string> </value>
+                </item>
+                <item>
                     <key> <string>cell_base_id</string> </key>
-                    <value> <string>path</string> </value>
+                    <value> <string>path_min_delay</string> </value>
                 </item>
                 <item>
                     <key> <string>cell_portal_type</string> </key>
@@ -148,54 +131,11 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>matrixbox</string> </value>
-                </item>
-                <item>
                     <key> <string>update_cell_range</string> </key>
                     <value> <int>1</int> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.SupplyLine_asCellRange(\'path\', matrixbox=1, display_base_category=0)[1]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.SupplyLine_asCellRange(\'path\', matrixbox=1, display_base_category=0)[0]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.SupplyLine_asCellRange(\'path\', matrixbox=1, display_base_category=0)[2]</string> </value>
         </item>
       </dictionary>
     </pickle>
