@@ -174,18 +174,40 @@ class BusinessSnapshot(Folder):
     # Get last created snapshot
     last_snapshot = self.getLastSnapshot()
 
-    # [1]: Extend the item_list with list of items from last snapshot
-    new_item_list.extend(last_snapshot.getItemList())
-    new_item_path_list.extend(last_snapshot.getItemPathList())
-
+    # Commit list of all commits between the last snapshot/first commit and the
+    # current snapshot
     successor_commit_list = []
 
-    # Get next predecessor commit for this snapshot using the equivalent commit
-    # Notice that we don't use the snapshot to get the next commit as the
-    # snapshot is mere a state which uses `predecessor` just for mentioning the
-    # equivalent commit.
-    next_commit = eqv_commit.getPredecessorRelatedValue()
+    # If there is last snapshot, then combine all the commit afterwards to create
+    # new snapshot
+    if last_snapshot:
 
+      # [1]: Extend the item_list with list of items from last snapshot
+      new_item_list.extend(last_snapshot.getItemList())
+      new_item_path_list.extend(last_snapshot.getItemPathList())
+
+      # Get next predecessor commit for this snapshot using the equivalent commit
+      # Notice that we don't use the snapshot to get the next commit as the
+      # snapshot is mere a state which uses `predecessor` just for mentioning the
+      # equivalent commit.
+      # Here the first next commit should be the commit created after last snapshot
+      # which we can get using the equivalent commit of last snapshot and then
+      # finding the next commit for it
+      next_commit = last_snapshot.getPredecessorValue().getPredecessorRelatedValue()
+
+    # If there is no last snapshot, create a new one by combining all the commits
+    else:
+      # Get the oldest commit and start from there to find the next commit
+      oldest_commit = min(
+                    self.aq_parent.objectValues(portal_type='Business Commit'),
+                    key=(lambda x: x.getCreationDate()))
+
+      new_item_list.extend(oldest_commit.objectValues())
+      new_item_path_list.extend(oldest_commit.getItemPathList())
+
+      next_commit = oldest_commit.getPredecessorRelatedValue()
+
+    # Fill sucessor commit list
     while (next_commit.getId() != eqv_commit.getId()):
       successor_commit_list.append(next_commit)
       next_commit = next_commit.getPredecessorRelatedValue()

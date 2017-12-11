@@ -120,17 +120,14 @@ class BusinessCommit(Folder):
 
     return super(BusinessCommit, self).newContent(id, **kw)
 
-  def install(self):
+  def createEquivalentSnapshot(self):
     """
-    Installation:
-    - create an empty snapshot that that's similar to a Commit
-    - fill it with hard links to commits and snapshots
-    - install it
+    This function uses the current commit to create a new snapshot
     """
     portal_commit = self.aq_parent
 
     # Create empty snapshot
-    snapshot = portal_commit.newContent(portal_type='Business Commit')
+    snapshot = portal_commit.newContent(portal_type='Business Snapshot')
     # Add the current commit as predecessor. This way we can have the BI
     # BPI in that commit to the Business Snapshot also.
     snapshot.setPredecessorValue(self)
@@ -138,8 +135,27 @@ class BusinessCommit(Folder):
     # Build the snapshot
     snapshot.buildSnapshot()
 
-    for item in snapshot.item_list:
+    return snapshot
+
+  def install(self):
+    """
+    Installation:
+    - check if there is already an equivalent snapshot
+    - if not, create one and install it
+    """
+    successor_list = self.getPredecessorRelatedValueList()
+
+    # Check if the successor list has a snapshot in it
+    try:
+      eqv_snapshot = [l for l
+                      in successor_list
+                      if l.getPortalType() == 'Business Snapshot'][0]
+    except IndexError:
+      # Create a new equivalent snapshot
+      eqv_snapshot = self.createEquivalentSnapshot()
+
+    for item in eqv_snapshot.item_list:
       item.install(self)
 
-  def getPathList(self):
+  def getItemPathList(self):
     return [l.getProperty('item_path') for l in self.objectValues()]
