@@ -205,11 +205,11 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>invisible</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Do you want to clone this document?</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -257,7 +257,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Do you want to clone this document:</string> </value>
+                    <value> <string>Confirmation message</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
