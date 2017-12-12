@@ -1,34 +1,13 @@
-# Script that creates "user_quantity" user for scalabiility tests:
+# Script that creates "user_quantity" users for scalabiility tests:
 # creates and validates persons
 # adds assignment and starts it
 # creates user (login credentials)
-# password is random for every call
-# creates the scalability users file
-
+# random password is given by parameter
 from DateTime import DateTime
-import random
-import string
+now = DateTime()
 
-request = context.REQUEST
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
-
-now = DateTime()
-status_code = 0
-error_message = "No error."
-
-configurator = portal_catalog.getResultValue(
-                  portal_type = "Business Configuration",
-                  id = "default_standard_configuration",
-                  title = "Small And Medium Business")
-
-if configurator == None or not configurator.contentValues(portal_type='Configuration Save'):
-  error_message = "Could not find the scalability business configuration object. Standard configuration not installed?"
-  return {'status_code' : 1, 'error_message': error_message, 'password' : None }
-
-user_quantity = request.get('user_quantity')
-if user_quantity is None: return {'status_code' : 1, 'error_message': "Parameter 'user_quantity' is required.", 'password' : None }
-password = ''.join(random.choice(string.digits + string.letters) for i in xrange(10))
 
 try:
   organisation = portal_catalog.getResultValue(
@@ -36,7 +15,7 @@ try:
                     title = 'Scalability company')
   if organisation is None:
     error_message = "Could not find the scalability organisation. Standard configuration not installed?"
-    return {'status_code' : 1, 'error_message': error_message, 'password' : None }
+    return json.dumps({"status_code" : 1, "error_message": error_message, "password" : None })
   organisation = organisation.getObject().getRelativeUrl()
 
   for i in xrange(0, int(user_quantity)):
@@ -81,5 +60,4 @@ try:
 except Exception as e:
   status_code = 1
   error_message = str(e)
-
-return {'status_code' : status_code, 'error_message': error_message, 'password' : password }
+  raise e
