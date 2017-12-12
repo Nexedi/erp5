@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+      <global name="SQL Method" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -49,6 +49,10 @@
         <item>
             <key> <string>max_rows_</string> </key>
             <value> <int>1000</int> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>SQL Method</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
