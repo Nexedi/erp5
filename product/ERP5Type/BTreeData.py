@@ -43,13 +43,13 @@ class BTreeData(Persistent):
 
     @chunk_size.setter
     def chunk_size(self, value):
-        """Prevent chunks from exceeding this size."""
         if value is not None and (value <= 0 or int(value) != value):
             raise ValueError('Invalid chunk_size')
         self._chunk_size = value
 
     @property
     def max_chunk_size(self):
+        """Prevent chunks from exceeding this size."""
         return self._max_chunk_size
 
     @max_chunk_size.setter
