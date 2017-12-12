@@ -584,7 +584,6 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     # How to implement pagination?
     # default_params.update(REQUEST.form)
     lines = field.get_value('lines')
-    list_method_name = traversed_document.Listbox_getListMethodName(field)
     list_method_query_dict = dict(
       portal_type=[x[1] for x in portal_types], **default_params
     )
@@ -593,8 +592,9 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     # Search for non-editable documents - all reports goes here
     # Reports have custom search scripts which wants parameters from the form
     # thus we introspect such parameters and try to find them in REQUEST
-    list_method = None
-    if list_method_name and list_method_name not in ("portal_catalog", "searchFolder", "objectValues"):
+    list_method = field.get_value('list_method') or None
+    list_method_name = list_method.getMethodName() if list_method is not None else ""
+    if list_method_name not in ("", "portal_catalog", "searchFolder", "objectValues"):
       # we avoid accessing known protected objects and builtin functions above
       try:
         list_method = getattr(traversed_document, list_method_name)
@@ -603,6 +603,8 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
         # which we will not introspect
         log('ListBox {!s} list_method {} is unavailable because of "{!s}"'.format(
           field, list_method_name, error), level=100)
+    else:
+      list_method = None
 
     # Put all ListBox's search method params from REQUEST to `default_param_json`
     # because old code expects synchronous render thus having all form's values
