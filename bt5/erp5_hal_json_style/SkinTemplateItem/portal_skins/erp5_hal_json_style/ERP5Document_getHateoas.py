@@ -191,13 +191,22 @@ def getAttrFromAnything(search_result, select, search_property_getter, search_pr
   if "." in select:
     select = select[select.rindex('.') + 1:]
 
+  # prepare accessor/getter name because this must be the first tried possibility
+  # getter is preferred way how to obtain properties - property itself is the second
+  if not select.startswith('get') and select[0] not in string.ascii_uppercase:
+    # maybe a hidden getter (variable accessible by a getter)
+    accessor_name = 'get' + UpperCase(select)
+  else:
+    # or obvious getter (starts with "get" or Capital letter - Script)
+    accessor_name = select
+
   # 1. resolve attribute on a raw object (all wrappers removed) using
   # lowest-level secure getattr method given object type
   raw_search_result = search_result
   if hasattr(search_result, 'aq_base'):
     raw_search_result = search_result.aq_base
-
-  if search_property_hasser(raw_search_result, select):
+  # BUT! only if there is no accessor (because that is the prefered way)
+  if search_property_hasser(raw_search_result, select) and not hasattr(raw_search_result, accessor_name):
     contents_value = search_property_getter(raw_search_result, select)
 
   # 2. use the fact that wrappers (brain or acquisition wrapper) use
@@ -207,12 +216,6 @@ def getAttrFromAnything(search_result, select, search_property_getter, search_pr
     unwrapped_search_result = search_result.aq_self
 
   if contents_value is None:
-    if not select.startswith('get') and select[0] not in string.ascii_uppercase:
-      # maybe a hidden getter (variable accessible by a getter)
-      accessor_name = 'get' + UpperCase(select)
-    else:
-      # or obvious getter (starts with "get" or Capital letter - Script)
-      accessor_name = select
     # again we check on a unwrapped object to avoid acquisition resolution
     # which would certainly find something which we don't want
     try:

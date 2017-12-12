@@ -990,7 +990,7 @@ return [Object(debit_price=1000.00, credit_price=100.00),
         Object(debit_price=10.00, credit_price=0.00)]
 """)
   @simulate('Test_listProducts', '*args, **kwargs', """
-return context.getPortalObject().foo_module.values()
+return context.getPortalObject().foo_module.contentValues()
 """)
   @simulate('Test_listCatalog', '*args, **kwargs', """
 return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id', 'ASC')])
@@ -1056,6 +1056,59 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     self.assertEqual(result_dict['_embedded']['contents'][1]['title'].encode('utf-8'), document_list[1].getTitle())
     self.assertEqual(result_dict['_embedded']['contents'][1]['Foo_getLocalTitle'], None)
     self.assertEqual(result_dict['_embedded']['contents'][1]['getTotalQuantity'], 0)
+
+
+class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
+  """Test HAL_JSON operations on cataloged Persons and other allowed content types of Person Module."""
+
+  def afterSetUp(self):
+    self.person = self.portal.person_module.newContent(
+      portal_type='Person', first_name="Benoit", last_name="Mandelbrot")
+    self.tic()
+
+  def beforeTearDown(self):
+    self.portal.person_module.deleteContent(self.person.getId())
+
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
+  @simulate('Test_listPersons', '*args, **kwargs', """
+return context.getPortalObject().person_module.contentValues(portal_type="Person")
+""")
+  @simulate('Test_listPersonsCatalog', '*args, **kwargs', """
+return context.getPortalObject().portal_catalog.searchResults(portal_type="Person")
+""")
+  @changeSkin('Hal')
+  def test_getHateoas_person_title_search(self):
+    """Person has amazing property of having attribute "title" and "getTitle" with different return values.
+
+    Value resolution must prefer getter over raw attribute.
+    """
+    fake_request = do_fake_request("GET")
+
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      local_roles=["Assignor", "Assignee"],
+      list_method='Test_listPersons',
+      select_list=['title'] # attribute which must be resolved through getter
+    )
+    result_dict = json.loads(result)
+    titles = [result['title'] for result in result_dict['_embedded']['contents']]
+    # getTitle() composes title from first_name and last_name while attribute "title" remains empty
+    self.assertIn("Benoit Mandelbrot", titles)
+
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      local_roles=["Assignor", "Assignee"],
+      list_method='Test_listPersonsCatalog',
+      select_list=['title'] # attribute which must be resolved through getter
+    )
+    result_dict = json.loads(result)
+    titles = [result['title'] for result in result_dict['_embedded']['contents']]
+    # getTitle() composes title from first_name and last_name while attribute "title" remains empty
+    self.assertIn("Benoit Mandelbrot", titles)
 
 
 class TestERP5PDM_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
