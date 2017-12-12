@@ -1350,8 +1350,9 @@ return msg"
             'return "application/hal+json"')
   @simulate('Base_translateString', 'msg, catalog="ui", encoding="utf8", lang="wo", **kw',
   code_string)
+  @createIndexedDocument()
   @changeSkin('Hal')
-  def test_getHateoasWorklist_default_view_translation(self):
+  def test_getHateoasWorklist_default_view_translation(self, **kw):
     # self._makeDocument()
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
@@ -1367,7 +1368,7 @@ return msg"
     work_list = [x for x in result_dict['worklist'] if x['name'].startswith('daiyanzhen')]
     self.assertEqual(len(work_list), 1)
     self.assertEqual(work_list[0]['name'], 'daiyanzhen')
-    self.assertTrue(work_list[0]['count'] > 0)
+    self.assertEqual(work_list[0]['count'], 1)
     self.assertFalse('module' in work_list[0])
     self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28%22Bar%22%20OR%20%22Foo%22%29%20AND%20simulation_state%3A%22draft%22')
 
