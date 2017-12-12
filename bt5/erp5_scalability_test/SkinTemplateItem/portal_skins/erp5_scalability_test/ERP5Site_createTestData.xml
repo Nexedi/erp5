@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_createScalabilityTestUsers</string> </value>
+            <value> <string>ERP5Site_createTestData</string> </value>
         </item>
       </dictionary>
     </pickle>
