@@ -241,6 +241,20 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="wait_for_listbox_loaded">
+    <tr>
+      <td colspan="3"><b>Wait for the listbox to be loaded</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tfoot//span[contains(@data-i18n, "Records")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
   <tal:block metal:define-macro="wait_for_content_loaded_in_menu_page">
     <tr>
       <td colspan="3"><b>Wait for the content to be loaded (in menu page)</b></td>

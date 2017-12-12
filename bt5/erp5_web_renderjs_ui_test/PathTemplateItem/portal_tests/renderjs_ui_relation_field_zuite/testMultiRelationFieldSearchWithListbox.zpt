@@ -243,7 +243,7 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
 </tal:block>
 
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
   <td>click</td>
   <td>//tbody/tr[1]//a</td>
