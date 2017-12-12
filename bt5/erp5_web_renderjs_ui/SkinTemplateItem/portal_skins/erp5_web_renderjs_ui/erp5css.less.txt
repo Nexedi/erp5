@@ -813,8 +813,45 @@ div[data-gadget-scope='editor_panel'] {
   min-width: @sub-line-min-width-desktop;
 }
 
-div[data-gadget-scope='header'] .ui-header {
+.renderTabletSubLink() {
+  padding-top: @half-margin-size;
+  padding-bottom: @half-margin-size;
+  white-space: nowrap;
+  overflow: hidden;
+  &::before {
+    font-size: 1.2em;
+    display: block;
+  }
+}
 
+.renderTabletSubListElement() {
+  flex: 1;
+  // XXX TODO Hardcoded color
+  border-left: 1px solid rgba(0, 0, 0, 0.55);
+  &:first-child {
+    border-left: none;
+  }
+
+  a {
+    display: block;
+  }
+}
+
+.renderTabletNotALinkTitle() {
+  padding-left: @headertitlespanleftmiddlepadding;
+  &::before {
+    margin-right:@headertitlespanleftlargemargin;
+  }
+}
+
+.renderTabletHeaderButton() {
+  // https://css-tricks.com/forums/topic/hide-text-but-not-the-before-pseudo-class/
+  // Default size
+  background-color: @colorheaderbackground;
+  width: 8em;
+}
+
+div[data-gadget-scope='header'] .ui-header {
   position: fixed;
   z-index: 1000;
   text-align: center;
@@ -848,8 +885,9 @@ div[data-gadget-scope='header'] .ui-header {
       @media @desktop {
         background-color: @colorsubheaderbackground;
       }
-      @media @smartphone, @tablet {
+      @media @smartphone {
         background-color: @colorheaderbackground;
+        .hide_text();
       }
 
       transition: background-color @transition-timing;
@@ -860,12 +898,7 @@ div[data-gadget-scope='header'] .ui-header {
       line-height: @headerheight;
 
       @media @tablet {
-      // https://css-tricks.com/forums/topic/hide-text-but-not-the-before-pseudo-class/
-        // Default size
-        width: 8em;
-      }
-      @media @smartphone {
-        .hide_text();
+        .renderTabletHeaderButton();
       }
 
       &::before {
@@ -938,17 +971,14 @@ div[data-gadget-scope='header'] .ui-header {
       }
 
       @media @tablet {
-         padding-left: @headertitlespanleftmiddlepadding;
-         &::before {
-           margin-right:@headertitlespanleftlargemargin;
-         }
+        .renderTabletNotALinkTitle();
       }
 
       @media @smartphone {
-         padding-left: @headertitlespanleftsmallpadding;
-         &::before {
-           margin-right:@headertitlespanleftsmallmargin;
-         }
+        padding-left: @headertitlespanleftsmallpadding;
+        &::before {
+          margin-right:@headertitlespanleftsmallmargin;
+        }
       }
     }
     // Clickable title
@@ -999,28 +1029,12 @@ div[data-gadget-scope='header'] .ui-header {
 
     li {
       @media @tablet, @smartphone {
-        flex: 1;
-        // XXX TODO Hardcoded color
-        border-left: 1px solid rgba(0, 0, 0, 0.55);
-        &:first-child {
-          border-left: none;
-        }
-
-        a {
-          display: block;
-        }
+        .renderTabletSubListElement();
       }
 
       @media @tablet {
         a {
-          padding-top: @half-margin-size;
-          padding-bottom: @half-margin-size;
-          white-space: nowrap;
-          overflow: hidden;
-          &::before {
-            font-size: 1.2em;
-            display: block;
-          }
+          .renderTabletSubLink();
         }
       }
 
@@ -1053,13 +1067,9 @@ div[data-gadget-scope='header'] .ui-header {
           }
         }
       }
-
     }
-
   }
-
 }
-
 /**********************************************
 * Gadget: main
 **********************************************/
