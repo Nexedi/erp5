@@ -416,10 +416,6 @@ class TaskDistributor(RPCRetry):
             proxy = DummyTaskDistributor()
         else:
             proxy = ServerProxy(portal_url, allow_none=True)
-            # create internal proxy to the tool in order to fall-back in case
-            # of old server
-            self._tool_proxy = ServerProxy(portal_url, allow_none=True
-                ).portal_task_distribution
         super(TaskDistributor, self).__init__(proxy, retry_time,logger)
         protocol_revision = self._retryRPC('getProtocolRevision')
         if protocol_revision != 1:
