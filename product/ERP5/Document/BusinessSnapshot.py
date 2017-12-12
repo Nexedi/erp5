@@ -114,23 +114,6 @@ class BusinessSnapshot(Folder):
                       PropertySheet.Version,
                     )
 
-  # Attribute to store item list which are basically hardlinks
-  item_list = []
-
-  def __init__(self, id):
-    """
-    While creating a new Business Snapshot, we need to create the hardlinks
-    and create a snapshot from the commits.
-    """
-    super(BusinessSnapshot, self).__init__(id)
-
-  def install(self):
-    """
-    Installing a snapshot should be similar to installing an installation_state
-    we used to have for Business Manager(s)
-    """
-    pass
-
   def getLastSnapshot(self):
 
     portal = self.getPortalObject()
@@ -152,7 +135,7 @@ class BusinessSnapshot(Folder):
     Returns the collection of all Business Item, Business Property Item and
     Business Patch item at the given snapshot.
     """
-    return self.item_list
+    return self.objectValues()
 
   def getItemPathList(self):
     """
@@ -169,7 +152,7 @@ class BusinessSnapshot(Folder):
     new_item_path_list = []
 
     # Get the equivalent commit for the snapshot
-    eqv_commit = self.getPredecessorValue()
+    eqv_commit = self.getSimilarValue()
 
     # Get last created snapshot
     last_snapshot = self.getLastSnapshot()
@@ -193,7 +176,7 @@ class BusinessSnapshot(Folder):
       # Here the first next commit should be the commit created after last snapshot
       # which we can get using the equivalent commit of last snapshot and then
       # finding the next commit for it
-      next_commit = last_snapshot.getPredecessorValue().getPredecessorRelatedValue()
+      next_commit = last_snapshot.getSimilarValue().getPredecessorRelatedValue()
 
     # If there is no last snapshot, create a new one by combining all the commits
     else:
@@ -226,4 +209,13 @@ class BusinessSnapshot(Folder):
           new_item_list.append(item)
           new_item_path_list.append(item_path)
 
-    self.item_list = new_item_list
+    # Create hardlinks for the objects
+    for item in new_item_list:
+      self._setObject(item.id, item, suppress_events=True)
+
+  def install(self):
+    """
+    Install the sub-objects in the commit
+    """
+    for item in self.objectValues():
+      item.install(self)

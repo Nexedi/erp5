@@ -130,7 +130,8 @@ class BusinessCommit(Folder):
     snapshot = portal_commit.newContent(portal_type='Business Snapshot')
     # Add the current commit as predecessor. This way we can have the BI
     # BPI in that commit to the Business Snapshot also.
-    snapshot.setPredecessorValue(self)
+    snapshot.setSimilarValue(self)
+    self.setSimilarValue(snapshot)
 
     # Build the snapshot
     snapshot.buildSnapshot()
@@ -154,7 +155,7 @@ class BusinessCommit(Folder):
       # Create a new equivalent snapshot
       eqv_snapshot = self.createEquivalentSnapshot()
 
-    for item in eqv_snapshot.item_list:
+    for item in eqv_snapshot.objectValues():
       item.install(self)
 
   def getItemPathList(self):
