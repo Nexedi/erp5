@@ -109,6 +109,7 @@ leaflet_version = leaflet.getVersion() or "001"
 leaflet_aggregate_list = []
 leaflet_modification_date = leaflet.getModificationDate()
 # XXX not matter what, live tests will say \xc2\xa9 and erp5 \xa9
+# u"©".encode("utf8")
 #leaflet_copy = 	u"\u00A9".encode('utf-8') | unicode('©', 'utf8') | '©'.encode('utf-8').strip()
 
 if leaflet_language and leaflet_format == "pdf":
@@ -186,10 +187,9 @@ if leaflet_display_side:
     leaflet_phone=leaflet_source.get("phone", None) or blank,
     leaflet_date=leaflet_date,
     leaflet_year=leaflet_year,
-    leaflet_recycle_url=leaflet_recycle_url,
+    leaflet_recycle_url=leaflet_recycle_url
   )
-
-  leaflet_content = leaflet_legalese + leaflet_content
+  leaflet_content = leaflet_legalese.decode() + leaflet_content.decode()
 
 # ========================= TRANSFORMATION: book ===============================
 # XXX still dirty

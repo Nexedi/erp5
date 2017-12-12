@@ -82,9 +82,8 @@ html{
   }
 }
 .ci-leaflet .ci-leaflet-container-left img {
-  max-width: 8em;
+  max-height: 2.5em;
   min-width: initial;
-  height: 4em;
 }
 .ci-leaflet .ci-leaflet-container-left {
   text-align: left;

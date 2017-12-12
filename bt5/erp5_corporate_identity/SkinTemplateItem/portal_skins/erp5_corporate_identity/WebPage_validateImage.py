@@ -3,7 +3,18 @@
 Upgrade image for the specific type of display
 ================================================================================
 """
+# parameters:
+# ------------------------------------------------------------------------------
+# img_string                    required, <img src=... />
+# img_wrap                      wrap image in a <p> tag and center it
+# img_fullscreen_link           wrap image in a link to fullscreen version
+# img_caption                   caption to use for this image/alt attribute
+# img_svg_format                display image as svg (default png/None)
+
 import re
+
+if img_string is None or img_string == "":
+  return img_string
 
 img_src = re.findall("src=['\"](.*?)['\"]", img_string)[0]
 img_obj = context.restrictedTraverse(img_src.split("?")[0])
@@ -27,8 +38,8 @@ if img_type == "image/svg+xml":
     img_string = img_string.replace('src=', "type='image/svg+xml' src=")
     img_string = img_string.replace('format=png', 'format=svg')
 
-# wrap image in link
-if img_wrap:
+# wrap image in fullscreen link
+if img_fullscreen_link:
   img_string = ''.join([
     '<a target="_blank" rel="noopener noreferrer" href="%s" title="%s">%s<a>' % (
       img_src,
@@ -36,5 +47,9 @@ if img_wrap:
       img_string
     )
   ])
+
+# wrap image in <p> tag
+if img_wrap:
+  img_string = '<p class="ci-book-img" style="text-align:center">' + img_string + '</p>'
 
 return img_string

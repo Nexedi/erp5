@@ -77,6 +77,7 @@
                         <string>display_note</string>
                         <string>portal_skin</string>
                         <string>display_svg</string>
+                        <string>document_save</string>
                       </list>
                     </value>
                 </item>

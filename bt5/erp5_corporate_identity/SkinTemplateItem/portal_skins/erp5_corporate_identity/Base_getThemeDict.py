@@ -65,7 +65,6 @@ if theme is not None:
 if theme is None:
   theme = "default"
 
-# XXX fallback images on portal_skin folders not found on convert
 theme_dict = {}
 theme_dict["theme"] = theme
 theme_dict["theme_logo_description"] = theme_logo_description
@@ -74,5 +73,4 @@ theme_dict["template_css_url"] = ''.join([url, css_path, pdf, ".css"])
 theme_dict["fallback_img_url"] = ''.join([url, '/', img])
 theme_dict["theme_css_font_list"] = getCustomParameter(font, None) or []
 theme_dict["theme_css_url"] = getCustomParameter(css, None) or getCommonParameter(css, None) or blank
-
 return theme_dict

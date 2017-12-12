@@ -280,11 +280,6 @@ html .ci-slideshow .ci-slideshow-footer > div {
 }
 html .ci-slideshow .ci-slideshow-header > div img,
 html .ci-slideshow .ci-slideshow-footer > div img {
-  /*
-  max-width: 8em;
-  min-width: initial;
-  height: 4em;
-  */
   max-height: 2.5em;
   min-width: initial;
 }

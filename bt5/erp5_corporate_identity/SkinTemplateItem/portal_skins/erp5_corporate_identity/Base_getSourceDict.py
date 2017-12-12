@@ -44,7 +44,7 @@ if source is None:
   if override_source_person_title is not None or override_source_person_title is blank:
     source_person_list = getCommonProxyParameter("override_person", override_source_person_title)
   if len(source_person_list) == 0:
-    source_person_list = getCommonProxyParameter("author", None)
+    source_person_list = getCommonProxyParameter("author", None) or []
   if len(source_person_list) > 0:
     source_person = source_person_list[0]
     contributor_title_string = ', '.join(x.get("name", blank) for x in source_person_list)
@@ -55,9 +55,9 @@ if source is None:
   if len(source_organisation_list) == 0:
     source_organisation_uid = getCustomParameter("source_organisation_uid", None)
   if source_organisation_uid:
-    source_organisation_list = getCommonProxyParameter("sender", source_organisation_uid)
+    source_organisation_list = getCommonProxyParameter("sender", source_organisation_uid) or []
   if len(source_organisation_list) == 0 and default_company_title:
-    source_organisation_list = getCommonProxyParameter("override_organisation", html_quote(default_company_title))
+    source_organisation_list = getCommonProxyParameter("override_organisation", default_company_title) or []
   if len(source_organisation_list) == 0 and source_person is not None:
     source_organisation_list = getCommonProxyParameter("source", source_person.get("uid")) or []
   if len(source_organisation_list) > 0:
@@ -75,7 +75,7 @@ else:
 
 # override specific bank account (no default to pick correct one if multiple exist)
 if default_bank_account_uid is not None:
-  override_bank_account_list = getCommonProxyParameter("bank", default_bank_account_uid)
+  override_bank_account_list = getCommonProxyParameter("bank", default_bank_account_uid) or []
   if len(override_bank_account_list) > 0:
     override_bank_account = override_bank_account_list[0]
     source["bank"] = override_bank_account.get("bank")

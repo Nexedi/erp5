@@ -76,9 +76,9 @@
                       <list>
                         <string>format</string>
                         <string>display_side</string>
-                        <string>portal_skin</string>
                         <string>display_svg</string>
                         <string>document_save</string>
+                        <string>portal_skin</string>
                       </list>
                     </value>
                 </item>

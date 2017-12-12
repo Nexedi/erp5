@@ -260,7 +260,10 @@ doc_source = doc.Base_getSourceDict(
 for image in re.findall('(<img.*?/>)', doc_content):
   doc_content = doc_content.replace(
     image,
-    context.WebPage_validateImage(img_string=image, img_svg_format=doc_display_svg)
+    context.WebPage_validateImage(
+      img_string=image,
+      img_svg_format=doc_display_svg
+    )
   )
 
 # ========================= TRANSFORMATION: book ===============================

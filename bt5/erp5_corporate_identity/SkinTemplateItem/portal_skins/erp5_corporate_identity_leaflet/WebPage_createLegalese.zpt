@@ -17,7 +17,8 @@ Generate leaflet legalese
                        leaflet_year                           python: options.get('leaflet_year');
                        leaflet_recycle_url                    python: options.get('leaflet_recycle_url');">
   <div id="legalese"> 
-    <p class="top"><span>&copy;</span><span tal:content="python: ''.join([leaflet_organisation, ' ', leaflet_year])"></span></p> 
+    <p class="top"><span>&copy;</span><span tal:content="python: ''.join([leaflet_organisation, ' ', leaflet_year])"></span>
+    </p> 
     <p>
       <span tal:content="python: leaflet_organisation"></span><br />
       <span tal:content="python: leaflet_address"></span><br />

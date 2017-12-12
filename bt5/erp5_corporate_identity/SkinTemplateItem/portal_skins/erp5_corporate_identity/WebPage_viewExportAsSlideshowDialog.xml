@@ -77,8 +77,8 @@
                         <string>format</string>
                         <string>display_note</string>
                         <string>display_svg</string>
-                        <string>portal_skin</string>
                         <string>document_save</string>
+                        <string>portal_skin</string>
                       </list>
                     </value>
                 </item>

@@ -58,7 +58,7 @@ Generate the leaflet footer
 	    <div class="ci-leaflet-container-right">
 	      <span>&copy;</span><span tal:content="python: leaflet_year + ' ' + leaflet_copyright"></span>
 	      <br/>
-	      <span tal:content="python: leaflet_contributor_list"></span>&nbsp;<span class="page"></span> | <span class="topage"></span>
+	      <span tal:content="python: leaflet_contributor_list"></span> <span class="page"></span> | <span class="topage"></span>
 	    </div>
 	  </div>
   </tal:block>

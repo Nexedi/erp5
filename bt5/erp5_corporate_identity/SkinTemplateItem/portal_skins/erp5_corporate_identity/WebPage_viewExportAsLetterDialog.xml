@@ -76,9 +76,9 @@
                       <list>
                         <string>format</string>
                         <string>portal_skin</string>
-                        <string>display_svg</string>
                         <string>display_head</string>
                         <string>display_source_address</string>
+                        <string>display_svg</string>
                         <string>document_save</string>
                       </list>
                     </value>

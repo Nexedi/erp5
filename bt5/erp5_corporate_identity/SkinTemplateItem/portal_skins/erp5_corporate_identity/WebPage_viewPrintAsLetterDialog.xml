@@ -78,6 +78,7 @@
                         <string>display_head</string>
                         <string>display_source_address</string>
                         <string>display_svg</string>
+                        <string>document_save</string>
                       </list>
                     </value>
                 </item>

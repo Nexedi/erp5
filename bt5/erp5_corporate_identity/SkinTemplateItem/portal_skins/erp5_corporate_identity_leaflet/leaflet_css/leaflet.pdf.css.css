@@ -14,29 +14,29 @@ html{
 .ci-leaflet #left-summary .title,
 .ci-leaflet p.ci-leaflet-source-header,
 .ci-leaflet p.ci-leaflet-sheet-header {
-  font-size: /*42px;*/ 28px; 
+  font-size: 28px; 
 }
 .ci-leaflet h2,
 .ci-leaflet #main-content .summary,
 .ci-leaflet #legalese .bottom {
-  font-size: /*30px;*/ 18px;
+  font-size: 18px;
 }
 .ci-leaflet p,
 .ci-leaflet li,
 .ci-leaflet div p:last-child {
-  font-size: /*26px;*/ 16px;
+  font-size: 16px;
 }
 .ci-leaflet #left-summary li {
-  font-size: /*24px;*/ 16px;
+  font-size: 16px;
 }
 .ci-leaflet-footer div {
-  font-size: /*18px;*/ 14px;
+  font-size: 14px;
 }
 .ci-leaflet #legalese p,
 .ci-leaflet #legalese span,
 .ci-leaflet #left-summary .excerpt,
 .ci-leaflet #main-content .left-icon .excerpt {
-  font-size: /*20px;*/ 14px;
+  font-size: 11px;
 }
 /* === font style === */
 .ci-leaflet #main-content .summary {
@@ -87,7 +87,8 @@ html{
   text-align: center;
 }
 .ci-leaflet .ci-leaflet-container-left img {
-  max-height: 16mm;
+  max-width: 120px;
+  height: initial;
 }
 .ci-leaflet .ci-leaflet-container-left {
   text-align: left;
@@ -188,8 +189,8 @@ html{
    resize all fonts in the whole document */
 .ci-leaflet #main-content > .left-icon {
   position: absolute;
-  margin-top: 20mm;
-  margin-bottom: 10mm;
+  margin-top: 0;
+  margin-bottom: 0;
   width: 28%;
   left: 5mm;
   text-align: center;
@@ -199,10 +200,10 @@ html{
   box-sizing: border-box;
 }
 .ci-leaflet #main-content .left-icon {
-  padding-top: 15%;
+  padding-top: 12%;
 }
 .ci-leaflet #main-content .left-icon ~ .left-icon {
-  padding-top: 4%;
+  padding-top: 0%;
 }
 .ci-leaflet #main-content .left-icon img {
   width: 100%;

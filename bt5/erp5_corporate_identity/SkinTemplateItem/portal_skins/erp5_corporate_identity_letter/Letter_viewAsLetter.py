@@ -158,7 +158,10 @@ letter_destination = letter.Base_getDestinationDict(
 for image in re.findall('(<img.*?/>)', letter_content):
   letter_content = letter_content.replace(
     image,
-    context.WebPage_validateImage(img_string=image, img_svg_format=letter_display_svg)
+    context.WebPage_validateImage(
+      img_string=image,
+      img_svg_format=letter_display_svg
+    )
   )
 
 # ============================= Format: html ===================================

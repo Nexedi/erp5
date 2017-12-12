@@ -4,14 +4,15 @@ Return local parameters that require proxy role to access
 ================================================================================
 """
 
-portal_type_valid_list = ["Web Site", "Web Section", "Web Page", "Letter"]
+portal_type_valid_template_list = ["Web Site", "Web Section", "Web Page", "Letter"]
+portal_type_valid_report_list = ["Project", "Sale Order", "Sale Opportunity"]
 portal_type = context.getPortalType()
 portal_object = context.getPortalObject()
 
 if REQUEST is not None:
   return None
 
-if portal_type not in portal_type_valid_list:
+if portal_type not in portal_type_valid_template_list and portal_type not in portal_type_valid_report_list:
   return None
 
 def err(my_value):
@@ -182,7 +183,9 @@ if pass_parameter is not None and pass_source_data is not None:
   # -------------------------- Contributor -------------------------------------
   # returns [{person_dict}, {person_dict...}]
   if pass_parameter == "author":
-    return populatePersonDict(context.getContributorValueList(*args, **kw))
+    if portal_type in portal_type_valid_template_list:
+      return populatePersonDict(context.getContributorValueList(*args, **kw))
+    return []
 
   # ------------- Override Sender/Recipient Organisation -----------------------
   # returns [{organisation_dict}]

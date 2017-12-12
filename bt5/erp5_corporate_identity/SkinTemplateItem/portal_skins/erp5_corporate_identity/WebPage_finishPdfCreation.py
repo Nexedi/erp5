@@ -3,6 +3,20 @@
 Save, download or return generated PDF Document
 ================================================================================
 """
+# parameters:
+# ------------------------------------------------------------------------------
+# doc_download                        download this document in HTML format
+# doc_save                            save this web page in HTML format
+# doc_version                         version of the document
+# doc_title                           title of the document
+# doc_relative_url                    relative url to set as follow-up
+# doc_language                        language of the document
+# doc_reference                       reference of the document
+# doc_full_reference                  full reference with version/language
+# doc_modification_date               date to set as initial date
+# doc_pdf_file                        pdf content to store
+# doc_aggregate_list                  not applicable (only used for events)
+
 if doc_save == 1:
   dms_module = getattr(context, 'document_module', None)
   if dms_module is not None:
@@ -19,7 +33,8 @@ if doc_save == 1:
       source_reference=''.join([doc_reference, '.pdf']),
       file=doc_pdf_file
     )
-    context.setAggregate(document.getRelativeUrl())
+    if getattr(context, "aggregate", None) is not None:
+      context.setAggregate(document.getRelativeUrl())
     message = context.Base_translateString(
       '%(portal_type)s created successfully as PDF Document.' % {
         'portal_type': document.getTranslatedPortalType()
