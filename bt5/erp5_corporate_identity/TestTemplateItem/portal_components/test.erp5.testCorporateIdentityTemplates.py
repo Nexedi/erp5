@@ -34,7 +34,6 @@ import functools
 import cStringIO
 import math
 import re
-import base64
 
 host_url = r"https?://localhost(?::[0-9]+)?/[^/]+/"
 test_url = "https://softinst73908.host.vifib.net/"
@@ -105,6 +104,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     self.message_catalog.message_edit('VAT ID', 'de', 'USt-ID', '')
     self.message_catalog.gettext('Data Sheet', add=1)
     self.message_catalog.message_edit('Data Sheet', 'de', 'Datenblatt', '')
+    self.message_catalog.gettext('Table Of Contents', add=1)
+    self.message_catalog.message_edit('Table Of Contents', 'de', 'Inhaltsverzeichnis', '')
         
     # Activating a system preference if none is activated
     for preference in self.portal.portal_catalog(portal_type="System Preference"):
@@ -234,7 +235,6 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     
     html = getattr(test_page, kw.get("test_method"))(portal_skin=kw.get("use_skin"), **kw)
     html = re.sub(host_url, test_url, html)
-    #html = html.replace(test_page.getReference(), expected_page.getReference())
 
     # update html test files or run tests
     if dump:
@@ -469,10 +469,10 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
   #  """
   #  self.runPdfTestPattern(
   #    "template_test_slideshow_input_002_en_html",
-  #    "template_test_slideshow_input_slide_4_003_en_bmp",
+  #    ["template_test_slideshow_input_slide_4_003_en_bmp"],
   #    "template_test_slideshow_input_003_en_pdf",
   #    **dict(
-  #      page_number=4,
+  #      page_number=[4],
   #      override_source_organisation_title="Couscous",
   #      override_logo_reference="Template.Test.Image.Erp5.Logo",
   #      use_skin="Slide",
@@ -878,3 +878,232 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         use_skin="Leaflet"
       )
     )
+
+  @changeSkin('Book')
+  def test_htmlBook(self):
+    """
+      Test:
+      - Web Page as Book
+      - without table of content
+      - export as html
+    """
+    self.runHtmlTestPattern(
+      "template_test_book_input_001_en_html",
+      "template_test_book_output_expected_001_en_html",
+      **dict(
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        include_content_table=0
+      )
+    )
+
+  @changeSkin('Book')
+  def testhtmlBookAllOptions(self):
+    """
+      Test:
+      - Web Page as Book
+      - with all tables and all override info set
+      - export as html
+    """
+    self.runHtmlTestPattern(
+      "template_test_book_input_001_en_html",
+      "template_test_book_output_expected_002_en_html",
+      **dict(
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        include_history_table=1,
+        include_content_table=1,
+        include_reference_table=1,
+        include_linked_content=1,
+        include_report_content=1,
+        override_document_description="foobar",
+        override_document_title="Couscous",
+        override_document_short_title="Cous",
+        override_document_reference="P-XYZ-Foobar",
+        override_logo_reference="Template.Test.Image.Erp5.Logo",
+        override_source_organisation_title="Test Organisation",
+        override_source_person_title="Test Sender",
+        override_document_version="333"
+      )
+    )
+
+  @changeSkin('Book')
+  def test_htmlBookTranslation(self):
+    """
+      Test:
+      - Web Page as Book
+      - with table of content in German (header)
+      - export as html
+    """
+    self.runHtmlTestPattern(
+      "template_test_book_input_002_de_html",
+      "template_test_book_output_expected_003_de_html",
+      **dict(
+        use_skin="Book",
+        test_method="WebPage_exportAsBook"
+      )
+    )
+
+  @changeSkin('Book')
+  def test_pdfBook(self):
+    """
+      Test:
+      - Web Page as Book
+      - without table of content
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_book_input_001_en_html",
+      "template_test_book_input_page_4_001_en_bmp",
+      "template_test_book_input_001_en_pdf",
+      **dict(
+        page_number=4,
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        format="pdf"
+      )
+    )
+
+  # XXX change to a single pdf from which pics are generated!
+  @changeSkin('Book')
+  def testpdfBookAllOptions(self):
+    """
+      Test:
+      - Web Page as Book
+      - with all tables and all override info set
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_book_input_001_en_html",
+      "template_test_book_input_page_4_002_en_bmp",
+      "template_test_book_input_001_en_pdf",
+      **dict(
+        page_number=4,
+        format="pdf",
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        include_history_table=1,
+        include_content_table=1,
+        include_reference_table=1,
+        include_linked_content=1,
+        include_report_content=1,
+        override_document_description="foobar",
+        override_document_title="Couscous",
+        override_document_short_title="Cous",
+        override_document_reference="P-XYZ-Foobar",
+        override_logo_reference="Template.Test.Image.Erp5.Logo",
+        override_source_organisation_title="Test Organisation",
+        override_source_person_title="Test Sender",
+        override_document_version="333"
+      )
+    )
+
+  # duplicate, just for page 5
+  @changeSkin('Book')
+  def testpdfBookAllOptionsDupe(self):
+    """
+      Test:
+      - Web Page as Book
+      - with all tables and all override info set
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_book_input_001_en_html",
+      "template_test_book_input_page_5_002_en_bmp",
+      "template_test_book_input_001_en_pdf",
+      **dict(
+        page_number=5,
+        format="pdf",
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        include_history_table=1,
+        include_content_table=1,
+        include_reference_table=1,
+        include_linked_content=1,
+        include_report_content=1,
+        override_document_description="foobar",
+        override_document_title="Couscous",
+        override_document_short_title="Cous",
+        override_document_reference="P-XYZ-Foobar",
+        override_logo_reference="Template.Test.Image.Erp5.Logo",
+        override_source_organisation_title="Test Organisation",
+        override_source_person_title="Test Sender",
+        override_document_version="333"
+      )
+    )
+
+  # duplicate, just for page 9
+  @changeSkin('Book')
+  def testpdfBookAllOptionsDoubleDupe(self):
+    """
+      Test:
+      - Web Page as Book
+      - with all tables and all override info set
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_book_input_001_en_html",
+      "template_test_book_input_page_9_002_en_bmp",
+      "template_test_book_input_001_en_pdf",
+      **dict(
+        page_number=9,
+        format="pdf",
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        include_history_table=1,
+        include_content_table=1,
+        include_reference_table=1,
+        include_linked_content=1,
+        include_report_content=1,
+        override_document_description="foobar",
+        override_document_title="Couscous",
+        override_document_short_title="Cous",
+        override_document_reference="P-XYZ-Foobar",
+        override_logo_reference="Template.Test.Image.Erp5.Logo",
+        override_source_organisation_title="Test Organisation",
+        override_source_person_title="Test Sender",
+        override_document_version="333"
+      )
+    )
+
+  @changeSkin('Book')
+  def test_PdfBookTranslation(self):
+    """
+      Test:
+      - Web Page as Book
+      - with table of content with German (header)
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_book_input_002_de_html",
+      "template_test_book_input_page_1_003_de_bmp",
+      "template_test_book_input_001_en_pdf",
+      **dict(
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        page_number=1,
+        format="pdf"
+      )
+    )
+
+  @changeSkin('Book')
+  def test_pdfBookPrint(self):
+    """
+      Test:
+      - Web Page as Book
+      - with table of content with German header
+      - print as pdf (will also return the pdf-file with different header)
+    """
+    self.runPdfTestPattern(
+      "template_test_book_input_002_de_html",
+      "template_test_book_input_page_1_003_de_bmp",
+      "template_test_book_input_001_en_pdf",
+      **dict(
+        use_skin="Book",
+        test_method="WebPage_printAsBook",
+        page_number=1,
+        format="pdf"
+      )
+    )
+
+  

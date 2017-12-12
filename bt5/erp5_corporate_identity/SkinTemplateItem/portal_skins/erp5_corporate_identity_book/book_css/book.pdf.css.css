@@ -1,0 +1,880 @@
+/* === font-size === */
+.ci-book h1 + p::first-letter {
+  font-size: 21.1667mm; /* 60pt; */ /* 80px; */
+}
+.ci-book h1 {
+  font-size: 12.7mm; /* 36pt; */ /* 48px; */
+}
+.ci-book h2 {
+  font-size: 7.9375mm; /* 22.5pt; */ /* 30px; */
+}
+.ci-book h3 {
+  font-size: 6.879167mm; /* 19.5pt; */ /* 26px; */
+}
+.ci-book .ci-book-header .ci-book-header-title,
+.ci-book table thead tr:first-child:nth-last-child(2) th,
+.ci-book table thead tr:first-child:nth-last-child(2) td {
+  font-size: 6.35mm; /* 18pt; */ /* 24px; */
+}
+.ci-book div.ci-book-box-offer span,
+.ci-book div.ci-book-box-offer-milestone span {
+  font-size: 5.820833mm; /* 16.5pt; */ /* 22px */
+}
+.ci-book div.ci-book-box-offer *,
+.ci-book div.ci-book-box-offer-milestone * {
+  font-size: 4.7625mm; /* 13.5pt; */ /* 18px; */
+  /*  font-size: 5.820833mm; 16.5pt; */ /* 22px */
+}
+.ci-book-ci-book-table-of-content li,
+.ci-book h4, 
+.ci-book h5, 
+.ci-book h6, 
+.ci-book span, 
+.ci-book p, 
+.ci-book a, 
+.ci-book li,
+.ci-book p,
+.ci-book pre {
+  font-size: 5.29167mm; /* 15pt; */ /* 20px; */
+}
+.ci-book .ci-book-img + span,
+.ci-book caption,
+.ci-book table thead th,
+.ci-book table thead td,
+.ci-book table tbody td,
+.ci-book table tbody td span,
+.ci-book table tbody td p,
+.ci-book table tbody td li,
+.ci-book table tbody td em,
+.ci-book table tbody td strong,
+.ci-book table tbody td a,
+.ci-book table tbody td em,
+.ci-book pre code {
+  font-size: 4.7625mm; /* 13.5pt; */ /* 18px; */
+}
+.ci-book .ci-book-header td:last-child div {
+  font-size: 4.7625mm; /* 13.5pt; */ /* 18px; */
+}
+
+.ci-book .ci-book-header .ci-book-header-subtitle,
+.ci-book .ci-book-header .ci-book-header-value,
+.ci-book .ci-book-header .ci-book-header-key {
+  font-size: 4.4979167mm; /* 12.75pt; */ /* 17px; */
+}
+.ci-book .ci-book-footer .ci-book-footer-copy,
+.ci-book .ci-book-footer span {
+  font-size: 4.23333mm; /* 12pt; */ /* 16px; */
+}
+.ci-book table tbody tr td ul li:before,
+.ci-book .ci-book-box-offer div,
+.ci-book .ci-book-box-offer-line div,
+.ci-book .ci-book-box-offer-milestone div,
+.ci-book .ci-book-box-offer div b,
+.ci-book .ci-book-box-offer-line div b,
+.ci-book .ci-book-box-offer-milestone div b {
+  font-size: 3.704167mm; /* 10.5pt; */ /* 14px; */ /* 8px; */
+}
+
+/* === cover === */
+.ci-book .ci-book-cover p.ci-book-cover-faux-h1 {
+  font-family: "Roboto" !important;
+  font-weight: bold !important;
+  font-size: 12.7mm; /* 36pt; */ /* 48px; */
+}
+.ci-book .ci-book-cover p.ci-book-cover-faux-h2 {
+  font-family: "Arial";
+  font-weight: lighter;
+  font-style: normal;
+  font-size: 12.7mm; /* 36pt; */ /* 48px; */
+}
+.ci-book .ci-book-cover p.ci-book-cover-description {
+  font-family: "Roboto";
+  font-weight: lighter;
+  font-style: italic;
+  font-size: 6.35mm; /* 18pt; */ /* 24px; */
+}
+.ci-book .ci-book-cover p.ci-book-cover-author-list span {
+  font-family: "Roboto";
+  font-weight: lighter;
+  font-style: normal;
+  font-size: 6.35mm; /* 18pt; */ /* 24px; */
+}
+
+/* === color === */
+/* .ci-book a:not([href*="#"]), */
+.ci-book a:not([id]),
+.ci-book td i, 
+.ci-book a span,
+.ci-book .ci-book-table table td[colspan] {
+  color: #1c76bb !important;
+}
+.ci-book * {
+  color: #000 !important;
+}
+.ci-book code {
+  color: #000 !important;
+}
+.ci-book a {
+  text-decoration: none;
+}
+
+/* === text align === */
+/* text align */
+.ci-book p {
+  text-align: justify;
+}
+.ci-book table tbody td ul {
+  text-align: left;
+  font-weight: normal;
+  margin: 0;
+  margin-left: 4pt;
+  padding: 0;
+}
+/* Chinese */
+.ci-zh .ci-book p {
+  text-align: initial;
+}
+
+/* === page breaks === */
+
+.ci-book h1 {
+  page-break-before: always;
+  page-break-after: avoid;
+}
+.ci-book .custom-force-page-break,
+.ci-book .custom-resume {
+  page-break-before: always; 
+}
+.ci-book h2, 
+.ci-book h3, 
+.ci-book h4, 
+.ci-book h5 {
+  page-break-after: avoid;
+}
+.ci-book h1 + img,
+.ci-book h2 + img,
+.ci-book h2 + p {
+  page-break-before: avoid;
+}
+.ci-book table,
+.ci-book table caption,
+.ci-book img, 
+.ci-book tr {
+  page-break-inside: avoid;
+}
+.ci-book img {
+  page-break-after: avoid;
+}
+.ci-book section:not(:last-child) {
+  page-break-after: always;
+  page-break-inside: always;
+}
+/* clear blank page after custom tables */
+.ci-book table.ci-book-version-list {
+  page-break-after: avoid !important;
+}
+.ci-book tbody + caption,
+.ci-book .ci-book-img + span {
+  page-break-inside: avoid;
+  page-break-before: avoid;
+  page-break-after: avoid;
+}
+.ci-book .ci-book-box-offer {
+  page-break-inside: avoid;
+}
+/* === header/footer === */
+.ci-book .ci-book-header,
+.ci-book .ci-book-footer {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+.ci-book .ci-book-header {
+  margin-top: 0;
+}
+.ci-book .ci-book-header td div,
+.ci-book .ci-book-header div,
+.ci-book .ci-book-header .ci-book-header-sidebyside,
+.ci-book .ci-book-header .ci-book-header-sidebyside-first,
+.ci-book .ci-book-header .ci-book-header-sidebyside-last {
+  line-height: 18px;
+  height: 18px;
+}
+.ci-book .ci-book-header td,
+.ci-book .ci-book-footer td {
+  text-align: center;
+  margin: 0;
+  vertical-align: middle;
+  padding: 0;
+  padding-bottom: 3mm;
+}
+.ci-book .ci-book-footer td span {
+  font-weight: 300;
+}
+.ci-book .ci-book-header td {
+  padding-top: 2mm;
+  border: 2px solid #a1a1a1;
+}
+
+/* freeze table cell widths */
+.ci-book .ci-book-header td:nth-child(1),
+.ci-book .ci-book-header td:nth-child(3),
+.ci-book .ci-book-footer td:nth-child(2),
+.ci-book .ci-book-footer td:nth-child(3) {
+  width: 30%;
+}
+.ci-book .ci-book-header td:nth-child(2),
+.ci-book .ci-book-footer td:nth-child(1) {
+  width: 40%;
+}
+.ci-book .ci-book-footer td:nth-child(1) {
+  text-align: left;
+}
+.ci-book .ci-book-footer td:nth-child(3) {
+  text-align: right;
+}
+
+/* header title/subtitle */
+.ci-book .ci-book-header .ci-book-header-title,
+.ci-book .ci-book-header .ci-book-header-subtitle {
+  font-weight: bold;
+}
+.ci-book .ci-book-header .ci-book-header-title {
+  padding-top: 2mm;
+  padding-bottom: 2mm;
+}
+
+/* header image dimensions */
+.ci-book .ci-book-header img {
+  max-height: 25mm;
+  max-width: 60%;
+  padding-top: 2mm;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* header spec section */
+.ci-book .ci-book-header td:last-child {
+  text-align: left;
+  padding-left: 2mm;
+}
+.ci-book .ci-book-header td:last-child .ci-book-header-key {
+  min-width: 25%;
+  display: inline-block;
+  font-weight: 300;
+}
+.ci-book .ci-book-header td:last-child .ci-book-header-value {
+  font-weight: bold;
+  width: auto;
+}
+.ci-book .ci-book-header .ci-book-header-sidebyside-last {
+  display: inline-block;
+  width: 58%;
+}
+.ci-book .ci-book-header .ci-book-header-sidebyside-first {
+  display: inline-block;
+  width: 40%;
+}
+.ci-book .ci-book-header .ci-book-header-sidebyside-first .ci-book-header-key {
+  width: 62.5%;
+}
+.ci-book .ci-book-header td div.ci-book-header-sidebyside {
+  position: relative;
+  top: -2px;
+}
+.ci-book .ci-book-header td div:last-child {
+  padding-top: 2px;
+}
+.ci-book .ci-book-header td:last-child .ci-book-header-minify {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
+}
+.ci-book .ci-book-header td:last-child div {
+  vertical-align: middle;
+}
+.ci-book .ci-book-header div span {
+  line-height: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.ci-book .ci-book-footer th,
+.ci-book .ci-book-footer td {
+  border: 0 none;
+}
+.ci-book .ci-book-footer .ci-book-footer-copy {
+  padding-right: 2mm;
+}
+
+/* === document cover === */
+.ci-book .ci-book-cover p {
+  text-align: center;
+}
+.ci-book .ci-book-cover .ci-book-cover-faux-h1 {
+  text-decoration: uppercase;
+  padding-top: 40%;
+  padding-bottom: 2%;
+}
+.ci-book .ci-book-cover .ci-book-cover-description {
+  margin: 10mm 0;
+  font-weight: normal;
+}
+.ci-book .ci-book-cover {
+  margin-bottom: 20%;
+}
+/* === tables === */
+/* fix header/footer clipping content */
+.ci-book thead {
+  display: table-header-group;
+}
+.ci-book tfoot {
+  display: table-row-group;
+}
+.ci-book table tr {
+  page-break-inside: avoid;
+}
+.ci-book .ci-book-table-highlight td,
+.ci-book table tr[data-class='ci-book-table-highlight'] td {
+  background-color: #ffa07a;
+}
+.ci-book .ci-book-table-section td,
+.ci-book table tr[data-class='ci-book-table-section'] td,
+.ci-book .ci-book-table-section-depth-1 td {
+  background-color: #e0e0e0;
+}
+.ci-book .ci-book-table-section-depth-2 td {
+  background-color: #f5f5f5;
+}
+.ci-book table td[colspan] {
+  padding: 0;
+}
+.ci-book table table td[colspan] {
+  padding-left: 2mm;
+  padding-right: 2mm;
+}
+.ci-book .ci-book-table table {
+  margin-right: 0;
+  margin-left: auto;
+  border-collapse: collapse;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  vertical-align: top;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  border-right-color: transparent;
+}
+.ci-book .ci-book-table table td {
+  text-align: left;
+}
+.ci-book .ci-book-table table td[rowspan] {
+  border-left-color: transparent;
+  vertical-align:top;
+}
+.ci-book .ci-book-table table td[rowspan],
+.ci-book .ci-book-table table td[colspan] {
+  border-left-color: transparent;
+}
+.ci-book .ci-book-table table td[colspan] {
+  border-bottom-color: transparent;
+}
+.ci-book .ci-book-table table tr:nth-child(1) td {
+  border-top-color: transparent;
+}
+.ci-book .ci-book-table table tr td:last-child {
+  border-right-color: transparent;
+}
+
+/* multi-table headers */
+.ci-book table thead {
+  display: table-header-group; 
+}
+.ci-book table tfoot {
+  display: table-row-group;
+}
+.ci-book table tr {
+  page-break-inside: avoid;
+}
+
+/* spacing */
+.ci-book table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 auto;
+}
+/* === table == */
+.ci-book section table thead th {
+  vertical-align: middle;
+  padding-top: 2mm;
+  padding-bottom: 2mm;
+}
+.ci-book table {
+  width: 100%;
+  margin: initial;
+  background-color: transparent !important;
+}
+.ci-book table th,
+.ci-book table td {
+  border: 1px solid #a1a1a1;
+  padding: 0 2mm;
+  text-align: center;
+}
+.ci-book table thead tr th p {
+  color: black !important;
+}
+.ci-book p + table td a {
+  display: block;
+}
+
+/* table formatting */
+.ci-book table {
+  border-collapse: collapse;
+}
+.ci-book table td {
+  padding-left: 2mm;
+  word-wrap: break-word;
+}
+/* sigh...  Fcuk Editor... backgrounds  */
+.ci-book table:not(.ci-book-header):not(.ci-book-footer) thead tr td,
+.ci-book table:not(.ci-book-header):not(.ci-book-footer) thead tr th,
+.ci-book table:not(.ci-book-header):not(.ci-book-footer) thead tr th span,
+.ci-book table:not(.ci-book-header):not(.ci-book-footer) tbody tr:first-child td,
+.ci-book table:not(.ci-book-header):not(.ci-book-footer) tbody tr:first-child th {
+  background-color: #e0e0e0;
+  font-weight: bold;
+}
+
+.ci-book table thead tr td,
+.ci-book table thead tr th {
+  text-align: center;
+}
+.ci-book table:not(.ci-book-header):not(.ci-book-footer) thead + tbody tr:first-child td,
+.ci-book table:not(.ci-book-header):not(.ci-book-footer) thead + tbody tr:first-child th {
+  background-color: #ffffff;
+  font-weight: normal;
+}
+.ci-book table.ci-document-page-header tbody tr td, 
+.ci-book table.ci-document-page-footer tbody tr td {
+  /* background-color: #ffffff !important; */
+  text-align: center;
+  font-weight: 100;
+}
+.ci-book table thead tr td,
+.ci-book table thead tr th {
+  padding-top: 2mm;
+  padding-bottom: 2mm;
+}
+/* override header with p tags eating maring/padding */
+.ci-book table thead tr td p
+.ci-book table thead tr th p {
+  padding: 0;
+  margin: 0;
+}
+
+/* === list formatting === */
+.ci-book ol {
+  list-style-position: inside;
+}
+.ci-book ul {
+  list-style: none;
+  list-style-position: inside;
+}
+.ci-book ul li {
+  padding-left: 16px;
+  text-indent: -24px;
+}
+.ci-book ul li:before {
+  content: "•";
+  padding-right: 16px;
+  margin-top: 2px;
+}
+
+/* === header auto-numbering 1.2.3.4. === */
+/* table-of-content numbering (numbering x.x.x.x) */
+/* faux-h1 */
+.ci-book p.ci-book-toc-faux-h1 {
+  text-align: right;
+  font-weight: normal;
+  padding-top: 10mm;
+  margin-bottom: 25%;
+  padding-right: 2mm;
+  font-size: 12.7mm; /* 36pt; */ /* 48px; */
+}
+
+.ci-book .ci-book-table-of-content + ol,
+.ci-book .ci-book-table-of-content + ol ol {
+  counter-reset: item;
+  list-style: none;
+  margin: 0;
+}
+.ci-book .ci-book-table-of-content + ol > li,
+.ci-book .ci-book-table-of-content + ol ol > li {
+   counter-increment: item;
+}
+.ci-book .ci-book-table-of-content + ol > li:before,
+.ci-book .ci-book-table-of-content + ol ol > li:before {
+  content: counters(item, ".") ". ";
+  padding-right: 0.5em;
+}
+.ci-book .ci-book-table-of-content + ol li ol li:before {
+  content: counters(item, ".") " ";
+}
+.ci-book .ci-book-table-of-content ~ h1 ~ ol > li:before, 
+.ci-book .ci-book-table-of-content ~ h1 ~ ol ol > li:before,
+.ci-book .ci-book-table-of-content ~ h2 ~ ol > li:before, 
+.ci-book .ci-book-table-of-content ~ h2 ~ ol ol > li:before,
+.ci-book .ci-book-table-of-content ~ h3 ~ ol > li:before, 
+.ci-book .ci-book-table-of-content ~ h3 ~ ol ol > li:before,
+.ci-book .ci-book-table-of-content ~ h4 ~ ol > li:before, 
+.ci-book .ci-book-table-of-content ~ h4 ~ ol ol > li:before {
+ counter-increment: initial;
+ content: none;
+}
+.ci-book {
+  counter-reset: h1;
+}
+.ci-book h1 {
+  counter-reset: h2;
+}
+.ci-book h2 {
+  counter-reset: h3;
+}
+.ci-book h3 {
+  counter-reset: h4;
+}
+.ci-book h4 {
+  counter-reset: h5;
+}
+.ci-book h5 {
+  counter-reset: h6;
+}
+.ci-book h1:before {
+  counter-increment: h1;
+  content: counter(h1) ". ";
+}
+.ci-book h2:before {
+  counter-increment: h2;
+  content: counter(h1) "." counter(h2) ". ";
+}
+.ci-book h3:before {
+  counter-increment: h3;
+  content: counter(h1) "." counter(h2) "." counter(h3) ". ";
+}
+.ci-book h4:before {
+  counter-increment: h4;
+  content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) ". ";
+}
+.ci-book h5:before {
+  counter-increment: h5;
+  content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". ";
+}
+.ci-book h6:before {
+  counter-increment: h6;
+  content: counter(h1) "." counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". ";
+}
+.ci-book .ci-book-table-of-content ol {
+  text-indent: 0;
+}
+.ci-book .ci-book-table-of-content ol ol {
+  text-indent: 3em;
+}
+.ci-book .ci-book-table-of-content ol ol ol {
+  text-indent: 6em;
+}
+.ci-book .ci-book-table-of-content ol ol ol ol {
+  text-indent: 9em;
+}
+.ci-book .ci-book-table-of-content ol ol ol ol ol {
+  text-indent: 12em;
+}
+.ci-book .ci-book-table-of-content ol ol ol ol ol ol {
+  text-indent: 15em;
+}
+.ci-book .ci-book-table-of-content-lead-item:not(:first-child) {
+  padding-top: 10mm;
+}
+
+.ci-book-table-of-content ol li div {
+  position: relative;
+  overflow: hidden;
+}
+.ci-book-table-of-content ol li div:after {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  width: 100%;
+  border-bottom: 1px dotted #000;
+  z-index: 500;
+}
+.ci-book .ci-book-table-of-content ol li div {
+  height: 28px;
+  line-height: 24px;
+}
+.ci-book .ci-book-table-of-content ol ol li div {
+  height: 24px;
+  line-height: 20px;
+}
+.ci-book .ci-book-table-of-content ol li {
+  counter-increment: item;
+}
+.ci-book .ci-book-table-of-content ol li div:before {
+  content: counters(item, ".") ". ";
+  padding-right: 0.5em;
+}
+.ci-book .ci-book-table-of-content li ol li div:before {
+  content: counters(item, ".") " ";
+}
+.ci-book .ci-book-table-of-content {
+  display: block;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-right: 10px;
+}
+.ci-book .ci-book-table-of-content ol {
+  counter-reset: item;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+  width: inherit;
+}
+.ci-book .ci-book-table-of-content li ol li {
+  margin: 0;
+}
+.ci-book .ci-book-table-of-content a {
+  text-decoration:none;
+  color: black;
+}
+
+/* === bold first parapaph and supersize first character === */
+.ci-book h1 + p {
+  font-weight: normal; /* was bold */
+  min-height: 64pt;
+  text-indent: 0; /* prevent whole paragraph swallowing last characters */
+}
+.ci-book h1 + p::first-letter {
+  float: left;
+  line-height: 64pt;
+  /*padding: 0;*/
+  padding: 0 .15em .15em 0;
+  margin: 0;
+  display: inline-block;
+  margin-bottom: -10pt;
+}
+.ci-book h1 + p:after {
+  clear: both;
+}
+
+/* === custom margins === */
+.ci-book h1 {
+  text-align: right;
+  font-weight: normal;
+  padding-top: 10mm;
+  margin-bottom: 25%;
+  padding-right: 2mm;
+}
+.ci-book h2 {
+  margin-top: 10mm; /* 0.67em */
+}
+.ci-book h3 {
+  margin-top: 12mm; /* 1em */
+}
+.ci-book h4 {
+  margin-top: 14mm; /* 1.33em */
+}
+.ci-book h5 {
+  margin-top: 16mm /* 1.67em */;
+}
+.ci-book h6 {
+  margin-top: 18mm /* 2.33em */;
+}
+.ci-book p {
+  margin-top: 5mm;
+  margin-bottom: 5mm;
+}
+
+/* === indent all paragraphs === */
+.ci-book p {
+  text-indent: 5mm;
+}
+.ci-book table {
+  margin-top: 5mm;
+  margin-bottom: 5mm;
+  margin-left: auto;
+  margin-right: auto;
+}
+.ci-book table table {
+  margin-top: 0;
+}
+
+/* === image and table captions */
+/* XXX caption should be inside .ci-book-img */
+.ci-book .ci-book-img > img {
+  display: block;
+  margin: 0 auto 0;
+  padding-top: 20px;
+  max-width: 240mm;
+}
+.ci-book .ci-book-img + span {
+  text-align: center;
+  display: block;
+}
+.ci-book table caption {
+  text-align: center;
+  padding-top: 4mm;
+  padding-bottom: 5mm;
+  caption-side: bottom;
+  width: auto;
+}
+
+/* customizations */
+/* editor adding <p>... */
+html .ci-book table td p {
+  margin: 0;
+  padding: 0;
+  text-indent: 0;
+}
+/* === code boxes === */
+.ci-book pre {
+  border: 1px solid #e0e0e0;
+  background-color: #fafafa;
+  padding: 6pt;
+}
+/* Cedric documentation exports */
+.ci-book pre {
+  white-space: pre-line;
+  word-wrap: break-word;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+/* === special headers === */
+/* distribution list */
+.ci-book .ci-book thead th {
+  vertical-align: middle;
+  padding-top: 2mm;
+  padding-bottom: 2mm;
+}
+.ci-book .ci-book-distribution-list tbody tr td ul {
+  vertical-align: top;
+  margin-left: 0;
+  padding-left: 0;
+  display: inline-block;
+  width: 49%;
+  padding-top: 5mm;
+  padding-bottom: 5mm;
+}
+.ci-book .ci-book-distribution-list tbody tr td ul li {
+  padding: 0;
+  list-style: none;
+  text-indent: 0;
+  line-height: 18pt;
+  text-align: left;
+}
+.ci-book .ci-book-distribution-list tbody tr td ul li:before {
+  content: "■";
+  padding-right: 8px;
+  vertical-align: middle;
+}
+.ci-book .ci-book-distribution-list tbody tr td ul li span,
+.ci-book .ci-book-distribution-list tbody tr td ul li div {
+  width: 46%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
+}
+.ci-book .ci-book-distribution-list tbody tr td ul li,
+.ci-book .ci-book-distribution-list tbody tr td ul div,
+.ci-book .ci-book-distribution-list tbody tr td ul span {
+  vertical-align: middle;
+}
+/* Version List */
+
+/* Signature List */
+.ci-book .ci-book-signature-list tbody td {
+  padding-top: 2mm;
+  padding-bottom: 5mm;
+}
+.ci-book .ci-book-signature-list tbody td i,
+.ci-book .ci-book-signature-list tbody td em {
+  display: block;
+  text-align: left;
+  text-indent: 2mm;
+}
+/* === box items === */
+/* Project Breakdown/Milestone List */
+.ci-book .ci-book-box-offer,
+.ci-book .ci-book-box-id,
+.ci-book .ci-book-box-coverage,
+.ci-book .ci-book-box-begin,
+.ci-book .ci-book-box-end,
+.ci-book .ci-book-box-total-duration,
+.ci-book .ci-book-box-duration,
+.ci-book .ci-book-box-leader,
+.ci-book .ci-book-box-resources,
+.ci-book .ci-book-box-location,
+.ci-book .ci-book-box-result,
+.ci-book .ci-book-box-offer-milestone {
+
+}
+.ci-book .ci-book-box-offer b,
+.ci-book .ci-book-box-offer-milestone b,
+.ci-book .ci-book-box-offer-line b {
+  font-weight: bold;
+}
+.ci-book .ci-book-box-detail {
+  table-layout: fixed;
+}
+.ci-book .ci-book-box-offer,
+.ci-book .ci-book-box-offer-line,
+.ci-book .ci-book-box-offer-milestone {
+  border: 1px solid #a1a1a1;
+  padding: 2px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-box-shadow: 10px 10px 0 #a1a1a1;
+  -moz-box-shadow: 10px 10px 0 #a1a1a1;
+  box-shadow: 10px 10px 0 #a1a1a1;
+  background-color: #fff;
+}
+.ci-book .ci-book-box-coverage {
+  display: inline-block;
+  vertical-align: top;
+  width: 66%;
+}
+.ci-book .ci-book-box-location,
+.ci-book .ci-book-box-resources,
+.ci-book .ci-book-box-leader {
+  display: inline-block;
+  vertical-align: top;
+  width: 33%;
+}
+.ci-book .ci-book-box-begin,
+.ci-book .ci-book-box-end {
+  display: inline-block;
+  vertical-align: top;
+  width: 33%;
+}
+.ci-book .ci-book-box-id {
+  display: inline-block;
+  vertical-align: top;
+  width: 33%;
+}
+.ci-book .ci-book-box-duration {
+  display: inline-block;
+  vertical-align: top;
+  width: 33%;
+}
+.ci-book .ci-book-box-end + .ci-book-box-resources {
+  margin-left: 20%;
+}
+.ci-book .ci-book-box-end + .ci-book-box-resources {
+  margin-left: 20%;
+}

@@ -43,9 +43,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W: 37,  0: Unused import base64 (unused-import)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

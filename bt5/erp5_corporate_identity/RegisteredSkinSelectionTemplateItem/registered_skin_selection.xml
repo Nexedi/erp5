@@ -1,5 +1,9 @@
 <registered_skin_selection>
  <skin_folder_selection>
+  <skin_folder>erp5_corporate_identity_book</skin_folder>
+  <skin_selection>Book,Report</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
   <skin_folder>erp5_corporate_identity_leaflet</skin_folder>
   <skin_selection>Leaflet</skin_selection>
  </skin_folder_selection>

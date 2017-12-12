@@ -1,0 +1,46 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Creates the Book footer.
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="book_theme                        python: options.get('book_theme');
+                       book_title                        python: options.get('book_title');
+                       book_language                     python: options.get('book_language');
+                       book_theme_css_font_list          python: options.get('book_theme_css_font_list');
+                       book_theme_css_url                python: options.get('book_theme_css_url');
+                       book_template_css_url             python: options.get('book_template_css_url');
+                       book_full_reference               python: options.get('book_full_reference');
+                       book_source_organisation_title    python: options.get('book_source_organisation_title');">
+  <!DOCTYPE html>
+  <html tal:attributes="class python: ''.join(['ci-', book_theme, ' ci-', book_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="python: book_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url book_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href book_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([book_template_css_url, '?portal_skin=Book'])" />
+    </head>
+    	<body class="ci-book" onload="setPlaceholdersWithUrlParameters()">
+    	  <tal:block metal:use-macro="context/WebPage_createBookFooter/macros/book_footer" />
+      </body>
+	 </html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="book_footer">
+    <table class="ci-book-footer">
+      <tbody>
+        <tr>
+          <td><span tal:content="python: book_full_reference"></span></td>
+          <td><span style="margin-left:-55px;" i18n:translate="" i18n:domain="erp5_ui">Company Confidential</span></td>
+          <td><span class="ci-book-footer-copy">&copy;</span><span tal:content="python: ''.join([book_source_organisation_title, ' - ISO 16016'])"></span></td>
+        </tr>
+      </tbody>
+    </table>
+  </tal:block>
+</tal:block>
