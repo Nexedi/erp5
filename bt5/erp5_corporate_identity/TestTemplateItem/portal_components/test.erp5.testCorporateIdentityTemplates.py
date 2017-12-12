@@ -230,7 +230,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     """
     test_page = getattr(self.portal.web_page_module, id1)
     expected_page = getattr(self.portal.web_page_module, id2)
-    dump = getattr(self.portal, 'dump_data')
+    dump = getattr(self.portal, 'dump_data', None)
     kw["override_date"] = kw.get("override_date", test_page.getModificationDate())
     
     html = getattr(test_page, kw.get("test_method"))(portal_skin=kw.get("use_skin"), **kw)
@@ -248,7 +248,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     test_page = getattr(self.portal.web_page_module, id1)
     expected_image = getattr(self.portal.image_module, id2)
     image_source_pdf_doc = getattr(self.portal.document_module, id3)
-    dump = getattr(self.portal, 'dump_data')
+    dump = getattr(self.portal, 'dump_data', None)
     kw["override_date"] = kw.get("override_date", test_page.getModificationDate())
 
     pdf_kw = dict(

@@ -34,6 +34,11 @@ citation_ad_doubles = {}
 citation_rd_doubles = {}
 
 for citation in re.findall('\[(.*?)\]', document_content or ''):
+  
+  # disregard empty brackets
+  if citation == blank:
+    continue
+
   citation_href = (re.findall(match_href, citation) or [""])[0]
 
   # RD = Referenced Document / AD = Applicable Document

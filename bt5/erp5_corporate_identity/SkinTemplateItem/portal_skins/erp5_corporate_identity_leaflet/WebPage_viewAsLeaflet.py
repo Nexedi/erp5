@@ -84,7 +84,7 @@ leaflet_display_svg = setToNone(kw.get('display_svg', "png"))
 leaflet_download = setToNone(kw.get('document_download', None))
 leaflet_save = setToNone(kw.get('document_save', None))
 
-override_leaflet_header_title = kw.get('override_leaflet_header_title', None)
+override_leaflet_header_title = setToNone(kw.get('override_leaflet_header_title', None))
 override_source_person_title = kw.get('override_source_person_title', None)
 override_source_organisation_title = kw.get(
   "override_source_organisation_title",
@@ -126,8 +126,11 @@ leaflet_theme = leaflet.Base_getThemeDict(
   url=leaflet_url,
   css_path="/leaflet_css/leaflet"
 )
+# set leaflet title, but not to theme (used elsewhere, but not on leaflet)
 if override_leaflet_header_title is not None:
   leaflet_theme["theme_logo_description"] = html_quote(override_leaflet_header_title)
+if leaflet_theme.get("theme").lower() == leaflet_theme.get("theme_logo_description").lower():
+  leaflet_theme["theme_logo_description"] = blank
 leaflet_recycle_url = ''.join([leaflet_url, "/leaflet_img/recycle.png?portal_skin=Leaflet"])
 leaflet_css = ''.join([
   'html .ci-leaflet #left-summary:before {',

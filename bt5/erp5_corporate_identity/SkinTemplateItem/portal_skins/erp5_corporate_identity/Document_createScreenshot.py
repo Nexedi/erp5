@@ -2,7 +2,7 @@ if id is None:
   return "Failed. Missing image id."
 if context.getPortalType() != "PDF":
   return "Failed. Not a pdf."
-if context.getId().find("template_test") == -1:
+if context.getId().find("template_") == -1:
   return "Failed. Not a template test item."
 
 pdf_page = context
