@@ -38,6 +38,9 @@ import shutil
 import logging
 import string
 import random
+import urlparse
+import base64
+import httplib
 import Utils
 import requests
 import slapos.slap
@@ -59,6 +62,12 @@ MAX_TEST_CASE_TIME = 60*60
 MAX_PREPARE_TEST_SUITE = 3600*10*1.0 # 10 hours
 # max time for a test line creation: 5 minutes
 MAX_CREATION_TEST_LINE = 60*10
+# max time for bootstrapping an instance site
+MAX_BOOTSRAPPING_TIME = 60*30
+# max time to get a connection
+MAX_CONNECTION_TIME = 60*5
+# time to check pending activities
+CHECK_ACTIVITIES_TIME = 60*2
 # runner names
 PERFORMANCE_RUNNER_SCRIPT = "performance_tester_erp5"
 SCALABILITY_RUNNER_SCRIPT = "runScalabilityTestSuite"
@@ -68,6 +77,8 @@ TEST_SUITE_INIT = "__init__.py"
 TESTNODE_USER = "testnode"
 HTACCESS = "/.htaccess"
 HTPASSWD = "/.htpasswd"
+PASSWORD_FILE = "/sr_pass"
+PASSWORD_LENGTH = 10
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
@@ -282,8 +293,14 @@ Require valid-user
 """ % (testsuite_directory, HTPASSWD)
     htaccess_file.write(file_content)
     htaccess_file.close()
+    password_path = testsuite_directory + PASSWORD_FILE
+    password_file = open(password_path, "r+") if os.path.isfile(password_path) else open(password_path, "w+")
+    password = password_file.read()
+    if len(password) != PASSWORD_LENGTH:
+      password = ''.join(random.choice(string.digits + string.letters) for i in xrange(PASSWORD_LENGTH))
+      password_file.write(password)
+    password_file.close()
     user = TESTNODE_USER
-    password = ''.join(random.choice(string.digits + string.letters) for i in xrange(10))
     command = [apache_htpasswd, "-bc", testsuite_directory + HTPASSWD, user, password]
     self.testnode.process_manager.spawn(*command)
     return user, password
@@ -410,6 +427,53 @@ Require valid-user
       return {'status_code' : 0}
     return {'status_code' : 1}
 
+  def getConnection(self, instance_url):
+    start_time = time.time()
+    count = 0
+    while MAX_CONNECTION_TIME > time.time()-start_time:
+      try:
+        count = count + 1
+        parsed = urlparse.urlparse(instance_url)
+        host = "%s:%s" % (parsed.hostname, str(parsed.port))
+        if parsed.scheme == 'https':
+          return httplib.HTTPSConnection(host)
+        elif parsed.scheme == 'http':
+          return httplib.HTTPConnection(host)
+        else:
+          raise ValueError("Protocol not implemented")
+      except:
+        self.log("Can't get connection to %s, we will retry." %instance_url)
+    raise ValueError("Cannot get new connection after %d try (for %s s)" %(count, str(time.time()-start_time)))
+
+  def waitForPendingActivities(self, instance_url, bootstrap_url):
+    start_time = time.time()
+    parsed = urlparse.urlparse(bootstrap_url)
+    user = parsed.username;
+    password = parsed.password;
+    header_dict = {'Authorization': 'Basic %s' % \
+    base64.encodestring('%s:%s' % (user, password)).strip()}
+    count = 0
+    no_pending_activities = False
+    while MAX_BOOTSRAPPING_TIME > time.time()-start_time and not no_pending_activities:
+      zope_connection = self.getConnection(instance_url)
+      try:
+        count = count + 1
+        zope_connection.request(
+          'GET', '/erp5/portal_activities/getMessageList',
+          headers=header_dict
+        )
+        result = zope_connection.getresponse()
+        message_list_text = result.read()
+        message_list = [s.strip() for s in message_list_text[1:-1].split(',')]
+        if len(message_list)==0 or len(message_list)==1: # hack to ignore alarm activities
+          self.log("There are no pending activities.")
+          return True
+        self.log("There are %d pending activities" %len(message_list))
+        time.sleep(CHECK_ACTIVITIES_TIME)
+      except Exception as e:
+        self.log("ERROR getting activities: " + str(e))
+    return no_pending_activities
+
   def runTestSuite(self, node_test_suite, portal_url):
     if not self.launchable:
       self.log("Current test_suite is not actually launchable.")
@@ -454,6 +518,7 @@ Require valid-user
         self._updateInstanceXML(configuration, self.instance_title,
                                 node_test_suite.test_result, node_test_suite.test_suite)
         self.slapos_communicator.waitInstanceStarted(self.instance_title)
+        self.slapos_communicator.requestInstanceStart()
 
       self.slapos_communicator.waitInstanceStarted(self.instance_title)
       self.log("[DEBUG] INSTANCE CORRECTLY STARTED")
@@ -482,6 +547,8 @@ Require valid-user
         if result["status_code"] != 0:
           return {'status_code' : result["status_code"], 'error_message': "ERROR bootstrapping: " + result["error_message"]}
         bootstrap_password = result["password"]
+        if not self.waitForPendingActivities(instance_url, bootstrap_url):
+          return {'status_code' : 1, 'error_message': "ERROR waiting for pending activities."}
 
       software_bin_directory = self.testnode.config['slapos_binary'].rsplit("slapos", 1)[0]
       runner = software_bin_directory + PERFORMANCE_RUNNER_SCRIPT
