@@ -103,6 +103,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_target_delivery</string>
                         <string>my_variation_category_list</string>
                         <string>my_quantity</string>
                         <string>my_quantity_unit</string>

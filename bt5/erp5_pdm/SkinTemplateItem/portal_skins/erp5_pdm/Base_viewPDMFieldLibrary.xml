@@ -203,6 +203,7 @@
                         <string>my_view_mode_supply_line_destination_title</string>
                         <string>my_view_mode_supply_line_source_title</string>
                         <string>my_ledger</string>
+                        <string>my_view_mode_target_delivery</string>
                       </list>
                     </value>
                 </item>
