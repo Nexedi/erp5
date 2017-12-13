@@ -34,6 +34,8 @@ import functools
 import cStringIO
 import math
 import re
+import io
+import base64
 
 host_url = r"https?://localhost(?::[0-9]+)?/[^/]+/"
 test_url = "https://softinst73908.host.vifib.net/erp5/"
@@ -150,14 +152,21 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
   def isImageRenderingEqual(self, image_data_1, image_data_2, max_rms=10.0):
     return self.computeImageRenderingRootMeanSquare(image_data_1, image_data_2) <= max_rms
 
+  def convertToPng(self, img_data):
+    bmp_file = Image.open(io.BytesIO(img_data))
+    img_buff = cStringIO.StringIO()
+    bmp_file.save(img_buff, format='PNG', optimize=True, quality=75)
+    img_data = img_buff.getvalue()
+    return ''.join(['data:image/png;base64,', base64.encodestring(img_data)])
+
   def assertImageRenderingEquals(self, test_image_data, expected_image_data, message="Images rendering differs", max_rms=10.0):
     rms = self.computeImageRenderingRootMeanSquare(test_image_data, expected_image_data)
     if rms <= max_rms:
       return
     raise AssertionError("%(message)s\nComparing image:\n%(base64_1)s\nWith image:\n%(base64_2)s\nRMS: %(rms)s > %(max_rms)s\nAssertionError: %(message)s" % {
       "message": message,
-      "base64_1": "pfff", #base64.encodestring(test_image_data),
-      "base64_2": "pfff", #base64.encodestring(expected_image_data),
+      "base64_1": self.convertToPng(test_image_data),
+      "base64_2": self.convertToPng(expected_image_data),
       "rms": rms,
       "max_rms": max_rms,
     })
@@ -1121,5 +1130,4 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         override_revision=1
       )
     )
-
   
