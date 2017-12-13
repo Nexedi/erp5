@@ -26,17 +26,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//input[@id="generateRSS"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>5000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@id="generate-rss"]</td>
+  <td>//input[@data-i18n="[value]Generate RSS"]</td>
   <td></td>
 </tr>
 <tr>
