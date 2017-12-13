@@ -14,6 +14,7 @@ MAIN FILE: render two pager in different output formats
 # override_source_organisation_title used instead of follow-up organisation
 # override_source_person_title used instead of contributor
 # override_batch_mode       used for tests
+# override_time             used for tests
 # ------
 # document_downalod:        download file directly (default None)            
 # document_save:            save file in document module (default None)
@@ -90,7 +91,8 @@ override_source_organisation_title = kw.get(
   "override_source_organisation_title",
   None
 )
-override_batch_mode = kw.get('batch_mode', False)
+override_batch_mode = kw.get('batch_mode', None) or False
+override_time = setToNone(kw.get('override_time', None)) or None
 
 
 # -------------------------- Document Parameters  ------------------------------
@@ -112,6 +114,9 @@ leaflet_modification_date = leaflet.getModificationDate()
 # u"©".encode("utf8")
 #leaflet_copy = 	u"\u00A9".encode('utf-8') | unicode('©', 'utf8') | '©'.encode('utf-8').strip()
 
+if override_time is not None:
+  leaflet_date="Nov-1976"
+  leaflet_year="1976"
 if leaflet_language and leaflet_format == "pdf":
   leaflet.REQUEST['AcceptLanguage'].set(leaflet_language, 10)
 if leaflet_reference is None:

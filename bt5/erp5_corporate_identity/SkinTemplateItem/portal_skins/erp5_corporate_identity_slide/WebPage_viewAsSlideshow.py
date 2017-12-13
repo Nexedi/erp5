@@ -255,6 +255,14 @@ doc_source = doc.Base_getSourceDict(
   default_bank_account_uid=getCustomParameter("default_bank_account_uid", None),
   theme_logo_url=doc_theme.get("theme_logo_url", None)
 )
+if doc_source.get("enhanced_logo_url") is not blank:
+  doc_css = ''.join([
+    doc_css,
+    ' .ci-slideshow-footer-logo {'
+      'background: #FFF url("%s") center no-repeat;' % (doc_source.get("enhanced_logo_url")),
+      'background-size: 100px auto;',
+    '}'
+  ])
 
 # --------------------------- Content Upgrades ---------------------------------
 for image in re.findall('(<img.*?/>)', doc_content):

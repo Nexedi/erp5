@@ -12,6 +12,7 @@ MAIN FILE: generate report (book header/footer and report content)
 # document_reference:       use as document reference
 # document_title            use as document title
 # override_batch_mode       used for tests
+# override_revision         used for tests
 # ------
 # document_download:        download file directly (default None)     
 # document_save:            save file in document module (default None)
@@ -88,7 +89,8 @@ override_document_title = kw.get('document_title', None)
 override_document_version = kw.get('document_version', None)
 override_document_reference = kw.get('document_reference', None)
 override_document_language = kw.get('document_language', None)
-override_batch_mode = kw.get('batch_mode', False)
+override_batch_mode = setToNone(kw.get('batch_mode', None))
+override_revision = setToNone(kw.get('override_revision', None))
 
 doc_report_name = kw.get('report_name', None)
 doc_report_title = kw.get('report_title', None)

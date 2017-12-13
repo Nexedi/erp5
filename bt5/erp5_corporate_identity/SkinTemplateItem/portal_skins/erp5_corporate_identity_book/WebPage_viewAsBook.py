@@ -17,6 +17,7 @@ MAIN FILE: generate book in different output formats
 # override_document_reference           use as document reference
 # override_logo_reference               use as document header logo
 # override_batch_mode                   used for tests
+# override_revision                     used for tests
 # ------
 # book_include_content_table            include table of content (True*)
 # book_include_history_table            include history/authors (XXX not done)
@@ -108,7 +109,9 @@ override_document_title = kw.get('override_document_title', None)
 override_document_version = kw.get('override_document_version', None)
 override_document_reference = kw.get('override_document_reference', None)
 override_logo_reference = kw.get('override_logo_reference', None)
-override_batch_mode = kw.get('batch_mode', False)
+override_batch_mode = setToNone(kw.get('batch_mode', None))
+override_revision = kw.get('override_revision', None)
+
 
 # -------------------------- Document Parameters  ------------------------------
 book_form = book.REQUEST
@@ -124,13 +127,12 @@ book_title = setOverrideParam(book, override_document_title, "title")
 book_short_title = setOverrideParam(book, override_document_short_title, "short_title")
 book_version = setOverrideParam(book, override_document_version, "version")
 book_description = setOverrideParam(book, override_document_description, "description")
-
 book_content = book.getTextContent()
 book_language = book.getLanguage()
 book_aggregate_list = []
 book_absolute_url = book.getAbsoluteUrl()
 book_reference = (html_quote(override_document_reference) if override_document_reference else book.getReference()) or blank
-book_revision = book.getRevision()
+book_revision = "1" if (override_batch_mode or override_revision) else book.getRevision()
 book_modification_date = book.getModificationDate()
 book_short_date = book_modification_date.strftime('%Y-%m-%d')
 
@@ -340,7 +342,7 @@ if book_format == "pdf":
     book_version=book_version,
     book_short_date=book_short_date,
   )
-
+  
   book_foot = book.WebPage_createBookFooter(
     book_theme=book_theme.get("theme"),
     book_title=book_title,

@@ -56,9 +56,7 @@ Creates the Slideshow footer section.
   <tal:block metal:define-macro="slide_footer">
     <div class="ci-slideshow-footer">
 	    <div class="ci-slideshow-container-left">
-	      <tal:block tal:condition="python: doc_footer_url != ''">
-	        <img alt="Logo" tal:attributes="src python: doc_footer_url" />
-	      </tal:block>
+	      <div style="width: 50%; height: 16mm;" class="ci-slideshow-footer-logo"></div>
 	    </div>
 	    <div class="ci-slideshow-container-center" tal:content="doc_description"></div>
 	    <div class="ci-slideshow-container-right">

@@ -134,16 +134,23 @@ section {
 .ci-slideshow-footer {
   position: static;
 }
-.ci-slideshow-footer div {
+.ci-slideshow-footer .ci-slideshow-container-left,
+.ci-slideshow-footer .ci-slideshow-container-center,
+.ci-slideshow-footer .ci-slideshow-container-right {
   display: inline-block;
   vertical-align: middle;
   width: 32%;
+  min-height: 10mm;
   text-align: center;
 }
 .ci-slideshow-footer .ci-slideshow-container-left img {
-  max-width: 120px;
-  height: 54px;
+  display: block;
+  border: 1px solid red !important;
+  height: 50px;
 }
+
+
+
 .ci-slideshow-footer .ci-slideshow-container-left {
   text-align: left;
 }

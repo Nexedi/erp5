@@ -12,6 +12,7 @@ return context.WebPage_viewAsLeaflet(
   override_leaflet_header_title=override_leaflet_header_title,
   document_save=document_save,
   document_download=document_download,
-  batch_mode=False,
+  batch_mode=batch_mode,
+  override_time=override_time,
   **kw
 )

@@ -36,7 +36,7 @@ import math
 import re
 
 host_url = r"https?://localhost(?::[0-9]+)?/[^/]+/"
-test_url = "https://softinst73908.host.vifib.net/"
+test_url = "https://softinst73908.host.vifib.net/erp5/"
 
 def setDomainDict(script_id, script_param, script_code):
   def wrapper(func):
@@ -755,7 +755,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_leaflet_output_expected_001_en_html",
       **dict(
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        override_time=1
       )
     )
   
@@ -776,7 +777,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         override_source_person_title="Test Recipient",
         override_source_organisation_title="Test Association",
         override_leaflet_header_title="Couscous",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        override_time=1
       )
     )
 
@@ -793,7 +795,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_leaflet_output_expected_003_de_html",
       **dict(
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        override_time=1
       )
     )
   
@@ -813,7 +816,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         page_number=1,
         format="pdf",
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        override_time=1
       )
     )
 
@@ -838,6 +842,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         override_source_organisation_title="Test Association",
         override_source_person_title="Test Recipient",
         override_leaflet_header_title="Couscous",
+        override_time=1
       )
     )
 
@@ -857,7 +862,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         page_number=0,
         test_method="WebPage_exportAsLeaflet",
         use_skin="Leaflet",
-        format="pdf"
+        format="pdf",
+        override_time=1
       )
     )
 
@@ -875,7 +881,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       **dict(
         page_number=1,
         test_method="WebPage_printAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        override_time=1
       )
     )
 
@@ -893,7 +900,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       **dict(
         use_skin="Book",
         test_method="WebPage_exportAsBook",
-        include_content_table=0
+        include_content_table=0,
+        override_revision=1
       )
     )
 
@@ -923,7 +931,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         override_logo_reference="Template.Test.Image.Erp5.Logo",
         override_source_organisation_title="Test Organisation",
         override_source_person_title="Test Sender",
-        override_document_version="333"
+        override_document_version="333",
+        override_revision=1
       )
     )
 
@@ -940,7 +949,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_book_output_expected_003_de_html",
       **dict(
         use_skin="Book",
-        test_method="WebPage_exportAsBook"
+        test_method="WebPage_exportAsBook",
+        override_revision=1
       )
     )
 
@@ -960,7 +970,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         page_number=4,
         use_skin="Book",
         test_method="WebPage_exportAsBook",
-        format="pdf"
+        format="pdf",
+        override_revision=1
       )
     )
 
@@ -994,7 +1005,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         override_logo_reference="Template.Test.Image.Erp5.Logo",
         override_source_organisation_title="Test Organisation",
         override_source_person_title="Test Sender",
-        override_document_version="333"
+        override_document_version="333",
+        override_revision=1
       )
     )
 
@@ -1028,7 +1040,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         override_logo_reference="Template.Test.Image.Erp5.Logo",
         override_source_organisation_title="Test Organisation",
         override_source_person_title="Test Sender",
-        override_document_version="333"
+        override_document_version="333",
+        override_revision=1
       )
     )
 
@@ -1062,7 +1075,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         override_logo_reference="Template.Test.Image.Erp5.Logo",
         override_source_organisation_title="Test Organisation",
         override_source_person_title="Test Sender",
-        override_document_version="333"
+        override_document_version="333",
+        override_revision=1
       )
     )
 
@@ -1082,7 +1096,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         use_skin="Book",
         test_method="WebPage_exportAsBook",
         page_number=1,
-        format="pdf"
+        format="pdf",
+        override_revision=1
       )
     )
 
@@ -1102,7 +1117,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         use_skin="Book",
         test_method="WebPage_printAsBook",
         page_number=1,
-        format="pdf"
+        format="pdf",
+        override_revision=1
       )
     )
 

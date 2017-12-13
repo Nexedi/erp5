@@ -16,6 +16,7 @@ return context.WebPage_viewAsBook(
   document_download=document_download,
   display_svg=display_svg,
   batch_mode=batch_mode,
+  override_revision=override_revision,
   transformation=transformation,
   include_content_table=include_content_table,
   include_history_table=include_history_table,

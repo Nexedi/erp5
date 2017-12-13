@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts13099734.13</string> </value>
+            <value> <string>ts13174820.87</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -64,6 +64,97 @@
             </value>
         </item>
         <item>
+            <key> <string>_content_information</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>ArtBox</string> </key>
+                    <value> <string>0.00     0.00   595.00   842.00</string> </value>
+                </item>
+                <item>
+                    <key> <string>BleedBox</string> </key>
+                    <value> <string>0.00     0.00   595.00   842.00</string> </value>
+                </item>
+                <item>
+                    <key> <string>CreationDate</string> </key>
+                    <value> <string>Wed Dec 13 15:20:14 2017</string> </value>
+                </item>
+                <item>
+                    <key> <string>Creator</string> </key>
+                    <value> <string>wkhtmltopdf 0.12.4</string> </value>
+                </item>
+                <item>
+                    <key> <string>CropBox</string> </key>
+                    <value> <string>0.00     0.00   595.00   842.00</string> </value>
+                </item>
+                <item>
+                    <key> <string>Encrypted</string> </key>
+                    <value> <string>no</string> </value>
+                </item>
+                <item>
+                    <key> <string>File size</string> </key>
+                    <value> <string>115075 bytes</string> </value>
+                </item>
+                <item>
+                    <key> <string>Form</string> </key>
+                    <value> <string>none</string> </value>
+                </item>
+                <item>
+                    <key> <string>JavaScript</string> </key>
+                    <value> <string>no</string> </value>
+                </item>
+                <item>
+                    <key> <string>MediaBox</string> </key>
+                    <value> <string>0.00     0.00   595.00   842.00</string> </value>
+                </item>
+                <item>
+                    <key> <string>Optimized</string> </key>
+                    <value> <string>no</string> </value>
+                </item>
+                <item>
+                    <key> <string>PDF version</string> </key>
+                    <value> <string>1.4</string> </value>
+                </item>
+                <item>
+                    <key> <string>Page rot</string> </key>
+                    <value> <string>0</string> </value>
+                </item>
+                <item>
+                    <key> <string>Page size</string> </key>
+                    <value> <string>595 x 842 pts (A4)</string> </value>
+                </item>
+                <item>
+                    <key> <string>Pages</string> </key>
+                    <value> <string>2</string> </value>
+                </item>
+                <item>
+                    <key> <string>Producer</string> </key>
+                    <value> <string>Qt 4.8.7</string> </value>
+                </item>
+                <item>
+                    <key> <string>Suspects</string> </key>
+                    <value> <string>no</string> </value>
+                </item>
+                <item>
+                    <key> <string>Tagged</string> </key>
+                    <value> <string>no</string> </value>
+                </item>
+                <item>
+                    <key> <string>Title</string> </key>
+                    <value> <string>Template Test Leaflet</string> </value>
+                </item>
+                <item>
+                    <key> <string>TrimBox</string> </key>
+                    <value> <string>0.00     0.00   595.00   842.00</string> </value>
+                </item>
+                <item>
+                    <key> <string>UserProperties</string> </key>
+                    <value> <string>no</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -83,7 +174,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>8e05f3583b1404fc2b3c2c1abc3a9ce4</string> </value>
+            <value> <string>c26f18152f6c90782bd3370b269dd4e7</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -125,7 +216,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>115071</int> </value>
+            <value> <int>115075</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -282,7 +373,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.5784.49253.4488</string> </value>
+                <value> <string>964.7028.293.17851</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -300,7 +391,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1513099734.14</float>
+                        <float>1513174820.87</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

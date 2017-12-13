@@ -47,7 +47,6 @@ def convertDocumentByConversionServer(
     self.getPortalObject().portal_preferences.getPreferredDocumentConversionServerUrl(),
     allow_none=True
   )
-  self.log("sven", self.getPortalObject().portal_preferences.getPreferredDocumentConversionServerUrl())
   return b64decode(
     proxy.convertFile(
       b64encode(data),

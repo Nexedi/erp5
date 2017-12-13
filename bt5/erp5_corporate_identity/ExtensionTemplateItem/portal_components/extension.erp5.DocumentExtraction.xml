@@ -46,20 +46,20 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W:142,  0: Anomalous backslash in string: \'\\s\'. String constant might be missing an r prefix. (anomalous-backslash-in-string)</string>
+                <string>W:141,  0: Anomalous backslash in string: \'\\s\'. String constant might be missing an r prefix. (anomalous-backslash-in-string)</string>
                 <string>W: 38,  4: Redefining built-in \'zip\' (redefined-builtin)</string>
-                <string>W: 77, 25: Redefining name \'trail\' from outer scope (line 155) (redefined-outer-name)</string>
-                <string>W: 77, 20: Redefining name \'tags\' from outer scope (line 154) (redefined-outer-name)</string>
-                <string>W:102, 28: Redefining name \'tags\' from outer scope (line 154) (redefined-outer-name)</string>
-                <string>W:102, 25: Redefining name \'sw\' from outer scope (line 149) (redefined-outer-name)</string>
-                <string>W:102, 39: Redefining name \'maxlines\' from outer scope (line 156) (redefined-outer-name)</string>
-                <string>W:102, 33: Redefining name \'trail\' from outer scope (line 155) (redefined-outer-name)</string>
-                <string>W:126, 37: Redefining name \'tags\' from outer scope (line 154) (redefined-outer-name)</string>
-                <string>W:126, 33: Redefining name \'sw\' from outer scope (line 149) (redefined-outer-name)</string>
-                <string>W:145, 16: Redefining name \'p\' from outer scope (line 157) (redefined-outer-name)</string>
-                <string>W:126, 50: Redefining name \'maxlines\' from outer scope (line 156) (redefined-outer-name)</string>
-                <string>W:126, 43: Redefining name \'trail\' from outer scope (line 155) (redefined-outer-name)</string>
-                <string>W:126, 28: Redefining name \'txt\' from outer scope (line 150) (redefined-outer-name)</string>
+                <string>W: 76, 25: Redefining name \'trail\' from outer scope (line 154) (redefined-outer-name)</string>
+                <string>W: 76, 20: Redefining name \'tags\' from outer scope (line 153) (redefined-outer-name)</string>
+                <string>W:101, 28: Redefining name \'tags\' from outer scope (line 153) (redefined-outer-name)</string>
+                <string>W:101, 25: Redefining name \'sw\' from outer scope (line 148) (redefined-outer-name)</string>
+                <string>W:101, 39: Redefining name \'maxlines\' from outer scope (line 155) (redefined-outer-name)</string>
+                <string>W:101, 33: Redefining name \'trail\' from outer scope (line 154) (redefined-outer-name)</string>
+                <string>W:125, 37: Redefining name \'tags\' from outer scope (line 153) (redefined-outer-name)</string>
+                <string>W:125, 33: Redefining name \'sw\' from outer scope (line 148) (redefined-outer-name)</string>
+                <string>W:144, 16: Redefining name \'p\' from outer scope (line 156) (redefined-outer-name)</string>
+                <string>W:125, 50: Redefining name \'maxlines\' from outer scope (line 155) (redefined-outer-name)</string>
+                <string>W:125, 43: Redefining name \'trail\' from outer scope (line 154) (redefined-outer-name)</string>
+                <string>W:125, 28: Redefining name \'txt\' from outer scope (line 149) (redefined-outer-name)</string>
               </tuple>
             </value>
         </item>

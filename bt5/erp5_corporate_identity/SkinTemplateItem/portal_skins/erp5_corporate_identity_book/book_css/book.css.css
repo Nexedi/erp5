@@ -245,12 +245,17 @@
 }
 
 /* header image dimensions */
+.ci-book .ci-book-header .ci-book-header-image-wkhtmltopdf-image-wrapper {
+  width: 100%;
+  height: inherit;
+  min-height: 22mm;
+  position: relative;
+}
 .ci-book .ci-book-header img {
-  max-height: 25mm;
+  max-height: 20mm;
   max-width: 60%;
-  padding-top: 2mm;
+  padding-top: 6mm;
   text-align: center;
-  vertical-align: middle;
 }
 
 /* header spec section */

@@ -245,6 +245,35 @@
 }
 
 /* header image dimensions */
+.ci-book .ci-book-header .ci-book-header-image-wkhtmltopdf-image-wrapper {
+  width: 100%;
+  height: inherit;
+  min-height: 25mm;
+}
+.ci-book .ci-book-header .ci-book-header-image-wkhtmltopdf-image-wrapper img {
+  max-width: 60%;
+  min-width: 160px;
+  height: 16mm;
+  margin-top: 6mm;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/*
+.ci-book .ci-book-header .ci-book-header-image-wkhtmltopdf-image-wrapper img {
+  max-width: 60%;
+  min-width: 200px;
+  height: 20mm;
+  margin-top: 6mm;
+  text-align: center;
+  vertical-align: middle;
+}
+.ci-book .ci-book-header .ci-book-header-image-wkhtmltopdf-image-wrapper img {
+  top: 0;
+  right: 0;
+  width: 100%;
+  border: 1px solid orange;
+}
 .ci-book .ci-book-header img {
   max-height: 25mm;
   max-width: 60%;
@@ -252,7 +281,7 @@
   text-align: center;
   vertical-align: middle;
 }
-
+*/
 /* header spec section */
 .ci-book .ci-book-header td:last-child {
   text-align: left;

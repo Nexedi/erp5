@@ -11,8 +11,8 @@ if parameter == "default_theme_css_url":
   return "default_themes/themes.css"
 
 if parameter == "wkhtmltopdf_rendering_fix":
-  return 
-  """
+
+  return """
   <script>
   (function () {
     var table_list = document.body.querySelectorAll("table"),

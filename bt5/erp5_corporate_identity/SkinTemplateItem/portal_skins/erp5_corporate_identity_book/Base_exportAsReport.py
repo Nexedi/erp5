@@ -19,5 +19,6 @@ return context.Base_viewAsReport(
   report_title=report_title,
   requirement_relative_url=requirement_relative_url,
   batch_mode=batch_mode,
+  override_revision=override_revision,
   **kw
 )

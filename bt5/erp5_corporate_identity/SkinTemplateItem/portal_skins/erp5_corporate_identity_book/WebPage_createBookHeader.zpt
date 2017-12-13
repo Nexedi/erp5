@@ -54,7 +54,9 @@ Creates the Book header.
         <tbody>
           <tr>
             <td>
-              <img tal:attributes="src python: book_logo_url; alt python: book_logo_title"/>
+              <div class="ci-book-header-image-wkhtmltopdf-image-wrapper">
+                <img tal:attributes="src python: book_logo_url; alt python: book_logo_title"/>
+              </div>
             </td>
             <td>
               <div class="ci-book-header-title" tal:content="python: book_title"></div>
