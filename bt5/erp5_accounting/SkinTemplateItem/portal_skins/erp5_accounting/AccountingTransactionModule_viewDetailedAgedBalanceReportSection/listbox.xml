@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>editable_columns</string>
-                <string>lines</string>
                 <string>list_method</string>
                 <string>selection_name</string>
                 <string>title</string>
@@ -72,10 +71,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>list_method</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -111,10 +106,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>lines</string> </key>
-                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>

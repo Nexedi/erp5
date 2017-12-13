@@ -10,10 +10,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
+                <string>editable_columns</string>
                 <string>list_method</string>
                 <string>selection_name</string>
                 <string>title</string>
+                <string>untranslatable_columns</string>
               </list>
             </value>
         </item>
@@ -56,6 +57,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -75,14 +82,9 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key> <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -96,7 +98,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -111,6 +113,41 @@
                     <key> <string>title</string> </key>
                     <value> <string>Summary Aged Balance</string> </value>
                 </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>period_0</string>
+                          <string>period_0</string>
+                        </tuple>
+                        <tuple>
+                          <string>period_1</string>
+                          <string>period_1</string>
+                        </tuple>
+                        <tuple>
+                          <string>period_2</string>
+                          <string>period_2</string>
+                        </tuple>
+                        <tuple>
+                          <string>period_3</string>
+                          <string>period_3</string>
+                        </tuple>
+                        <tuple>
+                          <string>period_4</string>
+                          <string>period_4</string>
+                        </tuple>
+                        <tuple>
+                          <string>period_5</string>
+                          <string>period_5</string>
+                        </tuple>
+                        <tuple>
+                          <string>period_6</string>
+                          <string>period_6</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -120,9 +157,22 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
         <tuple/>
       </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>context/portal_selections/accounting_transaction_module_detailed_aged_balance_selection/editable_columns</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
