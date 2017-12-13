@@ -1144,7 +1144,8 @@ div[data-gadget-scope='header'] .ui-header ul {
 .relation-input {
   display: flex;
 }
-.relation-input a {
+.relation-input a,
+.relation-input button {
   width: 24pt;
   overflow: hidden;
   text-indent: -9999px;
@@ -1153,7 +1154,8 @@ div[data-gadget-scope='header'] .ui-header ul {
   padding-top: 3pt;
   padding-bottom: 3pt;
 }
-.relation-input a::before {
+.relation-input a::before,
+.relation-input button::before {
   float: left;
   text-indent: 0;
   margin-left: 6pt;

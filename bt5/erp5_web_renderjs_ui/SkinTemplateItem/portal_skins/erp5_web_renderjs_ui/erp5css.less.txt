@@ -1344,7 +1344,7 @@ div[data-gadget-scope='header'] .ui-header {
 **********************************************/
 .relation-input {
   display: flex;
-  a {
+  a, button {
       .hide_text(@width: @quadruple-margin-size);
 
       &::before {

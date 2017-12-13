@@ -1,7 +1,7 @@
 /*jslint indent: 2, maxerr: 3, nomen: true, maxlen: 80 */
 /*global window, rJS, RSVP, URI, Handlebars,
- SimpleQuery, ComplexQuery, Query, QueryFactory*/
-(function (window, rJS, RSVP, URI,
+ SimpleQuery, ComplexQuery, Query, QueryFactory, document*/
+(function (window, rJS, RSVP, URI, document,
   SimpleQuery, ComplexQuery, Query, QueryFactory, Handlebars) {
   "use strict";
 
@@ -44,16 +44,67 @@
     gadget.element.textContent = gadget.state.value_text;
   }
 
-  function displayEditableLink(gadget, class_name) {
-    return gadget.translateHtml(relation_input_template({
-      href: "#",
+  function buildEditableInputHTML(gadget) {
+    gadget.element.innerHTML = relation_input_template({
       value: gadget.state.value_text,
       title: gadget.state.title,
-      name: gadget.state.key,
-      class_name: class_name
-    }))
-      .push(function (html) {
-        gadget.element.innerHTML = html;
+      name: gadget.state.key
+    });
+  }
+
+  function createEditableLink(gadget, class_name) {
+    // Add an airplane link
+    var a = document.createElement('a'),
+      div = gadget.element.querySelector('input').parentElement;
+    a.setAttribute('tabindex', -1);
+    a.setAttribute('class', class_name);
+    a.textContent = 'Jump to this document';
+    if (div.nextElementSibling !== null) {
+      div.parentElement.removeChild(div.nextElementSibling);
+    }
+    div.parentElement.appendChild(a);
+  }
+
+  function createEditableButton(gadget, class_name) {
+    // Add a search button
+    var button = document.createElement('button'),
+      div = gadget.element.querySelector('input').parentElement;
+    button.setAttribute('tabindex', -1);
+    button.setAttribute('class', class_name);
+    button.setAttribute('type', 'button');
+    if (div.nextElementSibling !== null) {
+      div.parentElement.removeChild(div.nextElementSibling);
+    }
+    div.parentElement.appendChild(button);
+  }
+
+  function redirectToTheSearchListbox(gadget) {
+    return gadget.getFormContent({
+      format: "json"
+    })
+      .push(function (content) {
+        var input = gadget.element.querySelector('input'),
+          extended_search = "";
+        if (input.value) {
+          extended_search = Query.objectToSearchText(
+            new SimpleQuery({
+              key: gadget.state.catalog_index,
+              value: input.value
+            })
+          );
+        }
+        return gadget.redirect({
+          command: 'index',
+          options: {
+            page: "relation_search",
+            url: gadget.state.url,
+            extended_search: extended_search,
+            view: gadget.state.view,
+            back_field: gadget.state.key,
+            relation_index: gadget.state.relation_index
+          },
+          form_content: content
+        });
       });
   }
 
@@ -85,8 +136,9 @@
         view: options.view,
         url: options.url,
         allow_creation: options.allow_creation,
-        portal_types: options.portal_types,
-        translated_portal_types: options.translated_portal_types,
+        portal_types: JSON.stringify(options.portal_types),
+        translated_portal_types:
+          JSON.stringify(options.translated_portal_types),
         has_focus: false,
         relation_index: options.relation_index,
         value_relative_url: options.value_relative_url,
@@ -121,7 +173,6 @@
 
     .onStateChange(function (modification_dict) {
       var gadget = this,
-        queue = new RSVP.Queue(),
         value_text = gadget.state.value_text,
         // target_url,
         SEARCHING_CLASS_STR = "ui-btn ui-corner-all ui-btn-icon-notext" +
@@ -130,6 +181,8 @@
           "ui-icon-plane ui-shadow-inset ui-btn-inline",
         JUMP_OFF_CLASS_STR = "ui-btn ui-corner-all ui-btn-icon-notext " +
           "ui-icon-plane ui-shadow-inset ui-btn-inline ui-disabled",
+        SEARCH_CLASS_STR = "ui-btn ui-corner-all ui-btn-icon-notext " +
+          "ui-icon-search ui-shadow-inset ui-btn-inline",
         JUMP_ADD_CLASS_STR = "ui-btn ui-corner-all ui-btn-icon-notext " +
           "ui-icon-plus ui-shadow-inset ui-btn-inline ui-disabled",
         JUMP_UNKNOWN_CLASS_STR = "ui-btn ui-corner-all ui-btn-icon-notext " +
@@ -145,12 +198,19 @@
 
       if (modification_dict.hasOwnProperty('editable')) {
         // First display of the input
-        queue.push(function () {
-          return displayEditableLink(gadget, JUMP_UNKNOWN_CLASS_STR);
-        });
+        buildEditableInputHTML(gadget);
       }
 
-      return queue
+      // Display the airplane link or the search button
+      if ((gadget.state.value_relative_url) || (gadget.state.value_text)) {
+        createEditableLink(gadget, JUMP_UNKNOWN_CLASS_STR);
+      } else {
+        gadget.element.querySelector(".search_ul").innerHTML = "";
+        return createEditableButton(gadget, SEARCH_CLASS_STR);
+      }
+
+      // Check if the airplane link has to be updated
+      return RSVP.Queue()
         .push(function () {
           var plane = gadget.element.querySelector("a"),
             ul = gadget.element.querySelector(".search_ul"),
@@ -245,12 +305,17 @@
             .push(function (result) {
               var list = [],
                 i,
-                type = [];
+                type = [],
+                portal_types,
+                translated_portal_types;
               if (gadget.state.allow_creation) {
-                for (i = 0; i < gadget.state.portal_types.length; i += 1) {
+                portal_types = JSON.parse(gadget.state.portal_types);
+                translated_portal_types =
+                  JSON.parse(gadget.state.translated_portal_types);
+                for (i = 0; i < portal_types.length; i += 1) {
                   type.push({
-                    name: gadget.state.translated_portal_types[i],
-                    value: gadget.state.portal_types[i]
+                    name: translated_portal_types[i],
+                    value: portal_types[i]
                   });
                 }
               }
@@ -304,6 +369,11 @@
         data_explore,
         new_state = {};
 
+      if (evt.target.tagName.toLowerCase() === 'button') {
+        // Go to the search listbox
+        return redirectToTheSearchListbox(gadget);
+      }
+
       if (evt.target.tagName.toLowerCase() === 'li') {
         li = evt.target;
         data_relative_url = li.getAttribute("data-relative-url");
@@ -327,29 +397,7 @@
 
         // Go to the search listbox
         if (data_explore) {
-          return gadget.getFormContent({
-            format: "json"
-          })
-            .push(function (content) {
-              var input = gadget.element.querySelector('input');
-              return gadget.redirect({
-                command: 'index',
-                options: {
-                  page: "relation_search",
-                  url: gadget.state.url,
-                  extended_search: Query.objectToSearchText(
-                    new SimpleQuery({
-                      key: gadget.state.catalog_index,
-                      value: input.value
-                    })
-                  ),
-                  view: gadget.state.view,
-                  back_field: gadget.state.key,
-                  relation_index: gadget.state.relation_index
-                },
-                form_content: content
-              });
-            });
+          return redirectToTheSearchListbox(gadget);
         }
       }
     }, false, false)
@@ -398,5 +446,5 @@
         });
     }, true, false);
 
-}(window, rJS, RSVP, URI,
+}(window, rJS, RSVP, URI, document,
   SimpleQuery, ComplexQuery, Query, QueryFactory, Handlebars));
