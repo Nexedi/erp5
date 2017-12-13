@@ -10,6 +10,10 @@
 <tr><td rowspan="1" colspan="3">Test basic functionality and decimal precision in both modes (non/editable)</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr><td>open</td>
+    <td>${base_url}/foo_module/1/Foo_createObjects?start:int=1&amp;num:int=1</td><td></td></tr>
+<tr><td>open</td>
+    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
 
 <!-- Shortcut for full renderjs url -->
 <tr><td>store</td>
@@ -47,6 +51,17 @@
 <tr><td>verifyText</td>
     <td>//div[@data-gadget-scope="field_my_quantity_read_only"]//p</td>
     <td>1 000 000 000 000.0</td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+
+<!-- default quantity has to be 0
+This is regression test for bug #20171208-5E8D43
+it tests right formatting of non-editable float field when precision is not defined -->
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//table/tbody/tr[1]/td[3]//p</td><td></td></tr>
+<tr><td>verifyText</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//table/tbody/tr[1]/td[3]//p</td>
+    <td>0</td></tr>
 
 </tbody></table>
 </body>
