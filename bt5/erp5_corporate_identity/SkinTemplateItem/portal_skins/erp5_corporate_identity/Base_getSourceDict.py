@@ -60,7 +60,12 @@ if source is None:
   if len(source_organisation_list) == 0 and default_company_title:
     source_organisation_list = getCommonProxyParameter("override_organisation", default_company_title) or []
   if len(source_organisation_list) == 0 and source_person is not None:
-    source_organisation_list = getCommonProxyParameter("source", source_person.get("uid")) or []
+    for organisation_candidate in source_person_list:
+      organisation_candidate_list = getCommonProxyParameter("source", organisation_candidate.get("uid")) or []
+      if len(organisation_candidate_list) > 0:
+        source_organisation_list = organisation_candidate_list
+        break
+    #source_organisation_list = getCommonProxyParameter("source", source_person.get("uid")) or []
   if len(source_organisation_list) > 0:
     source_organisation = source_organisation_list[0]
 

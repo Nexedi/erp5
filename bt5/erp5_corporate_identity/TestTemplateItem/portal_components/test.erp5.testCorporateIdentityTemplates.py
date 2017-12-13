@@ -106,14 +106,14 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     self.message_catalog.message_edit('Data Sheet', 'de', 'Datenblatt', '')
     self.message_catalog.gettext('Table Of Contents', add=1)
     self.message_catalog.message_edit('Table Of Contents', 'de', 'Inhaltsverzeichnis', '')
-        
+
     # Activating a system preference if none is activated
     for preference in self.portal.portal_catalog(portal_type="System Preference"):
       if preference.getPreferenceState() == "global":
         break
     else:
       self.portal.portal_preferences.default_nexedi_system_preference.enable()
-      self.tic()
+    self.tic()
 
   def computeImageRenderingRootMeanSquare(self, image_data_1, image_data_2):
     """

@@ -81,10 +81,11 @@ for link in re.findall('([^\[]<a.*?<\/a>[^\]])', doc_content):
           link_param_dict[param_key] = param_value
 
       if report_name is not None:
-        target_context = document.restrictedTraverse(link_relative_url)
-        target_caller = getattr(target_context, report_name, None)      
-        if target_caller is not None:
-          substitution_content = target_caller(**link_param_dict)
-          doc_content = doc_content.replace(link, substitution_content.encode("utf-8").strip())
+        target_context = document.restrictedTraverse(link_relative_url, None)
+        if target_context is not None:
+          target_caller = getattr(target_context, report_name, None)      
+          if target_caller is not None:
+            substitution_content = target_caller(**link_param_dict)
+            doc_content = doc_content.replace(link, substitution_content.encode("utf-8").strip())
 
 return doc_content

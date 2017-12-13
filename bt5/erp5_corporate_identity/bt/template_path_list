@@ -2,7 +2,9 @@ document_module/template_test_*
 image_module/template_test_*
 image_module/template_test_image*
 organisation_module/template_test*
+organisation_module/template_test*/default**
 person_module/template_test*
+person_module/template_test*/default**
 portal_preferences/default_site_preference/template_*
 portal_preferences/default_site_preference/template_*
 web_page_module/template_test_*
