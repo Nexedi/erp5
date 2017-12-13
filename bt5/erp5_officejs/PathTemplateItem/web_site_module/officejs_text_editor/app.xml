@@ -391,7 +391,9 @@
         </item>
         <item>
             <key> <string>configuration_stylesheet_url</string> </key>
-            <value> <string>gadget_officejs_nojqm.css</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -650,7 +652,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -664,7 +666,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.16277.24517.44253</string> </value>
+                <value> <string>963.48017.29648.13841</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -682,7 +684,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1504529296.63</float>
+                        <float>1513168356.92</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
