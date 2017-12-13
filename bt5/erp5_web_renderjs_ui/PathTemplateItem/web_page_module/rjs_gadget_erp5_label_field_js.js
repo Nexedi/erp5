@@ -124,15 +124,21 @@
 
       if (modification_dict.hasOwnProperty('error_text')) {
         // first remove old errors
-        span = this.state.container_element.querySelector('span');
-        if (span) {
-          this.state.container_element.removeChild(span);
+        span = this.state.container_element.lastElementChild;
+        if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
+          span = null;
         }
         // display new error if present
         if (this.state.error_text) {
-          span = document.createElement('span');
-          span.textContent = this.state.error_text;
-          this.state.container_element.appendChild(span);
+          if (span === null) {
+            span = document.createElement('span');
+            span.textContent = this.state.error_text;
+            this.state.container_element.appendChild(span);
+          } else {
+            span.textContent = this.state.error_text;
+          }
+        } else if (span !== null) {
+          this.state.container_element.removeChild(span);
         }
       }
 
