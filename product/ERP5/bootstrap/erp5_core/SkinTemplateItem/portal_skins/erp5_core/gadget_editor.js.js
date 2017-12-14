@@ -36,6 +36,7 @@
       var state_dict = {
           value: options.value || "",
           editor: options.editor,
+          editor_url: options.editor_url,
           content_type: options.content_type,
           maximize: options.maximize,
           portal_type: options.portal_type,
@@ -58,7 +59,8 @@
         div_max;
 
       if ((modification_dict.hasOwnProperty('editable')) ||
-          (modification_dict.hasOwnProperty('editor'))) {
+          (modification_dict.hasOwnProperty('editor')) ||
+          (modification_dict.hasOwnProperty('editor_url'))) {
         // Clear first to DOM, append after to reduce flickering/manip
         while (element.firstChild) {
           element.removeChild(element.firstChild);
@@ -80,7 +82,19 @@
         element.appendChild(div);
 
 
-        if (gadget.state.editable &&
+        if (gadget.state.editable && gadget.state.editor_url) {
+          queue
+            .push(function () {
+              return gadget.declareGadget(
+                gadget.state.editor_url,
+                {
+                  scope: 'editor',
+                  sandbox: 'iframe',
+                  element: div
+                }
+              );
+            });
+        } else if (gadget.state.editable &&
             (gadget.state.editor === 'codemirror')) {
           queue
             .push(function () {
@@ -115,7 +129,9 @@
       }
 
       if (gadget.state.editable &&
-          ((gadget.state.editor === 'codemirror') || (gadget.state.editor === 'fck_editor'))) {
+          ((gadget.state.editor === 'codemirror') ||
+           (gadget.state.editor === 'fck_editor') ||
+           (gadget.state.editor_url))) {
         queue
           .push(function () {
             return gadget.getDeclaredGadget('editor');
@@ -148,7 +164,9 @@
       var argument_list = arguments,
         result;
       if (this.state.editable &&
-          ((this.state.editor === 'codemirror') || (this.state.editor === 'fck_editor'))) {
+          ((this.state.editor === 'codemirror') ||
+           (this.state.editor === 'fck_editor') ||
+           (this.state.editor_url))) {
         return this.getDeclaredGadget('editor')
           .push(function (editor_gadget) {
             return editor_gadget.getContent.apply(editor_gadget, argument_list);
