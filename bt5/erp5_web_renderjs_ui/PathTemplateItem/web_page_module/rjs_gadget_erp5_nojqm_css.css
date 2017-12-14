@@ -436,6 +436,8 @@ div[data-gadget-scope='panel'] {
   left: 0;
   display: block;
   z-index: 2000;
+  transition: transform 200ms ease-out;
+  transform: translate3d(0, 0, 0);
 }
 @media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 85em) {
   div[data-gadget-scope='panel'] {
@@ -445,8 +447,6 @@ div[data-gadget-scope='panel'] {
 @media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 85em) {
   div[data-gadget-scope='panel'] {
     left: -186pt;
-    transition: transform 200ms ease-out;
-    transform: translate3d(0, 0, 0);
   }
   div[data-gadget-scope='panel'].visible {
     transform: translate3d(186pt, 0, 0);
@@ -479,8 +479,8 @@ div[data-gadget-scope='panel'] div[data-role="header"] a::before {
   margin-left: 12pt;
 }
 @media not screen and (max-width: 85em) {
-  div[data-gadget-scope='panel'] div[data-role="header"] button[data-i18n="Close"],
-  div[data-gadget-scope='panel'] div[data-role="header"] a[data-i18n="Close"] {
+  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='panel'] div[data-role="header"] button[data-i18n="Close"],
+  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='panel'] div[data-role="header"] a[data-i18n="Close"] {
     display: none;
   }
 }
@@ -686,7 +686,8 @@ div[data-gadget-scope='header'] .ui-header {
 }
 @media not screen and (max-width: 85em) {
   div[data-gadget-scope='header'] .ui-header {
-    margin-left: 180pt;
+    transition: transform 200ms ease-out;
+    transform: translate3d(180pt, 0, 0);
   }
 }
 div[data-gadget-scope='header'] .ui-header button,
@@ -712,10 +713,14 @@ div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
     background-color: #0E81C2;
   }
 }
-@media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 85em) {
+@media not screen and (min-width: 45em) {
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button,
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
     background-color: #085078;
+    width: 3em;
+    overflow: hidden;
+    text-indent: -9999px;
+    white-space: nowrap;
   }
 }
 div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button:hover,
@@ -727,16 +732,8 @@ div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a:active {
 @media only screen and (min-width: 45em) and (max-width: 85em) {
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button,
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
+    background-color: #085078;
     width: 8em;
-  }
-}
-@media not screen and (min-width: 45em) {
-  div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button,
-  div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
-    width: 3em;
-    overflow: hidden;
-    text-indent: -9999px;
-    white-space: nowrap;
   }
 }
 @media only screen and (min-width: 45em) and (max-width: 85em), not screen and (max-width: 85em) {
@@ -756,8 +753,8 @@ div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a:active {
   }
 }
 @media not screen and (max-width: 85em) {
-  div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button[name="panel"],
-  div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a[name="panel"] {
+  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button[name="panel"],
+  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a[name="panel"] {
     display: none;
   }
 }
@@ -772,8 +769,8 @@ div[data-gadget-scope='header'] .ui-header > .ui-btn-left a {
   }
 }
 @media not screen and (max-width: 85em) {
-  div[data-gadget-scope='header'] .ui-header > .ui-btn-right button,
-  div[data-gadget-scope='header'] .ui-header > .ui-btn-right a {
+  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='header'] .ui-header > .ui-btn-right button,
+  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='header'] .ui-header > .ui-btn-right a {
     padding-left: 24pt;
     padding-right: 24pt;
     min-width: 5em;
@@ -789,7 +786,7 @@ div[data-gadget-scope='header'] .ui-header h1 {
   text-overflow: ellipsis;
 }
 @media not screen and (max-width: 85em) {
-  div[data-gadget-scope='header'] .ui-header h1 {
+  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='header'] .ui-header h1 {
     flex: 1 100%;
   }
 }
@@ -832,7 +829,7 @@ div[data-gadget-scope='header'] .ui-header h1 a::before {
   }
 }
 @media not screen and (max-width: 85em) {
-  div[data-gadget-scope='header'] .ui-header h1 a::before {
+  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='header'] .ui-header h1 a::before {
     width: 12pt;
     margin-left: 24pt;
     margin-right: 6pt;
@@ -873,6 +870,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   div[data-gadget-scope='header'] .ui-header ul li a {
     padding-top: 3pt;
     padding-bottom: 3pt;
+    line-height: inherit;
     white-space: nowrap;
     overflow: hidden;
   }
@@ -901,12 +899,14 @@ div[data-gadget-scope='header'] .ui-header ul {
 @media not screen and (max-width: 85em) {
   div[data-gadget-scope='header'] .ui-header ul li a {
     display: block;
-    padding-left: 24pt;
-    padding-right: 24pt;
-    min-width: 5em;
     line-height: 30pt;
     white-space: nowrap;
     overflow: hidden;
+  }
+  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='header'] .ui-header ul li a {
+    padding-left: 24pt;
+    padding-right: 24pt;
+    min-width: 5em;
   }
   div[data-gadget-scope='header'] .ui-header ul li a::before {
     display: none;
@@ -955,7 +955,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   background-color: #ffa366;
 }
 @media not screen and (max-width: 85em) {
-  .gadget-content {
+  div[data-role='page']:not(.desktop-panel-hidden) .gadget-content {
     margin-left: 180pt;
   }
 }
@@ -1494,6 +1494,67 @@ div[data-gadget-scope='notification'] button.error {
   }
   to {
     opacity: 1;
+  }
+}
+/**********************************************
+* Desktop Panel Hidden
+**********************************************/
+@media not screen and (max-width: 85em) {
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header {
+    margin-left: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header h1 > span {
+    padding-left: 16pt;
+  }
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header h1 > span::before {
+    margin-right: 14pt;
+  }
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header h1 a::before {
+    text-align: center;
+  }
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header > .ui-btn-right button,
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header > .ui-btn-right a {
+    border-left: 1px solid rgba(255, 255, 255, 0.55);
+  }
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header .ui-controlgroup-controls button,
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header .ui-controlgroup-controls a {
+    background-color: #085078;
+    width: 8em;
+  }
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header .ui-subheader {
+    flex: 1 100%;
+    text-align: center;
+  }
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header ul > li {
+    flex: 1;
+    border-left: 1px solid rgba(0, 0, 0, 0.55);
+  }
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header ul > li:first-child {
+    border-left: none;
+  }
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header ul > li a {
+    display: block;
+  }
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header ul > li a {
+    padding-top: 3pt;
+    padding-bottom: 3pt;
+    line-height: inherit;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header ul > li a::before {
+    font-size: 1.2em;
+    display: block;
+  }
+  .desktop-panel-hidden .gadget-content {
+    padding-top: 7em;
+  }
+  .desktop-panel-hidden div[data-gadget-scope='panel'] {
+    transform: translate3d(-186pt, 0, 0);
+  }
+  .desktop-panel-hidden div[data-gadget-scope='panel'].visible {
+    transform: translate3d(0, 0, 0);
   }
 }
 /**********************************************

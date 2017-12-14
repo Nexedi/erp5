@@ -169,6 +169,19 @@
     return displayErrorContent(gadget, error);
   }
 
+  function hideDesktopPanel(gadget, hide) {
+    var element = gadget.element.querySelector('div[data-role="page"]');
+    if (hide) {
+      if (!element.classList.contains('desktop-panel-hidden')) {
+        element.classList.toggle('desktop-panel-hidden');
+      }
+    } else {
+      if (element.classList.contains('desktop-panel-hidden')) {
+        element.classList.remove('desktop-panel-hidden');
+      }
+    }
+  }
+
   //////////////////////////////////////////
   // Page rendering
   //////////////////////////////////////////
@@ -426,6 +439,9 @@
       gadget.props.panel_argument_list = param_list[0];
     })
 
+    .allowPublicAcquisition('hidePanel', function (param_list) {
+      return hideDesktopPanel(this, param_list[0]);
+    })
     .allowPublicAcquisition('triggerPanel', function () {
       return route(this, "panel", "toggle");
     })
