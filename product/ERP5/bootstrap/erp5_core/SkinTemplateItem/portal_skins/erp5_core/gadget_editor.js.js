@@ -123,6 +123,15 @@
           .push(function (editor_gadget) {
             return editor_gadget.render(gadget.state);
           });
+        if (gadget.state.maximize === 'auto') {
+          queue
+            .push(function () {
+              return gadget.getDeclaredGadget('maximize');
+            })
+            .push(function (maximize_gadget) {
+              return maximize_gadget.element.click();
+            });
+        }
       } else if (gadget.state.editable &&
           (gadget.state.editor === 'text_area')) {
         element.querySelector('textarea').value = gadget.state.value;
