@@ -138,11 +138,12 @@
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
+                  "renderjs_extra": '{"editor_url": "../officejs_image_editor_gadget/app/", "maximize": "auto"}',
                   "key": "text_content",
                   "hidden": 0,
                   "type": "GadgetField",
-                  "url": "../officejs_image_editor_gadget/app/",
-                  "sandbox": "iframe"
+                  "url": "gadget_editor.html",
+                  "sandbox": "public"
                 }
               }},
               "_links": {
