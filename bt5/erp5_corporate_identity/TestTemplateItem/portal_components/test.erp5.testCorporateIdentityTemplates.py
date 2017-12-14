@@ -956,7 +956,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       **dict(
         use_skin="Book",
         test_method="WebPage_exportAsBook",
-        override_revision=1
+        override_revision=1,
+        lang="de"
       )
     )
 
