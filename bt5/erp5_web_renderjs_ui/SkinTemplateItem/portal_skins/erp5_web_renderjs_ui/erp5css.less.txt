@@ -545,10 +545,11 @@ div[data-gadget-scope='panel'] {
   display: block;
   z-index: 2000;
 
+  transition: transform 200ms ease-out;
+  transform: translate3d(0, 0, 0);
+
   @media @smartphone, @tablet {
     left: -@panelwidth - @margin-size;
-    transition: transform 200ms ease-out;
-    transform: translate3d(0, 0, 0);
     &.visible {
       transform: translate3d(@panelwidth + @margin-size, 0, 0);
     }
@@ -575,7 +576,7 @@ div[data-gadget-scope='panel'] {
       }
 
       @media @desktop {
-        &[data-i18n="Close"] {
+        div[data-role='page']:not(.desktop-panel-hidden) &[data-i18n="Close"] {
           display: none;
         }
       }
@@ -808,14 +809,17 @@ div[data-gadget-scope='editor_panel'] {
 * Gadget: header
 **********************************************/
 .renderDesktopSubLink() {
-  padding-left: @sub-line-margin-size-desktop;
-  padding-right: @sub-line-margin-size-desktop;
-  min-width: @sub-line-min-width-desktop;
+  div[data-role='page']:not(.desktop-panel-hidden) & {
+    padding-left: @sub-line-margin-size-desktop;
+    padding-right: @sub-line-margin-size-desktop;
+    min-width: @sub-line-min-width-desktop;
+  }
 }
 
 .renderTabletSubLink() {
   padding-top: @half-margin-size;
   padding-bottom: @half-margin-size;
+  line-height: inherit;
   white-space: nowrap;
   overflow: hidden;
   &::before {
@@ -862,7 +866,8 @@ div[data-gadget-scope='header'] .ui-header {
   width: 100%;
 
   @media @desktop {
-    margin-left: @panelwidth;
+    transition: transform 200ms ease-out;
+    transform: translate3d(@panelwidth, 0, 0);
   }
 
   color: @white;
@@ -915,7 +920,7 @@ div[data-gadget-scope='header'] .ui-header {
         }
       }
 
-      &[name="panel"] {
+      div[data-role='page']:not(.desktop-panel-hidden) &[name="panel"] {
         @media @desktop {
           display: none;
         }
@@ -948,7 +953,9 @@ div[data-gadget-scope='header'] .ui-header {
     line-height: @headerheight;
     flex: 1;
     @media @desktop {
-      flex: 1 100%;
+      div[data-role='page']:not(.desktop-panel-hidden) & {
+        flex: 1 100%;
+      }
     }
 
     background-color: @colorheaderbackground;
@@ -997,9 +1004,11 @@ div[data-gadget-scope='header'] .ui-header {
         }
 
         @media @desktop {
-          width: @headertitlemiddlewidth;
-          margin-left: @headertitleleftmiddlemargin;
-          margin-right: @headertitlerightsmallmargin;
+          div[data-role='page']:not(.desktop-panel-hidden) & {
+            width: @headertitlemiddlewidth;
+            margin-left: @headertitleleftmiddlemargin;
+            margin-right: @headertitlerightsmallmargin;
+          }
         }
         width: @headertitleleftlargemargin;
         @media @smartphone {
@@ -1102,8 +1111,10 @@ div[data-gadget-scope='header'] .ui-header {
 
 
   @media @desktop {
-    // Keep the panel always visible
-    margin-left: @panelwidth;
+    div[data-role='page']:not(.desktop-panel-hidden) & {
+      // Keep the panel always visible
+      margin-left: @panelwidth;
+    }
   }
 
   // Top padding
@@ -1722,7 +1733,62 @@ div[data-gadget-scope='notification'] {
     from {opacity:0;}
     to {opacity:1;}
 }
+/**********************************************
+* Desktop Panel Hidden
+**********************************************/
+@media @desktop {
+  .desktop-panel-hidden {
+    div[data-gadget-scope="header"] .ui-header {
+  
+      margin-left: 0;
+      transform: translate3d(0, 0, 0);
 
+      h1 {
+        & > span {
+          .renderTabletNotALinkTitle();
+        }
+        a {
+          &::before {
+            text-align: center;
+          }
+        }
+      }
+
+      & > .ui-btn-right {
+        button, a {
+          border-left: 1px solid rgba(255, 255, 255, 0.55);
+        }
+      }
+
+      .ui-controlgroup-controls {
+        button, a {
+          .renderTabletHeaderButton();
+        }
+      }
+
+      .ui-subheader {
+        flex: 1 100%;
+        text-align: center;
+      }
+
+      ul > li {
+        .renderTabletSubListElement();
+        a {
+          .renderTabletSubLink();
+        }
+      }
+    }
+    .gadget-content {
+      padding-top: 7em;
+    }
+    div[data-gadget-scope='panel'] {
+      transform: translate3d(-@panelwidth - @margin-size, 0, 0);
+      &.visible {
+        transform: translate3d(0, 0, 0);
+      }
+    }
+  }
+}
 /**********************************************
 * Class
 **********************************************/
