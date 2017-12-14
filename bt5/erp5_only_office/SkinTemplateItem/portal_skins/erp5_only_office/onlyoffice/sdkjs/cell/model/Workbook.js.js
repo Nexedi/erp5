@@ -971,7 +971,7 @@
 				//copy cleanCellCache to prevent recursion in trigger("cleanCellCache")
 				var tmpCellCache = dependency_graph.cleanCellCache;
 				dependency_graph.cleanCellCache = {};
-				for (var i in dependency_graph.cleanCellCache) {
+				for (var i in tmpCellCache) {
 					dependency_graph.wb.handlers.trigger("cleanCellCache", i, {0: tmpCellCache[i]},
 						AscCommonExcel.c_oAscCanChangeColWidth.none);
 				}
