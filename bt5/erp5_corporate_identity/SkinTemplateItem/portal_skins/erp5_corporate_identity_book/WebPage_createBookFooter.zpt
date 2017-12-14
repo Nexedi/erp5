@@ -23,7 +23,7 @@ Creates the Book footer.
       <link rel="stylesheet" tal:attributes="href font_url" />
     </tal:block>
     <link rel="stylesheet" tal:attributes="href book_theme_css_url" />
-    <link rel="stylesheet" tal:attributes="href python: ''.join([book_template_css_url, '?portal_skin=Book'])" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([book_template_css_url, ''])" />
     </head>
     	<body class="ci-book" onload="setPlaceholdersWithUrlParameters()">
     	  <tal:block metal:use-macro="context/WebPage_createBookFooter/macros/book_footer" />

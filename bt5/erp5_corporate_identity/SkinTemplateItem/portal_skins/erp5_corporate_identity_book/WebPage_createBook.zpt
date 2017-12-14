@@ -42,7 +42,7 @@ Generates the complete book (only called in HTML version)
       <link rel="stylesheet" tal:attributes="href font_url" />
     </tal:block>
     <link rel="stylesheet" tal:attributes="href book_theme_css_url" />
-    <link rel="stylesheet" tal:attributes="href python: ''.join([book_template_css_url, '?portal_skin=Book'])" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([book_template_css_url, ''])" />
     <script type="text/javascript">
       function setPlaceholdersWithUrlParameters() {
         var vars={};

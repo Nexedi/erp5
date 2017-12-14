@@ -183,8 +183,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     preferred_document_conversion_server_url = system_preference.getPreferredDocumentConversionServerUrl()
     try:
       system_preference.edit(
-        preferred_document_conversion_server_url="https://softinst77579.host.vifib.net/",
-        #https://cloudooo.erp5.net/
+        preferred_document_conversion_server_url="https://cloudooo.erp5.net/",
         #https://softinst77579.host.vifib.net/
       )
       return args[0](*args[1:], **kw)
@@ -237,8 +236,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     test_page = getattr(self.portal.web_page_module, id1)
     expected_page = getattr(self.portal.web_page_module, id2)
     dump = getattr(self.portal, 'dump_data', None)
-    kw["override_date"] = kw.get("override_date", test_page.getModificationDate())
-    
+    #kw["override_date"] = kw.get("override_date", test_page.getModificationDate())
+
     html = getattr(test_page, kw.get("test_method"))(portal_skin=kw.get("use_skin"), **kw)
     html = re.sub(host_url, test_url, html)
 
@@ -255,11 +254,11 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     expected_image = getattr(self.portal.image_module, id2)
     image_source_pdf_doc = getattr(self.portal.document_module, id3)
     dump = getattr(self.portal, 'dump_data', None)
-    kw["override_date"] = kw.get("override_date", test_page.getModificationDate())
+    #kw["override_date"] = kw.get("override_date", test_page.getModificationDate())
 
     pdf_kw = dict(
       reference=test_page.getReference(),
-      target_language="en",
+      target_language=kw.get("lang", None) or "en",
       version=test_page.getVersion(),
     )
 
@@ -569,7 +568,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_letter_output_expected_001_en_html",
       **dict(
         test_method="WebPage_exportAsLetter",
-        use_skin="Letter"
+        use_skin="Letter",
+        override_time=1
       )
     )
   
@@ -588,7 +588,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_letter_output_expected_002_en_html",
       **dict(
         test_method="WebPage_exportAsLetter",
-        use_skin="Letter"
+        use_skin="Letter",
+        override_time=1
       )
     )
 
@@ -611,7 +612,10 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         override_source_person_title="Test Association Member",
         override_destination_organisation_title="Test Association",
         override_destination_person_title="Test Association Member",
-        override_date = "1999-12-31"
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31",
+        override_time=1
       )
     )
 
@@ -633,6 +637,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         use_skin="Letter",
         display_head=0,
         lang="de",
+        override_time=1
       )
     )
 
@@ -653,6 +658,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         test_method="WebPage_exportAsLetter",
         format="pdf",
         use_skin="Letter",
+        override_time=1
       )
     )
 
@@ -675,6 +681,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         test_method="WebPage_exportAsLetter",
         format="pdf",
         use_skin="Letter",
+        override_time=1
       )
     )
 
@@ -703,6 +710,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
         subfield_field_override_date_day="31",
+        override_time=1
       )
     )
     
@@ -726,6 +734,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         lang="de",
         display_head=0,
         use_skin="Letter",
+        override_time=1
       )
     )
 
@@ -745,6 +754,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         page_number=0,
         test_method="WebPage_printAsLetter",
         use_skin="Letter",
+        override_time=1
       )
     )
 

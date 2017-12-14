@@ -61,8 +61,8 @@ Generates the complete letter
     <tal:block tal:repeat="font_url letter_theme_css_font_list">
       <link rel="stylesheet" tal:attributes="href font_url" />
     </tal:block>
-    <link rel="stylesheet" tal:attributes="href python: ''.join([letter_theme_css_url, '?portal_skin=Letter'])" />
-    <link rel="stylesheet" tal:attributes="href python: ''.join([letter_template_css_url, '?portal_skin=Letter'])" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([letter_theme_css_url, ''])" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([letter_template_css_url, ''])" />
   </head>
   <body class="ci-letter">
     <tal:block metal:use-macro="context/Letter_createLetterHeader/macros/letter_header" />

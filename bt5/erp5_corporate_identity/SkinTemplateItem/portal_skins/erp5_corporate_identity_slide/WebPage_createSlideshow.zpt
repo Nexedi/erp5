@@ -29,12 +29,12 @@ Generates the complete slideshow
       <link rel="stylesheet" tal:attributes="href font_url" />
     </tal:block>
     <tal:block tal:condition="python: doc_format == 'html'">
-      <link rel="stylesheet" tal:attributes="href python: 'slide_css/reveal.custom.css?portal_skin=Slide'" />
+      <link rel="stylesheet" tal:attributes="href python: 'slide_css/reveal.custom.css'" />
     </tal:block>
-    <link rel="stylesheet" href="slide_css/white_theme.custom.css?portal_skin=Slide" id="theme" />
-    <link rel="stylesheet" href="slide_css/zenburn.css?portal_skin=Slide" />
-    <link rel="stylesheet" tal:attributes="href python: ''.join([doc_theme_css_url, '?portal_skin=Slide'])" />
-    <link rel="stylesheet" tal:attributes="href python: ''.join([doc_template_css_url, '?portal_skin=Slide'])" />
+    <link rel="stylesheet" href="slide_css/white_theme.custom.css" id="theme" />
+    <link rel="stylesheet" href="slide_css/zenburn.css" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([doc_theme_css_url, ''])" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([doc_template_css_url, ''])" />
     <style type="text/css" tal:content="structure doc_css"></style>
     <script type="text/javascript">
       function setPlaceholdersWithUrlParameters() {
@@ -58,8 +58,8 @@ Generates the complete slideshow
           <tal:block metal:use-macro="context/WebPage_createSlideshowContent/macros/slide_content" />
         </div>
       </div>
-      <script src="slide_js/head.min.js?portal_skin=Slide"></script>
-		<script src="slide_js/reveal.custom.js?portal_skin=Slide"></script>
+      <script src="slide_js/head.min.js"></script>
+		<script src="slide_js/reveal.custom.js"></script>
 		<script>
 			Reveal.initialize({
 			  width: 1280,
@@ -74,9 +74,9 @@ Generates the complete slideshow
         // Dispatches all reveal.js events to the parent window through postMessage
         postMessageEvents: false,
 				dependencies: [
-					{ src: 'slide_js/classList.min.js?portal_skin=Slide', condition: function() { return !document.body.classList; } },
-					{ src: 'slide_js/highlight.js?portal_skin=Slide', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: 'slide_js/zoom.js?portal_skin=Slide', async: true }
+					{ src: 'slide_js/classList.min.js', condition: function() { return !document.body.classList; } },
+					{ src: 'slide_js/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'slide_js/zoom.js', async: true }
 				]
 			});
 			Reveal.configure({ slideNumber: 'c / t' });

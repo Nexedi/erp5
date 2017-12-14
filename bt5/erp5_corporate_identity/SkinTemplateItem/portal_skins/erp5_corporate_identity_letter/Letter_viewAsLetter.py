@@ -14,6 +14,7 @@ MAIN FILE: generate letter in different output formats
 # override_destination_organisation: to use instead of event destination/null
 # override_date             to use instead of current date
 # override_batch_mode       used for tests
+# override_time             used for tests
 # ------
 # document_download:        download file directly (default None)            
 # document_save:            save file in document module (default None)
@@ -80,8 +81,10 @@ override_source_person_title = kw.get('override_source_person_title', None)
 override_source_organisation_title = kw.get("override_source_organisation_title", None)
 override_destination_person_title = kw.get("override_destination_person_title", None)
 override_destination_organisation_title = kw.get("override_destination_organisation_title", None)
-override_date = kw.get("override_date", None)
+override_date = setToNone(kw.get("override_date", None))
+
 override_batch_mode = kw.get('batch_mode', False)
+override_time = setToNone(kw.get('override_time', None)) or None
 
 # -------------------------- Document Parameters  ------------------------------
 letter_form = letter.REQUEST
@@ -121,6 +124,8 @@ else:
   letter_version = "001"
   letter_reference = letter_form.get("reference")
 
+if override_time is not None:
+  letter_modification_date = DateTime("1976-11-04")
 if letter_language and letter_format == "pdf":
   letter.REQUEST['AcceptLanguage'].set(letter_language, 10)
 if letter_reference is None:

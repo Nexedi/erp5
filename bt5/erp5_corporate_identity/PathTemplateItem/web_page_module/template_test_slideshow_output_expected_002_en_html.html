@@ -8,14 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
       <link rel="stylesheet"
-            href="slide_css/reveal.custom.css?portal_skin=Slide" />
+            href="slide_css/reveal.custom.css" />
     
-    <link rel="stylesheet" href="slide_css/white_theme.custom.css?portal_skin=Slide" id="theme" />
-    <link rel="stylesheet" href="slide_css/zenburn.css?portal_skin=Slide" />
+    <link rel="stylesheet" href="slide_css/white_theme.custom.css" id="theme" />
+    <link rel="stylesheet" href="slide_css/zenburn.css" />
+    <link rel="stylesheet" href="default_themes/themes.css" />
     <link rel="stylesheet"
-          href="default_themes/themes.css?portal_skin=Slide" />
-    <link rel="stylesheet"
-          href="https://softinst73908.host.vifib.net/erp5/web_page_module/template_test_slideshow_input_001_en_html/slide_css/slide.css?portal_skin=Slide" />
+          href="https://softinst73908.host.vifib.net/erp5/web_page_module/template_test_slideshow_input_001_en_html/slide_css/slide.css" />
     <style type="text/css">.ci-slideshow-intro.present:not(.slide-background):before {content: "";background: #FFF url("common_images/fallback.png") center no-repeat;background-size: auto 120px;} .ci-slideshow-footer-logo {background: #FFF url("Template.Test.Image.Logo.Alternativ?format=png&display=small") center no-repeat;background-size: 100px auto;}</style>
     <script type="text/javascript">
       function setPlaceholdersWithUrlParameters() {
@@ -165,8 +164,8 @@
   
         </div>
       </div>
-      <script src="slide_js/head.min.js?portal_skin=Slide"></script>
-		<script src="slide_js/reveal.custom.js?portal_skin=Slide"></script>
+      <script src="slide_js/head.min.js"></script>
+		<script src="slide_js/reveal.custom.js"></script>
 		<script>
 			Reveal.initialize({
 			  width: 1280,
@@ -181,9 +180,9 @@
         // Dispatches all reveal.js events to the parent window through postMessage
         postMessageEvents: false,
 				dependencies: [
-					{ src: 'slide_js/classList.min.js?portal_skin=Slide', condition: function() { return !document.body.classList; } },
-					{ src: 'slide_js/highlight.js?portal_skin=Slide', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: 'slide_js/zoom.js?portal_skin=Slide', async: true }
+					{ src: 'slide_js/classList.min.js', condition: function() { return !document.body.classList; } },
+					{ src: 'slide_js/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'slide_js/zoom.js', async: true }
 				]
 			});
 			Reveal.configure({ slideNumber: 'c / t' });

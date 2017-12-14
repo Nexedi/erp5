@@ -42,8 +42,8 @@ Generates the complete leaflet
     <tal:block tal:repeat="font_url leaflet_theme_css_font_list">
       <link rel="stylesheet" tal:attributes="href font_url" />
     </tal:block>
-    <link rel="stylesheet" tal:attributes="href python: ''.join([leaflet_theme_css_url, '?portal_skin=Leaflet'])" />
-    <link rel="stylesheet" tal:attributes="href python: ''.join([leaflet_template_css_url, '?portal_skin=Leaflet'])" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([leaflet_theme_css_url, ''])" />
+    <link rel="stylesheet" tal:attributes="href python: ''.join([leaflet_template_css_url, ''])" />
     <tal:block tal:condition="python: leaflet_css is not None">
       <style type="text/css" tal:content="python: leaflet_css"></style>
     </tal:block>
