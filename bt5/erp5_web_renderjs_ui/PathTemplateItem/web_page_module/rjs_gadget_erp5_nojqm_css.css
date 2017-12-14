@@ -813,30 +813,43 @@ div[data-gadget-scope='header'] .ui-header h1 > span::before {
     margin-right: 6pt;
   }
 }
-div[data-gadget-scope='header'] .ui-header h1 a {
+div[data-gadget-scope='header'] .ui-header h1 form {
+  height: 100%;
+}
+div[data-gadget-scope='header'] .ui-header h1 form button {
+  height: 100%;
+  width: 100%;
+  text-align: left;
+}
+div[data-gadget-scope='header'] .ui-header h1 a,
+div[data-gadget-scope='header'] .ui-header h1 button {
   display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-div[data-gadget-scope='header'] .ui-header h1 a::before {
+div[data-gadget-scope='header'] .ui-header h1 a::before,
+div[data-gadget-scope='header'] .ui-header h1 button::before {
   display: inline-block;
   width: 42pt;
 }
 @media only screen and (min-width: 45em) and (max-width: 85em), not screen and (min-width: 45em) {
-  div[data-gadget-scope='header'] .ui-header h1 a::before {
+  div[data-gadget-scope='header'] .ui-header h1 a::before,
+  div[data-gadget-scope='header'] .ui-header h1 button::before {
     text-align: center;
   }
 }
 @media not screen and (max-width: 85em) {
-  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='header'] .ui-header h1 a::before {
+  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='header'] .ui-header h1 a::before,
+  div[data-role='page']:not(.desktop-panel-hidden) div[data-gadget-scope='header'] .ui-header h1 button::before {
     width: 12pt;
     margin-left: 24pt;
     margin-right: 6pt;
   }
 }
 @media not screen and (min-width: 45em) {
-  div[data-gadget-scope='header'] .ui-header h1 a::before {
+  div[data-gadget-scope='header'] .ui-header h1 a::before,
+  div[data-gadget-scope='header'] .ui-header h1 button::before {
     width: 30pt;
   }
 }
@@ -1512,7 +1525,8 @@ div[data-gadget-scope='notification'] button.error {
   .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header h1 > span::before {
     margin-right: 14pt;
   }
-  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header h1 a::before {
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header h1 a::before,
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header h1 button::before {
     text-align: center;
   }
   .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header > .ui-btn-right button,
@@ -1562,36 +1576,13 @@ div[data-gadget-scope='notification'] button.error {
 /**********************************************
 * Class
 **********************************************/
-.content-iframe-maximize {
+.editor-maximize div[data-gadget-scope='editor'] iframe {
   position: fixed;
-}
-@media not screen and (max-width: 85em) {
-  .content-iframe-maximize {
-    left: 180pt;
-    top: 60pt;
-  }
-  .content-iframe-maximize iframe {
-    width: calc(100vw -  180pt );
-    height: calc(100vh -  60pt );
-  }
-}
-@media only screen and (min-width: 45em) and (max-width: 85em) {
-  .content-iframe-maximize {
-    left: 0;
-    top: 73pt;
-  }
-  .content-iframe-maximize iframe {
-    height: calc(100vh -  73pt );
-  }
-}
-@media not screen and (min-width: 45em) {
-  .content-iframe-maximize {
-    left: 0;
-    top: 67pt;
-  }
-  .content-iframe-maximize iframe {
-    height: calc(100vh -  67pt );
-  }
+  z-index: 1500;
+  left: 0;
+  top: 30pt;
+  width: 100vw;
+  height: calc(100vh -  30pt );
 }
 /**********************************************
 * Icons

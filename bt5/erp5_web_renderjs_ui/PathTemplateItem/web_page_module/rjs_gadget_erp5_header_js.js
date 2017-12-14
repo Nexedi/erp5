@@ -92,6 +92,7 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
     .declareAcquiredMethod("triggerPanel", "triggerPanel")
+    .declareAcquiredMethod("triggerMaximize", "triggerMaximize")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -128,6 +129,12 @@
     .declareMethod('notifyChange', function () {
       return this.changeState({
         modified: true
+      });
+    })
+    .declareMethod('setButtonTitle', function (options) {
+      return this.changeState({
+        title_button_icon: options.icon,
+        title_button_name: options.action
       });
     })
 /*
@@ -227,6 +234,7 @@
         default_title_icon = "",
         default_right_icon = "",
         title_link,
+        title_button,
         promise_list = [];
       // Main title
       if (modification_dict.hasOwnProperty('error') ||
@@ -234,7 +242,8 @@
           modification_dict.hasOwnProperty('submitted') ||
           modification_dict.hasOwnProperty('title_text') ||
           modification_dict.hasOwnProperty('title_icon') ||
-          modification_dict.hasOwnProperty('title_url')) {
+          modification_dict.hasOwnProperty('title_url') ||
+          modification_dict.hasOwnProperty('title_button_name')) {
         if (gadget.state.error) {
           default_title_icon = "exclamation";
         } else if (!gadget.state.loaded) {
@@ -249,7 +258,14 @@
           icon: default_title_icon || gadget.state.title_icon,
           url: gadget.state.title_url
         };
-        if (title_link.url === undefined) {
+        if (gadget.state.title_button_name) {
+          title_button = {
+            title: gadget.state.title_text,
+            icon: gadget.state.title_button_icon,
+            name: gadget.state.title_button_name
+          };
+          promise_list.push(gadget.translateHtml(header_button_template(title_button)));
+        } else if (title_link.url === undefined) {
           promise_list.push(gadget.translateHtml(header_title_template(title_link)));
         } else {
           promise_list.push(gadget.translateHtml(header_title_link_template(title_link)));
@@ -351,6 +367,9 @@
       }
       if (name === "submit") {
         return this.triggerSubmit();
+      }
+      if (name === "maximize") {
+        return this.triggerMaximize();
       }
       throw new Error("Unsupported button " + name);
     });

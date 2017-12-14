@@ -64,6 +64,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/team</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -71,7 +79,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_header.js</string> </value>
+            <value> <string>gadget_erp5_button_maximize.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_header_js</string> </value>
+            <value> <string>rjs_gadget_erp5_button_maximize_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -99,7 +107,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Header JS</string> </value>
+            <value> <string>Gadget ERP5 Button Maximize JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -163,7 +171,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -185,8 +193,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411375841.62</float>
-                        <string>GMT</string>
+                        <float>1510755215.61</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -230,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>963.64055.11832.51507</string> </value>
+                <value> <string>963.62469.23694.1228</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,7 +256,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1512664162.38</float>
+                        <float>1512570844.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -275,7 +283,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -305,8 +313,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411375820.35</float>
-                        <string>GMT</string>
+                        <float>1510750245.63</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

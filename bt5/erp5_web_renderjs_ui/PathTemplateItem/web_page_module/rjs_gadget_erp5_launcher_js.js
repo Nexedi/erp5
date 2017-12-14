@@ -182,6 +182,24 @@
     }
   }
 
+  function triggerMaximize(gadget, maximize) {
+    if (maximize) {
+      hideDesktopPanel(gadget, true);
+      return route(gadget, 'header', 'setButtonTitle', [{
+        icon: "times",
+        action: "maximize"
+      }])
+      .push(function () {
+        gadget.props.maximize = RSVP.defer();
+        return gadget.props.maximize.promise;
+      });
+    } else if (gadget.props.maximize !== undefined) {
+      gadget.props.maximize.resolve();
+      gadget.props.maximize = undefined;
+      hideDesktopPanel(gadget, false);
+      return route(gadget, 'header', 'setButtonTitle', [{}]);
+    }
+  }
   //////////////////////////////////////////
   // Page rendering
   //////////////////////////////////////////
@@ -483,6 +501,17 @@
         .push(function (main_gadget) {
           return main_gadget.triggerSubmit.apply(main_gadget, param_list);
         });
+    })
+    .allowPublicAcquisition("triggerMaximize", function (param_list) {
+      var gadget = this;
+      if (param_list[1]) {
+        param_list[1].fail(function (error) {
+          if (error.name === "cancel") {
+            return triggerMaximize(gadget, false);
+          }
+        });
+      }
+      return triggerMaximize(gadget, param_list[0]);
     })
     /////////////////////////////////////////////////////////////////
     // declared methods
