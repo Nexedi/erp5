@@ -3026,7 +3026,6 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
           method = changeObjectClass(catalog, method_id, sql_class)
         if method.meta_type == 'Script (Python)':
           method = changeObjectClass(catalog, method_id, script_class)
-          method._compile()
         new_obj  = method.aq_base
         self._objects[path] = new_obj
 

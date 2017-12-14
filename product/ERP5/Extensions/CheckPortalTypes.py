@@ -45,6 +45,11 @@ def changeObjectClass(self, object_id, new_class):
         i['meta_type'] = getattr(new_obj, 'meta_type', None)
         break
   new_obj = self._getOb(object_id, new_obj)
+  # Python scripts needs to be recompiled. If we need similar action on other types,
+  # we might later add a function "_afterClassChange" to perform different actions
+  # depending on the class
+  if hasattr(new_obj, '_compile'):
+    new_obj._compile()
   if new_obj.isIndexable:
     new_obj.reindexObject()
   elif new_obj.portal_type == 'Catalog':
