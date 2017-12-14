@@ -146,11 +146,12 @@
                   "css_class": "",
                   "required": 0,
                   "editable": 1,
+                  "renderjs_extra": '{"editor_url": "../ooffice_presentation_gadget/app/", "maximize": "auto"}',
                   "key": "text_content",
                   "hidden": 0,
                   "type": gadget.state.content_editable ? "GadgetField" : "EditorField",
-                  "url": "../ooffice_presentation_gadget/app/",
-                  "sandbox": "iframe"
+                  "url": "gadget_editor.html",
+                  "sandbox": "public"
                 }
               }},
               "_links": {

@@ -112,12 +112,12 @@
                 "css_class": "",
                 "required": 0,
                 "editable": 1,
+                "renderjs_extra": '{"editor_url": "../officejs_svg_editor_gadget/app/method-draw/method-draw.gadget.html", "maximize": "auto"}',
                 "key": "text_content",
                 "hidden": 0,
                 "type": "GadgetField",
-                "url": "../officejs_svg_editor_gadget/" +
-                  "app/method-draw/method-draw.gadget.html",
-                "sandbox": "iframe"
+                "url": "gadget_editor.html",
+                "sandbox": "public"
               }
             }},
               "_links": {
