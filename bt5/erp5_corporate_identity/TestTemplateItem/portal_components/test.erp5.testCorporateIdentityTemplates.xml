@@ -43,7 +43,11 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W: 30,  0: Unused createZODBPythonScript imported from Products.ERP5Type.tests.utils (unused-import)</string>
+                <string>W: 32,  0: Unused import transaction (unused-import)</string>
+                <string>W: 33,  0: Unused import functools (unused-import)</string>
+              </tuple>
             </value>
         </item>
         <item>

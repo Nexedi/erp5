@@ -40,26 +40,26 @@ import base64
 host_url = r"https?://localhost(?::[0-9]+)?/[^/]+/"
 test_url = "https://softinst73908.host.vifib.net/erp5/"
 
-def setDomainDict(script_id, script_param, script_code):
-  def wrapper(func):
-    @functools.wraps(func)
-    def wrapped(self, *args, **kwargs):
-      if script_id in self.portal.portal_skins.custom.objectIds():
-        raise ValueError('Precondition failed: %s exists in custom' % script_id)
-      createZODBPythonScript(
-        self.portal.portal_skins.custom,
-        script_id,
-        script_param,
-        script_code,
-      )
-      try:
-        func(self, *args, **kwargs)
-      finally:
-        if script_id in self.portal.portal_skins.custom.objectIds():
-          self.portal.portal_skins.custom.manage_delObjects(script_id)
-        transaction.commit()
-    return wrapped
-  return wrapper
+#def setDomainDict(script_id, script_param, script_code):
+#  def wrapper(func):
+#    @functools.wraps(func)
+#    def wrapped(self, *args, **kwargs):
+#      if script_id in self.portal.portal_skins.custom.objectIds():
+#        raise ValueError('Precondition failed: %s exists in custom' % script_id)
+#      createZODBPythonScript(
+#        self.portal.portal_skins.custom,
+#        script_id,
+#        script_param,
+#        script_code,
+#      )
+#      try:
+#        func(self, *args, **kwargs)
+#      finally:
+#        if script_id in self.portal.portal_skins.custom.objectIds():
+#          self.portal.portal_skins.custom.manage_delObjects(script_id)
+#        transaction.commit()
+#    return wrapped
+#  return wrapper
   
 def changeSkin(skin_name):
   """
@@ -149,9 +149,6 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     # - rms is ~1.0 if date is 2017-06-07 vs 2017-06-06 with bmp images
     return rms
 
-  def isImageRenderingEqual(self, image_data_1, image_data_2, max_rms=10.0):
-    return self.computeImageRenderingRootMeanSquare(image_data_1, image_data_2) <= max_rms
-
   def convertToPng(self, img_data):
     bmp_file = Image.open(io.BytesIO(img_data))
     img_buff = cStringIO.StringIO()
@@ -163,7 +160,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     rms = self.computeImageRenderingRootMeanSquare(test_image_data, expected_image_data)
     if rms <= max_rms:
       return
-    raise AssertionError("%(message)s\nComparing image:\n%(base64_1)s\nWith image:\n%(base64_2)s\nRMS: %(rms)s > %(max_rms)s\nAssertionError: %(message)s" % {
+    raise AssertionError("%(message)s\nComparing rendered image:\n%(base64_1)s\nWith expected image:\n%(base64_2)s\nRMS: %(rms)s > %(max_rms)s\nAssertionError: %(message)s" % {
       "message": message,
       "base64_1": self.convertToPng(test_image_data),
       "base64_2": self.convertToPng(expected_image_data),
