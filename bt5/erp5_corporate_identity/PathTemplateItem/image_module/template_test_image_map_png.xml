@@ -10,9 +10,11 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -48,9 +50,11 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -198,7 +202,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>share</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -224,7 +228,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1509356766.82</float>
+                        <float>1513263306.1</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -233,7 +237,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>shared</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
