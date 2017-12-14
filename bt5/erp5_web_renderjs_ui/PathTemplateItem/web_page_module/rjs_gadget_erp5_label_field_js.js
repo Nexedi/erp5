@@ -74,7 +74,8 @@
       label_text: '',
       error_text: '',
       label: true,  // the label element is already present in the HTML template
-      css_class: ''
+      css_class: '',
+      label_scope: 'field'
     })
 
     .ready(function () {
@@ -93,7 +94,8 @@
         options: options,
         scope: options.field_json.key,
         hidden: options.field_json.hidden,
-        css_class: options.field_json.css_class
+        css_class: options.field_json.css_class,
+        label_scope: 'field_' + options.field_type
       };
       // RenderJS would overwrite default value with empty variables :-(
       // So we have to mitigate this behaviour
@@ -157,7 +159,7 @@
             .push(function () {
               if (modification_dict.hasOwnProperty('field_url')) {
                 return gadget.declareGadget(gadget.state.field_url, {
-                  scope: SCOPE
+                  scope: gadget.state.label_scope
                 })
                   .push(function (field_gadget) {
                     gadget.state.container_element.removeChild(
@@ -167,7 +169,7 @@
                     return field_gadget;
                   });
               }
-              return gadget.getDeclaredGadget(SCOPE);
+              return gadget.getDeclaredGadget(gadget.state.label_scope);
             })
             .push(function (field_gadget) {
               return field_gadget.render(gadget.state.options);
@@ -177,7 +179,8 @@
     })
 
     .declareMethod("checkValidity", function () {
-      return this.getDeclaredGadget(SCOPE)
+      var gadget = this;
+      return this.getDeclaredGadget(gadget.state.label_scope)
         .push(function (gadget) {
           // XXX Implement checkValidity on all fields
           if (gadget.checkValidity !== undefined) {
@@ -188,8 +191,9 @@
     })
 
     .declareMethod('getContent', function () {
-      var argument_list = arguments;
-      return this.getDeclaredGadget(SCOPE)
+      var gadget = this,
+        argument_list = arguments;
+      return this.getDeclaredGadget(gadget.state.label_scope)
         .push(function (gadget) {
           if (gadget.getContent !== undefined) {
             return gadget.getContent.apply(gadget, argument_list);
@@ -199,8 +203,9 @@
     })
 
     .declareMethod('getListboxInfo', function () {
-      var argument_list = arguments;
-      return this.getDeclaredGadget(SCOPE)
+      var gadget = this,
+        argument_list = arguments;
+      return this.getDeclaredGadget(gadget.state.label_scope)
         .push(function (gadget) {
           return gadget.getListboxInfo.apply(gadget, argument_list);
         });
