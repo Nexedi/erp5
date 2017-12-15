@@ -1,0 +1,8 @@
+<property_sheet_list>
+ <portal_type id="Internet Message Post">
+  <item>Data</item>
+ </portal_type>
+ <portal_type id="Letter Post">
+  <item>Data</item>
+ </portal_type>
+</property_sheet_list>

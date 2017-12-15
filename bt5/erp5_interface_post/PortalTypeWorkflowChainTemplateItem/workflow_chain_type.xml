@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Internet Message Post</type>
+  <workflow>edit_workflow, interface_post_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Letter Post</type>
+  <workflow>edit_workflow, interface_post_workflow</workflow>
+ </chain>
+</workflow_chain>

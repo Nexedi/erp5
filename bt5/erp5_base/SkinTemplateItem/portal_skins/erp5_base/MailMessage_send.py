@@ -47,6 +47,9 @@ if not context.hasStartDate():
   context.setStartDate(DateTime())
 
 if download or not use_activity:
+
+  create_post_message_method = context.getTypeBasedMethod('createPostMessage')
+
   for to_url in to_url_list:
     body = body or context.getTextContent() or ''
     subject = subject or context.getTitle() or ''
@@ -79,8 +82,11 @@ if download or not use_activity:
       embedded_file_list=embedded_file_list,
       extra_header_dict=extra_header_dict)
 
-    if not use_activity:
-      context.activate(activity='SQLQueue').sendMailHostMessage(mail_message)
+    if create_post_message_method:
+      create_post_message_method(mail_message)
+    else:
+      if not use_activity:
+        context.activate(activity='SQLQueue').sendMailHostMessage(mail_message)
 
 if use_activity:
   method_kw = dict(event_relative_url=context.getRelativeUrl(),

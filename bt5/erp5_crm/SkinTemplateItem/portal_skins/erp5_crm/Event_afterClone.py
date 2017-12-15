@@ -1,3 +1,4 @@
+portal = context.getPortalObject()
 # We must copy these properties as they are retrieved from data
 content_dict = context.getPropertyDictFromContent()
 content_dict['title'] = context.getTitle()
@@ -14,3 +15,7 @@ content_dict['source_list'] = content_dict.get('source_list', []) + \
 context.edit(**content_dict)
 # reset reference
 context.Event_generateReference()
+# remove aggregates which are not attachments (ie: interface_post objects)
+document_type_list = portal.getPortalEmbeddedDocumentTypeList() + portal.getPortalDocumentTypeList()
+attachment_list = context.getAggregateList(portal_type=document_type_list)
+context.setAggregateList(attachment_list)

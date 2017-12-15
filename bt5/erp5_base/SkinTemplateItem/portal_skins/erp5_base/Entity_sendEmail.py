@@ -29,4 +29,8 @@ mail_message = portal.Base_createMailMessageAsString(
   embedded_file_list=embedded_file_list,
   extra_header_dict=extra_header_dict)
 
-event.sendMailHostMessage(mail_message)
+create_post_message_method = event.getTypeBasedMethod('createPostMessage')
+if create_post_message_method:
+  create_post_message_method(mail_message)
+else:
+  event.sendMailHostMessage(mail_message)

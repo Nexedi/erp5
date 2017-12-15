@@ -405,6 +405,7 @@ class TestXHTML(TestXHTMLMixin):
       'erp5_ingestion',
       'erp5_ingestion_mysql_innodb_catalog',
       'erp5_crm',
+      'erp5_interface_post',
 
       'erp5_jquery',
       'erp5_jquery_ui',
