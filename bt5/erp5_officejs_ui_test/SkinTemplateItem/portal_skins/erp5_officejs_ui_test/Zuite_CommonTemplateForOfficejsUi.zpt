@@ -1,0 +1,32 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="select_local_storage">
+    <tr>
+      <td colspan="3"><b>Select Local Storage</b></td>
+    </tr>
+    <tr>
+     <td>waitForElementPresent</td>
+     <td>//a[@data-i18n='Storages']</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>click</td>
+     <td>//a[@data-i18n='Storages']</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>waitForElementPresent</td>
+     <td>//a[@data-i18n='Local is Enough']</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>click</td>
+     <td>//a[@data-i18n='Local is Enough']</td>
+     <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+</tal:block>
