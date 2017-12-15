@@ -29,4 +29,15 @@ mail_message = portal.Base_createMailMessageAsString(
   embedded_file_list=embedded_file_list,
   extra_header_dict=extra_header_dict)
 
+mime_post = portal.mime_post_module.newContent(
+  portal_type='Internet Mail Message',
+  title="Internet Mail Message for %s" % event.getTitle(),
+  reference=event.getRelativeUrl(),
+  data=mail_message,
+)
+event_aggregate_list = event.getAggregateList()
+event_aggregate_list.append(mime_post.getRelativeUrl())
+mime_post.release()
+event.setAggregateList(event_aggregate_list)
+
 event.sendMailHostMessage(mail_message)

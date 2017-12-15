@@ -79,6 +79,18 @@ if download or not use_activity:
       embedded_file_list=embedded_file_list,
       extra_header_dict=extra_header_dict)
 
+    mime_post = portal.mime_post_module.newContent(
+      portal_type='Internet Mail Message',
+      title="Internet Mail Message for %s" % context.getTitle(),
+      reference=context.getRelativeUrl(),
+      data=mail_message,
+    )
+    mime_post.release()
+
+    mail_aggregate_list = context.getAggregateList()
+    mail_aggregate_list.append(mime_post.getRelativeUrl())
+    context.setAggregateList(mail_aggregate_list)
+
     if not use_activity:
       context.activate(activity='SQLQueue').sendMailHostMessage(mail_message)
 
