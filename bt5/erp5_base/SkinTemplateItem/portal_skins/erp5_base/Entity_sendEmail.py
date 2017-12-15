@@ -29,4 +29,18 @@ mail_message = portal.Base_createMailMessageAsString(
   embedded_file_list=embedded_file_list,
   extra_header_dict=extra_header_dict)
 
-event.sendMailHostMessage(mail_message)
+internet_message_post_module = portal.getDefaultModuleValue('Internet Message Post', None)
+if internet_message_post_module is not None:
+  # erp5_interface_post is installed, so it is needed to track outgoing emails
+  internet_message_post = internet_message_post_module.newContent(
+    portal_type='Internet Message Post',
+    title="Internet Message for %s" % event.getTitle(),
+    reference=event.getReference(),
+    data=mail_message,
+  )
+  internet_message_post.allowExport()
+  event_aggregate_list = event.getAggregateList()
+  event_aggregate_list.append(internet_message_post.getRelativeUrl())
+  event.setAggregateList(event_aggregate_list)
+else:
+  event.sendMailHostMessage(mail_message)
