@@ -14,6 +14,9 @@
  <portal_type id="Meeting Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Mime Post Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Sale Opportunity">
   <item>specialise</item>
  </portal_type>

@@ -8,6 +8,8 @@ Fax Message | edit_workflow
 Fax Message | event_interaction_workflow
 Fax Message | event_simulation_workflow
 Fax Message | pricing_interaction_workflow
+Internet Mail Message | document_publication_workflow
+Internet Mail Message | edit_workflow
 Letter | document_conversion_interaction_workflow
 Letter | edit_workflow
 Letter | event_interaction_workflow

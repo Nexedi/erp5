@@ -22,6 +22,8 @@ Fax Message | create_response
 Fax Message | preview
 Fax Message | related_events
 Fax Message | view
+Internet Mail Message | view
+Internet Mail Message | view_editor
 Letter | assessment
 Letter | create_response
 Letter | preview
@@ -45,6 +47,7 @@ Meeting | mass_emailing_report
 Meeting | new_event
 Meeting | view
 Meeting | view_communication_plan
+Mime Post Module | view
 Note | assessment
 Note | create_response
 Note | preview

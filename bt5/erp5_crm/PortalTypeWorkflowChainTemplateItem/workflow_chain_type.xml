@@ -12,6 +12,10 @@
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Internet Mail Message</type>
+  <workflow>document_publication_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Letter</type>
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>

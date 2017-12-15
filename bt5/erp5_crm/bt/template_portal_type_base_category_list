@@ -3,6 +3,7 @@ Campaign | specialise
 Event Module | business_application
 Meeting Module | business_application
 Meeting | specialise
+Mime Post Module | business_application
 Sale Opportunity Module | business_application
 Sale Opportunity | specialise
 Support Request Module | business_application

@@ -1,5 +1,6 @@
 campaign_module
 event_module
 meeting_module
+mime_post_module
 sale_opportunity_module
 support_request_module
