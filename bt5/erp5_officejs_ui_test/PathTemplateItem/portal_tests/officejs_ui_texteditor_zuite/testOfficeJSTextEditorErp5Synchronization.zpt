@@ -74,21 +74,6 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>name=editable</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
   <td>identifier=title</td>
   <td></td>
 </tr>
@@ -123,6 +108,11 @@
   <td>${description}</td>
 </tr>
 <tr>
+  <td>waitForElementPresent</td>
+  <td>identifier=cke_1_contents</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>//button[@data-i18n='Save']</td>
   <td></td>
@@ -149,21 +139,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>name=editable</td>
-  <td></td>
-</tr>
-<tr>
   <td>store</td>
   <td>search</td>
   <td>search</td>
@@ -182,6 +157,11 @@
   <td>type</td>
   <td>name=title</td>
   <td>${search}</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>identifier=cke_1_contents</td>
+  <td></td>
 </tr>
 <tr>
   <td>click</td>

@@ -151,22 +151,6 @@
   <td>reference</td>
 </tr>
 <tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Content</td>
-  <td></td>
-</tr>
-<!-- Stop Generic -->
-<tr>
   <td>waitForElementPresent</td>
   <td>identifier=ws-canvas</td>
   <td></td>
