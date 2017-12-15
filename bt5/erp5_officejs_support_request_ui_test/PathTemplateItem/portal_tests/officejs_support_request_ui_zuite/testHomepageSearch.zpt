@@ -46,7 +46,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@role='main']//input[@value='portal_type:  "Support Request"']</td>
+  <td>//div[@role='main']//input[@value='portal_type:&nbsp;&nbsp;"Support Request"']</td>
   <td></td>
 </tr>
 </tbody></table>
