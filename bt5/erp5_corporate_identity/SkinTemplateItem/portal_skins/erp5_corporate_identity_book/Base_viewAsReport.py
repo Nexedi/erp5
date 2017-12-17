@@ -12,7 +12,6 @@ MAIN FILE: generate report (book header/footer and report content)
 # document_reference:       use as document reference
 # document_title            use as document title
 # override_batch_mode       used for tests
-# override_revision         used for tests
 # ------
 # document_download:        download file directly (default None)     
 # document_save:            save file in document module (default None)
@@ -90,7 +89,6 @@ override_document_version = kw.get('document_version', None)
 override_document_reference = kw.get('document_reference', None)
 override_document_language = kw.get('document_language', None)
 override_batch_mode = setToNone(kw.get('batch_mode', None))
-override_revision = setToNone(kw.get('override_revision', None))
 
 doc_report_name = kw.get('report_name', None)
 doc_report_title = kw.get('report_title', None)
@@ -124,6 +122,9 @@ doc_revision = "1"
 doc_modification_date = DateTime()
 doc_short_date = doc_modification_date.strftime('%Y-%m-%d')
 
+if override_batch_mode is not None:
+  doc_modification_date = DateTime("1976-11-04")
+  doc_revision = "1"
 if doc_language and doc_format == "pdf":
   doc.REQUEST['AcceptLanguage'].set(doc_language, 10)
 if doc_reference is blank:
@@ -161,7 +162,7 @@ if doc_format == "html":
     book_theme_css_font_list=doc_theme.get("theme_css_font_list"),
     book_theme_css_url=doc_theme.get("theme_css_url"),
     book_template_css_url=doc_theme.get("template_css_url"),
-    book_logo_url=doc_source.get("enhanced_logo_url"),
+    book_logo_url=doc_source.get("enhanced_logo_url") + '&display=thumbnail',
     book_logo_title=doc_source.get("theme_logo_description"),
     book_short_title=doc_short_title,
     book_reference=doc_reference,
@@ -208,7 +209,7 @@ if doc_format == "pdf":
     book_theme_css_font_list=doc_theme.get("theme_css_font_list"),
     book_theme_css_url=doc_theme.get("theme_css_url"),
     book_template_css_url=doc_theme.get("template_css_url"),
-    book_logo_url=doc_source.get("enhanced_logo_url"),
+    book_logo_url=doc_source.get("enhanced_logo_url") + '&display=thumbnail',
     book_logo_title=doc_source.get("theme_logo_description"),
     book_short_title=doc_short_title,
     book_reference=doc_reference,
@@ -223,7 +224,7 @@ if doc_format == "pdf":
     book_language=doc_language,
     book_theme_css_font_list=doc_theme.get("theme_css_font_list"),
     book_theme_css_url=doc_theme.get("theme_css_url"),
-    book_theme_logo_url=doc_source.get("enhanced_logo_url"),
+    book_theme_logo_url=doc_source.get("enhanced_logo_url") + '&display=thumbnail',
     book_theme_logo_alt=doc_theme.get("theme_logo_description"),
     book_template_css_url=doc_theme.get("template_css_url"),
     book_full_reference=doc_full_reference,

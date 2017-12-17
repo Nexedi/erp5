@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts13285847.18</string> </value>
+            <value> <string>ts13549559.86</string> </value>
         </item>
         <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>7b51004fc81bbd685cfcbd74cb8b4f92</string> </value>
+            <value> <string>c7d773c07002d2d01d2cda8ef1c0052b</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -125,7 +125,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>377276</int> </value>
+            <value> <int>380427</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

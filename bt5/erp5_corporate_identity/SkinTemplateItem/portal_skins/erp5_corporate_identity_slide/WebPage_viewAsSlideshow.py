@@ -161,6 +161,13 @@ def setToNone(param):
   else:
     return param
 
+# XXX change url so convert does not fail    
+def setUrl(path):
+  if path.find("common") > -1:
+    return path
+  else:
+    return path + "&display=thumbnail"
+
 # -------------------------- Setup ---------------------------------------------
 doc = context
 doc_prefix = "Slideshow."
@@ -177,7 +184,7 @@ doc_ooo = setToNone(kw.get('flag_ooo', None))
 
 override_logo_reference = kw.get('override_logo_reference', None)
 override_source_organisation_title = kw.get("override_source_organisation_title", None)
-override_batch_mode = kw.get('batch_mode', False)
+override_batch_mode = setToNone(kw.get('batch_mode', None))
 override_source_person_title = None
 
 # ---------- backward compatability with legacy odp/sxi presentations ----------
@@ -226,6 +233,9 @@ doc_relative_url = doc.getRelativeUrl()
 doc_aggregate_list = []
 doc_modification_date = doc.getModificationDate()
 
+if override_batch_mode is not None:
+  doc_version = "001"
+  doc_creation_year = "1976"
 if doc_language and doc_format == "pdf":
   doc.REQUEST['AcceptLanguage'].set(doc_language, 10)
 if doc_reference is None:
@@ -255,14 +265,14 @@ doc_source = doc.Base_getSourceDict(
   default_bank_account_uid=getCustomParameter("default_bank_account_uid", None),
   theme_logo_url=doc_theme.get("theme_logo_url", None)
 )
-if doc_source.get("enhanced_logo_url") is not blank:
-  doc_css = ''.join([
-    doc_css,
-    ' .ci-slideshow-footer-logo {'
-      'background: #FFF url("%s") center no-repeat;' % (doc_source.get("enhanced_logo_url")),
-      'background-size: 100px auto;',
-    '}'
-  ])
+#if doc_source.get("enhanced_logo_url") is not blank:
+#  doc_css = ''.join([
+#    doc_css,
+#    ' .ci-slideshow-footer-logo {',
+#      'background: #FFF url("%s") center no-repeat;' % (doc_source.get("enhanced_logo_url")),
+#      'background-size: 100px auto;',
+#    '}'
+#  ])
 
 # --------------------------- Content Upgrades ---------------------------------
 for image in re.findall('(<img.*?/>)', doc_content):
@@ -327,7 +337,7 @@ if doc_format == "html":
     doc_template_css_url=doc_theme.get("template_css_url"),
     doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
     doc_theme_css_url=doc_theme.get("theme_css_url"),
-    doc_footer_url=doc_source.get("enhanced_logo_url"),
+    doc_footer_url=setUrl(doc_source.get("enhanced_logo_url")),
     doc_description=doc_description,
     doc_creation_year=doc_creation_year,
     doc_copyright=doc_source.get("organisation_title", blank),
@@ -346,11 +356,12 @@ if doc_format == "pdf":
     doc_template_css_url=doc_theme.get("template_css_url"),
     doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
     doc_theme_css_url=doc_theme.get("theme_css_url"),
-    doc_footer_url=doc_source.get("enhanced_logo_url"),
+    doc_footer_url=setUrl(doc_source.get("enhanced_logo_url")),
     doc_description=doc_description,
     doc_creation_year=doc_creation_year,
     doc_copyright=doc_source.get("organisation_title", blank),
-    doc_author_list=doc_source.get("contributor_title_string")
+    doc_author_list=doc_source.get("contributor_title_string"),
+    doc_css=doc_css
   )
   doc_slideshow_cover = context.WebPage_createSlideshowCover(
     doc_format=doc_format,

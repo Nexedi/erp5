@@ -3,6 +3,7 @@
 Export WebPage as Book
 ================================================================================
 """
+
 return context.WebPage_viewAsBook(
   override_document_description=override_document_description,
   override_document_short_title=override_document_short_title,
@@ -16,7 +17,6 @@ return context.WebPage_viewAsBook(
   document_download=document_download,
   display_svg=display_svg,
   batch_mode=batch_mode,
-  override_revision=override_revision,
   transformation=transformation,
   include_content_table=include_content_table,
   include_history_table=include_history_table,

@@ -278,11 +278,17 @@ html .ci-slideshow .ci-slideshow-footer > div {
   width: 32%;
   vertical-align: middle;
 }
-html .ci-slideshow .ci-slideshow-header > div img,
-html .ci-slideshow .ci-slideshow-footer > div img {
-  max-height: 2.5em;
-  min-width: initial;
+.ci-slideshow-footer-image-wrapper {
+  min-height: 20mm;
+  display: inline;
+  vertical-align: middle;
 }
+.ci-slideshow-footer-image-wrapper img {
+  display: inline-block;
+  width: auto;
+  height: auto;
+}
+
 html .ci-slideshow .ci-slideshow-container-left {
   text-align: left; 
 }

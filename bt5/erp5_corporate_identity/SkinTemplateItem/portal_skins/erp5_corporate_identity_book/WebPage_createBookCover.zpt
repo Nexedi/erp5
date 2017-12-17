@@ -40,8 +40,7 @@ Creates the Book cover.
       <p class="ci-book-cover-description" tal:content="python: book_description"></p>
       <p class="ci-book-cover-author-list">
         <tal:block tal:repeat="author book_source_person_title">
-          <span tal:content="author"></span>
-          <tal:block tal:condition="not: repeat/author/end">,</tal:block>
+          <span tal:content="author"></span><tal:block tal:condition="not: repeat/author/end">,</tal:block>
         </tal:block>
       </p>
     </div>

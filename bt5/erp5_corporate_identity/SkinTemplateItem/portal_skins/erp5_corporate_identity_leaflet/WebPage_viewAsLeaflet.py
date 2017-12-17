@@ -14,7 +14,6 @@ MAIN FILE: render two pager in different output formats
 # override_source_organisation_title used instead of follow-up organisation
 # override_source_person_title used instead of contributor
 # override_batch_mode       used for tests
-# override_time             used for tests
 # ------
 # document_downalod:        download file directly (default None)            
 # document_save:            save file in document module (default None)
@@ -69,6 +68,13 @@ def setToNone(param):
   else:
     return param
 
+# XXX change url so convert does not fail    
+def setUrl(path):
+  if path.find("common") > -1:
+    return path
+  else:
+    return path + "&display=thumbnail"
+
 # -------------------------- Setup ---------------------------------------------
 leaflet = context
 leaflet_prefix = "Leaflet."
@@ -91,8 +97,7 @@ override_source_organisation_title = kw.get(
   "override_source_organisation_title",
   None
 )
-override_batch_mode = kw.get('batch_mode', None) or False
-override_time = setToNone(kw.get('override_time', None)) or None
+override_batch_mode = setToNone(kw.get('batch_mode', None))
 
 
 # -------------------------- Document Parameters  ------------------------------
@@ -114,7 +119,7 @@ leaflet_modification_date = leaflet.getModificationDate()
 # u"©".encode("utf8")
 #leaflet_copy = 	u"\u00A9".encode('utf-8') | unicode('©', 'utf8') | '©'.encode('utf-8').strip()
 
-if override_time is not None:
+if override_batch_mode is not None:
   leaflet_date="Nov-1976"
   leaflet_year="1976"
 if leaflet_language and leaflet_format == "pdf":
@@ -235,7 +240,7 @@ if leaflet_format == "html":
     leaflet_template_css_url=leaflet_theme.get("template_css_url"),
     leaflet_organisation=leaflet_source.get("organisation_title", blank),
     leaflet_organisation_claim=leaflet_theme.get("theme_logo_description") or blank,
-    leaflet_logo_url=leaflet_source.get("enhanced_logo_url"),
+    leaflet_logo_url=setUrl(leaflet_source.get("enhanced_logo_url")),
     leaflet_copyright=leaflet_source.get("organisation_title", blank),
     leaflet_full_reference=leaflet_full_reference,
     leaflet_year=leaflet_year,
@@ -267,7 +272,7 @@ if leaflet_format == "pdf":
     leaflet_theme_css_font_list=leaflet_theme.get("theme_css_font_list"),
     leaflet_theme_css_url=leaflet_theme.get("theme_css_url"),
     leaflet_template_css_url=leaflet_theme.get("template_css_url"),
-    leaflet_logo_url=leaflet_source.get("enhanced_logo_url"),
+    leaflet_logo_url=setUrl(leaflet_source.get("enhanced_logo_url")),
     leaflet_copyright=leaflet_source.get("organisation_title", blank),
     leaflet_full_reference=leaflet_full_reference,
     leaflet_year=leaflet_year,

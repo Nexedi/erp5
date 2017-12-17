@@ -18,7 +18,7 @@ Creates the Tables of references.
                        book_abbreviation_list            python: options.get('book_abbreviation_list');
                        book_image_list                   python: options.get('book_image_list');
                        book_table_list                   python: options.get('book_table_list');">
-  <tal:block tal:condition="python: book_format == 'html'">
+  <tal:block tal:condition="python: book_format == 'html' or book_format == 'mhtml'">
     <tal:block metal:use-macro="context/WebPage_createBookTableOfReferences/macros/book_references" />
   </tal:block>
   <tal:block tal:condition="python: book_format == 'pdf'">

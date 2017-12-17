@@ -14,7 +14,6 @@ MAIN FILE: generate letter in different output formats
 # override_destination_organisation: to use instead of event destination/null
 # override_date             to use instead of current date
 # override_batch_mode       used for tests
-# override_time             used for tests
 # ------
 # document_download:        download file directly (default None)            
 # document_save:            save file in document module (default None)
@@ -67,6 +66,13 @@ def setToNone(param):
   else:
     return param
 
+# XXX change url so convert does not fail    
+def setUrl(path):
+  if path.find("common") > -1:
+    return path
+  else:
+    return path + "&display=thumbnail"
+
 # -------------------------- Setup ---------------------------------------------
 letter = context
 letter_format = kw.get('format', 'html')
@@ -83,8 +89,7 @@ override_destination_person_title = kw.get("override_destination_person_title", 
 override_destination_organisation_title = kw.get("override_destination_organisation_title", None)
 override_date = setToNone(kw.get("override_date", None))
 
-override_batch_mode = kw.get('batch_mode', False)
-override_time = setToNone(kw.get('override_time', None)) or None
+override_batch_mode = setToNone(kw.get('batch_mode', None))
 
 # -------------------------- Document Parameters  ------------------------------
 letter_form = letter.REQUEST
@@ -124,7 +129,7 @@ else:
   letter_version = "001"
   letter_reference = letter_form.get("reference")
 
-if override_time is not None:
+if override_batch_mode is not None:
   letter_modification_date = DateTime("1976-11-04")
 if letter_language and letter_format == "pdf":
   letter.REQUEST['AcceptLanguage'].set(letter_language, 10)
@@ -180,7 +185,7 @@ if letter_format == "html":
     letter_theme_css_font_list=letter_theme.get("theme_css_font_list"),
     letter_theme_css_url=letter_theme.get("theme_css_url"),
     letter_template_css_url=letter_theme.get("template_css_url"),
-    letter_theme_logo_url=letter_source.get("enhanced_logo_url"),
+    letter_theme_logo_url=setUrl(letter_source.get("enhanced_logo_url")),
     letter_theme_logo_alt=letter_theme.get("theme_logo_description"),
     letter_timestamp=letter_modification_date.strftime('%Y-%m-%d'),
     letter_destination_company=letter_destination.get("organisation_title", blank),
@@ -222,7 +227,7 @@ if letter_format == "pdf":
     letter_theme_css_font_list=letter_theme.get("theme_css_font_list"),
     letter_theme_css_url=letter_theme.get("theme_css_url"),
     letter_template_css_url=letter_theme.get("template_css_url"),
-    letter_theme_logo_url=letter_source.get("enhanced_logo_url"),
+    letter_theme_logo_url=setUrl(letter_source.get("enhanced_logo_url")),
     letter_theme_logo_alt=letter_theme.get("theme_logo_description"),
     letter_timestamp=letter_modification_date.strftime('%Y-%m-%d'),
     letter_source_city=letter_source.get("city", blank)
@@ -236,7 +241,7 @@ if letter_format == "pdf":
     letter_theme_css_font_list=letter_theme.get("theme_css_font_list"),
     letter_theme_css_url=letter_theme.get("theme_css_url"),
     letter_template_css_url=letter_theme.get("template_css_url"),
-    letter_theme_logo_url=letter_source.get("enhanced_logo_url"),
+    letter_theme_logo_url=setUrl(letter_source.get("enhanced_logo_url")),
     letter_theme_logo_alt=letter_theme.get("theme_logo_description"),
     letter_timestamp=letter_modification_date.strftime('%Y-%m-%d'),
     letter_destination_company=letter_destination.get("organisation_title", blank),

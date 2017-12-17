@@ -246,18 +246,16 @@
 
 /* header image dimensions */
 .ci-book .ci-book-header .ci-book-header-image-wkhtmltopdf-image-wrapper {
-  width: 100%;
-  height: inherit;
-  min-height: 22mm;
-  position: relative;
+  padding-top: 1mm;
+  min-height: 25mm;
+  display: inline;
+  vertical-align: middle;
 }
-.ci-book .ci-book-header img {
-  max-height: 20mm;
-  max-width: 60%;
-  padding-top: 6mm;
-  text-align: center;
+.ci-book .ci-book-header .ci-book-header-image-wkhtmltopdf-image-wrapper img {
+  height: auto;
+  display: inline-block;
+  width: auto;
 }
-
 /* header spec section */
 .ci-book .ci-book-header td:last-child {
   text-align: left;
@@ -811,6 +809,13 @@ html .ci-book table td p {
   display: block;
   text-align: left;
   text-indent: 2mm;
+}
+/* === reports === */
+.ci-book .ci-book-table .ci-book-report-cell-left {
+  text-align: left;
+}
+.ci-book .ci-book-table .ci-book-report-cell-right {
+  text-align: right;
 }
 /* === box items === */
 /* Project Breakdown/Milestone List */

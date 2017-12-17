@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>format="html", document_download=None, document_save=None, display_note=0, display_svg=None, override_source_organisation_title=None, override_logo_reference=None, batch_mode=False, **kw</string> </value>
+            <value> <string>format="html", batch_mode=None, document_download=None, document_save=None, display_note=0, display_svg=None, override_source_organisation_title=None, override_logo_reference=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

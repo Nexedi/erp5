@@ -143,14 +143,16 @@ section {
   min-height: 10mm;
   text-align: center;
 }
-.ci-slideshow-footer .ci-slideshow-container-left img {
-  display: block;
-  border: 1px solid red !important;
-  height: 50px;
+.ci-slideshow-footer .ci-slideshow-container-left .ci-slideshow-footer-image-wrapper {
+  min-height: 20mm;
+  display: inline;
+  vertical-align: middle;
 }
-
-
-
+.ci-slideshow-footer .ci-slideshow-container-left .ci-slideshow-footer-image-wrapper img {
+  display: inline-block;
+  width: auto;
+  height: auto;
+}
 .ci-slideshow-footer .ci-slideshow-container-left {
   text-align: left;
 }

@@ -17,7 +17,6 @@ MAIN FILE: generate book in different output formats
 # override_document_reference           use as document reference
 # override_logo_reference               use as document header logo
 # override_batch_mode                   used for tests
-# override_revision                     used for tests
 # ------
 # book_include_content_table            include table of content (True*)
 # book_include_history_table            include history/authors (XXX not done)
@@ -81,6 +80,13 @@ def setToNone(param):
   else:
     return param
 
+# XXX change url so convert does not fail    
+def setUrl(path):
+  if path.find("common") > -1:
+    return path
+  else:
+    return path + "&display=thumbnail"
+
 # -------------------------- Setup ---------------------------------------------
 book = context
 book_format = setToNone(kw.get('format', None)) or 'html'
@@ -110,8 +116,6 @@ override_document_version = kw.get('override_document_version', None)
 override_document_reference = kw.get('override_document_reference', None)
 override_logo_reference = kw.get('override_logo_reference', None)
 override_batch_mode = setToNone(kw.get('batch_mode', None))
-override_revision = kw.get('override_revision', None)
-
 
 # -------------------------- Document Parameters  ------------------------------
 book_form = book.REQUEST
@@ -132,10 +136,13 @@ book_language = book.getLanguage()
 book_aggregate_list = []
 book_absolute_url = book.getAbsoluteUrl()
 book_reference = (html_quote(override_document_reference) if override_document_reference else book.getReference()) or blank
-book_revision = "1" if (override_batch_mode or override_revision) else book.getRevision()
+book_revision = book.getRevision()
 book_modification_date = book.getModificationDate()
-book_short_date = book_modification_date.strftime('%Y-%m-%d')
 
+if override_batch_mode is not None:
+  book_modification_date = DateTime("1976-11-04")
+  book_revision = "1"
+book_short_date = book_modification_date.strftime('%Y-%m-%d')
 if book_language and book_format == "pdf":
   book.REQUEST['AcceptLanguage'].set(book_language, 10)
 if book_reference is None:
@@ -227,7 +234,7 @@ if book_include_reference_table is not None:
     book_image_list=book_image_list,
     book_table_list=book_table_list
   )
-  if book_format == 'html':
+  if book_format == 'html' or book_format == 'mhtml':
     book_content = book_references.encode('utf-8').strip() + book_content
   
 # table of content
@@ -255,10 +262,10 @@ for image in re.findall('(<img.*?/>)', book_content):
   )
 # ============================ Transformation ==================================    
 
-# ============================= Format: html ===================================
-if book_format == "html":
+# ========================== Format: mhtml/html ================================
+if book_format == "html" or book_format == "mhtml":
   book.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
-  return book.WebPage_createBook(
+  book_output = book.WebPage_createBook(
     book_theme=book_theme.get("theme"),
     book_title=book_title,
     book_language=book_language,
@@ -272,7 +279,7 @@ if book_format == "html":
     book_signature_list=book_signature_list,
     book_version_list=book_version_list,
     book_distribution_list=book_distribution_list,
-    book_logo_url=book_source.get("enhanced_logo_url"),
+    book_logo_url=setUrl(book_source.get("enhanced_logo_url")),
     book_logo_title=book_theme.get("theme_logo_description"),
     book_reference=book_reference,
     book_revision=book_revision,
@@ -283,6 +290,10 @@ if book_format == "html":
     book_content=book_content,
     book_table_of_content=book_table_of_content
   )
+  if book_format == "html":
+    return book_output
+  if book_format == "mhtml":
+    return book.Base_convertHtmlToSingleFile(book_output, allow_script=True)
 
 # ============================= Format: pdf ====================================
 if book_format == "pdf":
@@ -304,7 +315,7 @@ if book_format == "pdf":
     book_language=book_language,
     book_theme_css_font_list=book_theme.get("theme_css_font_list"),
     book_theme_css_url=book_theme.get("theme_css_url"),
-    book_theme_logo_url=book_source.get("enhanced_logo_url"),
+    book_theme_logo_url=setUrl(book_source.get("enhanced_logo_url")),
     book_theme_logo_alt=book_theme.get("theme_logo_alt"),
     book_template_css_url=book_theme.get("template_css_url"),
     book_include_history=book_include_history_table,
@@ -326,7 +337,6 @@ if book_format == "pdf":
     book_template_css_url=book_theme.get("template_css_url"),
     book_content=book_content,
   )
-
   book_head = book.WebPage_createBookHeader(
     book_theme=book_theme.get("theme"),
     book_title=book_title,
@@ -334,13 +344,13 @@ if book_format == "pdf":
     book_theme_css_font_list=book_theme.get("theme_css_font_list"),
     book_theme_css_url=book_theme.get("theme_css_url"),
     book_template_css_url=book_theme.get("template_css_url"),
-    book_logo_url=book_source.get("enhanced_logo_url"),
+    book_logo_url=setUrl(book_source.get("enhanced_logo_url")),
     book_logo_title=book_theme.get("theme_logo_description"),
     book_short_title=book_short_title,
     book_reference=book_reference,
     book_revision=book_revision,
     book_version=book_version,
-    book_short_date=book_short_date,
+    book_short_date=book_short_date
   )
   
   book_foot = book.WebPage_createBookFooter(
@@ -349,7 +359,7 @@ if book_format == "pdf":
     book_language=book_language,
     book_theme_css_font_list=book_theme.get("theme_css_font_list"),
     book_theme_css_url=book_theme.get("theme_css_url"),
-    book_theme_logo_url=book_source.get("enhanced_logo_url"),
+    book_theme_logo_url=setUrl(book_source.get("enhanced_logo_url")),
     book_theme_logo_alt=book_theme.get("theme_logo_description"),
     book_template_css_url=book_theme.get("template_css_url"),
     book_full_reference=book_full_reference,
@@ -378,7 +388,7 @@ if book_format == "pdf":
     encoding="utf8",
     margin_top=40,
     margin_bottom=20,
-    toc=True,
+    toc=True if book_include_content_table is not None else False,
     before_toc_data_list=before_toc_data_list,
     xsl_style_sheet_data=b64encode(xsl_style_sheet_data),
     after_toc_data_list=after_toc_data_list,

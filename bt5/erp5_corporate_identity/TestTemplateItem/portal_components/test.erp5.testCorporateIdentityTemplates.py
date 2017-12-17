@@ -236,7 +236,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     test_page = getattr(self.portal.web_page_module, id1)
     expected_page = getattr(self.portal.web_page_module, id2)
     dump = getattr(self.portal, 'dump_data', None)
-    #kw["override_date"] = kw.get("override_date", test_page.getModificationDate())
+    kw["batch_mode"] = 1
 
     html = getattr(test_page, kw.get("test_method"))(portal_skin=kw.get("use_skin"), **kw)
     html = re.sub(host_url, test_url, html)
@@ -254,7 +254,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     expected_image = getattr(self.portal.image_module, id2)
     image_source_pdf_doc = getattr(self.portal.document_module, id3)
     dump = getattr(self.portal, 'dump_data', None)
-    #kw["override_date"] = kw.get("override_date", test_page.getModificationDate())
+    kw["batch_mode"] = 1
 
     pdf_kw = dict(
       reference=test_page.getReference(),
@@ -554,7 +554,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         format="pdf"
       )
     )
-  
+
   @changeSkin('Letter')
   def test_htmlLetter(self):
     """
@@ -568,8 +568,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_letter_output_expected_001_en_html",
       **dict(
         test_method="WebPage_exportAsLetter",
-        use_skin="Letter",
-        override_time=1
+        use_skin="Letter"
       )
     )
   
@@ -588,8 +587,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_letter_output_expected_002_en_html",
       **dict(
         test_method="WebPage_exportAsLetter",
-        use_skin="Letter",
-        override_time=1
+        use_skin="Letter"
       )
     )
 
@@ -614,8 +612,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         override_destination_person_title="Test Association Member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31",
-        override_time=1
+        subfield_field_override_date_day="31"
       )
     )
 
@@ -636,8 +633,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         test_method="WebPage_exportAsLetter",
         use_skin="Letter",
         display_head=0,
-        lang="de",
-        override_time=1
+        lang="de"
       )
     )
 
@@ -657,8 +653,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         page_number=0,
         test_method="WebPage_exportAsLetter",
         format="pdf",
-        use_skin="Letter",
-        override_time=1
+        use_skin="Letter"
       )
     )
 
@@ -680,8 +675,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         page_number=0,
         test_method="WebPage_exportAsLetter",
         format="pdf",
-        use_skin="Letter",
-        override_time=1
+        use_skin="Letter"
       )
     )
 
@@ -709,8 +703,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         override_destination_person_title="Test Association Member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31",
-        override_time=1
+        subfield_field_override_date_day="31"
       )
     )
     
@@ -733,8 +726,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         format="pdf",
         lang="de",
         display_head=0,
-        use_skin="Letter",
-        override_time=1
+        use_skin="Letter"
       )
     )
 
@@ -753,8 +745,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       **dict(
         page_number=0,
         test_method="WebPage_printAsLetter",
-        use_skin="Letter",
-        override_time=1
+        use_skin="Letter"
       )
     )
 
@@ -771,8 +762,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_leaflet_output_expected_001_en_html",
       **dict(
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet",
-        override_time=1
+        use_skin="Leaflet"
       )
     )
   
@@ -793,8 +783,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         override_source_person_title="Test Recipient",
         override_source_organisation_title="Test Association",
         override_leaflet_header_title="Couscous",
-        use_skin="Leaflet",
-        override_time=1
+        use_skin="Leaflet"
       )
     )
 
@@ -811,8 +800,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_leaflet_output_expected_003_de_html",
       **dict(
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet",
-        override_time=1
+        use_skin="Leaflet"
       )
     )
   
@@ -832,8 +820,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         page_number=1,
         format="pdf",
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet",
-        override_time=1
+        use_skin="Leaflet"
       )
     )
 
@@ -857,8 +844,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         use_skin="Leaflet",
         override_source_organisation_title="Test Association",
         override_source_person_title="Test Recipient",
-        override_leaflet_header_title="Couscous",
-        override_time=1
+        override_leaflet_header_title="Couscous"
       )
     )
 
@@ -878,8 +864,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         page_number=0,
         test_method="WebPage_exportAsLeaflet",
         use_skin="Leaflet",
-        format="pdf",
-        override_time=1
+        format="pdf"
       )
     )
 
@@ -897,8 +882,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       **dict(
         page_number=1,
         test_method="WebPage_printAsLeaflet",
-        use_skin="Leaflet",
-        override_time=1
+        use_skin="Leaflet"
       )
     )
 
@@ -984,7 +968,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       "template_test_book_input_page_4_001_en_bmp",
       "template_test_book_input_001_en_pdf",
       **dict(
-        page_number=4,
+        page_number=5,
         use_skin="Book",
         test_method="WebPage_exportAsBook",
         format="pdf",
@@ -1138,4 +1122,3 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         override_revision=1
       )
     )
-  

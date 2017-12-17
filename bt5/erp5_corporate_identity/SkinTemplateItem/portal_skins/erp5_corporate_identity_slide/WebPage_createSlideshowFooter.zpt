@@ -16,7 +16,8 @@ Creates the Slideshow footer section.
                        doc_description                   python: options.get('doc_description');
                        doc_creation_year                 python: options.get('doc_creation_year');
                        doc_copyright                     python: options.get('doc_copyright');
-                       doc_author_list                   python: options.get('doc_author_list');">
+                       doc_author_list                   python: options.get('doc_author_list');
+                       doc_css                           python: options.get('doc_css');">
   <!DOCTYPE html>
   <html tal:attributes="class python: ''.join(['ci-', doc_theme, ' ci-', doc_language])">
   <head>
@@ -33,6 +34,7 @@ Creates the Slideshow footer section.
     <link rel="stylesheet" href="slide_css/zenburn.css" />
     <link rel="stylesheet" tal:attributes="href python: ''.join([doc_theme_css_url, ''])" />
     <link rel="stylesheet" tal:attributes="href python: ''.join([doc_template_css_url, ''])" />
+    <style type="text/css" tal:content="structure doc_css"></style>
     <script type="text/javascript">
       function setPlaceholdersWithUrlParameters() {
         var vars={};
@@ -56,7 +58,9 @@ Creates the Slideshow footer section.
   <tal:block metal:define-macro="slide_footer">
     <div class="ci-slideshow-footer">
 	    <div class="ci-slideshow-container-left">
-	      <div style="width: 50%; height: 16mm;" class="ci-slideshow-footer-logo"></div>
+	      <div class="ci-slideshow-footer-image-wrapper">
+          <img tal:attributes="src python: doc_footer_url" alt="" />
+        </div>
 	    </div>
 	    <div class="ci-slideshow-container-center" tal:content="doc_description"></div>
 	    <div class="ci-slideshow-container-right">

@@ -16,6 +16,5 @@ return context.Letter_viewAsLetter(
   document_save=document_save,
   document_download=document_download,
   batch_mode=batch_mode,
-  override_time=override_time,
   **kw
 )
