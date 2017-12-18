@@ -72,15 +72,17 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_bar_datetime_field_view" />
-
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_start_date']</td>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_start_date']//div[@data-gadget-scope='field']//p[contains(text(), '11:00:00')]</td>
   <td></td>
 </tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 
 <tr>
@@ -100,6 +102,7 @@
   <td>//div[@data-gadget-scope='field_my_stop_date']//select</td>
   <td>+0500</td>
 </tr>
+
 </tbody></table>
 </body>
 </html>

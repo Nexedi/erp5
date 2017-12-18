@@ -225,12 +225,25 @@
         queue
           .push(function (gadget_list) {
             var text_content = "",
-              state_date;
+              state_date,
+              options;
             if (gadget.state.value) {
               state_date = new Date(gadget.state.value);
-              text_content = state_date.toLocaleDateString();
-              if (!gadget.state.date_only) {
-                text_content += " " + state_date.toLocaleTimeString();
+              if (gadget.state.timezone_style) {
+                text_content = state_date.toLocaleDateString();
+                if (!gadget.state.date_only) {
+                  text_content += " " + state_date.toLocaleTimeString();
+                }
+              } else {
+                // We don't know the timezone used by erp5 to store the date
+                // display it as displayed in editable
+                options = {timeZone: "UTC"};
+                text_content = state_date.toLocaleDateString(undefined,
+                                                             options);
+                if (!gadget.state.date_only) {
+                  text_content += " " + state_date.toLocaleTimeString(undefined,
+                                                                      options);
+                }
               }
             }
             p_state.text_content = text_content;
