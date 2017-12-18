@@ -1,0 +1,56 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test ListBox Fast Save</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test fast saving without enough time to render listbox data</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<!-- Clean Up -->
+<tr><td>open</td>
+    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Reset Successfully.</td><td></td></tr>
+
+<!-- Create Foo objects with IDs 0-9 -->
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=3&amp;create_line:int=1</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module/1?editable=1</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//input[@name="field_my_quantity"]</td><td></td></tr>
+<tr><td>type</td>
+    <td>field_my_quantity</td>
+    <td>1.00</td></tr>
+<tr><td>click</td>
+    <td>//div[@data-gadget-scope='header']//button[@data-i18n='Save']</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//button[text()="Input data has errors."]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_my_quantity"]//span[text()='The number you input has too large precision.']</td><td></td></tr>
+<tr><td>type</td>
+    <td>field_my_quantity</td>
+    <td>1000000000.0</td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+<tr><td>verifyValue</td>
+    <td>field_my_quantity</td>
+    <td>1000000000.0</td></tr>
+
+</tbody></table>
+</body>
+</html>

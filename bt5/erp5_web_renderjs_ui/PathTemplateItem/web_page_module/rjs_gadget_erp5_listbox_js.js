@@ -1,8 +1,10 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
 /*global window, document, rJS, URI, RSVP,
-  SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory*/
+  SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory,
+  lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue */
 (function (window, document, rJS, URI, RSVP,
-  SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory) {
+  SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory,
+  lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue) {
   "use strict";
   var gadget_klass = rJS(window),
     listbox_thead_source = gadget_klass.__template_element
@@ -414,7 +416,6 @@
 
       } else if ((modification_dict.hasOwnProperty('show_line_selector')) ||
           (modification_dict.hasOwnProperty('allDocs_result'))) {
-
         // Render the listbox content
         result_queue
           .push(function () {
@@ -599,8 +600,12 @@
         "query": gadget.state.query_string,
         "limit": limit_options,
         "select_list": select_list,
+        // "aggregation": aggregation_option_list
         "sort_on": JSON.parse(gadget.state.sort_list_json)
       })
+        // Lock gadget to show that state is not consistent thus any other
+        // operation must wait
+        .push(lockGadgetInQueue(gadget))
         .push(function (result) {
           return gadget.changeState({
             allDocs_result: result
@@ -608,7 +613,7 @@
 
         }, function (error) {
           // do not crash interface if allDocs fails
-          //this will catch all error, not only search criteria invalid error
+          // this will catch all error, not only search criteria invalid error
           if (error instanceof RSVP.CancellationError) {
             throw error;
           }
@@ -616,40 +621,50 @@
           return gadget.changeState({
             has_error: true
           });
-        });
+        })
+        // gadget mutex is necessary because part of ListBox is rendered later
+        // via cancellable `fetchLineList` thus no other operation (eg. getContent) must be
+        // performed on ListBox before it is fully rendered
+        // unlock mutex in success and fail branch
+        .push(unlockGadgetInQueue(gadget), unlockGadgetInFailedQueue(gadget));
     })
 
     .declareMethod("getContent", function (options) {
-      var form_gadget = this,
-        k,
-        field_gadget,
-        count = form_gadget.props.cell_gadget_list.length,
-        data = {},
-        queue = new RSVP.Queue();
+      var gadget = this;
 
-      function extendData(field_data) {
-        var key;
-        for (key in field_data) {
-          if (field_data.hasOwnProperty(key)) {
-            data[key] = field_data[key];
-          }
-        }
-      }
-
-      for (k = 0; k < count; k += 1) {
-        field_gadget = form_gadget.props.cell_gadget_list[k];
-        // XXX Hack until better defined
-        if (field_gadget.getContent !== undefined) {
-          queue
-            .push(field_gadget.getContent.bind(field_gadget, options))
-            .push(extendData);
-        }
-      }
-      return queue
+      return new RSVP.Queue()
+        // lock gadget to forbid sub-field modification while getting their values
+        .push(lockGadgetInQueue(gadget))
         .push(function () {
-          data[form_gadget.props.listbox_uid_dict.key] = form_gadget.props.listbox_uid_dict.value;
+          // gather content from all sub-gadgets
+          return RSVP.all(
+            gadget.props.cell_gadget_list.map(
+              function (subgadget) {
+                if (subgadget.getContent !== undefined) {
+                  return subgadget.getContent(options);
+                }
+                return {};
+              }
+            )
+          );
+        })
+        .push(function (field_value_list) {
+          var data = {};  // will contain all subfields values
+          field_value_list.forEach(function (field_value) {
+            // imprint the content (object with possible multiple keys!) into `data`
+            var key;
+            for (key in field_value) {
+              if (field_value.hasOwnProperty(key)) {
+                data[key] = field_value[key];
+              }
+            }
+          });
+          // gadget.props.listbox_uid_dict.value is an array of UIDs of all editable documents
+          data[gadget.props.listbox_uid_dict.key] = gadget.props.listbox_uid_dict.value;
           return data;
-        });
+        })
+        // unlock passes through its argument
+        .push(unlockGadgetInQueue(gadget), unlockGadgetInFailedQueue(gadget));
     })
 
     .onEvent('click', function (evt) {
@@ -738,4 +753,5 @@
     });
 
 }(window, document, rJS, URI, RSVP,
-  SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory));
+  SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory,
+  lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue));
