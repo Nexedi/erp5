@@ -167,13 +167,14 @@ class EmailDocument(TextDocument):
       data = self.getData()
       if not data:
         # Generated a mail message temporarily to provide backward compatibility.
+        document_type_list = list(self.getPortalEmbeddedDocumentTypeList()) + list(self.getPortalDocumentTypeList())
         data = self.Base_createMailMessageAsString(
           from_url='from@example.com',
           to_url='to@example.com',
           subject=self.getTitle() or '',
           body=self.getTextContent() or '',
           content_type=self.getContentType(),
-          embedded_file_list=self.getAggregateValueList(),
+          embedded_file_list=self.getAggregateValueList(portal_type=document_type_list),
         )
       result = message_from_string(data)
       self._v_message = result
