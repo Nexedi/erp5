@@ -326,10 +326,10 @@ if getDetails(doc_content) > -1:
       # XXX split content above 1600 chars into multiple details tags?
       doc_content = doc_content.replace(slide, details)
 
-# ============================= Format: html ===================================
-if doc_format == "html":
+# ======================== Format: html/mhtml ==================================
+if doc_format == "html" or doc_format == "mhtml":
   doc.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
-  return context.WebPage_createSlideshow(
+  doc_output = context.WebPage_createSlideshow(
     doc_format=doc_format,
     doc_theme=doc_theme.get("theme"),
     doc_title=doc_title,
@@ -345,6 +345,10 @@ if doc_format == "html":
     doc_css=doc_css,
     doc_content=doc_content
   )
+  if doc_format == "html":
+    return doc_output
+  if doc_format == "mhtml":
+    return doc.Base_convertHtmlToSingleFile(doc_output, allow_script=True)
 
 # ============================= Format: pdf ====================================
 if doc_format == "pdf":

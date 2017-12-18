@@ -105,6 +105,10 @@
                           <string>pdf</string>
                           <string>pdf</string>
                         </tuple>
+                        <tuple>
+                          <string>mhtml</string>
+                          <string>mhtml</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
