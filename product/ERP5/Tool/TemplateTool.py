@@ -1278,19 +1278,6 @@ class TemplateTool (BaseTool):
 
         bm_dict_3 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
-          'dependency_list': [],
-          'description': '',
-          'force_install': 0,
-          'id': 'erp5_mysql_ndb_catalog',
-          'license': 'GPL',
-          'revision': '',
-          'test_dependency_list': [],
-          'provision_list': ['erp5_catalog'],
-          'title': 'erp5_mysql_ndb_catalog',
-          'version': '5.4.7'}
-
-        bm_dict_4 ={
-          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
           'dependency_list': ['erp5_view_style',],
           'description': '',
           'force_install': 0,
@@ -1302,7 +1289,7 @@ class TemplateTool (BaseTool):
           'title': 'erp5_jquery',
           'version': '5.4.7'}
 
-        bm_dict_5 ={
+        bm_dict_4 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
           'dependency_list': [],
           'description': '',
@@ -1315,7 +1302,7 @@ class TemplateTool (BaseTool):
           'title': 'erp5_property_sheets',
           'version': '5.4.7'}
 
-        bm_dict_6 ={
+        bm_dict_5 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
           'dependency_list': ['erp5_catalog (>= 1.1)',
                               'erp5_core_proxy_field_legacy',
@@ -1331,28 +1318,12 @@ class TemplateTool (BaseTool):
           'title': 'erp5_core',
           'version': '5.4.7'}
 
-        bm_dict_7 ={
-          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
-          'dependency_list': [],
-          'description': '',
-          'force_install': 0,
-          'id': 'erp5_business_package',
-          'license': 'GPL',
-          'revision': '',
-          'test_dependency_list': [],
-          'provision_list': [],
-          'title': 'erp5_business_package',
-          'version': '5.4.7'}
-
         if repository.endswith('/bootstrap'):
-          pass
-          #property_dict_list.append(bm_dict_1)
-          #property_dict_list.append(bm_dict_2)
-          #property_dict_list.append(bm_dict_3)
-          #property_dict_list.append(bm_dict_4)
-          #property_dict_list.append(bm_dict_5)
-          #property_dict_list.append(bm_dict_6)
-          #property_dict_list.append(bm_dict_7)
+          property_dict_list.append(bm_dict_1)
+          property_dict_list.append(bm_dict_2)
+          property_dict_list.append(bm_dict_3)
+          property_dict_list.append(bm_dict_4)
+          property_dict_list.append(bm_dict_5)
 
         self.repository_dict[repository] = tuple(property_dict_list)
 
