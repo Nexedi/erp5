@@ -80,7 +80,18 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_min_stock</string>
+                        <string>my_max_stock</string>
+                        <string>my_time_quantity_unit</string>
+                        <string>my_min_delay</string>
+                        <string>my_max_delay</string>
+                        <string>my_min_flow</string>
+                        <string>my_max_flow</string>
+                        <string>my_order_quantity_unit</string>
+                        <string>my_min_order_quantity</string>
+                        <string>my_max_order_quantity</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -104,12 +115,6 @@
                         <string>my_source_account</string>
                         <string>my_start_date_range_min</string>
                         <string>my_start_date_range_max</string>
-                        <string>my_min_delay</string>
-                        <string>my_max_delay</string>
-                        <string>my_min_flow</string>
-                        <string>my_max_flow</string>
-                        <string>my_min_stock</string>
-                        <string>my_max_stock</string>
                         <string>my_ledger</string>
                       </list>
                     </value>

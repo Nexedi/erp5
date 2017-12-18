@@ -26,6 +26,7 @@ elementary_type
 local_role_group
 mapping
 order
+order_quantity_unit
 origin
 parent
 product_line
@@ -49,3 +50,4 @@ source_section
 source_section_administration
 source_trade
 specialise
+time_quantity_unit

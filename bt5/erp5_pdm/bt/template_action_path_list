@@ -16,9 +16,11 @@ Internal Supply Line | discount_ratio
 Internal Supply Line | exclusive_discount_ratio
 Internal Supply Line | max_delay
 Internal Supply Line | max_flow
+Internal Supply Line | max_order_quantity
 Internal Supply Line | max_stock
 Internal Supply Line | min_delay
 Internal Supply Line | min_flow
+Internal Supply Line | min_order_quantity
 Internal Supply Line | min_stock
 Internal Supply Line | non_discountable_additional_price
 Internal Supply Line | surcharge_ratio
@@ -53,9 +55,11 @@ Purchase Supply Line | discount_ratio
 Purchase Supply Line | exclusive_discount_ratio
 Purchase Supply Line | max_delay
 Purchase Supply Line | max_flow
+Purchase Supply Line | max_order_quantity
 Purchase Supply Line | max_stock
 Purchase Supply Line | min_delay
 Purchase Supply Line | min_flow
+Purchase Supply Line | min_order_quantity
 Purchase Supply Line | min_stock
 Purchase Supply Line | non_discountable_additional_price
 Purchase Supply Line | surcharge_ratio
@@ -75,9 +79,11 @@ Sale Supply Line | discount_ratio
 Sale Supply Line | exclusive_discount_ratio
 Sale Supply Line | max_delay
 Sale Supply Line | max_flow
+Sale Supply Line | max_order_quantity
 Sale Supply Line | max_stock
 Sale Supply Line | min_delay
 Sale Supply Line | min_flow
+Sale Supply Line | min_order_quantity
 Sale Supply Line | min_stock
 Sale Supply Line | non_discountable_additional_price
 Sale Supply Line | surcharge_ratio

@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Max. Flow</string> </value>
+                    <value> <string>Max. Flow (Quantity Unit / Time Unit)</string> </value>
                 </item>
               </dictionary>
             </value>

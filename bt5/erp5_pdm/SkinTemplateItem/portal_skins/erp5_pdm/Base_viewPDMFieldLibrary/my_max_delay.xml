@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Max. Delay (Day)</string> </value>
+                    <value> <string>Max. Delay (Time Unit)</string> </value>
                 </item>
               </dictionary>
             </value>

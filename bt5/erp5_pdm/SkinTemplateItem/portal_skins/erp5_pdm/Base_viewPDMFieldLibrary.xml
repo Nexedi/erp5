@@ -203,6 +203,28 @@
                         <string>my_view_mode_supply_line_destination_title</string>
                         <string>my_view_mode_supply_line_source_title</string>
                         <string>my_ledger</string>
+                        <string>matrixbox_max_order_quantity</string>
+                        <string>matrixbox_min_order_quantity</string>
+                        <string>my_max_order_quantity</string>
+                        <string>my_min_order_quantity</string>
+                        <string>my_time_quantity_unit</string>
+                        <string>my_order_quantity_unit</string>
+                        <string>matrixbox_for_min_order_quantity</string>
+                        <string>my_min_order_quantity_variation_base_category_list</string>
+                        <string>my_min_delay_variation_base_category_list</string>
+                        <string>matrixbox_for_min_delay</string>
+                        <string>my_max_delay_variation_base_category_list</string>
+                        <string>matrixbox_for_max_delay</string>
+                        <string>my_max_flow_variation_base_category_list</string>
+                        <string>matrixbox_for_max_flow</string>
+                        <string>my_min_flow_variation_base_category_list</string>
+                        <string>matrixbox_for_min_flow</string>
+                        <string>my_max_stock_variation_base_category_list</string>
+                        <string>matrixbox_for_max_stock</string>
+                        <string>my_min_stock_variation_base_category_list</string>
+                        <string>matrixbox_for_min_stock</string>
+                        <string>my_max_order_quantity_variation_base_category_list</string>
+                        <string>matrixbox_for_max_order_quantity</string>
                         <string>my_view_mode_target_delivery</string>
                       </list>
                     </value>

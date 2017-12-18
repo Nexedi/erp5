@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Min. Stock</string> </value>
+                    <value> <string>Min. Stock (Quantity Unit)</string> </value>
                 </item>
               </dictionary>
             </value>
