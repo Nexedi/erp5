@@ -80,7 +80,7 @@ def changeSkin(skin_name):
     return wrapped
   return decorator
 
-class TestCorporateIdentityTemplates(ERP5TypeTestCase):
+class TestCorporateIdentityTemplatesDump(ERP5TypeTestCase):
 
   def getTitle(self):
     return "Test ERP5 Corporate Identity templates."
