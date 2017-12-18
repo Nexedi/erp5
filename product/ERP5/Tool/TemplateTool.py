@@ -852,22 +852,21 @@ class TemplateTool (BaseTool):
               version = dependency[1]
               if version:
                 version = version[1:-1]
-              base_bt = self.getLastestBTOnRepos(dependency[0], version)
             else:
-              try:
-                base_bt = self.getLastestBTOnRepos(dependency[0])
-              except BusinessTemplateIsMeta:
-                bt_list = self.getProviderList(dependency[0])
-                # We explicilty use the Business Template which is used the most
-                # while dealing with provision list
-                repository_list = self.getRepositoryList()
-                if dependency[0] == 'erp5_full_text_catalog':
-                  base_bt = [repository_list[1], 'erp5_full_text_mroonga_catalog']
-                if dependency[0] == 'erp5_view_style':
-                  base_bt = [repository_list[0], 'erp5_xhtml_style']
-                if dependency[0] == 'erp5_catalog':
-                  base_bt = [repository_list[0], 'erp5_mysql_innodb_catalog']
-                # XXX: Create path for the BT(s) here
+              version = None
+            try:
+              base_bt = self.getLastestBTOnRepos(dependency[0], version)
+            except BusinessTemplateIsMeta:
+              bt_list = self.getProviderList(dependency[0])
+              # We explicilty use the Business Template which is used the most
+              # while dealing with provision list
+              repository_list = self.getRepositoryList()
+              if dependency[0] == 'erp5_full_text_catalog':
+                base_bt = [repository_list[0], 'erp5_full_text_mroonga_catalog']
+              if dependency[0] == 'erp5_view_style':
+                base_bt = [repository_list[1], 'erp5_xhtml_style']
+              if dependency[0] == 'erp5_catalog':
+                base_bt = [repository_list[1], 'erp5_mysql_innodb_catalog']
 
             # Download the base_bt
             base_bt_path = os.path.join(base_bt[0], base_bt[1])
