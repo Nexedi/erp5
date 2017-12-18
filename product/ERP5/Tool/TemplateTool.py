@@ -1241,14 +1241,13 @@ class TemplateTool (BaseTool):
           'version': '5.4.7'}
 
         if repository.endswith('/bt5'):
-          pass
-          #property_dict_list.append(bp_dict_1)
-          #property_dict_list.append(bp_dict_2)
+          property_dict_list.append(bp_dict_1)
+          property_dict_list.append(bp_dict_2)
           #property_dict_list.append(bp_dict_3)
           #property_dict_list.append(bp_dict_4)
           #property_dict_list.append(bp_dict_5)
-          #property_dict_list.append(bp_dict_6)
-          #property_dict_list.append(bp_dict_7)
+          property_dict_list.append(bp_dict_6)
+          property_dict_list.append(bp_dict_7)
 
         bm_dict_1 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
