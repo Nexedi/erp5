@@ -27,6 +27,9 @@
       }
       options.xhrFields.withCredentials = storage._with_credentials;
     }
+    if (storage._timeout !== undefined) {
+      options.timeout = storage._timeout;
+    }
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax(options);
@@ -81,6 +84,7 @@
       this._authorization = "Basic " + spec.basic_login;
     }
     this._with_credentials = spec.with_credentials;
+    this._timeout = spec.timeout;
   }
 
   WEBHTTPStorage.prototype.get = function (id) {

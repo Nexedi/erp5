@@ -18,6 +18,7 @@
           type: "replicatedopml",
           remote_storage_unreachable_status: "WARNING",
           remote_opml_check_time_interval: 86400000,
+          request_timeout: 25000, // timeout is to 25 second
           local_sub_storage: {
             type: "query",
             sub_storage: {
