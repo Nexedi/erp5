@@ -91,11 +91,11 @@
         })
         .push(function (form_list) {
           var column_list = [
+            ['status', 'Status'],
             ['title', 'Instance Title'],
             ['specialise_title', 'Hosting Subscription'],
             ['aggregate_reference', 'Computer'],
-            ['date', 'Status Date'],
-            ['status', 'Status']
+            ['date', 'Status Date']
           ];
           return form_list.render({
             erp5_document: {
@@ -114,7 +114,7 @@
                   "portal_type": [],
                   "search_column_list": column_list,
                   "sort_column_list": column_list,
-                  "sort": [["hosting-title", "ascending"]],
+                  "sort": [["title", "ascending"], ["status", "ascending"]],
                   "title": "Software Instances",
                   "type": "ListBox"
                 }
