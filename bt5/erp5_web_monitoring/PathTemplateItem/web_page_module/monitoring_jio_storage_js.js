@@ -18,6 +18,7 @@
    *  "type": "replicatedopml",
    *  "remote_storage_unreachable_status": "WARNING",
    *  "remote_opml_check_time_interval": 86400000,
+   *  "request_timeout": 0,
    *  local_sub_storage: {
    *    type: "query",
    *      sub_storage: {
@@ -72,6 +73,10 @@
     if (this._remote_opml_check_time_interval === undefined) {
       // one day in miliseconds
       this._remote_opml_check_time_interval = 86400000;
+    }
+    this._request_timeout = spec.request_timeout;
+    if (this._request_timeout === undefined) {
+      this._request_timeout = 0; // no timeout
     }
   }
 
@@ -446,7 +451,8 @@
                 attachment_id: 'enclosure',
                 parser: 'rss',
                 sub_storage: {
-                  type: "http"
+                  type: "http",
+                  timeout: context._request_timeout
                 }
               },
               id_hash,
@@ -459,7 +465,8 @@
                 {
                   type: 'webhttp',
                   url: item.doc.url.replace('jio_private', 'private'),
-                  basic_login: basic_login
+                  basic_login: basic_login,
+                  timeout: context._request_timeout
                 },
                 id_hash
               ));
@@ -701,7 +708,8 @@
                   attachment_id: 'enclosure',
                   parser: 'opml',
                   sub_storage: {
-                    type: "http"
+                    type: "http",
+                    timeout: context._request_timeout
                   }
                 },
                 storage_spec.basic_login
