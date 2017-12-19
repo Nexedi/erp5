@@ -1242,6 +1242,16 @@ div[data-gadget-scope='header'] .ui-header {
   .ui-field-contain {
     & > label {
       color: @grey;
+
+      // backward-compatibility: support for ERP5 field class defined in formulator configuration
+      &.required {
+        // inform user that the field is needed by contraint, but do not prevent him to save the value
+        font-weight: bold;
+      }
+      &.invisible {
+        // used to hide the label of a formbox
+        display: none;
+      }
     }
   }
 
@@ -1250,12 +1260,6 @@ div[data-gadget-scope='header'] .ui-header {
       display: flex;
       & > label {
         flex: 1;
-        /* Disclaimer: Class .invisible is here only for backward-compatibility!
-                       Don't rely on this class because it will be removed.
-                       It was used to hide the label of a FormBox. */
-        &.invisible {
-          display: none;
-        }
       }
       & > label + div {
         flex: 3;
