@@ -106,8 +106,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     self.message_catalog.message_edit('VAT ID', 'de', 'USt-ID', '')
     self.message_catalog.gettext('Data Sheet', add=1)
     self.message_catalog.message_edit('Data Sheet', 'de', 'Datenblatt', '')
-    self.message_catalog.gettext('Table Of Contents', add=1)
-    self.message_catalog.message_edit('Table Of Contents', 'de', 'Inhaltsverzeichnis', '')
+    self.message_catalog.gettext('Table of Contents', add=1)
+    self.message_catalog.message_edit('Table of Contents', 'de', 'Inhaltsverzeichnis', '')
 
     # Activating a system preference if none is activated
     for preference in self.portal.portal_catalog(portal_type="System Preference"):
@@ -238,7 +238,14 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     dump = getattr(self.portal, 'dump_data', None)
     kw["batch_mode"] = 1
 
-    html = getattr(test_page, kw.get("test_method"))(portal_skin=kw.get("use_skin"), **kw)
+    #html = getattr(test_page, kw.get("test_method"))(portal_skin=kw.get("use_skin"), **kw)
+    html = self.call(
+      self.callWithNewRequestAcceptLanguage,
+      self.callWithNewRequestForm,
+      dict(),
+      getattr(test_page, kw.get("test_method")),
+      **kw
+    )
     html = re.sub(host_url, test_url, html)
 
     # update html test files or run tests

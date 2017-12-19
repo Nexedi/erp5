@@ -224,7 +224,7 @@ doc_uid = doc.getUid()
 doc_dirty_content = doc_converted_content or doc.getTextContent()
 doc_content = removeEmptyDetails(doc_dirty_content)
 doc_title = doc.getTitle()
-doc_language = doc.getLanguage()
+doc_language = setToNone(doc.getLanguage())
 doc_description = doc.getDescription()
 doc_creation_year = doc.getCreationDate().strftime('%Y')
 doc_version = doc.getVersion() or "001"
@@ -236,8 +236,10 @@ doc_modification_date = doc.getModificationDate()
 if override_batch_mode is not None:
   doc_version = "001"
   doc_creation_year = "1976"
-if doc_language and doc_format == "pdf":
+if doc_language is not None: #and doc_format == "pdf":
   doc.REQUEST['AcceptLanguage'].set(doc_language, 10)
+if doc_language is None:
+  doc_language = blank
 if doc_reference is None:
   doc_reference = doc_prefix + doc_title.replace(" ", ".")
 doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])

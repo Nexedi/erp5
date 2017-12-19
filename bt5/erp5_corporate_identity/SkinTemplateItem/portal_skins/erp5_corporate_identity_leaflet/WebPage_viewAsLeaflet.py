@@ -106,7 +106,7 @@ leaflet_url = leaflet.getAbsoluteUrl()
 leaflet_content = leaflet.getTextContent()
 leaflet_title = leaflet.getTitle()
 leaflet_relative_url = leaflet.getRelativeUrl()
-leaflet_language = leaflet.getLanguage()
+leaflet_language = setToNone(leaflet.getLanguage())
 leaflet_description = leaflet.getDescription()
 leaflet_creation_date = leaflet.getCreationDate()
 leaflet_date = leaflet_creation_date.strftime('%Y-%b')
@@ -122,8 +122,10 @@ leaflet_modification_date = leaflet.getModificationDate()
 if override_batch_mode is not None:
   leaflet_date="Nov-1976"
   leaflet_year="1976"
-if leaflet_language and leaflet_format == "pdf":
+if leaflet_language is not None: #and leaflet_format == "pdf":
   leaflet.REQUEST['AcceptLanguage'].set(leaflet_language, 10)
+if leaflet_language is None:
+  leaflet_language = blank
 if leaflet_reference is None:
   leaflet_reference = leaflet_prefix + leaflet_title.replace(" ", ".")
 leaflet_full_reference = '-'.join([leaflet_reference, leaflet_version, leaflet_language])  

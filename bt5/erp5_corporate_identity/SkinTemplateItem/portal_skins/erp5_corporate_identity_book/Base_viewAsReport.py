@@ -125,8 +125,10 @@ doc_short_date = doc_modification_date.strftime('%Y-%m-%d')
 if override_batch_mode is not None:
   doc_modification_date = DateTime("1976-11-04")
   doc_revision = "1"
-if doc_language and doc_format == "pdf":
+if doc_language is not None: # and doc_format == "pdf":
   doc.REQUEST['AcceptLanguage'].set(doc_language, 10)
+if doc_language is None:
+  doc_language = blank
 if doc_reference is blank:
   doc_reference = "Report." + doc_title.replace(" ", ".")
 doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])

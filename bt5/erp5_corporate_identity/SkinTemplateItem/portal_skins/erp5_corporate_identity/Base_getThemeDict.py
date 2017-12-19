@@ -49,8 +49,7 @@ theme = (
   custom_theme or
   default_company_title
 )
-#if theme and override_batch_mode:
-#  theme = "default"
+
 if theme is not None:
   logo_prefix = getCustomParameter("default_logo_prefix", None)
   theme = theme.lower()

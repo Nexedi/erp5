@@ -132,7 +132,7 @@ book_short_title = setOverrideParam(book, override_document_short_title, "short_
 book_version = setOverrideParam(book, override_document_version, "version")
 book_description = setOverrideParam(book, override_document_description, "description")
 book_content = book.getTextContent()
-book_language = book.getLanguage()
+book_language = setToNone(book.getLanguage())
 book_aggregate_list = []
 book_absolute_url = book.getAbsoluteUrl()
 book_reference = (html_quote(override_document_reference) if override_document_reference else book.getReference()) or blank
@@ -143,8 +143,10 @@ if override_batch_mode is not None:
   book_modification_date = DateTime("1976-11-04")
   book_revision = "1"
 book_short_date = book_modification_date.strftime('%Y-%m-%d')
-if book_language and book_format == "pdf":
+if book_language is not None: #and book_format == "pdf":
   book.REQUEST['AcceptLanguage'].set(book_language, 10)
+if book_language is None:
+  book_language = blank
 if book_reference is None:
   book_reference = book_prefix + book_title.replace(" ", ".")
 book_full_reference = '-'.join([book_reference, book_version, book_language])

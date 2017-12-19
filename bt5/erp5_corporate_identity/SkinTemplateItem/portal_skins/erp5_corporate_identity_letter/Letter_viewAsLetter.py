@@ -105,7 +105,7 @@ if letter_portal_type == "Web Page":
   letter_title = letter.getTitle()
   letter_modification_date = DateTime(override_date) if override_date else letter.getCreationDate()
   letter_content = letter.getTextContent()
-  letter_language = letter.getLanguage()
+  letter_language = setToNone(letter.getLanguage())
   letter_aggregate_list = []
   letter_source = None
   letter_destination = None
@@ -120,7 +120,7 @@ else:
   letter_title = letter_form.get('title')
   letter_content = letter_form.get('text_content')
   letter_aggregate_list = letter.getAggregateList()
-  letter_language = letter_form.get('select_language')
+  letter_language = setToNone(letter_form.get('select_language'))
   letter_source = letter_form.get('source') or None
   letter_destination = letter_form.get('destination') or None
   # cut corner to retrieve path to css files
@@ -131,8 +131,10 @@ else:
 
 if override_batch_mode is not None:
   letter_modification_date = DateTime("1976-11-04")
-if letter_language and letter_format == "pdf":
+if letter_language is not None: #and letter_format == "pdf":
   letter.REQUEST['AcceptLanguage'].set(letter_language, 10)
+if letter_language is None:
+  letter_language = blank
 if letter_reference is None:
   letter_reference = letter_prefix + letter_title.replace(" ", ".")
 letter_full_reference = '-'.join([letter_reference, letter_version, letter_language])
