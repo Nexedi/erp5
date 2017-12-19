@@ -6,4 +6,6 @@ organisation_module/template_test*/default**
 person_module/template_test*
 person_module/template_test*/default**
 portal_preferences/default_site_preference/template_*
+portal_tests/template_zuite
+portal_tests/template_zuite/testAndUpdateTest*
 web_page_module/template_test_*
