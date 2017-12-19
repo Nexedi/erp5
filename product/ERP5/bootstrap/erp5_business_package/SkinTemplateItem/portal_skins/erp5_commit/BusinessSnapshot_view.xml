@@ -83,7 +83,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_id</string>
-                        <string>my_predecessor</string>
+                        <string>my_similar_title</string>
                       </list>
                     </value>
                 </item>
@@ -93,7 +93,7 @@
                       <list>
                         <string>my_creation_date</string>
                         <string>my_modification_date</string>
-                        <string>my_translated_simulation_state_title</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

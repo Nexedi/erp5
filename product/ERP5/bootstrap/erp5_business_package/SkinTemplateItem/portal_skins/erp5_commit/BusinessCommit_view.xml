@@ -83,7 +83,8 @@
                       <list>
                         <string>my_title</string>
                         <string>my_id</string>
-                        <string>my_predecessor</string>
+                        <string>my_predecessor_title</string>
+                        <string>my_source_project_title</string>
                       </list>
                     </value>
                 </item>

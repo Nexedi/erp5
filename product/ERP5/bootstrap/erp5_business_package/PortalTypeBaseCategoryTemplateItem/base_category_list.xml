@@ -1,8 +1,13 @@
 <base_category_list>
  <portal_type id="Business Commit">
   <item>predecessor</item>
+  <item>similar</item>
+  <item>source_project</item>
  </portal_type>
  <portal_type id="Business Item">
+  <item>follow_up</item>
+ </portal_type>
+ <portal_type id="Business Manager">
   <item>follow_up</item>
  </portal_type>
  <portal_type id="Business Patch Item">
@@ -10,5 +15,8 @@
  </portal_type>
  <portal_type id="Business Property Item">
   <item>follow_up</item>
+ </portal_type>
+ <portal_type id="Business Snapshot">
+  <item>similar</item>
  </portal_type>
 </base_category_list>

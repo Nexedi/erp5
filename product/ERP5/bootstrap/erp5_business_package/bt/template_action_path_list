@@ -5,4 +5,5 @@ Business Patch Item | content_view
 Business Patch Item | diff_view
 Business Property Item | content_view
 Business Snapshot | content_view
+Commit Tool | create_snapshot
 Commit Tool | view

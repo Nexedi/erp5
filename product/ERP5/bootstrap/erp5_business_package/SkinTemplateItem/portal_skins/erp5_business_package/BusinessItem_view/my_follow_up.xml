@@ -11,16 +11,17 @@
             <value>
               <list>
                 <string>catalog_index</string>
-                <string>default</string>
+                <string>description</string>
                 <string>first_item</string>
                 <string>portal_type</string>
+                <string>required</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_predecessor</string> </value>
+            <value> <string>my_follow_up</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -57,12 +58,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -76,6 +71,10 @@
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -94,8 +93,8 @@
                     <value> <string>title</string> </value>
                 </item>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>Business Manager related to the Business Item</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -114,31 +113,22 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Business Commit</string>
-                          <string>Business Commit</string>
+                          <string>Business Manager</string>
+                          <string>Business Manager</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Predecessor</string> </value>
+                    <value> <string>Business Manager</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: context.BusinessCommit_getLastCommitTitle(here)</string> </value>
         </item>
       </dictionary>
     </pickle>

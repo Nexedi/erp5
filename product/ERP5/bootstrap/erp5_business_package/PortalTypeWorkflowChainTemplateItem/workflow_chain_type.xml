@@ -19,4 +19,8 @@
   <type>Business Property Item</type>
   <workflow>business_manager_interaction_workflow</workflow>
  </chain>
+ <chain>
+  <type>Business Snapshot</type>
+  <workflow>business_snapshot_validation_workflow</workflow>
+ </chain>
 </workflow_chain>
