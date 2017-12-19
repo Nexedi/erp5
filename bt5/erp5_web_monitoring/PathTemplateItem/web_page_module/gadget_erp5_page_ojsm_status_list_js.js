@@ -116,12 +116,12 @@
         })
         .push(function (form_list) {
           var column_list = [
+            ['category', 'Status'],
             ['source', 'Promise'],
             ['channel_item', 'Software Instance'],
             ['channel', 'Hosting Subscription'],
             ['lastBuildDate', 'Promise Date'],
-            ['description', 'Message'],
-            ['category', 'Status']
+            ['description', 'Message']
           ];
           return form_list.render({
             erp5_document: {

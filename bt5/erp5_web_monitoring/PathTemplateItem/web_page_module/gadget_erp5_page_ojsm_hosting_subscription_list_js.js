@@ -180,11 +180,11 @@
         })
         .push(function (form_list) {
           var column_list = [
+            ['status', 'Status'],
             ['title', 'Hosting Subscription'],
             ['amount', 'Instance Amount'],
             ['date', 'Status Date'],
-            ['synced', 'Synced?'],
-            ['status', 'Status']
+            ['synced', 'Synced?']
           ];
           return form_list.render({
             erp5_document: {
