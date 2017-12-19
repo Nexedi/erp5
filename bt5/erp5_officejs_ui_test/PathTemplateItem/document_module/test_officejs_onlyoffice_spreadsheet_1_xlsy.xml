@@ -1,0 +1,344 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Spreadsheet" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts13726546.63</string> </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_base_metadata</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>AppVersion</string> </key>
+                    <value> <string>3.0000</string> </value>
+                </item>
+                <item>
+                    <key> <string>CreationDate</string> </key>
+                    <value> <string>00/00/0000 00:00:00</string> </value>
+                </item>
+                <item>
+                    <key> <string>Generator</string> </key>
+                    <value> <string>LibreOffice/5.1.0.3$Linux_X86_64 LibreOffice_project/5e3e00a007d9b3b6efb6797a8b8e57b51ab1f737</string> </value>
+                </item>
+                <item>
+                    <key> <string>ImplementationName</string> </key>
+                    <value> <string>com.sun.star.comp.comphelper.OPropertyBag</string> </value>
+                </item>
+                <item>
+                    <key> <string>MIMEType</string> </key>
+                    <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
+                </item>
+                <item>
+                    <key> <string>ModificationDate</string> </key>
+                    <value> <string>00/00/0000 00:00:00</string> </value>
+                </item>
+                <item>
+                    <key> <string>PrintDate</string> </key>
+                    <value> <string>00/00/0000 00:00:00</string> </value>
+                </item>
+                <item>
+                    <key> <string>TemplateDate</string> </key>
+                    <value> <string>00/00/0000 00:00:00</string> </value>
+                </item>
+                <item>
+                    <key> <string>mime</string> </key>
+                    <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>base_data</string> </key>
+            <value> <string encoding="base64">UEsDBBQAAAgAAO29k0uFbDmKLgAAAC4AAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2Fz
+aXMub3BlbmRvY3VtZW50LnNwcmVhZHNoZWV0UEsDBBQAAAgAAO29k0vmyW8aSAQAAEgEAAAYAAAA
+VGh1bWJuYWlscy90aHVtYm5haWwucG5niVBORw0KGgoAAAANSUhEUgAAAN0AAAD/CAMAAABCfiMV
+AAADAFBMVEWPj4+fn5+/v7/Ozs7e3t7///8AAAD/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////8/GHAVAAABA0lEQVR42u3SgQkAIAwE
+sVrt/is7hvjkNghcVae2Z6onODo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6
+Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6
+Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6
+Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6
+ukDd6uCcSUf3QHeidUP3axcHZUTTdYeUsAAAAABJRU5ErkJgglBLAwQUAAgICADtvZNLAAAAAAAA
+AAAAAAAADAAAAHNldHRpbmdzLnhtbO1aXVPiOhi+P7/C6e0ZpdSPXRhlp1S+XEFtoSh3aRtoNE06
+SUrBX78phT3KUkVodzwzeiHQJM/79u2TJ08C5z9mAT6YQsYRJRdK+UhVDiBxqYfI5EIZ9JuH35Uf
+tX/O6XiMXFj1qBsFkIhDDoWQXfiBHE54NW2+UCJGqhRwxKsEBJBXhVulISSrYdWXvauLYOmVGUbk
+6ULxhQirpVIcx0fx8RFlk1K5UqmUFq2rri4lYzTZNlTa+2UoSunvQMmANJlFME1VT0rpZ+VgmeSL
+0mhKbVWH1e3XzpcB0pdDJGCQ1OZgeTlJ7UKRIatTBOPfVVM2jXs9xkYcORjqDII+DZVVo5iHshER
+odTU89KfIB8CvoZjUQzyEHnC3wStnZ2c7o3ehmjib8y8/F092xb+MADhISIenEFvPRSMNz+jxRjJ
+LjbfJmEYd7y1LLlgkgBKLaFD+UOZJqBrefaBLMh7ib4eYvkQivIW/DMixim7pRwJSf/7HGnyGvkh
+R+Q2ZeiZEgGwFWIkutSD6+X3KduD4JAJ5BaFvpb9qkB5TtCX+ReAr7sCTeEC3QRkklEebTfwVb45
+i9YK1sySlD1x8xXvFWqdCkGDHIFHlAZ9iZIroxNQG+BoHTWVanXXGoAJTLT1TfSzHcEtn8YthtZl
+26EUQ0CUmmAR3Iy84eLbq8WbEq19SfSXRH9J9JdEf0n0X5PorOaF8952ai08eYbpT8333tLjMoqx
+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
+0lrnLawTbNLhjpYSAqYb5VYoRj3IQMoRywZMl+1SR5QgPBg3FkzAoRIKeM9sL9kKfa7rH/0BoyIJ
+iX+GeNeCv3isNbsH1hjhzkOKA5UNBO5c+2olNXWoeIPvV6837Tdlb3dUbYG/4l5qLYH68BWVFv6/
+x11r/1Bv9Nof8Tv43zMq4dbo+j28d9SAX/7brPGzLxm/9tcsfgNQSwcIZplRtioCAABzBQAAUEsD
+BBQACAgIAO29k0sAAAAAAAAAAAAAAAAMAAAAbWFuaWZlc3QucmRmzZPNboMwEITvPIVlzthALwUF
+cijKuWqfwDWGWAUv8poS3r6Ok1ZRpKrqn9TjrkYz3460m+1hHMiLsqjBVDRjKSXKSGi16Ss6uy65
+pds62ti2Kx+aHfFqg6WfKrp3bio5X5aFLTcMbM+zoih4mvM8T7wiwdU4cUgMxrSOCAkejUJp9eR8
+GjnO4glmV1F066CQefcgPYvdOqmgsgphtlK9h7YgkYFAjQlMyoR0gxy6TkvFM5bzUTnBoe3ix2C9
+04OiPGDwK47P2N6IDKblXuC9sO5cg998lWh67mN6ddPF8d8jlGCcMu5P6rs7ef/n/i7P/xnir7R2
+RGxAzqNn+pDntPIfVUevUEsHCLT3aNIFAQAAgwMAAFBLAwQUAAAIAADtvZNLAAAAAAAAAAAAAAAA
+GgAAAENvbmZpZ3VyYXRpb25zMi90b29scGFuZWwvUEsDBBQAAAgAAO29k0sAAAAAAAAAAAAAAAAc
+AAAAQ29uZmlndXJhdGlvbnMyL3Byb2dyZXNzYmFyL1BLAwQUAAAIAADtvZNLAAAAAAAAAAAAAAAA
+GAAAAENvbmZpZ3VyYXRpb25zMi90b29sYmFyL1BLAwQUAAgICADtvZNLAAAAAAAAAAAAAAAAJwAA
+AENvbmZpZ3VyYXRpb25zMi9hY2NlbGVyYXRvci9jdXJyZW50LnhtbAMAUEsHCAAAAAACAAAAAAAA
+AFBLAwQUAAAIAADtvZNLAAAAAAAAAAAAAAAAHwAAAENvbmZpZ3VyYXRpb25zMi9pbWFnZXMvQml0
+bWFwcy9QSwMEFAAACAAA7b2TSwAAAAAAAAAAAAAAABoAAABDb25maWd1cmF0aW9uczIvcG9wdXBt
+ZW51L1BLAwQUAAAIAADtvZNLAAAAAAAAAAAAAAAAGgAAAENvbmZpZ3VyYXRpb25zMi9zdGF0dXNi
+YXIvUEsDBBQAAAgAAO29k0sAAAAAAAAAAAAAAAAYAAAAQ29uZmlndXJhdGlvbnMyL21lbnViYXIv
+UEsDBBQAAAgAAO29k0sAAAAAAAAAAAAAAAAYAAAAQ29uZmlndXJhdGlvbnMyL2Zsb2F0ZXIvUEsD
+BBQACAgIAO29k0sAAAAAAAAAAAAAAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1srVTLbsMgELzn
+KyyulaHNqUJxcqjUL0g/gOK1gwQLYpco/vvaUfOoqlSxmhu7OzszsMBqcwi+2kMmF7ERL/JZVIA2
+tg77Rnxs3+tXsVkvVsGg64BYnxbV2Id0DhtRMupoyJFGE4A0Wx0TYBttCYCsf+L1UekcXRlYivWi
+uuh1zkM99ufhgu6K93UyvGuEukVySQdonal5SNAIk5J31vAIU3ts5dGwvPYpKWUwLe0AWKg5Vra7
+Ej7ROE+KT0uZsL9hxQXTg5rqs1QImMfZkBzP8wYzw4HVVJ5FbCPytP9H8xIPHh5vNwCbx5N+52Ru
+uztu0Ih6mq3xFrFzfclHCloqYy14GMOYlS05/z2D/2nd+Sqo4GRBFiftNcMkvlK/voL1F1BLBwhT
+KqmfIQEAAEUEAABQSwECFAAUAAAIAADtvZNLhWw5ii4AAAAuAAAACAAAAAAAAAAAAAAAAAAAAAAA
+bWltZXR5cGVQSwECFAAUAAAIAADtvZNL5slvGkgEAABIBAAAGAAAAAAAAAAAAAAAAABUAAAAVGh1
+bWJuYWlscy90aHVtYm5haWwucG5nUEsBAhQAFAAICAgA7b2TS4vpr7sUBQAASyUAAAwAAAAAAAAA
+AAAAAAAA0gQAAHNldHRpbmdzLnhtbFBLAQIUABQACAgIAO29k0trBuzF5QUAAAsgAAALAAAAAAAA
+AAAAAAAAACAKAABjb250ZW50LnhtbFBLAQIUABQACAgIAO29k0vLKvg1UgoAAGVYAAAKAAAAAAAA
+AAAAAAAAAD4QAABzdHlsZXMueG1sUEsBAhQAFAAICAgA7b2TS2aZUbYqAgAAcwUAAAgAAAAAAAAA
+AAAAAAAAyBoAAG1ldGEueG1sUEsBAhQAFAAICAgA7b2TS7T3aNIFAQAAgwMAAAwAAAAAAAAAAAAA
+AAAAKB0AAG1hbmlmZXN0LnJkZlBLAQIUABQAAAgAAO29k0sAAAAAAAAAAAAAAAAaAAAAAAAAAAAA
+AAAAAGceAABDb25maWd1cmF0aW9uczIvdG9vbHBhbmVsL1BLAQIUABQAAAgAAO29k0sAAAAAAAAA
+AAAAAAAcAAAAAAAAAAAAAAAAAJ8eAABDb25maWd1cmF0aW9uczIvcHJvZ3Jlc3NiYXIvUEsBAhQA
+FAAACAAA7b2TSwAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAAAA2R4AAENvbmZpZ3VyYXRpb25zMi90
+b29sYmFyL1BLAQIUABQACAgIAO29k0sAAAAAAgAAAAAAAAAnAAAAAAAAAAAAAAAAAA8fAABDb25m
+aWd1cmF0aW9uczIvYWNjZWxlcmF0b3IvY3VycmVudC54bWxQSwECFAAUAAAIAADtvZNLAAAAAAAA
+AAAAAAAAHwAAAAAAAAAAAAAAAABmHwAAQ29uZmlndXJhdGlvbnMyL2ltYWdlcy9CaXRtYXBzL1BL
+AQIUABQAAAgAAO29k0sAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAKMfAABDb25maWd1cmF0aW9u
+czIvcG9wdXBtZW51L1BLAQIUABQAAAgAAO29k0sAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAANsf
+AABDb25maWd1cmF0aW9uczIvc3RhdHVzYmFyL1BLAQIUABQAAAgAAO29k0sAAAAAAAAAAAAAAAAY
+AAAAAAAAAAAAAAAAABMgAABDb25maWd1cmF0aW9uczIvbWVudWJhci9QSwECFAAUAAAIAADtvZNL
+AAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAAABJIAAAQ29uZmlndXJhdGlvbnMyL2Zsb2F0ZXIvUEsB
+AhQAFAAICAgA7b2TS1MqqZ8hAQAARQQAABUAAAAAAAAAAAAAAAAAfyAAAE1FVEEtSU5GL21hbmlm
+ZXN0LnhtbFBLBQYAAAAAEQARAHAEAADjIQAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>c2c71191bf0b7655982bda0e6bd85aa4</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-asc-spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>filename</string> </key>
+            <value> <string>onlyoffice.spreadsheet.test.1.xlsy</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_officejs_onlyoffice_spreadsheet_1_xlsy</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5047</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>test.officejs.onlyoffice.spreadsheet.1.xlsy</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

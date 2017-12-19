@@ -1,2 +1,3 @@
+document_module/test_officejs_*
 portal_tests/officejs_ui_*_zuite
 portal_tests/officejs_ui_*_zuite/**
