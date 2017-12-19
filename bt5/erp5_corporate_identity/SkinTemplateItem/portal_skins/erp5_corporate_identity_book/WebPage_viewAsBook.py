@@ -237,7 +237,8 @@ if book_include_reference_table is not None:
   if book_format == 'html' or book_format == 'mhtml':
     book_content = book_references.encode('utf-8').strip() + book_content
   
-# table of content
+# table of content has to be created manually to run over everything that
+# should be indexed in the toc
 if book_include_content_table is not None:
   book_translated_toc_title = translateText("Table of Contents")
   if book_format == "pdf":

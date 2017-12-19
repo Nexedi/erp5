@@ -65,9 +65,6 @@ Generates the complete book (only called in HTML version)
     	    <tal:block metal:use-macro="context/WebPage_createBookTableOfHistory/macros/book_history" />
         </tal:block>
         <tal:block tal:replace="structure book_table_of_content"></tal:block>
-        <!--tal:block tal:condition="python: book_include_reference is not None">
-    	    <tal:block metal:use-macro="context/WebPage_createBookTableOfReferences/macros/book_references" />
-        </tal:block-->
         <tal:block metal:use-macro="context/WebPage_createBookContent/macros/book_content" />
     	  <tal:block metal:use-macro="context/WebPage_createBookFooter/macros/book_footer" />
       </body>

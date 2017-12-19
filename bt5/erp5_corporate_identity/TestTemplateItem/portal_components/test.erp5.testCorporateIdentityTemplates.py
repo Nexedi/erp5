@@ -988,7 +988,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_001_en_html",
       "template_test_book_input_page_4_002_en_bmp",
-      "template_test_book_input_001_en_pdf",
+      "template_test_book_input_002_en_pdf",
       **dict(
         page_number=4,
         format="pdf",
@@ -1023,7 +1023,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_001_en_html",
       "template_test_book_input_page_5_002_en_bmp",
-      "template_test_book_input_001_en_pdf",
+      "template_test_book_input_002_en_pdf",
       **dict(
         page_number=5,
         format="pdf",
@@ -1046,7 +1046,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       )
     )
 
-  # duplicate, just for page 9
+  # duplicate, just for page 10
   @changeSkin('Book')
   def testpdfBookAllOptionsDoubleDupe(self):
     """
@@ -1057,10 +1057,10 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     """
     self.runPdfTestPattern(
       "template_test_book_input_001_en_html",
-      "template_test_book_input_page_9_002_en_bmp",
-      "template_test_book_input_001_en_pdf",
+      "template_test_book_input_page_10_002_en_bmp",
+      "template_test_book_input_002_en_pdf",
       **dict(
-        page_number=9,
+        page_number=10,
         format="pdf",
         use_skin="Book",
         test_method="WebPage_exportAsBook",

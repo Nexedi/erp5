@@ -60,7 +60,7 @@ for header in re.findall("<h[1-6].*?</h[1-6]>", doc_content or blank):
 closer = int(header_current) * '</ol>'
 insert = ''.join([
   '<section class="ci-book-table-of-content">',
-  '<p class="ci-book-toc-faux-h1" i18n:translate="" i18n:domain="erp5_ui">%s</p>' % (doc_toc_title or "Table of Contents"),
+  '<p class="ci-book-toc-faux-h1">%s</p>' % (doc_toc_title or "XXX"),
   table_of_content, 
   closer,
   '</section>'
