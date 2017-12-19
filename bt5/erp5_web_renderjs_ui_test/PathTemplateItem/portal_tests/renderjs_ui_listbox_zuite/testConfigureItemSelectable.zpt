@@ -1,0 +1,91 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<!-- Set all_columns property -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_all_columns=creation_date%7CCreation%20Date%0AgetUid%7CUID%0Adelivery.quantity%7CQuantity</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_configure" />
+
+<!-- Check the selectable columns -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='column_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]//option[1][@value='id' and text()='ID']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='column_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]//option[2][@value='title' and text()='Title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='column_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]//option[3][@value='getQuantity' and text()='Quantity']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='column_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]//option[4][@value='creation_date' and text()='Creation Date']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='column_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]//option[5][@value='getUid' and text()='UID']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='column_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]//option[6][@value='delivery.quantity' and text()='Quantity']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@class='column_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]//option[7]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@class='column_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
+  <td>id</td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

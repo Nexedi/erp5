@@ -698,4 +698,137 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="triggle_configure">
+    <tr>
+      <td colspan="3"><b>Open the configure panel</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Configure']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Configure']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="submit_configure">
+    <tr>
+      <td colspan="3"><b>Submit the configure panel</b></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="check_listbox_header">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Check the listbox header %(index)i' % header_configuration"></b></td>
+    </tr>
+    <tr>
+      <td>verifyText</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//thead/tr/th[%i]' % (header_configuration['index'] + 1)"></td>
+      <td tal:content="python: header_configuration['text']"></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="remove_configure_section">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Remove the configure section %(index)i' % configure_section_configuration"></b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]' % (configure_section_configuration['index'] + 1)"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>focus</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]//button' % (configure_section_configuration['index'] + 1)"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]//button' % (configure_section_configuration['index'] + 1)"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]' % (configure_section_configuration['index'] + 1)"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="add_new_configure_section">
+    <tr>
+      <td colspan="3"><b>Click on the + icon in the configure panel</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="set_configure_section">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Set the configure section %(index)i to %(key)s' % configure_section_configuration"></b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]//select' % (configure_section_configuration['index'] + 1)"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>select</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]//select' % (configure_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: 'value=%s' % configure_section_configuration['key']"></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="check_configure_section">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Check the configure section %(index)i' % configure_section_configuration"></b></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]//select' % (configure_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: configure_section_configuration['key']"></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
 </tal:block>

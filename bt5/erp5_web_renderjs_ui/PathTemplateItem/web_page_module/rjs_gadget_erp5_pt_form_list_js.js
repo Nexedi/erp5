@@ -62,8 +62,9 @@
           form_options.jio_key = form_gadget.state.jio_key;
           form_options.editable = form_gadget.state.editable;
 
-          // XXX Hardcoded for listbox's hide functionality
+          // XXX Hardcoded for listbox's hide/configure functionalities
           form_options.form_definition.hide_enabled = true;
+          form_options.form_definition.configure_enabled = true;
 
           // XXX not generic, fix later
           if (form_gadget.state.extended_search) {
@@ -101,8 +102,8 @@
             form_gadget.getUrlFor({command: 'change', options: {page: "action"}}),
             form_gadget.getUrlFor({command: 'display', options: {}}),
             form_gadget.state.erp5_document._links.action_object_jio_report ?
-              form_gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
-              "",
+                  form_gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
+                  "",
             calculatePageTitle(form_gadget, form_gadget.state.erp5_document)
           ]);
         })

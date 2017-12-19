@@ -766,13 +766,13 @@ div[data-gadget-scope='editor_panel'] {
       }
     }
 
-    .filter_item_container, .sort_item_container {
+    .filter_item_container, .sort_item_container, .column_item_container {
       & > div {
         display: flex;
         align-items: flex-start;
         padding: @margin-size 0;
 
-        .filter_item, .sort_item {
+        .filter_item, .sort_item, .column_item {
           flex: 1;
         }
       }

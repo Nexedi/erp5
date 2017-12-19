@@ -1,0 +1,98 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
+
+<tal:block tal:define="header_configuration python: {'text': 'ID', 'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_header" />
+</tal:block>
+<tal:block tal:define="header_configuration python: {'text': 'Title', 'index': 1}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_header" />
+</tal:block>
+<tal:block tal:define="header_configuration python: {'text': 'Quantity', 'index': 2}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_header" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_configure" />
+
+<tal:block tal:define="configure_section_configuration python: {'index': 2}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/remove_configure_section" />
+</tal:block>
+<tal:block tal:define="configure_section_configuration python: {'index': 1}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/remove_configure_section" />
+</tal:block>
+<tal:block tal:define="configure_section_configuration python: {'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/remove_configure_section" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/add_new_configure_section" />
+<tal:block tal:define="configure_section_configuration python: {'key': 'getQuantity', 'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/set_configure_section" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/add_new_configure_section" />
+<tal:block tal:define="configure_section_configuration python: {'key': 'id', 'index': 1}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/set_configure_section" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_configure" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="header_configuration python: {'text': 'Quantity', 'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_header" />
+</tal:block>
+
+<tal:block tal:define="header_configuration python: {'text': 'ID', 'index': 1}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_header" />
+</tal:block>
+
+</tbody></table>
+</body>
+</html>

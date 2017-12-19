@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>ERP5 Configure Editor</title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="handlebars.js"></script>
+
+    <!-- custom script -->
+    <script src="gadget_erp5_configure_editor.js"></script>
+
+    <script id="column-item-template" type="text/x-handlebars-template">
+      <button type="button" class="ui-icon ui-btn ui-btn-inline ui-icon-minus ui-icon-shadow"></button>
+      <div class="column_item ui-controlgroup-controls" >
+        <select data-iconpos="left">
+          {{#each option}}
+            {{#equal value selected_option}}
+              <option selected="selected" data-i18n="{{text}}" value="{{value}}">{{text}}</option>
+            {{else}}
+              <option value="{{value}}" data-i18n="{{text}}">{{text}}</option>
+            {{/equal}}
+          {{/each}}
+        </select>
+      </div>
+    </script>
+
+    <script id="column-template" type="text/x-handlebars-template">
+      <div class="ui-panel-inner">
+        <div data-role="header" role="banner" class="ui-header ui-bar-inherit">
+          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">
+            <div class="ui-controlgroup-controls">
+              <button data-rel="save" data-i18n="Submit" type="submit" class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check">Submit</button>
+            </div>
+          </div>
+
+          <h1 class="ui-title" role="heading" data-i18n="Configure Editor" aria-level="1">Configure Editor</h1>
+
+          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">
+            <div class="ui-controlgroup-controls">
+              <button data-i18n="Close" data-rel="close" type="button" class="close responsive ui-first-child ui-btn ui-btn-icon-left ui-icon-times">Close</button>
+            </div>
+          </div>
+        </div>
+
+        <section class="ui-body-c ui-content-section">
+          <div class="column_item_container ui-controlgroup ui-corner_all"></div>
+          <button type="button" class="plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all">Add Criteria</button>
+        </section>
+      </div>
+    </script>
+
+  </head>
+  <body>
+    <form class="configure_editor">
+      <div class="container"></div>
+    </form>
+  </body>
+</html>

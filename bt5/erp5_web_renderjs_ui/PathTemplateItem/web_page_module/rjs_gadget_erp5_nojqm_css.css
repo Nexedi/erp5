@@ -642,15 +642,21 @@ div[data-gadget-scope='editor_panel'] section fieldset input[type="radio"] {
   display: inline-block;
 }
 div[data-gadget-scope='editor_panel'] section .filter_item_container > div,
-div[data-gadget-scope='editor_panel'] section .sort_item_container > div {
+div[data-gadget-scope='editor_panel'] section .sort_item_container > div,
+div[data-gadget-scope='editor_panel'] section .column_item_container > div {
   display: flex;
   align-items: flex-start;
   padding: 6pt 0;
 }
 div[data-gadget-scope='editor_panel'] section .filter_item_container > div .filter_item,
 div[data-gadget-scope='editor_panel'] section .sort_item_container > div .filter_item,
+div[data-gadget-scope='editor_panel'] section .column_item_container > div .filter_item,
 div[data-gadget-scope='editor_panel'] section .filter_item_container > div .sort_item,
-div[data-gadget-scope='editor_panel'] section .sort_item_container > div .sort_item {
+div[data-gadget-scope='editor_panel'] section .sort_item_container > div .sort_item,
+div[data-gadget-scope='editor_panel'] section .column_item_container > div .sort_item,
+div[data-gadget-scope='editor_panel'] section .filter_item_container > div .column_item,
+div[data-gadget-scope='editor_panel'] section .sort_item_container > div .column_item,
+div[data-gadget-scope='editor_panel'] section .column_item_container > div .column_item {
   flex: 1;
 }
 div[data-gadget-scope='editor_panel'] section button {

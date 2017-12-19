@@ -68,7 +68,9 @@ param_dict = [
   { 'message': 'Default', 'translation': 'moren', 'language': 'wo'},
   { 'message': 'Creation Date', 'translation': 'chuangjianshijian', 'language': 'wo'},
   { 'message': 'Modification Date', 'translation': 'xiugaishijian', 'language': 'wo'},
-  { 'message': 'Owner', 'translation': 'shuoyouzhe', 'language': 'wo'}
+  { 'message': 'Owner', 'translation': 'shuoyouzhe', 'language': 'wo'},
+  { 'message': 'Configure', 'translation': 'peizhi', 'language': 'wo'},
+  { 'message': 'Configure Editor', 'translation': 'peizhibianjiqi', 'language': 'wo'}
  
 ]
 for tmp in param_dict:

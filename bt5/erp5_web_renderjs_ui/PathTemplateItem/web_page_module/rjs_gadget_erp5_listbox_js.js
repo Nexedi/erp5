@@ -60,7 +60,8 @@
           return cell_gadget.render({
             field_type: sub_field_json.type,
             field_json: sub_field_json,
-            label: false});
+            label: false
+          });
         });
     }
     for (i = 0; i < element_list.length; i += 1) {
@@ -158,7 +159,6 @@
     .declareMethod('render', function (options) {
       var gadget = this,
         field_json = options.field_json,
-        i,
         sort_column_list = [],
         search_column_list = [],
         query_string,
@@ -174,16 +174,6 @@
           return [column_sort[0], 'descending'];
         }
         return column_sort;
-      }
-
-      /** Check whether item is in outer-scoped field_json.column_list */
-      function is_in_column_list(item) {
-        for (i = 0; i < field_json.column_list.length; i += 1) {
-          if (field_json.column_list[i][0] === item[0] && field_json.column_list[i][1] === item[1]) {
-            return true;
-          }
-        }
-        return false;
       }
 
       // use only visible columns for sort
@@ -230,10 +220,47 @@
           // XXX Fix in case of multiple listboxes
           return RSVP.all([
             gadget.getUrlParameter(field_json.key + '_begin_from'),
-            gadget.getUrlParameter(field_json.key + '_sort_list:json')
+            gadget.getUrlParameter(field_json.key + '_sort_list:json'),
+            gadget.getUrlParameter(field_json.key + '_column_list:json')
           ]);
         })
         .push(function (result_list) {
+          var displayed_column_list = result_list[2] || [],
+            displayed_column_item_list = [],
+            displayable_column_item_list = [],
+            displayable_column_dict = {},
+            i,
+            j,
+            column_id,
+            column_title,
+            not_concatenated_list = [field_json.column_list, (field_json.all_column_list || [])];
+          // Calculate the list of all displayable columns
+          for (i = 0; i < not_concatenated_list.length; i += 1) {
+            for (j = 0; j < not_concatenated_list[i].length; j += 1) {
+              column_id = not_concatenated_list[i][j][0];
+              if (!displayable_column_dict.hasOwnProperty(column_id)) {
+                column_title = not_concatenated_list[i][j][1];
+                displayable_column_dict[column_id] = column_title;
+                displayable_column_item_list.push([column_id, column_title]);
+              }
+            }
+          }
+
+          // Check if user filters the column to display
+          if (displayed_column_list !== 0) {
+            for (i = 0; i < displayed_column_list.length; i += 1) {
+              if (displayable_column_dict.hasOwnProperty(displayed_column_list[i])) {
+                displayed_column_item_list.push([
+                  displayed_column_list[i],
+                  displayable_column_dict[displayed_column_list[i]]
+                ]);
+              }
+            }
+          }
+          if (displayed_column_item_list.length === 0) {
+            displayed_column_item_list = field_json.column_list;
+          }
+
           return gadget.changeState({
             key: field_json.key,
             title: field_json.title,
@@ -252,15 +279,18 @@
             list_method: field_json.list_method,
             list_method_template: field_json.list_method_template,
 
-            column_list_json: JSON.stringify(field_json.column_list),
+            column_list_json: JSON.stringify(displayed_column_item_list),
+            displayable_column_list_json:
+              JSON.stringify(displayable_column_item_list),
 
             sort_column_list_json: JSON.stringify(sort_column_list),
             search_column_list_json: JSON.stringify(search_column_list),
-            hide_sort: field_json.sort_column_list.length ? "" : "ui-disabled",
+            sort_class: field_json.sort_column_list.length ? "" : "ui-disabled",
 
             field_id: options.field_id,
             extended_search: options.extended_search,
             hide_class: options.hide_enabled ? "" : "ui-disabled",
+            configure_class: options.configure_enabled ? "" : "ui-disabled",
             command: field_json.command || 'index',
 
             // Force line calculation in any case
@@ -321,8 +351,9 @@
           (modification_dict.hasOwnProperty('title')) ||
           (modification_dict.hasOwnProperty('has_error')) ||
           (modification_dict.hasOwnProperty('show_line_selector')) ||
-          (modification_dict.hasOwnProperty('hide_sort')) ||
+          (modification_dict.hasOwnProperty('sort_class')) ||
           (modification_dict.hasOwnProperty('hide_class')) ||
+          (modification_dict.hasOwnProperty('configure_class')) ||
           (modification_dict.hasOwnProperty('extended_search'))) {
 
         // display sorting arrow inside correct columns
@@ -388,7 +419,8 @@
             return RSVP.all([
               gadget.translateHtml(listbox_template({
                 hide_class: gadget.state.hide_class,
-                hide_sort: gadget.state.hide_sort,
+                sort_class: gadget.state.sort_class,
+                configure_class: gadget.state.configure_class,
                 title: gadget.state.title,
                 hide_button_text: hide_button_text,
                 hide_button_name: hide_button_name
@@ -663,6 +695,7 @@
       var gadget = this,
         sort_button = gadget.element.querySelector('button[name="Sort"]'),
         hide_button = gadget.element.querySelector('button[name="Hide"]'),
+        configure_button = gadget.element.querySelector('button[name="Configure"]'),
         select_button = gadget.element.querySelector('button[name="SelectRows"]'),
         url,
         options = {},
@@ -671,6 +704,15 @@
         query_list = [],
         search_query,
         i;
+
+      if (evt.target === configure_button) {
+        evt.preventDefault();
+        url = "gadget_erp5_configure_editor.html";
+        options.column_list = JSON.parse(gadget.state.column_list_json);
+        options.displayable_column_list = JSON.parse(gadget.state.displayable_column_list_json);
+        options.key = gadget.state.key + "_column_list:json";
+        return gadget.renderEditorPanel(url, options);
+      }
 
       if (evt.target === sort_button) {
         evt.preventDefault();
