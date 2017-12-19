@@ -743,24 +743,25 @@ class BusinessItem(XMLObject):
       # Update the Business Manager with the path list everytime after editing
       # item_path
       manager = self.getFollowUpValue()
-
-      # Copy the path list for Business Manager and update it with new path
-      item_path_list = manager.getItemPathList()[:]
-      old_item_path = self._v_modified_property_dict.get('item_path')
-      if old_item_path and item_path_list:
-        if old_item_path in item_path_list:
-          for idx, item in enumerate(item_path_list):
-            if item == old_item_path:
-              item_path_list[idx] = self.getProperty('item_path')
+      # Check if the manager has already been set or not
+      if manager:
+        # Copy the path list for Business Manager and update it with new path
+        item_path_list = manager.getItemPathList()[:]
+        old_item_path = self._v_modified_property_dict.get('item_path')
+        if old_item_path and item_path_list:
+          if old_item_path in item_path_list:
+            for idx, item in enumerate(item_path_list):
+              if item == old_item_path:
+                item_path_list[idx] = self.getProperty('item_path')
+          else:
+            item_path_list.append(self.getProperty('item_path'))
         else:
+          # If there is no old_item_path or if path_list is empty, we can just
+          # append the new_path in path_list
           item_path_list.append(self.getProperty('item_path'))
-      else:
-        # If there is no old_item_path or if path_list is empty, we can just
-        # append the new_path in path_list
-        item_path_list.append(self.getProperty('item_path'))
 
-      # Update the manager with new path list
-      manager.setProperty('item_path_list', item_path_list)
+        # Update the manager with new path list
+        manager.setProperty('item_path_list', item_path_list)
 
   def build(self, context, **kw):
     """
