@@ -1129,9 +1129,8 @@ div[data-gadget-scope='header'] .ui-header {
     padding-top: 6em;
   }
 
-  // Label
-
-  .ui-field-contain {
+  // Set the size and padding of each field inside a form
+  .field_container > div > div > div.ui-field-contain {
     padding: @margin-size 0;
 
     div {
