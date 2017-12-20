@@ -26,86 +26,54 @@ MAIN FILE: generate report (book header/footer and report content)
 # requirement_relative_url  XXX sale order has no direct relation to requirement
 
 import re
-
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
 from datetime import datetime
 
 blank = ''
-
-# --------------------------  External parameters ------------------------------
-
-# eg "Nexedi" specific parameters
-customHandler = getattr(context, "WebPage_getCustomParameter", None)
-
-# parameters common to all templates
-commonHandler = getattr(context, "WebPage_getCommonParameter", None)
-commonProxyHandler = getattr(context, "WebPage_getCommonProxyParameter", None)
-
-def getCustomParameter(my_parameter, my_override_data):
-  if customHandler is not None:
-    source_data = my_override_data or doc_uid
-    return customHandler(parameter=my_parameter, source_data=source_data)
-
-def getCommonParameter(my_parameter, my_override_data):
-  if commonHandler is not None:
-    source_data = my_override_data or doc_uid
-    return commonHandler(parameter=my_parameter, source_data=source_data)
-
-def getCommonProxyParameter(my_parameter, my_override_data):
-  if commonProxyHandler is not None:
-    source_data = my_override_data or doc_uid
-    return commonProxyHandler(parameter=my_parameter, source_data=source_data)
-
 # ------------------ HTML cleanup/converter methods ----------------------------
 def translateText(snip):
   return doc_localiser.erp5_ui.gettext(snip, lang=doc_language).encode('utf-8').strip()
 
-def setOverrideParam(my_context, my_override, my_param):
-  if my_override is not None and my_override is not blank:
-    return html_quote(my_override)
-  try:
-    return getattr(my_context, my_param) or None
-  except:
-    return blank
-
-# XXX how to set checkbox correctly?
-def setToNone(param):
-  if param == blank or param == None or param == 0 or param == str(0):
-    return None
-  else:
-    return param
-
 # -------------------------- Setup ---------------------------------------------
+doc = context
 doc_download = None #XXX not yet implemented
-doc_save = setToNone(kw.get('document_save', None))
-doc_display_header = setToNone(kw.get('display_header', None))
-doc_display_comment = setToNone(kw.get('display_comment', None))
-doc_display_detail = setToNone(kw.get('display_detail', None))
-doc_display_depth = setToNone(kw.get('display_depth', None))
+doc_save = doc.Base_setToNone(param=kw.get('document_save', None))
+doc_display_header = doc.Base_setToNone(param=kw.get('display_header', None))
+doc_display_comment = doc.Base_setToNone(param=kw.get('display_comment', None))
+doc_display_detail = doc.Base_setToNone(param=kw.get('display_detail', None))
+doc_display_depth = doc.Base_setToNone(param=kw.get('display_depth', None))
 
 override_document_title = kw.get('document_title', None)
 override_document_version = kw.get('document_version', None)
 override_document_reference = kw.get('document_reference', None)
 override_document_language = kw.get('document_language', None)
-override_batch_mode = setToNone(kw.get('batch_mode', None))
+override_batch_mode = doc.Base_setToNone(param=kw.get('batch_mode', None))
 
 doc_report_name = kw.get('report_name', None)
 doc_report_title = kw.get('report_title', None)
+doc_format = doc.Base_setToNone(param=kw.get('format', None)) or 'html'
 doc_requirement_relative_url = kw.get('requirement_relative_url', None)
-doc_format = setToNone(kw.get('format', None)) or 'html'
 
 # -------------------------- Document Parameters  ------------------------------
-doc = context
-doc_localiser = doc.getPortalObject().Localizer
-doc_language = setToNone(setOverrideParam(doc, override_document_language, "language")) or "en"
 doc_uid = doc.getUid()
+doc_localiser = doc.getPortalObject().Localizer
 doc_relative_url = doc.getRelativeUrl()
-doc_rendering_fix = getCommonParameter('wkhtmltopdf_rendering_fix', None) or blank
-doc_title = setToNone(setOverrideParam(doc, override_document_title, "title")) or blank
-doc_short_title = setToNone(setOverrideParam(doc, doc_report_title, "short_title")) or blank
-doc_version = setToNone(setOverrideParam(doc, override_document_version, "version")) or "001"
+doc_rendering_fix = doc.Base_getCustomTemplateParameter('wkhtmltopdf_rendering_fix') or blank
 doc_report = getattr(doc, doc_report_name)
+doc_aggregate_list = []
+doc_absolute_url = doc.getAbsoluteUrl()
+doc_revision = "1"
+doc_modification_date = DateTime()
+doc_short_date = doc_modification_date.strftime('%Y-%m-%d')
+
+# XXX sigh for passing "" around
+doc_reference = html_quote(override_document_reference) if doc.Base_setToNone(override_document_reference) is not None else doc.Base_setToNone(doc.getReference()) or blank
+doc_short_title = html_quote(doc_report_title) if doc.Base_setToNone(doc_report_title) is not None else doc.Base_setToNone(doc.getShortTitle()) or blank
+doc_version = html_quote(override_document_version) if doc.Base_setToNone(override_document_version) is not None else doc.Base_setToNone(getattr(doc, "version", None)) or "001"
+doc_title = html_quote(override_document_title) if doc.Base_setToNone(override_document_title) is not None else doc.Base_setToNone(doc.getTitle()) or blank
+doc_language = html_quote(override_document_language) if doc.Base_setToNone(override_document_language) is not None else doc.Base_setToNone(doc.getLanguage())
+
 doc_content = doc_report(
   display_report=True,
   display_depth=doc_display_depth,
@@ -115,17 +83,12 @@ doc_content = doc_report(
   requirement_url=doc_requirement_relative_url,
   report_title=translateText(doc_report_title)
 )
-doc_aggregate_list = []
-doc_absolute_url = doc.getAbsoluteUrl()
-doc_reference = setToNone(setOverrideParam(doc, override_document_reference, "reference")) or blank
-doc_revision = "1"
-doc_modification_date = DateTime()
-doc_short_date = doc_modification_date.strftime('%Y-%m-%d')
 
+# test overrides
 if override_batch_mode is not None:
   doc_modification_date = DateTime("1976-11-04")
   doc_revision = "1"
-if doc_language is not None: # and doc_format == "pdf":
+if doc_language is not None:
   doc.REQUEST['AcceptLanguage'].set(doc_language, 10)
 if doc_language is None:
   doc_language = blank
@@ -133,21 +96,13 @@ if doc_reference is blank:
   doc_reference = "Report." + doc_title.replace(" ", ".")
 doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])
 
-# --------------------------- Layout Parameters --------------------------------
-doc_theme = doc.Base_getThemeDict(
-  custom_theme=getCustomParameter("theme", None),
-  override_batch_mode=override_batch_mode,
-  format=doc_format,
-  url=doc_absolute_url,
-  css_path="/book_css/book"
-)
+# ------------------------------- Theme ----------------------------------------
+doc_theme = doc.Base_getThemeDict(format=doc_format, css_path="book_css/book")
 
 # --------------------------- Source/Destination -------------------------------
 doc_source = doc.Base_getSourceDict(
   override_source_person_title=None,
   override_source_organisation_title=None,
-  default_company_title=getCustomParameter("default_company_title", None),
-  default_bank_account_uid=getCustomParameter("default_bank_account_uid", None),
   theme_logo_url=doc_theme.get("theme_logo_url", None)
 )
 
@@ -164,7 +119,7 @@ if doc_format == "html":
     book_theme_css_font_list=doc_theme.get("theme_css_font_list"),
     book_theme_css_url=doc_theme.get("theme_css_url"),
     book_template_css_url=doc_theme.get("template_css_url"),
-    book_logo_url=doc_source.get("enhanced_logo_url") + '&display=thumbnail',
+    book_logo_url=doc.Base_setUrl(path=doc_source.get("enhanced_logo_url")),
     book_logo_title=doc_source.get("theme_logo_description"),
     book_short_title=doc_short_title,
     book_reference=doc_reference,
@@ -211,7 +166,7 @@ if doc_format == "pdf":
     book_theme_css_font_list=doc_theme.get("theme_css_font_list"),
     book_theme_css_url=doc_theme.get("theme_css_url"),
     book_template_css_url=doc_theme.get("template_css_url"),
-    book_logo_url=doc_source.get("enhanced_logo_url") + '&display=thumbnail',
+    book_logo_url=doc.Base_setUrl(path=doc_source.get("enhanced_logo_url")),
     book_logo_title=doc_source.get("theme_logo_description"),
     book_short_title=doc_short_title,
     book_reference=doc_reference,
@@ -226,7 +181,7 @@ if doc_format == "pdf":
     book_language=doc_language,
     book_theme_css_font_list=doc_theme.get("theme_css_font_list"),
     book_theme_css_url=doc_theme.get("theme_css_url"),
-    book_theme_logo_url=doc_source.get("enhanced_logo_url") + '&display=thumbnail',
+    book_theme_logo_url=doc.Base_setUrl(path=doc_source.get("enhanced_logo_url")),
     book_theme_logo_alt=doc_theme.get("theme_logo_description"),
     book_template_css_url=doc_theme.get("template_css_url"),
     book_full_reference=doc_full_reference,
@@ -240,7 +195,7 @@ if doc_format == "pdf":
   embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_content, allow_script=True)
   footer_embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_foot, allow_script=True)
 
-  pdf_file = context.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
+  pdf_file = doc.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
     encoding="utf8",
     margin_top=40,
     margin_bottom=20,

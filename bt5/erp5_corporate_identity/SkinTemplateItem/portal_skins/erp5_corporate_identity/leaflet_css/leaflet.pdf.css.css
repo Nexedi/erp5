@@ -86,10 +86,23 @@ html{
   width: 33%;
   text-align: center;
 }
+.ci-leaflet-footer .ci-leaflet-footer-image-wrapper {
+  min-height: 20mm;
+  display: inline;
+  vertical-align: middle;
+}
+.ci-leaflet-footer .ci-leaflet-footer-image-wrapper img {
+  display: inline-block;
+  width: auto;
+  height: 14mm;
+}
+
+/*
 .ci-leaflet .ci-leaflet-container-left img {
   max-width: 120px;
   height: initial;
 }
+*/
 .ci-leaflet .ci-leaflet-container-left {
   text-align: left;
 }

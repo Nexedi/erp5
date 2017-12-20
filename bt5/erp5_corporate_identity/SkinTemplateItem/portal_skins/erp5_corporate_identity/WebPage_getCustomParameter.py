@@ -1,15 +1,16 @@
 """
 ================================================================================
-Return common parameter across all templates
+Return custom hardcoded parameters
 ================================================================================
 """
+# parameters:
+# ------------------------------------------------------------------------------
+# parameter                          Parameter to lookup
 
 if parameter == "fallback_image":
   return "common_images/fallback.png"
-
 if parameter == "default_theme_css_url":
   return "default_themes/themes.css"
-
 if parameter == "wkhtmltopdf_rendering_fix":
 
   return """

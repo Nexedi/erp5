@@ -33,8 +33,8 @@ Generates the complete slideshow
     </tal:block>
     <link rel="stylesheet" href="slide_css/white_theme.custom.css" id="theme" />
     <link rel="stylesheet" href="slide_css/zenburn.css" />
-    <link rel="stylesheet" tal:attributes="href python: ''.join([doc_theme_css_url, ''])" />
-    <link rel="stylesheet" tal:attributes="href python: ''.join([doc_template_css_url, ''])" />
+    <link rel="stylesheet" tal:attributes="href doc_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href doc_template_css_url" />
     <style type="text/css" tal:content="structure doc_css"></style>
     <script type="text/javascript">
       function setPlaceholdersWithUrlParameters() {

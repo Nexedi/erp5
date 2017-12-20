@@ -70,21 +70,37 @@ html{
 .ci-leaflet .ci-leaflet-footer {
   position: static;
 }
-.ci-leaflet .ci-leaflet-footer div {
+.ci-leaflet .ci-leaflet-footer .ci-leaflet-container-left,
+.ci-leaflet .ci-leaflet-footer .ci-leaflet-container-center,
+.ci-leaflet .ci-leaflet-footer .ci-leaflet-container-right {
   display: inline-block;
   vertical-align: middle;
   width: 33%;
   text-align: center;
 }
 @media(max-width: 720px) {
-  .ci-leaflet .ci-leaflet-footer div {
+  .ci-leaflet .ci-leaflet-footer .ci-leaflet-container-left,
+  .ci-leaflet .ci-leaflet-footer .ci-leaflet-container-center,
+  .ci-leaflet .ci-leaflet-footer .ci-leaflet-container-right{
     width: 31%;
   }
 }
+.ci-leaflet-footer .ci-leaflet-footer-image-wrapper {
+  min-height: 20mm;
+  display: inline;
+  vertical-align: middle;
+}
+.ci-leaflet-footer .ci-leaflet-footer-image-wrapper img {
+  display: inline-block;
+  width: auto;
+  height: 50px;
+}
+/*
 .ci-leaflet .ci-leaflet-container-left img {
   max-height: 2.5em;
   min-width: initial;
 }
+*/
 .ci-leaflet .ci-leaflet-container-left {
   text-align: left;
 }

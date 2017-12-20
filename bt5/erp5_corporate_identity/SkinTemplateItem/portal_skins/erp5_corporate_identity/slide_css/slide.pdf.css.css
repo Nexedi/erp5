@@ -151,7 +151,7 @@ section {
 .ci-slideshow-footer .ci-slideshow-container-left .ci-slideshow-footer-image-wrapper img {
   display: inline-block;
   width: auto;
-  height: auto;
+  height: 14mm;
 }
 .ci-slideshow-footer .ci-slideshow-container-left {
   text-align: left;

@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>format=None, css_path=None</string> </value>
+            <value> <string>parameter=None, override_data=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getThemeDict</string> </value>
+            <value> <string>Base_getCustomTemplateProxyParameter</string> </value>
         </item>
       </dictionary>
     </pickle>

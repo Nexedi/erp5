@@ -25,8 +25,8 @@ Generates the letter header
     <tal:block tal:repeat="font_url letter_theme_css_font_list">
       <link rel="stylesheet" tal:attributes="href font_url" />
     </tal:block>
-    <link rel="stylesheet" tal:attributes="href python: ''.join([letter_theme_css_url, ''])" />
-    <link rel="stylesheet" tal:attributes="href python: ''.join([letter_template_css_url, ''])" />
+    <link rel="stylesheet" tal:attributes="href letter_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href letter_template_css_url" />
     <script type="text/javascript">
       function setPlaceholdersWithUrlParameters() {
         var vars={};

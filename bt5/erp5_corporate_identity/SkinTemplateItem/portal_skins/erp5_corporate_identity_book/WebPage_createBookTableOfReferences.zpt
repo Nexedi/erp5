@@ -32,7 +32,7 @@ Creates the Tables of references.
         <link rel="stylesheet" tal:attributes="href font_url" />
       </tal:block>
       <link rel="stylesheet" tal:attributes="href book_theme_css_url" />
-      <link rel="stylesheet" tal:attributes="href python: ''.join([book_template_css_url, ''])" />
+     <link rel="stylesheet" tal:attributes="href book_template_css_url" />
       </head>
       	<body class="ci-book" tal:condition="python: book_include_reference is not None">
       	  <tal:block metal:use-macro="context/WebPage_createBookTableOfReferences/macros/book_references" />

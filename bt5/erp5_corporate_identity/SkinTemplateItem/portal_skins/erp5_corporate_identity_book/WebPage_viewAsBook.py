@@ -37,75 +37,28 @@ from datetime import datetime
 
 blank = ''
 
-# --------------------------  External parameters ------------------------------
-
-# eg "Nexedi" specific parameters
-customHandler = getattr(context, "WebPage_getCustomParameter", None)
-
-# parameters common to all templates
-commonHandler = getattr(context, "WebPage_getCommonParameter", None)
-commonProxyHandler = getattr(context, "WebPage_getCommonProxyParameter", None)
-
-def getCustomParameter(my_parameter, my_override_data):
-  if customHandler is not None:
-    source_data = my_override_data or book_uid
-    return customHandler(parameter=my_parameter, source_data=source_data)
-
-def getCommonParameter(my_parameter, my_override_data):
-  if commonHandler is not None:
-    source_data = my_override_data or book_uid
-    return commonHandler(parameter=my_parameter, source_data=source_data)
-
-def getCommonProxyParameter(my_parameter, my_override_data):
-  if commonProxyHandler is not None:
-    source_data = my_override_data or book_uid
-    return commonProxyHandler(parameter=my_parameter, source_data=source_data)
-
 # ------------------ HTML cleanup/converter methods ----------------------------
 def translateText(snip):
   return book_localiser.erp5_ui.gettext(snip, lang=book_language).encode('utf-8').strip()
 
-def setOverrideParam(my_context, my_override, my_param):
-  if my_override is not None and my_override is not blank:
-    return html_quote(my_override)
-  try:
-    return getattr(my_context, my_param) or None
-  except:
-    return blank
-
-# XXX how to set checkbox correctly?
-def setToNone(param):
-  if param == blank or param == None or param == 0 or param == str(0):
-    return None
-  else:
-    return param
-
-# XXX change url so convert does not fail    
-def setUrl(path):
-  if path.find("common") > -1:
-    return path
-  else:
-    return path + "&display=thumbnail"
-
 # -------------------------- Setup ---------------------------------------------
 book = context
-book_format = setToNone(kw.get('format', None)) or 'html'
+book_format = book.Base_setToNone(param=kw.get('format', None)) or 'html'
 book_transformation = kw.get('transformation', None)
-
-book_download = setToNone(kw.get('document_download', None))
-book_save = setToNone(kw.get('document_save', None))
-book_display_svg = setToNone(kw.get('display_svg', None))
+book_download = book.Base_setToNone(param=kw.get('document_download', None))
+book_save = book.Base_setToNone(param=kw.get('document_save', None))
+book_display_svg = book.Base_setToNone(param=kw.get('display_svg', None))
 
 book_include_content_table = kw.get('include_content_table', None)
 if book_include_content_table is None:
   book_include_content_table = 1
 else:
-  book_include_content_table = setToNone(book_include_content_table)
+  book_include_content_table = book.Base_setToNone(param=book_include_content_table)
 
-book_include_history_table = setToNone(kw.get('include_history_table', None))
-book_include_reference_table = setToNone(kw.get('include_reference_table', None))
-book_include_linked_content = setToNone(kw.get('include_linked_content', None))
-book_include_report_content = setToNone(kw.get('include_report_content', None))
+book_include_history_table = book.Base_setToNone(param=kw.get('include_history_table', None))
+book_include_reference_table = book.Base_setToNone(param=kw.get('include_reference_table', None))
+book_include_linked_content = book.Base_setToNone(param=kw.get('include_linked_content', None))
+book_include_report_content = book.Base_setToNone(param=kw.get('include_report_content', None))
 
 override_source_person_title = kw.get('override_source_person_title', None)
 override_source_organisation_title = kw.get("override_source_organisation_title", None)
@@ -115,7 +68,7 @@ override_document_title = kw.get('override_document_title', None)
 override_document_version = kw.get('override_document_version', None)
 override_document_reference = kw.get('override_document_reference', None)
 override_logo_reference = kw.get('override_logo_reference', None)
-override_batch_mode = setToNone(kw.get('batch_mode', None))
+override_batch_mode = book.Base_setToNone(param=kw.get('batch_mode', None))
 
 # -------------------------- Document Parameters  ------------------------------
 book_form = book.REQUEST
@@ -124,26 +77,29 @@ book_portal_type = book.getPortalType()
 book_uid = book.getUid()
 book_relative_url = book.getRelativeUrl()
 book_prefix = "Book."
-book_rendering_fix = getCommonParameter('wkhtmltopdf_rendering_fix', None) or blank
-
+book_rendering_fix = book.Base_getCustomTemplateParameter('wkhtmltopdf_rendering_fix') or blank
 book_dialog_id = book_form.get('dialog_id', None)
-book_title = setOverrideParam(book, override_document_title, "title")
-book_short_title = setOverrideParam(book, override_document_short_title, "short_title")
-book_version = setOverrideParam(book, override_document_version, "version")
-book_description = setOverrideParam(book, override_document_description, "description")
 book_content = book.getTextContent()
-book_language = setToNone(book.getLanguage())
 book_aggregate_list = []
 book_absolute_url = book.getAbsoluteUrl()
-book_reference = (html_quote(override_document_reference) if override_document_reference else book.getReference()) or blank
 book_revision = book.getRevision()
 book_modification_date = book.getModificationDate()
+book_language = book.Base_setToNone(param=book.getLanguage())
 
+# XXX sigh for passing "" around
+book_reference = html_quote(override_document_reference) if book.Base_setToNone(override_document_reference) is not None else book.Base_setToNone(book.getReference())
+book_short_title = html_quote(override_document_short_title) if book.Base_setToNone(override_document_short_title) is not None else book.Base_setToNone(book.getShortTitle())
+book_version = html_quote(override_document_version) if book.Base_setToNone(override_document_version) is not None else book.Base_setToNone(book.getVersion()) or "001"
+book_description = html_quote(override_document_description) if book.Base_setToNone(override_document_description) is not None else book.Base_setToNone(book.getDescription())
+book_title = html_quote(override_document_title) if book.Base_setToNone(override_document_title) is not None else book.Base_setToNone(book.getTitle())
+
+# override for tests
 if override_batch_mode is not None:
   book_modification_date = DateTime("1976-11-04")
   book_revision = "1"
+
 book_short_date = book_modification_date.strftime('%Y-%m-%d')
-if book_language is not None: #and book_format == "pdf":
+if book_language is not None:
   book.REQUEST['AcceptLanguage'].set(book_language, 10)
 if book_language is None:
   book_language = blank
@@ -151,22 +107,14 @@ if book_reference is None:
   book_reference = book_prefix + book_title.replace(" ", ".")
 book_full_reference = '-'.join([book_reference, book_version, book_language])
 
-# --------------------------- Layout Parameters --------------------------------
-book_theme = book.Base_getThemeDict(
-  custom_theme=getCustomParameter("theme", None),
-  override_batch_mode=override_batch_mode,
-  format=book_format,
-  url=book_absolute_url,
-  css_path="/book_css/book"
-)
+# ------------------------------- Theme ----------------------------------------
+book_theme = book.Base_getThemeDict(format=book_format, css_path="book_css/book")
 
 # --------------------------- Source/Destination -------------------------------
 book_source = book.Base_getSourceDict(
   override_source_person_title=override_source_person_title,
   override_source_organisation_title=override_source_organisation_title,
   override_logo_reference=override_logo_reference,
-  default_company_title=getCustomParameter("default_company_title", None),
-  default_bank_account_uid=getCustomParameter("default_bank_account_uid", None),
   theme_logo_url=book_theme.get("theme_logo_url", None)
 )
 
@@ -267,7 +215,6 @@ for image in re.findall('(<img.*?/>)', book_content):
 
 # ========================== Format: mhtml/html ================================
 if book_format == "html" or book_format == "mhtml":
-  book.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
   book_output = book.WebPage_createBook(
     book_theme=book_theme.get("theme"),
     book_title=book_title,
@@ -282,7 +229,7 @@ if book_format == "html" or book_format == "mhtml":
     book_signature_list=book_signature_list,
     book_version_list=book_version_list,
     book_distribution_list=book_distribution_list,
-    book_logo_url=setUrl(book_source.get("enhanced_logo_url")),
+    book_logo_url=book.Base_setUrl(path=book_source.get("enhanced_logo_url")),
     book_logo_title=book_theme.get("theme_logo_description"),
     book_reference=book_reference,
     book_revision=book_revision,
@@ -294,8 +241,22 @@ if book_format == "html" or book_format == "mhtml":
     book_table_of_content=book_table_of_content
   )
   if book_format == "html":
-    return book_output
+    return book.Base_finishWebPageCreation(
+      doc_download=book_download,
+      doc_save=book_save,
+      doc_version=book_version,
+      doc_title=book_title,
+      doc_relative_url=book_relative_url,
+      doc_aggregate_list=book_aggregate_list,
+      doc_language=book_language,
+      doc_modification_date=book_modification_date,
+      doc_reference=book_reference,
+      doc_full_reference=book_full_reference,
+      doc_html_file=book_output
+    )
+    
   if book_format == "mhtml":
+    context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
     return book.Base_convertHtmlToSingleFile(book_output, allow_script=True)
 
 # ============================= Format: pdf ====================================
@@ -318,7 +279,7 @@ if book_format == "pdf":
     book_language=book_language,
     book_theme_css_font_list=book_theme.get("theme_css_font_list"),
     book_theme_css_url=book_theme.get("theme_css_url"),
-    book_theme_logo_url=setUrl(book_source.get("enhanced_logo_url")),
+    book_theme_logo_url=book.Base_setUrl(path=book_source.get("enhanced_logo_url")),
     book_theme_logo_alt=book_theme.get("theme_logo_alt"),
     book_template_css_url=book_theme.get("template_css_url"),
     book_include_history=book_include_history_table,
@@ -347,7 +308,7 @@ if book_format == "pdf":
     book_theme_css_font_list=book_theme.get("theme_css_font_list"),
     book_theme_css_url=book_theme.get("theme_css_url"),
     book_template_css_url=book_theme.get("template_css_url"),
-    book_logo_url=setUrl(book_source.get("enhanced_logo_url")),
+    book_logo_url=book.Base_setUrl(path=book_source.get("enhanced_logo_url")),
     book_logo_title=book_theme.get("theme_logo_description"),
     book_short_title=book_short_title,
     book_reference=book_reference,
@@ -362,7 +323,7 @@ if book_format == "pdf":
     book_language=book_language,
     book_theme_css_font_list=book_theme.get("theme_css_font_list"),
     book_theme_css_url=book_theme.get("theme_css_url"),
-    book_theme_logo_url=setUrl(book_source.get("enhanced_logo_url")),
+    book_theme_logo_url=book.Base_setUrl(path=book_source.get("enhanced_logo_url")),
     book_theme_logo_alt=book_theme.get("theme_logo_description"),
     book_template_css_url=book_theme.get("template_css_url"),
     book_full_reference=book_full_reference,
@@ -387,7 +348,7 @@ if book_format == "pdf":
   embedded_html_data = book.Base_convertHtmlToSingleFile(book_content, allow_script=True)
   footer_embedded_html_data = book.Base_convertHtmlToSingleFile(book_foot, allow_script=True)
 
-  pdf_file = context.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
+  pdf_file = book.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
     encoding="utf8",
     margin_top=40,
     margin_bottom=20,

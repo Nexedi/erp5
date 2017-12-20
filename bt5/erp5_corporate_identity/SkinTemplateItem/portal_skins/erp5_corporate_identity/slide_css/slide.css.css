@@ -286,7 +286,7 @@ html .ci-slideshow .ci-slideshow-footer > div {
 .ci-slideshow-footer-image-wrapper img {
   display: inline-block;
   width: auto;
-  height: auto;
+  height: 50px;
 }
 
 html .ci-slideshow .ci-slideshow-container-left {

@@ -30,66 +30,22 @@ from datetime import datetime
 
 blank = ''
 
-# --------------------------  External parameters ------------------------------
-
-# eg "Nexedi" specific parameters
-customHandler = getattr(context, "WebPage_getCustomParameter", None)
-
-# parameters common to all templates
-commonHandler = getattr(context, "WebPage_getCommonParameter", None)
-commonProxyHandler = getattr(context, "WebPage_getCommonProxyParameter", None)
-
-def getCustomParameter(my_parameter, my_override_data):
-  if customHandler is not None:
-    source_data = my_override_data or letter_uid
-    return customHandler(parameter=my_parameter, source_data=source_data)
-
-def getCommonParameter(my_parameter, my_override_data):
-  if commonHandler is not None:
-    source_data = my_override_data or letter_uid
-    return commonHandler(parameter=my_parameter, source_data=source_data)
-
-def getCommonProxyParameter(my_parameter, my_override_data):
-  if commonProxyHandler is not None:
-    source_data = my_override_data or letter_uid
-    return commonProxyHandler(parameter=my_parameter, source_data=source_data)
-
-def setOverrideParam(my_context, my_override, my_param):
-  if my_override is not None and my_override is not blank:
-    return html_quote(my_override)
-  return getattr(my_context, my_param) or None
-
-# XXX how to set checkbox correctly?
-def setToNone(param):
-  if param == blank or param == None or param == 0 or param == str(0):
-    return None
-  else:
-    return param
-
-# XXX change url so convert does not fail    
-def setUrl(path):
-  if path.find("common") > -1:
-    return path
-  else:
-    return path + "&display=thumbnail"
-
 # -------------------------- Setup ---------------------------------------------
 letter = context
 letter_format = kw.get('format', 'html')
 letter_display_source_adress = kw.get('letter_display_source_adress', None)
 letter_transformation = kw.get('transformation', None)
-letter_display_head = setToNone(kw.get('dislay_head', 1))
-letter_display_svg = setToNone(kw.get('display_svg', 'png'))
-letter_download = setToNone(kw.get('document_download', None))
-letter_save = setToNone(kw.get('document_save', None))
+letter_display_head = letter.Base_setToNone(param=kw.get('dislay_head', 1))
+letter_display_svg = letter.Base_setToNone(param=kw.get('display_svg', 'png'))
+letter_download = letter.Base_setToNone(param=kw.get('document_download', None))
+letter_save = letter.Base_setToNone(param=kw.get('document_save', None))
 
 override_source_person_title = kw.get('override_source_person_title', None)
 override_source_organisation_title = kw.get("override_source_organisation_title", None)
 override_destination_person_title = kw.get("override_destination_person_title", None)
 override_destination_organisation_title = kw.get("override_destination_organisation_title", None)
-override_date = setToNone(kw.get("override_date", None))
-
-override_batch_mode = setToNone(kw.get('batch_mode', None))
+override_date = letter.Base_setToNone(param=kw.get("override_date", None))
+override_batch_mode = letter.Base_setToNone(param=kw.get('batch_mode', None))
 
 # -------------------------- Document Parameters  ------------------------------
 letter_form = letter.REQUEST
@@ -105,7 +61,7 @@ if letter_portal_type == "Web Page":
   letter_title = letter.getTitle()
   letter_modification_date = DateTime(override_date) if override_date else letter.getCreationDate()
   letter_content = letter.getTextContent()
-  letter_language = setToNone(letter.getLanguage())
+  letter_language = letter.Base_setToNone(param=letter.getLanguage())
   letter_aggregate_list = []
   letter_source = None
   letter_destination = None
@@ -120,17 +76,19 @@ else:
   letter_title = letter_form.get('title')
   letter_content = letter_form.get('text_content')
   letter_aggregate_list = letter.getAggregateList()
-  letter_language = setToNone(letter_form.get('select_language'))
+  letter_language = letter.Base_setToNone(param=letter_form.get('select_language'))
   letter_source = letter_form.get('source') or None
   letter_destination = letter_form.get('destination') or None
   # cut corner to retrieve path to css files
-  portal_object = context.getPortalObject()
+  portal_object = letter.getPortalObject()
   letter_url = portal_object.absolute_url()
   letter_version = "001"
   letter_reference = letter_form.get("reference")
 
+# overrides for tests
 if override_batch_mode is not None:
   letter_modification_date = DateTime("1976-11-04")
+
 if letter_language is not None: #and letter_format == "pdf":
   letter.REQUEST['AcceptLanguage'].set(letter_language, 10)
 if letter_language is None:
@@ -140,21 +98,13 @@ if letter_reference is None:
 letter_full_reference = '-'.join([letter_reference, letter_version, letter_language])
 
 # --------------------------- Layout Parameters --------------------------------
-letter_theme = letter.Base_getThemeDict(
-  custom_theme=getCustomParameter("theme", None),
-  override_batch_mode=override_batch_mode,
-  format=letter_format,
-  url=letter_url,
-  css_path="/letter_css/letter"
-)
+letter_theme = letter.Base_getThemeDict(format=letter_format, css_path="letter_css/letter")
 
 # --------------------------- Source/Destination -------------------------------
 letter_source = letter.Base_getSourceDict(
   source=letter_source,
   override_source_person_title=override_source_person_title,
   override_source_organisation_title=override_source_organisation_title,
-  default_company_title=getCustomParameter("default_company_title", None),
-  default_bank_account_uid=getCustomParameter("default_bank_account_uid", None),
   override_logo_reference=None,
   theme_logo_url=letter_theme.get("theme_logo_url", None)
 )
@@ -170,7 +120,7 @@ letter_destination = letter.Base_getDestinationDict(
 for image in re.findall('(<img.*?/>)', letter_content):
   letter_content = letter_content.replace(
     image,
-    context.WebPage_validateImage(
+    letter.WebPage_validateImage(
       img_string=image,
       img_svg_format=letter_display_svg
     )
@@ -178,8 +128,7 @@ for image in re.findall('(<img.*?/>)', letter_content):
 
 # ============================= Format: html ===================================
 if letter_format == "html":
-  letter.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
-  return letter.Letter_createLetter(
+  letter_output = letter.Letter_createLetter(
     letter_display_head=letter_display_head,
     letter_theme=letter_theme.get("theme"),
     letter_title=letter_title,
@@ -187,7 +136,7 @@ if letter_format == "html":
     letter_theme_css_font_list=letter_theme.get("theme_css_font_list"),
     letter_theme_css_url=letter_theme.get("theme_css_url"),
     letter_template_css_url=letter_theme.get("template_css_url"),
-    letter_theme_logo_url=setUrl(letter_source.get("enhanced_logo_url")),
+    letter_theme_logo_url=letter.Base_setUrl(path=letter_source.get("enhanced_logo_url")),
     letter_theme_logo_alt=letter_theme.get("theme_logo_description"),
     letter_timestamp=letter_modification_date.strftime('%Y-%m-%d'),
     letter_destination_company=letter_destination.get("organisation_title", blank),
@@ -199,8 +148,8 @@ if letter_format == "html":
     letter_source_company=letter_source.get("corporate_name", letter_source.get("organisation_title", blank)),
     letter_source_company_corporate_name=letter_source.get("corporate_name", blank),
     letter_source_company_capital=letter_source.get("social_capital", blank),
-    letter_source_company_capital_currency=letter_source.get("social_capital_currency", getCustomParameter("default_source_company_capital_currency", blank)),
-    letter_source_registered_court=letter_source.get("registered_court", getCustomParameter("default_source_registered_court", blank)),
+    letter_source_company_capital_currency=letter_source.get("social_capital_currency", letter.Base_getCustomTemplateParameter("default_source_company_capital_currency")),
+    letter_source_registered_court=letter_source.get("registered_court", letter.Base_getCustomTemplateParameter("default_source_registered_court")),
     letter_source_ape_code=letter_source.get("activity_code", blank),
     letter_source_address=letter_source.get("address", blank),
     letter_source_postal_code=letter_source.get("postal_code", blank),
@@ -218,6 +167,19 @@ if letter_format == "html":
     letter_source_bic=letter_source.get("bic", blank),
     letter_source_iban=letter_source.get("iban", blank)
   )
+  return letter.Base_finishWebPageCreation(
+    doc_download=letter_download,
+    doc_save=letter_save,
+    doc_version=letter_version,
+    doc_title=letter_title,
+    doc_relative_url=letter_relative_url,
+    doc_aggregate_list=letter_aggregate_list,
+    doc_language=letter_language,
+    doc_modification_date=letter_modification_date,
+    doc_reference=letter_reference,
+    doc_full_reference=letter_full_reference,
+    doc_html_file=letter_output
+  )
 
 # ============================= Format: pdf ====================================
 if letter_format == "pdf":
@@ -229,7 +191,7 @@ if letter_format == "pdf":
     letter_theme_css_font_list=letter_theme.get("theme_css_font_list"),
     letter_theme_css_url=letter_theme.get("theme_css_url"),
     letter_template_css_url=letter_theme.get("template_css_url"),
-    letter_theme_logo_url=setUrl(letter_source.get("enhanced_logo_url")),
+    letter_theme_logo_url=letter.Base_setUrl(path=letter_source.get("enhanced_logo_url")),
     letter_theme_logo_alt=letter_theme.get("theme_logo_description"),
     letter_timestamp=letter_modification_date.strftime('%Y-%m-%d'),
     letter_source_city=letter_source.get("city", blank)
@@ -243,7 +205,7 @@ if letter_format == "pdf":
     letter_theme_css_font_list=letter_theme.get("theme_css_font_list"),
     letter_theme_css_url=letter_theme.get("theme_css_url"),
     letter_template_css_url=letter_theme.get("template_css_url"),
-    letter_theme_logo_url=setUrl(letter_source.get("enhanced_logo_url")),
+    letter_theme_logo_url=letter.Base_setUrl(path=letter_source.get("enhanced_logo_url")),
     letter_theme_logo_alt=letter_theme.get("theme_logo_description"),
     letter_timestamp=letter_modification_date.strftime('%Y-%m-%d'),
     letter_destination_company=letter_destination.get("organisation_title", blank),
@@ -271,8 +233,8 @@ if letter_format == "pdf":
     letter_source_company=letter_source.get("organisation_title", blank),
     letter_source_company_corporate_name=letter_source.get("corporate_name", blank),
     letter_source_company_capital=letter_source.get("social_capital", blank),
-    letter_source_company_capital_currency=letter_source.get("social_capital_currency", getCustomParameter("default_source_company_capital_currency", blank)),
-    letter_source_registered_court=letter_source.get("registered_court", getCustomParameter("default_source_registered_court", blank)),
+    letter_source_company_capital_currency=letter_source.get("social_capital_currency", letter.Base_getCustomTemplateParameter("default_source_company_capital_currency")),
+    letter_source_registered_court=letter_source.get("registered_court", letter.Base_getCustomTemplateParameter("default_source_registered_court")),
     letter_source_ape_code=letter_source.get("activity_code", blank),
     letter_source_address=letter_source.get("address", blank),
     letter_source_postal_code=letter_source.get("postal_code", blank),

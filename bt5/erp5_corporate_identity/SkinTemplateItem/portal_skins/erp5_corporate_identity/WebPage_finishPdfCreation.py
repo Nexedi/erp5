@@ -33,13 +33,27 @@ if doc_save == 1:
       source_reference=''.join([doc_reference, '.pdf']),
       file=doc_pdf_file
     )
-    if getattr(context, "aggregate", None) is not None:
+
+    # try setting aggregate, eg event attachments
+    try:
       context.setAggregate(document.getRelativeUrl())
+    except:
+      pass
+
+    # try setting predecessor/related document to later distinguish this
+    # document from other documents related to the event
+    try:
+      document.setPredecessorValueList([event])
+    except:
+      pass
+
     message = context.Base_translateString(
       '%(portal_type)s created successfully as PDF Document.' % {
         'portal_type': document.getTranslatedPortalType()
       }
     )
+
+    # XXX redirect = true?
     return document.Base_redirect(
       keep_items=dict(portal_status_message=message)
     )

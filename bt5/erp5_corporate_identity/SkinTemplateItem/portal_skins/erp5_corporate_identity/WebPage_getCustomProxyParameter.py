@@ -160,7 +160,7 @@ def getSubstringFromProduct(my_candidate, my_as_is):
     return software_title.split(software_match_string)[0].lower()
 
 def callSelf(my_parameter, my_source_id, my_flag_site):
-  return context.WebPage_getCommonProxyParameter(
+  return context.WebPage_getCustomProxyParameter(
     parameter=my_parameter,
     source_uid=my_source_id,
     flag_site=my_flag_site
