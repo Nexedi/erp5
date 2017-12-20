@@ -145,13 +145,15 @@ section {
 }
 .ci-slideshow-footer .ci-slideshow-container-left .ci-slideshow-footer-image-wrapper {
   min-height: 20mm;
-  display: inline;
   vertical-align: middle;
+  width: 100%;
+  line-height: 20mm;
 }
 .ci-slideshow-footer .ci-slideshow-container-left .ci-slideshow-footer-image-wrapper img {
-  display: inline-block;
-  width: auto;
-  height: 14mm;
+  max-width: 28mm;
+  height: auto;
+  max-height: 14mm;
+  vertical-align: middle;
 }
 .ci-slideshow-footer .ci-slideshow-container-left {
   text-align: left;

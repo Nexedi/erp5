@@ -92,8 +92,9 @@ html{
 }
 .ci-leaflet-footer .ci-leaflet-footer-image-wrapper img {
   display: inline-block;
-  width: auto;
-  height: 50px;
+  max-width: 100px;
+  height: auto;
+  max-height: 50px;
 }
 /*
 .ci-leaflet .ci-leaflet-container-left img {

@@ -278,15 +278,17 @@ html .ci-slideshow .ci-slideshow-footer > div {
   width: 32%;
   vertical-align: middle;
 }
-.ci-slideshow-footer-image-wrapper {
+.ci-slideshow-footer .ci-slideshow-footer-image-wrapper {
   min-height: 20mm;
-  display: inline;
   vertical-align: middle;
+  width: 100%;
+  line-height: 20mm;
 }
-.ci-slideshow-footer-image-wrapper img {
-  display: inline-block;
-  width: auto;
-  height: 50px;
+.ci-slideshow-footer .ci-slideshow-footer-image-wrapper img {
+  max-width: 100px;
+  height: auto;
+  max-height: 50px;
+  vertical-align: middle;
 }
 
 html .ci-slideshow .ci-slideshow-container-left {
