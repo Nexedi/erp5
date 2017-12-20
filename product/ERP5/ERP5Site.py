@@ -2233,11 +2233,8 @@ class ERP5Generator(PortalGenerator):
     tool = p.portal_workflow
     tool.manage_delObjects(filter(tool.hasObject, manager_workflow_list))
     tool.manage_delObjects(filter(tool.hasObject, workflow_list))
-    self.bootstrap_bm(tool, 'erp5_core', (
-      'portal_workflow/business_template_installation_workflow',
-      'portal_workflow/business_template_building_workflow',
-      'portal_types/Business Template#type_workflow_list',
-      ))
+    self.bootstrap(tool, 'erp5_core', 'WorkflowTemplateItem', workflow_list)
+    tool.setChainForPortalTypes(('Business Template',), workflow_list)
     self.bootstrap(tool, 'erp5_business_package', 'WorkflowTemplateItem', (
       'business_manager_building_workflow',
       'business_manager_installation_workflow',
@@ -2396,7 +2393,7 @@ class ERP5Generator(PortalGenerator):
     """
     template_tool = p.portal_templates
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
-      for bt in ('erp5_core', 'erp5_business_package', 'erp5_property_sheets',
+      for bt in ('erp5_property_sheets', 'erp5_core', 'erp5_business_package',
                   ):
         if not bt:
           continue

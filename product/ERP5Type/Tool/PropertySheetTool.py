@@ -62,18 +62,16 @@ class PropertySheetTool(BaseTool):
   def _bootstrap(self):
     bt_name = 'erp5_property_sheets'
     from Products.ERP5.ERP5Site import ERP5Generator
-    ERP5Generator.bootstrap_bm(self, bt_name, (
-      'portal_property_sheets/BaseType',
-      'portal_property_sheets/BusinessTemplate',
-      'portal_property_sheets/Folder',
-      'portal_property_sheets/SimpleItem',
-      'portal_property_sheets/Version',
-      'portal_property_sheets/Comment',
-      # the following ones are required to upgrade an existing site
-      'portal_property_sheets/Reference',
-      'portal_property_sheets/BaseCategory',
-      'portal_property_sheets/SQLIdGenerator',
-    ))
+    ERP5Generator.bootstrap(self, bt_name, 'PropertySheetTemplateItem', (
+       'BaseType',
+       'BusinessTemplate',
+       'Folder',
+       'SimpleItem',
+       'Version',
+       'Comment',
+       'Reference',
+       'BaseCategory',
+       'SQLIdGenerator',))
     def install():
       from ZPublisher.BaseRequest import RequestContainer
       from Products.ERP5Type.Globals import get_request
