@@ -124,13 +124,11 @@ class TypesTool(TypeProvider):
 
   def _bootstrap(self):
     from Products.ERP5.ERP5Site import ERP5Generator
-    ERP5Generator.bootstrap_bm(self, 'erp5_core', (
-      'portal_types/Business Template',
-      'portal_types/Standard Property',
-      'portal_types/Acquired Property',
-      # the following ones are required to upgrade an existing site
-      'portal_types/Category Property',
-    ))
+    ERP5Generator.bootstrap(self, 'erp5_core', 'PortalTypeTemplateItem', (
+       'Business Template',
+       'Standard Property',
+       'Acquired Property',
+       'Category Property'))
     # Bootstrap Business Manager as it'll be needed while installation
     ERP5Generator.bootstrap(self, 'erp5_business_package', 'PortalTypeTemplateItem', (
       'Business Manager',
