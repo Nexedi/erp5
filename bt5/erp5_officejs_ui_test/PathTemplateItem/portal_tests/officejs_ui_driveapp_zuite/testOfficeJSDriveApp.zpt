@@ -56,8 +56,13 @@
   <td></td>
 </tr>
 <tr>
-  <td>runScript</td>
-  <td>window.indexedDB.deleteDatabase('jio:setting')</td>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Storages"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Storages"]</td>
   <td></td>
 </tr>
 <tr>
