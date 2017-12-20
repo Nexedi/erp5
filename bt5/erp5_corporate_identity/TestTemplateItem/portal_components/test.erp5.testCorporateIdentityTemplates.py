@@ -39,27 +39,6 @@ import base64
 
 host_url = r"https?://localhost(?::[0-9]+)?/[^/]+/"
 test_url = "https://softinst73908.host.vifib.net/erp5/"
-
-#def setDomainDict(script_id, script_param, script_code):
-#  def wrapper(func):
-#    @functools.wraps(func)
-#    def wrapped(self, *args, **kwargs):
-#      if script_id in self.portal.portal_skins.custom.objectIds():
-#        raise ValueError('Precondition failed: %s exists in custom' % script_id)
-#      createZODBPythonScript(
-#        self.portal.portal_skins.custom,
-#        script_id,
-#        script_param,
-#        script_code,
-#      )
-#      try:
-#        func(self, *args, **kwargs)
-#      finally:
-#        if script_id in self.portal.portal_skins.custom.objectIds():
-#          self.portal.portal_skins.custom.manage_delObjects(script_id)
-#        transaction.commit()
-#    return wrapped
-#  return wrapper
   
 def changeSkin(skin_name):
   """
@@ -108,6 +87,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     self.message_catalog.message_edit('Data Sheet', 'de', 'Datenblatt', '')
     self.message_catalog.gettext('Table of Contents', add=1)
     self.message_catalog.message_edit('Table of Contents', 'de', 'Inhaltsverzeichnis', '')
+    self.message_catalog.gettext('Adress', add=1)
+    self.message_catalog.message_edit('Adress', 'de', 'Adresse', '')
 
     # Activating a system preference if none is activated
     for preference in self.portal.portal_catalog(portal_type="System Preference"):
@@ -184,7 +165,6 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     try:
       system_preference.edit(
         preferred_document_conversion_server_url="https://cloudooo.erp5.net/",
-        #https://softinst77579.host.vifib.net/
       )
       return args[0](*args[1:], **kw)
     finally:
@@ -238,7 +218,6 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     dump = getattr(self.portal, 'dump_data', None)
     kw["batch_mode"] = 1
 
-    #html = getattr(test_page, kw.get("test_method"))(portal_skin=kw.get("use_skin"), **kw)
     html = self.call(
       self.callWithNewRequestAcceptLanguage,
       self.callWithNewRequestForm,
@@ -831,7 +810,6 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       )
     )
 
-  #@setDomainDict("ERP5Site_getWebSiteDomainDict", "", 'return {"test.portal.erp": context.getPortalObject()}')
   @changeSkin('Leaflet')
   def test_pdfLeafletOverrides(self):
     """
