@@ -87,8 +87,8 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     self.message_catalog.message_edit('Data Sheet', 'de', 'Datenblatt', '')
     self.message_catalog.gettext('Table of Contents', add=1)
     self.message_catalog.message_edit('Table of Contents', 'de', 'Inhaltsverzeichnis', '')
-    self.message_catalog.gettext('Adress', add=1)
-    self.message_catalog.message_edit('Adress', 'de', 'Adresse', '')
+    self.message_catalog.gettext('Web Adress', add=1)
+    self.message_catalog.message_edit('Web Adress', 'de', 'Web Adresse', '')
 
     # Activating a system preference if none is activated
     for preference in self.portal.portal_catalog(portal_type="System Preference"):
