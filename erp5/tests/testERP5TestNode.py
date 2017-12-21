@@ -1,15 +1,13 @@
 import unittest
 from unittest import TestCase
 
-from erp5.util.testnode.testnode import TestNode
+from erp5.util.testnode.testnode import TestNode, test_type_registry
 from erp5.util.testnode.NodeTestSuite import SlapOSInstance, NodeTestSuite
 from erp5.util.testnode.ProcessManager import ProcessManager, SubprocessError
 from erp5.util.testnode.Updater import Updater
 
 from erp5.util.testnode.SlapOSMasterCommunicator import SlapOSMasterCommunicator
 from erp5.util.testnode.SlapOSControler import SlapOSControler
-from erp5.util.testnode.UnitTestRunner import UnitTestRunner
-from erp5.util.testnode.ScalabilityTestRunner import ScalabilityTestRunner
 from erp5.util.testnode.SlapOSControler import createFolder
 
 from erp5.util.taskdistribution import TaskDistributor
@@ -55,14 +53,6 @@ class ERP5TestNode(TestCase):
       for arg in args:
         print "TESTNODE LOG : %r, %r" % (arg, kw)
     self.log = log
-
-  def returnGoodClassRunner(self, test_type):
-      if test_type == 'UnitTest':
-        return UnitTestRunner
-      elif test_type == 'ScalabilityTest':
-        return ScalabilityTestRunner
-      else:
-        raise NotImplementedError
 
   def tearDown(self):
     shutil.rmtree(self._temp_dir, True)
@@ -127,7 +117,7 @@ class ERP5TestNode(TestCase):
     """
     Update from zero/Regenerate the testsuite
     """
-    node_test_suite.edit(working_directory=self.working_directory,
+    node_test_suite.edit(
        **self.getTestSuiteData(add_third_repository=add_third_repository,
                                add_broken_repository=add_broken_repository)[0])
 
@@ -188,8 +178,9 @@ class ERP5TestNode(TestCase):
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.assertEquals(0, node_test_suite.retry_software_count)
     node_test_suite.retry_software_count = 2
+    self.assertIs(node_test_suite, test_node.getNodeTestSuite('foo'))
     self.assertEquals(2, node_test_suite.retry_software_count)
-    node_test_suite = test_node.delNodeTestSuite('foo')
+    del test_node.node_test_suite_dict['foo']
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.assertEquals(0, node_test_suite.retry_software_count)
 
@@ -199,7 +190,6 @@ class ERP5TestNode(TestCase):
     """
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
-    node_test_suite.edit(working_directory=self.working_directory)
     self.assertEquals("%s/foo" % self.working_directory,
                       node_test_suite.working_directory)
     self.assertEquals("%s/foo/test_suite" % self.working_directory,
@@ -471,16 +461,16 @@ shared = true
     test_node = self.getTestNode()
     test_suite_data = self.getTestSuiteData(add_third_repository=True)
     self.assertEquals([], os.listdir(self.working_directory))
-    test_node.checkOldTestSuite(test_suite_data)
+    test_node.purgeOldTestSuite(test_suite_data)
     self.assertEquals([], os.listdir(self.working_directory))
     os.mkdir(os.path.join(self.working_directory, 'foo'))
     self.assertEquals(['foo'], os.listdir(self.working_directory))
-    test_node.checkOldTestSuite(test_suite_data)
+    test_node.purgeOldTestSuite(test_suite_data)
     self.assertEquals(['foo'], os.listdir(self.working_directory))
     os.mkdir(os.path.join(self.working_directory, 'bar'))
     self.assertEquals(set(['bar','foo']),
                       set(os.listdir(self.working_directory)))
-    test_node.checkOldTestSuite(test_suite_data)
+    test_node.purgeOldTestSuite(test_suite_data)
     self.assertEquals(['foo'], os.listdir(self.working_directory))
 
   def test_09_runTestSuite(self, my_test_type='UnitTest'):
@@ -499,15 +489,13 @@ shared = true
 
     test_node = self.getTestNode()
     test_node.process_manager.spawn = spawn
-    RunnerClass = self.returnGoodClassRunner(my_test_type)
-    runner = self.returnGoodClassRunner(my_test_type)(test_node)
-    slapos_controler = runner._getSlapOSControler(self.working_directory)
+    runner = test_type_registry[my_test_type](test_node)
     # Create and initialise/regenerate a nodetestsuite
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
     node_test_suite.revision_list = ('dummy', (0, '')),
 
-    path = slapos_controler.instance_root + '/a/bin/runTestSuite'
+    path = runner.getInstanceRoot(node_test_suite) + '/a/bin/runTestSuite'
     os.makedirs(os.path.dirname(path))
     os.close(os.open(path, os.O_CREAT))
 
@@ -542,11 +530,9 @@ shared = true
 
   def test_10_prepareSlapOS(self, my_test_type='UnitTest'):
     test_node = self.getTestNode()
-    test_node_slapos = SlapOSInstance()
-    RunnerClass = self.returnGoodClassRunner(my_test_type)
-    runner = RunnerClass(test_node)
+    test_node_slapos = SlapOSInstance(self.slapos_directory)
+    runner = test_type_registry[my_test_type](test_node)
     node_test_suite = test_node.getNodeTestSuite('foo')
-    node_test_suite.edit(working_directory=self.working_directory)
     status_dict = {"status_code" : 0}
     global call_list
     call_list = []
@@ -660,7 +646,7 @@ shared = true
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
-    RunnerClass = self.returnGoodClassRunner(my_test_type)
+    RunnerClass = test_type_registry[my_test_type]
     # Patch
     if my_test_type == "ScalabilityTest":
       original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey
@@ -742,7 +728,6 @@ shared = true
   def test_14_createFolder(self):
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
-    node_test_suite.edit(working_directory=self.working_directory)
     folder = node_test_suite.test_suite_directory
     self.assertEquals(False, os.path.exists(folder))
     createFolder(folder)
@@ -818,7 +803,7 @@ shared = true
         self.assertEquals(1, len([x for x in suite_log.readlines() \
                               if x.find("Activated logfile")>=0]))
 
-    RunnerClass = self.returnGoodClassRunner(my_test_type)
+    RunnerClass = test_type_registry[my_test_type]
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
@@ -938,8 +923,7 @@ shared = true
       SlapOSControler.initializeSlapOSControler
     initial_runSoftwareRelease = SlapOSControler.runSoftwareRelease
     test_node = self.getTestNode()
-    RunnerClass = self.returnGoodClassRunner(my_test_type)
-    runner = RunnerClass(test_node)
+    runner = test_type_registry[my_test_type](test_node)
     node_test_suite = test_node.getNodeTestSuite('foo')
     init_call_kw_list = []
     def initializeSlapOSControler(self, **kw):
@@ -1045,7 +1029,7 @@ shared = true
     os.makedirs(test_result_path_root)
     self.generateTestRepositoryList()
     # Select the good runner to modify
-    RunnerClass = self.returnGoodClassRunner('ScalabilityTest')
+    RunnerClass = test_type_registry['ScalabilityTest']
     # Patch methods
     original_sleep = time.sleep
     original_getSlaposAccountKey = TaskDistributor.getSlaposAccountKey

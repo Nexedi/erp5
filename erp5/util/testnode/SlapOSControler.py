@@ -99,12 +99,6 @@ class SlapOSControler(object):
     else:
       raise ValueError("Configuration file not found.")
 
-  def getInstanceRequestedState(self, reference):
-    try:
-      return self.instance_config[reference]['requested_state']
-    except Exception:
-      raise ValueError("Instance '%s' not exist" %self.instance_config[reference])
-      
   def request(self, reference, software_url, software_type=None,
             software_configuration=None, computer_guid=None, state='started'):
     """
@@ -219,7 +213,7 @@ class SlapOSControler(object):
     self.software_path_list = software_path_list
     self.log('SlapOSControler, initialize, reset_software: %r', reset_software)
     config = self.config
-    slapos_config_dict = self.config.copy()
+    slapos_config_dict = config.copy()
     slapos_config_dict.update(software_root=self.software_root,
                               instance_root=self.instance_root,
                               proxy_database=self.proxy_database)

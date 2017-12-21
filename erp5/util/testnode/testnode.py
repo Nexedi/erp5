@@ -53,6 +53,11 @@ class DummyLogger(object):
       'critical', 'fatal'):
        setattr(self, name, func)
 
+test_type_registry = {
+  'UnitTest': UnitTestRunner,
+  'ScalabilityTest': ScalabilityTestRunner,
+}
+
 class TestNode(object):
 
   def __init__(self, log, config, max_log_time=MAX_LOG_TIME,
@@ -68,35 +73,28 @@ class TestNode(object):
     self.max_temp_time = max_temp_time
     self.url_access = "https://[0::0]:0123" # Ipv6 + port of the node
 
-
-  def checkOldTestSuite(self,test_suite_data):
-    installed_reference_set = set(os.listdir(self.working_directory))
-    wished_reference_set = set([x['test_suite_reference'] for x in test_suite_data])
-    to_remove_reference_set = installed_reference_set.difference(
-                                 wished_reference_set)
-    for y in to_remove_reference_set:
-      fpath = os.path.join(self.working_directory,y)
-      self.delNodeTestSuite(y)
-      self.log("testnode.checkOldTestSuite, DELETING : %r", fpath)
+  def purgeOldTestSuite(self, test_suite_data):
+    reference_set = set(os.listdir(self.working_directory))
+    reference_set.difference_update(x['test_suite_reference']
+                                    for x in test_suite_data)
+    for reference in reference_set:
+      fpath = os.path.join(self.working_directory, reference)
+      self.node_test_suite_dict.pop(reference, None)
+      self.log("testnode.purgeOldTestSuite, DELETING : %r", fpath)
       if os.path.isdir(fpath):
         shutil.rmtree(fpath)
       else:
         os.remove(fpath)
   
   def getNodeTestSuite(self, reference):
-    node_test_suite = self.node_test_suite_dict.get(reference)
-    if node_test_suite is None:
-      node_test_suite = NodeTestSuite(reference)
-      self.node_test_suite_dict[reference] = node_test_suite
-
-    node_test_suite.edit(
-               log=self.log,
-               config=self.config, 
-               process_manager=self.process_manager)
+    try:
+      node_test_suite = self.node_test_suite_dict[reference]
+    except KeyError:
+      node_test_suite = self.node_test_suite_dict[reference] = \
+        NodeTestSuite(reference, self.working_directory)
+      config = self.config
+      node_test_suite.edit(log_directory=config['log_directory'])
     return node_test_suite
-
-  def delNodeTestSuite(self, reference):
-    self.node_test_suite_dict.pop(reference, None)
 
   def constructProfile(self, node_test_suite, test_type, use_relative_path=False):
     assert len(node_test_suite.vcs_repository_list), "we must have at least one repository"
@@ -129,6 +127,10 @@ class TestNode(object):
                                     node_test_suite.reference)
           repository_path = os.path.relpath(repository_path, from_path)
 
+        # XXX: Like in run(), code depending on specific test type must be
+        #      moved to the test type classes. In particular, the use of a
+        #      replacement pattern ('<obfuscated_url>') is ugly: buildout
+        #      has cleaner ways to do that.
         if test_type=="ScalabilityTest":
           # <obfuscated_url> word is modified by in runner.prepareSlapOSForTestSuite()
           profile_content_list.append("""
@@ -159,7 +161,6 @@ shared = true
       f.write("[buildout]\nextends = %s\n%s" % (
         software_config_path,
         ''.join(profile_content_list)))
-    sys.path.append(repository_path)
 
   def updateRevisionList(self, node_test_suite):
     config = self.config
@@ -195,11 +196,8 @@ shared = true
     test_result.reportStatus('LOG url', "%s/%s" % (self.config.get('httpd_url'),
                              folder_id), '')
     self.log("going to switch to log %r", suite_log_path)
-    self.process_manager.log = self.log = self.getSuiteLog()
+    self.process_manager.log = self.log = self.suite_log
     return suite_log_path
-
-  def getSuiteLog(self):
-    return self.suite_log
 
   def _initializeSuiteLog(self, suite_log_path):
     # remove previous handlers
@@ -281,8 +279,8 @@ shared = true
   def run(self):
     log = self.log
     config = self.config
-    test_node_slapos = SlapOSInstance()
-    test_node_slapos.edit(working_directory=config['slapos_directory'])
+    portal_url = config['test_suite_master_url']
+    test_node_slapos = SlapOSInstance(config['slapos_directory'])
     try:
       while True:
         test_result = None
@@ -291,12 +289,12 @@ shared = true
           self.log = self.process_manager.log = self.testnode_log
           self.cleanUp()
           begin = time.time()
-          portal_url = config['test_suite_master_url']
-          self.taskdistribution = taskdistribution.TaskDistributor(
-                                                        portal_url,
-                                                        logger=DummyLogger(log))
-          node_configuration = self.taskdistribution.subscribeNode(node_title=config['test_node_title'],
-                                               computer_guid=config['computer_id'])
+          taskdistributor = taskdistribution.TaskDistributor(
+            portal_url, logger=DummyLogger(log))
+          self.test_suite_portal = taskdistributor # XXX ScalabilityTest
+          node_configuration = taskdistributor.subscribeNode(
+            node_title=config['test_node_title'],
+            computer_guid=config['computer_id'])
           if type(node_configuration) is str:
             # Backward compatiblity
             node_configuration = json.loads(node_configuration)
@@ -307,9 +305,9 @@ shared = true
             log('Received and using process timeout from master: %i',
               process_timeout)
             self.process_manager.max_timeout = process_timeout
-          test_suite_data = self.taskdistribution.startTestSuite(
-                                               node_title=config['test_node_title'],
-                                               computer_guid=config['computer_id'])
+          test_suite_data = taskdistributor.startTestSuite(
+            node_title=config['test_node_title'],
+            computer_guid=config['computer_id'])
           if type(test_suite_data) is str:
             # Backward compatiblity
             test_suite_data = json.loads(test_suite_data)
@@ -317,40 +315,27 @@ shared = true
           log("Got following test suite data from master : %r",
               test_suite_data)
           try:
-            my_test_type = self.taskdistribution.getTestType()
+            my_test_type = taskdistributor.getTestType()
           except Exception:
             log("testnode, error during requesting getTestType() method"
                 " from the distributor.")
             raise
           # Select runner according to the test type
-          if my_test_type == 'UnitTest':
-            runner = UnitTestRunner(self)
-          elif my_test_type == 'ScalabilityTest':
-            runner = ScalabilityTestRunner(self)
-          else:
+          try:
+            runner_class = test_type_registry[my_test_type]
+          except KeyError:
             log("testnode, Runner type %s not implemented.", my_test_type)
             raise NotImplementedError
+          runner = runner_class(self)
           log("Type of current test is %s", my_test_type)
           # master testnode gets test_suites, slaves get nothing
           runner.prepareSlapOSForTestNode(test_node_slapos)
           # Clean-up test suites
-          self.checkOldTestSuite(test_suite_data)
+          self.purgeOldTestSuite(test_suite_data)
           for test_suite in test_suite_data:
             node_test_suite = self.getNodeTestSuite(
-               test_suite["test_suite_reference"])
-
-            node_test_suite.edit(
-               working_directory=config['working_directory'],
-               log_directory=config['log_directory'])
-
+               test_suite.pop("test_suite_reference"))
             node_test_suite.edit(**test_suite)
-            if my_test_type == 'UnitTest':
-              runner = UnitTestRunner(node_test_suite)
-            elif my_test_type == 'ScalabilityTest':
-              runner = ScalabilityTestRunner(self)
-            else:
-              log("testnode, Runner type %s not implemented.", my_test_type)
-              raise NotImplementedError
 
             # XXX: temporary hack to prevent empty test_suite
             if not hasattr(node_test_suite, 'test_suite'):
@@ -359,11 +344,7 @@ shared = true
             self.process_manager.killPreviousRun()
             if not self.updateRevisionList(node_test_suite):
               continue
-            # Write our own software.cfg to use the local repository
-            self.constructProfile(node_test_suite, my_test_type, 
-                                  runner.getRelativePathUsage())
-            # Make sure we have local repository
-            test_result = self.taskdistribution.createTestResult(
+            test_result = taskdistributor.createTestResult(
                      node_test_suite.revision, [],
                      config['test_node_title'], False,
                      node_test_suite.test_suite_title,
@@ -375,17 +356,23 @@ shared = true
               node_test_suite.edit(test_result=test_result)
               # get cluster configuration for this test suite, this is needed to
               # know slapos parameters to user for creating instances
-              log("Getting configuration from test suite %s", node_test_suite.test_suite_title)
-              generated_config = self.taskdistribution.generateConfiguration(node_test_suite.test_suite_title)
+              log("Getting configuration from test suite %s",
+                  node_test_suite.test_suite_title)
+              generated_config = taskdistributor.generateConfiguration(
+                node_test_suite.test_suite_title)
               json_data = json.loads(generated_config)
               cluster_configuration = deunicodeData(json_data['configuration_list'][0])
               node_test_suite.edit(cluster_configuration=cluster_configuration)
               # Now prepare the installation of SlapOS and create instance
+              self.constructProfile(node_test_suite, my_test_type,
+                                    runner.getRelativePathUsage())
               status_dict = runner.prepareSlapOSForTestSuite(node_test_suite)
               # Give some time so computer partitions may start
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...
               time.sleep(20)
+              # XXX: Do not switch according to the test type. IOW, the
+              #      following code must be moved to the test type class.
               if my_test_type == 'UnitTest':
                 runner.runTestSuite(node_test_suite, portal_url)
               elif my_test_type == 'ScalabilityTest':

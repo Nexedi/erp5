@@ -29,14 +29,8 @@ import argparse
 import logging
 import logging.handlers
 import os
-import pkg_resources
 
-from testnode import TestNode
-
-CONFIG = {
-  'computer_id': 'COMPUTER',
-  'partition_reference': 'test0',
-}
+from .testnode import TestNode
 
 def main(*args):
   parser = argparse.ArgumentParser()
@@ -54,6 +48,10 @@ def main(*args):
   logging.basicConfig(level=logging.INFO,
                      format=logger_format)
   logger = logging.getLogger('erp5testnode')
+  CONFIG = {
+    'logger': logger.info,
+    'partition_reference': 'test0',
+  }
   if parsed_argument.console or parsed_argument.logfile:
     if parsed_argument.console:
       logger.addHandler(logging.StreamHandler())
@@ -64,11 +62,10 @@ def main(*args):
         maxBytes=20000000, backupCount=4)
       file_handler.setFormatter(formatter)
       logger.addHandler(file_handler)
-      logger.info('Activated logfile %r output' % parsed_argument.logfile)
+      logger.info('Activated logfile %r output', parsed_argument.logfile)
       CONFIG['log_file'] = parsed_argument.logfile
   else:
     logger.addHandler(logging.NullHandler())
-  CONFIG['logger'] = logger.info
   config = ConfigParser.SafeConfigParser()
   # do not change case of option keys
   config.optionxform = str
