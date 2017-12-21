@@ -99,12 +99,18 @@ def populateOrganisationDict(my_organisation_list):
     organisation_fax = organisation.getDefaultFax()
     organisation_link_list = organisation.objectValues(portal_type="Link",title="Corporate Web Site")
     organisation_bank_list = organisation.objectValues(portal_type="Bank Account",title="Default Bank Account")
+    organisation_default_image = organisation.getDefaultImage()
 
     output_dict["organisation_title"] = organisation.getTitle()
-    output_dict["logo_url"] = organisation.getDefaultImageAbsoluteUrl() or err("logo_url")
     output_dict["corporate_name"] = organisation.getCorporateName() or err("corporate name")
     output_dict["social_capital"] = organisation.getSocialCapital() or err("social capital")
     output_dict["activity_code"] = organisation.getActivityCode() or err("activitiy code")    
+    
+    #output_dict["logo_url"] = organisation.getDefaultImageAbsoluteUrl() or err("logo_url")
+    if organisation_default_image is not None:
+      output_dict["logo_url"] = organisation_default_image.getRelativeUrl() 
+    else:
+      output_dict["logo_url"] = err("logo_url")
 
     # XXX we should have social_capital_currency and corporate_registration_court
     output_dict["social_capital_currency"] = err("social capital")
