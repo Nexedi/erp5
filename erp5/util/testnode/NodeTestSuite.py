@@ -77,11 +77,11 @@ class NodeTestSuite(SlapOSInstance):
         vcs_repository['repository_path'] = repository_path
 
   def createSuiteLog(self):
-    # /srv/slapgrid/slappartXX/srv/var/log/testnode/az-mlksjfmlk234Sljssdflkj23KSdfslj/suite.log
+    # /srv/slapgrid/slappartXX/srv/var/log/testnode/az-D27KqX7FxJ/suite.log
     alphabets = string.digits + string.letters
     while 1:
       log_folder_name = '%s-%s' % (self.reference,
-        ''.join(random.choice(alphabets) for i in xrange(32)))
+        ''.join(random.choice(alphabets) for i in xrange(10)))
       log_folder_path = os.path.join(self.log_directory, log_folder_name)
       try:
         os.makedirs(log_folder_path)
