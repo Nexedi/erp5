@@ -827,7 +827,7 @@ develop = false
         self.assertTrue(suite.suite_log_path.endswith('suite.log'))
         m = re.match('.*\-(.*)\/suite.log', suite.suite_log_path)
         rand_part = m.groups()[0]
-        self.assertEqual(len(rand_part), 32)
+        self.assertEqual(len(rand_part), 10)
         self.assertNotIn(rand_part, rand_part_set)
         rand_part_set.add(rand_part)
         suite_log = open(suite.suite_log_path, 'r')
