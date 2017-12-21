@@ -192,16 +192,18 @@ class CommitTool (BaseTool):
       commit_list = [l for l
                      in self.objectValues(portal_type='Business Commit')
                      if l != new_obj]
-      latest_commit = max(commit_list, key=(lambda x: x.getCreationDate()))
 
-      if new_obj.getPortalType() == 'Business Commit':
-        # TODO: Add check for no latest_commit. Usable especially for 1st BM
-        new_obj.setPredecessorValue(latest_commit)
-      else:
-        # If the new_obj is Business Snapshot, create a similar value for the
-        # latest commit
-        new_obj.setSimilarValue(latest_commit)
-        latest_commit.setSimilarValue(new_obj)
+      if commit_list:
+        latest_commit = max(commit_list, key=(lambda x: x.getCreationDate()))
+
+        if new_obj.getPortalType() == 'Business Commit':
+          # TODO: Add check for no latest_commit. Usable especially for 1st BC
+          new_obj.setPredecessorValue(latest_commit)
+        else:
+          # If the new_obj is Business Snapshot, create a similar value for the
+          # latest commit
+          new_obj.setSimilarValue(latest_commit)
+          latest_commit.setSimilarValue(new_obj)
 
       return new_obj
 
