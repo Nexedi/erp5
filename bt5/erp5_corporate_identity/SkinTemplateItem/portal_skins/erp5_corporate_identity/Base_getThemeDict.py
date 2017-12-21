@@ -37,11 +37,15 @@ if theme is not None:
     theme_logo_url = logo_prefix + theme.capitalize()
     try:
       theme_logo = context.restrictedTraverse(theme_logo_url)
-    except LookupError:
       #context.log("status", "theme_logo_url: %r" % (theme_logo_url,))
       __traceback_info__ = "theme_logo_url: %r" % (theme_logo_url,)
-      raise Exception("theme_logo_url: %r" % (theme_logo_url,))
+      raise Exception("%s and context: %r" % (theme_logo_url, theme_logo,))
+    #except LookupError:
+    except:
+      __traceback_info__ = "theme_logo_url: %r" % (theme_logo_url,)
+      raise Exception("%s and context: %r" % (theme_logo_url, context.restrictedTraverse(theme_logo_url),))
       theme_logo = None
+      
   if theme_logo:
     theme_logo_description = theme_logo.getDescription()
 if theme is None:
