@@ -69,7 +69,6 @@ class Sound(File):
     RESPONSE.setHeader('Content-Length', len(data))
     RESPONSE.setHeader('Content-Type', mime)
     filename = self.getStandardFilename(format=format)
-    RESPONSE.setHeader('Cache-Control', 'Private') # workaround for Internet Explorer's bug
     # workaround for IE's bug to download files over SSL
     RESPONSE.setHeader('Pragma', '')
     RESPONSE.setHeader('Content-Disposition',

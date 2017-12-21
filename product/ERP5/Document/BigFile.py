@@ -319,7 +319,6 @@ class BigFile(File):
     if not inline:
       # need to return it as attachment
       filename = self.getStandardFilename(format=format)
-      RESPONSE.setHeader('Cache-Control', 'Private') # workaround for Internet Explorer's bug
       RESPONSE.setHeader('Accept-Ranges', 'bytes')
 
 

@@ -122,7 +122,6 @@ class DownloadableMixin:
         filename = self.getStandardFilename(format=output_format)
       else:
         filename = self.getStandardFilename(format=format)
-      RESPONSE.setHeader('Cache-Control', 'Private') # workaround for Internet Explorer's bug
       # workaround for IE's bug to download files over SSL
       RESPONSE.setHeader('Pragma', '')
       RESPONSE.setHeader('Content-Disposition',
