@@ -19,7 +19,6 @@ css = "default_theme_css_url"
 font = "default_theme_font_css_url_list"
 param = "?format=png"
 theme_logo_alt = "Default Logo"
-default_company_title = context.Base_getCustomTemplateParameter("default_company_title")
 
 theme_logo = None
 theme_logo_url = None
@@ -28,7 +27,7 @@ theme_logo_description = blank
 theme = (
   context.Base_getCustomTemplateProxyParameter("theme") or
   context.Base_getCustomTemplateParameter("theme") or
-  default_company_title
+  context.Base_getCustomTemplateParameter("default_company_title")
 )
 
 if theme is not None:
@@ -39,6 +38,9 @@ if theme is not None:
     try:
       theme_logo = context.restrictedTraverse(theme_logo_url)
     except LookupError:
+      #context.log("status", "theme_logo_url: %r" % (theme_logo_url,))
+      __traceback_info__ = "theme_logo_url: %r" % (theme_logo_url,)
+      raise Exception("theme_logo_url: %r" % (theme_logo_url,))
       theme_logo = None
   if theme_logo:
     theme_logo_description = theme_logo.getDescription()
