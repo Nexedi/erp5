@@ -37,38 +37,28 @@ class SlapOSInstance(object):
   Base of an software instance,
   store variables used during software installation
   """
-  def __init__(self):
+  def __init__(self, working_directory):
     self.retry_software_count = 0
     self.retry = False
+    self.working_directory = working_directory
 
-  def edit(self, **kw):
-    self.__dict__.update(**kw)
-    self._checkData()
-
-  def _checkData(self):
-    pass
 
 class NodeTestSuite(SlapOSInstance):
   """
   
   """
-  def __init__(self, reference):
-    super(NodeTestSuite, self).__init__()
+  def __init__(self, reference, working_directory):
+    d = os.path.join(working_directory, reference)
+    super(NodeTestSuite, self).__init__(d)
     self.reference = reference
     self.cluster_configuration = {}
+    self.test_suite_directory = os.path.join(d, 'test_suite')
+    self.custom_profile_path = os.path.join(d, 'software.cfg')
+    createFolder(d)
 
-  def _checkData(self):
-    if getattr(self, "working_directory", None) is not None:
-      if not(self.working_directory.endswith(os.path.sep + self.reference)):
-        self.working_directory = os.path.join(self.working_directory,
-                                             self.reference)
-      createFolder(self.working_directory)
-      self.test_suite_directory = os.path.join(
-                                   self.working_directory, "test_suite")
-      self.custom_profile_path = os.path.join(self.working_directory,
-                                 'software.cfg')
-    if getattr(self, "vcs_repository_list", None) is not None:
-      for vcs_repository in self.vcs_repository_list:
+  def edit(self, **kw):
+    self.__dict__.update(**kw)
+    for vcs_repository in kw.get('vcs_repository_list', ()):
         buildout_section_id = vcs_repository.get('buildout_section_id')
         repository_id = buildout_section_id or \
                         vcs_repository.get('url').split('/')[-1].split('.')[0]

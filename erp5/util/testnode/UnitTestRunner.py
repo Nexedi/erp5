@@ -102,7 +102,7 @@ class UnitTestRunner(object):
     # report-url, report-project and suite-url are required to seleniumrunner
     # instance. This is a hack which must be removed.
     config = self.testnode.config
-    return self._prepareSlapOS(config['slapos_directory'],
+    return self._prepareSlapOS(test_node_slapos.working_directory,
               test_node_slapos, self.testnode.log, create_partition=0,
               software_path_list=config.get("software_list"),
               cluster_configuration={
@@ -120,14 +120,18 @@ class UnitTestRunner(object):
               software_path_list=[node_test_suite.custom_profile_path],
               cluster_configuration={'_': json.dumps(node_test_suite.cluster_configuration)})
 
+  def getInstanceRoot(self, node_test_suite):
+    return self._getSlapOSControler(
+      node_test_suite.working_directory).instance_root
+
   def runTestSuite(self, node_test_suite, portal_url, log=None):
     config = self.testnode.config
-    slapos_controler = self._getSlapOSControler(self.testnode.working_directory)
-    run_test_suite_path_list = sorted(glob.glob("%s/*/bin/runTestSuite" % \
-        slapos_controler.instance_root))
-    if not len(run_test_suite_path_list):
+    run_test_suite_path_list = glob.glob(
+        self.getInstanceRoot(node_test_suite) + "/*/bin/runTestSuite")
+    try:
+      run_test_suite_path = min(run_test_suite_path_list)
+    except ValueError:
       raise ValueError('No runTestSuite provided in installed partitions.')
-    run_test_suite_path = run_test_suite_path_list[0]
     # Deal with Shebang size limitation
     invocation_list = dealShebang(run_test_suite_path)
     invocation_list += (run_test_suite_path,
