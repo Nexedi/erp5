@@ -19,7 +19,7 @@
 
 from ZODB.Connection import Connection
 
-FORCE_STORAGE_SYNC_ON_CONNECTION_OPENING = False
+FORCE_STORAGE_SYNC_ON_CONNECTION_OPENING = True
 
 if 1: # keep indentation. Also good for quick disabling.
 
