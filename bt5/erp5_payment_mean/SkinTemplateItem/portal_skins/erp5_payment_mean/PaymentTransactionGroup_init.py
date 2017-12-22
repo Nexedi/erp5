@@ -8,6 +8,5 @@ if me is not None:
   if section is not None:
     context.setSourceSectionValue(section)
     context.setPriceCurrency(section.getPriceCurrency())
-new_id = context.portal_ids.generateNewLengthId(id_group = "PTGR",  default=1)
-reference = "PTGR-%06d" % (new_id)
-context.setSourceReference(reference)
+
+context.PaymentTransactionGroup_generateSourceReference()
