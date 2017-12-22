@@ -45,8 +45,6 @@
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
-
 
 <tr>
   <td>waitForElementPresent</td>
@@ -98,6 +96,7 @@
   <td></td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>waitForElementPresent</td>
@@ -113,17 +112,60 @@
   <td></td>
 </tr>
 
+<!-- Check the listbox column header -->
+<tr>
+  <td>assertText</td>
+  <td>//thead/tr/th[1]</td>
+  <td>ID</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//thead/tr/th[2]</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//thead/tr/th[3]</td>
+  <td>Quantity</td>
+</tr>
+
+
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Hide Rows']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tr>
   <td>waitForElementPresent</td>
   <td>//tbody/tr/td/input[@type="checkbox"]</td>
   <td></td>
 </tr>
+
+<!-- Check the listbox column header -->
+<tr>
+  <td>assertText</td>
+  <td>//thead/tr/th[1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//thead/tr/th[2]</td>
+  <td>ID</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//thead/tr/th[3]</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//thead/tr/th[4]</td>
+  <td>Quantity</td>
+</tr>
+
+<!-- Line checkbox -->
 
 <tr>
   <td>verifyValue</td>
@@ -165,6 +207,23 @@
   <td></td>
 </tr>
 
+<!-- Check the listbox column header -->
+<tr>
+  <td>assertText</td>
+  <td>//thead/tr/th[1]</td>
+  <td>ID</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//thead/tr/th[2]</td>
+  <td>Title</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//thead/tr/th[3]</td>
+  <td>Quantity</td>
+</tr>
+
 <!-- only one element present -->
 <tr>
   <td>verifyElementPresent</td>
@@ -191,6 +250,7 @@
    <td>//button[@data-i18n='Hide Rows']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tr>
   <td>waitForElementPresent</td>

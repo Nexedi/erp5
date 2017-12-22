@@ -5,10 +5,14 @@
   SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory) {
   "use strict";
   var gadget_klass = rJS(window),
-    listbox_thead_source = gadget_klass.__template_element
-                         .getElementById("listbox-thead-template")
+    listbox_hidden_thead_source = gadget_klass.__template_element
+                         .getElementById("listbox-hidden-thead-template")
                          .innerHTML,
-    listbox_thead_template = Handlebars.compile(listbox_thead_source),
+    listbox_hidden_thead_template = Handlebars.compile(listbox_hidden_thead_source),
+    listbox_show_thead_source = gadget_klass.__template_element
+                         .getElementById("listbox-show-thead-template")
+                         .innerHTML,
+    listbox_show_thead_template = Handlebars.compile(listbox_show_thead_source),
 
     listbox_hidden_tbody_source = gadget_klass.__template_element
                          .getElementById("listbox-hidden-tbody-template")
@@ -348,7 +352,8 @@
           .push(function (column_sort_link_list) {
             // here we obtain links for sorting by columns
             // so we can construct array of header objects to be rendered in the header template
-            var hide_button_text,
+            var listbox_thead_template,
+              hide_button_text,
               hide_button_name,
               head_value_list = column_list.map(function (column, index) {
                 var current_sort = sort_list.find(hasSameFirstItem(column)),
@@ -372,9 +377,11 @@
               });
 
             if (gadget.state.show_line_selector) {
+              listbox_thead_template = listbox_show_thead_template;
               hide_button_text = 'Submit';
               hide_button_name = 'SelectRows';
             } else {
+              listbox_thead_template = listbox_hidden_thead_template;
               hide_button_text = 'Hide Rows';
               hide_button_name = 'Hide';
             }
