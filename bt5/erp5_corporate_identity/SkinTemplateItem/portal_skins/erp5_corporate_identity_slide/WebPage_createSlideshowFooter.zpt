@@ -12,6 +12,7 @@ Creates the Slideshow footer section.
                        doc_theme_css_font_list           python: options.get('doc_theme_css_font_list');
                        doc_theme_css_url                 python: options.get('doc_theme_css_url');
                        doc_template_css_url              python: options.get('doc_template_css_url');
+                       doc_footer_url_description        python: options.get('doc_footer_url_description');
                        doc_footer_url                    python: options.get('doc_footer_url');
                        doc_description                   python: options.get('doc_description');
                        doc_creation_year                 python: options.get('doc_creation_year');
@@ -59,7 +60,8 @@ Creates the Slideshow footer section.
     <div class="ci-slideshow-footer">
 	    <div class="ci-slideshow-container-left">
 	      <div class="ci-slideshow-footer-image-wrapper">
-          <img tal:attributes="src python: doc_footer_url" alt="" />
+          <img tal:attributes="src python: doc_footer_url;
+                               alt python: doc_footer_url_description or 'logo'" />
         </div>
 	    </div>
 	    <div class="ci-slideshow-container-center" tal:content="doc_description"></div>

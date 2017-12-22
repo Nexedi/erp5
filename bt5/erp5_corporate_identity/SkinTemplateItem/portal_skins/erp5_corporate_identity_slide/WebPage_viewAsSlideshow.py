@@ -205,8 +205,9 @@ doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])
 doc_theme = doc.Base_getThemeDict(format=doc_format, css_path="slide_css/slide")
 doc_css = ''.join(['.ci-slideshow-intro.present:not(.slide-background):before {',
   'content: "%s";' % (doc_theme.get("theme_logo_description")),
-  'background: #FFF url("%s") center no-repeat;' % (doc_theme.get("theme_logo_url")),
-  'background-size: auto 120px;'
+  'background: #FFF url("%s") center no-repeat;' % (doc.Base_setUrl(path=doc_theme.get("theme_logo_url"), display="medium")),
+  #'background-size: auto 120px;',
+  'background-size: auto 45% !important;',
 '}'])
 
 # ---------------------------------- Source ------------------------------------
@@ -279,7 +280,8 @@ if doc_format == "html" or doc_format == "mhtml":
     doc_template_css_url=doc_theme.get("template_css_url"),
     doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
     doc_theme_css_url=doc_theme.get("theme_css_url"),
-    doc_footer_url=doc.Base_setUrl(path=doc_source.get("enhanced_logo_url")),
+    doc_footer_url_description=doc_theme.get("theme_logo_description"),
+    doc_footer_url=doc.Base_setUrl(path=doc_source.get("enhanced_logo_url"), display=None),
     doc_description=doc_description,
     doc_creation_year=doc_creation_year,
     doc_copyright=doc_source.get("organisation_title", blank),
@@ -316,7 +318,8 @@ if doc_format == "pdf":
     doc_template_css_url=doc_theme.get("template_css_url"),
     doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
     doc_theme_css_url=doc_theme.get("theme_css_url"),
-    doc_footer_url=doc.Base_setUrl(path=doc_source.get("enhanced_logo_url")),
+    doc_footer_url_description=doc_theme.get("theme_logo_description"),
+    doc_footer_url=doc.Base_setUrl(path=doc_source.get("enhanced_logo_url"), display=None),
     doc_description=doc_description,
     doc_creation_year=doc_creation_year,
     doc_copyright=doc_source.get("organisation_title", blank),

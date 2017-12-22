@@ -38,7 +38,9 @@ if theme is not None:
     theme_logo_url = logo_prefix + theme.capitalize()
     try:
       theme_logo = context.restrictedTraverse(theme_logo_url)
-      theme_logo_relative_url = theme_logo.getRelativeUrl()
+      theme_logo_relative_url = theme_logo_url
+      # XXX does not work in test-environment
+      #theme_logo_relative_url = theme_logo.getRelativeUrl()
       theme_logo_description = theme_logo.getDescription()
     except LookupError:
       #__traceback_info__ = "theme_logo_url: %r" % (theme_logo_url,)

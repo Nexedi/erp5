@@ -12,6 +12,7 @@ Generates the complete slideshow
                        doc_template_css_url               python: options.get('doc_template_css_url');
                        doc_theme_css_font_list            python: options.get('doc_theme_css_font_list');
                        doc_theme_css_url                  python: options.get('doc_theme_css_url');
+                       doc_footer_url_description         python: options.get('doc_footer_url_description');
                        doc_footer_url                     python: options.get('doc_footer_url');
                        doc_description                    python: options.get('doc_description');
                        doc_creation_year                  python: options.get('doc_creation_year');

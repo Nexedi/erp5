@@ -15,4 +15,4 @@ Add image size conversion only if image is not the default image
 if path.find("common") > -1:
   return path
 else:
-  return path + "&display=thumbnail"
+  return path + "&display=%s" % (display or "thumbnail")
