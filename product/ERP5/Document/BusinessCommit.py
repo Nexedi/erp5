@@ -144,6 +144,7 @@ class BusinessCommit(Folder):
     - check if there is already an equivalent snapshot
     - if not, create one and install it
     """
+    site = self.getPortalObject()
     successor_list = self.getPredecessorRelatedValueList()
 
     # Check if the successor list has a snapshot in it
@@ -155,8 +156,26 @@ class BusinessCommit(Folder):
       # Create a new equivalent snapshot
       eqv_snapshot = self.createEquivalentSnapshot()
 
-    for item in eqv_snapshot.objectValues():
-      item.install(self)
+    # When installing Business Snapshot, installation state should be changed
+    if eqv_snapshot not in [None, self]:
+      if site.portal_workflow.isTransitionPossible(
+          eqv_snapshot, 'install'):
+        eqv_snapshot.install(self)
 
   def getItemPathList(self):
     return [l.getProperty('item_path') for l in self.objectValues()]
+
+  def getBusinessManagerList(self):
+    """
+    Give the list of all Business Manager(s) being touched by this Business
+    Commit
+    """
+    manager_list = []
+    for item in self.objectValues():
+      manager_list.extend(item.getFollowUpValueList())
+
+    return list(set(manager_list))
+
+  def getBusinessManagerTitleList(self):
+    title_list = [l.getTitle() for l in self.getBusinessManagerList()]
+    return title_list
