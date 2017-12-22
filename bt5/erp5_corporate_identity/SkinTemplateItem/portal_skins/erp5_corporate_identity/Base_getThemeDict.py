@@ -22,6 +22,7 @@ theme_logo_alt = "Default Logo"
 
 theme_logo = None
 theme_logo_url = None
+theme_logo_relative_url = None
 theme_logo_description = blank
 
 theme = (

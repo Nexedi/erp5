@@ -81,6 +81,7 @@ if override_logo_reference:
 if source_logo_url is None:
   source_logo_url = source.get("logo_url", blank)
 if source_logo_url is not blank and source_set is None:
+  # XXX: test environment fails if url with parameters are supplied
   source_logo_url = source_logo_url + "?format=png"
 if source_logo_url is blank and theme_logo_url is not None:
   source_logo_url = theme_logo_url

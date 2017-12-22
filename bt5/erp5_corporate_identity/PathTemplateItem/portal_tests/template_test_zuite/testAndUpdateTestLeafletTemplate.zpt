@@ -953,10 +953,10 @@ http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automat
   <td>pdf_source</td>
 </tr>
 <!-- pause to let the ajax request finish. now if the table was a async, queue
-     that would be nice, 3000 not enough-->
+     that would be nice, 3/6/9000 not enough-->
 <tr>
   <td>pause</td>
-  <td>6000</td>
+  <td>12000</td>
   <td></td>
 </tr>
 <tr>
@@ -1233,10 +1233,10 @@ http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automat
   <td>pdf_source</td>
 </tr>
 <!-- pause to let the ajax request finish. now if the table was a async, queue
-     that would be nice-->
+     that would be nice, 3/6000 did not work-->
 <tr>
   <td>pause</td>
-  <td>3000</td>
+  <td>9000</td>
   <td></td>
 </tr>
 <tr>
@@ -1493,10 +1493,10 @@ http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automat
   <td>pdf_source</td>
 </tr>
 <!-- pause to let the ajax request finish. now if the table was a async, queue
-     that would be nice-->
+     that would be nice 3/6000 did not work-->
 <tr>
   <td>pause</td>
-  <td>3000</td>
+  <td>9000</td>
   <td></td>
 </tr>
 <tr>

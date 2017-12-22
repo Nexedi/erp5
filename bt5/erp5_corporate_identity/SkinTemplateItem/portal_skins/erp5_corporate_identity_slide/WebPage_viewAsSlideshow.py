@@ -287,6 +287,7 @@ if doc_format == "html" or doc_format == "mhtml":
     doc_css=doc_css,
     doc_content=doc_content
   )
+
   if doc_format == "html":
     return doc.Base_finishWebPageCreation(
       doc_download=doc_download,
