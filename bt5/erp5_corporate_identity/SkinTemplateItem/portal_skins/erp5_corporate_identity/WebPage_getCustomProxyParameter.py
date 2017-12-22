@@ -8,6 +8,8 @@ portal_type_valid_template_list = ["Web Site", "Web Section", "Web Page", "Lette
 portal_type_valid_report_list = ["Project", "Sale Order", "Sale Opportunity"]
 portal_type = context.getPortalType()
 portal_object = context.getPortalObject()
+validation_state = ('released', 'released_alive', 'published', 'published_alive',
+            'shared', 'shared_alive', 'public', 'validated')
 
 if REQUEST is not None:
   return None
@@ -40,6 +42,16 @@ def populateProductDict(my_product_list):
     result_list.append(output_dict)
   return result_list
 
+def populateImageDict(my_image_list):
+  result_list = []
+  for image in my_image_list:
+    output_dict = {}
+    output_dict["relative_url"] = image.getRelativeUrl()
+    output_dict["reference"] = image.getReference() or err("reference")
+    output_dict["description"] = image.getDescription() or err("description")
+    result_list.append(output_dict)
+  return result_list
+    
 def populateBankDict(my_bank_list):
   result_list = []
   for bank in my_bank_list:
@@ -241,6 +253,15 @@ if pass_parameter is not None and pass_source_data is not None:
     return populateBankDict(portal_object.portal_catalog(
       portal_type="Bank Account",
       uid=pass_source_data
+    ))
+
+  # ------------------ Theme Logo (Prefix + Theme) -----------------------------
+  # returns [{logo_dict}] used in themes
+  if pass_parameter == "logo":
+    return populateImageDict(portal_object.portal_catalog(
+      portal_type="Image",
+      validation_state=validation_state,
+      reference=pass_source_data
     ))
 
   # ------------------------- Product (Website) --------------------------------

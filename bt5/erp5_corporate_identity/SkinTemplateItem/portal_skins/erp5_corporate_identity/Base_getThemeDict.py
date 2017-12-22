@@ -1,7 +1,7 @@
 """
 ================================================================================
 Create a theme dict for filling templates
-================================================================================
+=====================================r===========================================
 """
 # parameters:
 # ------------------------------------------------------------------------------
@@ -20,39 +20,31 @@ font = "default_theme_font_css_url_list"
 param = "?format=png"
 theme_logo_alt = "Default Logo"
 
-theme_logo = None
-theme_logo_url = None
-theme_logo_relative_url = None
-theme_logo_description = blank
-
+theme_logo_list = []
+theme_logo_dict = {}
+theme_reference = None
 theme = (
   context.Base_getCustomTemplateProxyParameter("theme") or
   context.Base_getCustomTemplateParameter("theme") or
   context.Base_getCustomTemplateParameter("default_company_title")
 )
-
 if theme is not None:
-  logo_prefix = context.Base_getCustomTemplateParameter("default_logo_prefix")
   theme = theme.lower()
-  if logo_prefix:
-    theme_logo_url = logo_prefix + theme.capitalize()
-    try:
-      theme_logo = context.restrictedTraverse(theme_logo_url)
-      theme_logo_relative_url = theme_logo_url
-      # XXX does not work in test-environment
-      #theme_logo_relative_url = theme_logo.getRelativeUrl()
-      theme_logo_description = theme_logo.getDescription()
-    except LookupError:
-      #__traceback_info__ = "theme_logo_url: %r" % (theme_logo_url,)
-      #raise Exception("%s and context: %r" % (theme_logo_url, context.restrictedTraverse(theme_logo_url),))
-      theme_logo = None
+  theme_logo_prefix = context.Base_getCustomTemplateParameter("default_logo_prefix")
+  if theme_logo_prefix:
+    theme_reference = theme_logo_prefix + theme.capitalize()
+    theme_logo_list = context.Base_getCustomTemplateProxyParameter("logo", theme_reference)
+    if len(theme_logo_list) > 0:
+      theme_logo_dict = theme_logo_list[0]
 if theme is None:
   theme = "default"
 
 theme_dict = {}
 theme_dict["theme"] = theme
-theme_dict["theme_logo_description"] = theme_logo_description
-theme_dict["theme_logo_url"] = (theme_logo_relative_url + param) if theme_logo_relative_url is not None else context.Base_getCustomTemplateParameter("fallback_image")
+theme_dict["theme_logo_description"] = theme_logo_dict.get("description", blank)
+theme_dict["theme_logo_url"] = context.Base_getCustomTemplateParameter("fallback_image")
+if theme_logo_dict.get("relative_url", None) is not None:
+  theme_dict["theme_logo_url"] = theme_logo_dict.get("relative_url") + param
 theme_dict["template_css_url"] = css_path + pdf + ".css"
 theme_dict["fallback_img_url"] = context.Base_getCustomTemplateParameter("fallback_image") or blank
 theme_dict["theme_css_font_list"] = context.Base_getCustomTemplateParameter(font) or []
