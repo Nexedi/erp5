@@ -189,7 +189,6 @@ class BusinessManager(Folder):
        , 'filter_content_types' : 1
     }
 
-  item_path_list = []
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -207,12 +206,6 @@ class BusinessManager(Folder):
   # XXX: This explicit setter and getter should be replaced using property
   # sheet.
 
-  def setItemPathList(self, value):
-    self.item_path_list = value
-
-  def getItemPathList(self):
-    return self.item_path_list
-
   def getShortRevision(self):
     return None
 
@@ -220,6 +213,23 @@ class BusinessManager(Folder):
     # Override the getter because currently we don't migrate the version, and
     # this is used to find missing dependency list
     return '5.4.7'
+
+  def install(self, **kw):
+    """
+    We have to create the snapshot state to find out what is going to be
+    installed and thus install only those paths which cater to the right commit
+    i.e, find the latest commit which modifies this Business Manager and
+    install it
+    """
+    # Get all Business Item which corresponds to this Business Manager
+    business_item_list = self.getFollowUpRelatedValueList()
+    # Get the commits corresponding to the Business Item
+    commit_list = [l.aq_parent for l in business_item_list]
+
+    if commit_list:
+      # Get the most recent Business Commit and install it
+      latest_commit = max(commit_list, key=(lambda x: x.getCreationDate()))
+      latest_commit.install()
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getBuildingState')
@@ -722,7 +732,22 @@ class BusinessItem(XMLObject):
   meta_type = 'Business Item'
   icon = None
   isProperty = False
-  isIndexable = False
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'edit')
+  def edit(self, item_path='', item_sign=1, item_layer=0, *args, **kw):
+    """
+      Generic edit Method for all ERP5 object
+    """
+    edited_value = self._edit(
+                              item_path=item_path,
+                              item_sign=item_sign,
+                              item_layer=item_layer,
+                              *args,
+                              **kw)
+    # TODO: Use activity to update follow_up of Business Item as the portal_category
+    # accessor is generated
+    # Update the follow up value for Business Manager
+    self.updateFollowUpPathList()
 
   def _edit(self, item_path='', item_sign=1, item_layer=0, *args, **kw):
     """
@@ -740,28 +765,34 @@ class BusinessItem(XMLObject):
     if 'item_path' in self._v_modified_property_dict:
       self.build(self.aq_parent)
 
-      # Update the Business Manager with the path list everytime after editing
-      # item_path
-      manager = self.getFollowUpValue()
-      # Check if the manager has already been set or not
-      if manager:
-        # Copy the path list for Business Manager and update it with new path
-        item_path_list = manager.getItemPathList()[:]
-        old_item_path = self._v_modified_property_dict.get('item_path')
-        if old_item_path and item_path_list:
-          if old_item_path in item_path_list:
-            for idx, item in enumerate(item_path_list):
-              if item == old_item_path:
-                item_path_list[idx] = self.getProperty('item_path')
-          else:
-            item_path_list.append(self.getProperty('item_path'))
-        else:
-          # If there is no old_item_path or if path_list is empty, we can just
-          # append the new_path in path_list
-          item_path_list.append(self.getProperty('item_path'))
+    # Update the Business Manager with the path list everytime after editing
+    # item_path. Use activity to call this function after the activitiy for
+    # _edit is finished.
 
-        # Update the manager with new path list
-        manager.setProperty('item_path_list', item_path_list)
+  def updateFollowUpPathList(self):
+    """
+    Update the path list for Follow Up Business Manager
+    """
+    manager = self.getFollowUpValue()
+    # Check if the manager has already been set or not
+    if manager:
+      # Copy the path list for Business Manager and update it with new path
+      item_path_list = manager.getItemPathList()[:]
+      old_item_path = self._v_modified_property_dict.get('item_path')
+      if old_item_path and item_path_list:
+        if old_item_path in item_path_list:
+          for idx, item in enumerate(item_path_list):
+            if item == old_item_path:
+              item_path_list[idx] = self.getProperty('item_path')
+        else:
+          item_path_list.append(self.getProperty('item_path'))
+      else:
+        # If there is no old_item_path or if path_list is empty, we can just
+        # append the new_path in path_list
+        item_path_list.append(self.getProperty('item_path'))
+
+      # Update the manager with new path list
+      manager.setItemPathList(item_path_list)
 
   def build(self, context, **kw):
     """
