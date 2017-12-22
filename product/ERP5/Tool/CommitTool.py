@@ -182,7 +182,16 @@ class CommitTool (BaseTool):
     def newContent(self, id=None, **kw):
       """
       Override newContent so as to use 'id' generated like hash
+      Also, create new commit only when all old commits are committed
       """
+      old_commit_list = self.objectValues(portal_type='Business Commit')
+      # Check if all the commits created before are commited or not
+      all_commited = all([l.getTranslatedValidationState() == 'commited'
+                           for l in old_commit_list])
+
+      if not all_commited:
+        raise ValueError('Please commit your last commit before creating new one')
+
       if id is None:
         id = uuid.uuid1()
 
