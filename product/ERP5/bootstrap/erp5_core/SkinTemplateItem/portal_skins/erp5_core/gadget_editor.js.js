@@ -1,6 +1,8 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, FileReader, Blob*/
-(function (window, rJS, RSVP, document, FileReader, Blob) {
+/*global window, rJS, RSVP, document, FileReader, Blob,
+lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
+(function (window, rJS, RSVP, document, FileReader, Blob,
+            lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue) {
   "use strict";
 
 /*
@@ -55,7 +57,7 @@
         url,
         div = document.createElement('div'),
         div_max = document.createElement('div'),
-        queue = new RSVP.Queue();
+        queue = lockGadgetInQueue(gadget)();
 
       if ((modification_dict.hasOwnProperty('editable')) ||
           (modification_dict.hasOwnProperty('editor'))) {
@@ -139,18 +141,24 @@
       } else {
         element.querySelector('pre').textContent = gadget.state.value;
       }
-      return queue;
+      return queue
+        .push(unlockGadgetInQueue(gadget), unlockGadgetInFailedQueue(gadget));
     })
 
     .declareMethod('getContent', function () {
       var argument_list = arguments,
+        gadget = this,
         result;
       if (this.state.editable &&
           ((this.state.editor === 'codemirror') || (this.state.editor === 'fck_editor'))) {
-        return this.getDeclaredGadget('editor')
+        return lockGadgetInQueue(gadget)()
+          .push(function () {
+            return gadget.getDeclaredGadget('editor');
+          })
           .push(function (editor_gadget) {
             return editor_gadget.getContent.apply(editor_gadget, argument_list);
-          });
+          })
+          .push(unlockGadgetInQueue(gadget), unlockGadgetInFailedQueue(gadget));
           /*
           .push(function (result) {
             var value = result[context.state.key] || '';
@@ -171,4 +179,5 @@
       return {};
     });
 
-}(window, rJS, RSVP, document, FileReader, Blob));
+}(window, rJS, RSVP, document, FileReader, Blob,
+  lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue));
