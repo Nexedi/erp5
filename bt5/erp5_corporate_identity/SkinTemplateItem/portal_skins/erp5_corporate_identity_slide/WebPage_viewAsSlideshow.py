@@ -271,7 +271,7 @@ if getDetails(doc_content) > -1:
       doc_content = doc_content.replace(slide, details)
 
 # ======================== Format: html/mhtml ==================================
-if doc_format == "html" or doc_format == "mhtml":
+if doc_format == "html": #or doc_format == "mhtml":
   doc_output = doc.WebPage_createSlideshow(
     doc_format=doc_format,
     doc_theme=doc_theme.get("theme"),
@@ -309,7 +309,7 @@ if doc_format == "html" or doc_format == "mhtml":
     return doc.Base_convertHtmlToSingleFile(doc_output, allow_script=True)
 
 # ============================= Format: pdf ====================================
-if doc_format == "pdf":
+if doc_format == "pdf" or doc_format == "mhtml":
   doc_slideshow_footer = doc.WebPage_createSlideshowFooter(
     doc_format=doc_format,
     doc_theme=doc_theme.get("theme"),
@@ -368,6 +368,9 @@ if doc_format == "pdf":
   before_body_data_list = [
     b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True)),
   ]
+  if doc_format == "mhtml":
+    context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
+    return doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True)
   if doc_display_notes:
     after_body_data_list = [
       b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True)),
