@@ -210,9 +210,6 @@ class Test(ERP5TypeTestCase):
   A Sample Test Class
   """
 
-  def getTitle(self):
-    return "SampleTest"
-
   def getBusinessTemplateList(self):
     """
     Tuple of Business Templates we need to install
