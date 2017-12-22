@@ -1409,6 +1409,14 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     return self._getPortalGroupedTypeList('event')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalInterfacePostTypeList')
+  def getPortalInterfacePostTypeList(self):
+    """
+    Return interface_post types.
+    """
+    return self._getPortalGroupedTypeList('interface_post')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalDivergenceTesterTypeList')
   def getPortalDivergenceTesterTypeList(self):
     """

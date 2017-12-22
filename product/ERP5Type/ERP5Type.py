@@ -283,6 +283,7 @@ class ERP5TypeInformation(XMLObject,
       'invoice', 'invoice_movement', 'balance_transaction_line',
       # CRM
       'event', 'ticket',
+      'interface_post', # object used to track exchanges in/out of ERP5
       # DMS
       'document', 'web_document', 'file_document', 'embedded_document',
       'recent_document', 'my_document', 'template_document',
