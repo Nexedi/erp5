@@ -41,7 +41,6 @@
     <td>test_url</td>
   </tr>
   <!-- Generic Officejs Test -->
-  <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities"/>
   <tr>
     <td>open</td>
     <td>${base_url}/web_site_module/${test_url}/</td>
