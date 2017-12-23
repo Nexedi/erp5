@@ -30,7 +30,8 @@ theme = (
 )
 if theme is not None:
   theme = theme.lower()
-  theme_logo_prefix = context.Base_getCustomTemplateParameter("default_logo_prefix")
+  #theme_logo_prefix = context.Base_getCustomTemplateParameter("default_logo_prefix")
+  theme_logo_prefix = "NXD-Template.Logo."
   if theme_logo_prefix:
     theme_reference = theme_logo_prefix + theme.capitalize()
     theme_logo_list = context.Base_getCustomTemplateProxyParameter("logo", theme_reference)
@@ -42,6 +43,7 @@ if theme is None:
 theme_dict = {}
 theme_dict["theme"] = theme
 theme_dict["theme_logo_description"] = theme_logo_dict.get("description", blank)
+# XXX this one is hard to get in test environment
 theme_dict["theme_logo_url"] = context.Base_getCustomTemplateParameter("fallback_image")
 if theme_logo_dict.get("relative_url", None) is not None:
   theme_dict["theme_logo_url"] = theme_logo_dict.get("relative_url") + param
