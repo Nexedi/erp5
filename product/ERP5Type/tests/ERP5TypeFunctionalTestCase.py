@@ -407,6 +407,11 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     # abort to get rid of the mysql participation in this transaction
     self.portal._p_jar.sync()
 
+    print "Tests will be executed in this order:"
+    for tc in tests_tool.unrestrictedTraverse(self.run_only or '').listTestCases():
+      print tc['path']
+    print
+
     debug = self.foreground or os.environ.get("erp5_debug_mode")
     error = None
     try:
