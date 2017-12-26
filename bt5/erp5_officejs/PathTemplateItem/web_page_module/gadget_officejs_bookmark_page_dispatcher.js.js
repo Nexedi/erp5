@@ -36,10 +36,8 @@
             };
           } else {
             query = {
-              query: '(title:"%' + search +
-                '%" OR url_string:"%' + search +
-                '%" OR description:"%' + search +
-                '%") AND portal_type:"' + gadget.state.portal_type + '"',
+              query: '("' + search +
+                '") AND portal_type:"' + gadget.state.portal_type + '"',
               select_list: ['title', 'url_string', 'description']
             };
           }
@@ -139,11 +137,22 @@
       return gadget.getDeclaredGadget('erp5_searchfield')
         .push(function (search_gadget) {
           return search_gadget.render({
-            extended_search: gadget.state.search
+            field_json: {
+              value: gadget.state.search,
+              editable: true,
+              title: "Search",
+              required: true,
+              key: "search"
+            }
           });
         });
     })
-
+    .allowPublicAcquisition("notifyValid", function () {
+      return true;
+    })
+    .allowPublicAcquisition("notifyInvalid", function () {
+      return true;
+    })
     .onEvent("submit", function () {
       var gadget = this;
       return gadget.notifySubmitting()

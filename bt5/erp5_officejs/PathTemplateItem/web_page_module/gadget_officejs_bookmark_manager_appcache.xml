@@ -108,7 +108,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 09 Dec 2016 11:45:33 +0000\n
+# generated on Tue, 26 Dec 2017 11:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -343,7 +343,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>vincent</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -357,7 +357,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.42958.18622.47018</string> </value>
+                <value> <string>964.25551.64087.3020</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -375,7 +375,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1507552624.72</float>
+                        <float>1514298247.3</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
