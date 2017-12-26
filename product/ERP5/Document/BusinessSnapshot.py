@@ -137,14 +137,16 @@ class BusinessSnapshot(Folder):
     portal = self.getPortalObject()
     commit_tool = portal.portal_commits
 
-    # Get the snapshot list except the current snapshot
-    snapshot_list = [l for l
-                     in commit_tool.objectValues(portal_type='Business Snapshot')
-                     if l != self]
+    # XXX: Is it a good idea to be dependent on portal_catalog to get Snapshot list ?
+    snapshot_list = commit_tool.searchFolder(
+                                          portal_type='Business Snapshot',
+                                          validation_state='installed'
+                                          )
 
-    if snapshot_list:
-      # Get the last created/installed snapshot comparing creation_date
-      return max(snapshot_list, key=(lambda x: x.getCreationDate()))
+    # There should never be more than 1 installed snapshot
+    if len(snapshot_list) == 1:
+      # Get the last installed snapshot
+      return snapshot_list[0].getObject()
 
     return None
 
@@ -222,7 +224,9 @@ class BusinessSnapshot(Folder):
     Install the sub-objects in the commit
     """
     site = self.getPortalObject()
-    # While installing the last snapshot state should be changed to 'replaced'
+
+    # While installing a new snapshot, last snapshot state should be
+    # changed to 'replaced'
     last_snapshot = self.getLastSnapshot()
     if last_snapshot not in [None, self]:
       if site.portal_workflow.isTransitionPossible(

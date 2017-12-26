@@ -733,22 +733,6 @@ class BusinessItem(XMLObject):
   icon = None
   isProperty = False
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'edit')
-  def edit(self, item_path='', item_sign=1, item_layer=0, *args, **kw):
-    """
-      Generic edit Method for all ERP5 object
-    """
-    edited_value = self._edit(
-                              item_path=item_path,
-                              item_sign=item_sign,
-                              item_layer=item_layer,
-                              *args,
-                              **kw)
-    # TODO: Use activity to update follow_up of Business Item as the portal_category
-    # accessor is generated
-    # Update the follow up value for Business Manager
-    self.updateFollowUpPathList()
-
   def _edit(self, item_path='', item_sign=1, item_layer=0, *args, **kw):
     """
     Overriden function so that we can update attributes for BusinessItem objects
@@ -764,10 +748,6 @@ class BusinessItem(XMLObject):
     # while in tests or while creating them on the fly
     if 'item_path' in self._v_modified_property_dict:
       self.build(self.aq_parent)
-
-    # Update the Business Manager with the path list everytime after editing
-    # item_path. Use activity to call this function after the activitiy for
-    # _edit is finished.
 
   def updateFollowUpPathList(self):
     """
@@ -793,6 +773,10 @@ class BusinessItem(XMLObject):
 
       # Update the manager with new path list
       manager.setItemPathList(item_path_list)
+
+    else:
+      # Complain loudly if the follow_up is not there
+      raise ValueError('Follow Up Business Manager is not set or defined yet')
 
   def build(self, context, **kw):
     """
