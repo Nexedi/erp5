@@ -128,6 +128,11 @@
   <td>//thead/tr/th[3]</td>
   <td>Quantity</td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tfoot/tr/th[@colspan="3"]</td>
+  <td></td>
+</tr>
 
 
 <tr>
@@ -163,6 +168,11 @@
   <td>assertText</td>
   <td>//thead/tr/th[4]</td>
   <td>Quantity</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tfoot/tr/th[@colspan="4"]</td>
+  <td></td>
 </tr>
 
 <!-- Line checkbox -->
@@ -222,6 +232,11 @@
   <td>assertText</td>
   <td>//thead/tr/th[3]</td>
   <td>Quantity</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tfoot/tr/th[@colspan="3"]</td>
+  <td></td>
 </tr>
 
 <!-- only one element present -->

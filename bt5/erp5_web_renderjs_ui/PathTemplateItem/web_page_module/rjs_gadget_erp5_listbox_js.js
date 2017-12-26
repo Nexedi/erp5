@@ -521,7 +521,7 @@
               .push(function (url_list) {
                 var foot = {};
                 foot.colspan = column_list.length + gadget.state.show_anchor +
-                  (gadget.state.line_icon ? 1 : 0);
+                  (gadget.state.line_icon ? 1 : 0) + gadget.state.show_line_selector;
                 foot.previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";
                 foot.previous_url = url_list[0];
                 foot.next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";
