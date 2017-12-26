@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_follow_up</string> </value>
+            <value> <string>my_follow_up_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
