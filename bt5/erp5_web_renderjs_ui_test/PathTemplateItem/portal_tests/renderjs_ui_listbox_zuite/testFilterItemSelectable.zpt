@@ -1,0 +1,113 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
+
+<!-- No item is displayed -->
+<!--tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@class='filter_item_container']/div</td>
+  <td></td>
+</tr-->
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='filter_item_container']//select</td>
+  <td></td>
+</tr>
+
+<!-- Check the selectable columns -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[1][@value='COLUMN_id' and text()='ID']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[2][@value='COLUMN_title' and text()='Title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[3][@value='TEXT' and text()='Searchable Text']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[4][@value='RAW' and text()='Search Expression']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[5]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[1]</td>
+  <td>COLUMN_id</td>
+</tr>
+
+<!-- Check the operation selectable -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[2]//option[1][@value='exact_match' and text()='Equals To']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[2]//option[2][@value='keyword' and text()='Contains']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[2]//option[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[2]</td>
+  <td>exact_match</td>
+</tr>
+
+<!-- Only one item is displayed -->
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@class='filter_item_container ui-controlgroup ui-corner_all']/div[2]</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>
