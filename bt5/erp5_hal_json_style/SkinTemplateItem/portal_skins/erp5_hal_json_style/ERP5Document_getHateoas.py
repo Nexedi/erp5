@@ -41,6 +41,7 @@ from zExceptions import Unauthorized
 from Products.ERP5Type.Utils import UpperCase
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Products.ERP5Type.Log import log
+from collections import OrderedDict
 
 MARKER = []
 
@@ -556,9 +557,10 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     _translate = Base_translateString
 
     column_list = [(name, _translate(title)) for name, title in field.get_value("columns")]
+    all_column_list = [(name, _translate(title)) for name, title in field.get_value("all_columns")]
     editable_column_list = [(name, _translate(title)) for name, title in field.get_value("editable_columns")]
     catalog_column_list = [(name, title)
-                           for name, title in column_list
+                           for name, title in OrderedDict(column_list + all_column_list).items()
                            if sql_catalog.isValidColumn(name)]
 
     # try to get specified searchable columns and fail back to all searchable columns
