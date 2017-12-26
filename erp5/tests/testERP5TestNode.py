@@ -1,6 +1,8 @@
 import unittest
 from unittest import TestCase
+from contextlib import contextmanager
 
+from erp5.util.testnode import logger
 from erp5.util.testnode.testnode import TestNode, test_type_registry
 from erp5.util.testnode.NodeTestSuite import SlapOSInstance, NodeTestSuite
 from erp5.util.testnode.ProcessManager import ProcessManager, SubprocessError
@@ -12,16 +14,26 @@ from erp5.util.testnode.SlapOSControler import createFolder
 
 from erp5.util.taskdistribution import TaskDistributor
 from erp5.util.taskdistribution import TestResultProxy
+import argparse
+import logging
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import json
 import time
 import types
 import re
 
+@contextmanager
+def dummySuiteLog(_):
+  yield
+
 class ERP5TestNode(TestCase):
+
+  _handler = logging.StreamHandler(sys.stdout)
+  _handler.setFormatter(logging.Formatter('TESTNODE LOG: %(message)s'))
 
   def setUp(self):
     self._temp_dir = tempfile.mkdtemp()
@@ -48,13 +60,11 @@ class ERP5TestNode(TestCase):
     os.mkdir(self.remote_repository0)
     os.mkdir(self.remote_repository1)
     os.mkdir(self.remote_repository2)
-    def log(*args,**kw):
-      for arg in args:
-        print "TESTNODE LOG : %r, %r" % (arg, kw)
-    self.log = log
+    logging.getLogger().addHandler(self._handler)
 
   def tearDown(self):
     shutil.rmtree(self._temp_dir, True)
+    logging.getLogger().removeHandler(self._handler)
 
   def getTestNode(self):
     # XXX how to get property the git path ?
@@ -79,7 +89,12 @@ class ERP5TestNode(TestCase):
     config["frontend_url"] = "http://frontend/"
     config["software_list"] = ["foo", "bar"]
 
-    return TestNode(self.log, config)
+    testnode = TestNode(config)
+    # By default, keep suite logs to stdout for easier debugging
+    # (stdout/stderr are automatically reported to ERP5).
+    # This is unset by test methods that check normal suite logging.
+    testnode.suiteLog = dummySuiteLog
+    return testnode
 
   def getTestSuiteData(self, add_third_repository=False,
                        add_broken_repository=False, reference="foo"):
@@ -219,7 +234,8 @@ class ERP5TestNode(TestCase):
     test_node.test_suite_portal.getTestNode = TaskDistributor.getTestType
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
-    node_test_suite.revision = 'rep1=1234-azerty,rep2=3456-qwerty'
+    node_test_suite.revision_list = (('rep1', (1234, 'azerty')),
+                                     ('rep2', (3456, 'qwerty')))
     test_node.constructProfile(node_test_suite,my_test_type)
     self.assertEquals("%s/software.cfg" % (node_test_suite.working_directory,),
                       node_test_suite.custom_profile_path)
@@ -234,12 +250,14 @@ repository = %(temp_dir)s/testnode/foo/rep1
 branch = master
 revision =
 develop = false
+shared = true
 
 [rep2]
 repository = %(temp_dir)s/testnode/foo/rep2
 branch = foo
 revision =
 develop = false
+shared = true
 """ % {'temp_dir': self._temp_dir}
     else:
       revision1 = "azerty"
@@ -253,17 +271,23 @@ repository = <obfuscated_url>/rep1/rep1.git
 revision = %(revision1)s
 ignore-ssl-certificate = true
 develop = false
+shared = true
 
 [rep2]
 repository = <obfuscated_url>/rep2/rep2.git
 revision = %(revision2)s
 ignore-ssl-certificate = true
 develop = false
+shared = true
 """ % {'temp_dir': self._temp_dir, 'revision1': revision1, 'revision2': revision2}
     self.assertEquals(expected_profile, profile.read())
     profile.close()
 
-  def test_05_getAndUpdateFullRevisionList(self):
+  def getAndUpdateFullRevisionList(self, test_node, node_test_suite):
+    if test_node.updateRevisionList(node_test_suite):
+      return node_test_suite.revision.split(',')
+
+  def test_05_updateRevisionList(self):
     """
     Check if we clone correctly repositories and get right revisions
     """
@@ -271,7 +295,7 @@ develop = false
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEquals(2, len(rev_list))
     self.assertEquals(rev_list[0], 'rep0=2-%s' % commit_dict['rep0'][0][0])
     self.assertEquals(rev_list[1], 'rep1=2-%s' % commit_dict['rep1'][0][0])
@@ -280,7 +304,7 @@ develop = false
     my_file.close()
     call = self.getCaller(cwd=self.remote_repository1)
     call("git commit -av -m new_commit".split())
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertTrue(rev_list[0].startswith('rep0=2-'))
     self.assertTrue(rev_list[1].startswith('rep1=3-'))
     self.assertEquals(2, len(node_test_suite.vcs_repository_list))
@@ -296,7 +320,7 @@ develop = false
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEquals(3, len(rev_list))
     self.assertEquals(3, len(node_test_suite.vcs_repository_list))
     rep2_clone_path = [x['repository_path'] for x in \
@@ -310,7 +334,7 @@ develop = false
     self.assertEquals(vcs_repository_info['branch'], 'foo')
     # change it to master
     vcs_repository_info['branch'] = 'master'
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     output = call("git branch".split()).strip()
     print output
     self.assertTrue("* master" in output.split('\n'))
@@ -318,7 +342,7 @@ develop = false
     remote_call = self.getCaller(cwd=self.remote_repository2)
     output = remote_call('git checkout master -b bar'.split())
     vcs_repository_info['branch'] = 'bar'
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     output = call("git branch".split()).strip()
     self.assertTrue("* bar" in output.split('\n'))
     # Add a fourth branch on remote, make sure we could switch to it
@@ -341,7 +365,7 @@ develop = false
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEquals(2, len(rev_list))
     self.assertEquals(2, len(node_test_suite.vcs_repository_list))
     # patch deleteRepository to make sure it will be called once for the wrong
@@ -362,7 +386,7 @@ develop = false
       call = self.getCaller(cwd=rep0_clone_path)
       self.assertEquals(call("git config --get remote.origin.url".split()).strip(),
                         self.remote_repository0)
-      rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+      rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
       self.assertEquals(call("git config --get remote.origin.url".split()).strip(),
                         self.remote_repository2)
       self.assertEquals([rep0_clone_path], deleted_repository_path_list)
@@ -380,7 +404,7 @@ develop = false
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEquals(2, len(rev_list))
     self.assertEquals(2, len(node_test_suite.vcs_repository_list))
     rep0_clone_path = [x['repository_path'] for x in \
@@ -390,7 +414,7 @@ develop = false
     my_file.write("next_content")
     my_file.close()
     # make sure code still works
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEqual(2, len(rev_list))
     self.assertEqual(2, len(node_test_suite.vcs_repository_list))
     # and check local change was resetted
@@ -408,7 +432,7 @@ develop = false
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_broken_repository=True)
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEqual(None, rev_list)
 
   def test_06_checkRevision(self):
@@ -419,7 +443,7 @@ develop = false
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     def getRepInfo(count=0, hash=0):
       assert count or hash
       info_list = []
@@ -436,14 +460,13 @@ develop = false
     self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][0][0]],
                       getRepInfo(hash=1))
     class TestResult(object):
-      pass
+      revision = NodeTestSuite.revision
     test_result = TestResult()
     # for test result to be one commit late for rep1 to force testnode to
     # reset tree to older version
-    test_result.revision = 'rep0=2-%s,rep1=1-%s' % (commit_dict['rep0'][0][0],
-                                                    commit_dict['rep1'][1][0])
+    test_result.revision_list = (('rep0', (2, commit_dict['rep0'][0][0])),
+                                 ('rep1', (1, commit_dict['rep1'][1][0])))
     test_node.checkRevision(test_result, node_test_suite)
-    expected_count_list = ['2', '1']
     self.assertEquals(['2', '1'], getRepInfo(count=1))
     self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][1][0]],
                       getRepInfo(hash=1))
@@ -518,24 +541,6 @@ develop = false
       parser.add_argument(option[0])
       expected_parameter_list += option
       checkRunTestSuiteParameters()
-
-  def test_08_getSupportedParamaterSet(self):
-    original_spawn = ProcessManager.spawn
-    try:
-      def get_help(self, *args, **kw):
-        return {'stdout': """My Program
-                  --foo  foo
-                  --bar  bar"""}
-      ProcessManager.spawn = get_help
-      process_manager = ProcessManager(log=None)
-      parameter_list = ['--foo', '--baz']
-      expected_suported_parameter_set = set(['--foo'])
-      supported_parameter_set = process_manager.getSupportedParameterSet(
-                                 "dummy_program_path", parameter_list)
-      self.assertEquals(expected_suported_parameter_set, supported_parameter_set)
-    finally:
-      ProcessManager.spawn = original_spawn
-
 
   def test_10_prepareSlapOS(self, my_test_type='UnitTest'):
     test_node = self.getTestNode()
@@ -643,13 +648,10 @@ develop = false
             allow_restart=False, test_title=None, project_title=None):
       global counter
       # return no test to check if run method will run the next test suite
-      if counter == 3 and project_title != 'qux':
-        result = None
-      else:
+      if counter != 3 or project_title == 'qux':
         test_result_path = os.path.join(test_result_path_root, test_title)
-        result =  TestResultProxy(self._proxy, self._retry_time,
-                self._logger, test_result_path, node_title, revision)
-      return result
+        return TestResultProxy(self._proxy, self._retry_time,
+                logger, test_result_path, node_title, revision)
     def patch_runTestSuite(self, *argv, **kw):
       return {'status_code':0}
     original_sleep = time.sleep
@@ -716,7 +718,7 @@ develop = false
     def _checkCorrectStatus(expected_status,*args):
       result = process_manager.spawn(*args)
       self.assertEqual(result['status_code'], expected_status)
-    process_manager = ProcessManager(log=self.log, max_timeout=1)
+    process_manager = ProcessManager(max_timeout=1)
     _checkCorrectStatus(0, *['sleep','0'])
     # We must make sure that if the command is too long that
     # it will be automatically killed
@@ -724,8 +726,7 @@ develop = false
 
   def test_13_SlaposControlerResetSoftware(self):
     test_node = self.getTestNode()
-    controler = SlapOSControler(self.working_directory,
-                                test_node.config, self.log)
+    controler = SlapOSControler(self.working_directory, test_node.config)
     os.mkdir(controler.software_root)
     file_name = 'AC_Ra\xc3\xadzertic\xc3\xa1ma'
     non_ascii_file = open(os.path.join(controler.software_root, file_name), 'w')
@@ -787,30 +788,26 @@ develop = false
     def patch_createTestResult(self, revision, test_name_list, node_title,
             allow_restart=False, test_title=None, project_title=None):
       test_result_path = os.path.join(test_result_path_root, test_title)
-      result = TestResultProxy(self._proxy, self._retry_time,
-               self._logger, test_result_path, node_title, revision)
-      return result
+      return TestResultProxy(self._proxy, self._retry_time,
+                logger, test_result_path, node_title, revision)
     def patch_runTestSuite(self,*argv, **kw):
       return {'status_code':0}
     def checkTestSuite(test_node):
       test_node.node_test_suite_dict
       rand_part_set = set()
       self.assertEquals(2, len(test_node.node_test_suite_dict))
-      self.assertIsNot(test_node.suite_log, None)
-      self.assertTrue(isinstance(test_node.suite_log, types.MethodType))
       for ref, suite in test_node.node_test_suite_dict.items():
         self.assertTrue('var/log/testnode/%s' % suite.reference in \
                          suite.suite_log_path,
                          "Incorrect suite log path : %r" % suite.suite_log_path)
-        self.assertTrue(suite.suite_log_path.endswith('suite.log'))
-        m = re.match('.*\-(.*)\/suite.log', suite.suite_log_path)
+        m = re.search('-(.*)/suite.log$', suite.suite_log_path)
         rand_part = m.groups()[0]
         self.assertEqual(len(rand_part), 10)
         self.assertNotIn(rand_part, rand_part_set)
         rand_part_set.add(rand_part)
-        suite_log = open(suite.suite_log_path, 'r')
-        self.assertEquals(1, len([x for x in suite_log.readlines() \
-                              if x.find("Activated logfile")>=0]))
+        with open(suite.suite_log_path) as suite_log:
+          self.assertIn("Getting configuration from test suite",
+                        suite_log.readline())
 
     RunnerClass = test_type_registry[my_test_type]
     original_sleep = time.sleep
@@ -846,6 +843,7 @@ develop = false
     original_createTestResult = TaskDistributor.createTestResult
     TaskDistributor.createTestResult = patch_createTestResult
     test_node = self.getTestNode()
+    del test_node.suiteLog
     # Change UnitTestRunner class methods
     original_prepareSlapOS = RunnerClass._prepareSlapOS
 
@@ -943,7 +941,7 @@ develop = false
     SlapOSControler.runSoftwareRelease = runSoftwareRelease
     def callPrepareSlapOS():
       runner._prepareSlapOS(self.working_directory, node_test_suite,
-         test_node.log, create_partition=0)
+         create_partition=0)
     def callRaisingPrepareSlapos():
       self.assertRaises(SubprocessError, callPrepareSlapOS)
 
@@ -998,9 +996,8 @@ develop = false
     def patch_createTestResult(self, revision, test_name_list, node_title,
             allow_restart=False, test_title=None, project_title=None):
       test_result_path = os.path.join(test_result_path_root, test_title)
-      result =  TestResultProxy(self._proxy, self._retry_time,
-                self._logger, test_result_path, node_title, revision)
-      return result
+      return TestResultProxy(self._proxy, self._retry_time,
+                logger, test_result_path, node_title, revision)
     global startTestSuiteDone
     startTestSuiteDone = False
     def patch_startTestSuite(self,node_title,computer_guid='unknown'):
