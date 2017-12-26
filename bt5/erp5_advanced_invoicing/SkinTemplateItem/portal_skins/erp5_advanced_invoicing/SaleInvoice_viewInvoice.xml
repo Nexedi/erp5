@@ -105,6 +105,7 @@
                         <string>my_destination_title</string>
                         <string>my_source_administration_title</string>
                         <string>my_specialise_title</string>
+                        <string>my_ledger</string>
                       </list>
                     </value>
                 </item>
