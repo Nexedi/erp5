@@ -115,6 +115,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>ledger_title</string>
+                          <string>Ledger</string>
+                        </tuple>
+                        <tuple>
                           <string>default_destination_section_title</string>
                           <string>Client</string>
                         </tuple>
@@ -199,6 +203,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>ledger_title</string>
+                          <string>Ledger</string>
+                        </tuple>
+                        <tuple>
                           <string>default_destination_section_title</string>
                           <string>Client</string>
                         </tuple>
@@ -255,6 +263,10 @@
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>ledger_title</string>
+                          <string>Ledger</string>
                         </tuple>
                         <tuple>
                           <string>default_destination_section_title</string>

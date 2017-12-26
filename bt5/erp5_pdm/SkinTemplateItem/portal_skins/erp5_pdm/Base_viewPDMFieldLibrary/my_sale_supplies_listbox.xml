@@ -89,6 +89,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>ledger_title</string>
+                          <string>Ledger</string>
+                        </tuple>
+                        <tuple>
                           <string>default_source_section_title</string>
                           <string>Supplier</string>
                         </tuple>
