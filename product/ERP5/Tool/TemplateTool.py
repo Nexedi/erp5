@@ -108,10 +108,10 @@ class TemplateTool (BaseTool):
     title = 'Template Tool'
     meta_type = 'ERP5 Template Tool'
     portal_type = 'Template Tool'
-    allowed_types = (
-      'ERP5 Business Template',
-      'ERP5 Business Manager',
-      )
+    allowed_content_types = [
+                              'Business Manager',
+                              'Business Template',
+                            ]
 
     # This stores information on repositories.
     repository_dict = {}
