@@ -28,7 +28,7 @@ import errno
 import os
 import re
 import shutil
-import sys
+from . import logger
 from .ProcessManager import SubprocessError
 
 SVN_UP_REV = re.compile(r'^(?:At|Updated to) revision (\d+).$')
@@ -42,10 +42,9 @@ class Updater(object):
 
   _git_cache = {}
 
-  def __init__(self, repository_path, log, revision=None, git_binary='git',
+  def __init__(self, repository_path, revision=None, git_binary='git',
       branch=None, realtime_output=True, process_manager=None, url=None,
       working_directory=None):
-    self.log = log
     self.revision = revision
     self._path_list = []
     self.branch = branch
@@ -111,16 +110,16 @@ class Updater(object):
     git_repository_path = os.path.join(self.getRepositoryPath(), '.git')
     name = os.path.basename(os.path.normpath(self.getRepositoryPath()))
     git_repository_link_path = os.path.join(self.getRepositoryPath(), '%s.git' %name)
-    self.log("checking link %s -> %s..",
+    logger.debug("checking link %s -> %s..",
              git_repository_link_path, git_repository_path)
     if ( not os.path.lexists(git_repository_link_path) and \
          not os.path.exists(git_repository_link_path) ):
       try:
         os.symlink(git_repository_path, git_repository_link_path)
-        self.log("link: %s -> %s created",
+        logger.debug("link: %s -> %s created",
           git_repository_link_path, git_repository_path)
       except OSError:
-        self.log("Cannot create link from %s -> %s",
+        logger.error("Cannot create link from %s -> %s",
           git_repository_link_path, git_repository_path)
   
   def _git_find_rev(self, ref):
@@ -148,7 +147,7 @@ class Updater(object):
     raise NotImplementedError
 
   def deleteRepository(self):
-    self.log("Wrong repository or wrong url, deleting repos %s",
+    logger.info("Wrong repository or wrong url, deleting repos %s",
              self.repository_path)
     shutil.rmtree(self.repository_path)
 
@@ -162,7 +161,7 @@ class Updater(object):
           if remote_url == self.url:
             correct_url = True
         except SubprocessError:
-          self.log("SubprocessError", exc_info=sys.exc_info())
+          logger.exception("")
         if not(correct_url):
           self.deleteRepository()
       if not os.path.exists(self.repository_path):
