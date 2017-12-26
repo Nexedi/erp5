@@ -159,8 +159,8 @@ class CommitTool (BaseTool):
     meta_type = 'ERP5 Commit Tool'
     portal_type = 'Commit Tool'
     allowed_types = (
-      'ERP5 Business Commit',
-      'ERP5 Business Snapshot',
+      'Business Commit',
+      'Business Snapshot',
       )
 
     # This stores information on repositories.

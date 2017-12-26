@@ -114,7 +114,25 @@ class BusinessSnapshot(Folder):
                       PropertySheet.Version,
                     )
 
+  def getItemList(self):
+    """
+    Returns the collection of all Business Item, Business Property Item and
+    Business Patch item at the given snapshot.
+    """
+    return self.objectValues()
+
+  def getItemPathList(self):
+    """
+    Returns the path of all Business Item, Business Property Item and
+    Business Patch item at the given snapshot.
+    """
+    return [l.getProperty('item_path') for l in self.getItemList()]
+
   def getLastSnapshot(self):
+    """
+    Get last snapshot exisiting.
+    Returns None if there is no last snapshot.
+    """
 
     portal = self.getPortalObject()
     commit_tool = portal.portal_commits
@@ -129,20 +147,6 @@ class BusinessSnapshot(Folder):
       return max(snapshot_list, key=(lambda x: x.getCreationDate()))
 
     return None
-
-  def getItemList(self):
-    """
-    Returns the collection of all Business Item, Business Property Item and
-    Business Patch item at the given snapshot.
-    """
-    return self.objectValues()
-
-  def getItemPathList(self):
-    """
-    Returns the path of all Business Item, Business Property Item and
-    Business Patch item at the given snapshot.
-    """
-    return [l.getProperty('item_path') for l in self.getItemList()]
 
   def buildSnapshot(self):
     """
@@ -217,5 +221,14 @@ class BusinessSnapshot(Folder):
     """
     Install the sub-objects in the commit
     """
+    site = self.getPortalObject()
+    # While installing the last snapshot state should be changed to 'replaced'
+    last_snapshot = self.getLastSnapshot()
+    if last_snapshot not in [None, self]:
+      if site.portal_workflow.isTransitionPossible(
+          last_snapshot, 'replace'):
+        last_snapshot.replace(self)
+
+    # Now install the items in new snapshot
     for item in self.objectValues():
       item.install(self)
