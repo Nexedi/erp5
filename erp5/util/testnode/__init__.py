@@ -30,9 +30,12 @@ import logging
 import logging.handlers
 import os
 
-from .testnode import TestNode
+log_formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 def main(*args):
+  from .testnode import TestNode
   parser = argparse.ArgumentParser()
   parser.add_argument("configuration_file", nargs=1, type=argparse.FileType(),
       help="Configuration file.")
@@ -43,29 +46,24 @@ def main(*args):
     parsed_argument = parser.parse_args(list(args))
   else:
     parsed_argument = parser.parse_args()
-  logger_format = '%(asctime)s %(name)-13s: %(levelname)-8s %(message)s'
-  formatter = logging.Formatter(logger_format)
-  logging.basicConfig(level=logging.INFO,
-                     format=logger_format)
-  logger = logging.getLogger('erp5testnode')
+
+  if parsed_argument.console or parsed_argument.logfile:
+    root = logging.getLogger()
+    def addHandler(handler):
+      handler.setFormatter(log_formatter)
+      root.addHandler(handler)
+    if parsed_argument.console:
+      addHandler(logging.StreamHandler())
+    if parsed_argument.logfile:
+      addHandler(logging.handlers.RotatingFileHandler(
+        filename=parsed_argument.logfile,
+        maxBytes=20000000, backupCount=4))
+  else:
+    logger.disable(logging.CRITICAL)
+
   CONFIG = {
-    'logger': logger.info,
     'partition_reference': 'test0',
   }
-  if parsed_argument.console or parsed_argument.logfile:
-    if parsed_argument.console:
-      logger.addHandler(logging.StreamHandler())
-      logger.info('Activated console output.')
-    if parsed_argument.logfile:
-      file_handler = logging.handlers.RotatingFileHandler(
-        filename=parsed_argument.logfile,
-        maxBytes=20000000, backupCount=4)
-      file_handler.setFormatter(formatter)
-      logger.addHandler(file_handler)
-      logger.info('Activated logfile %r output', parsed_argument.logfile)
-      CONFIG['log_file'] = parsed_argument.logfile
-  else:
-    logger.addHandler(logging.NullHandler())
   config = ConfigParser.SafeConfigParser()
   # do not change case of option keys
   config.optionxform = str
@@ -107,5 +105,4 @@ def main(*args):
     CONFIG['software_list'] = filter(None,
         config.get("software_list", "path_list").split(","))
   
-  testnode = TestNode(logger.info, CONFIG)
-  testnode.run()
+  TestNode(CONFIG).run()

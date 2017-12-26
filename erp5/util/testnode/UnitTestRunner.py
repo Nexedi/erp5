@@ -27,6 +27,7 @@
 import os
 import glob
 import json
+from . import logger
 from .ProcessManager import SubprocessError
 from .SlapOSControler import SlapOSControler
 from .Utils import createFolder
@@ -49,21 +50,20 @@ class UnitTestRunner(object):
     """
     return SlapOSControler(
                working_directory,
-               self.testnode.config,
-               self.testnode.log)
+               self.testnode.config)
  
-  def _prepareSlapOS(self, working_directory, slapos_instance, log,
+  def _prepareSlapOS(self, working_directory, slapos_instance,
           create_partition=1, software_path_list=None, **kw):
     """
     Launch slapos to build software and partitions
     """
     slapproxy_log = os.path.join(self.testnode.config['log_directory'],
                                   'slapproxy.log')
-    log('Configured slapproxy log to %r', slapproxy_log)
+    logger.debug('Configured slapproxy log to %r', slapproxy_log)
     reset_software = slapos_instance.retry_software_count > 10
     if reset_software:
       slapos_instance.retry_software_count = 0
-    log('testnode, retry_software_count : %r',
+    logger.info('testnode, retry_software_count: %r',
              slapos_instance.retry_software_count)
 
     # XXX Create a new controler because working_directory can be
@@ -80,12 +80,12 @@ class UnitTestRunner(object):
       method_list.append("runComputerPartition")
     for method_name in method_list:
       slapos_method = getattr(slapos_controler, method_name)
-      log("Before status_dict = slapos_method(...)")
+      logger.debug("Before status_dict = slapos_method(...)")
       status_dict = slapos_method(self.testnode.config,
                                   environment=self.testnode.config['environment'],
                                   **kw)
-      log(status_dict)
-      log("After status_dict = slapos_method(...)")
+      logger.info(status_dict)
+      logger.debug("After status_dict = slapos_method(...)")
       if status_dict['status_code'] != 0:
          slapos_instance.retry = True
          slapos_instance.retry_software_count += 1
@@ -103,7 +103,7 @@ class UnitTestRunner(object):
     # instance. This is a hack which must be removed.
     config = self.testnode.config
     return self._prepareSlapOS(test_node_slapos.working_directory,
-              test_node_slapos, self.testnode.log, create_partition=0,
+              test_node_slapos, create_partition=0,
               software_path_list=config.get("software_list"),
               cluster_configuration={
                 'report-url': config.get("report-url", ""),
@@ -116,7 +116,7 @@ class UnitTestRunner(object):
     Build softwares needed by testsuites
     """
     return self._prepareSlapOS(node_test_suite.working_directory,
-              node_test_suite, self.testnode.log,
+              node_test_suite,
               software_path_list=[node_test_suite.custom_profile_path],
               cluster_configuration={'_': json.dumps(node_test_suite.cluster_configuration)})
 
@@ -124,7 +124,7 @@ class UnitTestRunner(object):
     return self._getSlapOSControler(
       node_test_suite.working_directory).instance_root
 
-  def runTestSuite(self, node_test_suite, portal_url, log=None):
+  def runTestSuite(self, node_test_suite, portal_url):
     config = self.testnode.config
     run_test_suite_path_list = glob.glob(
         self.getInstanceRoot(node_test_suite) + "/*/bin/runTestSuite")
