@@ -67,6 +67,8 @@
   <item>Causality Movement Group</item>
   <item>Day Movement Group</item>
   <item>Delivery Causality Assignment Movement Group</item>
+  <item>First Causality Movement Group</item>
+  <item>Invoice Movement Group</item>
   <item>Monthly Range Movement Group</item>
   <item>Nested Line Movement Group</item>
   <item>Order Movement Group</item>
@@ -74,7 +76,9 @@
   <item>Parent Delivery Property Movement Group</item>
   <item>Parent Explanation Movement Group</item>
   <item>Predicate</item>
+  <item>Previous Causality Movement Group</item>
   <item>Property Assignment Movement Group</item>
+  <item>Property Grouping Movement Group</item>
   <item>Property Movement Group</item>
   <item>Quantity Sign Movement Group</item>
   <item>Requirement Movement Group</item>

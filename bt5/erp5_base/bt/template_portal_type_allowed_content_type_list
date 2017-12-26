@@ -41,6 +41,8 @@ Order Builder | Causality Assignment Movement Group
 Order Builder | Causality Movement Group
 Order Builder | Day Movement Group
 Order Builder | Delivery Causality Assignment Movement Group
+Order Builder | First Causality Movement Group
+Order Builder | Invoice Movement Group
 Order Builder | Monthly Range Movement Group
 Order Builder | Nested Line Movement Group
 Order Builder | Order Movement Group
@@ -48,7 +50,9 @@ Order Builder | Parent Delivery Category Movement Group
 Order Builder | Parent Delivery Property Movement Group
 Order Builder | Parent Explanation Movement Group
 Order Builder | Predicate
+Order Builder | Previous Causality Movement Group
 Order Builder | Property Assignment Movement Group
+Order Builder | Property Grouping Movement Group
 Order Builder | Property Movement Group
 Order Builder | Quantity Sign Movement Group
 Order Builder | Requirement Movement Group
