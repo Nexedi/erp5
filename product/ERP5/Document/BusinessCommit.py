@@ -160,7 +160,7 @@ class BusinessCommit(Folder):
     if eqv_snapshot not in [None, self]:
       if site.portal_workflow.isTransitionPossible(
           eqv_snapshot, 'install'):
-        eqv_snapshot.install(self)
+        eqv_snapshot.install()
 
   def getItemPathList(self):
     return [l.getProperty('item_path') for l in self.objectValues()]
