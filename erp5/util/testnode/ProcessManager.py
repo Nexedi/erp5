@@ -32,6 +32,7 @@ import threading
 import signal
 import sys
 import time
+from . import logger
 
 MAX_TIMEOUT = 3600 * 4
 
@@ -67,28 +68,28 @@ def format_command(*args, **kw):
     cmdline.append(v)
   return ' '.join(cmdline)
 
-def subprocess_capture(p, log, log_prefix, get_output=True):
-  def readerthread(input, output, buffer):
+def subprocess_capture(p, log_prefix, get_output=True):
+  log = logger.info
+  if log_prefix:
+    log_prefix += ': '
+  def readerthread(input, buffer):
     while True:
       data = input.readline()
       if not data:
         break
       if get_output:
         buffer.append(data)
-      if log_prefix:
-        data = "%s : " % log_prefix +  data
-      data = data.rstrip('\n')
-      output(data)
+      log(log_prefix + data.rstrip('\n'))
   if p.stdout:
     stdout = []
     stdout_thread = threading.Thread(target=readerthread,
-                                     args=(p.stdout, log, stdout))
+                                     args=(p.stdout, stdout))
     stdout_thread.daemon = True
     stdout_thread.start()
   if p.stderr:
     stderr = []
     stderr_thread = threading.Thread(target=readerthread,
-                                     args=(p.stderr, log, stderr))
+                                     args=(p.stderr, stderr))
     stderr_thread.daemon = True
     stderr_thread.start()
   p.wait()
@@ -99,7 +100,7 @@ def subprocess_capture(p, log, log_prefix, get_output=True):
   return (p.stdout and ''.join(stdout),
           p.stderr and ''.join(stderr))
 
-def killCommand(pid, log):
+def killCommand(pid):
   """
   To prevent processes from reacting to the KILL of other processes,
   we STOP them all first, and we repeat until the list of children does not
@@ -118,21 +119,20 @@ def killCommand(pid, log):
       try:
         child.suspend()
       except psutil.Error, e:
-        log("killCommand/suspend: %s", e)
+        logger.debug("killCommand/suspend: %s", e)
     time.sleep(1)
     new_list = set(process.children(recursive=True)).difference(process_list)
   for process in process_list:
     try:
       process.kill()
     except psutil.Error, e:
-      log("killCommand/kill: %s", e)
+      logger.debug("killCommand/kill: %s", e)
 
 class ProcessManager(object):
 
   stdin = file(os.devnull)
 
-  def __init__(self, log, max_timeout=MAX_TIMEOUT):
-    self.log = log
+  def __init__(self, max_timeout=MAX_TIMEOUT):
     self.process_pid_set = set()
     signal.signal(signal.SIGTERM, self.sigterm_handler)
     self.under_cancellation = False
@@ -142,19 +142,17 @@ class ProcessManager(object):
     self.timer_set = set()
 
   def spawn(self, *args, **kw):
-    def timeoutExpired(p, log):
+    def timeoutExpired(p):
       if p.poll() is None:
-        log('PROCESS TOO LONG OR DEAD, GOING TO BE TERMINATED')
-        killCommand(p.pid, log)
+        logger.warning('PROCESS TOO LONG OR DEAD, GOING TO BE TERMINATED')
+        killCommand(p.pid)
+        raise SubprocessError('Dead or too long process killed')
 
     if self.under_cancellation:
       raise CancellationError("Test Result was cancelled")
     get_output = kw.pop('get_output', True)
     log_prefix = kw.pop('log_prefix', '')
     new_session = kw.pop('new_session', True)
-    log = kw.pop('log', None)
-    if log is None:
-      log = self.log
     subprocess_kw = {}
     cwd = kw.pop('cwd', None)
     if cwd:
@@ -164,17 +162,16 @@ class ProcessManager(object):
     raise_error_if_fail = kw.pop('raise_error_if_fail', True)
     env = kw and dict(os.environ, **kw) or None
     command = format_command(*args, **kw)
-    log('subprocess_kw : %r' % (subprocess_kw,))
-    log('$ ' + command)
+    logger.info('subprocess_kw : %r', subprocess_kw)
+    logger.info('$ %s', command)
     sys.stdout.flush()
     p = subprocess.Popen(args, stdin=self.stdin, stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, env=env, **subprocess_kw)
     self.process_pid_set.add(p.pid)
-    timer = threading.Timer(self.max_timeout, timeoutExpired, args=(p, log))
+    timer = threading.Timer(self.max_timeout, timeoutExpired, args=(p,))
     self.timer_set.add(timer)
     timer.start()
-    stdout, stderr = subprocess_capture(p, log, log_prefix,
-                                        get_output=get_output)
+    stdout, stderr = subprocess_capture(p, log_prefix, get_output=get_output)
     timer.cancel()
     self.timer_set.discard(timer)
     result = dict(status_code=p.returncode, command=command,
@@ -211,32 +208,39 @@ class ProcessManager(object):
             continue
       except (psutil.AccessDenied, psutil.NoSuchProcess):
         continue
-      self.log('ProcesssManager, killall on %s having pid %s',
+      logger.debug('ProcesssManager, killall on %s having pid %s',
                name, process.pid)
       to_kill_list.append(process.pid)
     for pid in to_kill_list:
-      killCommand(pid, self.log)
+      killCommand(pid)
 
   def killPreviousRun(self, cancellation=False):
-    self.log('ProcessManager killPreviousRun, going to kill %r',
+    logger.debug('ProcessManager killPreviousRun, going to kill %r',
              self.process_pid_set)
     if cancellation:
       self.under_cancellation = True
     for timer in self.timer_set:
       timer.cancel()
     for pgpid in self.process_pid_set:
-      killCommand(pgpid, self.log)
+      killCommand(pgpid)
     try:
-      if os.path.exists(self.supervisord_pid_file):
-        with open(self.supervisord_pid_file) as f:
-          supervisor_pid = int(f.read().strip())
-        self.log('ProcessManager killPreviousRun, going to kill supervisor with pid %r',
-                 supervisor_pid)
-        os.kill(supervisor_pid, signal.SIGTERM)
-    except Exception:
-      self.log('ProcessManager killPreviousRun, exception when killing supervisor')
+      pid_file = self.supervisord_pid_file
+    except AttributeError:
+      pass
+    else:
+      del self.supervisord_pid_file
+      try:
+        if os.path.exists(pid_file):
+          with open(pid_file) as f:
+            pid = int(f.read().strip())
+          logger.debug('ProcessManager killPreviousRun,'
+                       ' going to kill supervisor with pid %r', pid)
+          os.kill(pid, signal.SIGTERM)
+      except Exception:
+        logger.exception(
+          'ProcessManager killPreviousRun, exception when killing supervisor')
     self.process_pid_set.clear()
 
   def sigterm_handler(self, signal, frame):
-    self.log('SIGTERM_HANDLER')
+    logger.debug('SIGTERM_HANDLER')
     sys.exit(1)

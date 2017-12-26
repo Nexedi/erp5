@@ -1,6 +1,8 @@
 import unittest
 from unittest import TestCase
+from contextlib import contextmanager
 
+from erp5.util.testnode import logger
 from erp5.util.testnode.testnode import TestNode, test_type_registry
 from erp5.util.testnode.NodeTestSuite import SlapOSInstance, NodeTestSuite
 from erp5.util.testnode.ProcessManager import ProcessManager, SubprocessError
@@ -13,16 +15,25 @@ from erp5.util.testnode.SlapOSControler import createFolder
 from erp5.util.taskdistribution import TaskDistributor
 from erp5.util.taskdistribution import TestResultProxy
 import argparse
+import logging
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import json
 import time
 import types
 import re
 
+@contextmanager
+def dummySuiteLog(_):
+  yield
+
 class ERP5TestNode(TestCase):
+
+  _handler = logging.StreamHandler(sys.stdout)
+  _handler.setFormatter(logging.Formatter('TESTNODE LOG: %(message)s'))
 
   def setUp(self):
     self._temp_dir = tempfile.mkdtemp()
@@ -49,13 +60,11 @@ class ERP5TestNode(TestCase):
     os.mkdir(self.remote_repository0)
     os.mkdir(self.remote_repository1)
     os.mkdir(self.remote_repository2)
-    def log(*args,**kw):
-      for arg in args:
-        print "TESTNODE LOG : %r, %r" % (arg, kw)
-    self.log = log
+    logging.getLogger().addHandler(self._handler)
 
   def tearDown(self):
     shutil.rmtree(self._temp_dir, True)
+    logging.getLogger().removeHandler(self._handler)
 
   def getTestNode(self):
     # XXX how to get property the git path ?
@@ -80,7 +89,12 @@ class ERP5TestNode(TestCase):
     config["frontend_url"] = "http://frontend/"
     config["software_list"] = ["foo", "bar"]
 
-    return TestNode(self.log, config)
+    testnode = TestNode(config)
+    # By default, keep suite logs to stdout for easier debugging
+    # (stdout/stderr are automatically reported to ERP5).
+    # This is unset by test methods that check normal suite logging.
+    testnode.suiteLog = dummySuiteLog
+    return testnode
 
   def getTestSuiteData(self, add_third_repository=False,
                        add_broken_repository=False, reference="foo"):
@@ -634,13 +648,10 @@ shared = true
             allow_restart=False, test_title=None, project_title=None):
       global counter
       # return no test to check if run method will run the next test suite
-      if counter == 3 and project_title != 'qux':
-        result = None
-      else:
+      if counter != 3 or project_title == 'qux':
         test_result_path = os.path.join(test_result_path_root, test_title)
-        result =  TestResultProxy(self._proxy, self._retry_time,
-                self._logger, test_result_path, node_title, revision)
-      return result
+        return TestResultProxy(self._proxy, self._retry_time,
+                logger, test_result_path, node_title, revision)
     def patch_runTestSuite(self, *argv, **kw):
       return {'status_code':0}
     original_sleep = time.sleep
@@ -707,7 +718,7 @@ shared = true
     def _checkCorrectStatus(expected_status,*args):
       result = process_manager.spawn(*args)
       self.assertEqual(result['status_code'], expected_status)
-    process_manager = ProcessManager(log=self.log, max_timeout=1)
+    process_manager = ProcessManager(max_timeout=1)
     _checkCorrectStatus(0, *['sleep','0'])
     # We must make sure that if the command is too long that
     # it will be automatically killed
@@ -715,8 +726,7 @@ shared = true
 
   def test_13_SlaposControlerResetSoftware(self):
     test_node = self.getTestNode()
-    controler = SlapOSControler(self.working_directory,
-                                test_node.config, self.log)
+    controler = SlapOSControler(self.working_directory, test_node.config)
     os.mkdir(controler.software_root)
     file_name = 'AC_Ra\xc3\xadzertic\xc3\xa1ma'
     non_ascii_file = open(os.path.join(controler.software_root, file_name), 'w')
@@ -778,30 +788,26 @@ shared = true
     def patch_createTestResult(self, revision, test_name_list, node_title,
             allow_restart=False, test_title=None, project_title=None):
       test_result_path = os.path.join(test_result_path_root, test_title)
-      result = TestResultProxy(self._proxy, self._retry_time,
-               self._logger, test_result_path, node_title, revision)
-      return result
+      return TestResultProxy(self._proxy, self._retry_time,
+                logger, test_result_path, node_title, revision)
     def patch_runTestSuite(self,*argv, **kw):
       return {'status_code':0}
     def checkTestSuite(test_node):
       test_node.node_test_suite_dict
       rand_part_set = set()
       self.assertEquals(2, len(test_node.node_test_suite_dict))
-      self.assertIsNot(test_node.suite_log, None)
-      self.assertTrue(isinstance(test_node.suite_log, types.MethodType))
       for ref, suite in test_node.node_test_suite_dict.items():
         self.assertTrue('var/log/testnode/%s' % suite.reference in \
                          suite.suite_log_path,
                          "Incorrect suite log path : %r" % suite.suite_log_path)
-        self.assertTrue(suite.suite_log_path.endswith('suite.log'))
-        m = re.match('.*\-(.*)\/suite.log', suite.suite_log_path)
+        m = re.search('-(.*)/suite.log$', suite.suite_log_path)
         rand_part = m.groups()[0]
         self.assertEqual(len(rand_part), 10)
         self.assertNotIn(rand_part, rand_part_set)
         rand_part_set.add(rand_part)
-        suite_log = open(suite.suite_log_path, 'r')
-        self.assertEquals(1, len([x for x in suite_log.readlines() \
-                              if x.find("Activated logfile")>=0]))
+        with open(suite.suite_log_path) as suite_log:
+          self.assertIn("Getting configuration from test suite",
+                        suite_log.readline())
 
     RunnerClass = test_type_registry[my_test_type]
     original_sleep = time.sleep
@@ -837,6 +843,7 @@ shared = true
     original_createTestResult = TaskDistributor.createTestResult
     TaskDistributor.createTestResult = patch_createTestResult
     test_node = self.getTestNode()
+    del test_node.suiteLog
     # Change UnitTestRunner class methods
     original_prepareSlapOS = RunnerClass._prepareSlapOS
 
@@ -934,7 +941,7 @@ shared = true
     SlapOSControler.runSoftwareRelease = runSoftwareRelease
     def callPrepareSlapOS():
       runner._prepareSlapOS(self.working_directory, node_test_suite,
-         test_node.log, create_partition=0)
+         create_partition=0)
     def callRaisingPrepareSlapos():
       self.assertRaises(SubprocessError, callPrepareSlapOS)
 
@@ -989,9 +996,8 @@ shared = true
     def patch_createTestResult(self, revision, test_name_list, node_title,
             allow_restart=False, test_title=None, project_title=None):
       test_result_path = os.path.join(test_result_path_root, test_title)
-      result =  TestResultProxy(self._proxy, self._retry_time,
-                self._logger, test_result_path, node_title, revision)
-      return result
+      return TestResultProxy(self._proxy, self._retry_time,
+                logger, test_result_path, node_title, revision)
     global startTestSuiteDone
     startTestSuiteDone = False
     def patch_startTestSuite(self,node_title,computer_guid='unknown'):
