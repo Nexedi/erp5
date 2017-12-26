@@ -12,21 +12,18 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>installed</string> </value>
+            <value> <string>replaced</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Replaced</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>reinstall</string>
-                <string>reinstall_action</string>
-                <string>replace</string>
-                <string>uninstall</string>
-                <string>uninstall_action</string>
+                <string>install</string>
+                <string>install_action</string>
               </tuple>
             </value>
         </item>

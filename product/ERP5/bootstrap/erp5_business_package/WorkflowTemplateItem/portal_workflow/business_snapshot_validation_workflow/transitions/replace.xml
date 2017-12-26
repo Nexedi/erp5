@@ -16,15 +16,15 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Install Business Manager</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=install_action</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>BusinessTemplate_install</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -38,11 +38,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>install_action</string> </value>
+            <value> <string>replace</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
+            <value> <string>replaced</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Install Business Manager Action</string> </value>
+            <value> <string>Replace Business Snapshot</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>2</int> </value>
         </item>
       </dictionary>
     </pickle>

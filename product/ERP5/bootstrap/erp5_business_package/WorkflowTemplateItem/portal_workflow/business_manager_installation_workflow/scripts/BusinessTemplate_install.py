@@ -14,7 +14,7 @@ if listbox is not None and len(listbox) > 0:
       object_to_update[item['listbox_key']] = "nothing"
 
 if workflow_action == 'install_action':
-  portal_templates.installBusinessItemList([business_manager], listbox)
+  business_manager.install()
 
 # XXX: TODO: Work nedeed on reinstall_action
 elif workflow_action == 'reinstall_action':

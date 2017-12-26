@@ -61,7 +61,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_item_path_list</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -80,6 +82,12 @@
                       <list>
                         <string>my_id</string>
                         <string>my_title</string>
+                        <string>my_comment</string>
+                        <string>my_description</string>
+                        <string>my_translated_building_state_title</string>
+                        <string>my_translated_installation_state_title</string>
+                        <string>my_provision_list</string>
+                        <string>my_version</string>
                       </list>
                     </value>
                 </item>
@@ -87,8 +95,12 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_translated_building_state_title</string>
-                        <string>my_translated_installation_state_title</string>
+                        <string>my_change_log</string>
+                        <string>my_dependency_list</string>
+                        <string>my_test_dependency_list</string>
+                        <string>my_copyright_list</string>
+                        <string>my_license</string>
+                        <string>my_maintainer_list</string>
                       </list>
                     </value>
                 </item>

@@ -67,7 +67,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_business_manager_title_list</string>
+                      </list>
                     </value>
                 </item>
                 <item>
