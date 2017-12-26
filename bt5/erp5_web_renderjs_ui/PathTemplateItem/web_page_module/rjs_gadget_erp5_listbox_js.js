@@ -193,7 +193,7 @@
 
       // use only visible columns for search
       if (field_json.search_column_list.length) {
-        search_column_list = field_json.search_column_list.filter(is_in_column_list);
+        search_column_list = field_json.search_column_list;
       }
 
       url_query = options.extended_search;

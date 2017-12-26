@@ -17,10 +17,20 @@
   <td>${base_url}/bar_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
-
 <tr>
   <td>assertTextPresent</td>
   <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<!-- Set all_columns property -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_all_columns=creation_date%7CCreation%20Date%0AgetUid%7CUID%0Adelivery.quantity%7CQuantity</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Set Successfully.</td>
   <td></td>
 </tr>
 
@@ -32,13 +42,6 @@
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
-
-<!-- No item is displayed -->
-<!--tr>
-  <td>assertElementNotPresent</td>
-  <td>//div[@class='filter_item_container']/div</td>
-  <td></td>
-</tr-->
 
 <tr>
   <td>waitForElementPresent</td>
@@ -59,17 +62,22 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[3][@value='TEXT' and text()='Searchable Text']</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[3][@value='COLUMN_creation_date' and text()='Creation Date']</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[4][@value='RAW' and text()='Search Expression']</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[4][@value='TEXT' and text()='Searchable Text']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[5][@value='RAW' and text()='Search Expression']</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[5]</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[1]//option[6]</td>
   <td></td>
 </tr>
 <tr>

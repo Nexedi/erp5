@@ -76,6 +76,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>gadget_erp5_field_listbox.js</string> </value>
         </item>
@@ -236,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.20125.49209.53111</string> </value>
+                <value> <string>964.25442.10691.60142</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1514279169.73</float>
+                        <float>1514300142.68</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
