@@ -57,7 +57,7 @@
 <tr>
   <td>verifySelectOptions</td>
   <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
-  <td>ID,biaoti</td>
+  <td>ID,biaoti,chuangjianshijian,xiugaishijian,shuoyouzhe</td>
 </tr>
 
 

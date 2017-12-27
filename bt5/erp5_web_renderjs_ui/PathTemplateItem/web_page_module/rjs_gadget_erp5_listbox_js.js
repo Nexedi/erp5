@@ -188,7 +188,7 @@
 
       // use only visible columns for sort
       if (field_json.sort_column_list.length) {
-        sort_column_list = field_json.sort_column_list.filter(is_in_column_list);
+        sort_column_list = field_json.sort_column_list;
       }
 
       // use only visible columns for search
