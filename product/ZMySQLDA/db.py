@@ -314,6 +314,7 @@ class DB(TM):
               error=True,
             )
       self.db = MySQLdb.connect(**self._kw_args)
+      self._query("SET time_zone='+00:00'")
 
     def tables(self, rdb=0,
                _care=('TABLE', 'VIEW')):
