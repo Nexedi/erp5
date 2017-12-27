@@ -13,8 +13,16 @@ portal = context.getPortalObject()
 if query_string is not None:
   kw.update(SearchableText=query_string)
 
-kw.update(parent_uid=[portal.restrictedTraverse(module).getUid() for module in context.getProperty('module_list') or []])
+parent_uid =[portal.restrictedTraverse(module).getUid()
+             for module in context.getProperty('module_list') or []]
+if parent_uid:
+  kw.update(parent_uid=parent_uid)
 
-portal.portal_catalog.searchAndActivate(method_id='Base_checkAlarmConsistency', method_kw={'fixit': fixit, 'active_process': active_process}, activate_kw={'tag':tag, 'priority': 8}, **kw)
+
+portal.portal_catalog.searchAndActivate(
+    method_id='Base_checkAlarmConsistency',
+    method_kw={'fixit': fixit, 'active_process': active_process},
+    activate_kw={'tag':tag, 'priority': 8},
+    **kw)
 
 context.activate(after_tag=tag).getId()
