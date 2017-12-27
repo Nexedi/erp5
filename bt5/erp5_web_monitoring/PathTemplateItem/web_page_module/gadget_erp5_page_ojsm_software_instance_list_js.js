@@ -114,7 +114,7 @@
                   "portal_type": [],
                   "search_column_list": column_list,
                   "sort_column_list": column_list,
-                  "sort": [["title", "ascending"], ["status", "ascending"]],
+                  "sort": [["status", "ascending"]],
                   "title": "Software Instances",
                   "type": "ListBox"
                 }
