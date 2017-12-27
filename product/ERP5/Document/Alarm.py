@@ -344,11 +344,19 @@ Alarm Tool Node: %s
   def getLastActiveProcess(self, include_active=False):
     """
     This returns the last active process finished. So it will
-    not returns the current one
+    not returns the current one.  ( XXX this docstring looks wrong. What about include_active ?)
+
+
     """
     if include_active:
       limit = 1
     else:
+      # XXX bug !
+      # This cannot be trusted during alarm execution.
+      # When alarm is running, isActive returns, then we assume that the latest
+      # created active process returned by the catalog is the "currently
+      # active" active process, but if the currently active active process is not yet indexed, we
+      # this method does not return the latest active process, but the previous one.
       limit = self.isActive() and 2 or 1
     active_process_list = self.getPortalObject().portal_catalog(
       portal_type='Active Process', limit=limit,

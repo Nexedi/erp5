@@ -1,7 +1,7 @@
 kw = {}
 
 if context.getProperty('incremental_check'):
-  last_active_process = context.getLastActiveProcess()
+  last_active_process = context.getLastActiveProcess(include_active=True)
   if last_active_process is not None:
     kw['indexation_timestamp'] = {
         'query': last_active_process.getStartDate(),
