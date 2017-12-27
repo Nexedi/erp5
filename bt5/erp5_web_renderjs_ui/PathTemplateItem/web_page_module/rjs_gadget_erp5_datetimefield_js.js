@@ -247,6 +247,11 @@
               }
             }
             p_state.text_content = text_content;
+            // for noneditable element, attach data-date attribute in ISO format
+            // so we can use it in tests
+            p_state.data = {
+              'date': input_state.value
+            };
             return gadget_list[0].render(p_state);
           });
       }

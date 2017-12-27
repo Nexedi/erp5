@@ -26,13 +26,20 @@
           append: options.append || '',
           prepend: options.prepend || ''
         };
+      // data are dictionary thus include it only when defined so it appears
+      // in modification_dict only when necessary
+      // keys are expected to be camelCase
+      if (options.data !== undefined) {
+        state_dict.data = JSON.stringify(options.data);
+      }
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function () {
+    .onStateChange(function (modification_dict) {
       var element = this.element,
         new_element = document.createElement(this.state.tag),
-        content = this.state.text_content;
+        content = this.state.text_content,
+        data, data_attr;
 
       if (this.state.text_content) {
         if (this.state.prepend) {
@@ -50,6 +57,14 @@
       }
       if (this.state.alt) {
         new_element.setAttribute('alt', this.state.alt);
+      }
+      if (modification_dict.hasOwnProperty("data")) {
+        data = JSON.parse(modification_dict.data);
+        for (data_attr in data) {
+          if (data.hasOwnProperty(data_attr)) {
+            new_element.dataset[data_attr] = data[data_attr];
+          }
+        }
       }
       // Clear first to DOM, append after to reduce flickering/manip
       while (element.firstChild) {

@@ -81,6 +81,12 @@
   <td></td>
 </tr>
 
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_start_date']//div[@data-gadget-scope='field']//p[@data-date='2015-12-21T11:00:00']</td>
+  <td></td>
+</tr>
+
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
