@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -78,12 +78,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_field_status.html</string> </value>
+            <value> <string>gadget_ojsm_graph_field.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ojsm_gadget_erp5_statusfield_html</string> </value>
+            <value> <string>gadget_ojsm_graph_field_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,7 +97,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -111,7 +107,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Statusfield</string> </value>
+            <value> <string>Gadget Officejs Monitoring Graph JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -197,7 +193,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1509383932.65</float>
+                        <float>1514308148.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -242,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.25935.32773.12561</string> </value>
+                <value> <string>964.26990.55688.60364</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +256,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1514308778.96</float>
+                        <float>1514372119.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -317,7 +313,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1509381854.52</float>
+                        <float>1514308114.16</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
