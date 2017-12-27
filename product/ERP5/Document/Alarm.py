@@ -358,7 +358,7 @@ Alarm Tool Node: %s
       # active" active process, but if the currently active active process is not yet indexed, we
       # this method does not return the latest active process, but the previous one.
       limit = self.isActive() and 2 or 1
-    active_process_list = self.getPortalObject().portal_catalog(
+    active_process_list = self.getPortalObject().portal_catalog.unrestrictedSearchResults(
       portal_type='Active Process', limit=limit,
       sort_on=(('creation_date', 'DESC'),
                ('id', 'DESC', 'UNSIGNED'),),
