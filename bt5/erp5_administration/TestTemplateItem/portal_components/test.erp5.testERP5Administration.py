@@ -28,6 +28,7 @@
 ##############################################################################
 
 import unittest
+import time
 from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase
 
 class TestERP5Administration(InventoryAPITestCase):
@@ -112,6 +113,38 @@ class TestERP5Administration(InventoryAPITestCase):
     alarm.solve()
     self.tic()
     self.assertEqual('3', inconsistent_document.title)
+
+  def test_check_consistency_incremental(self):
+    alarm = self.portal.portal_alarms.check_consistency.Base_createCloneDocument(
+        batch_mode=True)
+    alarm.edit(incremental_check=True)
+    alarm.activeSense()
+    self.tic()
+    # create an inconsistent document
+    inconsistent_document = self.portal.organisation_module.newContent(
+        portal_type='Organisation')
+    inconsistent_document.title = 0
+    self.tic()
+
+    # alarm report this document as not consistent
+    time.sleep(2) # catalog date columns have a one second precision
+    alarm.activeSense()
+    self.tic()
+    self.assertTrue(alarm.sense())
+    result, = alarm.getLastActiveProcess().getResultList()
+    constraint_message, = result.getProperty('constraint_message_list')
+    self.assertEqual(inconsistent_document.getRelativeUrl(), constraint_message.object_relative_url)
+
+    # next time the alarm run, document is not reported anymore
+    alarm.activeSense()
+    self.tic()
+    self.assertFalse(alarm.sense())
+    self.assertEqual([], alarm.getLastActiveProcess().getResultList())
+
+    # cleanup
+    self.portal.organisation_module.manage_delObjects(
+        ids=[inconsistent_document.getId()])
+    self.tic()
 
   def test_missing_category_document_constraint(self):
     person = self.portal.person_module.newContent(portal_type='Person')
