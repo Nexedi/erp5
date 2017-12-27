@@ -27,13 +27,22 @@
     var sort_column_list = gadget.state.sort_column_list,
       sort_value_list = sort_value || [],
       option_list = [],
+      is_selected = false,
       i;
 
     for (i = 0; i < sort_column_list.length; i += 1) {
+      is_selected = is_selected || (sort_value_list[0] === sort_column_list[i][0]);
       option_list.push({
         text: sort_column_list[i][1],
         value: sort_column_list[i][0],
-        selected_option: sort_value_list[0]
+        selected: sort_value_list[0] === sort_column_list[i][0]
+      });
+    }
+    if (!is_selected && (sort_value !== undefined)) {
+      option_list.push({
+        text: sort_value_list[0],
+        value: sort_value_list[0],
+        selected: true
       });
     }
 

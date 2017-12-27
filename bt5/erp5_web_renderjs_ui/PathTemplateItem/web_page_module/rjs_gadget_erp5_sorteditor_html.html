@@ -18,11 +18,7 @@
       <div class="sort_item ui-controlgroup-controls" >
         <select data-iconpos="left">
           {{#each option}}
-            {{#equal value selected_option}}
-              <option selected="selected" data-i18n="{{text}}" value="{{value}}">{{text}}</option>
-            {{else}}
-              <option value="{{value}}" data-i18n="{{text}}">{{text}}</option>
-            {{/equal}}
+            <option {{#if selected}}selected="selected"{{/if}} data-i18n="{{text}}" value="{{value}}">{{text}}</option>
           {{/each}}
         </select>
 
