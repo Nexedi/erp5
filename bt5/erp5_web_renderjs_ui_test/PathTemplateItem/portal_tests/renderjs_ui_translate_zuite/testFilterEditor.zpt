@@ -54,7 +54,7 @@
 <tr>
   <td>verifySelectOptions</td>
   <td>//div[@class="filter_item_container"]/div[1]//select[1]</td>
-  <td>ID,biaoti,soushuowenben,soushuo</td>
+  <td>ID,biaoti,chuangjianshijian,xiugaishijian,shuoyouzhe,soushuowenben,soushuo</td>
 </tr>
 
 <tr>
@@ -68,7 +68,7 @@
 <tr>
   <td>select</td>
   <td>//div[@class="filter_item_container"]/div[1]//select[1]</td>
-  <td>index=2</td>
+  <td>index=5</td>
 </tr>
 
 
