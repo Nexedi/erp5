@@ -1,5 +1,6 @@
 web_page_module/gadget_erp5_field_status_*
 web_page_module/gadget_erp5_page_ojsm_*
+web_page_module/gadget_ojsm_*
 web_page_module/gadget_erp5_page_settings_configurator_*
 web_page_module/gadget_officejs_jio_software_instance_view_html
 web_page_module/gadget_officejs_jio_software_instance_view_js
