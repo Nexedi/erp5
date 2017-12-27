@@ -3,7 +3,10 @@ kw = {}
 if context.getProperty('incremental_check'):
   last_active_process = context.getLastActiveProcess()
   if last_active_process is not None:
-    kw['indexation_timestamp'] = '>= %s' % last_active_process.getStartDate().ISO()
+    kw['indexation_timestamp'] = {
+        'query': last_active_process.getStartDate(),
+        'range': '>='
+    }
 
 active_process = context.newActiveProcess().getRelativeUrl()
 query_string = context.getProperty('catalog_query_string', '')
