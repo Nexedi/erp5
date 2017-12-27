@@ -10,17 +10,10 @@
     link_template = Handlebars.compile(source);
   gadget_klass
     .setState({
-      jio_gadget: "",
       instance: "",
       opml: "",
       opml_outline: "",
       graph_value: {}
-    })
-    .ready(function (gadget) {
-      return gadget.getDeclaredGadget("jio_gadget")
-        .push(function (jio_gadget) {
-          return gadget.changeState({"jio_gadget": jio_gadget});
-        });
     })
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -30,7 +23,6 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("redirect", "redirect")
     /////////////////////////////////////////////////////////////////
@@ -59,16 +51,6 @@
         .push(function (opml_doc) {
           return gadget.changeState({
             opml: opml_doc
-          });
-        })
-        .push(function () {
-          return gadget.state.jio_gadget.createJio({
-            type: "webhttp",
-            // XXX fix of url
-            url: gadget.state.instance._links.private_url.href
-              .replace("jio_private", "private") +
-              'documents/',
-            basic_login: gadget.state.opml.basic_login
           });
         })
         .push(function () {
@@ -197,82 +179,78 @@
     })
     .onStateChange(function () {
       var gadget = this,
-        graph_value = {};
+        graph_data;
       if (!gadget.state.hasOwnProperty('status') &&
           !gadget.state.hasOwnProperty('title')) {
         return;
       }
       return new RSVP.Queue()
         .push(function () {
-          // Move this to not slow down the page rendering...
-          return gadget.state.jio_gadget.get(
-            gadget.state.instance.data.state
-          )
-            .push(undefined, function (error) {
-              return gadget.notifySubmitted({
-                message: "Warning: Failed to download monitoring state history file!\n " +
-                  error.message || "",
-                status: "error"
-              })
-                .push(function () {
-                  return {};
-                });
-            })
-            .push(function (element_dict) {
-              var promise_data = [
-                  "Date, Success, Error, Warning",
-                  new Date() + ",0,0,0"
-                ],
-                data = element_dict.data || promise_data,
-                data_list = [],
-                line_list,
-                i;
+          var graph_options = {
+              data_url: gadget.state.instance._links.private_url.href +
+                'documents/',
+              data_filename: gadget.state.instance.data.state,
+              basic_login: gadget.state.opml.basic_login
+            };
 
-              data_list.push({
-                value_dict: {"0": [], "1": []},
-                type: "scatter",
-                axis_mapping_id_dict: {"1": "1_1"},
-                title: "promises success"
-              });
-              data_list.push({
-                value_dict: {"0": [], "1": []},
-                type: "scatter",
-                axis_mapping_id_dict: {"1": "1_2"},
-                title: "promises error"
-              });
-              for (i = 1; i < data.length; i += 1) {
-                line_list = data[i].split(',');
-                data_list[0].value_dict["0"].push(line_list[0]);
-                data_list[0].value_dict["1"].push(line_list[1]);
+          graph_options.extract_method = function (element_dict) {
+            var promise_data = [
+                "Date, Success, Error",
+                new Date() + ",0,0"
+              ],
+              data = element_dict.data || promise_data,
+              data_list = [],
+              line_list,
+              i;
 
-                // XXX repeating date entry
-                data_list[1].value_dict["0"].push(line_list[0]);
-                data_list[1].value_dict["1"].push(line_list[2]);
-              }
-              graph_value = {
-                data: data_list,
-                layout: {
-                  axis_dict : {
-                    "0": {
-                      "title": "Success/Failure Progression",
-                      "scale_type": "linear",
-                      "value_type": "date"
-                    },
-                    "1_1": {
-                      "title": "Promises success",
-                      "position": "right"
-                    },
-                    "1_2": {
-                      "title": "Promises error",
-                      "position": "right"
-                    }
-                  },
-                  title: "Success/Failure Progression"
-                }
-              };
+            data_list.push({
+              value_dict: {"0": [], "1": []},
+              type: "scatter",
+              axis_mapping_id_dict: {"1": "1_1"},
+              title: "promises success"
             });
+            data_list.push({
+              value_dict: {"0": [], "1": []},
+              type: "scatter",
+              axis_mapping_id_dict: {"1": "1_2"},
+              title: "promises error"
+            });
+            for (i = 1; i < data.length; i += 1) {
+              line_list = data[i].split(',');
+              data_list[0].value_dict["0"].push(line_list[0]);
+              data_list[0].value_dict["1"].push(line_list[1]);
+
+              // XXX repeating date entry
+              data_list[1].value_dict["0"].push(line_list[0]);
+              data_list[1].value_dict["1"].push(line_list[2]);
+            }
+            return data_list;
+          };
+          graph_options.data_dict = {
+            data: {},
+            layout: {
+              axis_dict : {
+                "0": {
+                  "title": "Promises Failure Progression",
+                  "scale_type": "linear",
+                  "value_type": "date"
+                },
+                "1_1": {
+                  "title": "Promises success",
+                  "position": "right"
+                },
+                "1_2": {
+                  "title": "Promises error",
+                  "position": "right"
+                }
+              },
+              title: "Promises Failure Progression"
+            }
+          };
+          return graph_options;
         })
-        .push(function () {
+        .push(function (g) {
+          graph_data = g;
           //gadget.element.querySelector('.template-view').innerHTML = html;
           return gadget.getDeclaredGadget('form_view');
         })
@@ -486,9 +464,9 @@
                   css_class: "no_label",
                   description: "The Graph Status",
                   hidden: 0,
-                  "default": graph_value || {},
+                  "default": graph_data,
                   key: "graph_status",
-                  url: "gadget_field_graph_dygraph.html",
+                  url: "gadget_ojsm_graph_field.html",
                   title: "",
                   type: "GadgetField"
                 }
