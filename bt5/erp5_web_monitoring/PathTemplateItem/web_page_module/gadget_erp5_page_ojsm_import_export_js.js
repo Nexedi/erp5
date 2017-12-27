@@ -297,7 +297,7 @@
     }
     return gadget.state.erp5_gadget.allDocs({
       query: '(portal_type:"Hosting Subscription") AND (validation_state:"validated")',
-      select_list: ['title', 'default_predecessor_uid', 'uid'],
+      select_list: ['title', 'default_predecessor_uid', 'uid', 'slap_state'],
       limit: [0, limit],
       sort_on: [
         ["creation_date", "descending"]
@@ -307,13 +307,17 @@
         var i,
           uid_search_list = [];
         for (i = 0; i < result.data.total_rows; i += 1) {
-          hosting_subscription_list.push({
-            title: result.data.rows[i].value.title,
-            relative_url: result.data.rows[i].id
-          });
-          uid_search_list.push(result.data.rows[i].value.uid);
-          if (result.data.rows[i].value.default_predecessor_uid) {
-            uid_dict[result.data.rows[i].value.default_predecessor_uid] = i;
+          if (result.data.rows[i].value.slap_state !== "destroy_requested") {
+            hosting_subscription_list.push({
+              title: result.data.rows[i].value.title,
+              relative_url: result.data.rows[i].id,
+              active: (result.data.rows[i].value.slap_state ===
+                       "start_requested") ? true : false
+            });
+            uid_search_list.push(result.data.rows[i].value.uid);
+            if (result.data.rows[i].value.default_predecessor_uid) {
+              uid_dict[result.data.rows[i].value.default_predecessor_uid] = i;
+            }
           }
         }
         return gadget.state.erp5_gadget.allDocs({
@@ -344,7 +348,7 @@
                 password: tmp_parameter.password,
                 basic_login: btoa(tmp_parameter.username + ':' +
                                   tmp_parameter.password),
-                active: true
+                active: hosting_subscription_list[uid_dict[tmp_uid]].active
               });
             }
           }
