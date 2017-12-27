@@ -5,10 +5,12 @@
 
   var gadget_klass = rJS(window);
 
-  function getHostingData(gadget, filter) {
+  function getHostingData(gadget, filter, status_sort) {
     // optimized way to fetch hosting subscription list
     var hosting_dict = {},
       instance_dict = {},
+      sort_status_dict = {},
+      compare_function,
       total_rows = 0;
     return gadget.jio_allDocs(filter)
       .push(function (result) {
@@ -78,6 +80,20 @@
             row_list.push(hosting_dict[key]);
           }
         }
+        if (status_sort !== undefined) {
+          if (status_sort === "ascending") {
+            compare_function = function (first, second) {
+              return first > second;
+            };
+          } else {
+            compare_function = function (first, second) {
+              return first <= second;
+            };
+          }
+          row_list.sort(function (a, b) {
+            return compare_function(a.value.status, b.value.status);
+          });
+        }
         return {data: {total_rows: total_rows, rows: row_list}};
       });
   }
@@ -101,8 +117,15 @@
     })
 
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
-      var gadget = this;
-      return getHostingData(gadget, param_list[0])
+      var gadget = this,
+        status_sort,
+        i;
+      for (i = 0; i < param_list[0].sort_on.length; i += 1) {
+        if (param_list[0].sort_on[i][0] === 'status') {
+          status_sort = param_list[0].sort_on[i][1];
+        }
+      }
+      return getHostingData(gadget, param_list[0], status_sort)
         .push(function (result) {
           var i,
             len = result.data.total_rows;
@@ -202,9 +225,9 @@
                     "opml" + "%22%29AND%28active%3A%22" +
                     "true" + "%22%29",
                   "portal_type": [],
-                  "search_column_list": [['title', 'Hosting Subscription']],
-                  "sort_column_list": [['title', 'Hosting Subscription']],
-                  "sort": [["title", "ascending"]],
+                  "search_column_list": [['status', 'Status'], ['title', 'Hosting Subscription']],
+                  "sort_column_list": [['status', 'Status'], ['title', 'Hosting Subscription']],
+                  "sort": [['status', 'ascending']],
                   "title": "Hosting Subscriptions",
                   "command": "index",
                   "type": "ListBox"
