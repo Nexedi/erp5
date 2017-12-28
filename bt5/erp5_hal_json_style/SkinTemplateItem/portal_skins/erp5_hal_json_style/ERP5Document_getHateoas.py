@@ -667,6 +667,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
 
     result.update({
       "column_list": column_list,
+      "all_column_list": all_column_list,
       "search_column_list": search_column_list,
       "sort" :field.get_value('sort'),
       "sort_column_list": sort_column_list,
