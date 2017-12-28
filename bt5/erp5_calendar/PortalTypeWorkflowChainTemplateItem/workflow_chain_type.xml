@@ -21,10 +21,10 @@
  </chain>
  <chain>
   <type>Presence Request</type>
-  <workflow>edit_workflow, presence_request_workflow</workflow>
+  <workflow>edit_workflow, presence_request_interaction_workflow, presence_request_workflow</workflow>
  </chain>
  <chain>
   <type>Presence Request Period</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, presence_request_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

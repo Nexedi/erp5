@@ -1717,6 +1717,100 @@ class TestCalendar(ERP5ReportTestCase):
     self.assertEqual(leave_request.getStartDate(), default_start_date)
     self.assertEqual(leave_request.getStopDate(), extra_stop_date)
 
+  def test_PresenceRequest_defaultPresenceRequestPeriod(self):
+    '''
+      Check check how default_presence_request_period is created and when
+      fields of PresenceRequest_view are visible or not
+    '''
+    default_start_date = DateTime('2018/01/01')
+    default_stop_date = DateTime('2018/01/03')
+    extra_start_date = DateTime('2018/01/05')
+    extra_stop_date = DateTime('2018/01/08')
+    default_quantity = 2.0
+
+    def checkDisplayedAsSimple():
+      self.assertEqual(
+        my_default_presence_request_period_start_date.get_value("enabled"),
+        True,
+      )
+      self.assertEqual(
+        my_default_presence_request_period_stop_date.get_value("enabled"),
+        True,
+      )
+      self.assertEqual(my_start_date.get_value("enabled"), False)
+      self.assertEqual(my_start_date.get_value("enabled"), False)
+      self.assertEqual(listbox.get_value("enabled"), False)
+
+    # Add a Presence Request, we should have no sub-objects and it should be
+    # displayed as simple (no listbox and fields to be edited on Delivery)
+    presence_request = self.portal.presence_request_module.newContent()
+    PresenceRequest_view = presence_request.PresenceRequest_view
+    my_default_presence_request_period_start_date = PresenceRequest_view.\
+      my_default_presence_request_period_start_date
+    my_default_presence_request_period_stop_date = PresenceRequest_view.\
+      my_default_presence_request_period_stop_date
+    my_start_date = PresenceRequest_view.my_start_date
+    my_stop_date = PresenceRequest_view.my_stop_date
+    listbox = PresenceRequest_view.listbox
+    checkDisplayedAsSimple()
+    self.assertEqual(
+      len(presence_request.objectValues(portal_type='Presence Request Period')), 0
+    )
+
+    # Edit properties, default_presence_request_period should be created, yet
+    # Presence Request is still displayed as simple
+    presence_request.edit(
+      default_presence_request_period_start_date=default_start_date,
+      default_presence_request_period_stop_date=default_stop_date,
+      default_presence_request_period_quantity=default_quantity,
+    )
+    checkDisplayedAsSimple()
+    presence_request_period_list = presence_request.objectValues(
+      portal_type='Presence Request Period'
+    )
+    self.assertEqual(len(presence_request_period_list), 1)
+    default_presence_request_period = presence_request_period_list[0]
+    self.assertEqual(
+      default_presence_request_period.getId(), 'default_presence_request_period'
+    )
+    self.assertEqual(default_presence_request_period.getStartDate(), default_start_date)
+    self.assertEqual(default_presence_request_period.getStopDate(), default_stop_date)
+    self.assertEqual(default_presence_request_period.getQuantity(), default_quantity)
+    self.assertEqual(presence_request.getStartDate(), default_start_date)
+    self.assertEqual(presence_request.getStopDate(), default_stop_date)
+
+    extra_presence_request_period = presence_request.newContent(
+      portal_type = 'Presence Request Period',
+    )
+    extra_presence_request_period.edit(
+      start_date=extra_start_date,
+      stop_date=extra_stop_date,
+      quantity=1.0,
+    )
+    self.assertEqual(
+      len(presence_request.objectValues(portal_type='Presence Request Period')), 2
+    )
+    # Since we have more than 1 Presence Request Periods, now we get the non-simple
+    # display (with listbox and not fields to be edited on Delivery)
+    self.assertEqual(
+      my_default_presence_request_period_start_date.get_value("enabled"),
+      False,
+    )
+    self.assertEqual(
+      my_default_presence_request_period_stop_date.get_value("enabled"),
+      False,
+    )
+    self.assertEqual(my_start_date.get_value("enabled"), True)
+    self.assertEqual(my_start_date.get_value("enabled"), True)
+    self.assertEqual(listbox.get_value("enabled"), True)
+
+    # yet, start and stop dates are not editable in Delivery level
+    # and they are defined by the movement values
+    self.assertEqual(my_start_date.get_value("editable"), 0)
+    self.assertEqual(my_start_date.get_value("editable"), 0)
+    self.assertEqual(presence_request.getStartDate(), default_start_date)
+    self.assertEqual(presence_request.getStopDate(), extra_stop_date)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCalendar))

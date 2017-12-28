@@ -11,5 +11,7 @@ Leave Request | edit_workflow
 Leave Request | leave_request_interaction_workflow
 Leave Request | leave_request_workflow
 Presence Request Period | edit_workflow
+Presence Request Period | presence_request_interaction_workflow
 Presence Request | edit_workflow
+Presence Request | presence_request_interaction_workflow
 Presence Request | presence_request_workflow
