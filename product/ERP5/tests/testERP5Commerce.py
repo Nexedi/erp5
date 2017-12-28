@@ -176,6 +176,12 @@ class TestCommerce(ERP5TypeTestCase):
     self.website.setProperty('ecommerce_base_currency',
                                             currency.getRelativeUrl())
 
+    # add quantity_unit/unit/piece
+    if getattr(self.portal.portal_categories.quantity_unit, 'unit', None) is None:
+      self.portal.portal_categories.quantity_unit.newContent(id='unit')
+    if getattr(self.portal.portal_categories.quantity_unit.unit, 'piece', None) is None:
+      self.portal.portal_categories.quantity_unit.unit.newContent(id='piece')
+
     self.app.REQUEST.set('session_id', SESSION_ID)
     self.loginByUserName('ivan')
     self.tic()
