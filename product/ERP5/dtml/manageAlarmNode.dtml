@@ -125,6 +125,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
      </div>
     </td>
   </tr>
+  <tr>
+    <td align="left" colspan=2>
+      <p class="form-help">
+        The Timer Service runs all periodic events in ERP5. By "Subscribing" the Alarm Node to the Timer Service,
+        you will enable Alarms in ERP5, and they will thus run at their configured time intervals. Note that if you
+        do not Subscribe to the Timer Service, Alarms will <span style="font-weight: bold">not</span> run in ERP5 at all,
+        even if you have "enabled" them in the "Configure Alarms" menu of ERP5.
+      </p>
+    </td>
+  </tr>
 </table>
 </form>
 <dtml-var manage_page_footer>
