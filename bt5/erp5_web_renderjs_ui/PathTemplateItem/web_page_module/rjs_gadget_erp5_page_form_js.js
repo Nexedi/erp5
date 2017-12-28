@@ -3,12 +3,19 @@
 (function (window, rJS, URI, RSVP) {
   "use strict";
 
+  /** Return local modifications to editable form fields after leaving the form
+  for a while - for example selecting a related object.
+
+  @argument result is possible current field value
+  */
   function loadFormContent(gadget, result) {
     var key;
     if (gadget.state.options.form_content) {
       for (key in result) {
         if (result.hasOwnProperty(key)) {
-          if (gadget.state.options.form_content[result[key].key]) {
+          if (typeof result[key] === "object" &&
+              result[key].hasOwnProperty("key") &&
+              gadget.state.options.form_content[result[key].key]) {
             result[key].default = gadget.state.options.form_content[result[key].key];
           }
         }
