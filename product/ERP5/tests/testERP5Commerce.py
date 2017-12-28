@@ -128,6 +128,12 @@ class TestCommerce(ERP5TypeTestCase):
     sale_order_module.manage_permission('Access contents information',
                                      roles=['Anonymous'], acquire=0)
 
+    # add quantity_unit/unit/piece
+    if getattr(self.portal.portal_categories.quantity_unit, 'unit', None) is None:
+      self.portal.portal_categories.quantity_unit.newContent(id='unit')
+    if getattr(self.portal.portal_categories.quantity_unit.unit, 'piece', None) is None:
+      self.portal.portal_categories.quantity_unit.unit.newContent(id='piece')
+
     # create default currency (EUR)
     currency = currency_module.newContent(portal_type='Currency',
                                           id='EUR')
@@ -175,12 +181,6 @@ class TestCommerce(ERP5TypeTestCase):
     self.website = self.setupWebSite()
     self.website.setProperty('ecommerce_base_currency',
                                             currency.getRelativeUrl())
-
-    # add quantity_unit/unit/piece
-    if getattr(self.portal.portal_categories.quantity_unit, 'unit', None) is None:
-      self.portal.portal_categories.quantity_unit.newContent(id='unit')
-    if getattr(self.portal.portal_categories.quantity_unit.unit, 'piece', None) is None:
-      self.portal.portal_categories.quantity_unit.unit.newContent(id='piece')
 
     self.app.REQUEST.set('session_id', SESSION_ID)
     self.loginByUserName('ivan')
