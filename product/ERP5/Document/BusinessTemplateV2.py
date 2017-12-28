@@ -162,13 +162,12 @@ def manage_addBusinessPatchItem(self, item_path='', item_sign=1, item_layer=0, *
 
   return c
 
-class BusinessManager(Folder):
+class BusinessTemplateV2(XMLObject):
 
-  """Business Manager is responsible for saving objects and properties in
-  an ERP5Site. Everything will be saved just via path"""
+  """Business Template V2 is config for paths of all objects to be installed"""
 
-  meta_type = 'ERP5 Business Manager'
-  portal_type = 'Business Manager'
+  meta_type = 'ERP5 Business Template'
+  portal_type = 'Business Template V2'
   add_permission = Permissions.AddPortalContent
 
   template_format_version = 3
@@ -180,12 +179,9 @@ class BusinessManager(Folder):
        , 'icon'           : 'file_icon.gif'
        , 'product'        : 'ERP5Type'
        , 'factory'        : ''
-       , 'type_class'     : 'BusinessManager'
-       , 'immediate_view' : 'BusinessManager_view'
+       , 'type_class'     : 'BusinessTemplateV2'
+       , 'immediate_view' : 'BusinessTemplateV2_view'
        , 'allow_discussion'     : 1
-       , 'allowed_content_types': ('Business Item',
-                                    'Business Property Item',
-                                    )
        , 'filter_content_types' : 1
     }
 
@@ -200,7 +196,7 @@ class BusinessManager(Folder):
                       PropertySheet.SimpleItem,
                       PropertySheet.CategoryCore,
                       PropertySheet.Version,
-                      PropertySheet.BusinessManager,
+                      PropertySheet.BusinessTemplateV2,
                     )
 
   # XXX: This explicit setter and getter should be replaced using property
@@ -218,10 +214,10 @@ class BusinessManager(Folder):
     """
     We have to create the snapshot state to find out what is going to be
     installed and thus install only those paths which cater to the right commit
-    i.e, find the latest commit which modifies this Business Manager and
+    i.e, find the latest commit which modifies this Business Template V2 and
     install it
     """
-    # Get all Business Item which corresponds to this Business Manager
+    # Get all Business Item which corresponds to this Business Template V2
     business_item_list = self.getFollowUpRelatedValueList()
     # Get the commits corresponding to the Business Item
     commit_list = [l.aq_parent for l in business_item_list]
@@ -239,7 +235,7 @@ class BusinessManager(Folder):
     """
     portal_workflow = getToolByName(self, 'portal_workflow')
     wf = portal_workflow.getWorkflowById(
-                        'business_manager_building_workflow')
+                        'business_template_v2_building_workflow')
     return wf._getWorkflowStateOf(self, id_only=id_only )
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -251,22 +247,22 @@ class BusinessManager(Folder):
     portal = self.getPortalObject()
     portal_workflow = portal.portal_workflow
     wf = portal_workflow.getWorkflowById(
-                         'business_manager_installation_workflow')
+                         'business_template_v2_installation_workflow')
     return wf._getWorkflowStateOf(self, id_only=id_only )
 
   def changeBuildingStatetoModified(self):
     """
     Change building_state to 'modified'. This is needed specifically as we want
     to update the building state even if we change any sub-objects(Business Item
-    or Business Property Item) of Business Manager.
+    or Business Property Item) of Business Template V2.
     """
     portal_workflow = self.getPortalObject().portal_workflow
-    wf = portal_workflow._getOb('business_manager_building_workflow')
+    wf = portal_workflow._getOb('business_template_v2_building_workflow')
 
     wf._executeMetaTransition(self, 'modified')
 
   def applytoERP5(self, DB):
-    """Apply the flattened/reduced Business Manager to the DB"""
+    """Apply the flattened/reduced Business Template V2 to the DB"""
     portal = self.getPortalObject()
     pass
 
@@ -293,7 +289,7 @@ class BusinessManager(Folder):
   security.declareProtected(Permissions.ManagePortal, 'preinstall')
   def preinstall(self, check_dependencies=1, **kw):
     """
-    Preinstall for Business Manager comapres the installation state and returns
+    Preinstall for Business Template V2 comapres the installation state and returns
     the changes in a manner which can keep up compatibilty with the view we use
     in Business Template installation.
 
@@ -334,7 +330,7 @@ class BusinessManager(Folder):
     self.template_format_version = int(value)
 
   def propertyMap(self):
-    prop_map = super(BusinessManager, self).propertyMap()
+    prop_map = super(BusinessTemplateV2, self).propertyMap()
     final_prop_map = prop_map+self._properties
     return final_prop_map
 
@@ -343,7 +339,7 @@ class BusinessManager(Folder):
     Export the object as zexp file
     """
     if not self.getBuildingState() == 'built':
-      raise ValueError, 'Manager not built properly'
+      raise ValueError, 'Template not built properly'
     f = StringIO()
 
     self._p_jar.exportFile(self._p_oid, f)
@@ -371,14 +367,14 @@ class BusinessManager(Folder):
   security.declareProtected(Permissions.ManagePortal, 'importFile')
   def importFile(self, path, connection=None):
     """
-      Import Business Manager object and all attribute to current BM itself
+      Import Business Template V2 object and all attribute to current BM itself
     """
     if not connection:
       connection = self.aq_parent._p_jar
     file = open(path, 'rb')
-    imported_manager = connection.importFile(file)
-    self.title = imported_manager.title
-    for obj in imported_manager.objectValues():
+    imported_template_v2 = connection.importFile(file)
+    self.title = imported_template_v2.title
+    for obj in imported_template_v2.objectValues():
       delattr(obj, '__ac_local_roles__')
       # XXX: Donot merge this, needed just for migrated erp5_core
       try:
@@ -389,7 +385,7 @@ class BusinessManager(Folder):
 
   def __add__(self, other):
     """
-    Adds the Business Item objects for the given Business Manager objects
+    Adds the Business Item objects for the given Business Template V2 objects
     """
     # XXX: Still to define
     return self
@@ -402,7 +398,7 @@ class BusinessManager(Folder):
     """
     # Create the sha list for all path item list available in current object
     sha_list = [item.sha for item in self._path_item_list]
-    # Reverse the sign of Business Item objects for the old Business Manager
+    # Reverse the sign of Business Item objects for the old Business Template V2
     # Trying comparing/subtracting ZODB with old installed object
     for path_item in other._path_item_list:
       if path_item.sha in sha_list:
@@ -425,7 +421,7 @@ class BusinessManager(Folder):
     layers to all Business Item objects
     """
     portal = self.getPortalObject()
-    LOG('Business Manager', INFO, 'Storing Manager Data')
+    LOG('Business Template V2', INFO, 'Storing template Data')
 
     to_delete_id_list = []
     for item in self.objectValues():
@@ -462,7 +458,7 @@ class BusinessManager(Folder):
 
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
-      For Business Manager, we expect to resolve the path incase we face
+      For Business Template V2, we expect to resolve the path incase we face
       paths which expect to include sub-objects.
       For example: 'portal_catalog/erp5_mysql_innodb/**' should only consider
       the sub-objects of the object mentioned, and create separate BusinessItem
@@ -514,7 +510,7 @@ class BusinessManager(Folder):
   def build(self, no_action=False, **kw):
     """Creates new values for business item from the values from
     OFS Database"""
-    LOG('Business Manager', INFO, 'Building Business Manager')
+    LOG('Business Template V2', INFO, 'Building Business Template V2')
     removable_sub_object_path_list = kw.get('removable_sub_object_path', [])
     removable_property_dict = kw.get('removable_property', {})
     # Now, we need to put a check here for returning whih objects should be
@@ -539,20 +535,20 @@ class BusinessManager(Folder):
           item.build(self)
           return self
 
-  def flattenBusinessManager(self):
+  def flattenBusinessTemplateV2(self):
     """
-    Flattening a reduced Business Manager with two path p1 and p2 where p1 <> p2:
+    Flattening a reduced Business Template V2 with two path p1 and p2 where p1 <> p2:
 
     flatten([(p1, s1, l1, v1), (p2, s2, l2, v2)]) = [(p1, s1, 0, v1), (p2, s2, 0, v2)]
-    A reduced Business Manager BT is said to be flattened if and only if:
+    A reduced Business Template V2 BT is said to be flattened if and only if:
     flatten(BT) = BT
     """
     pass
 
-  def reduceBusinessManager(self):
+  def reduceBusinessTemplateV2(self):
     """
-    Reduction is a function that takes a Business Manager as input and returns
-    a smaller Business Manager by taking out values with lower priority layers.
+    Reduction is a function that takes a Business Template V2 as input and returns
+    a smaller Business Template V2 by taking out values with lower priority layers.
 
     After taking out BusinessItem(s) with lower priority layer, we also go
     through arithmetic in case there are multiple number of BI at the higher layer
@@ -562,7 +558,7 @@ class BusinessManager(Folder):
     If l1 > l2,
     reduce([(p, s, l1, (a, b, c)), (p, s, l2, (d, e))]) = [(p, s, l1, merge(a, b, c))]
 
-    A Business Manager BT is said to be reduced if and only if:
+    A Business Template V2 BT is said to be reduced if and only if:
     reduce(BT) = BT
     """
     path_list = self.getPathList()
@@ -751,13 +747,13 @@ class BusinessItem(XMLObject):
 
   def updateFollowUpPathList(self):
     """
-    Update the path list for Follow Up Business Manager
+    Update the path list for Follow Up Business Template V2
     """
-    manager = self.getFollowUpValue()
-    # Check if the manager has already been set or not
-    if manager:
-      # Copy the path list for Business Manager and update it with new path
-      item_path_list = manager.getItemPathList()[:]
+    template = self.getFollowUpValue()
+    # Check if the template has already been set or not
+    if template:
+      # Copy the path list for Business Template V2 and update it with new path
+      item_path_list = template.getItemPathList()[:]
       old_item_path = self._v_modified_property_dict.get('item_path')
       if old_item_path and item_path_list:
         if old_item_path in item_path_list:
@@ -771,12 +767,12 @@ class BusinessItem(XMLObject):
         # append the new_path in path_list
         item_path_list.append(self.getProperty('item_path'))
 
-      # Update the manager with new path list
-      manager.setItemPathList(item_path_list)
+      # Update the template with new path list
+      template.setItemPathList(item_path_list)
 
     else:
       # Complain loudly if the follow_up is not there
-      raise ValueError('Follow Up Business Manager is not set or defined yet')
+      raise ValueError('Follow Up Business Template V2 is not set or defined yet')
 
   def build(self, context, **kw):
     """
@@ -788,7 +784,7 @@ class BusinessItem(XMLObject):
     3. For paths which point to property of an object in OFS : In this case,
     we can have URL delimiters like ?, #, = in the path
     """
-    LOG('Business Manager', INFO, 'Building Business Item')
+    LOG('Business Template V2', INFO, 'Building Business Item')
 
     # Remove the old sub-objects if exisiting before building
     id_list = [l for l in self.objectIds()]
@@ -949,7 +945,7 @@ class BusinessItem(XMLObject):
         try:
           value = container[key]
         except KeyError:
-          LOG('BusinessManager', WARNING,
+          LOG('BusinessTemplateV2', WARNING,
               'Could not access object %s' % (path,))
           if default is _MARKER:
             raise
@@ -960,7 +956,7 @@ class BusinessItem(XMLObject):
             if not validate(container, container, key, value):
               raise Unauthorized('unauthorized access to element %s' % key)
           except Unauthorized:
-            LOG('BusinessManager', WARNING,
+            LOG('BusinessTemplateV2', WARNING,
                 'access to %s is forbidden' % (path,))
           if default is _MARKER:
             raise
@@ -1096,7 +1092,7 @@ class BusinessItem(XMLObject):
   def getBusinessPathLayer(self):
     return self.getProperty('item_layer', 1)
 
-  def getParentBusinessManager(self):
+  def getParentBusinessTemplateV2(self):
     return self.aq_parent
 
 class BusinessPropertyItem(XMLObject):
@@ -1191,7 +1187,7 @@ class BusinessPropertyItem(XMLObject):
   def getBusinessPathLayer(self):
     return self.getProperty('item_layer', 1)
 
-  def getParentBusinessManager(self):
+  def getParentBusinessTemplateV2(self):
     return self.aq_parent
 
   def getBusinessItemPropertyName(self):
@@ -1323,13 +1319,13 @@ class BusinessPatchItem(XMLObject):
     if old_id_list:
       self.manage_delObjects(ids=old_id_list)
 
-    # Get the dependency Business Manager
+    # Get the dependency Business Template V2
     dependency_list = self.getProperty('dependency_list')
     if dependency_list:
       dependency_title = dependency_list[0]
-      dependency_bm = portal_templates.getInstalledBusinessManager(dependency_title)
+      dependency_bm = portal_templates.getInstalledBusinessTemplateV2(dependency_title)
       if not dependency_bm:
-        raise ValueError('Missing Installed Business Manager for dependecy_list \
+        raise ValueError('Missing Installed Business Template V2 for dependecy_list \
                           which is required to build')
 
     # Use item_path to determine if we need to create Business Item or
@@ -1356,7 +1352,7 @@ class BusinessPatchItem(XMLObject):
     # Copy old item/property item from the item at similar path in dependency_bm
     dependency_item = dependency_bm.getBusinessItemByPath(item_path)
 
-    # Raise if there is no item exisiting in dependency Business Manager
+    # Raise if there is no item exisiting in dependency Business Template V2
     if not dependency_item:
 
       raise ValueError('No %s exist at path %s in installed version of %s'

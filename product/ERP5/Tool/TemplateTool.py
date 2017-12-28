@@ -109,8 +109,8 @@ class TemplateTool (BaseTool):
     meta_type = 'ERP5 Template Tool'
     portal_type = 'Template Tool'
     allowed_content_types = [
-                              'Business Manager',
                               'Business Template',
+                              'Business Template V2',
                             ]
 
     # This stores information on repositories.
@@ -360,7 +360,7 @@ class TemplateTool (BaseTool):
       """Download Business Template from local directory or file
       """
       if format_version == 3:
-        bm = self.newContent(bt_id, 'Business Manager')
+        bm = self.newContent(bt_id, 'Business Template V2')
         bm.importFile(path)
         return bm
 
