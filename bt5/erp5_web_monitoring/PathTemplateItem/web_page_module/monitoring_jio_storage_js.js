@@ -38,10 +38,16 @@
   }
 
   function createStorage(context, storage_spec, key) {
-    if (!context._remote_storage_dict.hasOwnProperty(key)) {
-      context._remote_storage_dict[key] = jIO.createJIO(storage_spec);
+    var signature;
+    signature = generateHash(JSON.stringify(storage_spec));
+    if (!context._remote_storage_dict.hasOwnProperty(key) ||
+        signature !== context._remote_storage_dict[key].signature) {
+      context._remote_storage_dict[key] = {
+        storage: jIO.createJIO(storage_spec),
+        signature: signature
+      };
     }
-    return context._remote_storage_dict[key];
+    return context._remote_storage_dict[key].storage;
   }
 
   /**
