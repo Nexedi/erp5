@@ -118,7 +118,7 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>business_manager_title_list</string>
+                          <string>business_template_title_list</string>
                           <string>Business Templates</string>
                         </tuple>
                       </list>
