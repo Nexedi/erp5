@@ -114,12 +114,12 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>translated_validation_state</string>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
                           <string>business_manager_title_list</string>
-                          <string>Business Managers</string>
+                          <string>Business Templates</string>
                         </tuple>
                       </list>
                     </value>

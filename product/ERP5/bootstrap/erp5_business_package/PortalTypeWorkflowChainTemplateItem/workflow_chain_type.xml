@@ -19,4 +19,8 @@
   <type>Business Snapshot</type>
   <workflow>business_snapshot_validation_workflow</workflow>
  </chain>
+ <chain>
+  <type>Business Template V2</type>
+  <workflow>business_template_availability_workflow</workflow>
+ </chain>
 </workflow_chain>

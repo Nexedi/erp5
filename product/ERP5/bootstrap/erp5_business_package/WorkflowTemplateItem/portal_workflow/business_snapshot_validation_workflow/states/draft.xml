@@ -22,6 +22,7 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>build</string>
                 <string>install</string>
                 <string>install_action</string>
               </tuple>

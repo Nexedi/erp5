@@ -74,7 +74,6 @@
                         <string>listbox_item_path</string>
                         <string>listbox_item_sign</string>
                         <string>listbox_follow_up_title</string>
-                        <string>your_business_manager_title_list</string>
                       </list>
                     </value>
                 </item>
@@ -86,6 +85,7 @@
                         <string>my_id</string>
                         <string>my_predecessor_title</string>
                         <string>my_source_project_title</string>
+                        <string>your_business_template_title_list</string>
                       </list>
                     </value>
                 </item>

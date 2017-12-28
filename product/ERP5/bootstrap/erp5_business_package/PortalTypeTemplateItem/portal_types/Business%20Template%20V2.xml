@@ -18,11 +18,11 @@
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Business Manager</string> </value>
+            <value> <string>Business Template V2</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>BusinessManager</string> </value>
+            <value> <string>BusinessTemplateV2</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>
