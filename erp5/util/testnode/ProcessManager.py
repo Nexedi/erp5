@@ -160,7 +160,7 @@ class ProcessManager(object):
     if new_session:
       subprocess_kw['preexec_fn'] = os.setsid
     raise_error_if_fail = kw.pop('raise_error_if_fail', True)
-    env = kw and dict(os.environ, **kw) or None
+    env = dict(os.environ, **kw) if kw else None
     command = format_command(*args, **kw)
     logger.info('subprocess_kw : %r', subprocess_kw)
     logger.info('$ %s', command)
