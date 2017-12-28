@@ -150,7 +150,7 @@ class BusinessSnapshot(Folder):
 
     return None
 
-  def buildSnapshot(self):
+  def build(self, **kwargs):
     """
     Using equivalent commit, create a snapshot of ZODB state
     """

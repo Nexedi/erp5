@@ -179,7 +179,7 @@ class CommitTool (BaseTool):
       return self.objectValues(portal_type='Business Snapshot')
 
     security.declarePublic('newContent')
-    def newContent(self, id=None, **kw):
+    def newContent(self, id=None, portal_type=None, **kw):
       """
       Override newContent so as to use 'id' generated like hash
       Also, create new commit only when all old commits are committed
@@ -189,13 +189,13 @@ class CommitTool (BaseTool):
       all_commited = all([l.getTranslatedValidationState() == 'commited'
                            for l in old_commit_list])
 
-      if not all_commited:
+      if not all_commited and (portal_type == 'Business Commit'):
         raise ValueError('Please commit your last commit before creating new one')
 
       if id is None:
         id = uuid.uuid1()
 
-      new_obj =  super(CommitTool, self).newContent(id, **kw)
+      new_obj =  super(CommitTool, self).newContent(id, portal_type,**kw)
 
       # Add the last commit as its predecessor
       commit_list = [l for l

@@ -124,17 +124,21 @@ class BusinessCommit(Folder):
     """
     This function uses the current commit to create a new snapshot
     """
-    portal_commit = self.aq_parent
+    site = self.getPortalObject()
+    portal_commits = self.aq_parent
 
     # Create empty snapshot
-    snapshot = portal_commit.newContent(portal_type='Business Snapshot')
+    snapshot = portal_commits.newContent(portal_type='Business Snapshot')
     # Add the current commit as predecessor. This way we can have the BI
     # BPI in that commit to the Business Snapshot also.
     snapshot.setSimilarValue(self)
     self.setSimilarValue(snapshot)
 
     # Build the snapshot
-    snapshot.buildSnapshot()
+    if snapshot not in [None, self]:
+      if site.portal_workflow.isTransitionPossible(
+          snapshot, 'build'):
+        snapshot.build()
 
     return snapshot
 
