@@ -2228,10 +2228,7 @@ class ERP5Generator(PortalGenerator):
     """
     workflow_list = ['business_template_building_workflow',
                      'business_template_installation_workflow']
-    manager_workflow_list = ['business_manager_building_workflow',
-                             'business_manager_installation_workflow']
     tool = p.portal_workflow
-    tool.manage_delObjects(filter(tool.hasObject, manager_workflow_list))
     tool.manage_delObjects(filter(tool.hasObject, workflow_list))
     self.bootstrap(tool, 'erp5_core', 'WorkflowTemplateItem', workflow_list)
     tool.setChainForPortalTypes(('Business Template',), workflow_list)
@@ -2239,7 +2236,6 @@ class ERP5Generator(PortalGenerator):
       'business_manager_building_workflow',
       'business_manager_installation_workflow',
       ))
-    tool.setChainForPortalTypes(('Business Manager',), manager_workflow_list)
 
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed
@@ -2394,24 +2390,12 @@ class ERP5Generator(PortalGenerator):
     template_tool = p.portal_templates
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
       for bt in ('erp5_property_sheets', 'erp5_core', 'erp5_business_package',
-                  ):
+                  p.erp5_catalog_storage, 'erp5_jquery', 'erp5_xhtml_style',):
         if not bt:
           continue
         url = getBootstrapBusinessTemplateUrl(bt)
         bt = template_tool.download(url)
-
-        if bt.getPortalType() == 'Business Manager':
-          template_tool.updateInstallationState([bt])
-        else:
-          bt.install(**kw)
-
-      bt_list = []
-      for bt in (p.erp5_catalog_storage, 'erp5_jquery', 'erp5_xhtml_style',):
-        url = getBootstrapBusinessTemplateUrl(bt)
-        bt = template_tool.download(url)
-        bt_list.append(bt)
-      template_tool.updateInstallationState(bt_list)
-
+        bt.install(**kw)
 
   def setupERP5Promise(self,p,**kw):
     """
