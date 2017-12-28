@@ -139,18 +139,22 @@ class UnitTestRunner(object):
       '--revision', node_test_suite.revision,
       '--test_suite', node_test_suite.test_suite,
       '--test_suite_title', node_test_suite.test_suite_title)
+    soft = config['slapos_directory'] + '/soft/'
+    software_list = [soft + md5digest(x) for x in config['software_list']]
+    PATH = os.getenv('PATH', '')
+    PATH = ':'.join(x + '/bin' for x in software_list) + (PATH and ':' + PATH)
     supported_parameter_set = set(self.testnode.process_manager
       .getSupportedParameterList(run_test_suite_path))
-    def part(path):
-        path = config['slapos_directory'] + '/soft/%s/parts/' + path
-        path, = filter(os.path.exists, (path % md5digest(software)
-            for software in config['software_list']))
+    def path(name, compat): # BBB
+        path, = filter(os.path.exists, (base + relative
+          for relative in ('/bin/' + name, '/parts/' + compat)
+          for base in software_list))
         return path
     for option, value in (
-        ('--firefox_bin', lambda: part('firefox/firefox-slapos')),
+        ('--firefox_bin', lambda: path('firefox', 'firefox/firefox-slapos')),
         ('--frontend_url', lambda: config['frontend_url']),
         ('--node_quantity', lambda: config['node_quantity']),
-        ('--xvfb_bin', lambda: part('xserver/bin/Xvfb')),
+        ('--xvfb_bin', lambda: path('xvfb', 'xserver/bin/Xvfb')),
         ):
       if option in supported_parameter_set:
         invocation_list += option, value()
@@ -165,7 +169,7 @@ class UnitTestRunner(object):
     # result. We only do cleanup if the test runner itself is not able
     # to run.
     createFolder(node_test_suite.test_suite_directory, clean=True)
-    self.testnode.process_manager.spawn(*invocation_list,
+    self.testnode.process_manager.spawn(*invocation_list, PATH=PATH,
                           cwd=node_test_suite.test_suite_directory,
                           log_prefix='runTestSuite', get_output=False)
 
