@@ -141,10 +141,26 @@ class BusinessCommit(Folder):
   def install(self):
     """
     Installation:
-    - check if there is already an equivalent snapshot
-    - if not, create one and install it
+    - Check if the status is committed (Done by constraint of Business Commit
+      portal_type)
+    - Check if there are installed Business Manager(s) because they will be
+      required in building new Business Snapshot. Raise if there are None.
+    - Create an equivalent snapshot (using items of this commit and predecessors
+      belonging to installed Business Managers)
+    - TODO: Compare the snapshot with the last snapshot
+    - Install the snapshot
     """
     site = self.getPortalObject()
+    portal_templates = site.portal_templates
+    installed_bm_list = portal_templates.getInstalledBusinessManagerList()
+
+    # Should raise if there is no installed BM in ZODB. Should install BM via
+    # portal_templates first.
+    # XXX: Maybe instead of raising, we can provide an option to install BM
+    # here only. So that a new user don't get confused ?
+    if not installed_bm_list:
+      raise ValueError('There is no installed BM to create snapshot')
+
     successor_list = self.getPredecessorRelatedValueList()
 
     # Check if the successor list has a snapshot in it
