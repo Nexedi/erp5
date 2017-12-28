@@ -39,9 +39,8 @@ Example use:
       # Run the test_line.name test
       test_line.stop()
 """
+from __future__ import print_function
 import httplib
-import logging
-import select
 import socket
 import threading
 import time
@@ -57,8 +56,8 @@ if xmlrpclib.ExpatParser and isinstance(parser, xmlrpclib.ExpatParser):
     SAFE_RPC_EXCEPTION_LIST.append(xmlrpclib.expat.ExpatError)
 else:
     import sys
-    print >> sys.stderr, 'Warning: unhandled xmlrpclib parser %r, some ' \
-        'exceptions might get through safeRpcCall' % (parser, )
+    print('Warning: unhandled xmlrpclib parser %r, some exceptions might get'
+          ' through safeRpcCall' % parser, file=sys.stderr)
     del sys
 SAFE_RPC_EXCEPTION_LIST = tuple(SAFE_RPC_EXCEPTION_LIST)
 del parser, _
@@ -110,7 +109,6 @@ def binarize_args(arg):
 
 class RPCRetry(object):
     def __init__(self, proxy, retry_time, logger):
-        super(RPCRetry, self).__init__()
         self._proxy = proxy
         self._retry_time = retry_time
         self._logger = logger
@@ -159,7 +157,8 @@ class TestResultLineProxy(RPCRetry):
         Tell if test result line is still alive on site.
         """
         try:
-          return bool(self._retryRPC('isTestCaseAlive', [self._test_result_line_path]))
+          return bool(self._retryRPC('isTestCaseAlive',
+                                     (self._test_result_line_path,)))
         except:
           raise ValueError('isTestCaseAlive Failed.')
 
@@ -222,6 +221,7 @@ class TestResultProxy(RPCRetry):
         self._watcher_period = 60
         self._watcher_dict = {}
         self._watcher_condition = threading.Condition()
+
     def __repr__(self):
         return '<%s(%r, %r, %r) at %x>' % (self.__class__.__name__,
             self._test_result_path, self._node_title, self._revision, id(self))
@@ -381,10 +381,9 @@ class TestResultProxy(RPCRetry):
 
     def stop(self):
         """
-        
         """
         return self._retryRPC('stopTest', [self._test_result_path])
-        
+
     def getRunningTestCase(self):
       """
       Return the relative path of the next test with the running state
@@ -409,41 +408,37 @@ class ServerProxy(xmlrpclib.ServerProxy):
 
 class TaskDistributor(RPCRetry):
 
-    def __init__(self,portal_url,retry_time=64,logger=None):
+    def __init__(self, portal_url, retry_time=64, logger=None):
         if logger is None:
            logger = null_logger
         if portal_url is None:
             proxy = DummyTaskDistributor()
         else:
             proxy = ServerProxy(portal_url, allow_none=True)
-        super(TaskDistributor, self).__init__(proxy, retry_time,logger)
+        super(TaskDistributor, self).__init__(proxy, retry_time, logger)
         protocol_revision = self._retryRPC('getProtocolRevision')
         if protocol_revision != 1:
             raise ValueError('Unsupported protocol revision: %r',
                 protocol_revision)
 
-    def startTestSuite(self,node_title,computer_guid='unknown'):
+    def startTestSuite(self, node_title, computer_guid='unknown'):
       """
         Returns None if no test suite is needed.
         therwise, returns a JSON with all the test suite parameters.
       """
-      result = self._retryRPC('startTestSuite',(node_title,computer_guid,))
-      return result
+      return self._retryRPC('startTestSuite', (node_title, computer_guid))
 
     def getTestType(self):
       """
         Return the Test Type
       """
-      result = self._retryRPC('getTestType')
-      return result
+      return self._retryRPC('getTestType')
 
     def subscribeNode(self, node_title, computer_guid):
       """
         Susbscribes node with the node title and the computer guid.
       """
-      result = self._retryRPC('subscribeNode', (node_title,computer_guid,))
-      return result
-
+      return self._retryRPC('subscribeNode', (node_title, computer_guid))
 
     def generateConfiguration(self, test_suite_title):
       """
@@ -463,7 +458,7 @@ class TaskDistributor(RPCRetry):
         Returns the slapos account key related to the distributor
       """
       return self._retryRPC('getSlaposAccountKey')
-    
+
     def getSlaposAccountCertificate(self):
       """
         Returns the slapos account certificate related to the distributor
@@ -475,7 +470,7 @@ class TaskDistributor(RPCRetry):
         Returns the url of slapos master related to the distributor
       """
       return self._retryRPC('getSlaposUrl')
-      
+
     def getSlaposHateoasUrl(self):
       """
         Returns the url of API REST using hateoas of
