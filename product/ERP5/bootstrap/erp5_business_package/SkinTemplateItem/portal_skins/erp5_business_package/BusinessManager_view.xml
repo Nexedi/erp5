@@ -53,9 +53,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -69,11 +67,7 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_item_path</string>
-                        <string>listbox_item_sign</string>
-                        <string>listbox_item_layer</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -84,8 +78,6 @@
                         <string>my_title</string>
                         <string>my_comment</string>
                         <string>my_description</string>
-                        <string>my_translated_building_state_title</string>
-                        <string>my_translated_installation_state_title</string>
                         <string>my_provision_list</string>
                         <string>my_version</string>
                       </list>

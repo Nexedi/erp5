@@ -7,7 +7,8 @@ if context.getPortalType() != 'Commit Tool':
 last_obj = max(context.objectValues(), key=(lambda x: x.getCreationDate()))
 
 if last_obj.getPortalType() != 'Business Commit':
-  return 'No commits added after last snapshot. Add a commit and try again'
+  return 'You are trying to generate a new snapshot via Commit Tool but there \
+          are no commits added after last snapshot. Add a commit and try again.'
 
 # Create a new snapshot based on last commit
 snapshot = last_obj.createEquivalentSnapshot()

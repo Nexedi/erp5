@@ -4,11 +4,6 @@
   <item>Business Patch Item</item>
   <item>Business Property Item</item>
  </portal_type>
- <portal_type id="Business Manager">
-  <item>Business Item</item>
-  <item>Business Patch Item</item>
-  <item>Business Property Item</item>
- </portal_type>
  <portal_type id="Business Patch Item">
   <item>Business Item</item>
   <item>Business Property Item</item>
