@@ -150,15 +150,19 @@ class FunctionalTestRunner:
         print("\nSet 'erp5_debug_mode' environment variable to 1"
               " to use your existing display instead of Xvfb.")
         xvfb.run()
-      firefox_bin = os.environ.get("firefox_bin") 
-      firefox_driver = firefox_bin.replace("firefox-slapos", "geckodriver")
-      firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
-      firefox_capabilities['marionette'] = True
-      browser = webdriver.Firefox(
-        firefox_binary=firefox_bin,
-        capabilities=firefox_capabilities,
-        executable_path=firefox_driver,
-        firefox_binary=FirefoxBinary(firefox_bin))
+      capabilities = webdriver.common.desired_capabilities \
+        .DesiredCapabilities.FIREFOX.copy()
+      capabilities['marionette'] = True
+      # Service workers are disabled on Firefox 52 ESR:
+      # https://bugzilla.mozilla.org/show_bug.cgi?id=1338144
+      options = webdriver.FirefoxOptions()
+      options.set_preference('dom.serviceWorkers.enabled', True)
+      kw = dict(capabilities=capabilities, options=options)
+      firefox_bin = os.environ.get('firefox_bin')
+      if firefox_bin:
+        geckodriver = os.path.join(os.path.dirname(firefox_bin), 'geckodriver')
+        kw.update(firefox_binary=firefox_bin, executable_path=geckodriver)
+      browser = webdriver.Firefox(**kw)
       start_time = time.time()
       browser.get(self._getTestURL())
 
