@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_ledger</string> </value>
+            <value> <string>my_view_mode_ledger</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

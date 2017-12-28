@@ -202,7 +202,7 @@
                         <string>listbox_sale_supply_line_source_account</string>
                         <string>my_view_mode_supply_line_destination_title</string>
                         <string>my_view_mode_supply_line_source_title</string>
-                        <string>my_ledger</string>
+                        <string>my_view_mode_ledger</string>
                         <string>matrixbox_max_order_quantity</string>
                         <string>matrixbox_min_order_quantity</string>
                         <string>my_max_order_quantity</string>
