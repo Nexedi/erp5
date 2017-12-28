@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, btoa, XMLHttpRequest, Handlebars */
+/*global window, rJS, RSVP, btoa, XMLHttpRequest, Handlebars, jIO */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP, btoa, XMLHttpRequest, Handlebars) {
+(function (window, rJS, RSVP, btoa, XMLHttpRequest, Handlebars, jIO) {
   "use strict";
 
   var gadget_klass = rJS(window),
@@ -108,7 +108,7 @@
       });
   }
 
-  function checkCredential(url, title, hash) {
+  function checkCredential(url, title, hash, new_hash) {
     // Verify if login and password are correct for this URL
     if (url === undefined) {
       return {status: 'OK'};
@@ -122,6 +122,17 @@
             msg: error.msg + ' (' + url + ')',
             title: title
           };
+        if (new_hash !== undefined) {
+          // saved password is not valid
+          // check if inputted password is valid
+          return testUrl(url, new_hash)
+            .then(function () {
+              ko_msg.hash = new_hash;
+              return ko_msg;
+            }, function () {
+              return ko_msg;
+            });
+        }
         return ko_msg;
       });
   }
@@ -152,7 +163,8 @@
           attachment_id: 'enclosure',
           parser: 'opml',
           sub_storage: {
-            type: "http"
+            type: "http",
+            timeout: 25000 // timeout after 25 seconds
           }
         }
       })
@@ -162,25 +174,40 @@
           });
         })
         .push(undefined, function (error) {
+          var message_text,
+            code;
+          if (error instanceof jIO.util.jIOError) {
+            message_text = error.message;
+            code = error.status_code;
+          } else {
+            code = error.target.status;
+            message_text = error.target.responseType === "text" ?
+                error.target.statusText : "";
+          }
           gadget.state.message
             .innerHTML = notify_msg_template({
               status: 'error',
-              message: error.target.status +
-                ": Failed to access OPML URL. " + error.message
+              message: code + ": Failed to access OPML URL. " +
+                message_text
             });
           return {data: {total_rows: 0}};
         })
         .push(function (opml_result) {
           var i,
-            check_list = [true];
+            check_list = [true],
+            new_login;
           if (opml_result.data.total_rows > 0) {
             opml_dict.title = opml_result.data.rows[0].value.title;
+            if (doc.new_password) {
+              new_login = btoa(doc.username + ':' + doc.new_password);
+            }
             for (i = 1; i < opml_result.data.total_rows; i += 1) {
               if (opml_result.data.rows[i].value.url !== undefined) {
                 check_list.push(checkCredential(
                   opml_result.data.rows[i].value.url,
                   opml_result.data.rows[i].value.title,
-                  opml_dict.basic_login
+                  opml_dict.basic_login,
+                  new_login
                 ));
                 update_password_list.push({
                   base_url: opml_result.data.rows[i].value.url,
@@ -195,13 +222,27 @@
         })
         .push(function (status_list) {
           var i,
-            error_msg = '';
+            error_msg = '',
+            used_new_passwd_count = 0;
+          // in case the current password in opml is wrong and new
+          // password provided is OK, we set it as the current password in opml.
           for (i = 1; i < status_list.length; i += 1) {
             if (status_list[i].status !== 'OK') {
+              if (status_list[i].hash !== undefined) {
+                used_new_passwd_count += 1;
+              }
               error_msg += 'Login/password invalid for instance: ' +
                 status_list[i].title + '. ' +
                 status_list[i].msg + '\n';
             }
+          }
+          if (used_new_passwd_count > 0 &&
+              used_new_passwd_count === (status_list.length - 1)) {
+            // all backends password are OK, we only update our password
+            opml_dict.password = doc.new_password;
+            doc.new_password = '';
+            opml_dict.basic_login = status_list[1].hash;
+            return true;
           }
           if (error_msg !== '') {
             gadget.state.message
@@ -352,4 +393,4 @@
       return saveOPML(this, form_doc, verify_password);
     });
 
-}(window, rJS, RSVP, btoa, XMLHttpRequest, Handlebars));
+}(window, rJS, RSVP, btoa, XMLHttpRequest, Handlebars, jIO));
