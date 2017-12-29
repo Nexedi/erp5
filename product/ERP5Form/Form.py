@@ -391,7 +391,7 @@ def get_value(self, id, REQUEST=None, **kw):
       field_value_cache[cache_id] = value
 
   if callable(value):
-    return value(field, id, **kw)
+    return value(field, id, REQUEST=REQUEST, **kw)
   return value
 
 psyco.bind(get_value)
