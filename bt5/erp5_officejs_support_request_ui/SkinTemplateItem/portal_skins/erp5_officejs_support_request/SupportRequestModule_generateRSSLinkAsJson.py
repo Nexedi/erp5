@@ -2,16 +2,14 @@ from zExceptions import Unauthorized
 import json
 
 absolute_url = context.absolute_url()
-href = "SupportRequestModule_viewLastSupportRequestListAsRss"
+request_url = "%s/SupportRequestModule_viewLastSupportRequestListAsRss" % (absolute_url,)
 portal = context.getPortalObject()
 person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
 if person is None:
-  raise Unauthorized("You must logged in first!")
+  return json.dumps({'restricted_access_url': request_url})
 
 access_token = None
-
-request_url = "%s/%s" % (absolute_url, href)
 
 for token_item in portal.portal_catalog(
   portal_type="Restricted Access Token",
@@ -33,9 +31,8 @@ if access_token is None:
   reference = access_token.getReference()
   access_token.validate()
 
-url = "%s/%s?portal_skin=RSS&access_token=%s&access_token_secret=%s" % (
-        absolute_url,
-        href,
+url = "%s?access_token=%s&access_token_secret=%s" % (
+        request_url,
         access_token.getId(),
         reference)
 
