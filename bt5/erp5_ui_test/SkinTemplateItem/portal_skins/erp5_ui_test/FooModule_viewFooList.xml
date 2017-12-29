@@ -73,7 +73,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>listbox_delivery_start_date</string>
                       </list>
                     </value>
                 </item>
@@ -83,6 +82,8 @@
                       <list>
                         <string>listbox_id</string>
                         <string>listbox_subject_list</string>
+                        <string>listbox_delivery_start_date</string>
+                        <string>listbox_causality_title</string>
                       </list>
                     </value>
                 </item>
