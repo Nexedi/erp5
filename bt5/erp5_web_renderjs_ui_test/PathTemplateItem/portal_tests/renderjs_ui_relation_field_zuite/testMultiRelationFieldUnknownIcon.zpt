@@ -109,38 +109,6 @@
 </tr>
 
 
-<tr>
-  <td>fireEvent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
-  <td>blur</td>
-</tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>type</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
-  <td>search</td>
-</tr>
-
-<tr>
-  <td>fireEvent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
-  <td>input</td>
-</tr>
 
 <tr>
   <td>waitForElementPresent</td>
@@ -149,11 +117,10 @@
 </tr>
 
 
-
 <tr>
-  <td>fireEvent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
-  <td>blur</td>
+  <td>chooseOkOnNextConfirmation</td>
+  <td></td>
+  <td></td>
 </tr>
 
 <tr>
@@ -162,20 +129,21 @@
   <td></td>
 </tr>
 
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_confirmation" />
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name="search"]</td>
+  <td>//button[contains(text(),'unknown')]</td>
   <td></td>
 </tr>
+
+
 
 <tr>
   <td>click</td>
   <td>//h1[@class="ui-title"]//a</td>
   <td></td>
 </tr>
-
 
 
 <tr>

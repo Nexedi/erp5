@@ -160,6 +160,11 @@
   <td>blur</td>
 </tr>
 
+<tr>
+  <td>chooseOkOnNextConfirmation</td>
+  <td></td>
+  <td></td>
+</tr>
 
 <tr>
   <td>click</td>
@@ -167,6 +172,7 @@
   <td></td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_confirmation" />
 
 <tr>
   <td>waitForElementPresent</td>
@@ -232,12 +238,19 @@
   <td>blur</td>
 </tr>
 
+<tr>
+  <td>chooseOkOnNextConfirmation</td>
+  <td></td>
+  <td></td>
+</tr>
 
 <tr>
   <td>click</td>
   <td>//li[@data-explore="true"]</td>
   <td></td>
 </tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_confirmation" />
 
 <tr>
   <td>waitForTextPresent</td>

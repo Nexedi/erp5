@@ -26,7 +26,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/bar_module</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
 <tr>
@@ -42,69 +42,63 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_bar_datetime_field_view" />
-
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_stop_date']</td>
+  <td>//div[@data-gadget-scope='header']//a[@data-i18n='Actions']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[@data-i18n='Actions']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Custom Dialog Action']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Custom Dialog Action']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@name='field_your_comment']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>type</td>
-  <td>//div[@data-gadget-scope='field_my_stop_date']//input</td>
-  <td>222222-02-22T22:22</td>
+  <td>//textarea[@name='field_your_comment']</td>
+  <td>test</td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
+  <td>//div[@data-gadget-scope='panel']//a[@data-i18n='Preferences']</td>
   <td></td>
 </tr>
+
 
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>chooseOkOnNextConfirmation</td>
-  <td></td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
-  <td></td>
-</tr>
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_confirmation" />
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_bar_datetime_field_view" />
-
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_stop_date']</td>
+  <td>//div[@data-gadget-scope='panel']//a[@data-i18n='Preferences']</td>
   <td></td>
 </tr>
 
 
 <tr>
-  <td>verifyValue</td>
-  <td>//div[@data-gadget-scope='field_my_stop_date']//input</td>
+  <td>verifyConfirmationNotPresent</td>
+  <td></td>
   <td></td>
 </tr>
+
 </tbody></table>
 </body>
 </html>

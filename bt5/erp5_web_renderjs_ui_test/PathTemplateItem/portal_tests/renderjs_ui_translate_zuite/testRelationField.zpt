@@ -126,8 +126,20 @@
 </tr>
 
 <tr>
+  <td>chooseOkOnNextConfirmation</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<tr>
   <td>click</td>
   <td>//li[text()='liulangjieguo']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForConfirmation</td>
+  <td>querenlikai?</td>
   <td></td>
 </tr>
 

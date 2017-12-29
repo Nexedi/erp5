@@ -130,10 +130,18 @@
 </tr>
 
 <tr>
+  <td>chooseOkOnNextConfirmation</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<tr>
   <td>click</td>
   <td>//li[@data-explore="true"]</td>
   <td></td>
 </tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_confirmation" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
 
