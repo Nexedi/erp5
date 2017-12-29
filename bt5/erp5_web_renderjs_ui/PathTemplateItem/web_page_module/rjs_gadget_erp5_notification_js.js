@@ -19,7 +19,7 @@
     /////////////////////////////////////////////////////////////////
   gadget_klass
     .declareMethod('notify', function (options) {
-      if (options) {
+      if (options && options.message) {
         return this.changeState({
           visible: true,
           message: options.message,

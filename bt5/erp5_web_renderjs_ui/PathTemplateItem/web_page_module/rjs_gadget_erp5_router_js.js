@@ -812,6 +812,19 @@
         }
       }
 
+      //execute an url command without saving
+      if (gadget.props.modified && command[0] === PREFIX_COMMAND) {
+        if (!window.confirm(gadget.props.warning_message)) {
+          //back to previous hash
+          gadget.props.hasUnsaved = true;
+          return synchronousChangeState(evt.oldURL);
+        }
+      }
+      //don't rerender old page when back to the previous hash
+      if (gadget.props.hasUnsaved) {
+        gadget.props.hasUnsaved = false;
+        return;
+      }
       return gadget.route({
         method: command[0],
         path: command.substr(1),
@@ -974,7 +987,8 @@
           return RSVP.all([
             gadget.getSetting("selected_language"),
             gadget.getSetting("default_selected_language"),
-            gadget.getSetting("language_map")
+            gadget.getSetting("language_map"),
+            gadget.translate("This page contains unsaved changes, do you really want to leave the page ?")
           ]);
         })
         .push(function (results) {
@@ -986,6 +1000,7 @@
               }
             });
           }
+          gadget.props.warning_message = results[3];
           return gadget.listenHashChange();
         })
         .push(undefined, function (error) {
@@ -995,6 +1010,9 @@
           throw error;
         });
     })
+    .declareMethod('notify', function (options) {
+      this.props.modified = (options && options.modified);
+    })
 
     .declareAcquiredMethod('renderApplication', 'renderApplication')
     .declareAcquiredMethod('jio_allDocs', 'jio_allDocs')
@@ -1002,9 +1020,23 @@
     .declareAcquiredMethod('setSetting', 'setSetting')
     .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod('renderError', 'reportServiceError')
+    .declareAcquiredMethod('translate', 'translate')
 
     .declareJob('listenHashChange', function () {
       return listenHashChange(this);
+    })
+    .declareService(function () {
+      var gadget = this;
+      return loopEventListener(
+        window,
+        'beforeunload',
+        false,
+        function (event) {
+          if (gadget.props.modified) {
+            event.returnValue = 'fake';
+          }
+          return 'fake';
+        }
+      );
     });
-
 }(window, rJS, RSVP, loopEventListener, document, jIO, URI, URL, Blob));

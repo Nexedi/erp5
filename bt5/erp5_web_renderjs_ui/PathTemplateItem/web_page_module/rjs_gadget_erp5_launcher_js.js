@@ -335,13 +335,15 @@
     .allowPublicAcquisition('notifySubmitted', function (argument_list) {
       return RSVP.all([
         route(this, "header", 'notifySubmitted'),
-        route(this, "notification", 'notify', argument_list)
+        route(this, "notification", 'notify', argument_list),
+        route(this, "router", 'notify', argument_list)
       ]);
     })
     .allowPublicAcquisition('notifyChange', function (argument_list) {
       return RSVP.all([
         route(this, "header", 'notifyChange'),
-        route(this, "notification", 'notify', argument_list)
+        route(this, "notification", 'notify', argument_list),
+        route(this, "router", 'notify', argument_list)
       ]);
     })
 
@@ -578,7 +580,8 @@
         .push(function () {
           var promise_list = [
             route(gadget, 'panel', 'close'),
-            route(gadget, 'editor_panel', 'close')
+            route(gadget, 'editor_panel', 'close'),
+            route(gadget, 'router', 'notify', [{modified : false}])
           ];
           if (keep_message !== true) {
             promise_list.push(route(gadget, 'notification', 'close'));

@@ -15,7 +15,9 @@
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareAcquiredMethod("displayFormulatorValidationError",
                            "displayFormulatorValidationError")
-
+    .allowPublicAcquisition("notifyChange", function () {
+      return this.notifyChange({modified: true});
+    })
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
     /////////////////////////////////////////////////////////////////
