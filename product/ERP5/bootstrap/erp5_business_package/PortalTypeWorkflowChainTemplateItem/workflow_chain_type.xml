@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
   <type>Business Commit</type>
-  <workflow>business_commit_validation_workflow</workflow>
+  <workflow>business_commit_interaction_workflow, business_commit_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Business Item</type>
