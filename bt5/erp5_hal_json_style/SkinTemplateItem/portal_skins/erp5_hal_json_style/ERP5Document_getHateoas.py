@@ -132,7 +132,7 @@ def getUidAndAccessorForAnything(search_result, result_index, traversed_document
     value = getter(random_object, "value")
   """
   if hasattr(search_result, "getObject"):
-    # search_result = search_result.getObject()
+    # "Brain" object - which simulates DB Cursor thus result must have UID
     contents_uid = search_result.uid
     # every document indexed in catalog has to have relativeUrl
     contents_relative_url = getRealRelativeUrl(search_result)
@@ -257,7 +257,8 @@ def getAttrFromAnything(search_result, select, search_property_getter, search_pr
         contents_value = contents_value()
     except (AttributeError, KeyError, Unauthorized) as error:
       log("Could not evaluate {} on {} with error {!s}".format(
-        contents_value, search_result, error), level=100)  # WARNING
+        contents_value, search_result, error), level=200)  # ERROR
+      contents_value = None
 
   # make resulting value JSON serializable
   if contents_value is not None:
@@ -1446,13 +1447,17 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         }
 
       for select in select_list:
+        default_field_value = None
+        # every `select` can have a template field or be just a exotic getter for a value
         if editable_field_dict.has_key(select):
           # cell has a Form Field template thus render it using the field
           # fields are nice because they are standard
           REQUEST.set('cell', search_result)
           # if default value is given by evaluating Tales expression then we only
           # put "cell" to request (expected by tales) and let the field evaluate
-          if getattr(editable_field_dict[select].tales, "default", "") == "":
+          if (not editable_field_dict[select].get_tales("default") and  # no tales
+              (not hasattr(editable_field_dict[select], "get_recursive_tales") or  # no recursive tales
+               editable_field_dict[select].get_recursive_tales("default") == "")):
             # if there is no tales expr (or is empty) we extract the value from search result
             default_field_value = getAttrFromAnything(search_result, select, property_getter, property_hasser, {})
 
