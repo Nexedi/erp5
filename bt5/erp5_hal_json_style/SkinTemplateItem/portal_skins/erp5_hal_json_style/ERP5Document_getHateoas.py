@@ -309,8 +309,10 @@ url_template_dict = {
 default_document_uri_template = url_template_dict["jio_get_template"]
 Base_translateString = context.getPortalObject().Base_translateString
 
+
 def getRealRelativeUrl(document):
   return '/'.join(portal.portal_url.getRelativeContentPath(document))
+
 
 def getFormRelativeUrl(form):
   return portal.portal_catalog(
@@ -321,12 +323,17 @@ def getFormRelativeUrl(form):
     select_dict={'relative_url': None}
   )[0].relative_url
 
-def getFieldDefault(traversed_document, field, key, value=None):
-  # REQUEST.get(field.id, field.get_value("default"))
-  result = traversed_document.Field_getDefaultValue(field, key, value, REQUEST)
-  if getattr(result, 'translate', None) is not None:
-    result = "%s" % result
-  return result
+
+def getFieldDefault(form, field, key, value=None):
+  """Get available value for `field` preferably in python-object from REQUEST or from field's default."""
+  if value is None:
+    value = (REQUEST.form.get(field.id, REQUEST.form.get(key, None)) or
+             field.get_value('default', request=REQUEST, REQUEST=REQUEST))
+    if field.has_value("unicode") and field.get_value("unicode") and isinstance(value, 'unicode'):
+      value = unicode(value, self.get_form_encoding())
+  if getattr(value, 'translate', None) is not None:
+    return "%s" % value
+  return value
 
 
 def renderField(traversed_document, field, form, value=None, meta_type=None, key=None, key_prefix=None, selection_params=None):
@@ -358,7 +365,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     # fields have default value and can be required (unlike boxes)
     result.update({
       "required": field.get_value("required") if field.has_value("required") else None,
-      "default": getFieldDefault(traversed_document, field, result["key"], value),
+      "default": getFieldDefault(form, field, key, value),
     })
 
   if meta_type == "ProxyField":
@@ -423,7 +430,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       "hide_day": field.get_value('hide_day'),
       "hidden_day_is_last_day": field.get_value('hidden_day_is_last_day'),
     })
-    date_value = getFieldDefault(traversed_document, field, result["key"], value)
+    date_value = getFieldDefault(form, field, key, value)
     if not date_value and field.get_value('default_now'):
       date_value = DateTime()
     if same_type(date_value, DateTime()):
