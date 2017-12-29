@@ -206,14 +206,16 @@ class BusinessSnapshot(Folder):
 
     for commit in successor_commit_list:
       for item in commit.objectValues():
-        item_path = item.getProperty('item_path')
-        if item_path in new_item_path_list:
-          # Replace the old item with same path with new item
-          new_item_list = [l if l.getProperty('item_path') != item_path else item for l in new_item_list]
-        else:
-          # Add the item to list if there is no existing item at that path
-          new_item_list.append(item)
-          new_item_path_list.append(item_path)
+        # Check if the item has a follow_up only with installable Business Template
+        if item.getFollowUpValue().getAvailabilityState() == 'installable':
+          item_path = item.getProperty('item_path')
+          if item_path in new_item_path_list:
+            # Replace the old item with same path with new item
+            new_item_list = [l if l.getProperty('item_path') != item_path else item for l in new_item_list]
+          else:
+            # Add the item to list if there is no existing item at that path
+            new_item_list.append(item)
+            new_item_path_list.append(item_path)
 
     # Create hardlinks for the objects
     for item in new_item_list:
