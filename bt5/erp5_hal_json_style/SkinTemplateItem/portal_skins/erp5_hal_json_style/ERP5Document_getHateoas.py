@@ -621,7 +621,9 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
           if param_key not in list_method.params():  # we search in raw string
             del list_method_query_dict[param_key]    # but it is enough
 
-    if (editable_column_list):
+    if (True):  # editable_column_list (used to be but we need
+                # template fields resolution (issued by existence of `form_relative_url`)
+                # to always kick in
       list_method_custom = url_template_dict["custom_search_template"] % {
         "root_url": site_root.absolute_url(),
         "script_id": script.id,
@@ -631,6 +633,10 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
         "default_param_json": urlsafe_b64encode(json.dumps(list_method_query_dict))
       }
       list_method_query_dict = {}
+    """
+    # We commented out this part because of backward compatibility
+    # The problem seems to be that template fields for listboxes are
+    # used in the old UI even though they are not listed in "editable columns"
     elif (list_method_name == "portal_catalog"):
       pass
     elif (list_method_name == "searchFolder"):
@@ -644,6 +650,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
         "default_param_json": urlsafe_b64encode(json.dumps(list_method_query_dict))
       }
       list_method_query_dict = {}
+    """
 
 #     row_list = list_method(limit=lines, portal_type=portal_types,
 #                            **default_params)

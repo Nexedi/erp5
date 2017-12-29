@@ -1,0 +1,63 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test ListBox Fast Save</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test custom "default" value rendering inside editor field</td></tr>
+</thead><tbody>
+
+<tr><td>store</td>
+  <td>https://softinst81338.host.vifib.net/erp5</td>
+  <td>base_url</td></tr>
+
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr><td>open</td>
+    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Reset Successfully.</td><td></td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=2&amp;create_line:int=0</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr><td>open</td>
+    <td>${base_url}/foo_module/1/Foo_setCausality?value=foo_module/2</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Set Successfully.</td><td></td></tr>
+<!-- Set causality_reference_title as listbox columns
+     Do not put it in editable columns because the template field resolution must work always (backward compatibility)
+-->
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_columns=id%7CID%0Acausality_title%7CCausality</td>
+  <td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Set Successfully.</td><td></td></tr>
+
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+
+<!-- Listbox does have template field for causality BUT does not declare it in "editable columns"  -->
+<!-- Foo 2 without causality set -->
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//table/tbody/tr[1]/td[2]//div[@class="hello"]</td><td></td></tr>
+<tr><td>assertText</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//table/tbody/tr[1]/td[2]//div[@class="hello"]</td>
+    <td>Couscous</td></tr>
+
+</tbody></table>
+</body>
+</html>
