@@ -28,6 +28,13 @@
         });
     })
 
+    .declareMethod('notify', function (param_list) {
+      return this.getDeclaredGadget('erp5_router')
+        .push(function (router) {
+          return router.notify(param_list);
+        });
+    })
+
     .declareMethod('start', function () {
       var gadget = this,
         element_list =
