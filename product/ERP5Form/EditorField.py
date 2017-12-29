@@ -80,6 +80,8 @@ class EditorWidget(Widget.TextAreaWidget):
     """
       Render editor
     """
+    if REQUEST is None:
+      REQUEST = get_request()
     here = REQUEST['here']
     text_editor = field.get_value('text_editor')
     if text_editor == "svg_editor":

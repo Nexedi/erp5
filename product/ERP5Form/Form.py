@@ -263,7 +263,7 @@ class DefaultValue(StaticValue):
     self.value = value
 
   def __call__(self, field, id, **kw):
-    REQUEST = get_request()
+    REQUEST = kw.get('REQUEST', None) or get_request()
     try:
       form = field.aq_parent
       ob = REQUEST.get('cell', getattr(form, 'aq_parent', None))
@@ -278,7 +278,6 @@ class DefaultValue(StaticValue):
           value = ob.getProperty(self.key)
       except Unauthorized:
         value = ob.getProperty(self.key, d=value, checked_permission='View')
-        REQUEST = kw.get('REQUEST', get_request())
         if REQUEST is not None:
           REQUEST.set('read_only_%s' % self.key, 1)
     except (KeyError, AttributeError):

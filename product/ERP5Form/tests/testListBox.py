@@ -730,6 +730,7 @@ class TestListBox(ERP5TypeTestCase):
     """
     portal = self.getPortal()
     request = get_request()
+    request['here'] = portal.foo_module
     portal.ListBoxZuite_reset()
     form = portal.FooModule_viewFooList
     self.assertEqual(None, request.get('listbox_form_id'))
