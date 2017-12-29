@@ -129,12 +129,6 @@ class TypesTool(TypeProvider):
        'Standard Property',
        'Acquired Property',
        'Category Property'))
-    # Bootstrap Business Manager as it'll be needed while installation
-    ERP5Generator.bootstrap(self, 'erp5_business_package', 'PortalTypeTemplateItem', (
-      'Business Manager',
-      'Business Item',
-      'Business Property Item'
-    ))
 
   def listContentTypes(self, container=None):
     """List content types from all providers
