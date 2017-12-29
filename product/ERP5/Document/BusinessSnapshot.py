@@ -171,9 +171,10 @@ class BusinessSnapshot(Folder):
     # new snapshot
     if last_snapshot:
 
-      # [1]: Extend the item_list with list of items from last snapshot
-      new_item_list.extend(last_snapshot.getItemList())
-      new_item_path_list.extend(last_snapshot.getItemPathList())
+      for item in last_snapshot.objectValues():
+        if item.getFollowUpValue().getAvailabilityState() == 'installable':
+          new_item_list.append(item)
+          new_item_path_list.extend(item.getProperty('item_path'))
 
       # Get next predecessor commit for this snapshot using the equivalent commit
       # Notice that we don't use the snapshot to get the next commit as the
@@ -191,8 +192,10 @@ class BusinessSnapshot(Folder):
                     self.aq_parent.objectValues(portal_type='Business Commit'),
                     key=(lambda x: x.getCreationDate()))
 
-      new_item_list.extend(oldest_commit.objectValues())
-      new_item_path_list.extend(oldest_commit.getItemPathList())
+      for item in oldest_commit.objectValues():
+        if item.getFollowUpValue().getAvailabilityState() == 'installable':
+          new_item_list.append(item)
+          new_item_path_list.extend(item.getProperty('item_path'))
 
       next_commit = oldest_commit.getPredecessorRelatedValue()
 
