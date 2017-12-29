@@ -69,7 +69,7 @@
               };
             }
             promise_list.push(RSVP.all([
-              gadget.getUrlFor({command: 'display', options: display_options}),
+              gadget.getUrlFor({command: 'display_stored_state', options: display_options}),
               // Remove the counter from the title
               action_list[i].name,
               action_list[i].count

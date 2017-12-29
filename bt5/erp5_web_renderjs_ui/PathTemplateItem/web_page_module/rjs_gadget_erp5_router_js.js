@@ -281,34 +281,6 @@
     return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);
   }
 
-  function execDisplayStoredStateCommand(gadget, next_options) {
-    // console.warn(command_options);
-    var jio_key = next_options.jio_key,
-      queue;
-    delete next_options.jio_key;
-
-    if (jio_key) {
-      queue = gadget.props.jio_state_gadget.get(jio_key)
-        .push(function (options) {
-          // Keep the sticky parameters
-          copyStickyParameterDict(next_options, options);
-          next_options = options;
-        }, function (error) {
-          if ((error instanceof jIO.util.jIOError) &&
-              (error.status_code === 404)) {
-            return;
-          }
-          throw error;
-        });
-    } else {
-      queue = new RSVP.Queue();
-    }
-    return queue
-      .push(function () {
-        return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);
-      });
-  }
-
   function calculateChangeOptions(previous_options, next_options, drop_options) {
     var key;
     for (key in previous_options) {
@@ -324,6 +296,32 @@
       }
     }
     return next_options;
+  }
+
+  function execDisplayStoredStateCommand(gadget, next_options) {
+    // console.warn(command_options);
+    var jio_key = next_options.jio_key,
+      queue;
+    delete next_options.jio_key;
+
+    if (jio_key) {
+      queue = gadget.props.jio_state_gadget.get(jio_key)
+        .push(function (options) {
+          calculateChangeOptions(options, next_options);
+        }, function (error) {
+          if ((error instanceof jIO.util.jIOError) &&
+              (error.status_code === 404)) {
+            return;
+          }
+          throw error;
+        });
+    } else {
+      queue = new RSVP.Queue();
+    }
+    return queue
+      .push(function () {
+        return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);
+      });
   }
 
   function execChangeCommand(previous_options, next_options, drop_options) {
