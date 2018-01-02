@@ -16,24 +16,25 @@ class ERP5_scalability():
     return 'example/scalabilityUsers'
 
   def getUserQuantity(self, test_number):
-    return [20, 30, 40, 50, 75][test_number]
+    return [20, 30, 40, 50, 60][test_number]
 
   # Test duration in seconds
   def getTestDuration(self, test_number):
-    return 40*self.getUserQuantity(test_number)
+    return 8*self.getUserQuantity(test_number)
 
   def getTestRepetition(self, test_number):
     return 3
 
   def getScalabilityTestUrl(self, instance_information_dict):
-    erp5_address = instance_information_dict["zope-address"]
-    return "http://%s/erp5" % erp5_address
+    frontend_address = instance_information_dict['frontend-url-list'][0]
+    return "%s/erp5" % frontend_address
 
   def getScalabilityTestMetricUrl(self, instance_information_dict, **kw):
-    metrics_url = "http://%s:%s@%s/erp5" % (instance_information_dict['user'],
-                                    instance_information_dict['password'],
-                                    instance_information_dict['zope-address'])
-    return metrics_url + "/ERP5Site_getScalabilityTestMetric"
+    frontend_address = instance_information_dict['frontend-url-list'][0]
+    metrics_url = frontend_address.replace("https://",
+                    "https://%s:%s@" % (instance_information_dict['user'],
+                                        instance_information_dict['password']))
+    return metrics_url + "/erp5/ERP5Site_getScalabilityTestMetric"
 
   def getScalabilityTestOutput(self, metric_list):
     """
@@ -52,9 +53,10 @@ class ERP5_scalability():
             str(output_json[PERSON_KEY]), str(output_json[ORDER_KEY]))
 
   def getBootstrapScalabilityTestUrl(self, instance_information_dict, count=0, **kw):
-    bootstrap_url = "http://%s:%s@%s/erp5" % (instance_information_dict['user'],
-                                    instance_information_dict['password'],
-                                    instance_information_dict['zope-address'])
-    bootstrap_url += "/ERP5Site_bootstrapScalabilityTest"
+    frontend_address = instance_information_dict['frontend-url-list'][0]
+    bootstrap_url = frontend_address.replace("https://",
+                      "https://%s:%s@" % (instance_information_dict['user'],
+                                          instance_information_dict['password']))
+    bootstrap_url += "/erp5/ERP5Site_bootstrapScalabilityTest"
     bootstrap_url += "?user_quantity=%i" % self.getUserQuantity(count)
     return bootstrap_url
