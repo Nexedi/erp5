@@ -121,7 +121,10 @@
           ]);
         })
         .push(function () {
-          return gadget.notifySubmitted('Preferences Saved');
+          return gadget.notifySubmitted({
+            message: 'Preferences Saved',
+            status: 'success'
+          });
         });
     });
 
