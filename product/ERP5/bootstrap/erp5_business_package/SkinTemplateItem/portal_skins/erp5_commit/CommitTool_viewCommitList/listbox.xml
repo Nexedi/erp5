@@ -86,6 +86,10 @@
                           <string>similar_title</string>
                           <string>Similar</string>
                         </tuple>
+                        <tuple>
+                          <string>path_list</string>
+                          <string>Paths</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
