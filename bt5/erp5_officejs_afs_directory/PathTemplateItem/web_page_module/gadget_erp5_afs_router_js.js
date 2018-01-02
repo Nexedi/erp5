@@ -54,6 +54,12 @@
           return router.getUrlParameter.apply(router, argument_list);
         });
     })
+    .declareMethod('notify', function (param_list) {
+      return this.getDeclaredGadget('router')
+        .push(function (router) {
+          return router.notify(param_list);
+        });
+    })
     .declareMethod('redirect', function () {
       var argument_list = arguments;
       return this.getDeclaredGadget("router")
