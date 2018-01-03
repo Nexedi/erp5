@@ -429,7 +429,7 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     portal = self.getPortal()
 
   def checkOrderBuilderStockOptimisationResult(self, expected_result, **kw):
-    result_list = [(x.getResource(), x.getQuantity(),
+    result_list = [(x.getResource(), x.getVariationText(), x.getQuantity(),
                     x.getStartDate().strftime("%Y/%m/%d"),
                     x.getStopDate().strftime("%Y/%m/%d")) for x in \
                     self.order_builder.generateMovementListForStockOptimisation(**kw)]
@@ -454,7 +454,7 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     self._makeMovement(quantity=-3, destination_value=node_1, simulation_state='confirmed')
     resource_url = self.resource.getRelativeUrl()
     self.checkOrderBuilderStockOptimisationResult(
-       [(resource_url, 3.0, '2016/08/30', '2016/08/30')], node_uid=node_1.getUid())
+       [(resource_url, '', 3.0, '2016/08/30', '2016/08/30')], node_uid=node_1.getUid())
 
   def test_05_generateMovementListForStockOptimisationForSeveralNodes(self):
     """
@@ -478,21 +478,62 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     checkStockOptimisationForTwoNodes([])
     self._makeMovement(quantity=-3, destination_value=node_1, simulation_state='confirmed',
                        start_date=DateTime('2016/08/20'))
-    checkStockOptimisationForTwoNodes([(resource_url, 3.0, '2016/08/20', '2016/08/20')])
+    checkStockOptimisationForTwoNodes([(resource_url, '', 3.0, '2016/08/20', '2016/08/20')])
     self._makeMovement(quantity=-2, destination_value=node_1, simulation_state='confirmed',
                        start_date=DateTime('2016/08/18'))
-    checkStockOptimisationForTwoNodes([(resource_url, 5.0, '2016/08/18', '2016/08/18')])
+    checkStockOptimisationForTwoNodes([(resource_url, '', 5.0, '2016/08/18', '2016/08/18')])
     self._makeMovement(quantity=-7, destination_value=node_2, simulation_state='confirmed',
                        start_date=DateTime('2016/08/19'))
-    checkStockOptimisationForTwoNodes([(resource_url, 12.0, '2016/08/18', '2016/08/18')])
+    checkStockOptimisationForTwoNodes([(resource_url, '', 12.0, '2016/08/18', '2016/08/18')])
     self._makeMovement(quantity=11, destination_value=node_2, simulation_state='confirmed',
                        start_date=DateTime('2016/08/16'))
-    checkStockOptimisationForTwoNodes([(resource_url, 1.0, '2016/08/20', '2016/08/20')])
+    checkStockOptimisationForTwoNodes([(resource_url, '', 1.0, '2016/08/20', '2016/08/20')])
     self._makeMovement(quantity=7, destination_value=node_1, simulation_state='confirmed',
                        start_date=DateTime('2016/08/15'))
     checkStockOptimisationForTwoNodes([])
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOrderBuilder))
-  return suite
+  def checkGenerateMovementListForStockOptimisationWithInventories(self, variation_category_list=None):
+    node_1 = self.node_1
+    resource_url = self.resource.getRelativeUrl()
+    if variation_category_list:
+      self.resource.setVariationBaseCategoryList(('colour', 'size'))
+      self.resource.setVariationCategoryList(self.VARIATION_CATEGORIES)
+    else:
+      variation_category_list = []
+    variation_text = '\n'.join(variation_category_list)
+    self.createOrderBuilder()
+    self.fillOrderBuilder()
+    fixed_date = DateTime('2018/01/03')
+    self.pinDateTime(fixed_date)
+    resource_url = self.resource.getRelativeUrl()
+    node_uid_list = [node_1.getUid(), self.node_2.getUid()]
+    self.checkOrderBuilderStockOptimisationResult([], node_uid=node_1.getUid())
+    movement = self._makeMovement(quantity=3, destination_value=node_1, simulation_state='delivered',
+                       start_date=DateTime('2018/01/10'), variation_category_list=variation_category_list)
+    inventory = self.portal.inventory_module.newContent(portal_type="Inventory",
+                     start_date=DateTime('2018/01/12'),
+                     destination_value=node_1,
+                     full_inventory=1)
+    inventory.deliver()
+    self.tic()
+    # keep in stock only movements coming from inventory. It is intentional to
+    # not reindex inventory here.
+    self.portal.erp5_sql_connection.manage_test("delete from stock where uid=%s" % movement.getUid())
+    self.commit()
+    self.checkOrderBuilderStockOptimisationResult(
+      [(resource_url, variation_text, 3, '2018/01/12', '2018/01/12')], node_uid=node_1.getUid())
+
+  def test_06a_generateMovementListForStockOptimisationWithInventories(self):
+    """
+    generateMovementListForStockOptimisation was having issues when inventories here used.
+    make this method now works fine with inventories
+    """
+    self.checkGenerateMovementListForStockOptimisationWithInventories()
+
+  def test_06b_generateMovementListForStockOptimisationWithInventoriesAndVariation(self):
+    """
+    generateMovementListForStockOptimisation was having issues when inventories here used.
+    make this method now works fine with inventories and with variation
+    """
+    self.checkGenerateMovementListForStockOptimisationWithInventories(
+      variation_category_list = ['colour/green', 'size/big'])

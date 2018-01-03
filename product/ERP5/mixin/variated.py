@@ -380,4 +380,12 @@ class VariatedMixin:
     category_list.sort()
     return '\n'.join(category_list)
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'setVariationText')
+  def setVariationText(self, variation_text):
+    variation_category_list = []
+    if variation_text is not None and variation_text != "":
+      variation_category_list = variation_text.split("\n")
+    self.setVariationCategoryList(variation_category_list)
+
 InitializeClass(VariatedMixin)

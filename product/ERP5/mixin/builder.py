@@ -212,10 +212,11 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           # XXX FIXME define on a supply line
           # quantity_unit
           quantity_unit=resource.getQuantityUnit(),
-          variation_category_list=dumb_movement.getVariationCategoryList(),
           destination_value=self.getDestinationValue(),
           resource_portal_type=resource_portal_type,
           destination_section_value=self.getDestinationSectionValue())
+      # define variation after resource is set
+      movement.edit(variation_text=inventory_item.variation_text)
       return movement
 
     for inventory_item in sql_list:
