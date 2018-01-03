@@ -1,9 +1,14 @@
+from Acquisition import aq_self, aq_base
+
+def Base_aqSelf(self):
+  return aq_self(self)
+
+def Base_aqBase(self):
+  return aq_base(self)
+
 def Field_getSubFieldKeyDict(self, field, field_id, key=None):
   """XXX"""
   return field.generate_subfield_key(field_id, key=key)
-
-def Field_getDefaultValue(self, field, key, value, REQUEST):
-  return field._get_default(key, value, REQUEST)
 
 def WorkflowTool_listActionParameterList(self):
   action_list = self.listActions()
