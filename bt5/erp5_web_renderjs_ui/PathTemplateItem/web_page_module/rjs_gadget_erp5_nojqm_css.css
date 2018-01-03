@@ -1534,7 +1534,8 @@ div[data-gadget-scope='notification'] button.error {
   .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header h1 > span::before {
     margin-right: 14pt;
   }
-  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header h1 a::before {
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header h1 a::before,
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header h1 button::before {
     text-align: center;
   }
   .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header > .ui-btn-right button,
