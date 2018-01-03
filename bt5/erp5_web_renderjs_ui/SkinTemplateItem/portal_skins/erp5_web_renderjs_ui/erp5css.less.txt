@@ -339,6 +339,21 @@ a {
   }
 }
 
+/**********************************************
+* Button
+**********************************************/
+
+.button() {
+  padding: @margin-size;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: @border-radius;
+  &::before{
+    margin-right: @margin-size;
+  }
+  &:hover, &:active {
+    background-color: @colorblocklinkbackground;
+  }
+}
 
 /**********************************************
 * Preformatted
@@ -1636,17 +1651,11 @@ div[data-gadget-scope='erp5_searchfield'] {
         text-align: right;
       }
       a {
-        padding: @margin-size;
-        border: 1px solid rgba(0, 0, 0, 0.14);
-        border-radius: @radius;
+        .button();
 
         margin-right: @margin-size;
         &:last-of-type {
           margin-right: 0;
-        }
-
-        &:hover, &:active {
-          background-color: @colorblocklinkbackground;
         }
 
         @media @smartphone {
@@ -1654,8 +1663,6 @@ div[data-gadget-scope='erp5_searchfield'] {
         }
 
         &::before {
-          margin-right: @margin-size;
-
           @media @smartphone {
             float: left;
             text-indent: @margin-size;
