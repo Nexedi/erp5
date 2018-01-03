@@ -56,7 +56,7 @@ INSEE_CODE = getINSEECode(ZIP_CODE)
 
 def makeCTPBlock(movement, category):
   quantity = 0.
-  if category[:3] in ('437', '671'):
+  if category[:3] in ('437', '671', '801'):
     quantity = getattr(movement, 'employer_total_price', 0.) + getattr(movement, 'employee_total_price', 0.)
   return {
     'code': category,
@@ -106,11 +106,17 @@ def makeTaxableBaseComponentBlock(movement, category):
 
 def makeIndividualContributionBlock(movement, category):
   base = quantity = 0.0
-  if category in ('018', '063', '064', '059'):
+  if category in ('018', '063', '064'):
     quantity = (getattr(movement, 'employer_total_price', 0) + getattr(movement, 'employee_total_price', 0)) * -1
-    if category == '018':
+    # If "reduction generale but CTP is 801P then it should be positive, as we have to give money back
+    if category == '018' and 'base_amount/payroll/l10n/fr/ctp/801P' not in movement.getBaseContributionList():
       assert quantity <= 0., "Quantity in %s should be negative" % movement.absolute_url()
-      base = movement.base
+    elif category == '018':
+      assert quantity >= 0., "Quantity in %s should be positive" % movement.absolute_url()
+    base = movement.base
+  elif category in ('059',):
+    quantity = (getattr(movement, 'employer_total_price', 0) + getattr(movement, 'employee_total_price', 0)) * -1
+    base = 0.
   else:
     base = movement.base
   return {

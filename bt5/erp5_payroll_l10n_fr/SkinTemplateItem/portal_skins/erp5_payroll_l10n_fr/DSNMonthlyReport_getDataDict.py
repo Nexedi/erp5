@@ -205,7 +205,8 @@ if block_id == 'S21.G00.23':
     if target['code'][:3] != '801':
       assert target['quantity'] > 0
     else:
-      assert target['quantity'] < 0
+      target['quantity'] = target['quantity'] * -1.
+      assert target['quantity'] > 0
     rubric_value_dict['S21.G00.23.005'] = formatFloat(round(target['quantity']))
   else:
     rubric_value_dict['S21.G00.23.004'] = formatFloat(round(target['base']))
