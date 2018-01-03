@@ -21,45 +21,46 @@
         </div>
       </div>
     </div>
+    <div data-role="page">
+      <div class="gadget-content">
+        <article>
+          <section>
+            <tal:block tal:condition="exists: request/portal_status_message">
+              <span tal:attributes="data-i18n request/portal_status_message"><span tal:content="request/portal_status_message"></span></span>
+            </tal:block>
+          </section>
 
-    <div class="gadget-content">
-      <article>
-        <section>
-          <tal:block tal:condition="exists: request/portal_status_message">
-            <span tal:attributes="data-i18n request/portal_status_message"><span tal:content="request/portal_status_message"></span></span>
-          </tal:block>
-        </section>
+          <section>
+            <form method="post" tal:attributes="action python: '%s/' % context.absolute_url()">
 
-        <section>
-          <form method="post" tal:attributes="action python: '%s/' % context.absolute_url()">
-
-            <div class="ui-field-contain">
-              <label i18n:domain="ui" i18n:translate="" >Login</label>
-              <div><input autofocus type="text" name="__ac_name" value="" required=""></div>
-            </div>
-            <div class="ui-field-contain">
-              <label i18n:domain="ui" i18n:translate="" >Password</label>
-              <div><input type="password" name="__ac_password" value="" required=""></div>
-            </div>
-            <div class="ui-field-contain">
-              <label></label>
-              <div tal:define="absolute_url python:context.absolute_url()">
-                <a  i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+              <div class="ui-field-contain">
+                <label i18n:domain="ui" i18n:translate="" >Login</label>
+                <div><input autofocus type="text" name="__ac_name" value="" required=""></div>
               </div>
-            </div><br/>
-            <div class="ui-field-contain">
-              <label></label>
-              <div><input type="submit" value='Login' i18n:attributes="value" i18n:domain="ui"  tal:attributes="name python: '%s:method' % (form_action, )"/></div>
-            </div>
+              <div class="ui-field-contain">
+                <label i18n:domain="ui" i18n:translate="" >Password</label>
+                <div><input type="password" name="__ac_password" value="" required=""></div>
+              </div>
+              <div class="ui-field-contain">
+                <label></label>
+                <div tal:define="absolute_url python:context.absolute_url()">
+                  <a  i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+                </div>
+              </div><br/>
+              <div class="ui-field-contain">
+                <label></label>
+                <div><input type="submit" value='Login' i18n:attributes="value" i18n:domain="ui"  tal:attributes="name python: '%s:method' % (form_action, )"/></div>
+              </div>
 
 
-            <input type="hidden" name="url" tal:attributes="value python: context.absolute_url()" />
-            <input tal:condition="exists: request/came_from"
-                   type="hidden" name="came_from"
-                   tal:attributes="value request/came_from" />
-          </form>
-         </section>
-      </article>
+              <input type="hidden" name="url" tal:attributes="value python: context.absolute_url()" />
+              <input tal:condition="exists: request/came_from"
+                     type="hidden" name="came_from"
+                     tal:attributes="value request/came_from" />
+            </form>
+           </section>
+        </article>
+      </div>
     </div>
   </body>
 </html>
