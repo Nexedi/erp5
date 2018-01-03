@@ -18,12 +18,26 @@
 */
 
   rJS(window)
+    .declareAcquiredMethod('triggerMaximize', 'triggerMaximize')
+    .allowPublicAcquisition('triggerMaximize', function (param_list) {
+      var gadget = this;
+      if (!this.element.classList.contains('editor-maximize')) {
+        this.element.classList.toggle('editor-maximize');
+      }
+      return this.triggerMaximize.apply(this, param_list)
+        .push(function () {
+          if (gadget.element.classList.contains('editor-maximize')) {
+            gadget.element.classList.remove('editor-maximize');
+          }
+        });
+    })
     .declareMethod('render', function (options) {
       
       var state_dict = {
           value: options.value || "",
           editor: options.editor,
           content_type: options.content_type,
+          maximize: options.maximize,
           portal_type: options.portal_type,
           editable: options.editable || false,
           key: options.key
@@ -40,6 +54,7 @@
         gadget = this,
         url,
         div = document.createElement('div'),
+        div_max = document.createElement('div'),
         queue = new RSVP.Queue();
 
       if ((modification_dict.hasOwnProperty('editable')) ||
@@ -48,6 +63,28 @@
         while (element.firstChild) {
           element.removeChild(element.firstChild);
         }
+        if (modification_dict.hasOwnProperty('maximize')) {
+          if (gadget.state.maximize && gadget.state.editable) {
+            element.appendChild(div_max);
+            queue
+              .push(function () {
+                return gadget.triggerMaximize(false);
+              })
+              .push(function () {
+                return gadget.declareGadget("gadget_button_maximize.html", {
+                  scope: 'maximize',
+                  element: div_max,
+                  sandbox: 'public'
+                });
+              }, function (error) {
+              // Check Acquisition, old erp5 ui don't have triggerMaximize
+                if (error.name !== "AcquisitionError") {
+                  throw error;
+                }
+              });
+          }
+        }
+
         element.appendChild(div);
 
         if (gadget.state.editable &&
