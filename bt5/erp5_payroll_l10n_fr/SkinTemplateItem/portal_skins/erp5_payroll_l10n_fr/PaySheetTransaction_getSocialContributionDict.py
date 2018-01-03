@@ -73,8 +73,8 @@ def makeCTPBlock(movement, category):
 def makeTaxableBaseBlock(movement, category):
   return {
     'code': category,
-    'start_date': (movement.getStartDate() if category in ('07', '28', '29', '31') else ''),
-    'stop_date': (movement.getStopDate() if category in ('07', '28', '29', '31') else ''),
+    'start_date': movement.getStartDate(),
+    'stop_date': movement.getStopDate(),
     'base': movement.base,
     'contract_id': movement.PaySheetTransactionLine_getInsuranceContractId()
   }
