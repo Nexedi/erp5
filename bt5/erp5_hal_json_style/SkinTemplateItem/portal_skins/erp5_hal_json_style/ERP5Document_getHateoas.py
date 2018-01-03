@@ -117,7 +117,7 @@ def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
 
 
 def getUidAndAccessorForAnything(search_result, result_index, traversed_document):
-  """Return unique ID, unique URL, getter and hasser for any combination of `search_result` and `index`.
+  """Return unique ID, unique URL, getter for any combination of `search_result` and `index`.
 
   You want to use this method when you need a unique reference to random object in iterable (for example
   result of list_method or stat_method). This will give you UID and URL for identification within JIO and
@@ -126,9 +126,7 @@ def getUidAndAccessorForAnything(search_result, result_index, traversed_document
   Usage::
 
   for i, random_object in enumerate(unknown_iterable):
-    uid, url, getter, hasser = object_ids_and_access(random_object, i)
-    if hasser(random_object, "linkable"):
-      result[uid] = {'url': portal.abolute_url() + url}
+    uid, url, getter = object_ids_and_access(random_object, i)
     value = getter(random_object, "value")
   """
   if hasattr(search_result, "getObject"):
@@ -138,22 +136,14 @@ def getUidAndAccessorForAnything(search_result, result_index, traversed_document
     contents_relative_url = getRealRelativeUrl(search_result)
     # get property in secure way from documents
     search_property_getter = getProtectedProperty
-    def search_property_hasser (doc, attr):
-      """Brains cannot access Properties - they use permissioned getters."""
-      try:
-        return doc.hasProperty(attr)
-      except (AttributeError, Unauthorized) as e:
-        log('Cannot state ownership of property "{}" on {!s} because of "{!s}"'.format(
-          attr, doc, e))
-        return False
-  elif hasattr(search_result, "aq_self"):
+  elif hasattr(search_result, 'hasProperty') and hasattr(search_result, 'getId'):
     # Zope products have at least ID thus we work with that
     contents_uid = search_result.uid
     # either we got a document with relativeUrl or we got product and use ID
     contents_relative_url = getRealRelativeUrl(search_result) or search_result.getId()
     # documents and products have the same way of accessing properties
     search_property_getter = getProtectedProperty
-    search_property_hasser = lambda doc, attr: doc.hasProperty(attr)
+    # search_property_hasser = lambda doc, attr: doc.hasProperty(attr)
   else:
     # In case of reports the `search_result` can be list of
     # PythonScripts.standard._Object - a reimplementation of plain dictionary
@@ -167,13 +157,12 @@ def getUidAndAccessorForAnything(search_result, result_index, traversed_document
     contents_relative_url = "{}/{}".format(traversed_document.getRelativeUrl(), contents_uid)
     # property getter must be simple __getattr__ implementation
     search_property_getter = lambda obj, attr: getattr(obj, attr, None)
-    search_property_hasser = lambda obj, attr: hasattr(obj, attr)
 
-  return contents_uid, contents_relative_url, search_property_getter, search_property_hasser
+  return contents_uid, contents_relative_url, search_property_getter
 
 
-def getAttrFromAnything(search_result, select, search_property_getter, search_property_hasser, kwargs):
-  """Given `search_result` extract value named `select` using helper getter/hasser.
+def getAttrFromAnything(search_result, select, search_property_getter, kwargs):
+  """Given `search_result` extract value named `select` using helper getter.
 
   :param search_result: any dict-like object (usually dict or Brain or Document)
   :param select: field name (can represent actual attributes, Properties or even Scripts)
@@ -201,43 +190,46 @@ def getAttrFromAnything(search_result, select, search_property_getter, search_pr
     # or obvious getter (starts with "get" or Capital letter - Script)
     accessor_name = select
 
-  # 1. resolve attribute on a raw object (all wrappers removed) using
-  # lowest-level secure getattr method given object type
-  raw_search_result = search_result
-  if hasattr(search_result, 'aq_base'):
-    raw_search_result = search_result.aq_base
-  # BUT! only if there is no accessor (because that is the prefered way)
-  if search_property_hasser(raw_search_result, select) and not hasattr(raw_search_result, accessor_name):
-    contents_value = search_property_getter(raw_search_result, select)
+  # Following value resolution is copied from product/ERP5Form/ListBox.py#L2223
+  # 1. resolve attribute on unwrapped object using getter
+  try:
+    unwrapped_search_result = search_result.Base_aqSelf()
+    if contents_value is None and unwrapped_search_result is not None:
+      try:
+        if getattr(unwrapped_search_result, select, None) is not None:
+          # I know this looks suspicious but product/ERP5Form/ListBox.py#L2224
+          contents_value = getattr(search_result, select)
+      except Unauthorized:
+        pass
+  except AttributeError:
+    pass  # search_result is not a Document
 
   # 2. use the fact that wrappers (brain or acquisition wrapper) use
   # permissioned getters
-  unwrapped_search_result = search_result
-  if hasattr(search_result, 'aq_self'):
-    unwrapped_search_result = search_result.aq_self
+  try:
+    raw_search_result = search_result.Base_aqBase()
+    if contents_value is None and raw_search_result is not None:
+      try:
+        if getattr(raw_search_result, accessor_name, None) is not None:
+          contents_value = getattr(search_result, accessor_name, None)
+      except Unauthorized:
+        pass
+  except AttributeError:
+    pass  # search_result is not a Document
 
-  if contents_value is None:
-    # again we check on a unwrapped object to avoid acquisition resolution
-    # which would certainly find something which we don't want
-    try:
-      if hasattr(raw_search_result, accessor_name) and callable(getattr(search_result, accessor_name)):
-        # test on raw object but get the actual accessor using wrapper and acquisition
-        # do not call it here - it will be done later in generic call part
-        contents_value = getattr(search_result, accessor_name)
-    except (AttributeError, KeyError, Unauthorized) as error:
-      log("Could not evaluate {} nor {} on {} with error {!s}".format(
-        select, accessor_name, search_result, error), level=100)  # WARNING
-
-  if contents_value is None and search_property_hasser(search_result, select):
-    # maybe it is just a attribute
-    contents_value = search_property_getter(search_result, select)
-
+  # Following part resolves values on other objects than Documents
+  # Prefer getter (accessor) than raw property name
   if contents_value is None:
     try:
-      contents_value = getattr(search_result, select, None)
-    except (Unauthorized, AttributeError, KeyError) as error:
-      log("Cannot resolve {} on {!s} because {!s}".format(
-        select, raw_search_result, error), level=100)
+      contents_value = getattr(search_result, accessor_name)
+    except (AttributeError, Unauthorized):
+      pass
+
+  if contents_value is None:
+    try:
+      contents_value = search_property_getter(search_result, select)
+    except (AttributeError, Unauthorized):
+      pass
 
   if callable(contents_value):
     has_mandatory_param = False
@@ -1430,7 +1422,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # we can render fields which need 'here' to be set to currently rendered document
       #REQUEST.set('here', search_result)
       contents_item = {}
-      contents_uid, contents_relative_url, property_getter, property_hasser = \
+      contents_uid, contents_relative_url, property_getter = \
         getUidAndAccessorForAnything(search_result, result_index, traversed_document)
 
       # _links.self.href is mandatory for JIO so it can create reference to the
@@ -1453,20 +1445,21 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           'value': contents_uid
         }
 
+      # if default value is given by evaluating Tales expression then we only
+      # put "cell" to request (expected by tales) and let the field evaluate
+      REQUEST.set('cell', search_result)
       for select in select_list:
         default_field_value = None
         # every `select` can have a template field or be just a exotic getter for a value
         if editable_field_dict.has_key(select):
           # cell has a Form Field template thus render it using the field
           # fields are nice because they are standard
-          REQUEST.set('cell', search_result)
-          # if default value is given by evaluating Tales expression then we only
-          # put "cell" to request (expected by tales) and let the field evaluate
-          if (not editable_field_dict[select].get_tales("default") and  # no tales
-              (not hasattr(editable_field_dict[select], "get_recursive_tales") or  # no recursive tales
+          if (not editable_field_dict[select].tales.get("default", "") and  # no tales
+              (editable_field_dict[select].meta_type != 'ProxyField' or
+               not hasattr(editable_field_dict[select], "get_recursive_tales") or  # no recursive tales
                editable_field_dict[select].get_recursive_tales("default") == "")):
             # if there is no tales expr (or is empty) we extract the value from search result
-            default_field_value = getAttrFromAnything(search_result, select, property_getter, property_hasser, {})
+            default_field_value = getAttrFromAnything(search_result, select, property_getter, {})
 
           contents_item[select] = renderField(
             traversed_document,
@@ -1475,13 +1468,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             value=default_field_value,
             key='field_%s_%s' % (editable_field_dict[select].id, contents_uid))
 
-          REQUEST.other.pop('cell', None)
         else:
           # most of the complicated magic happens here - we need to resolve field names
           # given search_result. This name can unfortunately mean almost anything from
           # a key name to Python Script with variable number of input parameters.
-          contents_item[select] = getAttrFromAnything(search_result, select, property_getter, property_hasser, {'brain': search_result})
+          contents_item[select] = getAttrFromAnything(search_result, select, property_getter, {'brain': search_result})
       # endfor select
+      REQUEST.other.pop('cell', None)
       contents_list.append(contents_item)
     result_dict['_embedded']['contents'] = contents_list
 

@@ -1,0 +1,56 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test ListBox propetry resolution before getter</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Bug 20171215-133705C - property should be resolved before getter if different and not empty</td></tr>
+</thead><tbody>
+
+<tr><td>store</td>
+  <td>https://softinst81338.host.vifib.net/erp5</td>
+  <td>base_url</td></tr>
+
+
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr><td>open</td>
+    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Reset Successfully.</td><td></td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=2&amp;create_line:int=0</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_list_method=FooModule_listAsContext&amp;field_columns=id%7CID%0Astate%7CState</td>
+    <td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Set Successfully.</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<!-- Test for value "Couscous" (which is obviously the correct one) instead of "current"
+     Why? Please read description in the bug 20171215-133705C. Custom list_method returns
+     a list of [Foo.asContext(state="Couscous")] and getState seems to refer to original value.
+-->
+<tr><td>assertText</td>
+    <td>//div[@data-gadget-scope="field_listbox"]//table/tbody/tr[1]/td[2]/a</td>
+    <td>Couscous</td></tr>
+
+</tbody></table>
+</body>
+</html>
