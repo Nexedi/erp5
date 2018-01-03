@@ -73,13 +73,21 @@
                     <value>
                       <list>
                         <string>my_quaterly_payment</string>
+                        <string>my_cvae_fee_liability</string>
+                        <string>my_salary_fee_liability</string>
+                        <string>my_construction_effort_fee_liability</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_apprenticeship_fee_liability</string>
+                        <string>my_apprenticeship_supplementary_fee_liability</string>
+                        <string>my_continuous_professional_training_fee_liability</string>
+                        <string>my_continuous_short_term_professional_training_fee_liability</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
