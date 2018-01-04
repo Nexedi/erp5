@@ -10,11 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>css_class</string>
                 <string>default</string>
-                <string>editable</string>
                 <string>title</string>
-                <string>width</string>
               </list>
             </value>
         </item>
@@ -57,18 +54,10 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -94,16 +83,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string>page</string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -111,7 +92,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -120,10 +101,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Body</string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>80</int> </value>
                 </item>
               </dictionary>
             </value>
