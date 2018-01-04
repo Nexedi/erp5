@@ -178,6 +178,22 @@ class CommitTool (BaseTool):
     def getSnapshotList(self):
       return self.objectValues(portal_type='Business Snapshot')
 
+    def getInstalledSnapshot(self):
+      """
+      Return the installed snapshot.
+      Returns None in case there is no snapshot installed.
+      """
+      snapshot = [l for l
+                  in self.getSnapshotList()
+                  if l.getValidationState() == 'installed']
+
+      if len(snapshot) == 1:
+        return snapshot[0]
+      elif len(snapshot) > 1:
+        raise ValueError('Multiple Snapshot in installed state')
+      else:
+        return None
+
     security.declarePublic('newContent')
     def newContent(self, id=None, portal_type=None, **kw):
       """
