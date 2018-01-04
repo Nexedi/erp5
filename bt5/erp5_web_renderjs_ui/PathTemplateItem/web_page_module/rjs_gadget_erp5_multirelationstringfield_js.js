@@ -228,6 +228,10 @@
                 result[gadget.state.key].value_uid_list.push(undefined);
               }
             }
+            //user remove all data
+            if (options.format === "erp5" && result[gadget.state.key].length === 0) {
+              result[gadget.state.key] = "";
+            }
             return result;
 
           });
