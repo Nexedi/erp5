@@ -39,6 +39,8 @@ import fnmatch
 import re
 import threading
 import pprint
+import json
+import deepdiff
 
 from copy import deepcopy
 from collections import defaultdict
@@ -212,43 +214,33 @@ class BusinessTemplateV2(XMLObject):
 
   def install(self, **kw):
     """
-    We have to create the snapshot state to find out what is going to be
-    installed and thus install only those paths which cater to the right commit
-    i.e, find the latest commit which modifies this Business Template V2 and
-    install it
+    Steps for installation of a Business Template:
+    - Get the last installed snapshot if it exists
+    - If not create a new snapshot with paths to be installed from the BT
+    - If there is snapshot installed, create a new snapshot with adding the paths
+      for this BT and then install the snapshot
     """
-    # Get all Business Item which corresponds to this Business Template V2
-    business_item_list = self.getFollowUpRelatedValueList()
-    # Get the commits corresponding to the Business Item
-    commit_list = [l.aq_parent for l in business_item_list]
-
-    if commit_list:
-      # Get the most recent Business Commit and install it
-      latest_commit = max(commit_list, key=(lambda x: x.getCreationDate()))
-      latest_commit.install()
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBuildingState')
-  def getBuildingState(self, default=None, id_only=1):
-    """
-      Returns the current state in building
-    """
-    portal_workflow = getToolByName(self, 'portal_workflow')
-    wf = portal_workflow.getWorkflowById(
-                        'business_template_v2_building_workflow')
-    return wf._getWorkflowStateOf(self, id_only=id_only )
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInstallationState')
-  def getInstallationState(self, default=None, id_only=1):
-    """
-      Returns the current state in installation
-    """
+    # Check if there is already a snapshot existing
     portal = self.getPortalObject()
-    portal_workflow = portal.portal_workflow
-    wf = portal_workflow.getWorkflowById(
-                         'business_template_v2_installation_workflow')
-    return wf._getWorkflowStateOf(self, id_only=id_only )
+    portal_commits = portal.portal_commits
+    snapshot_item_list = []
+
+    installed_snapshot = portal_commits.getInstalledSnapshot()
+    # If there is already an installed snapshot, add its objectValues to new
+    # to be installed snapshot
+    if installed_snapshot:
+      snapshot_item_list.extend(installed_snapshot.objectValues())
+
+    # Get the Business Items which are related to this Business Template
+    related_follow_up_item_list = self.getFollowUpRelatedValueList()
+    # Add these paths in to-be-installed-snapshot item list
+    snapshot_item_list.extend(related_follow_up_item_list)
+
+    # Create a new snapshot and update it with item list and install it
+    snapshot = portal_commits.newContent(portal_type='Business Snapshot')
+    for item in snapshot_item_list:
+      snapshot._setObject(item.id, item, suppress_events=True)
+    snapshot.install()
 
   def changeBuildingStatetoModified(self):
     """
@@ -745,6 +737,24 @@ class BusinessItem(XMLObject):
     if 'item_path' in self._v_modified_property_dict:
       self.build(self.aq_parent)
 
+  def getZODBDiff(self):
+    """
+    Compare the diff of object with ZODB state of the same object
+    """
+    portal = self.getPortalObject()
+    obj = portal.restrictedTraverse(self.getProperty('item_path'))
+    context = self
+    obj = obj._getCopy(context)
+    obj = self.removeProperties(obj, True)
+
+    item = self.objectValues()[0]
+    item = item._getCopy(context)
+    item = self.removeProperties(item, True)
+
+    diff = deepdiff.DeepDiff(item.__dict__, obj.__dict__)
+
+    return diff.json
+
   def updateFollowUpPathList(self):
     """
     Update the path list for Follow Up Business Template V2
@@ -1039,8 +1049,10 @@ class BusinessItem(XMLObject):
     klass = obj.__class__
     classname = klass.__name__
     attr_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
-                'last_id', 'uid',
-                '__ac_local_roles__', '__ac_local_roles_group_id_dict__'}
+                'last_id', 'uid', '_mt_index', '_count', '_tree',
+                '__ac_local_roles__', '__ac_local_roles_group_id_dict__',
+                'workflow_history', 'subject_set_uid_dict', 'security_uid_dict',
+                'filter_dict', '_max_uid', 'isIndexable',}
     if properties:
       for prop in properties:
         if prop.endswith('_list'):
@@ -1069,7 +1081,7 @@ class BusinessItem(XMLObject):
         attr_set.add('type_provider_list')
 
     for attr in obj.__dict__.keys():
-      if attr in attr_set or attr.startswith('_cache_cookie_'):
+      if attr in attr_set or attr.startswith('_cache_cookie_') or attr.startswith('_v'):
         try:
           delattr(obj, attr)
         except AttributeError:
