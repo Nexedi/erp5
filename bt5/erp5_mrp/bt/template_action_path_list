@@ -1,3 +1,4 @@
+Component | resource_view_manufacturing_gantt
 Manufacturing Execution Cell | view
 Manufacturing Execution Line | option_view
 Manufacturing Execution Line | quantity_view
@@ -22,6 +23,7 @@ Manufacturing Order | production_order_operation_consumption
 Manufacturing Order | profile_view
 Manufacturing Order | view
 Manufacturing Order | view_stock
+Product | resource_view_manufacturing_gantt
 Production Order Cell | view
 Production Order Line | jump_to_transformation
 Production Order Line | price_view

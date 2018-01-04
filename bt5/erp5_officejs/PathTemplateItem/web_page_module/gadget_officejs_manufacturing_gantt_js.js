@@ -57,10 +57,14 @@
       .push(function (gantt_widget) {
         // First search all production report not finished to find out the
         // list of production orders still having work on them
-        var query;
+        var query, delivery_uid_list;
         gadget.property_dict.gantt_widget = gantt_widget;
         console.log("gantt_widget", gantt_widget);
         query = 'portal_type:="Manufacturing Execution" AND NOT simulation_state: ("draft", "cancelled", "delivered")';
+        delivery_uid_list = option_dict.delivery_uid_list;
+        if ((delivery_uid_list !== undefined) && (delivery_uid_list.length > 0)) {
+          query = query + ' AND uid: (' + delivery_uid_list.join(', ') + ')';
+        }
         return gadget.jio_allDocs({
           query: query,
           limit: 10000,
@@ -69,8 +73,11 @@
         });
       })
       .push(function (delivery_list) {
+        // try to search for other manufacturing execution having same causality as
+        // other manufacturing execution already found
         var causality_uid_list = [0], // Initiliaze with 0 to make sure to have at least one uid to search for
-            i, delivery, query, empty_causality_delivery_list = [];
+            i, delivery, query, empty_causality_delivery_list = [],
+            delivery_uid_list;
 
         delivery_list = delivery_list.data.rows;
         for (i = 0; i < delivery_list.length; i = i + 1) {
@@ -86,6 +93,11 @@
         query = 'portal_type:="Manufacturing Execution" AND causality_uid: (' + causality_uid_list.join(', ') + ') AND NOT simulation_state: ("draft", "cancelled")';
         console.log("QUERY", query);
         gadget.property_dict.empty_causality_delivery_list = empty_causality_delivery_list;
+        delivery_uid_list = option_dict.delivery_uid_list;
+        // No need to get more
+        if ((delivery_uid_list !== undefined) && (delivery_uid_list.length > 0)) {
+          query = query + ' AND uid: (' + delivery_uid_list.join(', ') + ')';
+        }
         return gadget.jio_allDocs({
           query: query,
           limit: 10000,

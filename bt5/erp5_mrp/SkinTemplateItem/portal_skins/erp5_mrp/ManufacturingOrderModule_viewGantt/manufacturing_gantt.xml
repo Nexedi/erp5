@@ -115,7 +115,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: {\'portal_type\': ["Manufacturing Order", "Manufacturing Execution"],}</string> </value>
+            <value> <string>python: here.ManufacturingOrderModule_getGanttConfigurationDict()</string> </value>
         </item>
       </dictionary>
     </pickle>
