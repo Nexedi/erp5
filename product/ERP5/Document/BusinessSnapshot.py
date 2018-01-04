@@ -238,6 +238,9 @@ class BusinessSnapshot(Folder):
           last_snapshot, 'replace'):
         last_snapshot.replace(self)
 
-    # Now install the items in new snapshot
+    # Now install the items in new snapshot, using the aq_parent of item as its
+    # context. This is important because if we use the snapshot as the context,
+    # it will change the parent of the items to snapshot, which is undesirable
+    # as we want them to stay as hardlinks in the snapshot
     for item in self.objectValues():
-      item.install(self)
+      item.install(item.aq_parent)
