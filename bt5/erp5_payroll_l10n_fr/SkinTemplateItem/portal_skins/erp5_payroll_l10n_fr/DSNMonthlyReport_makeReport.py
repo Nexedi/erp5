@@ -192,8 +192,14 @@ else:
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.23',
                                     target=aggregated_social_contribution_dict[ctp_code]))
 
-dsn_file.append(getDSNBlockDict(block_id='S21.G00.42', target=establishment))
-dsn_file.append(getDSNBlockDict(block_id='S21.G00.44', target=establishment))
+# Annual Taxes
+if organisation == establishment:
+  tax_list = organisation.Organisation_getAnnualTaxDictList(context)
+  for tax in tax_list:
+    if tax['tax_code'] == '011':
+      dsn_file.append(getDSNBlockDict(block_id='S21.G00.42', target=establishment))
+    dsn_file.append(getDSNBlockDict(block_id='S21.G00.44', target=establishment, **tax))
+
 
 for employee_data_dict, paysheet_data_dict in employee_result_list:
   enrollment_record = employee_data_dict['enrollment_record']

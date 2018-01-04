@@ -294,6 +294,10 @@ if block_id == 'S21.G00.40':
   rubric_value_dict["S21.G00.40.042"] = ''
   rubric_value_dict["S21.G00.40.043"] = formatFloat(enrollment_record.getOccupationalAccidentRiskRate())
 
+# Assujettissement fiscal
+if block_id == 'S21.G00.44':
+  rubric_value_dict['S21.G00.44.001'] = kw['tax_code']
+  rubric_value_dict['S21.G00.44.002'] = formatFloat(kw['amount'])
 
 # Versement Individu
 if block_id == 'S21.G00.50':
