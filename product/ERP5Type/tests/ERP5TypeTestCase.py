@@ -433,6 +433,20 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       type_list.sort(key=lambda x: x.getCreationDate())
       return type_list
 
+    def checkPropertyConstraint(self, document, property_name, value,
+                                decreased_quantity=1, commit=False):
+      """
+      Convenient method to check required properties on documents. It check that
+      number of consistency errors decrease when property is set
+      """
+      document.setProperty(property_name, None)
+      initial_consistency_len = len(document.checkConsistency())
+      document.setProperty(property_name, value)
+      if commit:
+        self.commit()
+      self.assertEqual(len(document.checkConsistency()),
+                           initial_consistency_len-decreased_quantity)
+
     def _addPropertySheet(self, portal_type_name,
                           property_sheet_name='TestPropertySheet',
                           deprecated=None):

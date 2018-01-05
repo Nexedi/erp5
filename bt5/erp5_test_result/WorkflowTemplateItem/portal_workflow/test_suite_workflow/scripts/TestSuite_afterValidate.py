@@ -26,3 +26,5 @@ def generateRandomString(size):
 if test_suite.getPortalType() == "Scalability Test Suite":
   random_path = test_suite.getReference() + "_" + generateRandomString(64)
   test_suite.setRandomizedPath(random_path)
+
+test_suite.TestDocument_optimize()

@@ -1,3 +1,4 @@
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import json 
 from time import sleep
@@ -111,7 +112,6 @@ class TestTaskDistribution(ERP5TypeTestCase):
       test_suite =  self.test_suite_module.newContent(
                     portal_type = portal_type,
                     title = test_suite_title,
-                    test_suite_title = test_suite_title,
                     test_suite = 'B%i' % i,
                     int_index = priority,
                     specialise_value = specialise_value,
@@ -150,6 +150,19 @@ class TestTaskDistribution(ERP5TypeTestCase):
                        "Scalability Test Suite")
     self.assertEquals(scalability_test_suite.getSpecialise(),
                        self.scalability_distributor.getRelativeUrl())
+
+  def test_02b_checkConsistencyOnTestSuite(self):
+    test_suite, = self._createTestSuite()
+    self.tic()
+    test_suite_repository, = test_suite.objectValues(portal_type="Test Suite Repository")
+    self.checkPropertyConstraint(test_suite, 'title', 'ERP5-MASTER')
+    self.checkPropertyConstraint(test_suite, 'test_suite', 'ERP5')
+    self.checkPropertyConstraint(test_suite_repository, 'git_url', 'https://lab.nexedi.com/nexedi/erp5.git')
+    self.checkPropertyConstraint(test_suite_repository, 'buildout_section_id', 'erp5')
+    self.checkPropertyConstraint(test_suite_repository, 'branch', 'master')
+    test_suite_repository.setGitUrl(None)
+    test_suite.invalidate()
+    self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, test_suite, 'validate_action')
 
   def _callOptimizeAlarm(self):
     self.portal.portal_alarms.task_distributor_alarm_optimize.activeSense()

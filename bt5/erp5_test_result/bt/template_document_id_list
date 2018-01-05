@@ -1,4 +1,5 @@
 document.erp5.TestNode
 document.erp5.TestSuite
+document.erp5.TestSuiteRepository
 document.erp5.ERP5ScalabilityDistributor
 document.erp5.SlapOSAgentDistributor
