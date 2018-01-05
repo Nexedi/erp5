@@ -1128,10 +1128,17 @@ class BusinessPropertyItem(XMLObject):
     """
     Overriden function so that we can update attributes for BusinessItem objects
     """
-    return super(BusinessPropertyItem, self)._edit(item_path=item_path,
-                                                   item_sign=item_sign,
-                                                   item_layer=item_layer,
-                                                   **kw)
+
+    super(BusinessPropertyItem, self)._edit(item_path=item_path,
+                                            item_sign=item_sign,
+                                            item_layer=item_layer,
+                                            **kw)
+
+    # Build the object here, if the item_path has been added/updated
+    # XXX: We also need to add attribute to ensure that this doesn't happen
+    # while in tests or while creating them on the fly
+    if 'item_path' in self._v_modified_property_dict:
+      self.build(self.aq_parent)
 
   def build(self, context, **kw):
     p = context.getPortalObject()
@@ -1143,6 +1150,35 @@ class BusinessPropertyItem(XMLObject):
     self.setProperty('item_property_name', property_id)
     self.setProperty('item_property_type', property_type)
     self.setProperty('item_property_value', property_value)
+
+  def updateFollowUpPathList(self):
+    """
+    Update the path list for Follow Up Business Template V2
+    """
+    template = self.getFollowUpValue()
+    # Check if the template has already been set or not
+    if template:
+      # Copy the path list for Business Template V2 and update it with new path
+      item_path_list = template.getItemPathList()[:]
+      old_item_path = self._v_modified_property_dict.get('item_path')
+      if old_item_path and item_path_list:
+        if old_item_path in item_path_list:
+          for idx, item in enumerate(item_path_list):
+            if item == old_item_path:
+              item_path_list[idx] = self.getProperty('item_path')
+        else:
+          item_path_list.append(self.getProperty('item_path'))
+      else:
+        # If there is no old_item_path or if path_list is empty, we can just
+        # append the new_path in path_list
+        item_path_list.append(self.getProperty('item_path'))
+
+      # Update the template with new path list
+      template.setItemPathList(item_path_list)
+
+    else:
+      # Complain loudly if the follow_up is not there
+      raise ValueError('Follow Up Business Template V2 is not set or defined yet')
 
   def install(self, context, *args):
     # Get portal object
