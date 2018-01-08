@@ -1,6 +1,6 @@
 """
 ================================================================================
-Print letter in any of the supported formats
+Update the letter dialog with parameters manually entered
 ================================================================================
 """
 # parameters (*default)
@@ -8,7 +8,8 @@ Print letter in any of the supported formats
 # REQUEST:                  request object
 # format:                   output format
 # portal_skin:              skin to use for output
-# batch_mode:               used for tests
+# cancel_url:               url to cancel dialog
+# dialog_id:                id of current dialog
 
 # display_source_address    display source (!) adress in adress field or not*
 # display_svg               display images in svg or png*
@@ -23,24 +24,25 @@ Print letter in any of the supported formats
 # override_destination_person_title: overide event recipient
 # override_date             to use instead of current date
 
-new_skin_name = "Letter"
-context.getPortalObject().portal_skins.changeSkin(new_skin_name)
-if REQUEST is None:
-  REQUEST = context.REQUEST
-REQUEST.set('portal_skin', new_skin_name)
-
-return context.Letter_viewAsLetter(
-  format=format,
-  display_head=display_head,
-  display_svg=display_svg,
-  display_source_address=display_source_address,
-  override_source_organisation_title=override_source_organisation_title,
-  override_source_person_title=override_source_person_title,
-  override_destination_organisation_title=override_destination_organisation_title,
-  override_destination_person_title=override_destination_person_title,
-  override_date=override_date,
-  document_save=document_save,
-  document_download=document_download,
-  batch_mode=batch_mode,
-  **kw
-)
+from Products.ERP5Type.Message import translateString
+if dialog_id is not None:
+  return context.Base_redirect(
+    dialog_id,
+    keep_items = dict(
+      portal_status_message=translateString('Preview updated.'),
+      cancel_url=cancel_url,
+      portal_skin=portal_skin,
+      override_source_organisation_title=override_source_organisation_title,
+      override_source_person_title=override_source_person_title,
+      override_destination_organisation_title=override_destination_organisation_title,
+      override_destination_person_title=override_destination_person_title,
+      override_date=override_date,
+      format=format,
+      display_head=display_head,
+      display_svg=display_svg,
+      display_source_address=display_source_address,
+      document_download=document_download,
+      document_save=document_save,
+      **kw
+    )
+  )

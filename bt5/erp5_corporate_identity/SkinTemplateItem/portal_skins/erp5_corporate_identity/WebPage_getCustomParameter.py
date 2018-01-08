@@ -8,9 +8,9 @@ Return custom hardcoded parameters
 # parameter                          Parameter to lookup
 
 if parameter == "fallback_image":
-  return "common_images/fallback.png"
+  return "template_images/fallback.png"
 if parameter == "default_theme_css_url":
-  return "default_themes/themes.css"
+  return "template_themes/themes.css"
 if parameter == "wkhtmltopdf_rendering_fix":
 
   return """

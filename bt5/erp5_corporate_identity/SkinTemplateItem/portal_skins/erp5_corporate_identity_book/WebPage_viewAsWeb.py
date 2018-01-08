@@ -3,6 +3,45 @@
 View WebPage as Book or Report
 ================================================================================
 """
+# parameters
+# ------------------------------------------------------------------------------
+# format                                output (html*, pdf)
+# batch_mode                            used for tests
+# transformation                        (not done)
+#
+# include_content_table                 include table of content (True*)
+# include_history_table                 include history/authors (XXX not done)
+# include_reference_table               include table of links/images/tables
+# include_linked_content                embed content of linked documents
+# include_report_content                embed content of report documents
+
+# document_download                     download file directly (None*)
+# document_save                         save file in document module (None*)
+# document_language                     language to generate report in
+# document_reference                    reference of document for report
+# document_version                      version of document for report
+# document_title                        document title for report
+#
+# override_source_person_title          use instead of the document author
+# override_source_organisation_title    use as publishing organisation
+# override_document_description         use as cover page description
+# override_document_short_title         use as cover page subtitle
+# override_document_title               use as cover page title
+# override_document_version             use as document version
+# override_document_reference           use as document reference
+# override_logo_reference               use as document header logo
+#
+# requirement_relative_url              XXX relate sale order to requirement
+#
+# report_name                           name of report to call
+# report_title                          title of report
+#
+# display_depth                         depth to report (eg sale order lines)
+# display_detail                        show details on report
+# display_comment                       show comments on report
+# display_header                        display report header
+# display_svg                           format for svg images (svg, png*)
+
 if context.REQUEST["portal_skin"] == "Report":
   return context.Base_viewAsReport(
     format=format,

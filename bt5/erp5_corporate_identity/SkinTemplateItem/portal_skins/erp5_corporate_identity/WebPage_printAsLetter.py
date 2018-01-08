@@ -5,9 +5,7 @@ Print letter in any of the supported formats
 """
 # parameters (*default)
 # ------------------------------------------------------------------------------
-# REQUEST:                  request object
 # format:                   output format
-# portal_skin:              skin to use for output
 # batch_mode:               used for tests
 
 # display_source_address    display source (!) adress in adress field or not*
@@ -22,12 +20,6 @@ Print letter in any of the supported formats
 # override_destination_organisation_title: override event recipient subordinate
 # override_destination_person_title: overide event recipient
 # override_date             to use instead of current date
-
-new_skin_name = "Letter"
-context.getPortalObject().portal_skins.changeSkin(new_skin_name)
-if REQUEST is None:
-  REQUEST = context.REQUEST
-REQUEST.set('portal_skin', new_skin_name)
 
 return context.Letter_viewAsLetter(
   format=format,

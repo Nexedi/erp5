@@ -1,0 +1,129 @@
+<tal:comment replace="nothing">
+"""
+================================================================================
+Creates the Letter footer section.
+================================================================================
+"""
+</tal:comment>
+<tal:block tal:define="letter_theme                         python: options.get('letter_theme');
+                       letter_title                         python: options.get('letter_title');
+                       letter_language                      python: options.get('letter_language');
+                       letter_theme_css_font_list           python: options.get('letter_theme_css_font_list');
+                       letter_theme_css_url                 python: options.get('letter_theme_css_url');
+                       letter_theme_logo_url                python: options.get('letter_theme_logo_url');
+                       letter_theme_logo_alt                python: options.get('letter_theme_logo_alt');
+                       letter_template_css_url              python: options.get('letter_template_css_url');
+                       letter_source_company                python: options.get('letter_source_company');
+                       letter_source_company_corporate_name python: options.get('letter_source_company_corporate_name');
+                       letter_source_company_capital        python: options.get('letter_source_company_capital');
+                       letter_source_company_capital_currency python: options.get('letter_source_company_capital_currency');
+                       letter_source_registered_court       python: options.get('letter_source_registered_court');
+                       letter_source_ape_code               python: options.get('letter_source_ape_code');
+                       letter_source_address                python: options.get('letter_source_address');
+                       letter_source_postal_code            python: options.get('letter_source_postal_code');
+                       letter_source_city                   python: options.get('letter_source_city');
+                       letter_source_country                python: options.get('letter_source_country');
+                       letter_source_vat                    python: options.get('letter_source_vat');
+                       letter_source_corporate_registration python: options.get('letter_source_corporate_registration');
+                       letter_source_phone                  python: options.get('letter_source_phone');
+                       letter_source_fax                    python: options.get('letter_source_fax');
+                       letter_source_mail                   python: options.get('letter_source_mail');
+                       letter_source_website                python: options.get('letter_source_website');
+                       letter_source_bank                   python: options.get('letter_source_bank');
+                       letter_source_bic                    python: options.get('letter_source_bic');
+                       letter_source_iban                   python: options.get('letter_source_iban');">
+  <!DOCTYPE html>
+  <html tal:attributes="class                               python: ''.join(['ci-', letter_theme, ' ci-', letter_language])">
+  <head>
+    <meta charset="utf-8">
+    <title tal:content="letter_title"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <tal:block tal:repeat="font_url letter_theme_css_font_list">
+      <link rel="stylesheet" tal:attributes="href font_url" />
+    </tal:block>
+    <link rel="stylesheet" tal:attributes="href letter_theme_css_url" />
+    <link rel="stylesheet" tal:attributes="href letter_template_css_url" />
+  </head>
+  <body class="ci-letter">
+    <tal:block metal:use-macro="context/Letter_createLetterFooter/macros/letter_footer" />
+  </body>
+</html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="letter_standard_footer">
+    <div class="ci-letter-footer ci-letter-footer-simple">
+	    <p class="ci-letter-simple-adress">
+	      <span tal:content="python: letter_source_company_corporate_name"></span>&nbsp;
+	      <tal:block tal:condition="python: letter_source_company_capital is not None">
+  	      <span i18n:translate="" i18n:domain="erp5_ui">au capital de</span>&nbsp;
+  	      <span tal:content="python: letter_source_company_capital"></span>
+  	      <span tal:content="python: letter_source_company_capital_currency or '&euro;'"></span>,
+  	     </tal:block>
+  	     <span tal:content="python: ''.join([letter_source_address, ', ', letter_source_postal_code, ' ', letter_source_city])"></span>
+  	     <br/>
+  	     <tal:block tal:condition="python: letter_source_registered_court is not None">
+  	      <span tal:content="python: letter_source_registered_court"></span> -
+  	     </tal:block>
+  	     <tal:block tal:condition="python: letter_source_ape_code is not None">
+  	      <span i18n:translate="" i18n:domain="erp5_ui">APE</span> : <span tal:content="letter_source_ape_code"></span> -
+  	     </tal:block>
+         <span i18n:translate="" i18n:domain="erp5_ui">N° TVA</span> : <span tal:content="python: letter_source_vat"></span>
+         <br/>
+         <span>
+          <b i18n:translate="" i18n:domain="erp5_ui">Email:</b>
+          <a tal:attributes="href python: ''.join(['mailto:', letter_source_mail])">
+            <b tal:content="letter_source_mail"></b>
+          </a>
+        </span> - <span>
+          <b i18n:translate="" i18n:domain="erp5_ui">Tel</b><b>:</b> <b tal:content="python: letter_source_phone"></b>
+        </span>
+	    </p>
+    </div>
+  </tal:block>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="letter_footer">
+    <div class="ci-letter-footer">
+	    <table>
+	      <thead>
+	        <tr>
+	          <th></th>
+	          <th></th>
+	          <th></th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	        <tr>
+	          <td>
+	            <div>
+	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Address</span><span tal:content="letter_source_company"></span>
+	              <span class="ci-letter-footer-title">&nbsp;</span><span tal:content="letter_source_address"></span>
+	              <span class="ci-letter-footer-title">&nbsp;</span><span tal:content="python: ''.join([letter_source_postal_code, ' ', letter_source_city])"></span>
+	              <span class="ci-letter-footer-title">&nbsp;</span><span tal:content="letter_source_country"></span>
+	            </div>
+	          </td>
+	          <td>
+	            <div>
+	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Telephone</span><span tal:content="letter_source_phone"></span>
+	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Telefax</span><span tal:content="letter_source_fax"></span>
+	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Email</span><span tal:content="letter_source_mail"></span>
+	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Web Adress</span><span tal:content="letter_source_website"></span>
+	            </div>
+	          </td>
+	          <td>
+	            <div>
+	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Bank Account</span><span tal:content="letter_source_bank"></span>
+	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">BIC</span><span tal:content="letter_source_bic"></span>
+	              <span class="ci-letter-footer-title"i18n:translate="" i18n:domain="erp5_ui">IBAN</span><span tal:content="letter_source_iban"></span>
+                <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">VAT ID</span><span tal:content="letter_source_vat"></span>
+	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Siren</span><span tal:content="letter_source_corporate_registration"></span>
+	            </div>
+	          </td>
+          </tr>
+	      </tbody>
+	    </table>
+	  </div>
+  </tal:block>
+</tal:block>

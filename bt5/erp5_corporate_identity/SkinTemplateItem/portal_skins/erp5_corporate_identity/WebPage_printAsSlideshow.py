@@ -1,6 +1,6 @@
 """
 ================================================================================
-Display WebPage as slideshow if called with portal_skin=Slide parameter
+Print and download slideshow in PDF format
 ================================================================================
 """
 # parameters   (* default)
@@ -23,8 +23,8 @@ return context.WebPage_viewAsSlideshow(
   display_svg=display_svg,
   override_source_organisation_title=override_source_organisation_title,
   override_logo_reference=override_logo_reference,
-  document_save=document_save,
-  document_download=document_download,
   batch_mode=batch_mode,
+  document_download=document_download,
+  document_save=document_save,
   **kw
 )
