@@ -31,8 +31,9 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Path import Path
+from Products.ERP5.mixin.periodicity import PeriodicityMixin
 
-class Supply(Path, XMLObject):
+class Supply(Path, XMLObject, PeriodicityMixin):
     """A Supply defines precise pricing and shipping conditions between
     two trade parties for a limited selection of traded products,
     components, services, etc. It can be used to represent price
@@ -57,6 +58,7 @@ class Supply(Path, XMLObject):
                       , PropertySheet.Movement
                       , PropertySheet.Delivery
                       , PropertySheet.Path
+                      , PropertySheet.Periodicity
                       , PropertySheet.FlowCapacity
                       , PropertySheet.Comment
                       )
