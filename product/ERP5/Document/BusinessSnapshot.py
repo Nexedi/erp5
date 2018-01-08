@@ -263,6 +263,14 @@ class BusinessSnapshot(Folder):
     portal_commits = portal.portal_commits
     installed_snapshot = portal_commits.getInstalledSnapshot()
 
+    # Create installation process, which have the changes to be made in the
+    # OFS during installation. Importantly, it should be a temp Business Snapshot
+    installation_process = portal_commits.newContent(
+                                                portal_type='Business Snapshot',
+                                                title='Installation Process',
+                                                temp_object=True,
+                                                )
+
     if installed_snaphot is not in (self, None):
 
       old_item_list = installed_snapshot.getItemList()
@@ -278,23 +286,15 @@ class BusinessSnapshot(Folder):
                            in old_state_path_list
                            if path not in new_state_path_list]
 
-      # Create installation process, which have the changes to be made in the
-      # OFS during installation. Importantly, it should be a temp Business Snapshot
-      installation_process = portal_commits.newContent(
-                                                  portal_type='Business Snapshot',
-                                                  title='Installation Process',
-                                                  temp_object=True,
-                                                  )
-
       # Add the removed path with negative sign in the to_install_path_item_list
       for path in removed_path_list:
         old_item = installed_snapshot.getBusinessItemByPath(path)
         # XXX: We can't change anything in the objects as they are just there
         # for comparison and in reality they are hardlinks
-        installation_state._setObject(old_item.id, old_item,
+        old_item = old_item._getCopy(installation_process)
+        installation_process._setObject(old_item.id, old_item,
                                       suppress_events=True)
         old_item.setProperty('item_sign', '-1')
-        to_install_path_item_list.append(old_item)
 
       # Path Item List for installation_process should be the difference between
       # old and new installation state
@@ -308,19 +308,21 @@ class BusinessSnapshot(Folder):
           # If the old_item exists, we match the hashes and if it differs, then
           # add the new item
           if old_item.getProperty('item_sha') != item.getProperty('item_sha'):
-            installation_state._setObject(to_be_installed_item.id,
+            to_be_installed_item = to_be_installed_item._getCopy(installation_process)
+            installation_process._setObject(to_be_installed_item.id,
                                           to_be_installed_item,
                                           suppress_events=True)
 
         else:
-          installation_state._setObject(item.id, item,
+          installation_process._setObject(item.id, item,
                                         suppress_events=True)
 
     # If there is no snapshot installed, everything in new snapshot should be
     # just compared to ZODB state.
     else:
-      # TODO: ADD COMPARISON FOR NO SNAPSHOT INSTALLED
-      pass
+      for item in self.objectValues():
+        item = item._getCopy(installation_process)
+        installation_process._setObject(item.id, item, suppress_event=True)
 
     change_list = self.compareOldStateToOFS(installation_process, installed_snapshot)
 
@@ -332,7 +334,7 @@ class BusinessSnapshot(Folder):
   def compareOldStateToOFS(self, installation_process, installed_snapshot):
 
     # Get the paths about which we are concerned about
-    to_update_path_list = installation_process.getPathList()
+    to_update_path_list = installation_process.getItemPathList()
     portal = self.getPortalObject()
 
     # List to store what changes will be done to which path. Here we compare
@@ -346,37 +348,6 @@ class BusinessSnapshot(Folder):
         # Better to check for status of BusinessPatchItem separately as it
         # can contain both BusinessItem as well as BusinessPropertyItem
         new_item = installation_process.getBusinessItemByPath(path)
-        if new_item.getPortalType() == 'Business Patch Item':
-          patch_item = new_item
-          # If the value is in ZODB, then compare it to the old_value
-          if '#' in str(path):
-            isProperty = True
-            relative_url, property_id = path.split('#')
-            obj = portal.restrictedTraverse(relative_url)
-            property_value = obj.getProperty(property_id)
-            if not property_value:
-              raise KeyError
-            property_type = obj.getPropertyType(property_id)
-            obj = property_value
-          else:
-            # If the path is path on an object and not of a property
-            isProperty = False
-            obj = portal.restictedTraverse(path)
-
-          obj_sha = self.calculateComparableHash(obj, isProperty)
-
-          # Get the sha of new_item from the BusinessPatchItem object
-          new_item_sha = patch_item._getOb('new_item').getProperty('item_sha')
-          old_item_sha = patch_item._getOb('old_item').getProperty('item_sha')
-
-          if new_item_sha == obj_sha:
-            # If the new_item in the patch is same as the one at ZODB, do
-            # nothing
-            continue
-          elif old_item_sha == obj_sha:
-            change_list.append((patch_item._getOb('new_item'), 'Adding'))
-          else:
-            change_list.append((patch_item._getOb('new_item'), 'Removing'))
 
         if '#' in str(path):
           isProperty = True
@@ -410,9 +381,12 @@ class BusinessSnapshot(Folder):
         obj_sha = self.calculateComparableHash(obj, isProperty)
 
         # Get item at old state
-        old_item = installed_snapshot.getBusinessItemByPath(path)
-        # Check if there is an object at old state at this path
+        if not installed_snapshot:
+          old_item = None
+        else:
+          old_item = installed_snapshot.getBusinessItemByPath(path)
 
+        # Check if there is an object at old state at this path
         if old_item:
           # Compare hash with ZODB
 
@@ -461,9 +435,12 @@ class BusinessSnapshot(Folder):
 
       except (AttributeError, KeyError) as e:
         # Get item at old state
-        old_item = installed_snapshot.getBusinessItemByPath(path)
-        # Check if there is an object at old state at this path
+        if not installed_snapshot:
+          old_item = None
+        else:
+          old_item = installed_snapshot.getBusinessItemByPath(path)
 
+        # Check if there is an object at old state at this path
         if old_item:
           # This means that the user had removed the object at this path
           # Check what the sign is for the new_item
