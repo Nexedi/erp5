@@ -8068,8 +8068,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     copied, = template_tool.manage_pasteObjects(cb_data)
     copied_bt = template_tool._getOb(copied['new_id'])
 
-    copied_bt.migrateSourceCodeFromFilesystem(
-      {self.component_portal_type: {sequence['document_title']: 'erp5'}})
+    copied_bt.migrateSourceCodeFromFilesystem(version='erp5')
 
     sequence.edit(current_bt=copied_bt)
 
