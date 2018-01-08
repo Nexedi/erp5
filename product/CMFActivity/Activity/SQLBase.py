@@ -28,6 +28,8 @@
 
 import sys
 import transaction
+from random import getrandbits
+from MySQLdb.constants.ER import DUP_ENTRY
 from DateTime import DateTime
 from Shared.DC.ZRDB.Results import Results
 from Shared.DC.ZRDB.DA import DatabaseError
@@ -43,6 +45,19 @@ from Products.CMFActivity.Errors import ActivityFlushError
 # TODO: Limit by size in bytes instead of number of rows.
 MAX_MESSAGE_LIST_SIZE = 100
 INVOKE_ERROR_STATE = -2
+# Activity uids are stored as 64 bits unsigned integers.
+# But do not trust database to reliably handle the MSb.
+# The cost of doing so is extremely low: assuming a busy activity table having
+# one million activities, the probability of triggering a conflict when
+# inserting one activity with 64 bits uid is 0.5e-13. With 63 bits it
+# increases to 1e-13, which is still very low.
+UID_SAFE_BITSIZE = 63
+# Inserting an activity batch of 100 activities among one million existing
+# activities has a probability of failing of 1e-11. While it should be low
+# enough, retries can help lower that. Try 10 times, which should be short
+# enough while yielding one order of magnitude collision probability
+# improvement.
+UID_ALLOCATION_TRY_COUNT = 10
 
 def sort_message_key(message):
   # same sort key as in SQLBase.getMessageList
@@ -122,8 +137,6 @@ class SQLBase(Queue):
     portal = activity_tool.getPortalObject()
     for i in xrange(0, len(registered_message_list), MAX_MESSAGE_LIST_SIZE):
       message_list = registered_message_list[i:i+MAX_MESSAGE_LIST_SIZE]
-      uid_list = portal.portal_ids.generateNewIdList(self.uid_group,
-        id_count=len(message_list), id_generator='uid')
       path_list = ['/'.join(m.object_path) for m in message_list]
       active_process_uid_list = [m.active_process_uid for m in message_list]
       method_id_list = [m.method_id for m in message_list]
@@ -137,19 +150,31 @@ class SQLBase(Queue):
       for m in message_list:
         m.order_validation_text = x = self.getOrderValidationText(m)
         processing_node_list.append(0 if x == 'none' else -1)
-      portal.SQLBase_writeMessageList(
-        table=self.sql_table,
-        uid_list=uid_list,
-        path_list=path_list,
-        active_process_uid_list=active_process_uid_list,
-        method_id_list=method_id_list,
-        priority_list=priority_list,
-        message_list=map(Message.dump, message_list),
-        group_method_id_list=group_method_id_list,
-        date_list=date_list,
-        tag_list=tag_list,
-        processing_node_list=processing_node_list,
-        serialization_tag_list=serialization_tag_list)
+      for _ in xrange(UID_ALLOCATION_TRY_COUNT):
+        try:
+          portal.SQLBase_writeMessageList(
+            table=self.sql_table,
+            uid_list=[
+              getrandbits(UID_SAFE_BITSIZE)
+              for _ in xrange(len(message_list))
+            ],
+            path_list=path_list,
+            active_process_uid_list=active_process_uid_list,
+            method_id_list=method_id_list,
+            priority_list=priority_list,
+            message_list=map(Message.dump, message_list),
+            group_method_id_list=group_method_id_list,
+            date_list=date_list,
+            tag_list=tag_list,
+            processing_node_list=processing_node_list,
+            serialization_tag_list=serialization_tag_list)
+        except MySQLdb.IntegrityError, (code, _):
+          if code != DUP_ENTRY:
+            raise
+        else:
+          break
+      else:
+        raise ValueError("Maximum retry for SQLBase_writeMessageList reached")
 
   def getNow(self, context):
     """
