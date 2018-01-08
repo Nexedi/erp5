@@ -257,6 +257,9 @@ a:focus {
   }
 }
 /**********************************************
+* Button
+**********************************************/
+/**********************************************
 * Preformatted
 **********************************************/
 pre,
@@ -1411,12 +1414,15 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
   border-radius: 0.325em;
   margin-right: 6pt;
 }
-.document_table table tfoot .ui-controlgroup-controls a:last-of-type {
-  margin-right: 0;
+.document_table table tfoot .ui-controlgroup-controls a::before {
+  margin-right: 6pt;
 }
 .document_table table tfoot .ui-controlgroup-controls a:hover,
 .document_table table tfoot .ui-controlgroup-controls a:active {
   background-color: #e0e0e0;
+}
+.document_table table tfoot .ui-controlgroup-controls a:last-of-type {
+  margin-right: 0;
 }
 @media not screen and (min-width: 45em) {
   .document_table table tfoot .ui-controlgroup-controls a {
@@ -1424,9 +1430,6 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
     text-indent: -9999px;
     white-space: nowrap;
   }
-}
-.document_table table tfoot .ui-controlgroup-controls a::before {
-  margin-right: 6pt;
 }
 @media not screen and (min-width: 45em) {
   .document_table table tfoot .ui-controlgroup-controls a::before {
