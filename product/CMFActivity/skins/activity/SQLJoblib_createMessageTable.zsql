@@ -9,7 +9,7 @@ class_file:
 </dtml-comment>
 <params></params>
 CREATE TABLE message_job (
-  `uid` INT UNSIGNED NOT NULL,
+  `uid` BIGINT UNSIGNED NOT NULL,
   `date` DATETIME NOT NULL,
   `path` VARCHAR(255) NOT NULL,
   `active_process_uid` INT UNSIGNED NULL,
