@@ -92,7 +92,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: portal.Base_checkPermission(\'portal_components\', \'Add portal content\') and context.getInstallationState() != \'installed\' and [id_ for id_ in (context.getTemplateExtensionIdList() + context.getTemplateDocumentIdList() + context.getTemplateTestIdList()) if not id_.startswith(\'extension.\') and not id_.startswith(\'document.\') and not id_.startswith(\'test.\') ]</string> </value>
+            <value> <string>python: portal.Base_checkPermission(\'portal_components\', \'Add portal content\') and context.getInstallationState() != \'installed\'</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -404,6 +404,8 @@
                           <string>Name</string>
                         </tuple>
                         <tuple>
+                          <string>source_reference</string>
+                          <string>Module</string>
                         </tuple>
                         <tuple>
                           <string>portal_type</string>
@@ -546,7 +548,7 @@
                 </item>
                 <item>
                     <key> <string>select</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
@@ -561,7 +563,12 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>None</string>
+                          <string>None</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
