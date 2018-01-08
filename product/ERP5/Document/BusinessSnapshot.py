@@ -69,6 +69,11 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 
 class BusinessSnapshot(Folder):
+  """
+  An installed/replaced snaphot should always be reduced, i.e, there can't be
+  more than one item on same path because it doesn't denote the state if there
+  is multiple on same path.
+  """
 
   meta_type = 'ERP5 Business Snashot'
   portal_type = 'Business Snapshot'
@@ -127,6 +132,16 @@ class BusinessSnapshot(Folder):
     Business Patch item at the given snapshot.
     """
     return [l.getProperty('item_path') for l in self.getItemList()]
+
+  def getBusinessItemByPath(self, path):
+    """
+    Returns the Item given the path of item. Returns None if it doesn't exist
+    """
+    item_list = self.getItemList()
+    try:
+      return [l for l in item_list if l.getProperty('item_path') == path][0]
+    except KeyError:
+      return
 
   def getLastSnapshot(self):
     """
@@ -224,6 +239,357 @@ class BusinessSnapshot(Folder):
     for item in new_item_list:
       self._setObject(item.id, item, suppress_events=True)
 
+  def preinstall(self):
+    """
+    Compares the last installed snapshot, to be installed snapshot and the
+    state at ZODB, and then returns the modification list
+
+    Steps:
+    1. Get paths for items in old and new snapshot
+    2. Create a temporary snapshot(called 'installation process') for items
+      which are going to be added, removed, modified
+    3. Add the list of items which has been removed from last snaphshot in the
+      temporary snapshot while changing their item_sign to -1.
+    4. For the items which are in both the snapshot, we have 2 process:
+        - No modification: Add new item to temporary snapshot directly
+        - Modification: Add old item to temporary snapshot
+    5. Using installation process(items needed to be installed),
+      installed_snapshot and the items at ZODB, we decide what to install.
+    """
+    modified_list = []
+    zodb_modified_list = []
+
+    portal = self.getPortalObject()
+    portal_commits = portal.portal_commits
+    installed_snapshot = portal_commits.getInstalledSnapshot()
+
+    if installed_snaphot is not in (self, None):
+
+      old_item_list = installed_snapshot.getItemList()
+      old_state_path_list = installed_snapshot.getItemPathList()
+
+      new_item_list = self.getItemList()
+      new_state_path_list = self.getItemPathList()
+
+      to_install_path_item_list = []
+
+      # Get the path which has been removed in new installation_state
+      removed_path_list = [path for path
+                           in old_state_path_list
+                           if path not in new_state_path_list]
+
+      # Create installation process, which have the changes to be made in the
+      # OFS during installation. Importantly, it should be a temp Business Snapshot
+      installation_process = portal_commits.newContent(
+                                                  portal_type='Business Snapshot',
+                                                  title='Installation Process',
+                                                  temp_object=True,
+                                                  )
+
+      # Add the removed path with negative sign in the to_install_path_item_list
+      for path in removed_path_list:
+        old_item = installed_snapshot.getBusinessItemByPath(path)
+        # XXX: We can't change anything in the objects as they are just there
+        # for comparison and in reality they are hardlinks
+        installation_state._setObject(old_item.id, old_item,
+                                      suppress_events=True)
+        old_item.setProperty('item_sign', '-1')
+        to_install_path_item_list.append(old_item)
+
+      # Path Item List for installation_process should be the difference between
+      # old and new installation state
+      for item in new_installation_state.objectValues():
+
+        old_item = installed_snapshot.getBusinessItemByPath(item.getProperty('item_path'))
+        self.updateHash(item)
+
+        if old_item:
+          to_be_installed_item = item
+          # If the old_item exists, we match the hashes and if it differs, then
+          # add the new item
+          if old_item.getProperty('item_sha') != item.getProperty('item_sha'):
+            installation_state._setObject(to_be_installed_item.id,
+                                          to_be_installed_item,
+                                          suppress_events=True)
+
+        else:
+          installation_state._setObject(item.id, item,
+                                        suppress_events=True)
+
+    # If there is no snapshot installed, everything in new snapshot should be
+    # just compared to ZODB state.
+    else:
+      # TODO: ADD COMPARISON FOR NO SNAPSHOT INSTALLED
+      pass
+
+    change_list = self.compareOldStateToOFS(installation_process, installed_snapshot)
+
+    if change_list:
+      change_list = [(l[0].item_path, l[1]) for l in change_list]
+
+    return change_list
+
+  def compareOldStateToOFS(self, installation_process, installed_snapshot):
+
+    # Get the paths about which we are concerned about
+    to_update_path_list = installation_process.getPathList()
+    portal = self.getPortalObject()
+
+    # List to store what changes will be done to which path. Here we compare
+    # with all the states (old version, new version and state of object at ZODB)
+    change_list = []
+
+    to_update_path_list = self.sortPathList(to_update_path_list)
+
+    for path in to_update_path_list:
+      try:
+        # Better to check for status of BusinessPatchItem separately as it
+        # can contain both BusinessItem as well as BusinessPropertyItem
+        new_item = installation_process.getBusinessItemByPath(path)
+        if new_item.getPortalType() == 'Business Patch Item':
+          patch_item = new_item
+          # If the value is in ZODB, then compare it to the old_value
+          if '#' in str(path):
+            isProperty = True
+            relative_url, property_id = path.split('#')
+            obj = portal.restrictedTraverse(relative_url)
+            property_value = obj.getProperty(property_id)
+            if not property_value:
+              raise KeyError
+            property_type = obj.getPropertyType(property_id)
+            obj = property_value
+          else:
+            # If the path is path on an object and not of a property
+            isProperty = False
+            obj = portal.restictedTraverse(path)
+
+          obj_sha = self.calculateComparableHash(obj, isProperty)
+
+          # Get the sha of new_item from the BusinessPatchItem object
+          new_item_sha = patch_item._getOb('new_item').getProperty('item_sha')
+          old_item_sha = patch_item._getOb('old_item').getProperty('item_sha')
+
+          if new_item_sha == obj_sha:
+            # If the new_item in the patch is same as the one at ZODB, do
+            # nothing
+            continue
+          elif old_item_sha == obj_sha:
+            change_list.append((patch_item._getOb('new_item'), 'Adding'))
+          else:
+            change_list.append((patch_item._getOb('new_item'), 'Removing'))
+
+        if '#' in str(path):
+          isProperty = True
+          relative_url, property_id = path.split('#')
+          obj = portal.restrictedTraverse(relative_url)
+          property_value = obj.getProperty(property_id)
+
+          # If the value at ZODB for the property is none, raise KeyError
+          # This is important to have compatibility between the way we check
+          # path as well as property. Otherwise, if we install a new property,
+          # we are always be getting an Error that there is change made at
+          # ZODB for this property
+          if not property_value:
+            raise KeyError
+          property_type = obj.getPropertyType(property_id)
+          obj = property_value
+        else:
+          isProperty = False
+          # XXX: Hardcoding because of problem with 'resource' trying to access
+          # the resource via acqusition. Should be removed completely before
+          # merging (DONT PUSH THIS)
+          if path == 'portal_categories/resource':
+            path_list = path.split('/')
+            container_path = path_list[:-1]
+            object_id = path_list[-1]
+            container = portal.restrictedTraverse(container_path)
+            obj = container._getOb(object_id)
+          else:
+            obj = portal.restrictedTraverse(path)
+
+        obj_sha = self.calculateComparableHash(obj, isProperty)
+
+        # Get item at old state
+        old_item = installed_snapshot.getBusinessItemByPath(path)
+        # Check if there is an object at old state at this path
+
+        if old_item:
+          # Compare hash with ZODB
+
+          if old_item.getProperty('item_sha') == obj_sha:
+            # No change at ZODB on old item, so get the new item
+            new_item = installation_process.getBusinessItemByPath(path)
+            # Compare new item hash with ZODB
+
+            if new_item.getProperty('item_sha') == obj_sha:
+              if int(new_item.getProperty('item_sign')) == -1:
+                # If the sign is negative, remove the value from the path
+                change_list.append((new_item, 'Removing'))
+              else:
+                # If same hash, and +1 sign, do nothing
+                continue
+
+            else:
+              # Install the new_item
+              change_list.append((new_item, 'Adding'))
+
+          else:
+            # Change at ZODB, so get the new item
+            new_item = installation_process.getBusinessItemByPath(path)
+            # Compare new item hash with ZODB
+
+            if new_item.getProperty('item_sha') == obj_sha:
+              # If same hash, do nothing
+              continue
+
+            else:
+              # Trying to update change at ZODB
+              change_list.append((new_item, 'Updating'))
+
+        else:
+          # Object created at ZODB by the user
+          # Compare with the new_item
+
+          new_item = installation_process.getBusinessItemByPath(path)
+          if new_item.getProperty('item_sha') == obj_sha:
+            # If same hash, do nothing
+            continue
+
+          else:
+            # Trying to update change at ZODB
+            change_list.append((new_item, 'Updating'))
+
+      except (AttributeError, KeyError) as e:
+        # Get item at old state
+        old_item = installed_snapshot.getBusinessItemByPath(path)
+        # Check if there is an object at old state at this path
+
+        if old_item:
+          # This means that the user had removed the object at this path
+          # Check what the sign is for the new_item
+          new_item = installation_process.getBusinessItemByPath(path)
+          # Check sign of new_item
+
+          if int(new_item.getProperty('item_sign')) == 1:
+            # Object at ZODB has been removed by the user
+            change_list.append((new_item, 'Adding'))
+
+        else:
+          # If there is  no item at old state, install the new_item
+          new_item = installation_process.getBusinessItemByPath(path)
+          # XXX: Hack for not trying to install the sub-objects from zexp,
+          # This should rather be implemented while exporting the object,
+          # where we shouldn't export sub-objects in the zexp
+          if not isProperty:
+            try:
+              value =  new_item.objectValues()[0]
+            except IndexError:
+              continue
+          # Installing a new item
+          change_list.append((new_item, 'Adding'))
+
+    return change_list
+
+  def calculateComparableHash(self, object, isProperty=False):
+    """
+    Remove some attributes before comparing hashses
+    and return hash of the comparable object dict, in case the object is
+    an erp5 object.
+
+    Use shallow copy of the dict of the object at ZODB after removing
+    attributes which changes at small updation, like workflow_history,
+    uid, volatile attributes(which starts with _v)
+
+    # XXX: Comparable hash shouldn't be used for BusinessPatchItem as whole.
+    We can compare the old_value and new_value, but there shouldn't be hash
+    for the Patch Item.
+    """
+    if isProperty:
+      obj_dict = object
+      # Have compatibilty between tuples and list while comparing as we face
+      # this situation a lot especially for list type properties
+      if isinstance(obj_dict, list):
+        obj_dict = tuple(obj_dict)
+    else:
+
+      klass = object.__class__
+      classname = klass.__name__
+      obj_dict = object.__dict__.copy()
+
+      # If the dict is empty, do calculate hash of None as it stays same on
+      # one platform and in any case its impossiblt to move live python
+      # objects from one seeion to another
+      if not bool(obj_dict):
+        return hash(None)
+
+      attr_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
+                  'last_id', 'uid', '_mt_index', '_count', '_tree',
+                  '__ac_local_roles__', '__ac_local_roles_group_id_dict__',
+                  'workflow_history', 'subject_set_uid_dict', 'security_uid_dict',
+                  'filter_dict', '_max_uid'}
+
+      attr_set.update(('isIndexable',))
+
+      if classname in ('File', 'Image'):
+        attr_set.update(('_EtagSupport__etag', 'size'))
+      elif classname == 'Types Tool' and klass.__module__ == 'erp5.portal_type':
+        attr_set.add('type_provider_list')
+
+      for attr in object.__dict__.keys():
+        if attr in attr_set or attr.startswith('_cache_cookie_') or attr.startswith('_v'):
+          try:
+            del obj_dict[attr]
+          except AttributeError:
+            # XXX: Continue in cases where we want to delete some properties which
+            # are not in attribute list
+            # Raise an error
+            continue
+
+        # Special case for configuration instance attributes
+        if attr in ['_config', '_config_metadata']:
+          import collections
+          # Order the dictionary so that comparison can be correct
+          obj_dict[attr] = collections.OrderedDict(sorted(obj_dict[attr].items()))
+          if 'valid_tags' in obj_dict[attr]:
+            try:
+              obj_dict[attr]['valid_tags'] = collections.OrderedDict(sorted(obj_dict[attr]['valid_tags'].items()))
+            except AttributeError:
+              # This can occur in case the valid_tag object is PersistentList
+              pass
+
+      if 'data' in obj_dict:
+        try:
+          obj_dict['data'] = obj_dict.get('data').__dict__
+        except AttributeError:
+          pass
+
+    obj_sha = hash(pprint.pformat(obj_dict))
+    return obj_sha
+
+  def sortPathList(self, path_list):
+    """
+    Custom sort for path_list according to the priorities of paths
+    """
+    def comparePath(path):
+      split_path_list = path.split('/')
+      # Paths with property item should have the least priority as they should
+      # be installed after installing the object only
+      if '#' in path:
+        return 11
+      if len(split_path_list) == 2 and split_path_list[0] in ('portal_types', 'portal_categories'):
+        return 1
+      # portal_transforms objects needs portal_components installed first so
+      # as to register the modules
+      if len(split_path_list) == 2 and split_path_list[0] == 'portal_transforms':
+        return 12
+      if len(split_path_list) > 2:
+        return 10
+      if len(split_path_list) == 1:
+        return 2
+      return 5
+
+    return sorted(path_list, key=comparePath)
+
   def install(self):
     """
     Install the sub-objects in the commit
@@ -233,7 +599,7 @@ class BusinessSnapshot(Folder):
     # While installing a new snapshot, last snapshot state should be
     # changed to 'replaced'
     last_snapshot = self.getLastSnapshot()
-    if last_snapshot not in [None, self]:
+    if last_snapshot not in (None, self):
       if site.portal_workflow.isTransitionPossible(
           last_snapshot, 'replace'):
         last_snapshot.replace(self)
