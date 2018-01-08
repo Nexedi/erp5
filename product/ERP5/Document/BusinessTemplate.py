@@ -6344,15 +6344,67 @@ Business Template is a set of definitions, such as skins, portal types and categ
       setattr(self, 'template_portal_type_base_category', ())
       return
 
+    @staticmethod
+    def _getAllFilesystemModuleFromPortalTypeIdList(portal_type_id_list):
+      import erp5.portal_type
+      import inspect
+      import Products.ERP5Type
+
+      product_base_path = inspect.getfile(Products.ERP5Type).rsplit('/', 2)[0]
+      seen_cls_set = set()
+      for portal_type in portal_type_id_list:
+        portal_type_cls = getattr(erp5.portal_type, portal_type)
+        # Calling mro() would not load the class...
+        portal_type_cls.loadClass()
+
+        for cls in portal_type_cls.mro():
+          if (not cls.__module__.startswith('erp5.') and
+              cls not in seen_cls_set):
+            seen_cls_set.add(cls)
+            try:
+              cls_path = inspect.getfile(cls)
+            except TypeError:
+              pass
+            else:
+              if cls_path.startswith(product_base_path):
+                cls_name = cls.__name__
+                cls_module = cls.__module__
+                yield cls_name, cls_module, cls_path
+
     security.declareProtected(Permissions.ManagePortal,
                               'getMigratableSourceCodeFromFilesystemList')
-    def getMigratableSourceCodeFromFilesystemList(self, *args, **kwargs):
+    def getMigratableSourceCodeFromFilesystemList(self,
+                                                  current_bt_only=False,
+                                                  *args,
+                                                  **kwargs):
       """
       Return the list of Business Template {Extension, Document, Test} Documents
       and Products Documents which can be migrated to ZODB Components.
       """
+      import inspect
+
+      bt_migratable_uid_list = []
       migratable_component_list = []
-      component_tool = self.getPortalObject().portal_components
+      portal = self.getPortalObject()
+      component_tool = portal.portal_components
+
+      from base64 import b64encode
+      import cPickle
+      def __newTempComponent(portal_type, reference, source_reference, migrate=False):
+        uid = b64encode("%s|%s|%s" % (portal_type, reference, source_reference))
+        if migrate:
+          bt_migratable_uid_list.append(uid)
+
+        obj = component_tool.newContent(temp_object=1,
+                                        id="temp_" + uid,
+                                        uid=uid,
+                                        portal_type=portal_type,
+                                        reference=reference,
+                                        source_reference=source_reference)
+
+        migratable_component_list.append(obj)
+
+        return obj
 
       for portal_type, id_list in (
           ('Document Component', self.getTemplateDocumentIdList()),
@@ -6361,14 +6413,56 @@ Business Template is a set of definitions, such as skins, portal types and categ
         for id_ in id_list:
           existing_component = getattr(component_tool, id_, None)
           if existing_component is None:
-            obj = component_tool.newContent(id="tmp_source_code_migration_%s" % id_,
-                                            portal_type=portal_type,
-                                            reference=id_,
-                                            temp_object=1)
+            obj = __newTempComponent(portal_type=portal_type,
+                                     reference=id_,
+                                     source_reference="%s:%s" % (self.getTitle(), id_),
+                                     migrate=True)
 
-            migratable_component_list.append(obj)
+      # Inspect Portal Types classes mro() of this Business Template to find
+      # Products Documents to migrate by default
+      portal_type_module_set = set(
+        self._getAllFilesystemModuleFromPortalTypeIdList(
+          self.getTemplatePortalTypeIdList()))
 
-      return sorted(migratable_component_list, key=lambda o: o.getReference())
+      # XXX: Only migrate Documents in ERP5 for the moment...
+      import Products.ERP5.Document
+      for name, obj in Products.ERP5.Document.__dict__.iteritems():
+        if not name.startswith('_') and inspect.ismodule(obj):
+          source_reference = obj.__name__
+
+          migrate = ((name, source_reference, inspect.getfile(obj))
+                     in portal_type_module_set)
+          if current_bt_only and not migrate:
+            continue
+
+          obj = __newTempComponent(portal_type='Document Component',
+                                   reference=name,
+                                   source_reference=source_reference,
+                                   migrate=migrate)
+
+      if not current_bt_only:
+        import Products.ERP5.tests
+        from glob import iglob
+        for test_path in iglob("%s/test*.py" %
+                               inspect.getfile(Products.ERP5.tests).rsplit('/', 1)[0]):
+          reference = test_path.rsplit('/', 1)[1][:-3]
+          obj = __newTempComponent(portal_type='Test Component',
+                                   reference=reference,
+                                   source_reference="Products.ERP5.tests." + reference)
+
+      # Automatically select ZODB Components to be migrated in Migration Dialog
+      selection_name = kwargs.get('selection_name')
+      if (selection_name is not None and
+          # XXX: Do not set uids on {check,uncheck}All, better way?
+          self.REQUEST.get('listbox_uncheckAll') is None and
+          self.REQUEST.get('listbox_checkAll') is None):
+        portal.portal_selections.setSelectionCheckedUidsFor(selection_name,
+                                                            bt_migratable_uid_list)
+
+      return sorted(migratable_component_list,
+                    key=lambda o: (not o.getProperty('migrate', False),
+                                   o.getPortalType(),
+                                   o.getReference()))
 
     security.declareProtected(Permissions.ManagePortal,
                               'migrateSourceCodeFromFilesystem')
@@ -6384,16 +6478,46 @@ Business Template is a set of definitions, such as skins, portal types and categ
       component_tool = portal.portal_components
       failed_import_dict = {}
       list_selection_name = kw.get('list_selection_name')
+      migrated_product_module_set = set()
 
       template_document_id_set = set(self.getTemplateDocumentIdList())
       template_extension_id_set = set(self.getTemplateExtensionIdList())
       template_test_id_set = set(self.getTemplateTestIdList())
 
-      for temp_obj in self.getMigratableSourceCodeFromFilesystemList():
+      if list_selection_name is None:
+        temp_obj_list = self.getMigratableSourceCodeFromFilesystemList(
+          current_bt_only=True)
+      else:
+        from base64 import b64decode
+        import cPickle
+        temp_obj_list = []
+        for uid in portal.portal_selections.getSelectionCheckedUidsFor(
+            list_selection_name):
+          portal_type, reference, source_reference = b64decode(uid).split('|')
+          obj = component_tool.newContent(temp_object=1,
+                                          id="temp_" + uid,
+                                          uid=uid,
+                                          portal_type=portal_type,
+                                          reference=reference,
+                                          source_reference=source_reference)
+
+          temp_obj_list.append(obj)
+
+      if not temp_obj_list:
+        if list_selection_name is not None:
+          return self.Base_redirect(
+            'view',
+            keep_items={'portal_status_message': 'Nothing Selected.'})
+
+        return
+
+      for temp_obj in temp_obj_list:
+        source_reference = temp_obj.getSourceReference()
         try:
           obj = temp_obj.importFromFilesystem(component_tool,
                                               temp_obj.getReference(),
-                                              version)
+                                              version,
+                                              source_reference)
         except Exception, e:
           LOG("BusinessTemplate", WARNING,
               "Could not import component '%s' ('%s') from the filesystem" %
@@ -6412,7 +6536,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
           else:
             id_set = template_document_id_set
 
-          id_set.discard(temp_obj.getReference())
+          if source_reference.startswith('Products'):
+            migrated_product_module_set.add(source_reference)
+          else:
+            id_set.discard(temp_obj.getReference())
+
           id_set.add(obj.getId())
 
       if failed_import_dict:
@@ -6432,6 +6560,27 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self.setTemplateDocumentIdList(sorted(template_document_id_set))
       self.setTemplateExtensionIdList(sorted(template_extension_id_set))
       self.setTemplateTestIdList(sorted(template_test_id_set))
+
+      # This will trigger a reset so that Portal Types mro() can be checked
+      # after migration for filesystem Products modules still being used
+      transaction.commit()
+
+      still_used_list_dict = {}
+      for _, cls_module, _ in self._getAllFilesystemModuleFromPortalTypeIdList(
+          portal.portal_types.objectIds()):
+        if cls_module in migrated_product_module_set:
+          package, module = cls_module.rsplit('.', 1)
+          still_used_list_dict.setdefault(package, []).append(module)
+
+      if still_used_list_dict:
+        module_still_used_message = ', '.join(
+            [ "%s.{%s}" % (package, ','.join(sorted(module_list)))
+              for package, module_list in still_used_list_dict.iteritems() ])
+
+        LOG('BusinessTemplate',
+            WARNING,
+            "The following Documents are still being imported so code need to "
+            "be updated: " + module_still_used_message)
 
       if list_selection_name is not None:
         message = (
