@@ -103,10 +103,11 @@ if block_id == 'S21.G00.06':
   # Calculate the average manpower of all year, if month is December
   # XXX : should be fixed to be corrct when there exists  DSN reports for
   # different establishments or organisations, or replaced/cancelled DSN reports
+  social_declaration_module = portal.getDefaultModule("DSN Monthly Report")
   average_manpower = ''
   if context.getEffectiveDate().month() == 12:
     manpower_list = []
-    report_list = portal.dsn_module.searchFolder(effective_date=str(context.getEffectiveDate().year()))
+    report_list = social_declaration_module.searchFolder(effective_date=str(context.getEffectiveDate().year()))
     for month_report in report_list:
       manpower_list.append(int(month_report.getQuantity()))
     average_manpower = str(sum(manpower_list) / len(manpower_list))
