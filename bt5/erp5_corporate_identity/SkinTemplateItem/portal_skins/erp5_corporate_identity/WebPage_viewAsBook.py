@@ -81,7 +81,6 @@ book_rendering_fix = book.Base_getCustomTemplateParameter('wkhtmltopdf_rendering
 book_dialog_id = book_form.get('dialog_id', None)
 book_content = book.getTextContent()
 book_aggregate_list = []
-book_absolute_url = book.getAbsoluteUrl()
 book_revision = book.getRevision()
 book_modification_date = book.getModificationDate()
 book_language = book.Base_setToNone(param=book.getLanguage())
@@ -198,7 +197,7 @@ if book_include_content_table is not None:
   elif book_format == "html":
     book_content, book_table_of_content = book.WebPage_createTableOfContent(
       doc_content=book_content,
-      doc_url=book_absolute_url,
+      doc_reference=book_reference,
       doc_toc_title=book_translated_toc_title
     )
 

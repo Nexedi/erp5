@@ -62,7 +62,6 @@ doc_relative_url = doc.getRelativeUrl()
 doc_rendering_fix = doc.Base_getCustomTemplateParameter('wkhtmltopdf_rendering_fix') or blank
 doc_report = getattr(doc, doc_report_name)
 doc_aggregate_list = []
-doc_absolute_url = doc.getAbsoluteUrl()
 doc_revision = "1"
 doc_modification_date = DateTime()
 doc_short_date = doc_modification_date.strftime('%Y-%m-%d')
