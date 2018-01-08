@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Style" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -77,13 +77,11 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_nojqm.css</string> </value>
+            <value> <string>gadget_button_maximize.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_nojqm_css</string> </value>
+            <value> <string>rjs_gadget_button_maximize_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,7 +99,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Style</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -111,7 +109,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Gadget ERP5 CSS</string> </value>
+            <value> <string>Gadget Button Maximize</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -175,7 +173,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -197,7 +195,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1469697744.71</float>
+                        <float>1510755209.9</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -242,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.44237.61138.34884</string> </value>
+                <value> <string>964.10046.23984.2525</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1515407011.06</float>
+                        <float>1513355549.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -287,7 +285,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -317,7 +315,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1469697693.07</float>
+                        <float>1510750152.4</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

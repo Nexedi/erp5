@@ -18,3 +18,4 @@ test.erp5.testFunctionalRJSTranslation
 test.erp5.testFunctionalRJSLogoutTranslation
 test.erp5.testFunctionalRJSNotification
 test.erp5.testFunctionalRJSMatrixbox
+test.erp5.testFunctionalRJSEditorGadget
