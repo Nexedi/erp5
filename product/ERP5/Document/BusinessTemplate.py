@@ -6294,9 +6294,35 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return
 
     security.declareProtected(Permissions.ManagePortal,
+                              'getMigratableSourceCodeFromFilesystemList')
+    def getMigratableSourceCodeFromFilesystemList(self, *args, **kwargs):
+      """
+      Return the list of Business Template {Extension, Document, Test} Documents
+      and Products Documents which can be migrated to ZODB Components.
+      """
+      migratable_component_list = []
+      component_tool = self.getPortalObject().portal_components
+
+      for portal_type, id_list in (
+          ('Document Component', self.getTemplateDocumentIdList()),
+          ('Extension Component', self.getTemplateExtensionIdList()),
+          ('Test Component', self.getTemplateTestIdList())):
+        for id_ in id_list:
+          existing_component = getattr(component_tool, id_, None)
+          if existing_component is None:
+            obj = component_tool.newContent(id="tmp_source_code_migration_%s" % id_,
+                                            portal_type=portal_type,
+                                            reference=id_,
+                                            temp_object=1)
+
+            migratable_component_list.append(obj)
+
+      return sorted(migratable_component_list, key=lambda o: o.getReference())
+
+    security.declareProtected(Permissions.ManagePortal,
                               'migrateSourceCodeFromFilesystem')
     def migrateSourceCodeFromFilesystem(self,
-                                        component_portal_type_dict,
+                                        version,
                                         erase_existing=False,
                                         **kw):
       """
@@ -6304,43 +6330,67 @@ Business Template is a set of definitions, such as skins, portal types and categ
       appropriate importFromFilesystem according to the destination Portal
       Type and then update the Business Template property with migrated IDs
       """
-      if not component_portal_type_dict:
-        return {}
-
-      component_tool = self.getPortalObject().portal_components
+      portal = self.getPortalObject()
+      component_tool = portal.portal_components
       failed_import_dict = {}
-      def migrate(component_dict, component_class, template_id_list_method):
-        migrated_id_list = []
-        for reference, version in component_dict.iteritems():
-          try:
-            obj = component_class.importFromFilesystem(component_tool,
-                                                       reference,
-                                                       version,
-                                                       erase_existing)
-          except Exception, e:
-            failed_import_dict[reference] = str(e)
+      list_selection_name = kw.get('list_selection_name')
+
+      template_document_id_set = set(self.getTemplateDocumentIdList())
+      template_extension_id_set = set(self.getTemplateExtensionIdList())
+      template_test_id_set = set(self.getTemplateTestIdList())
+
+      for temp_obj in self.getMigratableSourceCodeFromFilesystemList():
+        try:
+          obj = temp_obj.importFromFilesystem(component_tool,
+                                              temp_obj.getReference(),
+                                              version,
+                                              erase_existing=erase_existing)
+        except Exception, e:
+          failed_import_dict[temp_obj.getReference()] = str(e)
+        else:
+          portal_type = obj.getPortalType()
+          if portal_type == 'Extension Component':
+            id_set = template_extension_id_set
+          elif portal_type == 'Test Component':
+            id_set = template_test_id_set
+          # 'Document Component'
           else:
-            migrated_id_list.append(obj.getId())
+            id_set = template_document_id_set
 
-        if migrated_id_list:
-          template_id_list_method(migrated_id_list)
+          id_set.discard(temp_obj.getReference())
+          id_set.add(obj.getId())
 
-      component_dict = component_portal_type_dict.get('Document Component')
-      if component_dict:
-        from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
-        migrate(component_dict, DocumentComponent, self.setTemplateDocumentIdList)
+      if failed_import_dict:
+        message = (
+          "The following component could not be imported: " +
+          ', '.join([ "%s (%s)" % (name, error)
+                      for name, error in failed_import_dict.iteritems() ]))
 
-      component_dict = component_portal_type_dict.get('Extension Component')
-      if component_dict:
-        from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
-        migrate(component_dict, ExtensionComponent, self.setTemplateExtensionIdList)
+        if list_selection_name is not None:
+          return self.Base_redirect('view',
+                                    keep_items={'portal_status_message': message},
+                                    abort_transaction=True)
 
-      component_dict = component_portal_type_dict.get('Test Component')
-      if component_dict:
-        from Products.ERP5Type.Core.TestComponent import TestComponent
-        migrate(component_dict, TestComponent, self.setTemplateTestIdList)
+        transaction.abort()
+        raise RuntimeError(message)
 
-      return failed_import_dict
+      self.setTemplateDocumentIdList(sorted(template_document_id_set))
+      self.setTemplateExtensionIdList(sorted(template_extension_id_set))
+      self.setTemplateTestIdList(sorted(template_test_id_set))
+
+      if list_selection_name is not None:
+        message = (
+          "All components were successfully imported from filesystem to ZODB. "
+          "You can now delete them from your instance home and Products.")
+
+        if still_used_list_dict:
+          message = (
+            message +
+            " WARNING: Some migrated Documents have their filesystem Document "
+            "still being imported so code need to be updated (see log file).")
+
+        return self.Base_redirect('view',
+                                  keep_items={'portal_status_message': message})
 
 # Block acquisition on all _item_name_list properties by setting
 # a default class value to None
