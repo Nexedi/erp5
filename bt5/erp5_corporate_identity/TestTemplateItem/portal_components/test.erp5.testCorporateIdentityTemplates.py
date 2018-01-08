@@ -37,9 +37,6 @@ import re
 import io
 import base64
 
-host_url = r"https?://localhost(?::[0-9]+)?/[^/]+/"
-test_url = "https://softinst73908.host.vifib.net/erp5/"
-  
 def changeSkin(skin_name):
   """
   Change skin for following commands and attribute resolution.
@@ -225,11 +222,11 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       getattr(test_page, kw.get("test_method")),
       **kw
     )
-    html = re.sub(host_url, test_url, html)
 
     # update html test files or run tests
     if dump:
       expected_page.edit(text_content=html)
+      self.tic()
     self.assertEquals(html, expected_page.getData())
 
   def runPdfTestPattern(self, id1, id2, id3, **kw):
@@ -264,6 +261,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     # update bmp files
     if dump:
       expected_image.setData(bmp)
+      self.tic()
     self.assertImageRenderingEquals(str(bmp), str(expected_image.getData()))
 
   ##############################################################################
@@ -557,7 +555,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         use_skin="Letter"
       )
     )
-  
+
   @changeSkin('Letter')
   def test_htmlLetterFollowUpContributor(self):
     """
@@ -692,7 +690,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         subfield_field_override_date_day="31"
       )
     )
-    
+
   @changeSkin('Letter')
   def test_pdfLetterLocaliserHeadDisplay(self):
     """
@@ -751,7 +749,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         use_skin="Leaflet"
       )
     )
-  
+
   @changeSkin('Leaflet')
   def test_htmlLeafletOverrides(self):
     """
@@ -789,7 +787,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         use_skin="Leaflet"
       )
     )
-  
+
   @changeSkin('Leaflet')
   def test_pdfLeaflet(self):
     """

@@ -47,6 +47,7 @@
                 <string>W: 30,  0: Unused createZODBPythonScript imported from Products.ERP5Type.tests.utils (unused-import)</string>
                 <string>W: 32,  0: Unused import transaction (unused-import)</string>
                 <string>W: 33,  0: Unused import functools (unused-import)</string>
+                <string>W: 36,  0: Unused import re (unused-import)</string>
               </tuple>
             </value>
         </item>
