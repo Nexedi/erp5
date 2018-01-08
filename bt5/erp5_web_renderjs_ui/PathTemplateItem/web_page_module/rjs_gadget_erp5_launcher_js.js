@@ -182,6 +182,30 @@
     }
   }
 
+  function triggerMaximize(gadget, maximize) {
+    if (gadget.props.deferred_minimize !== undefined) {
+      gadget.props.deferred_minimize.resolve();
+      gadget.props.deferred_minimize = undefined;
+    }
+    hideDesktopPanel(gadget, maximize);
+    if (maximize) {
+      return route(gadget, 'header', 'setButtonTitle', [{
+        icon: "compress",
+        action: "maximize"
+      }])
+        .push(function () {
+          gadget.props.deferred_minimize = RSVP.defer();
+          return gadget.props.deferred_minimize.promise;
+        })
+        .push(undefined, function (error) {
+          if (error instanceof RSVP.CancellationError) {
+            return triggerMaximize(gadget, false);
+          }
+        });
+    }
+    return route(gadget, 'header', 'setButtonTitle', [{}]);
+  }
+
   //////////////////////////////////////////
   // Page rendering
   //////////////////////////////////////////
@@ -485,6 +509,9 @@
         .push(function (main_gadget) {
           return main_gadget.triggerSubmit.apply(main_gadget, param_list);
         });
+    })
+    .allowPublicAcquisition("triggerMaximize", function (param_list) {
+      return triggerMaximize(this, param_list[0]);
     })
     /////////////////////////////////////////////////////////////////
     // declared methods
