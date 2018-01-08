@@ -4,6 +4,8 @@ import os, subprocess, re
 from test_suite import ERP5TypeTestSuite
 import sys
 
+HERE = os.path.dirname(__file__)
+
 class _ERP5(ERP5TypeTestSuite):
   realtime_output = False
   enabled_product_list = ('CMFActivity', 'CMFCategory', 'ERP5', 'ERP5Catalog',
@@ -29,7 +31,7 @@ class _ERP5(ERP5TypeTestSuite):
 
   def _getAllTestList(self):
     test_list = []
-    path = sys.path[0]
+    path = "%s/../" % HERE
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
                               "/test\.[^.]+\.([^.]+).py$")
     for test_path in (
