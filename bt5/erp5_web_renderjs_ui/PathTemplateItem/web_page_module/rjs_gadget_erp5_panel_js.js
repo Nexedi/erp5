@@ -54,6 +54,8 @@
       var erp5_document = options.erp5_document,
         workflow_list,
         view_list,
+        view = options.view,
+        i,
         context = this;
       if (erp5_document !== undefined) {
         workflow_list = erp5_document._links.action_workflow || [];
@@ -63,6 +65,18 @@
         }
         if (view_list.constructor !== Array) {
           view_list = [view_list];
+        }
+        if (view === 'view') {
+          for (i = 0; i < view_list.length; i += 1) {
+            view_list[i].class_name = view_list[i].name === view ? 'active' : '';
+          }
+        } else {
+          for (i = 0; i < workflow_list.length; i += 1) {
+            workflow_list[i].class_name = workflow_list[i].href === view ? 'active' : '';
+          }
+          for (i = 0; i < view_list.length; i += 1) {
+            view_list[i].class_name = view_list[i].href === view ? 'active' : '';
+          }
         }
         // Prevent has much as possible to modify the DOM panel
         // stateChange prefer to compare strings
@@ -243,12 +257,14 @@
               for (i = 0; i < workflow_list.length; i += 1) {
                 result_workflow_list.push({
                   title: workflow_list[i].title,
+                  class_name: workflow_list[i].class_name,
                   href: result_list[i]
                 });
               }
               for (i = 0; i < view_list.length; i += 1) {
                 result_view_list.push({
                   title: view_list[i].title,
+                  class_name: view_list[i].class_name,
                   href: result_list[i + workflow_list.length]
                 });
               }

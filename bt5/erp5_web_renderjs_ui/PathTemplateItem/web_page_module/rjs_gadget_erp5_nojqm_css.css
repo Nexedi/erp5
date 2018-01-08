@@ -524,7 +524,8 @@ div[data-gadget-scope='panel'] ul li a {
   white-space: nowrap;
 }
 div[data-gadget-scope='panel'] ul li a:hover,
-div[data-gadget-scope='panel'] ul li a:active {
+div[data-gadget-scope='panel'] ul li a:active,
+div[data-gadget-scope='panel'] ul li a.active {
   background-color: #2b2b2b;
 }
 div[data-gadget-scope='panel'] ul li a::before {
@@ -561,7 +562,8 @@ div[data-gadget-scope='panel'] dl dd a {
   padding-left: 36pt;
 }
 div[data-gadget-scope='panel'] dl dd a:hover,
-div[data-gadget-scope='panel'] dl dd a:active {
+div[data-gadget-scope='panel'] dl dd a:active,
+div[data-gadget-scope='panel'] dl dd a.active {
   background-color: #2b2b2b;
 }
 div[data-gadget-scope='panel'] dl dd a::before {

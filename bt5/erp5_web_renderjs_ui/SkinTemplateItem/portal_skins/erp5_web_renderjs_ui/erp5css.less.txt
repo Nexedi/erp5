@@ -640,7 +640,7 @@ div[data-gadget-scope='panel'] {
   .linkpanel() {
     color: @white;
     display: block;
-    &:hover, &:active {
+    &:hover, &:active, &.active {
       background-color: darken(@panelbackgroundcolor, 10%);
     }
   }

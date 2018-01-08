@@ -189,7 +189,8 @@
             /*jslint regexp: false*/
             return gadget.updatePanel({
               erp5_document: erp5_document,
-              editable: gadget.state.options.editable
+              editable: gadget.state.options.editable,
+              view: options.view
             });
           }
         });
