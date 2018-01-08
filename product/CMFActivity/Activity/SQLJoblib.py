@@ -26,10 +26,15 @@
 #
 ##############################################################################
 
+from random import getrandbits
 from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
-from SQLBase import SQLBase, sort_message_key, MAX_MESSAGE_LIST_SIZE
+import MySQLdb
+from MySQLdb.constants.ER import DUP_ENTRY
+from SQLBase import (
+  SQLBase, sort_message_key, MAX_MESSAGE_LIST_SIZE,
+  UID_SAFE_BITSIZE, UID_ALLOCATION_TRY_COUNT,
+)
 from Products.CMFActivity.ActivityTool import Message
-
 from SQLDict import SQLDict
 
 class SQLJoblib(SQLDict):
@@ -69,8 +74,6 @@ class SQLJoblib(SQLDict):
     portal = activity_tool.getPortalObject()
     for i in xrange(0, len(registered_message_list), MAX_MESSAGE_LIST_SIZE):
       message_list = registered_message_list[i:i+MAX_MESSAGE_LIST_SIZE]
-      uid_list = portal.portal_ids.generateNewIdList(self.uid_group,
-        id_count=len(message_list), id_generator='uid')
       path_list = ['/'.join(m.object_path) for m in message_list]
       active_process_uid_list = [m.active_process_uid for m in message_list]
       method_id_list = [m.method_id for m in message_list]
@@ -85,19 +88,31 @@ class SQLJoblib(SQLDict):
       for m in message_list:
         m.order_validation_text = x = self.getOrderValidationText(m)
         processing_node_list.append(0 if x == 'none' else -1)
-      portal.SQLJoblib_writeMessage(
-        uid_list=uid_list,
-        path_list=path_list,
-        active_process_uid_list=active_process_uid_list,
-        method_id_list=method_id_list,
-        priority_list=priority_list,
-        message_list=map(Message.dump, message_list),
-        group_method_id_list=group_method_id_list,
-        date_list=date_list,
-        tag_list=tag_list,
-        processing_node_list=processing_node_list,
-        signature_list=signature_list,
-        serialization_tag_list=serialization_tag_list)
+      for _ in xrange(UID_ALLOCATION_TRY_COUNT):
+        try:
+          portal.SQLJoblib_writeMessage(
+            uid_list=[
+              getrandbits(UID_SAFE_BITSIZE)
+              for _ in xrange(len(message_list))
+            ],
+            path_list=path_list,
+            active_process_uid_list=active_process_uid_list,
+            method_id_list=method_id_list,
+            priority_list=priority_list,
+            message_list=map(Message.dump, message_list),
+            group_method_id_list=group_method_id_list,
+            date_list=date_list,
+            tag_list=tag_list,
+            processing_node_list=processing_node_list,
+            signature_list=signature_list,
+            serialization_tag_list=serialization_tag_list)
+        except MySQLdb.IntegrityError, (code, _):
+          if code != DUP_ENTRY:
+            raise
+        else:
+          break
+      else:
+        raise ValueError("Maximum retry for SQLBase_writeMessageList reached")
 
   def getProcessableMessageLoader(self, activity_tool, processing_node):
     path_and_method_id_dict = {}
