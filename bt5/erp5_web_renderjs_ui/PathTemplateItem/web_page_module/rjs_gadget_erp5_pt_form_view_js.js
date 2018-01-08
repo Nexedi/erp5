@@ -3,6 +3,22 @@
 (function (window, rJS, RSVP, calculatePageTitle) {
   "use strict";
 
+  /** Return true if `field` resembles non-empty and non-editable field. */
+  function isGoodNonEditableField(field) {
+    // ListBox and FormBox should always get a chance to render because they
+    // can contain editable fields
+    if (field.type === "ListBox") {return true; }
+    if (field.type === "FormBox") {return true; }
+    // hidden fields should not be obviously rendered
+    if (field.hidden === 1) {return false; }
+    // field without default
+    if (!field['default']) {return false; }
+    if (field['default'].length === 0) {return false; }
+    if (field['default'].length === 1 && (!field['default'][0])) {return false; }
+
+    return true;
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -49,6 +65,17 @@
           var form_options = gadget.state.erp5_form,
             rendered_form = gadget.state.erp5_document._embedded._view,
             key;
+
+          /* Remove empty non-editable fields to prevent them from displaying (business requirement).
+             Deleting objects inplace does not seem to be a good idea.
+          */
+          for (key in rendered_form) {
+            if (rendered_form.hasOwnProperty(key) && (key[0] !== "_")) {
+              if (!isGoodNonEditableField(rendered_form[key])) {
+                delete rendered_form[key];
+              }
+            }
+          }
 
           form_options.erp5_document = gadget.state.erp5_document;
           form_options.form_definition = gadget.state.form_definition;
