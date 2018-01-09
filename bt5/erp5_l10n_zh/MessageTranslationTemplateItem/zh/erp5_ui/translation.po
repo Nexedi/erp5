@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2016-11-23 12:11+UTC\n"
-"PO-Revision-Date: 2016-11-23 12:11+UTC\n"
+"POT-Creation-Date: 2018-01-09 12:01+UTC\n"
+"PO-Revision-Date: 2018-01-09 12:01+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: zh <>\n"
 "MIME-Version: 1.0\n"
@@ -7261,6 +7261,9 @@ msgstr "该项选择会影响所选基础"
 
 msgid "This option helps define whether an account is normally Credit or Debit balanced. Any asset and expense account will have a normal debit balance, while any liability, equity, and revenue account will have a normal credit balance. Checking this box will define the account as being a Normal Credit Balance"
 msgstr "该选项帮助定义一个账户通常是贷方余额账户还是借方余额账户。任何资产和费用帐户都会有一个普通贷方余额，而任何一个负债账户，权益账户或收入账户都会有一个普通借方余额。如果勾选该选项，该账户就会被定义为普通贷余额账户"
+
+msgid "This page contains unsaved changes, do you really want to leave the page ?"
+msgstr "此页面包含未保存的更改，您是否真的想离开页面？"
 
 msgid "This state is shown when the goods that are shipped equal the previsions"
 msgstr "该整合状态在交付货物的数量和预期的一致时显示"
