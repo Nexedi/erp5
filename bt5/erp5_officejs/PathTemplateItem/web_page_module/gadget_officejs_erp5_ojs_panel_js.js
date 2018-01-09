@@ -123,13 +123,6 @@
           })
 
           .push(function () {
-            return context.declareGadget('gadget_erp5_field_multicheckbox.html', {
-              scope: "erp5_checkbox",
-              element: tmp_element.querySelector('[data-gadget-scope="erp5_checkbox"]')
-            });
-          })
-
-          .push(function () {
             context.element.querySelector("div").appendChild(tmp_element);
             return context.listenResize();
           });
@@ -157,28 +150,6 @@
 
           .push(function (result) {
             context.element.querySelector("ul").innerHTML = result;
-
-            // Update the checkbox field value
-            return RSVP.all([
-              context.getDeclaredGadget("erp5_checkbox"),
-              context.translate("Edit Content")
-            ]);
-          })
-          .push(function (result_list) {
-            var value = [],
-              search_gadget = result_list[0],
-              title = result_list[1];
-            if (context.state.editable) {
-              value = ['editable'];
-            }
-            return search_gadget.render({field_json: {
-              editable: true,
-              name: 'editable',
-              key: 'editable',
-              hidden: false,
-              items: [[title, 'editable']],
-              default: value
-            }});
           });
       }
 

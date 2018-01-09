@@ -23,13 +23,12 @@
     .declareMethod("render", function (options) {
       return this.changeState({
         jio_key: options.jio_key,
-        doc: options.doc,
-        editable: options.editable ? 1 : 0
+        doc: options.doc
       });
     })
 
     .onEvent('submit', function () {
-      var gadget = this, doc;
+      var gadget = this, data;
       return gadget.notifySubmitting()
         .push(function () {
           return gadget.getDeclaredGadget('form_view');
@@ -38,16 +37,16 @@
           return form_gadget.getContent();
         })
         .push(function (content) {
-          if (gadget.state.editable) {
-            return new RSVP.Queue()
-              .push(function () {
-                return jIO.util.dataURItoBlob(content.text_content);
-              })
-              .push(function (blob) {
-                return gadget.jio_putAttachment(gadget.state.jio_key, "data", blob);
-              });
-          }
+          data = content.text_content;
+          delete content.text_content;
           return gadget.updateDocument(content);
+        })
+        .push(function () {
+          return gadget.jio_putAttachment(
+            gadget.state.jio_key,
+            "data",
+            jIO.util.dataURItoBlob(data)
+          );
         })
         .push(function () {
           return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
@@ -76,7 +75,6 @@
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
-          var editable = gadget.state.editable;
           return form_gadget.render({
             erp5_document: {
               "_embedded": {"_view": {
@@ -86,9 +84,9 @@
                   "default": gadget.state.doc.title,
                   "css_class": "",
                   "required": 1,
-                  "editable": 1 - editable,
+                  "editable": 1,
                   "key": "title",
-                  "hidden": editable,
+                  "hidden": 0,
                   "type": "StringField"
                 },
                 "my_reference": {
@@ -97,9 +95,9 @@
                   "default": gadget.state.doc.reference,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1 - editable,
+                  "editable": 1,
                   "key": "reference",
-                  "hidden": editable,
+                  "hidden": 0,
                   "type": "StringField"
                 },
                 "my_version": {
@@ -108,9 +106,9 @@
                   "default": gadget.state.doc.version,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1 - editable,
+                  "editable": 1,
                   "key": "version",
-                  "hidden": editable,
+                  "hidden": 0,
                   "type": "StringField"
                 },
                 "my_language": {
@@ -119,9 +117,9 @@
                   "default": gadget.state.doc.language,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1 - editable,
+                  "editable": 1,
                   "key": "language",
-                  "hidden": editable,
+                  "hidden": 0,
                   "type": "StringField"
                 },
                 "my_description": {
@@ -130,19 +128,19 @@
                   "default": gadget.state.doc.description,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1 - editable,
+                  "editable": 1,
                   "key": "description",
-                  "hidden": editable,
+                  "hidden": 0,
                   "type": "TextAreaField"
                 },
                 "my_content": {
-                  "default": editable ? data : data.blob,
-                  "css_class": editable === 1 ? "content-iframe-maximize" : "",
+                  "default": data,
+                  "css_class": "",
                   "required": 0,
-                  "editable": editable,
+                  "editable": 1,
                   "key": "text_content",
                   "hidden": 0,
-                  "type": editable === 1 ? "GadgetField" : "ImageField",
+                  "type": "GadgetField",
                   "url": "../officejs_image_editor_gadget/app/",
                   "sandbox": "iframe"
                 }
@@ -157,7 +155,13 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_title"], ["my_reference"], ["my_version"], ["my_language"], ["my_description"]]
+                [["my_title"], ["my_reference"]]
+              ], [
+                "right",
+                [["my_version"], ["my_language"]]
+              ], [
+                "center",
+                [["my_description"]]
               ], [
                 "bottom",
                 [["my_content"]]
@@ -169,24 +173,17 @@
           return RSVP.all([
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'selection_previous'}),
-            gadget.getUrlFor({command: 'selection_next'}),
-            gadget.getUrlFor({command: "change", options: {editable: true}})
+            gadget.getUrlFor({command: 'selection_next'})
           ]);
         })
         .push(function (url_list) {
-          var header_dict = {
+          return gadget.updateHeader({
             page_title: gadget.state.doc.title,
             selection_url: url_list[0],
             previous_url: url_list[1],
             next_url: url_list[2],
             save_action: true
-          };
-          if (gadget.state.editable) {
-            header_dict.edit_properties = url_list[3].replace("n.editable=true", "").replace("p.editable=true", "");
-          } else {
-            header_dict.edit_content = url_list[3];
-          }
-          return gadget.updateHeader(header_dict);
+          });
         });
     });
 }(window, rJS, RSVP, jIO, Blob));

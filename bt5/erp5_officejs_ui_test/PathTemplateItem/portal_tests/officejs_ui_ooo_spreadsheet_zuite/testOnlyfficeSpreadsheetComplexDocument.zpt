@@ -46,6 +46,12 @@
     <td>${base_url}/web_site_module/${test_url}/</td>
     <td></td>
   </tr>
+  <!-- Install can be longer than 90s -->
+  <tr>
+    <td>pause</td>
+    <td>60000</td>
+    <td></td>
+  </tr>
   <tr>
     <td>waitForElementPresent</td>
     <td>//a[@data-i18n="Storages"]</td>
@@ -86,8 +92,7 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/choice_erp5_storage"/>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/open_document_with_title"/>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/click_to_content"/>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load"/>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load_spreadsheet"/>
   <tr>
     <td>click</td>
     <td>//li[@data-label="Sheet2"]/a</td>
@@ -103,8 +108,7 @@
     <td></td>
   </tr>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/open_document_with_title"/>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/click_to_content"/>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load"/>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load_spreadsheet"/>
   <tr>
     <td>click</td>
     <td>//li[@data-label="Sheet2"]/a</td>
