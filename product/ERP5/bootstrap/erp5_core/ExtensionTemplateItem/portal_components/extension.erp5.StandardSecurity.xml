@@ -45,17 +45,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W: 32, 75: Redefining built-in \'object\' (redefined-builtin)</string>
-                <string>W: 32,  0: Dangerous default value [] as argument (dangerous-default-value)</string>
-                <string>W: 53,  2: Unused variable \'context\' (unused-variable)</string>
-                <string>W: 99, 50: Redefining built-in \'object\' (redefined-builtin)</string>
-                <string>W:104, 50: Redefining built-in \'object\' (redefined-builtin)</string>
-                <string>W:109, 50: Redefining built-in \'object\' (redefined-builtin)</string>
-                <string>W:114, 50: Redefining built-in \'object\' (redefined-builtin)</string>
-                <string>W: 28,  0: Unused ConsistencyError imported from Products.ERP5Security.ERP5GroupManager (unused-import)</string>
-                <string>W: 29,  0: Unused SimpleQuery imported from Products.ZSQLCatalog.SQLCatalog (unused-import)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
