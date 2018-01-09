@@ -105,15 +105,16 @@ class TestUserManagement(ERP5TypeTestCase):
     newSecurityManager(None, user)
 
   def _makePerson(self, login=AUTO_LOGIN, open_assignment=1, assignment_start_date=None,
-                  assignment_stop_date=None, tic=True, password='secret', **kw):
+                  assignment_stop_date=None, tic=True, password='secret', group_value=None, **kw):
     """Creates a person in person module, and returns the object, after
     indexing is done. """
     person_module = self.getPersonModule()
     new_person = person_module.newContent(
                      portal_type='Person', **kw)
-    assignment = new_person.newContent(portal_type = 'Assignment',
+    assignment = new_person.newContent(portal_type='Assignment',
                                        start_date=assignment_start_date,
-                                       stop_date=assignment_stop_date,)
+                                       stop_date=assignment_stop_date,
+                                       group_value=group_value,)
     if open_assignment:
       assignment.open()
     if login is not None:
@@ -159,6 +160,48 @@ class TestUserManagement(ERP5TypeTestCase):
         self.fail(
            "Plugin %s should not have authenticated '%s' with password '%s'" %
            (plugin_name, login, password))
+
+  def _getOrCreateGroupValue(self):
+    group_id = 'dummy_group'
+    group = self.portal.portal_categories.group
+    if group_id in group.objectIds():
+      return group[group_id]
+    else:
+      return self.portal.portal_categories.group.newContent(
+        id=group_id
+      )
+
+  def _createDummyDocument(self):
+    types_tool = self.portal.portal_types
+    # Create Portal Types if needed
+    if 'Dummy Object' not in types_tool.objectIds():
+      dummy_type = types_tool.newContent(
+        'Dummy Object',
+        'Base Type',
+        type_class='XMLObject'
+      )
+      dummy_type.newContent(
+        portal_type='Role Information',
+        role_category_list=self.portal.portal_categories.\
+          group.dummy_group.getRelativeUrl(),
+        role_name_list=('Assignee', )
+      )
+    if 'Dummy Module' not in types_tool.objectIds():
+      types_tool.newContent(
+        'Dummy Module',
+        'Base Type',
+        type_class='Folder',
+        type_filter_content_type=1,
+        type_allowed_content_type_list=('Dummy Object', ),
+      )
+    # clean-up dummy_module in any way
+    if 'dummy_module' in self.portal.objectIds():
+      self.portal.manage_delObjects(['dummy_module'])
+    self.tic()
+    self.portal.newContent(portal_type='Dummy Module', id='dummy_module')
+    dummy_document = self.portal.dummy_module.newContent(portal_type='Dummy Object')
+    self.tic()
+    return dummy_document
 
   def test_PersonWithLoginPasswordAreUsers(self):
     """Tests a person with a login & password is a valid user."""
@@ -522,29 +565,47 @@ class TestUserManagement(ERP5TypeTestCase):
   def test_AssignmentWithDate(self):
     """Tests a person with an assignment with correct date is a valid user."""
     date = DateTime()
-    _, login, password = self._makePerson(
+    user_id, login, password = self._makePerson(
       assignment_start_date=date - 5,
       assignment_stop_date=date + 5,
+      group_value=self._getOrCreateGroupValue()
     )
     self._assertUserExists(login, password)
+    self.assertIn(
+      'Assignee',
+      self.portal.acl_users.getUserById(user_id).\
+        getRolesInContext(self._createDummyDocument())
+    )
 
   def test_AssignmentWithBadStartDate(self):
     """Tests a person with an assignment with bad start date is not a valid user."""
     date = DateTime()
-    _, login, password = self._makePerson(
+    user_id, login, password = self._makePerson(
       assignment_start_date=date + 1,
       assignment_stop_date=date + 5,
+      group_value=self._getOrCreateGroupValue()
     )
     self._assertUserDoesNotExists(login, password)
+    self.assertNotIn(
+      'Assignee',
+      self.portal.acl_users.getUserById(user_id).\
+        getRolesInContext(self._createDummyDocument())
+    )
 
   def test_AssignmentWithBadStopDate(self):
     """Tests a person with an assignment with bad stop date is not a valid user."""
     date = DateTime()
-    _, login, password = self._makePerson(
+    user_id, login, password = self._makePerson(
       assignment_start_date=date - 5,
       assignment_stop_date=date - 1,
+      group_value=self._getOrCreateGroupValue()
     )
     self._assertUserDoesNotExists(login, password)
+    self.assertNotIn(
+      'Assignee',
+      self.portal.acl_users.getUserById(user_id).\
+        getRolesInContext(self._createDummyDocument())
+    )
 
   def test_DeletedPersonIsNotUser(self):
     user_id, login, password = self._makePerson()
