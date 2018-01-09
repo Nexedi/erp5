@@ -440,7 +440,7 @@ select {
 
 textarea {
   word-wrap: break-word;
-  white-space: normal;
+  white-space: pre-wrap;
   // Fix inconsistent Textarea bottom margin in Firefox and Chrome
   // http://stackoverflow.com/a/26904480
   vertical-align: top;

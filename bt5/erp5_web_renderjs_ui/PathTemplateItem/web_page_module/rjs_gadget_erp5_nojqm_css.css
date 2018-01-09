@@ -337,7 +337,7 @@ select:-moz-focusring {
 }
 textarea {
   word-wrap: break-word;
-  white-space: normal;
+  white-space: pre-wrap;
   vertical-align: top;
   transition: height 0.2s ease-out;
 }
