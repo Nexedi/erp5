@@ -64,6 +64,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       'erp5_web',
       'erp5_dms',
       'erp5_corporate_identity',
+      'erp5_corporate_identity_test',
       'erp5_ui_test_core'
     )
 
