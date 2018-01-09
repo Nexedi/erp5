@@ -103,14 +103,27 @@ if block_id == 'S21.G00.06':
   # Calculate the average manpower of all year, if month is December
   # XXX : should be fixed to be corrct when there exists  DSN reports for
   # different establishments or organisations, or replaced/cancelled DSN reports
-  social_declaration_module = portal.getDefaultModule("DSN Monthly Report")
+  def getDSNOrganisation(dsn_value):
+    return dsn_value.getAggregateRelatedValueList(portal_type="Pay Sheet Transaction")[0].getDestinationSection()
+  def calculateManPower():
+    manpower_dict = {}
+    social_declaration_module = portal.getDefaultModule("DSN Monthly Report")
+    report_list = social_declaration_module.searchFolder(
+      portal_type="DSN Monthly Report",
+      effective_date=str(context.getEffectiveDate().year()),
+      simulation_state='=draft OR =published OR =validated',
+    )
+    for month_report in report_list:
+      if getDSNOrganisation(month_report) == target.getRelativeUrl():
+        manpower_dict.setdefault(month_report.getEffectiveDate().month(), []).append(int(month_report.getQuantity()))
+    total_manpower = 0
+    for _, employee_quantity in manpower_dict.items():
+      total_manpower += sum(employee_quantity) / len(employee_quantity)
+    return total_manpower / len(manpower_dict.keys()) # Divide by number of months
+
   average_manpower = ''
   if context.getEffectiveDate().month() == 12:
-    manpower_list = []
-    report_list = social_declaration_module.searchFolder(effective_date=str(context.getEffectiveDate().year()))
-    for month_report in report_list:
-      manpower_list.append(int(month_report.getQuantity()))
-    average_manpower = str(sum(manpower_list) / len(manpower_list))
+    average_manpower = str(calculateManPower())
   rubric_value_dict['S21.G00.06.001'] = ''.join(target.getCorporateRegistrationCode().split(' '))[:9]
   rubric_value_dict['S21.G00.06.002'] = ''.join(target.getCorporateRegistrationCode().split(' '))[-5:]
   rubric_value_dict['S21.G00.06.003'] = target.getActivityCode()
