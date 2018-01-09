@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2017-06-19 12:06+UTC\n"
-"PO-Revision-Date: 2017-06-19 12:06+UTC\n"
+"POT-Creation-Date: 2018-01-09 13:01+UTC\n"
+"PO-Revision-Date: 2018-01-09 13:01+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -13500,6 +13500,9 @@ msgstr "Ce login n'est pas disponible, veuillez le changer"
 
 msgid "This option helps define whether an account is normally Credit or Debit balanced. Any asset and expense account will have a normal debit balance, while any liability, equity, and revenue account will have a normal credit balance. Checking this box will define the account as being a Normal Credit Balance"
 msgstr "Cette option permet de définir si un compte est de nature a être débiteur ou créditeur."
+
+msgid "This page contains unsaved changes, do you really want to leave the page ?"
+msgstr "Cette page contient des modifications non enregistrées, voulez-vous vraiment quitter la page?"
 
 msgid "This price is not defined in tariff. Enter a value."
 msgstr "Ce prix n'est pas dans le tarif. Veuillez saisir le prix."
