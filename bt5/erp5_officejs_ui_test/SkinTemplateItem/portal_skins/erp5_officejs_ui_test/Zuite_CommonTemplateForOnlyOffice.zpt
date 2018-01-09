@@ -1,6 +1,6 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
-  <tal:block metal:define-macro="wait_for_load">
+  <tal:block metal:define-macro="wait_for_load_spreadsheet">
     <!-- Wait for OnlyOffice run -->
     <tr>
       <td>waitForElementPresent</td>
@@ -15,6 +15,42 @@
     <tr>
       <td>waitForElementPresent</td>
       <td>//button[@id='id-toolbar-btn-align-center' and not(contains(@class, "disabled"))]</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="wait_for_load">
+    <!-- Wait for OnlyOffice run -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class='asc-loadmask-title']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>identifier=id_viewer</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@id='id-toolbar-btn-align-center' and not(contains(@class, "disabled"))]</td>
+      <td></td>
+    </tr>
+  </tal:block>
+    <tal:block metal:define-macro="wait_for_load_presentation">
+    <!-- Wait for OnlyOffice run -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class='asc-loadmask-title']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>identifier=id_viewer</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@id='id-toolbar-btn-insertimage' and not(contains(@class, "disabled"))]</td>
       <td></td>
     </tr>
   </tal:block>
@@ -134,21 +170,6 @@
     <tr>
       <td>waitForElementPresent</td>
       <td>//button[@id='id-toolbar-btn-align-center' and contains(@class, "active")]</td>
-      <td></td>
-    </tr>
-  </tal:block>
-  <tal:block metal:define-macro="click_to_content">
-    <tr>
-      <td colspan="3"><b>Click to Content</b></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>link=Content</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>click</td>
-      <td>link=Content</td>
       <td></td>
     </tr>
   </tal:block>

@@ -27,6 +27,12 @@
   <td>${base_url}/web_site_module/ooffice_text/</td>
   <td></td>
 </tr>
+<!-- Install can be longer than 90s -->
+<tr>
+  <td>pause</td>
+  <td>30000</td>
+  <td></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n="Storages"]</td>
@@ -78,16 +84,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>name=editable</td>
-  <td></td>
-</tr>
-<tr>
   <td>waitForElementPresent</td>
   <td>identifier=title</td>
   <td></td>
@@ -122,41 +118,7 @@
   <td>identifier=description</td>
   <td>${description}</td>
 </tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Content</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Content</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='asc-loadmask-title']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//canvas[@id='id_target_cursor']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load"/>
 <tr>
   <td>click</td>
   <td>//button[@id='id-toolbar-btn-align-center']</td>
@@ -164,7 +126,7 @@
 </tr>
 <tr>
   <td>pause</td>
-  <td>1000</td>
+  <td>2000</td>
   <td></td>
 </tr>
 <tr>
@@ -175,16 +137,6 @@
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Properties</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>identifier=title</td>
   <td></td>
 </tr>
 <tr>

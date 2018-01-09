@@ -53,6 +53,12 @@
   <td>${base_url}/web_site_module/${test_url}/</td>
   <td></td>
 </tr>
+<!-- Install can be longer than 90s -->
+<tr>
+  <td>pause</td>
+  <td>60000</td>
+  <td></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n="Storages"]</td>
@@ -120,16 +126,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>name=editable</td>
-  <td></td>
-</tr>
-<tr>
   <td>store</td>
   <td tal:content="python: 'Test Titre %s' % DateTime()">Titre</td>
   <td>title</td>
@@ -149,42 +145,8 @@
   <td>name=reference</td>
   <td>reference</td>
 </tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Content</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Content</td>
-  <td></td>
-</tr>
-<!-- Stop Generic -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='asc-loadmask-title']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>identifier=id_main</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>5000</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load"/>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/click_to_align_center"/>
 <tr>
   <td>click</td>
   <td>//button[@data-i18n="Save"]</td>

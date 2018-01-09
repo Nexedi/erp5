@@ -131,7 +131,13 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_title"], ["my_reference"], ["my_version"], ["my_language"], ["my_description"]]
+                [["my_title"], ["my_reference"]]
+              ], [
+                "right",
+                [["my_version"], ["my_language"]]
+              ], [
+                "center",
+                [["my_description"]]
               ], [
                 "bottom",
                 [["my_content"]]
