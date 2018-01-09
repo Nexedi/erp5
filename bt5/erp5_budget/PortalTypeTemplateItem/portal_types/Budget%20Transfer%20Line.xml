@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>BudgetTransfer</string> </value>
+            <value> <string>BudgetTransferLine</string> </value>
         </item>
       </dictionary>
     </pickle>
