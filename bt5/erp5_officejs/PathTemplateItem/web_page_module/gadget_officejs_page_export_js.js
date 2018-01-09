@@ -10,7 +10,7 @@
     "Text Editor": {
       "url": "officejs_text_editor/",
       "cache": "gadget_officejs_text_editor.appcache",
-      "sub_gadget": ["officejs_ckeditor_gadget", "officejs_setting_gadget"]
+      "sub_gadget": ["officejs_setting_gadget"]
     },
     "Illustration Editor": {
       "url": "officejs_svg_editor/",
