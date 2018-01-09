@@ -3,14 +3,10 @@ portal = context.getPortalObject()
 # create an HTML Post
 post_module = portal.post_module
 
-# get the related object
-follow_up_object, = portal.portal_catalog(relative_url=follow_up, limit=2)
-follow_up_object = follow_up_object.getObject()
-
 now = DateTime()
 post_edit_kw = {
   "start_date": now,
-  "follow_up_value": follow_up_object,
+  "follow_up_value": follow_up_value,
   "text_content": data,
 }
 if predecessor is not None:

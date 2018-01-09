@@ -38,7 +38,7 @@ support_request.immediateReindexObject()
 
 if description is not None or file is not None:
   portal.post_module.PostModule_createHTMLPostForSupportRequest(
-    follow_up=support_request.getRelativeUrl(),  # XXX give support_request as follow_up_value
+    follow_up_value=support_request,
     predecessor=None,
     data="" if description is None else description,
     file=file,
