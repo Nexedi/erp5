@@ -1,0 +1,74 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<!--
+Ensure stat_method gets executed and result displayed in tfoot element of the listbox table.
+
+-  if anchor, then text "Total" is present
+-  columns for which stat_method does not return any data remain empty
+-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI ListBox Stat Method</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI ListBox Stat Method</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr><td>open</td>
+    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Reset Successfully.</td><td></td></tr>
+
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<!-- Create Foo objects with IDs 0-9 -->
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=3</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<!-- Let's set up the default sort correctly: id | ASC -->
+<tr><td>open</td>
+    <td>${base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_method=FooModule_statMethod</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Set Successfully.</td><td></td></tr>
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//nav/span[@data-i18n="3 Records"]</td><td></td></tr>
+
+<tr><td>store</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table</td>
+    <td>listbox_table</td></tr>
+
+<!-- Default sort on ID column has to be ASCENDING -->
+<tr><td>assertFloat</td>
+    <td>${listbox_table}/tbody/tr[1]/td[3]/a</td>
+    <td>9</td></tr>
+<tr><td>assertFloat</td>
+    <td>${listbox_table}/tbody/tr[2]/td[3]/a</td>
+    <td>8</td></tr>
+<tr><td>assertFloat</td>
+    <td>${listbox_table}/tbody/tr[3]/td[3]/a</td>
+    <td>7</td></tr>
+<tr><td>assertFloat</td><!-- This tests that "Total" does not appear when first column has stat defined -->
+    <td>${listbox_table}/tfoot/tr[1]/td[1]</td>
+    <td>6</td></tr>
+<tr><td>assertFloat</td>
+    <td>${listbox_table}/tfoot/tr[1]/td[3]</td>
+    <td>24</td></tr>
+
+
+</tbody></table>
+</body>
+</html>

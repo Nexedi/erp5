@@ -247,7 +247,7 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tfoot//span[contains(@data-i18n, "Records")]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//nav//span[contains(@data-i18n, "Records")]</td>
       <td></td>
     </tr>
     <tr>

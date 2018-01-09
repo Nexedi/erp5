@@ -28,6 +28,11 @@
                          .innerHTML,
     listbox_tfoot_template = Handlebars.compile(listbox_tfoot_source),
 
+    listbox_nav_source = gadget_klass.__template_element
+                         .getElementById("listbox-nav-template")
+                         .innerHTML,
+    listbox_nav_template = Handlebars.compile(listbox_nav_source),
+
     listbox_source = gadget_klass.__template_element
                          .getElementById("listbox-template")
                          .innerHTML,
@@ -41,86 +46,78 @@
     loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
     disabled_class = 'ui-disabled';
 
+  function renderSubField(gadget, element, sub_field_json) {
+    sub_field_json.editable = sub_field_json.editable && gadget.state.editable;
+    return gadget.declareGadget(
+      'gadget_erp5_label_field.html',
+      {
+        element: element,
+        scope: sub_field_json.key
+      }
+    )
+      .push(function (cell_gadget) {
+        gadget.props.cell_gadget_list.push(cell_gadget);
+        return cell_gadget.render({
+          field_type: sub_field_json.type,
+          field_json: sub_field_json,
+          label: false
+        });
+      });
+  }
 
-  function renderEditableField(gadget, element, column_list) {
+  function renderEditableField(gadget, element, column_list, field_table) {
     var i,
       promise_list = [],
-      uid_value_dict = {},
-      uid_value,
       column,
       line,
       element_list = element.querySelectorAll(".editable_div");
-    gadget.props.listbox_uid_dict = {};
-    gadget.props.cell_gadget_list = [];
-    function renderSubCell(element, sub_field_json) {
-      sub_field_json.editable = sub_field_json.editable && gadget.state.editable; // XXX 
-      return gadget.declareGadget('gadget_erp5_label_field.html', {element: element, scope: sub_field_json.key})
-        .push(function (cell_gadget) {
-          gadget.props.cell_gadget_list.push(cell_gadget);
-          return cell_gadget.render({
-            field_type: sub_field_json.type,
-            field_json: sub_field_json,
-            label: false
-          });
-        });
-    }
+
     for (i = 0; i < element_list.length; i += 1) {
       column = element_list[i].getAttribute("data-column");
       line = element_list[i].getAttribute("data-line");
-      if (gadget.props.listbox_uid_dict.key === undefined) {
-        gadget.props.listbox_uid_dict.key = gadget.state.allDocs_result.data.rows[line].value["listbox_uid:list"].key;
-        gadget.props.listbox_uid_dict.value = [gadget.state.allDocs_result.data.rows[line].value["listbox_uid:list"].value];
-        uid_value_dict[gadget.state.allDocs_result.data.rows[line].value["listbox_uid:list"].value] = null;
-      } else {
-        uid_value = gadget.state.allDocs_result.data.rows[line].value["listbox_uid:list"].value;
-        if (!uid_value_dict.hasOwnProperty(uid_value)) {
-          uid_value_dict[uid_value] = null;
-          gadget.props.listbox_uid_dict.value.push(uid_value);
-        }
-      }
-      promise_list.push(renderSubCell(element_list[i],
-        gadget.state.allDocs_result.data.rows[line].value[column_list[column][0]] || ""));
+
+      promise_list.push(renderSubField(
+        gadget,
+        element_list[i],
+        field_table[line].cell_list[column] || ""
+      ));
     }
     return RSVP.all(promise_list);
   }
 
+  /**Put resulting `row_list` into `template` together with necessary gadget.state parameters.
 
-  function renderListboxTbody(gadget, template, body_value) {
-    var tmp,
+  First, it removes all similar containers from within the table! Currently it is tricky
+  to have multiple tbody/thead/tfoot elements! Feel free to refactor.
+
+  Example call: renderTablePart(gadget, compiled_template, row_list, "tbody");
+  **/
+  function renderTablePart(gadget, template, row_list, container_name) {
+    var container,
       column_list = JSON.parse(gadget.state.column_list_json);
 
     return gadget.translateHtml(template(
       {
-        "body_value": body_value,
+        "row_list": row_list,
         "show_anchor": gadget.state.show_anchor,
         "column_list": column_list
       }
     ))
-      .push(function (my_html) {
-        tmp = document.createElement("tbody");
-        tmp.innerHTML = my_html;
-        return renderEditableField(gadget, tmp, column_list);
+      .push(function (table_part_html) {
+        container = document.createElement(container_name);
+        container.innerHTML = table_part_html;
+        return renderEditableField(gadget, container, column_list, row_list);
       })
       .push(function () {
         var table =  gadget.element.querySelector("table"),
-          tbody = table.querySelector("tbody");
-        table.removeChild(tbody);
-        table.appendChild(tmp);
+          old_container = table.querySelector(container_name);
+        if (old_container) {
+          table.replaceChild(container, old_container);
+        } else {
+          table.appendChild(container);
+        }
+        return table;
       });
-  }
-
-
-  function renderListboxTfoot(gadget, foot) {
-    return gadget.translateHtml(listbox_tfoot_template(
-      {
-        "colspan": foot.colspan,
-        "previous_classname": foot.previous_classname,
-        "previous_url": foot.previous_url,
-        "record": foot.record,
-        "next_classname": foot.next_classname,
-        "next_url": foot.next_url
-      }
-    ));
   }
 
   /** Clojure to ease finding in lists of lists by the first item **/
@@ -137,7 +134,10 @@
     // Init local properties
     .ready(function () {
       this.props = {
+        // holds references to all editable sub-fields
         cell_gadget_list: [],
+        // ERP5 needs listbox_uid:list with UIDs of editable sub-documents
+        // so it can search for them in REQUEST.form under <field.id>_<sub-document.uid>
         listbox_uid_dict: {}
       };
     })
@@ -272,6 +272,9 @@
             sort_list_json: JSON.stringify(result_list[1] || field_json.sort.map(jioize_sort)),
 
             show_anchor: field_json.show_anchor,
+            show_stat: field_json.show_stat,
+            show_count: field_json.show_count,
+
             line_icon: field_json.line_icon,
             query: field_json.query,
             query_string: query_string,
@@ -438,6 +441,8 @@
           });
       }
 
+      /* Function `fetchLineContent` calls changeState({"allDocs_result": JIO.allDocs()})
+         so this if gets re-evaluated later with allDocs_result defined. */
       if (gadget.state.allDocs_result === undefined) {
         // Trigger line content calculation
         result_queue
@@ -453,7 +458,6 @@
 
       } else if ((modification_dict.hasOwnProperty('show_line_selector')) ||
           (modification_dict.hasOwnProperty('allDocs_result'))) {
-
         // Render the listbox content
         result_queue
           .push(function () {
@@ -463,7 +467,7 @@
               counter;
 
             column_list = JSON.parse(gadget.state.column_list_json);
-
+            // for actual allDocs_result structure see ref:gadget_erp5_jio.js
             if (lines === 0) {
               lines = allDocs_result.data.total_rows;
               counter = allDocs_result.data.total_rows;
@@ -471,7 +475,7 @@
               counter = Math.min(allDocs_result.data.total_rows, lines);
             }
             sort_list = JSON.parse(gadget.state.sort_list_json);
-
+            // Every line points to a sub-document so we need those links
             for (i = 0; i < counter; i += 1) {
               promise_list.push(
                 gadget.getUrlFor({
@@ -492,31 +496,52 @@
                 return RSVP.all(promise_list);
               })
 
-              .push(function (result_list) {
-                var value,
-                  body_value = [],
-                  tr_value = [],
-                  tmp_url,
-                  listbox_tbody_template;
+              .push(function (line_link_list) {
+                var row_list = [],
+                  value,
+                  cell_list,
+                  listbox_tbody_template,
+                  setNonEditable = function (cell) {cell.editable = false; };
+                // reset list of UIDs of editable sub-documents
+                gadget.props.listbox_uid_dict = {
+                  key: undefined,
+                  value: []
+                };
+                // clear list of previous sub-gadgets
+                gadget.props.cell_gadget_list = [];
 
                 for (i = 0; i < counter; i += 1) {
-                  tmp_url = result_list[i];
-                  tr_value = [];
+                  cell_list = [];
                   for (j = 0; j < column_list.length; j += 1) {
                     value = allDocs_result.data.rows[i].value[column_list[j][0]] || "";
-                    tr_value.push({
-                      "type": value.type,
-                      "editable": value.editable && gadget.state.editable,
-                      "href": tmp_url,
-                      "text": value,
-                      "line": i,
-                      "column": j
-                    });
+                    // value can be simply just a value in case of non-editable field
+                    // thus we construct "field_json" manually and insert the value in "default"
+                    if (value.constructor !== Object) {
+                      value = {
+                        'editable': 0,
+                        'default': value
+                      };
+                    }
+                    value.href = line_link_list[i];
+                    value.editable = value.editable && gadget.state.editable;
+                    value.line = i;
+                    value.column = j;
+                    cell_list.push(value);
                   }
-                  body_value.push({
-                    "value": allDocs_result.data.rows[i].value.uid,
-                    "jump": tmp_url,
-                    "tr_value": tr_value,
+                  // note row's editable UID into gadget.props.listbox_uid_dict if exists to send it back to ERP5
+                  // together with ListBox data. The listbox_uid_dict has quite surprising structure {key: <key>, value: <uid-array>}
+                  if (allDocs_result.data.rows[i].value['listbox_uid:list'] !== undefined) {
+                    gadget.props.listbox_uid_dict.key = allDocs_result.data.rows[i].value['listbox_uid:list'].key;
+                    gadget.props.listbox_uid_dict.value.push(allDocs_result.data.rows[i].value['listbox_uid:list'].value);
+                    // we could come up with better name than "value" for almost everything ^^
+                  } else {
+                    // if the document does not have listbox_uid:list then no gadget should be editable
+                    cell_list.forEach(setNonEditable);
+                  }
+                  row_list.push({
+                    "uid": allDocs_result.data.rows[i].value.uid,
+                    "jump": line_link_list[i],
+                    "cell_list": cell_list,
                     "line_icon": gadget.state.line_icon
                   });
                 }
@@ -527,7 +552,7 @@
                   listbox_tbody_template = listbox_hidden_tbody_template;
                 }
 
-                return renderListboxTbody(gadget, listbox_tbody_template, body_value);
+                return renderTablePart(gadget, listbox_tbody_template, row_list, "tbody");
               })
               .push(function () {
                 var prev_param = {},
@@ -551,31 +576,70 @@
 
               })
               .push(function (url_list) {
-                var foot = {};
-                foot.colspan = column_list.length + gadget.state.show_anchor +
-                  (gadget.state.line_icon ? 1 : 0) + gadget.state.show_line_selector;
-                foot.previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";
-                foot.previous_url = url_list[0];
-                foot.next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";
-                foot.next_url = url_list[1];
+                var record,
+                  previous_url = url_list[0],
+                  next_url = url_list[1],
+                  previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child",
+                  next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";
+
                 if ((gadget.state.begin_from === 0) && (counter === 0)) {
-                  foot.record = variable.translated_no_record;
+                  record = variable.translated_no_record;
                 } else if ((allDocs_result.data.rows.length <= lines) && (gadget.state.begin_from === 0)) {
-                  foot.record = counter + " " + variable.translated_records;
+                  record = counter + " " + variable.translated_records;
                 } else {
-                  foot.record = variable.translated_records + " " + (((gadget.state.begin_from + lines) / lines - 1) * lines + 1) + " - " + (((gadget.state.begin_from + lines) / lines - 1) * lines + counter);
+                  record = variable.translated_records + " " + (((gadget.state.begin_from + lines) / lines - 1) * lines + 1) + " - " + (((gadget.state.begin_from + lines) / lines - 1) * lines + counter);
                 }
 
                 if (gadget.state.begin_from === 0) {
-                  foot.previous_classname += " ui-disabled";
+                  previous_classname += " ui-disabled";
                 }
                 if (allDocs_result.data.rows.length <= lines) {
-                  foot.next_classname += " ui-disabled";
+                  next_classname += " ui-disabled";
                 }
-                return renderListboxTfoot(gadget, foot);
+                return gadget.translateHtml(
+                  listbox_nav_template({
+                    "previous_classname": previous_classname,
+                    "previous_url": previous_url,
+                    "record": record,
+                    "next_classname": next_classname,
+                    "next_url": next_url
+                  })
+                )
+                  .push(function (listbox_nav_html) {
+                    gadget.element.querySelector('nav').innerHTML = listbox_nav_html;
+                  });
               })
-              .push(function (my_html) {
-                gadget.element.querySelector(".tfoot").innerHTML = my_html;
+              .push(function () {
+                var result_sum = (gadget.state.allDocs_result.sum || {}).rows || [], // render summary footer if available
+                  summary = result_sum.map(function (row, row_index) {
+                    var row_editability = row['listbox_uid:list'] !== undefined;
+                    return {
+                      "uid": 'summary' + row_index,
+                      "cell_list": column_list.map(function (col_name, col_index) {
+                        var field_json = row.value[col_name[0]] || "";
+                        if (field_json.constructor !== Object) {
+                          field_json = {'default': field_json, 'editable': 0};
+                        }
+                        field_json.editable = field_json.editable && row_editability;
+                        field_json.column = col_index;
+                        field_json.line = row_index;
+                        return field_json;
+                      })
+                    };
+                  }),
+                  element;
+
+                if (counter === 0) {
+                  // do not render footer (summary) when no data in Listbox because it is ugly
+                  element = gadget.element.querySelector("table tfoot tr");
+                  if (element !== null) {
+                    element.remove();
+                  }
+                  return null;
+                }
+                return renderTablePart(gadget, listbox_tfoot_template, summary, "tfoot");
+              })
+              .push(function () {
                 var loading_element_classList = gadget.element.querySelector(".listboxloader").classList;
                 loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
               });
@@ -616,7 +680,8 @@
 
       var gadget = this,
         select_list = [],
-        limit_options,
+        limit_options = [],
+        aggregation_option_list = [],
         column_list = JSON.parse(gadget.state.column_list_json),
         i;
 
@@ -631,6 +696,12 @@
         limit_options = [gadget.state.begin_from, gadget.state.lines + 1];
       }
 
+      if (gadget.state.show_stat === true) {
+        aggregation_option_list.push("sum");
+      }
+      if (gadget.state.show_count === true) {
+        aggregation_option_list.push("count");
+      }
 
       return gadget.jio_allDocs({
         // XXX Not jIO compatible, but until a better api is found...
@@ -638,6 +709,7 @@
         "query": gadget.state.query_string,
         "limit": limit_options,
         "select_list": select_list,
+        // "aggregation": aggregation_option_list
         "sort_on": JSON.parse(gadget.state.sort_list_json)
       })
         .push(function (result) {
@@ -647,7 +719,7 @@
 
         }, function (error) {
           // do not crash interface if allDocs fails
-          //this will catch all error, not only search criteria invalid error
+          // this will catch all error, not only search criteria invalid error
           if (error instanceof RSVP.CancellationError) {
             throw error;
           }

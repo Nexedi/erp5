@@ -178,27 +178,33 @@
         ]
       )
         .push(function (catalog_json) {
-          var data = catalog_json._embedded.contents,
-            count = data.length,
-            k,
-            uri,
-            item,
-            result = [];
-          for (k = 0; k < count; k += 1) {
-            item = data[k];
-            uri = new URI(item._links.self.href);
-            delete item._links;
-            result.push({
-              id: uri.segment(2),
-              doc: {},
-              value: item
-            });
-          }
+          var data = catalog_json._embedded.contents || [],
+            summary = catalog_json._embedded.sum || [],
+            count = catalog_json._embedded.count;
           return {
-            data: {
-              rows: result,
-              total_rows: result.length
-            }
+            "data": {
+              "rows": data.map(function (item) {
+                var uri = new URI(item._links.self.href);
+                delete item._links;
+                return {
+                  "id": uri.segment(2),
+                  "doc": {},
+                  "value": item
+                };
+              }),
+              "total_rows": data.length
+            },
+            "sum": {
+              "rows": summary.map(function (item, index) {
+                return {
+                  "id": '/#summary' + index, // this is obviously wrong. @Romain help please!
+                  "doc": {},
+                  "value": item
+                };
+              }),
+              "total_rows": summary.length
+            },
+            "count": count
           };
         });
     })
