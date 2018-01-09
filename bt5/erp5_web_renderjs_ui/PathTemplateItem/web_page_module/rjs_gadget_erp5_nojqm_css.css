@@ -1607,6 +1607,9 @@ div[data-gadget-scope='maximize'] button:active {
   width: 100vw;
   height: calc(100vh -  30pt );
 }
+.editor-maximize div[data-gadget-scope='editor'] iframe {
+  height: 100%;
+}
 /**********************************************
 * Icons
 **********************************************/

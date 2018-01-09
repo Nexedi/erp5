@@ -1823,6 +1823,9 @@ div[data-gadget-scope='maximize'] button {
   top: @headerheight;
   width: 100vw;
   height: ~"calc(100vh - "@headerheight~")";
+  iframe {
+    height: 100%;
+  }
 }
 
 /**********************************************
