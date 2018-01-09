@@ -47,9 +47,25 @@ MARKER = []
 
 if REQUEST is None:
   REQUEST = context.REQUEST
-  # raise Unauthorized
+
 if response is None:
   response = REQUEST.RESPONSE
+
+
+def toBasicTypes(obj):
+  """Ensure that  obj contains only basic types."""
+  if obj is None:
+    return obj
+  if isinstance(obj, (bool, int, float, long, str, unicode)):
+    return obj
+  if isinstance(obj, (tuple, list)):
+    return [toBasicTypes(x) for x in obj]
+  try:
+    return {toBasicTypes(key): toBasicTypes(obj[key]) for key in obj}
+  except:
+    log('Cannot convert {!s} to basic types {!s}'.format(type(obj), obj), level=100)
+  return obj
+
 
 # http://stackoverflow.com/a/13105359
 def byteify(string):
@@ -684,6 +700,8 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       "lines": lines,
       "default_params": default_params,
       "list_method": list_method_name,
+      "show_stat": field.get_value('stat_method') != "" or len(field.get_value('stat_columns')) > 0,
+      "show_count": field.get_value('count_method') != "",
       "query": url_template_dict["jio_search_template"] % {
         "query": make_query({
           "query": sql_catalog.buildQuery(
@@ -1478,6 +1496,55 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       contents_list.append(contents_item)
     result_dict['_embedded']['contents'] = contents_list
 
+    # Compute statistics if the search issuer was ListBox
+    # or in future if the stats (SUM) are required by JIO call
+    source_field_meta_type = source_field.meta_type if source_field is not None else ""
+    if source_field_meta_type == "ProxyField":
+      source_field_meta_type = source_field.getRecursiveTemplateField().meta_type
+
+    if source_field is not None and source_field_meta_type == "ListBox":
+      contents_stat_list = []
+      # in case the search was issued by listbox we can provide results of
+      # stat_method and count_method back to the caller
+      # XXX: we should check whether they asked for it
+      stat_method = source_field.get_value('stat_method')
+      stat_columns = source_field.get_value('stat_columns')
+      # support only selection_name for stat methods because any `selection` is deprecated
+      # and should be removed
+      # Romain wants full backward compatibility so putting `selection` back in parameters
+      selection_name = source_field.get_value('selection_name')
+      if selection_name and 'selection_name' not in catalog_kw:
+        catalog_kw['selection_name'] = selection_name
+        catalog_kw['selection'] = context.getPortalObject().portal_selections.getSelectionFor(selection_name, REQUEST)
+
+      contents_stat = {}
+      if len(stat_columns) > 0:
+        # prefer stat per column (follow original ListBox.py implementation)
+        for stat_name, stat_script in stat_columns:
+          contents_stat[stat_name] = getattr(traversed_document, stat_script)(REQUEST=REQUEST, **catalog_kw)
+        contents_stat_list.append(contents_stat)
+      elif stat_method != "" and stat_method.getMethodName() != list_method:
+        # general stat_method is second in priority list - should return dictionary or list of dictionaries
+        # where all "fields" should be accessible by their "select" name (no "listbox_" prefix)
+        stat_method_result = getattr(traversed_document, stat_method.getMethodName())(REQUEST=REQUEST, **catalog_kw)
+        # stat method can return simple dictionary or subscriptable object thus we put it into one-item list
+        if stat_method_result is not None and not isinstance(stat_method_result, (list, tuple)):
+          stat_method_result = [stat_method_result, ]
+        contents_stat_list = toBasicTypes(stat_method_result) or []
+
+      for contents_stat in contents_stat_list:
+        for key, value in contents_stat.items():
+          if key in editable_field_dict:
+            contents_stat[key] = renderField(
+              traversed_document, editable_field_dict[key], listbox_form, value, key=editable_field_dict[key].id + '__sum')
+
+      if len(contents_stat_list) > 0:
+        result_dict['_embedded']['sum'] = contents_stat_list
+
+    # We should cleanup the selection if it exists in catalog params BUT
+    # we cannot because it requires escalated Permission.'modifyPortal' so
+    # the correct solution would be to ReportSection.popReport but unfortunately
+    # we don't have it anymore because we are asynchronous
     return result_dict
 
   elif mode == 'form':

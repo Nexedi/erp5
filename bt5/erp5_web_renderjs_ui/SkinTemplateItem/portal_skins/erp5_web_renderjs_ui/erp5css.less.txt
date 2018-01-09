@@ -1523,9 +1523,10 @@ div[data-gadget-scope='erp5_searchfield'] {
     th, td {
       // line-height: 1.5em;
       vertical-align: middle;
+      padding: @half-margin-size;
     }
 
-    thead {
+    thead, tfoot {
       background-color: @colorsubheaderbackground;
       color: @white;
 
@@ -1565,7 +1566,6 @@ div[data-gadget-scope='erp5_searchfield'] {
       @media @desktop, @tablet {
         a {
           display: block;
-          padding: @half-margin-size;
         }
       }
 
@@ -1646,40 +1646,43 @@ div[data-gadget-scope='erp5_searchfield'] {
         }
       }
     }
+  }
 
+  nav {
+    display: flex;
+    padding-top: @margin-size;
+    border-top: 2px solid rgba(0, 0, 0, 0.14902);
 
-    tfoot .ui-controlgroup-controls {
-      display: flex;
-      padding-top: @margin-size;
-      border-top: 2px solid rgba(0, 0, 0, 0.14902);
+    span {
+      opacity: .3;
+      flex: 2;
+      text-align: right;
+      float: right;
+    }
+    a {
+      .button();
 
-      span {
-        opacity: .3;
-        flex: 2;
-        text-align: right;
+      margin-right: @margin-size;
+      &:last-of-type {
+        margin-right: 0;
       }
-      a {
-        .button();
 
-        margin-right: @margin-size;
-        &:last-of-type {
-          margin-right: 0;
-        }
+      &:hover, &:active {
+        background-color: @colorblocklinkbackground;
+      }
+
+      @media @smartphone {
+        .hide_text(@width: initial);
+      }
+
+      &::before {
 
         @media @smartphone {
-          .hide_text(@width: initial);
-        }
-
-        &::before {
-
-          @media @smartphone {
-            float: left;
-            text-indent: @margin-size;
-          }
+          float: left;
+          text-indent: @margin-size;
         }
       }
     }
-
   }
 }
 

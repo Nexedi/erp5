@@ -1,0 +1,47 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<!--
+Ensure empty listbox does not show stat line even though it receives stat data.
+-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI ListBox No Stat Line on No Data</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI ListBox No Stat Line on No Data</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr><td>open</td>
+    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Reset Successfully.</td><td></td></tr>
+
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<!-- Let's set up the default sort correctly: id | ASC -->
+<tr><td>open</td>
+    <td>${base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_method=FooModule_statMethod</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Set Successfully.</td><td></td></tr>
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//nav/span[@data-i18n="No records"]</td><td></td></tr>
+
+<tr><td>assertElementNotPresent</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tfoot/tr</td>
+    <td></td></tr>
+
+</tbody></table>
+</body>
+</html>

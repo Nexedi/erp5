@@ -60,18 +60,18 @@
        </thead>
       </table>
     </script>
-    
+
     <script id="listbox-hidden-tbody-template" type="text/x-handlebars-template">
      <table>
        <tbody class="tbody">
-        {{#each body_value}}
+        {{#each row_list}}
           <tr>
            {{#if ../show_anchor}}
              <th>
                <a class="ui-link ui-btn ui-corner-all ui-icon-carat-r ui-btn-icon-notext" href="{{jump}}"></a>
              </th>
            {{/if}}
-           {{#each tr_value}}
+           {{#each cell_list}}
               <td>
                 {{#if type}}
                   {{#if editable}}
@@ -82,7 +82,7 @@
                     </a>
                   {{/if}}
                 {{else}}
-                  <a href="{{href}}" class="ui-link">{{text}}</a>
+                  <a href="{{href}}" class="ui-link">{{default}}</a>
                 {{/if}}
               </td>
            {{/each}}
@@ -101,7 +101,7 @@
     <script id="listbox-show-tbody-template" type="text/x-handlebars-template">
        <table>
        <tbody class="tbody">
-        {{#each body_value}}
+        {{#each row_list}}
            <tr>
              {{#if ../show_anchor}}
                 <th>
@@ -111,7 +111,7 @@
              <td>
                <input value="{{value}}" type="checkbox" checked="true" class="hide_element">
              </td>
-           {{#each tr_value}}
+           {{#each cell_list}}
               <td>
                 {{#if type}}
                   {{#if editable}}
@@ -122,7 +122,7 @@
                     </a>
                   {{/if}}
                 {{else}}
-                  <a href="{{href}}" class="ui-link">{{text}}</a>
+                  <a href="{{href}}" class="ui-link">{{default}}</a>
                 {{/if}}
               </td>
            {{/each}}
@@ -140,17 +140,38 @@
     <script id="listbox-tfoot-template" type="text/x-handlebars-template">
       <table>
        <tfoot class="ui-bar-inherit tfoot">
-        <th colspan="{{colspan}}">
-          <div class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all ui-paging-menu">
-            <div class="ui-controlgroup-controls">
-              <a class="{{previous_classname}}" data-i18n="Previous" href="{{previous_url}}">Previous</a>
-              <a class="{{next_classname}}" data-i18n="Next" href="{{next_url}}">Next</a>
-              <span class="ui-btn ui-disabled" data-i18n="{{record}}">{{record}}</span>
-            </div>
-          </div>
-        </th>
+       {{#each row_list}}
+         <tr>
+           {{#if ../show_anchor}}
+             <td>Total</td>
+           {{/if}}
+           {{#each cell_list}}
+           <td>
+             {{#if type}}
+               <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
+             {{else}}
+               {{#if default}}
+                 {{default}}
+               {{else}}
+                 {{#unless ../../show_anchor }}
+                   {{#if @first}}
+                     Total
+                   {{/if}}
+                 {{/unless}}
+               {{/if}}
+             {{/if}}
+           </td>
+           {{/each}}
+         </tr>
+       {{/each}}
        </tfoot>
       </table>
+    </script>
+
+    <script id="listbox-nav-template" type="text/x-handlebars-template">
+      <a class="{{previous_classname}}" data-i18n="Previous" href="{{previous_url}}">Previous</a>
+      <a class="{{next_classname}}" data-i18n="Next" href="{{next_url}}">Next</a>
+      <span class="ui-disabled ui-right" data-i18n="{{record}}">{{record}}</span>
     </script>
 
     <script id="listbox-template" type="text/x-handlebars-template">
@@ -165,11 +186,11 @@
         <tbody></tbody>
         <tfoot class="ui-bar-inherit tfoot"></tfoot>
       </table>
+      <nav></nav>
     </div>
   </script>
-  
-  
-  
+
+
   <script id="error-message-template" type="text/x-handlebars-template">
     <div class="ui-listbox-error">
 		   <a class="ui-btn ui-corner-all ui-btn-inline" href="{{reset_url}}">

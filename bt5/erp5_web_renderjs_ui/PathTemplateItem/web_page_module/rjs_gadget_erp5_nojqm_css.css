@@ -1305,24 +1305,30 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
 .document_table table {
   width: 100%;
   text-align: left;
+  /* end-of tbody, tfoot*/
 }
 .document_table table th,
 .document_table table td {
   vertical-align: middle;
+  padding: 3pt;
 }
-.document_table table thead {
+.document_table table thead,
+.document_table table tfoot {
   background-color: #0E81C2;
   color: #FFFFFF;
 }
-.document_table table thead a {
+.document_table table thead a,
+.document_table table tfoot a {
   color: #FFFFFF;
   text-decoration: underline;
 }
-.document_table table thead tr th {
+.document_table table thead tr th,
+.document_table table tfoot tr th {
   padding: 6pt 3pt;
 }
 @media not screen and (min-width: 45em) {
-  .document_table table thead {
+  .document_table table thead,
+  .document_table table tfoot {
     display: none;
   }
 }
@@ -1342,7 +1348,6 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
 @media not screen and (max-width: 85em), only screen and (min-width: 45em) and (max-width: 85em) {
   .document_table table tbody a {
     display: block;
-    padding: 3pt;
   }
 }
 @media not screen and (min-width: 45em) {
@@ -1411,41 +1416,46 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
     content: " ~ ";
   }
 }
-.document_table table tfoot .ui-controlgroup-controls {
+.document_table nav {
   display: flex;
   padding-top: 6pt;
   border-top: 2px solid rgba(0, 0, 0, 0.14902);
 }
-.document_table table tfoot .ui-controlgroup-controls span {
+.document_table nav span {
   opacity: .3;
   flex: 2;
   text-align: right;
+  float: right;
 }
-.document_table table tfoot .ui-controlgroup-controls a {
+.document_table nav a {
   padding: 6pt;
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
   margin-right: 6pt;
 }
-.document_table table tfoot .ui-controlgroup-controls a::before {
+.document_table nav a::before {
   margin-right: 6pt;
 }
-.document_table table tfoot .ui-controlgroup-controls a:hover,
-.document_table table tfoot .ui-controlgroup-controls a:active {
+.document_table nav a:hover,
+.document_table nav a:active {
   background-color: #e0e0e0;
 }
-.document_table table tfoot .ui-controlgroup-controls a:last-of-type {
+.document_table nav a:last-of-type {
   margin-right: 0;
 }
+.document_table nav a:hover,
+.document_table nav a:active {
+  background-color: #e0e0e0;
+}
 @media not screen and (min-width: 45em) {
-  .document_table table tfoot .ui-controlgroup-controls a {
+  .document_table nav a {
     overflow: hidden;
     text-indent: -9999px;
     white-space: nowrap;
   }
 }
 @media not screen and (min-width: 45em) {
-  .document_table table tfoot .ui-controlgroup-controls a::before {
+  .document_table nav a::before {
     float: left;
     text-indent: 6pt;
   }

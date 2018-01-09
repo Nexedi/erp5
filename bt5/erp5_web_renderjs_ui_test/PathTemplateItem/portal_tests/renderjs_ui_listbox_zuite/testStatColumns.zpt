@@ -1,0 +1,73 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<!--
+Ensure Stat Column methods are executed correctly and result displayed in tfoot element of the listbox table.
+
+-  if anchor, then text "Total" is present
+-  columns which are not present in Stat Columns do not display any data
+-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS ListBox Stat Columns</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS ListBox Stat Columns</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr><td>open</td>
+    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Reset Successfully.</td><td></td></tr>
+
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<!-- Create Foo objects with IDs 0-9 -->
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=2</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<!-- Let's set up stat column property on listbox -->
+<tr><td>open</td>
+    <td>${base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_columns=getQuantity+%7C+FooModule_statQuantity+%0A+title+%7C+FooModule_statTitle</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Set Successfully.</td><td></td></tr>
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//nav/span[@data-i18n="2 Records"]</td><td></td></tr>
+
+<tr><td>store</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table</td>
+    <td>listbox_table</td></tr>
+
+<!-- Default sort on ID column has to be ASCENDING -->
+<tr><td>assertFloat</td>
+    <td>${listbox_table}/tbody/tr[1]/td[3]/a</td>
+    <td>9</td></tr>
+<tr><td>assertFloat</td>
+    <td>${listbox_table}/tbody/tr[2]/td[3]/a</td>
+    <td>8</td></tr>
+<tr><td>assertText</td><!-- This tests that "Total" appears when first column has no stat defined -->
+    <td>${listbox_table}/tfoot/tr[1]/td[1]</td>
+    <td>Total</td></tr>
+<tr><td>assertText</td><!-- Test multiple Stat Columns -->
+    <td>${listbox_table}/tfoot/tr[1]/td[2]</td>
+    <td>Foos</td></tr>
+<tr><td>assertFloat</td>
+    <td>${listbox_table}/tfoot/tr[1]/td[3]</td>
+    <td>17</td></tr>
+
+</tbody></table>
+</body>
+</html>
