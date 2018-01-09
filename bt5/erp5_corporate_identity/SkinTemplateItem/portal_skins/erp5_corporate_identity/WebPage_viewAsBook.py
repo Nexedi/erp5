@@ -3,6 +3,9 @@
 MAIN FILE: generate book in different output formats
 ================================================================================
 """
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
+
 # kw-parameters   (* default)
 # ------------------------------------------------------------------------------
 # format                                output (html*, pdf)
@@ -33,7 +36,6 @@ import re
 
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
-from datetime import datetime
 
 blank = ''
 
@@ -44,7 +46,6 @@ def translateText(snip):
 # -------------------------- Setup ---------------------------------------------
 book = context
 book_format = book.Base_setToNone(param=kw.get('format', None)) or 'html'
-book_transformation = kw.get('transformation', None)
 book_download = book.Base_setToNone(param=kw.get('document_download', None))
 book_save = book.Base_setToNone(param=kw.get('document_save', None))
 book_display_svg = book.Base_setToNone(param=kw.get('display_svg', None))
@@ -71,14 +72,10 @@ override_logo_reference = kw.get('override_logo_reference', None)
 override_batch_mode = book.Base_setToNone(param=kw.get('batch_mode', None))
 
 # -------------------------- Document Parameters  ------------------------------
-book_form = book.REQUEST
 book_localiser = book.getPortalObject().Localizer
-book_portal_type = book.getPortalType()
-book_uid = book.getUid()
 book_relative_url = book.getRelativeUrl()
 book_prefix = "Book."
 book_rendering_fix = book.Base_getCustomTemplateParameter('wkhtmltopdf_rendering_fix') or blank
-book_dialog_id = book_form.get('dialog_id', None)
 book_content = book.getTextContent()
 book_aggregate_list = []
 book_revision = book.getRevision()
@@ -107,7 +104,7 @@ if book_reference is None:
 book_full_reference = '-'.join([book_reference, book_version, book_language])
 
 # ------------------------------- Theme ----------------------------------------
-book_theme = book.Base_getThemeDict(format=book_format, css_path="template_css/book")
+book_theme = book.Base_getThemeDict(doc_format=book_format, css_path="template_css/book")
 
 # --------------------------- Source/Destination -------------------------------
 book_source = book.Base_getSourceDict(

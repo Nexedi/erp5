@@ -3,6 +3,10 @@
 Parse a string for links and return a list with link information
 ================================================================================
 """
+# parameters
+# ------------------------------------------------------------------------------
+# document_content                 string representation of document content
+
 import re
 
 def setCitation(my_counter, my_title):
@@ -33,8 +37,8 @@ citation_ab_doubles = {}
 citation_ad_doubles = {}
 citation_rd_doubles = {}
 
-for citation in re.findall('\[(.*?)\]', document_content or ''):
-  
+for citation in re.findall(r'\[(.*?)\]', document_content or ''):
+
   # disregard empty brackets
   if citation == blank:
     continue
@@ -47,14 +51,14 @@ for citation in re.findall('\[(.*?)\]', document_content or ''):
   # -------------------------------------------------------------------
   # | <a id="RD-1">RD-1</a> | <a href="">title</a> | version | number |
   # -------------------------------------------------------------------
-  # AB = Abbreviation    
+  # AB = Abbreviation
   # input:  bla ERP5 [<a href="" title="title;description">ERP5</a>]
   # output: bla ERP5 [<a href="#AB-1">#AB-1</a>]
   # -------------------------------------------------------------------
   # | <a id="AB-1">AB-1</a> | ERP5 | title | description              |
   # -------------------------------------------------------------------
 
-  # XXX swalloing missing titles, not very elaborate
+  # XXX swallowing missing title. not very elaborate
   citation_content = (re.findall(match_content, citation) or ["XXX"])[0]
   citation_content_list = citation_content.split(";")
   citation_info = []
@@ -71,7 +75,6 @@ for citation in re.findall('\[(.*?)\]', document_content or ''):
   citation_dict = {}
   citation_dict["input"] = citation
   citation_type = re.findall(match_citation_type, citation)[0]
-  
 
   if citation_type == "AD":
     item_dict = {}
@@ -102,7 +105,7 @@ for citation in re.findall('\[(.*?)\]', document_content or ''):
       citation_rd_doubles[citation_href] = citation_rd_count
       citation_relevant_count = citation_rd_count
     else:
-      citation_relevant_count = citation_rd_double[citation_href]
+      citation_relevant_count = citation_rd_doubles[citation_href]
     citation_id = ''.join([citation_type, "-", str(citation_relevant_count)])
     item_dict["id"] = citation_id
     citation_dict["item"] = item_dict

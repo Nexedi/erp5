@@ -3,6 +3,9 @@
 Update a book dialog with parameters manually entered
 ================================================================================
 """
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
+
 # XXX: url_param_string on this dialog goes easily over 2000 chars and
 # Base_callDialogMethod sets an arbitrary limit for redirects at 2000 chars.
 # Drop unnecessary fields, it's just a dialog update.

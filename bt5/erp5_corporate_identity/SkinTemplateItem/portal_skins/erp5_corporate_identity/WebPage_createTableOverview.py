@@ -3,22 +3,25 @@
 Parse a string for tables and return a list with tables information
 ================================================================================
 """
+# parameters
+# ------------------------------------------------------------------------------
+# document_content                     document content in string representation
+
 import re
 
 def setTableCaption(my_counter, my_title):
   return ''.join([
-    '<a href="#', 
+    '<a href="#',
     my_counter,
     '"></a><caption>',
     my_counter,
     ' - ',
-    my_title, 
+    my_title,
     '</caption>'
   ])
 
 # XXX single quotes?
 caption_abbreviation = "TBL"
-caption_type = "Table"
 caption_list = []
 caption_count = 1
 match_doubles = {}

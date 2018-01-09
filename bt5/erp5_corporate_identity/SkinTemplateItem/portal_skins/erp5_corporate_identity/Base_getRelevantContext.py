@@ -7,6 +7,8 @@ Return relevant (predecessor) context if Letter is a subobject
 # ------------------------------------------------------------------------------
 # context_url:                   relative url of the context calling this script
 
+from zExceptions import Unauthorized
+
 if context_url is not None:
   try:
     underlying_context = context.restrictedTraverse(context_url)
@@ -16,7 +18,9 @@ if context_url is not None:
         for predecessor in aggregate.getPredecessorValueList() or []:
           if predecessor.getRelativeUrl() == context_url:
             return aggregate
-  except:
+
+  # restricted traverse => Unauthoried, Not found, aggregate => Attribue
+  except (AttributeError, KeyError, Unauthorized):
     pass
 
 return context

@@ -3,6 +3,9 @@
 Update the letter dialog with parameters manually entered
 ================================================================================
 """
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
+
 # parameters (*default)
 # ------------------------------------------------------------------------------
 # REQUEST:                  request object

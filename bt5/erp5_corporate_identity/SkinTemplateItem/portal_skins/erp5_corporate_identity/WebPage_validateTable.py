@@ -3,8 +3,10 @@
 Upgrade table for the specific type of display
 ================================================================================
 """
-import re
+# parameters
+# ------------------------------------------------------------------------------
+# table_string                       "regexed" table string
 
 # XXX set a meaningful caption
 if table_string.find('caption=') == -1:
-  return table.replace("</tbody>", '</tbody><caption>Table</caption')
+  return table_string.replace("</tbody>", '</tbody><caption>Table</caption')

@@ -1150,7 +1150,7 @@ http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automat
 </tr>
 <tr>
   <td>open</td>
-  <td>${screenshot_url}/Document_createScreenshot?frame=4&amp;id=template_test_book_input_page_4_001_en_bmp</td>
+  <td>${screenshot_url}/Document_createScreenshot?frame=4&amp;doc_id=template_test_book_input_page_4_001_en_bmp</td>
   <td></td>
 </tr>
 <tr>
@@ -1458,9 +1458,9 @@ http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automat
   <td>Data updated.</td>
   <td></td>
 </tr>
-<!-- generate images - 
-  template_test_book_input_page_4_002_en_bmp 
-  template_test_book_input_page_5_002_en_bmp 
+<!-- generate images -
+  template_test_book_input_page_4_002_en_bmp
+  template_test_book_input_page_5_002_en_bmp
   template_test_book_input_page_9_002_en_bmp
 -->
 <tr>
@@ -1480,7 +1480,7 @@ http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automat
 </tr>
 <tr>
   <td>open</td>
-  <td>${screenshot_url}/Document_createScreenshot?frame=4&amp;id=template_test_book_input_page_4_002_en_bmp</td>
+  <td>${screenshot_url}/Document_createScreenshot?frame=4&amp;doc_id=template_test_book_input_page_4_002_en_bmp</td>
   <td></td>
 </tr>
 <tr>
@@ -1490,7 +1490,7 @@ http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automat
 </tr>
 <tr>
   <td>open</td>
-  <td>${screenshot_url}/Document_createScreenshot?frame=5&amp;id=template_test_book_input_page_5_002_en_bmp</td>
+  <td>${screenshot_url}/Document_createScreenshot?frame=5&amp;doc_id=template_test_book_input_page_5_002_en_bmp</td>
   <td></td>
 </tr>
 <tr>
@@ -1500,7 +1500,7 @@ http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automat
 </tr>
 <tr>
   <td>open</td>
-  <td>${screenshot_url}/Document_createScreenshot?frame=10&amp;id=template_test_book_input_page_10_002_en_bmp</td>
+  <td>${screenshot_url}/Document_createScreenshot?frame=10&amp;doc_id=template_test_book_input_page_10_002_en_bmp</td>
   <td></td>
 </tr>
 <tr>
@@ -1762,7 +1762,7 @@ http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automat
 </tr>
 <tr>
   <td>open</td>
-  <td>${screenshot_url}/Document_createScreenshot?frame=1&amp;id=template_test_book_input_page_1_003_de_bmp</td>
+  <td>${screenshot_url}/Document_createScreenshot?frame=1&amp;doc_id=template_test_book_input_page_1_003_de_bmp</td>
   <td></td>
 </tr>
 <tr>

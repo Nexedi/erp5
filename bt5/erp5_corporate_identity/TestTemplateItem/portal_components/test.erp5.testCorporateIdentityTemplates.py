@@ -27,13 +27,9 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.Localizer.itools.i18n.accept import AcceptLanguage
-from Products.ERP5Type.tests.utils import createZODBPythonScript
 from PIL import Image
-import transaction
-import functools
 import cStringIO
 import math
-import re
 import io
 import base64
 

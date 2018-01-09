@@ -3,6 +3,10 @@
 Parse a string for images and return a list with image information
 ================================================================================
 """
+# parameters
+# ------------------------------------------------------------------------------
+# document_content                     document content in string representation
+
 import re
 
 def setFigureAnchor(my_counter, my_title, my_href):
@@ -22,21 +26,20 @@ def setFigureAnchor(my_counter, my_title, my_href):
 
 # XXX single quotes?
 figure_abbreviation = "FIG"
-figure_type = "Figure"
 match_href = 'src="(.*?)"'
 match_content = 'alt="(.*?)"'
 figure_list = []
 figure_count = 1
 figure_doubles = {}
 
-for figure in re.findall('(<img.*?\/>)', document_content or ''):
+for figure in re.findall('(<img.*?/>)', document_content or ''):
   figure_dict = {}
   figure_count = figure_count + 1
-  
+
   # XXX swallow missing alts
   figure_title = re.findall(match_content, figure) or ["XXX"]
   figure_href = re.findall(match_href, figure) or [""]
-  figure_id = figure_abbreviation + "-" + str(figure_count) 
+  figure_id = figure_abbreviation + "-" + str(figure_count)
   figure_dict["input"] = figure
   figure_dict["output"] = setFigureAnchor(
     figure_id,

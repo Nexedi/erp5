@@ -3,6 +3,9 @@
 Display WebPage as slideshow if called with portal_skin=Slide parameter
 ================================================================================
 """
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
+
 # parameters   (* default)
 # ------------------------------------------------------------------------------
 # format:                   output in html*, pdf

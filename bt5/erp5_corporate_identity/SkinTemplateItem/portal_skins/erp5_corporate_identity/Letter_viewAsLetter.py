@@ -3,6 +3,9 @@
 MAIN FILE: generate letter in different output formats
 ================================================================================
 """
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
+
 # kw-parameters   (* default)
 # ------------------------------------------------------------------------------
 # format:                   output in html*, pdf
@@ -24,9 +27,7 @@ MAIN FILE: generate letter in different output formats
 
 import re
 
-from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
-from datetime import datetime
 
 blank = ''
 
@@ -34,7 +35,6 @@ blank = ''
 letter = context
 letter_format = kw.get('format', 'html')
 letter_display_source_adress = kw.get('letter_display_source_adress', None)
-letter_transformation = kw.get('transformation', None)
 letter_display_head = letter.Base_setToNone(param=kw.get('dislay_head', 1))
 letter_display_svg = letter.Base_setToNone(param=kw.get('display_svg', 'png'))
 letter_download = letter.Base_setToNone(param=kw.get('document_download', None))
@@ -50,14 +50,11 @@ override_batch_mode = letter.Base_setToNone(param=kw.get('batch_mode', None))
 # -------------------------- Document Parameters  ------------------------------
 letter_form = letter.REQUEST
 letter_portal_type = letter.getPortalType()
-letter_uid = letter.getUid()
 letter_relative_url = letter.getRelativeUrl()
-letter_source_candidate_uid = None
 letter_prefix = "Letter."
 
 # letter can be Web Page or Event created in Ticket module
 if letter_portal_type == "Web Page":
-  letter_dialog_id = letter_form.get('dialog_id', None)
   letter_title = letter.getTitle()
   letter_modification_date = DateTime(override_date) if override_date else letter.getCreationDate()
   letter_content = letter.getTextContent()
@@ -65,13 +62,11 @@ if letter_portal_type == "Web Page":
   letter_aggregate_list = []
   letter_source = None
   letter_destination = None
-  letter_url = letter.getAbsoluteUrl()
   letter_reference = letter.getReference()
   letter_version = letter.getVersion() or "001"
 else:
   letter_format = 'pdf'
   letter_save = letter_save or True
-  letter_dialog_id = None
   letter_modification_date = letter_form['start_date'] or None or letter.getCreationDate()
   letter_title = letter_form.get('title')
   letter_content = letter_form.get('text_content')
@@ -80,8 +75,6 @@ else:
   letter_source = letter_form.get('source') or None
   letter_destination = letter_form.get('destination') or None
   # cut corner to retrieve path to css files
-  portal_object = letter.getPortalObject()
-  letter_url = portal_object.absolute_url()
   letter_version = "001"
   letter_reference = letter_form.get("reference")
 
@@ -98,7 +91,7 @@ if letter_reference is None:
 letter_full_reference = '-'.join([letter_reference, letter_version, letter_language])
 
 # --------------------------- Layout Parameters --------------------------------
-letter_theme = letter.Base_getThemeDict(format=letter_format, css_path="template_css/letter")
+letter_theme = letter.Base_getThemeDict(doc_format=letter_format, css_path="template_css/letter")
 
 # --------------------------- Source/Destination -------------------------------
 letter_source = letter.Base_getSourceDict(

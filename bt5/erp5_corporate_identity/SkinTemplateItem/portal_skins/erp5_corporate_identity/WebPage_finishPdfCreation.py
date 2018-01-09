@@ -34,17 +34,15 @@ if doc_save == 1:
       file=doc_pdf_file
     )
 
-    # try setting aggregate, eg event attachments
-    try:
+    # setting aggregate in case context is an event
+    if context.portal_type != 'Web Page':
       context.setAggregate(document.getRelativeUrl())
-    except:
-      pass
 
     # try setting predecessor/related document to later distinguish this
     # document from other documents related to the event
     try:
-      document.setPredecessorValueList([event])
-    except:
+      document.setPredecessorValueList([context])
+    except AttributeError:
       pass
 
     message = context.Base_translateString(

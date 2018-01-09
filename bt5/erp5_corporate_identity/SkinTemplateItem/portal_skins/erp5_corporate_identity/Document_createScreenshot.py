@@ -1,4 +1,14 @@
-if id is None:
+"""
+================================================================================
+Create a screenshot from a pdf file
+================================================================================
+"""
+# parameters:
+# ------------------------------------------------------------------------------
+# frame                      which page from the pdf file should be captured
+# doc_id                     image on which this screenshot should be saved
+
+if doc_id is None:
   return "Failed. Missing image id."
 if context.getPortalType() != "PDF":
   return "Failed. Not a pdf."
@@ -16,14 +26,12 @@ preferred_document_conversion_server_url = (
 )
 try:
   system_preference.edit(
-    preferred_document_conversion_server_url="https://softinst77579.host.vifib.net/",
-    #https://cloudooo.erp5.net/
-    #https://softinst77579.host.vifib.net/
+    preferred_document_conversion_server_url="https://cloudooo.erp5.net/"
   )
-  content_type, bmp_data = pdf_page.convert("bmp", frame=frame)
+  _, bmp_data = pdf_page.convert("bmp", frame=frame)
   image = portal.portal_catalog(
     portal_type="Image",
-    id=id,
+    id=doc_id,
     limit=1
   )
   image[0].edit(data=bmp_data)

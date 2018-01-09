@@ -1359,7 +1359,7 @@ http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automat
 </tr>
 <tr>
   <td>open</td>
-  <td>${screenshot_url}/Document_createScreenshot?frame=0&amp;id=template_test_letter_input_page_0_001_en_bmp</td>
+  <td>${screenshot_url}/Document_createScreenshot?frame=0&amp;doc_id=template_test_letter_input_page_0_001_en_bmp</td>
   <td></td>
 </tr>
 <tr>
@@ -1615,7 +1615,7 @@ http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automat
 </tr>
 <tr>
   <td>open</td>
-  <td>${screenshot_url}/Document_createScreenshot?frame=0&amp;id=template_test_letter_input_page_0_002_en_bmp</td>
+  <td>${screenshot_url}/Document_createScreenshot?frame=0&amp;doc_id=template_test_letter_input_page_0_002_en_bmp</td>
   <td></td>
 </tr>
 <tr>
@@ -1906,7 +1906,7 @@ http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automat
 </tr>
 <tr>
   <td>open</td>
-  <td>${screenshot_url}/Document_createScreenshot?shot?frame=0&amp;id=template_test_letter_input_page_0_003_en_bmp</td>
+  <td>${screenshot_url}/Document_createScreenshot?shot?frame=0&amp;doc_id=template_test_letter_input_page_0_003_en_bmp</td>
   <td></td>
 </tr>
 <tr>
@@ -2169,7 +2169,7 @@ http://seleniummaster.com/sitecontent/index.php/introduction-to-selenium-automat
 </tr>
 <tr>
   <td>open</td>
-  <td>${screenshot_url}/Document_createScreenshot?frame=1&amp;id=template_test_letter_input_page_1_004_de_bmp</td>
+  <td>${screenshot_url}/Document_createScreenshot?frame=1&amp;doc_id=template_test_letter_input_page_1_004_de_bmp</td>
   <td></td>
 </tr>
 <tr>

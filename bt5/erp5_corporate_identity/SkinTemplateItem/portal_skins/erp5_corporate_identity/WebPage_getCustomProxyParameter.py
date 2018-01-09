@@ -23,7 +23,7 @@ def err(my_value):
 
 def populateProductDictFromCategoryList(my_category_list):
   result_list = []
-  for category in my_cateogry_list:
+  for category in my_category_list:
     if category.find("follow_up/") > -1:
       output_dict = {}
       stripped_category_url = category.replace("follow_up/", "")
@@ -51,7 +51,7 @@ def populateImageDict(my_image_list):
     output_dict["description"] = image.getDescription() or err("description")
     result_list.append(output_dict)
   return result_list
-    
+
 def populateBankDict(my_bank_list):
   result_list = []
   for bank in my_bank_list:
@@ -116,11 +116,11 @@ def populateOrganisationDict(my_organisation_list):
     output_dict["organisation_title"] = organisation.getTitle()
     output_dict["corporate_name"] = organisation.getCorporateName() or err("corporate name")
     output_dict["social_capital"] = organisation.getSocialCapital() or err("social capital")
-    output_dict["activity_code"] = organisation.getActivityCode() or err("activitiy code")    
-    
+    output_dict["activity_code"] = organisation.getActivityCode() or err("activitiy code")
+
     #output_dict["logo_url"] = organisation.getDefaultImageAbsoluteUrl() or err("logo_url")
     if organisation_default_image is not None:
-      output_dict["logo_url"] = organisation_default_image.getRelativeUrl() 
+      output_dict["logo_url"] = organisation_default_image.getRelativeUrl()
     else:
       output_dict["logo_url"] = err("logo_url")
 
@@ -226,7 +226,7 @@ if pass_parameter is not None and pass_source_data is not None:
   if pass_parameter == "source" or pass_parameter == "destination":
     for c in portal_object.person_module.searchFolder(uid=pass_source_data):
       organisation = c.getCareerSubordinationValue()
-      if organisation is not None: 
+      if organisation is not None:
         return populateOrganisationDict([organisation])
     return []
 

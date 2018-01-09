@@ -5,20 +5,18 @@ Create a theme dict for filling templates
 """
 # parameters:
 # ------------------------------------------------------------------------------
-# format                              Output format for building css paths
+# doc_format                          Output format for building css paths
 # css_path                            Path for template css
 
 blank = ''
 
 # -------------------------------  Set Theme -----------------------------------
-# XXX images in portal_skins folders don't convert with ?params. Only format 
+# XXX images in portal_skins folders don't convert with ?params. Only format
 # is kept in Base_convertHtmlToSingleFile
-img = context.Base_getCustomTemplateParameter("fallback_image") or blank
-pdf = ".pdf" if format == "pdf" else blank
+pdf = ".pdf" if doc_format == "pdf" else blank
 css = "default_theme_css_url"
 font = "default_theme_font_css_url_list"
 param = "?format=png"
-theme_logo_alt = "Default Logo"
 
 theme_logo_list = []
 theme_logo_dict = {}

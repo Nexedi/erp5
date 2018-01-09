@@ -5,17 +5,16 @@ Insert reports linked to in a document (including backcompat handling)
 """
 # parameters   (* default)
 # ------------------------------------------------------------------------------
-# doc_content                               webpage containing report urls
+# doc_content                          string representation of document content
 
 import re
 
 document = context
-blank = ""
 
 # backcompat
 def getReportViaFancyName(my_report_name):
   for follow_up in document_required_follow_up_list:
-    report_name = report.split("insertFollowUp").pop().split("Report")[0]
+    report_name = follow_up.split("insertFollowUp").pop().split("Report")[0]
     detail_name = "Detail" in report_name
     coverage_name = "Coverage" in report_name
 
@@ -54,7 +53,7 @@ if (doc_content.find('${WebPage_')):
 # retrieve relative_url, try to access, see if report is callable, if so
 # call it with the parameters provided
 
-for link in re.findall('([^\[]<a.*?<\/a>[^\]])', doc_content):
+for link in re.findall('([^[]<a.*?</a>[^]])', doc_content):
   link_reference = None
   link_reference_list = re.findall('href=\"(.*?)\"', link)
   if len(link_reference_list) == 0:
@@ -83,7 +82,7 @@ for link in re.findall('([^\[]<a.*?<\/a>[^\]])', doc_content):
       if report_name is not None:
         target_context = document.restrictedTraverse(link_relative_url, None)
         if target_context is not None:
-          target_caller = getattr(target_context, report_name, None)      
+          target_caller = getattr(target_context, report_name, None)
           if target_caller is not None:
             substitution_content = target_caller(**link_param_dict)
             doc_content = doc_content.replace(link, substitution_content.encode("utf-8").strip())

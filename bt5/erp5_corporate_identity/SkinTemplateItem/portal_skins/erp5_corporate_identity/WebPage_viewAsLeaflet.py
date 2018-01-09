@@ -3,6 +3,9 @@
 MAIN FILE: render two pager in different output formats
 ================================================================================
 """
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
+
 # kw-parameters   (* default)
 # ------------------------------------------------------------------------------
 # format:                   output in html*, pdf
@@ -22,7 +25,6 @@ import re
 
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
-from datetime import datetime
 
 blank = ''
 
@@ -36,8 +38,6 @@ def removeLegalesePlaceholders(content):
 leaflet = context
 leaflet_prefix = "Leaflet."
 leaflet_format = kw.get('format', 'html')
-leaflet_layout = kw.get('transformation', None)
-leaflet_transformation = kw.get('transformation', None)
 leaflet_display_svg = leaflet.Base_setToNone(param=kw.get('display_svg', "png"))
 leaflet_download = leaflet.Base_setToNone(param=kw.get('document_download', None))
 leaflet_save = leaflet.Base_setToNone(param=kw.get('document_save', None))
@@ -53,13 +53,10 @@ override_batch_mode = leaflet.Base_setToNone(param=kw.get('batch_mode', None))
 
 
 # -------------------------- Document Parameters  ------------------------------
-leaflet_uid = leaflet.getUid()
-leaflet_url = leaflet.getAbsoluteUrl()
 leaflet_content = leaflet.getTextContent()
 leaflet_title = leaflet.getTitle()
 leaflet_relative_url = leaflet.getRelativeUrl()
 leaflet_language = leaflet.Base_setToNone(param=leaflet.getLanguage())
-leaflet_description = leaflet.getDescription()
 leaflet_creation_date = leaflet.getCreationDate()
 leaflet_date = leaflet_creation_date.strftime('%Y-%b')
 leaflet_year = leaflet_creation_date.strftime('%Y')
@@ -67,9 +64,6 @@ leaflet_reference = leaflet.getReference()
 leaflet_version = leaflet.getVersion() or "001"
 leaflet_aggregate_list = []
 leaflet_modification_date = leaflet.getModificationDate()
-# XXX not matter what, live tests will say \xc2\xa9 and erp5 \xa9
-# u"©".encode("utf8")
-#leaflet_copy = 	u"\u00A9".encode('utf-8') | unicode('©', 'utf8') | '©'.encode('utf-8').strip()
 
 # test overrides
 if override_batch_mode is not None:
@@ -84,7 +78,7 @@ if leaflet_reference is None:
 leaflet_full_reference = '-'.join([leaflet_reference, leaflet_version, leaflet_language])
 
 # ---------------------------- Theme Parameters --------------------------------
-leaflet_theme = leaflet.Base_getThemeDict(format=leaflet_format, css_path="template_css/leaflet")
+leaflet_theme = leaflet.Base_getThemeDict(doc_format=leaflet_format, css_path="template_css/leaflet")
 
 # XXX set leaflet title, but not to theme (used elsewhere, but not on leaflet)
 if override_leaflet_header_title is not None:
@@ -122,7 +116,7 @@ if leaflet_source.get("enhanced_logo_url") != blank:
 leaflet_content = removeLegalesePlaceholders(leaflet_content)
 
 # custom layout in leaflet
-for image in re.findall('(<div class="left-icon">.*?<\/div>)', leaflet_content):
+for image in re.findall('(<div class="left-icon">.*?</div>)', leaflet_content):
   img_caption = blank
   caption_list = re.findall('<p class="excerpt">(.*?)</p>', image, re.S)
   if len(caption_list) > 0:

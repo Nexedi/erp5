@@ -3,6 +3,12 @@
 Update the slide dialog with parameters manually entered
 ================================================================================
 """
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
+
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
+
 # parameters   (* default)
 # ------------------------------------------------------------------------------
 # format:                   output in html*, pdf

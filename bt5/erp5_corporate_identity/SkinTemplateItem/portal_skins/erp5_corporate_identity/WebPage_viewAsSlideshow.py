@@ -3,6 +3,9 @@
 MAIN FILE: generate presentation in different output formats
 ================================================================================
 """
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
+
 # kw-parameters   (* default)
 # ------------------------------------------------------------------------------
 # format:                   output in html*, pdf
@@ -22,7 +25,6 @@ MAIN FILE: generate presentation in different output formats
 
 import re
 
-from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
 
 blank = ''
@@ -31,8 +33,8 @@ blank = ''
 def getSlideList(my_content):
   return re.findall(r'<section[^>]*?>(.*?)</section>', my_content, re.S)
 
-def getSectionSlideList(my_content):
-  return re.findall(r'(<section[^>]*?>.*?</section>)', my_content, re.S)
+#def getSectionSlideList(my_content):
+#  return re.findall(r'(<section[^>]*?>.*?</section>)', my_content, re.S)
 
 def getDetails(my_content):
   return my_content.find("</details>")
@@ -49,17 +51,17 @@ def removeSlidesWithoutDetailsFromNotes(my_content):
   content = re.sub(r'<section class="[^"]*"></section>', blank, content)
   return content
 
-def removeSectionTags(my_content):
-  content = re.sub(r'<section class="[^"]*">', blank, my_content)
-  content = content.replace('</section>', blank)
-  content = content.replace('<section>', blank)
-  return content
+#def removeSectionTags(my_content):
+#  content = re.sub(r'<section class="[^"]*">', blank, my_content)
+#  content = content.replace('</section>', blank)
+#  content = content.replace('<section>', blank)
+#  return content
 
-def removeDetailTags(my_content):
-  content = my_content.replace('</details>', blank)
-  content = content.replace('<details>', blank)
-  content = content.replace('<details open="open">', blank)
-  return content
+#def removeDetailTags(my_content):
+#  content = my_content.replace('</details>', blank)
+#  content = content.replace('<details>', blank)
+#  content = content.replace('<details open="open">', blank)
+#  return content
 
 def removeEmptyDetails(my_content):
   content = my_content.replace('<details open="open"></details>', blank)
@@ -129,10 +131,7 @@ def sortContent(my_page_list):
 doc = context
 doc_prefix = "Slideshow."
 doc_converted_content = None
-doc_uid = doc.getUid()
-doc_url = doc.getAbsoluteUrl()
 doc_format = kw.get('format', 'html')
-doc_transformation = kw.get('transformation', None)
 doc_display_notes = doc.Base_setToNone(param=kw.get('display_note', None))
 doc_display_svg = doc.Base_setToNone(param=kw.get('display_svg', 'png'))
 doc_download = doc.Base_setToNone(param=kw.get('document_download', None))
@@ -177,7 +176,6 @@ if doc_ooo is not None:
           doc_converted_content += addSlideContent(slide_content, slide_notes)
 
 # -------------------------- Document Parameters  ------------------------------
-doc_uid = doc.getUid()
 doc_dirty_content = doc_converted_content or doc.getTextContent()
 doc_content = removeEmptyDetails(doc_dirty_content)
 doc_title = doc.getTitle()
@@ -202,7 +200,7 @@ if doc_reference is None:
 doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])
 
 # --------------------------- Layout Parameters --------------------------------
-doc_theme = doc.Base_getThemeDict(format=doc_format, css_path="template_css/slide")
+doc_theme = doc.Base_getThemeDict(doc_format=doc_format, css_path="template_css/slide")
 doc_css = ''.join(['.ci-slideshow-intro.present:not(.slide-background):before {',
   'content: "%s";' % (doc_theme.get("theme_logo_description")),
   'background: #FFF url("%s") center no-repeat;' % (doc.Base_setUrl(path=doc_theme.get("theme_logo_url"), display="medium")),

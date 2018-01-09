@@ -3,6 +3,9 @@
 MAIN FILE: generate report (book header/footer and report content)
 ================================================================================
 """
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
+
 # kw-parameters   (* default)
 # ------------------------------------------------------------------------------
 # format:                   output in html*, pdf
@@ -25,10 +28,8 @@ MAIN FILE: generate report (book header/footer and report content)
 # report_title              report title
 # requirement_relative_url  XXX sale order has no direct relation to requirement
 
-import re
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
-from datetime import datetime
 
 blank = ''
 # ------------------ HTML cleanup/converter methods ----------------------------
@@ -56,7 +57,6 @@ doc_format = doc.Base_setToNone(param=kw.get('format', None)) or 'html'
 doc_requirement_relative_url = kw.get('requirement_relative_url', None)
 
 # -------------------------- Document Parameters  ------------------------------
-doc_uid = doc.getUid()
 doc_localiser = doc.getPortalObject().Localizer
 doc_relative_url = doc.getRelativeUrl()
 doc_rendering_fix = doc.Base_getCustomTemplateParameter('wkhtmltopdf_rendering_fix') or blank
@@ -96,7 +96,7 @@ if doc_reference is blank:
 doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])
 
 # ------------------------------- Theme ----------------------------------------
-doc_theme = doc.Base_getThemeDict(format=doc_format, css_path="template_css/book")
+doc_theme = doc.Base_getThemeDict(doc_format=doc_format, css_path="template_css/book")
 
 # --------------------------- Source/Destination -------------------------------
 doc_source = doc.Base_getSourceDict(

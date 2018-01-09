@@ -3,6 +3,10 @@
 Export WebPage as Book
 ================================================================================
 """
+
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
+
 # parameters
 # ------------------------------------------------------------------------------
 # format                                output (html*, pdf)
