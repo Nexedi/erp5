@@ -1,10 +1,13 @@
-from Acquisition import aq_self, aq_base
+from Acquisition import aq_self, aq_base, aq_inner
 
 def Base_aqSelf(self):
   return aq_self(self)
 
 def Base_aqBase(self):
   return aq_base(self)
+
+def Base_aqInner(self):
+  return aq_inner(self)
 
 def Field_getSubFieldKeyDict(self, field, field_id, key=None):
   """XXX"""
