@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>DocumentConversion</string> </value>
+            <value> <string>TemplateDocumentConversion</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>extension.erp5.DocumentConversion</string> </value>
+            <value> <string>extension.erp5.TemplateDocumentConversion</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

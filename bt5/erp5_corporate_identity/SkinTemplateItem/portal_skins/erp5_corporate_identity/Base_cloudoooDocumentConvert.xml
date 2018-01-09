@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_module</string> </key>
-            <value> <string>DocumentConversion</string> </value>
+            <value> <string>TemplateDocumentConversion</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
