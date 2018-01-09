@@ -53,6 +53,12 @@
   <td>${base_url}/web_site_module/${test_url}/</td>
   <td></td>
 </tr>
+<!-- Install can be longer than 90s -->
+<tr>
+  <td>pause</td>
+  <td>60000</td>
+  <td></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n="Storages"]</td>
@@ -120,18 +126,8 @@
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>name=editable</td>
-  <td></td>
-</tr>
-<tr>
   <td>store</td>
-  <td tal:content="python: 'Test Titre %s' % DateTime()">Titre</td>
+  <td>Titre</td>
   <td>title</td>
 </tr>
 <tr>
@@ -184,6 +180,7 @@
   <td>//textarea[@title='Description']</td>
   <td>${description}</td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load"/>
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Save']</td>
@@ -199,21 +196,7 @@
   <td>//a[@data-i18n='Document']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Add</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=${title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=${title}</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/open_document_with_title"/>
 <tr>
   <td>waitForElementPresent</td>
   <td>//textarea[@title='Description']</td>
@@ -243,25 +226,4 @@
   <td>verifyValue</td>
   <td>//textarea[@title='Description']</td>
   <td>${description}</td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Content</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Content</td>
-  <td></td>
-</tr>
-<!-- Stop Generic -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='asc-loadmask-title']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>identifier=id_main</td>
-  <td></td>
 </tr>

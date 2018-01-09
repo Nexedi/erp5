@@ -19,11 +19,6 @@
     <td tal:content="python: 'test.officejs.onlyoffice.spreadsheet.replication.xlsy.%s' % DateTime().strftime('%Y%m%d%H%M%S')">Titre</td>
     <td>title</td>
   </tr>
-  <tr>
-    <td>store</td>
-    <td>ooffice_spreadsheet</td>
-    <td>test_url</td>
-  </tr>
 
   <!-- Initialize -->
   <tr>
@@ -89,7 +84,13 @@
 
   <tr>
     <td>open</td>
-    <td>${base_url}/web_site_module/${test_url}/</td>
+    <td>${base_url}/web_site_module/ooffice_spreadsheet/</td>
+    <td></td>
+  </tr>
+  <!-- Install can be longer than 90s -->
+  <tr>
+    <td>pause</td>
+    <td>30000</td>
     <td></td>
   </tr>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/choice_erp5_storage"/>
@@ -97,8 +98,8 @@
 
   <!--1-->
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/open_document_with_title"/>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/click_to_content"/><!-- first time after open -->
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load"/>
+
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load_spreadsheet"/>
   <tal:block tal:define="check_value string:1;
                          set_value string:2">
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOfficeCell/macros/current_cell" />
@@ -108,7 +109,7 @@
   <!-- XXX Romain -->
   <!--tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/open_document_with_title"/>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/click_to_content"/>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load"/>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load_spreadsheet"/>
   <tal:block tal:define="check_value string:2;
                          set_value string:2">
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOfficeCell/macros/current_cell" />
@@ -120,7 +121,7 @@
   <!-- XXX Romain -->
   <!--tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/open_document_with_title"/>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/click_to_content"/>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load"/>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load_spreadsheet"/>
   <tal:block tal:define="check_value string:2;
                          set_value string:2">
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOfficeCell/macros/current_cell" />
@@ -132,7 +133,7 @@
 
   <!--2-->
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/open_document_with_title"/>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load"/>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load_spreadsheet"/>
   <tal:block tal:define="check_value string:2;
                          set_value string:3">
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOfficeCell/macros/current_cell" />

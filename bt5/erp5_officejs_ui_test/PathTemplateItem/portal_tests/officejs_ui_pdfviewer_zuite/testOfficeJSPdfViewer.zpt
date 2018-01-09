@@ -56,7 +56,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=Local is Enough</td>
+  <td>//a[@data-i18n='Storages']</td>
   <td></td>
 </tr>
 <tr>
@@ -87,6 +87,16 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
   <td>link=Local is Enough</td>
   <td></td>
 </tr>
@@ -109,16 +119,6 @@
 <tr>
   <td>waitForElementPresent</td>
   <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>name=editable</td>
   <td></td>
 </tr>
 <tr>
@@ -175,6 +175,11 @@
   <td>type</td>
   <td>//textarea[@title='Description']</td>
   <td>${description}</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>identifier=viewerContainer</td>
+  <td></td>
 </tr>
 <tr>
   <td>click</td>
@@ -235,20 +240,4 @@
   <td>verifyValue</td>
   <td>//textarea[@title='Description']</td>
   <td>${description}</td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Content</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Content</td>
-  <td></td>
-</tr>
-<!-- Stop Generic -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>identifier=viewerContainer</td>
-  <td></td>
 </tr>
