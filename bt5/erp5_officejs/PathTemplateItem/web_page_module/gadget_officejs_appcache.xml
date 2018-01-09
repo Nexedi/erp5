@@ -139,8 +139,6 @@ gadget_officejs_page_add_document.html\n
 gadget_officejs_page_jio_configurator.html\n
 gadget_officejs_page_jio_dav_configurator.html\n
 gadget_officejs_page_jio_erp5_configurator.html\n
-gadget_officejs_page_login.html\n
-gadget_officejs_page_logout.html\n
 gadget_officejs_page_share_webrtc_jio.html\n
 gadget_officejs_page_sync.html\n
 gadget_officejs_page_document_list.html\n
@@ -156,8 +154,6 @@ gadget_officejs_page_add_document.js\n
 gadget_officejs_page_jio_configurator.js\n
 gadget_officejs_page_jio_dav_configurator.js\n
 gadget_officejs_page_jio_erp5_configurator.js\n
-gadget_officejs_page_login.js\n
-gadget_officejs_page_logout.js\n
 gadget_officejs_page_share_webrtc_jio.js\n
 gadget_officejs_page_sync.js\n
 gadget_officejs_page_document_list.js\n
@@ -313,7 +309,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.28053.22886.7526</string> </value>
+                <value> <string>960.52124.17632.64989</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -331,7 +327,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1495094344.5</float>
+                        <float>1515517086.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
