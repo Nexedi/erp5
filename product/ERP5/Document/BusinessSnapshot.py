@@ -271,7 +271,7 @@ class BusinessSnapshot(Folder):
                                                 temp_object=True,
                                                 )
 
-    if installed_snaphot is not in (self, None):
+    if installed_snaphot not in (self, None):
 
       old_item_list = installed_snapshot.getItemList()
       old_state_path_list = installed_snapshot.getItemPathList()
