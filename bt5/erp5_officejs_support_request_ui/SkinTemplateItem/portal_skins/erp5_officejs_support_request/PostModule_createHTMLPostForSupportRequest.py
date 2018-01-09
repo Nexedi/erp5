@@ -1,5 +1,5 @@
-follow_up_object, = context.getPortalObject().portal_catalog(relative_url=follow_up, limit=1)
-follow_up_object.edit()  # update modification date
+context.getPortalObject().restrictedTraverse(follow_up).edit()  # update modification date
+
 post = context.PostModule_createHTMLPostFromText(
   follow_up=follow_up,
   data=data,
