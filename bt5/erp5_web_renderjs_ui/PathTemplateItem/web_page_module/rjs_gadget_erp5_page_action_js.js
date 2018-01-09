@@ -80,8 +80,8 @@
       return gadget.jio_getAttachment(options.jio_key, "links")
         .push(function (result) {
           erp5_document = result;
-          action_list = asArray(erp5_document._links.action_workflow);
-          transition_list = asArray(erp5_document._links.action_object_jio_action)
+          transition_list = asArray(erp5_document._links.action_workflow);
+          action_list = asArray(erp5_document._links.action_object_jio_action)
                         .concat(asArray(erp5_document._links.action_object_clone_action));
 
           return RSVP.all([
