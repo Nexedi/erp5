@@ -982,6 +982,29 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
       mode="search",
       default_param_json='eyJcdTAwZWEiOiAiXHUwMGU4In0=')
 
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Test_listProducts', '*args, **kwargs', """
+return context.getPortalObject().foo_module.contentValues()
+""")
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoas_proxy_listbox_editable_field(self, **kw):
+    self.portal.foo_module.FooModule_viewFooList.proxifyField({'listbox':'Base_viewFieldLibrary.my_list_mode_listbox'})
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      local_roles=["Assignor", "Assignee"],
+      list_method='Test_listProducts',
+      select_list=['id', 'title', 'creation_date', 'modification_date'],
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+    )
+    result_dict = json.loads(result)
+    #editalble creation date is defined at proxy form
+    self.assertEqual(result_dict['_embedded']['contents'][0]['creation_date']['type'], 'DateTimeField')
+    self.assertEqual(result_dict['_embedded']['contents'][0]['modification_date']['type'], 'DateTimeField')
+
   @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
   @simulate('Test_listObjects', '*args, **kwargs', """
