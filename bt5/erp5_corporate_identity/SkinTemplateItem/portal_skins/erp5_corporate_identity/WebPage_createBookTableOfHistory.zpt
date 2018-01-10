@@ -27,7 +27,7 @@ Creates the Book sections (version, authors, etc).
     <link rel="stylesheet" tal:attributes="href book_theme_css_url" />
     <link rel="stylesheet" tal:attributes="href book_template_css_url" />
     </head>
-    	<body class="ci-book" tal:condition="python: book_include_history is not None">
+    	<body class="ci-book" tal:condition="python: book_include_history != None">
     	  <tal:block metal:use-macro="context/WebPage_createBookTableOfHistory/macros/book_history" />
       </body>
 	 </html>
@@ -35,7 +35,7 @@ Creates the Book sections (version, authors, etc).
 
 <tal:block tal:condition="python: False">
   <tal:block metal:define-macro="book_history">
-    <tal:block tal:condition="python: book_include_history is not None">
+    <tal:block tal:condition="python: book_include_history != None">
       <section>
     	  <table class="ci-book-table ci-book-signature-list" border="1" width="100%" cellpadding="0" cellspacing="0">
         	<thead>

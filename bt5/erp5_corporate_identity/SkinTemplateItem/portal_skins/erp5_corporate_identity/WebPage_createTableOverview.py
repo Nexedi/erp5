@@ -28,7 +28,7 @@ match_doubles = {}
 
 for caption in re.findall('(<caption.*?>.*?</caption>)', document_content or ''):
   caption_title = re.findall('<caption.*?>(.*?)</caption>', caption)[0]
-  if match_doubles.get(caption_title, None) is None:
+  if match_doubles.get(caption_title, None) == None:
     match_doubles[caption_title] = caption_count
     caption_relevant_count = caption_count
   else:

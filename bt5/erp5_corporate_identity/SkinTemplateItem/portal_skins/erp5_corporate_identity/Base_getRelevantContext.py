@@ -9,7 +9,7 @@ Return relevant (predecessor) context if Letter is a subobject
 
 from zExceptions import Unauthorized
 
-if context_url is not None:
+if context_url != None:
   try:
     underlying_context = context.restrictedTraverse(context_url)
     underlying_portal_type = underlying_context.getPortalType()

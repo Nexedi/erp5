@@ -55,17 +55,17 @@ Creates the Letter footer section.
     <div class="ci-letter-footer ci-letter-footer-simple">
 	    <p class="ci-letter-simple-adress">
 	      <span tal:content="python: letter_source_company_corporate_name"></span>&nbsp;
-	      <tal:block tal:condition="python: letter_source_company_capital is not None">
+	      <tal:block tal:condition="python: letter_source_company_capital != None">
   	      <span i18n:translate="" i18n:domain="erp5_ui">au capital de</span>&nbsp;
   	      <span tal:content="python: letter_source_company_capital"></span>
   	      <span tal:content="python: letter_source_company_capital_currency or '&euro;'"></span>,
   	     </tal:block>
   	     <span tal:content="python: ''.join([letter_source_address, ', ', letter_source_postal_code, ' ', letter_source_city])"></span>
   	     <br/>
-  	     <tal:block tal:condition="python: letter_source_registered_court is not None">
+  	     <tal:block tal:condition="python: letter_source_registered_court != None">
   	      <span tal:content="python: letter_source_registered_court"></span> -
   	     </tal:block>
-  	     <tal:block tal:condition="python: letter_source_ape_code is not None">
+  	     <tal:block tal:condition="python: letter_source_ape_code != None">
   	      <span i18n:translate="" i18n:domain="erp5_ui">APE</span> : <span tal:content="letter_source_ape_code"></span> -
   	     </tal:block>
          <span i18n:translate="" i18n:domain="erp5_ui">N° TVA</span> : <span tal:content="python: letter_source_vat"></span>

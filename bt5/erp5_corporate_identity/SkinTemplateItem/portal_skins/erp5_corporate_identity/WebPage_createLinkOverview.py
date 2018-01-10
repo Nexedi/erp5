@@ -83,7 +83,7 @@ for citation in re.findall(r'\[(.*?)\]', document_content or ''):
     item_dict["number"] = citation_info[1]
     item_dict["version"] = citation_info[2]
     item_dict["href"] = citation_href
-    if citation_ad_doubles.get(citation_href, None) is None:
+    if citation_ad_doubles.get(citation_href, None) == None:
       citation_ad_doubles[citation_href] = citation_ad_count
       citation_relevant_count = citation_ad_count
     else:
@@ -101,7 +101,7 @@ for citation in re.findall(r'\[(.*?)\]', document_content or ''):
     item_dict["number"] = citation_info[1]
     item_dict["version"] = citation_info[2]
     item_dict["href"] = citation_href
-    if citation_rd_doubles.get(citation_href, None) is None:
+    if citation_rd_doubles.get(citation_href, None) == None:
       citation_rd_doubles[citation_href] = citation_rd_count
       citation_relevant_count = citation_rd_count
     else:
@@ -124,7 +124,7 @@ for citation in re.findall(r'\[(.*?)\]', document_content or ''):
     item_dict["title"] = citation_info[0]
     item_dict["description"] = citation_info[1]
     item_dict["href"] = citation_href
-    if citation_ab_doubles.get(citation_href, None) is None:
+    if citation_ab_doubles.get(citation_href, None) == None:
       citation_ab_doubles[citation_href] = citation_ab_count
       citation_relevant_count = citation_ab_count
     else:

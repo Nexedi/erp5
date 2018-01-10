@@ -24,7 +24,7 @@ def getReportViaFancyName(my_report_name):
 
     method_name = ''.join(['Base_render', report_name, 'TextDocumentReportAsHtml'])
     method_call = getattr(follow_up, method_name)
-    if method_call is not None:
+    if method_call != None:
 
       # extra curl: Coverage report requires parameter details (1|0)
       if coverage_name:
@@ -63,7 +63,7 @@ for link in re.findall('([^[]<a.*?</a>[^]])', doc_content):
   if len(link_reference_list) > 0:
     link_reference = link_reference_list[0]
 
-  if link_reference is not None and link_reference.find("report=") > -1:
+  if link_reference != None and link_reference.find("report=") > -1:
 
     # url for report, check if report can be found.
     report_name = None
@@ -79,11 +79,11 @@ for link in re.findall('([^[]<a.*?</a>[^]])', doc_content):
         else:
           link_param_dict[param_key] = param_value
 
-      if report_name is not None:
+      if report_name != None:
         target_context = document.restrictedTraverse(link_relative_url, None)
-        if target_context is not None:
+        if target_context != None:
           target_caller = getattr(target_context, report_name, None)
-          if target_caller is not None:
+          if target_caller != None:
             substitution_content = target_caller(**link_param_dict)
             doc_content = doc_content.replace(link, substitution_content.encode("utf-8").strip())
 

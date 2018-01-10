@@ -56,7 +56,7 @@ Generates the letter Content
           <tr>
             <td></td>
             <td class="ci-letter-source">
-              <tal:block tal:condition="python: letter_display_source_address is not None">
+              <tal:block tal:condition="python: letter_display_source_address != None">
                 <tal:block tal:condition="python: letter_source_company">
                   <span tal:content="letter_source_company"></span><span class="ci-letter-separator">-</span>
                 </tal:block>

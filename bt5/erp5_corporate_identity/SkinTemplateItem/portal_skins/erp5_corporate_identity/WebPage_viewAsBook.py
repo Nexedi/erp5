@@ -51,7 +51,7 @@ book_save = book.Base_setToNone(param=kw.get('document_save', None))
 book_display_svg = book.Base_setToNone(param=kw.get('display_svg', None))
 
 book_include_content_table = kw.get('include_content_table', None)
-if book_include_content_table is None:
+if book_include_content_table == None:
   book_include_content_table = 1
 else:
   book_include_content_table = book.Base_setToNone(param=book_include_content_table)
@@ -83,23 +83,23 @@ book_modification_date = book.getModificationDate()
 book_language = book.Base_setToNone(param=book.getLanguage())
 
 # XXX sigh for passing "" around
-book_reference = html_quote(override_document_reference) if book.Base_setToNone(override_document_reference) is not None else book.Base_setToNone(book.getReference())
-book_short_title = html_quote(override_document_short_title) if book.Base_setToNone(override_document_short_title) is not None else book.Base_setToNone(book.getShortTitle())
-book_version = html_quote(override_document_version) if book.Base_setToNone(override_document_version) is not None else book.Base_setToNone(book.getVersion()) or "001"
-book_description = html_quote(override_document_description) if book.Base_setToNone(override_document_description) is not None else book.Base_setToNone(book.getDescription())
-book_title = html_quote(override_document_title) if book.Base_setToNone(override_document_title) is not None else book.Base_setToNone(book.getTitle())
+book_reference = html_quote(override_document_reference) if book.Base_setToNone(override_document_reference) != None else book.Base_setToNone(book.getReference())
+book_short_title = html_quote(override_document_short_title) if book.Base_setToNone(override_document_short_title) != None else book.Base_setToNone(book.getShortTitle())
+book_version = html_quote(override_document_version) if book.Base_setToNone(override_document_version) != None else book.Base_setToNone(book.getVersion()) or "001"
+book_description = html_quote(override_document_description) if book.Base_setToNone(override_document_description) != None else book.Base_setToNone(book.getDescription())
+book_title = html_quote(override_document_title) if book.Base_setToNone(override_document_title) != None else book.Base_setToNone(book.getTitle())
 
 # override for tests
-if override_batch_mode is not None:
+if override_batch_mode != None:
   book_modification_date = DateTime("1976-11-04")
   book_revision = "1"
 
 book_short_date = book_modification_date.strftime('%Y-%m-%d')
-if book_language is not None:
+if book_language != None:
   book.REQUEST['AcceptLanguage'].set(book_language, 10)
-if book_language is None:
+if book_language == None:
   book_language = blank
-if book_reference is None:
+if book_reference == None:
   book_reference = book_prefix + book_title.replace(" ", ".")
 book_full_reference = '-'.join([book_reference, book_version, book_language])
 
@@ -129,21 +129,21 @@ book_table_of_content = blank
 book_content.replace("${WebPage_insertTableOfReferences}", blank)
 
 # XXX: not done
-if book_include_history_table is not None:
+if book_include_history_table != None:
   book_signature_list = []
   book_version_list = []
   book_distribution_list = []
 
 # old generate book
-if book_include_linked_content is not None:
+if book_include_linked_content != None:
   book_content = book.WebPage_embedLinkedDocumentList(doc_content=book_content)
 
 # embed reports
-if book_include_report_content is not None:
+if book_include_report_content != None:
   book_content = book.WebPage_embedReportDocumentList(doc_content=book_content)
 
 # table of links
-if book_include_reference_table is not None:
+if book_include_reference_table != None:
   book_link_list = book.WebPage_createLinkOverview(book_content)
   table_link_list = book.WebPage_createTableOverview(book_content)
   image_link_list = book.WebPage_createImageOverview(book_content)
@@ -185,7 +185,7 @@ if book_include_reference_table is not None:
 
 # table of content has to be created manually to run over everything that
 # should be indexed in the toc
-if book_include_content_table is not None:
+if book_include_content_table != None:
   book_translated_toc_title = translateText("Table of Contents")
   if book_format == "pdf":
     book_table_of_content = book.WebPage_createBookXslTableOfContent(
@@ -332,11 +332,11 @@ if book_format == "pdf":
     b64encode(book.Base_convertHtmlToSingleFile(book_cover, allow_script=True)),
   ]
   after_toc_data_list = []
-  if book_include_history_table is not None:
+  if book_include_history_table != None:
     before_toc_data_list.append(
       b64encode(book.Base_convertHtmlToSingleFile(book_history, allow_script=True))
     )
-  if book_include_reference_table is not None: 
+  if book_include_reference_table != None:
     after_toc_data_list.append(
       b64encode(book.Base_convertHtmlToSingleFile(book_references, allow_script=True))
     )
@@ -348,7 +348,7 @@ if book_format == "pdf":
     encoding="utf8",
     margin_top=40,
     margin_bottom=20,
-    toc=True if book_include_content_table is not None else False,
+    toc=True if book_include_content_table != None else False,
     before_toc_data_list=before_toc_data_list,
     xsl_style_sheet_data=b64encode(xsl_style_sheet_data),
     after_toc_data_list=after_toc_data_list,

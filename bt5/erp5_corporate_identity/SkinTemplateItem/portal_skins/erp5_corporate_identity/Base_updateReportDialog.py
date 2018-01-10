@@ -32,7 +32,7 @@ Update a book report dialog with parameters manually entered
 # requirement_relative_url  XXX sale order has no direct relation to requirement
 
 from Products.ERP5Type.Message import translateString
-if dialog_id is not None:
+if dialog_id != None:
   return context.Base_redirect(
     dialog_id,
     keep_items = dict(

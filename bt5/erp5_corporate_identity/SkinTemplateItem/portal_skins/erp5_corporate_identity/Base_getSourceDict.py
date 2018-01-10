@@ -18,7 +18,7 @@ from Products.PythonScripts.standard import html_quote
 source_logo_url = None
 default_bank_account_uid=context.WebPage_getCustomParameter("default_bank_account_uid")
 
-if source is None:
+if source == None:
   default_company_title=context.WebPage_getCustomParameter("default_company_title")
   contributor_title_string = blank
   source_person = None
@@ -29,7 +29,7 @@ if source is None:
   source_set = None
 
   # source person
-  if override_source_person_title is not None or override_source_person_title is blank:
+  if override_source_person_title != None or override_source_person_title == blank:
     source_person_list = context.Base_getCustomTemplateProxyParameter("override_person", override_source_person_title)
   if len(source_person_list) == 0:
     source_person_list = context.Base_getCustomTemplateProxyParameter("author", None) or []
@@ -39,7 +39,7 @@ if source is None:
 
   # source organisation
   # order: override => follow-up => default_organisation_uid => default_company_title => source_person career subordinate
-  if override_source_organisation_title is not None or override_source_organisation_title is blank:
+  if override_source_organisation_title != None or override_source_organisation_title == blank:
     source_organisation_list = context.Base_getCustomTemplateProxyParameter("override_organisation", override_source_organisation_title)
   if len(source_organisation_list) == 0:
     source_organisation_list = context.Base_getCustomTemplateProxyParameter("organisation")
@@ -49,7 +49,7 @@ if source is None:
     source_organisation_list = context.Base_getCustomTemplateProxyParameter("sender", source_organisation_uid) or []
   if len(source_organisation_list) == 0 and default_company_title:
     source_organisation_list = context.Base_getCustomTemplateProxyParameter("override_organisation", default_company_title) or []
-  if len(source_organisation_list) == 0 and source_person is not None:
+  if len(source_organisation_list) == 0 and source_person != None:
     for organisation_candidate in source_person_list:
       organisation_candidate_list = context.Base_getCustomTemplateProxyParameter("source", organisation_candidate.get("uid")) or []
       if len(organisation_candidate_list) > 0:
@@ -69,7 +69,7 @@ else:
   source = context.Base_getCustomTemplateProxyParameter("source", source_uid)[0]
 
 # override specific bank account (no default to pick correct one if multiple exist)
-if default_bank_account_uid is not None:
+if default_bank_account_uid != None:
   override_bank_account_list = context.Base_getCustomTemplateProxyParameter("bank", default_bank_account_uid) or []
   if len(override_bank_account_list) > 0:
     override_bank_account = override_bank_account_list[0]
@@ -81,12 +81,12 @@ if default_bank_account_uid is not None:
 if override_logo_reference:
   source_logo_url = html_quote(override_logo_reference) + "?format=png"
   source_set = True
-if source_logo_url is None:
+if source_logo_url == None:
   source_logo_url = source.get("logo_url", blank)
-if source_logo_url is not blank and source_set is None:
+if source_logo_url != blank and source_set == None:
   # XXX: test environment fails if url with parameters are supplied
   source_logo_url = source_logo_url + "?format=png"
-if source_logo_url is blank and theme_logo_url is not None:
+if source_logo_url == blank and theme_logo_url != None:
   source_logo_url = theme_logo_url
 source["enhanced_logo_url"] = source_logo_url
 

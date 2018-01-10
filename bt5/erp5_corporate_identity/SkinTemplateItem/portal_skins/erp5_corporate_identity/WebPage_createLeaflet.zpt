@@ -44,7 +44,7 @@ Generates the complete leaflet
     </tal:block>
     <link rel="stylesheet" tal:attributes="href leaflet_theme_css_url" />
     <link rel="stylesheet" tal:attributes="href leaflet_template_css_url" />
-    <tal:block tal:condition="python: leaflet_css is not None">
+    <tal:block tal:condition="python: leaflet_css != None">
       <style type="text/css" tal:content="python: leaflet_css"></style>
     </tal:block>
     <script type="text/javascript">

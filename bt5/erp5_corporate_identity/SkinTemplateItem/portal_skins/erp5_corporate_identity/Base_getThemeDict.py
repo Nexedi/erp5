@@ -26,7 +26,7 @@ theme = (
   context.WebPage_getCustomParameter("theme") or
   context.WebPage_getCustomParameter("default_company_title")
 )
-if theme is not None:
+if theme != None:
   theme = theme.lower()
   theme_logo_prefix = context.WebPage_getCustomParameter("default_logo_prefix")
   if theme_logo_prefix:
@@ -34,14 +34,14 @@ if theme is not None:
     theme_logo_list = context.Base_getCustomTemplateProxyParameter("logo", theme_reference)
     if len(theme_logo_list) > 0:
       theme_logo_dict = theme_logo_list[0]
-if theme is None:
+if theme == None:
   theme = "default"
 
 theme_dict = {}
 theme_dict["theme"] = theme
 theme_dict["theme_logo_description"] = theme_logo_dict.get("description", blank)
 theme_dict["theme_logo_url"] = context.WebPage_getCustomParameter("fallback_image")
-if theme_logo_dict.get("relative_url", None) is not None:
+if theme_logo_dict.get("relative_url", None) != None:
   theme_dict["theme_logo_url"] = theme_logo_dict.get("relative_url") + param
 theme_dict["template_css_url"] = css_path + pdf + ".css"
 theme_dict["fallback_img_url"] = context.WebPage_getCustomParameter("fallback_image") or blank

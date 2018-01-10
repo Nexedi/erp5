@@ -67,11 +67,11 @@ doc_modification_date = DateTime()
 doc_short_date = doc_modification_date.strftime('%Y-%m-%d')
 
 # XXX sigh for passing "" around
-doc_reference = html_quote(override_document_reference) if doc.Base_setToNone(override_document_reference) is not None else doc.Base_setToNone(doc.getReference()) or blank
-doc_short_title = html_quote(doc_report_title) if doc.Base_setToNone(doc_report_title) is not None else doc.Base_setToNone(doc.getShortTitle()) or blank
-doc_version = html_quote(override_document_version) if doc.Base_setToNone(override_document_version) is not None else doc.Base_setToNone(getattr(doc, "version", None)) or "001"
-doc_title = html_quote(override_document_title) if doc.Base_setToNone(override_document_title) is not None else doc.Base_setToNone(doc.getTitle()) or blank
-doc_language = html_quote(override_document_language) if doc.Base_setToNone(override_document_language) is not None else doc.Base_setToNone(doc.getLanguage())
+doc_reference = html_quote(override_document_reference) if doc.Base_setToNone(override_document_reference) != None else doc.Base_setToNone(doc.getReference()) or blank
+doc_short_title = html_quote(doc_report_title) if doc.Base_setToNone(doc_report_title) != None else doc.Base_setToNone(doc.getShortTitle()) or blank
+doc_version = html_quote(override_document_version) if doc.Base_setToNone(override_document_version) != None else doc.Base_setToNone(getattr(doc, "version", None)) or "001"
+doc_title = html_quote(override_document_title) if doc.Base_setToNone(override_document_title) != None else doc.Base_setToNone(doc.getTitle()) or blank
+doc_language = html_quote(override_document_language) if doc.Base_setToNone(override_document_language) != None else doc.Base_setToNone(doc.getLanguage())
 
 doc_content = doc_report(
   display_report=True,
@@ -84,14 +84,14 @@ doc_content = doc_report(
 )
 
 # test overrides
-if override_batch_mode is not None:
+if override_batch_mode != None:
   doc_modification_date = DateTime("1976-11-04")
   doc_revision = "1"
-if doc_language is not None:
+if doc_language != None:
   doc.REQUEST['AcceptLanguage'].set(doc_language, 10)
-if doc_language is None:
+if doc_language == None:
   doc_language = blank
-if doc_reference is blank:
+if doc_reference == blank:
   doc_reference = "Report." + doc_title.replace(" ", ".")
 doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])
 

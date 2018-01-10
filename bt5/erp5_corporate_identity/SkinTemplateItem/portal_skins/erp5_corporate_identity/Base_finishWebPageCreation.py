@@ -19,7 +19,7 @@ Save, download or return generated HTML Document
 
 if doc_save == 1:
   web_page_module = getattr(context, 'web_page_module', None)
-  if web_page_module is not None:
+  if web_page_module != None:
     web_page = web_page_module.newContent(
       portal_type="Web Page",
       version=doc_version,

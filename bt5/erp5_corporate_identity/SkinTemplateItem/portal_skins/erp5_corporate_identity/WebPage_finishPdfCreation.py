@@ -19,7 +19,7 @@ Save, download or return generated PDF Document
 
 if doc_save == 1:
   dms_module = getattr(context, 'document_module', None)
-  if dms_module is not None:
+  if dms_module != None:
     document = dms_module.newContent(
       portal_type="PDF",
       version=doc_version,

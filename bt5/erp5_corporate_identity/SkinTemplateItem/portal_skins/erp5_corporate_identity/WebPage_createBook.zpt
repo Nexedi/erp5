@@ -58,10 +58,10 @@ Generates the complete book (only called in HTML version)
     </head>
     	<body class="ci-book" onload="setPlaceholdersWithUrlParameters()">
     	  <tal:block metal:use-macro="context/WebPage_createBookHeader/macros/book_header" />
-    	  <tal:block tal:condition="python: book_raw_report is not True">
+    	  <tal:block tal:condition="python: book_raw_report != True">
     	    <tal:block metal:use-macro="context/WebPage_createBookCover/macros/book_cover" />
     	  </tal:block>
-  	    <tal:block tal:condition="python: book_include_history is not None">
+  	    <tal:block tal:condition="python: book_include_history != None">
     	    <tal:block metal:use-macro="context/WebPage_createBookTableOfHistory/macros/book_history" />
         </tal:block>
         <tal:block tal:replace="structure book_table_of_content"></tal:block>

@@ -13,7 +13,7 @@ Upgrade image for the specific type of display
 
 import re
 
-if img_string is None or img_string == "":
+if img_string == None or img_string == "":
   return img_string
 
 img_src = re.findall("src=['\"](.*?)['\"]", img_string)[0]

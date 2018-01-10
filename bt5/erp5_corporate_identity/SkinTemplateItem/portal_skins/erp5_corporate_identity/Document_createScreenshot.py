@@ -8,7 +8,7 @@ Create a screenshot from a pdf file
 # frame                      which page from the pdf file should be captured
 # doc_id                     image on which this screenshot should be saved
 
-if doc_id is None:
+if doc_id == None:
   return "Failed. Missing image id."
 if context.getPortalType() != "PDF":
   return "Failed. Not a pdf."

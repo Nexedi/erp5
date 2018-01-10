@@ -45,7 +45,7 @@ def getNestedSection(my_content):
 def removeSlidesWithoutDetailsFromNotes(my_content):
   slide_list = getSlideList(my_content)
   for slide in slide_list:
-    if getNestedSection(slide) is False:
+    if getNestedSection(slide) == False:
       my_content = my_content.replace(slide, blank)
   content = my_content.replace('<section></section>', blank)
   content = re.sub(r'<section class="[^"]*"></section>', blank, content)
@@ -118,9 +118,9 @@ def sortContent(my_page_list):
           if page_content.find("<center>") > -1:
             page_tuple_first = (page_title, page_content, "first")
       sort_content_list = sorted(page_content_list, key=lambda page_foo: page_foo[0])
-    if page_tuple_last is not None:
+    if page_tuple_last != None:
       sort_content_list.append(page_tuple_last)
-    if page_tuple_first is not None:
+    if page_tuple_first != None:
       sort_content_list = [page_tuple_first] + sort_content_list
     return sort_content_list
 
@@ -145,7 +145,7 @@ override_source_person_title = None
 
 # ---------- backward compatability with legacy odp/sxi presentations ----------
 # note: this has to come first to convert file into html and then continue
-if doc_ooo is not None:
+if doc_ooo != None:
   doc_portal = doc.getPortalObject()
   if doc.getPortalType() in ["Presentation"]:
     raw_data = doc_portal.portal_transforms.convertToData(
@@ -154,7 +154,7 @@ if doc_ooo is not None:
       context=context,
       mimetype=doc.getContentType()
     )
-    if raw_data is None:
+    if raw_data == None:
       raise ValueError("Failed to convert to %r" % "text/html")
 
     # got something
@@ -188,14 +188,14 @@ doc_relative_url = doc.getRelativeUrl()
 doc_aggregate_list = []
 doc_modification_date = doc.getModificationDate()
 
-if override_batch_mode is not None:
+if override_batch_mode != None:
   doc_version = "001"
   doc_creation_year = "1976"
-if doc_language is not None: #and doc_format == "pdf":
+if doc_language != None: #and doc_format == "pdf":
   doc.REQUEST['AcceptLanguage'].set(doc_language, 10)
-if doc_language is None:
+if doc_language == None:
   doc_language = blank
-if doc_reference is None:
+if doc_reference == None:
   doc_reference = doc_prefix + doc_title.replace(" ", ".")
 doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])
 

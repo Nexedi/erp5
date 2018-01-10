@@ -26,7 +26,7 @@ Update the slide dialog with parameters manually entered
 # display_svg:              display svg-images as svg or png*
 
 from Products.ERP5Type.Message import translateString
-if dialog_id is not None:
+if dialog_id != None:
   return context.Base_redirect(
     dialog_id,
     keep_items = dict(

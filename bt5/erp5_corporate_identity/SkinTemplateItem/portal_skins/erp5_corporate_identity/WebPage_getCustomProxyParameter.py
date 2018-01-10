@@ -11,7 +11,7 @@ portal_object = context.getPortalObject()
 validation_state = ('released', 'released_alive', 'published', 'published_alive',
             'shared', 'shared_alive', 'public', 'validated')
 
-if REQUEST is not None:
+if REQUEST != None:
   return None
 
 if portal_type not in portal_type_valid_template_list and portal_type not in portal_type_valid_report_list:
@@ -75,7 +75,7 @@ def populatePersonDict(my_person_list):
     output_dict["name"] = person.getTitle() or err("title")
     output_dict["title"] = person.getFunctionTitle() or err("function title")
     output_dict["uid"] = person.getUid() or err("uid")
-    if person.getDefaultAddress() is not None:
+    if person.getDefaultAddress() != None:
       output_dict["address"] = person_address.getStreetAddress() or err("street address")
       output_dict["postal_code"] = person_address.getZipCode() or err("postal code")
       output_dict["city"] = person_address.getCity() or err("city")
@@ -83,17 +83,17 @@ def populatePersonDict(my_person_list):
       output_dict["address"] = err("street_adress")
       output_dict["postal_code"] = err("postal_code")
       output_dict["city"] = err("city")
-    if person_region is not None:
+    if person_region != None:
       output_dict["country"] = person_region.getTitle() or err("country")
       output_dict["codification"] = person_region.getCodification() or err("country code")
     else:
       output_dict["country"] = err("country")
       output_dict["codification"] = err("country code")
-    if person_default_telephone is not None:
+    if person_default_telephone != None:
       output_dict["phone"] = person_default_telephone.getCoordinateText() or err("phone")
     else:
       output_dict["phone"] = err("phone")
-    if person_default_mail is not None:
+    if person_default_mail != None:
       output_dict["email"] = person_default_mail.getUrlString() or err("email")
     else:
       output_dict["email"] = err("email")
@@ -119,7 +119,7 @@ def populateOrganisationDict(my_organisation_list):
     output_dict["activity_code"] = organisation.getActivityCode() or err("activitiy code")
 
     #output_dict["logo_url"] = organisation.getDefaultImageAbsoluteUrl() or err("logo_url")
-    if organisation_default_image is not None:
+    if organisation_default_image != None:
       output_dict["logo_url"] = organisation_default_image.getRelativeUrl()
     else:
       output_dict["logo_url"] = err("logo_url")
@@ -131,7 +131,7 @@ def populateOrganisationDict(my_organisation_list):
     output_dict["vat"] = organisation.getVatCode() or err("vat")
     output_dict["corporate_registration"] = organisation.getCorporateRegistrationCode() or err("corporate_registration")
     output_dict["email"] = organisation.getDefaultEmailText() or err("email")
-    if organisation.getDefaultAddress() is not None:
+    if organisation.getDefaultAddress() != None:
       output_dict["address"] = organisation_address.getStreetAddress() or err("street address")
       output_dict["postal_code"] = organisation_address.getZipCode() or err("postal code")
       output_dict["city"] = organisation_address.getCity() or err("city")
@@ -139,17 +139,17 @@ def populateOrganisationDict(my_organisation_list):
       output_dict["address"] = err("street address")
       output_dict["postal_code"] = err("postal code")
       output_dict["city"] = err("city")
-    if organisation_region is not None:
+    if organisation_region != None:
       output_dict["country"] = organisation_region.getTitle() or err("country")
       output_dict["codification"] = organisation_region.getCodification() or err("country code")
     else:
       output_dict["country"] = err("country")
       output_dict["codification"] = err("country code")
-    if organisation_phone is not None:
+    if organisation_phone != None:
       output_dict["phone"] = organisation_phone.getDefaultTelephoneCoordinateText() or err("phone")
     else:
       output_dict["phone"] = err("phone")
-    if organisation_fax is not None:
+    if organisation_fax != None:
       output_dict["fax"] = organisation_fax.getCoordinateText() or err("fax")
     else:
       output_dict["fax"] = err("fax")
@@ -173,7 +173,7 @@ def getSubstringFromProduct(my_candidate, my_as_is):
   software_match_string = " Software"
   software_title = my_candidate.get("title") or ""
   if software_title.find(software_match_string) > 1:
-    if my_as_is is True:
+    if my_as_is == True:
       return software_title.split(software_match_string)[0]
     return software_title.split(software_match_string)[0].lower()
 
@@ -188,7 +188,7 @@ pass_parameter = kw.get("parameter", None)
 pass_source_data = kw.get("source_data", None)
 pass_flag_site = kw.get("flag_site", None)
 
-if pass_parameter is not None and pass_source_data is not None:
+if pass_parameter != None and pass_source_data != None:
 
   # ---------------------- Override Person -------------------------------------
   # returns [{person_dict}]
@@ -230,7 +230,7 @@ if pass_parameter is not None and pass_source_data is not None:
     if len(person_candidate_list) > 0:
       for c in person_candidate_list:
         organisation = c.getCareerSubordinationValue()
-        if organisation is not None:
+        if organisation != None:
           return populateOrganisationDict([organisation])
         else:
           return populatePersonDict([c])
@@ -283,7 +283,7 @@ if pass_parameter is not None and pass_source_data is not None:
       return populateProductDictFromCategoryList(
         context.getWebSiteValue().getMembershipCriterionCategoryList() or []
       )
-    elif pass_source_data is not None:
+    elif pass_source_data != None:
       return populateProductDict(context.getFollowUpValueList(
         portal_type=pass_parameter,
         checked_permission='View',
@@ -298,7 +298,7 @@ if pass_parameter is not None and pass_source_data is not None:
     theme = None
     product_candidate_list = callSelf("product", pass_source_data, pass_flag_site)
 
-    if product_candidate_list is not None:
+    if product_candidate_list != None:
       if len(product_candidate_list) > 0:
         theme = getSubstringFromProduct(product_candidate_list[0], None)
 

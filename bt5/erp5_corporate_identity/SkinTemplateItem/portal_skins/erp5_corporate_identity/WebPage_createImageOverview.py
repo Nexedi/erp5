@@ -46,7 +46,7 @@ for figure in re.findall('(<img.*?/>)', document_content or ''):
     figure_title[0],
     figure_href[0]
   )
-  if figure_doubles.get(figure_title[0], None) is None:
+  if figure_doubles.get(figure_title[0], None) == None:
     item_dict = {}
     item_dict["id"] = figure_id
     item_dict["title"] = figure_title[0]

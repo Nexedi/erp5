@@ -26,12 +26,6 @@ Print letter in any of the supported formats
 # override_destination_person_title: overide event recipient
 # override_date             to use instead of current date
 
-#new_skin_name = "Letter"
-#context.getPortalObject().portal_skins.changeSkin(new_skin_name)
-#if REQUEST is None:
-#  REQUEST = context.REQUEST
-#REQUEST.set('portal_skin', new_skin_name)
-
 return context.Letter_viewAsLetter(
   format=format,
   display_head=display_head,

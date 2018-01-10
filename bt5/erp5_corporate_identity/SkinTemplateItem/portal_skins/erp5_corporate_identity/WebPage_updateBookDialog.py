@@ -37,7 +37,7 @@ Update a book dialog with parameters manually entered
 # display_svg                           format for svg images (svg, png*)
 
 from Products.ERP5Type.Message import translateString
-if dialog_id is not None:
+if dialog_id != None:
   return context.Base_redirect(
     dialog_id,
     keep_items = dict(

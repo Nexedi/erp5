@@ -23,7 +23,7 @@ Update a leaflet dialog with parameters manually entered
 # document_save:            save file in document module
 
 from Products.ERP5Type.Message import translateString
-if dialog_id is not None:
+if dialog_id != None:
   return context.Base_redirect(
     dialog_id,
     keep_items = dict(

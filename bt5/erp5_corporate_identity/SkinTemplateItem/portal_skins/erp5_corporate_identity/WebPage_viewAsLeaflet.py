@@ -66,14 +66,14 @@ leaflet_aggregate_list = []
 leaflet_modification_date = leaflet.getModificationDate()
 
 # test overrides
-if override_batch_mode is not None:
+if override_batch_mode != None:
   leaflet_date="Nov-1976"
   leaflet_year="1976"
-if leaflet_language is not None: #and leaflet_format == "pdf":
+if leaflet_language != None: #and leaflet_format == "pdf":
   leaflet.REQUEST['AcceptLanguage'].set(leaflet_language, 10)
-if leaflet_language is None:
+if leaflet_language == None:
   leaflet_language = blank
-if leaflet_reference is None:
+if leaflet_reference == None:
   leaflet_reference = leaflet_prefix + leaflet_title.replace(" ", ".")
 leaflet_full_reference = '-'.join([leaflet_reference, leaflet_version, leaflet_language])
 
@@ -81,7 +81,7 @@ leaflet_full_reference = '-'.join([leaflet_reference, leaflet_version, leaflet_l
 leaflet_theme = leaflet.Base_getThemeDict(doc_format=leaflet_format, css_path="template_css/leaflet")
 
 # XXX set leaflet title, but not to theme (used elsewhere, but not on leaflet)
-if override_leaflet_header_title is not None:
+if override_leaflet_header_title != None:
   leaflet_theme["theme_logo_description"] = html_quote(override_leaflet_header_title)
 if leaflet_theme.get("theme").lower() == leaflet_theme.get("theme_logo_description").lower():
   leaflet_theme["theme_logo_description"] = blank
