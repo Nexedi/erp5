@@ -95,7 +95,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_erase_existing</string>
                         <string>your_version</string>
                       </list>
                     </value>

@@ -6323,7 +6323,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
                               'migrateSourceCodeFromFilesystem')
     def migrateSourceCodeFromFilesystem(self,
                                         version,
-                                        erase_existing=False,
                                         **kw):
       """
       Migrate the given components from filesystem to ZODB by calling the
@@ -6343,8 +6342,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         try:
           obj = temp_obj.importFromFilesystem(component_tool,
                                               temp_obj.getReference(),
-                                              version,
-                                              erase_existing=erase_existing)
+                                              version)
         except Exception, e:
           import traceback
           LOG("BusinessTemplate", WARNING,
