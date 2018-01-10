@@ -291,7 +291,8 @@ class NotificationTool(BaseTool):
     portal = self.getPortalObject()
     searchUsers = self.acl_users.searchUsers
     def getUserValueByUserId(user_id):
-      user, = searchUsers(id=user_id, exact_match=True)
+      user, = [x for x in searchUsers(id=user_id, exact_match=True,
+               login_portal_type=portal.getPortalLoginTypeList()) if 'path' in x]
       return portal.unrestrictedTraverse(user['path'])
 
     if notifier_list is None:
