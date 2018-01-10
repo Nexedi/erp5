@@ -80,25 +80,6 @@
             <value> <string>LEN</string> </value>
         </item>
         <item>
-            <key> <string>effective_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1263423600.0</float>
-                    <string>GMT+1</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>length</string> </value>
         </item>
@@ -108,10 +89,6 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>Length</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
             <value> <string>Length</string> </value>
         </item>
       </dictionary>

@@ -56,18 +56,7 @@
         <item>
             <key> <string>_local_properties</string> </key>
             <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>quantity</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -79,25 +68,6 @@
             <value> <string>M2</string> </value>
         </item>
         <item>
-            <key> <string>effective_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1263423600.0</float>
-                    <string>GMT+1</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>square_meter</string> </value>
         </item>
@@ -106,15 +76,7 @@
             <value> <string>Category</string> </value>
         </item>
         <item>
-            <key> <string>quantity</string> </key>
-            <value> <string>1</string> </value>
-        </item>
-        <item>
             <key> <string>short_title</string> </key>
-            <value> <string>Square Meter</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
             <value> <string>Square Meter</string> </value>
         </item>
       </dictionary>

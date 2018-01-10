@@ -33,3 +33,17 @@ portal_categories/social_form/**
 portal_categories/trade_phase/**
 portal_categories/trade_state/**
 portal_categories/use/**
+quantity_unit_conversion_module/area_conversion_group
+quantity_unit_conversion_module/area_conversion_group/**
+quantity_unit_conversion_module/energy_conversion_group
+quantity_unit_conversion_module/energy_conversion_group/**
+quantity_unit_conversion_module/length_conversion_group
+quantity_unit_conversion_module/length_conversion_group/**
+quantity_unit_conversion_module/mass_conversion_group
+quantity_unit_conversion_module/mass_conversion_group/**
+quantity_unit_conversion_module/time_conversion_group
+quantity_unit_conversion_module/time_conversion_group/**
+quantity_unit_conversion_module/unit_conversion_group
+quantity_unit_conversion_module/unit_conversion_group/**
+quantity_unit_conversion_module/volume_conversion_group
+quantity_unit_conversion_module/volume_conversion_group/**
