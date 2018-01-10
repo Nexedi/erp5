@@ -200,6 +200,8 @@ gadget_erp5_field_textarea.html\n
 gadget_erp5_field_textarea.js\n
 gadget_html5_textarea.html\n
 gadget_html5_textarea.js\n
+gadget_erp5_configure_editor.html\n
+gadget_erp5_configure_editor.js\n
 \n
 gadget_ooffice_text_router.html\n
 gadget_officejs_jio_text_view.html\n
@@ -335,7 +337,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -349,7 +351,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>963.38374.35315.699</string> </value>
+                <value> <string>964.45947.24858.9318</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -367,7 +369,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1512139938.24</float>
+                        <float>1515590158.57</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

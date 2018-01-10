@@ -200,6 +200,8 @@ gadget_erp5_field_textarea.html\n
 gadget_erp5_field_textarea.js\n
 gadget_html5_textarea.html\n
 gadget_html5_textarea.js\n
+gadget_erp5_configure_editor.html\n
+gadget_erp5_configure_editor.js\n
 \n
 gadget_erp5_field_image.html\n
 gadget_erp5_field_image.js\n
@@ -351,7 +353,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.42958.18622.47018</string> </value>
+                <value> <string>964.45561.47559.9591</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -369,7 +371,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1507552636.58</float>
+                        <float>1515590111.64</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -197,6 +197,8 @@ gadget_erp5_field_textarea.html\n
 gadget_erp5_field_textarea.js\n
 gadget_html5_textarea.html\n
 gadget_html5_textarea.js\n
+gadget_erp5_configure_editor.html\n
+gadget_erp5_configure_editor.js\n
 \n
 gadget_erp5_field_checkbox.html\n
 gadget_erp5_field_checkbox.js\n
@@ -343,7 +345,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -357,7 +359,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.25551.64087.3020</string> </value>
+                <value> <string>964.45561.47559.9591</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -375,7 +377,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1514298247.3</float>
+                        <float>1515590093.02</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
