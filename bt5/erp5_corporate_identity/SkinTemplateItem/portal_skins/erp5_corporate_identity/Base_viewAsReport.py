@@ -59,7 +59,7 @@ doc_requirement_relative_url = kw.get('requirement_relative_url', None)
 # -------------------------- Document Parameters  ------------------------------
 doc_localiser = doc.getPortalObject().Localizer
 doc_relative_url = doc.getRelativeUrl()
-doc_rendering_fix = doc.Base_getCustomTemplateParameter('wkhtmltopdf_rendering_fix') or blank
+doc_rendering_fix = doc.WebPage_getCustomParameter('wkhtmltopdf_rendering_fix') or blank
 doc_report = getattr(doc, doc_report_name)
 doc_aggregate_list = []
 doc_revision = "1"

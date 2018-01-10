@@ -7,7 +7,7 @@ Create a destination dict for filling templates
 # ------------------------------------------------------------------------------
 # destination:                             Can be set if called from Event
 # override_destination_person_title:       Title of person to use
-# override_destination_organisation_title: Title of organisation to use 
+# override_destination_organisation_title: Title of organisation to use
 
 blank = ''
 
@@ -41,7 +41,7 @@ if destination is None:
   destination = {}
   destination.update(destination_person or {})
   destination.update(destination_organisation or {})
-  
+
 # destination => event
 else:
   destination_uid = context.restrictedTraverse(destination).getUid()

@@ -16,9 +16,10 @@ from Products.PythonScripts.standard import html_quote
 
 # -------------------------------  Set Source ----------------------------------
 source_logo_url = None
+default_bank_account_uid=context.WebPage_getCustomParameter("default_bank_account_uid")
+
 if source is None:
-  default_company_title=context.Base_getCustomTemplateParameter("default_company_title")
-  default_bank_account_uid=context.Base_getCustomTemplateParameter("default_bank_account_uid")
+  default_company_title=context.WebPage_getCustomParameter("default_company_title")
   contributor_title_string = blank
   source_person = None
   source_person_list = []
@@ -37,10 +38,13 @@ if source is None:
     contributor_title_string = ', '.join(x.get("name", blank) for x in source_person_list)
 
   # source organisation
+  # order: override => follow-up => default_organisation_uid => default_company_title => source_person career subordinate
   if override_source_organisation_title is not None or override_source_organisation_title is blank:
     source_organisation_list = context.Base_getCustomTemplateProxyParameter("override_organisation", override_source_organisation_title)
   if len(source_organisation_list) == 0:
-    source_organisation_uid = context.Base_getCustomTemplateParameter("default_source_organisation_uid")
+    source_organisation_list = context.Base_getCustomTemplateProxyParameter("organisation")
+  if len(source_organisation_list) == 0:
+    source_organisation_uid = context.WebPage_getCustomParameter("default_source_organisation_uid")
   if source_organisation_uid:
     source_organisation_list = context.Base_getCustomTemplateProxyParameter("sender", source_organisation_uid) or []
   if len(source_organisation_list) == 0 and default_company_title:
@@ -51,7 +55,6 @@ if source is None:
       if len(organisation_candidate_list) > 0:
         source_organisation_list = organisation_candidate_list
         break
-    #source_organisation_list = context.Base_getCustomTemplateProxyParameter("source", source_person.get("uid")) or []
   if len(source_organisation_list) > 0:
     source_organisation = source_organisation_list[0]
 
@@ -62,7 +65,7 @@ if source is None:
 
 # source => event
 else:
-  source_uid =context.restrictedTraverse(source).getUid()
+  source_uid = context.restrictedTraverse(source).getUid()
   source = context.Base_getCustomTemplateProxyParameter("source", source_uid)[0]
 
 # override specific bank account (no default to pick correct one if multiple exist)

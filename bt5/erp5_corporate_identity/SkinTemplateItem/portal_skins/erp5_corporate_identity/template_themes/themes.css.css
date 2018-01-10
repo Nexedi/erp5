@@ -4,7 +4,7 @@
 
 /* ------------------------  Slideshow -------------------------------------- */
 .ci-default .ci-slideshow .ci-slideshow-header h2,
-.ci-default .ci-slideshow .ci-slideshow-footer, 
+.ci-default .ci-slideshow .ci-slideshow-footer,
 .ci-default .ci-slideshow .ci-slideshow-intro.present > h2,
 .ci-default .ci-slideshow .ci-slideshow-intro.present:before,
 .ci-default .ci-slideshow h1,
@@ -81,7 +81,7 @@
   color: #ffffff;
 }
 .ci-default .ci-letter .ci-letter-footer {
-  border-color: #C3C7C6; 
+  border-color: #C3C7C6;
 }
 .ci-default .ci-letter .ci-letter-bar-logo img {
   background: #ffffff;

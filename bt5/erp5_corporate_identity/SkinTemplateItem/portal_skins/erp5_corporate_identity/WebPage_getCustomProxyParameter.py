@@ -224,10 +224,23 @@ if pass_parameter is not None and pass_source_data is not None:
   # -------------- Source/Destination (Person => Organisation) -----------------
   # returns [{organisation_dict}]
   if pass_parameter == "source" or pass_parameter == "destination":
-    for c in portal_object.person_module.searchFolder(uid=pass_source_data):
-      organisation = c.getCareerSubordinationValue()
-      if organisation is not None:
-        return populateOrganisationDict([organisation])
+    person_candidate_list = portal_object.person_module.searchFolder(uid=pass_source_data)
+    organisation_candidate_list = portal_object.organisation_module.searchFolder(uid=pass_source_data)
+
+    if len(person_candidate_list) > 0:
+      for c in person_candidate_list:
+        organisation = c.getCareerSubordinationValue()
+        if organisation is not None:
+          return populateOrganisationDict([organisation])
+        else:
+          return populatePersonDict([c])
+
+    # events might pass organisation as sender/recipient
+    if len(organisation_candidate_list) > 0:
+      organisation_candidate_list = portal_object.organisation_module.searchFolder(uid=pass_source_data)
+      for o in organisation_candidate_list:
+        return populateOrganisationDict([o])
+
     return []
 
   # -------------------- Organisation (Follow-Up) ------------------------------

@@ -48,7 +48,6 @@ override_date = letter.Base_setToNone(param=kw.get("override_date", None))
 override_batch_mode = letter.Base_setToNone(param=kw.get('batch_mode', None))
 
 # -------------------------- Document Parameters  ------------------------------
-letter_form = letter.REQUEST
 letter_portal_type = letter.getPortalType()
 letter_relative_url = letter.getRelativeUrl()
 letter_prefix = "Letter."
@@ -67,26 +66,26 @@ if letter_portal_type == "Web Page":
 else:
   letter_format = 'pdf'
   letter_save = letter_save or True
-  letter_modification_date = letter_form['start_date'] or None or letter.getCreationDate()
-  letter_title = letter_form.get('title')
-  letter_content = letter_form.get('text_content')
+  letter_modification_date = letter.getStartDate() or letter.getCreationDate()
+  letter_title = letter.getTitle()
+  letter_content = letter.getTextContent()
   letter_aggregate_list = letter.getAggregateList()
-  letter_language = letter.Base_setToNone(param=letter_form.get('select_language'))
-  letter_source = letter_form.get('source') or None
-  letter_destination = letter_form.get('destination') or None
+  letter_language = letter.Base_setToNone(param=kw.get('select_language'))
+  letter_source = letter.getSource()
+  letter_destination = letter.getDestination()
   # cut corner to retrieve path to css files
   letter_version = "001"
-  letter_reference = letter_form.get("reference")
+  letter_reference = letter.getReference()
 
 # overrides for tests
-if override_batch_mode is not None:
+if override_batch_mode != None:
   letter_modification_date = DateTime("1976-11-04")
 
-if letter_language is not None: #and letter_format == "pdf":
+if letter_language != None: #and letter_format == "pdf":
   letter.REQUEST['AcceptLanguage'].set(letter_language, 10)
-if letter_language is None:
+if letter_language == None:
   letter_language = blank
-if letter_reference is None:
+if letter_reference == None:
   letter_reference = letter_prefix + letter_title.replace(" ", ".")
 letter_full_reference = '-'.join([letter_reference, letter_version, letter_language])
 
@@ -141,8 +140,8 @@ if letter_format == "html":
     letter_source_company=letter_source.get("corporate_name", letter_source.get("organisation_title", blank)),
     letter_source_company_corporate_name=letter_source.get("corporate_name", blank),
     letter_source_company_capital=letter_source.get("social_capital", blank),
-    letter_source_company_capital_currency=letter_source.get("social_capital_currency", letter.Base_getCustomTemplateParameter("default_source_company_capital_currency")),
-    letter_source_registered_court=letter_source.get("registered_court", letter.Base_getCustomTemplateParameter("default_source_registered_court")),
+    letter_source_company_capital_currency=letter_source.get("social_capital_currency", letter.WebPage_getCustomParameter("default_source_company_capital_currency")),
+    letter_source_registered_court=letter_source.get("registered_court", letter.WebPage_getCustomParameter("default_source_registered_court")),
     letter_source_ape_code=letter_source.get("activity_code", blank),
     letter_source_address=letter_source.get("address", blank),
     letter_source_postal_code=letter_source.get("postal_code", blank),
@@ -226,8 +225,8 @@ if letter_format == "pdf":
     letter_source_company=letter_source.get("organisation_title", blank),
     letter_source_company_corporate_name=letter_source.get("corporate_name", blank),
     letter_source_company_capital=letter_source.get("social_capital", blank),
-    letter_source_company_capital_currency=letter_source.get("social_capital_currency", letter.Base_getCustomTemplateParameter("default_source_company_capital_currency")),
-    letter_source_registered_court=letter_source.get("registered_court", letter.Base_getCustomTemplateParameter("default_source_registered_court")),
+    letter_source_company_capital_currency=letter_source.get("social_capital_currency", letter.WebPage_getCustomParameter("default_source_company_capital_currency")),
+    letter_source_registered_court=letter_source.get("registered_court", letter.WebPage_getCustomParameter("default_source_registered_court")),
     letter_source_ape_code=letter_source.get("activity_code", blank),
     letter_source_address=letter_source.get("address", blank),
     letter_source_postal_code=letter_source.get("postal_code", blank),
@@ -259,6 +258,11 @@ if letter_format == "pdf":
       footer_html_data=b64encode(footer_embedded_html_data),
     )
   )
+
+  # return file for comparison in portal-component tests
+  if override_batch_mode != None:
+    if letter_portal_type != "Web Page":
+      return pdf_file
 
   return letter.WebPage_finishPdfCreation(
     doc_download=letter_download,

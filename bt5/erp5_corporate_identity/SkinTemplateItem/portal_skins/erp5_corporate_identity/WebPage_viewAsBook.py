@@ -75,7 +75,7 @@ override_batch_mode = book.Base_setToNone(param=kw.get('batch_mode', None))
 book_localiser = book.getPortalObject().Localizer
 book_relative_url = book.getRelativeUrl()
 book_prefix = "Book."
-book_rendering_fix = book.Base_getCustomTemplateParameter('wkhtmltopdf_rendering_fix') or blank
+book_rendering_fix = book.WebPage_getCustomParameter('wkhtmltopdf_rendering_fix') or blank
 book_content = book.getTextContent()
 book_aggregate_list = []
 book_revision = book.getRevision()

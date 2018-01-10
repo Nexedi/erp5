@@ -92,6 +92,16 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       self.portal.portal_preferences.default_nexedi_system_preference.enable()
     self.tic()
 
+  def createTestEvent(self, target_language):
+    test_event = self.portal.event_module.newContent(
+      portal_type="Letter",
+      language=target_language,
+      content_type="text/html",
+      text_content="Hello",
+      title="Test"
+    )
+    return test_event
+
   def computeImageRenderingRootMeanSquare(self, image_data_1, image_data_2):
     """
       Compute and return the RMS (Root Mean Square) of image_data_1 and 2.
@@ -112,10 +122,7 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     # image can be converted into greyscale without transparency
     h1 = image1.histogram()
     h2 = image2.histogram()
-    rms = math.sqrt(
-      #reduce(operator.add, map(lambda a, b: (a - b) ** 2, h1, h2)) / len(h1)
-      sum((a - b) ** 2 for a, b in zip(h1, h2)) / len(h1)
-    )
+    rms = math.sqrt(sum((a - b) ** 2 for a, b in zip(h1, h2)) / len(h1))
 
     # Note:
     # - rms is ~5300.0 same page, bmp without alpha and bmp transparent back
@@ -183,7 +190,6 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       if has_original_accept_language:
         self.app.REQUEST["AcceptLanguage"] = original_accept_language
       else:
-        # `del self.app.REQUEST["AcceptLanguage"]` raises `AttributeError: __delitem__`
         self.app.REQUEST["AcceptLanguage"] = AcceptLanguage()
 
   def callWithNewRequestForm(self, *args, **kw):
@@ -230,16 +236,21 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     """
     Compare a rendered PDF page with a a pregenerated image
     """
-    test_page = getattr(self.portal.web_page_module, id1)
+    target_language=kw.get("lang", None) or "en"
     expected_image = getattr(self.portal.image_module, id2)
     image_source_pdf_doc = getattr(self.portal.document_module, id3)
     dump = getattr(self.portal, 'dump_data', None)
     kw["batch_mode"] = 1
 
+    if id1 == None:
+      test_page = self.createTestEvent(target_language)
+      self.tic()
+    else:
+      test_page = getattr(self.portal.web_page_module, id1)
+
     pdf_kw = dict(
       reference=test_page.getReference(),
-      target_language=kw.get("lang", None) or "en",
-      version=test_page.getVersion(),
+      target_language=target_language
     )
 
     pdf_data = self.call(
@@ -251,7 +262,6 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       **kw
     )
 
-    # XXX don't overwrite file to create image, use temporary-pdf?
     image_source_pdf_doc.setData(pdf_data)
     _, bmp = image_source_pdf_doc.convert("bmp", frame=kw.get("page_number"))
 
@@ -680,8 +690,58 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         use_skin="Letter",
         override_source_organisation_title="Test Association",
         override_source_person_title="Test Association Member",
-        override_destination_organisation_title="Test Associatino",
+        override_destination_organisation_title="Test Association",
         override_destination_person_title="Test Association Member",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31"
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterEventOverrideSenderRecipientOrganisation(self):
+    """
+      Test:
+      - Event as Letter
+      - override recipient, sender and use organisations
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      None,
+      "template_test_letter_input_page_0_005_en_bmp",
+      "template_test_letter_input_005_en_pdf",
+      **dict(
+        page_number=0,
+        test_method="Letter_send",
+        format="pdf",
+        use_skin="Letter",
+        override_source_organisation_title="Test Organisation",
+        override_destination_organisation_title="Test Organisation",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31"
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterEventOverrideSenderRecipientPerson(self):
+    """
+      Test:
+      - Event as Letter
+      - override recipient, sender and a person without any organisation
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      None,
+      "template_test_letter_input_page_0_006_en_bmp",
+      "template_test_letter_input_006_en_pdf",
+      **dict(
+        page_number=0,
+        test_method="Letter_send",
+        format="pdf",
+        use_skin="Letter",
+        override_source_person_title="Test Unassociated Member",
+        override_destination_person_title="Test Unassociated Member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
         subfield_field_override_date_day="31"
