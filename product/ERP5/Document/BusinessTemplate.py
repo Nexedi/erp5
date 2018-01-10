@@ -6346,6 +6346,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
                                               version,
                                               erase_existing=erase_existing)
         except Exception, e:
+          import traceback
+          LOG("BusinessTemplate", WARNING,
+              "Could not import component '%s' ('%s') from the filesystem: %s" %
+              (temp_obj.getReference(),
+               temp_obj.getSourceReference(),
+               traceback.format_exc()))
+
           failed_import_dict[temp_obj.getReference()] = str(e)
         else:
           portal_type = obj.getPortalType()
