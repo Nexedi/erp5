@@ -22,12 +22,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>exhibit</string>
-                <string>exhibit_action</string>
                 <string>reinstall</string>
                 <string>reinstall_action</string>
-                <string>uninstall</string>
-                <string>uninstall_action</string>
               </tuple>
             </value>
         </item>

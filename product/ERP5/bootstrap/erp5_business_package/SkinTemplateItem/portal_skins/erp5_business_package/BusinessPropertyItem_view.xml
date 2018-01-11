@@ -61,8 +61,6 @@
                     <value>
                       <list>
                         <string>my_item_property_name</string>
-                        <string>my_item_property_type</string>
-                        <string>my_item_property_value</string>
                       </list>
                     </value>
                 </item>
