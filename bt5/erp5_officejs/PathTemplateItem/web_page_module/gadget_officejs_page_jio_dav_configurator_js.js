@@ -146,14 +146,11 @@
 
     .declareService(function () {
       var gadget = this;
-      return gadget.getSetting("global_setting_gadget_url", "../officejs_setting_gadget/app/")
-        .push(function (global_setting_gadget_url) {
-          return gadget.declareGadget(global_setting_gadget_url, {
-            "scope": "global_setting_gadget",
-            "element": gadget.element.querySelector(".global_setting_gadget"),
-            "sandbox": "iframe"
-          });
-        })
+      return gadget.declareGadget("gadget_officejs_setting.html", {
+        "scope": "global_setting_gadget",
+        "element": gadget.element.querySelector(".global_setting_gadget"),
+        "sandbox": "iframe"
+      })
         .push(function (global_setting_gadget) {
           return RSVP.all([
             global_setting_gadget.getSetting(

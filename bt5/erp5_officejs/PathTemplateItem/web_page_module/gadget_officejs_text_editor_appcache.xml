@@ -113,6 +113,7 @@
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
+#officejs\n
 font-awesome/font-awesome.css\n
 font-awesome/font-awesome-webfont.eot\n
 font-awesome/font-awesome-webfont.woff\n
@@ -133,8 +134,6 @@ erp5_launcher_nojqm.js\n
 gadget_officejs_router.js\n
 gadget_erp5_router.html\n
 gadget_erp5_router.js\n
-gadget_officejs_liberator.html\n
-gadget_officejs_liberator.js\n
 gadget_jio.html\n
 gadget_jio.js\n
 gadget_translate.html\n
@@ -211,12 +210,16 @@ gadget_button_maximize.js\n
 gadget_erp5_configure_editor.html\n
 gadget_erp5_configure_editor.js\n
 \n
+#setting\n
+gadget_officejs_setting.js\n
+gadget_officejs_setting.html\n
+\n
+#text editor\n
 gadget_officejs_text_editor_router.html\n
 gadget_officejs_jio_web_page_view.html\n
 gadget_officejs_jio_web_page_view.js\n
 \n
 #Ckeditor\n
-\n
 ckeditor.gadget.html\n
 ckeditor.gadget.js\n
 ckeditor/skins/moono-lisa/icons.png\n
@@ -554,14 +557,12 @@ ckeditor/config.js\n
 ckeditor/ckeditor.js\n
 ckeditor/adapters/jquery.js\n
 \n
-GADGET:\n
-officejs_setting_gadget/\n
 NETWORK:\n
 *</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Text Editor Gadget OfficeJS AppCache</string> </value>
+            <value> <string>OfficeJS Text Editor AppCache</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -698,7 +699,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.45862.32132.53930</string> </value>
+                <value> <string>964.48519.41997.58350</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -716,7 +717,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1515511501.22</float>
+                        <float>1515675473.77</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

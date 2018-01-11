@@ -141,7 +141,7 @@
                   "key": "text_content",
                   "hidden": 0,
                   "type": "GadgetField",
-                  "url": "../officejs_image_editor_gadget/app/",
+                  "url": "minipaint.gadget.html",
                   "sandbox": "iframe"
                 }
               }},

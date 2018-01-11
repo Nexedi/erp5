@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, jIO, Blob */
+/*global window, rJS, RSVP, jIO, Blob, URL */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, jIO, Blob) {
+(function (window, rJS, RSVP, jIO, Blob, URL) {
   "use strict";
 
   rJS(window)
@@ -28,7 +28,7 @@
     })
 
     .onEvent('submit', function () {
-      var gadget = this, doc;
+      var gadget = this, data;
       return gadget.notifySubmitting()
         .push(function () {
           return gadget.getDeclaredGadget('form_view');
@@ -37,7 +37,16 @@
           return form_gadget.getContent();
         })
         .push(function (content) {
+          data = content.text_content;
+          delete content.text_content;
           return gadget.updateDocument(content);
+        })
+        .push(function () {
+          return gadget.jio_putAttachment(
+            gadget.state.jio_key,
+            "data",
+            jIO.util.dataURItoBlob(data)
+          );
         })
         .push(function () {
           return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
@@ -58,16 +67,7 @@
           throw new Error(error);
         })
         .push(function (blob) {
-          return jIO.util.readBlobAsDataURL(blob);
-        })
-        .push(function (result) {
-          if (result.target.result.split('data:')[1] === '') {
-            data = '';
-          } else {
-            data = result.target.result.split(
-              /data:application\/.*;base64,/
-            )[1];
-          }
+          data = URL.createObjectURL(blob);
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
@@ -133,11 +133,11 @@
                   "default": data,
                   "css_class": "",
                   "required": 0,
-                  "editable": 0,
+                  "editable": 1,
                   "key": "text_content",
                   "hidden": 0,
                   "type": "GadgetField",
-                  "url": "../officejs_pdf_viewer_gadget/app/",
+                  "url": "pdf_js/pdfjs.gadget.html",
                   "sandbox": "iframe"
                 }
               }},
@@ -182,4 +182,4 @@
           });
         });
     });
-}(window, rJS, RSVP, jIO, Blob));
+}(window, rJS, RSVP, jIO, Blob, URL));

@@ -129,8 +129,6 @@ erp5_launcher_nojqm.js\n
 gadget_officejs_router.js\n
 gadget_erp5_router.html\n
 gadget_erp5_router.js\n
-gadget_officejs_liberator.html\n
-gadget_officejs_liberator.js\n
 gadget_jio.html\n
 gadget_jio.js\n
 gadget_translate.html\n
@@ -203,20 +201,78 @@ gadget_html5_textarea.js\n
 gadget_erp5_configure_editor.html\n
 gadget_erp5_configure_editor.js\n
 \n
-gadget_erp5_field_image.html\n
-gadget_erp5_field_image.js\n
+#setting\n
+gadget_officejs_setting.js\n
+gadget_officejs_setting.html\n
+\n
+#image app\n
 gadget_officejs_image_editor_router.html\n
 gadget_officejs_jio_image_view.html\n
 gadget_officejs_jio_image_view.js\n
-GADGET:\n
-officejs_image_editor_gadget/\n
-officejs_setting_gadget/\n
+\n
+#image editor\n
+minipaint.gadget.html\n
+minipaint.gadget.js\n
+miniPaint/config.js\n
+miniPaint/img/right.png\n
+miniPaint/img/logo.png\n
+miniPaint/img/colorwheel.png\n
+miniPaint/img/favicon.png\n
+miniPaint/img/preview.jpg\n
+miniPaint/img/sprites.png\n
+miniPaint/js/draw_tools.js\n
+miniPaint/js/edit.js\n
+miniPaint/js/effects.js\n
+miniPaint/js/elements.js\n
+miniPaint/js/events.js\n
+miniPaint/js/file.js\n
+miniPaint/js/gui.js\n
+miniPaint/js/help.js\n
+miniPaint/js/image.js\n
+miniPaint/js/layers.js\n
+miniPaint/js/main.js\n
+miniPaint/js/tools.js\n
+miniPaint/languages/de.js\n
+miniPaint/languages/empty.js\n
+miniPaint/languages/es.js\n
+miniPaint/languages/fr.js\n
+miniPaint/languages/it.js\n
+miniPaint/languages/ja.js\n
+miniPaint/languages/ko.js\n
+miniPaint/languages/lt.js\n
+miniPaint/languages/pt.js\n
+miniPaint/languages/ru.js\n
+miniPaint/languages/tr.js\n
+miniPaint/languages/zh.js\n
+miniPaint/libs/helpers.js\n
+miniPaint/libs/popup.js\n
+miniPaint/libs/sift.js\n
+miniPaint/libs/vintage.js\n
+miniPaint/styles/styles.css\n
+miniPaint/vendor/exif/exif.js\n
+miniPaint/vendor/exif/exif.min.js\n
+miniPaint/vendor/file-saver/FileSaver.min.js\n
+miniPaint/vendor/file-saver/canvas-toBlob.js\n
+miniPaint/vendor/glfx/glfx.js\n
+miniPaint/vendor/harmony/harmony.js\n
+miniPaint/vendor/harmony/harmony.min.js\n
+miniPaint/vendor/hermite-resize/hermite.js\n
+miniPaint/vendor/hqx/hqx.js\n
+miniPaint/vendor/hqx/hqx.min.js\n
+miniPaint/vendor/imagefilters/imagefilters.js\n
+miniPaint/vendor/imagefilters/imagefilters.min.js\n
+miniPaint/vendor/jquery/jquery-migrate.js\n
+miniPaint/vendor/jquery/jquery.js\n
+miniPaint/vendor/menu/menu.js\n
+miniPaint/vendor/menu/menu.min.js\n
+miniPaint/vendor/translate/jquery.translate.js\n
+miniPaint/vendor/translate/jquery.translate.min.js\n
 NETWORK:\n
 *</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Image Editor OfficeJS AppCache</string> </value>
+            <value> <string>OfficeJS Image Editor AppCache</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -353,7 +409,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.45561.47559.9591</string> </value>
+                <value> <string>964.48600.50298.62395</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -371,7 +427,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1515590111.64</float>
+                        <float>1515675496.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
