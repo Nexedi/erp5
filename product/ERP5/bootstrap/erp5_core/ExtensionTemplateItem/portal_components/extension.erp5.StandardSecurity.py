@@ -24,12 +24,16 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from DateTime import DateTime
 
-from Products.ERP5Security.ERP5GroupManager import ConsistencyError
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
-
-def getSecurityCategoryFromAssignment(self, base_category_list, user_name, object, portal_type,
-                                      child_category_list=[]):
+def getSecurityCategoryFromAssignment(
+  self,
+  base_category_list,
+  user_name,
+  object,  # pylint: disable=redefined-builtin
+  portal_type,
+  child_category_list=None
+):
   """
   This script returns a list of dictionaries which represent
   the security groups which a person is member of. It extracts
@@ -49,9 +53,9 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
     object             -- object which we want to assign roles to
     portal_type        -- portal type of object
   """
-  context = self
-
   category_list = []
+  if child_category_list is None:
+    child_category_list = []
 
   user_path_set = {
     x['path'] for x in self.acl_users.searchUsers(
@@ -66,10 +70,15 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
     return []
   user_path, = user_path_set
   person_object = self.getPortalObject().unrestrictedTraverse(user_path)
+  now = DateTime()
 
   # We look for every valid assignments of this user
   for assignment in person_object.contentValues(filter={'portal_type': 'Assignment'}):
-    if assignment.getValidationState() == 'open':
+    if assignment.getValidationState() == "open" and (
+      not assignment.hasStartDate() or assignment.getStartDate() <= now
+    ) and (
+      not assignment.hasStopDate() or assignment.getStopDate() >= now
+    ):
       category_dict = {}
       for base_category in base_category_list:
         category_value_list = assignment.getAcquiredValueList(base_category)
@@ -89,22 +98,31 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
   return category_list
 
 
-def getSecurityCategoryFromAssignmentParent(self, base_category_list,
-                                       user_name, object, portal_type):
-  return getSecurityCategoryFromAssignment(self, base_category_list,
-                                       user_name, object, portal_type, child_category_list=base_category_list)
+def getSecurityCategoryFromAssignmentParent(self, base_category_list, user_name,
+                                            object, # pylint: disable=redefined-builtin
+                                            portal_type):
+  return getSecurityCategoryFromAssignment(self, base_category_list, user_name,
+                                           object, # pylint: disable=redefined-builtin
+                                           portal_type, child_category_list=base_category_list)
 
-def getSecurityCategoryFromAssignmentParentGroup(self, base_category_list,
-                                       user_name, object, portal_type):
-  return getSecurityCategoryFromAssignment(self, base_category_list,
-                                       user_name, object, portal_type, child_category_list=('group',))
+def getSecurityCategoryFromAssignmentParentGroup(self, base_category_list, user_name,
+                                                 object, # pylint: disable=redefined-builtin
+                                                 portal_type):
+  return getSecurityCategoryFromAssignment(self, base_category_list, user_name,
+                                           object, # pylint: disable=redefined-builtin
+                                           portal_type, child_category_list=('group',))
 
-def getSecurityCategoryFromAssignmentParentFunction(self, base_category_list,
-                                       user_name, object, portal_type):
-  return getSecurityCategoryFromAssignment(self, base_category_list,
-                                       user_name, object, portal_type, child_category_list=('function',))
+def getSecurityCategoryFromAssignmentParentFunction(self, base_category_list, user_name,
+                                                    object, # pylint: disable=redefined-builtin
+                                                    portal_type):
+  return getSecurityCategoryFromAssignment(self, base_category_list, user_name,
+                                           object, # pylint: disable=redefined-builtin
+                                           portal_type, child_category_list=('function',))
 
-def getSecurityCategoryFromAssignmentParentFunctionParentGroup(self, base_category_list,
-                                       user_name, object, portal_type):
-  return getSecurityCategoryFromAssignment(self, base_category_list,
-                                       user_name, object, portal_type, child_category_list=('function', 'group'))
+def getSecurityCategoryFromAssignmentParentFunctionParentGroup(self, base_category_list, user_name,
+                                                               object, # pylint: disable=redefined-builtin
+                                                               portal_type):
+  return getSecurityCategoryFromAssignment(self, base_category_list, user_name,
+                                           object, # pylint: disable=redefined-builtin
+                                           portal_type, child_category_list=('function', 'group'))
+
