@@ -367,10 +367,20 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                                        text_content=source_code,
                                        portal_type=cls.portal_type)
 
-    # Validate the Component once it is imported so it can be used
-    # straightaway as there should be no error
-    new_component.validate()
+    # XXX-ARNAU: checkConsistency() is also called before commit in
+    # Component_checkSourceCodeAndValidateAfterModified. Also, everything
+    # should be done in checkConsistency()...
+    error_message_list = [ m for m in new_component.checkSourceCode()
+                           if m['type'] in ('F', 'E') ]
+    if error_message_list:
+      raise SyntaxError(error_message_list)
 
+    consistency_message_list = new_component.checkConsistency()
+    if consistency_message_list:
+      from Products.DCWorkflow.DCWorkflow import ValidationFailed
+      raise ValidationFailed(consistency_message_list)
+
+    new_component.validate()
     return new_component
 
 InitializeClass(ComponentMixin)

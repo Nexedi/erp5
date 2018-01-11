@@ -8225,6 +8225,95 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepCheckDocumentMigrationFailWithConsistencyError(self, sequence=None, **kw):
+    current_bt = sequence['current_bt']
+    self.assertRaises(RuntimeError,
+                      current_bt.migrateSourceCodeFromFilesystem,
+                      # version must not start with '_'
+                      version='_invalid_version')
+
+  def test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithConsistencyError(self):
+    """
+    Check that component.checkConsistency() (called before "validating" a ZODB
+    Component) is done when migrating Document from filesystem to ZODB
+    """
+    sequence_list = SequenceList()
+    sequence_string = """
+      CreateDocument
+      CreateNewBusinessTemplate
+      UseExportBusinessTemplate
+      AddDocumentToBusinessTemplate
+      CheckModifiedBuildingState
+      CheckNotInstalledInstallationState
+      BuildBusinessTemplate
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      CheckObjectPropertiesInBusinessTemplate
+      UseCurrentBusinessTemplateForInstall
+      InstallWithoutForceBusinessTemplate
+      Tic
+      CheckInstalledInstallationState
+      CheckBuiltBuildingState
+      CheckSkinsLayers
+      CheckDocumentExists
+
+      CopyBusinessTemplate
+      CheckDocumentMigrationFailWithConsistencyError
+      """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def stepCheckDocumentMigrationFailWithSourceCodeError(self, sequence=None, **kw):
+    current_bt = sequence['current_bt']
+
+    from Products.ERP5Type.mixin.component import ComponentMixin
+    orig_checkSourceCode = ComponentMixin.checkSourceCode
+    try:
+      ComponentMixin.checkSourceCode = lambda *args, **kwargs: [
+        {'type': 'E', 'row': 1, 'column': 1,
+         'text': 'Source Code Error for Unit Test'}]
+      self.assertRaises(RuntimeError, current_bt.migrateSourceCodeFromFilesystem,
+                        version='erp5')
+
+      ComponentMixin.checkSourceCode = lambda *args, **kwargs: [
+        {'type': 'F', 'row': 1, 'column': 1,
+         'text': 'Source Code Error for Unit Test'}]
+      self.assertRaises(RuntimeError, current_bt.migrateSourceCodeFromFilesystem,
+                        version='erp5')
+    finally:
+      ComponentMixin.checkSourceCode = orig_checkSourceCode
+
+  def test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithSyntaxError(self):
+    """
+    Check that component.checkSourceCode() (called before "validating" a ZODB
+    Component) is done when migrating Document from filesystem to ZODB
+    """
+    sequence_list = SequenceList()
+    sequence_string = """
+      CreateDocument
+      CreateNewBusinessTemplate
+      UseExportBusinessTemplate
+      AddDocumentToBusinessTemplate
+      CheckModifiedBuildingState
+      CheckNotInstalledInstallationState
+      BuildBusinessTemplate
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      CheckObjectPropertiesInBusinessTemplate
+      UseCurrentBusinessTemplateForInstall
+      InstallWithoutForceBusinessTemplate
+      Tic
+      CheckInstalledInstallationState
+      CheckBuiltBuildingState
+      CheckSkinsLayers
+      CheckDocumentExists
+
+      CopyBusinessTemplate
+      CheckDocumentMigrationFailWithSourceCodeError
+      """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 class TestConstraintTemplateItem(TestDocumentTemplateItem):
   document_title = 'UnitTest'
   document_data = ' \nclass UnitTest: \n  """ \n  Fake constraint for unit test \n \
@@ -8368,6 +8457,12 @@ TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocumentMigrated = \
 
 TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodb = \
     skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodb)
+
+TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithConsistencyError = \
+    skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithConsistencyError)
+
+TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithSyntaxError = \
+    skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithSyntaxError)
 
 def test_suite():
   suite = unittest.TestSuite()
