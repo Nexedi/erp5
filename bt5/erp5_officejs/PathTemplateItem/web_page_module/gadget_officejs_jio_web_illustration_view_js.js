@@ -116,8 +116,7 @@
                   "key": "text_content",
                   "hidden": 0,
                   "type": "GadgetField",
-                  "url": "../officejs_svg_editor_gadget/" +
-                    "app/method-draw/method-draw.gadget.html",
+                  "url": "method-draw/method-draw.gadget.html",
                   "sandbox": "iframe"
                 }
               }},

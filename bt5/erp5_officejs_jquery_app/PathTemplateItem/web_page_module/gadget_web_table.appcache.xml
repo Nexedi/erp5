@@ -129,8 +129,6 @@ erp5_launcher_nojqm.js\n
 gadget_officejs_router.js\n
 gadget_erp5_router.html\n
 gadget_erp5_router.js\n
-gadget_officejs_liberator.html\n
-gadget_officejs_liberator.js\n
 gadget_jio.html\n
 gadget_jio.js\n
 gadget_translate.html\n
@@ -203,18 +201,53 @@ gadget_html5_textarea.js\n
 gadget_erp5_configure_editor.html\n
 gadget_erp5_configure_editor.js\n
 \n
+#setting\n
+gadget_officejs_setting.js\n
+gadget_officejs_setting.html\n
+\n
+#web table\n
 gadget_officejs_web_table_router.html\n
 gadget_officejs_jio_web_table_view.html\n
 gadget_officejs_jio_web_table_view.js\n
-GADGET:\n
-officejs_web_table_editor_gadget/\n
-officejs_setting_gadget/\n
+\n
+#jquery-sheets\n
+jquery.js\n
+jquery-sheets/wickedgrid.css\n
+jquery-sheets/menu.html\n
+jquery-sheets/font-awesome.css\n
+jquery-sheets/js/thaw.js\n
+jquery-sheets/js/raphael.js\n
+jquery-sheets/js/copy3_of_undomanager.js\n
+jquery-sheets/js/jquery-ui.js\n
+jquery-sheets/js/globalize.js\n
+jquery-sheets/js/jquery.nearest.js\n
+jquery-sheets/js/megatable.js\n
+jquery-sheets/js/wickedgrid.js\n
+jquery-sheets/js/graphael/g.bar.js\n
+jquery-sheets/js/graphael/g.line.js\n
+jquery-sheets/js/graphael/g.raphael.js\n
+jquery-sheets/js/graphael/g.pie.js\n
+jquery-sheets/js/graphael/g.dot.js\n
+jquery-sheets/js/ZeroClipboard.js\n
+jquery-sheets/js/jquery.elastic.source.js\n
+jquery-sheets/js/infiniscroll.js\n
+jquery-sheets/js/undomanager.js\n
+jquery-sheets/js/MouseWheel.js\n
+jquery-sheets/bootstrap-theme.css\n
+jquery-sheets/images/underline1.svg\n
+jquery-sheets/images/strikethrough.svg\n
+jquery-sheets/images/right183.svg\n
+jquery-sheets/images/left181.svg\n
+jquery-sheets/images/centered5.svg\n
+jquery-sheets/images/italic3.svg\n
+jquery-sheets/images/bold13.svg\n
+jquery-sheets/bootstrap.css\n
 NETWORK:\n
 *</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Web TableGadget OfficeJS AppCache</string> </value>
+            <value> <string>OfficeJS Web Table  AppCache</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -345,7 +378,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.45561.47559.9591</string> </value>
+                <value> <string>964.48713.29620.20258</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -363,7 +396,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1515590135.09</float>
+                        <float>1515675467.86</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

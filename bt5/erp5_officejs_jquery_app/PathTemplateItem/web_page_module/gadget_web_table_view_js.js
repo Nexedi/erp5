@@ -116,7 +116,7 @@
                   "key": "text_content",
                   "hidden": 0,
                   "type": "GadgetField",
-                  "url": "../officejs_web_table_editor_gadget/app/",
+                  "url": "jquery-sheets.gadget.html",
                   "sandbox": "iframe"
                 }
               }},
