@@ -19,6 +19,9 @@ Data License | edit_workflow
 Data License | validation_workflow
 Data Operation | edit_workflow
 Data Operation | validation_workflow
+Data Order Line | edit_workflow
+Data Order | data_simulation_workflow
+Data Order | edit_workflow
 Data Product | edit_workflow
 Data Product | validation_workflow
 Data Release | edit_workflow

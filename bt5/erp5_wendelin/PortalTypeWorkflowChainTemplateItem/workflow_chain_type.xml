@@ -48,6 +48,14 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Data Order</type>
+  <workflow>data_simulation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Data Order Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Data Product</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>

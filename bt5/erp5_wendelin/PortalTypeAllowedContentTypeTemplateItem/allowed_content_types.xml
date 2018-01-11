@@ -39,6 +39,12 @@
  <portal_type id="Data Operation Module">
   <item>Data Operation</item>
  </portal_type>
+ <portal_type id="Data Order">
+  <item>Data Order Line</item>
+ </portal_type>
+ <portal_type id="Data Order Module">
+  <item>Data Order</item>
+ </portal_type>
  <portal_type id="Data Product">
   <item>Embedded File</item>
   <item>Measure</item>
