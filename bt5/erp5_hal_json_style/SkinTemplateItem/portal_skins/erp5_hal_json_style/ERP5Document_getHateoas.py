@@ -1409,17 +1409,17 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         field_name = "{}_{}".format(listbox_field_id, select.replace(".", "_"))
         if listbox_form.has_field(field_name, include_disabled=1):
           editable_field_dict[select] = listbox_form.get_field(field_name, include_disabled=1)
-      
-      #check if proxyfy
+
+      # check if proxify
       if source_field.meta_type == "ProxyField":
         proxy_listbox_field_id = source_field.getRecursiveTemplateField().id
         proxy_form = getattr(traversed_document, source_field.getRecursiveTemplateField().Base_aqInner().aq_parent.id)
         for select in select_list:
-          #need also get editalbe field from proxy form
+          # need also get editable field from proxy form
           proxy_field_name = "{}_{}".format(proxy_listbox_field_id, select.replace(".", "_"))
           if proxy_form.has_field(proxy_field_name, include_disabled=1):
             editable_field_dict[select] = proxy_form.get_field(proxy_field_name, include_disabled=1)
-    
+
     # handle the case when list-scripts are ignoring `limit` - paginate for them
     if limit is not None and isinstance(limit, (tuple, list)):
       start, num_items = map(int, limit)
@@ -1510,6 +1510,20 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     source_field_meta_type = source_field.meta_type if source_field is not None else ""
     if source_field_meta_type == "ProxyField":
       source_field_meta_type = source_field.getRecursiveTemplateField().meta_type
+
+    # Lets mingle with editability of fields here
+    # Original Listbox.py modifies editability during field rendering (method `render`)
+    # which we cannot use here so we overwrite result's own editability
+    if source_field is not None and source_field_meta_type == "ListBox":
+      # XXX TODO: should take into account "editable_columns" from listbox own selection
+      editable_column_set = set(name for name, _ in source_field.get_value("editable_columns"))
+      for line in result_dict['_embedded']['contents']:
+        for select in line:
+          # forbid editability only for fields not specified in editable_columns
+          if select in editable_column_set:
+            continue
+          if isinstance(line[select], dict) and line[select].get('editable'):
+            line[select]['editable'] = False
 
     if source_field is not None and source_field_meta_type == "ListBox":
       contents_stat_list = []
