@@ -85,7 +85,7 @@ class TestBudget(ERP5TypeTestCase):
     budget = self.portal.budget_module.newContent(
                             portal_type='Budget')
     budget_line = budget.newContent(portal_type='Budget Line')
-    budget_cell = budget_line.newContent(portal_type='Budget Cell')
+    budget_line.newContent(portal_type='Budget Cell')
     self.assertEqual([], budget.checkConsistency())
 
   def test_budget_cell_node_variation_with_aggregate(self):
@@ -626,17 +626,18 @@ class TestBudget(ERP5TypeTestCase):
 
     self.assertEqual(2, len(budget_line.contentValues()))
 
+    test_class_self = self
     class ReferenceQuery:
       """Helper class to compare queries
       """
-      def __eq__(me, query):
-        self.assertTrue(isinstance(query, ComplexQuery))
-        self.assertEqual(query.logical_operator, 'or')
-        self.assertEqual(2, len(query.query_list))
-        self.assertEqual(query.query_list[0].kw, {'project_uid': None})
-        self.assertEqual(query.query_list[1].kw,
+      def __eq__(self, query):
+        test_class_self.assertTrue(isinstance(query, ComplexQuery))
+        test_class_self.assertEqual(query.logical_operator, 'or')
+        test_class_self.assertEqual(2, len(query.query_list))
+        test_class_self.assertEqual(query.query_list[0].kw, {'project_uid': None})
+        test_class_self.assertEqual(query.query_list[1].kw,
           {'project_uid':
-            [self.portal.organisation_module.my_organisation.getUid()]})
+            [test_class_self.portal.organisation_module.my_organisation.getUid()]})
         return True
 
     self.assertEqual(
@@ -730,12 +731,13 @@ class TestBudget(ERP5TypeTestCase):
 
     self.assertEqual(1, len(budget_line.contentValues()))
 
+    test_class_self = self
     class ReferenceQuery:
       """Helper class to compare queries
       """
-      def __eq__(me, query):
-        self.assertTrue(isinstance(query, Query))
-        self.assertEqual(query.kw, {'project_uid': None})
+      def __eq__(self, query):
+        test_class_self.assertTrue(isinstance(query, Query))
+        test_class_self.assertEqual(query.kw, {'project_uid': None})
         return True
 
     self.assertEqual(

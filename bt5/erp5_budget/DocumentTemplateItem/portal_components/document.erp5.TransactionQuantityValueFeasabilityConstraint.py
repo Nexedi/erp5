@@ -27,54 +27,53 @@
 ##############################################################################
 
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
-from Products.ERP5Type import PropertySheet
 
 class TransactionQuantityValueFeasabilityConstraint(ConstraintMixin):
+  """
+  Check if the quantity of the transaction is possible
+  for the source and the destination
+
+  This is only relevant for ZODB Property Sheets (filesystem Property
+  Sheets rely on Products.ERP5.Constraint.TransactionQuantityValueFeasability
+  instead).
+  """
+  meta_type = 'ERP5 Transaction Quantity Value Feasability Constraint'
+  portal_type = 'Transaction Quantity Value Feasability Constraint'
+
+  def _checkConsistency(self, obj, fixit=0, **_):
     """
     Check if the quantity of the transaction is possible
     for the source and the destination
-
-    This is only relevant for ZODB Property Sheets (filesystem Property
-    Sheets rely on Products.ERP5.Constraint.TransactionQuantityValueFeasability
-    instead).
     """
-    meta_type = 'ERP5 Transaction Quantity Value Feasability Constraint'
-    portal_type = 'Transaction Quantity Value Feasability Constraint'
-
-    def _checkConsistency(self, object, fixit=0):
-      """
-      Check if the quantity of the transaction is possible
-      for the source and the destination
-      """
-      errors = []
-      source_cell = object.getSourceValue()
-      destination_cell = object.getDestinationValue()
-      # Check for source and destination
-      for node, sign, node_title in ((source_cell, 1, 'source'),
-                                     (destination_cell, -1, 'destination')):
-        # As the quantity can change a few lines letter,
-        # we need to get it each time.
-        object_quantity = object.getQuantity()
-        quantity = object_quantity * sign
-        if node is not None:
-          balance = node.getCurrentBalance()
-          is_transaction_ok = 1
-          # Check if balance and quantity have the same sign
-          if ((balance < 0) and (quantity < 0)):
-            if balance > quantity:
-              is_transaction_ok = 0
-          elif ((balance >= 0) and (quantity >= 0)):
-            if balance < quantity:
-              is_transaction_ok = 0
-          # Raise error
-          if not is_transaction_ok:
-            if fixit != 0:
-              object.setQuantity(balance)
-            else:
-              error_message = 'The quantity "%s" of the transaction is not ' \
-                              'compatible with budget "%s" defined on the ' \
-                              '%s "%s".' % \
-                              (object_quantity, balance, node_title, node)
-              # Add error
-              errors.append(self._generateError(object, error_message))
-      return errors
+    errors = []
+    source_cell = obj.getSourceValue()
+    destination_cell = obj.getDestinationValue()
+    # Check for source and destination
+    for node, sign, node_title in ((source_cell, 1, 'source'),
+                                   (destination_cell, -1, 'destination')):
+      # As the quantity can change a few lines letter,
+      # we need to get it each time.
+      object_quantity = obj.getQuantity()
+      quantity = object_quantity * sign
+      if node is not None:
+        balance = node.getCurrentBalance()
+        is_transaction_ok = 1
+        # Check if balance and quantity have the same sign
+        if ((balance < 0) and (quantity < 0)):
+          if balance > quantity:
+            is_transaction_ok = 0
+        elif ((balance >= 0) and (quantity >= 0)):
+          if balance < quantity:
+            is_transaction_ok = 0
+        # Raise error
+        if not is_transaction_ok:
+          if fixit != 0:
+            obj.setQuantity(balance)
+          else:
+            error_message = 'The quantity "%s" of the transaction is not ' \
+                            'compatible with budget "%s" defined on the ' \
+                            '%s "%s".' % \
+                            (object_quantity, balance, node_title, node)
+            # Add error
+            errors.append(self._generateError(obj, error_message))
+    return errors

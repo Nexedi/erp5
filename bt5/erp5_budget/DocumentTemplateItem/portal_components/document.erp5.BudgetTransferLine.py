@@ -35,24 +35,23 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.SupplyLine import SupplyLine
 
 class BudgetTransferLine(SupplyLine):
-    """
-    BudgetTransferLine
-    """
+  """
+  BudgetTransferLine
+  """
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Amount
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+  )
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Amount
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-    )
+  # CMF Type Definition
+  meta_type='ERP5 Budget Transfer Line'
+  portal_type='Budget Transfer Line'
+  add_permission = Permissions.AddPortalContent
 
-    # CMF Type Definition
-    meta_type='ERP5 Budget Transfer Line'
-    portal_type='Budget Transfer Line'
-    add_permission = Permissions.AddPortalContent
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
