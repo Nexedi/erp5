@@ -813,7 +813,7 @@
       }
 
       //execute an url command without saving
-      if (gadget.props.modified && command[0] === PREFIX_COMMAND) {
+      if (gadget.props.modified && command[0] === PREFIX_COMMAND && !gadget.props.form_content) {
         if (!window.confirm(gadget.props.warning_message)) {
           //back to previous hash
           gadget.props.hasUnsaved = true;

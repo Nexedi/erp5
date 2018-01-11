@@ -44,12 +44,14 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Views']</td>
+  <td>//a[@data-i18n="Views"]</td>
   <td></td>
 </tr>
+
+
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Views']</td>
+  <td>//a[@data-i18n="Views"]</td>
   <td></td>
 </tr>
 
@@ -72,50 +74,62 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//a[@data-i18n="Relation Fields"]</td>
   <td></td>
 </tr>
 
+
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//a[@data-i18n="Relation Fields"]</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td>TEST</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Save'][contains(@class, 'ui-icon-warning')]</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>type</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
-  <td>unknowntext</td>
+  <td>//input[@name="field_my_successor_title"]</td>
+  <td>search</td>
 </tr>
+
 
 <tr>
   <td>fireEvent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>//input[@name="field_my_successor_title"]</td>
   <td>input</td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//li[@name="Foo"]
-  <td></td>
-</tr>
-
-
-
-<tr>
-  <td>waitForElementPresent</td>
   <td>//li[@data-explore="true"]</td>
   <td></td>
 </tr>
 
+
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_my_successor_title"]</td>
+  <td>blur</td>
+</tr>
 
 
 <tr>
@@ -124,35 +138,11 @@
   <td></td>
 </tr>
 
-
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//button[contains(text(),'unknown')]</td>
+  <td>verifyConfirmationNotPresent</td>
+  <td>This page contains unsaved changes, do you really want to leave the page ?</td>
   <td></td>
 </tr>
-
-
-
-<tr>
-  <td>click</td>
-  <td>//h1[@class="ui-title"]//a</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//a[contains(@class, "ui-icon-warning")]</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//a[contains(@class, "ui-icon-warning")]</td>
-  <td></td>
-</tr>
-
 
 </tbody></table>
 </body>

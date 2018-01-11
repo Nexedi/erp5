@@ -199,12 +199,6 @@
 </tr>
 
 <tr>
-  <td>chooseOkOnNextConfirmation</td>
-  <td></td>
-  <td></td>
-</tr>
-
-<tr>
   <td colspan="3"><b>Click on the search button of the empty multi relation field</b></td>
 </tr>
 <tr>
@@ -212,8 +206,6 @@
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//button</td>
   <td></td>
 </tr>
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_confirmation" />
 
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
