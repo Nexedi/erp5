@@ -27,6 +27,7 @@
 
 from Products.ERP5Security.ERP5GroupManager import ConsistencyError
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
+from DateTime import DateTime
 
 def getSecurityCategoryFromAssignment(self, base_category_list, user_name, object, portal_type,
                                       child_category_list=[]):
@@ -66,10 +67,15 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name, objec
     return []
   user_path, = user_path_set
   person_object = self.getPortalObject().unrestrictedTraverse(user_path)
+  now = DateTime()
 
   # We look for every valid assignments of this user
   for assignment in person_object.contentValues(filter={'portal_type': 'Assignment'}):
-    if assignment.getValidationState() == 'open':
+    if assignment.getValidationState() == "open" and (
+      not assignment.hasStartDate() or assignment.getStartDate() <= now
+    ) and (
+      not assignment.hasStopDate() or assignment.getStopDate() >= now
+    ):
       category_dict = {}
       for base_category in base_category_list:
         category_value_list = assignment.getAcquiredValueList(base_category)
