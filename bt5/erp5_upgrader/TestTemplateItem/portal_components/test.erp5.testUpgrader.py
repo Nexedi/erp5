@@ -344,12 +344,19 @@ class TestUpgrader(ERP5TypeTestCase):
 
   def stepCheckNoActivitiesCreated(self, sequence=None):
     portal_activities = self.getActivityTool()
+    message_list = portal_activities.getMessageList()
     self.assertItemsEqual(['Alarm_runUpgrader', 'notify'],
-      [x.method_id for x in portal_activities.getMessageList()])
+      [x.method_id for x in message_list])
     getTitleList = self.getTemplateTool().getInstalledBusinessTemplateTitleList
     self.assertNotIn('erp5_web', getTitleList())
-    for message in portal_activities.getMessageList():
-      portal_activities.manageInvoke(message.object_path, message.method_id)
+    # "notify" must not be executed first as it has a dependency on
+    # Alarm_runUpgrader, so cast into a dict to control execution order.
+    message_dict = {x.method_id: x for x in message_list}
+    for method_id in ['Alarm_runUpgrader', 'notify']:
+      portal_activities.manageInvoke(
+        message_dict[method_id].object_path,
+        method_id,
+      )
     self.assertIn('erp5_web', getTitleList())
     self.commit()
     self.assertEqual({'immediateReindexObject', 'unindexObject'},
