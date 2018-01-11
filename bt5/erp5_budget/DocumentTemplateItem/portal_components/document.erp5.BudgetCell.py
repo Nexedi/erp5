@@ -35,133 +35,133 @@ from Products.ERP5.Document.MetaNode import MetaNode
 from Products.ERP5.Document.Movement import Movement
 
 class BudgetCell(Predicate, MetaNode, Movement):
-    """ Budget Cell defines a cell of budget.
-    XXX This is not a Movement, but we need getDestinationCredit
-    XXX This is not a MetaNode
+  """ Budget Cell defines a cell of budget.
+  XXX This is not a Movement, but we need getDestinationCredit
+  XXX This is not a MetaNode
+  """
+
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.SimpleItem
+                    , PropertySheet.Folder
+                    , PropertySheet.Predicate
+                    , PropertySheet.SortIndex
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Amount
+                    , PropertySheet.Budget
+                    , PropertySheet.MappedValue
+                    , PropertySheet.VariationRange
+                    )
+
+  # CMF Type Definition
+  meta_type='ERP5 Budget Cell'
+  portal_type='Budget Cell'
+  add_permission = Permissions.AddPortalContent
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
+  def getTitle(self):
     """
+    Return a calculated title.
+    """
+    script = self._getTypeBasedMethod('asTitle')
+    if script is not None:
+      return script()
+    raise UnboundLocalError(
+              "Did not find title script for portal type: %r" %
+              self.getPortalType())
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.Folder
-                      , PropertySheet.Predicate
-                      , PropertySheet.SortIndex
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Amount
-                      , PropertySheet.Budget
-                      , PropertySheet.MappedValue
-                      , PropertySheet.VariationRange
-                      )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
+  def getCurrentInventory(self, at_date=None, **kw):
+    """ Returns current inventory.
 
-    # CMF Type Definition
-    meta_type='ERP5 Budget Cell'
-    portal_type='Budget Cell'
-    add_permission = Permissions.AddPortalContent
+    at_date parameter can be used to take into account budget transactions
+    before that date.
+    """
+    kw['node_uid'] = self.getUid()
+    resource = self.getResourceValue()
+    if resource is not None:
+      kw['resource_uid'] = resource.getUid()
+    if at_date:
+      kw['at_date'] = at_date
+    sign = self.getParentValue().BudgetLine_getConsumptionSign()
+    return sign * self.portal_simulation.getCurrentInventory(**kw)
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentBalance')
+  def getCurrentBalance(self, at_date=None):
+    """
+    Returns current balance
+    """
+    sign = self.getParentValue().BudgetLine_getConsumptionSign()
+    return sign * self.getQuantity(0.0) + self.getCurrentInventory(at_date=at_date)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
-    def getTitle(self):
-      """
-      Return a calculated title.
-      """
-      script = self._getTypeBasedMethod('asTitle')
-      if script is not None:
-        return script()
-      raise UnboundLocalError,\
-              "Did not find title script for portal type: %r" %\
-              self.getPortalType()
+  security.declareProtected(Permissions.AccessContentsInformation, 'getConsumedBudget')
+  def getConsumedBudget(self, src__=0):
+    """
+    Return consumed budget.
+    """
+    script = self._getTypeBasedMethod('getConsumedBudget')
+    if script is not None:
+      return script(src__=src__)
+    raise UnboundLocalError(
+              "Did not find consumed budget script for portal type: %r" %
+              self.getPortalType())
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
-    def getCurrentInventory(self, at_date=None, **kw):
-      """ Returns current inventory.
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableBudget')
+  def getAvailableBudget(self, at_date=None):
+    """
+    Return available budget.
+    """
+    return self.getCurrentBalance(at_date=at_date) - self.getEngagedBudget()
 
-      at_date parameter can be used to take into account budget transactions
-      before that date.
-      """
-      kw['node_uid'] = self.getUid()
-      resource = self.getResourceValue()
-      if resource is not None:
-        kw['resource_uid'] = resource.getUid()
-      if at_date:
-        kw['at_date'] = at_date
-      sign = self.getParentValue().BudgetLine_getConsumptionSign()
-      return sign * self.portal_simulation.getCurrentInventory(**kw)
+  security.declareProtected(Permissions.AccessContentsInformation, 'getEngagedBudget')
+  def getEngagedBudget(self, src__=0):
+    """
+    Return Engaged budget.
+    """
+    script = self._getTypeBasedMethod('getEngagedBudget')
+    if script is not None:
+      return script(src__=src__)
+    raise UnboundLocalError(
+              "Did not find engaged budget script for portal type: %r" %
+              self.getPortalType())
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentBalance')
-    def getCurrentBalance(self, at_date=None):
-      """
-      Returns current balance
-      """
-      sign = self.getParentValue().BudgetLine_getConsumptionSign()
-      return sign * self.getQuantity(0.0) + self.getCurrentInventory(at_date=at_date)
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getExplanationValue')
+  def getExplanationValue(self):
+    """Explanation has no meaning for a budget cell"""
+    return None
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getConsumedBudget')
-    def getConsumedBudget(self, src__=0):
-      """
-      Return consumed budget.
-      """
-      script = self._getTypeBasedMethod('getConsumedBudget')
-      if script is not None:
-        return script(src__=src__)
-      raise UnboundLocalError,\
-              "Did not find consumed budget script for portal type: %r" % \
-              self.getPortalType()
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'setSourceCredit')
+  def setSourceCredit(self, source_credit):
+    """Set the quantity.
+    Overloaded from movement, we always set the quantity, even if not passed
+    """
+    try:
+      source_credit = float(source_credit)
+    except TypeError:
+      source_credit = 0.0
+    Movement.setSourceCredit(self, source_credit)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableBudget')
-    def getAvailableBudget(self, at_date=None):
-      """
-      Return available budget.
-      """
-      return self.getCurrentBalance(at_date=at_date) - self.getEngagedBudget()
+  def setSourceDebit(self, source_debit):
+    """Set the quantity.
+    Overloaded from movement, we always set the quantity, even if not passed
+    """
+    try:
+      source_debit = float(source_debit)
+    except TypeError:
+      source_debit = 0.0
+    Movement.setSourceDebit(self, source_debit)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getEngagedBudget')
-    def getEngagedBudget(self, src__=0):
-      """
-      Return Engaged budget.
-      """
-      script = self._getTypeBasedMethod('getEngagedBudget')
-      if script is not None:
-        return script(src__=src__)
-      raise UnboundLocalError,\
-              "Did not find engaged budget script for portal type: %r" % \
-              self.getPortalType()
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getExplanationValue')
-    def getExplanationValue(self, default=None):
-      """Explanation has no meaning for a budget cell"""
-      return default
-
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              'setSourceCredit')
-    def setSourceCredit(self, source_credit):
-      """Set the quantity.
-      Overloaded from movement, we always set the quantity, even if not passed
-      """
-      try:
-        source_credit = float(source_credit)
-      except TypeError:
-        source_credit = 0.0
-      Movement.setSourceCredit(self, source_credit)
-
-    def setSourceDebit(self, source_debit):
-      """Set the quantity.
-      Overloaded from movement, we always set the quantity, even if not passed
-      """
-      try:
-        source_debit = float(source_debit)
-      except TypeError:
-        source_debit = 0.0
-      Movement.setSourceDebit(self, source_debit)
-
-    security.declareProtected( Permissions.ModifyPortalContent,
-                               'setDestinationDebit', 'setDestinationCredit' )
-    setDestinationDebit = setSourceCredit
-    setDestinationCredit = setSourceDebit
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'setDestinationDebit', 'setDestinationCredit' )
+  setDestinationDebit = setSourceCredit
+  setDestinationCredit = setSourceDebit

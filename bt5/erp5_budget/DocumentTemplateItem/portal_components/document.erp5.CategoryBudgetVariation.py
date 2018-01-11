@@ -30,7 +30,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.BudgetVariation import BudgetVariation
 
-
 class CategoryBudgetVariation(BudgetVariation):
   """ A budget variation based on a category
   """
@@ -141,7 +140,7 @@ class CategoryBudgetVariation(BudgetVariation):
     for criterion_category in context.getMembershipCriterionCategoryList():
       if '/' not in criterion_category: # safe ...
         continue
-      criterion_base_category, category_url = criterion_category.split('/', 1)
+      criterion_base_category, _ = criterion_category.split('/', 1)
       if criterion_base_category == base_category:
         if uid_based_axis:
           category_uid = self.getPortalObject().portal_categories\
@@ -184,8 +183,9 @@ class CategoryBudgetVariation(BudgetVariation):
         axis = '%s_uid' % axis
 
     if self.getProperty('full_consumption_detail'):
-      for title, category in self.getBudgetLineVariationRangeCategoryList(context):
-        if not category: continue
+      for _, category in self.getBudgetLineVariationRangeCategoryList(context):
+        if not category:
+          continue
         if axis.endswith('_uid'):
           # XXX move out getattrs
           category = self.getPortalObject().portal_categories\

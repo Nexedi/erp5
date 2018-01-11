@@ -7,12 +7,24 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_recorded_property_dict</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>BudgetCell</string> </value>
         </item>
         <item>
             <key> <string>default_source_reference</string> </key>
             <value> <string>Products.ERP5.Document.BudgetCell</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -37,79 +49,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W: 38,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W: 44,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W: 61,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W: 62,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W: 63,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W: 66,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W: 67,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W: 69,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W: 70,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W: 71,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W: 74,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W: 75,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W: 76,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
-                <string>W: 77,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W: 81,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W: 82,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W: 83,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W: 88,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W: 89,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W: 90,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W: 91,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
-                <string>W: 92,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W: 93,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
-                <string>W: 94,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W: 95,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W: 97,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W: 98,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W: 99,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:102,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:103,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:105,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:106,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:107,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:110,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:111,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:112,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
-                <string>W:113,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:117,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:118,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:119,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:122,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:124,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:125,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:126,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:129,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:130,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:131,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
-                <string>W:132,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:136,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:138,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:139,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:140,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:142,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:144,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:145,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:148,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:149,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
-                <string>W:150,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:151,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
-                <string>W:152,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:154,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:155,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:158,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:159,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
-                <string>W:160,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:161,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
-                <string>W:162,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
-                <string>W:164,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:166,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:167,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
-                <string>W:138,  4: Arguments number differs from overridden \'getExplanationValue\' method (arguments-differ)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -119,7 +59,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
       </dictionary>
@@ -134,11 +74,26 @@
         <item>
             <key> <string>data</string> </key>
             <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
               <dictionary>
                 <item>
                     <key> <string>component_validation_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -147,7 +102,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="3" aka="AAAAAAAAAAM=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>

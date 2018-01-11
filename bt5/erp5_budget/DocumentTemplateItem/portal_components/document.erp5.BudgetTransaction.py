@@ -32,37 +32,35 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 
 class BudgetTransaction(DeliveryLine):
+  """
+  BudgetTransaction an order or transfer of budget.
+  """
+
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Amount
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.VariationRange
+                    , PropertySheet.ItemAggregation
+                    )
+  # CMF Type Definition
+  meta_type='ERP5 Budget Transaction'
+  portal_type='Budget Transaction'
+  add_permission = Permissions.AddPortalContent
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isAccountable')
+  def isAccountable(self):
     """
-    BudgetTransaction an order or transfer of budget.
+    Supersedes the DeliveryLine definition
     """
-
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Amount
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.VariationRange
-                      , PropertySheet.ItemAggregation
-                      )
-    # CMF Type Definition
-    meta_type='ERP5 Budget Transaction'
-    portal_type='Budget Transaction'
-    add_permission = Permissions.AddPortalContent
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'isAccountable')
-    def isAccountable(self):
-      """
-      Supersedes the DeliveryLine definition
-      """
-      return 1
-
+    return 1

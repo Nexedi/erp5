@@ -33,25 +33,24 @@ from Products.ERP5Type import Permissions, PropertySheet
 
 
 class BudgetTransfer(Supply):
-    """
-    BudgetTransfer  ...
-    """
+  """
+  BudgetTransfer  ...
+  """
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Folder
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Movement
+  )
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Folder
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Movement
-      )
+  # CMF Type Definition
+  meta_type='ERP5 Budget Transfer'
+  portal_type='Budget Transfer'
+  add_permission = Permissions.AddPortalContent
 
-    # CMF Type Definition
-    meta_type='ERP5 Budget Transfer'
-    portal_type='Budget Transfer'
-    add_permission = Permissions.AddPortalContent
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)

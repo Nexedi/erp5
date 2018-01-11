@@ -34,33 +34,32 @@ from Products.ERP5.mixin.variated import VariatedMixin
 
 
 class Budget(Predicate, VariatedMixin):
-    """
-    Budget means a kind of budget stock.
-    """
+  """
+  Budget means a kind of budget stock.
+  """
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Folder
-                      , PropertySheet.Predicate
-                      , PropertySheet.SortIndex
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Budget
-                      , PropertySheet.Path
-                      , PropertySheet.VariationRange
-                      , PropertySheet.Reference
-                      , PropertySheet.Version
-                      )
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.SimpleItem
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Folder
+                    , PropertySheet.Predicate
+                    , PropertySheet.SortIndex
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Budget
+                    , PropertySheet.Path
+                    , PropertySheet.VariationRange
+                    , PropertySheet.Reference
+                    , PropertySheet.Version
+                    )
 
-    # CMF Type Definition
-    meta_type='ERP5 Budget'
-    portal_type='Budget'
-    add_permission = Permissions.AddPortalContent
+  # CMF Type Definition
+  meta_type='ERP5 Budget'
+  portal_type='Budget'
+  add_permission = Permissions.AddPortalContent
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)

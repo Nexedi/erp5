@@ -27,46 +27,44 @@
 ##############################################################################
 
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
-from Products.ERP5Type import PropertySheet
 
 class TransactionQuantityValueValidityConstraint(ConstraintMixin):
+  """
+  This is only relevant for ZODB Property Sheets (filesystem Property
+  Sheets rely on Products.ERP5.Constraint.TransactionQuantityValueValidity
+  instead).
+  """
+  meta_type = 'ERP5 Transaction Quantity Value Validity Constraint'
+  portal_type = 'Transaction Quantity Value Validity Constraint'
+
+  def _checkConsistency(self, obj, fixit=0, **_):
     """
-    This is only relevant for ZODB Property Sheets (filesystem Property
-    Sheets rely on Products.ERP5.Constraint.TransactionQuantityValueValidity
-    instead).
+    Check if the quantity of the transaction is greater than the
+    balance of the source.
     """
-    meta_type = 'ERP5 Transaction Quantity Value Validity Constraint'
-    portal_type = 'Transaction Quantity Value Validity Constraint'
+    errors = []
 
-    def _checkConsistency(self, object, fixit=0):
-      """
-      Check if the quantity of the transaction is greater than the
-      balance of the source.
-      """
-      errors = []
+    source_cell = obj.getSourceValue()
+    destination_cell = obj.getDestinationValue()
 
-      source_cell = object.getSourceValue()
-      destination_cell = object.getDestinationValue()
-
-      if (source_cell is not None) and \
-         (destination_cell is not None):
-        # XXX Dirty code !
-        quantity = object.getQuantity()
-        budget_list = object.getPortalObject().budget_module.objectValues()
-        max_quantity = 0
-        for obj in budget_list:
-          for item in obj.objectValues():
-             if (item.getPortalType() == 'Budget Transfer Line') and \
-                (item.getSourceValue() == source_cell) and \
-                (item.getDestinationValue() == destination_cell):
-               max_quantity = item.getQuantity()
-        if quantity > max_quantity:
-          if fixit != 0:
-            self.setQuantity(max_quantity)
-          else:
-            error_message = 'The quantity of the transaction is greater than ' \
-                            'the transferable maximum quantity (TMQ): ' \
+    if source_cell is not None and destination_cell is not None:
+      # XXX Dirty code !
+      quantity = obj.getQuantity()
+      budget_list = obj.getPortalObject().budget_module.objectValues()
+      max_quantity = 0
+      for obj in budget_list:
+        for item in obj.objectValues():
+          if item.getPortalType() == 'Budget Transfer Line' and \
+             item.getSourceValue() == source_cell and \
+             item.getDestinationValue() == destination_cell:
+            max_quantity = item.getQuantity()
+      if quantity > max_quantity:
+        if fixit != 0:
+          self.setQuantity(max_quantity)
+        else:
+          error_message = 'The quantity of the transaction is greater than ' \
+                          'the transferable maximum quantity (TMQ): ' \
                             'TMQ = %.2f' % max_quantity
-            # Add error
-            errors.append(self._generateError(object, error_message))
-      return errors
+          # Add error
+          errors.append(self._generateError(obj, error_message))
+    return errors
