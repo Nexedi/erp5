@@ -183,9 +183,47 @@ gadget_officejs_jio_crib_from.html\n
 gadget_officejs_page_jio_crib_configurator.html\n
 gadget_officejs_page_jio_crib_configurator.js\n
 gadget_officejs_crib_panel.html\n
-GADGET:\n
-officejs_codemirror/\n
-officejs_setting_gadget/\n
+\n
+#setting\n
+gadget_officejs_setting.js\n
+gadget_officejs_setting.html\n
+\n
+#codemirror\n
+codemirror/lib/codemirror.js\n
+codemirror/lib/codemirror.css\n
+codemirror/addon/cm_edit/matchbrackets.js\n
+codemirror/addon/cm_edit/trailingspace.js\n
+codemirror/addon/dialog/dialog.css\n
+codemirror/addon/dialog/dialog.js\n
+codemirror/addon/display/fullscreen.css\n
+codemirror/addon/display/fullscreen.js\n
+codemirror/addon/display/rulers.js\n
+codemirror/addon/search/searchcursor.js\n
+codemirror/addon/search/search.js\n
+codemirror/addon/search/jump-to-line.js\n
+codemirror/addon/selection/active-line.js\n
+codemirror/addon/hint/show-hint.css\n
+codemirror/addon/hint/show-hint.js\n
+codemirror/addon/hint/anyword-hint.js\n
+codemirror/addon/fold/foldgutter.css\n
+codemirror/addon/fold/foldcode.js\n
+codemirror/addon/fold/foldgutter.js\n
+codemirror/addon/fold/indent-fold.js\n
+codemirror/addon/fold/comment-fold.js\n
+codemirror/addon/merge/merge.css\n
+diff_match_patch/javascript/diff_match_patch_uncompressed.js\n
+codemirror/addon/merge/merge.js\n
+codemirror/addon/lint/lint.css\n
+codemirror/addon/lint/lint.js\n
+jshint.js\n
+codemirror/addon/lint/javascript-lint.js\n
+csslint.js\n
+codemirror/addon/lint/css-lint.js\n
+codemirror/mode/xml/xml.js\n
+codemirror/mode/javascript/javascript.js\n
+codemirror/mode/css/css.js\n
+codemirror/mode/htmlmixed/htmlmixed.js\n
+codemirror.gadget.js\n
 NETWORK:\n
 *</string> </value>
         </item>
@@ -314,7 +352,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -328,7 +366,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.34163.780.59682</string> </value>
+                <value> <string>964.45561.47559.9591</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -346,7 +384,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501062971.88</float>
+                        <float>1515771284.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
