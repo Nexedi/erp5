@@ -16,10 +16,6 @@
         app_name_div.textContent = gadget.state.app_name +
           " is being prepared for 100 % offline mode";
       }
-      if (modification_dict.error_source) {
-        app_name_div = gadget.element.querySelector(".error-source");
-        app_name_div.textContent = "Source: " + gadget.state.error_source;
-      }
       if (modification_dict.error_amount) {
         app_name_div = gadget.element.querySelector(".error-amount");
         app_name_div.textContent = "Retry: " + gadget.state.error_amount;
