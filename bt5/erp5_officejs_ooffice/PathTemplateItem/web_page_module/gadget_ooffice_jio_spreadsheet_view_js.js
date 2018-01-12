@@ -150,8 +150,10 @@
                   "key": "text_content",
                   "hidden": 0,
                   "type": editable ? "GadgetField" : "EditorField",
-                  "url": "onlyoffice.gadget.html",
-                  "sandbox": "iframe"
+                  "renderjs_extra": '{"editor": "onlyoffice",' +
+                    '"maximize": true}',
+                  "url": "gadget_editor.html",
+                  "sandbox": "public"
                 }
               }},
               "_links": {
