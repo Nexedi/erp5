@@ -9,8 +9,11 @@ from functools import wraps
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
 
+import base64
+import DateTime
 import StringIO
 import json
+import re
 import urllib
 
 def changeSkin(skin_name):
@@ -644,6 +647,42 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
   @changeSkin('Hal')
+  def test_getHateoasDocument_listbox_vs_relation_inconsistency(self):
+    """Purpose of this test is to point to inconsistencies in search-enabled field rendering.
+
+    ListBox gets its Portal Types in `portal_type` as list of tuples whether
+    Relation Input receives `portal_types` and `translated_portal_types`
+    """
+    document = self._makeDocument()
+    # Drop editable permission
+    document.manage_permission('Modify portal content', [], 0)
+    document.Foo_view.listbox.ListBox_setPropertyList(
+      field_title = 'Foo Lines',
+      field_list_method = 'objectValues',
+      field_portal_types = 'Foo Line | Foo Line',
+    )
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="traverse",
+      relative_url=document.getRelativeUrl(),
+      view="view")
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    # ListBox rendering of allowed Portal Types
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['portal_type'], [['Foo Line', 'Foo Line']])
+    # Relation Input rendering of allowed Portal Types
+    self.assertEqual(result_dict['_embedded']['_view']['my_foo_category_title']['portal_types'], ['Category'])
+    self.assertEqual(result_dict['_embedded']['_view']['my_foo_category_title']['translated_portal_types'], ['Category'])
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
   def test_getHateoasDocument_non_editable_default_view(self):
     document = self._makeDocument()
     # Drop editable permission
@@ -711,6 +750,71 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
 
     self.assertFalse(result_dict['_embedded']['_view'].has_key('_actions'))
 
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoasDocument_listbox_list_method_params(self):
+    """Ensure that `list_method` of ListBox receives specified parameters."""
+    document = self._makeDocument()
+    document.manage_permission('Modify portal content', [], 0)
+    # pass custom list method which expect input arguments
+    document.Foo_view.listbox.ListBox_setPropertyList(
+      field_title = 'Foo Lines',
+      field_list_method = 'Foo_listWithInputParams',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date\ncatalog.uid|Uid')
+
+    now = DateTime.DateTime()
+    tomorrow = now + 1
+
+    fake_request = do_fake_request("GET", data=(
+      ('start_date', now.ISO()),
+      ('stop_date', tomorrow.ISO()))
+    )
+    # I tried to implement the standard way (see `data` param in do_fake_request)
+    # but for some reason it does not work...so we hack our way around
+    fake_request.set('start_date', now.ISO())
+    fake_request.set('stop_date', tomorrow.ISO())
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="traverse",
+      relative_url=document.getRelativeUrl(),
+      form=document.restrictedTraverse('portal_skins/erp5_ui_test/Foo_view'),
+      view="view"
+      )
+
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    list_method_template = \
+      result_dict['_embedded']['_view']['listbox']['list_method_template']
+    # default_param_json must not be empty because our custom list method
+    # specifies input parameters - they need to be filled from REQUEST
+    self.assertIn('default_param_json', list_method_template)
+    default_param_json = json.loads(
+      base64.b64decode(
+        re.search(r'default_param_json=([^\{&]+)',
+                  list_method_template).group(1)))
+    self.assertIn("start_date", default_param_json)
+    self.assertEqual(default_param_json["start_date"], now.ISO())
+    self.assertIn("stop_date", default_param_json)
+    self.assertEqual(default_param_json["stop_date"], tomorrow.ISO())
+    # reset listbox properties to defaults
+    document.Foo_view.listbox.ListBox_setPropertyList(
+      field_title = 'Foo Lines',
+      field_list_method = 'objectValues',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_stat_method = 'portal_catalog',
+      field_stat_columns = 'quantity | Foo_statQuantity',
+      field_editable = 1,
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date\ncatalog.uid|Uid',
+      field_editable_columns = 'id|ID\ntitle|Title\nquantity|quantity\nstart_date|Date',
+      field_search_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -1208,7 +1312,6 @@ class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
     self.assertEquals(fake_request.RESPONSE.status, 405)
     self.assertEquals(result, "")
 
-
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs',
@@ -1347,6 +1450,7 @@ class TestERP5Document_getHateoas_mode_worklist(ERP5HALJSONStyleSkinsMixin):
 
     self.assertEqual(result_dict['_debug'], "worklist")
 
+
 class TestERP5Document_getHateoas_translation(ERP5HALJSONStyleSkinsMixin):
   code_string = "\
 from Products.CMFCore.utils import getToolByName\n\
@@ -1428,8 +1532,7 @@ return msg"
   code_string)
   @createIndexedDocument()
   @changeSkin('Hal')
-  def test_getHateoasWorklist_default_view_translation(self, **kw):
-    # self._makeDocument()
+  def test_getHateoasWorklist_default_view_translation(self, document):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
       REQUEST=fake_request,
@@ -1476,7 +1579,7 @@ class TestERP5Action_getHateoas(ERP5HALJSONStyleSkinsMixin):
   @changeSkin('Hal')
   def test_getHateoasDialog_dialog_failure(self, document):
     """Test an dialog on Foo object with empty required for a failure.
-    
+
     Expected behaviour is response Http 400 with field errors.
     """
     fake_request = do_fake_request("POST")

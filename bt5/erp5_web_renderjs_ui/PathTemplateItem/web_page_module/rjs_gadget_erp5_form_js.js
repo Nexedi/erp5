@@ -171,12 +171,29 @@
         form_definition = this.state.form_definition,
         rendered_document = erp5_document._embedded._view,
         group_list = form_definition.group_list,
-        form_gadget = this;
+        form_gadget = this,
+        tmp;
 
       if (modification_dict.hasOwnProperty('hash')) {
         form_gadget.props.gadget_list = [];
       }
-
+      /* Update or remove h3 element based on value of `title` */
+      if (modification_dict.hasOwnProperty('title')) {
+        tmp = this.element.querySelector("h3");
+        if (modification_dict.title) {
+          if (tmp === null) {
+            // create new title element for existing title
+            tmp = document.createElement("h3");
+            this.element.insertBefore(tmp, this.element.firstChild);
+          }
+          tmp.textContent = modification_dict.title;
+        }
+        if (modification_dict.title === null || modification_dict.title === "") {
+          // user tends to remove the title
+          if (tmp !== null) {tmp.remove(); }
+        }
+        tmp = undefined;
+      }
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all(group_list.map(function (group) {
