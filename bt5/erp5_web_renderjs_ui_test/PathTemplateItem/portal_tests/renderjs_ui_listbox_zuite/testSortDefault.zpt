@@ -69,7 +69,7 @@ Frontend should not suppose default sorting
     <td>//a[@data-i18n='ID']</td><td></td></tr>
 <!-- Default sort on ID column has to be ASCENDING -->
 <tr><td>verifyElementPresent</td>
-    <td>//th[@class='ui-icon ui-icon-arrow-up']/a[@data-i18n='ID']</td><td></td></tr>
+    <td>//th[@class='ui-icon ui-icon-sort-amount-asc']/a[@data-i18n='ID']</td><td></td></tr>
 <!-- Verify that the default sort is visible in Sort Editor -->
 <tr><td>waitForElementPresent</td>
     <td>//button[@data-i18n='Sort']</td><td></td></tr>
@@ -97,7 +97,7 @@ Frontend should not suppose default sorting
     <td>//a[@data-i18n='Title']</td><td></td></tr>
 <!-- Default sort on Title column has to be DESCENDING -->
 <tr><td>verifyElementPresent</td>
-    <td>//th[@class='ui-icon ui-icon-arrow-down']/a[@data-i18n='Title']</td><td></td></tr>
+    <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[@data-i18n='Title']</td><td></td></tr>
 <!-- No other sort must be shown -->
 <tr><td>verifyElementPresent</td>
     <td>//th[@class='']/a[@data-i18n='ID']</td><td></td></tr>
@@ -130,7 +130,7 @@ Frontend should not suppose default sorting
 <tr><td>verifyElementPresent</td>
     <td>//th[@class='']/a[@data-i18n='Title']</td><td></td></tr>
 <tr><td>verifyElementPresent</td>
-    <td>//th[@class='ui-icon ui-icon-arrow-down']/a[@data-i18n='ID']</td><td></td></tr>
+    <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[@data-i18n='ID']</td><td></td></tr>
 
 </tbody></table>
 </body>

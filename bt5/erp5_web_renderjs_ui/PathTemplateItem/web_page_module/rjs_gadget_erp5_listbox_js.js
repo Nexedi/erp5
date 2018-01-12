@@ -395,10 +395,10 @@
 
                 if (current_sort !== undefined) {
                   if (current_sort[1] === 'ascending') {
-                    class_value = "ui-icon ui-icon-arrow-up";
+                    class_value = "ui-icon ui-icon-sort-amount-asc";
                   }
                   if (current_sort[1] === 'descending') {
-                    class_value = "ui-icon ui-icon-arrow-down";
+                    class_value = "ui-icon ui-icon-sort-amount-desc";
                   }
                 }
 

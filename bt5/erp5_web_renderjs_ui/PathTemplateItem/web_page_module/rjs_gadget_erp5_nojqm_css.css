@@ -1977,6 +1977,9 @@ div[data-gadget-scope='maximize'] button:active {
 .ui-icon-eye-slash::before {
   content: "\f070";
 }
+.ui-icon-low-vision::before {
+  content: "\f2a8";
+}
 .ui-icon-exclamation-triangle::before {
   content: "\f071";
 }

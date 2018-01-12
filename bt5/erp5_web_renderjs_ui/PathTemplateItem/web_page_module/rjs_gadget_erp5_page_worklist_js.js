@@ -30,7 +30,7 @@
 
       return gadget.updateHeader({
         page_title: 'Worklist',
-        page_icon: 'clipboard'
+        page_icon: 'tasks'
       })
         .push(function () {
           return gadget.jio_getAttachment(
