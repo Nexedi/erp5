@@ -33,7 +33,7 @@
         };
         return form_gadget.render({erp5_document: erp5_document,
                                    form_definition: form_definition,
-                                   editable: 0});
+                                   editable: 0, title: report_section.title});
       });
   }
 

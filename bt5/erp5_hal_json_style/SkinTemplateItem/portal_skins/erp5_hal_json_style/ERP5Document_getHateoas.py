@@ -78,6 +78,43 @@ def byteify(string):
   else:
     return string
 
+
+def ensureSerializable(obj):
+  """Ensure obj and all sub-objects are JSON serializable."""
+  if isinstance(obj, dict):
+    for key in obj:
+      obj[key] = ensureSerializable(obj[key])
+  # throw away date's type information and later reconstruct as Zope's DateTime
+  if isinstance(obj, DateTime):
+    return obj.ISO()
+  if isinstance(obj, (datetime.datetime, datetime.date, datetime.time)):
+    return obj.isoformat()
+  # let us believe that iterables don't contain other unserializable objects
+  return obj
+
+
+datetime_iso_re = re.compile(r'^\d{4}-\d{2}-\d{2} |T\d{2}:\d{2}:\d{2}.*$')
+time_iso_re = re.compile(r'^(\d{2}):(\d{2}):(\d{2}).*$')
+def ensureDeserialized(obj):
+  """Deserialize classes serialized by our own `ensureSerializable`.
+
+  Method `biteify` must not be called on the result because it would revert out
+  deserialization by calling __str__ on constructed classes.
+  """
+  if isinstance(obj, dict):
+    for key in obj:
+      obj[key] = ensureDeserialized(obj[key])
+  # seems that default __str__ method is good enough
+  if isinstance(obj, str):
+    # Zope's DateTime must be good enough for everyone
+    if datetime_iso_re.match(obj):
+      return DateTime(obj)
+    if time_iso_re.match(obj):
+      match_obj = time_iso_re.match(obj)
+      return datetime.time(*tuple(map(int, match_obj.groups())))
+  return obj
+
+
 def getProtectedProperty(document, select):
   """getProtectedProperty is a security-aware substitution for builtin `getattr`
 
@@ -324,7 +361,7 @@ def getRealRelativeUrl(document):
 
 def getFormRelativeUrl(form):
   return portal.portal_catalog(
-    portal_type="ERP5 Form",
+    portal_type=("ERP5 Form", "ERP5 Report"),
     uid=form.getUid(),
     id=form.getId(),
     limit=1,
@@ -359,6 +396,10 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
   if key is None:
     key = field.generate_field_key(key_prefix=key_prefix)
 
+  if meta_type == "ProxyField":
+    # resolve the base meta_type
+    meta_type = field.getRecursiveTemplateField().meta_type
+
   result = {
     "type": meta_type,
     "title": Base_translateString(field.get_value("title")),
@@ -376,12 +417,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       "default": getFieldDefault(form, field, key, value),
     })
 
-  if meta_type == "ProxyField":
-    return renderField(traversed_document, field, form, value,
-                       meta_type=field.getRecursiveTemplateField().meta_type,
-                       key=key, key_prefix=key_prefix,
-                       selection_params=selection_params)
-
+  # start the actual "switch" on field's meta_type here
   if meta_type in ("ListField", "RadioField", "ParallelListField", "MultiListField"):
     result.update({
       # XXX Message can not be converted to json as is
@@ -427,6 +463,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
                              if v))
       if parameters:
         result["default"] = '%s?%s' % (result["default"], parameters)
+
     return result
 
   if meta_type == "DateTimeField":
@@ -474,7 +511,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       except Unauthorized:
         jump_reference_list = []
         result.update({
-          "editable": False 
+          "editable": False
         })
     query = url_template_dict["jio_search_template"] % {
       "query": make_query({"query": sql_catalog.buildQuery(
@@ -528,7 +565,6 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
         if rel_cache[key] is not MARKER:
           REQUEST.set(key, rel_cache[key])
 
-
     result.update({
       "url": relative_url,
       "translated_portal_types": translated_portal_type,
@@ -569,12 +605,21 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     return result
 
   if meta_type == "ListBox":
-    """Display list of objects with optional search/sort capabilities on columns from catalog."""
+    """Display list of objects with optional search/sort capabilities on columns from catalog.
+
+    We might be inside a ReportBox which is inside a parent form BUT we still have access to
+    the original REQUEST with sent POST values from the parent form. We can save those
+    values into our query method and reconstruct them meanwhile calling asynchronous jio.allDocs.
+    """
     _translate = Base_translateString
 
-    column_list = [(name, _translate(title)) for name, title in field.get_value("columns")]
+    # column definition in ListBox own value 'columns' is superseded by dynamic
+    # column definition from Selection for specific Report ListBoxes; the same for editable_columns
+    column_list = [(name, _translate(title)) for name, title in (selection_params.get('selection_columns', [])
+                                                                 or field.get_value("columns"))]
+    editable_column_list = [(name, _translate(title)) for name, title in (selection_params.get('editable_columns', [])
+                                                                          or field.get_value("editable_columns"))]
     all_column_list = [(name, _translate(title)) for name, title in field.get_value("all_columns")]
-    editable_column_list = [(name, _translate(title)) for name, title in field.get_value("editable_columns")]
     catalog_column_list = [(name, title)
                            for name, title in OrderedDict(column_list + all_column_list).items()
                            if sql_catalog.isValidColumn(name)]
@@ -586,25 +631,28 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
 
     # try to get specified sortable columns and fail back to searchable fields
     sort_column_list = [(name, _translate(title))
-                        for name, title in field.get_value("sort_columns")
+                        for name, title in (selection_params.get('selection_sort_order', [])
+                                            or field.get_value("sort_columns"))
                         if sql_catalog.isValidColumn(name)] or search_column_list
+    # portal_type list can be overriden by selection too
+    # since it can be intentionally empty we don't override with non-empty field value
+    portal_type_list = selection_params.get("portal_type", field.get_value('portal_types'))
 
     # requirement: get only sortable/searchable columns which are already displayed in listbox
     # see https://lab.nexedi.com/nexedi/erp5/blob/HEAD/product/ERP5Form/ListBox.py#L1004
     # implemented in javascript in the end
     # see https://lab.nexedi.com/nexedi/erp5/blob/master/bt5/erp5_web_renderjs_ui/PathTemplateItem/web_page_module/rjs_gadget_erp5_listbox_js.js#L163
-
-    portal_types = field.get_value('portal_types')
-    default_params = dict(field.get_value('default_params'))
+    default_params = dict(field.get_value('default_params'))  # default_params is a list of tuples
     default_params['ignore_unknown_columns'] = True
-    if selection_params is not None:
-      default_params.update(selection_params)
-    # How to implement pagination?
-    # default_params.update(REQUEST.form)
-    lines = field.get_value('lines')
-    list_method_query_dict = dict(
-      portal_type=[x[1] for x in portal_types], **default_params
-    )
+    # we abandoned Selections in RJS thus we mix selection query parameters into
+    # listbox's default parameters
+    default_params.update(selection_params)
+
+    # ListBoxes in report view has portal_type defined already in default_params
+    # in that case we prefer non_empty version
+    list_method_query_dict = default_params.copy()
+    if not list_method_query_dict.get("portal_type", []):
+      list_method_query_dict["portal_type"] = [x for x, _ in portal_type_list]
     list_method_custom = None
 
     # Search for non-editable documents - all reports goes here
@@ -646,8 +694,11 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
         "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
         "form_relative_url": "%s/%s" % (getFormRelativeUrl(form), field.id),
         "list_method": list_method_name,
-        "default_param_json": urlsafe_b64encode(json.dumps(list_method_query_dict))
+        "default_param_json": urlsafe_b64encode(
+          json.dumps(ensureSerializable(list_method_query_dict)))
       }
+      # once we imprint `default_params` into query string of 'list method' we
+      # don't want them to propagate to the query as well
       list_method_query_dict = {}
     """
     # We commented out this part because of backward compatibility
@@ -663,7 +714,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
         "script_id": script.id,
         "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
         "list_method": list_method_name,
-        "default_param_json": urlsafe_b64encode(json.dumps(list_method_query_dict))
+        "default_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(list_method_query_dict)))
       }
       list_method_query_dict = {}
     """
@@ -696,9 +747,9 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       "sort_column_list": sort_column_list,
       "editable_column_list": editable_column_list,
       "show_anchor": field.get_value("anchor"),
-      "portal_type": portal_types,
-      "lines": lines,
-      "default_params": default_params,
+      "portal_type": portal_type_list,
+      "lines": field.get_value('lines'),
+      "default_params": ensureSerializable(default_params),
       "list_method": list_method_name,
       "show_stat": field.get_value('stat_method') != "" or len(field.get_value('stat_columns')) > 0,
       "show_count": field.get_value('count_method') != "",
@@ -848,26 +899,84 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   }
 
   if (form.pt == 'report_view'):
+    # reports are expected to return list of ReportSection which is a wrapper
+    # around a form - thus we will need to render those forms
     report_item_list = []
     report_result_list = []
     for field in form.get_fields():
       if field.getRecursiveTemplateField().meta_type == 'ReportBox':
+        # ReportBox.render returns a list of ReportSection classes which are
+        # just containers for FormId(s) usually containing one ListBox
+        # and its search/query parameters hidden in `selection_params`
+        # `path` contains relative_url of intended CONTEXT for underlaying ListBox
         report_item_list.extend(field.render())
-    j = 0
-    for report_item in report_item_list:
-      report_context = report_item.getObject(portal)
-      report_prefix = 'x%s' % j
-      j += 1
+    # ERP5 Report document differs from a ERP5 Form in only one thing: it has
+    # `report_method` attached to it - thus we call it right here
+    if hasattr(form, 'report_method') and getattr(form, 'report_method', ""):
+      report_method_name = getattr(form, 'report_method')
+      report_method = getattr(traversed_document, report_method_name)
+      report_item_list.extend(report_method())
+
+    for report_index, report_item in enumerate(report_item_list):
+      report_context = report_item.getObject(traversed_document)
+      report_prefix = 'x%s' % report_index
       report_title = report_item.getTitle()
       # report_class = "report_title_level_%s" % report_item.getLevel()
       report_form = report_item.getFormId()
       report_result = {'_links': {}}
-      renderForm(traversed_document, getattr(report_context, report_item.getFormId()),
-                 report_result, key_prefix=report_prefix,
-                 selection_params=report_item.selection_params)
-      report_result_list.append(report_result)
+      # some reports save a lot of unserializable data (datetime.datetime) and
+      # key "portal_type" (don't confuse with "portal_types" in ListBox) into
+      # report_item.selection_params thus we need to take that into account in
+      # ListBox field
+      #
+      # Selection Params are parameters for embedded ListBox's List Method
+      # and it must be passed in `default_json_param` field (might contain
+      # unserializable data types thus we need to take care of that
+      # In order not to lose information we put all ReportSection attributes
+      # inside the report selection params
+      report_form_params = report_item.selection_params.copy() \
+                           if report_item.selection_params is not None \
+                           else {}
 
+      if report_item.selection_name:
+        selection_name = report_prefix + "_" + report_item.selection_name
+        report_form_params.update(selection_name=selection_name)
+        # this should load selections with correct values - since it is modifying
+        # global state in the backend we have nothing more to do here
+        # I could not find where the code stores params in selection with render
+        # prefix - maybe it in some `render` method where it should not be
+        # Of course it is ugly, terrible and should be removed!
+        selection_tool = context.getPortalObject().portal_selections
+        selection_tool.getSelectionFor(selection_name, REQUEST)
+        selection_tool.setSelectionParamsFor(selection_name, report_form_params)
+        selection_tool.setSelectionColumns(selection_name, report_item.selection_columns)
+
+      if report_item.selection_columns:
+        report_form_params.update(selection_columns=report_item.selection_columns)
+      if report_item.selection_sort_order:
+        report_form_params.update(selection_sort_order=report_item.selection_sort_order)
+
+      # Report section is just a wrapper around form thus we render it right
+      # we keep traversed_document because its Portal Type Class should be
+      # addressable by the user = have actions (object_view) attached to it
+      # BUT! when Report Section defines `path` that is the new context for
+      # form rendering and subsequent searches...
+      renderForm(traversed_document if not report_item.path else report_context,
+                 getattr(report_context, report_item.getFormId()),
+                 report_result,
+                 key_prefix=report_prefix,
+                 selection_params=report_form_params)  # used to be only report_item.selection_params
+      # Report Title is important since there are more section on report page
+      # but often they render the same form with different data so we need to
+      # distinguish by the title at least.
+      report_result['title'] = report_title
+      report_result_list.append(report_result)
     response_dict['report_section_list'] = report_result_list
+  # end-if report_section
+
+  for key, value in previous_request_other.items():
+    if value is not None:
+      REQUEST.set(key, value)
 
 # XXX form action update, etc
 def renderRawField(field):
@@ -910,6 +1019,7 @@ def renderRawField(field):
 
 
 def renderFormDefinition(form, response_dict):
+  """Form "definition" is configurable in Zope admin: Form -> Order."""
   group_list = []
   for group in form.Form_getGroupTitleAndId():
 
@@ -1028,19 +1138,23 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     action_dict = {}
   #   result_dict['_relative_url'] = traversed_document.getRelativeUrl()
     result_dict['title'] = traversed_document.getTitle()
-  
+
     # Add a link to the portal type if possible
     if not is_portal:
-      result_dict['_links']['type'] = {
-        "href": default_document_uri_template % {
-          "root_url": site_root.absolute_url(),
-          "relative_url": portal.portal_types[traversed_document.getPortalType()]\
-                            .getRelativeUrl(), 
-          "script_id": script.id
-        },
-        "name": Base_translateString(traversed_document.getPortalType())
-      }
-      
+      # traversed_document should always have its Portal Type in ERP5 Portal Types
+      # thus attached actions to it so it is viewable
+      document_type_name = traversed_document.getPortalType()
+      document_type = getattr(portal.portal_types, document_type_name, None)
+      if document_type is not None:
+        result_dict['_links']['type'] = {
+          "href": default_document_uri_template % {
+            "root_url": site_root.absolute_url(),
+            "relative_url": document_type.getRelativeUrl(),
+            "script_id": script.id
+          },
+          "name": Base_translateString(traversed_document.getPortalType())
+        }
+
     # Return info about container
     if not is_portal:
       container = traversed_document.getParentValue()
@@ -1060,6 +1174,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       portal.portal_actions.listFilteredActionsFor(traversed_document))
   
     embedded_url = None
+
     # XXX See ERP5Type.getDefaultViewFor
     for erp5_action_key in erp5_action_dict.keys():
       erp5_action_list = []
@@ -1151,7 +1266,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # renderer_form = traversed_document.restrictedTraverse(form_id, None)
       # XXX Proxy field are not correctly handled in traversed_document of web site
       renderer_form = getattr(traversed_document, form_id)
-  #     traversed_document.log(form_id)
       if (renderer_form is not None):
         embedded_dict = {
           '_links': {
@@ -1161,19 +1275,31 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           }
         }
         # Put all query parameters (?reset:int=1&workflow_action=start_action) in request to mimic usual form display
+        query_param_dict = {}
         query_split = embedded_url.split('?', 1)
         if len(query_split) == 2:
           for query_parameter in query_split[1].split("&"):
-            query_key, query_value = query_parameter.split("=")
-            REQUEST.set(query_key, query_value)
-  
+            query_key, query_value = query_parameter.split('=')
+            # often + is used instead of %20 so we replace for space here
+            query_param_dict[query_key] = query_value.replace("+", " ")
+
+        # set URL params into REQUEST (just like it was sent by form)
+        for query_key, query_value in query_param_dict.items():
+          REQUEST.set(query_key, query_value)
+
+        # unfortunatelly some people use Scripts as targets for Workflow
+        # transactions - thus we need to check and mitigate
+        if "Script" in renderer_form.meta_type:
+          # we suppose that the script takes only what is given in the URL params
+          return renderer_form(**query_param_dict)
+
         renderForm(traversed_document, renderer_form, embedded_dict)
         result_dict['_embedded'] = {
           '_view': embedded_dict
           # embedded_action_key: embedded_dict
         }
   #       result_dict['_links']["_view"] = {"href": embedded_url}
-  
+
         # Include properties in document JSON
         # XXX Extract from renderer form?
         """
@@ -1255,7 +1381,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
   
     else:
       traversed_document_portal_type = traversed_document.getPortalType()
-      if traversed_document_portal_type == "ERP5 Form":
+      if traversed_document_portal_type in ("ERP5 Form", "ERP5 Report"):
         renderFormDefinition(traversed_document, result_dict)
         response.setHeader("Cache-Control", "private, max-age=1800")
         response.setHeader("Vary", "Cookie,Authorization,Accept-Encoding")
@@ -1278,19 +1404,18 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
               "template": True
             }
           }
-  
+
     # Define document action
     if action_dict:
       result_dict['_actions'] = action_dict
-  
-  
+
   elif mode == 'search':
     #################################################
     # Portal catalog search
     #
     # Possible call arguments example:
     #  form_relative_url: portal_skins/erp5_web/WebSite_view/listbox
-    #  list_method: objectValues                      (Script providing listing)
+    #  list_method: "objectValues"                    (Script providing items)
     #  default_param_json: <base64 encoded JSON>      (Additional search params)
     #  query: <str>                                   (term for fulltext search)
     #  select_list: ['int_index', 'id', 'title', ...] (column names to select)
@@ -1337,9 +1462,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         "sort_on": ()  # default is an empty tuple
       }
       if default_param_json is not None:
-        catalog_kw.update(byteify(json.loads(urlsafe_b64decode(default_param_json))))
+        catalog_kw.update(
+          ensureDeserialized(
+            byteify(
+              json.loads(urlsafe_b64decode(default_param_json)))))
       if query:
         catalog_kw["full_text"] = query
+
       if sort_on is not None:
         def parseSortOn(raw_string):
           """Turn JSON serialized array into a tuple (col_name, order)."""
@@ -1452,6 +1581,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       contents_uid, contents_relative_url, property_getter = \
         getUidAndAccessorForAnything(search_result, result_index, traversed_document)
 
+      # Check if this object provides a specific URL method.
+      # if getattr(search_result, 'getListItemUrl', None) is not None:
+      #  search_result.getListItemUrl(contents_uid, result_index, selection_name)
+
       # _links.self.href is mandatory for JIO so it can create reference to the
       # (listbox) item alone
       contents_item['_links'] = {
@@ -1503,7 +1636,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # endfor select
       REQUEST.other.pop('cell', None)
       contents_list.append(contents_item)
-    result_dict['_embedded']['contents'] = contents_list
+    result_dict['_embedded']['contents'] = ensureSerializable(contents_list)
 
     # Compute statistics if the search issuer was ListBox
     # or in future if the stats (SUM) are required by JIO call
@@ -1562,7 +1695,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
               traversed_document, editable_field_dict[key], listbox_form, value, key=editable_field_dict[key].id + '__sum')
 
       if len(contents_stat_list) > 0:
-        result_dict['_embedded']['sum'] = contents_stat_list
+        result_dict['_embedded']['sum'] = ensureSerializable(contents_stat_list)
 
     # We should cleanup the selection if it exists in catalog params BUT
     # we cannot because it requires escalated Permission.'modifyPortal' so
