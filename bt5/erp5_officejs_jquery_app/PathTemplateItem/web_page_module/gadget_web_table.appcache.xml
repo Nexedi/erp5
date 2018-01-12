@@ -200,6 +200,10 @@ gadget_html5_textarea.html\n
 gadget_html5_textarea.js\n
 gadget_erp5_configure_editor.html\n
 gadget_erp5_configure_editor.js\n
+gadget_editor.html\n
+gadget_editor.js\n
+gadget_button_maximize.html\n
+gadget_button_maximize.js\n
 \n
 #setting\n
 gadget_officejs_setting.js\n
@@ -378,7 +382,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.48713.29620.20258</string> </value>
+                <value> <string>964.54546.48173.5239</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -396,7 +400,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1515675467.86</float>
+                        <float>1516026571.86</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
