@@ -6,26 +6,25 @@ from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING
 
 # XXX We should not use meta_type properly,
 # XXX We need to discuss this problem.(yusei)
-def isListBox(field):
-  if field.meta_type=='ListBox':
-    return True
-  elif field.meta_type=='ProxyField':
-    template_field = field.getRecursiveTemplateField()
-    if template_field.meta_type=='ListBox':
-      return True
-  return False
+def isFieldType(field, type_name):
+  if field.meta_type == 'ProxyField':
+    field = field.getRecursiveTemplateField()
+  return field.meta_type == type_name
 
-from Products.Formulator.Errors import FormValidationError
+from Products.Formulator.Errors import FormValidationError, ValidationError
 from ZTUtils import make_query
 
 request = REQUEST
 if REQUEST is None:
   request = container.REQUEST
 
+# request.form holds POST data thus containing 'field_' + field.id items
+# such as 'field_your_some_field'
 request_form = request.form
 error_message = ''
+translate = context.Base_translateString
 
-# Make this script work alike wether called from another script or by a request
+# Make this script work alike no matter if called by a script or a request
 kw.update(request_form)
 
 # Exceptions for UI
@@ -63,6 +62,7 @@ if dialog_method == 'Base_editRelation':
                                    listbox_uid=kw.get('listbox_uid', None),
                                    saved_form_data=kw['saved_form_data'])
 # Exception for create relation
+# Not used in new UI - relation field implemented using JIO calls from JS
 if dialog_method == 'Base_createRelation':
   return context.Base_createRelation(form_id=kw['form_id'],
                                      selection_name=kw['list_selection_name'],
@@ -119,30 +119,27 @@ MARKER = [] # A recognisable default value. Use with 'is', not '=='.
 listbox_id_list = [] # There should not be more than one listbox - but this give us a way to check.
 file_id_list = [] # For uploaded files.
 for field in form.get_fields():
-  k = field.id
-  v = request.get(k, MARKER)
-  if v is not MARKER:
-    if isListBox(field):
-      listbox_id_list.append(k)
-    elif can_redirect and (v in (None, [], ()) or hasattr(v, 'read')) : # If we cannot redirect, useless to test it again
-      can_redirect = 0
+  field_id = field.id
+  field_value = request.get(field_id, MARKER)
 
-    # Cleanup my_ and your_ prefixes
-    splitted = k.split('_', 1)
-    if len(splitted) == 2 and splitted[0] in ('my', 'your'):
-      if hasattr(v, 'as_dict'):
-        # This is an encapsulated editor
-        # convert it
-        kw.update(v.as_dict())
+  if field_value is not MARKER:
+    if isFieldType(field, "ListBox"):
+      listbox_id_list.append(field_id)
+
+    # Cleanup my_ and your_ prefixes if present
+    if field_id.startswith("my_") or field_id.startswith("your_"):
+      _, field_name = field_id.split('_', 1)
+      if hasattr(field_value, 'as_dict'):
+        # This is an encapsulated editor - convert it
+        kw.update(field_value.as_dict())
       else:
-        kw[splitted[1]] = request_form[splitted[1]] = v
+        kw[field_name] = request_form[field_name] = field_value
 
     else:
-      kw[k] = request_form[k] = v
+      kw[field_id] = request_form[field_id] = field_value
 
 
 if len(listbox_id_list):
-  can_redirect = 0
   # Warn if there are more than one listbox in form ...
   if len(listbox_id_list) > 1:
     log('Base_callDialogMethod', 'There are %s listboxes in form %s.' % (len(listbox_id_list), form.id))
@@ -183,11 +180,8 @@ if listbox_uid is not None and kw.has_key('list_selection_name'):
   selected_uids = context.portal_selections.updateSelectionCheckedUidList(
     kw['list_selection_name'],
     listbox_uid, uids)
-# Remove unused parameter
-clean_kw = {}
-for k, v in kw.items() :
-  if v not in (None, [], ()) :
-    clean_kw[k] = kw[k]
+# Remove empty values for make_query.
+clean_kw = dict((k, v) for k, v in kw.items() if v not in (None, [], ()))
 
 # Handle deferred style, unless we are executing the update action
 if dialog_method != update_method and clean_kw.get('deferred_style', 0):
@@ -205,14 +199,13 @@ if dialog_method != update_method and clean_kw.get('deferred_style', 0):
     request.set('deferred_style_dialog_method', dialog_method)
     dialog_method = 'Base_activateSimpleView'
 
-
 url_params_string = make_query(clean_kw)
 
-# XXX: We always redirect in report mode to make sure portal_skin
-# parameter is taken into account by SkinTool.
-# If url is too long, we do not redirect to avoid crash.
-# XXX: 2000 is an arbitrary value resulted from trial and error.
-if (not(can_redirect) or len(url_params_string) > 2000):
+# Never redirect in JSON style - do as much as possible here.
+# At this point the 'dialog_method' should point to a form (if we are in report)
+# if we are not in Deferred mode - then it points to `Base_activateSimpleView`
+
+if True:
   if dialog_method != update_method:
     # When we are not executing the update action, we have to change the skin
     # manually,
