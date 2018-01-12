@@ -80,6 +80,25 @@ if dialog_method == 'Folder_delete':
                                selection_name=kw['selection_name'],
                                md5_object_uid_list=kw['md5_object_uid_list'])
 
+
+def handleFormError(form, validation_errors):
+  """Return correctly rendered form with all errors assigned to its fields."""
+  field_errors = form.ErrorFields(validation_errors)
+  # Pack errors into the request
+  request.set('field_errors', field_errors)
+  # Make sure editors are pushed back as values into the REQUEST object
+  for f in form.get_fields():
+    field_id = f.id
+    if request.has_key(field_id):
+      value = request.get(field_id)
+      if callable(value):
+        value(request)
+  if silent_mode:
+    return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form'), 'form'
+  request.RESPONSE.setStatus(400)
+  return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form')
+
+
 form = getattr(context, dialog_id)
 
 # form can be a python script that returns the form
@@ -95,26 +114,29 @@ try:
   request.set('editable_mode', 1)
   form.validate_all_to_request(request)
   request.set('editable_mode', editable_mode)
-except FormValidationError, validation_errors:
-  # Pack errors into the request
-  field_errors = form.ErrorFields(validation_errors)
-  request.set('field_errors', field_errors)
-  # Make sure editors are pushed back as values into the REQUEST object
-  for f in form.get_fields():
-    field_id = f.id
-    if request.has_key(field_id):
-      value = request.get(field_id)
-      if callable(value):
-        value(request)
-  if silent_mode: return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form'), 'form'
-  request.RESPONSE.setStatus(400)
-  return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form')
 
-# Use REQUEST.redirect if possible. It will not be possible if at least one of these is true :
-#  * we got an import_file,
-#  * we got a listbox
-#  * a value is None or [] or (), because this is not supported by make_query
-can_redirect = 1
+  default_skin = context.getPortalObject().portal_skins.getDefaultSkin()
+  allowed_styles = ("ODT", "ODS", "Hal", "HalRestricted")
+  if getattr(getattr(context, dialog_method), 'pt', None) == "report_view" and \
+     request.get('your_portal_skin', default_skin) not in allowed_styles:
+    # RJS own validation - only ODS/ODT and Hal* skins work for reports
+    # Form is OK, it's just this field - style so we return back form-wide error
+    # for which we don't have support out-of-the-box thus we manually craft it
+    # XXX TODO: Form-wide validation errors
+    return handleFormError(
+      form,
+      FormValidationError([
+        ValidationError(
+          error_key=None,
+          field=form.get_field('your_portal_skin'),
+          error_text=translate(
+            'Only ODT, ODS, Hal and HalRestricted skins are allowed for reports '\
+            'in Preferences - User Interface - Report Style'))
+      ], {}))
+
+except FormValidationError as validation_errors:
+  return handleFormError(form, validation_errors)
+
 MARKER = [] # A recognisable default value. Use with 'is', not '=='.
 listbox_id_list = [] # There should not be more than one listbox - but this give us a way to check.
 file_id_list = [] # For uploaded files.
@@ -188,10 +210,25 @@ if dialog_method != update_method and clean_kw.get('deferred_style', 0):
   clean_kw['deferred_portal_skin'] = clean_kw.get('portal_skin', None)
   # XXX Hardcoded Deferred style name
   clean_kw['portal_skin'] = 'Deferred'
-  
-  dialog_form = getattr(context, dialog_method)
-  page_template = getattr(dialog_form, 'pt', None)
-  # If the action form has report_view as it's method, it 
+
+  page_template = getattr(getattr(context, dialog_method), 'pt', None)
+
+  if page_template == 'report_view':
+    # Limit Reports in Deferred style to known working styles
+    if request_form.get('your_portal_skin', None) not in ("ODT", "ODS"):
+      # RJS own validation - deferred option works here only with ODS/ODT skins
+      return handleFormError(
+        form,
+        FormValidationError([
+          ValidationError(
+            error_key=None,
+            field=form.get_field('your_deferred_style'),
+            error_text=translate(
+              'Deferred reports are possible only with preference '\
+              '"Report Style" set to "ODT" or "ODS"'))
+        ], {}))
+
+  # If the action form has report_view as it's method, it
   if page_template != 'report_view':
     # use simple wrapper
     clean_kw['deferred_style_dialog_method'] = dialog_method
@@ -215,6 +252,7 @@ if True:
       request.set('portal_skin', new_skin_name)
       deferred_portal_skin = clean_kw.get('deferred_portal_skin')
       if deferred_portal_skin:
+        # has to be either ODS or ODT because only those contain `form_list`
         request.set('deferred_portal_skin', deferred_portal_skin)
     # and to cleanup formulator's special key in request
     # XXX unless we are in Folder_modifyWorkflowStatus which validates again !
@@ -223,15 +261,27 @@ if True:
         if str(key).startswith('field') or str(key).startswith('subfield'):
           request.form.pop(key, None)
 
-  # If we cannot redirect, then call the form directly.
-  dialog_form = getattr(context, dialog_method)
-  # XXX: this is a hack that should not be needed anymore with the new listbox.
-  # set the URL in request, so that we can immediatly call method
-  # that depend on it (eg. Show All). This is really related to
-  # current ListBox implementation which edit Selection's last_url
-  # with the content of REQUEST.URL
-  request.set('URL', '%s/%s' % (context.absolute_url(), dialog_method))
-  return dialog_form(**kw)
+    # now get dialog_method after skin re-selection and dialog_method mingling
+    dialog_form = getattr(context, dialog_method)
 
-dialog_method = getattr(context, dialog_method)
-return dialog_method(**clean_kw)
+    # XXX: this is a hack that should not be needed anymore with the new listbox.
+    # set the URL in request, so that we can immediatly call method
+    # that depend on it (eg. Show All). This is really related to
+    # current ListBox implementation which edit Selection's last_url
+    # with the content of REQUEST.URL
+    request.set('URL', '%s/%s' % (context.absolute_url(), dialog_method))
+
+    # RJS: If we are in deferred mode - call the form directly and return
+    # dialog method is now `Base_activateSimpleView` - the only script in
+    # deferred portal_skins folder
+    if clean_kw.get('deferred_style', 0):
+      return dialog_form(**kw)  # deferred form should return redirect with a message
+
+    # RJS: If skin selection is different than Hal* then ERP5Document_getHateoas
+    # does not exist and we call form method directly
+    if clean_kw.get("portal_skin", context.getPortalObject().portal_skins.getDefaultSkin()) not in ("Hal", "HalRestricted"):
+      return dialog_form(**kw)
+
+    return context.ERP5Document_getHateoas(REQUEST=request, form=dialog_form, mode="form")
+
+return getattr(context, dialog_method)(**kw)
