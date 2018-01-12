@@ -116,8 +116,10 @@
                   "key": "text_content",
                   "hidden": 0,
                   "type": "GadgetField",
-                  "url": "jquery-sheets.gadget.html",
-                  "sandbox": "iframe"
+                  "renderjs_extra": '{"editor": "jquery-sheets", ' +
+                    '"maximize": true}',
+                  "url": "gadget_editor.html",
+                  "sandbox": "public"
                 }
               }},
               "_links": {

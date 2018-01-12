@@ -137,8 +137,9 @@
                   "key": "text_content",
                   "hidden": 0,
                   "type": "GadgetField",
-                  "url": "pdf_js/pdfjs.gadget.html",
-                  "sandbox": "iframe"
+                  "renderjs_extra": '{"editor": "pdf", "maximize": true}',
+                  "url": "gadget_editor.html",
+                  "sandbox": "public"
                 }
               }},
               "_links": {

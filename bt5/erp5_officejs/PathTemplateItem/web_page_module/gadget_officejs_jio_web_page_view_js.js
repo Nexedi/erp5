@@ -115,7 +115,8 @@
                   "editable": 1,
                   "key": "text_content",
                   "hidden": 0,
-                  "renderjs_extra": '{"editor": "fck_editor", "maximize": true}',
+                  "renderjs_extra": '{"editor": "fck_editor",' +
+                    '"maximize": true}',
                   "type": "GadgetField",
                   "url": "gadget_editor.html",
                   "sandbox": "public"

@@ -141,8 +141,9 @@
                   "key": "text_content",
                   "hidden": 0,
                   "type": "GadgetField",
-                  "url": "minipaint.gadget.html",
-                  "sandbox": "iframe"
+                  "renderjs_extra": '{"editor": "minipaint", "maximize": true}',
+                  "url": "gadget_editor.html",
+                  "sandbox": "public"
                 }
               }},
               "_links": {
