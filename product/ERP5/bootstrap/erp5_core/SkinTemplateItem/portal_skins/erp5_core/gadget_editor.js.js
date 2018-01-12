@@ -5,6 +5,16 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
             lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue) {
   "use strict";
 
+  var editor_dict = {
+    "codemirror": {"url": "codemirror.gadget.html"},
+    "onlyoffice": {"url": "onlyoffice.gadget.html"},
+    "fck_editor": {"url": "ckeditor.gadget.html"},
+    "svg_editor" : {"url": "method-draw.html"},
+    "minipaint": {"url": "minipaint.gadget.html"},
+    "jquery-sheets": {"url": "jquery-sheets.gadget.html"},
+    "pdf": {"url": "pdf_js/pdfjs.gadget.html"}
+  };
+
 /*
   function readBlobAsDataURL(blob) {
     var fr = new FileReader();
@@ -90,37 +100,11 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         element.appendChild(div);
 
         if (gadget.state.editable &&
-            (gadget.state.editor === 'codemirror')) {
+            (editor_dict.hasOwnProperty(gadget.state.editor))) {
           queue
             .push(function () {
               return gadget.declareGadget(
-                "codemirror.gadget.html",
-                {
-                  scope: 'editor',
-                  sandbox: 'iframe',
-                  element: div
-                }
-              );
-            });
-        } else if (gadget.state.editable &&
-            (gadget.state.editor === 'onlyoffice')) {
-          queue
-            .push(function () {
-              return gadget.declareGadget(
-                "onlyoffice.gadget.html",
-                {
-                  scope: 'editor',
-                  sandbox: 'iframe',
-                  element: div
-                }
-              );
-            });
-        } else if (gadget.state.editable &&
-            (gadget.state.editor === 'fck_editor')) {
-          queue
-            .push(function () {
-              return gadget.declareGadget(
-                "ckeditor.gadget.html",
+                editor_dict[gadget.state.editor].url,
                 {
                   scope: 'editor',
                   sandbox: 'iframe',
@@ -137,7 +121,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
       }
 
       if (gadget.state.editable &&
-          (['codemirror', 'fck_editor', 'onlyoffice'].indexOf(gadget.state.editor) >= 0)) {
+          editor_dict.hasOwnProperty(gadget.state.editor)) {
         queue
           .push(function () {
             return gadget.getDeclaredGadget('editor');
@@ -163,7 +147,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         gadget = this,
         result;
       if (this.state.editable &&
-          (['codemirror', 'fck_editor', 'onlyoffice'].indexOf(this.state.editor) >= 0)) {
+          editor_dict.hasOwnProperty(gadget.state.editor)) {
         return lockGadgetInQueue(gadget)()
           .push(function () {
             return gadget.getDeclaredGadget('editor');
