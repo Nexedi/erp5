@@ -30,6 +30,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.DateUtils import addToDate
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.Document.Amount import Amount
@@ -39,6 +40,8 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.ExplanationCache import _getExplanationCache
 from DateTime import DateTime
 from Acquisition import aq_parent, aq_inner
+
+from math import ceil
 
 class CollectError(Exception): pass
 class MatrixError(Exception): pass
@@ -279,6 +282,113 @@ class BuilderMixin(XMLObject, Amount, Predicate):
             movement_list.append(movement)
             if delta <= 0:
               break
+    return movement_list
+
+  def generateMovementListForStockOptimisationFromSupplyDefinition(
+      self, supply,
+      from_date=None,
+      group_by_node=1, allow_intermediate_negative_stock=True,
+      **kw):
+    from Products.ERP5Type.Document import newTempMovement
+    portal = self.getPortalObject()
+    from_date = DateTime().earliestTime()
+
+    # Initiate Conditions taken from Yusei T. Original Script
+    # XXX to be cleaned
+    min_inventory = supply.getMinStock()
+    resource_value = supply.getResourceValue()
+    default_quantity_unit_value = resource_value.getDefaultQuantityUnitValue()
+    order_quantity_unit_value = supply.getOrderQuantityUnitValue()
+    time_quantity_unit_value = supply.getTimeQuantityUnitValue()
+    time_second_ratio = resource_value.getQuantityUnitDefinitionRatio(portal.portal_categories.quantity_unit.time.second)
+    min_delay = supply.getMinDelay()
+    max_delay = supply.getMaxDelay()
+    min_order = supply.getMinOrderQuantity()
+    max_order = supply.getMaxOrderQuantity()
+
+    # Initiate conversions
+    # XXX To be cleaned
+    min_delay_second = 0
+    max_delay_second = 0
+
+    min_order_in_default_quantity_unit = 0
+    max_order_in_default_quantity_unit = float('inf')
+    default_quantity_unit_relative_url = default_quantity_unit_value.getCategoryRelativeUrl()
+
+    if time_quantity_unit_value is not None:
+      time_second_conversion_ratio = resource_value.getQuantityUnitDefinitionRatio(time_quantity_unit_value) / time_second_ratio
+
+      if min_delay:
+        min_delay_second = min_delay * time_second_conversion_ratio
+      if max_delay:
+        max_delay_second = max_delay * time_second_conversion_ratio
+
+    if order_quantity_unit_value is not None:
+      order_quantity_unit_relative_url = order_quantity_unit_value.getCategoryRelativeUrl()
+      order_quantity_unit_default_quantity_unit_conversion_ratio = resource_value.convertQuantity(1, order_quantity_unit_relative_url, default_quantity_unit_relative_url)
+      if min_order:
+        min_order_in_default_quantity_unit = min_order * order_quantity_unit_default_quantity_unit_conversion_ratio
+      if max_order:
+        max_order_in_default_quantity_unit = max_order * order_quantity_unit_default_quantity_unit_conversion_ratio
+      default_quantity_unit_order_quantity_unit_conversion_ratio = 1 / order_quantity_unit_default_quantity_unit_conversion_ratio
+    else:
+      default_quantity_unit_order_quantity_unit_conversion_ratio = 1
+
+    # Function to define the minimal quantity to be ordered
+    def minimalQuantity(quantity, date):
+      # Initiate variables to match original script from Yusei T.
+      # XXX To be cleaned
+      conversion_ratio = default_quantity_unit_order_quantity_unit_conversion_ratio
+      next_date = date
+
+      delay_second = max_delay_second or min_delay_second or 0
+      start_date = addToDate(date, second=-delay_second)
+      order_quantity = ceil(quantity * conversion_ratio)
+      quantity = order_quantity / conversion_ratio
+
+      return order_quantity, order_quantity_unit_value, start_date, quantity
+
+    resource_portal_type = resource_value.getPortalType()
+    def newMovement(start_date, stop_date, quantity, quantity_unit):
+      # Create temporary movement
+      # Do not handle variation and Item for now
+      movement = newTempMovement(portal, "temp")
+      movement.edit(
+          resource_value=resource_value,
+          destination_value=supply.getDestinationValue(),
+          destination_section_value=supply.getDestinationSectionValue(),
+          source_value=supply.getSourceValue(),
+          source_section_value=supply.getSourceSectionValue(),
+          resource_portal_type=resource_portal_type,
+          quantity_unit_value=quantity_unit,
+          quantity=quantity,
+          start_date=start_date,
+          stop_date=stop_date,
+          )
+      return movement
+
+    now = DateTime()
+    movement_list = []
+    ordered_inventory = 0
+    order_movement_list = []
+    history_list = resource_value.Resource_getInventoryHistoryList(
+      from_date=from_date,
+      node_uid=supply.getDestinationUid()
+      # XXX This should be bound to a stard and stop date
+      )
+    for date, inventory in history_list:
+      if ordered_inventory + inventory < min_inventory: # SKU
+         quantity = min_inventory - inventory - ordered_inventory
+         ordered_quantity, ordered_unit, ordered_date, quantity = minimalQuantity(quantity, date)
+         ordered_inventory = ordered_inventory + quantity
+         movement_list.append(
+           newMovement(
+             ordered_date,
+             date,
+             ordered_quantity,
+             ordered_unit
+            )
+          )
     return movement_list
 
   def _searchMovementList(self, **kw):
