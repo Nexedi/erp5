@@ -1,0 +1,61 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test non-editable lines field in editable form</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test non-editable lines field in editable form</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<!-- Make lines field non-editable -->
+<tr><td>open</td>
+    <td>${base_url}/FooView_setFieldsProperties?my_lines_list__editable=</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Set Successfully.</td><td></td></tr>
+<tr><td>open</td>
+    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Done.</td><td></td></tr>
+
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module/1?editable=1</td><td></td></tr>
+
+<!-- Make sure lines render as non-editable -->
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_my_lines_list"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_my_lines_list"]//pre</td><td></td></tr>
+<tr><td>verifyElementPresent</td>
+    <td>//div[@data-gadget-scope="field_my_lines_list"]//pre</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_my_lines_list"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_my_lines_list"]//pre</td><td></td></tr>
+<tr><td>verifyElementPresent</td>
+    <td>//div[@data-gadget-scope="field_my_lines_list"]//pre</td><td></td></tr>
+
+<!-- Reset lines field back to defaults -->
+<tr><td>open</td>
+    <td>${base_url}/FooView_setFieldsProperties</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Set Successfully.</td><td></td></tr>
+<tr><td>open</td>
+    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Done.</td><td></td></tr>
+</tbody>
+</table>
+</body>
+</html>
