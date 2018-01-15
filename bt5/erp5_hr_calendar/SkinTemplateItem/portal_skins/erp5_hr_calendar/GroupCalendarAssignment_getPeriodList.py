@@ -1,14 +1,9 @@
-"""
-XXX duplicated here because original one is using woelfel.start_date sql table to
-filter out public holiday lines
-"""
 assert context.getPortalType() == "Group Calendar Assignment"
 portal = context.getPortalObject()
 period_list = []
 # look when we workers should be available with time tables
 group_calendar = context.getSpecialiseValue()
 if group_calendar is not None:
-  context.log("group_calendar", group_calendar)
   period_dict = {}
   for period in group_calendar.objectValues(portal_type=portal.getPortalCalendarPeriodTypeList()):
     period_list.append(period)
