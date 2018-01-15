@@ -9,7 +9,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
     "codemirror": {"url": "codemirror.gadget.html"},
     "onlyoffice": {"url": "onlyoffice.gadget.html"},
     "fck_editor": {"url": "ckeditor.gadget.html"},
-    "svg_editor" : {"url": "method-draw/method-draw.html"},
+    "svg_editor" : {"url": "method-draw/method-draw.gadget.html"},
     "minipaint": {"url": "minipaint.gadget.html"},
     "jquery-sheets": {"url": "jquery-sheets.gadget.html"},
     "pdf": {"url": "pdf_js/pdfjs.gadget.html"}
