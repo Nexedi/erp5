@@ -51,6 +51,9 @@
     })
 
     .declareMethod('checkValidity', function () {
+      if (!this.state.editable) {
+        return true;
+      }
       return this.getDeclaredGadget('sub')
         .push(function (subgadget) {
           return subgadget.checkValidity();
