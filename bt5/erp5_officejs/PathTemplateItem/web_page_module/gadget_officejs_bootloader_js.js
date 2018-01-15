@@ -117,7 +117,7 @@ var repair = false;
           }),
         gadget.install()
           .push(function () {
-            window.location = gadget.state.redirect_url;
+            window.location = gadget.props.redirect_url;
           })
       ]);
     })
