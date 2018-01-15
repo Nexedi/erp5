@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2017 Nexedi SA and Contributors. All Rights Reserved.
 #                    Ayush Tiwari<ayush.tiwari@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,13 +27,16 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.amount
+Products.ERP5.interfaces.commit
 """
 
 from zope.interface import Interface
 
 class ICommit(Interface):
-  """Commit interface specification
+  """Commit interface specification for ERP5 objects
+
+  ICommitObject defines the set of function which helps in commiting any ERP5
+  object or its property to Business Commit.
   """
 
   def getLatestDraftBusinessCommit():
@@ -41,14 +44,6 @@ class ICommit(Interface):
     Returns the lastest draft commit available where the current object
     can be added
     """
-
-class ICommitObject(ICommit):
-  """Commit interface specification for ERP5 objects
-
-  ICommitObject defines the set of function which helps in commiting any ERP5
-  object to Business Commit. As it concerns with commiting an object, it'll
-  always be creating a Business Item in the Business Commit.
-  """
 
   def createBusinessItem(layer=1, sign=1):
     """
@@ -62,16 +57,15 @@ class ICommitObject(ICommit):
     properly add the Business Item in Business Commit
     """
 
-class ICommitObjectProperty(ICommit):
-  """Commit interface specification for properties of ERP5 objects
-
-  ICommitPropertyObject defines the set of function which helps in commiting any
-  ERP5 object property to latest Business Commit. It will always create a
-  Business Property Item in the Business Commit.
-  """
-
   def createBusinessPropertyItem(layer=1, sign=1):
     """
     Creates a Business Property Item object with the path of the property for
     the ERP5 object specified.
+
+
+    layer -- Priority of the Business Item
+    sign -- Sign of the Business Item
+
+    NOTE: It will still be needed to add the follow_up Business Template to
+    properly add the Business Item in Business Commit
     """
