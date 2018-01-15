@@ -371,6 +371,10 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     movement_list = []
     ordered_inventory = 0
     order_movement_list = []
+    # XXX This is dangerous if increase and decrease movements happen at 
+    # the same date, 
+    # In order to work at a due date, increase movement must be placed
+    # before decrease movement happening at the same date
     history_list = resource_value.Resource_getInventoryHistoryList(
       from_date=from_date,
       node_uid=supply.getDestinationUid()
@@ -384,7 +388,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
          movement_list.append(
            newMovement(
              ordered_date,
-             date,
+             addToDate(date, second=-1),
              ordered_quantity,
              ordered_unit
             )
