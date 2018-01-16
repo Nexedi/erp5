@@ -334,6 +334,14 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     else:
       default_quantity_unit_order_quantity_unit_conversion_ratio = 1
 
+    def getPreviousValidDate(date):
+      # We suppose the system has not been configured to handled per hour commands
+      return DateTime(supply.getNextPeriodicalDate(
+        date.earliestTime(),
+        # Hackish and dangerous
+        next_start_date=date.earliestTime(),
+        factor=-1)).earliestTime()
+
     # Function to define the minimal quantity to be ordered
     def minimalQuantity(quantity, date):
       # Initiate variables to match original script from Yusei T.
@@ -342,11 +350,14 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       next_date = date
 
       delay_second = max_delay_second or min_delay_second or 0
-      start_date = addToDate(date, second=-delay_second)
+      start_date = getPreviousValidDate(
+        addToDate(date, second=-delay_second)
+      )
+      stop_date = addToDate(start_date, second=delay_second).earliestTime()
       order_quantity = ceil(quantity * conversion_ratio)
       quantity = order_quantity / conversion_ratio
 
-      return order_quantity, order_quantity_unit_value, start_date, quantity
+      return order_quantity, order_quantity_unit_value, start_date, stop_date, quantity
 
     resource_portal_type = resource_value.getPortalType()
     def newMovement(start_date, stop_date, quantity, quantity_unit):
@@ -383,12 +394,12 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     for date, inventory in history_list:
       if ordered_inventory + inventory < min_inventory: # SKU
          quantity = min_inventory - inventory - ordered_inventory
-         ordered_quantity, ordered_unit, ordered_date, quantity = minimalQuantity(quantity, date)
+         ordered_quantity, ordered_unit, ordered_date, delivery_date, quantity = minimalQuantity(quantity, date)
          ordered_inventory = ordered_inventory + quantity
          movement_list.append(
            newMovement(
              ordered_date,
-             addToDate(date, second=-1),
+             delivery_date,
              ordered_quantity,
              ordered_unit
             )
