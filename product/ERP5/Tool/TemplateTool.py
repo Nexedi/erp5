@@ -2420,6 +2420,19 @@ class TemplateTool (BaseTool):
       installed_bm_title_list = [bm.title for bm in installed_bm_list]
       return installed_bm_title_list
 
+    def getInstalledBusinessTemplateV2List(self):
+      bt_list = self.objectValues(portal_type='Business Template V2')
+      installed_bt_list = [bt for bt in bt_list
+                           if bt.getAvailabilityState() == 'installable']
+      return installed_bt_list
+
+    def getInstalledBusinessTemplateV2TitleList(self):
+      installed_bt_list = self.getInstalledBusinessManagerV2List()
+      if not len(installed_bt_list):
+        return []
+      installed_bt_title_list = [bt.getTitle() for bt in installed_bt_list]
+      return installed_bt_title_list
+
     security.declareProtected(Permissions.ManagePortal,
             'getBusinessTemplateUrl')
     def getBusinessTemplateUrl(self, base_url_list, bt5_title):

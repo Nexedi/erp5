@@ -147,23 +147,23 @@ class BusinessCommit(Folder):
     Installation:
     - Check if the status is committed (Done by constraint of Business Commit
       portal_type)
-    - Check if there are installed Business Manager(s) because they will be
+    - Check if there are installed Business Template V2(s) because they will be
       required in building new Business Snapshot. Raise if there are None.
     - Create an equivalent snapshot (using items of this commit and predecessors
-      belonging to installed Business Managers)
+      belonging to installed Business Template V2s)
     - TODO: Compare the snapshot with the last snapshot
     - Install the snapshot
     """
     site = self.getPortalObject()
     portal_templates = site.portal_templates
-    installed_bm_list = portal_templates.getInstalledBusinessManagerList()
+    installed_bt_list = portal_templates.getInstalledBusinessTemplateV2List()
 
     # Should raise if there is no installed BM in ZODB. Should install BM via
     # portal_templates first.
     # XXX: Maybe instead of raising, we can provide an option to install BM
     # here only. So that a new user don't get confused ?
-    if not installed_bm_list:
-      raise ValueError('There is no installed BM to create snapshot')
+    if not installed_bt_list:
+      raise ValueError('There is no installed BT to create snapshot')
 
     successor_list = self.getPredecessorRelatedValueList()
 
@@ -185,17 +185,17 @@ class BusinessCommit(Folder):
   def getItemPathList(self):
     return [l.getProperty('item_path') for l in self.objectValues()]
 
-  def getBusinessManagerList(self):
+  def getBusinessTemplateV2List(self):
     """
-    Give the list of all Business Manager(s) being touched by this Business
+    Give the list of all Business Template V2(s) being touched by this Business
     Commit
     """
-    manager_list = []
+    template_list = []
     for item in self.objectValues():
-      manager_list.extend(item.getFollowUpValueList())
+      template_list.extend(item.getFollowUpValueList())
 
-    return list(set(manager_list))
+    return list(set(template_list))
 
-  def getBusinessManagerTitleList(self):
-    title_list = [l.getTitle() for l in self.getBusinessManagerList()]
+  def getBusinessTemplateV2TitleList(self):
+    title_list = [l.getTitle() for l in self.getBusinessTemplateV2List()]
     return title_list
