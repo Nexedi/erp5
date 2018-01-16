@@ -126,51 +126,56 @@ class PeriodicityMixin:
   def _getTimezone(self, date):
     return date.timezone()
 
-  def _getNextMonth(self, date, timezone):
+  def _getNextMonth(self, date, timezone, factor):
     year = date.year()
     month = date.month()
-    if month == 12:
+    if month == 12 and factor == 1:
       year += 1
       month = 1
-    else:
+    elif factor == 1:
       month += 1
+    elif month == 1:
+      month = 12
+      year -= 1
+    else:
+      month -= 1
 
     return DateTime(year, month, 1, 0, 0, 0, timezone)
 
-  def _getNextDay(self, date, timezone):
+  def _getNextDay(self, date, timezone, factor):
     if timezone is not None:
-      new_date = DateTime(date.timeTime() + 86400.0, timezone)
+      new_date = DateTime(date.timeTime() + (86400.0 * factor), timezone)
     else:
-      new_date = DateTime(date.timeTime() + 86400.0)
+      new_date = DateTime(date.timeTime() + (86400.0 * factor))
 
     # Due to daylight savings, 24 hours later does not always mean that
     # it's next day.
     while new_date.day() == date.day():
       if timezone is not None:
-        new_date = DateTime(new_date.timeTime() + 3600.0, timezone)
+        new_date = DateTime(new_date.timeTime() + (3600.0 * factor), timezone)
       else:
-        new_date = DateTime(new_date.timeTime() + 3600.0)
+        new_date = DateTime(new_date.timeTime() + (3600.0 * factor))
     return DateTime(new_date.year(), new_date.month(), new_date.day(),
             0, 0, 0, timezone)
 
-  def _getNextHour(self, date, timezone):
+  def _getNextHour(self, date, timezone, factor):
     if timezone is not None:
-      new_date = DateTime(date.timeTime() + 3600.0, timezone)
+      new_date = DateTime(date.timeTime() + (3600.0 * factor), timezone)
     else:
-      new_date = DateTime(date.timeTime() + 3600.0)
+      new_date = DateTime(date.timeTime() + (3600.0 * factor))
     return DateTime(new_date.year(), new_date.month(), new_date.day(),
             new_date.hour(), 0, 0, timezone)
 
-  def _getNextMinute(self, date, timezone):
+  def _getNextMinute(self, date, timezone, factor):
     if timezone is not None:
-      new_date = DateTime(date.timeTime() + 60.0, timezone)
+      new_date = DateTime(date.timeTime() + (60.0 * factor), timezone)
     else:
-      new_date = DateTime(date.timeTime() + 60.0)
+      new_date = DateTime(date.timeTime() + (60.0 * factor))
     return DateTime(new_date.year(), new_date.month(), new_date.day(),
             new_date.hour(), new_date.minute(), 0, timezone)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getNextPeriodicalDate')
-  def getNextPeriodicalDate(self, current_date, next_start_date=None):
+  def getNextPeriodicalDate(self, current_date, next_start_date=None, factor=1):
     """
     Get the next date where this periodic event should start.
 
@@ -201,18 +206,19 @@ class PeriodicityMixin:
 
     timezone = self._getTimezone(next_start_date)
     previous_date = next_start_date
-    next_start_date = max(self._getNextMinute(next_start_date, timezone),
+    next_start_date = max(self._getNextMinute(next_start_date, timezone, factor),
             current_date)
     while 1:
+      self.log(next_start_date)
       if not self._validateMonth(next_start_date):
-        next_start_date = self._getNextMonth(next_start_date, timezone)
+        next_start_date = self._getNextMonth(next_start_date, timezone, factor)
       elif not (self._validateDay(next_start_date) and
                 self._validateWeek(next_start_date)):
-        next_start_date = self._getNextDay(next_start_date, timezone)
+        next_start_date = self._getNextDay(next_start_date, timezone, factor)
       elif not self._validateHour(next_start_date):
-        next_start_date = self._getNextHour(next_start_date, timezone)
+        next_start_date = self._getNextHour(next_start_date, timezone, factor)
       elif not self._validateMinute(next_start_date, previous_date):
-        next_start_date = self._getNextMinute(next_start_date, timezone)
+        next_start_date = self._getNextMinute(next_start_date, timezone, factor)
       else:
         parts = list(next_start_date.parts())
         parts[5] = previous_date.second() # XXX keep old behaviour
