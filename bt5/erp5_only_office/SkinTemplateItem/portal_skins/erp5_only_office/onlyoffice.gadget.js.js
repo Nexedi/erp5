@@ -1,6 +1,6 @@
 /*global window, rJS, RSVP, DocsAPI, console, document,
  Common, require, jIO, URL, FileReader, atob, ArrayBuffer,
-  Uint8Array, XMLHttpRequest, Blob, Rusha*/
+  Uint8Array, XMLHttpRequest, Blob, Rusha, define*/
 /*jslint nomen: true, maxlen:80, indent:2*/
 "use strict";
 if (Common === undefined) {
@@ -277,7 +277,7 @@ DocsAPI.DocEditor.version = function () {
               return g.props.value_zip_storage.getAttachment('/', 'body.txt')
                 .push(undefined, function (error) {
                   if (error.status_code === 404) {
-                    throw 'not supported format of document: "' +
+                    throw 'not supported format of document: body.txt absent "' +
                     value.slice(0, 100) + '"';
                   }
                   throw error;
@@ -395,7 +395,7 @@ DocsAPI.DocEditor.version = function () {
           require.onError = function (error) {
             console.error(error);
           };
-          require.config({catchError:true});
+          require.config({catchError: true});
 
           if (g.props.binary_loader) {
             g.props.base_url = "onlyoffice-bin/";
@@ -441,7 +441,20 @@ DocsAPI.DocEditor.version = function () {
           }
         })
         .push(function () {
-          return zip.getAttachment('/', '/');
+          return zip.getAttachment('/', 'body.txt')
+            .push(undefined, function (error) {
+              if (error.status_code === 404) {
+                return "";
+              }
+              throw error;
+            });
+        })
+        .push(function (Editor_bin) {
+          if (Editor_bin) {
+            return zip.getAttachment('/', '/');
+          } else {
+            return new Blob();
+          }
         })
         .push(function (zip_blob) {
           return jIO.util.readBlobAsDataURL(zip_blob);

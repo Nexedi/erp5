@@ -1,7 +1,9 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
   <tal:block metal:define-macro="wait_for_load_spreadsheet">
-    <!-- Wait for OnlyOffice run -->
+    <tr>
+      <td colspan="3"><b>Wait for load OnlyOffice</b></td>
+    </tr>
     <tr>
       <td>waitForElementPresent</td>
       <td>//div[@class='asc-loadmask-title']</td>
@@ -19,7 +21,9 @@
     </tr>
   </tal:block>
   <tal:block metal:define-macro="wait_for_load">
-    <!-- Wait for OnlyOffice run -->
+    <tr>
+      <td colspan="3"><b>Wait for load OnlyOffice</b></td>
+    </tr>
     <tr>
       <td>waitForElementPresent</td>
       <td>//div[@class='asc-loadmask-title']</td>
@@ -36,8 +40,10 @@
       <td></td>
     </tr>
   </tal:block>
-    <tal:block metal:define-macro="wait_for_load_presentation">
-    <!-- Wait for OnlyOffice run -->
+  <tal:block metal:define-macro="wait_for_load_presentation">
+    <tr>
+      <td colspan="3"><b>Wait for load OnlyOffice</b></td>
+    </tr>
     <tr>
       <td>waitForElementPresent</td>
       <td>//div[@class='asc-loadmask-title']</td>
