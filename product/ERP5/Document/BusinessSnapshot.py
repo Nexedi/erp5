@@ -140,12 +140,12 @@ class BusinessSnapshot(Folder):
     item_list = self.getItemList()
     try:
       return [l for l in item_list if l.getProperty('item_path') == path][0]
-    except KeyError:
+    except IndexError:
       return
 
   def getLastSnapshot(self):
     """
-    Get last snapshot exisiting.
+    Get last snapshot installed.
     Returns None if there is no last snapshot.
     """
 
@@ -271,7 +271,7 @@ class BusinessSnapshot(Folder):
                                                 temp_object=True,
                                                 )
 
-    if installed_snaphot not in (self, None):
+    if installed_snapshot not in (self, None):
 
       old_item_list = installed_snapshot.getItemList()
       old_state_path_list = installed_snapshot.getItemPathList()
@@ -291,14 +291,14 @@ class BusinessSnapshot(Folder):
         old_item = installed_snapshot.getBusinessItemByPath(path)
         # XXX: We can't change anything in the objects as they are just there
         # for comparison and in reality they are hardlinks
-        old_item = old_item._getCopy(installation_process)
+        #old_item = old_item._getCopy(installation_process)
         installation_process._setObject(old_item.id, old_item,
                                       suppress_events=True)
         old_item.setProperty('item_sign', '-1')
 
       # Path Item List for installation_process should be the difference between
       # old and new installation state
-      for item in new_installation_state.objectValues():
+      for item in self.objectValues():
 
         old_item = installed_snapshot.getBusinessItemByPath(item.getProperty('item_path'))
         self.updateHash(item)
@@ -308,7 +308,7 @@ class BusinessSnapshot(Folder):
           # If the old_item exists, we match the hashes and if it differs, then
           # add the new item
           if old_item.getProperty('item_sha') != item.getProperty('item_sha'):
-            to_be_installed_item = to_be_installed_item._getCopy(installation_process)
+            #to_be_installed_item = to_be_installed_item._getCopy(installation_process)
             installation_process._setObject(to_be_installed_item.id,
                                           to_be_installed_item,
                                           suppress_events=True)
@@ -466,6 +466,26 @@ class BusinessSnapshot(Folder):
           change_list.append((new_item, 'Adding'))
 
     return change_list
+
+  def updateHash(self, item):
+    """
+    Function to update hash of Business Item or Business Property Item
+    """
+    # Check for isProperty attribute
+    if item.isProperty:
+      value = item.getProperty('item_property_value')
+    else:
+      value_list = item.objectValues()
+      if value_list:
+        value = value_list[0]
+      else:
+        value = ''
+
+    if value:
+      item.setProperty('item_sha', self.calculateComparableHash(
+                                                            value,
+                                                            item.isProperty,
+                                                            ))
 
   def calculateComparableHash(self, object, isProperty=False):
     """
