@@ -36,7 +36,9 @@
       var self = this;
       return new RSVP.Queue()
       .push(function () {
-        return PDFViewerApplication.pdfDocument.getData();
+        if (PDFViewerApplication.pdfDocument) {
+          return PDFViewerApplication.pdfDocument.getData();
+        }
       })
       .push(function (data) {
         var blob = PDFJS.createBlob(data, "application/pdf");
