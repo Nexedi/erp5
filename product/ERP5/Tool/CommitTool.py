@@ -194,6 +194,13 @@ class CommitTool (BaseTool):
       else:
         return None
 
+    security.declarePublic('getHeadCommit')
+    def getHeadCommit(self):
+      """
+      Returns the HEAD commit object
+      """
+      return self._getOb(self.getHeadCommitId())
+
     security.declarePublic('newContent')
     def newContent(self, id=None, portal_type=None, **kw):
       """
