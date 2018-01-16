@@ -2,15 +2,10 @@
 if context.getPortalType() != 'Commit Tool':
   return 'context is not commit tool'
 
-# Check if the last created sub-object in Commit Tool is a commit and is not
-# raise an Error
-last_obj = max(context.objectValues(), key=(lambda x: x.getCreationDate()))
+# Get the HEAD commit and create a snapshot based on it
+head_commit = context.getHeadCommit()
 
-if last_obj.getPortalType() != 'Business Commit':
-  raise ValueError('You are trying to generate a new snapshot via Commit Tool but there \
-are no commits added after last snapshot. Add a commit and try again.')
-
-# Create a new snapshot based on last commit
-snapshot = last_obj.createEquivalentSnapshot()
+# Create a new snapshot based on HEAD commit
+snapshot = head_commit.createEquivalentSnapshot()
 
 return context.Base_redirect('view')
