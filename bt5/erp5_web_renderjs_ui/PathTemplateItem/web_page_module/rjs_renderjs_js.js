@@ -665,7 +665,58 @@ if (typeof document.contains !== 'function') {
     return this.documentElement.contains(node);
  }
 }
-;/*! RenderJs */
+;(function (DOMParser) {
+  "use strict";
+
+  try {
+    if ((new window.URL("../a", "https://example.com/")).href === "https://example.com/a") {
+      return;
+    }
+  } catch (ignore) {}
+
+  var isAbsoluteOrDataURL = /^(?:[a-z]+:)?\/\/|data:/i;
+
+  function resolveUrl(url, base_url) {
+    var doc, base, link,
+      html = "<!doctype><html><head></head></html>";
+ 
+    if (url && base_url) {
+      doc = (new DOMParser()).parseFromString(html, 'text/html');
+      base = doc.createElement('base');
+      link = doc.createElement('link');
+      doc.head.appendChild(base);
+      doc.head.appendChild(link);
+      base.href = base_url;
+      link.href = url;
+      return link.href;
+    }
+    return url;
+  }
+
+  function URL(url, base) {
+    if (base !== undefined) {
+      if (!isAbsoluteOrDataURL.test(base)) {
+        throw new TypeError("Failed to construct 'URL': Invalid base URL");
+      }
+      url = resolveUrl(url, base);
+    }
+    if (!isAbsoluteOrDataURL.test(url)) {
+      throw new TypeError("Failed to construct 'URL': Invalid URL");
+    }
+    this.href = url;
+  }
+  URL.prototype.href = "";
+
+  if (window.URL && window.URL.createObjectURL) {
+    URL.createObjectURL = window.URL.createObjectURL;
+  }
+  if (window.URL && window.URL.revokeObjectURL) {
+    URL.revokeObjectURL = window.URL.revokeObjectURL;
+  }
+
+  window.URL = URL;
+
+}(DOMParser));;/*! RenderJs */
 /*jslint nomen: true*/
 
 /*
@@ -809,6 +860,7 @@ if (typeof document.contains !== 'function') {
     gadget_loading_klass_list = [],
     renderJS,
     Monitor,
+    Mutex,
     scope_increment = 0,
     isAbsoluteOrDataURL = new RegExp('^(?:[a-z]+:)?//|data:', 'i'),
     is_page_unloaded = false,
@@ -824,6 +876,64 @@ if (typeof document.contains !== 'function') {
     // it will not restore renderJS crash report
     is_page_unloaded = true;
   });
+
+  /////////////////////////////////////////////////////////////////
+  // Mutex
+  /////////////////////////////////////////////////////////////////
+  Mutex = function createMutex() {
+    if (!(this instanceof Mutex)) {
+      return new Mutex();
+    }
+    this._latest_defer = null;
+  };
+
+  Mutex.prototype = {
+    constructor: Mutex,
+
+    lock: function lockMutex() {
+      var previous_defer = this._latest_defer,
+        current_defer = RSVP.defer(),
+        queue = new RSVP.Queue();
+
+      this._latest_defer = current_defer;
+
+      if (previous_defer !== null) {
+        queue.push(function acquireMutex() {
+          return previous_defer.promise;
+        });
+      }
+
+      // Create a new promise (.then) not cancellable
+      // to allow external cancellation of the callback
+      // without breaking the mutex implementation
+      queue
+        .fail(current_defer.resolve.bind(current_defer));
+
+      return queue
+        .push(function generateMutexUnlock() {
+          return function runAndUnlock(callback) {
+            return new RSVP.Queue()
+              .push(function executeMutexCallback() {
+                return callback();
+              })
+              .push(function releaseMutexAfterSuccess(result) {
+                current_defer.resolve(result);
+                return result;
+              }, function releaseMutexAfterError(error) {
+                current_defer.resolve(error);
+                throw error;
+              });
+          };
+        });
+    },
+
+    lockAndRun: function (callback) {
+      return this.lock()
+        .push(function executeLockAndRunCallback(runAndUnlock) {
+          return runAndUnlock(callback);
+        });
+    }
+  };
 
   /////////////////////////////////////////////////////////////////
   // Helper functions
@@ -1251,15 +1361,26 @@ if (typeof document.contains !== 'function') {
   /////////////////////////////////////////////////////////////////
   // RenderJSGadget.declareMethod
   /////////////////////////////////////////////////////////////////
-  RenderJSGadget.declareMethod = function declareMethod(name, callback) {
+  RenderJSGadget.declareMethod = function declareMethod(name, callback,
+                                                        options) {
     this.prototype[name] = function triggerMethod() {
       var context = this,
-        argument_list = arguments;
+        argument_list = arguments,
+        mutex_name;
 
+      function waitForMethodCallback() {
+        return callback.apply(context, argument_list);
+      }
+
+      if ((options !== undefined) && (options.hasOwnProperty('mutex'))) {
+        mutex_name = '__mutex_' + options.mutex;
+        if (!context.hasOwnProperty(mutex_name)) {
+          context[mutex_name] = new Mutex();
+        }
+        return context[mutex_name].lockAndRun(waitForMethodCallback);
+      }
       return new RSVP.Queue()
-        .push(function waitForMethodCallback() {
-          return callback.apply(context, argument_list);
-        });
+        .push(waitForMethodCallback);
     };
     // Allow chain
     return this;
@@ -1295,54 +1416,37 @@ if (typeof document.contains !== 'function') {
       return this.element;
     })
     .declareMethod('changeState', function changeState(state_dict) {
-      var next_onStateChange = new RSVP.Queue(),
-        previous_onStateCHange,
-        context = this;
-      if (context.hasOwnProperty('__previous_onStateChange')) {
-        previous_onStateCHange = context.__previous_onStateChange;
-        next_onStateChange
-          .push(function waitForPreviousStateChange() {
-            return previous_onStateCHange;
+      var context = this,
+        key,
+        modified = false,
+        previous_cancelled = context.hasOwnProperty('__modification_dict'),
+        modification_dict;
+      if (previous_cancelled) {
+        modification_dict = context.__modification_dict;
+        modified = true;
+      } else {
+        modification_dict = {};
+      }
+      for (key in state_dict) {
+        if (state_dict.hasOwnProperty(key) &&
+            (state_dict[key] !== context.state[key])) {
+          context.state[key] = state_dict[key];
+          modification_dict[key] = state_dict[key];
+          modified = true;
+        }
+      }
+      if (modified && context.__state_change_callback !== undefined) {
+        context.__modification_dict = modification_dict;
+        return new RSVP.Queue()
+          .push(function waitForStateChangeCallback() {
+            return context.__state_change_callback(modification_dict);
           })
-          .push(undefined, function handlePreviousStateChangeError() {
-            // Run callback even if previous failed
-            return;
+          .push(function handleStateChangeSuccess(result) {
+            delete context.__modification_dict;
+            return result;
           });
       }
-      context.__previous_onStateChange = next_onStateChange;
-      return next_onStateChange
-        .push(function checkStateModification() {
-          var key,
-            modified = false,
-            previous_cancelled = context.hasOwnProperty('__modification_dict'),
-            modification_dict;
-          if (previous_cancelled) {
-            modification_dict = context.__modification_dict;
-            modified = true;
-          } else {
-            modification_dict = {};
-          }
-          for (key in state_dict) {
-            if (state_dict.hasOwnProperty(key) &&
-                (state_dict[key] !== context.state[key])) {
-              context.state[key] = state_dict[key];
-              modification_dict[key] = state_dict[key];
-              modified = true;
-            }
-          }
-          if (modified && context.__state_change_callback !== undefined) {
-            context.__modification_dict = modification_dict;
-            return new RSVP.Queue()
-              .push(function waitForStateChangeCallback() {
-                return context.__state_change_callback(modification_dict);
-              })
-              .push(function handleStateChangeSuccess(result) {
-                delete context.__modification_dict;
-                return result;
-              });
-          }
-        });
-    });
+    }, {mutex: 'changestate'});
 
   /////////////////////////////////////////////////////////////////
   // RenderJSGadget.declareAcquiredMethod
@@ -2038,6 +2142,7 @@ if (typeof document.contains !== 'function') {
   /////////////////////////////////////////////////////////////////
   // global
   /////////////////////////////////////////////////////////////////
+  renderJS.Mutex = Mutex;
   window.rJS = window.renderJS = renderJS;
   window.__RenderJSGadget = RenderJSGadget;
   window.__RenderJSEmbeddedGadget = RenderJSEmbeddedGadget;
