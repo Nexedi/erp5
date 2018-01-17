@@ -10,13 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>css_class</string>
                 <string>description</string>
-                <string>editable</string>
-                <string>height</string>
-                <string>text_editor</string>
                 <string>title</string>
-                <string>width</string>
               </list>
             </value>
         </item>
@@ -47,10 +42,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -59,27 +50,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -90,10 +65,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>description</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
@@ -102,36 +73,16 @@ Text (<details> tags will be automatically added at the beginning and at the end
 ]]></string> </value>
                 </item>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_text_content</string> </value>
+                    <value> <string>my_editor_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewWebFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>4</int> </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>text_editor</string> </key>
-                    <value> <string>text_area</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Text</string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>50</int> </value>
                 </item>
               </dictionary>
             </value>
