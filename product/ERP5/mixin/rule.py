@@ -475,7 +475,8 @@ class RuleMixin(Predicate):
       else:
         # We must create a profit and loss movement
         new_movement = self._newProfitAndLossMovement(prevision_movement)
-        movement_collection_diff.addNewMovement(new_movement)
+        if new_movement is not None:
+          movement_collection_diff.addNewMovement(new_movement)
 
 InitializeClass(RuleMixin)
 
