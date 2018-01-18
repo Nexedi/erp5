@@ -937,7 +937,17 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       report_form_params = report_item.selection_params.copy() \
                            if report_item.selection_params is not None \
                            else {}
-
+      # request.prefixed_selection_name maybe used in tales expression
+      if report_form:
+        listbox = getattr(getattr(report_context, report_form), 'listbox', None)
+        if listbox is not None:
+          listbox_selection_name = report_prefix + "_" + listbox.get_value('selection_name')
+          REQUEST.other['prefixed_selection_name'] = listbox_selection_name
+          if report_form_params:
+            params = portal.portal_selections.getSelectionParamsFor(listbox_selection_name)
+            params.update(report_form_params)
+            portal.portal_selections.setSelectionParamsFor(listbox_selection_name,params)
+      
       if report_item.selection_name:
         selection_name = report_prefix + "_" + report_item.selection_name
         report_form_params.update(selection_name=selection_name)
