@@ -14,9 +14,10 @@ def isFieldType(field, type_name):
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from ZTUtils import make_query
 
-request = REQUEST
-if REQUEST is None:
-  request = container.REQUEST
+# Kato: I do not understand why we throw away REQUEST from parameters (hidden in **kw)
+# and use container.REQUEST just to introduce yet another global state
+# because REUQEST from arguments is a different instance than container.REQUEST!
+request = container.REQUEST
 
 # request.form holds POST data thus containing 'field_' + field.id items
 # such as 'field_your_some_field'
