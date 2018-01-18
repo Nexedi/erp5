@@ -200,6 +200,7 @@ gadget_html5_textarea.js\n
 gadget_erp5_configure_editor.html\n
 gadget_erp5_configure_editor.js\n
 \n
+#bookmark\n
 gadget_erp5_field_checkbox.html\n
 gadget_erp5_field_checkbox.js\n
 gadget_officejs_bookmark_manager_router.html\n
@@ -215,8 +216,10 @@ gadget_erp5_page_ojs_bookmark_dispatcher.html\n
 gadget_erp5_page_ojs_bookmark_dispatcher.js\n
 gadget_erp5_page_ojs_bookmark_preference.html\n
 gadget_erp5_page_ojs_bookmark_preference.js\n
-GADGET:\n
-officejs_setting_gadget/\n
+\n
+#setting\n
+gadget_officejs_setting.html\n
+gadget_officejs_setting.js\n
 NETWORK:\n
 *</string> </value>
         </item>
@@ -359,7 +362,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.45561.47559.9591</string> </value>
+                <value> <string>964.48513.5538.10342</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -377,7 +380,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1515590093.02</float>
+                        <float>1516115771.45</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

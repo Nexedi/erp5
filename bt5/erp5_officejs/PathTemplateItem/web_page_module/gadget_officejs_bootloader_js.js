@@ -19,14 +19,10 @@ var repair = false;
       check_local_deletion: false,
       check_local_modification: false,
       signature_sub_storage: {
-        type: "limitalldocs",
-        document: window.location.href,
+        type: "query",
         sub_storage: {
-          type: "query",
-          sub_storage: {
-            type: "indexeddb",
-            database: "officejs-hash"
-          }
+          type: "indexeddb",
+          database: "officejs-hash"
         }
       },
       local_sub_storage: {
@@ -41,8 +37,8 @@ var repair = false;
       },
       remote_sub_storage: {
         type: "appcache",
-        manifest: gadget.state.cache_file,
-        version: gadget.state.version_url,
+        manifest: gadget.props.cache_file,
+        version: gadget.props.version_url,
         take_installer: true
       }
     });
@@ -58,7 +54,7 @@ var repair = false;
       serviceWorker = registration.active;
     }
     if (serviceWorker.state !== "activated") {
-      RSVP.Promise(function (resolve, reject) {
+      return RSVP.Promise(function (resolve, reject) {
         serviceWorker.addEventListener('statechange', function (e) {
           if (e.target.state === "activated") {
             resolve();
@@ -75,125 +71,80 @@ var repair = false;
     .setState({error_amount: 0})
     .ready(function (gadget) {
       var i,
-        state = {},
         element_list =
           gadget.element.querySelectorAll('[data-install-configuration]');
-      if (window.Bootloader === undefined) {
-        window.Bootloader = gadget;
-      }
 
+      gadget.props = {};
       for (i = 0; i < element_list.length; i += 1) {
-        state[element_list[i].getAttribute('data-install-configuration')] =
-          element_list[i].textContent;
+        gadget.props[element_list[i].getAttribute(
+          'data-install-configuration'
+        )] = element_list[i].textContent;
       }
-      state.redirect_url = new URL(window.location);
-      state.redirect_url.pathname += state.version_url;
-      if (state.redirect_url.hash) {
-        if (state.redirect_url.hash.startsWith('#access_token')) {
+      gadget.props.redirect_url = new URL(window.location);
+      gadget.props.redirect_url.pathname += gadget.props.version_url;
+      if (gadget.props.redirect_url.hash) {
+        if (gadget.props.redirect_url.hash.startsWith('#access_token')) {
           // This is a bad hack to support dropbox.
-          state.redirect_url.hash = state.redirect_url.hash.replace(
+          gadget.props.redirect_url.hash =
+            gadget.props.redirect_url.hash.replace(
             '#access_token',
             '#/?page=ojs_dropbox_configurator&access_token'
           );
-        } else if (state.redirect_url.hash
+        } else if (gadget.props.redirect_url.hash
             .startsWith('#page=settings_configurator')) {
           // Make monitoring app still compatible with old instances setup URLs
-          state.redirect_url.hash = state.redirect_url.hash.replace(
+          gadget.props.redirect_url.hash =
+            gadget.props.redirect_url.hash.replace(
             '#page=settings_configurator',
             '#/?page=settings_configurator'
           );
         }
       }
-      return gadget.changeState(state);
     })
-
-    .allowPublicAcquisition('isChildren', function () {
-      return true;
-    })
-    .declareAcquiredMethod('isChildren', 'isChildren')
-    .declareAcquiredMethod('renderError', 'renderError')
 
     .declareService(function () {
       var gadget = this;
-      return gadget.isChildren()
-        .push(undefined, function (error) {
-          if (error instanceof rJS.AcquisitionError) {
-            return RSVP.all([
-              new RSVP.Queue()
-                .push(function () {
-                  return RSVP.delay(600);
-                })
-                .push(function () {
-                  return gadget.changeState({main: true});
-                }),
-              gadget.install()
-                .push(function () {
-                  window.location = gadget.state.redirect_url;
-                })
-            ]);
-          }
-          throw error;
-        });
-    })
-
-    .allowPublicAcquisition('renderError', function (param_list) {
-      param_list[0].error_amount = this.state.error_amount + 1;
-      return this.changeState(param_list[0]);
+      return RSVP.all([
+        new RSVP.Queue()
+          .push(function () {
+            return RSVP.delay(600);
+          })
+          .push(function () {
+            return gadget.changeState({
+              app_name: gadget.props.app_name,
+              redirect_url: gadget.props.redirect_url
+            });
+          }),
+        gadget.install()
+          .push(function () {
+            window.location = gadget.props.redirect_url;
+          })
+      ]);
     })
 
     .declareMethod('render', function (options) {
-      return this.getDeclaredGadget('view_gadget')
+      var gadget = this;
+      return new RSVP.Queue()
+        .push(function () {
+          var element = gadget.element.querySelector('.presentation');
+          if (element) {
+            return gadget.getDeclaredGadget('view');
+          }
+          element = document.createElement("div");
+          element.className = "presentation";
+          gadget.element.appendChild(element);
+          return gadget.declareGadget(
+            "gadget_officejs_bootloader_presentation.html",
+            {"scope": "view", "element": element}
+          );
+        })
         .push(function (view_gadget) {
           return view_gadget.render(options);
         });
     })
 
     .onStateChange(function (modification_dict) {
-      var gadget = this, element, options;
-      if (modification_dict.main) {
-        element = document.createElement("div");
-        element.className = "presentation";
-        gadget.element.insertBefore(element, gadget.element.firstChild);
-        return gadget.declareGadget(
-          "gadget_officejs_bootloader_presentation.html",
-          {"scope": "view_gadget", "element": element}
-        )
-          .push(function (view_gadget) {
-            return view_gadget.render({
-              app_name: gadget.state.app_name,
-              redirect_url: gadget.state.redirect_url
-            });
-          });
-      }
-      if (modification_dict.error) {
-        options = {
-          error: gadget.state.error,
-          error_amount: gadget.state.error_amount
-        };
-        if (modification_dict.error_source) {
-          options.error_source = gadget.state.error_source;
-        }
-        if (gadget.state.main) {
-          return gadget.render(options);
-        }
-        options.error_source = gadget.state.app_name;
-        return gadget.renderError(options);
-      }
-    })
-
-    .declareMethod('declareAndInstall', function (url) {
-      var element = document.createElement("div");
-      element.setAttribute("style", "display: none");
-      this.element.appendChild(element);
-      return this.declareGadget(url,
-        {
-          "element": element,
-          "scope": url,
-          "sandbox": "iframe"
-        })
-        .push(function (sub_gadget) {
-          return sub_gadget.install();
-        });
+      return this.render(modification_dict);
     })
 
     .declareMethod("install", function () {
