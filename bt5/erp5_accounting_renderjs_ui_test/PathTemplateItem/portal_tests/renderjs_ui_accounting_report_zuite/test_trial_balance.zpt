@@ -1,0 +1,179 @@
+<html>
+<head><title>Test Trial Balance Report</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><th rowspan="1" colspan="4">
+Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tests/testAccountingReports.py#L2326">TestAccountingReports.testJournal</a>
+</th></tr>
+</thead>
+
+<tbody
+  tal:define="init_method string:AccountingZuite_initializeAccountingTransactionReportTest?report_name=trial-balance&report_style=Hal;
+              now python: DateTime()">
+
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/accounting_module/</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Trial Balance"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Trial Balance"]</td><td></td></tr>
+
+<tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.day())"></td><td>day</td></tr>
+<tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.month())"></td><td>month</td></tr>
+<tr><td>store</td><td tal:content="python: now.year()"></td><td>year</td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//select[@name="field_your_section_category"]</td><td></td></tr>
+<tr><td>select</td>
+    <td>//select[@name="field_your_section_category"]</td>
+    <td>value=group/demo_group</td></tr>
+
+<tr><td>type</td>
+    <td>//input[@name="field_your_from_date"]</td>
+    <td>${year}-01-01</td></tr>
+<tr><td>type</td>
+    <td>//input[@name="field_your_at_date"]</td>
+    <td>${year}-12-31</td></tr>
+<!-- field_your_section_category_strict is False by default -->
+<!-- field_your_per_account_class_summary is False by default -->
+<!-- field_your_expand_accounts is False by default -->
+<tr><td>click</td>
+    <td>//input[@type="checkbox" and @name="field_your_show_empty_accounts"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//input[@type="checkbox" and @name="field_your_show_detailed_balance_columns"]</td><td></td></tr>
+<!-- let field_your_portal_type its default values -->
+
+<!-- For simulation state only ensure that default values are still "delivered" and "stopped" -->
+<tr><td>store</td>
+    <td>//div[@data-gadget-scope="field_your_simulation_state"]//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_multilist.html"]</td>
+    <td>multi_select</td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>${multi_select}/div[3]//select</td><td></td></tr>
+<tr><td>assertValue</td>
+    <td>${multi_select}/div[1]//select</td>
+    <td>delivered</td></tr>
+<tr><td>assertValue</td>
+    <td>${multi_select}/div[2]//select</td>
+    <td>stopped</td></tr>
+<tr><td>assertValue</td>
+    <td>${multi_select}/div[3]//select</td>
+    <td></td></tr>
+
+<tr><td>click</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
+
+<tr><td>store</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>table</td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>${table}//../nav//span[@data-i18n="10 Records"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>
+
+
+<!-- ListBox sorts the result in different order than they are returned by its
+     List Method. Seems they are sorted on Title alphabetically -->
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
+                        node_id string:A-BANK;
+                        node_title string:Bank (Bank1);
+                        credit string:3300;
+                        final_balance string:-3300;
+                        final_credit_balance string:3300;
+                        final_balance_if_credit string:3300">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[2];
+                        node_id string:A-COLLECTED-VAT;
+                        node_title string:Collected VAT 10%">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[3];
+                        node_id string:A-EQUITY;
+                        node_title string:Equity">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[4];
+                        node_id string:A-FIX-ASSETS;
+                        node_title string:Fixed Assets">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[5];
+                        node_id string:A-GP;
+                        node_title string:Goods Purchase">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[6];
+                        node_id string:A-GS;
+                        node_title string:Goods Sales">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[7];
+                        node_id string:A-PAY;
+                        node_title string:Payable;
+                        debit string:200;
+                        credit string:100;
+                        final_balance string:100;
+                        final_debit_balance string:200;
+                        final_credit_balance string:100;
+                        final_balance_if_debit string:100">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[8];
+                        node_id string:A-REC;
+                        node_title string:Receivable;
+                        debit string:3400;
+                        credit string:200;
+                        final_balance string:3200;
+                        final_debit_balance string:3400;
+                        final_credit_balance string:200;
+                        final_balance_if_debit string:3200">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[9];
+                       node_title string:Refundable VAT 10%;
+                       node_id string:A-REF-VAT">
+  <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table"></tal:block>
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[10];
+                       node_title string:Stocks;
+                       node_id string:A-STOCK">
+  <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table"></tal:block>
+</tal:block>
+
+<!-- Stats line -->
+<tal:block tal:define="row_selector string:$${table}/tfoot/tr[1];
+                       debit string:3600;
+                       credit string:3600;
+                       final_debit_balance string:3600;
+                       final_credit_balance string:3600;
+                       final_balance_if_debit string:3300;
+                       final_balance_if_credit string:3300">
+  <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table"></tal:block>
+</tal:block>
+
+</tbody>
+</table>
+</body>
+</html>

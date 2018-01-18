@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+      <global name="Python Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -50,11 +50,15 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>report_style=\'View\'</string> </value>
+            <value> <string>with_ledger=True</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_setAccountReferencePreference</string> </value>
+            <value> <string>AccountingZuite_createReportOtherPartiesDataset</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Python Script</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -7,13 +7,6 @@ from DateTime import DateTime
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 year = 2005
 
-# if the previous test didn't change input data, no need to recreate content
-current_script_data_id = '%s_month_count_%s' % (
-                                 month_count, script.getId())
-if accounting_module.getProperty('current_content_script',
-                                '') == current_script_data_id:
-  return "Accounting Transactions Created."
-
 
 # first, cleanup accounting module
 # XXX should be done in an external script / tool, because we have to
@@ -99,8 +92,6 @@ for month in range(1, month_count + 1):
     tr.setSourceReference('source_reference')
     tr.setDestinationReference('destination_reference')
 
-accounting_module.setProperty('current_content_script',
-                              current_script_data_id)
 
 # test depends on this
 return "Accounting Transactions Created."

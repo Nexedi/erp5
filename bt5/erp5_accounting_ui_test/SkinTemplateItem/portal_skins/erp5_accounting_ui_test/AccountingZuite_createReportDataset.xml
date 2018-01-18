@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>report_style=\'View\'</string> </value>
+            <value> <string>two_banks=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_setAccountReferencePreference</string> </value>
+            <value> <string>AccountingZuite_createReportDataset</string> </value>
         </item>
       </dictionary>
     </pickle>

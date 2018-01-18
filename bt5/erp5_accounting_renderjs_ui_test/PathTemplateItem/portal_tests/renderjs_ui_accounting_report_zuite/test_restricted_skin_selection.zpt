@@ -1,0 +1,52 @@
+<html>
+<head><title>Test Invoices Report Skin Allowance</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><th rowspan="1" colspan="4">
+Check that use gets notified if they are using wrong 'Report Style' (UI) Preference.
+</th></tr>
+</thead>
+
+<!-- Set Report Style to not-allowed value 'View' -->
+<tbody
+  tal:define="init_method string:AccountingZuite_initializeAccountingTransactionReportTest?report_name=journal&report_style=View;">
+
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/accounting_module/</td><td></td></tr>
+
+<!-- Select random Report and fill in just the necessary values for valid submission. -->
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Journal"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Journal"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//select[@name="field_your_section_category"]</td><td></td></tr>
+<tr><td>select</td>
+    <td>//select[@name="field_your_section_category"]</td>
+    <td>value=group/demo_group</td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
+
+<!-- Now we should get somehow notified about wrong skin selection.
+At the beginning it was implemented as Form Message because the error is on a hidden field. -->
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="notification"]//button[contains(text(), "skins are allowed for reports")]</td><td></td></tr>
+<tr><td>assertElementPresent</td>
+    <td>//div[@data-gadget-scope="notification"]//button[contains(text(), "skins are allowed for reports")]</td><td></td></tr>
+
+</tbody>
+</table>
+</body>
+</html>
