@@ -5,7 +5,7 @@ portal = context.portal_url.getPortalObject()
 from Products.ERP5Form.Report import ReportSection
 
 request = context.REQUEST
-at_date = request['at_date']
+at_date = request['at_date'].latestTime()
 section_category = request['section_category']
 simulation_state = request['simulation_state']
 role_filter_list = request.get('mirror_section_category_list', None)
