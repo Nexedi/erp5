@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string> node_category=None, node_category_strict_membership=None, mirror_section_category=None, omit_grouping_reference=None, selection_name=None, analytic_column_list=(), **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -8,6 +8,8 @@ request = container.REQUEST
 for _ in range(line_count):
   context.newContent(portal_type=line_portal_type)
 
-request.set('portal_status_message',
-    translateString('Accounting Transaction Lines added.'),)
-return getattr(context, form_id)()
+return context.Base_redirect(
+  form_id,
+  keep_items={
+    'portal_status_message': translateString('Accounting Transaction Lines added.')
+  })

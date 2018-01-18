@@ -3,7 +3,8 @@ request = container.REQUEST
 Base_translateString = container.Base_translateString
 
 portal = context.getPortalObject()
-
+# We have to obtain parameters from request because of "generic" implementation
+# https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5Form/ReportBox.py#L71
 portal_type = request['portal_type']
 simulation_state = request['simulation_state']
 hide_analytic = request['hide_analytic']
