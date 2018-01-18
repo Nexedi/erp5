@@ -7,12 +7,10 @@
 
   function AppCacheStorage(spec) {
     this._manifest = spec.manifest;
-    this._gadget = spec.gadget;
     this._take_installer = spec.take_installer || false;
     this._origin_url = spec.origin_url !== undefined ?
         spec.origin_url : window.location.href;
     this._version = spec.version || "";
-    this._gadget_list = [];
     this._prefix = spec.prefix || "./";
     this._documents = {};
     // Harcoded here, find a better way.
@@ -26,8 +24,7 @@
         this._prefix + "gadget_officejs_bootloader_serviceworker.js",
         this._prefix + "gadget_erp5_nojqm.css",
         this._prefix + "officejs_logo.png",
-        this._prefix + "jio_appcachestorage.js",
-        this._prefix + "jio_limitalldocsstorage.js"
+        this._prefix + "jio_appcachestorage.js"
       ];
     } else {
       this._relative_url_list = [this._prefix + "/"];
@@ -51,13 +48,6 @@
 
   AppCacheStorage.prototype.getAttachment = function (origin_url,
                                                        relative_url) {
-    var storage = this;
-    if (storage._gadget_list.indexOf(relative_url) >= 0) {
-      return window.Bootloader.declareAndInstall(relative_url)
-        .push(function () {
-          return new Blob([]);
-        });
-    }
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax({
@@ -76,9 +66,6 @@
       var result = {}, i, len = this._relative_url_list.length;
       for (i = 0; i < len; i += 1) {
         result[this._relative_url_list[i]] = {};
-      }
-      for (i = 0; i < this._gadget_list.length; i += 1) {
-        result[this._gadget_list[i]] = {};
       }
       return result;
     }
@@ -120,22 +107,17 @@
         storage._relative_url_list.push(storage._version + storage._manifest);
         for (i = 0; i < relative_url_list.length; i += 1) {
           if (relative_url_list[i].indexOf("NETWORK:") >= 0) {
-            take = 3;
-          } else if (relative_url_list[i].indexOf('GADGET:') >= 0) {
-            take = 2;
+            take = false;
           } else if (relative_url_list[i] !== "" &&
               relative_url_list[i].charAt(0) !== '#' &&
-              relative_url_list[i].charAt(0) !== ' ') {
-            if (take === 1) {
-              storage._relative_url_list.push(
-                storage._version + relative_url_list[i]
-              );
-            } else if (take === 2) {
-              storage._gadget_list.push(relative_url_list[i]);
-            }
+              relative_url_list[i].charAt(0) !== ' ' &&
+              take) {
+            storage._relative_url_list.push(
+              storage._version + relative_url_list[i]
+            );
           }
           if (relative_url_list[i].indexOf("CACHE:") >= 0) {
-            take = 1;
+            take = true;
           }
         }
       })
