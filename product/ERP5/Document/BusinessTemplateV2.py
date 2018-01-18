@@ -752,8 +752,26 @@ class BusinessItem(XMLObject):
     item = self.removeProperties(item, True)
 
     diff = deepdiff.DeepDiff(item.__dict__, obj.__dict__)
+    tree_diff = deepdiff.DeepDiff(item.__dict__, obj.__dict__, view='tree')
+    diff_tree_list = []
 
-    return diff.json
+    # Flatten the list of DiffValues
+    for subset in tree_diff.values():
+      if isinstance(subset, set):
+        sublist = list(subset)
+        for item in sublist:
+          diff_tree_list.append(item)
+
+    diff_list = []
+    for val in diff_tree_list:
+      new_val = {}
+      new_val['diff'] = val.additional.get('diff', None)
+      new_val['t1'] = val.t1
+      new_val['t2'] = val.t2
+      new_val['path'] = val.path()[6:-2]
+      diff_list.append(new_val)
+
+    return json.dumps(diff_list)
 
   def updateFollowUpPathList(self):
     """
