@@ -13,15 +13,6 @@ business_process = portal.portal_catalog.getResultValue(
              'erp5_default_business_process'), # erp5_simulation_test
   portal_type='Business Process').getRelativeUrl()
 
-# if the previous test didn't change input data, no need to recreate content
-current_script_data_id = '%s_month_count_%s_draft_%s_state_%s_payment_%s_leger_%s' % (
-     month_count, add_draft_transactions, transaction_state,
-     add_related_payments, set_ledger, script.getId())
-
-if accounting_module.getProperty('current_content_script',
-                                '') == current_script_data_id:
-  return "Accounting Transactions Created."
-
 # first, cleanup accounting module
 # XXX should be done in an external script / tool, because we have to
 # workaround some security checks
@@ -279,9 +270,6 @@ if add_draft_transactions:
     tr.newContent(portal_type='Sale Invoice Transaction Line',
                   source=getAccountByTitle('Goods Sales'),
                   quantity=random.randint(300, 400),)
-
-accounting_module.setProperty('current_content_script',
-                              current_script_data_id)
 
 # test depends on this
 return "Accounting Transactions Created."

@@ -1,0 +1,54 @@
+<html>
+<head><title>Test Balance Sheet Report</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><th rowspan="1" colspan="4">
+Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tests/testAccountingReports.py#L4563">testAccountingReports.py:TestAccountingReports.testBalanceSheet</a>
+</th></tr>
+</thead>
+
+<tbody
+  tal:define="init_method string:AccountingZuite_initializeAccountingTransactionReportTest?report_name=balance-sheet&report_style=Hal;
+              offset python:0;
+              now python:DateTime()">
+
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.day())"></td><td>day</td></tr>
+<tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.month())"></td><td>month</td></tr>
+<tr><td>store</td><td tal:content="python: now.year()"></td><td>year</td></tr>
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/accounting_module/</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Balance Sheet"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Balance Sheet"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//select[@name="field_your_section_category"]</td><td></td></tr>
+<tr><td>select</td>
+    <td>//select[@name="field_your_section_category"]</td>
+    <td>value=group/demo_group</td></tr>
+<tr><td>type</td>
+    <td>//input[@name="field_your_at_date"]</td>
+    <td>${year}-12-31</td></tr>
+
+<!-- We cannot easily ensure correctness because the report renders always as
+     an attachment. Even in unittest we only check validity of such attachment.
+-->
+
+</tbody>
+</table>
+</body>
+</html>

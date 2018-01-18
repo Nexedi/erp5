@@ -1,0 +1,118 @@
+<html>
+<head><title>Test Third Party (aka Other Party) Report</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><th rowspan="1" colspan="4">
+Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tests/testAccountingReports.py#L4658">testAccountingReports.py:TestAccountingReports.testOtherPartiesReport</a>
+</th></tr>
+</thead>
+
+<tbody
+  tal:define="init_method string:AccountingZuite_initializeAccountingTransactionReportTest?report_name=other-parties-ledger&report_style=Hal;
+              offset python:0;
+              now python:DateTime()">
+
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.day())"></td><td>day</td></tr>
+<tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.month())"></td><td>month</td></tr>
+<tr><td>store</td><td tal:content="python: now.year()"></td><td>year</td></tr>
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/accounting_module/</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Third Parties"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Third Parties"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//select[@name="field_your_section_category"]</td><td></td></tr>
+<tr><td>select</td>
+    <td>//select[@name="field_your_section_category"]</td>
+    <td>value=group/demo_group</td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_your_ledger"]//select</td><td></td></tr>
+<tr><td>select</td>
+    <td>//div[@data-gadget-scope="field_your_ledger"]//select</td>
+    <td>value=ledger/accounting/general</td></tr>
+<tr><td>type</td>
+    <td>//input[@name="field_your_at_date"]</td>
+    <td>${year}-${month}-${day}</td></tr>
+<tr><td>click</td><!-- Uncheck because it is checked by default -->
+    <td>//input[@type="checkbox" and @name="field_your_omit_balanced_accounts"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td><td></td></tr>
+<!-- we need to zero-out simulation_state to just 'delivered' -->
+<tal:block tal:repeat="_ python:range(4)"><!-- There is by default just few simulation states -->
+<!-- we take advantage of dissapearing elements when selecting one empty -->
+<tr><td>select</td>
+    <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
+    <td>value=</td></tr>
+<tr><td>pause</td>
+    <td>50</td>
+    <td></td></tr>
+</tal:block>
+<tr><td>select</td>
+    <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
+    <td>value=delivered</td></tr>
+<tr><td>click</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
+
+<tr><td>store</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>table</td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>${table}//../nav//span[@data-i18n="2 Records"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
+                       Movement_getExplanationTitle string:Transaction 1;
+                       section_title string:;
+                       Movement_getExplanationTranslatedPortalType string:Accounting Transaction;
+                       Movement_getNodeGapId string:A-REC;
+                       Movement_getExplanationReference string:;
+                       Movement_getSpecificReference string:1;
+                       getTranslatedSimulationStateTitle string:Closed;
+                       debit_price string:100;
+                       credit_price string:0;
+                       running_total_price string:100">
+<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_ledger_table" />
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[2];
+                       Movement_getExplanationTitle string:Transaction 2;
+                       section_title string:;
+                       Movement_getExplanationTranslatedPortalType string:Accounting Transaction;
+                       Movement_getNodeGapId string:A-PAY;
+                       Movement_getExplanationReference string:;
+                       Movement_getSpecificReference string:2;
+                       getTranslatedSimulationStateTitle string:Closed;
+                       debit_price string:200;
+                       credit_price string:0;
+                       running_total_price string:300">
+<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_ledger_table" />
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tfoot/tr[1];
+                       debit_price string:300;
+                       credit_price string:0">
+<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_ledger_table" />
+</tal:block>
+
+</tbody>
+</table>
+</body>
+</html>

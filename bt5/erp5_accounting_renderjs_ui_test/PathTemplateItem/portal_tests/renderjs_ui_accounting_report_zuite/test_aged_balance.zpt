@@ -1,0 +1,121 @@
+<html>
+<head><title>Test Aged Balance Report</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><th rowspan="1" colspan="4">
+Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tests/testAccountingReports.py#L4904">testAccountingReports.py:test_simple_aged_creditor_report_detailed.testOtherPartiesReport</a>
+</th></tr>
+</thead>
+
+<tbody
+  tal:define="init_method string:AccountingZuite_initializeAccountingTransactionReportTest?report_name=aged-balance&report_style=Hal;
+              now python:DateTime();
+              last_month python:DateTime(now.year(), now.month(), 1) - 1;
+              offset python:0">
+
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+
+<tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.month())"></td><td>month</td></tr>
+<tr><td>store</td><td tal:content="python: now.year()"></td><td>year</td></tr>
+<tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(last_month.day())"></td><td>last_day</td></tr>
+<tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(last_month.month())"></td><td>last_month</td></tr>
+<tr><td>store</td><td tal:content="python: last_month.year()"></td><td>last_year</td></tr>
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/accounting_module/</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Aged Balance"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Aged Balance"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//select[@name="field_your_section_category"]</td><td></td></tr>
+<tr><td>select</td>
+    <td>//select[@name="field_your_section_category"]</td>
+    <td>value=group/demo_group</td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_your_account_type"]//select</td><td></td></tr>
+<tr><td>select</td>
+    <td>//div[@data-gadget-scope="field_your_account_type"]//select</td>
+    <td>value=account_type/asset/receivable</td></tr>
+<tr><td>type</td>
+    <td>//input[@name="field_your_at_date"]</td>
+    <td>${year}-${month}-01</td></tr>
+<tr><td>click</td><!-- Check because it is unchecked by default -->
+    <td>//input[@type="checkbox" and @name="field_your_detailed"]</td><td></td></tr>
+<tr><td>type</td>
+    <td>//textarea[@name="field_your_period_list"]</td>
+    <td>1<br/>
+2<br/>
+3<br/></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td><td></td></tr>
+<!-- we need to zero-out simulation_state to just 'delivered' -->
+<tal:block tal:repeat="_ python:range(4)"><!-- There is by default just few simulation states -->
+<!-- we take advantage of dissapearing elements when selecting one empty -->
+<tr><td>select</td>
+    <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
+    <td>value=</td></tr>
+<tr><td>pause</td>
+    <td>50</td>
+    <td></td></tr>
+</tal:block>
+<tr><td>select</td>
+    <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
+    <td>value=delivered</td></tr>
+<tr><td>click</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
+
+
+<tr><td>store</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>table</td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>${table}/../nav//span[@data-i18n="1 Records"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>
+
+<tr><td>store</td>
+    <td>${table}/tbody/tr[1]</td>
+    <td>current_row</td></tr>
+
+<tr><td>assertText</td>
+    <td>${current_row}/td[1]/a</td>
+    <td>Client 1</td></tr>
+<tr><td>assertText</td>
+    <td>${current_row}/td[2]/a</td>
+    <td>Sale invoice 2</td></tr>
+<!-- skip account_number field -->
+<!-- skip invoice_number field -->
+<!-- skip transaction_reference field -->
+<tr><td>verifyElementPresent</td>
+    <td>${current_row}/td[6]//p[@data-date="${last_year}-${last_month}-${last_day}"]</td><td></td></tr>
+<tr><td>assertText</td>
+    <td>${current_row}/td[7]/a</td>
+    <td>Sale Invoice Transaction</td></tr>
+
+<tr><td>assertFloat</td>
+    <td>${current_row}/td[8]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+    <td>300</td></tr><!-- balance -->
+<tr><td>assertText</td>
+    <td>${current_row}/td[9]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+    <td></td></tr><!-- future is empty -->
+<tr><td>assertFloat</td>
+    <td>${current_row}/td[10]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+    <td>300</td></tr><!-- period_1=300 -->
+</tbody>
+</table>
+</body>
+</html>

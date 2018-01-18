@@ -50,11 +50,15 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>report_style=\'View\'</string> </value>
+            <value> <string>report_name, report_style</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_setAccountReferencePreference</string> </value>
+            <value> <string>AccountingZuite_initializeAccountingTransactionReportTest</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

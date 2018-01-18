@@ -1,0 +1,229 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<!-- Those macros help to check cell values in tables.
+
+It solves the problem when a column changes its position - then you modify once-here.
+
+Further macros allow to copy&paste code from UnitTest so you are sure you didn't
+forget anything.
+
+Usage:
+  :param row_selector: mandatory XPath selector of processed row - has to be a
+    full-path selector with possible embedded zope variables
+    example: tal:define="row_selector string:$${table}/tbody/tr[1]"
+      will use Zuite's own variable ${table} save by 'store'.
+
+   Other parameters copy the names from unittest and are optional. If a parameter
+   is unspecified then the check is either skipped or replaced with a meaningful
+   default value (e.g. 0 for numerical variables).
+-->
+  <head>
+    <title tal:content="template/title">Macros for testing Reports</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  </head>
+  <body tal:define="offset python:0">
+
+    <!-- Following macro checks values in generally used "Transactions Table".
+
+    Since all macros are very similar - please refer to the docs at the top. -->
+    <tal:block metal:define-macro='check_row_in_transactions_table'>
+    <tr tal:condition="exists:row_selector"><td>store</td>
+        <td tal:content="string:$row_selector"></td>
+        <td>current_row</tr>
+
+    <tr tal:condition="exists:specific_reference">
+        <td>assertText</td>
+        <td>${current_row}/td[1]//a</td>
+        <td tal:content="string:$specific_reference"></td></tr>
+    <tr tal:condition="exists:date">
+        <td>assertElementPresent</td>
+        <td tal:content="string:$${current_row}/td[2]//p[@data-date='$date']"></td>
+        <td></td></tr>
+    <tr tal:condition="exists:title">
+        <td>assertText</td>
+        <td>${current_row}/td[3]//a</td>
+        <td tal:content="string:$title"></td></tr>
+    <tr tal:condition="exists:parent_reference">
+        <td>assertText</td>
+        <td>${current_row}/td[4]//a</td>
+        <td tal:content="string:$parent_reference"></td></tr>
+    <tr tal:condition="exists:node_title">
+        <td>assertText</td>
+        <td>${current_row}/td[5]//a</td>
+        <td tal:content="string:$node_title"></td></tr>
+    <tr tal:condition="exists:mirror_section_title">
+        <td>assertText</td>
+        <td>${current_row}/td[6]//a</td>
+        <td tal:content="string:$mirror_section_title"></td></tr>
+    <tr tal:condition="exists:debit">
+        <td>assertFloat</td>
+        <td>${current_row}/td[7]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+        <td tal:content="string:$debit"></td></tr>
+    <tr tal:condition="exists:credit">
+        <td>assertFloat</td>
+        <td>${current_row}/td[8]//div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td>
+        <td tal:content="string:$credit"></td></tr>
+    </tal:block>
+
+    <!-- Following macro checks values in generally used "Accounts Ledger Table"
+
+    Since all macros are very similar - please refer to the docs at the top. -->
+    <tal:block metal:define-macro='check_row_in_accounts_ledger_table'>
+    <tr tal:condition="exists:row_selector"><td>store</td>
+        <td tal:content="string:$row_selector"></td>
+        <td>current_row</tr>
+
+    <tr tal:condition="exists:date">
+        <td>assertElementPresent</td><!-- Date -->
+        <td tal:content="python: '${{current_row}}/td[{:d}]//p[@data-date=\'{}\']'.format(offset + 1, date)"></td>
+        <td></td></tr>
+    <tr tal:condition="exists:Movement_getExplanationTranslatedPortalType">
+        <td>assertText</td><!-- Type -->
+        <td tal:content="python: '${{current_row}}/td[{:d}]//a'.format(offset + 2)"></td>
+        <td tal:content="string:$Movement_getExplanationTranslatedPortalType"></td></tr>
+    <tr tal:condition="exists:Movement_getNodeGapId">
+        <td>assertText</td><!-- GAP -->
+        <td tal:content="python: '${{current_row}}/td[{:d}]//a'.format(offset + 3)"></td>
+        <td tal:content="string:$Movement_getNodeGapId"></td></tr>
+    <tr tal:condition="exists:Movement_getExplanationReference">
+        <td>assertText</td><!-- Invoice No -->
+        <td tal:content="python: '${{current_row}}/td[{:d}]//a'.format(offset + 4)"></td>
+        <td tal:content="string:$Movement_getExplanationReference"></td></tr>
+    <tr tal:condition="exists:Movement_getExplanationTitle">
+        <td>assertText</td><!-- Title -->
+        <td tal:content="python:'${{current_row}}/td[{:d}]//a'.format(offset + 5)"></td>
+        <td tal:content="string:$Movement_getExplanationTitle"></td></tr>
+    <tr tal:condition="exists:Movement_getSpecificReference">
+        <td>assertText</td><!-- Reference -->
+        <td tal:content="python: '${{current_row}}/td[{:d}]//a'.format(offset + 6)"></td>
+        <td tal:content="string:$Movement_getSpecificReference">1</td></tr>
+    <tr tal:condition="exists:getTranslatedSimulationStateTitle">
+        <td>assertText</td><!-- State -->
+        <td tal:content="python: '${{current_row}}/td[{:d}]//a'.format(offset + 7)"></td>
+        <td tal:content="string:$getTranslatedSimulationStateTitle"></td></tr>
+    <tr tal:condition="exists:debit_price">
+        <td>assertFloat</td>
+        <td tal:content="python: '${{current_row}}/td[{:d}]//div[contains(@data-gadget-url, \'gadget_html5_element.html\')]/p'.format(offset + 8)"></td>
+        <td tal:content="string:$debit_price"></td></tr>
+    <tr tal:condition="exists:credit_price">
+        <td>assertFloat</td>
+        <td tal:content="python: '${{current_row}}/td[{:d}]//div[contains(@data-gadget-url, \'gadget_html5_element.html\')]/p'.format(offset + 9)"></td>
+        <td tal:content="string:$credit_price"></td></tr>
+    <tr tal:condition="exists:running_total_price">
+        <td>assertFloat</td><!-- Balance -->
+        <td tal:content="python: '${{current_row}}/td[{:d}]//div[contains(@data-gadget-url, \'gadget_html5_element.html\')]/p'.format(offset + 10)"></td>
+        <td tal:content="string:$running_total_price"></td></tr>
+    </tal:block>
+
+
+<!-- Following macro checks values in generally used "Accounts Table"
+
+    Since all macros are very similar - please refer to the docs at the top. -->
+    <tal:block metal:define-macro='check_row_in_accounts_table'>
+    <tr tal:condition="exists:row_selector"><td>store</td>
+        <td tal:content="string:$row_selector"></td>
+        <td>current_row</tr>
+
+    <tr tal:condition="exists:date">
+        <td>assertElementPresent</td><!-- Date -->
+        <td tal:content="python: '${{current_row}}/td[{:d}]//p[@data-date=\'{}\']'.format(offset + 1, date)"></td>
+        <td></td></tr>
+    <tr tal:condition="exists:Movement_getSpecificReference">
+        <td>assertText</td><!-- Transaction Reference -->
+        <td tal:content="python: '${{current_row}}/td[{:d}]//a'.format(offset + 2)"></td>
+        <td tal:content="string:$Movement_getSpecificReference"></td></tr>
+    <tr tal:condition="exists:mirror_section_title">
+        <td>assertText</td><!-- Third Party -->
+        <td tal:content="python: '${{current_row}}/td[{:d}]//a'.format(offset + 3)"></td>
+        <td tal:content="string:$mirror_section_title"></td></tr>
+    <tr tal:condition="exists:Movement_getExplanationTitleAndAnalytics">
+        <td>assertText</td><!-- Title Reference -->
+        <td tal:content="python: '${{current_row}}/td[{:d}]//a'.format(offset + 4)"></td>
+        <td tal:content="string:$Movement_getExplanationTitleAndAnalytics"></td></tr>
+    <tr tal:condition="exists:debit_price">
+        <td>assertFloat</td>
+        <td tal:content="python: '${{current_row}}/td[{:d}]//div[contains(@data-gadget-url, \'gadget_html5_element.html\')]/p'.format(offset + 5)"></td>
+        <td tal:content="string:$debit_price"></td></tr>
+    <tr tal:condition="exists:credit_price">
+        <td>assertFloat</td>
+        <td tal:content="python: '${{current_row}}/td[{:d}]//div[contains(@data-gadget-url, \'gadget_html5_element.html\')]/p'.format(offset + 6)"></td>
+        <td tal:content="string:$credit_price"></td></tr>
+    <tr tal:condition="exists:running_total_price">
+        <td>assertFloat</td><!-- Balance -->
+        <td tal:content="python: '${{current_row}}/td[{:d}]//div[contains(@data-gadget-url, \'gadget_html5_element.html\')]/p'.format(offset + 7)"></td>
+        <td tal:content="string:$running_total_price"></td></tr>
+    <!-- Grouping Reference -->
+    <!-- Grouping Date -->
+    <!-- State -->
+
+    </tal:block>
+
+    <!-- Following macro checks values in generally used "Balance Table".
+
+    Since all macros are very similar - please refer to the docs at the top. -->
+    <tal:block metal:define-macro='check_row_in_balance_table'>
+
+    <tr><td>store</td><td tal:content="string:$row_selector"></td><td>current_row</td></tr>
+    <tr><td>store</td><td>div[@data-gadget-url="${renderjs_url}/gadget_html5_element.html"]/p</td><td>float_val</td></tr>
+    <tr tal:condition="exists:node_id">
+      <td>assertText</td>
+      <td>${current_row}/td[1]//a</td>
+      <td tal:content="string:$node_id"></td></tr><!-- not covered by the unittest -->
+    <tr tal:condition="exists:node_title">
+    	<td>assertText</td>
+    	<td>${current_row}/td[2]//a</td>
+    	<td tal:content="string:$node_title"></td></tr>
+    <tr tal:condition="exists:initial_debit_balance">
+    	<td>assertFloat</td>
+    	<td>${current_row}/td[3]//${float_val}</td>
+    	<td tal:condition="exists:initial_debit_balance" tal:content="string:$initial_debit_balance"></td>
+    	<td tal:condition="not:exists:initial_debit_balance">0</td></tr>
+    <tr tal:condition="exists:initial_credit_balance">
+    	<td>assertFloat</td>
+    	<td>${current_row}/td[4]//${float_val}</td>
+    	<td tal:condition="exists:initial_credit_balance" tal:content="string:$initial_credit_balance"></td>
+    	<td tal:condition="not:exists:initial_credit_balance">0</td></tr>
+    <tr tal:condition="exists:initial_balance">
+    	<td>assertFloat</td>
+    	<td>${current_row}/td[5]//${float_val}</td>
+    	<td tal:condition="exists:initial_balance" tal:content="string:$initial_balance"></td>
+    	<td tal:condition="not:exists:initial_balance">0</td></tr>
+    <tr tal:condition="exists:debit">
+    	<td>assertFloat</td>
+    	<td>${current_row}/td[6]//${float_val}</td>
+    	<td tal:condition="exists:debit" tal:content="string:$debit"></td>
+    	<td tal:condition="not:exists:debit">0</td></tr>
+    <tr tal:condition="exists:credit">
+    	<td>assertFloat</td>
+    	<td>${current_row}/td[7]//${float_val}</td>
+    	<td tal:condition="exists:credit" tal:content="string:$credit"></td>
+    	<td tal:condition="not:exists:credit">0</td></tr>
+    <tr tal:condition="exists:final_debit_balance">
+    	<td>assertFloat</td>
+    	<td>${current_row}/td[8]//${float_val}</td>
+    	<td tal:condition="exists:final_debit_balance" tal:content="string:$final_debit_balance"></td>
+    	<td tal:condition="not:exists:final_debit_balance">0</td></tr>
+    <tr tal:condition="exists:final_credit_balance">
+    	<td>assertFloat</td>
+    	<td>${current_row}/td[9]//${float_val}</td>
+    	<td tal:condition="exists:final_credit_balance" tal:content="string:$final_credit_balance"></td>
+    	<td tal:condition="not:exists:final_credit_balance">0</td></tr>
+    <tr tal:condition="exists:final_balance">
+    	<td>assertFloat</td>
+    	<td>${current_row}/td[10]//${float_val}</td>
+    	<td tal:condition="exists:final_balance" tal:content="string:$final_balance"></td>
+    	<td tal:condition="not:exists:final_balance">0</td></tr>
+    <tr tal:condition="exists:final_balance_if_debit">
+    	<td>assertFloat</td>
+    	<td>${current_row}/td[11]//${float_val}</td>
+    	<td tal:condition="exists:final_balance_if_debit" tal:content="string:$final_balance_if_debit"></td>
+    	<td tal:condition="not:exists:final_balance_if_debit">0</td></tr>
+    <tr tal:condition="exists:final_balance_if_credit">
+    	<td>assertFloat</td>
+    	<td>${current_row}/td[12]//${float_val}</td>
+    	<td tal:condition="exists:final_balance_if_credit" tal:content="string:$final_balance_if_credit"></td>
+    	<td tal:condition="not:exists:final_balance_if_credit">0</td></tr>
+    </tal:block>
+
+  </body>
+</html>

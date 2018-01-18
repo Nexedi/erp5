@@ -1,0 +1,192 @@
+<html>
+<head><title>Test Report Journal</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><th rowspan="1" colspan="4">
+Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tests/testAccountingReports.py#L53">TestAccountingReports.testJournal</a>
+</th></tr>
+</thead>
+
+<tbody
+  tal:define="init_method string:AccountingZuite_initializeAccountingTransactionReportTest?report_name=journal&report_style=Hal;
+              now python: DateTime()">
+
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/accounting_module/</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Journal"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Journal"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//select[@name="field_your_section_category"]</td><td></td></tr>
+<tr><td>select</td>
+    <td>//select[@name="field_your_section_category"]</td>
+    <td>value=group/demo_group</td></tr>
+<!-- field_your_at_date is already at now() -->
+<!-- field_your_section_category_strict is False by default -->
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_your_portal_type"]/div/div[1]//select</td><td></td></tr>
+<!-- we need to zero-out portal_types to just 'Sale Invoice Transaction' -->
+<tal:block tal:repeat="_ python:range(8)"><!-- there is by default many Portal Types -->
+<!-- we take advantage of dissapearing elements when selecting one empty -->
+<tr><td>select</td>
+    <td>//div[@data-gadget-scope="field_your_portal_type"]/div/div[1]//select</td>
+    <td>value=</td></tr>
+<tr><td>pause</td>
+    <td>50</td>
+    <td></td></tr>
+</tal:block>
+<tr><td>select</td>
+    <td>//div[@data-gadget-scope="field_your_portal_type"]/div/div[1]//select</td>
+    <td>value=Sale Invoice Transaction</td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td><td></td></tr>
+<!-- we need to zero-out simulation_state to just 'delivered' -->
+<tal:block tal:repeat="_ python:range(4)"><!-- There is by default just few simulation states -->
+<!-- we take advantage of dissapearing elements when selecting one empty -->
+<tr><td>select</td>
+    <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
+    <td>value=</td></tr>
+<tr><td>pause</td>
+    <td>50</td>
+    <td></td></tr>
+</tal:block>
+<tr><td>select</td>
+    <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
+    <td>value=delivered</td></tr>
+<tr><td>click</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
+
+<tr><td>store</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>table</td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>${table}//../nav//span[@data-i18n="9 Records"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>
+
+<tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.day())"></td><td>day</td></tr>
+<tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.month())"></td><td>month</td></tr>
+<tr><td>store</td><td tal:content="python: now.year()"></td><td>year</td></tr>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
+                        date string:$${year}-$${month}-$${day};
+                        title string:First One;
+                        parent_reference string:1;
+                        node_title string:A-REC;
+                        mirror_section_title string:Client 1;
+                        debit string:119.60;
+                        credit string:0">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+</tal:block>
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[2];
+                        specific_reference string:;
+                        title string:;
+                        parent_reference string:;
+                        node_title string:A-COLLECTED-VAT;
+                        mirror_section_title string:Client 1;
+                        debit string:0,
+                        credit string:19.60">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[3];
+                        specific_reference string:;
+                        title string:;
+                        parent_reference string:;
+                        node_title string:A-GS;
+                        mirror_section_title string:Client 1;
+                        debit string:0;
+                        credit string:100">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+</tal:block>
+
+<!-- Second Transaction -->
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[4];
+                        date string:$${year}-$${month}-$${day};
+                        title string:Second One;
+                        parent_reference string:2;
+                        node_title string:A-REC;
+                        mirror_section_title string:Client 2;
+                        debit string:239.20;
+                        credit string:0">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+</tal:block>
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[5];
+                        specific_reference string:;
+                        title string:;
+                        parent_reference string:;
+                        node_title string:A-COLLECTED-VAT;
+                        mirror_section_title string:Client 2;
+                        debit string:0;
+                        credit string:39.20">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+</tal:block>
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[6];
+                        specific_reference string:;
+                        title string:;
+                        parent_reference string:;
+                        node_title string:A-GS;
+                        mirror_section_title string:Client 2;
+                        debit string:0;
+                        credit string:200">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+</tal:block>
+
+<!-- Third Transaction -->
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[7];
+                        date string:$${year}-$${month}-$${day};
+                        title string:Third One;
+                        parent_reference string:3;
+                        node_title string:A-REC;
+                        mirror_section_title string:John Smith;
+                        debit string:358.80;
+                        credit string:0">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+</tal:block>
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[8];
+                        specific_reference string:;
+                        title string:;
+                        parent_reference string:;
+                        node_title string:A-COLLECTED-VAT;
+                        mirror_section_title string:John Smith;
+                        debit string:0;
+                        credit string:58.80">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+</tal:block>
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[9];
+                        specific_reference string:;
+                        title string:Line Title;
+                        parent_reference string:;
+                        node_title string:A-GS;
+                        mirror_section_title string:John Smith;
+                        debit string:0;
+                        credit string:300">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+</tal:block>
+<!-- Stats line -->
+<tal:block tal:define="row_selector string:$${table}/tfoot/tr[1];
+                        debit string:717.60;
+                        credit string:717.60">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+</tal:block>
+</tbody>
+</table>
+</body>
+</html>
