@@ -207,11 +207,19 @@
     }, {mutex: 'changestate'})
 
     .allowPublicAcquisition("notifyInvalid", function (param_list) {
-      return this.changeState({error_text: param_list[0]});
+      // Label doesn't know when a subgadget calls notifyInvalid
+      // Prevent mutex dead lock by defering the changeState call
+      return this.deferErrorTextRender(param_list[0]);
     })
 
     .allowPublicAcquisition("notifyValid", function () {
-      return this.changeState({error_text: ''});
+      // Label doesn't know when a subgadget calls notifyValid
+      // Prevent mutex dead lock by defering the changeState call
+      return this.deferErrorTextRender('');
+    })
+
+    .declareJob('deferErrorTextRender', function (error_text) {
+      return this.changeState({error_text: error_text});
     });
 
 }(window, document, rJS, RSVP));
