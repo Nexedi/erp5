@@ -55,7 +55,7 @@
         .push(function (subgadget) {
           return subgadget.checkValidity();
         });
-    })
+    }, {mutex: 'changestate'})
 
     .declareMethod('getContent', function () {
       if (this.state.editable) {
@@ -65,6 +65,6 @@
           });
       }
       return {};
-    });
+    }, {mutex: 'changestate'});
 
 }(window, rJS));

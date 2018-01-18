@@ -58,7 +58,7 @@
         .push(function (gadget) {
           return gadget.getContent();
         });
-    })
+    }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
       if (this.state.editable) {
@@ -68,6 +68,6 @@
           });
       }
       return true;
-    });
+    }, {mutex: 'changestate'});
 
 }(window, rJS));

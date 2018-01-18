@@ -14,13 +14,13 @@
         .push(function (declared_gadget) {
           return declared_gadget.checkValidity();
         });
-    })
+    }, {mutex: 'changestate'})
     .declareMethod('getContent', function () {
       return this.getDeclaredGadget("erp5_form")
         .push(function (declared_gadget) {
           return declared_gadget.getContent();
         });
-    })
+    }, {mutex: 'changestate'})
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
@@ -55,7 +55,7 @@
           form_options.editable = form_gadget.state.editable;
 
           return erp5_form.render(form_options);
-        })
+        });
     });
 
 }(window, rJS));

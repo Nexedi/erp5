@@ -185,7 +185,7 @@
           }
           return true;
         });
-    })
+    }, {mutex: 'changestate'})
 
     .declareMethod('getContent', function () {
       var argument_list = arguments;
@@ -196,7 +196,7 @@
           }
           return {};
         });
-    })
+    }, {mutex: 'changestate'})
 
     .declareMethod('getListboxInfo', function () {
       var argument_list = arguments;
@@ -204,7 +204,7 @@
         .push(function (gadget) {
           return gadget.getListboxInfo.apply(gadget, argument_list);
         });
-    })
+    }, {mutex: 'changestate'})
 
     .allowPublicAcquisition("notifyInvalid", function (param_list) {
       return this.changeState({error_text: param_list[0]});

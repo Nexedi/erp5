@@ -21,13 +21,13 @@
         .push(function (declared_gadget) {
           return declared_gadget.checkValidity();
         });
-    })
+    }, {mutex: 'changestate'})
     .declareMethod('getContent', function () {
       return this.getDeclaredGadget("erp5_form")
         .push(function (declared_gadget) {
           return declared_gadget.getContent();
         });
-    })
+    }, {mutex: 'changestate'})
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
@@ -150,7 +150,7 @@
             focus_on: focus_on
           });
         });
-    })
+    }, {mutex: 'changestate'})
 
     .onEvent('submit', function () {
       var gadget = this;

@@ -85,6 +85,6 @@
           }
           return result;
         });
-    });
+    }, {mutex: 'changestate'});
 
 }(window, rJS));

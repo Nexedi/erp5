@@ -761,7 +761,7 @@
           data[form_gadget.props.listbox_uid_dict.key] = form_gadget.props.listbox_uid_dict.value;
           return data;
         });
-    })
+    }, {mutex: 'changestate'})
 
     .onEvent('click', function (evt) {
       var gadget = this,

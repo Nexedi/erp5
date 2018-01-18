@@ -225,7 +225,7 @@
         return gadget.props.listbox_gadget.getListboxInfo();
       }
       return {};
-    })
+    }, {mutex: 'changestate'})
     .declareMethod("getContent", function (options) {
       var form_gadget = this,
         k,
@@ -259,7 +259,7 @@
         .push(function () {
           return data;
         });
-    })
+    }, {mutex: 'changestate'})
     .declareMethod("checkValidity", function () {
       var form_gadget = this,
         k,
@@ -286,6 +286,6 @@
           return result;
         });
 
-    });
+    }, {mutex: 'changestate'});
 
 }(window, document, rJS, RSVP));

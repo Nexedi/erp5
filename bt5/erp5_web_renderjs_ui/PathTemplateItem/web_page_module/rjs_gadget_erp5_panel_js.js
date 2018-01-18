@@ -330,7 +330,7 @@
       }
       // Typing a search query should not modify the header status
       return;
-    })
+    }, {mutex: 'changestate'})
     .allowPublicAcquisition('notifyValid', function () {
       // Typing a search query should not modify the header status
       return;

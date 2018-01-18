@@ -42,19 +42,19 @@
         .push(function (g) {
           return g.triggerSubmit();
         });
-    })
+    }, {mutex: 'changestate'})
     .declareMethod('checkValidity', function () {
       return this.getDeclaredGadget('fg')
         .push(function (declared_gadget) {
           return declared_gadget.checkValidity();
         });
-    })
+    }, {mutex: 'changestate'})
     .declareMethod('getContent', function () {
       return this.getDeclaredGadget('fg')
         .push(function (declared_gadget) {
           return declared_gadget.getContent();
         });
-    })
+    }, {mutex: 'changestate'})
 
     /////////////////////////////////////////////////////////////////
     // Own methods

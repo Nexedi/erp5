@@ -34,19 +34,19 @@
         .push(function (declared_gadget) {
           return declared_gadget.checkValidity();
         });
-    })
+    }, {mutex: 'changestate'})
     .declareMethod('getContent', function () {
       return this.getDeclaredGadget("erp5_form")
         .push(function (declared_gadget) {
           return declared_gadget.getContent();
         });
-    })
+    }, {mutex: 'changestate'})
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('triggerSubmit', function () {
       this.element.querySelector('input[type="submit"]').click();
-    })
+    }, {mutex: 'changestate'})
 
     .declareMethod('render', function (options) {
       // copy out wanted items from options and pass it to `changeState`

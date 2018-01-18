@@ -193,7 +193,7 @@
 
           return content_dict;
         });
-    })
+    }, {mutex: 'changestate'})
 
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
     .onEvent('click', function (evt) {

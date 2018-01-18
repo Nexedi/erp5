@@ -143,5 +143,5 @@
           });
       }
       return final_result;
-    });
+    }, {mutex: 'changestate'});
 }(window, rJS, RSVP, document));

@@ -105,7 +105,7 @@
           });
       }
       return {};
-    })
+    }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
       if (this.state.editable) {
@@ -115,6 +115,6 @@
           });
       }
       return true;
-    });
+    }, {mutex: 'changestate'});
 
 }(window, rJS, Math));

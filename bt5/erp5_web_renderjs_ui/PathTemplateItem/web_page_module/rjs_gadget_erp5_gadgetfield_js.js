@@ -79,6 +79,6 @@
         .push(function (result) {
           return result.getContent();
         });
-    });
+    }, {mutex: 'changestate'});
 
 }(window, rJS, document));

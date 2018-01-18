@@ -149,7 +149,7 @@
       // (as ERP5 does in case of formulator error)
       this.state.value = result[input.getAttribute('name')];
       return result;
-    })
+    }, {mutex: 'changestate'})
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function () {
@@ -180,7 +180,7 @@
           });
       }
       return result;
-    })
+    }, {mutex: 'changestate'})
 
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .onEvent('change', function () {

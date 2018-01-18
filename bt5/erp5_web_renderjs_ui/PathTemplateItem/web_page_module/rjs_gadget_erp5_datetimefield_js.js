@@ -364,7 +364,7 @@
           });
       }
       return result;
-    })
+    }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
       var gadget = this;
@@ -375,6 +375,6 @@
           });
       }
       return true;
-    });
+    }, {mutex: 'changestate'});
 
 }(window, rJS, RSVP));

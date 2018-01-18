@@ -133,7 +133,7 @@
           });
       }
       return final_result;
-    })
+    }, {mutex: 'changestate'})
 
     .allowPublicAcquisition('notifyValid', function () {
       return;
@@ -194,6 +194,6 @@
           });
       }
       return true;
-    });
+    }, {mutex: 'changestate'});
 
 }(window, rJS, document, RSVP));
