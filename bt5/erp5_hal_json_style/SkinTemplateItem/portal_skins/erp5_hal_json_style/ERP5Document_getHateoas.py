@@ -1682,11 +1682,12 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       stat_method = source_field.get_value('stat_method')
       stat_columns = source_field.get_value('stat_columns')
       # support only selection_name for stat methods because any `selection` is deprecated
-      # and should be removed
+      # and should be removed. Selection_name can be passed in catalog_kw by e.g. reports so it has precedence.
       # Romain wants full backward compatibility so putting `selection` back in parameters
-      selection_name = source_field.get_value('selection_name')
+      selection_name = catalog_kw.get('selection_name', source_field.get_value('selection_name'))
       if selection_name and 'selection_name' not in catalog_kw:
         catalog_kw['selection_name'] = selection_name
+      if 'selection' not in catalog_kw:
         catalog_kw['selection'] = context.getPortalObject().portal_selections.getSelectionFor(selection_name, REQUEST)
 
       contents_stat = {}
