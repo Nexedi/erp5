@@ -295,6 +295,7 @@
             command: field_json.command || 'index',
 
             // Force line calculation in any case
+            render_timestamp: new Date().getTime(),
             allDocs_result: undefined,
 
             // No error message
