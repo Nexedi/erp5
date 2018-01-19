@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from collections import defaultdict
 from Products.CMFActivity.ActivityTool import Message
 import sys
 #from time import time
@@ -173,7 +174,7 @@ class SQLDict(SQLBase):
 
         if message_dict:
           message_unique_dict = {}
-          serialization_tag_dict = {}
+          serialization_tag_dict = defaultdict(list)
           distributable_uid_set = set()
           deletable_uid_list = []
 
@@ -193,8 +194,7 @@ class SQLDict(SQLBase):
             if serialization_tag is None:
               distributable_uid_set.add(message.uid)
             else:
-              serialization_tag_dict.setdefault(serialization_tag,
-                                                []).append(message)
+              serialization_tag_dict[serialization_tag].append(message)
           # Don't let through if there is the same serialization tag in the
           # message dict. If there is the same serialization tag, only one can
           # be validated and others must wait.
@@ -214,11 +214,10 @@ class SQLDict(SQLBase):
           if deletable_uid_list:
             activity_tool.SQLBase_delMessage(table=self.sql_table,
                                              uid=deletable_uid_list)
-          distributable_count = len(distributable_uid_set)
-          if distributable_count:
+          if distributable_uid_set:
             assignMessage(table=self.sql_table,
               processing_node=0, uid=tuple(distributable_uid_set))
-            validated_count += distributable_count
+            validated_count += len(distributable_uid_set)
             if validated_count >= MAX_VALIDATED_LIMIT:
               return
         offset += READ_MESSAGE_LIMIT
