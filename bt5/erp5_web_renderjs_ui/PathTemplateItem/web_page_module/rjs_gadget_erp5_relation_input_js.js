@@ -145,7 +145,17 @@
         value_uid: options.value_uid,
         value_text: options.value_text,
         value_portal_type: options.value_portal_type
-      };
+      },
+        sort_list = JSON.parse(options.sort_list_json);
+      sort_list.map(function (sort) {
+        var order = sort[1].toLowerCase();
+        if (order.startsWith('asc')) {
+          sort[1] = 'ascending';
+        } else if (order.startsWith('desc')) {
+          sort[1] = 'descending';
+        }
+      });
+      state_dict.sort_list_json = JSON.stringify(sort_list);
 
       return this.changeState(state_dict);
     })
@@ -299,7 +309,8 @@
                   ]
                 })),
                 limit: [0, 10],
-                select_list: [gadget.state.catalog_index, "uid"]
+                select_list: [gadget.state.catalog_index, "uid"],
+                sort_on: JSON.parse(gadget.state.sort_list_json)
               });
             })
             .push(function (result) {

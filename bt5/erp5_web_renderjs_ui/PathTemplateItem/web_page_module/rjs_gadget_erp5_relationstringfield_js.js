@@ -15,6 +15,7 @@
           var render_options = {
             editable: field_json.editable,
             query: field_json.query,
+            sort_list_json: JSON.stringify(field_json.sort),
             catalog_index: field_json.catalog_index,
             allow_jump: field_json.allow_jump,
             // required: field_json.required,
