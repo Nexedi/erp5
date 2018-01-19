@@ -1632,65 +1632,57 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     finally:
       del activity_tool.__class__.doSomething
 
-  def test_103_2_CheckSQLDictDeleteDuplicatesBeforeExecution(self):
+  def test_103_2_CheckSQLDictDoesNotDeleteDuplicatesBeforeExecution(self):
     """
-      Test that SQLDict delete the same messages before execution if messages
-      has the same method_id and path and tag.
+      Test that SQLDict does not delete messages before execution
+      even if messages have the same method_id and path and tag.
+      There could be other things which differ (ex: serialization_tag) and may
+      not all be cheap to check during validation. Validation node is the only
+      non-paralelisable Zope-side task around activities, so it should be kept
+      simple.
+      Deduplication is cheap:
+      - inside the transaction which spawned duplicate activities, because it
+        has to have created activities around anyway, and can keep track
+      - inside the CMFActvitiy-level processing surrounding activity execution
+        because it has to load the activities to process them anyway
     """
     activity_tool = self.getActivityTool()
-    marker = []
-    def doSomething(self, other_tag):
-      marker.append(self.countMessage(tag=other_tag))
-    activity_tool.__class__.doSomething = doSomething
-    try:
-      # Adds two same activities.
-      activity_tool.activate(activity='SQLDict', after_tag='foo', priority=2,
-        tag='a').doSomething(other_tag='a')
-      self.commit()
-      uid1, = [x.uid for x in activity_tool.getMessageList()]
-      activity_tool.activate(activity='SQLDict', after_tag='bar', priority=1,
-        tag='a').doSomething(other_tag='a')
-      self.commit()
-      self.assertEqual(len(activity_tool.getMessageList()), 2)
-      activity_tool.distribute()
-      # After distribute, duplicate is deleted.
-      uid2, = [x.uid for x in activity_tool.getMessageList()]
-      self.assertNotEqual(uid1, uid2)
-      activity_tool.tic()
-      self.assertEqual(len(activity_tool.getMessageList()), 0)
-      self.assertEqual(marker, [1])
-    finally:
-      del activity_tool.__class__.doSomething
+    # Adds two same activities.
+    activity_tool.activate(activity='SQLDict', after_tag='foo', priority=2,
+      tag='a').getId()
+    self.commit()
+    uid1, = [x.uid for x in activity_tool.getMessageList()]
+    activity_tool.activate(activity='SQLDict', after_tag='bar', priority=1,
+      tag='a').getId()
+    self.commit()
+    uid2, = [x.uid for x in activity_tool.getMessageList() if x.uid != uid1]
+    self.assertEqual(len(activity_tool.getMessageList()), 2)
+    activity_tool.distribute()
+    # After distribute, duplicate is still present.
+    self.assertItemsEqual([uid1, uid2], [x.uid for x in activity_tool.getMessageList()])
+    activity_tool.tic()
+    self.assertEqual(len(activity_tool.getMessageList()), 0)
 
-  def test_103_3_CheckSQLJoblibDeleteDuplicatesBeforeExecution(self):
+  def test_103_3_CheckSQLJoblibDoesNotDeleteDuplicatesBeforeExecution(self):
     """
-      Test that SQLJoblib delete the same messages before execution if messages
-      has the same method_id and path and tag and signature.
+    (see test_103_2_CheckSQLDictDoesNotDeleteDuplicatesBeforeExecution)
     """
     activity_tool = self.getActivityTool()
-    marker = []
-    def doSomething(self, other_tag):
-      marker.append(self.countMessage(tag=other_tag))
-    activity_tool.__class__.doSomething = doSomething
-    try:
-      # Adds two same activities.
-      activity_tool.activate(activity='SQLJoblib', after_tag='foo', priority=2,
-        tag='a').doSomething(other_tag='a')
-      self.commit()
-      uid1, = [x.uid for x in activity_tool.getMessageList()]
-      activity_tool.activate(activity='SQLJoblib', after_tag='bar', priority=1,
-        tag='a').doSomething(other_tag='a')
-      self.commit()
-      self.assertEqual(len(activity_tool.getMessageList()), 2)
-      activity_tool.distribute()
-      # After distribute, duplicate is deleted.
-      uid2, = [x.uid for x in activity_tool.getMessageList()]
-      self.assertNotEqual(uid1, uid2)
-      activity_tool.tic()
-      self.assertEqual(len(activity_tool.getMessageList()), 0)
-      self.assertEqual(marker, [1])
-    finally:
-      del activity_tool.__class__.doSomething
+    # Adds two same activities.
+    activity_tool.activate(activity='SQLJoblib', after_tag='foo', priority=2,
+      tag='a').getId()
+    self.commit()
+    uid1, = [x.uid for x in activity_tool.getMessageList()]
+    activity_tool.activate(activity='SQLJoblib', after_tag='bar', priority=1,
+      tag='a').getId()
+    self.commit()
+    uid2, = [x.uid for x in activity_tool.getMessageList() if x.uid != uid1]
+    self.assertEqual(len(activity_tool.getMessageList()), 2)
+    activity_tool.distribute()
+    # After distribute, duplicate is still present.
+    self.assertItemsEqual([uid1, uid2], [x.uid for x in activity_tool.getMessageList()])
+    activity_tool.tic()
+    self.assertEqual(len(activity_tool.getMessageList()), 0)
 
   def test_103_4_CheckSQLDictDistributeWithSerializationTagAndGroupMethodId(
       self):
@@ -2279,7 +2271,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
                             for message in result
                             if (message.processing_node==-1 and
                                 message.serialization_tag=='test_115')]),
-                       3)
+                       4)
 
       self.assertEqual(len([message
                             for message in result
