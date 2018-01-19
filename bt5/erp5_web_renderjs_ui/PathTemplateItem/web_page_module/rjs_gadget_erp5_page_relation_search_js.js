@@ -62,15 +62,6 @@
         filter_action: true
       });
     })
-    .allowPublicAcquisition('getUrlParameter', function (argument_list) {
-      return this.getUrlParameter(argument_list)
-        .push(function (result) {
-          if ((result === undefined) && (argument_list[0] === 'field_listbox_sort_list:json')) {
-            return [];
-          }
-          return result;
-        });
-    })
     .declareMethod("render", function (options) {
       var gadget = this,
         select_template = options.select_template || "";

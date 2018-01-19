@@ -492,6 +492,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     portal_type_list = field.get_value('portal_type')
     translated_portal_type = []
     jump_reference_list = []
+    relation_sort = field.get_value('sort')
     if portal_type_list:
       portal_type_list = [x[0] for x in portal_type_list]
       translated_portal_type = [Base_translateString(x) for x in portal_type_list]
@@ -513,10 +514,10 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
         result.update({
           "editable": False
         })
+    relation_query_kw = kw.copy()
+    relation_query_kw['portal_type'] = portal_type_list
     query = url_template_dict["jio_search_template"] % {
-      "query": make_query({"query": sql_catalog.buildQuery(
-        {"portal_type": portal_type_list}
-      ).asSearchTextExpression(sql_catalog)})
+      "query": make_query({"query": sql_catalog.buildQuery(relation_query_kw).asSearchTextExpression(sql_catalog)})
     }
     title = field.get_value("title")
     column_list = field.get_value("columns")
@@ -543,11 +544,15 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       # overwrite, like Base_getRelatedObjectParameter does
       if subfield["portal_type"] == []:
         subfield["portal_type"] = field.get_value('portal_type')
+      if relation_sort:
+        subfield["sort"] = relation_sort
+      listbox_query_kw = kw.copy()
+      listbox_query_kw.update(dict(portal_type = [x[-1] for x in subfield["portal_type"]],
+            **subfield["default_params"]))
       subfield["query"] = url_template_dict["jio_search_template"] % {
         "query": make_query({"query": sql_catalog.buildQuery(
-          dict(portal_type = [x[-1] for x in subfield["portal_type"]],
-            **subfield["default_params"]), ignore_unknown_columns=True
-       ).asSearchTextExpression(sql_catalog)})
+          listbox_query_kw, ignore_unknown_columns=True
+        ).asSearchTextExpression(sql_catalog)})
       }
       # Kato: why?
       if "list_method_template" in subfield:
@@ -570,6 +575,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       "translated_portal_types": translated_portal_type,
       "portal_types": portal_type_list,
       "query": query,
+      "sort": relation_sort,
       "catalog_index": field.get_value('catalog_index'),
       "allow_jump": field.get_value('allow_jump'),
       "allow_creation": field.get_value('allow_creation'),

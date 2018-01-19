@@ -14,6 +14,7 @@
         return input_gadget.render({
           editable: gadget.state.editable,
           query: gadget.state.query,
+          sort_list_json: gadget.state.sort_list_json,
           catalog_index: gadget.state.catalog_index,
           allow_jump: gadget.state.allow_jump,
           // required: field_json.required,
@@ -47,6 +48,7 @@
         state_dict = {
           editable: field_json.editable,
           query: field_json.query,
+          sort_list_json: JSON.stringify(field_json.sort),
           catalog_index: field_json.catalog_index,
           allow_jump: field_json.allow_jump,
           required: field_json.required,
