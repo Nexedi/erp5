@@ -13,10 +13,11 @@
                 <string>css_class</string>
                 <string>default</string>
                 <string>description</string>
+                <string>editable</string>
                 <string>enabled</string>
+                <string>text_editor</string>
                 <string>title</string>
                 <string>whitespace_preserve</string>
-                <string>width</string>
               </list>
             </value>
         </item>
@@ -98,10 +99,6 @@
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -122,20 +119,28 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_text_content</string> </value>
+                    <value> <string>my_editor_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewWebFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string>text_area</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -144,10 +149,6 @@
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>80</int> </value>
                 </item>
               </dictionary>
             </value>
