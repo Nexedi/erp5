@@ -197,7 +197,9 @@
         }
       }
 
-      queue = RSVP.Queue();
+      // Cancel previous line rendering to not conflict with the asynchronous render for now
+      gadget.fetchLineContent(true);
+      queue = new RSVP.Queue();
       if (!variable.translated_records) {
         queue
           .push(function () {
@@ -212,10 +214,6 @@
           });
       }
       queue
-        .push(function () {
-          // Cancel previous line rendering to not conflict with the asynchronous render for now
-          return gadget.fetchLineContent(true);
-        })
         .push(function () {
           // XXX Fix in case of multiple listboxes
           return RSVP.all([
