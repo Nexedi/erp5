@@ -173,47 +173,25 @@ class SQLDict(SQLBase):
                                         validation_text_dict, now_date=now_date)
 
         if message_dict:
-          message_unique_dict = {}
           serialization_tag_dict = defaultdict(list)
           distributable_uid_set = set()
-          deletable_uid_list = []
 
-          # remove duplicates
-          # SQLDict considers object_path, method_id, tag to unify activities,
-          # but ignores method arguments. They are outside of semantics.
-          for message in message_dict.itervalues():
-            message_unique_dict.setdefault(self.generateMessageUID(message),
-                                           []).append(message)
-          for message_list in message_unique_dict.itervalues():
-            if len(message_list) > 1:
-              # Sort list of duplicates to keep the message with highest score
-              message_list.sort(key=sort_message_key)
-              deletable_uid_list += [m.uid for m in message_list[1:]]
-            message = message_list[0]
-            serialization_tag = message.activity_kw.get('serialization_tag')
-            if serialization_tag is None:
-              distributable_uid_set.add(message.uid)
-            else:
-              serialization_tag_dict[serialization_tag].append(message)
           # Don't let through if there is the same serialization tag in the
           # message dict. If there is the same serialization tag, only one can
           # be validated and others must wait.
           # But messages with group_method_id are exceptions. serialization_tag
           # does not stop validating together. Because those messages should
           # be processed together at once.
+          for message in message_dict.itervalues():
+            serialization_tag = message.activity_kw.get('serialization_tag')
+            if serialization_tag is None or message.line.group_method_id != '\0':
+              distributable_uid_set.add(message.uid)
+            else:
+              serialization_tag_dict[serialization_tag].append(message)
           for message_list in serialization_tag_dict.itervalues():
             # Sort list of messages to validate the message with highest score
             message_list.sort(key=sort_message_key)
             distributable_uid_set.add(message_list[0].uid)
-            group_method_id = message_list[0].line.group_method_id
-            if group_method_id == '\0':
-              continue
-            for message in message_list[1:]:
-              if group_method_id == message.line.group_method_id:
-                distributable_uid_set.add(message.uid)
-          if deletable_uid_list:
-            activity_tool.SQLBase_delMessage(table=self.sql_table,
-                                             uid=deletable_uid_list)
           if distributable_uid_set:
             assignMessage(table=self.sql_table,
               processing_node=0, uid=tuple(distributable_uid_set))
