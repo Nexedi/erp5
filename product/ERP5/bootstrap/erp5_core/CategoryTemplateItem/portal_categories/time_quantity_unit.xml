@@ -63,7 +63,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python:portal.getPortalSupplyPathTypeList()</string> </value>
+            <value> <string>python:portal.getPortalSupplyPathTypeList() + portal.getPortalSupplyTypeList()</string> </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
