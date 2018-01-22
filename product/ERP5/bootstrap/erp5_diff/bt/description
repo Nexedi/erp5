@@ -1,0 +1,1 @@
+Provides views, scripts and files to give generic diff between any ERP5 objects. Also, the ZODB history tab will be using this generic diff to show the difference between old and new value.
