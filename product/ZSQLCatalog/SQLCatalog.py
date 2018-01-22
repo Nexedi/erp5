@@ -1033,7 +1033,7 @@ class Catalog(Folder,
     add_key = keys.add
     table_dict = self._getCatalogSchema()
     for table in self.getCatalogSearchTableIds():
-      for field in table_dict[table]:
+      for field in table_dict.get(table, ()):
         add_key(field)
         add_key('%s.%s' % (table, field))  # Is this inconsistent ?
     for related in self.getSQLCatalogRelatedKeyList():
@@ -1054,7 +1054,7 @@ class Catalog(Folder,
     result = {}
     table_dict = self._getCatalogSchema()
     for table in self.getCatalogSearchTableIds():
-      for field in table_dict[table]:
+      for field in table_dict.get(table, ()):
         result.setdefault(field, []).append(table)
         result.setdefault('%s.%s' % (table, field), []).append(table) # Is this inconsistent ?
     return result
@@ -1069,7 +1069,7 @@ class Catalog(Folder,
     keys = set()
     table_dict = self._getCatalogSchema()
     for table in self.getCatalogSearchTableIds():
-      for field in table_dict[table]:
+      for field in table_dict.get(table, ()):
         keys.add('%s.%s' % (table, field))
     return sorted(keys)
 
