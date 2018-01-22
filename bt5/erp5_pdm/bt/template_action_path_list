@@ -28,6 +28,7 @@ Internal Supply Line | variable_additional_price
 Internal Supply Line | view
 Internal Supply Module | view
 Internal Supply | view
+Internal Supply | view_condition
 Internal Supply | view_profile
 Measure | view
 Organisation | jump_to_internal_supply
@@ -67,6 +68,7 @@ Purchase Supply Line | variable_additional_price
 Purchase Supply Line | view
 Purchase Supply Module | view
 Purchase Supply | view
+Purchase Supply | view_condition
 Purchase Supply | view_profile
 Quantity Unit Conversion Definition | view
 Quantity Unit Conversion Group | view
@@ -91,6 +93,7 @@ Sale Supply Line | variable_additional_price
 Sale Supply Line | view
 Sale Supply Module | view
 Sale Supply | view
+Sale Supply | view_condition
 Sale Supply | view_profile
 Service Individual Variation | view
 Service Module | converted_inventory_report
