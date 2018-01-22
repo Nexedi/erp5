@@ -2,16 +2,62 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Standard Property" module="erp5.portal_type"/>
+      <global name="Acquired Property" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>acquisition_accessor_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>parent</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_mask_value</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_object_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_portal_type</string> </key>
+            <value> <string>python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList() + portal.getPortalSupplyTypeList() + portal.getPortalProjectTypeList() + portal.getPortalOpenOrderTypeList() + portal.getPortalSupplyPathTypeList()</string> </value>
+        </item>
+        <item>
+            <key> <string>alt_accessor_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
         <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
                 <string>elementary_type/float</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_acquired_property_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_translation_acquired_property_id</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -24,7 +70,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Standard Property</string> </value>
+            <value> <string>Acquired Property</string> </value>
         </item>
         <item>
             <key> <string>property_default</string> </key>

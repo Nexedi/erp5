@@ -2,25 +2,42 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Standard Property" module="erp5.portal_type"/>
+      <global name="Acquired Property" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_local_properties</string> </key>
+            <key> <string>acquisition_accessor_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_base_category</string> </key>
             <value>
               <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>mode</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
+                <string>parent</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_mask_value</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_object_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_portal_type</string> </key>
+            <value> <string>python: portal.getPortalAcquisitionMovementTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList() + portal.getPortalSupplyTypeList() + portal.getPortalProjectTypeList() + portal.getPortalOpenOrderTypeList() + portal.getPortalSupplyPathTypeList()</string> </value>
+        </item>
+        <item>
+            <key> <string>alt_accessor_id</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -32,6 +49,18 @@
             </value>
         </item>
         <item>
+            <key> <string>content_acquired_property_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_translation_acquired_property_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>The maximal delay time of a movement process.</string> </value>
         </item>
@@ -40,12 +69,8 @@
             <value> <string>max_delay_property</string> </value>
         </item>
         <item>
-            <key> <string>mode</string> </key>
-            <value> <string>w</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Standard Property</string> </value>
+            <value> <string>Acquired Property</string> </value>
         </item>
         <item>
             <key> <string>property_default</string> </key>
