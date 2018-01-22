@@ -2272,7 +2272,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(len([message
                             for message in result
                             if (message.processing_node>0 and
-                                message.processing==1 and
                                 message.serialization_tag=='test_115')]),
                        1)
 
@@ -2285,7 +2284,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(len([message
                             for message in result
                             if (message.processing_node>0 and
-                                message.processing==1 and
                                 message.serialization_tag=='')]),
                        1)
     finally:
