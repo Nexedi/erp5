@@ -130,20 +130,21 @@
   <td>title</td>
 </tr>
 <tr>
-  <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]</td>
-  <td>Title 0</td> <!-- before -->
+  <td>assertElementPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/div[@data-gadget-sandbox="public"]</td>
+  <td></td>
 </tr>
 <tr>
-  <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]</td>
-  <td>Version 1</td> <!-- after -->
+  <td>storeEval</td>
+  <td>document.querySelector('#selenium_myiframe').contentWindow.document.evaluate("//tr[@class='listbox-data-line-0 DataA']/td[2]/div[@data-gadget-sandbox='public']", document.querySelector('#selenium_myiframe').contentWindow.document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-gadget-value');</td>
+  <td>_data_gadget_value</td>
 </tr>
 <tr>
-  <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]</td>
-  <td>Version 3</td> <!-- now -->
+  <td>verifyEval</td>
+  <td>storedVars['_data_gadget_value'].replace(/(\r\n\t|\n|\r\t)/gm,"").replace(/\s+/g, '')</td>
+  <td>---+++@@-1+1@@-Title0+Version1</td>
 </tr>
+
 </tal:block>
 <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
 
@@ -190,20 +191,21 @@
   <td>title</td>
 </tr>
 <tr>
-  <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]</td>
-  <td>Version 1</td> <!-- before -->
+  <td>assertElementPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/div[@data-gadget-sandbox="public"]</td>
+  <td></td>
 </tr>
 <tr>
-  <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]</td>
-  <td>Version 2</td> <!-- after -->
+  <td>storeEval</td>
+  <td>document.querySelector('#selenium_myiframe').contentWindow.document.evaluate("//tr[@class='listbox-data-line-0 DataA']/td[2]/div[@data-gadget-sandbox='public']", document.querySelector('#selenium_myiframe').contentWindow.document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-gadget-value');</td>
+  <td>_data_gadget_value</td>
 </tr>
 <tr>
-  <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]</td>
-  <td>Version 3</td> <!-- now -->
+  <td>verifyEval</td>
+  <td>storedVars['_data_gadget_value'].replace(/(\r\n\t|\n|\r\t)/gm,"").replace(/\s+/g, '')</td>
+  <td>---+++@@-1+1@@-Version1+Version2</td>
 </tr>
+
 </tal:block>
 <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
 
@@ -268,20 +270,21 @@
   <td>title</td>
 </tr>
 <tr>
-  <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]</td>
-  <td>Version 2</td> <!-- before -->
+  <td>assertElementPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/div[@data-gadget-sandbox="public"]</td>
+  <td></td>
 </tr>
 <tr>
-  <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]</td>
-  <td>Version 3</td> <!-- after -->
+  <td>storeEval</td>
+  <td>document.querySelector('#selenium_myiframe').contentWindow.document.evaluate("//tr[@class='listbox-data-line-0 DataA']/td[2]/div[@data-gadget-sandbox='public']", document.querySelector('#selenium_myiframe').contentWindow.document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-gadget-value');</td>
+  <td>_data_gadget_value</td>
 </tr>
 <tr>
-  <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]</td>
-  <td>Version 3</td> <!-- now -->
+  <td>verifyEval</td>
+  <td>storedVars['_data_gadget_value'].replace(/(\r\n\t|\n|\r\t)/gm,"").replace(/\s+/g, '')</td>
+  <td>---+++@@-1+1@@-Version2+Version3</td>
 </tr>
+
 </tal:block>
 <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
 

@@ -49,8 +49,11 @@ from xml.dom import minidom
 class TestXHTMLMixin(ERP5TypeTestCase):
 
   # some forms have intentionally empty listbox selections like RSS generators
-  FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS']
+  FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS',
+                                            'erp5_core/Base_viewHistoricalComparison',]
   JSL_IGNORE_FILE_LIST = (
+        'diff2html.js',
+        'diff2html-ui.js',
         'dream_graph_editor/lib/handlebars.min.js',
         'dream_graph_editor/lib/jquery-ui.js',
         'dream_graph_editor/lib/jquery.js',
@@ -84,6 +87,22 @@ class TestXHTMLMixin(ERP5TypeTestCase):
         'erp5_sql_browser',
         'erp5_dhtmlx_scheduler',
         'erp5_svg_editor',
+        )
+
+  HTML_IGNORE_FILE_LIST = (
+        'gadget_erp5_side_by_side_diff.html',
+        )
+  # NOTE: Here the difference between the JSL_IGNORE_SKIN_LIST is that we also
+  # consider the folders inside the skin. In this way, we can include multiple
+  # HTML files at once which are inside some folder in any skin folder.
+  HTML_IGNORE_SKIN_FOLDER_LIST = (
+        'erp5_jquery',
+        'erp5_fckeditor',
+        'erp5_ckeditor',
+        'erp5_svg_editor',
+        'erp5_jquery_ui',
+        'erp5_dms/pdf_js',
+        'erp5_test_result/test_result_js',
         )
 
   def changeSkin(self, skin_name):
@@ -229,13 +248,12 @@ class TestXHTMLMixin(ERP5TypeTestCase):
     path_list = []
     for script_path, script in skins_tool.ZopeFind(
               skins_tool, obj_metatypes=['File'], search_sub=1):
-      is_required_check_path = True
-      ignore_bts = ['erp5_jquery', 'erp5_fckeditor', 'erp5_ckeditor',
-                    'erp5_svg_editor', 'erp5_jquery_ui',
-                    'erp5_dms/pdf_js', 'erp5_test_result/test_result_js']
       if script_path.endswith('.html'):
-        for ignore_bt_name in ignore_bts:
-          if  script_path.startswith(ignore_bt_name):
+        x = script_path.split('/', 1)
+        if not x[1] in self.HTML_IGNORE_FILE_LIST:
+          is_required_check_path = False
+        for ignore_folder_name in self.HTML_IGNORE_SKIN_FOLDER_LIST:
+          if  script_path.startswith(ignore_folder_name):
             is_required_check_path = False
             break;
         if is_required_check_path:

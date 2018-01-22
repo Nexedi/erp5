@@ -1,6 +1,7 @@
 mimetypes_registry
 portal_callables
 portal_contribution_registry
+portal_diff
 portal_notifications
 portal_sessions
 portal_transforms
