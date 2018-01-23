@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO */
-(function (window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO) {
+/*global window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO, Handlebars */
+(function (window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO, Handlebars) {
   "use strict";
 
   /* Make sure that returned object is an Array instance. */
@@ -10,7 +10,7 @@
     return [obj];
   }
 
-  function submitDialog(gadget) {
+  function submitDialog(gadget, submit_action_id, is_update_method) {
     var form_gadget = gadget,
       action = form_gadget.state.erp5_document._embedded._view._actions.put,
       form_id = form_gadget.state.erp5_document._embedded._view.form_id,
@@ -30,7 +30,10 @@
         data[form_id.key] = form_id['default'];
         // XXX Hardcoded
         data.dialog_id = form_id['default'];
-        data.dialog_method = action.action;
+        data.dialog_method = form_gadget.state.form_definition[submit_action_id];
+        if (is_update_method) {
+          data.update_method = data.dialog_method;
+        }
         //XXX hack for redirect, difined in form
         redirect_to_parent = content_dict.field_your_redirect_to_parent;
         for (key in content_dict) {
@@ -220,7 +223,13 @@
       });
   }
 
-  rJS(window)
+  var gadget_klass = rJS(window),
+    dialog_button_source = gadget_klass.__template_element
+                         .getElementById("dialog-button-template")
+                         .innerHTML,
+    dialog_button_template = Handlebars.compile(dialog_button_source);
+
+  gadget_klass
     /////////////////////////////////////////////////////////////////
     // acquisition
     /////////////////////////////////////////////////////////////////
@@ -231,6 +240,7 @@
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareAcquiredMethod("updateForm", "updateForm")
     .declareAcquiredMethod("displayFormulatorValidationError", "displayFormulatorValidationError")
@@ -265,12 +275,13 @@
         // ignore options.editable because dialog is always editable
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
-        erp5_form: options.erp5_form || {}
+        erp5_form: options.erp5_form || {},
         // ignore global editable state (be always editable)
+        show_update_button: Boolean(options.form_definition.update_action)
       });
     })
 
-    .onStateChange(function () {
+    .onStateChange(function (modification_dict) {
       var form_gadget = this,
         icon,
         selector = form_gadget.element.querySelector("h3"),
@@ -305,9 +316,21 @@
         }
       }
 
-      // Calculate the h3 properties
       return new RSVP.Queue()
         .push(function () {
+          // Set the dialog button
+          if (modification_dict.hasOwnProperty('show_update_button')) {
+            return form_gadget.translateHtml(dialog_button_template({
+              show_update_button: form_gadget.state.show_update_button
+            }))
+              .push(function (html) {
+                form_gadget.element.querySelector('.dialog_button_container')
+                                   .innerHTML = html;
+              });
+          }
+        })
+        .push(function () {
+          // Calculate the h3 properties
           return RSVP.all([
             form_gadget.translate(form_gadget.state.form_definition.title),
             form_gadget.translate(title)
@@ -383,8 +406,21 @@
     })
 
     .onEvent('submit', function () {
-      return submitDialog(this);
-    }, false, true);
+      if (this.state.has_update_action === true) {
+        return submitDialog(this, "update_action", true);
+      }
+      return submitDialog(this, "action");
+    }, false, true)
 
+    .onEvent('click', function (evt) {
+      if (evt.target.name === "action_confirm") {
+        evt.preventDefault();
+        return submitDialog(this, "action");
+      }
+      if (evt.target.name === "action_update") {
+        evt.preventDefault();
+        return submitDialog(this, "update_action", true);
+      }
+    }, false, false);
 
-}(window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO));
+}(window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO, Handlebars));

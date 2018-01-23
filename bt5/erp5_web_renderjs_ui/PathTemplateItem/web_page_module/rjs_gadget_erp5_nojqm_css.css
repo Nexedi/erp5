@@ -975,6 +975,24 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content input[type='submit']:active {
   background-color: #ffa366;
 }
+.gadget-content button[name='action_update'] {
+  padding: 6pt;
+  margin-top: 30pt;
+  margin-right: 12pt;
+  background-color: #777777;
+  color: #FFFFFF;
+  border-radius: 0.325em;
+  border-width: 1px;
+  border-style: solid;
+  min-width: 8em;
+}
+.gadget-content button[name='action_update']:hover,
+.gadget-content button[name='action_update']:focus {
+  background-color: #919191;
+}
+.gadget-content button[name='action_update']:active {
+  background-color: #aaaaaa;
+}
 @media not screen and (max-width: 85em) {
   div[data-role='page']:not(.desktop-panel-hidden) .gadget-content {
     margin-left: 180pt;

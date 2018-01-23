@@ -1105,33 +1105,41 @@ div[data-gadget-scope='header'] .ui-header {
 /**********************************************
 * Gadget: main
 **********************************************/
+.renderPageSubmitButton(@backgroundcolor) {
+  padding: @margin-size;
+  margin-top: @headerheight;
+  margin-right: @double-margin-size;
+
+  background-color: @backgroundcolor;
+  color: @white;
+
+  border-radius: @radius;
+  border-width: 1px;
+  border-style: solid;
+
+  min-width: 8em;
+
+  &:hover, &:focus {
+    background-color: lighten(@backgroundcolor, 10%);
+  }
+  &:active {
+    background-color: lighten(@backgroundcolor, 20%);
+  }
+}
+
 .gadget-content {
   div[data-gadget-scope='m'] {
     animation: fadein @transition-timing;
   }
 
+  // Dialog page template main submit button 
   input[type='submit'] {
-    padding: @margin-size;
-    margin-top: @headerheight;
-    margin-right: @double-margin-size;
-
-    background-color: @coloraccent;
-    color: @white;
-
-    border-radius: @radius;
-    border-width: 1px;
-    border-style: solid;
-
-    min-width: 8em;
-
-    &:hover, &:focus {
-      background-color: lighten(@coloraccent, 10%);
-    }
-    &:active {
-      background-color: lighten(@coloraccent, 20%);
-    }
+    .renderPageSubmitButton(@coloraccent);
   }
-
+  // Dialog page template update button 
+  button[name='action_update'] {
+    .renderPageSubmitButton(@grey);
+  }
 
   @media @desktop {
     div[data-role='page']:not(.desktop-panel-hidden) & {
