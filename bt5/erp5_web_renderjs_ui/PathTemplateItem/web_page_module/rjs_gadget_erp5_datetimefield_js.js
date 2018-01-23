@@ -226,24 +226,24 @@
           .push(function (gadget_list) {
             var text_content = "",
               state_date,
-              options;
+              offset_time_zone;
             if (gadget.state.value) {
               state_date = new Date(gadget.state.value);
-              if (gadget.state.timezone_style) {
-                text_content = state_date.toLocaleDateString();
-                if (!gadget.state.date_only) {
-                  text_content += " " + state_date.toLocaleTimeString();
-                }
-              } else {
-                // We don't know the timezone used by erp5 to store the date
-                // display it as displayed in editable
-                options = {timeZone: "UTC"};
-                text_content = state_date.toLocaleDateString(undefined,
-                                                             options);
-                if (!gadget.state.date_only) {
-                  text_content += " " + state_date.toLocaleTimeString(undefined,
-                                                                      options);
-                }
+              //get timezone difference between server and local browser
+              offset_time_zone = timezone + (state_date.getTimezoneOffset() / 60);
+              //adjust hour in order to get correct date time string
+              state_date.setUTCHours(state_date.getUTCHours() + offset_time_zone);
+              //example scenario:
+              //state.value =  "Fri, 01 Jan 2016 00:00:00 +0500" and local is france, GMT + 1
+              //state_date = new Date(gadget.state.value)  Thu Dec 31 2015 20:00:00 GMT+0100 (CET)
+              //offset_time_zone = 4
+              //after adjust hour, state_date ==>  Fri Jan 01 2016 00:00:00 GMT+0100 (CET)
+              //toLocaleDateString  return 2016/01/01
+              //toLocaleTimeString return 00:00:00
+              //same as server side value in local format
+              text_content = state_date.toLocaleDateString();
+              if (!gadget.state.date_only) {
+                text_content += " " + state_date.toLocaleTimeString();
               }
             }
             p_state.text_content = text_content;
