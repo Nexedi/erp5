@@ -1050,6 +1050,7 @@ def renderFormDefinition(form, response_dict):
   response_dict["title"] = Base_translateString(form.getTitle())
   response_dict["pt"] = form.pt
   response_dict["action"] = form.action
+  response_dict["update_action"] = form.update_action
 
 
 mime_type = 'application/hal+json'
