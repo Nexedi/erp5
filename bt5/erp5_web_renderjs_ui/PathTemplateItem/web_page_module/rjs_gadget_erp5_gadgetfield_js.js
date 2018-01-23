@@ -14,7 +14,10 @@
         url: options.field_json.url,
         sandbox: options.field_json.sandbox || undefined,
         hidden: options.field_json.hidden,
-        css_class: options.field_json.css_class
+        css_class: options.field_json.css_class,
+        // Force calling subfield render
+        // as user may have modified the input value
+        render_timestamp: new Date().getTime()
       });
     })
 

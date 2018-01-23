@@ -18,7 +18,10 @@
           name: field_json.key,
           title: field_json.title,
           first_item: field_json.first_item,
-          hidden: field_json.hidden
+          hidden: field_json.hidden,
+          // Force calling subfield render
+          // as user may have modified the input value
+          render_timestamp: new Date().getTime()
         };
 
       if ((!state_dict.value) && (state_dict.first_item)) {

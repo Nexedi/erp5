@@ -14,7 +14,10 @@
           editable: field_json.editable,
           name: field_json.key,
           title: field_json.title,
-          hidden: field_json.hidden
+          hidden: field_json.hidden,
+          // Force calling subfield render
+          // as user may have modified the input value
+          render_timestamp: new Date().getTime()
         };
       state_dict.inner_html = state_dict.value;
       return this.changeState(state_dict);

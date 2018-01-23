@@ -21,7 +21,10 @@
           "required": options.field_json.required,
           "hidden": options.field_json.hidden,
           "title": options.field_json.title,
-          "key": options.field_json.key
+          "key": options.field_json.key,
+          // Force calling subfield render
+          // as user may have modified the input value
+          render_timestamp: new Date().getTime()
         };
 
       if (this.state.gadget_rendered === false) {

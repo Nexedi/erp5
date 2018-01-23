@@ -49,7 +49,10 @@
           key: field_json.key,
           sub_select_key: field_json.sub_select_key,
           sub_input_key: field_json.sub_input_key,
-          hidden: field_json.hidden
+          hidden: field_json.hidden,
+          // Force calling subfield render
+          // as user may have modified the input value
+          render_timestamp: new Date().getTime()
         };
       if ((item_list.length === 0) || (item_list[0][0] !== "")) {
         item_list.unshift(["", ""]);

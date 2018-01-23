@@ -55,7 +55,10 @@
           name: field_json.key,
           title: field_json.title,
           item_list: field_json.items,
-          hidden: field_json.hidden
+          hidden: field_json.hidden,
+          // Force calling subfield render
+          // as user may have modified the input value
+          render_timestamp: new Date().getTime()
         };
 
       //the first item will always be selected if no initial default value is supplied.

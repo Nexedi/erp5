@@ -60,7 +60,10 @@
           portal_types: field_json.portal_types,
 	  translated_portal_types: field_json.translated_portal_types,
           relation_field_id: field_json.relation_field_id,
-          hidden: field_json.hidden
+          hidden: field_json.hidden,
+          // Force calling subfield render
+          // as user may have modified the input value
+          render_timestamp: new Date().getTime()
         };
 
       if (field_json.default.hasOwnProperty('value_text_list')) {

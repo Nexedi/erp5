@@ -60,7 +60,10 @@
           name: field_json.key,
           item_list: field_json.items,
           value_list: field_json.value || field_json.default,
-          hidden: field_json.hidden
+          hidden: field_json.hidden,
+          // Force calling subfield render
+          // as user may have modified the input value
+          render_timestamp: new Date().getTime()
         };
 
       return this.changeState(state_dict);

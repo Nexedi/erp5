@@ -57,7 +57,10 @@
           subfield_timezone_key: field_json.subfield_timezone_key,
           start_datetime: field_json.start_datetime,
           end_datetime: field_json.end_datetime,
-          hidden: field_json.hidden
+          hidden: field_json.hidden,
+          // Force calling subfield render
+          // as user may have modified the input value
+          render_timestamp: new Date().getTime()
         };
       return this.changeState(state_dict);
     })
