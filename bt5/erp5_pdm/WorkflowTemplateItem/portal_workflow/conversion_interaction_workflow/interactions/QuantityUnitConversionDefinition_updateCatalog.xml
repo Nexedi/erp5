@@ -58,6 +58,7 @@
               <list>
                 <string>reindexObject</string>
                 <string>immediateReindexObject</string>
+                <string>manage_afterClone</string>
               </list>
             </value>
         </item>
