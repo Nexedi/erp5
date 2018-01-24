@@ -37,6 +37,7 @@ for pref in (system_pref, user_pref):
 else:
   # created empty one because no template found
   knowledge_pad = context.knowledge_pad_module.newContent(
+                            immediate_reindex=True,
                             portal_type = 'Knowledge Pad',
                             title = context.Base_translateString('Tab 1'))
 if is_web_mode:
@@ -61,13 +62,6 @@ if owner is not None:
 
 # set default gadgets
 context.ERP5Site_createDefaultKnowledgeBox(knowledge_pad)
-
-# Calling immediateReindexObject explicitly is a coding crime.
-# But it's safe for newly created objects and this script should
-# be called rarely enough to not cause any performance issue.
-# Any other solution would be more complicated.
-# See also ERP5Site_addNewKnowledgePad
-knowledge_pad.immediateReindexObject()
 
 if REQUEST is None:
   return knowledge_pad

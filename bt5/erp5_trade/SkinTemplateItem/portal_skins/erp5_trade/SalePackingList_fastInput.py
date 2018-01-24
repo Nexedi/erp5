@@ -35,6 +35,9 @@ for container_number in range(container_count) :
   # we use container_type to know which are the resource (and variation) 
   # of the container
   container = delivery.newContent(
+                          # Container must be immediately reindexed,
+                          # in order to see good packed quantity in fast input form
+                          immediate_reindex=True,
                           portal_type="Container",
                           title=new_container_id,
                           int_index=next_container_number,
@@ -93,10 +96,6 @@ for container_number in range(container_count) :
           cell.setMembershipCriterionBaseCategoryList(
                                           line_variation_base_category_list)
           cell.edit(quantity=quantity)
-
-# Container must be immediately reindexed, 
-# in order to see good packed quantity in fast input form
-container.recursiveImmediateReindexObject()
 
 url_params = make_query(selection_name=selection_name, 
                         dialog_category=dialog_category, 

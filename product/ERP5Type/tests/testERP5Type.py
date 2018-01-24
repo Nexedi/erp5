@@ -3263,14 +3263,8 @@ class TestAccessControl(ERP5TypeTestCase):
     method.setExpression(self.expression)
     method.setExpressionInstance(Expression(self.expression))
 
-    createZODBPythonScript(self.getSkinsTool().custom,
-                           'Base_immediateReindexObject',
-                           '',
-                           'context.immediateReindexObject()'
-                          ).manage_proxy(('Manager',))
-
   def test(self):
-    self.portal.person_module.newContent().Base_immediateReindexObject()
+    self.portal.person_module.newContent(immediate_reindex=True)
 
 
 def test_suite():

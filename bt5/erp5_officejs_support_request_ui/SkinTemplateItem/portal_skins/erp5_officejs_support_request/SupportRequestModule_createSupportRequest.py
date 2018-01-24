@@ -8,6 +8,7 @@ project_list = portal.portal_catalog(portal_type="Project", id=project) # with i
 project_object = project_list[0].getObject()
 
 support_request = portal.support_request_module.newContent(
+  immediate_reindex=True,
   portal_type='Support Request',
   title=title,
   resource="service_module/" + resource,
@@ -34,7 +35,6 @@ support_request.edit(
 
 
 support_request.submit()
-support_request.immediateReindexObject()
 
 if description is not None or file is not None:
   portal.post_module.PostModule_createHTMLPostForSupportRequest(

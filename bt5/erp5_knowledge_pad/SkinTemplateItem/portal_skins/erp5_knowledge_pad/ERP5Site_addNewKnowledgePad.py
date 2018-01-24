@@ -1,4 +1,5 @@
 pad = context.knowledge_pad_module.newContent(portal_type='Knowledge Pad',
+                                              immediate_reindex=True,
                                               title = pad_title)
 # for web mode
 if mode in ('web_front', 'web_section',):
@@ -8,9 +9,6 @@ if mode in ('web_front', 'web_section',):
 
 # set it as active
 context.ERP5Site_toggleActiveKnowledgePad(pad, mode=mode, redirect=False)
-
-# See ERP5Site_createDefaultKnowledgePadListForUser
-pad.immediateReindexObject()
 
 if redirect_url:
   return context.REQUEST.RESPONSE.redirect(redirect_url)

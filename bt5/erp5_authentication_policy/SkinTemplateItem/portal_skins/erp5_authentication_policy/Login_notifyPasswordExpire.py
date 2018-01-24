@@ -25,11 +25,10 @@ if (len(recovery_list) > 0):
 
 module = portal.getDefaultModule(portal_type='Credential Recovery')
 credential_recovery = module.newContent(
+                               immediate_reindex=True,
                                portal_type="Credential Recovery",
                                reference=context.getReference(),
                                destination_decision_value=context,
                                language=portal.Localizer.get_selected_language())
-# immediate reindex allowed because it is a new object
-credential_recovery.immediateReindexObject()
 context.serialize()
 credential_recovery.submit()

@@ -29,6 +29,7 @@ else:
 # create the person wich represent the company
 person_module = portal.getDefaultModule(portal_type='Person')
 accountant = person_module.newContent(portal_type='Person',
+                         immediate_reindex=True,
                          title=changed_object.getAccountantName(),
                          default_telephone_text=changed_object.getAccountantTelNumber(),
                          default_fax_text=changed_object.getAccountantFax(),
@@ -51,6 +52,5 @@ assignment.open()
 login = context.generateNewLogin(text=changed_object.getAccountantName())
 password = changed_object.Person_generatePassword()
 context.EGov_setLoginAndPasswordAsManager(accountant, login, password)
-accountant.immediateReindexObject()
 
 accountant.Person_sendCrendentialsByEMail()

@@ -1,22 +1,17 @@
 """ This script reindex all the objects created before updating local roles """
-module_list = ['document_module',
-               'image_module',
-               'knowledge_pad_module',
-               'organisation_module',
-               'person_module',
-               'review_module',
-               'test_page_module',
-               'web_page_module',
-               'web_site_module']
-
-context.portal_types.recursiveImmediateReindexObject()
 portal = context.getPortalObject()
-for module_id in module_list:
-  module = getattr(portal, module_id)
-  module.recursiveImmediateReindexObject()
-  stack = [module]
-  for obj in stack:
-    for child in obj.objectValues():
-      stack.append(child)
-    obj.updateLocalRolesOnSecurityGroups()
-    obj.reindexObjectSecurity()
+portal.portal_types.Folder_reindexAll()
+stack = [
+  portal.document_module,
+  portal.image_module,
+  portal.knowledge_pad_module,
+  portal.organisation_module,
+  portal.person_module,
+  portal.review_module,
+  portal.test_page_module,
+  portal.web_page_module,
+  portal.web_site_module,
+]
+for obj in stack:
+  stack.extend(obj.objectValues())
+  obj.updateLocalRolesOnSecurityGroups()

@@ -19,6 +19,3 @@ if file not in ("undefined", None):  # XXX "undefined" ? should also be fixed in
   document.publish()
 
 post.publish()
-# XXX in support request web app interface, discussable page reloads right after
-#     adding a post, searching for new post hoping it is already indexed.
-post.immediateReindexObject()
