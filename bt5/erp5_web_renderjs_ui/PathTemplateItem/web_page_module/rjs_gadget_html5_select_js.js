@@ -107,6 +107,11 @@
       if (this.state.editable) {
         result[select.getAttribute('name')] =
           select.options[select.selectedIndex].value;
+        // Change the value state in place
+        // This will prevent the gadget to be changed if
+        // its parent call render with the same value
+        // (as ERP5 does in case of formulator error)
+        this.state.value = result[select.getAttribute('name')];
       }
       return result;
     })
