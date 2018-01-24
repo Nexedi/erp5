@@ -1,8 +1,8 @@
 /*globals window, document, RSVP, rJS,
-          URI, location, XMLHttpRequest, console, navigator*/
+          URI, location, XMLHttpRequest, console, navigator, ProgressEvent*/
 /*jslint indent: 2, maxlen: 80*/
 (function (window, document, RSVP, rJS,
-           XMLHttpRequest, location, console, navigator) {
+           XMLHttpRequest, location, console, navigator, ProgressEvent) {
   "use strict";
 
   var MAIN_SCOPE = "m";
@@ -133,6 +133,9 @@
     // Display it to the user for now,
     // and allow user to go back to the frontpage
     var error_text = "";
+    if (error instanceof ProgressEvent) {
+      error = error.target.error;
+    }
 
     if (error.target instanceof XMLHttpRequest) {
       error_text = error.target.toString() + " " +
@@ -647,4 +650,4 @@
     });
 
 }(window, document, RSVP, rJS,
-  XMLHttpRequest, location, console, navigator));
+  XMLHttpRequest, location, console, navigator, ProgressEvent));
