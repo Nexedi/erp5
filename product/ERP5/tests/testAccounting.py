@@ -1659,7 +1659,7 @@ class TestClosingPeriod(AccountingTestCase):
 
     # now check content of stock table
     testStockTableContent()
-    balance_transaction.immediateReindexObject()
+    balance_transaction.reindexObject()
     self.tic()
     testStockTableContent()
 

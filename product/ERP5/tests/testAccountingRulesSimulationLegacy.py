@@ -787,7 +787,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
 
     # getTotalPrice uses mysql, so we must make sure the invoice is cataloged
     # to have correct results
-    invoice_line.getParentValue().recursiveImmediateReindexObject()
+    self.tic()
     self.assertEqual(invoice_line.getTotalPrice(), 100)
     self.assertEqual(invoice_line.getTotalQuantity(), 10)
 

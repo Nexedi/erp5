@@ -6808,7 +6808,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       self.assertEqual(initial___ac_local_roles_group_id_dict__,
         path.__ac_local_roles_group_id_dict__)
       # make sure we can reindexing the object works
-      path.recursiveImmediateReindexObject()
+      path.recursiveReindexObject()
       self.tic()
     finally:
       # restore state

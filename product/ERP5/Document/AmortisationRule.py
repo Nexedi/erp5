@@ -113,7 +113,6 @@ class AmortisationRule(RuleMixin):
             setter = getattr(simulation_movement, setter_name)
             setter(value)
         simulation_movement.edit(start_date=simulation_movement.getStopDate())
-        #simulation_movement.immediateReindexObject()
         return modified_properties
 
       def updateSimulationMovement(aggregated_movement, calculated_movement,

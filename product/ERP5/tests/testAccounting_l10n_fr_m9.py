@@ -149,7 +149,7 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     self.assertEqual(transmission_sheet.getValidationState(), 'draft')
     # add an invoice to the transamission sheet
     invoice.setAggregateValue(transmission_sheet)
-    invoice.recursiveImmediateReindexObject()
+    self.tic()
     self.getWorkflowTool().doActionFor(
                             transmission_sheet,
                             'emit_action')

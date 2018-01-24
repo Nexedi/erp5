@@ -861,7 +861,7 @@ class TestPackingListMixin(TestOrderMixin):
     if quantity is None:
       quantity = sequence.get('line_quantity',self.default_quantity)
     container_line.edit(quantity=quantity)
-    container_line.immediateReindexObject()
+    self.tic()
 
   def stepSetContainerFullQuantity(self,sequence=None, sequence_list=None,
                                        quantity=None,**kw):
@@ -882,7 +882,7 @@ class TestPackingListMixin(TestOrderMixin):
       if not line.hasCellContent():
         quantity = line.getQuantity()
         container_line.edit(quantity=quantity)
-        container_line.immediateReindexObject()
+        self.tic()
         self.assertEqual(quantity, container_line.getQuantity())
         self.assertEqual(quantity, container_line.getTotalQuantity())
       # with variation
@@ -903,7 +903,7 @@ class TestPackingListMixin(TestOrderMixin):
                 quantity=old_cell.getQuantity(),
                 predicate_category_list=cell_key,
                 variation_category_list=cell_key)
-            cell.immediateReindexObject()
+            self.tic()
           self.assertEqual(old_cell.getQuantity(), cell.getQuantity())
           self.assertEqual(old_cell.getTotalQuantity(), cell.getTotalQuantity())
 

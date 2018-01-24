@@ -2642,9 +2642,7 @@ class SimulationTool(BaseTool):
             #  m.Movement_zSetDestinationTotalAssetPrice(uid=m.getUid(), total_asset_price = total_asset_price)
           # Global reindexing required afterwards in any case: so let us do it now
           # Until we get faster methods (->reindexObject())
-          #m.immediateReindexObject()
           m.reindexObject()
-          #m.activate(priority=7).immediateReindexObject() # Too slow
 
       return result
 
@@ -2870,7 +2868,6 @@ class SimulationTool(BaseTool):
                                           )
                   else:
                     raise self.MergeDeliveryListError, "Unknown portal type %s" % str(object_to_update.getPortalType())
-                  #object_to_update.immediateReindexObject()
                 else:
                   raise self.MergeDeliveryListError, "No object to update"
 

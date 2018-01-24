@@ -1336,7 +1336,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       action = transition_step['action']
       LOG("Transiting '%s' on packing list %s" % (action, transition_step['id']), 0, '')
       workflow_tool.doActionFor(transited_pl, action, packing_list_workflow)
-      transited_pl.recursiveImmediateReindexObject() # XXX
       self.tic()
 
       for omit_transit in (0,1):

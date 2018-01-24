@@ -257,7 +257,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual([],folder_object_list)
 
     person = person_module.newContent(id='4',portal_type='Person')
-    person_module.recursiveImmediateReindexObject()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual(['4'],folder_object_list)
 
@@ -286,7 +286,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog.manage_catalogClear()
 
     person = person_module.newContent(id='4',portal_type='Person')
-    person_module.recursiveImmediateReindexObject()
+    self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual(['4'],folder_object_list)
 
@@ -1364,8 +1364,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # and then delete it
     self.deleted_organisation = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
-    self.deleted_organisation.immediateReindexObject()
-    self.commit()
+    self.tic()
     deleted_url = self.deleted_organisation.getRelativeUrl()
     module.manage_delObjects(ids=[self.deleted_organisation.getId()])
     self.commit()
@@ -1722,7 +1721,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """
     org_a = self._makeOrganisation(title='abc',default_address_city='abc')
     module = self.getOrganisationModule()
-    module.immediateReindexObject()
+    self.tic()
     # First try without aliases
     query1 = Query(parent_portal_type="Organisation")
     query2 = Query(grand_parent_portal_type="Organisation Module")

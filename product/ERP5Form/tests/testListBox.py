@@ -298,7 +298,7 @@ class TestListBox(ERP5TypeTestCase):
 
     foo_module = portal.foo_module
     o = foo_module.newContent(title=u'\xe9lisa')
-    o.immediateReindexObject()
+    self.tic()
 
     request = get_request()
     request['here'] = portal.foo_module
@@ -332,7 +332,7 @@ class TestListBox(ERP5TypeTestCase):
 
     foo_module = portal.foo_module
     o = foo_module.newContent(title=u'\xe9lisa')
-    o.immediateReindexObject()
+    self.tic()
 
     request = get_request()
     request['here'] = portal.foo_module
@@ -389,7 +389,7 @@ class TestListBox(ERP5TypeTestCase):
     self.assertEqual(word in o.getSubjectList(), True)
 
     # Reindex
-    o.immediateReindexObject()
+    self.tic()
 
     # Render the module in html
     request = get_request()
@@ -485,7 +485,7 @@ class TestListBox(ERP5TypeTestCase):
     o = foo_module.newContent()
 
     # Reindex
-    o.immediateReindexObject()
+    self.tic()
 
     # Render the module in html
     request = get_request()
@@ -570,7 +570,7 @@ class TestListBox(ERP5TypeTestCase):
     o = foo_module.newContent()
 
     # Reindex
-    o.immediateReindexObject()
+    self.tic()
 
     # Render the module in html
     request = get_request()
