@@ -153,6 +153,30 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="update_dialog">
+    <tr>
+      <td colspan="3"><b>Update the dialog</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//button[@name='action_update' and @type='submit']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//button[@name='action_update' and @type='submit']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
   <tal:block metal:define-macro="search_in_form_list">
     <tr>
       <td colspan="3"><b tal:content="python: 'Submit a form list search: %s' % search_query"></b></td>
@@ -837,6 +861,25 @@
       <td>This page contains unsaved changes, do you really want to leave the page ?</td>
       <td></td>
    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="wait_for_notification">
+    <tr>
+      <td colspan="3"><b>Wait for the notification message</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td tal:content="python: '//div[@data-gadget-scope=\'notification\']//button[@class=\'%(class)s\' and text()=\'%(text)s\']' % notification_configuration"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td tal:content="python: '//div[@data-gadget-scope=\'notification\']//button[@class=\'%(class)s\' and text()=\'%(text)s\']' % notification_configuration"></td>
+      <td></td>
+    </tr>
     <tr>
       <td colspan="3"><p></p></td>
     </tr>

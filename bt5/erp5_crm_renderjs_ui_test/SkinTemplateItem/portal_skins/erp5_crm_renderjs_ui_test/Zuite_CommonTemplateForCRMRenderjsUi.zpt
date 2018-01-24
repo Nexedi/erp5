@@ -1,0 +1,306 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+  <tal:block metal:define-macro="init">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>open</td>
+      <td>${base_url}/portal_preferences/CRMRJSZuite_setPreference</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Set CRM Preference Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>store</td>
+      <td>${base_url}/web_site_module/renderjs_runner/#</td>
+      <td>renderjs_url</td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="delete_data">
+    <tr>
+      <td colspan="3"><b>Delete CRM Test Data</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/CRMRJSZuite_deleteData</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Deleted Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="prepare_data">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/delete_data" />
+    <tr>
+      <td colspan="3"><b>Create CRM Test Data</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/CRMRJSZuite_createEvent</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Event Created.</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="view_create_response_dialog">
+    <tr>
+      <td colspan="3"><b>Display the create response dialog</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${renderjs_url}/event_module/erp5_crm_renderjs_ui_test_event?editable=1</td>
+      <td></td>
+    </tr>
+    <!-- Wait for gadget to be loaded -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Actions</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[@data-gadget-scope='header']//a[text()='Actions' and contains(@href, '#!change') and contains(@href, 'n.page=action')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[@data-gadget-scope='header']//a[text()='Actions' and contains(@href, '#!change') and contains(@href, 'n.page=action')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_action.html']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Create Response</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[@data-gadget-scope='m']//a[text()='Create Response' and contains(@href, '#!change') and contains(@href, 'create_response') and contains(@href, 'u.page=')]</td>
+      <td></td>
+    </tr>
+    <!-- Follow one link -->
+    <tr>
+      <td>click</td>
+      <td>//div[@data-gadget-scope='m']//a[text()='Create Response' and contains(@href, '#!change') and contains(@href, 'create_response') and contains(@href, 'u.page=')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_dialog.html']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Create Response</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="check_create_response_dialog_content">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Check the create response dialog content'"></b></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_your_response_event_title</td>
+      <td tal:content="python: dialog_content_configuration['field_your_response_event_title']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_your_response_event_portal_type</td>
+      <td tal:content="python: dialog_content_configuration['field_your_response_event_portal_type']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_your_response_event_resource</td>
+      <td tal:content="python: dialog_content_configuration['field_your_response_event_resource']"></td>
+    </tr>
+    <tr tal:condition="python: 'field_your_response_event_start_date' in dialog_content_configuration">
+      <td>verifyValue</td>
+      <td>field_your_response_event_start_date</td>
+      <td tal:content="python: dialog_content_configuration['field_your_response_event_start_date']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_your_response_event_notification_message</td>
+      <td tal:content="python: dialog_content_configuration['field_your_response_event_notification_message']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td tal:content="python: '//input[@name=\'field_your_response_workflow_action\' and @type=\'radio\' and @value=\'%s\']' % dialog_content_configuration['field_your_response_workflow_action']"></td>
+      <td>on</td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_my_default_destination</td>
+      <td tal:content="python: dialog_content_configuration['field_my_default_destination']"></td>
+    </tr>
+    <!-- Wait for ckeditor to be loaded :/ How to inspect inside another iframe? -->
+    <tr>
+      <td>pause</td>
+      <td>5000</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>storeEval</td>
+            <td>document.querySelector('#selenium_myiframe').contentWindow.document.querySelector('iframe').contentWindow.document.querySelector('iframe').contentWindow.document.body.innerHTML</td>
+      <td>field_your_response_event_text_content</td>
+    </tr>
+    <tr>
+      <td>verifyEval</td>
+      <td>storedVars['field_your_response_event_text_content']</td>
+      <td tal:content="python: dialog_content_configuration['field_your_response_event_text_content']"></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+
+  <tal:block metal:define-macro="fill_create_response_dialog_content">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Fill the create response dialog content'"></b></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_response_event_title</td>
+      <td tal:content="python: dialog_content_configuration['field_your_response_event_title']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_response_event_portal_type</td>
+      <td tal:content="python: dialog_content_configuration['field_your_response_event_portal_type']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_response_event_resource</td>
+      <td tal:content="python: dialog_content_configuration['field_your_response_event_resource']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_response_event_start_date</td>
+      <td tal:content="python: dialog_content_configuration['field_your_response_event_start_date']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_response_event_notification_message</td>
+      <td tal:content="python: dialog_content_configuration['field_your_response_event_notification_message']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_your_response_workflow_action</td>
+      <td tal:content="python: dialog_content_configuration['field_your_response_workflow_action']"></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>field_my_default_destination</td>
+      <td tal:content="python: dialog_content_configuration['field_my_default_destination']"></td>
+    </tr>
+    <tr>
+      <td>storeEval</td>
+      <td tal:content="python: 'document.querySelector(\'#selenium_myiframe\').contentWindow.document.querySelector(\'iframe\').contentWindow.document.querySelector(\'iframe\').contentWindow.document.body.innerHTML = \'%s\'' % dialog_content_configuration['field_your_response_event_text_content']"></td>
+      <td>field_my_text_content</td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+
+  <tal:block metal:define-macro="check_response_content">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Check the response content'"></b></td>
+    </tr>
+    <!-- Wait for gadget to be loaded -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_my_title</td>
+      <td tal:content="python: response_configuration['field_my_title']"></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td tal:content="python: response_configuration['field_my_portal_type']"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_my_resource</td>
+      <td tal:content="python: response_configuration['field_my_resource']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_my_start_date</td>
+      <td tal:content="python: response_configuration['field_my_start_date']"></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td tal:content="python: response_configuration['simulation_state']"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_my_source_title</td>
+      <td tal:content="python: response_configuration['field_my_source_title']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>field_my_destination_title_list</td>
+      <td tal:content="python: response_configuration['field_my_destination_title']"></td>
+    </tr>
+    <!-- Wait for ckeditor to be loaded :/ How to inspect inside another iframe? -->
+    <tr>
+      <td>pause</td>
+      <td>5000</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>storeEval</td>
+            <td>document.querySelector('#selenium_myiframe').contentWindow.document.querySelector('iframe').contentWindow.document.querySelector('iframe').contentWindow.document.body.innerHTML</td>
+      <td>field_my_text_content</td>
+    </tr>
+    <tr>
+      <td>verifyEval</td>
+      <td>storedVars['field_my_text_content']</td>
+      <td tal:content="python: response_configuration['field_my_text_content']"></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+</tal:block>
