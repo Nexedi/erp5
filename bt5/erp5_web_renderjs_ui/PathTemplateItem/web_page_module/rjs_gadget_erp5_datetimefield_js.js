@@ -226,7 +226,7 @@
           .push(function (gadget_list) {
             var text_content = "",
               state_date,
-              options;
+              offset_time_zone;
             if (gadget.state.value) {
               state_date = new Date(gadget.state.value);
               if (gadget.state.timezone_style) {
@@ -235,14 +235,13 @@
                   text_content += " " + state_date.toLocaleTimeString();
                 }
               } else {
-                // We don't know the timezone used by erp5 to store the date
-                // display it as displayed in editable
-                options = {timeZone: "UTC"};
-                text_content = state_date.toLocaleDateString(undefined,
-                                                             options);
+                //get timezone difference between server and local browser
+                offset_time_zone = timezone + (state_date.getTimezoneOffset() / 60);
+                //adjust hour in order to get correct date time string
+                state_date.setUTCHours(state_date.getUTCHours() + offset_time_zone);
+                text_content = state_date.toLocaleDateString();
                 if (!gadget.state.date_only) {
-                  text_content += " " + state_date.toLocaleTimeString(undefined,
-                                                                      options);
+                  text_content += " " + state_date.toLocaleTimeString();
                 }
               }
             }
