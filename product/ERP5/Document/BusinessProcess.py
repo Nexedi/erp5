@@ -769,7 +769,7 @@ class BusinessProcess(Path, XMLObject):
     property_dict.update(trade_model_path.getArrowCategoryDict(context=amount))
 
     # More categories
-    for base_category in ('delivery_mode', 'incoterm', 'payment_mode'):
+    for base_category in ('delivery_mode', 'incoterm', 'payment_mode', 'ledger'):
       value = trade_model_path.getPropertyList(base_category)
       if value:
         property_dict[base_category] = value
