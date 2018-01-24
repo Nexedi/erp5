@@ -1,7 +1,6 @@
-/*global window, rJS, RSVP, URI, location,
-    loopEventListener, btoa */
+/*global window, rJS, RSVP, URI, navigator */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, URI, navigator) {
   "use strict";
 
   function setjIOERP5Configuration(gadget) {
@@ -18,8 +17,12 @@
         var configuration = {},
           portal_type = result[0],
           attachment_synchro = result[1] !== "",
-          extended_attachment_url = result[1];
-
+          extended_attachment_url = result[1],
+          // https://bugs.chromium.org/p/chromium/issues/detail?id=375297
+          // mobile device memory is limited for blob,
+          // we reach this limit with parallel operation.
+          is_low_memory = (navigator.userAgent.indexOf("Chrome") > 0) &&
+            (navigator.userAgent.indexOf('Mobile') > 0);
         configuration = {
           type: "replicate",
           // XXX This drop the signature lists...
@@ -30,8 +33,8 @@
           },
           use_remote_post: true,
           conflict_handling: 1,
-          parallel_operation_attachment_amount: 10,
-          parallel_operation_amount: 10,
+          parallel_operation_attachment_amount: is_low_memory ? 1 : 10,
+          parallel_operation_amount: is_low_memory ? 1 : 10,
 //          signature_hash_key: "modification_date",
           check_local_attachment_modification: attachment_synchro,
           check_local_attachment_creation: attachment_synchro,
@@ -233,4 +236,4 @@
         });
     });
 
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, URI, navigator));
