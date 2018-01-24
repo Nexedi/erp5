@@ -685,10 +685,11 @@ return context.generatePredicate(
     self.getRule('default_delivery_rule').validate()
     self.tic()
     self.pl.updateSimulation(create_root=1)
-    self.tic(stop_condition=lambda message_list: 1 == sum(1
-      for m in message_list if m.method_id == 'immediateReindexObject'))
+    self.tic()
     root_applied_rule, = self.pl.getCausalityRelatedValueList()
     sm, = root_applied_rule.objectValues()
+    sm.unindexObject()
+    self.tic()
     line = sm.getDeliveryValue()
     self.assertEqual([sm], line.getDeliveryRelatedValueList())
     self.assertEqual([], [x.getObject() for x in self.portal.portal_catalog
@@ -701,15 +702,14 @@ return context.generatePredicate(
     should be deleted at some point.
     """
     root_applied_rule = self._slowReindex()
-    r, = self.portal.cmf_activity_sql_connection.manage_test(
-      'update message set priority = 127\0select * from message')
-    self.assertEqual(r.processing_node, -1)
     line_id, = self.pl.objectIds()
     self.pl._delObject(line_id)
     line = self.pl.newContent(portal_type=self.packing_list_line_portal_type,
                               quantity=1)
     self.tic()
     sm, = root_applied_rule.objectValues()
+    sm.reindexObject()
+    self.tic()
     self.assertEqual(line, sm.getDeliveryValue())
 
   def test_14_indexRelated(self):
@@ -718,7 +718,6 @@ return context.generatePredicate(
     This actually tests the zodb-indexing of delivery category.
     """
     root_applied_rule = self._slowReindex()
-    self.portal.cmf_activity_sql_connection.manage_test('delete from message')
     self.pl.updateSimulation(index_related=1)
     self.tic()
     sm, = root_applied_rule.objectValues()
