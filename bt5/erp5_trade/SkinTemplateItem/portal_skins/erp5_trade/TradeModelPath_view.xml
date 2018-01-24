@@ -105,6 +105,7 @@
                         <string>my_payment_mode</string>
                         <string>my_delivery_mode</string>
                         <string>my_incoterm</string>
+                        <string>my_ledger</string>
                       </list>
                     </value>
                 </item>
