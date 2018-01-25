@@ -57,8 +57,12 @@ class TestMultiRelationField(ERP5TypeTestCase):
                  ['Category'], [('Category', 'Category')], 'title', '',
                  [([category.getUid()], category.getUid(), category.getId(),
                    None, 'subfield_field_my_foo_category_title_item')], '')
-    self.assertFalse(foo_object.hasActivity(method_id="recursiveImmediateReindexObject"))
+    foo_path = foo_object.getPath()
+    foo_uid = foo_object.getUid()
+    self.assertEqual([x.path for x in self.portal.portal_catalog(uid=foo_uid)], [foo_path])
+    foo_object.unindexObject()
+    self.tic()
+    self.assertEqual([x.path for x in self.portal.portal_catalog(uid=foo_uid)], [])
     editor.edit(foo_object)
-    self.commit()
-    self.assertTrue(foo_object.hasActivity(method_id="recursiveImmediateReindexObject"))
-
+    self.tic()
+    self.assertEqual([x.path for x in self.portal.portal_catalog(uid=foo_uid)], [foo_path])
