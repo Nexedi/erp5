@@ -3,7 +3,6 @@ and redirects to the accounting transaction view which is easier to
 use.
 '''
 from Products.ERP5Type.Message import translateString
-request = container.REQUEST
 
 for _ in range(line_count):
   context.newContent(portal_type=line_portal_type)
