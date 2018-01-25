@@ -118,14 +118,12 @@ for month in range(1, month_count + 1):
       ptr.stop()
 
       if not keep_grouping_reference:
+        tag = script.id + '_payment_indexation_' + ptr.getPath()
+        ptr.recursiveReindexObject(activate_kw={'tag': tag})
         for line in ptr.getMovementList(
                           portal_type=ptr.getPortalAccountingMovementTypeList()):
           if line.getGroupingReference():
-             line.activate(after_path_and_method_id=(
-                  (ptr.getPath(), line.getPath()),
-                    ('recursiveImmediateReindexObject',
-                      'immediateReindexObject')),
-             ).AccountingTransactionLine_resetGroupingReference()
+             line.activate(after_tag=tag).AccountingTransactionLine_resetGroupingReference()
 
 
 accounting_module.setProperty('current_content_script',
