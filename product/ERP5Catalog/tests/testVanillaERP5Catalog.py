@@ -110,14 +110,6 @@ class TestVanillaERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       self.assertTrue(path not in  path_list)
       LOG('checkRelativeUrlInSQLPathList not found path:',0,path)
 
-  # This test fails because initial business template installation indexes
-  # installed objects using rules inconsistent with ERP5Site_reindexAll.
-  # This is not a regression: previously tests did not notice because they were
-  # not testing result set equality, but post-reindex being a superset of
-  # pre-reindex (bad), and pre-reindex was necessarily a subset because other
-  # tests run before were clearing catalog, making this test an exercise in
-  # futiliy.
-  @unittest.expectedFailure
   def test_1_ERP5Site_reindexAll(self):
     portal = self.getPortal()
     portal.portal_categories.newContent(portal_type='Base Category', title="GreatTitle1")

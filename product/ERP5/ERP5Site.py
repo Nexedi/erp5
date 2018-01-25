@@ -266,6 +266,17 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  security.declarePublic('isSubtreeIndexable')
+  def isSubtreeIndexable(self):
+    """
+    Allow a container to preempt indexability of its content, without having
+    to set "isIndexable = False" on (at minimum) its immediate children.
+
+    The meaning of calling this method on an instance where
+    isAncestryIndexable returns False is undefined.
+    """
+    return self.isIndexable
+
   def __before_publishing_traverse__(self, self2, request):
     request.RESPONSE.realm = None
     return super(ERP5Site, self).__before_publishing_traverse__(self2, request)

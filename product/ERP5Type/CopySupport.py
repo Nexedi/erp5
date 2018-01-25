@@ -545,7 +545,6 @@ class CopyContainer:
 
   def _setNonIndexable(self):
     self.isIndexable = ConstantGetter('isIndexable', value=False)
-    self.__recurse('_setNonIndexable')
 
   def manage_pasteObjects(self, cb_copy_data=None, is_indexable=None, reindex_kw=None, immediate_reindex=False, REQUEST=None):
     """Paste previously copied objects into the current object.
