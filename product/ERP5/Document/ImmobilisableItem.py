@@ -1075,14 +1075,20 @@ class ImmobilisableItem(Item, Amount):
       # An item can be expanded for amortisation only when related deliveries
       # are no more in 'calculating' immobilisation_state
       related_packing_list_list = self.getAggregateRelatedValueList()
-      related_packing_list_path_list = [x.getPath() for x in related_packing_list_list]
+      for related_packing_list in related_packing_list_list:
+        # XXX: Tagged reindexation added to replace after_path_and_method_id. May be unnecessary.
+        related_packing_list.recursiveReindexObject(
+          # Recycle a tag we must wait on anyway.
+          # XXX: it would be better to have per-item tags...
+          activate_kw={'tag': 'expand_amortisation'},
+        )
       self.activate(
-          after_path_and_method_id=(
-            related_packing_list_path_list, ('immediateReindexObject',
-                                             'recursiveImmediateReindexObject',
-                                             'updateImmobilisationState',)),
-          after_tag='expand_amortisation'
-          ).immediateExpandAmortisation()
+        after_path_and_method_id=(
+          [x.getPath() for x in related_packing_list_list],
+          ('updateImmobilisationState', ),
+        ),
+        after_tag='expand_amortisation'
+      ).immediateExpandAmortisation()
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'immediateExpandAmortisation')

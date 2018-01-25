@@ -206,14 +206,12 @@ for month in range(1, month_count + 1):
           tr.deliver()
           assert tr.getSimulationState() == 'delivered'
         if not keep_grouping_reference:
+          tag = script.id + '_payment_indexation_' + payment.getPath()
+          payment.recursiveReindexObject(activate_kw={'tag': tag})
           for line in payment.getMovementList(
                           portal_type=payment.getPortalAccountingMovementTypeList()):
             if line.getGroupingReference():
-               line.activate(after_path_and_method_id=(
-                  (payment.getPath(), line.getPath()),
-                    ('recursiveImmediateReindexObject',
-                      'immediateReindexObject')),
-               ).AccountingTransactionLine_resetGroupingReference()
+               line.activate(after_tag=tag).AccountingTransactionLine_resetGroupingReference()
 
       else:
         # other cases not supported for now

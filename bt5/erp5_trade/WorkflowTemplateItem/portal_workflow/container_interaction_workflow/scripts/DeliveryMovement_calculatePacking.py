@@ -1,12 +1,14 @@
-object = state_change['object']
-delivery = object.getExplanationValue()
-
-activate_kw = {}
+document = state_change['object']
+delivery = document.getExplanationValue()
 if getattr(delivery, 'calculatePacking', None) is not None:
   try:
-    container = object.getContainerValue()
-    activate_kw['after_path_and_method_id'] = (container.getPath(),
-                                         'recursiveImmediateReindexObject')
+    container = document.getContainerValue()
   except AttributeError:
-    pass
-  delivery.activate(**activate_kw).calculatePacking()
+    container = None
+  if container is None:
+    tag = None
+  else:
+    tag = script.id + '_' + container.getPath()
+    # XXX: Tagged reindexation added to replace after_path_and_method_id. May be unnecessary.
+    container.recursiveReindexObject(activate_kw={'tag': tag})
+  delivery.activate(after_tag=tag).calculatePacking()

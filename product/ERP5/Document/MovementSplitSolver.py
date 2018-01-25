@@ -74,6 +74,8 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
         in delivery_dict.iteritems():
       # First, duplicate the whole delivery document including its
       # sub objects.
+      old_delivery_url = delivery.getRelativeUrl()
+      indexation_tag = 'MovementSplitSolver_solve_' + old_delivery_url
       applied_rule = delivery.getCausalityRelatedValue(
           portal_type='Applied Rule')
       parent = delivery.getParentValue()
@@ -81,11 +83,10 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
           parent._duplicate(parent.manage_copyObjects(ids=ids))
         )(parent, delivery.getId())
       new_delivery = parent[cp['new_id']]
-      old_delivery_url = delivery.getRelativeUrl()
+      new_delivery.recursiveReindexObject(activate_kw={'tag': indexation_tag})
       new_delivery_url = new_delivery.getRelativeUrl()
 
-      reindex_path_list = [new_delivery.getPath()]
-      update_related_content_tag_list = []
+      update_related_content_tag_list = [indexation_tag]
 
       old_simulation_movement_list = []
       new_simulation_movement_list = []
@@ -134,11 +135,9 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
                                         new_movement_url)
           update_related_content_tag_list.append('%s_updateRelatedContent'
                                                  % movement.getPath())
-          new_movement_path = movement.getPath().replace(
-            old_delivery_url, new_delivery_url)
-          reindex_path_list.append(new_movement_path)
-          reindex_path_list.extend(
-            [x.getPath() for x in simulation_movement_list])
+          for simulation_movement in simulation_movement_list:
+            # XXX: Tagged reindexation added to replace after_path_and_method_id. May be unnecessary.
+            simulation_movement.reindexObject(activate_kw={'tag': indexation_tag})
           new_simulation_movement_list.extend(
             [x.getRelativeUrl() for x in simulation_movement_list])
           _delete(movement)
@@ -152,7 +151,7 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
             simulation_movement.setDelivery(
               simulation_movement.getDelivery().replace(
               '%s/' % old_delivery_url, '%s/' % new_delivery_url))
-            reindex_path_list.append(simulation_movement.getRelativeUrl())
+            simulation_moment.reindexObjec(activate_kw={'tag': indexation_tag})
           quantity_dict = {}
           for simulation_movement in simulation_movement_list:
             delivery_movement = simulation_movement.getDeliveryValue()
@@ -197,10 +196,7 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
                      new_root_simulation_movement_list]
           cut_data = applied_rule.manage_cutObjects(id_list)
           new_applied_rule.manage_pasteObjects(cut_data)
-          reindex_path_list = [\
-            x.replace('%s/' % applied_rule.getRelativeUrl(),
-                      '%s/' % new_applied_rule.getRelativeUrl()) for x in \
-            reindex_path_list]
+          new_applied_rule.recursiveReindexObject(activate_kw={'tag': indexation_tag})
 
       # Update variation category list
       def _updateVariationCategoryList(document):
@@ -225,9 +221,7 @@ class MovementSplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
         mapping={'old_delivery_url':old_delivery_url}))
 
       # Update causality state
-      activate_kw = dict(after_tag_list=update_related_content_tag_list,
-        after_path_and_method_id=(reindex_path_list,
-          ('immediateReindexObject','recursiveImmediateReindexObject')))
+      activate_kw = {'after_tag_list': update_related_content_tag_list}
       delivery.activate(**activate_kw).updateCausalityState()
       new_delivery.activate(**activate_kw).updateCausalityState()
 
