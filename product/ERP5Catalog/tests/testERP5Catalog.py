@@ -1328,7 +1328,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     original_path_list = self.getSQLPathList(self.original_connection_id)
     new_path_list = self.getSQLPathList(self.new_connection_id)
-    self.assertTrue(set(original_path_list).issubset(new_path_list))
+    self.assertTrue(
+      set(original_path_list).issubset(new_path_list),
+      set(original_path_list).difference(new_path_list),
+    )
     self.organisation2 = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
     first_deleted_url = self.organisation2.getRelativeUrl()
