@@ -3,6 +3,7 @@ Generic method called when submitting a form in dialog mode.
 Responsible for validating form data and redirecting to the form action.
 """
 from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING
+import json
 
 # XXX We should not use meta_type properly,
 # XXX We need to discuss this problem.(yusei)
@@ -14,10 +15,17 @@ def isFieldType(field, type_name):
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from ZTUtils import make_query
 
+def failWithMessage(message, request=None):
+  response = request.RESPONSE if request is not None else context.REQUEST.RESPONSE
+  response.setStatus(500)
+  response.setHeader("Content-type", "application/json; charset=utf-8")
+  return json.dumps({"portal_status_message": str(message)})
+
 # Kato: I do not understand why we throw away REQUEST from parameters (hidden in **kw)
-# and use container.REQUEST just to introduce yet another global state
-# because REUQEST from arguments is a different instance than container.REQUEST!
-request = container.REQUEST
+# and use container.REQUEST just to introduce yet another global state. Maybe because
+# container.REQUEST is used in other places.
+# Well, REQUEST from arguments is a different instance than container.REQUEST so it will create problems...
+request = kw.get('REQUEST', None) or container.REQUEST
 
 # request.form holds POST data thus containing 'field_' + field.id items
 # such as 'field_your_some_field'
@@ -81,25 +89,6 @@ if dialog_method == 'Folder_delete':
                                selection_name=kw['selection_name'],
                                md5_object_uid_list=kw['md5_object_uid_list'])
 
-
-def handleFormError(form, validation_errors):
-  """Return correctly rendered form with all errors assigned to its fields."""
-  field_errors = form.ErrorFields(validation_errors)
-  # Pack errors into the request
-  request.set('field_errors', field_errors)
-  # Make sure editors are pushed back as values into the REQUEST object
-  for f in form.get_fields():
-    field_id = f.id
-    if request.has_key(field_id):
-      value = request.get(field_id)
-      if callable(value):
-        value(request)
-  if silent_mode:
-    return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form'), 'form'
-  request.RESPONSE.setStatus(400)
-  return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form')
-
-
 form = getattr(context, dialog_id)
 
 # form can be a python script that returns the form
@@ -124,19 +113,25 @@ try:
     # Form is OK, it's just this field - style so we return back form-wide error
     # for which we don't have support out-of-the-box thus we manually craft it
     # XXX TODO: Form-wide validation errors
-    return handleFormError(
-      form,
-      FormValidationError([
-        ValidationError(
-          error_key=None,
-          field=form.get_field('your_portal_skin'),
-          error_text=translate(
-            'Only ODT, ODS, Hal and HalRestricted skins are allowed for reports '\
-            'in Preferences - User Interface - Report Style'))
-      ], {}))
+    return failWithMessage(
+      translate('Only ODT, ODS, Hal and HalRestricted skins are allowed for reports '\
+                'in Preferences - User Interface - Report Style'))
 
 except FormValidationError as validation_errors:
-  return handleFormError(form, validation_errors)
+  # Pack errors into the request
+  field_errors = form.ErrorFields(validation_errors)
+  request.set('field_errors', field_errors)
+  # Make sure editors are pushed back as values into the REQUEST object
+  for f in form.get_fields():
+    field_id = f.id
+    if request.has_key(field_id):
+      value = request.get(field_id)
+      if callable(value):
+        value(request)
+  if kw.get('silent_mode', False): return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form'), 'form'
+  request.RESPONSE.setStatus(400)
+  return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form')
+
 
 MARKER = [] # A recognisable default value. Use with 'is', not '=='.
 listbox_id_list = [] # There should not be more than one listbox - but this give us a way to check.
@@ -218,16 +213,9 @@ if dialog_method != update_method and clean_kw.get('deferred_style', 0):
     # Limit Reports in Deferred style to known working styles
     if request_form.get('your_portal_skin', None) not in ("ODT", "ODS"):
       # RJS own validation - deferred option works here only with ODS/ODT skins
-      return handleFormError(
-        form,
-        FormValidationError([
-          ValidationError(
-            error_key=None,
-            field=form.get_field('your_deferred_style'),
-            error_text=translate(
-              'Deferred reports are possible only with preference '\
-              '"Report Style" set to "ODT" or "ODS"'))
-        ], {}))
+      return failWithMessage(
+        translate('Deferred reports are possible only with preference '\
+                  '"Report Style" set to "ODT" or "ODS"'))
 
   # If the action form has report_view as it's method, it
   if page_template != 'report_view':
