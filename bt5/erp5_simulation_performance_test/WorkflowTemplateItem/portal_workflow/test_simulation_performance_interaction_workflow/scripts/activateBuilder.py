@@ -8,8 +8,7 @@ builder = delivery.getPortalObject().portal_deliveries[{
 delivery_portal_type = builder.getDeliveryPortalType()
 serialization_tag    = 'build:' + delivery_portal_type
 index_tag            = 'index:' + delivery_portal_type
-after_method_id      = ('recursiveImmediateReindexObject',
-                        'immediateReindexObject',
+after_method_id      = ('immediateReindexObject',
                         'expand',
                         '_updateSimulation')
 activate_kw          = dict(tag=index_tag)

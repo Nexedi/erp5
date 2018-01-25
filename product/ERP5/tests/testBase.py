@@ -98,13 +98,11 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.ImmediateReindexObjectIsCalled()
     from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.immediateReindexObject = crashingMethod
-    Organisation.recursiveImmediateReindexObject = crashingMethod
 
   def beforeTearDown(self):
     # Remove crashing method
     from Products.ERP5Type.Document.Organisation import Organisation
     del Organisation.immediateReindexObject
-    del Organisation.recursiveImmediateReindexObject
 
   def createCategories(self):
     """
@@ -188,8 +186,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertTrue(len(message_list) > 0)
     self.assertTrue(len(message_list) < 3)
     for method_id in method_id_list:
-      self.assertTrue(method_id in ["immediateReindexObject",
-                                    "recursiveImmediateReindexObject"])
+      self.assertTrue(method_id in ["immediateReindexObject"])
 
   def stepSetSameTitleValueWithEdit(self, sequence=None, sequence_list=None,
                                     **kw):

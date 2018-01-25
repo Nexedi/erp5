@@ -2820,9 +2820,7 @@ class Base( CopyContainer,
     if self.isAncestryIndexable():
       with super_user():
         PortalContent.reindexObject(self, *args, **kw)
-
-  security.declarePrivate('recursiveImmediateReindexObject')
-  recursiveImmediateReindexObject = immediateReindexObject
+  _reindexOnCreation = immediateReindexObject
 
   security.declarePublic('reindexObject')
   def reindexObject(self, *args, **kw):

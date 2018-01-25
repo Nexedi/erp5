@@ -1266,14 +1266,19 @@ class Folder(CopyContainer, OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, F
             value_list.extend(c.getIndexableChildValueList())
     return value_list
 
-  security.declarePrivate('recursiveImmediateReindexObject')
-  def recursiveImmediateReindexObject(self, **kw):
-    if self.isIndexable and int(getattr(self.getPortalObject(), 'isIndexable', 1)):
-      self.immediateReindexObject(**kw)
-    for c in self.objectValues():
-      if getattr(aq_base(c),
-                 'recursiveImmediateReindexObject', None) is not None:
-        c.recursiveImmediateReindexObject(**kw)
+  def _reindexOnCreation(self, **reindex_kw):
+    """
+    Immediately and recursively reindex self, a document which was created
+    (bound to its parent) within current transaction.
+
+    Here, immediate recursion is expected to be fine as document tree just
+    created: assume we can iterate over what was just created without causing
+    memory exhaustion.
+    """
+    self.immediateReindexObject(**reindex_kw)
+    dummy = lambda **kw: None
+    for document in self.objectValues():
+      getattr(document, '_reindexOnCreation', dummy)(**reindex_kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'moveObject')
   def moveObject(self, idxs=None):

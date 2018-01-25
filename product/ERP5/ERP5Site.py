@@ -1973,7 +1973,7 @@ class ERP5Generator(PortalGenerator):
     #      nodes have nothing else to do.
     after_method_id = tuple({after_method_id}.union(('Folder_reindexAll',
       'Folder_reindexObjectList', 'InventoryModule_reindexMovementList',
-      'immediateReindexObject', 'recursiveImmediateReindexObject', 'SQLCatalog_deferFullTextIndexActivity')))
+      'immediateReindexObject', 'SQLCatalog_deferFullTextIndexActivity')))
     p.portal_activities.activateObject(p, after_method_id=after_method_id,
       )._delPropValue(id_)
 

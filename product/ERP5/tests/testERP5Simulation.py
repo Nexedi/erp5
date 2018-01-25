@@ -120,8 +120,7 @@ class TestERP5Simulation(TestPackingListMixin, SecurityTestCase):
         after_tag.append(previous_tag)
       delivery_builder.activate(
         after_method_id=('solve',
-                         'immediateReindexObject',
-                         'recursiveImmediateReindexObject',), # XXX too brutal.
+                         'immediateReindexObject'), # XXX too brutal.
         after_tag=after_tag,
         ).build(explanation_uid=packing_list.getCausalityValue().getUid())
 
