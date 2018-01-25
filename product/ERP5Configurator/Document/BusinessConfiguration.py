@@ -335,7 +335,6 @@ class BusinessConfiguration(Item):
     """
     kw = dict(tag="start_configuration_%s" % self.getId(),
               after_method_id=["updateBusinessTemplateFromUrl",
-                               "recursiveImmediateReindexObject",
                                "immediateReindexObject"])
     # build
     configuration_save_list = self.contentValues(portal_type='Configuration Save')
@@ -353,8 +352,7 @@ class BusinessConfiguration(Item):
                                                  configurator_item.getUid())
 
     kw["tag"] = "final_configuration_step_%s" % self.getId()
-    kw["after_method_id"] = ["fixConsistency", 'immediateReindexObject', \
-                             "recursiveImmediateReindexObject"]
+    kw["after_method_id"] = ["fixConsistency", 'immediateReindexObject']
 
     self.activate(**kw).ERP5Site_afterConfigurationSetup()
 

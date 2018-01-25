@@ -271,7 +271,6 @@ class AppliedRule(XMLObject, ExplainableMixin):
       if rar_list and portal.portal_activities.countMessage(
         path=[x.getPath() for x in rar_list],
         method_id=('immediateReindexObject',
-                   'recursiveImmediateReindexObject',
                    'recursiveImmediateReindexSimulationMovement')):
         raise ConflictError
       # Do not try to keep simulation tree for a draft delivery

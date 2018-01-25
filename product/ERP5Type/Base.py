@@ -2821,9 +2821,6 @@ class Base( CopyContainer,
       with super_user():
         PortalContent.reindexObject(self, *args, **kw)
 
-  security.declarePrivate('recursiveImmediateReindexObject')
-  recursiveImmediateReindexObject = immediateReindexObject
-
   security.declarePublic('reindexObject')
   def reindexObject(self, *args, **kw):
     """

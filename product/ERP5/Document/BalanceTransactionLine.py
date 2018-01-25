@@ -52,6 +52,3 @@ class BalanceTransactionLine(AccountingTransactionLine, InventoryLine):
   reindexObject = InventoryLine.reindexObject
   recursiveReindexObject = InventoryLine.recursiveReindexObject
   immediateReindexObject = InventoryLine.immediateReindexObject
-  recursiveImmediateReindexObject = \
-              InventoryLine.recursiveImmediateReindexObject
-

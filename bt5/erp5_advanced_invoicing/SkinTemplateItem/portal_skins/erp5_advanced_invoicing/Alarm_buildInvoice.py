@@ -21,8 +21,7 @@ for builder_id in builder_id_list:
   after_tag            = index_tag
   # depend on reindexing so that select methods
   # do not return movements that are already built
-  after_method_id      = ('recursiveImmediateReindexObject',
-                          'immediateReindexObject',
+  after_method_id      = ('immediateReindexObject',
                           '_updateSimulation')
   activate_kw          = dict(tag=index_tag)
   builder.activate(

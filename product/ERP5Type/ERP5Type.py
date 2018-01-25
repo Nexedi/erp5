@@ -451,7 +451,7 @@ class ERP5TypeInformation(XMLObject,
         #   (activities). Or just not request immediate indexation.
         # - if ImmediateReindexContextManager is used, anything until
         #   context manager exits.
-        method = ob.recursiveImmediateReindexObject
+        method = ob.reindexOnCreation
         if reindex_kw is not None:
           method = partial(method, **reindex_kw)
         if isinstance(immediate_reindex, ImmediateReindexContextManager):

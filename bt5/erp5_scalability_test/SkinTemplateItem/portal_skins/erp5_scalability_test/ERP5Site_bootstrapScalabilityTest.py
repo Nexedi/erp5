@@ -36,7 +36,6 @@ if configurator.getSimulationState() == "draft":
 # create users if installation is done
 try:
   context.portal_categories.activate(after_method_id = ('ERP5Site_afterConfigurationSetup',
-                                     'recursiveImmediateReindexObject',
                                      'immediateReindexObject')
                                      ).ERP5Site_createTestData(user_quantity, password)
 except Exception as e:
