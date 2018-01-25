@@ -146,7 +146,7 @@
                   "default": data,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1,
+                  "editable": editable,
                   "key": "text_content",
                   "hidden": 0,
                   "type": editable ? "GadgetField" : "EditorField",
