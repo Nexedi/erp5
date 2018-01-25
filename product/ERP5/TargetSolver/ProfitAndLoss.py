@@ -49,9 +49,6 @@ class ProfitAndLoss(CopyToTarget):
       target_quantity = delivery_line_quantity * simulation_movement.getDeliveryRatio()
       added_quantity = simulation_movement.getQuantity() - target_quantity
       simulation_movement.edit(profit_quantity=added_quantity)
-    delivery_line.activate(
-      after_path_and_method_id=(
-        simulation_movement.getPath(),
-        ['immediateReindexObject', 'recursiveImmediateReindexObject']
-      )
-    ).edit()
+    tag = 'ProfitAndLoss_solve_' + simulation_movement.getPath()
+    simulation_movement.reindexObject(activate_kw={'tag': tag})
+    delivery_line.activate(after_tag=tag).edit()

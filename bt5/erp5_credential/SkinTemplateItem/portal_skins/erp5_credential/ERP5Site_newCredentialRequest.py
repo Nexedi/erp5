@@ -39,7 +39,8 @@ credential_request = module.newContent(
 credential_request.setCategoryList(category_list)
 # Same tag is used as in ERP5 Login._setReference, in order to protect against
 # concurrency between Credential Request and Person object too
-credential_request.reindexObject(activate_kw=dict(tag='set_login_%s' % reference.encode('hex')))
+tag = 'set_login_%s' % reference.encode('hex')
+credential_request.reindexObject(activate_kw={'tag': tag})
 
 #We attach the current user to the credential request if not anonymous
 if not context.portal_membership.isAnonymousUser():
@@ -58,15 +59,7 @@ if portal_preferences.getPreferredCredentialAlarmAutomaticCall():
   message_str = "Credential Request Created."
 else:
   if portal_preferences.isPreferredEmailVerificationCheck():
-    # after_path_and_method_id argument is used below to not activate when
-    # Crededial request object is not indexed yet. This is needed because when
-    # the method searchAndActivate from catalog is called, if the object is not
-    # indexed, the e-mail is not sent.
-    method_id_list = ('immediateReindexObject', 'recursiveImmediateReindexObject')
-    path_and_method_id = (credential_request.getPath(), method_id_list)
-    activity_kw = dict(activity='SQLQueue',
-                       after_path_and_method_id=path_and_method_id)
-    credential_request.activate(**activity_kw).CredentialRequest_sendSubmittedNotification(
+    credential_request.activate(activity='SQLQueue', after_tag=tag).CredentialRequest_sendSubmittedNotification(
       context_url=context.absolute_url(),
       notification_reference='credential_request-subscription')
     message_str = "Thanks for your registration. You will be receive an email to activate your account."

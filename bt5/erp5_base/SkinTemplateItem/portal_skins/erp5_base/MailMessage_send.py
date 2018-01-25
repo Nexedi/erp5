@@ -93,9 +93,9 @@ if use_activity:
                    from_url=from_url)
   if extra_header_dict:
     method_kw['extra_header_dict'] = extra_header_dict
-  context.activate(
-    after_path_and_method_id=((context.getPath(),), 
-                              ('immediateReindexObject', 'recursiveImmediateReindexObject'))).MailMessage_sendByActivity(
+  tag = script.id + '_reindex_' + context.getPath()
+  context.reindexObject(activate_kw={'tag': tag})
+  context.activate(after_tag=tag).MailMessage_sendByActivity(
     method_kw=method_kw, **kw)
 
 if download:
