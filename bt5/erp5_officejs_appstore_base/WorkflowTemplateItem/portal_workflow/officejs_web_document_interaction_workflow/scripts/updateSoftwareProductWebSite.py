@@ -6,5 +6,5 @@ if web_page.getPublicationSection() == "application/landing_page":
     software_product.activate(
       after_path_and_method_id=(
         (web_page.getPath(),),
-        ("immediateReindexObject", "recursiveImmediateReindexObject")
+        ("immediateReindexObject", )
        )).SoftwareProduct_fixRelatedWebSite()

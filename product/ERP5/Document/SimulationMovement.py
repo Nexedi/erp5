@@ -505,26 +505,6 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     root_rule = self.getRootAppliedRule()
     return root_rule.getCausalityValueList()
 
-  # XXX FIXME Use a interaction workflow instead
-  # XXX This behavior is now done by simulation_movement_interaction_workflow
-  # The call to activate() must be done after actual call to
-  # setDelivery() on the movement,
-  # but activate() must be called on the previous delivery...
-  #def _setDelivery(self, value):
-  #  LOG('setDelivery before', 0, '')
-  #  delivery_value = self.getDeliveryValue()
-  #  Movement.setDelivery(value)
-  #  LOG('setDelivery', 0, '')
-  #  if delivery_value is not None:
-  #    LOG('delivery_value = ', 0, repr(delivery_value))
-  #    activity = delivery_value.activate(
-  #                activity='SQLQueue',
-  #                after_path_and_method_id=(
-  #                                        self.getPath(),
-  #                                        ['immediateReindexObject',
-  #                                         'recursiveImmediateReindexObject']))
-  #    activity.edit()
-
   def _isTreeDelivered(self):
     """
     checks if subapplied rules  of this movement (going down the complete
