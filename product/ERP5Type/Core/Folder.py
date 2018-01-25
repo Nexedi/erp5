@@ -1229,7 +1229,7 @@ class Folder(CopyContainer, OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, F
 
   security.declarePublic('recursiveReindexObject')
   def recursiveReindexObject(self, activate_kw=None, **kw):
-    if self.isIndexable:
+    if self.isAncestryIndexable():
       kw, activate_kw = self._getReindexAndActivateParameterDict(
         kw,
         activate_kw,
@@ -1245,7 +1245,7 @@ class Folder(CopyContainer, OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, F
       )
 
   def _isDocumentNonIndexable(self, document):
-    return not document.isIndexable
+    return not document.isSubtreeIndexable()
 
   def _updateActivateKwWithSerialisationTag(self, document, activate_kw):
     activate_kw['serialization_tag'] = document.getRootDocumentPath()
@@ -1258,11 +1258,12 @@ class Folder(CopyContainer, OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, F
       Get indexable childen recursively.
     """
     value_list = []
-    if self.isIndexable:
+    if self.isAncestryIndexable():
       value_list.append(self)
-      for c in self.objectValues():
-        if getattr(aq_base(c), 'getIndexableChildValueList', None) is not None:
-          value_list.extend(c.getIndexableChildValueList())
+      if self.isSubtreeIndexable():
+        for c in self.objectValues():
+          if getattr(aq_base(c), 'getIndexableChildValueList', None) is not None:
+            value_list.extend(c.getIndexableChildValueList())
     return value_list
 
   security.declarePrivate('recursiveImmediateReindexObject')
@@ -1303,7 +1304,7 @@ class Folder(CopyContainer, OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, F
       Called when the base of a hierarchy is renamed
     """
     # Reindex self
-    if self.isIndexable:
+    if self.isAncestryIndexable():
       self.moveObject()
     # Reindex contents
     for c in self.objectValues():

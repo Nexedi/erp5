@@ -2788,9 +2788,36 @@ class Base( CopyContainer,
 #   def contentIds(self, *args, **kw):
 #     return []
 
+  security.declarePrivate('isSubtreeIndexable')
+  def isSubtreeIndexable(self):
+    """
+    Allow a container to preempt indexability of its content, without having
+    to set "isIndexable = False" on (at minimum) its immediate children.
+
+    The meaning of calling this method on an instance where
+    isAncestryIndexable returns False is undefined.
+    """
+    return self.isIndexable
+
+  security.declarePrivate('isAncestryIndexable')
+  def isAncestryIndexable(self):
+    """
+    Tells whether this document is indexable, taking into account its entire
+    ancestry: a document may only be indexed if its parent is indexable, and
+    it's parent's parent, etc until ERP5Site object (inclusive).
+    """
+    node = self.aq_inner
+    portal = aq_base(self.getPortalObject())
+    while True:
+      is_indexable = node.isSubtreeIndexable()
+      if not is_indexable or aq_base(node) is portal:
+        break
+      node = node.aq_parent
+    return is_indexable
+
   security.declarePrivate('immediateReindexObject')
   def immediateReindexObject(self, *args, **kw):
-    if self.isIndexable and int(getattr(self.getPortalObject(), 'isIndexable', 1)):
+    if self.isAncestryIndexable():
       with super_user():
         PortalContent.reindexObject(self, *args, **kw)
 
@@ -2810,7 +2837,7 @@ class Base( CopyContainer,
     # immediateReindexObject.
     # Do not check if root is indexable, it is done into catalogObjectList,
     # so we will save time
-    if self.isIndexable:
+    if self.isAncestryIndexable():
       kw, activate_kw = self._getReindexAndActivateParameterDict(
         kw,
         activate_kw,
@@ -2858,7 +2885,7 @@ class Base( CopyContainer,
     """
       Get indexable childen recursively.
     """
-    if self.isIndexable:
+    if self.isAncestryIndexable():
       return [self]
     return []
 
