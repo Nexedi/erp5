@@ -86,7 +86,7 @@ def ensureSerializable(obj):
       obj[key] = ensureSerializable(obj[key])
   # throw away date's type information and later reconstruct as Zope's DateTime
   if isinstance(obj, DateTime):
-    return obj.ISO()
+    return obj.ISO() + ' ' + obj.timezone()  # ISO with timezone
   if isinstance(obj, (datetime.datetime, datetime.date, datetime.time)):
     return obj.isoformat()
   # let us believe that iterables don't contain other unserializable objects
