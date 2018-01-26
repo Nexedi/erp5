@@ -677,7 +677,8 @@ class SQLBase(Queue):
                          message.validate(self, activity_tool)
         if validate_value == VALID:
           # Try to invoke the message - what happens if invoke calls flushActivity ??
-          activity_tool.invoke(message)
+          with ActivityRuntimeEnvironment(message):
+            activity_tool.invoke(message)
           if message.getExecutionState() != MESSAGE_EXECUTED:
             raise ActivityFlushError('Could not invoke %s on %s'
                                      % (message.method_id, path))
