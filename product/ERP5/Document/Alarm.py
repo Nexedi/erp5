@@ -35,7 +35,6 @@ from AccessControl.SecurityManagement import getSecurityManager, \
             setSecurityManager, newSecurityManager
 from AccessControl.User import nobody
 from Products.CMFActivity.ActivityRuntimeEnvironment import getActivityRuntimeEnvironment
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -107,11 +106,8 @@ class Alarm(XMLObject, PeriodicityMixin):
     """
     activate_kw = dict(activate_kw)
 
-    portal_membership = self.getPortalObject().portal_membership
-    if fixit or not self.getEnabled():
-      checkPermission = portal_membership.checkPermission
-      if not checkPermission(Permissions.ManagePortal, self):
-        raise Unauthorized('fixing problems or activating a disabled alarm is not allowed')
+    if (fixit or not self.getEnabled()) and not self.getPortalObject().portal_membership.checkPermission(Permissions.ManagePortal, self):
+      raise Unauthorized('fixing problems or activating a disabled alarm is not allowed')
 
     # Use UnrestrictedMethod, so that the behaviour would not
     # change even if this method is invoked by random users.
@@ -329,7 +325,8 @@ class Alarm(XMLObject, PeriodicityMixin):
     else:
       prefix = 'INFO'
 
-    notification_tool = getToolByName(self, 'portal_notifications')
+    portal = self.getPortalObject()
+    notification_tool = portal.portal_notifications
     candidate_list = self.getDestinationValueList()
     if not candidate_list:
       candidate_list = None
@@ -352,7 +349,7 @@ class Alarm(XMLObject, PeriodicityMixin):
 
     notification_tool.sendMessage(recipient=candidate_list,
                 subject='[%s][%s] Alarm Notification: %s' %
-                  (prefix, self.getPortalObject().getTitle(), self.getTitle()),
+                  (prefix, portal.getTitle(), self.getTitle()),
                 message="""
 Alarm Title: %s (%s)
 
@@ -361,7 +358,7 @@ Alarm Description:
 
 Alarm Tool Node: %s
 """ % (self.getTitle(), self.getId(), self.getDescription(),
-       self.getPortalObject().portal_alarms.getAlarmNode()),
+       portal.portal_alarms.getAlarmNode()),
                 attachment_list=attachment_list)
 
   security.declareProtected(Permissions.ManagePortal, 'getLastActiveProcess')
@@ -400,12 +397,12 @@ Alarm Tool Node: %s
       pass
     else:
       activate_kw.setdefault('tag', activity_runtime_environment.getTag())
-    portal_activities = getToolByName(self,'portal_activities')
-    active_process = portal_activities.newActiveProcess(start_date=DateTime(),
-                                                        causality_value=self,
-                                                        activate_kw=activate_kw,
-                                                        **kw)
-    return active_process
+    return self.getPortalObject().portal_activities.newActiveProcess(
+      start_date=DateTime(),
+      causality_value=self,
+      activate_kw=activate_kw,
+      **kw
+    )
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setNextAlarmDate')
   def setNextAlarmDate(self, current_date=None):
