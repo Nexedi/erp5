@@ -1,6 +1,6 @@
 """ This script reindex all the objects created before updating local roles """
 portal = context.getPortalObject()
-portal.portal_types.Folder_reindexAll()
+portal.portal_types.recursiveReindexObject()
 stack = [
   portal.document_module,
   portal.image_module,

@@ -419,7 +419,7 @@ class TestDomainTool(TestPredicateMixIn):
     # Enable system preference and reindex relevant predicates
     system_preference.enable()
     self.tic()
-    supply_module.Folder_reindexAll()
+    supply_module.recursiveReindexObject()
     self.tic()
     # if document has relations using base categories which are not present in the preference, then left join mode is still used.
     assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(True, [supply1_line1])
@@ -432,7 +432,7 @@ class TestDomainTool(TestPredicateMixIn):
     system_preference.setPreferredPredicateCategoryList(['source_section', 'destination_section', 'price_currency', 'resource'])
     self.portal.portal_caches.clearAllCache()
     self.tic()
-    supply_module.Folder_reindexAll()
+    supply_module.recursiveReindexObject()
     self.tic()
     # resource is not in preferred predicate category list, so only inner join is used
     assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(False, [supply1_line1], tested_base_category_list=['source_section', 'destination_section', 'price_currency', 'resource'])
