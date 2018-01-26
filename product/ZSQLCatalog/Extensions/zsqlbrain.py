@@ -12,7 +12,6 @@
 #
 ##############################################################################
 
-import string
 import Acquisition
 import sys
 import traceback
@@ -116,7 +115,7 @@ class ZSQLBrain(Acquisition.Implicit):
       No exceptions are raised.
     """
     script=REQUEST.script
-    if string.find(path, script) != 0:
+    if not path.startswith(script):
       path='%s/%s' % (script, path)
     try:
       return REQUEST.resolve_url(path)
