@@ -395,15 +395,18 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       if ordered_inventory + inventory < min_inventory: # SKU
          quantity = min_inventory - inventory - ordered_inventory
          ordered_quantity, ordered_unit, ordered_date, delivery_date, quantity = minimalQuantity(quantity, date)
-         ordered_inventory = ordered_inventory + quantity
-         movement_list.append(
-           newMovement(
-             ordered_date,
-             delivery_date,
-             ordered_quantity,
-             ordered_unit
+         # XXX CLN This is very naive, it has to be optimized
+         if ordered_date <= supply.getStartDateRangeMax()\
+          and ordered_date >= supply.getStartDateRangeMin():
+           ordered_inventory = ordered_inventory + quantity
+           movement_list.append(
+             newMovement(
+               ordered_date,
+               delivery_date,
+               ordered_quantity,
+               ordered_unit
+              )
             )
-          )
     return movement_list
 
   def _searchMovementList(self, **kw):
