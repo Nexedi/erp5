@@ -43,6 +43,10 @@ class ActivityRuntimeEnvironment(object):
   def __init__(self, message):
     self._message = message
 
+  security.declarePublic('getTag')
+  def getTag(self, default=None):
+    return self._message.activity_kw.get('tag', default)
+
   security.declarePublic('edit')
   def edit(self, **kw):
     # There is no point allowing to modify other attributes from a message
