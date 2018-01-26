@@ -16,17 +16,13 @@ import Acquisition
 import sys
 import traceback
 from ZODB.POSException import ConflictError
-
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import allow_class
-
 from zLOG import LOG, WARNING
-
 try:
   from Products.CMFActivity.ActiveObject import DEFAULT_ACTIVITY
 except ImportError:
   DEFAULT_ACTIVITY = None
-
 _MARKER = []
 
 class ZSQLBrain(Acquisition.Implicit):
@@ -38,8 +34,7 @@ class ZSQLBrain(Acquisition.Implicit):
     """
     if name.startswith('__') :
       return None
-    o = self.getObject()
-    return getattr(o, name, None)
+    return getattr(self.getObject(), name, None)
 
   def getURL(self):
     return self.path
@@ -114,7 +109,7 @@ class ZSQLBrain(Acquisition.Implicit):
       style url. If no object is found, None is returned.
       No exceptions are raised.
     """
-    script=REQUEST.script
+    script = REQUEST.script
     if not path.startswith(script):
       path='%s/%s' % (script, path)
     try:
