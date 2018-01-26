@@ -28,11 +28,13 @@
 ##############################################################################
 
 from compiler.consts import CO_VARKEYWORDS
+from random import getrandbits
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.SecurityManagement import getSecurityManager, \
             setSecurityManager, newSecurityManager
 from AccessControl.User import nobody
+from Products.CMFActivity.ActivityRuntimeEnvironment import getActivityRuntimeEnvironment
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
@@ -92,16 +94,6 @@ class Alarm(XMLObject, PeriodicityMixin):
     """
     return self.hasActivity(only_valid=1)
 
-  def __getTag(self, new):
-    # Tag is generated from portal_ids so that it can be retrieved
-    # later when creating an active process for example
-    portal_ids = self.getPortalObject().portal_ids
-    if new:
-      id = portal_ids.generateNewId(id_generator='uid', id_group=self.getId())
-    else:
-      id = portal_ids.getLastLengthGeneratedId(id_group=self.getId())
-    return '%s_%s' % (self.getRelativeUrl(), id)
-
   security.declareProtected(Permissions.AccessContentsInformation, 'activeSense')
   def activeSense(self, fixit=0, activate_kw=(), params=None):
     """
@@ -138,7 +130,39 @@ class Alarm(XMLObject, PeriodicityMixin):
         # We do some inspection to keep compatibility
         # (because fixit and tag were not set previously)
         if 'tag' not in activate_kw:
-          activate_kw['tag'] = self.__getTag(True)
+          # If a given alarm is running more than once at a given point in
+          # time, there is a risk that the same random value will have been
+          # produced.
+          # In such event, notify() will be delayed until all conflicting
+          # invocations are done executing.
+          # Also, all notifications will as a result refer to a single
+          # ActiveProcess, so all but one notification content will be lost to
+          # someone only checking notification content.
+          # This is expected to be highly unlikely to have any meaningful
+          # effect, because:
+          # - if a single alarm can be running multiple times in parallel and
+          #   has notifications enabled, there is anyway no guarantee that each
+          #   payload will actually be properly notified (independently from
+          #   any tag collision)
+          # - if a single alarm is not usually happening in parallel and
+          #   notifications are enabled (hence, there is a reasonable
+          #   expectation that each notification will properly happen),
+          #   parallel execution means a former invocation failed, so
+          #   administrator attention should already be attracted to the issue.
+          # - and overall, alarm concurrency should be low enough that
+          #   collision should stay extremely low: it should be extremely rare
+          #   for a notification-neabled alarm to run even 10 times in parallel
+          #   (as alarms can at most be spawned every minute), and even in such
+          #   case the probability of a collision is about 2e-9 (10 / 2**32).
+          #   Assuming 10 alarms spawned every second with a one-second duration
+          #   it takes a bit under 7 years for a single collision to be more
+          #   likely to have occurred than not: 50% / (10 / 2**32) = 6.8 years
+          # On the other hand, using a completely constant tag per alarm would
+          # mean notify() would be blocked by any isolated failure event, which
+          # increases the pressure on a timely resolution of what could be a
+          # frequent occurrence (ex: an alarm pulling data from a 3rd-party
+          # server with poor availability).
+          activate_kw['tag'] = '%s_%x' % (self.getRelativeUrl(), getrandbits(32))
         tag = activate_kw['tag']
         method = getattr(self, method_id)
         func_code = method.func_code
@@ -370,7 +394,12 @@ Alarm Tool Node: %s
     of processes
     """
     activate_kw = kw.pop('activate_kw', {})
-    activate_kw.setdefault('tag', self.__getTag(False))
+    try:
+      activity_runtime_environment = getActivityRuntimeEnvironment()
+    except KeyError:
+      pass
+    else:
+      activate_kw.setdefault('tag', activity_runtime_environment.getTag())
     portal_activities = getToolByName(self,'portal_activities')
     active_process = portal_activities.newActiveProcess(start_date=DateTime(),
                                                         causality_value=self,

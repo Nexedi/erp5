@@ -461,28 +461,23 @@ class TestAlarm(ERP5TypeTestCase):
     self.tic()
     alarm.activeSense()
     self.commit()
-    messages_list = self.getActivityTool().getMessageList()
-    self.assertEqual(2, len(messages_list))
-    expected_tag = alarm.getRelativeUrl() + '_0'
+    tag_set = set()
+    def assertSingleTagAndMethodItemsEqual(expected_method_list):
+      method_id_list = []
+      for m in self.getActivityTool().getMessageList():
+        method_id_list.append(m.method_id)
+        if m.method_id == 'notify':
+          tag_set.add(m.activity_kw.get('after_tag'))
+        elif m.method_id in (sense_method_id, 'immediateReindexObject'):
+          tag_set.add(m.activity_kw.get('tag'))
+      self.assertItemsEqual(method_id_list, expected_method_list)
+      self.assertEqual(len(tag_set), 1, tag_set)
     # check tags after activeSense
-    for m in messages_list:
-      if m.method_id == 'notify':
-        self.assertEqual(expected_tag, m.activity_kw.get('after_tag'))
-      elif m.method_id == sense_method_id:
-        self.assertEqual(expected_tag, m.activity_kw.get('tag'))
-      else:
-        self.fail(m.method_id)
+    assertSingleTagAndMethodItemsEqual(['notify', sense_method_id])
     # execute alarm sense script and check tags
-    self.getActivityTool().manageInvoke(alarm.getPhysicalPath(),sense_method_id)
+    self.getActivityTool().manageInvoke(alarm.getPhysicalPath(), sense_method_id)
     self.commit()
-    messages_list = self.getActivityTool().getMessageList()
-    for m in messages_list:
-      if m.method_id == 'notify':
-        self.assertEqual(expected_tag, m.activity_kw.get('after_tag'))
-      elif m.method_id == 'immediateReindexObject':
-        self.assertEqual(expected_tag, m.activity_kw.get('tag'))
-      else:
-        self.fail(m.method_id)
+    assertSingleTagAndMethodItemsEqual(['notify', 'immediateReindexObject'])
     self.tic()
 
   def test_19_ManualInvocation(self):
