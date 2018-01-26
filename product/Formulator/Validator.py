@@ -839,7 +839,9 @@ class DateTimeValidator(Validator):
     except ('DateTimeError', 'Invalid Date Components', 'TimeError',
             DateError, TimeError) :
       self.raise_error('not_datetime', field)
-
+    # pass value through request in order to be restored in case if validation fail
+    if getattr(REQUEST, 'form', None):
+      REQUEST.form[key] = result
     # check if things are within range
     start_datetime = field.get_value('start_datetime')
     if (start_datetime not in (None, '') and
