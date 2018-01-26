@@ -13,7 +13,6 @@
 ##############################################################################
 
 import Acquisition
-import sys
 import traceback
 from ZODB.POSException import ConflictError
 from AccessControl import ClassSecurityInfo
@@ -55,21 +54,13 @@ class ZSQLBrain(Acquisition.Implicit):
     if 'path' not in dir(self) and 'PATH' not in dir(self):
       raise ValueError, "Unable to getObject from ZSQLBrain if ZSQL Method "\
                   "does not retrieves the `path` column from catalog table."
-    try:
-      obj = self.aq_parent.unrestrictedTraverse(self.getPath())
-      if obj is None:
-        if REQUEST is None:
-          REQUEST = self.REQUEST
-        obj = self.aq_parent.portal_catalog.resolve_url(
-                                  self.getPath(), REQUEST)
-      return obj
-    except ConflictError:
-      raise
-    except:
-      LOG("ZCatalog WARNING", 0,
-          "Could not access object path %s" % self.getPath(),
-          error=sys.exc_info() )
-      return None
+    obj = self.aq_parent.unrestrictedTraverse(self.getPath())
+    if obj is None:
+      if REQUEST is None:
+        REQUEST = self.REQUEST
+      obj = self.aq_parent.portal_catalog.resolve_url(
+                                self.getPath(), REQUEST)
+    return obj
 
   def getProperty(self, name, d=_MARKER, **kw):
     value = None
