@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sql_catalog_id=None, additional_priority=0, clear_catalog=0, final_activity_tag=None, start_tree=None, stop_tree=None</string> </value>
+            <value> <string>sql_catalog_id=None, clear_catalog=False, additional_priority=1, final_activity_tag="ERP5Site_reindexAll"</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
