@@ -145,9 +145,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       sql_connection = getattr(self.getPortal(), connection_id)
     if sql is None:
       sql = 'select distinct(path) from catalog'
-    result = sql_connection.manage_test(sql)
-    path_list = map(lambda x: x['path'], result)
-    return path_list
+    # XXX: manage_test has an implicit "LIMIT 1000" which cannot be disabled.
+    return [x['path'] for x in sql_connection.manage_test(sql)]
 
   def getSQLPathListWithRolesAndUsers(self, connection_id):
     sql = 'select distinct(path) from catalog, roles_and_users\
@@ -374,41 +373,17 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(len(uid_buffer) == 0)
 
   def test_13_ERP5Site_reindexAll(self):
-    # Flush message queue
-    self.tic()
-    # Create some objects
     portal = self.getPortal()
-    portal_category = self.getCategoryTool()
-    base_category = portal_category.newContent(portal_type='Base Category',
-                                               title="GreatTitle1")
-    module = portal.getDefaultModule('Organisation')
-    organisation = module.newContent(portal_type='Organisation',
-                                     title="GreatTitle2")
-    # Flush message queue
+    self.getCategoryTool().newContent(portal_type='Base Category', title="GreatTitle1")
+    portal.getDefaultModule('Organisation').newContent(portal_type='Organisation', title="GreatTitle2")
     self.tic()
     original_path_list = self.getSQLPathList()
-    # Clear catalog
-    portal_catalog = self.getCatalogTool()
-    portal_catalog.manage_catalogClear()
-    sql_connection = self.getSQLConnection()
-    sql = 'select count(*) from catalog where portal_type!=NULL'
-    result = sql_connection.manage_test(sql)
-    message_count = result[0]['COUNT(*)']
-    self.assertEqual(0, message_count)
-    # Commit
-    self.commit()
-    # Reindex all
+    self.getCatalogTool().manage_catalogClear()
+    self.assertEqual([], self.getSQLPathList())
     portal.ERP5Site_reindexAll()
     self.tic()
-    self.commit()
-    # Check catalog
-    sql = 'select count(*) from message'
-    result = sql_connection.manage_test(sql)
-    message_count = result[0]['COUNT(*)']
-    self.assertEqual(0, message_count)
     # Check if all objects are catalogued as before
-    new_path_list = self.getSQLPathList()
-    self.assertTrue(set(original_path_list).issubset(new_path_list))
+    self.assertTrue(set(original_path_list).issubset(self.getSQLPathList()))
 
   def test_14_ReindexWithBrokenCategory(self):
     """Reindexing an object with 1 broken category must not affect other valid
