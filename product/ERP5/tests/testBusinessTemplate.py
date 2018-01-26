@@ -2768,9 +2768,6 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(message_list), 0)
 
   def stepCheckHasClearedCatalog(self, sequence=None, **kw):
-    """
-    Check if we have activity for Folder_reindexAll.
-    """
     self.assertTrue(self._has_cleared_catalog)
     del self._has_cleared_catalog[:]
 

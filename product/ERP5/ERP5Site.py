@@ -1940,16 +1940,17 @@ class ERP5Generator(PortalGenerator):
 
     p._v_bootstrapping = False
 
-    # XXX: Is it useful to wait for indexing before using upgradeSite ?
-    after_method_id = 'immediateReindexObject'
+    reindex_all_tag = 'ERP5Site_reindexAll'
+    upgrade_tag = 'updgradeSite'
+    preference_tag = 'initSystemPreference'
     if bt5_repository_url:
-      p.portal_templates.repository_dict = dict.fromkeys(
-        bt5_repository_url.split())
+      p.portal_templates.repository_dict = dict.fromkeys(bt5_repository_url.split())
       if bt5:
-        method_id = 'upgradeSite'
-        getattr(p.portal_templates.activate(after_method_id=after_method_id),
-                method_id)(bt5.split(), update_catalog=True)
-        after_method_id = method_id
+        p.portal_templates.activate(
+          # XXX: Is it useful to wait for indexing ?
+          after_tag=reindex_all_tag,
+          tag=upgrade_tag,
+        ).upgradeSite(bt5.split(), update_catalog=True)
     if id_store_interval != '':
       id_store_interval = int(id_store_interval)
       if id_store_interval < 0:
@@ -1961,22 +1962,17 @@ class ERP5Generator(PortalGenerator):
       else:
         ob._setStoredInZodb(0)
     if cloudooo_url:
-      method_id = '_initSystemPreference'
-      getattr(p.portal_activities.activateObject(p,
-        after_method_id=after_method_id), method_id)(cloudooo_url=cloudooo_url)
-      after_method_id = method_id
+      p.portal_activities.activateObject(
+        p,
+        after_tag=(reindex_all_tag, upgrade_tag),
+        tag=preference_tag,
+      )._initSystemPreference(cloudooo_url=cloudooo_url)
     id_ = 'isPortalBeingCreated'
     setattr(p, id_, ConstantGetter(id_, value=True))
-    # XXX: ERP5Site_reindexAll should be reviewed so that one can depend on a
-    #      final tag. A more general approach is to have an activity dependency
-    #      to anything, so that _delPropValue is called as soon as activity
-    #      nodes have nothing else to do.
-    after_method_id = tuple({after_method_id}.union(('Folder_reindexAll',
-      'Folder_reindexObjectList', 'InventoryModule_reindexMovementList',
-      'immediateReindexObject', 'SQLCatalog_deferFullTextIndexActivity')))
-    p.portal_activities.activateObject(p, after_method_id=after_method_id,
-      )._delPropValue(id_)
-
+    p.portal_activities.activateObject(
+      p,
+      after_tag=(reindex_all_tag, upgrade_tag, preference_tag),
+    )._delPropValue(id_)
     return p
 
   @classmethod
