@@ -250,7 +250,7 @@ define([
                 this.$el.find('#fm-btn-create, #fm-btn-back, #fm-btn-create+.devider').hide();
             }
 
-            this.panels['help'].setLangConfig(this.mode.lang);
+            // this.panels['help'].setLangConfig(this.mode.lang);
         },
 
         setMode: function(mode, delay) {
