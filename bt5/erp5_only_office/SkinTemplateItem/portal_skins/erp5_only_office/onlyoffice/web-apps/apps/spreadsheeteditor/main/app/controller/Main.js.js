@@ -621,7 +621,7 @@ define([
                      if (me.plugins && me.plugins.pluginsData && me.plugins.pluginsData.length>0)
                          me.updatePlugins(me.plugins, false);
                      else
-                         me.requestPlugins('../../../../plugins.json');
+                         me.requestPlugins();
                     me.api.asc_registerCallback('asc_onPluginsInit', _.bind(me.updatePluginsList, me));
                 }
 
