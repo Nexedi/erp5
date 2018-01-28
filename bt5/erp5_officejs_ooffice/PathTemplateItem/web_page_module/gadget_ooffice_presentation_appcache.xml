@@ -732,6 +732,7 @@ onlyoffice/sdkjs/cell/model/DrawingObjects/GlobalCounters.js\n
 onlyoffice/sdkjs/cell/model/DrawingObjects/Graphics.js\n
 onlyoffice/sdkjs/cell/model/DrawingObjects/ShapeDrawer.js\n
 onlyoffice/sdkjs/cell/model/FormulaObjects/cubeFunctions.js\n
+onlyoffice/sdkjs/cell/model/FormulaObjects/cubeFunctions.xmla.js\n
 onlyoffice/sdkjs/cell/model/FormulaObjects/databaseFunctions.js\n
 onlyoffice/sdkjs/cell/model/FormulaObjects/dateandtimeFunctions.js\n
 onlyoffice/sdkjs/cell/model/FormulaObjects/engineeringFunctions.js\n
@@ -1358,7 +1359,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>vincent</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -1372,7 +1373,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.55968.25998.221</string> </value>
+                <value> <string>965.1014.10748.13687</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1390,7 +1391,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1516112122.46</float>
+                        <float>1517243462.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
