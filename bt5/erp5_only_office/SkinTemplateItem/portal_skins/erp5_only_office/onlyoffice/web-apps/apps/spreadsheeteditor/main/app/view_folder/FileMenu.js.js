@@ -233,7 +233,7 @@ define([
                 }
             }
 
-            this.panels['help'].setLangConfig(this.mode.lang);
+            // this.panels['help'].setLangConfig(this.mode.lang);
         },
 
         setMode: function(mode, delay) {
