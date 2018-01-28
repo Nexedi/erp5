@@ -54,7 +54,8 @@ DocsAPI.DocEditor.version = function () {
     .ready(function (g) {
       g.props = {
         save_defer: null,
-        handlers: {}
+        handlers: {},
+        headerCaption: ""
       };
     })
     .ready(function (g) {
@@ -400,6 +401,7 @@ DocsAPI.DocEditor.version = function () {
 
           if (g.props.binary_loader) {
             g.props.base_url = "onlyoffice-bin/";
+            g.props.headerCaption = "BIN " + g.props.headerCaption;
           } else {
             g.props.base_url = "onlyoffice/";
             define("sdk", sdk_deps, function () {
