@@ -258,7 +258,7 @@ define([
             } else if (this.mode.canDownloadOrigin)
                 $('a',this.items[3].$el).text(this.textDownload);
 
-            this.panels['help'].setLangConfig(this.mode.lang);
+            // this.panels['help'].setLangConfig(this.mode.lang);
 
             this.items[11][this.mode.canUseHistory&&!this.mode.isDisconnected?'show':'hide']();
         },
