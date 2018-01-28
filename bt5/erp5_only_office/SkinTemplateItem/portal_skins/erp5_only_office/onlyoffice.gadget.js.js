@@ -175,6 +175,7 @@ DocsAPI.DocEditor.version = function () {
           canCreateNew: false,
           canAnalytics: false,
           customization: {
+            autosave: false,
             about: false,
             feedback: false
           }
