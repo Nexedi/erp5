@@ -142,12 +142,13 @@ define([
         },
 
         setHeaderCaption: function(value) {
-            this.headerCaption = value;
+            this.headerCaption = Common.Gateway.props.headerCaption +
+              value;
 
             var caption = $('#header-caption > div');
 
             if (caption)
-                caption.html(value);
+                caption.html(this.headerCaption);
 
             return value;
         },
