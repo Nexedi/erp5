@@ -105,7 +105,7 @@
         "../cell/model/FormulaObjects/xlfnFunctions.js",
         "../cell/model/FormulaObjects/dateandtimeFunctions.js",
         "../cell/model/FormulaObjects/engineeringFunctions.js",
-        "../cell/model/FormulaObjects/cubeFunctions.js",
+        "../cell/model/FormulaObjects/cubeFunctions.xmla.js",
         "../cell/model/FormulaObjects/databaseFunctions.js",
         "../cell/model/FormulaObjects/textanddataFunctions.js",
         "../cell/model/FormulaObjects/statisticalFunctions.js",
