@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, selection=None, analytic_column_list=(), **kwd</string> </value>
+            <value> <string>brain, selection=None, analytic_column_list=None, **kwd</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
