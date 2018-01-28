@@ -517,6 +517,7 @@ onlyoffice/sdkjs/cell/model/DrawingObjects/GlobalCounters.js
 onlyoffice/sdkjs/cell/model/DrawingObjects/Graphics.js
 onlyoffice/sdkjs/cell/model/DrawingObjects/ShapeDrawer.js
 onlyoffice/sdkjs/cell/model/FormulaObjects/cubeFunctions.js
+onlyoffice/sdkjs/cell/model/FormulaObjects/cubeFunctions.xmla.js
 onlyoffice/sdkjs/cell/model/FormulaObjects/databaseFunctions.js
 onlyoffice/sdkjs/cell/model/FormulaObjects/dateandtimeFunctions.js
 onlyoffice/sdkjs/cell/model/FormulaObjects/engineeringFunctions.js
