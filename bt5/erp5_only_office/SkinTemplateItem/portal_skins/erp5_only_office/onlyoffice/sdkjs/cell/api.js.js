@@ -1064,7 +1064,14 @@ var editor;
 				}).then(resolve, reject);
 			};
 			if (opt_url) {
-				AscCommon.getJSZipUtils().getBinaryContent(opt_url, processData);
+				Common.Gateway.jio_getAttachment('/', 'Editor.xlsx')
+					.push(undefined, function (err) {
+						resolve();
+					})
+					.push(function (data) {
+						processData(undefined, data);
+					});
+				// AscCommon.getJSZipUtils().getBinaryContent(opt_url, processData);
 			} else {
 				processData(undefined, undefined, opt_path);
 			}
