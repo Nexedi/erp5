@@ -184,7 +184,8 @@
           return RSVP.all([
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'selection_previous'}),
-            gadget.getUrlFor({command: 'selection_next'})
+            gadget.getUrlFor({command: 'selection_next'}),
+            gadget.getUrlFor({command: 'change', options: {page: 'download_ooffice'}})
           ]);
         })
         .push(function (url_list) {
@@ -193,7 +194,8 @@
             selection_url: url_list[0],
             previous_url: url_list[1],
             next_url: url_list[2],
-            save_action: true
+            save_action: true,
+            download_url: url_list[3]
           });
         });
     });
