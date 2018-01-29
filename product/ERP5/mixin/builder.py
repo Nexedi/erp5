@@ -558,10 +558,12 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       Create a new delivery in case where a builder may not update
       an existing one.
     """
-    return delivery_module.newContent(
+    delivery = delivery_module.newContent(
       portal_type=self.getDeliveryPortalType(),
-      created_by_builder=1,
-      activate_kw=activate_kw)
+      created_by_builder=1)
+    delivery.autoPlan()
+    delivery.immediateReindexObject()
+    return delivery
 
   def _processDeliveryGroup(self, delivery_module, movement_group_node,
                             collect_order_list, movement_group_node_list=None,
@@ -625,6 +627,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       if property_dict:
         property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
         delivery.edit(**property_dict)
+        delivery.immediateReindexObject()
 
       # Then, create delivery line
       for grouped_node in movement_group_node.getGroupList():
