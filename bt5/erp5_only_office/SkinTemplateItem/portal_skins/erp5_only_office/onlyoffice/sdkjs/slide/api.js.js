@@ -6704,9 +6704,6 @@ background-repeat: no-repeat;\
 		this.WordControl.m_oLogicDocument.CalculateComments();
 		writer.WriteDocument3(this.WordControl.m_oLogicDocument);
 
-		var _header = "PPTY;v10;" + writer.pos + ";";
-		window["native"]["Save_End"](_header, writer.pos);
-
 		return writer.ImData.data;
 	};
 

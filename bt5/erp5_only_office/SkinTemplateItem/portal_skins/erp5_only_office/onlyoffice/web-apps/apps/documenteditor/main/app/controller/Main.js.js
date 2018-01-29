@@ -933,12 +933,9 @@ define([
                 Common.Gateway.on('processmouse',           _.bind(me.onProcessMouse, me));
                 Common.Gateway.on('refreshhistory',         _.bind(me.onRefreshHistory, me));
                 Common.Gateway.on('save', function () {
-                    var g = Common.Gateway;
                     if (me.api.isDocumentModified()) {
                         me.api.asc_Save();
-                    }
-                    if (g.props.save_defer) {
-                      g.props.save_defer.resolve(undefined);
+                        return true;
                     }
                 });
                 Common.Gateway.on('downloadas',             _.bind(me.onDownloadAs, me));

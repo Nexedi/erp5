@@ -49,16 +49,16 @@ Asc['asc_docs_api'].prototype._OfflineAppDocumentStartLoad = function()
 	AscCommon.History.UserSaveMode = true;
 	return this.jio_open();
 };
-Asc['asc_docs_api'].prototype._OfflineAppDocumentEndLoad = function(_url, _data)
+Asc['asc_docs_api'].prototype._OfflineAppDocumentEndLoad = function(_url, _binary)
 {
 	//AscCommon.g_oIdCounter.m_sUserId = window["AscDesktopEditor"]["CheckUserId"]();
-	if (_data == "")
+	if (_binary == "")
 	{
 		this.sendEvent("asc_onError", c_oAscError.ID.ConvertationOpenError, c_oAscError.Level.Critical);
 		return;
 	}
 
-	this.OpenDocument2(_url, _data);
+    this.OpenDocument2(_url, _binary);
 	this.WordControl.m_oLogicDocument.Set_FastCollaborativeEditing(false);
 	this.DocumentOrientation = (null == this.WordControl.m_oLogicDocument) ? true : !this.WordControl.m_oLogicDocument.Orientation;
 	DesktopOfflineUpdateLocalName(this);
