@@ -14,8 +14,7 @@
   rJS(window)
     .setState({
       subgadget_template: undefined,
-      editable: undefined,
-      css_class: ''
+      editable: undefined
     })
 
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
@@ -33,7 +32,6 @@
           title: field_json.title,
           hidden: field_json.hidden,
           view: field_json.view,
-          css_class: field_json.css_class,
           // field_json._embedded is HATEOASed subobj specs included in FormBox
           erp5_embedded_document: field_json._embedded
         };
@@ -76,11 +74,6 @@
 
       // do not preserve objects in the state
       delete gadget.state.erp5_embedded_document;
-
-      // pass CSS class to the DIV element
-      if (modification_dict.hasOwnProperty('css_class')) {
-        gadget.element.classList.add(modification_dict.css_class);
-      }
 
       return gadget.getDeclaredGadget('sub')
         .push(function (subgadget) {

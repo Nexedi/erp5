@@ -119,7 +119,7 @@
       this.state.label_element.setAttribute('for', gadget.state.scope);
 
       if (modification_dict.hasOwnProperty('css_class') && this.state.css_class) {
-        this.state.label_element.classList.add(this.state.css_class);
+        this.element.classList.add(this.state.css_class);
       }
 
       if (modification_dict.hasOwnProperty('error_text')) {
