@@ -1029,13 +1029,16 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content .field_container > div > div > div.ui-field-contain div {
   width: 100%;
 }
-.gadget-content .horizontal_align_form_box .field_container > div {
-  /* Class .horizontal_align_form_box is here only for backward-compatibility!
-       It is used to force horizontal rendering of fields inside FormBox.
-       The first > div represents form-group ("left", "right" ...) */
+.gadget-content .field_container > div > div.horizontal_align_form_box > .ui-field-contain {
+  padding: 0;
+}
+.gadget-content .field_container > div > div.horizontal_align_form_box > .ui-field-contain > label {
+  padding-top: 9pt;
+}
+.gadget-content .field_container > div > div.horizontal_align_form_box .field_container > div {
   display: flex;
 }
-.gadget-content .horizontal_align_form_box .field_container > div > div {
+.gadget-content .field_container > div > div.horizontal_align_form_box .field_container > div > div {
   flex: 1;
 }
 .gadget-content .ui-content-header-plain {
