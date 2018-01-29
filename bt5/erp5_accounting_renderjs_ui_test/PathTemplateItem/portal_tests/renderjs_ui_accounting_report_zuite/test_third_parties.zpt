@@ -15,6 +15,11 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 
 <tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
 
+<tr><td>open</td>
+    <td>${base_url}/portal_caches/manage_clearAllCache</td><td></td></tr>
+<tr><td>assertElementPresent</td>
+    <td>//div[@class="system-msg" and contains(text(), "All cache factories cleared")]</td><td></td></tr>
+
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.day())"></td><td>day</td></tr>
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.month())"></td><td>month</td></tr>
 <tr><td>store</td><td tal:content="python: now.year()"></td><td>year</td></tr>
@@ -51,9 +56,9 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>click</td><!-- Uncheck because it is checked by default -->
     <td>//input[@type="checkbox" and @name="field_your_omit_balanced_accounts"]</td><td></td></tr>
 
+<tr><th colspan="3">Zero-out simulation_state to just 'delivered'<th></tr>
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td><td></td></tr>
-<!-- we need to zero-out simulation_state to just 'delivered' -->
 <tal:block tal:repeat="_ python:range(4)"><!-- There is by default just few simulation states -->
 <!-- we take advantage of dissapearing elements when selecting one empty -->
 <tr><td>select</td>

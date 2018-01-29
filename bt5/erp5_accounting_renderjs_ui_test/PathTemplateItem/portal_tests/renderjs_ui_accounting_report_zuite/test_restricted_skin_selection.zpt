@@ -3,7 +3,7 @@
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><th rowspan="1" colspan="4">
+<tr><th rowspan="1" colspan="3">
 Check that use gets notified if they are using wrong 'Report Style' (UI) Preference.
 </th></tr>
 </thead>
@@ -38,7 +38,6 @@ Check that use gets notified if they are using wrong 'Report Style' (UI) Prefere
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
 <tr><td>click</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
-
 <!-- Now we should get somehow notified about wrong skin selection.
 At the beginning it was implemented as Form Message because the error is on a hidden field. -->
 <tr><td>waitForElementPresent</td>
