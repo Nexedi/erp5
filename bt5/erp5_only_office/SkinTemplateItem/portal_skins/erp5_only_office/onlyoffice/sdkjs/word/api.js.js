@@ -7985,9 +7985,6 @@ background-repeat: no-repeat;\
 
 		oBinaryFileWriter.Write(true);
 
-		var _header = AscCommon.c_oSerFormat.Signature + ";v" + Asc.c_nVersionNoBase64 + ";" + _memory.GetCurPosition() + ";";
-		window["native"]["Save_End"](_header, _memory.GetCurPosition());
-
 		return _memory.ImData.data;
 	};
 
