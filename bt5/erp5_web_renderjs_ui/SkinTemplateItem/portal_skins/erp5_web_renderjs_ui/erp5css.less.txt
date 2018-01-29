@@ -1307,6 +1307,9 @@ div[data-gadget-scope='header'] .ui-header {
     & > label {
       color: @grey;
 
+      // padding to be aligned with <input>
+      padding: @half-margin-size;
+
       // backward-compatibility: support for ERP5 field class defined in formulator configuration
       &.required {
         // inform user that the field is needed by contraint, but do not prevent him to save the value
@@ -1317,6 +1320,11 @@ div[data-gadget-scope='header'] .ui-header {
         display: none;
       }
     }
+  }
+
+  .ui-field-contain p {
+    // non-editable fields are rendered using <p> so they deserve the same padding as <input>s
+    padding: @half-margin-size;
   }
 
   @media @tablet, @desktop {
