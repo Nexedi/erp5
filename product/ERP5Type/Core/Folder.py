@@ -479,8 +479,13 @@ class FolderMixIn(ExtensionClass.Base):
       # in this script) are immutable. Anything else is already under the control
       # of caller, either via arguments or via default activate parameter dict.
       recurse_activate_kw = activate_kw.copy()
+    skip_method_id = kw.get('skip_method_id')
+    if skip_method_id is None:
+      skip = lambda document: False
+    else:
+      skip = hook_raised(my_getattr(self, skip_method_id))
     def recurse(container, depth):
-      if getattr(aq_base(container), 'getPhysicalPath', None) is None:
+      if getattr(aq_base(container), 'getPhysicalPath', None) is None or skip(container):
         return
       if (max_depth is None or depth < max_depth) and \
          isinstance(container, ObjectManager) and len(container):
