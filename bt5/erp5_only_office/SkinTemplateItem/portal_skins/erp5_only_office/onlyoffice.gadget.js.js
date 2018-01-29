@@ -1,6 +1,7 @@
 /*global window, rJS, RSVP, DocsAPI, console, document,
  Common, require, jIO, URL, FileReader, atob, ArrayBuffer,
-  Uint8Array, XMLHttpRequest, Blob, Rusha, define*/
+ Uint8Array, XMLHttpRequest, Blob, Rusha, define,
+ TextDecoder, DesktopOfflineAppDocumentEndSave*/
 /*jslint nomen: true, maxlen:80, indent:2*/
 "use strict";
 if (Common === undefined) {
@@ -71,8 +72,8 @@ DocsAPI.DocEditor.version = function () {
     .declareMethod("jio_getAttachment", function (docId, attId, opt) {
       var g = this,
         queue;
-      if (attId === 'body.txt') {
-        opt = 'asText';
+      if (attId === 'body.txt' || attId === 'Editor.bin') {
+        opt = 'asBinArray';
         if (!docId) {
           docId = '/';
         }
@@ -88,6 +89,11 @@ DocsAPI.DocEditor.version = function () {
             data = jIO.util.readBlobAsText(blob)
               .then(function (evt) {
                 return evt.target.result;
+              });
+          } else if (opt === "asBinArray") {
+            data = jIO.util.readBlobAsArrayBuffer(blob)
+              .then(function (evt) {
+                return new Uint8ClampedArray(evt.target.result);
               });
           } else if (opt === "asBlobURL") {
             data = URL.createObjectURL(blob);
@@ -246,7 +252,7 @@ DocsAPI.DocEditor.version = function () {
           return "";
         })
         .push(function (portal_type) {
-          var value, documentType, magic;
+          var value;
           portal_type = portal_type || options.portal_type;
           g.props.binary_loader = false;
           g.props.jio_key = options.jio_key;
@@ -276,27 +282,36 @@ DocsAPI.DocEditor.version = function () {
                 type: "zipfile",
                 file: value
               });
-              return g.props.value_zip_storage.getAttachment('/', 'body.txt')
+              return g.jio_getAttachment('/', 'body.txt')
                 .push(undefined, function (error) {
                   if (error.status_code === 404) {
-                    throw 'not supported format of document: body.txt absent "' +
-                    value.slice(0, 100) + '"';
+                    return g.jio_getAttachment('/', 'Editor.bin')
+                      .push(undefined, function (error) {
+                        if (error.status_code === 404) {
+                          throw 'not supported format of document:' +
+                          ' body.txt/Editor.bin absent "' +
+                          value.slice(0, 100) + '"';
+                        }
+                        throw error;
+                      });
                   }
                   throw error;
-                })
-                .push(jIO.util.readBlobAsText)
-                .push(function (evt) {
-                  return evt.target.result;
                 });
             }
           }
+        })
+        .push(function (value) {
+          var documentType, magic;
           g.props.value = value;
           if (!g.props.documentType && value === "") {
             throw "can not create empty document " +
             "because portal_type is unknown";
           }
           if (value) {
-            magic = g.props.value.slice(0, 4);
+            magic = value.slice(0, 4);
+            if (typeof magic !== 'string') {
+              magic = String.fromCharCode.apply(null, magic);
+            }
             switch (magic) {
             case 'XLSY':
               documentType = "spreadsheet";
@@ -427,27 +442,62 @@ DocsAPI.DocEditor.version = function () {
         });
     })
 
-    .declareMethod('getContent', function () {
+    .declareMethod("jio_save", function (data) {
       var g = this,
-        zip = g.props.value_zip_storage,
-        queue = new RSVP.Queue(),
-        save_defer = RSVP.defer();
-      g.props.save_defer = save_defer;
-      g.props.handlers.save();
-      return queue.push(function () {
-        return save_defer.promise;
-      })
-        .push(function (data) {
+        zip = g.props.value_zip_storage;
+      return new RSVP.Queue()
+        .push(function () {
           if (data) {
-            var body = data[g.props.key];
-            return zip.putAttachment('/', 'body.txt', body);
+            return g.jio_putAttachment('/', 'body.txt', data)
+              .push(function () {
+                // cleanup if Editor.bin exist
+                return zip.removeAttachment('/', 'Editor.bin')
+                  .push(undefined, function (error) {
+                    if (error.status_code !== 404) {
+                      throw error;
+                    }
+                  });
+              })
+              .push(undefined, function (error) {
+                display_error(g, error);
+              });
           }
         })
         .push(function () {
-          return zip.getAttachment('/', 'body.txt')
+          if (g.props.save_defer) {
+            // if we are run from getContent
+            g.props.save_defer.resolve();
+            g.props.save_defer = null;
+          } else {
+            g.triggerSubmit();
+          }
+        });
+    })
+    .declareMethod('getContent', function () {
+      var g = this,
+        zip = g.props.value_zip_storage,
+        queue = new RSVP.Queue();
+      if (g.props.handlers.save()) {
+        g.props.save_defer = RSVP.defer();
+      }
+      return queue.push(function () {
+        if (g.props.save_defer) {
+          return g.props.save_defer.promise;
+        }
+      })
+        .push(function () {
+          // prevent save empty zip archive
+          // check document exist in archive
+          return zip.getAttachment('/', 'Editor.bin')
             .push(undefined, function (error) {
               if (error.status_code === 404) {
-                return "";
+                return zip.getAttachment('/', 'body.txt')
+                  .push(undefined, function (error) {
+                    if (error.status_code === 404) {
+                      return "";
+                    }
+                    throw error;
+                  });
               }
               throw error;
             });
@@ -465,6 +515,10 @@ DocsAPI.DocEditor.version = function () {
         .push(function (evt) {
           var data = {};
           data[g.props.key] = evt.target.result;
+          // TODO it should be run on state change
+          // if fail send int:1
+          // it clear modification state onlyoffice
+          DesktopOfflineAppDocumentEndSave(0);
           return data;
         });
     });
