@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24,6 +24,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -42,6 +43,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -61,30 +64,18 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_document_list.js</string> </value>
+            <value> <string>gadget_erp5_page_download_ooffice.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -94,36 +85,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_erp5_page_document_list_js</string> </value>
+            <value> <string>ojs_gadget_erp5_page_download_ooffice_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.18</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -133,7 +103,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Document List JS</string> </value>
+            <value> <string>Gadget ERP5 Download OnlyOffice Page</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -199,11 +169,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -225,7 +195,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1495446491.04</float>
+                        <float>1517232469.76</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -234,7 +204,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -270,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.45979.16486.37376</string> </value>
+                <value> <string>965.9244.29740.45090</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -288,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1517218473.92</float>
+                        <float>1517239528.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -315,7 +285,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -345,7 +315,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1495446386.43</float>
+                        <float>1517231781.91</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -112,6 +112,7 @@
               }
             },
             form_definition: {
+              configure_enabled: false,
               group_list: [[
                 "bottom",
                 [["listbox"]]
@@ -122,14 +123,19 @@
         .push(function () {
           return RSVP.all([
             gadget.getUrlFor({command: "change", options: {"page": "ojs_add_document"}}),
-            gadget.getSetting('document_title_plural')
+            gadget.getSetting('document_title_plural'),
+            gadget.getUrlFor({
+              command: 'change',
+              options: {page: 'upload_ooffice'}
+            })
           ]);
         })
         .push(function (result) {
           return gadget.updateHeader({
             page_title: result[1],
             filter_action: true,
-            add_url: result[0]
+            add_url: result[0],
+            upload_url: result[2]
           });
         });
     });
