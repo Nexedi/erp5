@@ -1160,11 +1160,17 @@ div[data-gadget-scope='header'] .ui-header {
       width: 100%;
     }
   }
-  /* Disclaimer: Class .horizontal_align_form_box is here only for backward-compatibility!
-                 Don't rely on this class because it will be removed.
-                 It was used to force horizontal rendering of fields inside FormBox. */
-  .horizontal_align_form_box .ui-field-contain > div {
-    display: block-inline;
+
+  .horizontal_align_form_box .field_container > div {
+
+    /* Class .horizontal_align_form_box is here only for backward-compatibility!
+       It is used to force horizontal rendering of fields inside FormBox.
+       The first > div represents form-group ("left", "right" ...) */
+
+    display: flex;
+    & > div {
+      flex: 1;
+    }
   }
 
   .ui-content-header-plain {
