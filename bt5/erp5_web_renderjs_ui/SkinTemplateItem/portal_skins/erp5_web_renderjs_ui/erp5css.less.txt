@@ -1185,15 +1185,26 @@ div[data-gadget-scope='header'] .ui-header {
     }
   }
 
-  .horizontal_align_form_box .field_container > div {
+  .field_container > div > div.horizontal_align_form_box {
+    // Class .horizontal_align_form_box is here only for backward-compatibility!
+    // It is used to force horizontal rendering of fields inside FormBox.
+    // we need to overwrite the padding above this statement
+    & > .ui-field-contain {
+      // makes field to high
+      padding: 0;
 
-    /* Class .horizontal_align_form_box is here only for backward-compatibility!
-       It is used to force horizontal rendering of fields inside FormBox.
-       The first > div represents form-group ("left", "right" ...) */
+      & > label {
+        padding-top: @margin-size + @half-margin-size;
+      }
+    }
 
-    display: flex;
-    & > div {
-      flex: 1;
+    .field_container > div {
+      // matches form-group ("left", "right" ...)
+      display: flex;
+
+      & > div {
+        flex: 1;
+      }
     }
   }
 
