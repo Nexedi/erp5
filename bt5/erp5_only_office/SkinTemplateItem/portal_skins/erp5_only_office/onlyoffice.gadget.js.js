@@ -336,16 +336,25 @@ DocsAPI.DocEditor.version = function () {
           }
         })
         .push(function () {
-          return jIO.util.ajax({
-            type: "GET",
-            url: "onlyoffice.gadget.appcache"
-          });
+          return new RSVP.Queue()
+            .push(function () {
+              return jIO.util.ajax({
+                type: "GET",
+                url: "onlyoffice.gadget.appcache"
+              });
+            })
+            .push(undefined, function (error) {
+              return;
+            });
         })
         .push(function (response) {
           /*configure requeryjs for rename
           view and edit to view_folder and edit_folder
           in dependencies
           */
+          if (!response) {
+            return;
+          }
           var text = response.target.responseText,
             relative_url_list = text.split('\r\n'),
             i,
