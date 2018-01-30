@@ -413,10 +413,12 @@ class ContributionTool(BaseTool):
           # If we need to discoverMetadata synchronously, it must
           # be for user interface and should thus be handled by
           # ZODB scripts
-          document.activate(after_path_and_method_id=(document.getPath(),
-            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat',
-             'immediateReindexObject', 'recursiveImmediateReindexObject')))\
-          .discoverMetadata(filename=filename,
+          document.activate(
+            after_path_and_method_id=(
+              document.getPath(),
+              ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'),
+            ),
+          ).discoverMetadata(filename=filename,
                             user_login=user_login,
                             input_parameter_dict=input_parameter_dict)
     # Keep the document close to us - this is only useful for
