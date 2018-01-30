@@ -212,6 +212,8 @@ gadget_erp5_page_download_ooffice.html\n
 gadget_erp5_page_download_ooffice.js\n
 gadget_cloudoo_conversion.html\n
 gadget_cloudoo_conversion.js\n
+gadget_erp5_pt_form_dialog.html\n
+gadget_erp5_pt_form_dialog.js\n
 \n
 #setting\n
 gadget_officejs_setting.js\n
@@ -1378,7 +1380,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.10599.57025.17117</string> </value>
+                <value> <string>965.10646.12687.56302</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1396,7 +1398,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1517322484.59</float>
+                        <float>1517325788.41</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
