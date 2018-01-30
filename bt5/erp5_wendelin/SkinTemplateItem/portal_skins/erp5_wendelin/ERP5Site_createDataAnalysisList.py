@@ -109,16 +109,14 @@ for movement in portal_catalog(query):
             except AttributeError:
               pass
             aggregate_set.add(item.getRelativeUrl())
-      elif transformation_line.getPortalType() == \
-          "Data Transformation Operation Line":
-        # find other items such as device configuration and data configuration
-        # from data ingestion and data supply
-        composed = data_analysis.asComposedDocument()
-        line_list = [l for l in delivery.objectValues(portal_type="Data Ingestion Line")]
-        line_list +=  [l for l in composed.objectValues(portal_type="Data Supply Line")]
-        for line in line_list:
-          if line.getResourceValue().getPortalType() == "Data Operation":
-            aggregate_set.update(line.getAggregateList())
+      # find other items such as device configuration and data configuration
+      # from data ingestion and data supply
+      composed = data_analysis.asComposedDocument()
+      line_list = [l for l in delivery.objectValues(portal_type="Data Ingestion Line")]
+      line_list +=  [l for l in composed.objectValues(portal_type="Data Supply Line")]
+      for line in line_list:
+        if line.getResourceValue().getPortalType() == "Data Operation":
+          aggregate_set.update(line.getAggregateList())
 
       data_analysis.newContent(
         portal_type = "Data Analysis Line",
