@@ -147,7 +147,7 @@ define([
 
                 if (this.api){
                     this.api.SetDrawingFreeze(true);
-                    this.api.SetThemesPath("../../../../sdkjs/slide/themes/");
+                    this.api.SetThemesPath("onlyoffice/sdkjs/slide/themes/");
 
                     this.api.asc_registerCallback('asc_onError',                    _.bind(this.onError, this));
                     this.api.asc_registerCallback('asc_onDocumentContentReady',     _.bind(this.onDocumentContentReady, this));
