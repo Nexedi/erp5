@@ -1,20 +1,21 @@
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from threading import local
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 
 DEFAULT_MAX_RETRY = 3
+_activity_runtime_environment = local()
 
 def getActivityRuntimeEnvironment():
   """
     Raises KeyError if called outside activity.
   """
-  return getTransactionalVariable()['activity_runtime_environment']
+  try:
+    return _activity_runtime_environment.value
+  except AttributeError:
+    raise KeyError
 
 def _getActivityRuntimeEnvironment():
-  try:
-    return getActivityRuntimeEnvironment()
-  except KeyError:
-    return
+  return getattr(_activity_runtime_environment, 'value', None)
 
 
 class BaseMessage:
@@ -42,6 +43,14 @@ class ActivityRuntimeEnvironment(object):
 
   def __init__(self, message):
     self._message = message
+
+  def __enter__(self):
+    assert not hasattr(_activity_runtime_environment, 'value')
+    _activity_runtime_environment.value = self
+
+  def __exit__(self, exc_type, exc_val, exc_tb):
+    assert _activity_runtime_environment.value is self
+    del _activity_runtime_environment.value
 
   security.declarePublic('getTag')
   def getTag(self, default=None):

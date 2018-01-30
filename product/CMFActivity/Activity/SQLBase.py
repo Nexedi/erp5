@@ -36,7 +36,7 @@ from ZODB.POSException import ConflictError
 from Products.CMFActivity.ActivityTool import (
   Message, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED, SkippedMessage)
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
-  DEFAULT_MAX_RETRY, ActivityRuntimeEnvironment, getTransactionalVariable)
+  DEFAULT_MAX_RETRY, ActivityRuntimeEnvironment)
 from Queue import Queue, VALIDATION_ERROR_DELAY, VALID, INVALID_PATH
 from Products.CMFActivity.Errors import ActivityFlushError
 
@@ -508,11 +508,10 @@ class SQLBase(Queue):
       # everything needed from MySQL to get a fresh view of ZODB objects.
       transaction.commit()
       transaction.begin()
-      tv = getTransactionalVariable()
-      tv['activity_runtime_environment'] = activity_runtime_environment
       # Try to invoke
       try:
-        method(*args)
+        with activity_runtime_environment:
+          method(*args)
         # Abort if at least 1 message failed. On next tic, only those that
         # succeeded will be selected because their at_date won't have been
         # increased.
@@ -533,8 +532,8 @@ class SQLBase(Queue):
         if exc_info:
           try:
             # Register it again.
-            tv['activity_runtime_environment'] = activity_runtime_environment
-            cancel = message.on_error_callback(*exc_info)
+            with activity_runtime_environment:
+              cancel = message.on_error_callback(*exc_info)
             del exc_info, message.exc_info
             transaction.commit()
             if cancel:
