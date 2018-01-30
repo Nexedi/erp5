@@ -124,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.Letter_getPredecessor(context_url=context.getRelativeUrl()).getData().encode("base64")</string> </value>
+            <value> <string>python: context.Letter_getPredecessor(context_url=context.getRelativeUrl()).absolute_url() + "/getData"</string> </value>
         </item>
       </dictionary>
     </pickle>
