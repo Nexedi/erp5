@@ -101,6 +101,10 @@
                           <string>Version</string>
                         </tuple>
                         <tuple>
+                          <string>destination_project_title</string>
+                          <string>Project</string>
+                        </tuple>
+                        <tuple>
                           <string>source_title</string>
                           <string>Source</string>
                         </tuple>
@@ -123,6 +127,14 @@
                         <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>effective_date</string>
+                          <string>Effective Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>expiration_date</string>
+                          <string>Expiration Date</string>
                         </tuple>
                       </list>
                     </value>
