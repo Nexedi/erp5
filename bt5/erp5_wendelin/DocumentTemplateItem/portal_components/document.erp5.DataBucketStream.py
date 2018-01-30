@@ -198,7 +198,7 @@ class DataBucketStream(Document):
     """
       Wether bucket with such key exists
     """
-    return self._tree.has_key(key)
+    return key in self._tree
 
   def hasBucketIndex(self, index):
     """
@@ -220,7 +220,11 @@ class DataBucketStream(Document):
       self._long_index_tree.insert(count, key)
     except AttributeError:
       pass
-    return self._tree.insert(key, PersistentString(value))
+    value = PersistentString(value)
+    is_new_key = self._tree.insert(key, value)
+    if not is_new_key:
+      self.log("Reingestion of same key")
+      self._tree[key] = value
     
   def getBucketKeySequenceByKey(self, start_key=None, stop_key=None,
                    count=None, exclude_start_key=False, exclude_stop_key=False):
@@ -363,3 +367,28 @@ class DataBucketStream(Document):
     h = hashlib.md5()
     h.update(self.getBucketByKey(key))
     return h.hexdigest()
+    
+  def delBucketByKey(self, key):
+    """
+      Remove the bucket.
+    """
+    del self._tree[key]
+    for index, my_key in list(self.getBucketIndexKeySequenceByIndex()):
+      if my_key == key:
+        del self._long_index_tree[index]
+
+  def delBucketByIndex(self, index):
+    """
+      Remove the bucket.
+    """
+    key = self._long_index_tree[index]
+    del self._tree[key]
+    del self._long_index_tree[index]
+        
+  def rebuildIndexTreeByKeyOrder(self):
+    """
+        Clear and rebuild the index tree by order of keys
+    """
+    self.initIndexTree()
+    for count, key in enumerate(self.getBucketKeySequenceByKey()):
+      self._long_index_tree.insert(count, key)
