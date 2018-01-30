@@ -2,6 +2,7 @@ portal = context.getPortalObject()
 operation = None
 use = None
 parameter_dict = {}
+context.checkConsistency(fixit=True)
 initial_product = context.getSpecialiseValue(portal_type="Data Transformation").getResourceValue()
 for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
   resource = analysis_line.getResourceValue()
