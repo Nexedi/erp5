@@ -655,7 +655,14 @@ div[data-gadget-scope='panel'] {
   .linkpanel() {
     color: @white;
     display: block;
-    &:hover, &:active, &.active {
+    // Define .active before :hover to ensure it hover is displayed
+    // for the .active entry
+    &.active {
+      color: @colorforeground;
+      background-color: @colorbackground;
+    }
+    &:hover, &:active {
+      color: @white;
       background-color: darken(@panelbackgroundcolor, 10%);
     }
   }
