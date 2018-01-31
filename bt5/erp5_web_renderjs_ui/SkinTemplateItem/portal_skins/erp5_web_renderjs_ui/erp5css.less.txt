@@ -1307,17 +1307,19 @@ div[data-gadget-scope='header'] .ui-header {
     & > label {
       color: @grey;
 
-      // backward-compatibility: support for ERP5 field class defined in formulator configuration
-      &.required {
-        // inform user that the field is needed by contraint, but do not prevent him to save the value
-        font-weight: bold;
-      }
-      &.invisible {
-        // used to hide the label of a formbox
-        display: none;
-      }
     }
   }
+  //Label styling in required and "invisible" field
+  .required > .ui-field-contain > label {
+    // backward-compatibility: support for ERP5 field class defined in formulator configuration
+    // inform user that the field is needed by contraint, but do not prevent him to save the value
+    font-weight: bold;
+  }
+  .invisible > .ui-field-contain > label {
+    // used to hide the label of a formbox
+    display: none;
+  }
+
 
   @media @tablet, @desktop {
     .ui-field-contain {
