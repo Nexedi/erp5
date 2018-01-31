@@ -1,28 +1,7 @@
-/*global window, rJS*/
+/*global window, rJS, isEmpty, getFirstNonEmpty */
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
-(function (window, rJS) {
+(function (window, rJS, getFirstNonEmpty) {
   "use strict";
-
-  function isEmpty(value) {
-    return (value === undefined ||
-            value === null ||
-            value.length === 0);
-  }
-
-  /** More robust way of writing a || b || "" because if b===0 it gets skipped.
-  */
-  function getNonEmpty() {
-    var i;
-    for (i = 0; i < arguments.length; i++) {
-      if (!isEmpty(arguments[i])) {
-        return arguments[i];
-      }
-    }
-    if (arguments.length === 1) {
-      return arguments[0];
-    }
-    return arguments[arguments.length - 1];
-  }
 
   rJS(window)
     .setState({
@@ -32,7 +11,7 @@
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
-          value: getNonEmpty(field_json.value, field_json['default'], ""),
+          value: getFirstNonEmpty(field_json.value, field_json['default'], ""),
           item_list: JSON.stringify(field_json.items),
           editable: field_json.editable,
           required: field_json.required,
@@ -132,4 +111,4 @@
       return true;
     }, {mutex: 'changestate'});
 
-}(window, rJS));
+}(window, rJS, getFirstNonEmpty));

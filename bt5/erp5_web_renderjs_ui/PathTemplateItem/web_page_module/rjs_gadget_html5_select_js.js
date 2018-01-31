@@ -1,28 +1,7 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, rJS, RSVP, Handlebars, getFirstNonEmpty */
 /*jslint indent: 2, maxerr: 3, maxlen: 80, nomen: true */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, rJS, RSVP, Handlebars, getFirstNonEmpty) {
   "use strict";
-
-  function isEmpty(value) {
-    return (value === undefined ||
-            value === null ||
-            value.length === 0);
-  }
-
-  /** More robust way of writing a || b || "" because if b===0 it gets skipped.
-  */
-  function getNonEmpty() {
-    var i;
-    for (i = 0; i < arguments.length; i++) {
-      if (!isEmpty(arguments[i])) {
-        return arguments[i];
-      }
-    }
-    if (arguments.length === 1) {
-      return arguments[0];
-    }
-    return arguments[arguments.length - 1];
-  }
 
   // How to change html selected option using JavaScript?
   // http://stackoverflow.com/a/20662180
@@ -53,7 +32,7 @@
 
     .declareMethod('render', function (options) {
       var state_dict = {
-          value: getNonEmpty(options.value, ""),
+          value: getFirstNonEmpty(options.value, ""),
           item_list: JSON.stringify(options.item_list),
           editable: options.editable,
           required: options.required,
@@ -169,4 +148,4 @@
       return this.notifyInvalid(evt.target.validationMessage);
     }, true, false);
 
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS, RSVP, Handlebars, getFirstNonEmpty));
