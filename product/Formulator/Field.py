@@ -651,7 +651,10 @@ class ZMIField(
         from TALESField import TALESMethod
         result = {}
         for key, value in map.items():
-            result[key] = TALESMethod(value)
+            if value:
+                result[key] = TALESMethod(value)
+            else:
+                result[key] = ''  # do not create empty methods
         self._edit_tales(result)
 
     # display test screen
