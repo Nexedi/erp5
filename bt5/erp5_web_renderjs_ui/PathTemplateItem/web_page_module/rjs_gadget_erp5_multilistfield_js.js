@@ -3,11 +3,32 @@
 (function (window, rJS, document, RSVP) {
   'use strict';
 
+  function isEmpty(value) {
+    return (value === undefined ||
+            value === null ||
+            value.length === 0);
+  }
+
   /* Make sure that returned object is an Array instance. */
   function ensureArray(obj) {
-    if (!obj) {return []; }
     if (Array.isArray(obj)) {return obj; }
+    if (isEmpty(obj)) {return []; }
     return [obj];
+  }
+
+  /** More robust way of writing a || b || "" because if b===0 it gets skipped.
+  */
+  function getNonEmpty() {
+    var i;
+    for (i = 0; i < arguments.length; i++) {
+      if (!isEmpty(arguments[i])) {
+        return arguments[i];
+      }
+    }
+    if (arguments.length === 1) {
+      return arguments[0];
+    }
+    return arguments[arguments.length - 1];
   }
 
   function appendListField(gadget, value, item_list) {
@@ -37,10 +58,11 @@
   rJS(window)
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
-        item_list = field_json.items,
+        item_list = ensureArray(field_json.items),
         state_dict = {
           value_list: JSON.stringify(
-            ensureArray(field_json.value || field_json.default)
+            ensureArray(
+              getNonEmpty(field_json.value, field_json['default'], []))
           ),
           editable: field_json.editable,
           required: field_json.required,
@@ -54,6 +76,11 @@
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
         };
+      // Items can be simply an array of values. It is a valid input produced
+      // usually by TALES expression
+      if (item_list.length > 0 && !Array.isArray(item_list[0])) {
+        item_list = item_list.map(function (item) {return [item, item]; });
+      }
       if ((item_list.length === 0) || (item_list[0][0] !== "")) {
         item_list.unshift(["", ""]);
       }
@@ -77,17 +104,13 @@
         element.removeChild(element.firstChild);
       }
 
-      function enQueue() {
-        var argument_list = arguments;
+      value_list.forEach(function (value) {
         queue
           .push(function () {
-            return appendListField.apply(this, argument_list);
+            return appendListField(gadget, value, item_list);
           });
-      }
+      });
 
-      for (i = 0; i < value_list.length; i += 1) {
-        enQueue(gadget, value_list[i], item_list);
-      }
       return queue;
     })
 
