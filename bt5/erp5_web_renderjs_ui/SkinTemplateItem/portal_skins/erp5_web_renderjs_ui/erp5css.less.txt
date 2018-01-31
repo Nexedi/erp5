@@ -415,6 +415,14 @@ input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio])
   }
 }
 
+// Force safari to render search input as text
+// https://stackoverflow.com/questions/34802552/safari-input-type-search-reset-normalize
+input[type="search"] {
+    -webkit-appearance: textfield;
+}
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
 
 // http://kyusuf.com/post/completely-css-custom-checkbox-radio-buttons-and-select-boxes
 select {

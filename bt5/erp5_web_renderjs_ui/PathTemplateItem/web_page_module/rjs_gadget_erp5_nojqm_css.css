@@ -319,6 +319,12 @@ textarea:invalid:focus,
 select:invalid:focus {
   box-shadow: 0 0 12pt #FF6600;
 }
+input[type="search"] {
+  -webkit-appearance: textfield;
+}
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
 select {
   cursor: pointer;
   -webkit-appearance: none;
