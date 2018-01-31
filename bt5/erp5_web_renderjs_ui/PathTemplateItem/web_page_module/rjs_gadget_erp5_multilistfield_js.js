@@ -1,35 +1,7 @@
-/*global window, rJS, document, RSVP*/
+/*global window, rJS, document, RSVP, isEmpty, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80, unparam: true */
-(function (window, rJS, document, RSVP) {
+(function (window, rJS, document, RSVP, isEmpty, ensureArray, getFirstNonEmpty) {
   'use strict';
-
-  function isEmpty(value) {
-    return (value === undefined ||
-            value === null ||
-            value.length === 0);
-  }
-
-  /* Make sure that returned object is an Array instance. */
-  function ensureArray(obj) {
-    if (Array.isArray(obj)) {return obj; }
-    if (isEmpty(obj)) {return []; }
-    return [obj];
-  }
-
-  /** More robust way of writing a || b || "" because if b===0 it gets skipped.
-  */
-  function getNonEmpty() {
-    var i;
-    for (i = 0; i < arguments.length; i++) {
-      if (!isEmpty(arguments[i])) {
-        return arguments[i];
-      }
-    }
-    if (arguments.length === 1) {
-      return arguments[0];
-    }
-    return arguments[arguments.length - 1];
-  }
 
   function appendListField(gadget, value, item_list) {
     var div = document.createElement('div');
@@ -62,7 +34,7 @@
         state_dict = {
           value_list: JSON.stringify(
             ensureArray(
-              getNonEmpty(field_json.value, field_json['default'], []))
+              getFirstNonEmpty(field_json.value, field_json['default'], []))
           ),
           editable: field_json.editable,
           required: field_json.required,
@@ -222,4 +194,4 @@
       return true;
     }, {mutex: 'changestate'});
 
-}(window, rJS, document, RSVP));
+}(window, rJS, document, RSVP, isEmpty, ensureArray, getFirstNonEmpty));
