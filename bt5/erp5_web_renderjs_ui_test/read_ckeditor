@@ -1,0 +1,28 @@
+<tal:block define macro truc><tal:comment tal:replace="nothing"><!--
+
+  this macro needs globals: text_content
+
+  --></tal:comment>
+  <tr>
+    <td colspan="3"><b>CKEditor Verify Text Content</b></td>
+  </tr>
+  <!-- Wait for ckeditor to be loaded :/ How to inspect inside another iframe? -->
+  <tr>
+    <td>pause</td>
+    <td>5000</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>storeEval</td>
+    <td>document.querySelector('#selenium_myiframe').contentWindow.document.querySelector('iframe').contentWindow.document.querySelector('iframe').contentWindow.document.body.innerHTML</td>
+    <td>_macro_ckeditor_verify_text_content_temporary_var</td>
+  </tr>
+  <tr>
+    <td>verifyEval</td>
+    <td>storedVars['_macro_ckeditor_verify_text_content_temporary_var']</td>
+    <td tal:content="python: text_content"></td>
+  </tr>
+  <tr>
+    <td colspan="3"><p></p></td>
+  </tr>
+</tal:block>
