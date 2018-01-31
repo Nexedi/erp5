@@ -99,6 +99,7 @@
 @invalid-border: @border-size @border-type @coloraccent;
 @invalid-box-shadow: 0 0 @double-margin-size @coloraccent;
 
+@quarter-margin-size: 1.5pt;
 @half-margin-size: 3pt;
 @margin-size: 6pt;
 @double-margin-size: 12pt;
@@ -634,7 +635,7 @@ div[data-gadget-scope='panel'] {
   }
 
   .alignwithicon() {
-    padding: @half-margin-size;
+    padding: @quarter-margin-size;
     padding-left: @double-margin-size;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -1169,7 +1170,7 @@ div[data-gadget-scope='header'] .ui-header {
 
   // Set the size and padding of each field inside a form
   .field_container > div > div > div.ui-field-contain {
-    padding: @margin-size 0;
+    padding: @half-margin-size 0;
 
     div {
       width: 100%;

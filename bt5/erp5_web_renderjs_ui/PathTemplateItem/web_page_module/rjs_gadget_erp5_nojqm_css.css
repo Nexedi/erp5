@@ -520,7 +520,7 @@ div[data-gadget-scope='panel'] ul:first-child {
 div[data-gadget-scope='panel'] ul li a {
   color: #FFFFFF;
   display: block;
-  padding: 3pt;
+  padding: 1.5pt;
   padding-left: 12pt;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -549,7 +549,7 @@ div[data-gadget-scope='panel'] dl:not(:empty) {
   transform: scaleY(1);
 }
 div[data-gadget-scope='panel'] dl dt {
-  padding: 3pt;
+  padding: 1.5pt;
   padding-left: 12pt;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -561,7 +561,7 @@ div[data-gadget-scope='panel'] dl dt::before {
 div[data-gadget-scope='panel'] dl dd a {
   color: #FFFFFF;
   display: block;
-  padding: 3pt;
+  padding: 1.5pt;
   padding-left: 12pt;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -1018,7 +1018,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   }
 }
 .gadget-content .field_container > div > div > div.ui-field-contain {
-  padding: 6pt 0;
+  padding: 3pt 0;
 }
 .gadget-content .field_container > div > div > div.ui-field-contain div {
   width: 100%;
