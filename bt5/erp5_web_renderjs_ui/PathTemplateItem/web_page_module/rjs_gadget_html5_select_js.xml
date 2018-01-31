@@ -98,12 +98,6 @@
             </value>
         </item>
         <item>
-            <key> <string>subject</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Gadget HTML5 Select JS</string> </value>
         </item>
@@ -236,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>963.62584.36941.22510</string> </value>
+                <value> <string>965.10402.53372.47291</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +248,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1516785191.79</float>
+                        <float>1517343550.97</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

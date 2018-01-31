@@ -3,6 +3,27 @@
 (function (window, rJS) {
   "use strict";
 
+  function isEmpty(value) {
+    return (value === undefined ||
+            value === null ||
+            value.length === 0);
+  }
+
+  /** More robust way of writing a || b || "" because if b===0 it gets skipped.
+  */
+  function getNonEmpty() {
+    var i;
+    for (i = 0; i < arguments.length; i++) {
+      if (!isEmpty(arguments[i])) {
+        return arguments[i];
+      }
+    }
+    if (arguments.length === 1) {
+      return arguments[0];
+    }
+    return arguments[arguments.length - 1];
+  }
+
   rJS(window)
     .setState({
       tag: 'p'
@@ -11,7 +32,7 @@
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
-          value: field_json.value || field_json.default || "",
+          value: getNonEmpty(field_json.value, field_json['default'], ""),
           item_list: JSON.stringify(field_json.items),
           editable: field_json.editable,
           required: field_json.required,
@@ -23,8 +44,8 @@
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
         };
-
-      if ((!state_dict.value) && (state_dict.first_item)) {
+      // first_item means to select the first item by default on empty value
+      if (isEmpty(state_dict.value) && (state_dict.first_item)) {
         state_dict.value = field_json.items[0][1];
       }
       return this.changeState(state_dict);
