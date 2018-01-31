@@ -2,12 +2,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test RenderJS UI</title>
+<title>Test RenderJS UI MultiList</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+<tr><td rowspan="1" colspan="3">Test int:0 in items and as default</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 
@@ -24,7 +24,18 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/FooViewDummyMultiListFieldDialog_setFieldPropertyList</td>
+  <td>${base_url}/foo_module/Foo_createObjects?num:int=1&amp;start:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr><th colspan="3">Set MultiList's items to python:[("0", 0), ("1", 1)] and default=python:0</th></tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/FooViewDummyMultiListFieldDialog_setFieldPropertyList?your_dummy__default_tales=python%3A0&amp;your_dummy__items_tales=python%3A%20%5B(%220%22%2C%200)%2C(%221%22%2C1)%5D</td>
   <td></td>
 </tr>
 <tr>
@@ -36,35 +47,25 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Add']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Add</td>
-  <td></td>
-</tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Save</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
   <td></td>
 </tr>
 
 <!-- Go to test form -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_foo_dummy_multilist_field_report_view" />
 
+<tr><td cellspan="3">The option 1 must be selected</td></tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, "gadget_erp5_field_multilist.html")]/div[1]//option[@value="0" and @selected="selected"]</td>
+  <td></td>
+</tr>
 
 <!-- Run test form & check -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tr>
   <td>waitForTextPresent</td>
-  <td>repr []</td>
+  <td>repr [0]</td>
   <td></td>
 </tr>
 
