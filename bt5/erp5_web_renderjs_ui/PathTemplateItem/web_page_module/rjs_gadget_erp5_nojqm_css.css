@@ -177,6 +177,24 @@ select {
   font-weight: 400;
   line-height: 1.5;
 }
+@media only screen and (min-width: 45em) and (max-width: 85em) {
+  body,
+  button,
+  input,
+  textarea,
+  select {
+    font-size: 11pt;
+  }
+}
+@media not screen and (max-width: 85em) {
+  body,
+  button,
+  input,
+  textarea,
+  select {
+    font-size: 10pt;
+  }
+}
 /**********************************************
 * Inline elements
 **********************************************/
