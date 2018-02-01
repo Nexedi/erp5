@@ -42,6 +42,7 @@ from Products.ERP5Type.Utils import UpperCase
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Products.ERP5Type.Log import log
 from collections import OrderedDict
+from urlparse import urlparse
 
 MARKER = []
 
@@ -1303,12 +1304,26 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # set URL params into REQUEST (just like it was sent by form)
         for query_key, query_value in query_param_dict.items():
           REQUEST.set(query_key, query_value)
-
-        # unfortunatelly some people use Scripts as targets for Workflow
-        # transactions - thus we need to check and mitigate
-        if "Script" in renderer_form.meta_type:
-          # we suppose that the script takes only what is given in the URL params
-          return renderer_form(**query_param_dict)
+        # Embedded Form can be a Script or even a class method thus we mitigate here
+        try:
+          if "Script" in renderer_form.meta_type:
+            # we suppose that the script takes only what is given in the URL params
+            return renderer_form(**query_param_dict)
+        except AttributeError:
+          # if renderer form does not have attr meta_type then it is not a document
+          # but most likely bound instance method. Some form_ids do actually point to methods.
+          returned_value = renderer_form(**query_param_dict)
+          # returned value is usually REQUEST.RESPONSE.redirect()
+          log('ERP5Document_getHateoas', 'HAL_JSON cannot handle returned value "{!s}" from {}({!s})'.format(
+            returned_value, form_id, query_param_dict), 100)
+          status_message = Base_translateString('Operation executed')
+          if isinstance(returned_value, (str, unicode)):
+            parsed_url = urlparse(returned_value)
+            parsed_query = parse_qs(parsed_url.query)
+            if len(parsed_query.get('portal_status_message', ())) > 0:
+               status_message = parsed_query.get('portal_status_message')[0]
+          return traversed_document.Base_redirect(keep_items={
+            'portal_status_message': status_message})
 
         renderForm(traversed_document, renderer_form, embedded_dict)
         result_dict['_embedded'] = {
