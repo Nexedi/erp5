@@ -1529,7 +1529,8 @@ div[data-gadget-scope='erp5_searchfield'] {
 
   .ui-table-header {
     display: flex;
-    padding-bottom: @margin-size;
+    padding-top: @half-margin-size;
+    padding-bottom: @half-margin-size;
     @media @smartphone {
       border-bottom: 2px solid @colorsubheaderbackground;
     }

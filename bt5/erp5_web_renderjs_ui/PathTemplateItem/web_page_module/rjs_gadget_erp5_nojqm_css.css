@@ -1302,7 +1302,8 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
 }
 .document_table .ui-table-header {
   display: flex;
-  padding-bottom: 6pt;
+  padding-top: 3pt;
+  padding-bottom: 3pt;
 }
 @media not screen and (min-width: 45em) {
   .document_table .ui-table-header {
