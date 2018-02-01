@@ -391,9 +391,16 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       node_uid=supply.getDestinationUid()
       # XXX This should be bound to a stard and stop date
       )
-    for date, inventory in history_list:
-      if ordered_inventory + inventory < min_inventory: # SKU
-         quantity = min_inventory - inventory - ordered_inventory
+    while history_list:
+      date, inventory, quantity = history_list[0]
+      min_inventory = self.Base_evaluateMinInventoryForSupplyAtDate(
+        supply=supply,
+        history_list=history_list,
+        at_date=date,
+        )
+      if ordered_inventory + (inventory-quantity) < min_inventory: # SKU
+         #import pdb;pdb.set_trace()
+         quantity = min_inventory - (inventory-quantity) - ordered_inventory
          ordered_quantity, ordered_unit, ordered_date, delivery_date, quantity = minimalQuantity(quantity, date)
          # XXX CLN This is very naive, it has to be optimized
          if ordered_date <= supply.getStartDateRangeMax()\
@@ -407,6 +414,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                ordered_unit
               )
             )
+      history_list.pop(0)
     return movement_list
 
   def _searchMovementList(self, **kw):
