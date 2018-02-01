@@ -580,8 +580,8 @@ div[data-gadget-scope='panel'] dl dd a.active {
 }
 div[data-gadget-scope='panel'] dl dd a:hover,
 div[data-gadget-scope='panel'] dl dd a:active {
-  color: #FFFFFF;
-  background-color: #2b2b2b;
+  color: #1F1F1F;
+  background-color: #FFFFFF;
 }
 div[data-gadget-scope='panel'] dl dd a::before {
   width: 24pt;

@@ -32,6 +32,10 @@
 @colorblocklinkbackground: #e0e0e0;
 
 @panelbackgroundcolor: #444444;
+@paneldarkerbackgroundcolor: darken(@panelbackgroundcolor, 10%);
+
+@panelcontextuallinkcolor: @colorforeground;
+@panelcontextuallinkcolorbackground: @colorbackground;
 
 @listboxbordercolor: rgba(0, 0, 0, 0.14902);
 
@@ -663,18 +667,18 @@ div[data-gadget-scope='panel'] {
     padding-left: @double-margin-size + @quadruple-margin-size;
   }
 
-  .linkpanel() {
+  .linkpanel(@linkpanelhovercolor: @white, @linkpanelhoverbackgroundcolor: @paneldarkerbackgroundcolor) {
     color: @white;
     display: block;
     // Define .active before :hover to ensure it hover is displayed
     // for the .active entry
     &.active {
-      color: @colorforeground;
-      background-color: @colorbackground;
+      color: @panelcontextuallinkcolor;
+      background-color: @panelcontextuallinkcolorbackground;
     }
     &:hover, &:active {
-      color: @white;
-      background-color: darken(@panelbackgroundcolor, 10%);
+      color: @linkpanelhovercolor;
+      background-color: @linkpanelhoverbackgroundcolor;
     }
   }
 
@@ -708,7 +712,7 @@ div[data-gadget-scope='panel'] {
 
     dd {
         a {
-          .linkpanel();
+          .linkpanel(@panelcontextuallinkcolor, @panelcontextuallinkcolorbackground);
           .alignwithouticon();
         }
     }
@@ -1457,7 +1461,7 @@ div[data-gadget-scope='header'] .ui-header {
       // No transition, as it doesn't feel right
       // transition: background-color @transition-timing;
       &:hover, &:active {
-        background-color: darken(@panelbackgroundcolor, 10%);
+        background-color: @paneldarkerbackgroundcolor;
       }
 
     }
