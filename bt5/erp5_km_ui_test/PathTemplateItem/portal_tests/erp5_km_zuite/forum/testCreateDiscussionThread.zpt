@@ -45,6 +45,9 @@
   <td>field_your_title</td>
   <td>Thread 1</td>
 </tr>
+<tal:block tal:define="text_content python: 'Post 1'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
 <tr>
   <td>clickAndWait</td>
   <td>dialog_submit_button</td>
@@ -97,11 +100,9 @@
   <td>field_your_title</td>
   <td>exact:Re: Thread 1</td>
 </tr>
-<tr>
-  <td>type</td>
-  <td>field_your_text_content</td>
-  <td>Response</td>
-</tr>
+<tal:block tal:define="text_content python: 'Response'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
 <tr>
   <td>clickAndWait</td>
   <td>dialog_submit_button</td>

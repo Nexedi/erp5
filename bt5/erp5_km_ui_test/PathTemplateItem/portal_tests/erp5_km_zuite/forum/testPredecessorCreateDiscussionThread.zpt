@@ -77,13 +77,9 @@
   <td>field_your_title</td>
   <td>Thread 1</td>
 </tr>
-<!--
-<tr>
-  <td>type</td>
-  <td>//textarea[@class="ace_text-input"]</td>
-  <td>Post 1</td>
-</tr>
--->
+<tal:block tal:define="text_content python: 'Post 1'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
 <!-- verify predecessor hidden input is not set DONT WORK 
 <tr>
   <td>assertValue</td>
@@ -167,13 +163,9 @@
   <td>field_your_title</td>
   <td>Thread 2</td>
 </tr>
-<!--
-<tr>
-  <td>type</td>
-  <td>//textarea[@class="ace_text-input"]</td>
-  <td>Post 2</td>
-</tr>
--->
+<tal:block tal:define="text_content python: 'Post 2'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
 <tr>
   <td>clickAndWait</td>
   <td>//button[@id='dialog_submit_button']</td>
@@ -265,13 +257,9 @@
   <td>field_your_title</td>
   <td>Thread 3</td>
 </tr>
-<!--
-<tr>
-  <td>type</td>
-  <td>//textarea[@class="ace_text-input"]</td>
-  <td>Post 3</td>
-</tr>
--->
+<tal:block tal:define="text_content python: 'Post 3'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
 <tr>
   <td>clickAndWait</td>
   <td>//button[@id='dialog_submit_button']</td>
