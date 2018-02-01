@@ -72,13 +72,13 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class='editable_div']//div[@class='datetimefield']</td>
+  <td>//div[@data-gadget-scope="field_listbox"]//div[@class='datetimefield']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//div[@class='editable_div']//div[@class='datetimefield']//input</td>
+  <td>//div[@data-gadget-scope="field_listbox"]//div[@class='datetimefield']//input</td>
   <td></td>
 </tr>
 
