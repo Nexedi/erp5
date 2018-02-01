@@ -569,7 +569,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     delivery = delivery_module.newContent(
       portal_type=self.getDeliveryPortalType(),
       created_by_builder=1)
-    delivery.autoPlan()
+    if self.getPortalObject().portal_workflow.isTransitionPossible(delivery, "auto_plan"):
+      delivery.autoPlan()
     delivery.immediateReindexObject()
     return delivery
 
