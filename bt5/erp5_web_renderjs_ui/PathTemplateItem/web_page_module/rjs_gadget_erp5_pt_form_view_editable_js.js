@@ -80,8 +80,7 @@
 
         // render the header
         .push(function () {
-          var new_content_action = form_gadget.state.erp5_document._links.action_object_new_content_action,
-            delete_action = form_gadget.state.erp5_document._links.action_object_delete_action;
+          var new_content_action = form_gadget.state.erp5_document._links.action_object_new_content_action;
 
           if (new_content_action !== undefined) {
             new_content_action = form_gadget.getUrlFor({command: 'change', options: {view: new_content_action.href, editable: true}});
@@ -89,17 +88,13 @@
             new_content_action = "";
           }
 
-          if (delete_action !== undefined) {
-            delete_action = form_gadget.getUrlFor({command: 'change', options: {view: delete_action.href}});
-          } else {
-            delete_action = "";
-          }
           return RSVP.all([
             form_gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
             form_gadget.getUrlFor({command: 'change', options: {page: "action"}}),
             new_content_action,
             form_gadget.getUrlFor({command: 'history_previous'}),
-            delete_action,
+            form_gadget.getUrlFor({command: 'selection_previous'}),
+            form_gadget.getUrlFor({command: 'selection_next'}),
             calculatePageTitle(form_gadget, form_gadget.state.erp5_document)
           ]);
         })
@@ -109,9 +104,9 @@
             actions_url: all_result[1],
             add_url: all_result[2],
             selection_url: all_result[3],
-            delete_url: all_result[4],
-            cut_url: "",
-            page_title: all_result[5]
+            previous_url: all_result[4],
+            next_url: all_result[5],
+            page_title: all_result[6]
           };
           if (form_gadget.state.save_action === true) {
             header_dict.save_action = true;

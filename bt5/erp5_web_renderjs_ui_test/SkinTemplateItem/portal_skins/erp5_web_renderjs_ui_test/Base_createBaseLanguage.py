@@ -8,6 +8,7 @@ param_dict = [
   { 'message': 'Contains', 'translation': 'baohang', 'language': 'wo'},
   { 'message': 'Search', 'translation': 'soushuo', 'language': 'wo'},
   { 'message': 'Next', 'translation': 'houyige', 'language': 'wo'},
+  { 'message': 'Fast Input', 'translation': 'kuaishushuru', 'language': 'wo'},
   { 'message': 'Add', 'translation': 'zhenjia', 'language': 'wo'},
   { 'message': 'Loading', 'translation': 'jiazhaizhong', 'language': 'wo'},
   { 'message': 'Actions', 'translation': 'caozhuo', 'language': 'wo'},

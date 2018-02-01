@@ -3319,3 +3319,6 @@ hmtl .ui-icon-carat-u::before{
 .ui-icon-bomb::before {
   content: "\f1e2";
 }
+.ui-icon-clone::before {
+  content: "\f24d";
+}

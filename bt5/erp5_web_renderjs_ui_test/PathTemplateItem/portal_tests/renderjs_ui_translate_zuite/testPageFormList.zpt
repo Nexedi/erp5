@@ -42,7 +42,7 @@
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//div[@data-role="header"]//a[text() = 'jianque']</td>
+  <td>//div[@data-role="header"]//a[text() = 'kuaishushuru']</td>
   <td></td>
 </tr>
 

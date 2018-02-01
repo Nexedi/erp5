@@ -84,13 +84,6 @@
   <td>//div[@data-role="header"]//a[text() = 'shitu']</td>
   <td></td>
 </tr>
- 
-
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//div[@data-role="header"]//a[text() = 'shangchu']</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>verifyElementPresent</td>
@@ -100,17 +93,21 @@
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//div[@data-role="header"]//a[text() = 'jianque']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>verifyElementPresent</td>
   <td>//div[@data-role="header"]//a[text() = 'zhenjia']</td>
   <td></td>
 </tr>
 
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-role="header"]//a[text() = 'qianyige']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-role="header"]//a[text() = 'houyige']</td>
+  <td></td>
+</tr>
 
 <tr>
   <td>verifyElementPresent</td>

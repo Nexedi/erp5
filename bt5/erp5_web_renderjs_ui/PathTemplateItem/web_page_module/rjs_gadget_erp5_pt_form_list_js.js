@@ -111,7 +111,7 @@
           return form_gadget.updateHeader({
             panel_action: true,
             jump_url: "",
-            cut_url: "",
+            fast_input_url: "",
             add_url: all_gadget[0],
             actions_url: all_gadget[1],
             export_url: all_gadget[3],
