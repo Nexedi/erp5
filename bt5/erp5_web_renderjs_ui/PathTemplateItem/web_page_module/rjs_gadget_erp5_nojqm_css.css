@@ -1386,6 +1386,9 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
   .document_table table tbody a {
     display: block;
   }
+  .document_table table tbody td:not(:last-child) {
+    border-right: 1px solid rgba(0, 0, 0, 0.14902);
+  }
 }
 @media not screen and (min-width: 45em) {
   .document_table table tbody tr {

@@ -33,6 +33,8 @@
 
 @panelbackgroundcolor: #444444;
 
+@listboxbordercolor: rgba(0, 0, 0, 0.14902);
+
 @radius: .325em;
 
 // XXX BUG Generate wrong align on firefox smartphone
@@ -1610,6 +1612,9 @@ div[data-gadget-scope='erp5_searchfield'] {
         a {
           display: block;
         }
+        td:not(:last-child) {
+          border-right: 1px solid @listboxbordercolor;
+        }
       }
 
       @media @smartphone {
@@ -1694,7 +1699,7 @@ div[data-gadget-scope='erp5_searchfield'] {
   nav {
     display: flex;
     padding-top: @margin-size;
-    border-top: 2px solid rgba(0, 0, 0, 0.14902);
+    border-top: 2px solid @listboxbordercolor;
 
     span {
       opacity: .3;
