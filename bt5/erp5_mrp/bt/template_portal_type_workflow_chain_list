@@ -34,6 +34,7 @@ Production Order | delivery_causality_interaction_workflow
 Production Order | delivery_causality_workflow
 Production Order | delivery_simulation_interaction_workflow
 Production Order | edit_workflow
+Production Order | production_order_interaction_workflow
 Production Order | production_order_workflow
 Production Packing List Cell | delivery_movement_causality_interaction_workflow
 Production Packing List Cell | delivery_movement_simulation_interaction_workflow
