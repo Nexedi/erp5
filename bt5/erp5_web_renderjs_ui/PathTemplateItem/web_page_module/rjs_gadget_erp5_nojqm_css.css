@@ -1306,7 +1306,7 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
 }
 @media not screen and (min-width: 45em) {
   .document_table .ui-table-header {
-    border-bottom: 2px solid rgba(0, 0, 0, 0.14902);
+    border-bottom: 2px solid #0E81C2;
   }
 }
 .document_table .ui-table-header h1 {

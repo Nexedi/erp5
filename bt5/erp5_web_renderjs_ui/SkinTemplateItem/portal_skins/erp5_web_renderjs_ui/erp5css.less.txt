@@ -1525,7 +1525,7 @@ div[data-gadget-scope='erp5_searchfield'] {
     display: flex;
     padding-bottom: @margin-size;
     @media @smartphone {
-      border-bottom: 2px solid rgba(0, 0, 0, 0.14902);
+      border-bottom: 2px solid @colorsubheaderbackground;
     }
 
     h1 {
