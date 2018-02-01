@@ -209,7 +209,6 @@ class PeriodicityMixin:
     next_start_date = max(self._getNextMinute(next_start_date, timezone, factor),
             current_date)
     while 1:
-      self.log(next_start_date)
       if not self._validateMonth(next_start_date):
         next_start_date = self._getNextMonth(next_start_date, timezone, factor)
       elif not (self._validateDay(next_start_date) and
