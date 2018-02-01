@@ -181,17 +181,29 @@
       .push(undefined, function (error) {
         if (error.target !== undefined) {
           var error_text = 'Encountered an unknown error. Try to resubmit',
-            promise;
-          // if we know what the error was, try to precise it for the user 
+            promise_queue = new RSVP.Queue();
+          // if we know what the error was, try to precise it for the user
           if (error.target.status === 400) {
             error_text = 'Input data has errors';
           } else if (error.target.status === 403) {
             error_text = 'You do not have the permissions to edit the object';
           } else if (error.target.status === 0) {
             error_text = 'Document was not saved! Resubmit when you are online or the document accessible';
+          } else if (error.target.status === 500 && error.target.response.type === "application/json") {
+            promise_queue
+              .push(function () {
+                return jIO.util.readBlobAsText(error.target.response);
+              })
+              .push(function (response_text) {
+                var response = JSON.parse(response_text.target.result);
+                error_text = response.portal_status_message;
+              });
           }
           // display translated error_text to user
-          promise = form_gadget.notifySubmitted()
+          promise_queue
+            .push(function () {
+              return form_gadget.notifySubmitted();
+            })
             .push(function () {
               return form_gadget.translate(error_text);
             })
@@ -204,7 +216,7 @@
           // if server validation of form data failed (indicated by response code 400)
           // we parse out field errors and display them to the user
           if (error.target.status === 400) {
-            promise
+            promise_queue
               .push(function () {
                 // when the server-side validation returns the error description
                 if (error.target.responseType === "blob") {
@@ -217,7 +229,7 @@
                 return form_gadget.displayFormulatorValidationError(JSON.parse(event.target.result));
               });
           }
-          return promise;
+          return promise_queue;
         }
         throw error;
       });
