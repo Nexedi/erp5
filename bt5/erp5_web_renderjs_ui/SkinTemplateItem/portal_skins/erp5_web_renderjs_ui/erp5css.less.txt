@@ -1487,6 +1487,9 @@ div[data-gadget-scope='header'] .ui-header {
 .floatfield, .integerfield {
   p, input {
     text-align: right;
+    // Do not render float/integer on multiline
+    // as it make them unreadable
+    white-space: nowrap;
   }
 }
 

@@ -1269,6 +1269,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 .floatfield input,
 .integerfield input {
   text-align: right;
+  white-space: nowrap;
 }
 /**********************************************
 * Listbox
