@@ -165,22 +165,9 @@
       <td>field_my_default_destination</td>
       <td tal:content="python: dialog_content_configuration['field_my_default_destination']"></td>
     </tr>
-    <!-- Wait for ckeditor to be loaded :/ How to inspect inside another iframe? -->
-    <tr>
-      <td>pause</td>
-      <td>5000</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>storeEval</td>
-            <td>document.querySelector('#selenium_myiframe').contentWindow.document.querySelector('iframe').contentWindow.document.querySelector('iframe').contentWindow.document.body.innerHTML</td>
-      <td>field_your_response_event_text_content</td>
-    </tr>
-    <tr>
-      <td>verifyEval</td>
-      <td>storedVars['field_your_response_event_text_content']</td>
-      <td tal:content="python: dialog_content_configuration['field_your_response_event_text_content']"></td>
-    </tr>
+    <tal:block tal:define="text_content python: dialog_content_configuration['field_your_response_event_text_content']">
+      <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/verify_ckeditor_text_content"/>
+    </tal:block>
     <tr>
       <td colspan="3"><p></p></td>
     </tr>
@@ -226,11 +213,9 @@
       <td>field_my_default_destination</td>
       <td tal:content="python: dialog_content_configuration['field_my_default_destination']"></td>
     </tr>
-    <tr>
-      <td>storeEval</td>
-      <td tal:content="python: 'document.querySelector(\'#selenium_myiframe\').contentWindow.document.querySelector(\'iframe\').contentWindow.document.querySelector(\'iframe\').contentWindow.document.body.innerHTML = \'%s\'' % dialog_content_configuration['field_your_response_event_text_content']"></td>
-      <td>field_my_text_content</td>
-    </tr>
+    <tal:block tal:define="text_content python: dialog_content_configuration['field_your_response_event_text_content']">
+      <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+    </tal:block>
     <tr>
       <td colspan="3"><p></p></td>
     </tr>
@@ -282,22 +267,9 @@
       <td>field_my_destination_title_list</td>
       <td tal:content="python: response_configuration['field_my_destination_title']"></td>
     </tr>
-    <!-- Wait for ckeditor to be loaded :/ How to inspect inside another iframe? -->
-    <tr>
-      <td>pause</td>
-      <td>5000</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>storeEval</td>
-            <td>document.querySelector('#selenium_myiframe').contentWindow.document.querySelector('iframe').contentWindow.document.querySelector('iframe').contentWindow.document.body.innerHTML</td>
-      <td>field_my_text_content</td>
-    </tr>
-    <tr>
-      <td>verifyEval</td>
-      <td>storedVars['field_my_text_content']</td>
-      <td tal:content="python: response_configuration['field_my_text_content']"></td>
-    </tr>
+    <tal:block tal:define="text_content python: response_configuration['field_my_text_content']">
+      <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/verify_ckeditor_text_content"/>
+    </tal:block>
     <tr>
       <td colspan="3"><p></p></td>
     </tr>
