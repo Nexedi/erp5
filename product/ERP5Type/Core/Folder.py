@@ -485,7 +485,6 @@ class FolderMixIn(ExtensionClass.Base):
       recurse(self, 0)
     except StopIteration:
       activate_kw['group_method_id'] = kw['group_id'] = '' # no grouping
-      activate_kw['priority'] = 1 + activate_kw.get('priority', 1)
       activate(self, 'SQLQueue', **activate_kw)._recurseCallMethod(
         method_id, method_args, method_kw, restricted=restricted, **kw)
 
