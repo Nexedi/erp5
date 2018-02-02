@@ -104,7 +104,7 @@
       allowedContent: true,
       keystrokes: [
         [CKEDITOR.CTRL + 83, 'saveRJS']
-      ],
+      ]
     },
     DESKTOP_CONFIGURATION = {
       toolbar: TOOLBAR_DESKTOP,
@@ -113,7 +113,16 @@
       allowedContent: true,
       keystrokes: [
         [CKEDITOR.CTRL + 83, 'saveRJS']
-      ],
+      ]
+    },
+    READONLY_CONFIGURATION = {
+      toolbar: [],
+      allowedContent: true,
+      readOnly: true,
+      removePlugins: 'elementspath',
+      startupShowBorders: false,
+      startupOutlineBlocks: false,
+      contentsCss: ''
     },
       MATCH_MEDIA = window.matchMedia("not screen and (min-width: 45em)");
 
@@ -139,9 +148,13 @@
         key: options.key,
         value: options.value || "",
         editable: options.editable === undefined ? true : options.editable,
-        configuration: options.configuration || DESKTOP_CONFIGURATION,
-        configuration_mobile: options.configuration_mobile ||
-                              MOBILE_CONFIGURATION,
+        configuration: !options.editable || options.editable !== undefined ?
+                       READONLY_CONFIGURATION :
+                       options.configuration || DESKTOP_CONFIGURATION,
+        configuration_mobile: !options.editable ||
+                              options.editable !== undefined ?
+                              READONLY_CONFIGURATION :
+                              options.configuration_mobile || MOBILE_CONFIGURATION,
         is_responsive: (options.configuration_mobile !== undefined) ||
                        (options.configuration === undefined),
         is_mobile: MATCH_MEDIA.matches
