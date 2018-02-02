@@ -124,6 +124,13 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       except OSError:
         continue
       self.rmdir_list.append(d)
+    self._has_cleared_catalog = []
+    from Products.ERP5Catalog.Document.ERP5Catalog import ERP5Catalog
+    orig_manage_catalogClear = ERP5Catalog.manage_catalogClear
+    def manage_catalogClear(*args, **kw):
+      self._has_cleared_catalog.append(None)
+      return orig_manage_catalogClear(*args, **kw)
+    ERP5Catalog.manage_catalogClear = manage_catalogClear
 
   def beforeTearDown(self):
     """Remove objects created in tests."""
@@ -2760,13 +2767,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                      and m.kw.get('uid') is not None ]
     self.assertEqual(len(message_list), 0)
 
-  def stepCheckFolderReindexActivityPresence(self, sequence=None, **kw):
+  def stepCheckHasClearedCatalog(self, sequence=None, **kw):
     """
     Check if we have activity for Folder_reindexAll.
     """
-    message_list = [ m for m in self.portal.portal_activities.getMessageList()
-                     if m.method_id == 'Folder_reindexAll']
-    self.assertNotEquals(len(message_list), 0)
+    self.assertTrue(self._has_cleared_catalog)
+    del self._has_cleared_catalog[:]
 
   def stepCheckPathNotUnindexAfterBuild(self, sequence=None, **kw):
     """
@@ -3633,7 +3639,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        InstallWithoutForceBusinessTemplate \
-                       CheckFolderReindexActivityPresence \
+                       CheckHasClearedCatalog \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -4386,7 +4392,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckCatalogPreinstallReturnCatalogMethod \
                        Tic \
                        InstallWithoutForceBusinessTemplate \
-                       CheckFolderReindexActivityPresence \
+                       CheckHasClearedCatalog \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -5486,7 +5492,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        InstallWithoutForceBusinessTemplate \
-                       CheckFolderReindexActivityPresence \
+                       CheckHasClearedCatalog \
                        Tic \
                        \
                        CheckFormGroups \
@@ -5502,7 +5508,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        UseImportBusinessTemplate \
                        Tic \
                        InstallWithoutForceBusinessTemplate \
-                       CheckFolderReindexActivityPresence \
+                       CheckHasClearedCatalog \
                        Tic \
                        \
                        CheckFormGroups \
