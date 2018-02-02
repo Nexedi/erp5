@@ -88,6 +88,10 @@
                           <string>Group Calendar</string>
                           <string>Group Calendar</string>
                         </tuple>
+                        <tuple>
+                          <string>Time Table</string>
+                          <string>Time Table</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
