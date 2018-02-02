@@ -79,7 +79,9 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
           element.removeChild(element.firstChild);
         }
         if (modification_dict.hasOwnProperty('maximize')) {
-          if (gadget.state.maximize && gadget.state.editable) {
+          // for fck_editor fields, we want to be able to maximize also in non editable
+          if ((gadget.state.maximize && gadget.state.editable) ||
+              (gadget.state.maximize && gadget.state.editor === 'fck_editor')) {
             element.appendChild(div_max);
             queue
               .push(function () {
@@ -102,8 +104,9 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
 
         element.appendChild(div);
 
-        if (gadget.state.editable &&
-            (editor_dict.hasOwnProperty(gadget.state.editor))) {
+        if ((gadget.state.editable &&
+             (editor_dict.hasOwnProperty(gadget.state.editor))) ||
+            (!gadget.state.editable && gadget.state.editor === 'fck_editor')) {
           queue
             .push(function () {
               return gadget.declareGadget(
@@ -123,8 +126,9 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         }
       }
 
-      if (gadget.state.editable &&
-          editor_dict.hasOwnProperty(gadget.state.editor)) {
+      if ((gadget.state.editable &&
+             (editor_dict.hasOwnProperty(gadget.state.editor))) ||
+            (!gadget.state.editable && gadget.state.editor === 'fck_editor')) {
         queue
           .push(function () {
             return gadget.getDeclaredGadget('editor');
@@ -135,9 +139,6 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
       } else if (gadget.state.editable &&
           (gadget.state.editor === 'text_area')) {
         element.querySelector('textarea').value = gadget.state.value;
-      } else if (!gadget.state.editable &&
-          (gadget.state.editor === 'fck_editor')) {
-        element.innerHTML = gadget.state.value;
       } else {
         element.querySelector('pre').textContent = gadget.state.value;
       }
