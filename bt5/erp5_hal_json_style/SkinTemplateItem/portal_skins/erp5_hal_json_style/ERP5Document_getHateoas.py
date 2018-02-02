@@ -493,12 +493,12 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     translated_portal_type = []
     jump_reference_list = []
     relation_sort = field.get_value('sort')
+    kw = {}
     if portal_type_list:
       portal_type_list = [x[0] for x in portal_type_list]
       translated_portal_type = [Base_translateString(x) for x in portal_type_list]
       # ported from Base_jumpToRelatedDocument\n
       base_category = field.get_value('base_category')
-      kw = {}
       for k, v in field.get_value('parameter_list'):
         kw[k] = v
 
