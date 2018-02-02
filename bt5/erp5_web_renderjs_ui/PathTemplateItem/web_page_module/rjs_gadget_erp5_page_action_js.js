@@ -88,7 +88,7 @@
           delete_list = asArray(erp5_document._links.action_object_delete_action);
 
           return RSVP.all([
-            renderLinkList(gadget, "Workflow-Transitions", "random", transition_list),
+            renderLinkList(gadget, "Decisions", "random", transition_list),
             renderLinkList(gadget, "Actions", "gear", action_list),
             renderLinkList(gadget, "Clone", "clone", clone_list),
             renderLinkList(gadget, "Delete", "trash-o", delete_list)

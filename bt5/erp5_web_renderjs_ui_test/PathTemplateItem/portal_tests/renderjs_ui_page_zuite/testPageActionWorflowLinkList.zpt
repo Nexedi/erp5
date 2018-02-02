@@ -32,7 +32,7 @@
 <!-- Generate links to parents -->
 <tr>
   <td>assertTextPresent</td>
-  <td>Workflow-Transitions</td>
+  <td>Decisions</td>
   <td></td>
 </tr>
 
