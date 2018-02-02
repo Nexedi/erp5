@@ -53,17 +53,22 @@
       var erp5_document = options.erp5_document,
         workflow_list,
         view_list,
+        action_list,
         view = options.view,
         i,
         context = this;
       if (erp5_document !== undefined) {
         workflow_list = erp5_document._links.action_workflow || [];
         view_list = erp5_document._links.action_object_view || [];
+        action_list = erp5_document._links.action_object_jio_action || [];
         if (workflow_list.constructor !== Array) {
           workflow_list = [workflow_list];
         }
         if (view_list.constructor !== Array) {
           view_list = [view_list];
+        }
+        if (action_list.constructor !== Array) {
+          action_list = [action_list];
         }
         if (view === 'view') {
           for (i = 0; i < view_list.length; i += 1) {
@@ -76,17 +81,22 @@
           for (i = 0; i < view_list.length; i += 1) {
             view_list[i].class_name = view_list[i].href === view ? 'active' : '';
           }
+          for (i = 0; i < action_list.length; i += 1) {
+            action_list[i].class_name = action_list[i].href === view ? 'active' : '';
+          }
         }
         // Prevent has much as possible to modify the DOM panel
         // stateChange prefer to compare strings
         workflow_list = JSON.stringify(workflow_list);
         view_list = JSON.stringify(view_list);
+        action_list = JSON.stringify(action_list);
       }
       return context.getUrlParameter('editable')
         .push(function (editable) {
           return context.changeState({
             workflow_list: workflow_list,
             view_list: view_list,
+            action_list: action_list,
             global: true,
             editable: options.editable || editable || false
           });
@@ -206,6 +216,7 @@
       if ((this.state.global === true) &&
           (modification_dict.hasOwnProperty("editable") ||
           modification_dict.hasOwnProperty("workflow_list") ||
+          modification_dict.hasOwnProperty("action_list") ||
           modification_dict.hasOwnProperty("view_list"))) {
         if (this.state.view_list === undefined) {
           queue
@@ -218,7 +229,8 @@
               var i = 0,
                 promise_list = [],
                 workflow_list = JSON.parse(gadget.state.workflow_list),
-                view_list = JSON.parse(gadget.state.view_list);
+                view_list = JSON.parse(gadget.state.view_list),
+                action_list = JSON.parse(gadget.state.action_list);
 
               for (i = 0; i < workflow_list.length; i += 1) {
                 promise_list.push(
@@ -242,14 +254,27 @@
                   })
                 );
               }
+              for (i = 0; i < action_list.length; i += 1) {
+                promise_list.push(
+                  gadget.getUrlFor({
+                    command: 'change',
+                    options: {
+                      view: action_list[i].href,
+                      page: undefined
+                    }
+                  })
+                );
+              }
               return RSVP.all(promise_list);
             })
             .push(function (result_list) {
               var i,
                 result_workflow_list = [],
                 result_view_list = [],
+                result_action_list = [],
                 workflow_list = JSON.parse(gadget.state.workflow_list),
-                view_list = JSON.parse(gadget.state.view_list);
+                view_list = JSON.parse(gadget.state.view_list),
+                action_list = JSON.parse(gadget.state.action_list);
 
               for (i = 0; i < workflow_list.length; i += 1) {
                 result_workflow_list.push({
@@ -265,9 +290,17 @@
                   href: result_list[i + workflow_list.length]
                 });
               }
+              for (i = 0; i < action_list.length; i += 1) {
+                result_action_list.push({
+                  title: action_list[i].title,
+                  class_name: action_list[i].class_name,
+                  href: result_list[i + action_list.length]
+                });
+              }
               gadget.element.querySelector("dl").innerHTML = panel_template_body_desktop({
                 workflow_list: result_workflow_list,
-                view_list: result_view_list
+                view_list: result_view_list,
+                action_list: result_action_list
               });
             });
         }
