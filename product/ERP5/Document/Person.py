@@ -181,14 +181,11 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
 
     def _setReference(self, value):
       """
-        Set the user id. This method is defined explicitly, because:
-
-        - we want to apply a different permission
-
-        - we want to prevent duplicated user ids, but only when
-          PAS _AND_ ERP5UserManager are used
+        Set the user id. This method is defined explicitly, because
+        we want to prevent duplicated user ids, but only when
+        PAS _AND_ ERP5UserManager are used
       """
-      if value != self.getUserId():
+      if value != self.getReference():
         if value:
           self.__checkUserIdAvailability(
             pas_plugin_class=ERP5UserManager,
