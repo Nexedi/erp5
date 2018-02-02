@@ -39,10 +39,11 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
 try:
   from Products import PluggableAuthService
-  from Products.ERP5Security.ERP5UserManager import ERP5UserManager
-  from Products.ERP5Security.ERP5LoginUserManager import ERP5LoginUserManager
 except ImportError:
   PluggableAuthService = None
+else:
+  from Products.ERP5Security.ERP5UserManager import ERP5UserManager
+  from Products.ERP5Security.ERP5LoginUserManager import ERP5LoginUserManager
 
 class UserExistsError(ValidationFailed):
   def __init__(self, user_id):
