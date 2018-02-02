@@ -34,10 +34,12 @@ Check that user gets notified if there is an error on a hidden field.
     <td>//a[@data-i18n="Views"]</td><td></td></tr>
 <tr><td>click</td>
     <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr><td>waitForElementPresent</td>
     <td>//a[@data-i18n="View Hidden Positive-Only Quantity"]</td><td></td></tr>
 <tr><td>click</td>
     <td>//a[@data-i18n="View Hidden Positive-Only Quantity"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr><td>waitForElementPresent</td>
     <td>//button[@data-i18n='Save']</td><td></td></tr>
 <tr><td>click</td>

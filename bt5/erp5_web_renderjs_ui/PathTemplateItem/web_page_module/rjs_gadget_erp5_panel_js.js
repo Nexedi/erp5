@@ -24,8 +24,7 @@
 
   gadget_klass
     .setState({
-      visible: false,
-      desktop: false
+      visible: false
     })
     //////////////////////////////////////////////
     // acquired method
@@ -146,7 +145,6 @@
 
           .push(function () {
             context.element.querySelector("div").appendChild(tmp_element);
-            return context.listenResize();
           });
       }
 
@@ -206,11 +204,10 @@
       }
 
       if ((this.state.global === true) &&
-          (modification_dict.hasOwnProperty("desktop") ||
-          modification_dict.hasOwnProperty("editable") ||
+          (modification_dict.hasOwnProperty("editable") ||
           modification_dict.hasOwnProperty("workflow_list") ||
           modification_dict.hasOwnProperty("view_list"))) {
-        if (!(this.state.desktop && (this.state.view_list !== undefined))) {
+        if (this.state.view_list === undefined) {
           queue
             .push(function () {
               gadget.element.querySelector("dl").textContent = '';
@@ -288,30 +285,6 @@
         return this.toggle();
       }
     }, false, false)
-
-    .declareJob('listenResize', function () {
-      // resize should be only trigger after the render method
-      // as displaying the panel rely on external gadget (for translation for example)
-      var result,
-        event,
-        context = this;
-      function extractSizeAndDispatch() {
-        if (window.matchMedia("(min-width: 85em)").matches) {
-          return context.changeState({
-            desktop: true
-          });
-        }
-        return context.changeState({
-          desktop: false
-        });
-      }
-      result = loopEventListener(window, 'resize', false,
-                                 extractSizeAndDispatch);
-      event = document.createEvent("Event");
-      event.initEvent('resize', true, true);
-      window.dispatchEvent(event);
-      return result;
-    })
 
     .allowPublicAcquisition('notifyChange', function (argument_list, scope) {
       if (scope === 'erp5_checkbox') {
