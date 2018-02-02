@@ -104,7 +104,7 @@
       allowedContent: true,
       keystrokes: [
         [CKEDITOR.CTRL + 83, 'saveRJS']
-      ],
+      ]
     },
     DESKTOP_CONFIGURATION = {
       toolbar: TOOLBAR_DESKTOP,
@@ -113,7 +113,16 @@
       allowedContent: true,
       keystrokes: [
         [CKEDITOR.CTRL + 83, 'saveRJS']
-      ],
+      ]
+    },
+    READONLY_CONFIGURATION = {
+      toolbar: [],
+      allowedContent: true,
+      readOnly: true,
+      removePlugins: 'elementspath',
+      startupShowBorders: false,
+      startupOutlineBlocks: false,
+      contentsCss: ''
     },
       MATCH_MEDIA = window.matchMedia("not screen and (min-width: 45em)");
 
@@ -142,6 +151,8 @@
         configuration: options.configuration || DESKTOP_CONFIGURATION,
         configuration_mobile: options.configuration_mobile ||
                               MOBILE_CONFIGURATION,
+        configuration_readonly: options.configuration_readonly ||
+                                READONLY_CONFIGURATION,
         is_responsive: (options.configuration_mobile !== undefined) ||
                        (options.configuration === undefined),
         is_mobile: MATCH_MEDIA.matches
@@ -166,6 +177,7 @@
         configuration;
       if (modification_dict.hasOwnProperty('configuration') ||
           modification_dict.hasOwnProperty('configuration_mobile') ||
+          modification_dict.hasOwnProperty('configuration_readonly') ||
           modification_dict.hasOwnProperty('is_responsive') ||
           modification_dict.hasOwnProperty('is_mobile')) {
         // Expected configuration changed.
@@ -175,7 +187,9 @@
           gadget.ckeditor.destroy();
         }
         // Create a new editor
-        if (gadget.state.is_responsive && gadget.state.is_mobile) {
+        if (!modification_dict.editable) {
+          configuration = gadget.state.configuration_readonly;
+        } else if (gadget.state.is_responsive && gadget.state.is_mobile) {
           configuration = gadget.state.configuration_mobile;
         } else {
           configuration = gadget.state.configuration;
