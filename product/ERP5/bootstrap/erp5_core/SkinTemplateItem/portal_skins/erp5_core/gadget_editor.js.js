@@ -79,7 +79,9 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
           element.removeChild(element.firstChild);
         }
         if (modification_dict.hasOwnProperty('maximize')) {
-          if (gadget.state.maximize && gadget.state.editable) {
+          // for fck_editor fields, we want to be able to maximize also in non editable
+          if ((gadget.state.maximize && gadget.state.editable) ||
+              (gadget.state.maximize && gadget.state.editor === 'fck_editor')) {
             element.appendChild(div_max);
             queue
               .push(function () {
@@ -137,7 +139,13 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         element.querySelector('textarea').value = gadget.state.value;
       } else if (!gadget.state.editable &&
           (gadget.state.editor === 'fck_editor')) {
-        element.innerHTML = gadget.state.value;
+        queue
+          .push(function () {
+            return gadget.getDeclaredGadget('editor');
+          })
+          .push(function (editor_gadget) {
+            return editor_gadget.render(gadget.state);
+          });
       } else {
         element.querySelector('pre').textContent = gadget.state.value;
       }
