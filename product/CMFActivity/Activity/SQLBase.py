@@ -238,8 +238,8 @@ class SQLBase(Queue):
   def getPriority(self, activity_tool):
     result = activity_tool.SQLBase_getPriority(table=self.sql_table)
     if result:
-      assert len(result) == 1, len(result)
-      return result[0]['priority']
+      result, = result
+      return result['priority'], result['date']
     return Queue.getPriority(self, activity_tool)
 
   def _retryOnLockError(self, method, args=(), kw={}):
