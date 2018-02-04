@@ -375,6 +375,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           quantity=quantity,
           start_date=start_date,
           stop_date=stop_date,
+          reference=resource_value.getReference(),
           )
       return movement
 
