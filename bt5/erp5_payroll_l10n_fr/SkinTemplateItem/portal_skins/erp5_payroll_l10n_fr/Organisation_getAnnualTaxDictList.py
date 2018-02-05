@@ -42,7 +42,7 @@ for tax, value_list in tax_property_name_list.items():
       at_date=year_stop_date,
       section_uid=context.getUid(),
       portal_type="Accounting Transaction Line",
-      simulation_state=['stopped', 'delivered', 'started', 'confirmed'],
+      simulation_state=['stopped', 'delivered'],
     )
   annual_tax_list.append({
     'tax_code': (value_list[0] if is_subjected else value_list[1]),
