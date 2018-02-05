@@ -104,7 +104,10 @@ if block_id == 'S21.G00.06':
   # XXX : should be fixed to be corrct when there exists  DSN reports for
   # different establishments or organisations, or replaced/cancelled DSN reports
   def getDSNOrganisation(dsn_value):
-    return dsn_value.getAggregateRelatedValueList(portal_type="Pay Sheet Transaction")[0].getDestinationSection()
+    try:
+      return dsn_value.getAggregateRelatedValueList(portal_type="Pay Sheet Transaction")[0].getDestinationSection()
+    except IndexError:
+      return ''
   def calculateManPower():
     manpower_dict = {}
     social_declaration_module = portal.getDefaultModule("DSN Monthly Report")
@@ -118,11 +121,11 @@ if block_id == 'S21.G00.06':
         manpower_dict.setdefault(month_report.getEffectiveDate().month(), []).append(int(month_report.getQuantity()))
     total_manpower = 0
     for _, employee_quantity in manpower_dict.items():
-      total_manpower += sum(employee_quantity) / len(employee_quantity)
+      total_manpower += sum(employee_quantity)
     return total_manpower / len(manpower_dict.keys()) # Divide by number of months
 
   average_manpower = ''
-  if context.getEffectiveDate().month() == 12:
+  if context.getEffectiveDate().month() == 12 and target.getRelativeUrl() == getDSNOrganisation(context):
     average_manpower = str(calculateManPower())
   rubric_value_dict['S21.G00.06.001'] = ''.join(target.getCorporateRegistrationCode().split(' '))[:9]
   rubric_value_dict['S21.G00.06.002'] = ''.join(target.getCorporateRegistrationCode().split(' '))[-5:]
