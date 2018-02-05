@@ -1342,7 +1342,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # and then delete it
     self.deleted_organisation = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
-    self.tic()
+    self.deleted_organisation.immediateReindexObject()
+    self.commit()
     deleted_url = self.deleted_organisation.getRelativeUrl()
     module.manage_delObjects(ids=[self.deleted_organisation.getId()])
     self.commit()
