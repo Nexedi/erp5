@@ -294,7 +294,7 @@
                 result_action_list.push({
                   title: action_list[i].title,
                   class_name: action_list[i].class_name,
-                  href: result_list[i + action_list.length]
+                  href: result_list[i + workflow_list.length + view_list.length]
                 });
               }
               gadget.element.querySelector("dl").innerHTML = panel_template_body_desktop({
