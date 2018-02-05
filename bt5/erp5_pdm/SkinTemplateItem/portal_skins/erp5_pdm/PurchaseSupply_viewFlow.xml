@@ -81,6 +81,8 @@
                         <string>my_max_flow</string>
                         <string>my_min_order_quantity</string>
                         <string>my_max_order_quantity</string>
+                        <string>my_min_order_delay</string>
+                        <string>my_max_order_delay</string>
                       </list>
                     </value>
                 </item>
