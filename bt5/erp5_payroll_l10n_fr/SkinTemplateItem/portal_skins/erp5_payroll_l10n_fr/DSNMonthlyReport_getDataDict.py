@@ -347,7 +347,7 @@ if block_id == 'S21.G00.55':
     return {}
   payment_source_trade = target.getSourceTradeValue()
   if kw['establishment'] == target.getSourceSectionValue():
-    rubric_value_dict['S21.G00.55.001'] = target.AccountingTransactionLine_statSourceDebit()
+    rubric_value_dict['S21.G00.55.001'] = formatFloat(target.AccountingTransactionLine_statSourceDebit())
   else:
     rubric_value_dict['S21.G00.55.001'] = formatFloat(0.)
 
