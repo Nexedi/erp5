@@ -96,7 +96,7 @@ def balancer_cookie_hook(ob, req, resp):
       if balancer_cookie in req.cookies:
         resp.expireCookie(balancer_cookie, path=path)
     else:
-      server_id = req['HTTP_X_BALANCER_CURRENT_SERVER']
+      server_id = req.get('HTTP_X_BALANCER_CURRENT_SERVER')
       if server_id != req.cookies.get(balancer_cookie):
         resp.setCookie(balancer_cookie, server_id, path=path);
 
