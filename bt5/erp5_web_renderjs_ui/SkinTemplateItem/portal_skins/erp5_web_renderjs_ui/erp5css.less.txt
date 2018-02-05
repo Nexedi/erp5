@@ -7,7 +7,7 @@
 @white: #FFFFFF;
 @txtgreen: #22CC22;
 @txtsubgrey: #575757;
-@grey: #777777;
+@grey: #767676;
 @backgroundgreen: #37A419;
 
 
@@ -31,8 +31,8 @@
 @colorfocus: #3388cc;
 @colorblocklinkbackground: #e0e0e0;
 
-@panelbackgroundcolor: #444444;
-@paneldarkerbackgroundcolor: darken(@panelbackgroundcolor, 10%);
+@paneldarkerbackgroundcolor: @black;
+@panelbackgroundcolor: lighten(@paneldarkerbackgroundcolor, 10%);
 
 @panelcontextuallinkcolor: @colorforeground;
 @panelcontextuallinkcolorbackground: @colorbackground;
@@ -718,6 +718,7 @@ div[data-gadget-scope='panel'] {
 
     dt {
       .alignwithicon();
+      text-transform: uppercase;
     }
 
     dd {
@@ -1545,7 +1546,7 @@ div[data-gadget-scope='erp5_searchfield'] {
     padding-top: @half-margin-size;
     padding-bottom: @half-margin-size;
     @media @smartphone {
-      border-bottom: 2px solid @colorsubheaderbackground;
+      border-bottom: 2px solid @colorheaderbackground;
     }
 
     h1 {
@@ -1590,7 +1591,7 @@ div[data-gadget-scope='erp5_searchfield'] {
     }
 
     thead, tfoot {
-      background-color: @colorsubheaderbackground;
+      background-color: @colorheaderbackground;
       color: @white;
 
       a {
