@@ -104,7 +104,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Base_getEditorFieldPreferredTextEditor</string> </value>
+            <value> <string>python: here.Base_getEditorFieldPreferredTextEditor(content_type=\'text/raw\')</string> </value>
         </item>
       </dictionary>
     </pickle>
