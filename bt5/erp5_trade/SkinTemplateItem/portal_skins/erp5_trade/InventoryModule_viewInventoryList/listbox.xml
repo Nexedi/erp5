@@ -14,6 +14,7 @@
                 <string>editable_columns</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
+                <string>sort</string>
                 <string>title</string>
               </list>
             </value>
@@ -159,6 +160,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>inventory_module_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>DESC</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
