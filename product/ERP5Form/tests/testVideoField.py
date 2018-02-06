@@ -43,7 +43,7 @@ class TestVideoField(ERP5TypeTestCase):
   def test_render_view(self):
     self.field.values['default'] = 'Video content'
 
-    self.assertEqual('<video preload="preload" src="Video content" controls="controls" height="85" width="160" >\nYour browser does not support video tag.</video>', \
+    self.assertEqual('<video preload="preload" src="Video content" controls="controls" height="85" width="160" >Your browser does not support video tag.</video>', \
                       self.field.render_view(value='Video content'))
 
     self.field.values['video_preload'] = False
@@ -56,7 +56,7 @@ class TestVideoField(ERP5TypeTestCase):
 
     self.assertEqual('<video src="Another Video content" ' +
         'height="800" width="1280" loop="loop" autoplay="autoplay" ' +
-        '>\nAnother error message</video>', \
+        '>Another error message</video>', \
             self.field.render_view(value='Another Video content'))
 
 import unittest

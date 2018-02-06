@@ -415,12 +415,12 @@ class TestTextAreaField(ERP5TypeTestCase):
 
   def test_render_view(self):
     self.field.values['default'] = 'My first Line\n&My Second Line\tfoo'
-    self.assertEqual('<div  >\nMy first Line<br/><br/>&amp;My Second Line\tfoo</div>',
+    self.assertEqual('<div  >My first Line<br/><br/>&amp;My Second Line\tfoo</div>',
                       self.field.render_view(value=['My first Line\n', '&My Second Line\tfoo']))
     editable_mode = self.portal.REQUEST.get('editable_mode', 1)
     self.portal.REQUEST.set('editable_mode', 0)
     try:
-      self.assertEqual('<div  >\nMy first Line<br/>&amp;My Second Line\tfoo</div>',
+      self.assertEqual('<div  >My first Line<br/>&amp;My Second Line\tfoo</div>',
                         self.field.render(REQUEST=self.portal.REQUEST))
     finally:
       self.portal.REQUEST.set('editable_mode', editable_mode)
@@ -452,7 +452,7 @@ class TestLinesField(ERP5TypeTestCase):
 
   def test_render_view(self):
     self.assertEqual(self.field.render_view(value=['My first Line\n', '&My Second Line\tfoo']),
-                      '<div  >\nMy first Line<br />\n<br />\n&amp;My Second Line\tfoo</div>')
+                      '<div  >My first Line<br />\n<br />\n&amp;My Second Line\tfoo</div>')
 
   def test_render_odt(self):
     self.field.values['default'] = ['A', 'B']

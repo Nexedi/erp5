@@ -1699,13 +1699,27 @@ def render_tag(tag, **kw):
   attr_str = string.join(attr_list, " ")
   return "<%s %s %s" % (tag, attr_str, extra)
 
+VOID_ELEMENT_LIST = ('area', 'base', 'br', 'col', 'embed', 'hr', 'img',
+                     'input', 'link', 'meta', 'param', 'source', 'track',
+                     'wbr')
 def render_element(tag, **kw):
-  if kw.has_key('contents'):
-    contents = kw['contents']
-    del kw['contents']
-    return "%s>\n%s</%s>" % (apply(render_tag, (tag, ), kw), contents, tag)
-  else:
+  # https://www.w3.org/TR/html5/syntax.html#start-tags
+  # End tags are forbidden on void HTML elements
+  if tag in VOID_ELEMENT_LIST:
+    if kw.has_key('contents'):
+      raise ValueError('Void element %s does not accept content' % tag)
     return apply(render_tag, (tag, ), kw) + " />"
+  else:
+    if kw.has_key('contents'):
+      contents = kw['contents']
+      del kw['contents']
+      if tag == 'textarea':
+        # Newlines at the start of textarea elements are ignored as an authoring convenience
+        # https://www.w3.org/TR/html52/syntax.html#the-in-body-insertion-mode
+        contents = '\n%s' % contents
+    else:
+      contents = ''
+    return "%s>%s</%s>" % (apply(render_tag, (tag, ), kw), contents, tag)
 
 
 ##############################################################################
