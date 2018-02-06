@@ -35,7 +35,7 @@ class _ERP5(ERP5TypeTestSuite):
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
                               "/test\.[^.]+\.([^.]+).py$")
     for test_path in (
-        glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.testFunctionalSimulation.py' % path)):
+        glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.testFunctional*.py' % path)):
       component_re_match = component_re.match(test_path)
       if component_re_match is not None:
         test_case = "%s:%s" % (component_re_match.group(1),
