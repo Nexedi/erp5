@@ -145,8 +145,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       sql_connection = getattr(self.getPortal(), connection_id)
     if sql is None:
       sql = 'select distinct(path) from catalog'
-    # XXX: manage_test has an implicit "LIMIT 1000" which cannot be disabled.
-    return [x['path'] for x in sql_connection.manage_test(sql)]
+    _, row_list = sql_connection().query(sql, max_rows=0)
+    return [x for x, in row_list]
 
   def getSQLPathListWithRolesAndUsers(self, connection_id):
     sql = 'select distinct(path) from catalog, roles_and_users\
