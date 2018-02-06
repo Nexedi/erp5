@@ -1,4 +1,4 @@
-(function(window, rJS, jIO, RSVP, AudioContext, URL, MediaSource, loopEventListener, promiseEventListener, document) {
+(function(window, rJS, jIO, RSVP, URL, loopEventListener, promiseEventListener, document) {
   "use strict";
   rJS(window)
     //////////////////////////////////////////////
@@ -21,11 +21,6 @@
       return hours+':'+minutes+':'+seconds;
     })
 
-    .declareMethod('configurePlayerContext', function() {
-      this.source.connect(this.gain);
-      this.gain.connect(this.audioContext.destination);
-    })
-
     .declareMethod('configurePlayer', function(id, length, duration) {
       // Configure player controller by setting the [id, title...] for the audio.
       var gadget = this;
@@ -38,7 +33,13 @@
           gadget.element.querySelector('.total_time').innerHTML = str;
         });
       }
-      return this.configurePlayerContext();
+      if (this.id) {
+        return this.getAudioChunk().push(function(blob) {
+          gadget.audio.src = URL.createObjectURL(blob);
+        }).push(undefined, function(err) {
+          throw err;
+        });
+      }
     })
 
     .declareMethod('getAudioChunk', function() {
@@ -48,20 +49,17 @@
       if (start >= gadget.length) {
         return RSVP.resolve(undefined);
       }
-      end = start + 10e3 >= gadget.length ? gadget.length - 1 : start + 10e3;
+      var chunkLength = gadget.length;
+      end = start + chunkLength >= gadget.length ? gadget.length - 1 : start + chunkLength;
       console.log(start, end);
       // Call `getAttachment` method of jIO to fetch a chunk of data from IDB storage.
       return this.getAttachment(this.id, {start: start, end: end})
         .push(function(blob) {
-          gadget.index += 10e3;
-          return RSVP.Queue().push(function() {
-            return jIO.util.readBlobAsArrayBuffer(blob);
-          }).push(function(evt) {
-            return evt.target.result;
-          });
+          gadget.index += chunkLength;
+          return blob;
         }).push(undefined, function(err) {
-          console.log(err);
-        });
+        throw err;
+      });
     })
 
     .declareMethod('handlePlayPause', function() {
@@ -93,92 +91,13 @@
       }
     })
 
-    .declareMethod('setSourceBuffer', function() {
-      // Release object url when finished attaching with mediaSource.
-      URL.revokeObjectURL(this.audio.src);
-      this.sourceBuffer = this.mediaSource.addSourceBuffer('audio/mpeg');
-      //this.sourceBuffer = this.mediaSource.addSourceBuffer('audio/webm; codecs="opus"');
-      return this.setUpdateEvent();
-    })
-
-    .declareMethod('setUpdateEvent', function() {
-      var gadget = this;
-      return gadget.getAudioChunk().push(function (buffer) {
-        // gadget.mediaSource.removeBuffer(gadget.sourceBuffer);
-        try {
-          if (buffer) {
-            gadget.sourceBuffer.appendBuffer(buffer);
-          }
-        } catch (ex) {}
-        if (gadget.replay) {
-          gadget.audio.play();
-          gadget.replay = false;
-        }
-      }).push(function() {
-        return gadget.setUpdate();
-      });
-    })
-
-    .declareJob('setUpdate', function() {
-      var gadget = this;
-      return loopEventListener(
-        gadget.sourceBuffer,
-        'updateend',
-        false,
-        function() {
-          // `timestampOffset` value can give the time of the buffered audio data.
-          if (gadget.sourceBuffer.timestampOffset < (gadget.count * 30)) {
-            return gadget.getAudioChunk().push(function(buffer) {
-              try {
-                if (buffer) {
-                  return gadget.sourceBuffer.appendBuffer(buffer);
-                }
-              } catch (ex) {}
-              if (gadget.mediaSource.readyState === 'open') {
-                return gadget.mediaSource.endOfStream();
-              }
-            });
-          }
-        },
-        true
-      );
-    })
-
-    .declareMethod('handleRangeRequest', function(index) {
-      // We can also return from here without doing anything if the current
-      // range is already present in the buffer.
-      this.replay = true;
-      this.count = 1;
-      this.mediaSource = new MediaSource();
-      this.audio.src =  URL.createObjectURL(this.mediaSource);
-      this.index = index;
-      this.mediaSource.onsourceopen = this.setSourceBuffer.bind(this);
-    })
-
-    .declareMethod('cleanUp', function() {
-      // Remove reference of Object(s) to free memory.
-      this.mediaSource = undefined;
-      this.audioContext = undefined;
-      this.audio = undefined;
-      this.source = undefined;
-      this.gain = undefined;
-    })
-
     .ready(function() {
-      //this.cleanUp();
-      var audioContext = this.audioContext = new AudioContext();
-      var gadget = this;
       this.play = false;
       this.count = 1;
       this.offset = 0;
       this.customPlayer = this.element.querySelector('.audioplayer');
       this.audio = document.createElement('audio');
       document.body.appendChild(this.audio);
-      this.gain = audioContext.createGain();
-      this.source = audioContext.createMediaElementSource(this.audio);
-      this.mediaSource = new MediaSource();
-      this.audio.src =  URL.createObjectURL(this.mediaSource);
-      return this.mediaSource.onsourceopen = this.setSourceBuffer.bind(this);
     })
 
     .declareService(function() {
@@ -188,27 +107,6 @@
         'timeupdate',
         false,
         function() {
-          if (gadget.audio.currentTime > (gadget.count * 30) - 10) {
-            gadget.count++;
-            return gadget.getAudioChunk().push(function(buffer) {
-              try {
-                if (buffer) {
-                  gadget.sourceBuffer.appendBuffer(buffer);
-                }
-              } catch (ex) {}
-            }).push(function() {
-              gadget.currentTime = gadget.audio.currentTime + gadget.offset;
-              gadget.currentTime = gadget.currentTime > gadget.duration ? gadget.duration : gadget.currentTime;
-              var percentage = ((98 / gadget.duration) * gadget.currentTime);
-              gadget.element.querySelector('.timeline').style.background = 'linear-gradient(to right, #454549 ' + (percentage + 1) + '%, #bcbcbc 0%';
-              gadget.element.querySelector('.playhead').style.marginLeft = percentage + '%';
-              return gadget.toHHMMSS(gadget.currentTime).push(function (str) {
-                return gadget.element.querySelector('.current_time').innerHTML = str;
-              });
-            }).push(undefined, function(err) {
-              throw err;
-            });
-          }
           gadget.currentTime = gadget.audio.currentTime + gadget.offset;
           gadget.currentTime = gadget.currentTime > gadget.duration ? gadget.duration : gadget.currentTime;
           var percentage = ((98 / gadget.duration) * gadget.currentTime);
@@ -289,9 +187,8 @@
           val = (val > 98 ? 98 : val);
           gadget.element.querySelector('.timeline').style.background = 'linear-gradient(to right, #454549 ' + (val + 1) + '%, #bcbcbc 0%';
           gadget.element.querySelector('.playhead').style.marginLeft = val + '%';
-          gadget.offset = (val * gadget.duration) / 98;
-          var position = Math.floor(((gadget.length / gadget.duration) * gadget.offset)) - 10e3;
-          return gadget.handleRangeRequest(position);
+          //gadget.offset = (val * gadget.duration) / 98;
+          gadget.audio.currentTime = (val * gadget.duration) / 98;
         },
         true
       );
@@ -395,4 +292,4 @@
           gadget.audioContext.close();
         });
     });
-})(window, rJS, jIO, RSVP, AudioContext, URL, MediaSource, loopEventListener, promiseEventListener, document);
+})(window, rJS, jIO, RSVP, URL, loopEventListener, promiseEventListener, document);

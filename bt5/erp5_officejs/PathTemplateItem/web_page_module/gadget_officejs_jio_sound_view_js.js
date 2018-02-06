@@ -18,21 +18,35 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("render", function (options) {
-      var gadget = this;
-      return this.getDeclaredGadget('sound_controller')
-        .push(function (soundController) {
-          return soundController.configurePlayer(options.doc.id, options.doc.title, options.doc.length, options.doc.duration);
-        }).push(function () {
-          return gadget.changeState({
-            jio_key: options.jio_key,
-            doc: options.doc
-          });
-        });
-    })
     .allowPublicAcquisition('getAttachment', function (params) {
-      return this.jioInstance.getAttachment(params[0], params[1], {"start": params[2].start, "end": params[2].end});
+      return this.jioInstance.getAttachment(params[0], params[0], {"start": params[1].start, "end": params[1].end});
     })
+
+    .declareMethod("render", function (options) {
+      var gadget = this,
+        queue;
+      if (options.doc.type && options.doc.type === 'mp3') {
+        queue = gadget.declareGadget('gadget_officejs_jio_sound_controller.html', {element: gadget.element.querySelector('.controller')});
+      } else {
+        queue = gadget.declareGadget('gadget_officejs_jio_sound_controller_fallback.html', {element: gadget.element.querySelector('.controller')});
+      }
+      queue
+       .push(function (soundController) {
+        gadget.id = options.doc.id;
+        gadget.title = options.doc.title;
+        gadget.length = options.doc.length;
+        gadget.duration = options.doc.duration;
+        gadget.type = options.doc.type;
+        return soundController.configurePlayer(gadget.id, gadget.length, gadget.duration);
+      }).push(function () {
+        return gadget.changeState({
+          jio_key: options.jio_key,
+          doc: options.doc
+        });
+      });
+      return queue;
+    })
+
     .declareMethod('calculateDuration', function (blob) {
       // Create a temporary audio element and assign the data to calculate the time information.
       var gadget = this;
@@ -50,6 +64,7 @@
           return gadget.duration = audioElement.duration;
         });
     })
+
     .onEvent('submit', function () {
       var gadget = this;
       return gadget.notifySubmitting()
@@ -60,38 +75,61 @@
           return form_gadget.getContent();
         })
         .push(function (content) {
-          gadget.title = content.title.file_name;
-          gadget.result = jIO.util.dataURItoBlob(content.title.url);
-          return gadget.calculateDuration(gadget.result);
-        })
-        .push(function () {
-          gadget.length = gadget.result.size;
-          return gadget.jioInstance.post({
-            "title": gadget.title
-          })
-          .push(undefined, function (error) {
-            throw error;
-          });
+          if (gadget.title === "Untitled Document") {
+            gadget.title = content.title;
+            return gadget.jioInstance.post({
+              "title": gadget.title
+            });
+          } else {
+            gadget.title = content.title;
+            return gadget.jioInstance.put(
+              gadget.id, {
+                "title": gadget.title
+              });
+          }
         })
         .push(function (id) {
-          gadget.id = id;
-          return gadget.jioInstance.putAttachment(gadget.id, gadget.title, gadget.result);
+          var data = gadget.element.querySelector('#data').files[0];
+          if (data) {
+            var result = data.slice();
+            var arrName = data.name.split('.');
+            gadget.type = arrName[arrName.length - 1];
+            gadget.id = id;
+            gadget.title = data.name;
+            gadget.length = data.size;
+            return RSVP.all([
+              gadget.calculateDuration(result),
+              gadget.jioInstance.putAttachment(gadget.id, gadget.id, result)
+            ]);
+          }
         })
         .push(function () {
-          return gadget.getDeclaredGadget('sound_controller').push(function (soundController) {
-            return soundController.configurePlayer(gadget.id, gadget.title, gadget.length, gadget.duration);
-          }).push(function () {
-            return gadget.updateDocument({
-              id: gadget.id,
-              title: gadget.title,
-              length: gadget.length,
-              duration: gadget.duration
+          var subGadget;
+          document.getElementById('field-content').style.display = "none";
+          if (gadget.type && gadget.type === 'mp3') {
+            subGadget = gadget.declareGadget('gadget_officejs_jio_sound_controller.html', {element: gadget.element.querySelector('.controller')});
+          } else {
+            subGadget = gadget.declareGadget('gadget_officejs_jio_sound_controller_fallback.html', {element: gadget.element.querySelector('.controller')});
+          }
+          return subGadget
+            .push(function (soundController) {
+              return soundController.configurePlayer(gadget.id, gadget.length, gadget.duration);
+            })
+            .push(function () {
+              return gadget.updateDocument({
+                id: gadget.id,
+                title: gadget.title,
+                length: gadget.length,
+                duration: gadget.duration,
+                type: gadget.type
+              });
             });
-          });
         })
         .push(function () {
           document.location.reload();
           return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
+        }).push(undefined, function (err) {
+          console.log(err);
         });
     })
 
@@ -114,30 +152,21 @@
         .push(function (form_gadget) {
           return form_gadget.render({
             erp5_document: {
-              "_embedded": {"_view": {
-                "my_title": {
-                  "description": "",
-                  "title": "Upload",
-                  "default": gadget.state.doc.title,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "title",
-                  "hidden": 0,
-                  "type": "FileField"
-                },
-                "my_id": {
-                  "description": "",
-                  "title": "Upload",
-                  "default": gadget.state.doc.id,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "title",
-                  "hidden": 1,
-                  "type": "StringField"
+              "_embedded": {
+                "_view": {
+                  "my_title": {
+                    "description": "",
+                    "title": "Title",
+                    "default": gadget.state.doc.title,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "title",
+                    "hidden": 0,
+                    "type": "StringField"
+                  }
                 }
-              }},
+              },
               "_links": {
                 "type": {
                   // form_list display portal_type in header
@@ -148,7 +177,7 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_title", "my_id"]]
+                [["my_title"]]
               ]]
             }
           });

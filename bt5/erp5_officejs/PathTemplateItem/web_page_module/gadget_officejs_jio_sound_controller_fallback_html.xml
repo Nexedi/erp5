@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_sound_controller.html</string> </value>
+            <value> <string>gadget_officejs_jio_sound_controller_fallback.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_sound_controller_html</string> </value>
+            <value> <string>gadget_officejs_jio_sound_controller_fallback_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Jio Sound Player Controller</string> </value>
+            <value> <string>OfficeJS Jio Sound Player Controller Fallback</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -193,7 +193,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1516615199.18</float>
+                        <float>1517414910.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -238,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.13275.57856.44817</string> </value>
+                <value> <string>965.13159.31244.36061</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,7 +256,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1517481386.97</float>
+                        <float>1517481584.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -315,7 +315,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1516614517.94</float>
+                        <float>1517414787.86</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
