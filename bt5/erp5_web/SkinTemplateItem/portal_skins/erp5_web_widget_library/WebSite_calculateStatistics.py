@@ -46,8 +46,7 @@ def calculateStatistics():
     if group is not None:
       documents_groups[group] = documents_groups.get(group, 0) + 1
     # XXX: count owner
-    doc_metadata = portal_catalog.getMetadataForUid(doc.getUid())
-    doc_owner = doc_metadata.get('owner', None)
+    doc_owner = doc.Base_getOwnerId()
     if doc_owner is not None and doc_owner.find('@')!=-1:
       # we have a website user. we wanted to filter Zope users
       documents_owners[doc_owner] = documents_owners.get(doc_owner, 0) + 1
