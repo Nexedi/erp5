@@ -146,7 +146,7 @@ class CategoryProperty(IdAsReferenceMixin('_category'), XMLObject):
                                       portal):
     try:
       cat_object = portal.portal_categories._getOb(category_id)
-    except AttributeError:
+    except KeyError:
       if portal.hasObject('portal_categories'):
         LOG("ERP5Type.Core.CategoryProperty", WARNING,
             "Base Category %r is missing. Accessors can not be generated." % \
