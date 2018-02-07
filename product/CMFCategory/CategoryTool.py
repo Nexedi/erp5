@@ -33,14 +33,13 @@ ERP portal_categories tool.
 from collections import deque
 import re
 from BTrees.OOBTree import OOTreeSet
-from OFS.Folder import Folder
-from Products.CMFCore.utils import UniqueObject
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl import Unauthorized, getSecurityManager
 from Acquisition import aq_base, aq_inner
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Core.Folder import OFS_HANDLER
+from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.CMFCategory import _dtmldir
@@ -83,7 +82,7 @@ class RelatedIndex(): # persistent.Persistent can be added
       pass
 
 
-class CategoryTool( UniqueObject, Folder, Base ):
+class CategoryTool(BaseTool):
     """
       The CategoryTool object is the placeholder for all methods
       and algorithms related to categories and relations in CMF.
@@ -130,29 +129,15 @@ class CategoryTool( UniqueObject, Folder, Base ):
     portal_type     = 'Category Tool'
     allowed_types = ( 'CMF Base Category', )
 
+    _folder_handler = OFS_HANDLER # BBB
 
     # Declarative Security
     security = ClassSecurityInfo()
-
-    #
-    #   ZMI methods
-    #
-    manage_options = ( ( { 'label'      : 'Overview'
-                         , 'action'     : 'manage_overview'
-                         }
-                        ,
-                        )
-                     + Folder.manage_options
-                     )
 
     security.declareProtected( Permissions.ManagePortal
                              , 'manage_overview' )
     manage_overview = DTMLFile( 'explainCategoryTool', _dtmldir )
 
-
-    # Multiple inheritance inconsistency caused by Base must be circumvented
-    def __init__( self, *args, **kwargs ):
-      Base.__init__(self, self.id, **kwargs)
 
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
@@ -196,10 +181,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
         result = self.objectIds()
       else:
         # XXX Incompatible with ERP5Type per portal type categories
-        result = list(context._categories[:])
-      if sort:
-        result.sort()
-      return result
+        result = context._categories
+      return (sorted if sort else list)(result)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryIds')
     getBaseCategoryIds = getBaseCategoryList
@@ -1728,12 +1711,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
           cache[cache_key] = obj
 
         return obj
-
-    # Use Base class's methods for properties instead of patched PropertyManager's
-    _propertyMap = Base._propertyMap
-    _setProperty = Base._setProperty
-    getProperty = Base.getProperty
-    hasProperty = Base.hasProperty
 
     def _removeDuplicateBaseCategoryIdInCategoryPath(self, base_category_id,
                                                      path):
