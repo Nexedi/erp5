@@ -2933,11 +2933,11 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         # which end with '_list' which would've made no sense. So, we decided
         # to move them to 'string' type
         if prop['type'] in ('string', 'selection') and \
-            getattr(catalog, prop_id) == method_id:
+            getattr(catalog, prop_id, None) == method_id:
           method_properties[prop_id] = 1
 
         elif prop['type'] == 'multiple selection' and \
-            method_id in getattr(catalog, prop_id):
+            method_id in getattr(catalog, prop_id, ()):
           method_properties[prop_id] = 1
 
     return method_properties
