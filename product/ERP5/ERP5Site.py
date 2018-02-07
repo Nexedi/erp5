@@ -2197,13 +2197,14 @@ class ERP5Generator(PortalGenerator):
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed
     if kw.get('reindex', 1):
-      setattr(p, 'isIndexable', ConstantGetter('isIndexable', value=True))
+      delattr(p, 'isIndexable')
       # Clear portal ids sql table, like this we do not take
       # ids for a previously created web site
       p.portal_ids.clearGenerator(all=True)
-      # Then clear the catalog and reindex it
-      p.portal_catalog.manage_catalogClear()
-      # Calling ERP5Site_reindexAll is useless.
+      # Calling ERP5Site_reindexAll is important, as some needed indexation
+      # activities may have been skipped (not spawned) while portal was tagged
+      # as non-indexable.
+      p.ERP5Site_reindexAll(clear_catalog=True)
 
   def setupUserFolder(self, p):
       # Use Pluggable Auth Service instead of the standard acl_users.
