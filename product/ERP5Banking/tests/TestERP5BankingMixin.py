@@ -1131,8 +1131,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     """
     # we need to have a unique inventory group id by destination
 
-    inventory_group_id = 'inventory_group_%s_%s%s' % \
-                         (destination.getParentValue().getUid(), destination.getId(), extra_id)
+    inventory_group_id = '%s%s' % (destination.getUid(), extra_id)
     if start_date is None:
       start_date = DateTime()-1
     if not hasattr(self, inventory_group_id):
@@ -1145,7 +1144,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       inventory_group = getattr(self, inventory_group_id)
 
     # get/create the inventory based on currency
-    inventory_id = '%s_inventory_%s' % (inventory_group_id, currency.getId())
+    inventory_id = 'inventory_%s_%s' % (inventory_group.getUid(), currency.getId())
     if not hasattr(self, inventory_id):
       inventory = inventory_group.newContent(id=inventory_id,
                                              portal_type='Cash Inventory',
