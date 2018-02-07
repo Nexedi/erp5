@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-
+from collections import Counter
 import unittest
 import os
 
@@ -133,11 +133,15 @@ class TestOOoImport(TestOOoImportMixin):
     person_module.Base_importFile(import_file=f, listbox=listbox)
 
   def stepCheckActivitiesCount(self, sequence=None, sequence_list=None, **kw):
-    message_list   = self.getPortal().portal_activities.getMessageList()
-    self.assertEqual(102,len(message_list))
-    '''for i in range(101):
-      method_id = message_list[i].method_id
-      self.assertEqual('Base_importFileLine',method_id)'''
+    activity_count_by_method_dict = Counter(
+      x.method_id
+      for x in self.getPortal().portal_activities.getMessageList()
+    )
+    self.assertEqual(
+      101,
+      activity_count_by_method_dict['Base_importFileLineDefaultScript'],
+      activity_count_by_method_dict,
+    )
 
   def stepCheckImportedPersonList(self, sequence=None, sequence_list=None,
                                   num=101, **kw):
