@@ -1073,21 +1073,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
             len(self.getCatalogTool()(portal_type='Organisation', limit=None)))
     ctool.default_result_limit = old_default_result_limit
 
-  def playActivityList(self, method_id_list):
-    self.commit()
-    portal_activities = self.getActivityTool()
-    for i in range(0,100):
-      message_list = portal_activities.getMessageList()
-      for message in message_list:
-        #if message.method_id=='_setHotReindexingState':
-        #  import pdb;pdb.set_trace()
-        if message.method_id in method_id_list:
-          try:
-            portal_activities.manageInvoke(message.object_path,message.method_id)
-          except ActivityFlushError,m:
-            pass
-      self.commit()
-
   def test_48_ERP5Site_hotReindexAll(self):
     """
       test the hot reindexing of catalog -> catalog2
@@ -1200,31 +1185,33 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     deleted_url = self.deleted_organisation.getRelativeUrl()
     module.manage_delObjects(ids=[self.deleted_organisation.getId()])
     self.commit()
-    # We will invoke acitivities one by one in order to make sure we can test
-    # the double indexing state of hot reindexing
-    self.playActivityList(('Folder_reindexAll',
-                         'InventoryModule_reindexMovementList',
-                         'immediateReindexObject',
-                         'Folder_reindexObjectList',
-                         'unindexObject',
-                         'recursiveImmediateReindexObject'))
+    query = self.portal.cmf_activity_sql_connection().query
+    query(
+      'update message set processing_node=-4 where method_id in '
+      '("playBackRecordedObjectList", "_finishHotReindexing")',
+    )
+    hasNoProcessableMessage = lambda message_list: all(
+      x.processing_node == -4
+      for x in message_list
+    )
+    self.tic(stop_condition=hasNoProcessableMessage)
+    self.assertEqual(portal_catalog.getHotReindexingState(),
+                      HOT_REINDEXING_DOUBLE_INDEXING_STATE)
     # try to delete objects in double indexing state
     module.manage_delObjects(ids=[self.organisation2.getId()])
-    self.playActivityList(('immediateReindexObject',
-                         'unindexObject',
-                         'recursiveImmediateReindexObject',
-                         'playBackRecordedObjectList',
-                         'getId',
-                         '_setHotReindexingState'))
+    self.commit()
+    query(
+      'update message set processing_node=-1 where '
+      'method_id="playBackRecordedObjectList"',
+    )
+    self.tic(stop_condition=hasNoProcessableMessage)
     self.assertEqual(portal_catalog.getHotReindexingState(),
                       HOT_REINDEXING_DOUBLE_INDEXING_STATE)
     # Now we have started an double indexing
     self.next_deleted_organisation = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2",id='toto')
     next_deleted_url = self.next_deleted_organisation.getRelativeUrl()
-    self.commit()
-    self.playActivityList(( 'immediateReindexObject',
-                         'recursiveImmediateReindexObject',))
+    self.tic(stop_condition=hasNoProcessableMessage)
     path_list=[next_deleted_url]
     self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.original_connection_id)
@@ -1233,6 +1220,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     #after the hot reindexing
     self.organisation4 = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
+    self.commit()
+    query(
+      'update message set processing_node=-1 where '
+      'method_id="_finishHotReindexing"',
+    )
     self.tic()
     self.assertEqual(portal_catalog.getHotReindexingState(),
                       HOT_REINDEXING_FINISHED_STATE)
