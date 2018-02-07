@@ -34,7 +34,7 @@ from types import StringType
 from collections import defaultdict
 from cPickle import dumps, loads
 from Products.CMFCore import permissions as CMFCorePermissions
-from Products.ERP5Type.Core.Folder import Folder
+from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.CMFActivity.ActiveObject import DEFAULT_ACTIVITY
 from Products.CMFActivity.ActivityConnection import ActivityConnection
@@ -607,7 +607,7 @@ def cancelProcessShutdown():
   is_running_lock.release()
   has_processed_shutdown = False
 
-class ActivityTool (Folder, UniqueObject):
+class ActivityTool (BaseTool):
     """
     ActivityTool is the central point for activity management.
 
@@ -634,7 +634,7 @@ class ActivityTool (Folder, UniqueObject):
                      , { 'label' : 'LoadBalancing', 'action' : 'manageLoadBalancing'}
                      , { 'label' : 'Advanced', 'action' : 'manageActivitiesAdvanced' }
                      ,
-                     ] + list(Folder.manage_options))
+                     ] + list(BaseTool.manage_options))
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'manageActivities' )
     manageActivities = DTMLFile( 'dtml/manageActivities', globals() )
@@ -660,15 +660,10 @@ class ActivityTool (Folder, UniqueObject):
       LOG('ActivityTool', 0, real_SQLDict_setPriority(src__=1, **kw))
       return real_SQLDict_setPriority(**kw)
 
-    def __init__(self, id=None):
-        if id is None:
-          id = ActivityTool.id
-        Folder.__init__(self, id)
-
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
         # Filters the list of available meta types.
-        all = Folder.filtered_meta_types(self)
+        all = BaseTool.filtered_meta_types(self)
         meta_types = []
         for meta_type in self.all_meta_types():
             if meta_type['name'] in self.allowed_types:
@@ -844,12 +839,12 @@ class ActivityTool (Folder, UniqueObject):
     security.declarePrivate('manage_beforeDelete')
     def manage_beforeDelete(self, item, container):
         self.unsubscribe()
-        Folder.inheritedAttribute('manage_beforeDelete')(self, item, container)
+        BaseTool.inheritedAttribute('manage_beforeDelete')(self, item, container)
     
     security.declarePrivate('manage_afterAdd')
     def manage_afterAdd(self, item, container):
         self.subscribe()
-        Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
+        BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'getServerAddress')
     def getServerAddress(self):
