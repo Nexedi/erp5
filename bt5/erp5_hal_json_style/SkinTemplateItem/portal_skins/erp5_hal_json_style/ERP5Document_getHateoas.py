@@ -236,12 +236,13 @@ def getAttrFromAnything(search_result, select, search_property_getter, kwargs):
 
   # prepare accessor/getter name because this must be the first tried possibility
   # getter is preferred way how to obtain properties - property itself is the second
-  if not select.startswith('get') and select[0] not in string.ascii_uppercase:
+  getter_regex = re.compile('^(get|as|has)[A-Z]')
+  if getter_regex.match(select) or select[0] in string.ascii_uppercase:
+    # it is either getter (starts with "get", "has" or "as") or a Script (starts with capital letter)
+    accessor_name = select
+  else:
     # maybe a hidden getter (variable accessible by a getter)
     accessor_name = 'get' + UpperCase(select)
-  else:
-    # or obvious getter (starts with "get" or Capital letter - Script)
-    accessor_name = select
 
   # Following value resolution is copied from product/ERP5Form/ListBox.py#L2223
   # 1. resolve attribute on unwrapped object using getter
