@@ -303,6 +303,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     time_second_ratio = resource_value.getQuantityUnitDefinitionRatio(portal.portal_categories.quantity_unit.time.second)
     min_delay = supply.getMinDelay()
     max_delay = supply.getMaxDelay()
+    min_order_delay = supply.getMinOrderDelay()
+    max_order_delay = supply.getMaxOrderDelay()
     min_order = supply.getMinOrderQuantity()
     max_order = supply.getMaxOrderQuantity()
 
@@ -310,6 +312,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     # XXX To be cleaned
     min_delay_second = 0
     max_delay_second = 0
+    min_order_delay_second = 0
+    max_order_delay_second = 0
 
     min_order_in_default_quantity_unit = 0
     max_order_in_default_quantity_unit = float('inf')
@@ -322,6 +326,10 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         min_delay_second = min_delay * time_second_conversion_ratio
       if max_delay:
         max_delay_second = max_delay * time_second_conversion_ratio
+      if min_order_delay:
+        min_order_delay_second = min_order_delay * time_second_conversion_ratio
+      if max_delay:
+        max_order_delay_second = max_order_delay * time_second_conversion_ratio
 
     if order_quantity_unit_value is not None:
       order_quantity_unit_relative_url = order_quantity_unit_value.getCategoryRelativeUrl()
