@@ -362,13 +362,16 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         addToDate(date, second=-delay_second)
       )
       stop_date = addToDate(start_date, second=delay_second).earliestTime()
+      order_delay_second = max_order_delay_second or min_order_delay_second or 0
+      effective_date = addToDate(start_date, second=-order_delay_second)
+
       order_quantity = ceil(quantity * conversion_ratio)
       quantity = order_quantity / conversion_ratio
 
-      return order_quantity, order_quantity_unit_value, start_date, stop_date, quantity
+      return order_quantity, order_quantity_unit_value, effective_date, start_date, stop_date, quantity
 
     resource_portal_type = resource_value.getPortalType()
-    def newMovement(start_date, stop_date, quantity, quantity_unit):
+    def newMovement(effective_date, start_date, stop_date, quantity, quantity_unit):
       # Create temporary movement
       # Do not handle variation and Item for now
       movement = newTempMovement(portal, "temp")
@@ -381,6 +384,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           resource_portal_type=resource_portal_type,
           quantity_unit_value=quantity_unit,
           quantity=quantity,
+          effective_date=effective_date,
           start_date=start_date,
           stop_date=stop_date,
           reference=resource_value.getReference(),
@@ -410,14 +414,15 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       if ordered_inventory + (inventory-quantity) < min_inventory: # SKU
          #import pdb;pdb.set_trace()
          quantity = min_inventory - (inventory-quantity) - ordered_inventory
-         ordered_quantity, ordered_unit, ordered_date, delivery_date, quantity = minimalQuantity(quantity, date)
+         ordered_quantity, ordered_unit, effective_date, start_date, delivery_date, quantity = minimalQuantity(quantity, date)
          # XXX CLN This is very naive, it has to be optimized
-         if ordered_date <= supply.getStartDateRangeMax()\
-          and ordered_date >= supply.getStartDateRangeMin():
+         if start_date <= supply.getStartDateRangeMax()\
+          and start_date >= supply.getStartDateRangeMin():
            ordered_inventory = ordered_inventory + quantity
            movement_list.append(
              newMovement(
-               ordered_date,
+               effective_date,
+               start_date,
                delivery_date,
                ordered_quantity,
                ordered_unit
