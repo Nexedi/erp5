@@ -74,11 +74,13 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Purchase</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>default_incoming_accounting_simulation_rule</string> </value>
+            <value> <string>default_inventory_accounting_transaction_rule</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -92,13 +94,13 @@
             <key> <string>test_method_id</string> </key>
             <value>
               <tuple>
-                <string>SimulationMovement_testIncomingInventoryAccountingTransactionRule</string>
+                <string>SimulationMovement_testInventoryAccountingTransactionSimulationRule</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Incoming Accounting  Simulation Rule</string> </value>
+            <value> <string>Default Inventory Accounting Transaction Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -222,7 +224,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.59952.12747.50039</string> </value>
+                <value> <string>965.23144.40355.17749</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -240,7 +242,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1516771056.68</float>
+                        <float>1518074729.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -289,7 +291,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1516349771.61</float>
+                        <float>1516174831.45</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
