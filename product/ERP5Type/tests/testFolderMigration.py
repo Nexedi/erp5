@@ -443,10 +443,9 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(self.folder.isBTree(), True)
       self.assertEqual(self.folder.isHBTree(), False)
 
-      setattr(self.folder,'_folder_handler','VeryWrongHandler')
+      self.folder._folder_handler = 'CMFBTreeFolderHandler'
       self.tic()
 
-      self.assertEqual(self.folder.isBTree(), False)
       self.assertEqual(self.folder.isHBTree(), False)
 
       self.assertEqual(self.folder._fixFolderHandler(), True)
@@ -465,10 +464,9 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(self.folder.isBTree(), True)
       self.assertEqual(self.folder.isHBTree(), False)
 
-      setattr(self.folder,'_folder_handler','VeryWrongHandler')
+      self.folder._folder_handler = 'CMFBTreeFolderHandler'
       self.tic()
 
-      self.assertEqual(self.folder.isBTree(), False)
       self.assertEqual(self.folder.isHBTree(), False)
 
       self.folder.migrateToHBTree()
