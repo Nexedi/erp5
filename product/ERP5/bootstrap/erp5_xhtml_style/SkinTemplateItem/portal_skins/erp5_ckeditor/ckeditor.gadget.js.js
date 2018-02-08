@@ -187,7 +187,7 @@
           gadget.ckeditor.destroy();
         }
         // Create a new editor
-        if (!modification_dict.editable) {
+        if (!gadget.state.editable) {
           configuration = gadget.state.configuration_readonly;
         } else if (gadget.state.is_responsive && gadget.state.is_mobile) {
           configuration = gadget.state.configuration_mobile;
