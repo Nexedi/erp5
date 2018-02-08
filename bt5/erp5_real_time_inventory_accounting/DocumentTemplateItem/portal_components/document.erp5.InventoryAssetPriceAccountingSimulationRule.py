@@ -43,33 +43,11 @@ class InventoryAssetPriceAccountingRuleMovementGenerator(InvoiceTransactionRuleM
   def _getInputMovementList(self, movement_list=None, rounding=False):
     simulation_movement = self._applied_rule.getParentValue()
 
-    # ERP5 generic implementation of getPrice():
-    # 1. PL 'price' => 
-    # 2. Movement_getPriceCalculationOperandDict()
-    #    => Supply Line...
+    # No expand if price is not set (already checked in 'Test Method ID' on the Rule).
+    # Price is automatically acquired from Supply if not set directly on PL Movement.
     quantity = simulation_movement.getPrice()
     if quantity is None:
-      # XXX: "or fails to generate, and creates a "stock decrease" (expense)"???
-      raise NotImplementedError
-
-      # use = simulation_movement.getUse()
-      # if use == 'trade/sale':
-      #   portal_type = 'Sale Supply Line'
-      # elif use == 'trade/purchase':
-      #   portal_type = 'Purchase Supply Line'
-      # else:
-      #   raise NotImplementatedError("%s: use='%s' not handled by this Rule" %
-      #                               (simulation_movement.getPath(), use))
-
-      # domain_tool = simulation_movement.getPortalObject().portal_domains
-      # sale_supply_line_list = domain_tool.searchPredicateList(
-      #   simulation_movement,
-      #   portal_type=portal_type)
-
-      # if len(sale_supply_line_list) == 0:
-      #   return ()
-
-      # quantity = sale_supply_line_list[0].getBasePrice()
+      return []
 
     return [simulation_movement.asContext(quantity=quantity)]
 

@@ -92,6 +92,14 @@ class TestRealTimeInventoryAccountingMixin:
     self.assertIterableLen(causality_related_list, causality_related_list_expected_len)
     return causality_related_list
 
+  def stepCheckAccountingTransactionNotGeneratedFromSalePackingList(self, sequence=None, sequence_list=None):
+    packing_list = sequence['current_sale_packing_list']
+    self._checkAndGetCausalityRelated(packing_list, 'Accounting Transaction', 0)
+
+  def stepCheckAccountingTransactionNotGeneratedFromPurchasePackingList(self, sequence=None, sequence_list=None):
+    packing_list = sequence['current_purchase_packing_list']
+    self._checkAndGetCausalityRelated(packing_list, 'Accounting Transaction', 0)
+
   def stepCheckAccountingTransactionGeneratedFromSalePackingList(self, sequence=None, sequence_list=None):
     packing_list = sequence['current_sale_packing_list']
     accounting_transaction = self._checkAndGetCausalityRelated(packing_list, 'Accounting Transaction', 1)[0]
@@ -310,6 +318,20 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
       product_big_b_car.validate()
 
     try:
+      product_car_no_supply = self.portal.product_module.car_no_supply
+    except AttributeError:
+      product_car_no_supply = self.portal.product_module.newContent(
+        portal_type='Product',
+        id='car_no_supply',
+        title='Car No Supply',
+        reference='843326789',
+        product_line_value=category_tool.product_line.component,
+        use_value=category_tool.use.trade.purchase,
+        quantity_unit_value=category_tool.quantity_unit.unit.piece)
+    if product_car_no_supply.getValidationState() != 'validated':
+      product_car_no_supply.validate()
+
+    try:
       product_part_1 = self.portal.product_module.part_1
     except AttributeError:
       product_part_1 = self.portal.product_module.newContent(
@@ -449,6 +471,49 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
     sequence_list.addSequenceString(sequence_str)
     sequence_list.play(self, quiet=0)
 
+  def stepTestSalePackingListNoPriceAndNoSupply_create(self, sequence=None, sequence_list=None):
+    sale_packing_list = self.portal.sale_packing_list_module.newContent(
+      portal_type='Sale Packing List',
+      specialise_value=self.portal.sale_trade_condition_module.hoge,
+      title='Vente depuis le Prac (No Price/Supply)',
+      start_date=DateTime('2018/01/30 00:00:00 GMT+9'),
+      stop_date=DateTime('2018/01/31 00:00:00 GMT+9'),
+      source_value=self.portal.organisation_module.hoge,
+      source_section_value=self.portal.organisation_module.hoge,
+      destination_value=self.portal.organisation_module.client,
+      destination_section_value=self.portal.organisation_module.client,
+      price_currency_value=self.portal.currency_module.DOL)
+
+    sale_packing_list.newContent(
+      portal_type='Sale Packing List Line',
+      title='Vente voiture',
+      int_index=1,
+      resource_value=self.portal.product_module.car_no_supply,
+      quantity=1,
+      quantity_unit_value=self.portal.portal_categories.quantity_unit.unit.piece,
+      use_value=self.portal.portal_categories.use.trade.sale)
+
+    sequence.edit(sale_packing_list_1=sale_packing_list)
+
+  def testSalePackingListNoPriceAndNoSupply(self):
+    sequence_list = SequenceList()
+    sequence_str = """
+      TestSalePackingListNoPriceAndNoSupply_create
+      Tic
+      SelectSalePackingList1
+      ConfirmSalePackingList
+      Tic
+      StartSalePackingList
+      Tic
+      StopSalePackingList
+      Tic
+      CallBuilder
+      Tic
+      CheckAccountingTransactionNotGeneratedFromSalePackingList
+      """
+    sequence_list.addSequenceString(sequence_str)
+    sequence_list.play(self, quiet=0)
+
   def stepTestPurchasePackingList_create(self, sequence=None, sequence_list=None):
     purchase_packing_list = self.portal.purchase_packing_list_module.newContent(
       portal_type='Purchase Packing List',
@@ -520,6 +585,48 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
       Tic
       CheckAccountingTransactionGeneratedFromPurchasePackingList
       TestPurchasePackingList_checkAllAccountingTransaction
+      """
+    sequence_list.addSequenceString(sequence_str)
+    sequence_list.play(self, quiet=0)
+
+  def stepTestPurchasePackingListNoPriceAndNoSupply_create(self, sequence=None, sequence_list=None):
+    purchase_packing_list = self.portal.purchase_packing_list_module.newContent(
+      portal_type='Purchase Packing List',
+      specialise_value=self.portal.purchase_trade_condition_module.hoge,
+      title='Reception Supplier (No Supply/Price)',
+      start_date=DateTime('2018/01/09 00:00:00 GMT+9'),
+      stop_date=DateTime('2018/01/10 00:00:00 GMT+9'),
+      source_value=self.portal.organisation_module.hoge,
+      source_section_value=self.portal.organisation_module.supplier,
+      destination_value=self.portal.organisation_module.supplier,
+      destination_section_value=self.portal.organisation_module.hoge,
+      price_currency_value=self.portal.currency_module.DOL)
+
+    purchase_packing_list.newContent(
+      portal_type='Purchase Packing List Line',
+      int_index=1,
+      resource_value=self.portal.product_module.car_no_supply,
+      quantity=1,
+      quantity_unit_value=self.portal.portal_categories.quantity_unit.unit.piece,
+      use_value=self.portal.portal_categories.use.trade.purchase)
+
+    sequence.edit(purchase_packing_list_1=purchase_packing_list)
+
+  def testPurchasePackingListNoPriceAndNoSupply(self):
+    sequence_list = SequenceList()
+    sequence_str = """
+      TestPurchasePackingListNoPriceAndNoSupply_create
+      Tic
+      SelectPurchasePackingList1
+      ConfirmPurchasePackingList
+      Tic
+      StartPurchasePackingList
+      Tic
+      StopPurchasePackingList
+      Tic
+      CallBuilder
+      Tic
+      CheckAccountingTransactionNotGeneratedFromPurchasePackingList
       """
     sequence_list.addSequenceString(sequence_str)
     sequence_list.play(self, quiet=0)
