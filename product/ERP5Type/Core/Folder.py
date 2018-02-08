@@ -1472,8 +1472,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
   # Aliases
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getObjectIds')
-  def getObjectIds(self, *args, **kw):
-    return self.objectIds(*args, **kw)
+  getObjectIds = objectIds
 
   # Overloading
   security.declareProtected( Permissions.AccessContentsInformation,
