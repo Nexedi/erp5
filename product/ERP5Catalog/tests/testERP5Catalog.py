@@ -27,28 +27,20 @@
 #
 ##############################################################################
 
-import unittest
+from random import randint
 import sys
+import unittest
 from unittest import expectedFailure
-
-from Testing import ZopeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
-from zLOG import LOG
 from DateTime import DateTime
-from Products.ERP5Type.tests.utils import LogInterceptor
-from Products.ERP5Type.tests.utils import createZODBPythonScript, todo_erp5, \
-                                          getExtraSqlConnectionStringList
-from Products.ZSQLCatalog.ZSQLCatalog import HOT_REINDEXING_FINISHED_STATE,\
-      HOT_REINDEXING_RECORDING_STATE, HOT_REINDEXING_DOUBLE_INDEXING_STATE
-from Products.CMFActivity.Errors import ActivityFlushError
+from OFS.ObjectManager import ObjectManager
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import LogInterceptor, createZODBPythonScript, todo_erp5, getExtraSqlConnectionStringList
 from Products.PageTemplates.Expressions import getEngine
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
-
-
-from OFS.ObjectManager import ObjectManager
-from random import randint
+from Testing import ZopeTestCase
+from zLOG import LOG
 
 class IndexableDocument(ObjectManager):
 
@@ -148,11 +140,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       sql = 'select distinct(path) from catalog'
     _, row_list = sql_connection().query(sql, max_rows=0)
     return [x for x, in row_list]
-
-  def getSQLPathListWithRolesAndUsers(self, connection_id):
-    sql = 'select distinct(path) from catalog, roles_and_users\
-           where catalog.security_uid=roles_and_users.uid'
-    return self.getSQLPathList(connection_id, sql)
 
   def checkRelativeUrlInSQLPathList(self,url_list,connection_id=None):
     path_list = self.getSQLPathList(connection_id=connection_id)
@@ -268,50 +255,71 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   def test_10_OrderedSearchFolder(self):
     person_module = self.getPersonModule()
-
-    # Clear catalog
-    portal_catalog = self.getCatalogTool()
-    portal_catalog.manage_catalogClear()
-
-    person = person_module.newContent(id='a',portal_type='Person',title='a',description='z')
+    person_uid_list = [
+      person_module.newContent(id='a', portal_type='Person', title='a', description='z').getUid(),
+      person_module.newContent(id='b', portal_type='Person', title='a', description='y').getUid(),
+      person_module.newContent(id='c', portal_type='Person', title='a', description='x').getUid(),
+    ]
     self.tic()
-    person = person_module.newContent(id='b',portal_type='Person',title='a',description='y')
-    self.tic()
-    person = person_module.newContent(id='c',portal_type='Person',title='a',description='x')
-    self.tic()
-    folder_object_list = [x.getObject().getId()
-              for x in person_module.searchFolder(sort_on=[('id','ascending')])]
-    self.assertEqual(['a','b','c'],folder_object_list)
-    folder_object_list = [x.getObject().getId()
-              for x in person_module.searchFolder(
-              sort_on=[('title','ascending'), ('description','ascending')])]
-    self.assertEqual(['c','b','a'],folder_object_list)
-    folder_object_list = [x.getObject().getId()
-              for x in person_module.searchFolder(
-              sort_on=[('title','ascending'),('description','descending')])]
-    self.assertEqual(['a','b','c'],folder_object_list)
+    self.assertEqual(
+      ['a','b','c'],
+      [
+        x.getObject().getId()
+        for x in person_module.searchFolder(
+          sort_on=[('id', 'ascending')],
+        )
+      ],
+    )
+    self.assertEqual(
+      ['c','b','a'],
+      [
+        x.getObject().getId()
+        for x in person_module.searchFolder(
+          sort_on=[('title', 'ascending'), ('description', 'ascending')],
+        )
+      ],
+    )
+    self.assertEqual(
+      ['a','b','c'],
+      [
+        x.getObject().getId()
+        for x in person_module.searchFolder(
+          sort_on=[('title', 'ascending'), ('description', 'descending')],
+        )
+      ],
+    )
 
   def test_11_CastStringAsInt(self):
     person_module = self.getPersonModule()
-
-    # Clear catalog
-    portal_catalog = self.getCatalogTool()
-    portal_catalog.manage_catalogClear()
-
-    person = person_module.newContent(id='a',portal_type='Person',title='1')
+    person_uid_list = [
+      person_module.newContent(portal_type='Person', title='1').getUid(),
+      person_module.newContent(portal_type='Person', title='2').getUid(),
+      person_module.newContent(portal_type='Person', title='12').getUid(),
+    ]
     self.tic()
-    person = person_module.newContent(id='b',portal_type='Person',title='2')
-    self.tic()
-    person = person_module.newContent(id='c',portal_type='Person',title='12')
-    self.tic()
-    folder_object_list = [x.getObject().getTitle() for x in person_module.searchFolder(sort_on=[('title','ascending')])]
-    self.assertEqual(['1','12','2'],folder_object_list)
-    folder_object_list = [x.getObject().getTitle() for x in person_module.searchFolder(sort_on=[('title','ascending','int')])]
-    self.assertEqual(['1','2','12'],folder_object_list)
+    self.assertEqual(
+      ['1', '12', '2'],
+      [
+        x.getObject().getTitle()
+        for x in person_module.searchFolder(
+          sort_on=[('title', 'ascending')],
+          uid=person_uid_list,
+        )
+      ],
+    )
+    self.assertEqual(
+      ['1', '2', '12'],
+      [
+        x.getObject().getTitle()
+        for x in person_module.searchFolder(
+          sort_on=[('title', 'ascending', 'int')],
+          uid=person_uid_list,
+        )
+      ],
+    )
 
   def test_12_TransactionalUidBuffer(self):
-    portal_catalog = self.getCatalogTool()
-    catalog = portal_catalog.getSQLCatalog()
+    catalog = self.getCatalogTool().getSQLCatalog()
     self.assertTrue(catalog is not None)
     from Products.ZSQLCatalog.SQLCatalog import global_reserved_uid_lock
     # Clear out the uid buffer.
@@ -337,75 +345,35 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     uid_buffer = getUIDBuffer()
     self.assertTrue(len(uid_buffer) == 0)
 
-  def test_13_ERP5Site_reindexAll(self):
-    portal = self.getPortal()
-    self.getCategoryTool().newContent(portal_type='Base Category', title="GreatTitle1")
-    portal.getDefaultModule('Organisation').newContent(portal_type='Organisation', title="GreatTitle2")
-    self.tic()
-    original_path_list = self.getSQLPathList()
-    self.getCatalogTool().manage_catalogClear()
-    self.assertEqual([], self.getSQLPathList())
-    portal.ERP5Site_reindexAll()
-    self.tic()
-    # Check if all objects are catalogued as before
-    self.assertTrue(set(original_path_list).issubset(self.getSQLPathList()))
-
   def test_14_ReindexWithBrokenCategory(self):
     """Reindexing an object with 1 broken category must not affect other valid
     categories"""
-    # Flush message queue
     self.tic()
-    # Create some objects
-    portal = self.portal
     portal_category = self.getCategoryTool()
-    group_nexedi_category = portal_category.group\
-                                .newContent( id = 'nexedi', )
-    region_europe_category = portal_category.region\
-                                .newContent( id = 'europe', )
-    module = portal.getDefaultModule('Organisation')
-    organisation = module.newContent(portal_type='Organisation',)
+    group_nexedi_category = portal_category.group.newContent(id='nexedi')
+    region_europe_category = portal_category.region.newContent(id='europe')
+    organisation = self.portal.getDefaultModule('Organisation').newContent(portal_type='Organisation')
     organisation.setGroup('nexedi')
     self.assertEqual(organisation.getGroupValue(), group_nexedi_category)
     organisation.setRegion('europe')
     self.assertEqual(organisation.getRegionValue(), region_europe_category)
     organisation.setRole('not_exists')
     self.assertEqual(organisation.getRoleValue(), None)
-    # Flush message queue
     self.tic()
-    # Clear catalog
-    portal_catalog = self.getCatalogTool()
-    portal_catalog.manage_catalogClear()
     sql_connection = self.getSQLConnection()
-
-    sql = 'SELECT COUNT(*) FROM category '\
-        'WHERE uid=%s and category_strict_membership = 1' %\
-        organisation.getUid()
-    result = sql_connection.manage_test(sql)
-    message_count = result[0]['COUNT(*)']
-    self.assertEqual(0, message_count)
-    # Commit
-    self.tic()
-    # Check catalog
-    organisation.reindexObject()
-    # Commit
-    self.tic()
-    sql = 'select count(*) from message'
-    result = sql_connection.manage_test(sql)
-    message_count = result[0]['COUNT(*)']
-    self.assertEqual(0, message_count)
     # Check region and group categories are catalogued
-    for base_cat, theorical_count in {
-                                      'region':1,
-                                      'group':1,
-                                      'role':0}.items() :
-      sql = """SELECT COUNT(*) FROM category
-            WHERE category.uid=%s and category.category_strict_membership = 1
-            AND category.base_category_uid = %s""" % (organisation.getUid(),
-                    portal_category[base_cat].getUid())
-      result = sql_connection.manage_test(sql)
-      cataloged_obj_count = result[0]['COUNT(*)']
-      self.assertEqual(theorical_count, cataloged_obj_count,
-            'category %s is not cataloged correctly' % base_cat)
+    for base_cat, theorical_count in (
+      ('region', 1),
+      ('group', 1),
+      ('role', 0),
+    ):
+      self.assertEqual(
+        theorical_count,
+        sql_connection.manage_test(
+          "SELECT COUNT(*) FROM category WHERE category.uid=%s and category.category_strict_membership = 1 AND category.base_category_uid = %s" % (organisation.getUid(), portal_category[base_cat].getUid())
+        )[0]['COUNT(*)'],
+        'category %s is not cataloged correctly' % base_cat,
+      )
 
   def test_15_getObject(self,):
     # portal_catalog.getObject raises a ValueError if UID parameter is a string
@@ -1074,179 +1042,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
             len(self.getCatalogTool()(portal_type='Organisation', limit=None)))
     ctool.default_result_limit = old_default_result_limit
 
-  def test_48_ERP5Site_hotReindexAll(self):
-    """
-      test the hot reindexing of catalog -> catalog2
-      then a hot reindexing detailed catalog2 -> catalog
-      this test use the variable environment: extra_sql_connection_string_list
-    """
-    portal = self.portal
-    self.original_connection_id = 'erp5_sql_connection'
-    self.original_deferred_connection_id = self.new_erp5_deferred_sql_connection
-    self.new_connection_id = self.new_erp5_sql_connection
-    self.new_deferred_connection_id = 'erp5_sql_deferred_connection2'
-    new_connection_string = getExtraSqlConnectionStringList()[0]
-
-    # Skip this test if default connection string is not "test test".
-    original_connection = getattr(portal, self.original_connection_id)
-    connection_string = original_connection.connection_string
-    if (connection_string == new_connection_string):
-      message = 'SKIPPED: default connection string is the same as the one for hot-reindex catalog'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-
-    portal_category = self.getCategoryTool()
-    portal_activities = self.getActivityTool()
-    self.base_category = portal_category.newContent(portal_type='Base Category',
-                                               title="GreatTitle1")
-    module = portal.getDefaultModule('Organisation')
-    self.organisation = module.newContent(portal_type='Organisation',
-                                     title="GreatTitle2")
-    # Flush message queue
-    self.tic()
-    addSQLConnection = portal.manage_addProduct['ZMySQLDA'] \
-      .manage_addZMySQLConnection
-    # Create new connectors
-    addSQLConnection(self.new_connection_id,'', new_connection_string)
-    new_connection = portal[self.new_connection_id]
-    new_connection.manage_open_connection()
-    addSQLConnection(self.new_deferred_connection_id,'', new_connection_string)
-    new_connection = portal[self.new_deferred_connection_id]
-    new_connection.manage_open_connection()
-    # the transactionless connector must not be change because this one
-    # create the portal_ids otherwise it create of conflicts with uid
-    # objects
-
-    # Create new catalog
-    portal_catalog = self.getCatalogTool()
-    self.original_catalog_id = 'erp5_mysql_innodb'
-    self.new_catalog_id = self.original_catalog_id + '2'
-    cp_data = portal_catalog.manage_copyObjects(ids=('erp5_mysql_innodb',))
-    new_id = portal_catalog.manage_pasteObjects(cp_data)[0]['new_id']
-    portal_catalog.manage_renameObject(id=new_id, new_id=self.new_catalog_id)
-
-    # Parse all methods in the new catalog in order to change the connector
-    new_catalog = portal_catalog[self.new_catalog_id]
-    source_sql_connection_id_list=list((self.original_connection_id,
-                                  self.original_deferred_connection_id))
-    destination_sql_connection_id_list=list((self.new_connection_id,
-                                       self.new_deferred_connection_id))
-    #launch the full hot reindexing
-    portal_catalog.manage_hotReindexAll(source_sql_catalog_id=self.original_catalog_id,
-                 destination_sql_catalog_id=self.new_catalog_id,
-                 source_sql_connection_id_list=source_sql_connection_id_list,
-                 destination_sql_connection_id_list=destination_sql_connection_id_list,
-                 update_destination_sql_catalog=True)
-
-    # Flush message queue
-    self.tic()
-    original_path_list = self.getSQLPathList(self.original_connection_id)
-    new_path_list = self.getSQLPathList(self.new_connection_id)
-    self.assertTrue(
-      set(original_path_list).issubset(new_path_list),
-      set(original_path_list).difference(new_path_list),
-    )
-    self.organisation2 = module.newContent(portal_type='Organisation',
-                                     title="GreatTitle2")
-    first_deleted_url = self.organisation2.getRelativeUrl()
-    self.tic()
-    path_list = [self.organisation.getRelativeUrl()]
-    self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
-    self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.new_connection_id)
-    path_list = [first_deleted_url]
-    self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.original_connection_id)
-    self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.new_connection_id)
-
-    # Make sure some zsql method use the right connection_id
-    zsql_method = portal.portal_skins.erp5_core.Resource_zGetInventoryList
-    self.assertEqual(getattr(zsql_method,'connection_id'),self.new_connection_id)
-
-    self.assertEqual(portal_catalog.getHotReindexingState(),
-                      HOT_REINDEXING_FINISHED_STATE)
-
-    # Do a hot reindex in the reverse way, but this time a more
-    # complicated hot reindex
-    portal_catalog.manage_hotReindexAll(
-      source_sql_catalog_id=self.new_catalog_id,
-      destination_sql_catalog_id=self.original_catalog_id,
-      source_sql_connection_id_list=destination_sql_connection_id_list,
-      destination_sql_connection_id_list=source_sql_connection_id_list,
-      update_destination_sql_catalog=True)
-    self.commit()
-    self.assertEqual(portal_catalog.getHotReindexingState(),
-                      HOT_REINDEXING_RECORDING_STATE)
-    self.organisation3 = module.newContent(portal_type='Organisation',
-                                     title="GreatTitle2")
-    # Try something more complicated, create new object, reindex it
-    # and then delete it
-    self.deleted_organisation = module.newContent(portal_type='Organisation',
-                                     title="GreatTitle2")
-    self.deleted_organisation.immediateReindexObject()
-    self.commit()
-    deleted_url = self.deleted_organisation.getRelativeUrl()
-    module.manage_delObjects(ids=[self.deleted_organisation.getId()])
-    self.commit()
-    query = self.portal.cmf_activity_sql_connection().query
-    query(
-      'update message set processing_node=-4 where method_id in '
-      '("playBackRecordedObjectList", "_finishHotReindexing")',
-    )
-    hasNoProcessableMessage = lambda message_list: all(
-      x.processing_node == -4
-      for x in message_list
-    )
-    self.tic(stop_condition=hasNoProcessableMessage)
-    self.assertEqual(portal_catalog.getHotReindexingState(),
-                      HOT_REINDEXING_DOUBLE_INDEXING_STATE)
-    # try to delete objects in double indexing state
-    module.manage_delObjects(ids=[self.organisation2.getId()])
-    self.commit()
-    query(
-      'update message set processing_node=-1 where '
-      'method_id="playBackRecordedObjectList"',
-    )
-    self.tic(stop_condition=hasNoProcessableMessage)
-    self.assertEqual(portal_catalog.getHotReindexingState(),
-                      HOT_REINDEXING_DOUBLE_INDEXING_STATE)
-    # Now we have started an double indexing
-    self.next_deleted_organisation = module.newContent(portal_type='Organisation',
-                                     title="GreatTitle2",id='toto')
-    next_deleted_url = self.next_deleted_organisation.getRelativeUrl()
-    self.tic(stop_condition=hasNoProcessableMessage)
-    path_list=[next_deleted_url]
-    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
-    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.original_connection_id)
-    module.manage_delObjects(ids=[self.next_deleted_organisation.getId()])
-    #Create object during the double indexing to check the security object
-    #after the hot reindexing
-    self.organisation4 = module.newContent(portal_type='Organisation',
-                                     title="GreatTitle2")
-    self.commit()
-    query(
-      'update message set processing_node=-1 where '
-      'method_id="_finishHotReindexing"',
-    )
-    self.tic()
-    self.assertEqual(portal_catalog.getHotReindexingState(),
-                      HOT_REINDEXING_FINISHED_STATE)
-    # Check Security UID object exist in roles and users
-    # compare the number object in the catalog
-    count_catalog = len(self.getSQLPathList(self.original_connection_id))
-    count_restricted_catalog = len(self.getSQLPathListWithRolesAndUsers(\
-                               self.original_connection_id))
-    self.assertEqual(count_catalog, count_restricted_catalog)
-
-    path_list = [self.organisation3.getRelativeUrl()]
-    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.new_connection_id)
-    self.checkRelativeUrlInSQLPathList(path_list,connection_id=self.original_connection_id)
-    path_list = [first_deleted_url,deleted_url,next_deleted_url]
-    self.checkRelativeUrlNotInSQLPathList(path_list,connection_id=self.new_connection_id)
-    self.checkRelativeUrlNotInSQLPathList(path_list,connection_id=self.original_connection_id)
-    # Make sure module are there
-    path_list = [module.getRelativeUrl()]
-    self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.new_connection_id)
-    self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
-
   def test_48bis_ERP5Site_hotReindexAllCheckCachedValues(self):
     """
       test the hot reindexing of catalog -> catalog2
@@ -1400,42 +1195,20 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   @todo_erp5
   def test_49_IndexInOrderedSearchFolder(self):
-    person_module = self.getPersonModule()
-
-    # Clear catalog
-    portal_catalog = self.getCatalogTool()
-    portal_catalog.manage_catalogClear()
-    catalog = portal_catalog.objectValues()[0]
-
-    person = person_module.newContent(id='a',portal_type='Person',title='a',description='z')
+    searchFolder = self.getPersonModule().searchFolder
+    catalog = self.getCatalogTool().objectValues()[0]
     self.tic()
-    person = person_module.newContent(id='b',portal_type='Person',title='a',description='y')
-    self.tic()
-    person = person_module.newContent(id='c',portal_type='Person',title='a',description='x')
-    self.tic()
-    index_columns = getattr(catalog, 'sql_catalog_index_on_order_keys', None)
-    self.assertNotEqual(index_columns, None)
-    self.assertEqual(len(index_columns), 0)
+    self.assertEqual(catalog.sql_catalog_index_on_order_keys, ())
     # Check catalog don't tell to use index if nothing defined
-    sql = person_module.searchFolder(src__=1)
-    self.assertTrue('use index' not in sql)
-    sql = person_module.searchFolder(src__=1, sort_on=[('id','ascending')])
-    self.assertTrue('use index' not in sql)
-    sql = person_module.searchFolder(src__=1, sort_on=[('title','ascending')])
-    self.assertTrue('use index' not in sql)
+    self.assertNotIn('use index', searchFolder(src__=1))
+    self.assertNotIn('use index', searchFolder(src__=1, sort_on=[('id','ascending')]))
+    self.assertNotIn('use index', searchFolder(src__=1, sort_on=[('title','ascending')]))
     # Defined that catalog must tell to use index when order by catalog.title
-    index_columns = ('catalog.title',)
-    setattr(catalog, 'sql_catalog_index_on_order_keys', index_columns)
-    index_columns = getattr(catalog, 'sql_catalog_index_on_order_keys', None)
-    self.assertNotEqual(index_columns, None)
-    self.assertEqual(len(index_columns), 1)
+    catalog.sql_catalog_index_on_order_keys = ('catalog.title', )
     # Check catalog tell to use index only when ordering by catalog.title
-    sql = person_module.searchFolder(src__=1)
-    self.assertTrue('use index' not in sql)
-    sql = person_module.searchFolder(src__=1, sort_on=[('id','ascending')])
-    self.assertTrue('use index' not in sql)
-    sql = person_module.searchFolder(src__=1, sort_on=[('title','ascending')])
-    self.assertTrue('use index' in sql)
+    self.assertNotIn('use index', searchFolder(src__=1))
+    self.assertNotIn('use index', searchFolder(src__=1, sort_on=[('id','ascending')]))
+    self.assertIn('use index', searchFolder(src__=1, sort_on=[('title','ascending')]))
 
   def test_50_LocalRolesArgument(self):
     """test local_roles= argument
@@ -1662,17 +1435,25 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Add a script to create uid list
     catalog = self.getCatalogTool().getSQLCatalog()
     script_id = 'z0_zCreateUid'
-    script_content = "context.getPortalObject().portal_ids.generateNewIdList(id_generator='uid',\
-                                                                             id_group='text_uid')"
-    script = createZODBPythonScript(catalog, script_id,
-                          '*args,**kw', script_content)
-    sql_clear_catalog = list(catalog.sql_clear_catalog)
-    sql_clear_catalog.append(script_id)
-    sql_clear_catalog.sort()
-    catalog.sql_clear_catalog = tuple(sql_clear_catalog)
+    script = createZODBPythonScript(
+      catalog,
+      script_id,
+      '*args,**kw',
+      "context.getPortalObject().portal_ids.generateNewIdList(id_generator='uid', id_group='text_uid')",
+    )
+    sql_clear_catalog_orig = catalog.sql_clear_catalog
+    catalog.sql_clear_catalog = tuple(sorted(sql_clear_catalog_orig + (script_id, )))
     # launch the sql_clear_catalog with the script after the drop tables and
     # before the recreate tables of catalog
-    catalog.manage_catalogClear()
+    try:
+      self.commit()
+      catalog.manage_catalogClear()
+    finally:
+      self.abort()
+      catalog.sql_clear_catalog = sql_clear_catalog_orig
+      self.commit()
+      self.portal.ERP5Site_reindexAll(clear_catalog=True)
+      self.tic()
 
   def test_SearchOnOwner(self):
     # owner= can be used a search key in the catalog to have all documents for
@@ -2042,9 +1823,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     uf._doAddUser('foo', 'foo', ['Member', ], [])
     uf._doAddUser('ERP5TypeTestCase', 'ERP5TypeTestCase', ['Member', ], [])
     self.commit()
-    portal_catalog = self.getCatalogTool()
-    portal_catalog.manage_catalogClear()
-    self.getPortal().ERP5Site_reindexAll()
+    self.getPortal().ERP5Site_reindexAll(clear_catalog=True)
     self.tic()
 
     # Person stuff
