@@ -265,42 +265,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEqual([],folder_object_list)
 
-  def test_07_ClearCatalogAndTestNewContent(self):
-    person_module = self.getPersonModule()
-
-    # Clear catalog
-    portal_catalog = self.getCatalogTool()
-    portal_catalog.manage_catalogClear()
-
-    person = person_module.newContent(id='4',portal_type='Person')
-    self.tic()
-    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEqual(['4'],folder_object_list)
-
-  def test_08_ClearCatalogAndTestRecursiveImmediateReindexObject(self):
-    person_module = self.getPersonModule()
-
-    # Clear catalog
-    portal_catalog = self.getCatalogTool()
-    portal_catalog.manage_catalogClear()
-
-    person = person_module.newContent(id='4',portal_type='Person')
-    self.tic()
-    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEqual(['4'],folder_object_list)
-
-  def test_09_ClearCatalogAndTestImmediateReindexObject(self):
-    person_module = self.getPersonModule()
-
-    # Clear catalog
-    portal_catalog = self.getCatalogTool()
-    portal_catalog.manage_catalogClear()
-
-    person = person_module.newContent(id='4',portal_type='Person')
-    self.tic()
-    folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
-    self.assertEqual(['4'],folder_object_list)
-
   def test_10_OrderedSearchFolder(self):
     person_module = self.getPersonModule()
 
