@@ -100,15 +100,15 @@ class TestRealTimeInventoryAccountingMixin:
     packing_list = sequence['current_purchase_packing_list']
     self._checkAndGetCausalityRelated(packing_list, 'Accounting Transaction', 0)
 
-  def stepCheckAccountingTransactionGeneratedFromSalePackingList(self, sequence=None, sequence_list=None):
+  def stepCheckThreeAccountingTransactionGeneratedFromSalePackingList(self, sequence=None, sequence_list=None):
     packing_list = sequence['current_sale_packing_list']
-    accounting_transaction = self._checkAndGetCausalityRelated(packing_list, 'Accounting Transaction', 1)[0]
-    sequence.edit(current_accounting_transaction=accounting_transaction)
+    accounting_transaction_list = self._checkAndGetCausalityRelated(packing_list, 'Accounting Transaction', 3)
+    sequence.edit(current_accounting_transaction_list=accounting_transaction_list)
 
-  def stepCheckAccountingTransactionGeneratedFromPurchasePackingList(self, sequence=None, sequence_list=None):
+  def stepCheckThreeAccountingTransactionGeneratedFromPurchasePackingList(self, sequence=None, sequence_list=None):
     packing_list = sequence['current_purchase_packing_list']
-    accounting_transaction = self._checkAndGetCausalityRelated(packing_list, 'Accounting Transaction', 1)[0]
-    sequence.edit(current_accounting_transaction=accounting_transaction)
+    accounting_transaction_list = self._checkAndGetCausalityRelated(packing_list, 'Accounting Transaction', 3)
+    sequence.edit(current_accounting_transaction_list=accounting_transaction_list)
 
   def _checkDelivery(self,
                      delivery,
@@ -150,8 +150,14 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
   def afterSetUp(self):
     category_tool = self.portal.portal_categories
 
-    getattr(self.portal.portal_types,
-            'Accounting Transaction').setLedgerValueList(category_tool.ledger.contentValues())
+    getattr(self.portal.portal_types, 'Accounting Transaction').setLedgerValueList(
+      [category_tool.ledger.achat,
+       category_tool.ledger.preparation,
+       category_tool.ledger.production,
+       category_tool.ledger.stock,
+       category_tool.ledger.transit.entree,
+       category_tool.ledger.transit.sortie,
+       category_tool.ledger.vente])
 
     if 'my_group' not in category_tool.group:
       category_tool.group.newContent(portal_type='Category',
@@ -178,6 +184,16 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
         financial_section_value=category_tool.financial_section.asset.current_assets.stock,
         gap_value=category_tool.gap.fr.pcg['3']['35']['355'])
 
+    if 'stock_car_transit' not in self.portal.account_module:
+      self.portal.account_module.newContent(
+        portal_type='Account',
+        id='stock_car_transit',
+        reference='STOCK_CAR_TRANSIT',
+        title='Stock Transit Véhicules',
+        account_type_value=category_tool.account_type.asset,
+        financial_section_value=category_tool.financial_section.asset.current_assets.stock,
+        gap_value=category_tool.gap.fr.pcg['3']['35']['355'])
+
     if 'variation_parts' not in self.portal.account_module:
       self.portal.account_module.newContent(
         portal_type='Account',
@@ -194,6 +210,16 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
         id='stock_parts_port',
         reference='STOCK_PARTS_PORT',
         title='Stock Parts Port',
+        account_type_value=category_tool.account_type.asset,
+        financial_section_value=category_tool.financial_section.asset.current_assets.stock,
+        gap_value=category_tool.gap.fr.pcg['3']['32']['321'])
+
+    if 'stock_parts_transit' not in self.portal.account_module:
+      self.portal.account_module.newContent(
+        portal_type='Account',
+        id='stock_parts_transit',
+        reference='STOCK_PARTS_TRANSIT',
+        title='Stock Parts Transit',
         account_type_value=category_tool.account_type.asset,
         financial_section_value=category_tool.financial_section.asset.current_assets.stock,
         gap_value=category_tool.gap.fr.pcg['3']['32']['321'])
@@ -430,26 +456,67 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
     sequence.edit(sale_packing_list_1=sale_packing_list)
 
   def stepTestSalePackingList_checkAllAccountingTransaction(self, sequence=None, sequence_list=None):
-    accounting_transaction = sequence['current_accounting_transaction']
-    self.assertEquals(accounting_transaction.getSimulationState(), 'draft')
-    self._checkDelivery(
-      accounting_transaction,
-      delivery_property_dict=dict(
-        source_section_value=self.portal.organisation_module.hoge,
-        resource_value=self.portal.currency_module.DOL,
-        ledger_value=self.portal.portal_categories.ledger.stock,
-        # start_date=stop_date=SPL.start_date
-        start_date=DateTime('2018/01/30 00:00:00 GMT+9'),
-        stop_date=DateTime('2018/01/30 00:00:00 GMT+9')),
-      movement_property_dict_tuple=(
-        dict(portal_type='Accounting Transaction Line',
-             source_value=self.portal.account_module.variation_cars,
-             # sum(SPLL.price)
-             quantity=-17100),
-        dict(portal_type='Accounting Transaction Line',
-             source_value=self.portal.account_module.stock_car_park,
-             # sum(SPLL.price)
-             quantity=17100)))
+    accounting_transaction_list = sequence['current_accounting_transaction_list']
+    for accounting_transaction in accounting_transaction_list:
+      self.assertEquals(accounting_transaction.getSimulationState(), 'draft')
+      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock:
+        self._checkDelivery(
+          accounting_transaction,
+          delivery_property_dict=dict(
+            source_section_value=self.portal.organisation_module.hoge,
+            resource_value=self.portal.currency_module.DOL,
+            # start_date=stop_date=SPL.start_date
+            start_date=DateTime('2018/01/30 00:00:00 GMT+9'),
+            stop_date=DateTime('2018/01/30 00:00:00 GMT+9')),
+          movement_property_dict_tuple=(
+            dict(portal_type='Accounting Transaction Line',
+                 source_value=self.portal.account_module.variation_cars,
+                 # sum(SPLL.price)
+                 quantity=-17100),
+            dict(portal_type='Accounting Transaction Line',
+                 source_value=self.portal.account_module.stock_car_park,
+                 # sum(SPLL.price)
+                 quantity=17100)))
+
+      elif accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.transit.entree:
+        self._checkDelivery(
+          accounting_transaction,
+          delivery_property_dict=dict(
+            source_section_value=self.portal.organisation_module.hoge,
+            resource_value=self.portal.currency_module.DOL,
+            # start_date=stop_date=SPL.start_date
+            start_date=DateTime('2018/01/30 00:00:00 GMT+9'),
+            stop_date=DateTime('2018/01/30 00:00:00 GMT+9')),
+          movement_property_dict_tuple=(
+            dict(portal_type='Accounting Transaction Line',
+                 source_value=self.portal.account_module.variation_cars,
+                 # sum(SPLL.price)
+                 quantity=-17100),
+            dict(portal_type='Accounting Transaction Line',
+                 source_value=self.portal.account_module.stock_car_transit,
+                 # sum(SPLL.price)
+                 quantity=17100)))
+
+      # ledger/transit/sortie
+      else:
+        self._checkDelivery(
+          accounting_transaction,
+          delivery_property_dict=dict(
+            source_section_value=self.portal.organisation_module.hoge,
+            resource_value=self.portal.currency_module.DOL,
+            ledger_value=self.portal.portal_categories.ledger.transit.sortie,
+            # start_date=stop_date=SPL.stop_date
+            start_date=DateTime('2018/01/31 00:00:00 GMT+9'),
+            stop_date=DateTime('2018/01/31 00:00:00 GMT+9')),
+          movement_property_dict_tuple=(
+            dict(portal_type='Accounting Transaction Line',
+                 source_value=self.portal.account_module.stock_car_transit,
+                 # sum(SPLL.price)
+                 quantity=-17100),
+            dict(portal_type='Accounting Transaction Line',
+                 source_value=self.portal.account_module.variation_cars,
+                 # sum(SPLL.price)
+                 quantity=17100)))
 
   def testSalePackingList(self):
     sequence_list = SequenceList()
@@ -465,7 +532,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
       Tic
       CallBuilder
       Tic
-      CheckAccountingTransactionGeneratedFromSalePackingList
+      CheckThreeAccountingTransactionGeneratedFromSalePackingList
       TestSalePackingList_checkAllAccountingTransaction
       """
     sequence_list.addSequenceString(sequence_str)
@@ -548,26 +615,67 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
     sequence.edit(purchase_packing_list_1=purchase_packing_list)
 
   def stepTestPurchasePackingList_checkAllAccountingTransaction(self, sequence=None, sequence_list=None):
-    accounting_transaction = sequence['current_accounting_transaction']
-    self.assertEquals(accounting_transaction.getSimulationState(), 'draft')
-    self._checkDelivery(
-      accounting_transaction,
-      delivery_property_dict=dict(
-        source_section_value=self.portal.organisation_module.hoge,
-        resource_value=self.portal.currency_module.DOL,
-        ledger_value=self.portal.portal_categories.ledger.stock,
-        # start_date=stop_date=PPL.stop_date
-        start_date=DateTime('2018/01/10 00:00:00 GMT+9'),
-        stop_date=DateTime('2018/01/10 00:00:00 GMT+9')),
-      movement_property_dict_tuple=(
-        dict(portal_type='Accounting Transaction Line',
-             source_value=self.portal.account_module.stock_parts_port,
-             # sum(PPLL.price)
-             quantity=-14000),
-        dict(portal_type='Accounting Transaction Line',
-             source_value=self.portal.account_module.variation_parts,
-             # sum(PPLL.price)
-             quantity=14000)))
+    accounting_transaction_list = sequence['current_accounting_transaction_list']
+    for accounting_transaction in accounting_transaction_list:
+      self.assertEquals(accounting_transaction.getSimulationState(), 'draft')
+      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock:
+        self._checkDelivery(
+        accounting_transaction,
+        delivery_property_dict=dict(
+          source_section_value=self.portal.organisation_module.hoge,
+          resource_value=self.portal.currency_module.DOL,
+          # start_date=stop_date=PPL.stop_date
+          start_date=DateTime('2018/01/10 00:00:00 GMT+9'),
+          stop_date=DateTime('2018/01/10 00:00:00 GMT+9')),
+        movement_property_dict_tuple=(
+          dict(portal_type='Accounting Transaction Line',
+               source_value=self.portal.account_module.stock_parts_port,
+               # sum(PPLL.price)
+               quantity=-14000),
+          dict(portal_type='Accounting Transaction Line',
+               source_value=self.portal.account_module.variation_parts,
+               # sum(PPLL.price)
+               quantity=14000)))
+
+      elif accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.transit.entree:
+        self._checkDelivery(
+        accounting_transaction,
+        delivery_property_dict=dict(
+          source_section_value=self.portal.organisation_module.hoge,
+          resource_value=self.portal.currency_module.DOL,
+          # start_date=stop_date=PPL.start_date
+          start_date=DateTime('2018/01/09 00:00:00 GMT+9'),
+          stop_date=DateTime('2018/01/09 00:00:00 GMT+9')),
+        movement_property_dict_tuple=(
+          dict(portal_type='Accounting Transaction Line',
+               source_value=self.portal.account_module.stock_parts_transit,
+               # sum(PPLL.price)
+               quantity=-14000),
+          dict(portal_type='Accounting Transaction Line',
+               source_value=self.portal.account_module.variation_parts,
+               # sum(PPLL.price)
+               quantity=14000)))
+
+      # ledger/transit/sortie
+      else:
+        self._checkDelivery(
+        accounting_transaction,
+        delivery_property_dict=dict(
+          source_section_value=self.portal.organisation_module.hoge,
+          resource_value=self.portal.currency_module.DOL,
+          ledger_value=self.portal.portal_categories.ledger.transit.sortie,
+          # start_date=stop_date=PPL.stop_date
+          start_date=DateTime('2018/01/10 00:00:00 GMT+9'),
+          stop_date=DateTime('2018/01/10 00:00:00 GMT+9')),
+        movement_property_dict_tuple=(
+          dict(portal_type='Accounting Transaction Line',
+               source_value=self.portal.account_module.stock_parts_transit,
+               # sum(PPLL.price)
+               quantity=14000),
+          dict(portal_type='Accounting Transaction Line',
+               source_value=self.portal.account_module.variation_parts,
+               # sum(PPLL.price)
+               quantity=-14000)))
 
   def testPurchasePackingList(self):
     sequence_list = SequenceList()
@@ -583,7 +691,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
       Tic
       CallBuilder
       Tic
-      CheckAccountingTransactionGeneratedFromPurchasePackingList
+      CheckThreeAccountingTransactionGeneratedFromPurchasePackingList
       TestPurchasePackingList_checkAllAccountingTransaction
       """
     sequence_list.addSequenceString(sequence_str)
