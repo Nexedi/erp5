@@ -1,7 +1,8 @@
-use = movement.getUse()
-if use == 'trade/sale':
+delivery_portal_type = movement.getDeliveryValue().getPortalType()
+assert delivery_portal_type # XXX debug
+if delivery_portal_type.startswith('Sale Packing List'):
   return []
-elif use == 'trade/purchase':
+elif delivery_portal_type.startswith('Purchase Packing List'):
   if movement.getDestination() == 'organisation_module/supplier':
     return ['source/account_module/variation_parts']
 else:

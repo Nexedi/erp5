@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TradeModelPath_getInventoryAccountingStockLedgerDebitSource</string> </value>
+            <value> <string>TradeModelPath_getInventoryAccountingStockLedgerInCreditDestination</string> </value>
         </item>
       </dictionary>
     </pickle>
