@@ -106,7 +106,8 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
 
         if ((gadget.state.editable &&
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
-            (!gadget.state.editable && gadget.state.editor === 'fck_editor')) {
+            (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
+            (gadget.state.editor == 'pdf')) {
           queue
             .push(function () {
               return gadget.declareGadget(
@@ -128,7 +129,8 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
 
       if ((gadget.state.editable &&
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
-            (!gadget.state.editable && gadget.state.editor === 'fck_editor')) {
+            (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
+            (gadget.state.editor == 'pdf')) {
         queue
           .push(function () {
             return gadget.getDeclaredGadget('editor');
