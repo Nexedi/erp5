@@ -117,6 +117,10 @@
                           <string>Client Project</string>
                         </tuple>
                         <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Start Date</string>
+                        </tuple>
+                        <tuple>
                           <string>delivery.stop_date</string>
                           <string>Stop Date</string>
                         </tuple>
