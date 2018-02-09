@@ -33,6 +33,7 @@ from functools import wraps
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.ZopeGuards import NullIter, guarded_getattr
 from Acquisition import aq_base, aq_parent, aq_inner
+from OFS.Folder import Folder as OFSFolder
 from OFS.ObjectManager import ObjectManager, checkValidId
 from zExceptions import BadRequest
 from OFS.History import Historical
@@ -557,20 +558,32 @@ class FolderMixIn(ExtensionClass.Base):
 
 InitializeClass(FolderMixIn)
 
+class OFSFolder2(OFSFolder):
+  """
+  Make OFSFolder behave more consistently with (H)BTreeFolder2, especially
+  exception-wise.
+  """
+  def _getOb(self, *args, **kw):
+    try:
+      return OFSFolder._getOb(self, *args, **kw)
+    except AttributeError as exc:
+      raise KeyError(exc.args)
+
 OFS_HANDLER = 0
 BTREE_HANDLER = 1
 HBTREE_HANDLER = 2
+_OFS_PROPERTY_ID = '_dummy_property_for_ofsfolder' # Dummy
 _BTREE_PROPERTY_ID = '_tree'
 _HBTREE_PROPERTY_ID = '_htree'
 _HANDLER_LIST = (
-  None,
+  (_OFS_PROPERTY_ID, lambda self, id: None, OFSFolder2),
   (_BTREE_PROPERTY_ID, BTreeFolder2Base.__init__, CMFBTreeFolder),
   (_HBTREE_PROPERTY_ID, HBTreeFolder2Base.__init__, CMFHBTreeFolder),
 )
 # Bad value, accidentally put everywhere long ago
 _BROKEN_BTREE_HANDLER = 'CMFBTreeFolderHandler'
 
-class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
+class Folder(CopyContainer, OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
   """
   A Folder is a subclass of Base but not of XMLObject.
   Folders are not considered as documents and are therefore
@@ -638,6 +651,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
 
   # Per default we use BTree folder
   _folder_handler = BTREE_HANDLER
+  _dummy_property_for_ofsfolder = () # Just a marker property for code simplicity (*cough*)
 
   # Overload __init__ so that we do not take into account title
   # This is required for test_23_titleIsNotDefinedByDefault
@@ -1519,6 +1533,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     """
     object = self._getOb(id)
     object.manage_beforeDelete(object, self)
+    if self._objects:
+      self._objects = tuple(i for i in self._objects if i['id'] != id)
     self._delOb(id)
 
   security.declareProtected(Permissions.ManagePortal, 'callMethodOnObjectList')
