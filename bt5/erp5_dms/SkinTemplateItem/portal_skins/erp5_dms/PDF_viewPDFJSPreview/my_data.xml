@@ -12,7 +12,6 @@
               <list>
                 <string>data_url</string>
                 <string>default</string>
-                <string>gadget_url</string>
               </list>
             </value>
         </item>
@@ -68,12 +67,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -91,15 +84,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_iframe_gadget_field</string> </value>
+                    <value> <string>my_view_mode_text_content</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
                 </item>
               </dictionary>
             </value>
@@ -116,19 +105,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: context.absolute_url()+\'/getData\'</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:field.restrictedTraverse(\'pdf_js/pdfjs.gadget.html\').absolute_url() + "?auto_focus=1"</string> </value>
         </item>
       </dictionary>
     </pickle>
