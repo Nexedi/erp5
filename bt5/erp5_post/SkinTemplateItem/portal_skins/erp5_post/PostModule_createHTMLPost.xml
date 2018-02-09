@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>follow_up_value, data, predecessor=None</string> </value>
+            <value> <string>follow_up, data, predecessor=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
