@@ -89,6 +89,10 @@
                           <string>Data Supply</string>
                           <string>Data Supply</string>
                         </tuple>
+                        <tuple>
+                          <string>Data Transformation</string>
+                          <string>Data Transformation</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -113,7 +117,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Data Supply</string> </value>
+                    <value> <string>Data Supplies and Data Transformations</string> </value>
                 </item>
               </dictionary>
             </value>
