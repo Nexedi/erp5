@@ -81,7 +81,8 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         if (modification_dict.hasOwnProperty('maximize')) {
           // for fck_editor fields, we want to be able to maximize also in non editable
           if ((gadget.state.maximize && gadget.state.editable) ||
-              (gadget.state.maximize && gadget.state.editor === 'fck_editor')) {
+              (gadget.state.maximize && gadget.state.editor === 'fck_editor') ||
+              (gadget.state.editor == 'pdf')) {
             element.appendChild(div_max);
             queue
               .push(function () {
@@ -106,7 +107,8 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
 
         if ((gadget.state.editable &&
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
-            (!gadget.state.editable && gadget.state.editor === 'fck_editor')) {
+            (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
+            (gadget.state.editor == 'pdf')) {
           queue
             .push(function () {
               return gadget.declareGadget(
@@ -128,7 +130,8 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
 
       if ((gadget.state.editable &&
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
-            (!gadget.state.editable && gadget.state.editor === 'fck_editor')) {
+            (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
+            (gadget.state.editor == 'pdf')) {
         queue
           .push(function () {
             return gadget.getDeclaredGadget('editor');
