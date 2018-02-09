@@ -179,7 +179,8 @@
           modification_dict.hasOwnProperty('configuration_mobile') ||
           modification_dict.hasOwnProperty('configuration_readonly') ||
           modification_dict.hasOwnProperty('is_responsive') ||
-          modification_dict.hasOwnProperty('is_mobile')) {
+          modification_dict.hasOwnProperty('is_mobile') ||
+          modification_dict.hasOwnProperty('editable')) {
         // Expected configuration changed.
         // Recreate ckeditor
         if (gadget.hasOwnProperty('ckeditor')) {
