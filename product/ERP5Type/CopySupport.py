@@ -212,9 +212,7 @@ class CopyContainer:
 
       The objects specified in 'ids' get deleted.
       """
-      if ids is None: ids = []
-      if uids is None: uids = []
-      if len(ids) > 0:
+      if ids:
         # Use default method
         return ObjectManager.manage_delObjects(self, ids, REQUEST)
       if not uids:
