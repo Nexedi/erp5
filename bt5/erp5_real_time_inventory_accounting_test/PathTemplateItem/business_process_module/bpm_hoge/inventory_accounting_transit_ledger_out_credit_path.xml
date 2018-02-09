@@ -81,6 +81,12 @@
             <value> <string>stock</string> </value>
         </item>
         <item>
+            <key> <string>membership_criterion_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>payment_end_of_month</string> </key>
             <value> <int>0</int> </value>
         </item>
@@ -91,6 +97,22 @@
         <item>
             <key> <string>source_method_id</string> </key>
             <value> <string>TradeModelPath_getInventoryAccountingTransitLedgerOutCreditSource</string> </value>
+        </item>
+        <item>
+            <key> <string>string_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_tales_expression</string> </key>
+            <value> <string>python: context.getDeliveryValue() is not None and context.getDeliveryValue().getPortalType() in (\'Sale Packing List Line\', \'Sale Packing List Cell\', \'Purchase Packing List Line\', \'Purchase Packing List Cell\')</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

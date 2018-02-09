@@ -71,7 +71,11 @@ class InventoryAssetPriceAccountingRuleMovementGenerator(InvoiceTransactionRuleM
                                                                  update_property_dict=update_property_dict):
         # PATCH-BEGIN
         update_dict = {}
-        if movement.getLedger() == 'transit/entree':
+        if movement.getLedger() == 'stock/entree':
+          update_dict['start_date'] = update_dict['stop_date'] = input_movement.getStopDate()
+        elif movement.getLedger() == 'stock/sortie':
+          update_dict['start_date'] = update_dict['stop_date'] = input_movement.getStartDate()
+        elif movement.getLedger() == 'transit/entree':
           update_dict['start_date'] = update_dict['stop_date'] = input_movement.getStartDate()
         elif movement.getLedger() == 'transit/sortie':
           update_dict['start_date'] = update_dict['stop_date'] = input_movement.getStopDate()
@@ -105,30 +109,8 @@ class InventoryAssetPriceAccountingRuleMovementGenerator(InvoiceTransactionRuleM
       self,
       input_movement)
 
-    # XXX: Root Applied Rule?
-    use = input_movement.getUse()
-    # Site Preference => Trade => Sale/Purchase uses
-    #input_movement.log("%r (ledger=%r)" % (input_movement, input_movement.getLedger()))
-    if use == 'trade/sale':
-      start_date = input_movement.getStartDate()
-      if input_movement.getLedger() == 'transit/sortie':
-        stop_date = input_movement.getStopDate()
-      else:
-        stop_date = start_date
-    elif use == 'trade/purchase':
-      stop_date = input_movement.getStopDate()
-      if input_movement.getLedger() == 'transit/entree':
-        start_date = input_movement.getStartDate()
-      else:
-        start_date = stop_date
-
+    if input_movement.getDeliveryValue().getPortalType().startswith('Purchase Packing List'):
       update_property_dict['source_section'] = input_movement.getDestinationSection()
-    else:
-      raise NotImplementedError("%s: use='%s' not handled by this Rule" %
-                                  (input_movement.getPath(), use))
-
-    update_property_dict['start_date'] = start_date
-    update_property_dict['stop_date'] = stop_date
 
     return update_property_dict
 

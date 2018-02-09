@@ -41,6 +41,9 @@ class TestRealTimeInventoryAccountingMixin:
   def stepSelectPurchasePackingList1(self, sequence=None, sequence_list=None):
     sequence.edit(current_purchase_packing_list=sequence['purchase_packing_list_1'])
 
+  def stepSelectInternalPackingList1(self, sequence=None, sequence_list=None):
+    sequence.edit(current_internal_packing_list=sequence['internal_packing_list_1'])
+
   def _transitAndCheck(self, document, workflow_method_id, expected_state):
     from Products.DCWorkflow.DCWorkflow import ValidationFailed
     try:
@@ -84,6 +87,18 @@ class TestRealTimeInventoryAccountingMixin:
     packing_list = sequence['current_purchase_packing_list']
     self._transitAndCheck(packing_list, 'stop_action', 'stopped')
 
+  def stepConfirmInternalPackingList(self, sequence=None, sequence_list=None):
+    packing_list = sequence['current_internal_packing_list']
+    self._transitAndCheck(packing_list, 'confirm_action', 'confirmed')
+
+  def stepStartInternalPackingList(self, sequence=None, sequence_list=None):
+    packing_list = sequence['current_internal_packing_list']
+    self._transitAndCheck(packing_list, 'start_action', 'started')
+
+  def stepStopInternalPackingList(self, sequence=None, sequence_list=None):
+    packing_list = sequence['current_internal_packing_list']
+    self._transitAndCheck(packing_list, 'stop_action', 'stopped')
+
   def _checkAndGetCausalityRelated(self,
                                    document,
                                    causality_related_portal_type,
@@ -100,6 +115,10 @@ class TestRealTimeInventoryAccountingMixin:
     packing_list = sequence['current_purchase_packing_list']
     self._checkAndGetCausalityRelated(packing_list, 'Accounting Transaction', 0)
 
+  def stepCheckAccountingTransactionNotGeneratedFromInternalPackingList(self, sequence=None, sequence_list=None):
+    packing_list = sequence['current_internal_packing_list']
+    self._checkAndGetCausalityRelated(packing_list, 'Accounting Transaction', 0)
+
   def stepCheckThreeAccountingTransactionGeneratedFromSalePackingList(self, sequence=None, sequence_list=None):
     packing_list = sequence['current_sale_packing_list']
     accounting_transaction_list = self._checkAndGetCausalityRelated(packing_list, 'Accounting Transaction', 3)
@@ -108,6 +127,11 @@ class TestRealTimeInventoryAccountingMixin:
   def stepCheckThreeAccountingTransactionGeneratedFromPurchasePackingList(self, sequence=None, sequence_list=None):
     packing_list = sequence['current_purchase_packing_list']
     accounting_transaction_list = self._checkAndGetCausalityRelated(packing_list, 'Accounting Transaction', 3)
+    sequence.edit(current_accounting_transaction_list=accounting_transaction_list)
+
+  def stepCheckTwoAccountingTransactionGeneratedFromInternalPackingList(self, sequence=None, sequence_list=None):
+    packing_list = sequence['current_internal_packing_list']
+    accounting_transaction_list = self._checkAndGetCausalityRelated(packing_list, 'Accounting Transaction', 2)
     sequence.edit(current_accounting_transaction_list=accounting_transaction_list)
 
   def _checkDelivery(self,
@@ -154,7 +178,8 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
       [category_tool.ledger.achat,
        category_tool.ledger.preparation,
        category_tool.ledger.production,
-       category_tool.ledger.stock,
+       category_tool.ledger.stock.entree,
+       category_tool.ledger.stock.sortie,
        category_tool.ledger.transit.entree,
        category_tool.ledger.transit.sortie,
        category_tool.ledger.vente])
@@ -190,6 +215,16 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
         id='stock_car_transit',
         reference='STOCK_CAR_TRANSIT',
         title='Stock Transit Véhicules',
+        account_type_value=category_tool.account_type.asset,
+        financial_section_value=category_tool.financial_section.asset.current_assets.stock,
+        gap_value=category_tool.gap.fr.pcg['3']['35']['355'])
+
+    if 'stock_car_workshop' not in self.portal.account_module:
+      self.portal.account_module.newContent(
+        portal_type='Account',
+        id='stock_car_workshop',
+        reference='STOCK_CAR_WORKSHOP',
+        title='Stock Atelier Véhicules',
         account_type_value=category_tool.account_type.asset,
         financial_section_value=category_tool.financial_section.asset.current_assets.stock,
         gap_value=category_tool.gap.fr.pcg['3']['35']['355'])
@@ -285,6 +320,26 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
       organisation_supplier.validate()
 
     try:
+      organisation_workshop = self.portal.organisation_module.workshop
+    except AttributeError:
+      organisation_workshop = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+        id='workshop',
+        title='Workshop')
+    if organisation_workshop.getValidationState() != 'validated':
+      organisation_workshop.validate()
+
+    try:
+      organisation_park = self.portal.organisation_module.park
+    except AttributeError:
+      organisation_park = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+        id='park',
+        title='Park')
+    if organisation_park.getValidationState() != 'validated':
+      organisation_park.validate()
+
+    try:
       currency_dol_conversion_eur = currency_dol.CONV_EUR
     except AttributeError:
       currency_dol_conversion_eur = currency_dol.newContent(
@@ -328,6 +383,21 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
         specialise_value=self.portal.business_process_module.bpm_hoge)
     if ptc.getValidationState() != 'validated':
       ptc.validate()
+
+    try:
+      itc = self.portal.internal_trade_condition_module.hoge
+    except AttributeError:
+      itc = self.portal.internal_trade_condition_module.newContent(
+        portal_type='Internal Trade Condition',
+        id='hoge',
+        reference='ITC-HOGE',
+        title='HOGE Internal Trade Condition',
+        source_value=organisation_hoge,
+        source_section_value=organisation_hoge,
+        price_currency_value=currency_eur,
+        specialise_value=self.portal.business_process_module.bpm_hoge)
+    if itc.getValidationState() != 'validated':
+      itc.validate()
 
     try:
       product_big_b_car = self.portal.product_module.big_b_car
@@ -425,6 +495,26 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
     if purchase_supply.getValidationState() != 'validated':
       purchase_supply.validate()
 
+    try:
+      internal_supply = self.portal.internal_supply_module.hoge
+    except AttributeError:
+      internal_supply = self.portal.internal_supply_module.newContent(
+        portal_type='Internal Supply',
+        id='hoge',
+        title='HOGE Internal Supply',
+        start_date_range_min=DateTime('2018/01/01 00:00:00 GMT+9'),
+        start_date_range_max=DateTime('2999/12/31 00:00:00 GMT+9'),
+        source_section_value=organisation_hoge)
+    if 'product_big_b_car' not in internal_supply:
+      internal_supply.newContent(
+        portal_type='Internal Supply Line',
+        id='product_big_b_car',
+        title=product_big_b_car.getTitle(),
+        resource_value=product_big_b_car,
+        base_price=4242)
+    if internal_supply.getValidationState() != 'validated':
+      internal_supply.validate()
+
     self.tic()
 
   def stepCallBuilder(self, sequence=None, sequence_list=None):
@@ -459,7 +549,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
     accounting_transaction_list = sequence['current_accounting_transaction_list']
     for accounting_transaction in accounting_transaction_list:
       self.assertEquals(accounting_transaction.getSimulationState(), 'draft')
-      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock:
+      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.sortie:
         self._checkDelivery(
           accounting_transaction,
           delivery_property_dict=dict(
@@ -618,7 +708,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
     accounting_transaction_list = sequence['current_accounting_transaction_list']
     for accounting_transaction in accounting_transaction_list:
       self.assertEquals(accounting_transaction.getSimulationState(), 'draft')
-      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock:
+      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.entree:
         self._checkDelivery(
         accounting_transaction,
         delivery_property_dict=dict(
@@ -735,6 +825,136 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
       CallBuilder
       Tic
       CheckAccountingTransactionNotGeneratedFromPurchasePackingList
+      """
+    sequence_list.addSequenceString(sequence_str)
+    sequence_list.play(self, quiet=0)
+
+  def stepTestInternalPackingList_create(self, sequence=None, sequence_list=None):
+    internal_packing_list = self.portal.internal_packing_list_module.newContent(
+      portal_type='Internal Packing List',
+      specialise_value=self.portal.internal_trade_condition_module.hoge,
+      title='Transfert Workshop to Park',
+      start_date=DateTime('2018/03/02 00:00:00 GMT+9'),
+      stop_date=DateTime('2018/03/03 00:00:00 GMT+9'),
+      source_value=self.portal.organisation_module.workshop,
+      source_section_value=self.portal.organisation_module.hoge,
+      destination_value=self.portal.organisation_module.park,
+      destination_section_value=self.portal.organisation_module.hoge,
+      price_currency_value=self.portal.currency_module.DOL)
+
+    internal_packing_list.newContent(
+      portal_type='Internal Packing List Line',
+      int_index=1,
+      resource_value=self.portal.product_module.big_b_car,
+      price=4242,
+      quantity=1,
+      quantity_unit_value=self.portal.portal_categories.quantity_unit.unit.piece,
+      use_value=self.portal.portal_categories.use.trade.purchase)
+
+    sequence.edit(internal_packing_list_1=internal_packing_list)
+
+  def stepTestInternalPackingList_checkAllAccountingTransaction(self, sequence=None, sequence_list=None):
+    accounting_transaction_list = sequence['current_accounting_transaction_list']
+    for accounting_transaction in accounting_transaction_list:
+      self.assertEquals(accounting_transaction.getSimulationState(), 'draft')
+      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.entree:
+        self._checkDelivery(
+          accounting_transaction,
+          delivery_property_dict=dict(
+            source_section_value=self.portal.organisation_module.hoge,
+            resource_value=self.portal.currency_module.DOL,
+            # start_date=stop_date=IPL.stop_date
+            start_date=DateTime('2018/03/03 00:00:00 GMT+9'),
+            stop_date=DateTime('2018/03/03 00:00:00 GMT+9')),
+          movement_property_dict_tuple=(
+            dict(portal_type='Accounting Transaction Line',
+                 source_value=self.portal.account_module.stock_car_park,
+                 # sum(IPLL.price)
+                 quantity=-4242),
+            dict(portal_type='Accounting Transaction Line',
+                 source_value=self.portal.account_module.variation_cars,
+                 # sum(IPLL.price)
+                 quantity=4242)))
+
+      # ledger/stock/sortie
+      else:
+        self._checkDelivery(
+          accounting_transaction,
+          delivery_property_dict=dict(
+            source_section_value=self.portal.organisation_module.hoge,
+            resource_value=self.portal.currency_module.DOL,
+            ledger_value=self.portal.portal_categories.ledger.stock.sortie,
+            # start_date=stop_date=IPL.start_date
+            start_date=DateTime('2018/03/02 00:00:00 GMT+9'),
+            stop_date=DateTime('2018/03/02 00:00:00 GMT+9')),
+          movement_property_dict_tuple=(
+            dict(portal_type='Accounting Transaction Line',
+                 source_value=self.portal.account_module.variation_cars,
+                 # sum(IPLL.price)
+                 quantity=-4242),
+            dict(portal_type='Accounting Transaction Line',
+                 source_value=self.portal.account_module.stock_car_workshop,
+                 # sum(IPLL.price)
+                 quantity=4242)))
+
+  def testInternalPackingList(self):
+    sequence_list = SequenceList()
+    sequence_str = """
+      TestInternalPackingList_create
+      Tic
+      SelectInternalPackingList1
+      ConfirmInternalPackingList
+      Tic
+      StartInternalPackingList
+      Tic
+      StopInternalPackingList
+      Tic
+      CallBuilder
+      Tic
+      CheckTwoAccountingTransactionGeneratedFromInternalPackingList
+      TestInternalPackingList_checkAllAccountingTransaction
+      """
+    sequence_list.addSequenceString(sequence_str)
+    sequence_list.play(self, quiet=0)
+
+  def stepTestInternalPackingListNoPriceAndNoSupply_create(self, sequence=None, sequence_list=None):
+    internal_packing_list = self.portal.internal_packing_list_module.newContent(
+      portal_type='Internal Packing List',
+      specialise_value=self.portal.internal_trade_condition_module.hoge,
+      title='Transfer Workshop to Park (No Supply/Price)',
+      start_date=DateTime('2018/03/02 00:00:00 GMT+9'),
+      stop_date=DateTime('2018/03/02 00:00:00 GMT+9'),
+      source_value=self.portal.organisation_module.workshop,
+      source_section_value=self.portal.organisation_module.hoge,
+      destination_value=self.portal.organisation_module.park,
+      destination_section_value=self.portal.organisation_module.hoge,
+      price_currency_value=self.portal.currency_module.DOL)
+
+    internal_packing_list.newContent(
+      portal_type='Internal Packing List Line',
+      int_index=1,
+      resource_value=self.portal.product_module.car_no_supply,
+      quantity=1,
+      quantity_unit_value=self.portal.portal_categories.quantity_unit.unit.piece,
+      use_value=self.portal.portal_categories.use.trade.purchase)
+
+    sequence.edit(internal_packing_list_1=internal_packing_list)
+
+  def testInternalPackingListNoPriceAndNoSupply(self):
+    sequence_list = SequenceList()
+    sequence_str = """
+      TestInternalPackingListNoPriceAndNoSupply_create
+      Tic
+      SelectInternalPackingList1
+      ConfirmInternalPackingList
+      Tic
+      StartInternalPackingList
+      Tic
+      StopInternalPackingList
+      Tic
+      CallBuilder
+      Tic
+      CheckAccountingTransactionNotGeneratedFromInternalPackingList
       """
     sequence_list.addSequenceString(sequence_str)
     sequence_list.play(self, quiet=0)

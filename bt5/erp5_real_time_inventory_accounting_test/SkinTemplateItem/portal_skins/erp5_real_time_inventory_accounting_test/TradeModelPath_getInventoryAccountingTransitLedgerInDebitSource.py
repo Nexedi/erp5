@@ -1,8 +1,9 @@
-use = movement.getUse()
-if use == 'trade/sale':
+delivery_portal_type = movement.getDeliveryValue().getPortalType()
+assert delivery_portal_type # XXX debug
+if delivery_portal_type.startswith('Sale Packing List'):
   if movement.getSource() == 'organisation_module/hoge':
     return ['source/account_module/stock_car_transit']
-elif use == 'trade/purchase':
+elif delivery_portal_type.startswith('Purchase Packing List'):
   return []
 else:
   raise NotImplementedError
