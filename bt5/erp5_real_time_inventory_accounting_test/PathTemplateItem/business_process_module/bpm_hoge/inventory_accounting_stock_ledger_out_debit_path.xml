@@ -40,13 +40,13 @@
             <value>
               <tuple>
                 <string>trade_phase/trade/inventory_accounting</string>
-                <string>ledger/stock</string>
+                <string>ledger/stock/sortie</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>TMP-INVENTORY-ACCOUNTING-STOCK-LG-DEBIT</string> </value>
+            <value> <string>TMP-INVENTORY-ACCOUNTING-STOCK-LG-OUT-DEBIT</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -56,11 +56,13 @@
         </item>
         <item>
             <key> <string>destination_method_id</string> </key>
-            <value> <string>TradeModelPath_getInventoryAccountingStockLedgerDebitDestination</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>inventory_accounting_stock_ledger_debit_path</string> </value>
+            <value> <string>inventory_accounting_stock_ledger_out_debit_path</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -77,6 +79,12 @@
             <value> <string>stock</string> </value>
         </item>
         <item>
+            <key> <string>membership_criterion_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>payment_end_of_month</string> </key>
             <value> <int>0</int> </value>
         </item>
@@ -86,11 +94,27 @@
         </item>
         <item>
             <key> <string>source_method_id</string> </key>
-            <value> <string>TradeModelPath_getInventoryAccountingStockLedgerDebitSource</string> </value>
+            <value> <string>TradeModelPath_getInventoryAccountingStockLedgerOutDebitSource</string> </value>
+        </item>
+        <item>
+            <key> <string>string_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_tales_expression</string> </key>
+            <value> <string>python: context.getDeliveryValue() is not None and context.getDeliveryValue().getPortalType() in (\'Sale Packing List Line\', \'Sale Packing List Cell\', \'Internal Packing List Line\', \'Internal Packing List Cell\')</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Inventory Accounting Stock Ledger Debit</string> </value>
+            <value> <string>Inventory Accounting Stock Ledger Out Debit</string> </value>
         </item>
       </dictionary>
     </pickle>

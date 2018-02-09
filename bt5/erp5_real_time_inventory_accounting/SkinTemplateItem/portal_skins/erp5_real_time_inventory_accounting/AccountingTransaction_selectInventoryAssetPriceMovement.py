@@ -1,6 +1,6 @@
 kw['parent_specialise_reference'] = ['default_inventory_accounting_transaction_rule']
 kw['grand_grand_parent_specialise_reference'] = ['default_delivering_rule', 'default_delivery_rule']
-kw['explanation_portal_type'] = ['Sale Packing List', 'Purchase Packing List']
+kw['explanation_portal_type'] = ['Sale Packing List', 'Purchase Packing List', 'Internal Packing List']
 kw['portal_type'] = 'Simulation Movement'
 kw['delivery_uid'] = None
 kw['left_join_list'] = ['delivery_uid']
