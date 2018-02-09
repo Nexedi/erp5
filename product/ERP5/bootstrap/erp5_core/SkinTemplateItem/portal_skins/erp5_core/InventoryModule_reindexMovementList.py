@@ -8,11 +8,14 @@
 
 previous_tag = None
 portal = context.getPortalObject()
+portal_type_list = portal.getPortalInventoryTypeList()
+if not portal_type_list:
+  return
 
 # We have to reindex all inventory documents in the order of the dates.
 # Uids are used to make the ordering consistent, even when multiple documents have
 # the same date.
-for inventory in portal.portal_catalog(portal_type=portal.getPortalInventoryTypeList(),
+for inventory in portal.portal_catalog(portal_type=portal_type_list,
                                        limit=None,
                                        sort_on=[('delivery.start_date', 'ascending'), ('uid', 'ascending')],
                                        sql_catalog_id=sql_catalog_id):
