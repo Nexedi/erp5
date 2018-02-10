@@ -15,5 +15,9 @@ if not content_type:
 if content_type == 'text/html':
   return context.portal_preferences.getPreferredTextEditor() or 'text_area'
 
+# If this is a PDF, use the default PDF renderer
+if content_type == 'application/pdf':
+  return 'pdf'
+
 # Else use preferred source code editor or fallback to Textarea
 return context.portal_preferences.getPreferredSourceCodeEditor() or 'text_area'
