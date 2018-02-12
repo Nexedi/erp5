@@ -77,12 +77,20 @@
                   {{#if editable}}
                     <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
                   {{else}}
-                    <a href="{{href}}" class="ui-link">
-                      <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
-                    </a>
+                    {{#if href}}
+                      <a href="{{href}}" class="ui-link">
+                        <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
+                      </a>
+                     {{else}}
+                       <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
+                     {{/if}}
                   {{/if}}
                 {{else}}
-                  <a href="{{href}}" class="ui-link">{{default}}</a>
+                  {{#if href}}
+                    <a href="{{href}}" class="ui-link">{{default}}</a>
+                  {{else}}
+                    <p>{{default}}</p>
+                  {{/if}}
                 {{/if}}
               </td>
            {{/each}}
@@ -117,12 +125,20 @@
                   {{#if editable}}
                     <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
                   {{else}}
-                    <a href="{{href}}" class="ui-link">
+                    {{#if href}}
+                      <a href="{{href}}" class="ui-link">
+                        <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
+                      </a>
+                    {{else}}
                       <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
-                    </a>
+                    {{/if}}
                   {{/if}}
                 {{else}}
-                  <a href="{{href}}" class="ui-link">{{default}}</a>
+                  {{#if href}}
+                    <a href="{{href}}" class="ui-link">{{default}}</a>
+                  {{else}}
+                    <p>{{default}}</p>
+                  {{/if}}
                 {{/if}}
               </td>
            {{/each}}
