@@ -1,4 +1,4 @@
-"""Set subversion working copy list and enable preference.
+"""Set subversion working copy list, set text editor and enable preference.
 
 This script is called by Products.ERP5Type.tests.runFunctionalTest to set
 subversion working copy paths and conversion server address.
@@ -13,6 +13,8 @@ if pref is None:
 
 pref.setPreferredSubversionWorkingCopyList(tuple(working_copy_list.split(',')))
 pref.setPreferredHtmlStyleUnsavedFormWarning(False)
+pref.setPreferredTextEditor(text_editor)
+pref.setPreferredSourceCodeEditor(source_code_editor)
 
 if pref.getPreferenceState() == 'disabled':
   pref.enable()
