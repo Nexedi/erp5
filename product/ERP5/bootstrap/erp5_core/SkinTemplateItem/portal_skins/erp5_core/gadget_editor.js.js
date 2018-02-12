@@ -15,19 +15,17 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
     "pdf": {"url": "pdf_js/pdfjs.gadget.html"}
   };
 
-/*
+
   function readBlobAsDataURL(blob) {
     var fr = new FileReader();
     return new RSVP.Promise(function (resolve, reject, notify) {
       fr.addEventListener("load", resolve);
       fr.addEventListener("error", reject);
-      fr.addEventListener("progress", notify);
       fr.readAsDataURL(blob);
     }, function () {
       fr.abort();
     });
   }
-*/
 
   rJS(window)
     .declareAcquiredMethod('triggerMaximize', 'triggerMaximize')
@@ -122,6 +120,9 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         } else if (gadget.state.editable &&
             (gadget.state.editor === 'text_area')) {
           element.appendChild(document.createElement('textarea'));
+        } else if (!gadget.state.editable &&
+            (gadget.state.editor === 'svg_editor')) {
+          element.appendChild(document.createElement('img'));
         } else {
           element.appendChild(document.createElement('pre'));
         }
@@ -141,6 +142,16 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
       } else if (gadget.state.editable &&
           (gadget.state.editor === 'text_area')) {
         element.querySelector('textarea').value = gadget.state.value;
+      } else if (!gadget.state.editable &&
+          (gadget.state.editor === 'svg_editor')) {
+        queue
+          .push(function () {
+            var blob = new Blob([gadget.state.value], {type: 'image/svg+xml'});
+            return readBlobAsDataURL(blob);
+          })
+          .push(function (evt) {
+            element.querySelector('img').src = evt.target.result;
+          });
       } else {
         element.querySelector('pre').textContent = gadget.state.value;
       }

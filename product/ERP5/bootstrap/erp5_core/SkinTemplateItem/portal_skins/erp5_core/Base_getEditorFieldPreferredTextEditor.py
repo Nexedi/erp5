@@ -19,5 +19,9 @@ if content_type == 'text/html':
 if content_type == 'application/pdf':
   return 'pdf'
 
+# If this is a SVG, use the default SVG editor
+if content_type == 'image/svg+xml':
+  return 'svg_editor'
+
 # Else use preferred source code editor or fallback to Textarea
 return context.portal_preferences.getPreferredSourceCodeEditor() or 'text_area'
