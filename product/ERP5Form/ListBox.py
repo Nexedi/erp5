@@ -52,6 +52,7 @@ from Products.PythonScripts.Utility import allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from warnings import warn
 import cgi
+from ZTUtils import make_query
 
 DEFAULT_LISTBOX_DISPLAY_STYLE = 'table'
 DEFAULT_LISTBOX_PAGE_NAVIGATION_TEMPLATE = 'ListBox_viewSliderPageNavigationRenderer'
@@ -349,6 +350,15 @@ class ListBoxWidget(Widget.Widget):
                                  default=[],
                                  required=0)
     property_names.append('url_columns')
+    
+    
+    url_parameter_dict = fields.ListTextAreaField('url_parameter_dict',
+                                 title="url parameter dict",
+                                 description=(
+        "An optional dict of parameter which is used to construct a custom URL."),
+                                 default={},
+                                 required=0)
+    property_names.append('url_parameter_dict')
 
     untranslatable_columns = fields.ListTextAreaField('untranslatable_columns',
                                  title="Untranslatable Columns",
@@ -2291,6 +2301,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     brain = self.getBrain()
     encoding = renderer.getEncoding()
     url_column_dict = dict(renderer.getUrlColumnList())
+    url_parameter_dict = renderer.field.get_value('url_parameter_dict')
     selection = renderer.getSelection()
     selection_name = renderer.getSelectionName()
     ignore_layout = int(request.get('ignore_layout',
@@ -2322,64 +2333,84 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
       no_link = self.isSummary()
       url_method = None
       url = None
-
-      # Find an URL method.
-      if url_column_dict.has_key(sql):
-        url_method_id = url_column_dict.get(sql)
-        if url_method_id != sql:
-          if url_method_id not in (None, ''):
-            url_method = getattr(brain, url_method_id, None)
-            if url_method is None:
-              LOG('ListBox', WARNING, 'could not find the url method %s' % (url_method_id,))
+      if url_parameter_dict:
+        if sql in url_parameter_dict:
+          result_dict = url_parameter_dict[sql].copy()
+          for key in result_dict:
+            value = getattr(brain, result_dict[key], None)
+            if key != 'view':
+              if callable(value):
+                try:
+                  result_dict[key] = value(selection=selection, selection_name=selection.getName(), column_id=sql, index=self.index)
+                except TypeError:
+                  result_dict[key] = value()
+          if result_dict:
+            #this one is not good, should get restrivedocumet's path
+            if 'jio_key' not in result_dict:
+              url = request.physicalPathToURL(brain.getPath())
+            else:
+              url =  self.getObject().getPortalObject().restrictedTraverse(result_dict['jio_key']).absolute_url()
+            if 'parameter' in result_dict:
+              url = '%s?%s' % (url, make_query(result_dict['parameter']))
+    
+      else:
+        # Find an URL method.
+        if url_column_dict.has_key(sql):
+          url_method_id = url_column_dict.get(sql)
+          if url_method_id != sql:
+            if url_method_id not in (None, ''):
+              url_method = getattr(brain, url_method_id, None)
+              if url_method is None:
+                LOG('ListBox', WARNING, 'could not find the url method %s' % (url_method_id,))
+                no_link = True
+            else:
+              # If the URL Method is empty, generate no link.
               no_link = True
-          else:
-            # If the URL Method is empty, generate no link.
-            no_link = True
 
-      if url_method is not None:
-        try:
-          url = url_method(brain = brain, selection = selection,
-                           selection_name = selection.getName(),
-                           column_id=sql)
-        except (ConflictError, RuntimeError):
-          raise
-        except:
-          LOG('ListBox', WARNING, 'could not evaluate the url method %r with %r' % (url_method, brain),
-              error = sys.exc_info())
-      elif not no_link:
-        # XXX For compatibility?
-        # Check if this object provides a specific URL method.
-        if getattr(brain, 'getListItemUrl', None) is not None:
+        if url_method is not None:
           try:
-            url = brain.getListItemUrl(alias, self.index, selection_name)
+            url = url_method(brain = brain, selection = selection,
+                             selection_name = selection.getName(),
+                             column_id=sql)
           except (ConflictError, RuntimeError):
             raise
           except:
-            LOG('ListBox', WARNING, 'could not evaluate the url method getListItemUrl with %r' % (brain,),
+            LOG('ListBox', WARNING, 'could not evaluate the url method %r with %r' % (url_method, brain),
                 error = sys.exc_info())
-        else:
-          try:
-            # brain.absolute_url() is slow because it invokes
-            # _aq_dynamic() every time to get brain.REQUEST,
-            # so we call request.physicalPathToURL() directly
-            # instead of brain.absolute_url().
-            url = request.physicalPathToURL(brain.getPath())
-            params = []
-            if ignore_layout:
-              params.append('ignore_layout:int=1')
-            if editable_mode:
-              params.append('editable_mode:int=1')
-            if selection_name:
-              params.extend(('selection_name=%s' % selection_name,
-                             'selection_index=%s' % self.index,
-                             'reset:int=1'))
-              selection_tool = self.getObject().getPortalObject().portal_selections
-              if selection_tool.isAnonymous():
-                params.append('selection_key=%s' % selection.getAnonymousSelectionKey())
-            if params:
-              url = '%s?%s' % (url, '&amp;'.join(params))
-          except AttributeError:
-            pass
+        elif not no_link:
+          # XXX For compatibility?
+          # Check if this object provides a specific URL method.
+          if getattr(brain, 'getListItemUrl', None) is not None:
+            try:
+              url = brain.getListItemUrl(alias, self.index, selection_name)
+            except (ConflictError, RuntimeError):
+              raise
+            except:
+              LOG('ListBox', WARNING, 'could not evaluate the url method getListItemUrl with %r' % (brain,),
+                  error = sys.exc_info())
+          else:
+            try:
+              # brain.absolute_url() is slow because it invokes
+              # _aq_dynamic() every time to get brain.REQUEST,
+              # so we call request.physicalPathToURL() directly
+              # instead of brain.absolute_url().
+              url = request.physicalPathToURL(brain.getPath())
+              params = []
+              if ignore_layout:
+                params.append('ignore_layout:int=1')
+              if editable_mode:
+                params.append('editable_mode:int=1')
+              if selection_name:
+                params.extend(('selection_name=%s' % selection_name,
+                               'selection_index=%s' % self.index,
+                               'reset:int=1'))
+                selection_tool = self.getObject().getPortalObject().portal_selections
+                if selection_tool.isAnonymous():
+                  params.append('selection_key=%s' % selection.getAnonymousSelectionKey())
+              if params:
+                url = '%s?%s' % (url, '&amp;'.join(params))
+            except AttributeError:
+              pass
 
       if isinstance(url, str):
         url = unicode(url, encoding)

@@ -462,7 +462,9 @@
           .push(function () {
             var lines = gadget.state.lines,
               promise_list = [],
+              url_promise_list = [],
               allDocs_result = gadget.state.allDocs_result,
+              value,
               counter;
 
             column_list = JSON.parse(gadget.state.column_list_json);
@@ -489,17 +491,42 @@
                   }
                 })
               );
+              for (j = 0; j < column_list.length; j += 1) {
+                value = allDocs_result.data.rows[i].value[column_list[j][0]] || "";
+                if (value.url_column) {
+                  if (value.jio_key) {
+                    url_promise_list.push(
+                      gadget.getUrlFor({
+                        command: 'change',
+                        options: {
+                          jio_key : value.jio_key,
+                          view: value.view || 'view'
+                        }
+                      }));
+                  } else if (value.absolute_url) {
+                    url_promise_list.push(value.absolute_url);
+                  } else {
+                    url_promise_list.push(false);
+                  }
+                }
+              }
             }
             return new RSVP.Queue()
               .push(function () {
-                return RSVP.all(promise_list);
+                return RSVP.all([
+                  RSVP.all(promise_list),
+                  RSVP.all(url_promise_list)
+                ]);
               })
-
-              .push(function (line_link_list) {
+              .push(function (result_list) {
                 var row_list = [],
                   value,
                   cell_list,
+                  url_value,
+                  index = 0,
                   listbox_tbody_template,
+                  line_link_list = result_list[0],
+                  url_column_list = result_list[1],
                   setNonEditable = function (cell) {cell.editable = false; };
                 // reset list of UIDs of editable sub-documents
                 gadget.props.listbox_uid_dict = {
@@ -513,6 +540,15 @@
                   cell_list = [];
                   for (j = 0; j < column_list.length; j += 1) {
                     value = allDocs_result.data.rows[i].value[column_list[j][0]] || "";
+                     //url column
+                    // get url value
+                    if (value.url_column) {
+                      url_value = url_column_list[index];
+                      value = value.column_value || "";
+                      index += 1;
+                    } else {
+                      url_value = line_link_list[i];
+                    }
                     // value can be simply just a value in case of non-editable field
                     // thus we construct "field_json" manually and insert the value in "default"
                     if (value.constructor !== Object) {
@@ -521,7 +557,7 @@
                         'default': value
                       };
                     }
-                    value.href = line_link_list[i];
+                    value.href = url_value;
                     value.editable = value.editable && gadget.state.editable;
                     value.line = i;
                     value.column = j;

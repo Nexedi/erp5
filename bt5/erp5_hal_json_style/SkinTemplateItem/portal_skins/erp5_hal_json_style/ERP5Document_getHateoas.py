@@ -1535,6 +1535,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     # extract form field definition into `editable_field_dict`
     editable_field_dict = {}
+    url_parameter_dict = {}
     listbox_form = None
     listbox_field_id = None
     source_field_meta_type = source_field.meta_type if source_field is not None else ""
@@ -1545,6 +1546,16 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       listbox_field_id = source_field.id
       listbox_form = getattr(traversed_document, source_field.aq_parent.id)
 
+      url_parameter_dict = dict(source_field.get_value('url_parameter_dict'))
+      # support only selection_name for stat methods&url columns because any `selection` is deprecated
+      # and should be removed. Selection_name can be passed in catalog_kw by e.g. reports so it has precedence.
+      # Romain wants full backward compatibility so putting `selection` back in parameters
+      selection_name = catalog_kw.get('selection_name', source_field.get_value('selection_name'))
+      if selection_name and 'selection_name' not in catalog_kw:
+        catalog_kw['selection_name'] = selection_name
+      if 'selection' not in catalog_kw:
+        catalog_kw['selection'] = context.getPortalObject().portal_selections.getSelectionFor(selection_name, REQUEST)
+      
       # field TALES expression evaluated by Base_getRelatedObjectParameter requires that
       REQUEST.other['form_id'] = listbox_form.id
 
@@ -1651,6 +1662,35 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           # given search_result. This name can unfortunately mean almost anything from
           # a key name to Python Script with variable number of input parameters.
           contents_item[select] = getAttrFromAnything(search_result, select, property_getter, {'brain': search_result})
+        if url_parameter_dict:
+          if select in url_parameter_dict:
+            contents_item[select] = {
+               'column_value': contents_item[select],
+               'url_column': True
+            }
+            generate_view = False
+            for key in url_parameter_dict[select]:
+              value = getattr(search_result, url_parameter_dict[select][key], None)
+              if key == 'view':
+                generate_view = True
+              elif callable(value):
+                try:
+                  contents_item[select][key] = value(selection=catalog_kw['selection'], selection_name=catalog_kw['selection_name'], column_id=select, index=result_index)
+                except TypeError:
+                  contents_item[select][key] = value()
+              else:
+                contents_item[select][key] = url_parameter_dict[select][key]
+
+            if 'jio_key' not in contents_item[select] and url_parameter_dict[select] and 'absolute_url' not in contents_item[select]:
+              contents_item[select]['jio_key'] = traversed_document.getRelativeUrl()
+            
+            if generate_view:
+              contents_item[select]['view'] =  url_template_dict["traverse_generator"] % {
+                "root_url": site_root.absolute_url(),
+                "script_id": script.id,
+                "relative_url": contents_item[select]['jio_key'].replace("/", "%2F"),
+                "view": url_parameter_dict[select]['view']
+              }
       # endfor select
       REQUEST.other.pop('cell', None)
       contents_list.append(contents_item)
@@ -1683,14 +1723,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # XXX: we should check whether they asked for it
       stat_method = source_field.get_value('stat_method')
       stat_columns = source_field.get_value('stat_columns')
-      # support only selection_name for stat methods because any `selection` is deprecated
-      # and should be removed. Selection_name can be passed in catalog_kw by e.g. reports so it has precedence.
-      # Romain wants full backward compatibility so putting `selection` back in parameters
-      selection_name = catalog_kw.get('selection_name', source_field.get_value('selection_name'))
-      if selection_name and 'selection_name' not in catalog_kw:
-        catalog_kw['selection_name'] = selection_name
-      if 'selection' not in catalog_kw:
-        catalog_kw['selection'] = context.getPortalObject().portal_selections.getSelectionFor(selection_name, REQUEST)
 
       contents_stat = {}
       if len(stat_columns) > 0:
