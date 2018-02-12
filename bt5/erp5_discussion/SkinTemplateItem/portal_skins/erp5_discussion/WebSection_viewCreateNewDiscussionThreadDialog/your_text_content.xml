@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>title</string>
+                <string>validator_field_id</string>
               </list>
             </value>
         </item>
@@ -90,6 +91,10 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Body</string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string>my_core_mode_required_text_content_validator</string> </value>
                 </item>
               </dictionary>
             </value>
