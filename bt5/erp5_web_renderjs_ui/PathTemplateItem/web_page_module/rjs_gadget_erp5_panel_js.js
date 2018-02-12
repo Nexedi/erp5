@@ -163,11 +163,11 @@
           // Update the global links
           .push(function () {
             return RSVP.all([
-              context.getUrlFor({command: 'display', options: {page: "front"}}),
+              context.getUrlFor({command: 'display_stored_state', options: {page: "front"}}),
               context.getUrlFor({command: 'display', options: {page: "history"}}),
               context.getUrlFor({command: 'display', options: {page: "preference"}}),
               context.getUrlFor({command: 'display', options: {page: "logout"}}),
-              context.getUrlFor({command: 'display', options: {page: "search"}}),
+              context.getUrlFor({command: 'display_stored_state', options: {page: "search"}}),
               context.getUrlFor({command: 'display', options: {page: "worklist"}}),
               context.getUrlFor({command: 'display'})
             ]);
@@ -376,7 +376,7 @@
           });
         })
         .push(function () {
-          return gadget.redirect({command: 'display', options: redirect_options});
+          return gadget.redirect({command: 'store_and_display', options: redirect_options});
         });
 
     }, /*useCapture=*/false, /*preventDefault=*/true);

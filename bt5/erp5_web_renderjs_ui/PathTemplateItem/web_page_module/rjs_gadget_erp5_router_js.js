@@ -47,7 +47,10 @@
     // Change UI language
     COMMAND_CHANGE_LANGUAGE = "change_language",
     VALID_URL_COMMAND_DICT = {},
-    STICKY_PARAMETER_LIST = ['editable'];
+    STICKY_PARAMETER_LIST = ['editable'],
+    // This is a hack to store the form_list search state per standalone
+    // page (without any jio_key)
+    PAGE_STATE_STORAGE_PREFIX = '__PAGE__';
 
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_DISPLAY_STATE] = null;
@@ -304,11 +307,16 @@
   function execDisplayStoredStateCommand(gadget, next_options) {
     // console.warn(command_options);
     var jio_key = next_options.jio_key,
+      storage_key = jio_key,
       queue;
     delete next_options.jio_key;
 
-    if (jio_key) {
-      queue = gadget.props.jio_state_gadget.get(jio_key)
+    if ((!storage_key) && (next_options.page)) {
+      storage_key = PAGE_STATE_STORAGE_PREFIX + next_options.page;
+    }
+
+    if (storage_key) {
+      queue = gadget.props.jio_state_gadget.get(storage_key)
         .push(function (options) {
           calculateChangeOptions(options, next_options);
         }, function (error) {
@@ -340,17 +348,21 @@
   }
 
   function execStoreAndDisplayCommand(gadget, options) {
-    var jio_key,
+    var jio_key = options.jio_key,
+      storage_key = jio_key,
       queue,
       display_url;
 
-    jio_key = options.jio_key;
     delete options.jio_key;
+
+    if ((!storage_key) && (options.page)) {
+      storage_key = PAGE_STATE_STORAGE_PREFIX + options.page;
+    }
 
     display_url = getDisplayUrlFor(jio_key, options);
 
-    if (jio_key) {
-      queue = gadget.props.jio_state_gadget.put(jio_key, dropStickyParameterEntry(options));
+    if (storage_key) {
+      queue = gadget.props.jio_state_gadget.put(storage_key, dropStickyParameterEntry(options));
     } else {
       queue = new RSVP.Queue();
     }
