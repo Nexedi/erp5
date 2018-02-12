@@ -32,6 +32,8 @@
     COMMAND_CHANGE_STATE = "change",
     // Like change, but also store the current jio document display state
     COMMAND_STORE_AND_CHANGE_STATE = "store_and_change",
+    // Like display, but also store the current jio document display state
+    COMMAND_STORE_AND_DISPLAY_STATE = "store_and_display",
     // Display one entry index from a selection
     COMMAND_INDEX_STATE = "index",
     // Display previous entry index from a selection
@@ -52,6 +54,7 @@
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STORED_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_CHANGE_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_STORE_AND_CHANGE_STATE] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_STORE_AND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_INDEX_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_SELECTION_PREVIOUS] = null;
   VALID_URL_COMMAND_DICT[COMMAND_SELECTION_NEXT] = null;
@@ -336,12 +339,10 @@
     );
   }
 
-  function execStoreAndChangeCommand(gadget, previous_options, next_options, drop_options) {
-    var options,
-      jio_key,
+  function execStoreAndDisplayCommand(gadget, options) {
+    var jio_key,
       queue,
       display_url;
-    options = calculateChangeOptions(previous_options, next_options, drop_options);
 
     jio_key = options.jio_key;
     delete options.jio_key;
@@ -358,6 +359,13 @@
       .push(function () {
         return synchronousChangeState(display_url);
       });
+  }
+
+  function execStoreAndChangeCommand(gadget, previous_options, next_options, drop_options) {
+    return execStoreAndDisplayCommand(
+      gadget,
+      calculateChangeOptions(previous_options, next_options, drop_options)
+    );
   }
 
   function execIndexCommand(gadget, previous_options, next_options) {
@@ -752,6 +760,9 @@
     }
     if (command_options.path === COMMAND_STORE_AND_CHANGE_STATE) {
       return execStoreAndChangeCommand(gadget, previous_options, next_options, drop_options);
+    }
+    if (command_options.path === COMMAND_STORE_AND_DISPLAY_STATE) {
+      return execStoreAndDisplayCommand(gadget, next_options);
     }
     if (command_options.path === COMMAND_SELECTION_NEXT) {
       return execSelectionNextCommand(gadget, previous_options);
