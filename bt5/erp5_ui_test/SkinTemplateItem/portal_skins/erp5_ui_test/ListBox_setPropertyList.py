@@ -51,6 +51,7 @@ d = dict(
   field_untranslatable_columns = '',
   field_hide_rows_on_no_search_criterion = '',
   field_style_columns = '',
+  field_url_parameter_dict = ''
 )
 
 d.update(context.REQUEST)
