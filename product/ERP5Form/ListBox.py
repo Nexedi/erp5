@@ -2338,7 +2338,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           result_dict = url_parameter_dict[sql].copy()
           for key in result_dict:
             value = getattr(brain, result_dict[key], None)
-            if key != 'view':
+            if key not in ('view', 'view_action'):
               if callable(value):
                 try:
                   result_dict[key] = value(selection=selection, selection_name=selection.getName(), column_id=sql, index=self.index)
@@ -2349,6 +2349,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
               url = ''
             else:
               url =  self.getObject().getPortalObject().restrictedTraverse(result_dict['jio_key']).absolute_url()
+            if 'view_action' in result_dict:
+              url += result_dict['view_action']
             if 'parameter' in result_dict:
               url = '%s?%s' % (url, make_query(result_dict['parameter']))
 
