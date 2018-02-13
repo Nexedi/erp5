@@ -275,7 +275,7 @@ def getAttrFromAnything(search_result, select, search_property_getter, kwargs):
   # Prefer getter (accessor) than raw property name
   try:
     underlying_search_result = search_result.getObject()
-  except:
+  except AttributeError:
     underlying_search_result = search_result
 
   if contents_value is None:
