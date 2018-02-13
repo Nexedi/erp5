@@ -173,6 +173,55 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
       return resource.reference
   resource_reference = ComputedAttribute(getResourceReference, 1)
 
+  def getListItemParamDict(self, cname_id, selection_index, selection_name):
+    query_kw = {
+      'variation_text': self.variation_text,
+      'selection_name': selection_name,
+      'selection_index': selection_index,
+      'domain_name': selection_name,
+      'node_uid': self.node_uid
+    }
+    query_kw_update = {}
+    if cname_id in ('getCurrentInventory', ):
+      query_kw_update = {
+        'simulation_state':
+          list(self.getPortalCurrentInventoryStateList() + \
+          self.getPortalTransitInventoryStateList()),
+        'omit_transit': 1,
+        'transit_simulation_state': list(
+          self.getPortalTransitInventoryStateList())
+      }
+
+    elif cname_id in ('getAvailableInventory', ):
+      query_kw_update = {
+        'simulation_state': list(self.getPortalCurrentInventoryStateList() + \
+                          self.getPortalTransitInventoryStateList()),
+        'omit_transit': 1,
+        'transit_simulation_state': list(self.getPortalTransitInventoryStateList()),
+        'reserved_kw': {
+          'simulation_state': list(self.getPortalReservedInventoryStateList()),
+          'transit_simulation_state': list(self.getPortalTransitInventoryStateList()),
+          'omit_input': 1
+        }
+      }
+    elif cname_id in ('getFutureInventory', 'inventory', ):
+      query_kw_update = {
+        'simulation_state': \
+          list(self.getPortalFutureInventoryStateList()) + \
+          list(self.getPortalTransitInventoryStateList()) + \
+          list(self.getPortalReservedInventoryStateList()) + \
+          list(self.getPortalCurrentInventoryStateList())
+      }
+    elif cname_id in ('getInventoryAtDate', ):
+      query_kw_update = {
+        'to_date': self.at_date,
+        'simulation_state': \
+          list(self.getPortalFutureInventoryStateList()) + \
+          list(self.getPortalReservedInventoryStateList())
+      }
+    query_kw.update(query_kw_update)
+    return query_kw
+  
   def getListItemUrl(self, cname_id, selection_index, selection_name):
     """Returns the URL for column `cname_id`. Used by ListBox
     """
@@ -190,58 +239,11 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
           return explanation.absolute_url()
       return ''
     elif resource is not None:
-      # A resource is defined, so try to display the movement list
-      form_id = 'Resource_viewMovementHistory'
-      query_kw = {
-        'variation_text': self.variation_text,
-        'selection_name': selection_name,
-        'selection_index': selection_index,
-        'domain_name': selection_name,
-        "node_uid": self.node_uid
-      }
-      # Add parameters to query_kw
-      query_kw_update = {}
-
       if cname_id in ('transformed_resource_title', ):
         return resource.absolute_url()
-      elif cname_id in ('getCurrentInventory', ):
-        query_kw_update = {
-          'simulation_state':
-            list(self.getPortalCurrentInventoryStateList() + \
-            self.getPortalTransitInventoryStateList()),
-          'omit_transit': 1,
-          'transit_simulation_state': list(
-                 self.getPortalTransitInventoryStateList())
-        }
-
-      elif cname_id in ('getAvailableInventory', ):
-        query_kw_update = {
-          'simulation_state': list(self.getPortalCurrentInventoryStateList() + \
-                            self.getPortalTransitInventoryStateList()),
-          'omit_transit': 1,
-          'transit_simulation_state': list(self.getPortalTransitInventoryStateList()),
-          'reserved_kw': {
-            'simulation_state': list(self.getPortalReservedInventoryStateList()),
-            'transit_simulation_state': list(self.getPortalTransitInventoryStateList()),
-            'omit_input': 1
-          }
-        }
-      elif cname_id in ('getFutureInventory', 'inventory', ):
-        query_kw_update = {
-          'simulation_state': \
-            list(self.getPortalFutureInventoryStateList()) + \
-            list(self.getPortalTransitInventoryStateList()) + \
-            list(self.getPortalReservedInventoryStateList()) + \
-            list(self.getPortalCurrentInventoryStateList())
-        }
-      elif cname_id in ('getInventoryAtDate', ):
-        query_kw_update = {
-          'to_date': self.at_date,
-          'simulation_state': \
-            list(self.getPortalFutureInventoryStateList()) + \
-            list(self.getPortalReservedInventoryStateList())
-        }
-      query_kw.update(query_kw_update)
+       # A resource is defined, so try to display the movement list
+      form_id = 'Resource_viewMovementHistory'
+      query_kw = self.getListItemParamDict(cname_id, selection_index, selection_name)
       return '%s/%s?%s&reset=1' % ( resource.absolute_url(),
                                     form_id,
                                     make_query(**query_kw) )
