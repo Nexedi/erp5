@@ -178,6 +178,16 @@ class ERP5Catalog(Folder, Catalog):
   isIndexable = 0
   __class_init__  = Catalog.__class_init__
 
+  # Note: superclass supports older variants of these metatypes, but we do not
+  # expect these as content here. So just override superclass properties with
+  # the new metatypes.
+  HAS_ARGUMENT_SRC_METATYPE_SET = (
+    "ERP5 SQL Method",
+  )
+  HAS_FUNC_CODE_METATYPE_SET = (
+    "ERP5 Python Script",
+  )
+
   def __init__(self, id, title='', container=None):
     # Initialize both SQLCatalog as well as Folder
     Catalog.__init__(self, id, title, container)
@@ -324,16 +334,6 @@ class ERP5Catalog(Folder, Catalog):
 
   def _getFilterDict(self):
     return FilterDict(self)
-
-  def _getCatalogMethodArgumentList(self, method):
-    if method.meta_type == "LDIF Method":
-      # Build the dictionnary of values
-      return method.arguments_src.split()
-    elif method.meta_type == "ERP5 SQL Method":
-      return method.getArgumentsSrc().split()
-    elif method.meta_type == "ERP5 Python Script":
-      return method.func_code.co_varnames[:method.func_code.co_argcount]
-    return ()
 
   def _getCatalogMethod(self, method_name):
     return self._getOb(method_name)

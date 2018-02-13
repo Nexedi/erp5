@@ -632,6 +632,13 @@ class Catalog(Folder,
   manage_catalogAdvanced = DTMLFile('dtml/catalogAdvanced', globals())
 
   _cache_sequence_number = 0
+  HAS_ARGUMENT_SRC_METATYPE_SET = (
+    "Z SQL Method",
+    "LDIF Method",
+  )
+  HAS_FUNC_CODE_METATYPE_SET = (
+    "Script (Python)",
+  )
 
   def __init__(self, id, title='', container=None):
     if container is not None:
@@ -1479,11 +1486,14 @@ class Catalog(Folder,
           raise
 
   def _getCatalogMethodArgumentList(self, method):
-    if method.meta_type in ("Z SQL Method", "LDIF Method"):
-      # Build the dictionnary of values
+    meta_type = method.meta_type
+    if meta_type in self.HAS_ARGUMENT_SRC_METATYPE_SET:
       return method.arguments_src.split()
-    elif method.meta_type == "Script (Python)":
+    elif meta_type in self.HAS_FUNC_CODE_METATYPE_SET:
       return method.func_code.co_varnames[:method.func_code.co_argcount]
+    # Note: Raising here would completely prevent indexation from working.
+    # Instead, let the method actually fail when called, so _catalogObjectList
+    # can log the error and carry on.
     return ()
 
   def _getCatalogMethod(self, method_name):
