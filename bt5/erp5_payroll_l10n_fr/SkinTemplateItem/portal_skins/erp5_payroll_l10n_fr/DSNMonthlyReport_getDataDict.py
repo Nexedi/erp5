@@ -55,7 +55,7 @@ if block_id == 'S10.G00.00':
   rubric_value_dict['S10.G00.00.005'] = '01'
   rubric_value_dict['S10.G00.00.006'] = 'P03V01'
   rubric_value_dict['S10.G00.00.007'] = '01'
-  rubric_value_dict['S10.G00.00.008'] = '01'
+  rubric_value_dict['S10.G00.00.008'] = kw.get('type', '01')
 
 # Emetteur
 if block_id == 'S10.G00.01':
@@ -88,7 +88,7 @@ if block_id == 'S10.G00.02':
 if block_id == 'S20.G00.05':
   now = DateTime()
   rubric_value_dict['S20.G00.05.001'] = '01' # Monthly DSN
-  rubric_value_dict['S20.G00.05.002'] = '01' # Normal Declaration
+  rubric_value_dict['S20.G00.05.002'] = kw.get('type', '01') # Normal Declaration
   rubric_value_dict['S20.G00.05.003'] = '11'
   rubric_value_dict['S20.G00.05.004'] = kw['order'] # Declaration.Ordre, incremented for each DSN
   rubric_value_dict['S20.G00.05.005'] = formatDate(DateTime(kw['year'], kw['month'], 1))
@@ -149,7 +149,7 @@ elif block_id == 'S21.G00.11':
   rubric_value_dict['S21.G00.11.005'] = target.getDefaultAddressCity()
   rubric_value_dict['S21.G00.11.006'] = ''
   rubric_value_dict['S21.G00.11.007'] = ''
-  rubric_value_dict['S21.G00.11.008'] = int(context.getQuantity())
+  rubric_value_dict['S21.G00.11.008'] = str(int(context.getQuantity(0)))
   rubric_value_dict['S21.G00.11.009'] = ''
   rubric_value_dict['S21.G00.11.015'] = (establishment_country_code if establishment_country_code not in france_territory_code else '')
   rubric_value_dict['S21.G00.11.016'] = ''
