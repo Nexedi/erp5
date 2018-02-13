@@ -262,6 +262,10 @@ method-draw/css/font-files/fanwood_italic-webfont.svg\n
 method-draw/css/font-files/fanwood_italic-webfont.ttf\n
 method-draw/css/font-files/fertigo-webfont.eot\n
 method-draw/css/font-files/fertigo-webfont.ttf\n
+method-draw/css/font-files/OpenSans-Regular.woff2\n
+method-draw/css/font-files/OpenSans-Bold.woff2\n
+method-draw/css/font-files/OpenSans-Italic.woff2\n
+method-draw/css/font-files/OpenSans-Bold.woff2\n
 method-draw/css/fonts.css\n
 method-draw/css/method-draw.compiled.css\n
 method-draw/css/method-draw.css\n
@@ -613,7 +617,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.54546.48173.5239</string> </value>
+                <value> <string>964.58581.32438.37376</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -631,7 +635,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1516026584.05</float>
+                        <float>1518539910.86</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
