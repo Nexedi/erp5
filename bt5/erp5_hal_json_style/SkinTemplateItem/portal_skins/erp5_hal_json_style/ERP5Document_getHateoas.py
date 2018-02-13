@@ -1807,6 +1807,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             if 'jio_key' not in contents_item[select] and url_parameter_dict[select] and 'absolute_url' not in contents_item[select]:
               contents_item[select]['jio_key'] = traversed_document.getRelativeUrl()
             
+            if 'parameter' not in contents_item[select] and getattr(search_result, 'getListItemParamDict', None) is not None:
+              contents_item[select]['parameter'] = search_result.getListItemParamDict(select, result_index, catalog_kw['selection_name'])
+              
             if generate_view:
               if 'parameter' in contents_item[select]:
                 contents_item[select]['view'] =  url_template_dict["traverse_generator_with_parameter"] % {
