@@ -2344,20 +2344,24 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                   result_dict[key] = value(selection=selection, selection_name=selection.getName(), column_id=sql, index=self.index)
                 except TypeError:
                   result_dict[key] = value()
-          if result_dict:
-            if 'jio_key' not in result_dict:
-              url = ''
-            else:
-              try:
-                url =  self.getObject().getPortalObject().restrictedTraverse(result_dict['jio_key']).absolute_url()
-              except KeyError:
-                url = result_dict['jio_key']
 
-            if 'view_action' in result_dict:
-              url += result_dict['view_action']
-            if 'parameter' not in result_dict and getattr(brain, 'getListItemParamDict', None) is not None:
-              result_dict['parameter'] = brain.getListItemParamDict(alias, self.index, selection_name)
-            if 'parameter' in result_dict:
+          if 'jio_key' not in result_dict:
+            url = ''
+            if getattr(brain, 'getListItem', None) is not None:
+              item = brain.getListItem(alias, self.index, selection_name)
+              if item is not None:
+                url = item.absolute_url()
+          else:
+            try:
+              url =  self.getObject().getPortalObject().restrictedTraverse(result_dict['jio_key']).absolute_url()
+            except KeyError:
+              url = result_dict['jio_key']
+
+          if 'view_action' in result_dict:
+            url += result_dict['view_action']
+          if 'parameter' not in result_dict and getattr(brain, 'getListItemParamDict', None) is not None:
+            result_dict['parameter'] = brain.getListItemParamDict(alias, self.index, selection_name)
+          if 'parameter' in result_dict:
               url = '%s?%s' % (url, make_query(result_dict['parameter']))
 
       # Find an URL method.

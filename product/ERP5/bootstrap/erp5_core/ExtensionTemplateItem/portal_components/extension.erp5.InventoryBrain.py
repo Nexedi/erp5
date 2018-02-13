@@ -343,15 +343,20 @@ class MovementHistoryListBrain(InventoryListBrain):
     return self._convertDateToZone(self.date_utc)
   date = ComputedAttribute(_date, 1)
 
+  def getListItem(self, cname_id, selection_index, selection_name):
+    document = self.getObject()
+    if document.isMovement():
+      return document.getExplanationValue()
+  def getListItemParamDict(self, cname_id, selection_index, selection_name):
+    return {}
+    
   def getListItemUrl(self, cname_id, selection_index, selection_name):
     """Returns the URL for column `cname_id`. Used by ListBox
     Here we just want a link to the explanation of movement.
     """
-    document = self.getObject()
-    if document.isMovement():
-      explanation = document.getExplanationValue()
-      if explanation is not None:
-        return explanation.absolute_url()
+    item = self.getListItem(cname_id, selection_index, selection_name)
+    if item is not None:
+      return item.absolute_url()
     return ''
 
   def _debit(self):
