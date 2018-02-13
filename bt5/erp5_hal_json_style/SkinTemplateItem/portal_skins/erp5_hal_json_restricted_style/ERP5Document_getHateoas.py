@@ -24,5 +24,6 @@ return context.ERP5Document_getHateoas(
   sort_on=sort_on,
   local_roles=local_roles,
   selection_domain=selection_domain,
+  parameter=parameter,
   restricted=1
 )
