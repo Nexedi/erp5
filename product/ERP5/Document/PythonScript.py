@@ -31,7 +31,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from App.special_dtml import HTMLFile
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.Ticket import Ticket
 from Products.PythonScripts.PythonScript import \
   PythonScript as ZopePythonScript
 
