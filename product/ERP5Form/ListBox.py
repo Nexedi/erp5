@@ -2345,9 +2345,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                 except TypeError:
                   result_dict[key] = value()
           if result_dict:
-            #this one is not good, should get restrivedocumet's path
             if 'jio_key' not in result_dict:
-              url = request.physicalPathToURL(brain.getPath())
+              url = ''
             else:
               url =  self.getObject().getPortalObject().restrictedTraverse(result_dict['jio_key']).absolute_url()
             if 'parameter' in result_dict:
