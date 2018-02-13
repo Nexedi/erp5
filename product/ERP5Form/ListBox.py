@@ -2348,7 +2348,11 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
             if 'jio_key' not in result_dict:
               url = ''
             else:
-              url =  self.getObject().getPortalObject().restrictedTraverse(result_dict['jio_key']).absolute_url()
+              try:
+                url =  self.getObject().getPortalObject().restrictedTraverse(result_dict['jio_key']).absolute_url()
+              except KeyError:
+                url = result_dict['jio_key']
+
             if 'view_action' in result_dict:
               url += result_dict['view_action']
             if 'parameter' not in result_dict and getattr(brain, 'getListItemParamDict', None) is not None:

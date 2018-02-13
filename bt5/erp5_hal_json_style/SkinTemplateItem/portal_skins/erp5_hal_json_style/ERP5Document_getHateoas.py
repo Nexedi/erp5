@@ -1768,6 +1768,12 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
               else:
                 contents_item[select][key] = url_parameter_dict[select][key]
 
+            if 'jio_key' in contents_item[select]:
+              try:
+                portal.restrictedTraverse(contents_item[select]['jio_key'])
+              except KeyError:
+                contents_item[select]['jio_key'] =  traversed_document.getRelativeUrl()  + '/' + contents_item[select]['jio_key']
+                
             if 'jio_key' not in contents_item[select] and url_parameter_dict[select] and 'absolute_url' not in contents_item[select]:
               contents_item[select]['jio_key'] = traversed_document.getRelativeUrl()
             
