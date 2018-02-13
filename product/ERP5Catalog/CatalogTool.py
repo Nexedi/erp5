@@ -395,8 +395,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       # Get all dynamic classes from portal_type
       catalog_tool_class = getattr(erp5.portal_type, 'Catalog Tool')
       catalog_class = getattr(erp5.portal_type, 'Catalog')
-      sql_class = getattr(erp5.portal_type, 'SQL Method')
-      script_class = getattr(erp5.portal_type, 'Python Script')
+      type_conversion_dict = {
+        'Script (Python)': getattr(erp5.portal_type, 'Python Script'),
+        'Z SQL Method': getattr(erp5.portal_type, 'SQL Method'),
+      }
 
       if not catalog_tool_class:
         LOG('OldCatalogTool', WARNING, "Portal Type Catalog Tool doesn't exist")
@@ -406,15 +408,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       for obj in self.objectValues():
         filter_dict = obj.filter_dict
         for method in obj.objectValues():
-          if method.meta_type == 'Z SQL Method':
-            new_method = changeObjectClass(obj, method.id, sql_class)
-          elif method.meta_type == 'Script (Python)':
-            new_method = changeObjectClass(obj, method.id, script_class)
-          else:
-            LOG('Catalog Migration', WARNING, '''Subobject %s is not of meta_type \
-                                          Z SQL Method or Script(Python)'''%method.id)
+          try:
+            portal_type_class = type_conversion_dict[method.meta_type]
+          except KeyError:
+            LOG('Catalog Migration', WARNING, '%s/%s/%s has unhandled meta_type %r' % (self.id, obj.id, method.id, method.meta_type))
             return
-
+          new_method = changeObjectClass(obj, method.id, portal_type_class)
           # Migrate filter_dict and keep them as properties for the methods
           new_method_id = new_method.id
           if new_method_id in filter_dict:
