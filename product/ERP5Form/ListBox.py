@@ -2351,6 +2351,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
               url =  self.getObject().getPortalObject().restrictedTraverse(result_dict['jio_key']).absolute_url()
             if 'view_action' in result_dict:
               url += result_dict['view_action']
+            if 'parameter' not in result_dict and getattr(brain, 'getListItemParamDict', None) is not None:
+              result_dict['parameter'] = brain.getListItemParamDict(alias, self.index, selection_name)
             if 'parameter' in result_dict:
               url = '%s?%s' % (url, make_query(result_dict['parameter']))
     
