@@ -72,7 +72,7 @@ support_request.Base_redirect(
     'portal_status_message': portal.Base_translateString(
       'New ${portal_type} created.',
       mapping={
-        'portal_type': 'Support Request',
+        'portal_type': portal.Base_translateString('Support Request'),
       },
     ),
   },
