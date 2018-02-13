@@ -365,6 +365,8 @@ url_template_dict = {
                        "&relative_url=%(relative_url)s&view=%(view)s",
   "traverse_generator_non_view": "%(root_url)s/%(script_id)s?mode=traverse" + \
                        "&relative_url=%(relative_url)s&view=%(view)s&form_id=%(form_id)s",
+  "traverse_generator_with_parameter": "%(root_url)s/%(script_id)s?mode=traverse" + \
+                       "&relative_url=%(relative_url)s&view=%(view)s&parameter=%(parameter)s",
   "traverse_template": "%(root_url)s/%(script_id)s?mode=traverse" + \
                        "{&relative_url,view}",
   "search_template": "%(root_url)s/%(script_id)s?mode=search" + \
@@ -423,11 +425,10 @@ def getFieldDefault(form, field, key, value=None):
   return value
 
 
-def renderField(traversed_document, field, form, value=None, meta_type=None, key=None, key_prefix=None, selection_params=None):
+def renderField(traversed_document, field, form, value=None, meta_type=None, key=None, key_prefix=None, selection_params=None, parameter=None):
   """Extract important field's attributes into `result` dictionary."""
   if selection_params is None:
     selection_params = {}
-
   # some TALES expressions are using Base_getRelatedObjectParameter which requires that
   previous_request_field = REQUEST.other.pop('field_id', None)
   REQUEST.other['field_id'] = field.id
@@ -694,6 +695,10 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     # listbox's default parameters
     default_params.update(selection_params)
 
+    if parameter is not None:
+      default_params.update(ensureDeserialized(byteify(
+        json.loads(urlsafe_b64decode(parameter)))))
+    
     # ListBoxes in report view has portal_type defined already in default_params
     # in that case we prefer non_empty version
     list_method_query_dict = default_params.copy()
@@ -854,7 +859,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
   return result
 
 
-def renderForm(traversed_document, form, response_dict, key_prefix=None, selection_params=None):
+def renderForm(traversed_document, form, response_dict, key_prefix=None, selection_params=None, parameter=None):
   """
   Render a `form` in plain python dict.
 
@@ -937,7 +942,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       if not field.get_value("enabled"):
         continue
       try:
-        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params)
+        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params, parameter=parameter)
         if field_errors.has_key(field.id):
           response_dict[field.id]["error_text"] = field_errors[field.id].error_text
       except AttributeError:
@@ -1388,6 +1393,36 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # Put a prefix to prevent conflict
         result_dict['_links']["action_" + erp5_action_key] = erp5_action_list
 
+        # unfortunatelly some people use Scripts as targets for Workflow
+        # transactions - thus we need to check and mitigate
+        if "Script" in renderer_form.meta_type:
+          # we suppose that the script takes only what is given in the URL params
+          return renderer_form(**query_param_dict)
+        renderForm(traversed_document, renderer_form, embedded_dict, parameter=parameter)
+        result_dict['_embedded'] = {
+          '_view': embedded_dict
+          # embedded_action_key: embedded_dict
+        }
+  #       result_dict['_links']["_view"] = {"href": embedded_url}
+
+        # Include properties in document JSON
+        # XXX Extract from renderer form?
+        """
+        for group in renderer_form.Form_getGroupTitleAndId():
+          for field in renderer_form.get_fields_in_group(group['goid']):
+            field_id = field.id
+  #           traversed_document.log(field_id)
+            if field_id.startswith('my_'):
+              property_name = field_id[len('my_'):]
+  #             traversed_document.log(property_name)
+              property_value = traversed_document.getProperty(property_name, d=None)
+              if (property_value is not None):
+                if same_type(property_value, DateTime()):
+                  # Serialize DateTime
+                  property_value = property_value.rfc822()
+                result_dict[property_name] = property_value 
+                """
+  
     ##############
     # XXX Custom slapos code
     ##############
@@ -1737,12 +1772,23 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
               contents_item[select]['jio_key'] = traversed_document.getRelativeUrl()
             
             if generate_view:
-              contents_item[select]['view'] =  url_template_dict["traverse_generator"] % {
-                "root_url": site_root.absolute_url(),
-                "script_id": script.id,
-                "relative_url": contents_item[select]['jio_key'].replace("/", "%2F"),
-                "view": url_parameter_dict[select]['view']
-              }
+              if 'parameter' in contents_item[select]:
+                contents_item[select]['view'] =  url_template_dict["traverse_generator_with_parameter"] % {
+                  "root_url": site_root.absolute_url(),
+                  "script_id": script.id,
+                  "relative_url": contents_item[select]['jio_key'].replace("/", "%2F"),
+                  "view": url_parameter_dict[select]['view'],
+                  "parameter":  urlsafe_b64encode(
+                    json.dumps(ensureSerializable(contents_item[select]['parameter'])))
+                }
+              else:
+                contents_item[select]['view'] =  url_template_dict["traverse_generator"] % {
+                  "root_url": site_root.absolute_url(),
+                  "script_id": script.id,
+                  "relative_url": contents_item[select]['jio_key'].replace("/", "%2F"),
+                  "view": url_parameter_dict[select]['view']
+                }
+
       # endfor select
       REQUEST.other.pop('cell', None)
       contents_list.append(contents_item)
