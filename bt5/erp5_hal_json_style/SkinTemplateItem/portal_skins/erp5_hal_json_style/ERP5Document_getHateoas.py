@@ -273,9 +273,14 @@ def getAttrFromAnything(search_result, select, search_property_getter, kwargs):
 
   # Following part resolves values on other objects than Documents
   # Prefer getter (accessor) than raw property name
+  try:
+    underlying_search_result = search_result.getObject()
+  except:
+    underlying_search_result = search_result
+
   if contents_value is None:
     try:
-      contents_value = getattr(search_result, accessor_name)
+      contents_value = getattr(underlying_search_result, accessor_name)
     except (AttributeError, Unauthorized):
       pass
 
@@ -818,7 +823,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
 def renderForm(traversed_document, form, response_dict, key_prefix=None, selection_params=None):
   """
   :param selection_params: holds parameters to construct ERP5Form.Selection instance
-      for underlaying ListBox - since we do not use selections in RenderJS UI
+      for underlying ListBox - since we do not use selections in RenderJS UI
       we mitigate the functionality here by overriding ListBox's own values
       for columns, editable columns, and sort with those found in `selection_params`
   """
@@ -915,7 +920,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
         # ReportBox.render returns a list of ReportSection classes which are
         # just containers for FormId(s) usually containing one ListBox
         # and its search/query parameters hidden in `selection_params`
-        # `path` contains relative_url of intended CONTEXT for underlaying ListBox
+        # `path` contains relative_url of intended CONTEXT for underlying ListBox
         report_item_list.extend(field.render())
     # ERP5 Report document differs from a ERP5 Form in only one thing: it has
     # `report_method` attached to it - thus we call it right here
