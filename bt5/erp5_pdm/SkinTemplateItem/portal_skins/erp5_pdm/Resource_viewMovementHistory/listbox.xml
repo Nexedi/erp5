@@ -161,7 +161,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -173,11 +181,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>default_display_style</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default_params</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_style_list</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -189,7 +205,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -201,7 +225,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -221,6 +253,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>page_navigation_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -230,6 +270,10 @@
                 </item>
                 <item>
                     <key> <string>report_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>row_css_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -257,12 +301,34 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>stat_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>stat_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>style_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>url_parameter_dict</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
               </dictionary>
             </value>
@@ -339,6 +405,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>default_display_style</string> </key>
+                    <value> <string>table</string> </value>
+                </item>
+                <item>
                     <key> <string>default_params</string> </key>
                     <value>
                       <list/>
@@ -347,6 +417,12 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_style_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
@@ -405,7 +481,15 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
@@ -419,7 +503,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -427,6 +511,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_navigation_template</string> </key>
+                    <value> <string>ListBox_viewSliderPageNavigationRenderer</string> </value>
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
@@ -447,6 +535,10 @@
                 <item>
                     <key> <string>report_tree</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>search</string> </key>
@@ -492,7 +584,13 @@
                 <item>
                     <key> <string>stat_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>style_columns</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -511,6 +609,12 @@
                       <list/>
                     </value>
                 </item>
+                <item>
+                    <key> <string>url_parameter_dict</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -518,6 +622,19 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: {\'date\': {},  \'getExplanationText\': {}, \'node_title\':{}, \'section_title\':{}, \'variation_category_item_list\': {},\'total_quantity\':{}, \'getTranslatedSimulationStateTitle\':{}}</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
@@ -530,7 +647,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="3" aka="AAAAAAAAAAM=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
