@@ -114,7 +114,7 @@
         </item>
         <item>
             <key> <string>test_tales_expression</string> </key>
-            <value> <string>python: context.getDeliveryValue() is not None and context.getDeliveryValue().getPortalType() in (\'Sale Packing List Line\', \'Sale Packing List Cell\', \'Internal Packing List Line\', \'Internal Packing List Cell\')</string> </value>
+            <value> <string>python: context.getDeliveryValue() is not None and context.getDeliveryValue().getPortalType() in (\'Production Packing List Line\', \'Production Packing List Cell\', \'Sale Packing List Line\', \'Sale Packing List Cell\', \'Internal Packing List Line\', \'Internal Packing List Cell\')</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

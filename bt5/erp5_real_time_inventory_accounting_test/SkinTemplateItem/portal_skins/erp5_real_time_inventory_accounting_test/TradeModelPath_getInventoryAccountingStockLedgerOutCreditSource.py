@@ -3,7 +3,7 @@ assert delivery_portal_type # XXX debug
 if delivery_portal_type.startswith('Sale Packing List'):
   if movement.getSource() == 'organisation_module/hoge':
     return ['source/account_module/variation_cars']
-elif delivery_portal_type.startswith('Internal Packing List'):
+elif delivery_portal_type.startswith('Internal Packing List') or delivery_portal_type.startswith('Production Packing List'):
   return ['source/account_module/variation_cars']
 else:
   raise NotImplementedError
