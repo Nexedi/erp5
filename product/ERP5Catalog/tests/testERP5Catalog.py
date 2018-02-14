@@ -43,6 +43,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript, todo_erp5, \
 from Products.ZSQLCatalog.ZSQLCatalog import HOT_REINDEXING_FINISHED_STATE,\
       HOT_REINDEXING_RECORDING_STATE, HOT_REINDEXING_DOUBLE_INDEXING_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
+from Products.PageTemplates.Expressions import getEngine
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 
 
@@ -3963,6 +3964,34 @@ VALUES
         self.assertEqual(organisation_call_list, organisation_list)
     finally:
       del self.portal.portal_activities.__class__.doSomething
+
+  def test_filter_expression(self):
+    catalog = self.portal.portal_catalog.getSQLCatalog()
+    portal_type_list = catalog.getVisibleAllowedContentTypeList()
+    assert portal_type_list
+    econtext = getEngine().getContext()
+    getExpressionInstance = lambda: catalog._getFilterDict()[indexation_method_id].get('expression_instance')
+    evaluate = lambda: getExpressionInstance()(econtext)
+    catalog_method_list = catalog.getSqlCatalogObjectListList()
+    for portal_type in portal_type_list:
+      indexation_method = catalog.newContent(portal_type=portal_type)
+      indexation_method_id = indexation_method.getId()
+      catalog.setSqlCatalogObjectListList(catalog_method_list + (indexation_method_id, ))
+      try:
+        indexation_method.setFiltered(True)
+        indexation_method.setExpression('python: 1')
+        self.assertEqual(evaluate(), 1)
+        self.commit()
+        self.assertEqual(evaluate(), 1)
+        indexation_method.setExpression('python: 2')
+        self.abort()
+        self.assertEqual(evaluate(), 1)
+        indexation_method.setExpression('python: 2')
+        self.assertEqual(evaluate(), 2)
+        self.commit()
+        self.assertEqual(evaluate(), 2)
+      finally:
+        catalog.setSqlCatalogObjectListList(catalog_method_list)
 
 def test_suite():
   suite = unittest.TestSuite()

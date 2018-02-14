@@ -39,7 +39,6 @@ from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
 from urllib import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
-from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
@@ -1600,10 +1599,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
     # set filter for this method
     expression = 'python: context.isPredicate()'
-    expr_instance = Expression(expression)
     zsql_method.setFiltered(1)
     zsql_method.setExpression(expression)
-    zsql_method.setExpressionInstance(expr_instance)
     zsql_method.setExpressionCacheKey('portal_type')
     zsql_method.setTypeList([])
 
@@ -1625,10 +1622,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
     # set filter for this method
     expression = 'python: context.isDelivery()'
-    expr_instance = Expression(expression)
     zsql_method.setFiltered(1)
     zsql_method.setExpression(expression)
-    zsql_method.setExpressionInstance(expr_instance)
     zsql_method.setExpressionCacheKey('portal_type')
     zsql_method.setTypeList([])
 
