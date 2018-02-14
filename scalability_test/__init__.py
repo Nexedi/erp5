@@ -1,5 +1,6 @@
 import os.path
 import json
+import urlparse
 
 PERSON_KEY = "person_per_hour"
 ORDER_KEY = "sale_order_per_hour"
@@ -27,12 +28,15 @@ class ERP5_scalability():
 
   def getScalabilityTestUrl(self, instance_information_dict):
     frontend_address = instance_information_dict['frontend-url-list'][0]
-    return "%s/erp5" % frontend_address
+    port = 4443 if urlparse.urlparse(frontend_address).scheme == 'https' else 8080
+    return "%s:%d/erp5" % (frontend_address, port)
 
   def getScalabilityTestMetricUrl(self, instance_information_dict, **kw):
     frontend_address = instance_information_dict['frontend-url-list'][0]
-    metrics_url = frontend_address.replace("https://",
-                    "https://%s:%s@" % (instance_information_dict['user'],
+    port = 4443 if urlparse.urlparse(frontend_address).scheme == 'https' else 8080
+    frontend_address = "%s:%d" % (frontend_address, port)
+    metrics_url = frontend_address.replace("://",
+                    "://%s:%s@" % (instance_information_dict['user'],
                                         instance_information_dict['password']))
     return metrics_url + "/erp5/ERP5Site_getScalabilityTestMetric"
 
@@ -53,10 +57,9 @@ class ERP5_scalability():
             str(output_json[PERSON_KEY]), str(output_json[ORDER_KEY]))
 
   def getBootstrapScalabilityTestUrl(self, instance_information_dict, count=0, **kw):
-    frontend_address = instance_information_dict['frontend-url-list'][0]
-    bootstrap_url = frontend_address.replace("https://",
-                      "https://%s:%s@" % (instance_information_dict['user'],
-                                          instance_information_dict['password']))
+    bootstrap_url = "http://%s:%s@%s" % (instance_information_dict['user'],
+                                         instance_information_dict['password'],
+                                         instance_information_dict['zope-address'])
     bootstrap_url += "/erp5/ERP5Site_bootstrapScalabilityTest"
     bootstrap_url += "?user_quantity=%i" % self.getUserQuantity(count)
     return bootstrap_url
