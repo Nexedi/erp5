@@ -81,6 +81,7 @@ DocumentProxy
 Domain
 DublinCore
 DynamicCategoryProperty
+ERP5User
 EmailHeader
 EntityConstraint
 EquivalenceTester
