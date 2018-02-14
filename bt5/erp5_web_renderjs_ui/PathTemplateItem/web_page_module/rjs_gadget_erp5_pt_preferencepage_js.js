@@ -12,6 +12,7 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("jio_get", "jio_get")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
@@ -22,12 +23,18 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function () {
       var gadget = this,
-        user = "Who are you?";
-      return gadget.updateHeader({
-        page_title: 'Preferences',
-        page_icon: 'sliders',
-        save_action: true
-      })
+        user = "Who are you?",
+        header_dict = {
+          page_title: 'Preferences',
+          page_icon: 'sliders',
+          save_action: true
+        };
+
+      return gadget.getUrlFor({command: 'display'})
+        .push(function (front_url) {
+          header_dict.front_url = front_url;
+          return gadget.updateHeader(header_dict);
+        })
         .push(function () {
           return gadget.getDeclaredGadget("erp5_form");
         })

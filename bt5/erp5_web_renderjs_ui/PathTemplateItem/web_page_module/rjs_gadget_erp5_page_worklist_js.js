@@ -26,12 +26,17 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function () {
-      var gadget = this;
+      var gadget = this,
+        header_dict = {
+          page_title: 'Worklist',
+          page_icon: 'tasks'
+        };
 
-      return gadget.updateHeader({
-        page_title: 'Worklist',
-        page_icon: 'tasks'
-      })
+      return gadget.getUrlFor({command: 'display'})
+        .push(function (url) {
+          header_dict.front_url = url;
+          return gadget.updateHeader(header_dict);
+        })
         .push(function () {
           return gadget.jio_getAttachment(
             'portal_workflow',

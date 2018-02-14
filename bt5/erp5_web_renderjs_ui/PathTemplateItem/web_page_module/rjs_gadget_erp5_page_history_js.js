@@ -26,12 +26,17 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
       var gadget = this,
-        id_list = options.id_list || [];
+        id_list = options.id_list || [],
+        header_dict = {
+          page_title: 'History',
+          page_icon: 'history'
+        };
 
-      return gadget.updateHeader({
-        page_title: 'History',
-        page_icon: 'history'
-      })
+      return gadget.getUrlFor({command: 'display'})
+        .push(function (front_url) {
+          header_dict.front_url = front_url;
+          return gadget.updateHeader(header_dict);
+        })
         .push(function () {
           var i,
             query_list = [];
