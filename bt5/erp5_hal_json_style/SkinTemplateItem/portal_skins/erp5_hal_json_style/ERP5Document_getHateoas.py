@@ -663,7 +663,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     # ListBoxes in report view has portal_type defined already in default_params
     # in that case we prefer non_empty version
     list_method_query_dict = default_params.copy()
-    if not list_method_query_dict.get("portal_type", []):
+    if not list_method_query_dict.get("portal_type", []) and portal_type_list:
       list_method_query_dict["portal_type"] = [x for x, _ in portal_type_list]
     list_method_custom = None
 
