@@ -60,7 +60,7 @@ class SMSTool(BaseTool):
                             message_id and document_relative_url
     """
 
-    gateway = self.find(gateway_reference)
+    gateway = self._findGateway(gateway_reference)
 
     message_id = gateway.send(
             text=text,
@@ -80,24 +80,25 @@ class SMSTool(BaseTool):
   security.declareProtected(ManagePortal, 'getMessageStatus')
   def getMessageStatus(self,message_id, gateway_reference='default'):
 
-     gateway = self.find(gateway_reference)
+     gateway = self._findGateway(gateway_reference)
      return gateway.getMessageStatus(message_id)
 
   security.declarePublic('isSendByTitleAllowed')
   def isSendByTitleAllowed(self, gateway_reference='default'):
     """Define the support or not to use the title of the telephone instead of
         the number when send a message."""
-    gateway = self.find(gateway_reference)
+    gateway = self._findGateway(gateway_reference)
     return gateway.isTitleMode()
 
 
-  security.declarePublic('find')
-  def find(self,gateway_reference='default'):
-    """Search the gateway by his reference"""
+  def _findGateway(self, gateway_reference='default'):
+    """Search the gateway by its reference"""
 
-    result = self.searchFolder(reference=gateway_reference)
-    if len(result) > 0:
-      return result[0].getObject()
-    else:
-      raise ValueError, "Impossible to find gateway with reference %s" % gateway_reference
+    result = self.getPortalObject().portal_catalog.unrestrictedSearchResults(
+        parent_uid=self.getUid(),
+        reference=gateway_reference)
+    if result:
+      result, = result # ensure only one gateway with this reference
+      return result.getObject()
+    raise ValueError("Impossible to find gateway with reference %s" % gateway_reference)
 
