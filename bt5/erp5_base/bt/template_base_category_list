@@ -4,6 +4,7 @@ bank_account_type
 collect_order_group
 conflicting_solver
 contributor
+creator
 currency_exchange_type
 delivery_builder
 delivery_solver
