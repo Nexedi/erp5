@@ -84,6 +84,7 @@ def manage_page_footer(self):
     return default
 
   if editor == 'codemirror' and getattr(portal, 'code_mirror_support', None) is not None:
+    keymap = portal.portal_preferences.getPreferredSourceCodeEditorKeymap()
     return '''<script type="text/javascript" src="%s/jquery/core/jquery.min.js"></script>
               %s
               </body>
@@ -91,7 +92,8 @@ def manage_page_footer(self):
                           portal.code_mirror_support(textarea_selector=textarea_selector,
                                                      portal_url=portal_url,
                                                      bound_names=bound_names,
-                                                     mode=mode))
+                                                     mode=mode,
+                                                     keymap=keymap))
   else:
     return '''
 <script type="text/javascript" src="%(portal_url)s/jquery/core/jquery.min.js"></script>
