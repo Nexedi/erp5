@@ -1,7 +1,7 @@
 from Products.ERP5Type.Document import newTempBase
 
 portal =  context.getPortalObject()
-portal_diff  = portal.portal_diff
+portal_diff = portal.portal_diff
 
 # Get the list selection name as we will need it to get the selected object for
 # the current list which we need to diff between
@@ -15,7 +15,7 @@ diff = portal_diff.diffPortalObject(selected_obj_list[0], selected_obj_list[1]).
 
 # Return a list of TempBase objects which can be displayed in a listbox
 tempbase_list = []
-uid = 999
+uid = 0
 for x in diff:
   temp_obj = newTempBase(portal,
                         x['path'],

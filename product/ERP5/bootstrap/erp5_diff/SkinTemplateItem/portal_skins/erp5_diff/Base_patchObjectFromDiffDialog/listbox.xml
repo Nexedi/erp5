@@ -65,10 +65,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -158,7 +154,7 @@
                 </item>
                 <item>
                     <key> <string>select</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
@@ -182,7 +178,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: REQUEST[\'list_selection_name\']</string> </value>
+            <value> <string>python: \'diff_selection_\'+ here.getId()</string> </value>
         </item>
       </dictionary>
     </pickle>

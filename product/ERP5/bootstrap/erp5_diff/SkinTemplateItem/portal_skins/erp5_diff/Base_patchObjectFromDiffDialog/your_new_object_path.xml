@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>default</string>
                 <string>editable</string>
                 <string>title</string>
               </list>
@@ -17,7 +18,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_t1</string> </value>
+            <value> <string>your_new_object_path</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -50,18 +51,22 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -75,24 +80,24 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_text_area_field</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Old Value</string> </value>
+                    <value> <string>New Path</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -108,7 +113,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.restrictedTraverse(\'erp5_diff.html\').absolute_url()</string> </value>
+            <value> <string>python: context.Base_getNewValuePath(list_selection_name=REQUEST[\'list_selection_name\'])</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -28,6 +28,7 @@
 ##############################################################################
 
 import deepdiff
+from zLOG import LOG, WARNING
 from deepdiff import DeepDiff
 from unidiff import PatchSet
 from AccessControl import ClassSecurityInfo
@@ -60,13 +61,22 @@ class DiffTool(BaseTool):
     """
     return PortalPatch(old, new, path, patch_format)
 
-  def patchFromDiff(self, old, diff_dict):
+  def patchPortalObject(self, old, diff_list):
     """
     Receives the dict with old object, diff value and returns a new object from
     the diff and the old value
     """
-    pass
+    #LOG('DiffTool', 0, str(diff_list))
 
+    copy_data = old.aq_parent.manage_copyObjects([old.id,])
+    new_id = old.aq_parent.manage_pasteObjects(copy_data)[0]['new_id']
+    new_obj = old.aq_parent[new_id]
+
+    LOG('DiffTool', 0, str([l['path'] for l in diff_list]))
+    for diff in diff_list:
+      setattr(new_obj, diff['path'], diff['t2'])
+
+    return new_obj
 
 class PortalPatch:
   """
@@ -176,7 +186,7 @@ class PortalPatch:
           # complete list, hence we get paths as root[<list_name>][<index_no>]
           # which is inconsistent to manage in string formatting, thus we have
           # decided to use the parent list by using .up
-          if key == 'iterable_item_removed':
+          if key in ('iterable_item_removed',):
             diff_tree_list.append(item.up)
           else:
             diff_tree_list.append(item)
@@ -222,14 +232,16 @@ class PortalPatch:
           new_val['diff'] = "---  \n+++  \n" + "@@ -1,%s +1,%s @@\n" % (len(str(old_value)), len(str(new_value))) + "- %s\n+ %s\n" % (str(old_value), str(new_value))
         except ValueError:
           new_val['diff'] = None
-
         new_val['path'] = val.path()[6:-2]
         new_val['t1'] = val.t1
         new_val['t2'] = val.t2
 
         diff_list.append(new_val)
 
-    return diff_list
+    # Sort the list of dictionaries according to the path
+    sorted_diff_list = sorted(diff_list, key=lambda k: k['path'])
+
+    return sorted_diff_list
 
   def removeProperties(self,
                        obj,
@@ -248,7 +260,7 @@ class PortalPatch:
                 'last_id', 'uid', '_mt_index', '_count', '_tree',
                 '__ac_local_roles__', '__ac_local_roles_group_id_dict__',
                 'workflow_history', 'subject_set_uid_dict', 'security_uid_dict',
-                'filter_dict', '_max_uid', 'isIndexable', 'id'}
+                'filter_dict', '_max_uid', 'isIndexable', 'id', 'modification_date'}
     if properties:
       for prop in properties:
         if prop.endswith('_list'):
@@ -275,7 +287,7 @@ class PortalPatch:
         attr_set.add('type_provider_list')
 
     # Copy the dict and then remove the undesriable properties
-    obj_dict = obj.__dict__.copy()
+    obj_dict = obj.showDict().copy()
     for attr in obj_dict.keys():
       if attr in attr_set or attr.startswith('_cache_cookie_') or attr.startswith('_v'):
         try:

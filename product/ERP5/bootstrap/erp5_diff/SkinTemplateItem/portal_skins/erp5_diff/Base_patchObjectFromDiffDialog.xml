@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>Base_createNewObjectFromPatch</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiffTool_viewDiff</string> </value>
+            <value> <string>Base_patchObjectFromDiffDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -101,11 +101,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DiffTool_viewDiff</string> </value>
+            <value> <string>Base_patchObjectFromDiffDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -117,7 +117,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Create Object From Patch</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
