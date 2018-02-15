@@ -45,7 +45,7 @@ from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.User import system as system_user
-from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser
+from Products.CMFCore.utils import UniqueObject
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base, aq_inner, aq_parent
 from ActivityBuffer import ActivityBuffer
@@ -182,7 +182,7 @@ class Message(BaseMessage):
       # was generated.
       # Strip last stack entry, since it will always be the same.
       self.call_traceback = ''.join(format_list(extract_stack()[:-1]))
-    self.user_name = _getAuthenticatedUser(self).getIdOrUserName()
+    self.user_name = getSecurityManager().getUser().getIdOrUserName()
     # Store REQUEST Info
     self.request_info = {}
     if request is not None:
