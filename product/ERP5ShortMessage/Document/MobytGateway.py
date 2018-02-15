@@ -74,7 +74,7 @@ class MobytGateway(XMLObject):
 
     # see https://web.archive.org/web/20111125005954/http://www.mobyt.fr/doc/mobyt_module_http.pdf
     # for documentation of this old API
-    api_url = "http://multilevel.mobyt.fr/sms"
+    api_url = "https://multilevel.mobyt.fr/sms"
 
     security.declarePrivate("_fetchSendResponseAsDict")
     def _fetchSendResponseAsDict(self,page):
