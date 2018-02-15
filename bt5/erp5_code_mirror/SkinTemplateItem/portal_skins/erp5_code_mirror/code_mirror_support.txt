@@ -38,6 +38,13 @@
 <script type="text/javascript" src="&dtml-portal_url;/diff_match_patch/javascript/diff_match_patch_uncompressed.js"></script>
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/merge/merge.js"></script>
 
+<!-- Keymaps -->
+<dtml-if expr="keymap == 'emacs'">
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/keymap/emacs.js"></script>
+<dtml-elif expr="keymap == 'vim'">
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/keymap/vim.js"></script>
+</dtml-if>
+
 <!-- Linter -->
 <link rel="stylesheet" href="&dtml-portal_url;/codemirror/addon/lint/lint.css">
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/lint/lint.js"></script>
@@ -484,6 +491,7 @@
  var cm = CodeMirror.fromTextArea(
    getTextareaField()[0],
    {mode: mode,
+    keyMap: "&dtml-keymap;",
     lineNumbers: true,
     styleActiveLine: true,
     showTrailingSpace: true,
