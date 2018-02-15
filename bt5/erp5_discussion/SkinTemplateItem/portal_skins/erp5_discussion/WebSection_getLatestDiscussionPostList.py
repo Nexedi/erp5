@@ -13,4 +13,5 @@ if len(parent_uid_list)==0:
   # no parent discussion threads therefore no posts
   return []
 
-return context.portal_catalog(**kw)
+result = [x.getObject() for x in  context.portal_catalog(**kw)]
+return result
