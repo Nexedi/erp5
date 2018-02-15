@@ -12,6 +12,7 @@
               <list>
                 <string>columns</string>
                 <string>editable_columns</string>
+                <string>portal_types</string>
                 <string>sort</string>
                 <string>title</string>
                 <string>url_columns</string>
@@ -108,6 +109,17 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Time Table Line</string>
+                          <string>Time Table Line</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
