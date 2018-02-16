@@ -57,7 +57,9 @@ class MobytGateway(XMLObject):
 
     add_permission = Permissions.AddPortalContent
 
-    zope.interface.implements(interfaces.ISmsGateway)
+    zope.interface.implements(
+        interfaces.ISmsSendingGateway,
+        interfaces.ISmsReceivingGateway)
 
     # Declarative security
     security = ClassSecurityInfo()
@@ -70,11 +72,9 @@ class MobytGateway(XMLObject):
                       , PropertySheet.SMSGateway
                       )
 
-    api_url = "http://multilevel.mobyt.fr/sms"
-    security.declarePublic('getAllowedMessageType')
-    def getAllowedMessageType(self):
-      """List of all message type"""
-      return ['text','multitext', 'wappush', 'ucs2', 'multiucs2']
+    # see https://web.archive.org/web/20111125005954/http://www.mobyt.fr/doc/mobyt_module_http.pdf
+    # for documentation of this old API
+    api_url = "https://multilevel.mobyt.fr/sms"
 
     security.declarePrivate("_fetchSendResponseAsDict")
     def _fetchSendResponseAsDict(self,page):
@@ -137,42 +137,24 @@ class MobytGateway(XMLObject):
       return phone
 
     security.declareProtected(Permissions.ManagePortal, 'send')
-    def send(self, text,recipient,sender=None, sender_title=None,
-              message_type="text",test=False,**kw):
+    def send(self, text, recipient, sender):
       """Send a message.
-         Parameters:
-         text -- message
-         recipient -- phone url of destination_reference. Could be a list
-         sender -- phone url of source
-         sender_title -- Use it as source if the gateway has title mode enable
-         message_type -- Only 'text' is available today
-         test -- Force the test mode
-
-         Kw Parameters:
-         quality -- Quality of the SMS (default,n)
-
-         Return message id
-         """
+      """
+      traverse = self.getPortalObject().restrictedTraverse
       #Check messsage type
-      if message_type not in self.getAllowedMessageType():
-        raise ValueError, "Type of message in not allowed"
+      message_type = self.getProperty('mobyt_message_type', 'MULTITEXT')
+      if message_type not in ('TEXT', 'MULTITEXT', 'WAPPUSH', 'UCS2', 'MULTIUCS2'):
+        raise ValueError("Type of message in not allowed")
 
-      #Check message qualit
-      quality = kw.get('quality','n') #Allow sender personalization and status of SMS
-      assert quality in ['n','l','ll'], "Unknown quality : '%s'" % quality
+      #Check message quality
+      quality = self.getProperty('mobyt_quality', 'n') #Allow sender personalization and status of SMS
+      assert quality in ('n','l','ll'), "Unknown quality : '%s'" % quality
 
-      #Recipients
-      if not isinstance(recipient, str):
-        recipient_count = len(recipient)
-        recipient = ",".join([self._transformPhoneUrlToGatewayNumber(x) for x in recipient])
-      else:
-        recipient = self._transformPhoneUrlToGatewayNumber(recipient)
-        recipient_count = 1
+      #Recipient
+      recipient = self._transformPhoneUrlToGatewayNumber(
+          traverse(recipient).getDefaultMobileTelephoneValue().asURL())
 
-      if recipient_count  > 1:
-        base_url = self.api_url + "/batch.php" #Multi recipient
-      else:
-        base_url = self.api_url + "/send.php"
+      base_url = self.api_url + "/send.php"
 
       #Common params
       params = {  "user" : self.getGatewayUser(),
@@ -182,22 +164,19 @@ class MobytGateway(XMLObject):
                   "qty"  : quality,
                   "return_id": 1}
 
-      #Define sender
-      if sender_title and self.isTitleMode() and quality == 'n':
-        params['sender'] = sender_title
-      elif sender:
-        params['sender'] = self._transformPhoneUrlToGatewayNumber(sender)
-      elif self.getDefaultSender():
-        params['sender'] = self.getDefaultSender()
+      if self.isTitleMode():
+        params['sender'] = traverse(sender).getDefaultMobileTelephoneValue().getTitle()
+      else:
+        params['sender'] = self._transformPhoneUrlToGatewayNumber(
+            traverse(sender).getDefaultMobileTelephoneValue().asURL()) or self.getDefaultSender()
 
       #Define type of message
       if message_type != "text":
         assert quality == 'n', "This type of message require top level messsage quality"
-        assert message_type in self.getAllowedMessageType(), "Unknown message type"
-        params['operation'] = message_type.capitalize()
+        params['operation'] = message_type
 
       #Send message (or test)
-      if test or self.isSimulationMode():
+      if self.isSimulationMode():
         LOG("MobytGateway", INFO, params)
         result =  {'status': "Test"}
       else:
