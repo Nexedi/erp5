@@ -372,6 +372,13 @@
     .onEvent('click', function (evt) {
       var new_state;
 
+      if (evt.target.classList.contains('trash')) {
+        evt.preventDefault();
+        new_state = getQueryStateFromDOM(this);
+        new_state.query_list = [];
+        return this.changeState(new_state);
+      }
+
       if (evt.target.classList.contains('close')) {
         evt.preventDefault();
         return this.trigger();

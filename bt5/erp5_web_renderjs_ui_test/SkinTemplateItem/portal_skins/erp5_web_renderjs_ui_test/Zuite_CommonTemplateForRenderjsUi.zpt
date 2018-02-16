@@ -67,26 +67,9 @@
       <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
       <td></td>
     </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//a[@data-i18n='Previous']</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//button[@data-i18n="Filter"][contains(@class, "ui-icon-warning")]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>click</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
-      <td></td>
-    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter" />
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/trash_editor_configuration" />
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_filter" />
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
   </tal:block>
 
@@ -515,19 +498,30 @@
     </tr>
   </tal:block>
 
-  <tal:block metal:define-macro="triggle_filter_and">
+
+  <tal:block metal:define-macro="triggle_filter">
     <tr>
-      <td colspan="3"><b>Open the filter panel in AND mode</b></td>
+      <td colspan="3"><b>Open the filter panel</b></td>
     </tr>
     <tr>
      <td>waitForElementPresent</td>
-     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[text()='Filter']</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[@data-i18n='Filter']</td>
      <td></td>
     </tr>
     <tr>
      <td>click</td>
-     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[text()='Filter']</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[@data-i18n='Filter']</td>
      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="triggle_filter_and">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter" />
+    <tr>
+      <td colspan="3"><b>Check the filter panel in AND mode</b></td>
     </tr>
     <tr>
       <td>waitForElementPresent</td>
@@ -545,18 +539,9 @@
   </tal:block>
 
   <tal:block metal:define-macro="triggle_filter_or">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter" />
     <tr>
-      <td colspan="3"><b>Open the filter panel in OR mode</b></td>
-    </tr>
-    <tr>
-     <td>waitForElementPresent</td>
-     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[text()='Filter']</td>
-     <td></td>
-    </tr>
-    <tr>
-     <td>click</td>
-     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[text()='Filter']</td>
-     <td></td>
+      <td colspan="3"><b>Check the filter panel in OR mode</b></td>
     </tr>
     <tr>
       <td>waitForElementPresent</td>
@@ -768,6 +753,25 @@
       <td>verifyText</td>
       <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//thead/tr/th[%i]' % (header_configuration['index'] + 1)"></td>
       <td tal:content="python: header_configuration['text']"></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="trash_editor_configuration">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Trash the panel editor configuration'"></b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_editor_panel.html\')]//button[@class=\'trash ui-btn-c ui-override-theme ui-btn ui-icon-trash-o ui-btn-icon-left ui-corner-all\']'"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_editor_panel.html\')]//button[@class=\'trash ui-btn-c ui-override-theme ui-btn ui-icon-trash-o ui-btn-icon-left ui-corner-all\']'"></td>
+      <td></td>
     </tr>
     <tr>
       <td colspan="3"><p></p></td>

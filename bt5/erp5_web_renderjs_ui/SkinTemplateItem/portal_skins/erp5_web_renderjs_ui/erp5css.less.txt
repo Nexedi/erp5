@@ -847,6 +847,10 @@ div[data-gadget-scope='editor_panel'] {
         text-indent: 0;
       }
 
+      &.trash {
+        float: right;
+      }
+
     }
   }
 

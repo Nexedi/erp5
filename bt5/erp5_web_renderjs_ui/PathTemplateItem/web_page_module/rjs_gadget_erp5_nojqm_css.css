@@ -715,6 +715,9 @@ div[data-gadget-scope='editor_panel'] section button::before {
   float: left;
   text-indent: 0;
 }
+div[data-gadget-scope='editor_panel'] section button.trash {
+  float: right;
+}
 /**********************************************
 * Gadget: header
 **********************************************/
