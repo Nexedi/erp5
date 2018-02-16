@@ -58,8 +58,8 @@
       ['fast_input_url', 'Fast Input', 'magic'],
       ['previous_url', 'Previous', 'carat-l'],
       ['next_url', 'Next', 'carat-r'],
-      ['edit_content', 'Content', 'file-text'],
-      ['edit_properties', 'Properties', 'info']
+      ['download_url', 'Download', 'download'],
+      ['upload_url', 'Upload', 'upload']
     ];
 
   gadget_klass
