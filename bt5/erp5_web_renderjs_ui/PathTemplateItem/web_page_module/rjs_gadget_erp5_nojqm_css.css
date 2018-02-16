@@ -271,7 +271,7 @@ a:focus {
 }
 @media not screen and (max-width: 85em) {
   a[accesskey]:after {
-    content: " [" attr(accesskey) "] ";
+    content: " (" attr(accesskey) ") ";
   }
 }
 /**********************************************

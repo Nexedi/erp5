@@ -351,7 +351,7 @@ a {
   @media @desktop {
     // Do not display access key if not physical keyboard
     &[accesskey]:after {
-      content: " [" attr(accesskey) "] ";
+      content: " (" attr(accesskey) ") ";
     }
   }
 }
