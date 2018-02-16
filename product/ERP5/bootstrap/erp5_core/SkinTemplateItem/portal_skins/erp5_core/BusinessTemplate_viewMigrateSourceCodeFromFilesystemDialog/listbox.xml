@@ -539,7 +539,12 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>None</string>
+                          <string></string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
