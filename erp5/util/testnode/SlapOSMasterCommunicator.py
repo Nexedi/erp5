@@ -2,7 +2,7 @@ import datetime
 import json
 import traceback
 import time
-#import feedparser
+import requests
 from functools import wraps
 from uritemplate import expand
 
@@ -12,8 +12,8 @@ from requests.exceptions import HTTPError
 from ..taskdistribution import SAFE_RPC_EXCEPTION_LIST
 from . import logger
 
-# max time to instance changing state: 2 hour
-MAX_INSTANCE_TIME = 60*60*2
+# max time to instance changing state: 3 hour
+MAX_INSTANCE_TIME = 60*60*3
 
 SOFTWARE_PRODUCT_NAMESPACE = "product."
 
@@ -224,6 +224,7 @@ class SlapOSMasterCommunicator(object):
       return SOFTWARE_STATE_INSTALLED
 
     message = self.getSoftwareInstallationNews()
+    logger.info(message)
     if message.startswith("#error no data found"):
       return SOFTWARE_STATE_UNKNOWN
 
@@ -433,6 +434,22 @@ class SlapOSTester(SlapOSMasterCommunicator):
       logger.error(error_message)
       logger.error("Do you use instance state propagation in your project?")
       raise ValueError(error_message)
+
+  def getInstanceUrlDict(self):
+    # XXX: until frontend issue is solved, this returns the address for one of the zopes
+    url_list = []
+    for instance in self.getInstanceUrlList():
+      information = self.getInformationFromInstance(instance["href"])
+      try:
+        connection_dict = information["connection_dict"]["_"]
+        address = json.loads(connection_dict)["zope-address-list"][0][0]
+        parameter_dict = information['parameter_dict']['_']
+        user = json.loads(parameter_dict)['inituser-login']
+        password = json.loads(parameter_dict)['inituser-password']
+        url_list.append({'zope-address' : address, 'user' : user, 'password' : password })
+      except Exception as e:
+        pass # ignore instances without zope-address-list
+    return url_list[0]
 
 class SoftwareReleaseTester(SlapOSTester):
   deadline = None

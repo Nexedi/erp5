@@ -78,7 +78,7 @@ class BenchmarkProcess(multiprocessing.Process):
 
   def runBenchmarkSuiteList(self, result):
     for target_idx, target in enumerate(self._argument_namespace.benchmark_suite_list):
-      self._logger.debug("EXECUTE: %s" % target)
+      self._logger.info("EXECUTE: %s" % target)
       result.enterSuite(target.__name__)
       with_error = False
 
@@ -115,7 +115,7 @@ class BenchmarkProcess(multiprocessing.Process):
         # Clear the Browser history (which keeps (request, response))
         # otherwise it will consume a lot of memory after some time. Also it
         # does make sense to keep it as suites are independent of each other
-        self._browser.mech_browser.clear_history()
+        self._browser._history.clear()
 
       result.exitSuite(with_error)
 

@@ -38,14 +38,19 @@ import shutil
 import logging
 import string
 import random
+import urlparse
+import base64
+import httplib
 import Utils
+import requests
+import slapos.slap
 from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
 from erp5.util import taskdistribution
+from erp5.util.benchmark.thread import TestThread
 # for dummy slapos answer
 import signal
-import slapos.slap
 
 from . import logger
 
@@ -56,7 +61,26 @@ MAX_CREATION_INSTANCE_TIME = 60*10
 # max time for a test: 1 hour
 MAX_TEST_CASE_TIME = 60*60
 # max time to prepare SlapOS for testsuite (software installation, instances requests, etc.)
-MAX_PREPARE_TEST_SUITE = 3600*10*1.0 # 10 hours 
+MAX_PREPARE_TEST_SUITE = 3600*10*1.0 # 10 hours
+# max time for a test line creation: 5 minutes
+MAX_CREATION_TEST_LINE = 60*10
+# max time for bootstrapping an instance site
+MAX_BOOTSRAPPING_TIME = 60*30
+# max time to get a connection
+MAX_CONNECTION_TIME = 60*5
+# time to check pending activities
+CHECK_ACTIVITIES_TIME = 60*2
+# runner names
+PERFORMANCE_RUNNER_SCRIPT = "performance_tester_erp5"
+SCALABILITY_RUNNER_SCRIPT = "runScalabilityTestSuite"
+SCALABILITY_TEST = "scalability_test"
+TEST_SUITE_INIT = "__init__.py"
+# access SR by password
+TESTNODE_USER = "testnode"
+HTACCESS = "/.htaccess"
+HTPASSWD = "/.htpasswd"
+PASSWORD_FILE = "/sr_pass"
+PASSWORD_LENGTH = 10
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
@@ -65,19 +89,19 @@ class ScalabilityTestRunner():
                                   self.testnode.working_directory,
                                   self.testnode.config)
     # Create the slapos account configuration file and dir
-    key = self.testnode.test_suite_portal.getSlaposAccountKey()
-    certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
+    key = self.testnode.taskdistribution.getSlaposAccountKey()
+    certificate = self.testnode.taskdistribution.getSlaposAccountCertificate()
     # Get Slapos Master Url
     self.slapos_url = ''
     try:
-      self.slapos_url = self.testnode.test_suite_portal.getSlaposUrl()
+      self.slapos_url = self.testnode.taskdistribution.getSlaposUrl()
       if not self.slapos_url:
         self.slapos_url = self.testnode.config['server_url']
     except:
       self.slapos_url = self.testnode.config['server_url']
     
     # Get Slapos Master url used for api rest (using hateoas)
-    self.slapos_api_rest_url = self.testnode.test_suite_portal.getSlaposHateoasUrl()
+    self.slapos_api_rest_url = self.testnode.taskdistribution.getSlaposHateoasUrl()
 
     logger.info("SlapOS Master url is: %s", self.slapos_url)
     logger.info("SlapOS Master hateoas url is: %s", self.slapos_api_rest_url)
@@ -114,12 +138,12 @@ class ScalabilityTestRunner():
     """
     Generate an instance title using various parameter
     TODO : add some verification (to don't use unexisting variables)
-    ROQUE XXX TODO: for now, the name is always the same. The instance is not being destroyed yet. 
+    XXX TODO: for now, the name is always the same. The instance is not being destroyed yet.
     """
     instance_title = "Scalability-"
     instance_title += "("+test_suite_title+")-"
     instance_title += str(self.involved_nodes_computer_guid).replace("'","")
-    instance_title += "-2" # XXX hack to force instance creation. Will be removed.
+    instance_title += "-erp5" # XXX hack to force instance creation. Will be removed.
     #instance_title += "-"+str(datetime.datetime.now().isoformat())+"-"
     #instance_title += "timestamp="+str(time.time())
     return instance_title
@@ -131,7 +155,7 @@ class ScalabilityTestRunner():
     """
     config = software_configuration.copy()
     config.update({'scalability-launcher-computer-guid':self.launcher_nodes_computer_guid[0]})
-    config.update({'scalability-launcher-title':'MyTestNodeTitle'})
+    config.update({'scalability-launcher-title':self.testnode.config['test_node_title']})
     config.update({'test-result-path':test_result.test_result_path})
     config.update({'test-suite-revision':test_result.revision})
     config.update({'test-suite':test_suite})
@@ -160,7 +184,7 @@ ces or already launched.")
     """
     We will build slapos software needed by the testnode itself,
     """
-    if self.testnode.test_suite_portal.isMasterTestnode(
+    if self.testnode.taskdistribution.isMasterTestnode(
                            self.testnode.config['test_node_title']):
       pass
     return {'status_code' : 0} 
@@ -258,6 +282,31 @@ ces or already launched.")
     order = slap.registerOpenOrder()
     return slap, supply, order
 
+  def generateProfilePasswordAccess(self):
+    software_hash_directory = self.testnode.config['slapos_binary'].rsplit("bin/slapos", 1)[0]
+    apache_htpasswd = software_hash_directory + "parts/apache/bin/htpasswd"
+    testsuite_directory = self.testnode.config['repository_path_list'][0].rsplit('/', 1)[0]
+    htaccess_file = open(testsuite_directory + HTACCESS, "w")
+    file_content = """
+AuthType Basic
+AuthName "Password Protected Area"
+AuthUserFile "%s%s"
+Require valid-user
+""" % (testsuite_directory, HTPASSWD)
+    htaccess_file.write(file_content)
+    htaccess_file.close()
+    password_path = testsuite_directory + PASSWORD_FILE
+    password_file = open(password_path, "r+") if os.path.isfile(password_path) else open(password_path, "w+")
+    password = password_file.read()
+    if len(password) != PASSWORD_LENGTH:
+      password = ''.join(random.choice(string.digits + string.letters) for i in xrange(PASSWORD_LENGTH))
+      password_file.write(password)
+    password_file.close()
+    user = TESTNODE_USER
+    command = [apache_htpasswd, "-bc", testsuite_directory + HTPASSWD, user, password]
+    self.testnode.process_manager.spawn(*command)
+    return user, password
+
   def createSoftwareReachableProfilePath(self, node_test_suite):
     # Create an obfuscated link to the testsuite directory
     path_to_suite = os.path.join(
@@ -278,14 +327,12 @@ ces or already launched.")
         raise ValueError(msg)
     logger.info("Sym link : %s %s", path_to_suite, self.obfuscated_link_path)
 
+    user, password = self.generateProfilePasswordAccess()
     # Construct the ipv6 obfuscated url of the software profile reachable from outside
-    self.reachable_address = os.path.join(
-      "https://","["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
-      self.randomized_path)
+    self.reachable_address = "http://%s:%s@%s" % (user, password,
+      os.path.join("["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
+      "software",self.randomized_path))
     self.reachable_profile = os.path.join(self.reachable_address, "software.cfg")
-    # ROQUE XXX: below urls are hardcoded until we find ways to make buildout extending through unsafe https 
-    self.reachable_address = "https://lab.nexedi.com/rporchetto/telecom/tree/master"
-    self.reachable_profile = "https://lab.nexedi.com/rporchetto/telecom/raw/master/software_release/software.cfg"
     # Write the reachable address in the software.cfg file,
     # by replacing <obfuscated_url> occurences by the current reachable address.
     software_file = open(node_test_suite.custom_profile_path, "r")
@@ -313,10 +360,10 @@ ces or already launched.")
     slap, supply, order = self._initializeSlapOSConnection()
 
     # Only master testnode must order software installation
-    if self.testnode.test_suite_portal.isMasterTestnode(self.testnode.config['test_node_title']):
+    if self.testnode.taskdistribution.isMasterTestnode(self.testnode.config['test_node_title']):
       # Get from ERP5 Master the configuration of the cluster for the test
       test_configuration = Utils.deunicodeData(
-          json.loads(self.testnode.test_suite_portal.generateConfiguration(
+          json.loads(self.testnode.taskdistribution.generateConfiguration(
                      node_test_suite.test_suite_title)))
       self.involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
       self.launchable = test_configuration['launchable']
@@ -332,7 +379,7 @@ ces or already launched.")
       node_test_suite.edit(configuration_list=configuration_list)
       self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
       self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
-      
+
       self.createSoftwareReachableProfilePath(node_test_suite)
       logger.info("Software reachable profile path is: %s",
                   self.reachable_profile)
@@ -384,6 +431,52 @@ ces or already launched.")
       return {'status_code' : 0}
     return {'status_code' : 1}
 
+  def getConnection(self, instance_url):
+    start_time = time.time()
+    count = 0
+    while MAX_CONNECTION_TIME > time.time()-start_time:
+      try:
+        count = count + 1
+        parsed = urlparse.urlparse(instance_url)
+        host = "%s:%s" % (parsed.hostname, str(parsed.port))
+        if parsed.scheme == 'https':
+          return httplib.HTTPSConnection(host)
+        elif parsed.scheme == 'http':
+          return httplib.HTTPConnection(host)
+        else:
+          raise ValueError("Protocol not implemented")
+      except:
+        logger.info("Can't get connection to %s, we will retry." %instance_url)
+    raise ValueError("Cannot get new connection after %d try (for %s s)" %(count, str(time.time()-start_time)))
+
+  def waitForPendingActivities(self, instance_url, bootstrap_url):
+    start_time = time.time()
+    parsed = urlparse.urlparse(bootstrap_url)
+    user = parsed.username;
+    password = parsed.password;
+    header_dict = {'Authorization': 'Basic %s' % \
+    base64.encodestring('%s:%s' % (user, password)).strip()}
+    count = 0
+    no_pending_activities = False
+    while MAX_BOOTSRAPPING_TIME > time.time()-start_time and not no_pending_activities:
+      zope_connection = self.getConnection(instance_url)
+      try:
+        count = count + 1
+        zope_connection.request(
+          'GET', '/erp5/portal_activities/getMessageList',
+          headers=header_dict
+        )
+        result = zope_connection.getresponse()
+        message_list_text = result.read()
+        message_list = [s.strip() for s in message_list_text[1:-1].split(',')]
+        if len(message_list)==0 or len(message_list)==1: # hack to ignore alarm activities
+          logger.info("There are no pending activities.")
+          return True
+        logger.info("There are %d pending activities" %len(message_list))
+        time.sleep(CHECK_ACTIVITIES_TIME)
+      except Exception as e:
+        logger.info("ERROR getting activities: " + str(e))
+    return no_pending_activities
 
   def runTestSuite(self, node_test_suite, portal_url):
     if not self.launchable:
@@ -391,7 +484,7 @@ ces or already launched.")
       return {'status_code' : 1} # Unable to continue due to not realizable configuration
     configuration_list = node_test_suite.configuration_list
     test_list = range(0, len(configuration_list))
-    test_result_proxy = self.testnode.portal.createTestResult(
+    test_result_proxy = self.testnode.taskdistribution.createTestResult(
       node_test_suite.revision, test_list,
       self.testnode.config['test_node_title'],
       True, node_test_suite.test_suite_title,
@@ -400,12 +493,30 @@ ces or already launched.")
     count = 0
     error_message = None
 
-    self.slapos_communicator.waitInstanceStarted(self.instance_title)
+    def makeSuite(test_suite, location_list, **kwargs):
+      import imp
+      suite = None
+      repo_location = None
+      for location in location_list:
+        try:
+          module = imp.load_source(SCALABILITY_TEST, "%s/%s/%s" %(location, SCALABILITY_TEST, TEST_SUITE_INIT))
+          suite_class = getattr(module, test_suite)
+          suite = suite_class(**kwargs)
+          repo_location = "%s/%s/" % (location, SCALABILITY_TEST)
+        except:
+          pass
+      return suite, repo_location
+
+    suite, repo_location = makeSuite(node_test_suite.test_suite, self.testnode.config['repository_path_list'])
+    if suite == None:
+      error_message = "Could not find test suite %s in the repositories" % node_test_suite.test_suite
+      return {'status_code' : 1, 'error_message': error_message }
 
     # Each cluster configuration are tested
     for configuration in configuration_list:
       # First configuration doesn't need XML configuration update.
       if count > 0:
+        logger.info("Requesting instance with configuration %d" % count)
         self.slapos_communicator.requestInstanceStop()
         self.slapos_communicator.waitInstanceStopped(self.instance_title)
         self._updateInstanceXML(configuration, self.instance_title,
@@ -416,50 +527,112 @@ ces or already launched.")
       self.slapos_communicator.waitInstanceStarted(self.instance_title)
       logger.debug("INSTANCE CORRECTLY STARTED")
 
-      # ROQUE XXX : for debug
-      if True:
-        logger.debug("RETURN FOR DEBUG")
-        return {'status_code' : 0}
+      instance_information = self.slapos_communicator.getInstanceUrlDict()
+      instance_url = suite.getScalabilityTestUrl(instance_information)
+      bootstrap_url = suite.getBootstrapScalabilityTestUrl(instance_information, count)
+      metric_url = suite.getScalabilityTestMetricUrl(instance_information)
+
+      logger.info("Instance url: " + str(instance_url))
+      try:
+        if requests.get(instance_url).status_code != 200:
+          error_message = "Site error. %s not found. Instance site not properly created?" % instance_url
+          return {'status_code' : 1, 'error_message': error_message }
+      except Exception as e:
+        return {'status_code' : 1, 'error_message': "Connection error: %s" % str(e) }
+
+      bootstrap_password = "insecure"
+      if bootstrap_url is not None:
+        logger.info("Bootstrapping instance...")
+        response = requests.get(bootstrap_url)
+        try:
+          result = json.loads(response.text)
+        except:
+          return {'status_code' : 1, 'error_message': "ERROR bootstrapping: " + str(response.text)}
+        if result["status_code"] != 0:
+          return {'status_code' : result["status_code"], 'error_message': "ERROR bootstrapping: " + result["error_message"]}
+        bootstrap_password = result["password"]
+        if not self.waitForPendingActivities(instance_url, bootstrap_url):
+          return {'status_code' : 1, 'error_message': "ERROR waiting for pending activities."}
+
+      software_bin_directory = self.testnode.config['slapos_binary'].rsplit("slapos", 1)[0]
+      runner = software_bin_directory + PERFORMANCE_RUNNER_SCRIPT
+      scalabilityRunner = software_bin_directory + SCALABILITY_RUNNER_SCRIPT
+      slappart_directory = self.testnode.config['srv_directory'].rsplit("srv", 1)[0]
+      log_path = slappart_directory + "var/log/"
 
       # Start only the current test
       exclude_list=[x for x in test_list if x!=test_list[count]]
       count += 1
       test_result_line_proxy = test_result_proxy.start(exclude_list)
 
+      # Loop for getting the running test case
+      test_line_time = time.time()
+      current_test = test_result_proxy.getRunningTestCase()
+      while not current_test and \
+            time.time() - test_line_time < MAX_CREATION_TEST_LINE:
+        time.sleep(15)
+        current_test = test_result_proxy.getRunningTestCase()
+
       if test_result_line_proxy == None :
         error_message = "Test case already tested."
+        logger.info("ERROR: " + error_message)
         break
 
-      logger.info("Test for count : %d is in a running state.", count)
+      logger.info("Test case for count : %d is in a running state." %count)
+
+      current_test_data_json = json.loads(current_test)
+      current_test_data = "%d,%s,%s" % (current_test_data_json["count"], current_test_data_json["title"], current_test_data_json["relative_path"])
+      command = [ scalabilityRunner,
+                  "--instance-url", instance_url,
+                  "--bootstrap-password", bootstrap_password,
+                  "--test-result-path", node_test_suite.test_result.test_result_path,
+                  "--revision", node_test_suite.revision,
+                  "--current-test-data", current_test_data,
+                  "--node-title", self.testnode.config['test_node_title'],
+                  "--test-suite-master-url", self.testnode.config["test_suite_master_url"],
+                  "--test-suite", node_test_suite.test_suite,
+                  "--runner-path", runner,
+                  "--repo-location", repo_location,
+                  "--log-path", log_path,
+                  "--metric-url", metric_url
+                ]
+
+      logger.info("Running test case...")
+      test_thread = TestThread(self.testnode.process_manager, command, logger.info)
+      test_thread.start()
 
       # Wait for test case ending
       test_case_start_time = time.time()
       while test_result_line_proxy.isTestCaseAlive() and \
             test_result_proxy.isAlive() and \
             time.time() - test_case_start_time < MAX_TEST_CASE_TIME:
-        time.sleep(15)
+        time.sleep(60)
 
       # Max time limit reach for current test case: failure.
       if test_result_line_proxy.isTestCaseAlive():
         error_message = "Test case during for %s seconds, too long. (max: %s seconds). Test failure." \
                             %(str(time.time() - test_case_start_time), MAX_TEST_CASE_TIME)
+        logger.info("ERROR: " + str(error_message))
         break
 
       # Test cancelled, finished or in an undeterminate state.
       if not test_result_proxy.isAlive():
+        logger.info("[DEBUG] Test case finished")
         # Test finished
         if count == len(configuration_list):
           break
         # Cancelled or in an undeterminate state.
-        error_message = "Test cancelled or undeterminate state."
+        error_message = "Test case cancelled or undeterminate state."
+        logger.info("ERROR: " + str(error_message))
         break
 
     # Stop current instance
-    self.slapos_communicator.requestInstanceStop()
-    self.slapos_communicator.waitInstanceStopped(self.instance_title)
+    # XXX ROQUE: for debug, instance is not stopped
+    #self.slapos_communicator.requestInstanceStop()
+    #self.slapos_communicator.waitInstanceStopped(self.instance_title)
 
     # Delete old instances
-    # ROQUE: for now, the instance is not removed.
+    # XXX ROQUE: for debug, the instance is not removed.
     #self._cleanUpOldInstance()
 
     # If error appears then that's a test failure.    
@@ -470,7 +643,8 @@ ces or already launched.")
       logger.debug("Test Failed.")
       return {'status_code' : 1, 'error_message': error_message} 
     # Test is finished.
-    logger.debug("Test finished.")
+    logger.info("Test finished.")
+
     return {'status_code' : 0}
 
   def _cleanUpOldInstance(self):
