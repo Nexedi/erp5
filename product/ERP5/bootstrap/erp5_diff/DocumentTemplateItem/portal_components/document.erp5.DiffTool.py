@@ -170,6 +170,9 @@ class PortalPatch:
     old_value_dict = self.removeProperties(self.old_value, export=True)
     new_value_dict = self.removeProperties(self.new_value, export=True)
 
+    #old_value_dict = self.old_value.__dict__
+    #new_value_dict = self.new_value.__dict__
+
     # Get the DeepDiff in tree format.
     tree_diff = DeepDiff(old_value_dict,
                           new_value_dict,

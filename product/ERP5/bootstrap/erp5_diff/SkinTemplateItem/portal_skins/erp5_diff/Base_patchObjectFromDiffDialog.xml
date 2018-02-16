@@ -18,7 +18,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Dialog to be used to create new object from the patch or use the diff to patch old object.</string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -117,7 +117,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create Object From Patch</string> </value>
+            <value> <string>Create New Document</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

@@ -97,7 +97,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiffTool_viewDiffTwoObjectDialog</string> </value>
+            <value> <string>ERP5Site_viewDiffTwoObjectDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -129,7 +129,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>DiffTool_updateDiffTwoObjectDialog</string> </value>
+            <value> <string>ERP5Site_updateDiffTwoObjectDialog</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>

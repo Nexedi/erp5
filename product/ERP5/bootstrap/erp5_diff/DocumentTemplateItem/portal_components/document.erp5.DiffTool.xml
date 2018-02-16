@@ -44,7 +44,7 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W:246,  2: Dangerous default value [] as argument (dangerous-default-value)</string>
+                <string>W:249,  2: Dangerous default value [] as argument (dangerous-default-value)</string>
                 <string>W: 31,  0: Unused WARNING imported from zLOG (unused-import)</string>
               </tuple>
             </value>
