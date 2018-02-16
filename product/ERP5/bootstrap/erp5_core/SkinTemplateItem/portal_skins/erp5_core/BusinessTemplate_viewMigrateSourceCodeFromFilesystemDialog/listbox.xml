@@ -404,8 +404,6 @@
                           <string>Name</string>
                         </tuple>
                         <tuple>
-                        </tuple>
-                        <tuple>
                           <string>portal_type</string>
                           <string>Destination Portal Type</string>
                         </tuple>
