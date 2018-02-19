@@ -26,6 +26,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
@@ -100,13 +101,20 @@
             gadget.getUrlFor({command: 'selection_next'}),
             gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
             gadget.state.erp5_document._links.action_object_jio_report ?
-              gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
-              "",
-            calculatePageTitle(gadget, gadget.state.erp5_document)
+                gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
+                "",
+            calculatePageTitle(gadget, gadget.state.erp5_document),
+            gadget.isDesktopMedia(),
+            gadget.state.erp5_document._links.action_object_new_content_action ?
+                gadget.getUrlFor({command: 'change', options: {
+                  view: gadget.state.erp5_document._links.action_object_new_content_action.href,
+                  editable: true
+                }}) :
+                ""
           ]);
         })
         .push(function (all_result) {
-          return gadget.updateHeader({
+          var options = {
             edit_url: all_result[0],
             actions_url: all_result[1],
             selection_url: all_result[2],
@@ -115,7 +123,12 @@
             tab_url: all_result[5],
             export_url: all_result[6],
             page_title: all_result[7]
-          });
+          },
+            is_desktop = all_result[8];
+          if (is_desktop) {
+            options.add_url = all_result[9];
+          }
+          return gadget.updateHeader(options);
         });
     });
 

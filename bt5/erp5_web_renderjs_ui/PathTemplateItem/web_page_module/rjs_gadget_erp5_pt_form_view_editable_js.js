@@ -15,6 +15,7 @@
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareAcquiredMethod("displayFormulatorValidationError",
                            "displayFormulatorValidationError")
+    .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
     .allowPublicAcquisition("notifyChange", function () {
       return this.notifyChange({modified: true});
     })
@@ -80,22 +81,23 @@
 
         // render the header
         .push(function () {
-          var new_content_action = form_gadget.state.erp5_document._links.action_object_new_content_action;
-
-          if (new_content_action !== undefined) {
-            new_content_action = form_gadget.getUrlFor({command: 'change', options: {view: new_content_action.href, editable: true}});
-          } else {
-            new_content_action = "";
-          }
-
           return RSVP.all([
             form_gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
             form_gadget.getUrlFor({command: 'change', options: {page: "action"}}),
-            new_content_action,
+            form_gadget.state.erp5_document._links.action_object_new_content_action ?
+                form_gadget.getUrlFor({command: 'change', options: {
+                  view: form_gadget.state.erp5_document._links.action_object_new_content_action.href,
+                  editable: true
+                }}) :
+                "",
             form_gadget.getUrlFor({command: 'history_previous'}),
             form_gadget.getUrlFor({command: 'selection_previous'}),
             form_gadget.getUrlFor({command: 'selection_next'}),
-            calculatePageTitle(form_gadget, form_gadget.state.erp5_document)
+            calculatePageTitle(form_gadget, form_gadget.state.erp5_document),
+            form_gadget.isDesktopMedia(),
+            form_gadget.state.erp5_document._links.action_object_jio_report ?
+                form_gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
+                ""
           ]);
         })
         .push(function (all_result) {
@@ -107,9 +109,13 @@
             previous_url: all_result[4],
             next_url: all_result[5],
             page_title: all_result[6]
-          };
+          },
+            is_desktop = all_result[7];
           if (form_gadget.state.save_action === true) {
             header_dict.save_action = true;
+          }
+          if (is_desktop) {
+            header_dict.export_url = all_result[8];
           }
           return form_gadget.updateHeader(header_dict);
         });
