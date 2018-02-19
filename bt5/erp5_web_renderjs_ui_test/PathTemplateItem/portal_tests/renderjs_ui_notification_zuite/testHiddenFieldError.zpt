@@ -44,8 +44,10 @@ Check that user gets notified if there is an error on a hidden field.
     <td>//button[@data-i18n='Save']</td><td></td></tr>
 <tr><td>click</td>
     <td>//button[@data-i18n='Save']</td><td></td></tr>
-<tr><td>waitForTextPresent</td>
-    <td>The input failed the external validator.</td><td></td></tr>
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'Input data has errors.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 </tbody>
 </table>
