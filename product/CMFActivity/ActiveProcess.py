@@ -75,7 +75,6 @@ class ActiveProcess(Base):
   # Declarative properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
-                    , PropertySheet.Folder
                     , PropertySheet.CategoryCore
                     , PropertySheet.ActiveProcess )
 
