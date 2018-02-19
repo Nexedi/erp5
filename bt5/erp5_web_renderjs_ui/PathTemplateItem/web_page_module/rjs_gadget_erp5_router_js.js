@@ -28,6 +28,8 @@
     COMMAND_RELOAD = "reload",
     // Display the latest state stored for a jio document
     COMMAND_DISPLAY_STORED_STATE = "display_stored_state",
+    // Display an action on the jio document,
+    COMMAND_DISPLAY_ACTION = "display_action",
     // Display the current jio document, but change some URL parameters
     COMMAND_CHANGE_STATE = "change",
     // Like change, but also store the current jio document display state
@@ -56,6 +58,7 @@
   VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STORED_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_CHANGE_STATE] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_ACTION] = null;
   VALID_URL_COMMAND_DICT[COMMAND_STORE_AND_CHANGE_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_STORE_AND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_INDEX_STATE] = null;
@@ -164,7 +167,37 @@
   //////////////////////////////////////////////////////////////////
   // Build URL functions
   //////////////////////////////////////////////////////////////////
+  function getDisplayUrlFor(jio_key, options) {
+    var prefix = '?',
+      result,
+      tmp,
+      key;
+    result = "#" + PREFIX_DISPLAY + (jio_key || "");
+    for (key in options) {
+      if (options.hasOwnProperty(key) && options[key] !== undefined) {
+        // Don't keep empty values
+        tmp = options[key];
+        if (endsWith(key, ":json")) {
+          tmp = JSON.stringify(tmp);
+        }
+        result += prefix + encodeURIComponent(key) + "=" + encodeURIComponent(tmp);
+        prefix = '&';
+      }
+    }
+    return result;
+  }
+
   function getCommandUrlFor(gadget, command, options) {
+    var result = "#" + PREFIX_COMMAND + (command || ""),
+      prefix = "?",
+      key,
+      tmp,
+      tmp_dict,
+      action_url,
+      action,
+      action_data,
+      i,
+      j;
     if (command === COMMAND_RAW) {
       return options.url;
     }
@@ -179,11 +212,6 @@
           return new_url;
         });
     }
-    var result = "#" + PREFIX_COMMAND + (command || ""),
-      prefix = "?",
-      key,
-      tmp,
-      tmp_dict;
     tmp_dict = gadget.props.options;
     for (key in tmp_dict) {
       if (tmp_dict.hasOwnProperty(key) && (tmp_dict[key] !== undefined)) {
@@ -243,26 +271,6 @@
       hash = new URL(hash, window.location.href).href;
     }
     return hash;
-  }
-
-  function getDisplayUrlFor(jio_key, options) {
-    var prefix = '?',
-      result,
-      tmp,
-      key;
-    result = "#" + PREFIX_DISPLAY + (jio_key || "");
-    for (key in options) {
-      if (options.hasOwnProperty(key) && options[key] !== undefined) {
-        // Don't keep empty values
-        tmp = options[key];
-        if (endsWith(key, ":json")) {
-          tmp = JSON.stringify(tmp);
-        }
-        result += prefix + encodeURIComponent(key) + "=" + encodeURIComponent(tmp);
-        prefix = '&';
-      }
-    }
-    return result;
   }
 
   //////////////////////////////////////////////////////////////////
@@ -374,6 +382,41 @@
     return synchronousChangeState(
       getDisplayUrlFor(jio_key, options)
     );
+  }
+
+  function execDisplayActionCommand(gadget, options) {
+    return new RSVP.Queue()
+      .push(function () {
+        return gadget.jio_getAttachment(options.jio_key, 'links');
+      })
+      .push(function (document_view) {
+        var i, j, action, action_data, action_url;
+
+        for (i = 0; i < Object.keys(document_view._links).length; i = i + 1) {
+          action = Object.keys(document_view._links)[i];
+          if (document_view._links.hasOwnProperty(action)) {
+            if (document_view._links[action].constructor !== Array) {
+              document_view._links[action] = [document_view._links[action]];
+            }
+            for (j = 0;  j < document_view._links[action].length; j = j + 1) {
+              action_data = document_view._links[action][j];
+              if (action_data.name === options.page) {
+                action_url = getDisplayUrlFor(
+                  options.jio_key,
+                  {
+                    jio_key: options.jio_key,
+                    view: action_data.href
+                  }
+                );
+                if (action_url !== null && action_url !== undefined) {
+                  return synchronousChangeState(action_url);
+                }
+              }
+            }
+          }
+        }
+        throw new Error('Action not found: ' + options.name);
+      });
   }
 
   function execStoreAndDisplayCommand(gadget, options) {
@@ -811,6 +854,9 @@
     }
     if (command_options.path === COMMAND_CHANGE_STATE) {
       return execChangeCommand(previous_options, next_options, drop_options);
+    }
+    if (command_options.path === COMMAND_DISPLAY_ACTION) {
+      return execDisplayActionCommand(gadget, next_options);
     }
     if (command_options.path === COMMAND_STORE_AND_CHANGE_STATE) {
       return execStoreAndChangeCommand(gadget, previous_options, next_options, drop_options);
