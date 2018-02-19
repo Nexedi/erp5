@@ -639,9 +639,20 @@
     // Nothing. Go to front page
     // If no frontpage is configured, his may comes from missing configuration on website
     // or default HTML gadget modification date more recent than the website modification date
-    return gadget.getSetting("frontpage_gadget")
-      .push(function (result) {
-        var options = {page: result};
+    return new RSVP.Queue()
+      .push(function () {
+        return RSVP.all([
+          gadget.getSetting("frontpage_gadget"),
+          gadget.isDesktopMedia()
+        ]);
+      })
+      .push(function (result_list) {
+        var options = {page: result_list[0]};
+        if (result_list[1]) {
+          // When displayed on a desktop, force the UI
+          // to be in editable mode by default
+          options.editable = true;
+        }
         if (previous_options === undefined) {
           previous_options = {};
         }
@@ -1044,6 +1055,7 @@
     .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod('renderError', 'reportServiceError')
     .declareAcquiredMethod('translate', 'translate')
+    .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
 
     .declareJob('listenHashChange', function () {
       return listenHashChange(this);
