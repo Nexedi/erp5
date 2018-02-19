@@ -29,7 +29,5 @@ credential_recovery = module.newContent(
                                reference=context.getReference(),
                                destination_decision_value=context,
                                language=portal.Localizer.get_selected_language())
-# immediate reindex allowed because it is a new object
-credential_recovery.immediateReindexObject()
 context.serialize()
 credential_recovery.submit()

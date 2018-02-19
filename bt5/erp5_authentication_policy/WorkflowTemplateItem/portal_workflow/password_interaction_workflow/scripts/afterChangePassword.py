@@ -13,6 +13,3 @@ if portal.portal_preferences.getPreferredNumberOfLastPasswordToCheck() or \
                                                            destination_value=login,
                                                            password=current_password)
     password_event.confirm()
-    # Person_isPasswordExpired cache the wrong result if document is not in catalog.
-    # As the document is created in the same transaction, it is possible to force reindexation
-    password_event.immediateReindexObject()
