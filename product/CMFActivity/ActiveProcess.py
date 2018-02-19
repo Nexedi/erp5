@@ -124,11 +124,6 @@ class ActiveProcess(Base):
       return result_list.values()
     return list(result_list)
 
-  security.declareProtected(CMFCorePermissions.ManagePortal, 'activateResult')
-  def activateResult(self, result):
-    if result not in (None, 0, '', (), []):
-      self.postResult(result) # Until we get SQLQueue
-
   security.declareProtected( CMFCorePermissions.View, 'hasActivity' )
   def hasActivity(self, **kw):
     """
