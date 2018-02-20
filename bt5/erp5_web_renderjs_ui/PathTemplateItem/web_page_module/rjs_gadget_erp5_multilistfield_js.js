@@ -30,7 +30,10 @@
   rJS(window)
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
-        item_list = ensureArray(field_json.items),
+        item_list = ensureArray(field_json.items).map(function (item) {
+          if (Array.isArray(item)) {return item; }
+          else {return [item, item]; }
+        }),
         state_dict = {
           value_list: JSON.stringify(
             ensureArray(
@@ -48,11 +51,6 @@
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
         };
-      // Items can be simply an array of values. It is a valid input produced
-      // usually by TALES expression
-      if (item_list.length > 0 && !Array.isArray(item_list[0])) {
-        item_list = item_list.map(function (item) {return [item, item]; });
-      }
       if ((item_list.length === 0) || (item_list[0][0] !== "")) {
         item_list.unshift(["", ""]);
       }

@@ -1,6 +1,6 @@
-/*global window, rJS, isEmpty, getFirstNonEmpty */
+/*global window, rJS, isEmpty, getFirstNonEmpty, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
-(function (window, rJS, getFirstNonEmpty) {
+(function (window, rJS, getFirstNonEmpty, ensureArray) {
   "use strict";
 
   rJS(window)
@@ -10,10 +10,14 @@
 
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
+        item_list = ensureArray(field_json.items).map(function (item) {
+          if (Array.isArray(item)) {return item; }
+          else {return [item, item]; }
+        }),
         state_dict = {
           value: getFirstNonEmpty(field_json.value, field_json['default'], ""),
-          item_list: JSON.stringify(field_json.items),
           editable: field_json.editable,
+          item_list: JSON.stringify(item_list),
           required: field_json.required,
           name: field_json.key,
           title: field_json.title,
@@ -111,4 +115,4 @@
       return true;
     }, {mutex: 'changestate'});
 
-}(window, rJS, getFirstNonEmpty));
+}(window, rJS, getFirstNonEmpty, ensureArray));

@@ -1,6 +1,6 @@
-/*global window, RSVP */
+/*global window, RSVP, Array, isNaN */
 /*jslint indent: 2, maxerr: 3, nomen: true, unparam: true */
-(function (window, RSVP) {
+(function (window, RSVP, Array, isNaN) {
   "use strict";
 
   window.calculatePageTitle = function (gadget, erp5_document) {
@@ -22,7 +22,8 @@
   function isEmpty(value) {
     return (value === undefined ||
             value === null ||
-            value.length === 0);
+            value.length === 0 ||
+            (typeof value === "number" && isNaN(value)));
   }
   window.isEmpty = isEmpty;
 
@@ -57,4 +58,19 @@
   }
   window.getFirstNonEmpty = getFirstNonEmpty;
 
-}(window, RSVP));
+  /** Convert anything to boolean value correctly (even "false" will be false)*/
+  function asBoolean(obj) {
+    if (typeof obj === "boolean") {
+      return obj;
+    }
+    if (typeof obj === "string") {
+      return obj.toLowerCase() === "true" || obj === "1";
+    }
+    if (typeof obj === "number") {
+      return obj !== 0;
+    }
+    return Boolean(obj);
+  }
+  window.asBoolean = asBoolean;
+
+}(window, RSVP, Array, isNaN));

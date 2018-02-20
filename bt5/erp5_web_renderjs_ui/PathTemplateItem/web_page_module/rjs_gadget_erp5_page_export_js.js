@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars, calculatePageTitle */
+/*global window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, calculatePageTitle) {
+(function (window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -53,12 +53,6 @@
       });
   }
 
-  function asArray(obj) {
-    if (!obj) {return []; }
-    if (Array.isArray(obj)) {return obj; }
-    return [obj];
-  }
-
   gadget_klass
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -82,8 +76,8 @@
       return gadget.jio_getAttachment(options.jio_key, options.view || "links")
         .push(function (result) {
           erp5_document = result;
-          report_list = asArray(erp5_document._links.action_object_jio_report),
-          print_list = asArray(erp5_document._links.action_object_jio_print);
+          report_list = ensureArray(erp5_document._links.action_object_jio_report),
+          print_list = ensureArray(erp5_document._links.action_object_jio_print);
 
           return RSVP.all([
             renderLinkList(gadget, "Reports", "bar-chart-o", report_list),
@@ -105,4 +99,4 @@
         });
     });
 
-}(window, rJS, RSVP, Handlebars, calculatePageTitle));
+}(window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray));
