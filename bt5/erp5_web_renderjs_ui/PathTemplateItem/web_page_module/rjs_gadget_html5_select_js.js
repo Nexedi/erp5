@@ -36,6 +36,7 @@
           item_list: JSON.stringify(options.item_list),
           editable: options.editable,
           required: options.required,
+          id: options.id,
           name: options.name,
           title: options.title,
           hidden: options.hidden
@@ -51,8 +52,8 @@
         item_list = JSON.parse(this.state.item_list),
         tmp = "";
 
+      select.id = this.state.id || this.state.name;
       select.setAttribute('name', this.state.name);
-      select.setAttribute('id', this.state.name);
 
       if (this.state.title) {
         select.setAttribute('title', this.state.title);

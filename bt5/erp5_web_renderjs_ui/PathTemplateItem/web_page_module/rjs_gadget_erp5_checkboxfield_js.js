@@ -27,6 +27,7 @@
         state_dict = {
           checked: asBool(field_json.value || field_json.default),
           editable: field_json.editable,
+          id: field_json.key,
           name: field_json.key,
           title: field_json.title,
           hidden: field_json.hidden,

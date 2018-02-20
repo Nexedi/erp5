@@ -8,6 +8,7 @@
       tag: 'div',
       text_content: '',
       inner_html: '',
+      id: undefined,
       name: undefined,
       src: undefined,
       alt: undefined,
@@ -19,6 +20,7 @@
       var state_dict = {
           text_content: options.text_content || "",
           inner_html: options.inner_html || "",
+          id: options.id,
           tag: options.tag || 'div',
           src: options.src,
           alt: options.alt,
@@ -51,6 +53,9 @@
         new_element.textContent = content;
       } else if (this.state.inner_html) {
         new_element.innerHTML = this.state.inner_html;
+      }
+      if (this.state.id) {
+        new_element.id = this.state.id;
       }
       if (this.state.src) {
         new_element.setAttribute('src', this.state.src);
