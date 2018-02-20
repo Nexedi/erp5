@@ -1,0 +1,51 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Print Actions</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Print Action following <a href="https://www.erp5.com/documentation/developer/howto/erp5-developer-howto/erp5-Guideline.Never.Print.Directly">Guideline</a></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module/1</td><td></td></tr>
+
+<tr><td colspan="3"><b>Go to relation field view</b></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td><td></td></tr>
+<tr><td>click</td>
+    <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//ul[@class='document-listview']//a[@data-i18n='Relation Fields']</td><td></td></tr>
+<tr><td>click</td>
+    <td>//ul[@class='document-listview']//a[@data-i18n='Relation Fields']</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n='Export']</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n='Export']</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//h3[text()='Print']</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n='View Print Dialog']</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n='View Print Dialog']</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@role="main"]//input[@type='submit']</td><td></td></tr>
+<tr><td>click</td>
+    <td>//div[@role="main"]//input[@type='submit']</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//p[@id='field_last_form_id']</td><td></td></tr>
+<tr><td>assertText</td>
+    <td>//p[@id='field_last_form_id']</td>
+    <td>Foo_viewRelationField</td></tr>
+</tbody></table>
+</body>
+</html>

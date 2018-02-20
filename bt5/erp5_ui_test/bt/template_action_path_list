@@ -34,5 +34,7 @@ Foo | view_hidden_positive_only_quantity
 Foo | view_listbox
 Foo | view_multiple_listbox
 Foo | view_planning
+Foo | view_print_dialog
+Foo | view_printout_form
 Foo | view_proxy_field
 Foo | view_relation_field
