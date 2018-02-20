@@ -119,6 +119,9 @@ class ActiveProcess(Base):
     except AttributeError:
       # BBB: self was created before implementation of __init__
       return []
+    # XXX: ConflictFreeLog does not support indexing so cast to list for the
+    #      moment, although this is inefficient and the caller never needs a
+    #      copy (currently). Same for IOBTree.itervalues().
     if type(result_list) is not ConflictFreeLog: # BBB: result_list is IOBTree
       return result_list.values()
     return list(result_list)
