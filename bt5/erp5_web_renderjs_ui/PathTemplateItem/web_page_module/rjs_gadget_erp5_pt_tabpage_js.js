@@ -1,5 +1,9 @@
 /*global window, rJS, RSVP, Handlebars, URI, calculatePageTitle */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
+
+/** Page for displaying Views, Jump and BreadCrumb navigation for a document.
+*/
+
 (function (window, rJS, RSVP, Handlebars, URI, calculatePageTitle) {
   "use strict";
 
@@ -11,6 +15,38 @@
     table_template = Handlebars.compile(gadget_klass.__template_element
                          .getElementById("table-template")
                          .innerHTML);
+
+  /** Go recursively up the parent-chain and insert breadcrumbs in the last argument.
+   */
+  function modifyBreadcrumbList(gadget, parent_link, breadcrumb_action_list) {
+    if (parent_link === undefined) {
+      return;
+    }
+    var uri = new URI(parent_link.href),
+      jio_key = uri.segment(2);
+
+    if ((uri.protocol() !== 'urn') || (uri.segment(0) !== 'jio') || (uri.segment(1) !== "get")) {
+      // Parent is the ERP5 site thus recursive calling ends here
+      breadcrumb_action_list.unshift({
+        title: "ERP5",
+        link: "#"
+      });
+      return;
+    }
+
+    // Parent is an ERP5 document
+    return gadget.getUrlFor({command: 'display_stored_state', options: {jio_key: jio_key}})
+      .push(function (parent_href) {
+        breadcrumb_action_list.unshift({
+          title: parent_link.name,
+          link: parent_href
+        });
+        return gadget.jio_getAttachment(jio_key, "links");
+      })
+      .push(function (result) {
+        return modifyBreadcrumbList(gadget, result._links.parent || "#", breadcrumb_action_list);
+      });
+  }
 
   gadget_klass
     /////////////////////////////////////////////////////////////////
@@ -24,52 +60,33 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+
+    /** Render only transforms its arguments and passes them to mutex-protected onStateChange
+
+    options:
+      jio_key: {string} currently viewed document (e.g. foo/1)
+      page: {string} selected page (always "tab" for page_tab)
+      view: {string} always "view"
+      selection, history, selection_index
+    */
     .declareMethod("render", function (options) {
-      var view_list,
+      return this.changeState({
+        jio_key: options.jio_key
+      });
+    })
+
+    .onStateChange(function (modification_dict) {
+      var gadget = this,
+        view_list = [],
         tab_list = [],
         jump_action_list = [],
         breadcrumb_action_list = [],
-        parent_queue,
-        gadget = this,
         erp5_document,
         tab_title = "Views",
         tab_icon = "eye",
         jump_list;
 
-      function handleParent(parent_link) {
-        parent_queue.push(function () {
-          var uri,
-            jio_key;
-          if (parent_link !== undefined) {
-            uri = new URI(parent_link.href);
-            jio_key = uri.segment(2);
-
-            if ((uri.protocol() !== 'urn') || (uri.segment(0) !== 'jio') || (uri.segment(1) !== "get")) {
-              // Parent is the ERP5 site
-              breadcrumb_action_list.unshift({
-                title: "ERP5",
-                link: "#"
-              });
-            } else {
-              // Parent is an ERP5 document
-              return gadget.getUrlFor({command: 'display_stored_state', options: {jio_key: jio_key}})
-                .push(function (parent_href) {
-                  breadcrumb_action_list.unshift({
-                    title: parent_link.name,
-                    link: parent_href
-                  });
-                  return gadget.jio_getAttachment(jio_key, "links");
-                })
-                .push(function (result) {
-                  handleParent(result._links.parent || "#");
-                });
-            }
-
-          }
-        });
-      }
-
-      return gadget.jio_getAttachment(options.jio_key, "links")
+      return gadget.jio_getAttachment(modification_dict.jio_key, "links")
         .push(function (result) {
           var i,
             promise_list = [];
@@ -88,7 +105,8 @@
           for (i = 0; i < view_list.length; i += 1) {
             promise_list.push(gadget.getUrlFor({command: 'change', options: {
               view: view_list[i].href,
-              page: undefined
+              page: undefined  // Views in ERP5 must be forms but because of
+                               // OfficeJS we keep it empty for different default
             }}));
           }
           for (i = 0; i < jump_list.length; i += 1) {
@@ -97,9 +115,11 @@
               page: 'search'
             }}));
           }
-          parent_queue = new RSVP.Queue();
-          handleParent(erp5_document._links.parent || "#");
-          promise_list.push(parent_queue);
+          promise_list.push(
+            modifyBreadcrumbList(gadget,
+                                 erp5_document._links.parent || "#",
+                                 breadcrumb_action_list)
+          );
           return RSVP.all(promise_list);
         })
         .push(function (all_result) {
