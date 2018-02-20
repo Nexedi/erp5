@@ -51,15 +51,23 @@ from erp5.util import taskdistribution
 from erp5.util.benchmark.thread import TestThread
 # for dummy slapos answer
 import signal
-
+import threading
 from . import logger
+
+# master frontend information
+FRONTEND_MASTER_REFERENCE = "Scalability-FRONTEND-MASTER-SOFT1-COMP-2732"
+FRONTEND_MASTER_DOMAIN = "scalability.nexedi.com"
+FRONTEND_PUBLIC_IPV4 = "163.172.72.96"
+FRONTEND_SOFTWARE = "https://lab.node.vifib.com/nexedi/slapos/raw/1.0.56/software/apache-frontend/software.cfg"
 
 # max time to instance changing state: 2 hour
 MAX_INSTANCE_TIME = 60*60*2
+# max time to generate frontend instance: 1.5 hour
+MAX_FRONTEND_TIME = 60*90
 # max time to register instance to slapOSMaster: 5 minutes
 MAX_CREATION_INSTANCE_TIME = 60*10
-# max time for a test: 1 hour
-MAX_TEST_CASE_TIME = 60*60
+# max time for a test: 2 hour
+MAX_TEST_CASE_TIME = 60*60*2
 # max time to prepare SlapOS for testsuite (software installation, instances requests, etc.)
 MAX_PREPARE_TEST_SUITE = 3600*10*1.0 # 10 hours
 # max time for a test line creation: 5 minutes
@@ -70,17 +78,21 @@ MAX_BOOTSRAPPING_TIME = 60*30
 MAX_CONNECTION_TIME = 60*5
 # time to check pending activities
 CHECK_ACTIVITIES_TIME = 60*2
+
 # runner names
 PERFORMANCE_RUNNER_SCRIPT = "performance_tester_erp5"
 SCALABILITY_RUNNER_SCRIPT = "runScalabilityTestSuite"
 SCALABILITY_TEST = "scalability_test"
 TEST_SUITE_INIT = "__init__.py"
+USERHOSTS_BIN = "/opt/slapgrid/488fc141078e0494c60d437972b3fe55/parts/userhosts/userhosts"
+
 # access SR by password
 TESTNODE_USER = "testnode"
 HTACCESS = "/.htaccess"
 HTPASSWD = "/.htpasswd"
 PASSWORD_FILE = "/sr_pass"
 PASSWORD_LENGTH = 10
+HOSTFILE = "/hosts"
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
@@ -149,7 +161,7 @@ class ScalabilityTestRunner():
     return instance_title
 
   def _generateInstanceXML(self, software_configuration,
-                      test_result, test_suite):
+                           test_result, test_suite, frontend_instance_guid=None):
     """
     Generate a complete scalability instance XML configuration
     """
@@ -160,17 +172,22 @@ class ScalabilityTestRunner():
     config.update({'test-suite-revision':test_result.revision})
     config.update({'test-suite':test_suite})
     config.update({'test-suite-master-url':self.testnode.config['test_suite_master_url']})
+    if frontend_instance_guid:
+      config["frontend"] = {"software-url": FRONTEND_SOFTWARE,
+                            "virtualhostroot-http-port" : 8080,
+                            "virtualhostroot-https-port" : 4443}
+      config["sla-dict"]["instance_guid=%s" % frontend_instance_guid] = ["frontend"]
     return config
   
   def _createInstance(self, software_path, software_configuration, instance_title,
-                      test_result, test_suite):
+                      test_result, test_suite, frontend_instance_guid=None):
     """
     Create scalability instance
     """
     if self.authorize_request:
       logger.info("testnode, request : %s", instance_title)
       config = self._generateInstanceXML(software_configuration,
-                                         test_result, test_suite)
+                                         test_result, test_suite, frontend_instance_guid)
       request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
       self.slapos_communicator.requestInstanceStart(instance_title, request_kw)
       self.authorize_request = False
@@ -214,9 +231,9 @@ ces or already launched.")
     Return true if the specified software on the specified node is installed.
     This method should communicates with SlapOS Master.
     """
-    logger.info("Current software state: %s",
-      self.slapos_communicator._getSoftwareState())
-    return self.slapos_communicator._getSoftwareState() == SlapOSMasterCommunicator.SOFTWARE_STATE_INSTALLED
+    software_state = self.slapos_communicator._getSoftwareState(computer_guid)
+    logger.info("Current software state: %s", software_state)
+    return software_state == SlapOSMasterCommunicator.SOFTWARE_STATE_INSTALLED
 
   def remainSoftwareToInstall(self):
     """
@@ -269,8 +286,7 @@ ces or already launched.")
                                 slapgrid_rest_uri=self.slapos_api_rest_url)
       if getattr(slap, '_hateoas_navigator', None) is None:
          retry += 1
-         logger.info(
-           "Fail to load _hateoas_navigator waiting a bit and retry.")
+         logger.info("Fail to load _hateoas_navigator waiting a bit and retry.")
          time.sleep(30)
       else:
          break
@@ -328,6 +344,7 @@ Require valid-user
     logger.info("Sym link : %s %s", path_to_suite, self.obfuscated_link_path)
 
     user, password = self.generateProfilePasswordAccess()
+    logger.info("Software Profile password: %s" % password)
     # Construct the ipv6 obfuscated url of the software profile reachable from outside
     self.reachable_address = "http://%s:%s@%s" % (user, password,
       os.path.join("["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
@@ -346,6 +363,37 @@ Require valid-user
     for line in new_file_content:
       software_file.write(line)
     software_file.close()
+
+  def prepareFrontendMasterInstance(self, computer, test_suite_title):
+    public_ipv4 = FRONTEND_PUBLIC_IPV4
+    frontend_software = FRONTEND_SOFTWARE
+    frontend_master_reference = FRONTEND_MASTER_REFERENCE
+    domain = FRONTEND_MASTER_DOMAIN
+    slap, supply, order = self._initializeSlapOSConnection()
+    slapos_communicator = SlapOSMasterCommunicator.SlapOSTester(
+				frontend_master_reference, slap, order, supply,
+				frontend_software, computer_guid=computer)
+    # Ask for software installation
+    start_time = time.time()
+    slapos_communicator.supply(frontend_software, computer)
+    while (slapos_communicator._getSoftwareState() != SlapOSMasterCommunicator.SOFTWARE_STATE_INSTALLED
+        and (MAX_PREPARE_TEST_SUITE > (time.time()-start_time))):
+      logger.info("Waiting for frontend software installation")
+      time.sleep(60)
+    if slapos_communicator._getSoftwareState() != SlapOSMasterCommunicator.SOFTWARE_STATE_INSTALLED:
+      raise ValueError("ERROR while installing frontend software")
+    logger.info("Frontend software installed.")
+    # Request master frontend instance
+    master_request_kw = {"partition_parameter_kw": {"domain": domain, "public-ipv4": public_ipv4 } }
+    slapos_communicator.requestInstanceStart(frontend_master_reference, master_request_kw)
+    slapos_communicator.waitInstanceStarted(frontend_master_reference)
+    logger.info("Master Frontend instance started.")
+    frontend_master_dict = slapos_communicator.getMasterFrontendDict()
+    if not frontend_master_dict['frontend_master_ipv6']:
+      raise ValueError("ERROR with master frontend: ipv6 url not found")
+    parsed_url = urlparse.urlparse(frontend_master_dict['frontend_master_ipv6'])
+    self.frontend_master_ipv6 = parsed_url.hostname
+    return frontend_master_dict['instance_guid']
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
@@ -381,8 +429,7 @@ Require valid-user
       self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
 
       self.createSoftwareReachableProfilePath(node_test_suite)
-      logger.info("Software reachable profile path is: %s",
-                  self.reachable_profile)
+      logger.info("Software reachable profile path is: %s", self.reachable_profile)
 
       # Initialize SlapOS Master Communicator
       self.slapos_communicator = SlapOSMasterCommunicator.SlapOSTester(
@@ -403,14 +450,17 @@ Require valid-user
       # Waiting until all softwares are installed
       while (self.remainSoftwareToInstall() 
              and (max_time > (time.time()-start_time))):
-        logger.info("Master testnode is waiting for the end of"
-                    " all software installation (for %ss) PID=%s.",
+        logger.info("Master testnode is waiting for the end of "
+                    "all software installation (for %ss) PID=%s.",
                     int(time.time()-start_time), os.getpid())
         time.sleep(interval_time)
       # TODO : remove the line below wich simulate an answer from slapos master
       self._comeBackFromDummySlapOS()
+      # Ask for frontend SR installation and instance request
+      frontend_instance_guid = self.prepareFrontendMasterInstance(self.launcher_nodes_computer_guid[0], node_test_suite.test_suite_title)
       if self.remainSoftwareToInstall() :
         # All softwares are not installed, however maxtime is elapsed, that's a failure.
+        logger.error("All softwares are not installed.")
         return {'status_code' : 1}
       self.authorize_request = True
       logger.debug("Softwares installed.")
@@ -420,7 +470,8 @@ Require valid-user
                              configuration_list[0],
                              self.instance_title,
                              node_test_suite.test_result,
-                             node_test_suite.test_suite)
+                             node_test_suite.test_suite,
+                             frontend_instance_guid)
         logger.debug("Scalability instance requested.")
       except Exception:
         msg = "Unable to launch instance"
@@ -439,19 +490,21 @@ Require valid-user
         count = count + 1
         parsed = urlparse.urlparse(instance_url)
         host = "%s:%s" % (parsed.hostname, str(parsed.port))
+        if parsed.port is None: host = parsed.hostname
         if parsed.scheme == 'https':
           return httplib.HTTPSConnection(host)
         elif parsed.scheme == 'http':
           return httplib.HTTPConnection(host)
         else:
           raise ValueError("Protocol not implemented")
-      except:
+      except Exception as e:
         logger.info("Can't get connection to %s, we will retry." %instance_url)
+        logger.info("Exception: " + str(e))
     raise ValueError("Cannot get new connection after %d try (for %s s)" %(count, str(time.time()-start_time)))
 
-  def waitForPendingActivities(self, instance_url, bootstrap_url):
+  def waitForPendingActivities(self, instance_url):
     start_time = time.time()
-    parsed = urlparse.urlparse(bootstrap_url)
+    parsed = urlparse.urlparse(instance_url)
     user = parsed.username;
     password = parsed.password;
     header_dict = {'Authorization': 'Basic %s' % \
@@ -521,29 +574,47 @@ Require valid-user
         self.slapos_communicator.waitInstanceStopped(self.instance_title)
         self._updateInstanceXML(configuration, self.instance_title,
                                 node_test_suite.test_result, node_test_suite.test_suite)
-        self.slapos_communicator.waitInstanceStarted(self.instance_title)
-        self.slapos_communicator.requestInstanceStart()
+        logger.info("Waiting for new configuration...")
+        time.sleep(60*5)
 
       self.slapos_communicator.waitInstanceStarted(self.instance_title)
       logger.debug("INSTANCE CORRECTLY STARTED")
 
+      # loop for getting instance information (with frontend)
+      instance_information_time = time.time()
       instance_information = self.slapos_communicator.getInstanceUrlDict()
+      logger.info("Getting instance information:")
+      while not instance_information['frontend-url-list'] and \
+            time.time() - instance_information_time < MAX_FRONTEND_TIME:
+        time.sleep(5*60)
+        instance_information = self.slapos_communicator.getInstanceUrlDict()
+      logger.info(instance_information)
+      if not instance_information['frontend-url-list']:
+        return {'status_code' : 1, 'error_message': "Error getting instance information: frontend url not available" }
+
       instance_url = suite.getScalabilityTestUrl(instance_information)
       bootstrap_url = suite.getBootstrapScalabilityTestUrl(instance_information, count)
       metric_url = suite.getScalabilityTestMetricUrl(instance_information)
-
       logger.info("Instance url: " + str(instance_url))
-      try:
-        if requests.get(instance_url).status_code != 200:
-          error_message = "Site error. %s not found. Instance site not properly created?" % instance_url
-          return {'status_code' : 1, 'error_message': error_message }
-      except Exception as e:
-        return {'status_code' : 1, 'error_message': "Connection error: %s" % str(e) }
+
+      # adding frontend url to userhosts
+      logger.info("Updating userhots with instance frontend url...")
+      parsed_url = urlparse.urlparse(instance_url)
+      testsuite_directory = self.testnode.config['repository_path_list'][0].rsplit('/', 1)[0]
+      hosts_file = open(testsuite_directory + HOSTFILE, "w")
+      file_content = """%s %s
+""" % (self.frontend_master_ipv6, parsed_url.hostname)
+      hosts_file.write(file_content)
+      hosts_file.close()
 
       bootstrap_password = "insecure"
       if bootstrap_url is not None:
         logger.info("Bootstrapping instance...")
-        response = requests.get(bootstrap_url)
+        try:
+          response = requests.get(bootstrap_url)
+        except Exception as e:
+          error_message = "Site error. %s not found. Instance site not properly created? Error: %s" % (instance_url, e)
+          return {'status_code' : 1, 'error_message': error_message }
         try:
           result = json.loads(response.text)
         except:
@@ -551,8 +622,9 @@ Require valid-user
         if result["status_code"] != 0:
           return {'status_code' : result["status_code"], 'error_message': "ERROR bootstrapping: " + result["error_message"]}
         bootstrap_password = result["password"]
-        if not self.waitForPendingActivities(instance_url, bootstrap_url):
+        if not self.waitForPendingActivities(bootstrap_url):
           return {'status_code' : 1, 'error_message': "ERROR waiting for pending activities."}
+      logger.info("Bootstrap password: " + bootstrap_password)
 
       software_bin_directory = self.testnode.config['slapos_binary'].rsplit("slapos", 1)[0]
       runner = software_bin_directory + PERFORMANCE_RUNNER_SCRIPT
@@ -562,8 +634,9 @@ Require valid-user
 
       # Start only the current test
       exclude_list=[x for x in test_list if x!=test_list[count]]
-      count += 1
       test_result_line_proxy = test_result_proxy.start(exclude_list)
+      logger.info("Test case for count : %d is in a running state." %count)
+      count += 1
 
       # Loop for getting the running test case
       test_line_time = time.time()
@@ -578,11 +651,10 @@ Require valid-user
         logger.info("ERROR: " + error_message)
         break
 
-      logger.info("Test case for count : %d is in a running state." %count)
-
       current_test_data_json = json.loads(current_test)
       current_test_data = "%d,%s,%s" % (current_test_data_json["count"], current_test_data_json["title"], current_test_data_json["relative_path"])
-      command = [ scalabilityRunner,
+      command = [ USERHOSTS_BIN,
+                  scalabilityRunner,
                   "--instance-url", instance_url,
                   "--bootstrap-password", bootstrap_password,
                   "--test-result-path", node_test_suite.test_result.test_result_path,
@@ -596,9 +668,12 @@ Require valid-user
                   "--log-path", log_path,
                   "--metric-url", metric_url
                 ]
+      hosts_file = testsuite_directory + HOSTFILE
+      exec_env = os.environ.copy()
+      exec_env.update({'HOSTS': hosts_file})
 
       logger.info("Running test case...")
-      test_thread = TestThread(self.testnode.process_manager, command, logger.info)
+      test_thread = TestThread(self.testnode.process_manager, command, logger.info, env=exec_env)
       test_thread.start()
 
       # Wait for test case ending
@@ -614,6 +689,8 @@ Require valid-user
                             %(str(time.time() - test_case_start_time), MAX_TEST_CASE_TIME)
         logger.info("ERROR: " + str(error_message))
         break
+
+      logger.info("[DEBUG] Test case for current configuration finished")
 
       # Test cancelled, finished or in an undeterminate state.
       if not test_result_proxy.isAlive():
@@ -648,47 +725,14 @@ Require valid-user
     return {'status_code' : 0}
 
   def _cleanUpOldInstance(self):
-    logger.debug("_cleanUpOldInstance")
+    # TODO is this necessary?
+    #instance_to_delete_list = []
+    #outdated_date = datetime.datetime.fromtimestamp(time.time()) - datetime.timedelta(days=2)
 
-    # Get title and link list of all instances
-    instance_dict = self.slapos_communicator.getHostingSubscriptionDict()
-    instance_to_delete_list = []
-    outdated_date = datetime.datetime.fromtimestamp(time.time()) - datetime.timedelta(days=2)
-
-    # Select instances to delete
-    for title,link in instance_dict.items():
-      # Instances created by testnode contains "Scalability-" and
-      # "timestamp=" in the title.
-      if "Scalability-" in title and "timestamp=" in title:
-        # Get timestamp of the instance creation date
-        foo, timestamp = title.split("timestamp=")
-        creation_date = datetime.datetime.fromtimestamp(float(timestamp))
-        # Test if instance is older than the limit
-        if creation_date < outdated_date:
-          instance_to_delete_list.append((title,link))
-    
-    for title,link in instance_to_delete_list:
-      # Get instance information
-      instance_information_dict = self.slapos_communicator.getHostingSubscriptionInformationDict(title)
-      # Delete instance
-      if instance_information_dict:
-        if instance_information_dict['status'] != 'destroyed':
-          self.slapos_controler.request(
-              instance_information_dict['title'],
-              instance_information_dict['software_url'],
-              software_type=instance_information_dict['software_type'],
-              computer_guid=instance_information_dict['computer_guid'],
-              state='destroyed'
-          )
-          logger.debug("Instance '%s' deleted.",
-            instance_information_dict['title'])
-
-  def _cleanUpNodesInformation(self):
-    self.involved_nodes_computer_guid = []
-    self.launcher_nodes_computer_guid = []
-    self.remaining_software_installation_dict = {}
-    self.authorize_supply = True
-    self.authorize_request = False
+    self.slapos_communicator.requestInstanceDestroy(self.instance_title)
+    # TODO: check status? Is it possible to check status 'destroy requested' ?
+    # does make sense to wait the destruction? For now it waits until stop
+    self.slapos_communicator.waitInstanceStopped(self.instance_title)
 
   def getRelativePathUsage(self):
     """
