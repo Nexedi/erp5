@@ -69,6 +69,7 @@ class BenchmarkProcess(multiprocessing.Process):
                         "another process, flushing remaining results...")
 
   def getBrowser(self, log_file):
+    self._logger.info("[BenchmarkProcess] Browser username and password: %s - %s" % (self._username, self._password))
     return Browser(self._argument_namespace.erp5_base_url,
                    self._username,
                    self._password,
@@ -87,8 +88,9 @@ class BenchmarkProcess(multiprocessing.Process):
       except StopIteration:
         raise
       except Exception, e:
+        message = "Exception while running target suite for user %s: %s" % (self._browser._username, str(e))
+        self._logger.info(message)
         msg = "%s: %s" % (target, traceback.format_exc())
-
         try:
           msg += "Last response headers:\n%s\nLast response contents:\n%s" % \
               (self._browser.headers, self._browser.contents)
