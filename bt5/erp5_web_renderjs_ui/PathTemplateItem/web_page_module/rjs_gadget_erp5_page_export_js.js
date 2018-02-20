@@ -74,16 +74,20 @@
     .declareMethod("render", function (options) {
       var gadget = this,
         erp5_document,
-        report_list;
+        report_list,
+        print_list;
 
-      return gadget.jio_getAttachment(options.jio_key, "links")
+      // Get the whole view as attachment because actions can change based on
+      // what view we are at. If no view available than fallback to "links".
+      return gadget.jio_getAttachment(options.jio_key, options.view || "links")
         .push(function (result) {
           erp5_document = result;
-          report_list = asArray(erp5_document._links.action_object_report_jio)
-                        .concat(asArray(erp5_document._links.action_object_jio_report));
+          report_list = asArray(erp5_document._links.action_object_jio_report),
+          print_list = asArray(erp5_document._links.action_object_jio_print);
 
           return RSVP.all([
-            renderLinkList(gadget, "Reports", "bar-chart-o", report_list)
+            renderLinkList(gadget, "Reports", "bar-chart-o", report_list),
+            renderLinkList(gadget, "Print", "print", print_list)
           ]);
         })
         .push(function (translated_html_link_list) {

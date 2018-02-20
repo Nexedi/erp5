@@ -79,7 +79,9 @@
         clone_list,
         delete_list;
 
-      return gadget.jio_getAttachment(options.jio_key, "links")
+      // Get the whole view as attachment because actions can change based on
+      // what view we are at. If no view available than fallback to "links".
+      return gadget.jio_getAttachment(options.jio_key, options.view || "links")
         .push(function (result) {
           erp5_document = result;
           transition_list = asArray(erp5_document._links.action_workflow);

@@ -298,6 +298,9 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     document = self._makeDocument()
     parent = document.getParentValue()
     fake_request = do_fake_request("GET")
+    # XXX Kato: Can someone please put comments why getHateoas is called on a Document?
+    #           From test point of view it does not make much sense since this should never happen in reality
+    #           ERP5Document_getHateoas should be always called on portal, Web Site, or Web Section.
     result = document.ERP5Document_getHateoas(REQUEST=fake_request)
     self.assertEquals(fake_request.RESPONSE.status, 200)
     self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
@@ -359,17 +362,20 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     document = self.portal.web_site_module.hateoas
     parent = document.getParentValue()
     fake_request = do_fake_request("GET")
-    result = document.ERP5Document_getHateoas(REQUEST=fake_request)
+    # Note empty relative_url to force `is_portal_root` == True and to obtain "raw_search" in the links
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request)
     self.assertEquals(fake_request.RESPONSE.status, 200)
     self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
     )
     result_dict = json.loads(result)
+    # This means that no object is actually rendered because no relative_url is given thus getHateoas is not in "web_mode"
+    # XXX Kato: I think it is just more unecessary complexity because in real life - getHateoas is always called on a Web Section
     self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
 
     self.assertEqual(result_dict['_links']['parent'],
                     {"href": "urn:jio:get:%s" % parent.getRelativeUrl(), "name": parent.getTitle()})
-
+    # form_id must be empty in this case because we have no relative_url to display view for
     self.assertEqual(result_dict['_links']['view'][0]['href'],
                      "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
                        self.portal.absolute_url(),
@@ -455,7 +461,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
 
     self.assertEqual(result_dict['_links']['parent'],
                     {"href": "urn:jio:get:%s" % parent.getRelativeUrl(), "name": parent.getTitle()})
-
+    # view links do not have form_id in their URL
     self.assertEqual(result_dict['_links']['view'][0]['href'],
                      "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
                        self.portal.absolute_url(),
@@ -560,7 +566,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['action_object_view'][0]['name'], "view")
 
     self.assertEqual(result_dict['_links']['action_workflow'][0]['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog" % (
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog&form_id=Foo_view" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_workflow'][0]['title'], "Custom Action No Dialog")
@@ -579,7 +585,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['site_root']['name'], self.portal.web_site_module.hateoas.getTitle())
 
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document" % (
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document&form_id=Foo_view" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['title'], "Create a Document")
@@ -710,7 +716,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
 
     self.assertEqual(result_dict['_links']['parent'],
                     {"href": "urn:jio:get:%s" % parent.getRelativeUrl(), "name": parent.getTitle()})
-
+    # view links do not have form_id in the URL
     self.assertEqual(result_dict['_links']['view'][0]['href'],
                      "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
                        self.portal.absolute_url(),
@@ -1353,7 +1359,7 @@ class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['result_list'][0]['_links']['action_object_view'][0]['name'], "view")
 
     self.assertEqual(result_dict['result_list'][0]['_links']['action_workflow'][0]['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog" % (
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog&form_id=Foo_view" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['result_list'][0]['_links']['action_workflow'][0]['title'], "Custom Action No Dialog")
@@ -1366,7 +1372,7 @@ class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['result_list'][0]['_links']['site_root']['name'], self.portal.web_site_module.hateoas.getTitle())
 
     self.assertEqual(result_dict['result_list'][0]['_links']['action_object_new_content_action']['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document" % (
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document&form_id=Foo_view" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['result_list'][0]['_links']['action_object_new_content_action']['title'], "Create a Document")
