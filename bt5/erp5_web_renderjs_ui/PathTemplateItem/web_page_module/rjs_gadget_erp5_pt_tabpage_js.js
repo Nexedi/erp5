@@ -1,10 +1,10 @@
-/*global window, rJS, RSVP, Handlebars, URI, calculatePageTitle */
+/*global window, rJS, RSVP, Handlebars, URI, calculatePageTitle, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 
 /** Page for displaying Views, Jump and BreadCrumb navigation for a document.
 */
 
-(function (window, rJS, RSVP, Handlebars, URI, calculatePageTitle) {
+(function (window, rJS, RSVP, Handlebars, URI, calculatePageTitle, ensureArray) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -91,17 +91,9 @@
           var i,
             promise_list = [];
           erp5_document = result;
-          view_list = erp5_document._links.view || [];
-          jump_list = erp5_document._links.action_object_jump || [];
+          view_list = ensureArray(erp5_document._links.view);
+          jump_list = ensureArray(erp5_document._links.action_object_jump);
 
-          // All ERP5 document should at least have one view.
-          // So, no need normally to test undefined
-          if (view_list.constructor !== Array) {
-            view_list = [view_list];
-          }
-          if (jump_list.constructor !== Array) {
-            jump_list = [jump_list];
-          }
           for (i = 0; i < view_list.length; i += 1) {
             promise_list.push(gadget.getUrlFor({command: 'change', options: {
               view: view_list[i].href,
@@ -178,4 +170,4 @@
         });
     });
 
-}(window, rJS, RSVP, Handlebars, URI, calculatePageTitle));
+}(window, rJS, RSVP, Handlebars, URI, calculatePageTitle, ensureArray));

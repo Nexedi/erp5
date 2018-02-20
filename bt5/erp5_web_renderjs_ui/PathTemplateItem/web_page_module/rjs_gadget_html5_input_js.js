@@ -1,25 +1,13 @@
-/*global window, document, rJS, RSVP, jIO */
+/*global window, document, rJS, RSVP, jIO, getFirstNonEmpty */
 /*jslint indent: 2, maxerr: 3, maxlen: 80 */
-(function (window, document, rJS, RSVP, jIO) {
+(function (window, document, rJS, RSVP, jIO, getFirstNonEmpty) {
   "use strict";
-
-  /** Missing value can have different values based on type.
-   *
-   * In general `undefined` and `null` are considered missing values
-   * Float is missing when `NaN`
-   */
-  function is_missing(value) {
-    if (value === undefined || value === null) {return true; }
-    if (typeof value === "number") {return window.isNaN(value); }
-    return false;
-  }
 
   rJS(window)
 
     .declareMethod('render', function (options) {
       return this.changeState({
-        // display nothing for missing values
-        value: is_missing(options.value) ? "" : options.value,
+        value: getFirstNonEmpty(options.value, ""),
         checked: options.checked,
         editable: options.editable,
         required: options.required,
@@ -203,4 +191,4 @@
       return this.notifyInvalid(evt.target.validationMessage);
     }, true, false);
 
-}(window, document, rJS, RSVP, jIO));
+}(window, document, rJS, RSVP, jIO, getFirstNonEmpty));

@@ -1,6 +1,6 @@
-/*global window, rJS */
+/*global window, rJS, getFirstNonEmpty */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, rJS, getFirstNonEmpty) {
   "use strict";
 
   rJS(window)
@@ -13,7 +13,7 @@
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
-          value: field_json.value || field_json.default || "",
+          value: getFirstNonEmpty(field_json.value, field_json.default, ""),
           editable: field_json.editable,
           required: field_json.required,
           id: field_json.key,
@@ -78,4 +78,4 @@
       return true;
     }, {mutex: 'changestate'});
 
-}(window, rJS));
+}(window, rJS, getFirstNonEmpty));

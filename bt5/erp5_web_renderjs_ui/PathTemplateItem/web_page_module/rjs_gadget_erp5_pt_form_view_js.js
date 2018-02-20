@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, calculatePageTitle */
+/*global window, rJS, RSVP, calculatePageTitle, isEmpty */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle) {
+(function (window, rJS, RSVP, calculatePageTitle, isEmpty) {
   "use strict";
 
   /** Return true if `field` resembles non-empty and non-editable field. */
@@ -12,12 +12,8 @@
     if (field.type === "FormBox") {return true; }
     // hidden fields should not be obviously rendered
     if (field.hidden === 1) {return false; }
-    // field without default
-    if (!field['default']) {return false; }
-    if (field['default'].length === 0) {return false; }
-    if (field['default'].length === 1 && (!field['default'][0])) {return false; }
-
-    return true;
+    // empty default value is bad and final decision
+    return !isEmpty(field['default']);
   }
 
   rJS(window)
@@ -138,4 +134,4 @@
         });
     });
 
-}(window, rJS, RSVP, calculatePageTitle));
+}(window, rJS, RSVP, calculatePageTitle, isEmpty));
