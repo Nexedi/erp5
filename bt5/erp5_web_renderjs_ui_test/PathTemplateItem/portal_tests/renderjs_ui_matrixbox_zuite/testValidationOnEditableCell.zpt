@@ -57,8 +57,10 @@
 
 <tr><td>click</td>
     <td>//button[@data-i18n="Save"]</td><td></td></tr>
-<tr><td>waitForTextPresent</td>
-    <td>Input data has errors.</td><td></td></tr>
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'Input data has errors.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 <!-- Verify no data loss (and correct formating with precision=1)-->
 <tr><td>verifyValue</td>
@@ -84,8 +86,12 @@
 
 <tr><td>click</td>
     <td>//button[@data-i18n="Save"]</td><td></td></tr>
-<tr><td>waitForTextPresent</td>
-    <td>Data updated.</td><td></td></tr>
+
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data updated.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
 
 </tbody>
 </table>

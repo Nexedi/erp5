@@ -50,8 +50,12 @@
 <tr><td>click</td>
     <td>//button[@data-i18n="Save"]</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tr><td>waitForTextPresent</td>
-    <td>Data updated.</td></tr>
+
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data updated.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
 <tr><td>verifyValue</td>
     <td>field_matrixbox_quantity_cell_0_0_0</td>
     <td>1.0</td></tr>
@@ -99,8 +103,12 @@
 <tr><td>click</td>
     <td>//button[@data-i18n="Save"]</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tr><td>waitForTextPresent</td>
-    <td>Data updated.</td></tr>
+
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data updated.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
 <tr><td>verifyValue</td>
     <td>field_matrixbox_quantity_cell_0_0_0</td>
     <td>1.0</td></tr>
