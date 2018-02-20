@@ -26,28 +26,11 @@
       <td>//button[@data-i18n="Save"][contains(@class, "ui-disabled")]</td>
       <td></td>
     </tr>
-    <tr>
-      <td>waitForTextPresent</td>
-      <td>Data updated.</td>
-      <td></td>
-    </tr>
-    <!-- Second loader while updating the page -->
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//h1[@class="ui-title"]//a[contains(@class, "ui-icon-spinner")]</td>
-      <td></td>
-    </tr>
-    <!-- Save Button is disabled  -->
-    <tr>
-      <td>verifyElementPresent</td>
-      <td>//button[@data-i18n="Save"][contains(@class, "ui-disabled")]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementNotPresent</td>
-      <td>//h1[@class="ui-title"]//a[contains(@class, "ui-icon-spinner")]</td>
-      <td></td>
-    </tr>
+    <tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                               'text': 'Data updated.'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
     <tr>
       <td>verifyElementPresent</td>
       <td>//button[@data-i18n="Save"][contains(@class, "ui-icon-check")]</td>
