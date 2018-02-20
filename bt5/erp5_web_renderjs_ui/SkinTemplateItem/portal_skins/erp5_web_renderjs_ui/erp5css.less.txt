@@ -1364,6 +1364,14 @@ div[data-gadget-scope='header'] .ui-header {
     }
   }
 
+  // Increase the size of the editors when placed
+  // in the bottom group
+  .bottom {
+    iframe {
+      height: 80vh;
+    }
+  }
+
 /*
   @media @smartphone {
     .ui-field-contain {
