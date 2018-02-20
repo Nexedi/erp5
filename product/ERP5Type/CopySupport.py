@@ -423,68 +423,87 @@ class CopyContainer:
                                          new_id=self.id)
 
   def _duplicate(self, cp):
-    try:    cp = _cb_decode(cp)
-    except: raise CopyError, 'Clipboard Error'
+    _, result = self.__duplicate(
+      cp,
+      duplicate=True,
+      is_indexable=True,
+    )
+    return result
 
-    oblist=[]
-    op=cp[0]
+  def __duplicate(self, cp, duplicate, is_indexable):
+    try:
+      cp = _cb_decode(cp)
+    except:
+      raise CopyError(eInvalid)
+    oblist = []
+    op = cp[0]
     app = self.getPhysicalRoot()
-    result = []
-
     for mdata in cp[1]:
       m = Moniker.loadMoniker(mdata)
-      try: ob = m.bind(app)
-      except: raise CopyError, 'Not Found'
-      self._verifyObjectPaste(ob, validate_src=1)
+      try:
+        ob = m.bind(app)
+      except:
+        raise CopyError(eNotFound)
+      self._verifyObjectPaste(ob, validate_src=op + 1)
       oblist.append(ob)
-
-    if op==0:
-      for ob in oblist:
-        if not ob.cb_isCopyable():
-            raise CopyError, 'Not Supported'
-        try:    ob._notifyOfCopyTo(self, op=0)
-        except: raise CopyError, 'Copy Error'
-        ob = ob._getCopy(self)
-        orig_id = ob.getId()
-        id = self._get_id(ob.getId())
-        result.append({'id':orig_id, 'new_id':id})
-        ob._setId(id)
-        self._setObject(id, ob)
-        ob = self._getOb(id)
-        ob._postCopy(self, op=0)
-        ob._postDuplicate()
-        ob.wl_clearLocks()
-
-    if op==1:
-      # Move operation
-      for ob in oblist:
-        id = ob.getId()
-        if not ob.cb_isMoveable():
-          raise CopyError, 'Not Supported'
-        try:    ob._notifyOfCopyTo(self, op=1)
-        except: raise CopyError, 'Move Error'
-        if not sanity_check(self, ob):
-          raise CopyError, 'This object cannot be pasted into itself'
-
+    result = []
+    def doMove(self, ob):
+      aq_parent(aq_inner(ob))._delObject(ob.getId())
+      return aq_base(ob)
+    is_doable_id, notify_error, do_sanity_check, do, set_owner, is_clone = (
+      ( # 0: Copy
+        'cb_isCopyable',
+        'Copy Error',
+        lambda self, ob: True,
+        lambda self, ob: ob._getCopy(self),
+        1, # Take ownership.
+        True,
+      ),
+      ( # 1: Move
+        'cb_isMoveable',
+        'Move Error',
+        sanity_check,
+        doMove,
+        0, # Retain original ownership.
+        False,
+      ),
+    )[op]
+    for ob in oblist:
+      if not getattr(ob, is_doable_id)():
+        raise CopyError(eNotSupported % escape(ob.getId()))
+      try:
+        ob._notifyOfCopyTo(self, op=op)
+      except:
+        raise CopyError(MessageDialog(
+          title=notify_error,
+          message=sys.exc_info()[1],
+          action='manage_main',
+        ))
+      if not do_sanity_check(self, ob):
+        raise CopyError('This object cannot be pasted into itself')
+      if not set_owner:
         # try to make ownership explicit so that it gets carried
         # along to the new location if needed.
         ob.manage_changeOwnershipType(explicit=1)
-
-        aq_parent(aq_inner(ob))._delObject(id)
-        ob = aq_base(ob)
-        orig_id = id
-        id = self._get_id(id)
-        result.append({'id':orig_id, 'new_id':id })
-
-        ob._setId(id)
-        self._setObject(id, ob, set_owner=0)
-        ob = self._getOb(id)
-        ob._postCopy(self, op=1)
-
+      new_ob = do(self, ob)
+      orig_id = ob.getId()
+      new_id = self._get_id(orig_id)
+      result.append({'id': orig_id, 'new_id': new_id})
+      new_ob._setId(new_id)
+      if not is_indexable:
+        new_ob._setNonIndexable()
+      self._setObject(new_id, new_ob, set_owner=set_owner)
+      new_ob = self._getOb(new_id)
+      new_ob._postCopy(self, op=op)
+      if is_clone:
+        new_ob.manage_afterClone(new_ob)
+        new_ob.wl_clearLocks()
+      if duplicate:
+        new_ob._postDuplicate()
+      if not set_owner:
         # try to make ownership implicit if possible
-        ob.manage_changeOwnershipType(explicit=0)
-
-    return result
+        new_ob.manage_changeOwnershipType(explicit=0)
+    return op, result
 
   def _postDuplicate(self):
     self_base = aq_base(self)
@@ -522,100 +541,27 @@ class CopyContainer:
     If is_indexable is False, we will avoid indexing the pasted objects and
     subobjects
     """
-    cp=None
+    cp = None
     if cb_copy_data is not None:
-      cp=cb_copy_data
-    else:
-      if REQUEST and REQUEST.has_key('__cp'):
-        cp=REQUEST['__cp']
+      cp = cb_copy_data
+    elif REQUEST is not None and REQUEST.has_key('__cp'):
+      cp = REQUEST['__cp']
     if cp is None:
-      raise CopyError, eNoData
-
-    try:  cp=_cb_decode(cp)
-    except: raise CopyError, eInvalid
-
-    oblist=[]
-    op=cp[0]
-    app = self.getPhysicalRoot()
-    result = []
-
-    for mdata in cp[1]:
-      m = Moniker.loadMoniker(mdata)
-      try: ob = m.bind(app)
-      except: raise CopyError, eNotFound
-      self._verifyObjectPaste(ob, validate_src=op+1)
-      oblist.append(ob)
-
-    if op==0:
-      # Copy operation
-      for ob in oblist:
-        if not ob.cb_isCopyable():
-          raise CopyError, eNotSupported % escape(ob.getId())
-        try:  ob._notifyOfCopyTo(self, op=0)
-        except: raise CopyError, MessageDialog(
-          title='Copy Error',
-          message=sys.exc_info()[1],
-          action ='manage_main')
-        ob=ob._getCopy(self)
-        orig_id=ob.getId()
-        id=self._get_id(ob.getId())
-        result.append({'id':orig_id, 'new_id':id})
-        ob._setId(id)
-        if not is_indexable:
-          ob._setNonIndexable()
-        self._setObject(id, ob)
-        ob = self._getOb(id)
-        ob._postCopy(self, op=0)
-        ob.manage_afterClone(ob)
-        ob.wl_clearLocks()
-
-      if REQUEST is not None:
-        return self.manage_main(self, REQUEST, update_menu=1,
-                    cb_dataValid=1)
-
-    if op==1:
-      # Move operation
-      for ob in oblist:
-        id=ob.getId()
-        if not ob.cb_isMoveable():
-          raise CopyError, eNotSupported % escape(id)
-        try:  ob._notifyOfCopyTo(self, op=1)
-        except: raise CopyError, MessageDialog(
-          title='Move Error',
-          message=sys.exc_info()[1],
-          action ='manage_main')
-        if not sanity_check(self, ob):
-          raise CopyError, 'This object cannot be pasted into itself'
-
-        # try to make ownership explicit so that it gets carried
-        # along to the new location if needed.
-        ob.manage_changeOwnershipType(explicit=1)
-
-        aq_parent(aq_inner(ob))._delObject(id)
-        ob = aq_base(ob)
-        orig_id=id
-        id=self._get_id(id)
-        result.append({'id':orig_id, 'new_id':id })
-
-        ob._setId(id)
-        if not is_indexable:
-          ob._setNonIndexable()
-        self._setObject(id, ob, set_owner=0)
-        ob=self._getOb(id)
-        ob._postCopy(self, op=1)
-
-        # try to make ownership implicit if possible
-        ob.manage_changeOwnershipType(explicit=0)
-
-      if REQUEST is not None:
-        REQUEST['RESPONSE'].setCookie('__cp', 'deleted',
-                  path='%s' % cookie_path(REQUEST),
-                  expires='Wed, 31-Dec-97 23:59:59 GMT')
-        REQUEST['__cp'] = None
-        return self.manage_main(self, REQUEST, update_menu=1,
-                    cb_dataValid=0)
-    return result
-
+      raise CopyError(eNoData)
+    op, result = self.__duplicate(
+      cp,
+      duplicate=False,
+      is_indexable=is_indexable,
+    )
+    if REQUEST is None:
+      return result
+    if op == 0:
+      cb_dataValid = 1
+    else:
+      cb_dataValid = 0
+      REQUEST['RESPONSE'].setCookie('__cp', 'deleted', path='%s' % cookie_path(REQUEST), expires='Wed, 31-Dec-97 23:59:59 GMT')
+      REQUEST['__cp'] = None
+    return self.manage_main(self, REQUEST, update_menu=1, cb_dataValid=cb_dataValid)
 #### Helper methods
 
 def tryMethodCallWithTemporaryPermission(context, permission, method,
