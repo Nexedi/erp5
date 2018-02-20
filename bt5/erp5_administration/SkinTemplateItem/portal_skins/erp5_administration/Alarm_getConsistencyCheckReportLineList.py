@@ -8,14 +8,11 @@ if active_process is None:
 else:
   active_process = context.getPortalObject().restrictedTraverse(active_process)
 
-result_list = []
-constraint_message_list = []
-if active_process is not None:
-  result_list = [x for x in active_process.getResultList()]
-  # High severity will be displayed first
-  result_list.sort(key=lambda x: -x.severity)
+if active_process is None:
+  return []
 
-for result in result_list:
+constraint_message_list = []
+for result in active_process.ActiveProcess_getResultList():
   constraint_message_list.extend(result.getProperty('constraint_message_list') or [])
 
 return constraint_message_list

@@ -8,11 +8,7 @@ if active_process is None:
 else:
   active_process = context.getPortalObject().restrictedTraverse(active_process)
 
-result_list = []
+if active_process is None:
+  return []
 
-if active_process is not None:
-  result_list = [x for x in active_process.getResultList()]
-  # High severity will be displayed first
-  result_list.sort(key=lambda x: -x.severity)
-
-return result_list
+return active_process.ActiveProcess_getResultList()
