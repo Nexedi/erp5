@@ -19,6 +19,7 @@ import urlparse
 import httplib
 import base64
 import requests
+import ssl
 import threading
 from erp5.util.benchmark.argument import ArgumentType
 from erp5.util.benchmark.performance_tester import PerformanceTester
@@ -31,7 +32,7 @@ import datetime
 MAX_INSTALLATION_TIME = 60*50
 MAX_TESTING_TIME = 60
 MAX_GETTING_CONNECTION_TIME = 60*5
-TEST_METRIC_TIME_INTERVAL = 60*5
+TEST_METRIC_TIME_INTERVAL = 60*3
 
 SCALABILITY_LOG_FILENAME = "runScalabilityTestSuite"
 LOG_FILE_PREFIX = "scalability-test"
@@ -39,7 +40,7 @@ LOG_FILE_PREFIX = "scalability-test"
 TEST_CASE_DURATION = 60
 # Maximum limit of documents to create during a test case
 MAX_DOCUMENTS = 1
-MAX_ERRORS = 1
+MAX_ERRORS = 2
 
 class DummyLogger(object):
   def __init__(self, func):
@@ -58,6 +59,7 @@ def getConnection(instance_url, log):
       count = count + 1
       parsed = urlparse.urlparse(instance_url)
       host = "%s:%s" % (parsed.hostname, str(parsed.port))
+      if parsed.port is None: host = parsed.hostname
       if parsed.scheme == 'https':
         return httplib.HTTPSConnection(host)
       elif parsed.scheme == 'http':
@@ -73,6 +75,7 @@ def waitFor0PendingActivities(instance_url, log):
   """
   Waiting while there are no pending activities on the instance.
   """
+  log("waiting activities for: " + str(instance_url))
   start_time = time.time()
   parsed = urlparse.urlparse(instance_url)
   user = parsed.username;
@@ -103,8 +106,9 @@ def waitFor0PendingActivities(instance_url, log):
 
       log("There is %d pending activities" %len(message_list))
       time.sleep(5)
-    except:
+    except Exception as e:
       time.sleep(5)
+      log("exception: " + str(e))
       log("Getting activities failed, retry.")
 
   if not ok:
@@ -226,12 +230,16 @@ class ScalabilityLauncher(object):
     ScalabilityLauncher._checkParsedArguments(namespace)
     return namespace
 
-  def moveLogs(self, folder_name):
+  def moveLogs(self, folder_name, current_test):
     file_to_move_list = glob.glob(os.path.join(self.__argumentNamespace.log_path,
                                   "%s*.csv" %LOG_FILE_PREFIX))
     file_to_move_list += glob.glob(os.path.join(self.__argumentNamespace.log_path,
                                   "%s*.log" %LOG_FILE_PREFIX))
-    new_directory_path = os.path.join(self.__argumentNamespace.log_path,
+    root_test_dir = os.path.join(self.__argumentNamespace.log_path,
+                                 "scalability-test-%s/" % current_test.relative_path.split("/")[1])
+    if not os.path.exists(root_test_dir):
+      os.makedirs(root_test_dir)
+    new_directory_path = os.path.join(root_test_dir,
                                       folder_name)
     if not os.path.exists(new_directory_path):
       os.makedirs(new_directory_path)
@@ -335,7 +343,7 @@ class ScalabilityLauncher(object):
                              '--benchmark-path-list', benchmarks_path,
                              '--users-file-path', user_file_path,
                              '--users-file', user_file,
-                             '--filename-prefix', "%s_%s_repetition%d" %(LOG_FILE_PREFIX, current_test.title, i),
+                             '--filename-prefix', "%s_%s_repetition%d_suite_%s" %(LOG_FILE_PREFIX, current_test.title, i, test_suite),
                              '--report-directory', self.__argumentNamespace.log_path,
                              '--repeat', "%d"%1,
                              '--max-errors', str(MAX_ERRORS),
@@ -352,13 +360,17 @@ class ScalabilityLauncher(object):
       time.sleep(test_duration)
 
       waitFor0PendingActivities(instance_url, self.log)
-      self.moveLogs(log_dir)
+      self.moveLogs(log_dir, current_test)
 
     self.log("Test Case %s has finished" %(current_test.title))
     metric_thread_stop_event.set()
     time.sleep(15) # wait thread to stop
     metric_list = metric_thread.getMetricList()
     test_output = suite.getScalabilityTestOutput(metric_list)
+    if not test_output:
+      self.log("metric list and test output empty. getting metric thread error message.")
+      test_output = metric_thread.getErrorMessage()
+    self.log("test_output: " + str(test_output))
 
     # Send results to master
     retry_time = 2.0

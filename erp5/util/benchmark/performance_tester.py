@@ -175,11 +175,6 @@ class PerformanceTester(object):
                                                                        callable_object=True,
                                                                        searchable_path_list=namespace.benchmark_path_list))
 
-    if namespace.repeat > 0:
-      namespace.max_error_number = \
-          min(len(namespace.benchmark_suite_list) * namespace.repeat,
-              namespace.max_error_number)
-
     if isinstance(namespace.users, tuple) and namespace.repeat == -1:
         raise argparse.ArgumentTypeError("Repeat cannot be infinite for a "
                                          "range of users")
