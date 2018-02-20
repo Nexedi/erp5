@@ -23,6 +23,7 @@
         checked: options.checked,
         editable: options.editable,
         required: options.required,
+        id: options.id,
         name: options.name,
         type: options.type || 'text',
         title: options.title,
@@ -48,8 +49,8 @@
       if (this.state.type === 'radio') {
         textarea.checked = this.state.checked;
       }
+      textarea.id = this.state.id || this.state.name;
       textarea.setAttribute('name', this.state.name);
-      textarea.setAttribute('id', this.state.name);
 
       textarea.setAttribute('type', this.state.type);
       if (this.state.title) {

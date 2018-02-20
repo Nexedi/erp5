@@ -13,6 +13,7 @@
           value: field_json.value || field_json.default || "",
           editable: field_json.editable,
           name: field_json.key,
+          id: field_json.key,
           title: field_json.title,
           hidden: field_json.hidden,
           // Force calling subfield render
