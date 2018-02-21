@@ -355,11 +355,13 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       # Initiate variables to match original script from Yusei T.
       # XXX To be cleaned
       conversion_ratio = default_quantity_unit_order_quantity_unit_conversion_ratio
-      next_date = date
 
       delay_second = max_delay_second or min_delay_second or 0
+      # XXX Hardcoded that we need to receive one day before...
+      # Very bad....
+      limit_date = getPreviousValidDate(date) - 1
       start_date = getPreviousValidDate(
-        addToDate(date, second=-delay_second)
+        addToDate(limit_date, second=-delay_second)
       )
       stop_date = addToDate(start_date, second=delay_second).earliestTime()
       order_delay_second = max_order_delay_second or min_order_delay_second or 0
@@ -411,13 +413,15 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         history_list=history_list,
         at_date=date,
         )
-      if ordered_inventory + (inventory-quantity) < min_inventory: # SKU
+      self.log("at %s min: %s, Ordered: %s, inventory:%s, quantity:%s" % (date, min_inventory, ordered_inventory, inventory, quantity))
+      if ordered_inventory + (inventory) < min_inventory: # SKU
          #import pdb;pdb.set_trace()
-         quantity = min_inventory - (inventory-quantity) - ordered_inventory
+         quantity = min_inventory - (inventory) - ordered_inventory
          ordered_quantity, ordered_unit, effective_date, start_date, delivery_date, quantity = minimalQuantity(quantity, date)
          # XXX CLN This is very naive, it has to be optimized
          if start_date <= supply.getStartDateRangeMax()\
           and start_date >= supply.getStartDateRangeMin():
+           self.log("Week %s Will order %s at %s" % (delivery_date.week(), quantity, delivery_date))
            ordered_inventory = ordered_inventory + quantity
            movement_list.append(
              newMovement(
@@ -429,6 +433,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
               )
             )
       history_list.pop(0)
+    return []
     return movement_list
 
   def _searchMovementList(self, **kw):
@@ -585,7 +590,6 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       created_by_builder=1)
     if self.getPortalObject().portal_workflow.isTransitionPossible(delivery, "auto_plan"):
       delivery.autoPlan()
-    delivery.immediateReindexObject()
     return delivery
 
   def _processDeliveryGroup(self, delivery_module, movement_group_node,
