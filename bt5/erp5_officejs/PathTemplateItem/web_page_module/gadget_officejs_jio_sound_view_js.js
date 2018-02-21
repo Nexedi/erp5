@@ -1,6 +1,7 @@
-/*global window, rJS, RSVP */
+/*global window, rJS, RSVP, jIO, URL,
+  promiseEventListener, document*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, jIO, rJS, RSVP, MediaSource, URL, document, promiseEventListener) {
+(function (window, jIO, rJS, RSVP, URL, document, promiseEventListener) {
   "use strict";
 
   rJS(window)
@@ -13,45 +14,30 @@
     .declareAcquiredMethod("updateDocument", "updateDocument")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
+    .declareAcquiredMethod("reload", "reload")
+    .declareAcquiredMethod("jio_get", "jio_get")
+    .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-
-    .allowPublicAcquisition('getAttachment', function (params) {
-      return this.jioInstance.getAttachment(params[0], params[0], {"start": params[1].start, "end": params[1].end});
-    })
-
     .declareMethod("render", function (options) {
-      var gadget = this,
-        queue;
-      if (options.doc.type && options.doc.type === 'mp3') {
-        queue = gadget.declareGadget('gadget_officejs_jio_sound_controller.html', {element: gadget.element.querySelector('.controller')});
-      } else {
-        queue = gadget.declareGadget('gadget_officejs_jio_sound_controller_fallback.html', {element: gadget.element.querySelector('.controller')});
-      }
-      queue
-       .push(function (soundController) {
-        gadget.id = options.doc.id;
-        gadget.title = options.doc.title;
-        gadget.length = options.doc.length;
-        gadget.duration = options.doc.duration;
-        gadget.type = options.doc.type;
-        return soundController.configurePlayer(gadget.id, gadget.length, gadget.duration);
-      }).push(function () {
-        return gadget.changeState({
-          jio_key: options.jio_key,
-          doc: options.doc
-        });
-      });
-      return queue;
-    })
-
-    .declareMethod('calculateDuration', function (blob) {
-      // Create a temporary audio element and assign the data to calculate the time information.
       var gadget = this;
-      var audioElement = document.createElement('audio');
-      audioElement.src = URL.createObjectURL(blob);
+      gadget.type = options.doc.type;
+      return gadget.changeState({
+        jio_key: options.jio_key,
+        doc: options.doc
+      });
+    })
+/*
+    .declareMethod('calculateDuration', function (data) {
+      // Create a temporary audio element and assign the data to
+      // calculate the time duration.
+      var gadget = this,
+        audioElement = document.createElement('audio');
+      audioElement.src = URL.createObjectURL(data);
       return RSVP.Queue()
         .push(function () {
           return promiseEventListener(
@@ -61,10 +47,10 @@
           );
         })
         .push(function () {
-          return gadget.duration = audioElement.duration;
+          gadget.duration = audioElement.duration;
         });
     })
-
+*/
     .onEvent('submit', function () {
       var gadget = this;
       return gadget.notifySubmitting()
@@ -75,75 +61,69 @@
           return form_gadget.getContent();
         })
         .push(function (content) {
-          if (gadget.title === "Untitled Document") {
-            gadget.title = content.title;
-            return gadget.jioInstance.post({
-              "title": gadget.title
-            });
-          } else {
-            gadget.title = content.title;
-            return gadget.jioInstance.put(
-              gadget.id, {
-                "title": gadget.title
-              });
-          }
-        })
-        .push(function (id) {
-          var data = gadget.element.querySelector('#data').files[0];
-          if (data) {
-            var result = data.slice();
-            var arrName = data.name.split('.');
-            gadget.type = arrName[arrName.length - 1];
-            gadget.id = id;
-            gadget.title = data.name;
-            gadget.length = data.size;
-            return RSVP.all([
-              gadget.calculateDuration(result),
-              gadget.jioInstance.putAttachment(gadget.id, gadget.id, result)
-            ]);
-          }
-        })
-        .push(function () {
-          var subGadget;
-          document.getElementById('field-content').style.display = "none";
-          if (gadget.type && gadget.type === 'mp3') {
-            subGadget = gadget.declareGadget('gadget_officejs_jio_sound_controller.html', {element: gadget.element.querySelector('.controller')});
-          } else {
-            subGadget = gadget.declareGadget('gadget_officejs_jio_sound_controller_fallback.html', {element: gadget.element.querySelector('.controller')});
-          }
-          return subGadget
-            .push(function (soundController) {
-              return soundController.configurePlayer(gadget.id, gadget.length, gadget.duration);
-            })
+          var blob = jIO.util.dataURItoBlob(content.data.url);
+          return RSVP.Queue()
             .push(function () {
-              return gadget.updateDocument({
-                id: gadget.id,
-                title: gadget.title,
-                length: gadget.length,
-                duration: gadget.duration,
-                type: gadget.type
-              });
+              gadget.title = content.data.file_name;
+              return gadget.jio_get(gadget.state.jio_key);
+              // Create a new document if not present in IDB.
+              /*if (gadget.title === "Untitled Document") {
+                gadget.title = content.title;
+                return gadget.jio_post({
+                  "title": gadget.title
+                });
+              }
+              // Update the document if already present in IDB.
+              gadget.title = content.title;
+              return gadget.jio_put(
+                gadget.id,
+                {
+                  "title": gadget.title
+                }
+              );
+              */
+            }).push(function (doc) {
+              var property;
+              for (property in content) {
+                if (content.hasOwnProperty(property) && property !== 'data') {
+                  doc[property] = content[property];
+                }
+              }
+              doc.length = blob.size;
+              return gadget.jio_put(gadget.state.jio_key, doc);
+            }).push(function () {
+              return gadget.jio_putAttachment(gadget.state.jio_key, 'enclosure', blob);
             });
+            /*.push(function (doc) {
+              // Extract information from data, if uploaded.
+              if (content.data) {
+                var arrName = content.data.file_name.split('.');
+                gadget.type = arrName[arrName.length - 1];
+                gadget.id = id;
+                gadget.title = content.data.file_name;
+                var blob = jIO.util.dataURItoBlob(content.data.url);
+                gadget.length = blob.size;
+                // Calculate the duration of audio file.
+                //return gadget.calculateDuration(blob).push(function () {
+                  // Insert audio data in attachment table.
+                return gadget.jio_putAttachment(gadget.id, gadget.id, blob);
+                //});
+              }
+            });*/
         })
         .push(function () {
-          document.location.reload();
+          return gadget.updateDocument({
+            title: gadget.title
+          });
+        })
+        .push(function () {
+          //gadget.reload();
           return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
-        }).push(undefined, function (err) {
-          console.log(err);
         });
     })
 
     .declareMethod("triggerSubmit", function () {
       return this.element.querySelector('button[type="submit"]').click();
-    })
-    .ready(function () {
-      this.jioInstance = jIO.createJIO({
-        "type": "uuid",
-        "sub_storage": {
-          "type": "indexeddb",
-          "database": "musicPlayer"
-        }
-      });
     })
 
     .onStateChange(function () {
@@ -164,6 +144,30 @@
                     "key": "title",
                     "hidden": 0,
                     "type": "StringField"
+                  },
+                  "my_file": {
+                    "description": "",
+                    "title": "Upload",
+                    "default": "",
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "data",
+                    "hidden": 0,
+                    "type": "FileField"
+                  },
+                  "my_content": {
+                    "default": {
+                      id: gadget.state.jio_key
+                    },
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "player_content",
+                    "hidden": 0,
+                    "type": "GadgetField",
+                    "url": "gadget_custom_player.html",
+                    "sandbox": "public"
                   }
                 }
               },
@@ -177,7 +181,10 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_title"]]
+                [["my_title"], ["my_file"]]
+              ], [
+                "bottom",
+                [["my_content"]]
               ]]
             }
           });
@@ -199,4 +206,4 @@
           });
         });
     });
-}(window, jIO, rJS, RSVP, MediaSource, URL, document, promiseEventListener));
+}(window, jIO, rJS, RSVP, URL, document, promiseEventListener));

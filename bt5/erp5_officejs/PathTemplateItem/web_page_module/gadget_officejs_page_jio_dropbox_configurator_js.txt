@@ -47,44 +47,23 @@
             }
           },
           local_sub_storage: {
-            type: "mapping",
-            attachment: {
-              'data': {
-                get: {uri_template: 'enclosure'},
-                put: {uri_template: 'enclosure'}
-              }
-            },
+            type: "query",
             sub_storage: {
-              type: "query",
+              type: "uuid",
               sub_storage: {
-                type: "uuid",
-                sub_storage: {
-                  type: "indexeddb",
-                  database: "officejs-dropbox"
-                }
+                type: "indexeddb",
+                database: "officejs-dropbox"
               }
             }
           },
           remote_sub_storage: {
-            type: "mapping",
-            attachment: {
-              'data': {
-                get: {uri_template: 'enclosure'},
-                put: {uri_template: 'enclosure'}
-              }
-            },
-            mapping_dict: {
-              "portal_type": ["equalSubProperty", "type"]
-            },
+            type: "query",
             sub_storage: {
-              type: "query",
+              type: "drivetojiomapping",
               sub_storage: {
-                type: "drivetojiomapping",
-                sub_storage: {
-                  type: "dropbox",
-                  access_token: token,
-                  root: "sandbox"
-                }
+                type: "dropbox",
+                access_token: token,
+                root: "sandbox"
               }
             }
           }

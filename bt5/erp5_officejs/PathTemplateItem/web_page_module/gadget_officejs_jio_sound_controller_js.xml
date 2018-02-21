@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_sound_controller.js</string> </value>
+            <value> <string>gadget_custom_player_controller.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -107,7 +107,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Jio Sound Player Controller JS</string> </value>
+            <value> <string>Gadget Custom Player Controller JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -240,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.19416.47794.57344</string> </value>
+                <value> <string>965.41988.8883.41625</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -258,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1517849904.52</float>
+                        <float>1519204227.98</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

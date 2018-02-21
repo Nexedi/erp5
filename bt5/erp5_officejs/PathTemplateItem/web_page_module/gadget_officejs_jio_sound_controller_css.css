@@ -1,13 +1,12 @@
 .audioplayer{
-	width: 100%;
+	width: 100% !important;
 	height: 60px;
-  margin-top: 200px;
 }
 
 .pDiv{
     position: relative;
     height:60px;
-    width: 5%;
+    width: 5% !important;
     border: none;
     background-size: 50% 50%;
     background-repeat: no-repeat;
@@ -20,11 +19,11 @@
 .duration{
    margin-top: 8px;
    float:left;
-   width: 7%;
+   width: 7% !important;
 }
 
 .pDiv i {
-  width: 50%;
+  width: 50% !important;
   height: 50%;
   overflow: auto;
   margin-top: 20px;
@@ -34,7 +33,7 @@
 
 .timeline{
   position: relative;
-	width: 80%;
+	width: 80% !important;
 	height: 20px;
 	margin-top: 20px;
 	float: left;
@@ -44,7 +43,7 @@
 
 .playhead{
   position: relative;
-	width: 18px;
+	width: 18px !important;
 	height: 18px;
 	border-radius: 50%;
 	margin-top: 1px;
@@ -53,7 +52,7 @@
 
 .volTimeline {
     display: none;
-    width: 1%;
+    width: 1% !important;
     height: 107px;
     margin-top: -85px;
     margin-left: -13px;
@@ -75,6 +74,7 @@
   float:left;
   margin-top:20px;
   margin-left: 1%;
+  width: fit-content !important;
 }
 
 .pVolumn:hover, .pDiv:hover, .timeline:hover {

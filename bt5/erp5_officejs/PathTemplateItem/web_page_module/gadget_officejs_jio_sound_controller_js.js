@@ -1,107 +1,72 @@
-(function(window, rJS, jIO, RSVP, AudioContext, URL, MediaSource, loopEventListener, promiseEventListener, document) {
+/*global window, rJS, RSVP, jIO, AudioContext,
+  URL, MediaSource, loopEventListener, document*/
+/*jslint nomen: true, indent: 2, maxerr: 3 */
+(function (window, rJS, jIO, RSVP, AudioContext, URL, MediaSource, loopEventListener, document) {
   "use strict";
+
   rJS(window)
     //////////////////////////////////////////////
     // Acquire methods
     /////////////////////////////////////////////
-    .declareAcquiredMethod('getAttachment', 'getAttachment')
+    .declareAcquiredMethod('jio_get', 'jio_get')
+    .declareAcquiredMethod('jio_getAttachment', 'jio_getAttachment')
+    .declareAcquiredMethod('updateCurrentTime', 'updateCurrentTime')
+    .declareAcquiredMethod('updateTotalTime', 'updateTotalTime')
 
     //////////////////////////////////////////////
     // Declare methods
     /////////////////////////////////////////////
-    .declareMethod('toHHMMSS', function(sec) {
-      var sec_num = parseInt(sec, 10);
-      var hours   = Math.floor(sec_num / 3600);
-      var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-      var seconds = sec_num - (hours * 3600) - (minutes * 60);
-
-      if (hours   < 10) {hours   = "0"+hours;}
-      if (minutes < 10) {minutes = "0"+minutes;}
-      if (seconds < 10) {seconds = "0"+seconds;}
-      return hours+':'+minutes+':'+seconds;
-    })
-
-    .declareMethod('configurePlayerContext', function() {
+    .declareMethod('configurePlayerContext', function () {
       this.source.connect(this.gain);
       this.gain.connect(this.audioContext.destination);
     })
 
-    .declareMethod('configurePlayer', function(id, length, duration) {
-      // Configure player controller by setting the [id, title...] for the audio.
-      var gadget = this;
-      this.id = id;
-      this.length = length;
-      this.duration = duration;
-      this.index = 0;
-      if (this.duration) {
-        this.toHHMMSS(this.duration).push(function (str) {
-          gadget.element.querySelector('.total_time').innerHTML = str;
-        });
-      }
-      return this.configurePlayerContext();
-    })
-
-    .declareMethod('getAudioChunk', function() {
-      var gadget = this;
-      var start, end;
+    .declareMethod('getAudioChunk', function () {
+      var gadget = this, start, end;
       start = gadget.index;
       if (start >= gadget.length) {
-        return RSVP.resolve(undefined);
+        return;
       }
-      end = start + 10e3 >= gadget.length ? gadget.length - 1 : start + 10e3;
-      console.log(start, end);
+
+      end = start + 10e5 >= gadget.length ? gadget.length - 1 : start + 10e5;
       // Call `getAttachment` method of jIO to fetch a chunk of data from IDB storage.
-      return this.getAttachment(this.id, {start: start, end: end})
-        .push(function(blob) {
-          gadget.index += 10e3;
-          return RSVP.Queue().push(function() {
+      return this.jio_getAttachment(this.id, 'enclosure', { start: start, end: end })
+        .push(function (blob) {
+          gadget.index += 10e5;
+          return RSVP.Queue().push(function () {
             return jIO.util.readBlobAsArrayBuffer(blob);
-          }).push(function(evt) {
+          }).push(function (evt) {
             return evt.target.result;
           });
-        }).push(undefined, function(err) {
-          console.log(err);
         });
     })
 
-    .declareMethod('handlePlayPause', function() {
-      var gadget = this;
+    .declareMethod('handlePlayPause', function () {
       if (this.play) {
         // Audio player is in play condition.
         this.play = false;
-        this.customPlayer.querySelector('.play-btn').classList.add('ui-icon-play');
-        this.customPlayer.querySelector('.play-btn').classList.remove('ui-icon-pause');
         this.audio.pause();
       } else {
         // Audio player is in pause condition.
         this.play = true;
-        this.customPlayer.querySelector('.play-btn').classList.add('ui-icon-pause');
-        this.customPlayer.querySelector('.play-btn').classList.remove('ui-icon-play');
         this.audio.play();
       }
     })
 
-    .declareMethod('handleSound', function() {
+    .declareMethod('handleSound', function () {
       if (this.audio.muted) {
         this.audio.muted = false;
-        this.customPlayer.querySelector('.vol-btn').classList.remove('ui-icon-volume-off');
-        this.customPlayer.querySelector('.vol-btn').classList.add('ui-icon-volume-up');
       } else {
         this.audio.muted = true;
-        this.customPlayer.querySelector('.vol-btn').classList.remove('ui-icon-volume-up');
-        this.customPlayer.querySelector('.vol-btn').classList.add('ui-icon-volume-off');
       }
     })
 
-    .declareMethod('setSourceBuffer', function() {
-      // Release object url when finished attaching with mediaSource.
-      URL.revokeObjectURL(this.audio.src);
+    .declareMethod('setSourceBuffer', function () {
       this.sourceBuffer = this.mediaSource.addSourceBuffer('audio/mpeg');
-      //this.sourceBuffer = this.mediaSource.addSourceBuffer('audio/webm; codecs="opus"');
       return this.setUpdateEvent();
     })
 
-    .declareMethod('setUpdateEvent', function() {
+    .declareMethod('setUpdateEvent', function () {
       var gadget = this;
       return gadget.getAudioChunk().push(function (buffer) {
         // gadget.mediaSource.removeBuffer(gadget.sourceBuffer);
@@ -109,32 +74,32 @@
           if (buffer) {
             gadget.sourceBuffer.appendBuffer(buffer);
           }
-        } catch (ex) {}
+        } catch (ignore) {}
         if (gadget.replay) {
           gadget.audio.play();
           gadget.replay = false;
         }
-      }).push(function() {
+      }).push(function () {
         return gadget.setUpdate();
       });
     })
 
-    .declareJob('setUpdate', function() {
+    .declareJob('setUpdate', function () {
       var gadget = this;
       return loopEventListener(
         gadget.sourceBuffer,
         'updateend',
         false,
-        function() {
+        function () {
           // `timestampOffset` value can give the time of the buffered audio data.
           if (gadget.sourceBuffer.timestampOffset < (gadget.count * 30)) {
-            return gadget.getAudioChunk().push(function(buffer) {
+            return gadget.getAudioChunk().push(function (buffer) {
               try {
                 if (buffer) {
                   return gadget.sourceBuffer.appendBuffer(buffer);
                 }
-              } catch (ex) {}
-              if (gadget.mediaSource.readyState === 'open') {
+              } catch (ignore) {}
+              if (!buffer && gadget.mediaSource.readyState === 'open') {
                 return gadget.mediaSource.endOfStream();
               }
             });
@@ -144,7 +109,7 @@
       );
     })
 
-    .declareMethod('handleRangeRequest', function(index) {
+    .declareMethod('handleRangeRequest', function (index) {
       // We can also return from here without doing anything if the current
       // range is already present in the buffer.
       this.replay = true;
@@ -155,110 +120,95 @@
       this.mediaSource.onsourceopen = this.setSourceBuffer.bind(this);
     })
 
-    .declareMethod('cleanUp', function() {
-      // Remove reference of Object(s) to free memory.
-      this.mediaSource = undefined;
-      this.audioContext = undefined;
-      this.audio = undefined;
-      this.source = undefined;
-      this.gain = undefined;
+    .declareMethod('getContent', function () {
+      return {};
     })
 
-    .ready(function() {
-      //this.cleanUp();
-      var audioContext = this.audioContext = new AudioContext();
-      var gadget = this;
+    .declareMethod('render', function (params) {
+      this.id = params.id;
+      this.length = params.length;
+      //this.duration = params.duration;
+      this.index = 0;
+      if (this.duration) {
+        this.updateTotalTime(this.duration);
+      }
+      return this.configurePlayerContext();
+    })
+
+    .ready(function () {
+      var audioContext = new AudioContext();
+      this.audioContext = audioContext;
       this.play = false;
       this.count = 1;
       this.offset = 0;
-      this.customPlayer = this.element.querySelector('.audioplayer');
-      this.audio = document.createElement('audio');
-      document.body.appendChild(this.audio);
+      this.audio = document.querySelector('audio');
       this.gain = audioContext.createGain();
       this.source = audioContext.createMediaElementSource(this.audio);
       this.mediaSource = new MediaSource();
       this.audio.src =  URL.createObjectURL(this.mediaSource);
-      return this.mediaSource.onsourceopen = this.setSourceBuffer.bind(this);
+      this.mediaSource.onsourceopen = this.setSourceBuffer.bind(this);
     })
 
-    .declareService(function() {
+    .declareService(function () {
       var gadget = this;
       return loopEventListener(
         gadget.audio,
         'timeupdate',
         false,
-        function() {
+        function () {
           if (gadget.audio.currentTime > (gadget.count * 30) - 10) {
-            gadget.count++;
-            return gadget.getAudioChunk().push(function(buffer) {
+            gadget.count = gadget.count + 1;
+            return gadget.getAudioChunk().push(function (buffer) {
               try {
                 if (buffer) {
                   gadget.sourceBuffer.appendBuffer(buffer);
                 }
-              } catch (ex) {}
-            }).push(function() {
+              } catch (ignore) {}
+            }).push(function () {
               gadget.currentTime = gadget.audio.currentTime + gadget.offset;
               gadget.currentTime = gadget.currentTime > gadget.duration ? gadget.duration : gadget.currentTime;
               var percentage = ((98 / gadget.duration) * gadget.currentTime);
-              gadget.element.querySelector('.timeline').style.background = 'linear-gradient(to right, #454549 ' + (percentage + 1) + '%, #bcbcbc 0%';
-              gadget.element.querySelector('.playhead').style.marginLeft = percentage + '%';
-              return gadget.toHHMMSS(gadget.currentTime).push(function (str) {
-                return gadget.element.querySelector('.current_time').innerHTML = str;
-              });
-            }).push(undefined, function(err) {
-              throw err;
+              //gadget.element.querySelector('.timeline').style.background = 'linear-gradient(to right, #454549 ' + (percentage + 1) + '%, #bcbcbc 0%';
+              //gadget.element.querySelector('.playhead').style.marginLeft = percentage + '%';
+              gadget.updateCurrentTime(gadget.currentTime);
             });
           }
+          console.log(gadget.currentTime);
           gadget.currentTime = gadget.audio.currentTime + gadget.offset;
           gadget.currentTime = gadget.currentTime > gadget.duration ? gadget.duration : gadget.currentTime;
           var percentage = ((98 / gadget.duration) * gadget.currentTime);
-          gadget.element.querySelector('.timeline').style.background = 'linear-gradient(to right, #454549 ' + (percentage + 1) + '%, #bcbcbc 0%';
-          gadget.element.querySelector('.playhead').style.marginLeft = percentage + '%';
-          return gadget.toHHMMSS(gadget.currentTime).push(function (str) {
-            return gadget.element.querySelector('.current_time').innerHTML = str;
-          });
+          //gadget.element.querySelector('.timeline').style.background = 'linear-gradient(to right, #454549 ' + (percentage + 1) + '%, #bcbcbc 0%';
+          //gadget.element.querySelector('.playhead').style.marginLeft = percentage + '%';
+          gadget.updateCurrentTime(gadget.currentTime);
         },
         true
       );
     })
 
-    .declareService(function() {
+    .declareService(function () {
       var gadget = this;
-      gadget.mousedown = false;
-      return loopEventListener(
-        gadget.element.querySelector('.playhead'),
-        'mousedown',
-        false,
-        function () {
-          gadget.mousedown = true;
-          gadget.play = false;
-          gadget.customPlayer.querySelector('.play-btn').classList.add('ui-icon-play');
-          gadget.customPlayer.querySelector('.play-btn').classList.remove('ui-icon-pause');
-          gadget.audio.pause();
-        },
-        true
-      );
-    })
-
-    .declareService(function() {
-      var gadget = this;
-      gadget.mousedown = false;
-      return loopEventListener(
-        gadget.element.querySelector('.timeline'),
-        'mouseup',
-        false,
-        function () {
-          gadget.mousedown = false;
-          gadget.play = true;
-          gadget.customPlayer.querySelector('.play-btn').classList.add('ui-icon-pause');
-          gadget.customPlayer.querySelector('.play-btn').classList.remove('ui-icon-play');
-          gadget.audio.play();
-        },
-        true
-      );
-    })
-
-    .declareService(function() {
+      return RSVP.Queue().push(function () {
+        return loopEventListener(
+          gadget.audio,
+          'ended',
+          false,
+          function () {
+            gadget.play = false;
+            gadget.customPlayer.querySelector('.play-btn').classList.add('ui-icon-play');
+            gadget.customPlayer.querySelector('.play-btn').classList.remove('ui-icon-pause');
+          },
+          true
+        );
+      }).push(undefined, function () {
+        // Pause when gadget go out of scope { CancellationError }.
+        gadget.audio.pause();
+        gadget.source.disconnect(0);
+        gadget.gain.disconnect(0);
+        gadget.audioContext.close();
+      });
+    });
+/*
+    .declareService(function () {
       var gadget = this;
       return loopEventListener(
         gadget.element.querySelector('.timeline'),
@@ -266,7 +216,7 @@
         false,
         function (evt) {
           if (gadget.mousedown) {
-            var val = (((evt.clientX - gadget.element.querySelector('.timeline').offsetLeft) / gadget.element.querySelector('.timeline').offsetWidth)) * 100;
+            var val = ((evt.offsetX / gadget.element.querySelector('.timeline').offsetWidth)) * 100;
             val = (val > 98 ? 98 : val);
             gadget.element.querySelector('.timeline').style.background = 'linear-gradient(to right, #454549 ' + (val + 1) + '%, #bcbcbc 0%';
             gadget.element.querySelector('.playhead').style.marginLeft = val + '%';
@@ -278,121 +228,24 @@
       );
     })
 
-    .declareService(function() {
+    .declareService(function () {
       var gadget = this;
       return loopEventListener(
         gadget.element.querySelector('.timeline'),
         'click',
         false,
         function (evt) {
-          var val = (((evt.clientX - gadget.element.querySelector('.timeline').offsetLeft) / gadget.element.querySelector('.timeline').offsetWidth)) * 100;
+          var val, position;
+          val = ((evt.offsetX / gadget.element.querySelector('.timeline').offsetWidth)) * 100;
           val = (val > 98 ? 98 : val);
           gadget.element.querySelector('.timeline').style.background = 'linear-gradient(to right, #454549 ' + (val + 1) + '%, #bcbcbc 0%';
           gadget.element.querySelector('.playhead').style.marginLeft = val + '%';
           gadget.offset = (val * gadget.duration) / 98;
-          var position = Math.floor(((gadget.length / gadget.duration) * gadget.offset)) - 10e3;
+          position = Math.floor(((gadget.length / gadget.duration) * gadget.offset)) - 10e3;
           return gadget.handleRangeRequest(position);
         },
         true
       );
     })
-
-    .declareService(function() {
-      var gadget = this;
-      return loopEventListener(
-        gadget.element.querySelector('.pVolumn'),
-        'mouseover',
-        false,
-        function() {
-          gadget.element.querySelector('.volTimeline').style.display = /*change it to block*/'none';
-        },
-        true
-      );
-    })
-
-    .declareService(function() {
-      var gadget = this;
-      return loopEventListener(
-        gadget.element.querySelector('.pVolumn'),
-        'mouseleave',
-        false,
-        function() {
-          gadget.element.querySelector('.volTimeline').style.display = 'none';
-        },
-        true
-      );
-    })
-
-    .declareService(function() {
-      var gadget = this;
-      return loopEventListener(
-        gadget.element.querySelector('.volTimeline'),
-        'mouseover',
-        false,
-        function() {
-          gadget.element.querySelector('.volTimeline').style.display = 'block';
-        },
-        true
-      );
-    })
-
-    .declareService(function() {
-      var gadget = this;
-      return loopEventListener(
-        gadget.element.querySelector('.volTimeline'),
-        'mouseleave',
-        false,
-        function() {
-          gadget.element.querySelector('.volTimeline').style.display = 'none';
-        },
-        true
-      );
-    })
-
-    .declareService(function() {
-      var gadget = this;
-      return loopEventListener(
-        gadget.audio,
-        'ended',
-        false,
-        function() {
-          gadget.play = false;
-          gadget.customPlayer.querySelector('.play-btn').classList.add('ui-icon-play');
-          gadget.customPlayer.querySelector('.play-btn').classList.remove('ui-icon-pause');
-        },
-        true
-      );
-    })
-
-    .declareService(function() {
-      var gadget = this;
-      return loopEventListener(
-        gadget.element.querySelector('.play-btn'),
-        'click',
-        false,
-        gadget.handlePlayPause.bind(gadget),
-        true
-      );
-    })
-
-    .declareService(function() {
-      var gadget = this;
-      return RSVP.Queue()
-        .push(function() {
-          return loopEventListener(
-            gadget.element.querySelector('.vol-btn'),
-            'click',
-            false,
-            gadget.handleSound.bind(gadget),
-            true
-          );
-        })
-        .push(undefined, function() {
-          // Pause when gadget go out of scope { CancellationError }.
-          gadget.audio.pause();
-          gadget.source.disconnect(0);
-          gadget.gain.disconnect(0);
-          gadget.audioContext.close();
-        });
-    });
-})(window, rJS, jIO, RSVP, AudioContext, URL, MediaSource, loopEventListener, promiseEventListener, document);
+*/
+}(window, rJS, jIO, RSVP, AudioContext, URL, MediaSource, loopEventListener, document));
