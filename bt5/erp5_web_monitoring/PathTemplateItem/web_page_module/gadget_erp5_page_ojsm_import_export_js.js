@@ -347,7 +347,7 @@
                 .title,
               relative_url: hosting_subscription_list[uid_dict[tmp_uid]]
                 .relative_url,
-              url: tmp_parameter.opml_url || String(tmp_uid),
+              url: tmp_parameter.opml_url || String(tmp_uid) + " NO MONITOR",
               has_monitor: tmp_parameter.opml_url !== undefined,
               username: tmp_parameter.username,
               password: tmp_parameter.password,
@@ -550,7 +550,7 @@
                 return gadget.state.erp5_gadget.createJio();
               })
               .push(function () {
-                return gadget.getSetting('opml_import_limit', 100);
+                return gadget.getSetting('opml_import_limit', 300);
               })
               .push(function (select_limit) {
                 return getInstanceOPMLListFromMaster(gadget, select_limit);

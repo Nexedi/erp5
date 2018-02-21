@@ -9,7 +9,6 @@
     // optimized way to fetch hosting subscription list
     var hosting_dict = {},
       instance_dict = {},
-      sort_status_dict = {},
       compare_function,
       total_rows = 0;
     return gadget.jio_allDocs(filter)
@@ -81,16 +80,21 @@
           }
         }
         if (status_sort !== undefined) {
-          if (status_sort === "ascending") {
-            compare_function = function (first, second) {
-              return first > second;
-            };
-          } else {
-            compare_function = function (first, second) {
-              return first <= second;
-            };
-          }
+          compare_function = function (first, second) {
+            first = first.toUpperCase();
+            second = second.toUpperCase();
+            if (first > second) {
+              return 1;
+            }
+            if (first < second) {
+              return -1;
+            }
+            return 0;
+          };
           row_list.sort(function (a, b) {
+            if (status_sort === "ascending") {
+              return compare_function(b.value.status, a.value.status);
+            }
             return compare_function(a.value.status, b.value.status);
           });
         }
@@ -119,10 +123,10 @@
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this,
         status_sort,
-        i;
-      for (i = 0; i < param_list[0].sort_on.length; i += 1) {
-        if (param_list[0].sort_on[i][0] === 'status') {
-          status_sort = param_list[0].sort_on[i][1];
+        j;
+      for (j = 0; j < param_list[0].sort_on.length; j += 1) {
+        if (param_list[0].sort_on[j][0] === 'status') {
+          status_sort = param_list[0].sort_on[j][1];
         }
       }
       return getHostingData(gadget, param_list[0], status_sort)
@@ -223,11 +227,12 @@
                   "list_method": "portal_catalog",
                   "query": "urn:jio:allDocs?query=%28portal_type%3A%22" +
                     "opml" + "%22%29AND%28active%3A%22" +
-                    "true" + "%22%29",
+                    "true" + "%22%29AND%28url%3A%22" +
+                    "https://%25%22%29",
                   "portal_type": [],
                   "search_column_list": [['status', 'Status'], ['title', 'Hosting Subscription']],
-                  "sort_column_list": [['status', 'Status'], ['title', 'Hosting Subscription']],
-                  "sort": [['status', 'ascending']],
+                  "sort_column_list": [['title', 'Hosting Subscription']],
+                  "sort": [['title', 'ascending']],
                   "title": "Hosting Subscriptions",
                   "command": "index",
                   "type": "ListBox"
