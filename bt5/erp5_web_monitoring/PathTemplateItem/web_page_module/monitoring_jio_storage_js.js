@@ -695,7 +695,7 @@
 
   function syncOpmlStorage(context) {
     return context._local_sub_storage.allDocs({
-      query: '(portal_type:"opml") AND (active:true)',
+      query: '(portal_type:"opml") AND (active:true) AND (url:"https://%")',
       select_list: ["url", "basic_login"]
     })
       .push(function (storage_result) {
