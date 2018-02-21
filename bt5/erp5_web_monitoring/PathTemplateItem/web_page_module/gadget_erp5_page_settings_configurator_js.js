@@ -205,7 +205,7 @@
 
       return new RSVP.Queue()
         .push(function () {
-          return gadget.getSetting('opml_import_limit', 100);
+          return gadget.getSetting('opml_import_limit', 300);
         })
         .push(function (import_limit) {
           opml_import_limit = import_limit;
@@ -237,9 +237,10 @@
         })
         .push(function (result) {
           var column_list = [
-            ['title', 'OPML Title'],
+            ['title', 'Title'],
             ['url', 'Url'],
-            ['active', 'Enable Sync']
+            ['state', 'Requested State'],
+            ['active', 'Sync Enabled']
           ];
           return result[0].render({
             erp5_document: {
