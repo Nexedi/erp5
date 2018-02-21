@@ -140,6 +140,17 @@
                   "hidden": 0,
                   "type": "PasswordField"
                 },
+                "my_requested_state": {
+                  "description": "Hosting subscription state",
+                  "title": "Requested State",
+                  "default": doc.state || (doc.active ? "Started" : "Stopped"),
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 0,
+                  "key": "state",
+                  "hidden": 0,
+                  "type": "StringField"
+                },
                 "my_active": {
                   "description": "Sync this opml or not",
                   "title": "Active (Enable Sync)",
@@ -185,7 +196,7 @@
               group_list: [[
                 "left",
                 [["my_title"], ["my_url"], ["my_username"], ["my_password"],
-                  ["my_active"], ["my_verify_password"],
+                  ["my_requested_state"], ["my_active"], ["my_verify_password"],
                   ["my_new_password"]]
               ]]
             }

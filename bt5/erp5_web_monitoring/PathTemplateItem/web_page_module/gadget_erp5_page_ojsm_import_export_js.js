@@ -293,7 +293,7 @@
       opml_list = [],
       uid_dict = {};
     if (limit === undefined) {
-      limit = 100;
+      limit = 300;
     }
     return gadget.state.erp5_gadget.allDocs({
       query: '(portal_type:"Hosting Subscription") AND (validation_state:"validated")',
@@ -312,7 +312,9 @@
               title: result.data.rows[i].value.title,
               relative_url: result.data.rows[i].id,
               active: (result.data.rows[i].value.slap_state ===
-                       "start_requested") ? true : false
+                       "start_requested") ? true : false,
+              state: (result.data.rows[i].value.slap_state ===
+                       "start_requested") ? "Started" : "Stopped"
             });
             uid_search_list.push(result.data.rows[i].value.uid);
             if (result.data.rows[i].value.default_predecessor_uid) {
@@ -336,21 +338,25 @@
           tmp_uid = result.data.rows[i].value.uid;
           if (uid_dict.hasOwnProperty(tmp_uid)) {
             tmp_parameter = readMonitoringParameter(result.data.rows[i].value.connection_xml);
-            if (tmp_parameter !== undefined) {
-              opml_list.push({
-                portal_type: "opml",
-                title: hosting_subscription_list[uid_dict[tmp_uid]]
-                  .title,
-                relative_url: hosting_subscription_list[uid_dict[tmp_uid]]
-                  .relative_url,
-                url: tmp_parameter.opml_url,
-                username: tmp_parameter.username,
-                password: tmp_parameter.password,
-                basic_login: btoa(tmp_parameter.username + ':' +
-                                  tmp_parameter.password),
-                active: hosting_subscription_list[uid_dict[tmp_uid]].active
-              });
+            if (tmp_parameter === undefined) {
+              tmp_parameter = {username: "", password: "", opml_url: undefined};
             }
+            opml_list.push({
+              portal_type: "opml",
+              title: hosting_subscription_list[uid_dict[tmp_uid]]
+                .title,
+              relative_url: hosting_subscription_list[uid_dict[tmp_uid]]
+                .relative_url,
+              url: tmp_parameter.opml_url || String(tmp_uid),
+              has_monitor: tmp_parameter.opml_url !== undefined,
+              username: tmp_parameter.username,
+              password: tmp_parameter.password,
+              basic_login: btoa(tmp_parameter.username + ':' +
+                                tmp_parameter.password),
+              active: tmp_parameter.opml_url !== undefined &&
+                hosting_subscription_list[uid_dict[tmp_uid]].active,
+              state: hosting_subscription_list[uid_dict[tmp_uid]].state
+            });
           }
         }
         return opml_list;
