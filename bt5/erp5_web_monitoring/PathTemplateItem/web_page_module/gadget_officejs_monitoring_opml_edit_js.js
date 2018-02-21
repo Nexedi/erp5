@@ -147,7 +147,8 @@
         username: doc.username,
         password: doc.password,
         active: (doc.active === 1) ? true : false,
-        has_monitor: true
+        has_monitor: true,
+        state: doc.state || (doc.active ? "Started" : "Stopped")
       },
       update_password_list = [];
     gadget.state.message.textContent = "";
@@ -299,7 +300,6 @@
               opml_dict.basic_login =
                 btoa(doc.username + ':' + doc.new_password);
               opml_dict.password = doc.new_password;
-              opml_dict.state = "Started";
               return true;
             });
         });
@@ -308,6 +308,8 @@
     return new RSVP.Queue()
       .push(function () {
         if (verify_password) {
+          // if verification pass -> instance is started
+          opml_dict.state = "Started";
           return validateOPML();
         }
         return true;

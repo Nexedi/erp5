@@ -45,11 +45,13 @@
           if (state) {
             return gadget.notifySubmitting()
               .push(function () {
+                var verify_opml = doc.title === "" || doc.title === undefined ||
+                    doc.verify_password === 1;
+                if (gadget.state.active === false && doc.active === 1) {
+                  verify_opml = true;
+                }
                 doc.title = gadget.state.opml_title;
-                return opml_gadget.saveOPML(
-                  doc,
-                  doc.title === "" || doc.title === undefined || doc.verify_password === 1
-                );
+                return opml_gadget.saveOPML(doc, verify_opml);
               })
               .push(function (status) {
                 var msg = {message: 'Document Updated', status: 'success'};
@@ -84,7 +86,8 @@
           return gadget.changeState({
             "opml_title": doc.title || "",
             "opml_key": options.jio_key,
-            "password": doc.password
+            "password": doc.password,
+            "active": doc.active
           });
         })
         .push(function () {
