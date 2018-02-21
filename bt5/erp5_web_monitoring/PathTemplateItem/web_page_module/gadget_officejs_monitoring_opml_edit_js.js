@@ -146,7 +146,8 @@
         basic_login: btoa(doc.username + ':' + doc.password),
         username: doc.username,
         password: doc.password,
-        active: (doc.active === 1) ? true : false
+        active: (doc.active === 1) ? true : false,
+        has_monitor: true
       },
       update_password_list = [];
     gadget.state.message.textContent = "";
@@ -298,6 +299,7 @@
               opml_dict.basic_login =
                 btoa(doc.username + ':' + doc.new_password);
               opml_dict.password = doc.new_password;
+              opml_dict.state = "Started";
               return true;
             });
         });
