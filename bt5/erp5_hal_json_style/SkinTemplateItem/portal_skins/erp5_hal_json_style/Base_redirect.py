@@ -31,8 +31,10 @@ if len(parameters):
 # XXX Allow CORS
 response = context.REQUEST.RESPONSE
 context.Base_prepareCorsResponse(RESPONSE=response)
+# Get the response_code from keep_items. If not present then use 201
+response_code = keep_items.pop("response_code", 201)
 # http://en.wikipedia.org/wiki/Post/Redirect/Get
-response.setStatus(201)
+response.setStatus(response_code)
 response.setHeader("X-Location", "urn:jio:get:%s" % context.getRelativeUrl())
 # be explicit with the reponse content type because in case of reports - they
 # can be in text/plain, application/pdf ... so the RJS form needs to know what

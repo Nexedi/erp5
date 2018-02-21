@@ -7,6 +7,8 @@ portal = context.getPortalObject()
 request=context.REQUEST
 
 form = getattr(context, dialog_id)
+# Default response is to redirect, hence we use 201 for it
+response_code =201
 
 # Validate the form
 try:
@@ -81,10 +83,16 @@ except ValidationFailed, error_message:
                           # that would become an error.
     log("Status message has been truncated")
     message = "%s ..." % message[:(2000 - 4)]
+  # In case of error, the response_code should be 403
+  response_code = 403
 except WorkflowException, error_message:
+  # In case of error, the response_code should be 403
+  response_code = 403
   if str(error_message) == "No workflow provides the '${action_id}' action.":
     message = translateString("Workflow state may have been updated by other user. Please try again.")
-    return context.Base_redirect(form_id, keep_items={'portal_status_message': message}, **kw)
+    return context.Base_redirect(form_id,
+              keep_items={'portal_status_message': message,
+                          'response_code': response_code,}, **kw)
   else:
     raise
 else:
@@ -102,4 +110,6 @@ else:
   redirect_document = context
 
 return redirect_document.Base_redirect(form_id,
-                keep_items={'portal_status_message': message}, **kw)
+                          keep_items={'portal_status_message': message,
+                                      'response_code': response_code},
+                                      **kw)

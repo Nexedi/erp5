@@ -182,8 +182,20 @@
           // if we know what the error was, try to precise it for the user
           if (error.target.status === 400) {
             error_text = 'Input data has errors';
-          } else if (error.target.status === 403) {
-            error_text = 'You do not have the permissions to edit the object';
+          } else if (error.target.status === 403 && error.target.response.type === "application/json") {
+            promise_queue
+              .push(function () {
+                return jIO.util.readBlobAsText(error.target.response);
+              })
+              // Get the error_text from portal_status_message, if there is no
+              // portal_status_message, then use the default error_text
+              .push(function (response_text) {
+                var response = JSON.parse(response_text.target.result);
+                error_text = response.portal_status_message;
+                if (!error_text) {
+                  error_text = 'You do not have the permissions to edit the object';
+                }
+              });
           } else if (error.target.status === 0) {
             error_text = 'Document was not saved! Resubmit when you are online or the document accessible';
           } else if (error.target.status === 500 && error.target.response.type === "application/json") {
