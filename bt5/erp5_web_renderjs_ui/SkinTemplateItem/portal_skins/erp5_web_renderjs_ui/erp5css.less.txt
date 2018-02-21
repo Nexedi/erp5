@@ -1566,7 +1566,19 @@ div[data-gadget-scope='erp5_searchfield'] {
       color: @grey;
       flex: 2;
       align-self: flex-end;
+
+      // Hide the pagination info next to the listbox title
+      @media @smartphone {
+        span.listboxloader {
+          display: none;
+          &.ui-icon-spinner {
+            // Show the loader
+            display: initial;
+          }
+        }
+      }
     }
+
     button {
       padding: @half-margin-size;
       border: 1px solid rgba(0, 0, 0, 0.14);

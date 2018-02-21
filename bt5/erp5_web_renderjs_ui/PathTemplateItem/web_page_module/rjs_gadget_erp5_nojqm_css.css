@@ -1341,6 +1341,14 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
   flex: 2;
   align-self: flex-end;
 }
+@media not screen and (min-width: 45em) {
+  .document_table .ui-table-header h1 span.listboxloader {
+    display: none;
+  }
+  .document_table .ui-table-header h1 span.listboxloader.ui-icon-spinner {
+    display: initial;
+  }
+}
 .document_table .ui-table-header button {
   padding: 3pt;
   border: 1px solid rgba(0, 0, 0, 0.14);
