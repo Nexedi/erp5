@@ -975,6 +975,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 10)
     self.assertEqual(result_dict['_embedded']['contents'][0]["_links"]["self"]["href"][:12], "urn:jio:get:")
+    # No count if not in the listbox context currently
+    self.assertEqual(result_dict['_embedded'].get('count', None), None)
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -999,6 +1001,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
     self.assertEqual(result_dict['_embedded']['contents'][0]["_links"]["self"]["href"][:12], "urn:jio:get:")
+    # No count if not in the listbox context currently
+    self.assertEqual(result_dict['_embedded'].get('count', None), None)
 
     # self.assertEqual(result_dict, {}, json.dumps(result_dict, indent=2))
 
@@ -1028,6 +1032,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     relative_url = result_dict['_embedded']['contents'][0]["relative_url"]
     self.assertTrue(str(relative_url).endswith(result_dict['_embedded']['contents'][0]["id"]))
     self.assertEqual(result_dict['_embedded']['contents'][0]["_links"]["self"]["href"], "urn:jio:get:%s" % relative_url)
+    # No count if not in the listbox context currently
+    self.assertEqual(result_dict['_embedded'].get('count', None), None)
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -1051,6 +1057,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_select_list'], [])
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 0)
+    # No count if not in the listbox context currently
+    self.assertEqual(result_dict['_embedded'].get('count', None), None)
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -1074,6 +1082,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_select_list'], [])
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 0)
+    # No count if not in the listbox context currently
+    self.assertEqual(result_dict['_embedded'].get('count', None), None)
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -1114,6 +1124,9 @@ return context.getPortalObject().foo_module.contentValues()
     #editalble creation date is defined at proxy form
     self.assertEqual(result_dict['_embedded']['contents'][0]['creation_date']['type'], 'DateTimeField')
     self.assertEqual(result_dict['_embedded']['contents'][0]['modification_date']['type'], 'DateTimeField')
+    # There is a count method on this listbox
+    self.assertEqual(result_dict['_embedded']['count'], 0)
+
 
   @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
@@ -1154,6 +1167,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     self.assertEqual(result_dict['_embedded']['contents'][0]['credit_price'],  100.0)
     self.assertEqual(result_dict['_embedded']['contents'][1]['debit_price'],    10.0)
     self.assertEqual(result_dict['_embedded']['contents'][1]['credit_price'],    0.0)
+    # No count if not in the listbox context currently
+    self.assertEqual(result_dict['_embedded'].get('count', None), None)
 
     # Render a Document using Form Field template (only for field 'id')
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
@@ -1172,6 +1187,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     self.assertIn("field_listbox", result_dict['_embedded']['contents'][1]['id']['key'])
     self.assertEqual("StringField", result_dict['_embedded']['contents'][1]['id']['type'])
     self.assertEqual(document_list[1].getId(), result_dict['_embedded']['contents'][1]['id']['default'])
+    # There is a count method on the listbox
+    self.assertEqual(result_dict['_embedded']['count'], 0)
 
     # Test rendering without form template of attribute, getterm and a script
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
@@ -1189,6 +1206,64 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     self.assertEqual(result_dict['_embedded']['contents'][1]['title'].encode('utf-8'), document_list[1].getTitle())
     self.assertEqual(result_dict['_embedded']['contents'][1]['Foo_getLocalTitle'], None)
     self.assertEqual(result_dict['_embedded']['contents'][1]['getTotalQuantity'], 0)
+    # No count if not in the listbox context currently
+    self.assertEqual(result_dict['_embedded'].get('count', None), None)
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
+  @simulate('Test_listCatalog', '*args, **kwargs', """
+return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id', 'ASC')])
+""")
+  @simulate('Test_countCatalog', '*args, **kwargs', """
+return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id', 'ASC')])
+""")
+  @createIndexedDocument(quantity=2)
+  @changeSkin('Hal')
+  def test_getHateoas_count_method(self, document_list):
+    """Test that count method also uses the query parameters.
+    """
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      relative_url='foo_module',
+      list_method="searchFolder",
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(len(result_dict['_embedded']['contents']), 2)
+    self.assertEqual(result_dict['_embedded']['count'], 2)
+
+    # Check that limiting the number of result doesn't impact count
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      relative_url='foo_module',
+      list_method="searchFolder",
+      query='portal_type:"Foo"',
+      limit=1,
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+    )
+    result_dict = json.loads(result)
+    # There is a count method on this listbox
+    self.assertEqual(len(result_dict['_embedded']['contents']), 1)
+    self.assertEqual(result_dict['_embedded']['count'], 2)
+
+    # Check that query parameters are passed to the count method
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      relative_url='foo_module',
+      list_method="searchFolder",
+      query='id:"%s"' % self.portal.foo_module.contentIds()[0],
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+    )
+    result_dict = json.loads(result)
+    # There is a count method on this listbox
+    self.assertEqual(len(result_dict['_embedded']['contents']), 1)
+    self.assertEqual(result_dict['_embedded']['count'], 1)
 
 
 class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
@@ -1230,6 +1305,8 @@ return context.getPortalObject().portal_catalog.searchResults(portal_type="Perso
     titles = [result['title'] for result in result_dict['_embedded']['contents']]
     # getTitle() composes title from first_name and last_name while attribute "title" remains empty
     self.assertIn("Benoit Mandelbrot", titles)
+    # No count if not in the listbox context currently
+    self.assertEqual(result_dict['_embedded'].get('count', None), None)
 
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
       REQUEST=fake_request,
@@ -1242,6 +1319,8 @@ return context.getPortalObject().portal_catalog.searchResults(portal_type="Perso
     titles = [result['title'] for result in result_dict['_embedded']['contents']]
     # getTitle() composes title from first_name and last_name while attribute "title" remains empty
     self.assertIn("Benoit Mandelbrot", titles)
+    # No count if not in the listbox context currently
+    self.assertEqual(result_dict['_embedded'].get('count', None), None)
 
 
 class TestERP5PDM_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
@@ -1305,6 +1384,8 @@ return portal.portal_simulation.getInventoryList(section_uid=context.getUid())
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
     self.assertEqual(result_dict['_embedded']['contents'][0]['total_price'],   0)
     self.assertEqual(result_dict['_embedded']['contents'][0]['total_quantity'],0)
+    # No count if not in the listbox context currently
+    self.assertEqual(result_dict['_embedded'].get('count', None), None)
 
 
 class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):

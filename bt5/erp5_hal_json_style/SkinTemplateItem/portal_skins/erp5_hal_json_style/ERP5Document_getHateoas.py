@@ -1729,6 +1729,17 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             line[select]['editable'] = False
 
     if source_field is not None and source_field_meta_type == "ListBox":
+      # Trigger count method if exist
+      # XXX No need to count if no pagination
+      count_method = source_field.get_value('count_method')
+      if count_method != "" and count_method.getMethodName() != list_method:
+        count_kw = dict(catalog_kw)
+        # Drop not needed parameters
+        count_kw.pop("sort_on", None)
+        count_kw.pop("limit", None)
+        count_method_result = getattr(traversed_document, count_method.getMethodName())(REQUEST=REQUEST, **count_kw)
+        result_dict['_embedded']['count'] = ensureSerializable(count_method_result[0][0])
+
       contents_stat_list = []
       # in case the search was issued by listbox we can provide results of
       # stat_method and count_method back to the caller
