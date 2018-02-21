@@ -1640,9 +1640,6 @@ div[data-gadget-scope='erp5_searchfield'] {
       }
 
       @media @desktop, @tablet {
-        a {
-          display: block;
-        }
         td:not(:last-child) {
           border-right: 1px solid @listboxbordercolor;
         }
