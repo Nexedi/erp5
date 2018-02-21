@@ -106,9 +106,6 @@
  </tr>
 
 
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
-
 </tbody></table>
 </body>
 </html>

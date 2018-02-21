@@ -446,10 +446,13 @@
         // Trigger line content calculation
         result_queue
           .push(function () {
-            var loading_element_classList = gadget.element.querySelector(".listboxloader").classList,
+            var loading_element = gadget.element.querySelector(".listboxloader"),
+              loading_element_classList = loading_element.classList,
               tbody_classList = gadget.element.querySelector("table").querySelector("tbody").classList;
             // Set the loading icon and trigger line calculation
             loading_element_classList.add.apply(loading_element_classList, loading_class_list);
+            // remove pagination information
+            loading_element.textContent = '';
             tbody_classList.add(disabled_class);
 
             return gadget.fetchLineContent(false);
@@ -463,7 +466,8 @@
             var lines = gadget.state.lines,
               promise_list = [],
               allDocs_result = gadget.state.allDocs_result,
-              counter;
+              counter,
+              pagination_message = '';
 
             column_list = JSON.parse(gadget.state.column_list_json);
             // for actual allDocs_result structure see ref:gadget_erp5_jio.js
@@ -583,10 +587,16 @@
 
                 if ((gadget.state.begin_from === 0) && (counter === 0)) {
                   record = variable.translated_no_record;
+                  pagination_message = 0;
                 } else if ((allDocs_result.data.rows.length <= lines) && (gadget.state.begin_from === 0)) {
                   record = counter + " " + variable.translated_records;
+                  pagination_message = counter;
                 } else {
-                  record = variable.translated_records + " " + (((gadget.state.begin_from + lines) / lines - 1) * lines + 1) + " - " + (((gadget.state.begin_from + lines) / lines - 1) * lines + counter);
+                  pagination_message = (((gadget.state.begin_from + lines) / lines - 1) * lines + 1) + " - " + (((gadget.state.begin_from + lines) / lines - 1) * lines + counter);
+                  if (allDocs_result.count !== undefined) {
+                    pagination_message += ' / ' + allDocs_result.count;
+                  }
+                  record = variable.translated_records + " " + pagination_message;
                 }
 
                 if (gadget.state.begin_from === 0) {
@@ -603,12 +613,11 @@
                     "next_classname": next_classname,
                     "next_url": next_url
                   })
-                )
-                  .push(function (listbox_nav_html) {
-                    gadget.element.querySelector('nav').innerHTML = listbox_nav_html;
-                  });
+                );
               })
-              .push(function () {
+              .push(function (listbox_nav_html) {
+                gadget.element.querySelector('nav').innerHTML = listbox_nav_html;
+
                 var result_sum = (gadget.state.allDocs_result.sum || {}).rows || [], // render summary footer if available
                   summary = result_sum.map(function (row, row_index) {
                     var row_editability = row['listbox_uid:list'] !== undefined;
@@ -639,8 +648,10 @@
                 return renderTablePart(gadget, listbox_tfoot_template, summary, "tfoot");
               })
               .push(function () {
-                var loading_element_classList = gadget.element.querySelector(".listboxloader").classList;
+                var loading_element = gadget.element.querySelector(".listboxloader"),
+                  loading_element_classList = loading_element.classList;
                 loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
+                loading_element.textContent = '(' + pagination_message + ')';
               });
           });
       }

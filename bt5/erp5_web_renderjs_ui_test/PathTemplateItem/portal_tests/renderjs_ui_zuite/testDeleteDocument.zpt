@@ -168,11 +168,9 @@
  	<td></td>
 </tr>
 
-<tr>
- 	<td>waitForTextPresent</td>
- 	<td>2 Records</td>
- 	<td></td>
-</tr>
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
 
 <!-- Wait for the action page and click on the delete link -->
 <tr>
@@ -333,17 +331,9 @@
   <td></td>
 </tr>
 
-<tr>
- 	<td>waitForTextPresent</td>
- 	<td>No records</td>
- 	<td></td>
-</tr>
-
-<tr>
- 	<td>verifyTextPresent</td>
- 	<td>No records</td>
- 	<td></td>
-</tr>
+<tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
 
 <!-- Wait for the action page and check no delete link is here-->
 <tr>

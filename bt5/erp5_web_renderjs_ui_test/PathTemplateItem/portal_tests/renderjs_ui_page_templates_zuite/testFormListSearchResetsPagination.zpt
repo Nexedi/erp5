@@ -70,21 +70,17 @@
   <td>Title 10</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//span[@data-i18n='1 Records']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
 
 <!-- Pagination keeps search query -->
 <tal:block tal:define="search_query python: '%'">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
 </tal:block>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//span[@data-i18n='Records 1 - 3']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 25)', 'footer': 'Records 1 - 3 / 25'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
 <tal:block tal:define="parsed_query python: '';
                        search_query python: '%'">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
@@ -94,11 +90,9 @@
   <td>//a[@data-i18n='Next']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//span[@data-i18n='Records 4 - 6']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="pagination_configuration python: {'header': '(4 - 6 / 25)', 'footer': 'Records 4 - 6 / 25'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
 <tal:block tal:define="parsed_query python: '';
                        search_query python: '%'">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
