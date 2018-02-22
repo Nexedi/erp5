@@ -484,7 +484,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       self._setUpdated(delivery, 'delivery')
       if property_dict:
         property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
-        delivery.edit(**property_dict)
+        delivery._edit(reindex_object=1, **property_dict)
 
       # Then, create delivery line
       for grouped_node in movement_group_node.getGroupList():
