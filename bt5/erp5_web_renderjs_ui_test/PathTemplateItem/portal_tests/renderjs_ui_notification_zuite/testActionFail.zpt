@@ -7,7 +7,7 @@
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><th rowspan="1" colspan="3">Test Default Module View (expected failure)</th></tr>
+<tr><th rowspan="1" colspan="3">Test Default Module View</th></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 
@@ -44,12 +44,12 @@
 <!-- Header has a save button -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[text()='Do Nothing Action' and contains(@href, '#!change')]</td>
+  <td>//a[text()='Fail Dialog Action' and contains(@href, '#!change')]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[text()='Do Nothing Action' and contains(@href, '#!change')]</td>
+  <td>//a[text()='Fail Dialog Action' and contains(@href, '#!change')]</td>
   <td></td>
 </tr>
 
