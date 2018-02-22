@@ -69,6 +69,7 @@ class BenchmarkProcess(multiprocessing.Process):
                         "another process, flushing remaining results...")
 
   def getBrowser(self, log_file):
+    self._logger.info("[BenchmarkProcess] Browser username and password: %s - %s" % (self._username, self._password))
     return Browser(self._argument_namespace.erp5_base_url,
                    self._username,
                    self._password,
@@ -87,8 +88,8 @@ class BenchmarkProcess(multiprocessing.Process):
       except StopIteration:
         raise
       except Exception, e:
+        self._logger.info("Exception while running target suite for user %s: %s" % (self._browser._username, str(e)))
         msg = "%s: %s" % (target, traceback.format_exc())
-
         try:
           msg += "Last response headers:\n%s\nLast response contents:\n%s" % \
               (self._browser.headers, self._browser.contents)
@@ -115,7 +116,7 @@ class BenchmarkProcess(multiprocessing.Process):
         # Clear the Browser history (which keeps (request, response))
         # otherwise it will consume a lot of memory after some time. Also it
         # does make sense to keep it as suites are independent of each other
-        self._browser.mech_browser.clear_history()
+        self._browser._history.clear()
 
       result.exitSuite(with_error)
 
