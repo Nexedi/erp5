@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>default_field_your_resource,field_your_title, description, field_your_project, default_field_your_project, form_id, field_your_resource, dialog_id, resource, title, file, project, dialog_method, field_my_description, field_your_file=None</string> </value>
+            <value> <string>description, file, resource, title, project, **kwargs</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
