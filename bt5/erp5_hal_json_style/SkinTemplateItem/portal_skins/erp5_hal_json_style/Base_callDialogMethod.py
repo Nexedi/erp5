@@ -48,19 +48,11 @@ if dialog_method == 'Base_configureSortOn':
                                       selection_name=kw['selection_name'],
                                       field_sort_on=kw['field_sort_on'],
                                       field_sort_order=kw['field_sort_order'])
-# Exceptions for Base_edit
-# if dialog_method == 'Base_edit':
-#   return context.Base_edit(form_id=kw['form_id'],
-#                            dialog_id=dialog_id,
-#                            selection_name=kw['selection_name'])
 # Exceptions for Workflow
 if dialog_method == 'Workflow_statusModify':
-  value = context.Workflow_statusModify(form_id=kw['form_id'],
+  return context.Workflow_statusModify(form_id=kw['form_id'],
                                         dialog_id=dialog_id)
-  # XXX: This test is related to erp5_web and should not be present in configuration where it is not installed.
-  #if not(getattr(context.REQUEST, 'ignore_layout', 0)) and context.getApplicableLayout() :
-  #  context.REQUEST.RESPONSE.redirect(context.WebSite_getDocumentPhysicalPath())
-  return value
+
 # Exception for edit relation
 if dialog_method == 'Base_editRelation':
   return context.Base_editRelation(form_id=kw['form_id'],
@@ -99,7 +91,6 @@ if not hasattr(form, 'validate_all_to_request'):
 try:
   # It is necessary to force editable_mode before validating
   # data. Otherwise, field appears as non editable.
-  # This is the pending of form_dialog.
   editable_mode = request.get('editable_mode', 1)
   request.set('editable_mode', 1)
   form.validate_all_to_request(request)

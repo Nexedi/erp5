@@ -4,7 +4,7 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Log import log
 portal = context.getPortalObject()
-request=context.REQUEST
+request = kw.get("REQUEST", None) or context.REQUEST
 
 form = getattr(context, dialog_id)
 
@@ -21,7 +21,7 @@ except FormValidationError, validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)
-  return form(request)
+  return context.Base_renderForm(dialog_id)
 
 # XXX: this is a duplication from form validation code in Base_callDialogMethod
 # Correct fix is to factorise this script with Base_callDialogMethod, not to
@@ -81,7 +81,7 @@ except ValidationFailed, error_message:
                           # that would become an error.
     log("Status message has been truncated")
     message = "%s ..." % message[:(2000 - 4)]
-except WorkflowException, error_message:
+except WorkflowException as error_message:
   if str(error_message) == "No workflow provides the '${action_id}' action.":
     message = translateString("Workflow state may have been updated by other user. Please try again.")
     return context.Base_redirect(form_id, keep_items={'portal_status_message': message}, **kw)
