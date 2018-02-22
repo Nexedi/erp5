@@ -33,6 +33,7 @@
 import logging
 import sys
 import urllib
+import Cookie
 
 from urlparse import urljoin
 from z3c.etestbrowser.browser import ExtendedTestBrowser
@@ -782,9 +783,24 @@ class MainForm(Form):
                          (self.browser._username, self.browser._password))
 
     def login(form):
+      print "Login with user-pass: " + self.browser._username + " - " + self.browser._password
       form.getControl(name='__ac_name').value = self.browser._username
       form.getControl(name='__ac_password').value = self.browser._password
       form.submit()
+
+    def setCookies():
+      headers_cookie = self.browser.headers['set-cookie']
+      cookie = Cookie.SimpleCookie()
+      cookie.load(headers_cookie)
+      if '__ac' in cookie.keys():
+        ac_value = cookie['__ac'].value
+      else:
+        for part in headers_cookie.split(","):
+          if '__ac=' in part:
+            for subpart in part.split(";"):
+              if '__ac=' in subpart:
+                ac_value = subpart.split("=")[1].replace('"','')
+      self.browser.cookies["__ac"] = ac_value
 
     try:
       login(self)
@@ -797,12 +813,7 @@ class MainForm(Form):
                          (self.browser._erp5_base_url,
                           self.browser._username,
                           self.browser._password))
-    
-    import Cookie
-    cookie = Cookie.SimpleCookie()
-    cookie.load(self.browser.headers['set-cookie'])
-    ac_value = cookie['__ac'].value
-    self.browser.cookies["__ac"] = ac_value
+    setCookies()
 
   def submitSelectFavourite(self, label=None, value=None, **kw):
     """
