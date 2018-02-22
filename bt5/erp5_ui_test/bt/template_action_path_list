@@ -22,6 +22,7 @@ Foo | dummy_multicheckboxfield_report
 Foo | dummy_multilistfield_report
 Foo | dummy_radiofield_report
 Foo | dummy_report
+Foo | fail_dialog_action_jio
 Foo | list
 Foo | select_bar
 Foo | view
