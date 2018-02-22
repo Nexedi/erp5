@@ -80,10 +80,14 @@ class BenchmarkResultStatistic(object):
 
   @property
   def mean(self):
+    if self.n == 0:
+      self.n = 1
     return self._value_sum / self.n
 
   @property
   def standard_deviation(self):
+    if self.n == 0:
+      self.n = 1
     return math.sqrt(self._variance_sum / self.n)
 
 class NothingFlushedException(Exception):
