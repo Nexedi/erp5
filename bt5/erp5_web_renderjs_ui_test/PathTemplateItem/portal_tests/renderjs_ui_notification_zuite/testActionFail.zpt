@@ -55,8 +55,8 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 
-<tal:block tal:define="notification_configuration python: {'class': 'error',
-                                                           'text': 'Encountered an unknown error. Try to resubmit.'}">
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': '&quot;Nothing&quot; action is done.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 
