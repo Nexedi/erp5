@@ -33,6 +33,7 @@
 import logging
 import sys
 import urllib
+import Cookie
 
 from urlparse import urljoin
 from z3c.etestbrowser.browser import ExtendedTestBrowser
@@ -786,6 +787,23 @@ class MainForm(Form):
       form.getControl(name='__ac_password').value = self.browser._password
       form.submit()
 
+    def setCookies():
+      """
+      Gets the __ac value from the browser headers and sets it as cookie in order to keep
+      the user logged during the tests. If SimpleCookie can't parse the values,
+      regular expressions are used.
+      """
+      headers_cookie = self.browser.headers['set-cookie']
+      cookie = Cookie.SimpleCookie()
+      cookie.load(headers_cookie)
+      if '__ac' in cookie.keys():
+        ac_value = cookie['__ac'].value
+      else:
+        reg = '__ac=\"([A-Za-z0-9%]+)*\"'
+        match = re.search(reg, headers_cookie)
+        ac_value = match.group(1) if match else None
+      self.browser.cookies["__ac"] = ac_value
+
     try:
       login(self)
     except LookupError:
@@ -797,12 +815,7 @@ class MainForm(Form):
                          (self.browser._erp5_base_url,
                           self.browser._username,
                           self.browser._password))
-    
-    import Cookie
-    cookie = Cookie.SimpleCookie()
-    cookie.load(self.browser.headers['set-cookie'])
-    ac_value = cookie['__ac'].value
-    self.browser.cookies["__ac"] = ac_value
+    setCookies()
 
   def submitSelectFavourite(self, label=None, value=None, **kw):
     """
