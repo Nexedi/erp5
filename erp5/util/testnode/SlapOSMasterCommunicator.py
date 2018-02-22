@@ -2,7 +2,7 @@ import datetime
 import json
 import traceback
 import time
-#import feedparser
+import requests
 from functools import wraps
 from uritemplate import expand
 
@@ -12,8 +12,8 @@ from requests.exceptions import HTTPError
 from ..taskdistribution import SAFE_RPC_EXCEPTION_LIST
 from . import logger
 
-# max time to instance changing state: 2 hour
-MAX_INSTANCE_TIME = 60*60*2
+# max time to instance changing state: 3 hour
+MAX_INSTANCE_TIME = 60*60*3
 
 SOFTWARE_PRODUCT_NAMESPACE = "product."
 
@@ -89,19 +89,24 @@ class SlapOSMasterCommunicator(object):
     return self.slap_supply.supply(self.url, self.computer_guid)
 
   @retryOnNetworkFailure
-  def _request(self, state, instance_title=None, request_kw=None):
+  def _request(self, state, instance_title=None, request_kw=None, shared=False, software_type="RootSoftwareInstance"):
     if instance_title is not None:
       self.name = instance_title 
     if request_kw is not None:
-      if isinstance(request_kw, basestring):
+      if isinstance(request_kw, basestring) or \
+        isinstance(request_kw, unicode):
         self.request_kw = json.loads(request_kw)
       else:
         self.request_kw = request_kw
+    if self.request_kw is None:
+      self.request_kw = {}
     logger.info('Request %s@%s: %s', self.url, self.name, state)
     self.latest_state = state
     return self.slap_order.request(
             software_release=self.url,
+            software_type="RootSoftwareInstance",
             partition_reference=self.name,
+            shared=shared,
             state=state,
             **self.request_kw)
 
@@ -134,9 +139,9 @@ class SlapOSMasterCommunicator(object):
     
  
   @retryOnNetworkFailure
-  def getSoftwareInstallationList(self):
-    # XXX Move me to slap.py API 
-    computer = self._hateoas_getComputer(self.computer_guid)
+  def getSoftwareInstallationList(self, computer_guid=None):
+    # XXX Move me to slap.py API
+    computer = self._hateoas_getComputer(computer_guid) if computer_guid else self._hateoas_getComputer(self.computer_guid)
 
     # Not a list ?
     action = computer['_links']['action_object_slap']
@@ -151,9 +156,9 @@ class SlapOSMasterCommunicator(object):
 
 
   @retryOnNetworkFailure
-  def getSoftwareInstallationNews(self):
+  def getSoftwareInstallationNews(self, computer_guid=None):
     getter_link = None
-    for si in self.getSoftwareInstallationList():
+    for si in self.getSoftwareInstallationList(computer_guid):
       if si["title"] == self.url:
         getter_link = si["href"]
         break
@@ -219,11 +224,12 @@ class SlapOSMasterCommunicator(object):
     result = self.hateoas_navigator.GET(object_link)
     return json.loads(result)
 
-  def _getSoftwareState(self):
+  def _getSoftwareState(self, computer_guid=None):
     if self.computer_guid is None:
       return SOFTWARE_STATE_INSTALLED
 
-    message = self.getSoftwareInstallationNews()
+    message = self.getSoftwareInstallationNews(computer_guid)
+    logger.info(message)
     if message.startswith("#error no data found"):
       return SOFTWARE_STATE_UNKNOWN
 
@@ -288,6 +294,9 @@ class SlapOSMasterCommunicator(object):
             if instance_state['text'].startswith('#access Instance correctly stopped'):
               state =  INSTANCE_STATE_STOPPED
 
+            if instance_state['text'].startswith('#destroy'):
+              state = INSTANCE_STATE_DESTROYED
+
             if instance_state['text'].startswith('#error'):
               state = INSTANCE_STATE_STARTED_WITH_ERROR
 
@@ -297,8 +306,8 @@ class SlapOSMasterCommunicator(object):
           try:
             monitor_information_dict = self.getRSSEntryFromMonitoring(monitor_v6_url)
           except Exception:
-            logger.exception('Unable to download promises for: %s',
-                             instance["title"])
+            logger.exception('Unable to download promises for: %s', instance["title"])
+            logger.error(traceback.format_exc())
             monitor_information_dict = {"message": "Unable to download"}
 
         message_list.append({
@@ -357,8 +366,7 @@ class SlapOSMasterCommunicator(object):
     if (time.time()-start_time) > max_time:
       error_message = "Instance '%s' not '%s' after %s seconds" %(instance_title, state, str(time.time()-start_time))
       return {'error_message' : error_message}
-    logger.info("Instance correctly '%s' after %s seconds.",
-                state, time.time() - start_time)
+    logger.info("Instance correctly '%s' after %s seconds.", state, time.time() - start_time)
     return {'error_message' : None}
 
 class SlapOSTester(SlapOSMasterCommunicator):
@@ -400,22 +408,20 @@ class SlapOSTester(SlapOSMasterCommunicator):
       self.computer_guid = computer_guid
     self._supply()
 
-  def requestInstanceStart(self, instance_title=None, request_kw=None):
-    self._request(INSTANCE_STATE_STARTED, instance_title, request_kw)
+  def requestInstanceStart(self, instance_title=None, request_kw=None, shared=False, software_type="RootSoftwareInstance"):
+    self.instance = self._request(INSTANCE_STATE_STARTED, instance_title, request_kw, shared, software_type)
 
-  def requestInstanceStop(self, instance_title=None, request_kw=None):
-    self._request(INSTANCE_STATE_STOPPED, instance_title, request_kw)
+  def requestInstanceStop(self, instance_title=None, request_kw=None, shared=False):
+    self._request(INSTANCE_STATE_STOPPED, instance_title, request_kw, shared)
 
-  def requestInstanceDestroy(self, instance_title=None, request_kw=None):
-    self._request(INSTANCE_STATE_DESTROYED, instance_title, request_kw)
+  def requestInstanceDestroy(self, instance_title=None, request_kw=None, shared=False):
+    self._request(INSTANCE_STATE_DESTROYED, instance_title, request_kw, shared)
 
   def waitInstanceStarted(self, instance_title):
     error_message = self._waitInstance(instance_title, INSTANCE_STATE_STARTED)["error_message"]
     if error_message is not None:
       logger.error(error_message)
-      logger.error("Do you use instance state propagation in your project?")
-      logger.error("Instance '%s' will be stopped and test aborted.",
-                   instance_title)
+      logger.error("Instance '%s' will be stopped and test aborted.", instance_title)
       self.requestInstanceStop()
       time.sleep(60)
       raise ValueError(error_message)
@@ -424,15 +430,59 @@ class SlapOSTester(SlapOSMasterCommunicator):
     error_message = self._waitInstance(instance_title, INSTANCE_STATE_STOPPED)["error_message"]
     if error_message is not None:
       logger.error(error_message)
-      logger.error("Do you use instance state propagation in your project?")
       raise ValueError(error_message)
 
   def waitInstanceDestroyed(self, instance_title):
     error_message = self._waitInstance(instance_title, INSTANCE_STATE_DESTROYED)["error_message"]
     if error_message is not None:
       logger.error(error_message)
-      logger.error("Do you use instance state propagation in your project?")
       raise ValueError(error_message)
+
+  def getMasterFrontendDict(self):
+    frontend_master_ipv6 = None
+    instance_guid = None
+    for instance in self.getInstanceUrlList():
+      if instance["title"] == "Monitor Frontend apache-frontend-1":
+        try:
+          information = self.getInformationFromInstance(instance["href"])
+          frontend_master_ipv6 = information['parameter_dict']['url']
+        except Exception as e:
+          pass
+    return {'instance_guid' : self.instance.getInstanceGuid(), 'frontend_master_ipv6' : frontend_master_ipv6}
+
+  def getInstanceUrlDict(self):
+    frontend_url_list = []
+    zope_address_list = []
+    for instance in self.getInstanceUrlList():
+      information = self.getInformationFromInstance(instance["href"])
+      if "frontend-" in instance["title"]:
+        try:
+          # TODO: this should get "secure_access" value (https). Until having a
+          # valid certificate, the "site_url" (http) will be used.
+          frontend = [instance["title"].replace("frontend-", ""),
+                      information["connection_dict"]["site_url"]]
+          frontend_url_list.append(frontend)
+        except Exception as e:
+          logger.info("Frontend url not generated yet for instance: " + instance["title"])
+          pass
+      if instance["title"] == self.name:
+        try:
+          connection_json = json.loads(information["connection_dict"]["_"])
+          user = connection_json["inituser-login"]
+          password = connection_json["inituser-password"]
+        except Exception as e:
+          raise ValueError("user and password not found in connection parameters. Error while instantiating?")
+      if "zope-" in instance["title"]:
+        try:
+          connection_dict = information["connection_dict"]["_"]
+          address = json.loads(connection_dict)["zope-address-list"][0][0]
+          zope = [instance["title"].replace("zope-", ""), address]
+          zope_address_list.append(zope)
+        except Exception as e:
+          logger.info("zope address not found in connection parameters. Error while instantiating?")
+          pass
+    return {'zope-address-list' : zope_address_list, 'user' : user,
+            'password' : password, 'frontend-url-list' : frontend_url_list }
 
 class SoftwareReleaseTester(SlapOSTester):
   deadline = None
