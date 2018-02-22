@@ -197,7 +197,7 @@ class TestERP5Discussion(ERP5TypeTestCase):
     current_post_list = list(discussion_thread_object1.objectValues())
     new_post = discussion_thread_object1.newContent()
     self.tic()
-    self.assertSameSet([new_post] + current_post_list, web_section1.WebSection_getLatestDiscussionPostList())
+    self.assertSameSet([new_post] + current_post_list, [x.getObject() for x in web_section1.WebSection_getLatestDiscussionPostList()])
 
     # test archiving threads so the do not belong any more to web section document list
     discussion_thread_object1.archive()
