@@ -88,6 +88,8 @@ class TransformedResource(AmountGeneratorLine):
           result = list(self.getVariationRangeBaseCategoryList()) # The current resource variation
         if 'trade_phase' not in result:
           result.append('trade_phase')
+        if 'industrial_phase' not in result:
+          result.append('industrial_phase')
       return result
 
     def getCellAggregateKey(self):
