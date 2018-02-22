@@ -114,7 +114,8 @@ class EditorWidget(Widget.TextAreaWidget):
                                    content=value,
                                    field_id=key,
                                    portal_url=site_root.absolute_url(),
-                                   mode=mode)
+                                   mode=mode,
+                                   keymap=site_root.portal_preferences.getPreferredSourceCodeEditorKeymap())
     elif text_editor != 'text_area':
       return here.fckeditor_wysiwyg_support.pt_render(
            extra_context= {

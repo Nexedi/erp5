@@ -1,6 +1,6 @@
-/*global window, rJS, URI, RSVP */
+/*global window, rJS, URI, RSVP, asBoolean */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, URI, RSVP) {
+(function (window, rJS, URI, RSVP, asBoolean) {
   "use strict";
 
   /** Return local modifications to editable form fields after leaving the form
@@ -16,7 +16,7 @@
           if (typeof result[key] === "object" &&
               result[key].hasOwnProperty("key") &&
               gadget.state.options.form_content[result[key].key]) {
-            result[key].default = gadget.state.options.form_content[result[key].key];
+            result[key]['default'] = gadget.state.options.form_content[result[key].key];
           }
         }
       }
@@ -77,7 +77,7 @@
     })
     /**
      * Render obtain ERP5 Document and assigned Form Definition.
-     * 
+     *
      * Arguments:
      * `erp5_document` or parameters to obtain one: `jio_key`, `view`
      * `editable`
@@ -119,7 +119,7 @@
       }
 
       // options.editable differs when it comes from the erp5_launcher of FormBox - try to unify it here
-      if (options.editable === "true" || options.editable === true || options.editable === "1" || options.editable === 1) {
+      if (asBoolean(options.editable)) {
         options.editable = 1;
       } else {
         options.editable = 0;
@@ -228,4 +228,4 @@
       return this.render(options);
     });
 
-}(window, rJS, URI, RSVP));
+}(window, rJS, URI, RSVP, asBoolean));

@@ -68,8 +68,7 @@ class IComponent(Interface):
     Return the ID prefix for Component objects
     """
 
-  def importFromFilesystem(cls, context, reference, version,
-                           erase_existing=False):
+  def importFromFilesystem(cls, context, reference, version):
     """
     Import a Component from the filesystem into ZODB after checking that the
     source code is valid

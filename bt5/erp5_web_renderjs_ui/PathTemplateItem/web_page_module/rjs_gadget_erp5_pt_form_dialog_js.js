@@ -1,19 +1,13 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO, Handlebars */
-(function (window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO, Handlebars) {
+/*global window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO, Handlebars, ensureArray */
+(function (window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO, Handlebars, ensureArray) {
   "use strict";
-
-  /* Make sure that returned object is an Array instance. */
-  function ensureArray(obj) {
-    if (!obj) {return []; }
-    if (Array.isArray(obj)) {return obj; }
-    return [obj];
-  }
 
   function submitDialog(gadget, submit_action_id, is_update_method) {
     var form_gadget = gadget,
       action = form_gadget.state.erp5_document._embedded._view._actions.put,
       form_id = form_gadget.state.erp5_document._embedded._view.form_id,
+      dialog_id = form_gadget.state.erp5_document._embedded._view.dialog_id,
       redirect_to_parent;
 
     return form_gadget.notifySubmitting()
@@ -27,9 +21,12 @@
         var data = {},
           key;
 
-        data[form_id.key] = form_id['default'];
-        // XXX Hardcoded
-        data.dialog_id = form_id['default'];
+        // In dialog form, dialog_id is mandatory and form_id is optional
+        data.dialog_id = dialog_id['default'];
+        if (form_id !== undefined) {
+          data.form_id = form_id['default'];
+        }
+
         data.dialog_method = form_gadget.state.form_definition[submit_action_id];
         if (is_update_method) {
           data.update_method = data.dialog_method;
@@ -179,7 +176,7 @@
           });
       })
       .push(undefined, function (error) {
-        if (error.target !== undefined) {
+        if (error !== undefined && error.target !== undefined) {
           var error_text = 'Encountered an unknown error. Try to resubmit',
             promise_queue = new RSVP.Queue();
           // if we know what the error was, try to precise it for the user
@@ -234,6 +231,7 @@
         throw error;
       });
   }
+
 
   var gadget_klass = rJS(window),
     dialog_button_source = gadget_klass.__template_element
@@ -295,11 +293,11 @@
 
     .onStateChange(function (modification_dict) {
       var form_gadget = this,
-        icon,
         selector = form_gadget.element.querySelector("h3"),
+        view_list = ensureArray(this.state.erp5_document._links.action_workflow),
+        icon,
         title,
-        i,
-        view_list = ensureArray(this.state.erp5_document._links.action_workflow);
+        i;
 
       title = this.state.form_definition.title;
 
@@ -322,8 +320,9 @@
         break;
       }
 
+      // By default we display dialog form title
       for (i = 0; i < view_list.length; i += 1) {
-        if (view_list[i].href === this.state.view) {
+        if (this.state.view === view_list[i].href) {
           title = view_list[i].title;
         }
       }
@@ -435,4 +434,4 @@
       }
     }, false, false);
 
-}(window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO, Handlebars));
+}(window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO, Handlebars, ensureArray));

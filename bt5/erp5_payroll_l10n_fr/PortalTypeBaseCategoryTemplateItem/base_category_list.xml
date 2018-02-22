@@ -7,5 +7,7 @@
  </portal_type>
  <portal_type id="DSN Monthly Report">
   <item>source_administration</item>
+  <item>source_section</item>
+  <item>source_trade</item>
  </portal_type>
 </base_category_list>

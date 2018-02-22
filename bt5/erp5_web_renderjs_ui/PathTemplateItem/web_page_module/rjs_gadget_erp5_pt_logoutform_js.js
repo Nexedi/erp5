@@ -17,11 +17,17 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
      .declareMethod("render", function () {
-      var gadget = this;
-      return gadget.updateHeader({
-        page_title: 'Logout',
-        page_icon: 'power-off'
-      })
+      var gadget = this,
+        header_dict = {
+          page_title: 'Logout',
+          page_icon: 'power-off'
+        };
+
+      return gadget.getUrlFor({command: 'display'})
+        .push(function (front_url) {
+          header_dict.front_url = front_url;
+          return gadget.updateHeader(header_dict);
+        })
         .push(function () {
           return gadget.translateHtml(gadget.element.innerHTML);
         })

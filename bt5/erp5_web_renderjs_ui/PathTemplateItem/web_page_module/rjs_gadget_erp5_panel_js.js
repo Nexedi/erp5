@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
-/*global window, document, rJS, Handlebars, RSVP, Node, loopEventListener */
-(function (window, document, rJS, Handlebars, RSVP, Node, loopEventListener) {
+/*global window, document, rJS, Handlebars, RSVP, Node, URL, loopEventListener, asBoolean , ensureArray*/
+(function (window, document, rJS, Handlebars, RSVP, Node, URL, loopEventListener, asBoolean, ensureArray) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -51,25 +51,18 @@
 
     .declareMethod('render', function (options) {
       var erp5_document = options.erp5_document,
+        view = options.view,
+        context = this,
         workflow_list,
         view_list,
         action_list,
-        view = options.view,
-        i,
-        context = this;
+        i;
+
       if (erp5_document !== undefined) {
-        workflow_list = erp5_document._links.action_workflow || [];
-        view_list = erp5_document._links.action_object_view || [];
-        action_list = erp5_document._links.action_object_jio_action || [];
-        if (workflow_list.constructor !== Array) {
-          workflow_list = [workflow_list];
-        }
-        if (view_list.constructor !== Array) {
-          view_list = [view_list];
-        }
-        if (action_list.constructor !== Array) {
-          action_list = [action_list];
-        }
+        workflow_list = ensureArray(erp5_document._links.action_workflow);
+        view_list = ensureArray(erp5_document._links.action_object_view);
+        action_list = ensureArray(erp5_document._links.action_object_jio_action);
+
         if (view === 'view') {
           for (i = 0; i < view_list.length; i += 1) {
             view_list[i].class_name = view_list[i].name === view ? 'active' : '';
@@ -98,7 +91,7 @@
             view_list: view_list,
             action_list: action_list,
             global: true,
-            editable: options.editable || editable || false
+            editable: asBoolean(options.editable) || asBoolean(editable) || false
           });
         });
     })
@@ -381,4 +374,4 @@
 
     }, /*useCapture=*/false, /*preventDefault=*/true);
 
-}(window, document, rJS, Handlebars, RSVP, Node, loopEventListener));
+}(window, document, rJS, Handlebars, RSVP, Node, URL, loopEventListener, asBoolean, ensureArray));

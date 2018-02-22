@@ -167,7 +167,7 @@ def checkConversionToolAvailability(self):
     severity = 1
     result.edit(detail=message)
   result.edit(severity=severity)
-  active_process.activateResult(result)
+  active_process.postResult(result)
 
 from Products.ERP5Type.Utils import checkPythonSourceCode
 

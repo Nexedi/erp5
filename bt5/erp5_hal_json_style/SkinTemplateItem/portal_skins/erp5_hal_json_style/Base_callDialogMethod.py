@@ -250,27 +250,36 @@ if True:
         if str(key).startswith('field') or str(key).startswith('subfield'):
           request.form.pop(key, None)
 
-    # now get dialog_method after skin re-selection and dialog_method mingling
-    dialog_form = getattr(context, dialog_method)
+  # now get dialog_method after skin re-selection and dialog_method mingling
+  dialog_form = getattr(context, dialog_method)
+  # XXX: this is a hack that should not be needed anymore with the new listbox.
+  # set the URL in request, so that we can immediatly call method
+  # that depend on it (eg. Show All). This is really related to
+  # current ListBox implementation which edit Selection's last_url
+  # with the content of REQUEST.URL
+  request.set('URL', '%s/%s' % (context.absolute_url(), dialog_method))
 
-    # XXX: this is a hack that should not be needed anymore with the new listbox.
-    # set the URL in request, so that we can immediatly call method
-    # that depend on it (eg. Show All). This is really related to
-    # current ListBox implementation which edit Selection's last_url
-    # with the content of REQUEST.URL
-    request.set('URL', '%s/%s' % (context.absolute_url(), dialog_method))
+  # RJS: If we are in deferred mode - call the form directly and return
+  # dialog method is now `Base_activateSimpleView` - the only script in
+  # deferred portal_skins folder
+  if clean_kw.get('deferred_style', 0):
+    return dialog_form(**kw)  # deferred form should return redirect with a message
 
-    # RJS: If we are in deferred mode - call the form directly and return
-    # dialog method is now `Base_activateSimpleView` - the only script in
-    # deferred portal_skins folder
-    if clean_kw.get('deferred_style', 0):
-      return dialog_form(**kw)  # deferred form should return redirect with a message
+  # RJS: If skin selection is different than Hal* then ERP5Document_getHateoas
+  # does not exist and we call form method directly
+  # If update_method was clicked and the target is the original dialog form then we must not call dialog_form directly because it returns HTML
+  if clean_kw.get("portal_skin", context.getPortalObject().portal_skins.getDefaultSkin()) not in ("Hal", "HalRestricted", "View"):
+    return dialog_form(**kw)
 
-    # RJS: If skin selection is different than Hal* then ERP5Document_getHateoas
-    # does not exist and we call form method directly
-    if clean_kw.get("portal_skin", context.getPortalObject().portal_skins.getDefaultSkin()) not in ("Hal", "HalRestricted"):
-      return dialog_form(**kw)
+  # dialog_form can be anything from a pure python function, class method to ERP5 Form or Python Script
+  try:
+    meta_type = dialog_form.meta_type
+  except AttributeError:
+    meta_type = ""
 
+  if meta_type in ("ERP5 Form", "ERP5 Report"):
     return context.ERP5Document_getHateoas(REQUEST=request, form=dialog_form, mode="form")
+
+  return dialog_form(**kw)
 
 return getattr(context, dialog_method)(**kw)

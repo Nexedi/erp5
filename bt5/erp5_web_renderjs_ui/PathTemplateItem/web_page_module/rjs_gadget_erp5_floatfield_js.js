@@ -31,6 +31,7 @@
           editable: field_json.editable,
           required: field_json.required,
           hidden: field_json.hidden,
+          id: field_json.key,
           name: field_json.key,
           title: field_json.title,
           precision: window.parseFloat(field_json.precision),

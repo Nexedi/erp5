@@ -30,14 +30,15 @@
 </tr>
 
 <!-- Field without value are not displayed -->
+<!-- We used to have "my_quantity" field here but it DOES have a default value of 0 thus will be visible -->
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//label[@for='field_my_quantity']</td>
+  <td>//label[@for='field_my_short_title']</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//input[@name='field_my_quantity']</td>
+  <td>//input[@name='field_my_short_title']</td>
   <td></td>
 </tr>
 

@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars, calculatePageTitle */
+/*global window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, calculatePageTitle) {
+(function (window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -53,11 +53,6 @@
       });
   }
 
-  function asArray(obj) {
-    if (!obj) {return []; }
-    if (Array.isArray(obj)) {return obj; }
-    return [obj];
-  }
 
   gadget_klass
     /////////////////////////////////////////////////////////////////
@@ -79,16 +74,18 @@
         clone_list,
         delete_list;
 
-      return gadget.jio_getAttachment(options.jio_key, "links")
+      // Get the whole view as attachment because actions can change based on
+      // what view we are at. If no view available than fallback to "links".
+      return gadget.jio_getAttachment(options.jio_key, options.view || "links")
         .push(function (result) {
           erp5_document = result;
-          transition_list = asArray(erp5_document._links.action_workflow);
-          action_list = asArray(erp5_document._links.action_object_jio_action),
-          clone_list = asArray(erp5_document._links.action_object_clone_action),
-          delete_list = asArray(erp5_document._links.action_object_delete_action);
+          transition_list = ensureArray(erp5_document._links.action_workflow);
+          action_list = ensureArray(erp5_document._links.action_object_jio_action),
+          clone_list = ensureArray(erp5_document._links.action_object_clone_action),
+          delete_list = ensureArray(erp5_document._links.action_object_delete_action);
 
           return RSVP.all([
-            renderLinkList(gadget, "Decisions", "random", transition_list),
+            renderLinkList(gadget, "Workflows", "random", transition_list),
             renderLinkList(gadget, "Actions", "gear", action_list),
             renderLinkList(gadget, "Clone", "clone", clone_list),
             renderLinkList(gadget, "Delete", "trash-o", delete_list)
@@ -109,4 +106,4 @@
         });
     });
 
-}(window, rJS, RSVP, Handlebars, calculatePageTitle));
+}(window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray));

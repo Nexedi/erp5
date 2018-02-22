@@ -374,6 +374,10 @@
       ]);
     })
 
+    .allowPublicAcquisition('isDesktopMedia', function (argument_list) {
+      return window.matchMedia("(min-width: 85em)").matches;
+    })
+
     .allowPublicAcquisition('refresh', function () {
       var gadget = this;
       return gadget.getDeclaredGadget(MAIN_SCOPE)

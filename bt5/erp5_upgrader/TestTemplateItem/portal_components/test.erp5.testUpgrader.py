@@ -202,7 +202,6 @@ class TestUpgrader(ERP5TypeTestCase):
     group_dict = DETAIL_PATTERN.match(detail).groupdict()
     person = self.portal.restrictedTraverse(group_dict['relative_url'])
     message_list = [m.message for m in person.checkConsistency()]
-    self.assertNotEqual(result_list, [])
     self.assertEqual(len(result_list), 1)
     return person, group_dict, detail, message_list
 

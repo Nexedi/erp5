@@ -83,16 +83,6 @@ class TestTemplateTool(ERP5TypeTestCase):
       bt.install(force=1)
     self.tic()
 
-  def checkFolderReindexAllActivityPresense(self):
-    message_list = [m for m in self.portal.portal_activities.getMessageList()
-                      if m.method_id == 'Folder_reindexAll']
-    self.assertNotEquals(len(message_list), 0)
-
-  def checkFolderReindexAllActivityNotPresent(self):
-    message_list = [m for m in self.portal.portal_activities.getMessageList()
-                      if m.method_id == 'Folder_reindexAll']
-    self.assertEqual(len(message_list), 0)
-
   def testUpdateBT5FromRepository(self):
     """ Test the list of bt5 returned for upgrade """
     # edit bt5 revision so that it will be marked as updatable
@@ -544,6 +534,13 @@ class TestTemplateTool(ERP5TypeTestCase):
   def test_installBusinessTemplatesFromRepository_update_catalog(self):
     """ Test if update catalog is trigger when needed.
     """
+    has_cleared_catalog = []
+    from Products.ERP5Catalog.Document.ERP5Catalog import ERP5Catalog
+    orig_manage_catalogClear = ERP5Catalog.manage_catalogClear
+    def manage_catalogClear(*args, **kw):
+      has_cleared_catalog.append(None)
+      return orig_manage_catalogClear(*args, **kw)
+    ERP5Catalog.manage_catalogClear = manage_catalogClear
     try:
       bt5_name = 'erp5_ingestion_mysql_innodb_catalog'
       template_tool = self.portal.portal_templates
@@ -557,7 +554,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertNotEquals(bt.getId(), None)
       self.commit()
-      self.checkFolderReindexAllActivityNotPresent()
+      self.assertFalse(has_cleared_catalog)
       # Before launch activities make sure email table is created even
       # catalog is not created.
       catalog_tool = self.portal.portal_catalog
@@ -572,7 +569,8 @@ class TestTemplateTool(ERP5TypeTestCase):
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertEqual(bt.getTitle(), bt5_name)
       self.commit()
-      self.checkFolderReindexAllActivityPresense()
+      self.assertTrue(has_cleared_catalog)
+      del has_cleared_catalog[:]
       self.tic()
 
       # Install again should not force catalog to be updated
@@ -583,9 +581,10 @@ class TestTemplateTool(ERP5TypeTestCase):
       self.assertNotEquals(bt, None)
       self.assertEqual(bt.getTitle(), bt5_name)
       self.commit()
-      self.checkFolderReindexAllActivityNotPresent()
+      self.assertFalse(has_cleared_catalog)
       self.tic()
     finally:
+      ERP5Catalog.manage_catalogClear = orig_manage_catalogClear
       # Make sure no broken catalog it will be left behind and propaguated to
       # the next tests.
       if len(self.portal.portal_activities.getMessageList())>0:

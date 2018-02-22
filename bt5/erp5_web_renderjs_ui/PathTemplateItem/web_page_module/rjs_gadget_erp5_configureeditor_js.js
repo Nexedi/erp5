@@ -92,7 +92,16 @@
     })
 
     .onEvent('click', function (evt) {
-      var gadget = this;
+      var gadget = this,
+        container;
+
+      if (evt.target.classList.contains('trash')) {
+        evt.preventDefault();
+        container = gadget.element.querySelector(".column_item_container");
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
+        }
+      }
 
       if (evt.target.classList.contains('close')) {
         evt.preventDefault();

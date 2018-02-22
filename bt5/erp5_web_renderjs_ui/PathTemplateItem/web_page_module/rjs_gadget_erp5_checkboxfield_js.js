@@ -1,20 +1,7 @@
-/*global window, rJS */
+/*global window, rJS, asBoolean, getFirstNonEmpty */
 /*jslint indent: 2, maxerr: 3, maxlen: 80 */
-(function (window, rJS) {
+(function (window, rJS, asBoolean, getFirstNonEmpty) {
   "use strict";
-
-  function asBool(obj) {
-    if (typeof obj === "boolean") {
-      return obj;
-    }
-    if (typeof obj === "string") {
-      return obj.toLowerCase() === "true" || obj === "1";
-    }
-    if (typeof obj === "number") {
-      return obj !== 0;
-    }
-    return Boolean(obj);
-  }
 
   rJS(window)
     .setState({
@@ -25,8 +12,9 @@
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
-          checked: asBool(field_json.value || field_json.default),
+          checked: asBoolean(getFirstNonEmpty(field_json.value, field_json.default)),
           editable: field_json.editable,
+          id: field_json.key,
           name: field_json.key,
           title: field_json.title,
           hidden: field_json.hidden,
@@ -95,4 +83,4 @@
       }
       return true;
     }, {mutex: 'changestate'});
-}(window, rJS));
+}(window, rJS, asBoolean, getFirstNonEmpty));

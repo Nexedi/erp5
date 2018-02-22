@@ -2,8 +2,7 @@ from Products.ERP5Type.DateUtils import addToDate, getNumberOfDayInMonth
 
 if context.getSourceAdministration() is None \
    or context.getEffectiveDate() is None \
-   or context.getQuantity() is None \
-   or len(context.getAggregateRelatedIdList()) <= 0:
+   or context.getQuantity() is None:
   return context.REQUEST.response.redirect("%s?portal_status_message=%s" % (context.absolute_url(), "DSN can't be built if some fields are empty"))
 
 portal = context.getPortalObject()
@@ -34,14 +33,19 @@ paysheet_id_list =  [transaction.getId() for transaction in paysheet_list]
 change_block_dict = context.DSNMonthlyReport_getChangeBlockDict()
 
 organisation_contact = context.getSourceAdministrationValue()
-establishment = accounting_module.restrictedTraverse(paysheet_id_list[0]).getDestinationTradeValue()
+if len(paysheet_list):
+  establishment = accounting_module.restrictedTraverse(paysheet_id_list[0]).getDestinationTradeValue()
+else:
+  establishment = context.getSourceTradeValue()
 establishment_registration_code = ''.join(establishment.getCorporateRegistrationCode().split(' '))
 
 # Finds the head office of the comany
 if len(payment_transaction_list):
   organisation = payment_transaction_list[0].getSourceSectionValue()
-else:
+elif len(paysheet_list):
   organisation = paysheet_list[0].getDestinationSectionValue()
+else:
+  organisation = context.getSourceSectionValue()
 
 
 # Variable containing all the record of the DSN
@@ -60,12 +64,13 @@ leave_period_dict = context.DSNMonthlyReport_getLeavePeriodDict(bank_account)
 employee_list = []
 
 # DSN HEADERS
-dsn_file.append(getDSNBlockDict(block_id='S10.G00.00'))
+dsn_type = ('01' if len(paysheet_list) else '02')
+dsn_file.append(getDSNBlockDict(block_id='S10.G00.00', type=dsn_type))
 dsn_file.append(getDSNBlockDict(block_id='S10.G00.01', target=organisation))
 dsn_file.append(getDSNBlockDict(block_id='S10.G00.02', target=organisation_contact))
 
 # Monthly DSN
-dsn_file.append(getDSNBlockDict(block_id='S20.G00.05', year=declared_year, month=declared_month, order=nb_dsn))
+dsn_file.append(getDSNBlockDict(block_id='S20.G00.05', year=declared_year, month=declared_month, order=nb_dsn, type=dsn_type))
 
 dsn_file.append(getDSNBlockDict(block_id='S21.G00.06', target=organisation))
 
@@ -79,7 +84,10 @@ employee_result_list = [
   for paysheet in paysheet_list
 ]
 
-employee_data_list, paysheet_data_list = zip(*employee_result_list)
+if len(employee_result_list):
+  employee_data_list, paysheet_data_list = zip(*employee_result_list)
+else:
+  employee_data_list, paysheet_data_list = [], []
 
 insurance_contract_id_list = set()
 for employee_data_dict, paysheet_data_dict in employee_result_list:
@@ -171,7 +179,7 @@ if len(payment_transaction_list):
                                       establishment=establishment,
                                       payer=organisation))
       dsn_file.append(getDSNBlockDict(block_id='S21.G00.55', target=payment, establishment=establishment))
-else:
+elif len(paysheet_list):
   # If there is no Payment Transaction, then the organisation pays quaterly
   amount = -1. * portal.portal_simulation.getInventory(
     from_date=first_date_of_month,

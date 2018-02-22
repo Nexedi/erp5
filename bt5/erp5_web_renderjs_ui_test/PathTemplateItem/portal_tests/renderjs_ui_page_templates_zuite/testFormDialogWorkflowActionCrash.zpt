@@ -57,13 +57,14 @@
   <td>//input[@type='submit' and @value='Dummy Crashing Workflow Action']</td>
   <td></td>
 </tr>
+
 <!-- Wait for the notification to appear. We cannot use verifyText because the button
      is there all the time. It gets text assigned and is shown asynchronously later. -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='notification']/button[text()='Encountered an unknown error. Try to resubmit.']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'Encountered an unknown error. Try to resubmit.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
 <!-- Modified form data must stay after the notification -->
 <tr>
   <td>verifyValue</td>

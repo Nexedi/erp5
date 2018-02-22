@@ -38,7 +38,6 @@ from Products.ZSQLCatalog.SQLCatalog import Catalog, CatalogError
 import OFS.History
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
-from Products.CMFCore.Expression import Expression
 from zLOG import LOG, INFO, TRACE, WARNING, ERROR
 
 import time
@@ -392,12 +391,6 @@ class ERP5Catalog(Folder, Catalog):
     if method is None:
       return None
     method.setExpression(expression)
-
-    if expression:
-      expression_instance = Expression(expression)
-    else:
-      expression_instance = None
-    method.setExpressionInstance(expression)
 
 InitializeClass(ERP5Catalog)
 

@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>BusinessTemplate_migrateSourceCodeFromFilesystem</string> </value>
+            <value> <string>migrateSourceCodeFromFilesystem</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -88,16 +88,14 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_version_item_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_erase_existing</string>
+                        <string>your_version</string>
                       </list>
                     </value>
                 </item>

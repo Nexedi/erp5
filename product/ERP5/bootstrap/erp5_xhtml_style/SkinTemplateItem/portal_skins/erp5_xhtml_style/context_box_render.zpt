@@ -110,6 +110,7 @@
             sort_actions actions/object_sort | nothing;
             ui_actions actions/object_ui | nothing;
             print_actions actions/object_print | nothing;
+            print_jio_actions actions/object_jio_print | nothing;
             list_mode list_mode | nothing;
             can_modify_portal_content python: portal.portal_membership.checkPermission('Modify portal content', here)">
         <span class="separator"><!--separator--></span>
@@ -132,7 +133,7 @@
           </button>
           <span class="separator"><!--separator--></span>
         </tal:block>
-        <button tal:condition="print_actions" class="print" type="submit" name="Folder_print:method" title="Print"
+        <button tal:condition="python: print_actions or print_jio_actions" class="print" type="submit" name="Folder_print:method" title="Print"
                 i18n:attributes="title" i18n:domain="ui">
           <span class="image"></span>
           <span class="description" i18n:translate="" i18n:domain="ui">Print</span>

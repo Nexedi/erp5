@@ -29,11 +29,6 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//h1//span[text()='Search']</td>
-  <td></td>
-</tr>
 <!-- Header has a menu button -->
 <tr>
   <td>assertElementPresent</td>

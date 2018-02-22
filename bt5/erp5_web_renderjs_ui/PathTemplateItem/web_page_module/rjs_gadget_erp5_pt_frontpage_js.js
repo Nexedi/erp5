@@ -96,7 +96,11 @@
           filter_action: true
         };
 
-      return gadget.updateHeader(header_dict)
+      return gadget.getUrlFor({command: 'display'})
+        .push(function (front_url) {
+          header_dict.front_url = front_url;
+          return gadget.updateHeader(header_dict);
+        })
         .push(function () {
           return gadget.getDeclaredGadget('form_list');
         })

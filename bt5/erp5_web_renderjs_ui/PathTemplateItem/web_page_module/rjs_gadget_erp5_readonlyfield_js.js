@@ -12,6 +12,7 @@
       var field_json = options.field_json || {},
         state_dict = {
           text_content: field_json.value || field_json.default || "",
+          id: field_json.key,
           hidden: field_json.hidden
         };
       return this.changeState(state_dict);

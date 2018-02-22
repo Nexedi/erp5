@@ -52,7 +52,7 @@ def addDialogIfNeeded(url):
                  context.absolute_url(), url_quote('%s/%s' % (absolute_url, action)))
   return url
 
-print_action_list = actions['object_print']
+print_action_list = sorted(actions.get('object_print', []) + actions.get('object_jio_print', []), key=lambda x: x["priority"])
 new_print_action_list = []
 for ai in print_action_list:
   ai_copy = ai.copy()

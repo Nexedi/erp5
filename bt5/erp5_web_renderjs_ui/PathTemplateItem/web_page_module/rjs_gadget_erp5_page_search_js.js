@@ -47,9 +47,15 @@
             return gadget.getUrlFor({command: 'history_previous'});
           }
         })
-        .push(function (result) {
-          if (result !== undefined) {
-            header_dict.selection_url = result;
+        .push(function (selection_url) {
+          if (selection_url === undefined) {
+            return gadget.getUrlFor({command: 'display'});
+          }
+          header_dict.selection_url = selection_url;
+        })
+        .push(function (front_url) {
+          if (front_url !== undefined) {
+            header_dict.front_url = front_url;
           }
           return gadget.updateHeader(header_dict);
         })

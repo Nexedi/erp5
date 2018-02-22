@@ -168,14 +168,15 @@
       if (options.hasOwnProperty("page_title")) {
         state.title_text = options.page_title;
       }
-      if (options.hasOwnProperty("page_icon")) {
-        state.title_icon = options.page_icon;
-      }
       for (i = 0; i < possible_main_link_list.length; i += 1) {
         if (options.hasOwnProperty(possible_main_link_list[i][0])) {
           state.title_icon = possible_main_link_list[i][2];
           state.title_url = options[possible_main_link_list[i][0]];
         }
+      }
+      // Surcharge icon if the page want it
+      if (options.hasOwnProperty("page_icon")) {
+        state.title_icon = options.page_icon;
       }
 
       // Left button

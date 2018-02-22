@@ -39,7 +39,6 @@ from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
 from urllib import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
-from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
@@ -125,6 +124,13 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       except OSError:
         continue
       self.rmdir_list.append(d)
+    self._has_cleared_catalog = []
+    from Products.ERP5Catalog.Document.ERP5Catalog import ERP5Catalog
+    orig_manage_catalogClear = ERP5Catalog.manage_catalogClear
+    def manage_catalogClear(*args, **kw):
+      self._has_cleared_catalog.append(None)
+      return orig_manage_catalogClear(*args, **kw)
+    ERP5Catalog.manage_catalogClear = manage_catalogClear
 
   def beforeTearDown(self):
     """Remove objects created in tests."""
@@ -1600,10 +1606,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
     # set filter for this method
     expression = 'python: context.isPredicate()'
-    expr_instance = Expression(expression)
     zsql_method.setFiltered(1)
     zsql_method.setExpression(expression)
-    zsql_method.setExpressionInstance(expr_instance)
     zsql_method.setExpressionCacheKey('portal_type')
     zsql_method.setTypeList([])
 
@@ -1625,10 +1629,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
     # set filter for this method
     expression = 'python: context.isDelivery()'
-    expr_instance = Expression(expression)
     zsql_method.setFiltered(1)
     zsql_method.setExpression(expression)
-    zsql_method.setExpressionInstance(expr_instance)
     zsql_method.setExpressionCacheKey('portal_type')
     zsql_method.setTypeList([])
 
@@ -2765,13 +2767,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                      and m.kw.get('uid') is not None ]
     self.assertEqual(len(message_list), 0)
 
-  def stepCheckFolderReindexActivityPresence(self, sequence=None, **kw):
+  def stepCheckHasClearedCatalog(self, sequence=None, **kw):
     """
     Check if we have activity for Folder_reindexAll.
     """
-    message_list = [ m for m in self.portal.portal_activities.getMessageList()
-                     if m.method_id == 'Folder_reindexAll']
-    self.assertNotEquals(len(message_list), 0)
+    self.assertTrue(self._has_cleared_catalog)
+    del self._has_cleared_catalog[:]
 
   def stepCheckPathNotUnindexAfterBuild(self, sequence=None, **kw):
     """
@@ -3638,7 +3639,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        InstallWithoutForceBusinessTemplate \
-                       CheckFolderReindexActivityPresence \
+                       CheckHasClearedCatalog \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -4391,7 +4392,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckCatalogPreinstallReturnCatalogMethod \
                        Tic \
                        InstallWithoutForceBusinessTemplate \
-                       CheckFolderReindexActivityPresence \
+                       CheckHasClearedCatalog \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -5491,7 +5492,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        InstallWithoutForceBusinessTemplate \
-                       CheckFolderReindexActivityPresence \
+                       CheckHasClearedCatalog \
                        Tic \
                        \
                        CheckFormGroups \
@@ -5507,7 +5508,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        UseImportBusinessTemplate \
                        Tic \
                        InstallWithoutForceBusinessTemplate \
-                       CheckFolderReindexActivityPresence \
+                       CheckHasClearedCatalog \
                        Tic \
                        \
                        CheckFormGroups \
@@ -8073,8 +8074,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     copied, = template_tool.manage_pasteObjects(cb_data)
     copied_bt = template_tool._getOb(copied['new_id'])
 
-    copied_bt.migrateSourceCodeFromFilesystem(
-      {self.component_portal_type: {sequence['document_title']: 'erp5'}})
+    copied_bt.migrateSourceCodeFromFilesystem(version='erp5')
 
     sequence.edit(current_bt=copied_bt)
 
@@ -8231,6 +8231,95 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepCheckDocumentMigrationFailWithConsistencyError(self, sequence=None, **kw):
+    current_bt = sequence['current_bt']
+    self.assertRaises(RuntimeError,
+                      current_bt.migrateSourceCodeFromFilesystem,
+                      # version must not start with '_'
+                      version='_invalid_version')
+
+  def test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithConsistencyError(self):
+    """
+    Check that component.checkConsistency() (called before "validating" a ZODB
+    Component) is done when migrating Document from filesystem to ZODB
+    """
+    sequence_list = SequenceList()
+    sequence_string = """
+      CreateDocument
+      CreateNewBusinessTemplate
+      UseExportBusinessTemplate
+      AddDocumentToBusinessTemplate
+      CheckModifiedBuildingState
+      CheckNotInstalledInstallationState
+      BuildBusinessTemplate
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      CheckObjectPropertiesInBusinessTemplate
+      UseCurrentBusinessTemplateForInstall
+      InstallWithoutForceBusinessTemplate
+      Tic
+      CheckInstalledInstallationState
+      CheckBuiltBuildingState
+      CheckSkinsLayers
+      CheckDocumentExists
+
+      CopyBusinessTemplate
+      CheckDocumentMigrationFailWithConsistencyError
+      """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def stepCheckDocumentMigrationFailWithSourceCodeError(self, sequence=None, **kw):
+    current_bt = sequence['current_bt']
+
+    from Products.ERP5Type.mixin.component import ComponentMixin
+    orig_checkSourceCode = ComponentMixin.checkSourceCode
+    try:
+      ComponentMixin.checkSourceCode = lambda *args, **kwargs: [
+        {'type': 'E', 'row': 1, 'column': 1,
+         'text': 'Source Code Error for Unit Test'}]
+      self.assertRaises(RuntimeError, current_bt.migrateSourceCodeFromFilesystem,
+                        version='erp5')
+
+      ComponentMixin.checkSourceCode = lambda *args, **kwargs: [
+        {'type': 'F', 'row': 1, 'column': 1,
+         'text': 'Source Code Error for Unit Test'}]
+      self.assertRaises(RuntimeError, current_bt.migrateSourceCodeFromFilesystem,
+                        version='erp5')
+    finally:
+      ComponentMixin.checkSourceCode = orig_checkSourceCode
+
+  def test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithSyntaxError(self):
+    """
+    Check that component.checkSourceCode() (called before "validating" a ZODB
+    Component) is done when migrating Document from filesystem to ZODB
+    """
+    sequence_list = SequenceList()
+    sequence_string = """
+      CreateDocument
+      CreateNewBusinessTemplate
+      UseExportBusinessTemplate
+      AddDocumentToBusinessTemplate
+      CheckModifiedBuildingState
+      CheckNotInstalledInstallationState
+      BuildBusinessTemplate
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      CheckObjectPropertiesInBusinessTemplate
+      UseCurrentBusinessTemplateForInstall
+      InstallWithoutForceBusinessTemplate
+      Tic
+      CheckInstalledInstallationState
+      CheckBuiltBuildingState
+      CheckSkinsLayers
+      CheckDocumentExists
+
+      CopyBusinessTemplate
+      CheckDocumentMigrationFailWithSourceCodeError
+      """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 class TestConstraintTemplateItem(TestDocumentTemplateItem):
   document_title = 'UnitTest'
   document_data = ' \nclass UnitTest: \n  """ \n  Fake constraint for unit test \n \
@@ -8374,6 +8463,12 @@ TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocumentMigrated = \
 
 TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodb = \
     skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodb)
+
+TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithConsistencyError = \
+    skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithConsistencyError)
+
+TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithSyntaxError = \
+    skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithSyntaxError)
 
 def test_suite():
   suite = unittest.TestSuite()

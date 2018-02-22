@@ -27,10 +27,7 @@
 ##############################################################################
 
 import unittest
-
 from Products.ZSQLMethods.SQL import SQL as ZSQLMethod
-from Products.CMFCore.Expression import Expression
-
 from Products.ZSQLCatalog.SQLCatalog import Catalog as SQLCatalog
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog as ZSQLCatalog
 
