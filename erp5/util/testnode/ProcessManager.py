@@ -221,8 +221,11 @@ class ProcessManager(object):
       self.under_cancellation = True
     for timer in self.timer_set:
       timer.cancel()
-    for pgpid in self.process_pid_set:
-      killCommand(pgpid)
+    try:
+      for pgpid in self.process_pid_set.copy():
+        killCommand(pgpid)
+    except Exception:
+      pass
     try:
       pid_file = self.supervisord_pid_file
     except AttributeError:
