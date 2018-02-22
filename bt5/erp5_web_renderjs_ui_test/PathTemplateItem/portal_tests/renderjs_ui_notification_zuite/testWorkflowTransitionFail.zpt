@@ -55,16 +55,11 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Workflow script raised</td>
-  <td></td>
-</tr>
+
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'Workflow script raised.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 </tbody></table>
 </body>
