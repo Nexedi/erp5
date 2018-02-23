@@ -186,14 +186,22 @@
             error_text = 'You do not have the permissions to edit the object';
           } else if (error.target.status === 0) {
             error_text = 'Document was not saved! Resubmit when you are online or the document accessible';
-          } else if (error.target.status === 500 && error.target.response.type === "application/json") {
+          }
+          // if the response type is json, then look for the status message
+          // sent from the portal. We prefer to have portal_status_message in
+          // all cases when we have error
+          if (error.target.response.type === 'application/json') {
             promise_queue
               .push(function () {
                 return jIO.util.readBlobAsText(error.target.response);
               })
+              // Get the error_text from portal_status_message, if there is no
+              // portal_status_message, then use the default error_text
               .push(function (response_text) {
                 var response = JSON.parse(response_text.target.result);
-                error_text = response.portal_status_message;
+                // If there is no portal_status_message, use the default
+                // error_text
+                error_text = response.portal_status_message || error_text;
               });
           }
           // display translated error_text to user
@@ -212,7 +220,8 @@
             });
           // if server validation of form data failed (indicated by response code 400)
           // we parse out field errors and display them to the user
-          if (error.target.status === 400) {
+          if (error.target.status === 400 &&
+              error.target.response.type === 'application/hal+json') {
             promise_queue
               .push(function () {
                 // when the server-side validation returns the error description

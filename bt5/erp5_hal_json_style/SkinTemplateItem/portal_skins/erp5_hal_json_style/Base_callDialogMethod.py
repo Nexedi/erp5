@@ -15,12 +15,6 @@ def isFieldType(field, type_name):
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from ZTUtils import make_query
 
-def failWithMessage(message, request=None):
-  response = request.RESPONSE if request is not None else context.REQUEST.RESPONSE
-  response.setStatus(500)
-  response.setHeader("Content-type", "application/json; charset=utf-8")
-  return json.dumps({"portal_status_message": str(message)})
-
 # Kato: I do not understand why we throw away REQUEST from parameters (hidden in **kw)
 # and use container.REQUEST just to introduce yet another global state. Maybe because
 # container.REQUEST is used in other places.
@@ -104,7 +98,7 @@ try:
     # Form is OK, it's just this field - style so we return back form-wide error
     # for which we don't have support out-of-the-box thus we manually craft it
     # XXX TODO: Form-wide validation errors
-    return failWithMessage(
+    return context.Base_returnFailureWithMessage(
       translate('Only ODT, ODS, Hal and HalRestricted skins are allowed for reports '\
                 'in Preferences - User Interface - Report Style'))
 
@@ -204,7 +198,7 @@ if dialog_method != update_method and clean_kw.get('deferred_style', 0):
     # Limit Reports in Deferred style to known working styles
     if request_form.get('your_portal_skin', None) not in ("ODT", "ODS"):
       # RJS own validation - deferred option works here only with ODS/ODT skins
-      return failWithMessage(
+      return Base_returnFailureWithMessage(
         translate('Deferred reports are possible only with preference '\
                   '"Report Style" set to "ODT" or "ODS"'))
 

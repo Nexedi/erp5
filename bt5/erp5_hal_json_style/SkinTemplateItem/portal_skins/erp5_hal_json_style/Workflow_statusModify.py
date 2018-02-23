@@ -21,6 +21,7 @@ except FormValidationError, validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)
+  request.RESPONSE.setStatus(400)
   return context.Base_renderForm(dialog_id)
 
 # XXX: this is a duplication from form validation code in Base_callDialogMethod
@@ -68,6 +69,7 @@ try:
     doaction_param_list['workflow_action'],
     **doaction_param_list)
 except ValidationFailed, error_message:
+  response_code = 403
   if getattr(error_message, 'msg', None):
     # use of Message class to store message+mapping+domain
     message = error_message.msg
@@ -77,14 +79,12 @@ except ValidationFailed, error_message:
       message = str(message)
   else:
     message = str(error_message)
-  if len(message) > 2000: # too long message will generate a too long URI
-                          # that would become an error.
-    log("Status message has been truncated")
-    message = "%s ..." % message[:(2000 - 4)]
+  return context.Base_returnFailureWithMessage(message, response_code, request)
 except WorkflowException as error_message:
+  response_code = 403
   if str(error_message) == "No workflow provides the '${action_id}' action.":
     message = translateString("Workflow state may have been updated by other user. Please try again.")
-    return context.Base_redirect(form_id, keep_items={'portal_status_message': message}, **kw)
+    return context.Base_returnFailureWithMessage(message, response_code, request)
   else:
     raise
 else:
