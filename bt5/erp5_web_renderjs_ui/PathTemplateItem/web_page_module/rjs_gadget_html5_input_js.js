@@ -14,6 +14,19 @@
     return false;
   }
 
+  function readFileData(file) {
+    return new RSVP.Queue()
+      .push(function () {
+        return jIO.util.readBlobAsDataURL(file);
+      })
+      .push(function (evt) {
+        return {
+          url: evt.target.result,
+          file_name: file.name
+        };
+      });
+  }
+
   rJS(window)
 
     .declareMethod('render', function (options) {
@@ -30,6 +43,8 @@
         step: options.step,
         hidden: options.hidden,
         trim: options.trim || false,
+        multiple: options.multiple,
+        accept: options.accept,
         append: options.append, // text to apend after the field
         prepend: options.prepend // text to prepend infront the field
       });
@@ -57,6 +72,13 @@
       }
       if (this.state.step) {
         textarea.setAttribute('step', this.state.step);
+      }
+      if (this.state.accept) {
+        textarea.setAttribute('accept', this.state.accept);
+      }
+
+      if (this.state.multiple) {
+        textarea.multiple = true;
       }
 
       if (this.state.required) {
@@ -116,18 +138,41 @@
       if (this.state.editable) {
         input = this.element.querySelector('input');
         if (this.state.type === 'file') {
-          if (input.files[0] !== undefined) {
-            return new RSVP.Queue()
-              .push(function () {
-                return jIO.util.readBlobAsDataURL(input.files[0]);
-              })
-              .push(function (evt) {
-                result[input.getAttribute('name')] = {
-                  url: evt.target.result,
-                  file_name: input.files[0].name
-                };
-                return result;
-              });
+          if (this.state.multiple) {
+            var i, promiseArray = [];
+            if (input.files.length > 0) {
+              for (i = 0; i < input.files.length; i++) {
+                promiseArray.push(
+                  (function (file) {
+                    return new RSVP.Queue()
+                      .push(function () {
+                        return jIO.util.readBlobAsDataURL(file);
+                      })
+                      .push(function (evt) {
+                        return {
+                          url: evt.target.result,
+                          file_name: file.name
+                        };
+                      });
+                  })(input.files[i])
+                );
+              }
+            }
+            return RSVP.all(promiseArray);
+          } else {
+            if (input.files[0] !== undefined) {
+              return new RSVP.Queue()
+                .push(function () {
+                  return jIO.util.readBlobAsDataURL(input.files[0]);
+                })
+                .push(function (evt) {
+                  result[input.getAttribute('name')] = {
+                    url: evt.target.result,
+                    file_name: input.files[0].name
+                  };
+                  return result;
+                });
+            }
           }
         } else if (this.state.type === 'checkbox') {
           result[input.getAttribute('name')] = (input.checked ? 1 : 0);

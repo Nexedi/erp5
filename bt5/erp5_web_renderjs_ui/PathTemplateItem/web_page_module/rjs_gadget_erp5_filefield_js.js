@@ -16,7 +16,9 @@
           required: field_json.required,
           name: field_json.key,
           title: field_json.title,
-          hidden: field_json.hidden
+          hidden: field_json.hidden,
+          multiple: field_json.multiple,
+          accept: field_json.accept
         };
       return this.changeState(state_dict);
     })
