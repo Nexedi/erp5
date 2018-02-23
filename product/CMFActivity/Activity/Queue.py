@@ -260,4 +260,4 @@ class Queue(object):
       Legal value range is [-128, 127].
       Values out of this range might work, but are non-standard.
     """
-    return 128
+    return 128,
