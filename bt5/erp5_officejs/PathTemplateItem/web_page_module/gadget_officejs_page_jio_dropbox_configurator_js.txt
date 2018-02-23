@@ -34,8 +34,8 @@
           check_remote_modification: true,
           check_remote_creation: true,
           check_remote_deletion: true,
-          parallel_operation_attachment_amount: 50,
-          parallel_operation_amount: 50,
+          parallel_operation_attachment_amount: 1,
+          parallel_operation_amount: 1,
           signature_sub_storage: {
             type: "query",
             sub_storage: {

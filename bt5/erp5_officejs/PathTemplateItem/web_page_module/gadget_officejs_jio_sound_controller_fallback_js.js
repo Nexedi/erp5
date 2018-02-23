@@ -34,13 +34,13 @@
       try {
         // Check if attachment present in the store.
         throw this.jio_getAttachment(this.id, 'enclosure', { start: start, end: end });
-      } catch (err) {
-        return;
-      }
-      return this.jio_getAttachment(this.id, 'enclosure', { start: start, end: end })
-        .push(function (blob) {
+      } catch (result) {
+        return result.push(function (blob) {
           return blob;
+        }).push(undefined, function (error) {
+          return;
         });
+      }
     })
 
     .declareMethod('handlePlayPause', function () {
@@ -130,9 +130,6 @@
       }).push(undefined, function () {
         // Pause when gadget go out of scope { CancellationError }.
         gadget.audio.pause();
-        gadget.source.disconnect(0);
-        gadget.gain.disconnect(0);
-        gadget.audioContext.close();
       });
     });
 }(window, rJS, RSVP, jIO, URL, loopEventListener, document));

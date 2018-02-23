@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_sound_view.js</string> </value>
+            <value> <string>gadget_erp5_ojs_media_player_panel.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,13 +81,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_sound_view_js</string> </value>
+            <value> <string>gadget_officejs_jio_media_player_panel_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -101,13 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Jio Sound View JS</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget Officejs Media Player Panel JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -193,7 +185,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1516288106.96</float>
+                        <float>1518020223.41</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -238,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.42272.6476.33348</string> </value>
+                <value> <string>965.42058.22152.36232</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,7 +248,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1519294814.86</float>
+                        <float>1519208330.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -313,7 +305,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1516287740.58</float>
+                        <float>1518020060.62</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -70,8 +70,14 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_sound_view.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_multi_upload.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_sound_view_js</string> </value>
+            <value> <string>gadget_officejs_jio_multi_upload_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,17 +107,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Jio Sound View JS</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget Multi Upload JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -193,7 +195,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1516288106.96</float>
+                        <float>1519208154.83</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -238,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.42272.6476.33348</string> </value>
+                <value> <string>965.43498.63121.17783</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1519294814.86</float>
+                        <float>1519305403.39</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -279,7 +281,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -295,7 +299,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -313,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1516287740.58</float>
+                        <float>1519208061.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
