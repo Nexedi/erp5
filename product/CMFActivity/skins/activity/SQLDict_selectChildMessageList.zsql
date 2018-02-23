@@ -16,7 +16,9 @@ SELECT uid FROM
   message
 WHERE
   processing_node = 0
-  AND path LIKE <dtml-sqlvar type="string" expr="path + '/%'">
+  AND (path = <dtml-sqlvar path type="string">
+    OR path LIKE <dtml-sqlvar type="string"
+      expr="path.replace('_', r'\_') + '/%'">)
   AND method_id = <dtml-sqlvar method_id type="string">
   AND group_method_id = <dtml-sqlvar group_method_id type="string">
 FOR UPDATE
