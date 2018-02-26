@@ -359,7 +359,7 @@
     .ready(function (gadget) {
       gadget.state_parameter_dict = {
         connected: false,
-        server: 'https://mail.tiolive.com/chat/http-bind/',
+        server: 'https://mail.nexedi.net/chat/http-bind/',
         jio: '',
         passwd: ''
       };

@@ -59,7 +59,7 @@
               "server": {
                 "description": "",
                 "title": "Server URL",
-                "default": "tiolive.com",
+                "default": "nexedi.com",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
