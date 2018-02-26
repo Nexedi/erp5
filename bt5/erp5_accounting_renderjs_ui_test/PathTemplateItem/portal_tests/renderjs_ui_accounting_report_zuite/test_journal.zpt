@@ -76,7 +76,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>${table}//../nav//span[@data-i18n="9 Records"]</td><td></td></tr>
+    <td>${table}//../nav//span[text()="9 Records"]</td><td></td></tr>
 
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>

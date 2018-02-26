@@ -89,7 +89,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>${table}/../nav//span[@data-i18n="5 Records"]</td><td></td></tr>
+    <td>${table}/../nav//span[text()="5 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
     Movement_getExplanationTitleAndAnalytics string:Transaction 3 ref3;
@@ -159,7 +159,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>${table}/../nav//span[@data-i18n="2 Records"]</td><td></td></tr>
+    <td>${table}/../nav//span[text()="2 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
    Movement_getExplanationTitleAndAnalytics string:Transaction 1 ref1;
@@ -199,7 +199,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>${table}/../nav//span[@data-i18n="5 Records"]</td><td></td></tr>
+    <td>${table}/../nav//span[text()="5 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
           Movement_getSpecificReference string:1;
@@ -268,7 +268,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>${table}/../nav//span[@data-i18n="1 Records"]</td><td></td></tr>
+    <td>${table}/../nav//span[text()="1 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
    Movement_getExplanationTitleAndAnalytics string:Transaction 4 ref4;
@@ -297,7 +297,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>${table}/../nav//span[@data-i18n="1 Records"]</td><td></td></tr>
+    <td>${table}/../nav//span[text()="1 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
    Movement_getExplanationTitleAndAnalytics string:Transaction 5 ref5;
@@ -326,7 +326,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>${table}/../nav//span[@data-i18n="1 Records"]</td><td></td></tr>
+    <td>${table}/../nav//span[text()="1 Records"]</td><td></td></tr>
 
 <tr><td>store</td>
     <td>${table}/tbody/tr[1]</td>
