@@ -1085,20 +1085,20 @@ class ActivityTool (Folder, UniqueObject):
 
       try:
         # Loop as long as there are activities. Always process the queue with
-        # "highest" priority. If several queues have same highest priority, do
-        # not choose one that has just been processed.
-        # This algorithm is fair enough because we only have 2 queues.
-        # Otherwise, a round-robin of highest-priority queues would be required.
+        # "highest" priority. If several queues have same highest priority,
+        # use a round-robin algorithm.
         # XXX: We always finish by iterating over all queues, in case that
         #      getPriority does not see messages dequeueMessage would process.
-        last = None
+        activity_list = activity_dict.values()
         def sort_key(activity):
-          return activity.getPriority(self), activity is last
+          return activity.getPriority(self)
         while is_running_lock.acquire(0):
           try:
-            for last in sorted(activity_dict.values(), key=sort_key):
+            activity_list.sort(key=sort_key) # stable sort
+            for i, activity in enumerate(activity_list):
               # Transaction processing is the responsability of the activity
-              if not last.dequeueMessage(inner_self, processing_node):
+              if not activity.dequeueMessage(inner_self, processing_node):
+                activity_list.append(activity_list.pop(i))
                 break
             else:
               break
