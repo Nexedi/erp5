@@ -52,6 +52,13 @@ class ERP5_scalability():
     bootstrap_url += "?user_quantity=%i" % self.getUserQuantity(count)
     return bootstrap_url
 
+  def getSiteAvailabilityUrl(self, instance_information_dict, **kw):
+    frontend_address = self.getScalabilityTestUrl(instance_information_dict)
+    site_url = frontend_address.replace("://",
+                    "://%s:%s@" % (instance_information_dict['user'],
+                                   instance_information_dict['password']))
+    return site_url + "/erp5/ERP5Site_isReady"
+
   def getScalabilityTestOutput(self, metric_list):
     """
     From the list of metrics taken during a test run, select the best metric
