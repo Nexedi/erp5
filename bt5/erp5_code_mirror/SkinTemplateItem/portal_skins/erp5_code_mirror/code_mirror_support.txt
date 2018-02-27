@@ -487,6 +487,30 @@
  lint_option = false;
 </dtml-if>
 
+ var extra_keys = {
+   "Ctrl-Q": function(cm){cm.foldCode(cm.getCursor());},
+   "Tab": function(cm) {
+     // We want to insert spaces, not tab, and we also want to keep the behaviour of indenting selection.
+     if (cm.getSelection()) {
+       return cm.execCommand("defaultTab");
+     }
+     var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+     cm.replaceSelection(spaces);
+     },
+   "Ctrl-I": "indentAuto",
+   "Shift-Tab": "indentLess"};
+
+ var save_shortcut = function(cm){saveDocument(cm, $.Event('click'))};
+<dtml-if expr="keymap == 'emacs'">
+ extra_keys["Ctrl-X Ctrl-S"] = save_shortcut;
+ // autocomplete: Alt-/
+<dtml-else>
+ extra_keys["Ctrl-S"] = save_shortcut;
+ extra_keys["Ctrl-Space"] = "autocomplete";
+ // Ctrl-Space used in some OS (such as Chrome OS) to switch input method
+ extra_keys["Alt-Space"] = "autocomplete";
+</dtml-if>
+
  // CodeMirror expects a DOM element, not a JQuery Object
  var cm = CodeMirror.fromTextArea(
    getTextareaField()[0],
@@ -498,20 +522,7 @@
     tabSize: 2,
     indentWithTabs: false,
     matchBrackets: true,
-    extraKeys: {"Ctrl-Space": "autocomplete",
-                "Alt-Space": "autocomplete",
-                "Ctrl-Q": function(cm){cm.foldCode(cm.getCursor());},
-                "Tab": function(cm) {
-                  // We want to insert spaces, not tab, and we also want to keep the behaviour of indenting selection.
-                  if (cm.getSelection()) {
-                    return cm.execCommand("defaultTab");
-                  }
-                  var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
-                  cm.replaceSelection(spaces);
-                },
-                "Ctrl-I": "indentAuto",
-                "Shift-Tab": "indentLess",
-                "Ctrl-S": function(cm){saveDocument(cm, $.Event('click'))}},
+    extraKeys: extra_keys,
     foldGutter: true,
     lineWrapping: true,
     gutters: ["CodeMirror-lint-markers",
