@@ -41,14 +41,14 @@ class ERP5_scalability():
     metrics_url = frontend_address.replace("://",
                     "://%s:%s@" % (instance_information_dict['user'],
                                    instance_information_dict['password']))
-    return metrics_url + "/erp5/ERP5Site_getScalabilityTestMetric"
+    return metrics_url + "/ERP5Site_getScalabilityTestMetric"
 
   def getBootstrapScalabilityTestUrl(self, instance_information_dict, count=0, **kw):
     frontend_address = self.getScalabilityTestUrl(instance_information_dict)
     bootstrap_url = frontend_address.replace("://",
                       "://%s:%s@" % (instance_information_dict['user'],
                                      instance_information_dict['password']))
-    bootstrap_url += "/erp5/ERP5Site_bootstrapScalabilityTest"
+    bootstrap_url += "/ERP5Site_bootstrapScalabilityTest"
     bootstrap_url += "?user_quantity=%i" % self.getUserQuantity(count)
     return bootstrap_url
 
@@ -57,7 +57,7 @@ class ERP5_scalability():
     site_url = frontend_address.replace("://",
                     "://%s:%s@" % (instance_information_dict['user'],
                                    instance_information_dict['password']))
-    return site_url + "/erp5/ERP5Site_isReady"
+    return site_url + "/ERP5Site_isReady"
 
   def getScalabilityTestOutput(self, metric_list):
     """
