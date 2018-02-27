@@ -46,7 +46,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 # XXX Give priority to VariatedMixin (over Amount) due to conflicting
 #     implementations of getVariationBaseCategoryList
-class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
+class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin, CompositionMixin):
     """
       Build of material - contains a list of transformed resources
 
