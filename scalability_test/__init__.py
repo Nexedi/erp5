@@ -21,9 +21,8 @@ class ERP5_scalability():
   def getUserQuantity(self, test_number):
     return [8, 14, 20, 28, 36][test_number]
 
-  # Test duration in seconds
   def getTestDuration(self, test_number):
-    return 30 * self.getUserQuantity(test_number)
+    return 60*10
 
   def getTestRepetition(self, test_number):
     return 3
@@ -37,16 +36,27 @@ class ERP5_scalability():
     return "%s:%d/erp5" % (frontend_address, port)
 
   def getScalabilityTestMetricUrl(self, instance_information_dict, **kw):
-    for frontend in instance_information_dict['frontend-url-list']:
-      if frontend[0] == ZOPE_USER_FAMILY:
-        frontend_address = frontend[1]
-        break
-    port = 4443 if urlparse.urlparse(frontend_address).scheme == 'https' else 8080
-    frontend_address = "%s:%d" % (frontend_address, port)
+    frontend_address = self.getScalabilityTestUrl(instance_information_dict)
     metrics_url = frontend_address.replace("://",
                     "://%s:%s@" % (instance_information_dict['user'],
-                                        instance_information_dict['password']))
-    return metrics_url + "/erp5/ERP5Site_getScalabilityTestMetric"
+                                   instance_information_dict['password']))
+    return metrics_url + "/ERP5Site_getScalabilityTestMetric"
+
+  def getBootstrapScalabilityTestUrl(self, instance_information_dict, count=0, **kw):
+    frontend_address = self.getScalabilityTestUrl(instance_information_dict)
+    bootstrap_url = frontend_address.replace("://",
+                      "://%s:%s@" % (instance_information_dict['user'],
+                                     instance_information_dict['password']))
+    bootstrap_url += "/ERP5Site_bootstrapScalabilityTest"
+    bootstrap_url += "?user_quantity=%i" % self.getUserQuantity(count)
+    return bootstrap_url
+
+  def getSiteAvailabilityUrl(self, instance_information_dict, **kw):
+    frontend_address = self.getScalabilityTestUrl(instance_information_dict)
+    site_url = frontend_address.replace("://",
+                    "://%s:%s@" % (instance_information_dict['user'],
+                                   instance_information_dict['password']))
+    return site_url + "/ERP5Site_isReady"
 
   def getScalabilityTestOutput(self, metric_list):
     """
@@ -63,15 +73,3 @@ class ERP5_scalability():
         output_json[ORDER_KEY] = metric_json[ORDER_KEY]
     return "Person: %s doc/hour; SaleOrder: %s doc/hour;" % (
             str(output_json[PERSON_KEY]), str(output_json[ORDER_KEY]))
-
-  def getBootstrapScalabilityTestUrl(self, instance_information_dict, count=0, **kw):
-    for zope in instance_information_dict['zope-address-list']:
-      if zope[0] == ZOPE_USER_FAMILY:
-        zope_address = zope[1]
-        break
-    bootstrap_url = "http://%s:%s@%s" % (instance_information_dict['user'],
-                                         instance_information_dict['password'],
-                                         zope_address)
-    bootstrap_url += "/erp5/ERP5Site_bootstrapScalabilityTest"
-    bootstrap_url += "?user_quantity=%i" % self.getUserQuantity(count)
-    return bootstrap_url
