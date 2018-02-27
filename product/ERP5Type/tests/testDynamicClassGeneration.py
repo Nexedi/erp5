@@ -1358,8 +1358,8 @@ class _TestZodbComponent(SecurityTestCase):
     except ImportError:
       pass
     else:
-      self.fail("Component '%s' should not have been generated" % \
-                  full_module_name)
+      self.fail("Component '%s' should not have been generated" %
+                self._getComponentFullModuleName(module_name))
 
       self._component_tool.reset(force=True,
                                  reset_portal_type_at_transaction_boundary=False)
@@ -1376,8 +1376,8 @@ class _TestZodbComponent(SecurityTestCase):
     try:
       self._importModule(module_name)
     except ImportError:
-      self.fail("Component '%s' should have been generated" % \
-                  full_module_name)
+      self.fail("Component '%s' should have been generated" %
+                self._getComponentFullModuleName(module_name))
 
     if expected_default_version is not None:
       top_module_name = self._getComponentModuleName()
