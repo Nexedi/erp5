@@ -2,7 +2,8 @@ from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.Formulator.Errors import FormValidationError
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.Message import translateString
-from Products.ERP5Type.Log import log
+from Products.ERP5Type.Log import log, WARNING
+
 portal = context.getPortalObject()
 request = kw.get("REQUEST", None) or context.REQUEST
 
@@ -69,7 +70,6 @@ try:
     doaction_param_list['workflow_action'],
     **doaction_param_list)
 except ValidationFailed, error_message:
-  response_code = 403
   if getattr(error_message, 'msg', None):
     # use of Message class to store message+mapping+domain
     message = error_message.msg
@@ -79,12 +79,11 @@ except ValidationFailed, error_message:
       message = str(message)
   else:
     message = str(error_message)
-  return context.Base_returnFailureWithMessage(message, response_code, request)
+  return context.Base_renderMessage(message, WARNING, request)
 except WorkflowException as error_message:
-  response_code = 403
   if str(error_message) == "No workflow provides the '${action_id}' action.":
     message = translateString("Workflow state may have been updated by other user. Please try again.")
-    return context.Base_returnFailureWithMessage(message, response_code, request)
+    return context.Base_renderMessage(message, WARNING, request)
   else:
     raise
 else:

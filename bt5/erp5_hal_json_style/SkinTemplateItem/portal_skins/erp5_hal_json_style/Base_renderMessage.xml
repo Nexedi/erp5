@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>message, response_code=500, request=None</string> </value>
+            <value> <string>message, level="error", request=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_returnFailureWithMessage</string> </value>
+            <value> <string>Base_renderMessage</string> </value>
         </item>
       </dictionary>
     </pickle>
