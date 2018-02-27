@@ -30,7 +30,7 @@
 
       end = start + 10e5 >= gadget.length ? gadget.length - 1 : start + 10e5;
       // Call `getAttachment` method of jIO to fetch a chunk of data from IDB storage.
-      return this.jio_getAttachment(this.id, 'enclosure', { start: start, end: end })
+      return this.jio_getAttachment(this.id, 'data', { start: start, end: end })
         .push(function (blob) {
           gadget.index += 10e5;
           return RSVP.Queue().push(function () {
@@ -173,7 +173,6 @@
               gadget.updateCurrentTime(gadget.currentTime);
             });
           }
-          console.log(gadget.currentTime);
           gadget.currentTime = gadget.audio.currentTime + gadget.offset;
           gadget.currentTime = gadget.currentTime > gadget.duration ? gadget.duration : gadget.currentTime;
           var percentage = ((98 / gadget.duration) * gadget.currentTime);

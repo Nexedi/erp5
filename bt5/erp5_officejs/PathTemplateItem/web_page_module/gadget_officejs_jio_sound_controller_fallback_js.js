@@ -33,7 +33,7 @@
       // Call `getAttachment` method of jIO to fetch a chunk of data from IDB storage.
       try {
         // Check if attachment present in the store.
-        throw this.jio_getAttachment(this.id, 'enclosure', { start: start, end: end });
+        throw this.jio_getAttachment(this.id, 'data', { start: start, end: end });
       } catch (result) {
         return result.push(function (blob) {
           return blob;

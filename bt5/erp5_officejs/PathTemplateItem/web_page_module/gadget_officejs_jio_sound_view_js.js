@@ -92,7 +92,7 @@
               doc.length = blob.size;
               return gadget.jio_put(gadget.state.jio_key, doc);
             }).push(function () {
-              return gadget.jio_putAttachment(gadget.state.jio_key, 'enclosure', blob);
+              return gadget.jio_putAttachment(gadget.state.jio_key, 'data', blob);
             });
             /*.push(function (doc) {
               // Extract information from data, if uploaded.

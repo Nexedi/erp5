@@ -57,13 +57,25 @@
             }
           },
           remote_sub_storage: {
-            type: "query",
+            type: "mapping",
+            attachment: {
+              'data': {
+                get: {uri_template: 'enclosure'},
+                put: {uri_template: 'enclosure'}
+              }
+            },
+            mapping_dict: {
+              "portal_type": ["equalSubProperty", "type"]
+            },
             sub_storage: {
-              type: "drivetojiomapping",
+              type: "query",
               sub_storage: {
-                type: "dropbox",
-                access_token: token,
-                root: "sandbox"
+                type: "drivetojiomapping",
+                sub_storage: {
+                  type: "dropbox",
+                  access_token: token,
+                  root: "sandbox"
+                }
               }
             }
           }
