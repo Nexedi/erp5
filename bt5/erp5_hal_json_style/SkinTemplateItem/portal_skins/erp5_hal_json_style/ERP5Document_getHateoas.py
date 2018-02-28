@@ -148,6 +148,54 @@ def ensureDeserialized(obj):
       return datetime.time(*tuple(map(int, match_obj.groups())))
   return obj
 
+NBSP_UTF8 = u'\xA0'.encode('utf-8')
+def generateDomainTreeList(url_tool, domain_tool, domain, depth, domain_list):
+  if depth:
+    domain_list.append((
+      '%s%s' % (NBSP_UTF8 * 4 * (depth - 1), domain.getTitle()),
+      '/'.join(url_tool.getRelativeContentPath(domain)[2:])
+    ))
+  new_depth = depth + 1
+  for sub_domain in domain_tool.getChildDomainValueList(domain, depth=depth):
+    generateDomainTreeList(url_tool, domain_tool, sub_domain, new_depth, domain_list)
+
+def getDomainSelection(domain_list):
+  root_dict = {}
+
+  if len(domain_list) > 0:
+    category_tool = portal.portal_categories
+    domain_tool = portal.portal_domains
+    preference_tool = portal.portal_preferences
+    url_tool = portal.portal_url
+
+  for base_domain_id in domain_list:
+    domain = None
+    if category_tool is not None:
+      domain = category_tool.restrictedTraverse(base_domain_id, None)
+      if domain is not None :
+
+        root_dict[base_domain_id] = getattr(
+          domain,
+          preference_tool.getPreference(
+            'preferred_category_child_item_list_method_id',
+            'getCategoryChildCompactLogicalPathItemList'
+          )
+        )(local_sort_id=('int_index', 'translated_title'), checked_permission='View',
+          filter_node=0, display_none_category=0)
+
+      elif domain_tool is not None:
+        try:
+          domain = domain_tool.getDomainByPath(base_domain_id, None)
+        except KeyError:
+          domain = None
+        if domain is not None:
+          # XXX Implement recursive fetch
+          domain_list = []
+          generateDomainTreeList(url_tool, domain_tool, domain, 0, domain_list)
+          root_dict[base_domain_id] = domain_list
+
+  return root_dict
+
 
 def getProtectedProperty(document, select):
   """getProtectedProperty is a security-aware substitution for builtin `getattr`
@@ -803,8 +851,11 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
         "query": make_query({
           "query": sql_catalog.buildQuery(
             list_method_query_dict,
-            ignore_unknown_columns=True).asSearchTextExpression(sql_catalog)})}
+            ignore_unknown_columns=True).asSearchTextExpression(sql_catalog)})},
+      "domain_root_list": field.get_value("domain_root_list")
     })
+    result["domain_dict"] = getDomainSelection([x[0] for x in result["domain_root_list"]])
+
     if (list_method_custom is not None):
       result["list_method_template"] = list_method_custom
     return result

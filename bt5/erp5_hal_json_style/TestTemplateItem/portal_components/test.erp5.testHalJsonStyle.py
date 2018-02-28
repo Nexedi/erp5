@@ -536,7 +536,8 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       field_editable = 1,
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date\ncatalog.uid|Uid',
       field_editable_columns = 'id|ID\ntitle|Title\nquantity|quantity\nstart_date|Date',
-      field_search_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
+      field_search_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',
+      field_domain_root_list = 'foo_category|FooCat\nfoo_domain|FooDomain\nnot_existing_domain|NotExisting',)
 
     parent = document.getParentValue()
     fake_request = do_fake_request("GET")
@@ -630,6 +631,9 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['sort_column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'Quantity'], ['start_date', 'Date']])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['list_method_template'],
                      '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_ui_test/Foo_view/listbox&list_method=objectValues&default_param_json=eyJwb3J0YWxfdHlwZSI6IFsiRm9vIExpbmUiXSwgImlnbm9yZV91bmtub3duX2NvbHVtbnMiOiB0cnVlfQ=={&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['domain_root_list'], [['foo_category', 'FooCat'], ['foo_domain', 'FooDomain'], ['not_existing_domain', 'NotExisting']])
+    NBSP_prefix = u'\xA0' * 4
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['domain_dict'], {'foo_domain': [['a', 'a'], ['%sa1' % NBSP_prefix, 'a/a1'], ['%sa2' % NBSP_prefix, 'a/a2'], ['b', 'b']], 'foo_category': [['a', 'a'], ['a/a1', 'a/a1'], ['a/a2', 'a/a2'], ['b', 'b']]})
 
     self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['href'], 'urn:jio:get:%s' % document.getRelativeUrl())
     self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['name'], document.getRelativeUrl())
