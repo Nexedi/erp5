@@ -149,6 +149,8 @@
             extended_search: extended_search,
             begin_from: result.begin_from,
             search_column_list: result.search_column_list,
+            domain_list: result.domain_list,
+            domain_dict: result.domain_dict,
             focus_on: focus_on
           });
         });

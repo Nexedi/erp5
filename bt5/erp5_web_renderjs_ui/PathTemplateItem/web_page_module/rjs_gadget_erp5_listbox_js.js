@@ -65,7 +65,7 @@
       });
   }
 
-  function renderEditableField(gadget, element, column_list, field_table) {
+  function renderEditableField(gadget, element, field_table) {
     var i,
       promise_list = [],
       column,
@@ -106,7 +106,7 @@
       .push(function (table_part_html) {
         container = document.createElement(container_name);
         container.innerHTML = table_part_html;
-        return renderEditableField(gadget, container, column_list, row_list);
+        return renderEditableField(gadget, container, row_list);
       })
       .push(function () {
         var table =  gadget.element.querySelector("table"),
@@ -279,6 +279,9 @@
             lines: field_json.lines,
             list_method: field_json.list_method,
             list_method_template: field_json.list_method_template,
+
+            domain_list_json: JSON.stringify(field_json.domain_root_list || []),
+            domain_dict_json: JSON.stringify(field_json.domain_dict || {}),
 
             column_list_json: JSON.stringify(displayed_column_item_list),
             displayable_column_list_json:
@@ -660,11 +663,24 @@
     })
 
     .declareMethod('getListboxInfo', function () {
+      var domain_list = JSON.parse(this.state.domain_list_json),
+        domain_dict = JSON.parse(this.state.domain_dict_json),
+        i,
+        len = domain_list.length;
+      for (i = 0; i < len; i += 1) {
+        if (domain_dict.hasOwnProperty(domain_list[i][0])) {
+          domain_dict['selection_domain_' + domain_list[i][0]] = domain_dict[domain_list[i][0]];
+          delete domain_dict[domain_list[i][0]];
+        }
+        domain_list[i][0] = 'selection_domain_' + domain_list[i][0];
+      }
       //XXXXX search column list is used for search editor to
       //construct search panel
       //hardcoded begin_from key to define search position
       return {
         search_column_list: JSON.parse(this.state.search_column_list_json),
+        domain_list: domain_list,
+        domain_dict: domain_dict,
         begin_from: this.state.key + "_begin_from"
       };
     })

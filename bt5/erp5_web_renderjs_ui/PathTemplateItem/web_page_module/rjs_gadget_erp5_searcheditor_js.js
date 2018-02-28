@@ -22,9 +22,13 @@
       ["Equals To", "exact_match"],
       ["Contains", "keyword"]
     ],
+    DOMAIN = [
+      ["Equals To", "exact_match"]
+    ],
     DEFAULT = [["Contains", "contain"]],
     PREFIX_COLUMN = 'COLUMN_',
     PREFIX_RAW = 'RAW',
+    PREFIX_DOMAIN = 'DOMAIN_',
     PREFIX_TEXT = 'TEXT';
 
   // XXX
@@ -42,7 +46,9 @@
       column_option_list = [],
       input_type = "search",
       i,
-      is_selected;
+      is_selected,
+      domain_list,
+      domain_option_list;
 
     if (query_dict.key.indexOf(PREFIX_COLUMN) === 0) {
       if (isNumericComparison(query_dict.key)) {
@@ -54,6 +60,27 @@
         }
       } else {
         operator_default_list = OTHER;
+      }
+    } else if (query_dict.key.indexOf(PREFIX_DOMAIN) === 0) {
+      is_selected = false;
+      operator_default_list = DOMAIN;
+      input_type = "select";
+      domain_option_list = [];
+      domain_list = gadget.state.domain_dict[query_dict.key.slice(PREFIX_DOMAIN.length)];
+      for (i = 0; i < domain_list.length; i += 1) {
+        domain_option_list.push({
+          text: domain_list[i][0],
+          value: domain_list[i][1],
+          selected: (query_dict.value === domain_list[i][1])
+        });
+        is_selected = is_selected || (query_dict.value === domain_list[i][1]);
+      }
+      if (!is_selected) {
+        domain_option_list.push({
+          text: '??? ' + query_dict.value,
+          value: query_dict.value,
+          selected: true
+        });
       }
     }
 
@@ -75,6 +102,8 @@
       // Do not try to change it to another value, as it means losing user data
       if (query_dict.key.indexOf(PREFIX_COLUMN) === 0) {
         query_dict.key = query_dict.key.slice(PREFIX_COLUMN.length);
+      } else if (query_dict.key.indexOf(PREFIX_DOMAIN) === 0) {
+        query_dict.key = query_dict.key.slice(PREFIX_DOMAIN.length);
       } else {
         query_dict.key = '';
       }
@@ -110,7 +139,8 @@
       option: column_option_list,
       operator_option: operator_option_list,
       input_value: query_dict.value,
-      input_type: input_type
+      input_type: input_type,
+      domain_option: domain_option_list
     });
   }
 
@@ -122,12 +152,18 @@
       },
       i,
       filter_item_list = gadget.element.querySelectorAll(".filter_item"),
-      select_list;
+      select_list,
+      value;
 
     for (i = 0; i < filter_item_list.length; i += 1) {
       select_list = filter_item_list[i].querySelectorAll("select");
+      if (select_list.length === 3) {
+        value = select_list[2][select_list[2].selectedIndex].value;
+      } else {
+        value = filter_item_list[i].querySelector("input").value;
+      }
       state.query_list.push({
-        value: filter_item_list[i].querySelector("input").value,
+        value: value,
         operator: select_list[1][select_list[1].selectedIndex].value,
         key: select_list[0][select_list[0].selectedIndex].value
       });
@@ -164,7 +200,8 @@
         len,
         sub_jio_query,
         search_column_list = [],
-        search_column_dict = {};
+        search_column_dict = {},
+        search_domain_dict = {};
 
       len = options.search_column_list.length;
       for (i = 0; i < len; i += 1) {
@@ -172,6 +209,15 @@
         search_column_list.push([
           PREFIX_COLUMN + options.search_column_list[i][0],
           options.search_column_list[i][1]
+        ]);
+      }
+
+      len = options.domain_list.length;
+      for (i = 0; i < len; i += 1) {
+        search_domain_dict[options.domain_list[i][0]] = true;
+        search_column_list.push([
+          PREFIX_DOMAIN + options.domain_list[i][0],
+          options.domain_list[i][1]
         ]);
       }
       search_column_list.push([PREFIX_TEXT, "Searchable Text"]);
@@ -195,6 +241,12 @@
             if (search_column_dict.hasOwnProperty(jio_query.key)) {
               query_list.push({
                 key: PREFIX_COLUMN + jio_query.key,
+                value: jio_query.value,
+                operator: jio_query.operator
+              });
+            } else if (search_domain_dict.hasOwnProperty(jio_query.key)) {
+              query_list.push({
+                key: PREFIX_DOMAIN + jio_query.key,
                 value: jio_query.value,
                 operator: jio_query.operator
               });
@@ -222,6 +274,12 @@
                 if (search_column_dict.hasOwnProperty(sub_jio_query.key)) {
                   query_list.push({
                     key: PREFIX_COLUMN + sub_jio_query.key,
+                    value: sub_jio_query.value,
+                    operator: sub_jio_query.operator
+                  });
+                } else if (search_domain_dict.hasOwnProperty(sub_jio_query.key)) {
+                  query_list.push({
+                    key: PREFIX_DOMAIN + sub_jio_query.key,
                     value: sub_jio_query.value,
                     operator: sub_jio_query.operator
                   });
@@ -257,6 +315,7 @@
         begin_from_key: options.begin_from,
         // [{key: 'title', value: 'Foo', operator: 'like'}]
         query_list: query_list,
+        domain_dict: options.domain_dict,
         // and/or
         operator: operator,
         focus_on: options.focus_on
@@ -338,6 +397,8 @@
         } else {
           if (query.key.indexOf(PREFIX_COLUMN) === 0) {
             query.key = query.key.slice(PREFIX_COLUMN.length);
+          } else if (query.key.indexOf(PREFIX_DOMAIN) === 0) {
+            query.key = query.key.slice(PREFIX_DOMAIN.length);
           } else {
             query.key = '';
           }

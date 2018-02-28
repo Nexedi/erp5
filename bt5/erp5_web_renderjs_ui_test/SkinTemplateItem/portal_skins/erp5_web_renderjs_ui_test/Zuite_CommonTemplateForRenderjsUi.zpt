@@ -725,6 +725,38 @@
     </tr>
   </tal:block>
 
+
+  <tal:block metal:define-macro="check_filter_domain_section">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Check the filter domain section %(index)i' % filter_domain_section_configuration"></b></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select' % (filter_domain_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: filter_domain_section_configuration['key']"></td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select[2]' % (filter_domain_section_configuration['index'] + 1)"></td>
+      <td>exact_match</td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select[3]' % (filter_domain_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: filter_domain_section_configuration['value']"></td>
+    </tr>
+    <tal:block tal:repeat="option python: filter_domain_section_configuration.get('option_list', [['XXX', 'XXX']])">
+      <tr>
+        <td>assertElementPresent</td>
+        <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select[3]//option[%i][@value=\'%s\' and text()=\'%s\']' % (filter_domain_section_configuration['index'] + 1, repeat['option'].index + 1, option[0], option[1])"></td>
+        <td></td>
+      </tr>
+    </tal:block>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
   <tal:block metal:define-macro="triggle_configure">
     <tr>
       <td colspan="3"><b>Open the configure panel</b></td>
