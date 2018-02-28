@@ -99,7 +99,7 @@ try:
     # Form is OK, it's just this field - style so we return back form-wide error
     # for which we don't have support out-of-the-box thus we manually craft it
     # XXX TODO: Form-wide validation errors
-    return Base_renderMessage(
+    return context.Base_renderMessage(
       translate('Only ODT, ODS, Hal and HalRestricted skins are allowed for reports '\
                 'in Preferences - User Interface - Report Style'),
       level=WARNING)
@@ -200,7 +200,7 @@ if dialog_method != update_method and clean_kw.get('deferred_style', 0):
     # Limit Reports in Deferred style to known working styles
     if request_form.get('your_portal_skin', None) not in ("ODT", "ODS"):
       # RJS own validation - deferred option works here only with ODS/ODT skins
-      return Base_renderMessage(
+      return context.Base_renderMessage(
         translate('Deferred reports are possible only with preference '\
                   '"Report Style" set to "ODT" or "ODS"'),
         level=WARNING)
