@@ -93,9 +93,11 @@ class TestNode(object):
     software_config_path = None
     profile_content_list = []
     revision_dict = dict(node_test_suite.revision_list)
+    self.config['repository_path_list'] = []
     for vcs_repository in node_test_suite.vcs_repository_list:
       buildout_section_id = vcs_repository.get('buildout_section_id')
       repository_path = vcs_repository['repository_path']
+      self.config['repository_path_list'].append(repository_path)
       try:
         profile_path = vcs_repository[PROFILE_PATH_KEY]
       except KeyError:
@@ -127,7 +129,6 @@ class TestNode(object):
           # <obfuscated_url> word is modified by in runner.prepareSlapOSForTestSuite()
           profile_content_list.append("""
 [%(buildout_section_id)s]
-repository = <obfuscated_url>/%(buildout_section_id)s/%(buildout_section_id)s.git
 revision = %(revision)s
 ignore-ssl-certificate = true
 develop = false
