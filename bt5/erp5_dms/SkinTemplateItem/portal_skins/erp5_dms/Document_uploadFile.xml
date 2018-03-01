@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id=None,form_id=None,file=None,**kw</string> </value>
+            <value> <string>dialog_id=None, form_id=None, file=None, cancel_url=\'\', **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
