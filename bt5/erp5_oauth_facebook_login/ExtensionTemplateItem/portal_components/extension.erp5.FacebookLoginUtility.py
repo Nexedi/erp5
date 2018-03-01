@@ -37,5 +37,12 @@ def getAccessTokenFromCode(self, code, redirect_uri):
     code=code, redirect_uri=redirect_uri,
     app_id=client_id, app_secret=secret_key)
 
+def unrestrictedSearchFacebookConnector(self):
+  return self.getPortalObject().portal_catalog.unrestrictedSearchResults(
+            portal_type="Facebook Connector",
+            reference="default",
+            validation_state="validated",
+            limit=2)
+
 def getUserEntry(token):
   return getFacebookUserEntry(token)
