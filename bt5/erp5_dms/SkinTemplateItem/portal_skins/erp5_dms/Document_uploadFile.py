@@ -8,8 +8,9 @@ It does the following:
 Otherwise it just uploads the file, bumps up revision number and calls metadata discovery script.
 
 """
+from Products.ERP5Type.Log import log, WARNING
 
-translateString = context.Base_translateString
+translate = context.Base_translateString
 request = context.REQUEST
 current_type = context.getPortalType()
 file_name = file.filename
@@ -20,19 +21,21 @@ file_name = file.filename
 # we accept or suggest appropriate portal type
 ext = file_name[file_name.rfind('.')+1:]
 candidate_type_list = context.ContributionTool_getCandidateTypeListByExtension(ext)
-if candidate_type_list == () and current_type != 'File':
-  portal_status_message = translateString("Sorry, this is not one of ${portal_type}. This file should be uploaded into a file document.", 
-                                    mapping = dict(portal_type = str(candidate_type_list)))
-  return context.Base_redirect(dialog_id, keep_items = dict(portal_status_message=portal_status_message,cancel_url = kw['cancel_url']), **kw)
+
+if not candidate_type_list and current_type != 'File':
+  log("Document {!s} does not support extension {!s}. Use generic 'File' document.".format(current_type, ext), level=WARNING)
+  return context.Base_redirect(dialog_id, keep_items={
+    'portal_status_message': translate("Current document does not support ${ext} file extension.", mapping={'ext': ext}),
+    'cancel_url': cancel_url})
+
 if candidate_type_list and current_type not in candidate_type_list:
-  portal_status_message = translateString("Sorry, this is a ${portal_type}. This file should be uploaded into a ${appropriate_type} document.",
-                                mapping = dict(portal_type = current_type, appropriate_type = str(candidate_type_list)))
-  return context.Base_redirect(dialog_id, keep_items = dict(portal_status_message =portal_status_message, cancel_url = kw['cancel_url']), **kw)
+  log("File extension {!s} is supported only by {!s}, not by current document {!s}.".format(ext, candidate_type_list, current_type), level=WARNING)
+  return context.Base_redirect(dialog_id, keep_items={
+    'portal_status_message': translate("Current document does not support ${ext} file extension.", mapping={'ext': ext}),
+    'cancel_url': cancel_url})
 
 context.edit(file=file)
 context.activate().Document_convertToBaseFormatAndDiscoverMetadata(file_name=file_name)
 
-msg = translateString('File uploaded.')
-
 # Return to view mode
-return context.Base_redirect(form_id, keep_items = {'portal_status_message' : msg},  **kw)
+return context.Base_redirect(form_id, keep_items={'portal_status_message': translateString('File uploaded.')})
