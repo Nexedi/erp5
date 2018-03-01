@@ -1,6 +1,8 @@
 import json
 import oauth2client.client
 from Products.ERP5Security.ERP5ExternalOauth2ExtractionPlugin import getGoogleUserEntry
+from zExceptions import Unauthorized
+
 
 SCOPE_LIST = ['https://www.googleapis.com/auth/userinfo.profile',
               'https://www.googleapis.com/auth/userinfo.email']
@@ -48,6 +50,22 @@ def getAccessTokenFromCode(self, code, redirect_uri):
   credential = flow.step2_exchange(code)
   credential_data = json.loads(credential.to_json())
   return credential_data
+
+def unrestrictedSearchGoogleConnector(self):
+  return self.getPortalObject().portal_catalog.unrestrictedSearchResults(
+            portal_type="Google Connector",
+            reference="default",
+            validation_state="validated",
+            limit=2)
+
+def unrestrictedSearchGoogleLogin(self, login, REQUEST=None):
+  if REQUEST is not None:
+    raise Unauthorized
+
+  return self.getPortalObject().portal_catalog.unrestrictedSearchResults(
+    portal_type="Google Login",
+    reference=login,
+    validation_state="validated", limit=1)
 
 def getUserEntry(access_token):
   return getGoogleUserEntry(access_token)
