@@ -1,12 +1,7 @@
 if REQUEST is not None:
   raise ValueError("This script can't be called in the URL")
 
-result_list = context.getPortalObject().portal_catalog(
-  portal_type="Facebook Connector",
-  reference=reference,
-  validation_state="validated",
-  limit=2,
-)
+result_list = context.ERP5Site_getFacebookConnector()
 
 assert result_list, "Facebook Connector not found"
 
