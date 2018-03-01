@@ -1,3 +1,4 @@
+from Products.ERP5Type.ImmediateReindexContextManager import ImmediateReindexContextManager
 portal = context.getPortalObject()
 logged_in_user_value = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
@@ -7,7 +8,13 @@ now = DateTime()
 project_list = portal.portal_catalog(portal_type="Project", id=project) # with id keyword, this function will return a sequence data type which contains one element.
 project_object = project_list[0].getObject()
 
-# support_request.Base_getRelatedPostList
+with ImmediateReindexContextManager() as immediate_reindex_context_manager:
+  support_request = portal.support_request_module.newContent(
+    immediate_reindex=immediate_reindex_context_manager,
+    portal_type='Support Request',
+    title=title,
+    resource="service_module/" + resource,
+  )
 
 #    - Reference = automatically generated - already implemented
 #    - Requester = current user person
@@ -17,21 +24,20 @@ project_object = project_list[0].getObject()
 #    - Location = Project related Location
 #    - Supervisor = Project related Supervisor
 
-support_request = portal.support_request_module.newContent(
-  portal_type='Support Request',
-  title=title,
-  resource="service_module/" + resource,
-  destination_decision_value=logged_in_user_value,
-  source_decision_value = project_object.getSourceDecisionValue(),
-  source_section_value = project_object.getSourceSectionValue(),
-  source_project_value = project_object,
-  destination_value = project_object.getDestinationValue(),
-  start_date=now,
-)
+  support_request = portal.support_request_module.newContent(
+    portal_type='Support Request',
+    title=title,
+    resource="service_module/" + resource,
+    destination_decision_value=logged_in_user_value,
+    source_decision_value = project_object.getSourceDecisionValue(),
+    source_section_value = project_object.getSourceSectionValue(),
+    source_project_value = project_object,
+    destination_value = project_object.getDestinationValue(),
+    start_date=now,
+  )
 
 
-support_request.submit()
-support_request.immediateReindexObject()
+  support_request.submit()
 
 if description is not None or file is not None:
   portal.post_module.PostModule_createHTMLPostForSupportRequest(

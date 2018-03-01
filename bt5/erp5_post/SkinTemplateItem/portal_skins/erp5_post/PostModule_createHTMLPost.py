@@ -13,6 +13,7 @@ if predecessor not in (None, ""):
   predecessor_value, = portal.portal_catalog(relative_url=predecessor, limit=2)
   post_edit_kw["predecessor_value"] = predecessor_value.getObject()
 post = post_module.newContent(
+  immediate_reindex=immediate_reindex_context_manager,
   portal_type='HTML Post',
   **post_edit_kw
 )
