@@ -2087,7 +2087,7 @@ def foobar(self, a, b="portal_type"):
     self.commit()
 
     self.assertRaisesRegexp(NotFound, "The specified module,"
-        " '%s', couldn't be found." % module, external_method)
+        " '%s', couldn't be found." % module, external_method, 'portal_ids')
 
     # Check fallback on FS, and also callable objects.
     cfg = getConfiguration()
