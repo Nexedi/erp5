@@ -48,11 +48,10 @@ if person_list:
 person_module = portal.getDefaultModule(portal_type='Person')
 person = person_module.newContent(portal_type='Person', **kw)
 person.validate()
-# do not immediate reindex object
-# this means that when creating an account the new one will *NOT*
+# Note: object is not immediately indexed.
+# This means that when creating an account the new one will *NOT*
 # be available immediately and we should consider sending two email to user
 # that 1) his account will be created and when created 2)-> send account info
-#person.immediateReindexObject()
 
 # Create default career
 person.newContent(portal_type='Career',
