@@ -426,7 +426,7 @@ class CopyContainer:
     _, result = self.__duplicate(
       cp,
       duplicate=True,
-      is_indexable=True,
+      is_indexable=None,
     )
     return result
 
@@ -490,7 +490,7 @@ class CopyContainer:
       new_id = self._get_id(orig_id)
       result.append({'id': orig_id, 'new_id': new_id})
       new_ob._setId(new_id)
-      if not is_indexable:
+      if is_indexable is not None and not is_indexable:
         new_ob._setNonIndexable()
       self._setObject(new_id, new_ob, set_owner=set_owner)
       new_ob = self._getOb(new_id)
@@ -531,7 +531,7 @@ class CopyContainer:
     self.isIndexable = ConstantGetter('isIndexable', value=False)
     self.__recurse('_setNonIndexable')
 
-  def manage_pasteObjects(self, cb_copy_data=None, is_indexable=True, REQUEST=None):
+  def manage_pasteObjects(self, cb_copy_data=None, is_indexable=None, REQUEST=None):
     """Paste previously copied objects into the current object.
 
     If calling manage_pasteObjects from python code, pass the result of a
