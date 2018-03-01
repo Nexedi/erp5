@@ -49,5 +49,12 @@ def getAccessTokenFromCode(self, code, redirect_uri):
   credential_data = json.loads(credential.to_json())
   return credential_data
 
+def unrestrictedSearchGoogleConnector(self):
+  return self.getPortalObject().portal_catalog.unrestrictedSearchResults(
+            portal_type="Google Connector",
+            reference="default",
+            validation_state="validated",
+            limit=2)
+
 def getUserEntry(access_token):
   return getGoogleUserEntry(access_token)
