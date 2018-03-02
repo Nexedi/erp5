@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\', line_portal_type=\'Accounting Transaction Line\', line_count=1</string> </value>
+            <value> <string>form_id=\'view\', line_portal_type=\'Accounting Transaction Line\', line_count=1, **kwargs</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
