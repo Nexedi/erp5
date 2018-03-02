@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>exchange_rate=None, form_id=\'view\'</string> </value>
+            <value> <string>exchange_rate=None, form_id=\'view\', **kwargs</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
