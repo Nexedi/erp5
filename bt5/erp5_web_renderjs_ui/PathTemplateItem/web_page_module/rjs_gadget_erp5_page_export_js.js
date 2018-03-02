@@ -67,19 +67,20 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
       var gadget = this,
-        erp5_document,
-        report_list,
-        print_list;
+        erp5_document;
 
       // Get the whole view as attachment because actions can change based on
       // what view we are at. If no view available than fallback to "links".
       return gadget.jio_getAttachment(options.jio_key, options.view || "links")
         .push(function (result) {
+          var export_list = ensureArray(result._links.action_object_jio_exchange),
+          report_list = ensureArray(result._links.action_object_jio_report),
+          print_list = ensureArray(result._links.action_object_jio_print);
+
           erp5_document = result;
-          report_list = ensureArray(erp5_document._links.action_object_jio_report),
-          print_list = ensureArray(erp5_document._links.action_object_jio_print);
 
           return RSVP.all([
+            renderLinkList(gadget, "Export", "exchange", export_list),
             renderLinkList(gadget, "Reports", "bar-chart-o", report_list),
             renderLinkList(gadget, "Print", "print", print_list)
           ]);

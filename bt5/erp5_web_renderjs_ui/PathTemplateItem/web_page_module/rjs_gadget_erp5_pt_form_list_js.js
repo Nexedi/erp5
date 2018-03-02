@@ -101,7 +101,9 @@
             new_content_action,
             form_gadget.getUrlFor({command: 'change', options: {page: "action"}}),
             form_gadget.getUrlFor({command: 'display', options: {}}),
-            form_gadget.state.erp5_document._links.action_object_jio_report ?
+            (form_gadget.state.erp5_document._links.action_object_jio_report ||
+             form_gadget.state.erp5_document._links.action_object_jio_print ||
+             form_gadget.state.erp5_document._links.action_object_jio_exchange) ?
                   form_gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
                   "",
             calculatePageTitle(form_gadget, form_gadget.state.erp5_document)

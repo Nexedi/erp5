@@ -96,6 +96,7 @@
             calculatePageTitle(form_gadget, form_gadget.state.erp5_document),
             form_gadget.isDesktopMedia(),
             (form_gadget.state.erp5_document._links.action_object_jio_report ||
+             form_gadget.state.erp5_document._links.action_object_jio_exchange ||
              form_gadget.state.erp5_document._links.action_object_jio_print) ?
                 form_gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
                 ""
