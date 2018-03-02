@@ -68,21 +68,20 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
       var gadget = this,
-        erp5_document,
-        transition_list,
-        action_list,
-        clone_list,
-        delete_list;
+        erp5_document;
 
       // Get the whole view as attachment because actions can change based on
       // what view we are at. If no view available than fallback to "links".
       return gadget.jio_getAttachment(options.jio_key, options.view || "links")
-        .push(function (result) {
-          erp5_document = result;
-          transition_list = ensureArray(erp5_document._links.action_workflow);
-          action_list = ensureArray(erp5_document._links.action_object_jio_action),
-          clone_list = ensureArray(erp5_document._links.action_object_clone_action),
-          delete_list = ensureArray(erp5_document._links.action_object_delete_action);
+        .push(function (jio_attachment) {
+          var transition_list = ensureArray(jio_attachment._links.action_workflow),
+            action_list = ensureArray(jio_attachment._links.action_object_jio_action)
+              .concat(ensureArray(jio_attachment._links.action_object_jio_button))
+              .concat(ensureArray(jio_attachment._links.action_object_jio_fast_input)),
+            clone_list = ensureArray(jio_attachment._links.action_object_clone_action),
+            delete_list = ensureArray(jio_attachment._links.action_object_delete_action);
+
+          erp5_document = jio_attachment;
 
           return RSVP.all([
             renderLinkList(gadget, "Workflows", "random", transition_list),

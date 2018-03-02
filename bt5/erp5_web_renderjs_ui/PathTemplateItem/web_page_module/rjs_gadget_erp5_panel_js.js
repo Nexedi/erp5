@@ -61,7 +61,9 @@
       if (erp5_document !== undefined) {
         workflow_list = ensureArray(erp5_document._links.action_workflow);
         view_list = ensureArray(erp5_document._links.action_object_view);
-        action_list = ensureArray(erp5_document._links.action_object_jio_action);
+        action_list = ensureArray(erp5_document._links.action_object_jio_action)
+          .concat(ensureArray(erp5_document._links.action_object_jio_fast_input))
+          .concat(ensureArray(erp5_document._links.action_object_jio_button));
 
         if (view === 'view') {
           for (i = 0; i < view_list.length; i += 1) {
