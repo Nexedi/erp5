@@ -23,12 +23,16 @@
     "local": {
       "setConfiguration": function (gadget) {
         var configuration = {
-          type: "query",
+          type: "cloudoo",
+          url: "https://softinst77579.host.vifib.net/",
           sub_storage: {
-            type: "uuid",
+            type: "query",
             sub_storage: {
-              type: "indexeddb",
-              database: "local_default"
+              type: "uuid",
+              sub_storage: {
+                type: "indexeddb",
+                database: "local_default"
+              }
             }
           }
         };

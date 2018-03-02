@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP */
+/*global window, rJS, RSVP, jIO */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, jIO) {
   "use strict";
 
   rJS(window)
@@ -13,8 +13,6 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
-    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
@@ -24,37 +22,32 @@
         file_name,
         jio_key,
         data,
-        conversion_gadget,
         destination_mime_type = 'docy',
         source_mime_type = 'docx';
 
       return gadget.notifySubmitting()
         .push(function () {
-          return RSVP.all([
-            gadget.getDeclaredGadget('form_view'),
-            gadget.getDeclaredGadget('conversion')
-          ]);
+          return gadget.getDeclaredGadget('form_view');
         })
-        .push(function (result) {
-          conversion_gadget = result[1];
-          return result[0].getContent();
-        })
-        .push(function (content) {
-          file_name = content.file.file_name.split(source_mime_type)[0];
+        .push(function (form_gadget) {
           return RSVP.all([
-            conversion_gadget.convert(content.file.url.split('base64,')[1], source_mime_type, destination_mime_type),
+            form_gadget.getContent(),
             gadget.getSetting('portal_type')
           ]);
         })
         .push(function (result) {
-          return RSVP.all([
-            gadget.jio_post({title: file_name, portal_type: result[1], content_type: "application/x-asc-text", filename: file_name}),
-            conversion_gadget.b64toBlob(result[0], "application/zip")
-          ]);
+          file_name = result[0].file.file_name.split(source_mime_type)[0];
+          data = jIO.util.dataURItoBlob(result[0].file.url);
+          return gadget.jio_post({
+            title: file_name,
+            portal_type: result[1],
+            content_type: "application/x-asc-text",
+            filename: file_name
+          });
         })
-        .push(function (result) {
-          jio_key = result[0];
-          return gadget.jio_putAttachment(jio_key, 'data', result[1]);
+        .push(function (doc_id) {
+          jio_key = doc_id;
+          return gadget.jio_putAttachment(jio_key, "data?docx", data);
         })
         .push(function () {
           return gadget.redirect({command: 'display', options: {jio_key: jio_key}});
@@ -75,6 +68,7 @@
               "_embedded": {"_view": {
                 "_actions": {"put": {}},
                 "form_id": {},
+                "dialog_id": {},
                 "my_file": {
                   "description": "",
                   "title": "File",
