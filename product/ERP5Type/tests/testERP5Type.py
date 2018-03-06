@@ -3261,7 +3261,6 @@ class TestAccessControl(ERP5TypeTestCase):
     method = self.getCatalogTool().getSQLCatalog()._getOb('z_catalog_object_list')
     method.setFiltered(1)
     method.setExpression(self.expression)
-    method.setExpressionInstance(Expression(self.expression))
 
     createZODBPythonScript(self.getSkinsTool().custom,
                            'Base_immediateReindexObject',

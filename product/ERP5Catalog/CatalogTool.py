@@ -423,7 +423,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             new_method.setTypeList(filter_['type'])
             new_method.setExpressionCacheKeyList(filter_['expression_cache_key'])
             new_method.setExpression(filter_['expression'])
-            new_method.setExpressionInstance(filter_['expression_instance'])
         # Delete filter_dict before migration of catalog object(s)
         del obj.filter_dict
 
