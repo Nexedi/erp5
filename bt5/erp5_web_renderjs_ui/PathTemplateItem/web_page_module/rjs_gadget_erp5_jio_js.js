@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery, jIO */
+/*global window, rJS, RSVP, UriTemplate, URI, SimpleQuery, ComplexQuery, jIO */
 /*jslint indent: 2, maxerr: 3, nomen: true */
-(function (window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery, jIO) {
+(function (window, rJS, RSVP, UriTemplate, URI, SimpleQuery, ComplexQuery, jIO) {
   "use strict";
 
   function wrapJioCall(gadget, method_name, argument_list) {
@@ -42,9 +42,23 @@
 
   function isSingleLocalRoles(parsed_query) {
     if ((parsed_query instanceof SimpleQuery) &&
+        (parsed_query.operator === undefined) &&
         (parsed_query.key === 'local_roles')) {
       // local_roles:"Assignee"
       return parsed_query.value;
+    }
+  }
+
+  function isSingleDomain(parsed_query) {
+    if ((parsed_query instanceof SimpleQuery) &&
+        (parsed_query.operator === undefined) &&
+        (parsed_query.key !== undefined) &&
+        (parsed_query.key.indexOf('selection_domain_') === 0)) {
+      // domain_region:"europe/france"
+      var result = {};
+      result[parsed_query.key.slice('selection_domain_'.length)] =
+        parsed_query.value;
+      return result;
     }
   }
 
@@ -59,6 +73,7 @@
       for (i = 0; i < parsed_query.query_list.length; i += 1) {
         sub_query = parsed_query.query_list[i];
         if ((sub_query instanceof SimpleQuery) &&
+            (sub_query.key !== undefined) &&
             (sub_query.key === 'local_roles')) {
           local_role_list.push(sub_query.value);
         } else {
@@ -104,76 +119,111 @@
         });
     })
 
-    .declareMethod('allDocs', function (option_dict) {
+    .declareMethod('allDocs', function (options) {
       // throw new Error('do not use all docs');
 
-      if (option_dict.list_method_template === undefined) {
+      if (options.list_method_template === undefined) {
         return wrapJioCall(this, 'allDocs', arguments);
       }
 
-      var query = option_dict.query,
+      var query = options.query,
         i,
+        key,
         parsed_query,
         sub_query,
         result_list,
-        tmp_list = [],
-        local_roles;
-      if (option_dict.query) {
-        parsed_query = jIO.QueryFactory.create(option_dict.query);
-
+        local_roles,
+        local_role_found = false,
+        selection_domain,
+        sort_list = [];
+      if (options.query) {
+        parsed_query = jIO.QueryFactory.create(options.query);
         result_list = isSingleLocalRoles(parsed_query);
         if (result_list) {
           query = undefined;
           local_roles = result_list;
         } else {
-
-          result_list = isMultipleLocalRoles(parsed_query);
+          result_list = isSingleDomain(parsed_query);
           if (result_list) {
             query = undefined;
-            local_roles = result_list;
-          } else if ((parsed_query instanceof ComplexQuery) &&
-                     (parsed_query.operator === 'AND')) {
+            selection_domain = result_list;
+          } else {
 
-            // portal_type:"Person" AND local_roles:"Assignee"
-            for (i = 0; i < parsed_query.query_list.length; i += 1) {
-              sub_query = parsed_query.query_list[i];
+            result_list = isMultipleLocalRoles(parsed_query);
+            if (result_list) {
+              query = undefined;
+              local_roles = result_list;
+            } else if ((parsed_query instanceof ComplexQuery) &&
+                       (parsed_query.operator === 'AND')) {
 
-              result_list = isSingleLocalRoles(sub_query);
-              if (result_list) {
-                local_roles = result_list;
-                parsed_query.query_list.splice(i, 1);
-                query = Query.objectToSearchText(parsed_query);
-                i = parsed_query.query_list.length;
-              } else {
-                result_list = isMultipleLocalRoles(sub_query);
-                if (result_list) {
-                  local_roles = result_list;
-                  parsed_query.query_list.splice(i, 1);
-                  query = Query.objectToSearchText(parsed_query);
-                  i = parsed_query.query_list.length;
+              // portal_type:"Person" AND local_roles:"Assignee"
+              // AND selection_domain_region:"europe/france"
+              for (i = 0; i < parsed_query.query_list.length; i += 1) {
+                sub_query = parsed_query.query_list[i];
+
+                if (!local_role_found) {
+                  result_list = isSingleLocalRoles(sub_query);
+                  if (result_list) {
+                    local_roles = result_list;
+                    parsed_query.query_list.splice(i, 1);
+                    query = jIO.Query.objectToSearchText(parsed_query);
+                    local_role_found = true;
+                  } else {
+                    result_list = isMultipleLocalRoles(sub_query);
+                    if (result_list) {
+                      local_roles = result_list;
+                      parsed_query.query_list.splice(i, 1);
+                      query = jIO.Query.objectToSearchText(parsed_query);
+                      local_role_found = true;
+                    }
+                  }
                 }
+
+                result_list = isSingleDomain(sub_query);
+                if (result_list) {
+                  parsed_query.query_list.splice(i, 1);
+                  query = jIO.Query.objectToSearchText(parsed_query);
+                  if (selection_domain) {
+                    for (key in result_list) {
+                      if (result_list.hasOwnProperty(key)) {
+                        selection_domain[key] = result_list[key];
+                      }
+                    }
+                  } else {
+                    selection_domain = result_list;
+                  }
+                  i -= 1;
+                }
+
               }
             }
           }
+        }
+      }
 
+      if (options.sort_on) {
+        for (i = 0; i < options.sort_on.length; i += 1) {
+          sort_list.push(JSON.stringify(options.sort_on[i]));
         }
-        option_dict.query = query;
-        option_dict.local_roles = local_roles;
       }
-      if (option_dict.sort_on) {
-        for (i = 0; i < option_dict.sort_on.length; i += 1) {
-          tmp_list.push(JSON.stringify(option_dict.sort_on[i]));
-        }
-        option_dict.sort_on = tmp_list;
+
+      if (selection_domain) {
+        selection_domain = JSON.stringify(selection_domain);
       }
+
+      options.query = query;
+      options.sort_on = sort_list;
+      options.local_roles = local_roles;
+      options.selection_domain = selection_domain;
+
       return wrapJioCall(
         this,
         'getAttachment',
         [
           // XXX Ugly hardcoded meaningless id...
           "erp5",
-          new UriTemplate.parse(option_dict.list_method_template)
-                         .expand(option_dict),
+          new UriTemplate.parse(options.list_method_template)
+                         .expand(options),
           {format: "json"}
         ]
       )
@@ -224,4 +274,4 @@
       return wrapJioCall(this, 'post', [doc]);
     });
 
-}(window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery, jIO));
+}(window, rJS, RSVP, UriTemplate, URI, SimpleQuery, ComplexQuery, jIO));
