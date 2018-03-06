@@ -3,12 +3,12 @@ from zExceptions import Unauthorized
 if REQUEST is not None:
   raise Unauthorized
 
-portal_catalog = context.getPortalObject().portal_catalog
+login = context.ERP5Site_getFacebookLogin(login)
 
-login = portal_catalog.getResultValue(
-  portal_type="Facebook Login",
-  reference=login,
-  validation_state="validated")
+if login is None:
+  return login
 
-if login is not None:
-  return login.getParentValue().getRelativeUrl()
+if len(login) > 1:
+  raise ValueError("Duplicated User")
+
+return login[0].getParentValue().getRelativeUrl()

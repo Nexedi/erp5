@@ -1,5 +1,6 @@
 import facebook
 from Products.ERP5Security.ERP5ExternalOauth2ExtractionPlugin import getFacebookUserEntry
+from zExceptions import Unauthorized
 
 def getAccessTokenFromCode(self, code, redirect_uri):
   client_id, secret_key = self.ERP5Site_getFacebookClientIdAndSecretKey()
@@ -13,6 +14,15 @@ def unrestrictedSearchFacebookConnector(self):
             reference="default",
             validation_state="validated",
             limit=2)
+
+def unrestrictedSearchFacebookLogin(self, login, REQUEST=None):
+  if REQUEST is not None:
+    raise Unauthorized
+
+  return self.getPortalObject().portal_catalog.unrestrictedSearchResults(
+    portal_type="Facebook Login",
+    reference=login,
+    validation_state="validated", limit=1)
 
 def getUserEntry(token):
   return getFacebookUserEntry(token)
