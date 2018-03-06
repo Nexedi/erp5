@@ -45,7 +45,13 @@ class ExpressionMixin:
     try:
       return self._v_expression_instance
     except AttributeError:
-      result = Expression(self.getExpression())
+      expression = self.getExpression()
+      # Check if the expression is not None, because Expression(<expression>)
+      # raises an error in case `expression` is empty or None.
+      if expression:
+        result = Expression(expression)
+      else:
+        result = None
       self._v_expression_instance = result
       return result
 
