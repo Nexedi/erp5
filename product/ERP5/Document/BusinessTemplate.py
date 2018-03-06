@@ -116,7 +116,6 @@ catalog_method_list = ('_is_catalog_list_method_archive',
                        '_is_filtered_archive',)
 
 catalog_method_filter_list = ('_filter_expression_archive',
-                              '_filter_expression_instance_archive',
                               '_filter_expression_cache_key_archive',
                               '_filter_type_archive',)
 
@@ -616,8 +615,12 @@ class BaseTemplateItem(Implicit, Persistent):
       # PythonScript covers both Zope Python scripts
       # and ERP5 Python Scripts
       if isinstance(obj, PythonScript):
+        # `expression_instance` is included so as to add compatibility for
+        # exporting older catalog methods which might have them as their
+        # properties or in their attribute dict.
         attr_set.update(('func_code', 'func_defaults', '_code',
-                         '_lazy_compilation', 'Python_magic'))
+                         '_lazy_compilation', 'Python_magic',
+                         'expression_instance'))
         for attr in 'errors', 'warnings', '_proxy_roles':
           if not obj.__dict__.get(attr, 1):
             delattr(obj, attr)
@@ -625,7 +628,10 @@ class BaseTemplateItem(Implicit, Persistent):
         attr_set.update(('_EtagSupport__etag', 'size'))
       # SQL covers both ZSQL Methods and ERP5 SQL Methods
       elif isinstance(obj, SQL):
-        attr_set.update(('_arg', 'template'))
+        # `expression_instance` is included so as to add compatibility for
+        # exporting older catalog methods which might have them as their
+        # properties or in their attribute dict.
+        attr_set.update(('_arg', 'template', 'expression_instance'))
       elif interfaces.IIdGenerator.providedBy(obj):
         attr_set.update(('last_max_id_dict', 'last_id_dict'))
       elif classname == 'Types Tool' and klass.__module__ == 'erp5.portal_type':
@@ -3068,14 +3074,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       #    migration.
       if self._is_filtered_archive.get(method_id, 0):
         expression = self._filter_expression_archive[method_id]
-        if expression and expression.strip():
-          # only compile non-empty expressions
-          expr_instance = Expression(expression)
-        else:
-          expr_instance = None
         method.setFiltered(1)
         method.setExpression(expression)
-        method.setExpressionInstance(expr_instance)
         method.setExpressionCacheKey(
           self._filter_expression_cache_key_archive.get(method_id, ()))
         method.setTypeList(self._filter_type_archive.get(method_id, ()))
