@@ -47,6 +47,7 @@ Product | sale_price_view
 Product | transformed_resource_inventory
 Product | view
 Product | view_measure
+Product | view_movement_history
 Product | view_quantities
 Product | view_stock
 Purchase Supply Line | additional_price
