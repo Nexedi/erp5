@@ -368,19 +368,19 @@ url_template_dict = {
   "traverse_template": "%(root_url)s/%(script_id)s?mode=traverse" + \
                        "{&relative_url,view}",
   "search_template": "%(root_url)s/%(script_id)s?mode=search" + \
-                     "{&query,select_list*,limit*,sort_on*,local_roles*}",
+                     "{&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}",
   "worklist_template": "%(root_url)s/%(script_id)s?mode=worklist",
   "custom_search_template": "%(root_url)s/%(script_id)s?mode=search" + \
                      "&relative_url=%(relative_url)s" \
                      "&form_relative_url=%(form_relative_url)s" \
                      "&list_method=%(list_method)s" \
                      "&default_param_json=%(default_param_json)s" \
-                     "{&query,select_list*,limit*,sort_on*,local_roles*}",
+                     "{&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}",
   "custom_search_template_no_editable": "%(root_url)s/%(script_id)s?mode=search" + \
                      "&relative_url=%(relative_url)s" \
                      "&list_method=%(list_method)s" \
                      "&default_param_json=%(default_param_json)s" \
-                     "{&query,select_list*,limit*,sort_on*,local_roles*}",
+                     "{&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}",
   "new_content_action": "%(root_url)s/%(script_id)s?mode=newContent",
   "bulk_action": "%(root_url)s/%(script_id)s?mode=bulk",
   # XXX View is set by default to empty
@@ -1491,6 +1491,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     #  select_list: ['int_index', 'id', 'title', ...] (column names to select)
     #  limit: [15, 16]                                (begin_index, num_records)
     #  local_roles: TODO
+    #  selection_domain: JSON string: {region: 'foo/bar'}
     #
     # Default Param JSON contains
     #  portal_type: list of Portal Types to include (singular form matches the
@@ -1538,6 +1539,19 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
               json.loads(urlsafe_b64decode(default_param_json)))))
       if query:
         catalog_kw["full_text"] = query
+
+      if selection_domain is not None:
+        selection_domain_dict = ensureDeserialized(
+            byteify(json.loads(selection_domain)))
+        category_tool = portal.portal_categories
+        domain_tool = portal.portal_domains
+        for domain_root_id in selection_domain_dict:
+          domain_root = category_tool.restrictedTraverse(domain_root_id, None)
+          if domain_root is None:
+            selection_domain_dict[domain_root_id] = domain_tool.getDomainByPath('%s/%s' % (domain_root_id, selection_domain_dict[domain_root_id]))
+          else:
+            selection_domain_dict[domain_root_id] = domain_root.restrictedTraverse(selection_domain_dict[domain_root_id])
+        catalog_kw["selection_domain"] = selection_domain_dict
 
       if sort_on is not None:
         def parseSortOn(raw_string):
@@ -1632,6 +1646,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     result_dict.update({
       '_query': query,
       '_local_roles': local_roles,
+      '_selection_domain': selection_domain,
       '_limit': limit,
       '_select_list': select_list,
       '_embedded': {}
