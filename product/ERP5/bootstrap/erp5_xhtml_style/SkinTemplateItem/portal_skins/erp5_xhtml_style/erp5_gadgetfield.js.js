@@ -118,7 +118,7 @@
                 editable: (field_element.getAttribute("data-gadget-editable") !== null),
                 key: field_element.getAttribute("data-gadget-editable"),
                 value: field_element.getAttribute("data-gadget-value"),
-                extra: field_element.getAttribute("data-gadget-renderjs-extra")
+                extra: field_element.getAttribute("data-gadget-renderjs-extra") || "{}"
               });
               promise_list.push(gadget.getDeclaredGadget(field_scope));
             }
