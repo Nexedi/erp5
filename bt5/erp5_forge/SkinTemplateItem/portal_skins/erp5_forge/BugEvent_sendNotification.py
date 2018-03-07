@@ -1,4 +1,8 @@
-bug_message = state_change["object"]
+from zExceptions import Forbidden
+if REQUEST is not None:
+  raise Forbidden("Request call denied.")
+
+bug_message = context
 
 # Bug Information
 bug = bug_message.getParentValue()
