@@ -1,0 +1,56 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="init" tal:define="base_url python: '/' + here.getPortalObject().getId()">
+
+    <!-- Check inventory total records -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//nav//span[@class='ui-disabled ui-right']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyText</td>
+      <td>//nav//span[@class='ui-disabled ui-right']</td>
+      <td>2 Records</td>
+    </tr>
+
+    <!--  Check the correct title -->
+    <tr>
+      <td>assertText</td>
+      <td tal:content="python: '//div[@data-gadget-scope=\'field_listbox\']//table/tbody/tr[%s]/td[1]' % index">inventory value</td>
+      <td tal:content="python: title"></td>
+    </tr>
+
+    <!-- Check that inventory and movement list are consistent while in loop -->
+    <tal:block tal:repeat="inventory_tuple python: [(current_inventory, 3),
+                                                    (available_inventory, 4),
+                                                    (future_inventory, 5),
+]">
+      <tr>
+        <td>assertText</td>
+        <td tal:content="python: '//div[@data-gadget-scope=\'field_listbox\']//table/tbody/tr[%s]/td[%s]' % (index, inventory_tuple[1])">inventory value</td>
+        <td tal:content="python: int(inventory_tuple[0])"></td>
+      </tr>
+
+    </tal:block>
+
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+
+  </tal:block>
+
+  <tal:block metal:define-macro="check_total_for_inventory">
+    <tr>
+      <td colspan="3"><b>Total for inventories</b></td>
+    </tr>
+    <tr>
+      <td>assertText</td>
+      <td>//div[@data-gadget-scope='field_listbox']//table/tfoot/tr[1]/td[1]</td>
+      <td>Total</td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+</tal:block>

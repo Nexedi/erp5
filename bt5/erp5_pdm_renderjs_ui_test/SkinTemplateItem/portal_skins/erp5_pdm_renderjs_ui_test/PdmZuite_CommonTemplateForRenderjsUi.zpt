@@ -1,0 +1,104 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="init">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>setTimeout</td>
+      <td>600000</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/PdmZuite_deleteData</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Deleted Successfully.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/PdmZuite_reset</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Reset Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td tal:content="string:$${base_url}/internal_packing_list_module/$init_method" />
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Delivery Created.</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/renderjs_runner/#/product_module/erp5_pdm_ui_test_product</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/PdmZuite_CommonTemplateForRenderjsUi/macros/go_to_stock_view" />
+  </tal:block>
+
+  <tal:block metal:define-macro="go_to_stock_view">
+    <tr>
+      <td colspan="3"><b>Go to Stock view</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//ul[@class='document-listview']//a[@data-i18n='Stock']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//ul[@class='document-listview']//a[@data-i18n='Stock']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+</tal:block>
