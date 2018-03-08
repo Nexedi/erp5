@@ -261,7 +261,10 @@
     .declareMethod('get', function (id) {
       return wrapJioCall(this, 'get', [id]);
     })
-    .declareMethod('getAttachment', function (id, name) {
+    .declareMethod('getAttachment', function (id, name, options) {
+      if (options) {
+        return wrapJioCall(this, 'getAttachment', [id, name, options]);
+      }
       return wrapJioCall(this, 'getAttachment', [id, name, {format: "json"}]);
     })
     .declareMethod('putAttachment', function (id, name, json) {
