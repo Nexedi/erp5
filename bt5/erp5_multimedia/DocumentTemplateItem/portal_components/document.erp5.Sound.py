@@ -35,7 +35,10 @@ class Sound(File):
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw):
     """XXXXXX"""
     range = REQUEST.get_header('Range', None)
-    if range is not None:
+    if range is None:
+      start = None
+      end = None
+    else:
       ranges = HTTPRangeSupport.parseRange(range)
       (start, end) =  ranges[0]
 
@@ -63,8 +66,11 @@ class Sound(File):
       raise Forbidden('You are not allowed to get this document in this ' \
                       'format')
     mime, data = self.convert(format, **kw)
-    
-    data = data[start:end-1]
+    total_length = len(data)
+    if end is None:
+      end = total_length
+    if start is not None:
+      data = data[start:end-1]
     
     RESPONSE.setHeader('Content-Length', len(data))
     RESPONSE.setHeader('Content-Type', mime)
@@ -74,5 +80,10 @@ class Sound(File):
     RESPONSE.setHeader('Content-Disposition',
                        'attachment; filename="%s"' % filename)
     RESPONSE.setHeader('Accept-Ranges', 'bytes')
-    RESPONSE.setStatus(206)
+    if start is None:
+      RESPONSE.setStatus(200)
+    else:
+      RESPONSE.setHeader('Content-Range',
+                         'bytes %s-%s/%s' % (start, end-1, total_length))
+      RESPONSE.setStatus(206)
     return str(data)
