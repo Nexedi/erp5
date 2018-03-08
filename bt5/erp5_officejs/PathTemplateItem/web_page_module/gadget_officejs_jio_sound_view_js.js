@@ -102,6 +102,7 @@
                     "editable": 1,
                     "key": "data",
                     "hidden": 0,
+                    "accept": "audio/*",
                     "type": "FileField"
                   },
                   "my_content": {
