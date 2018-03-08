@@ -133,10 +133,10 @@
           // Update the global links
           .push(function () {
             return RSVP.all([
-              context.getUrlFor({command: 'display', options: {page: "ojs_claudie_document_list"}}),
+              context.getUrlFor({command: 'display', options: {page: "ojs_message_document_list"}}),
               context.getUrlFor({command: 'display', options: {page: "ojs_configurator"}}),
               context.getUrlFor({command: 'display', options: {page: "ojs_sync", 'auto_repair': true}}),
-              context.getUrlFor({command: 'display', options: {page: "ojs_claudie_front"}})
+              context.getUrlFor({command: 'display', options: {page: "ojs_message_front"}})
             ]);
           })
           .push(function (result_list) {

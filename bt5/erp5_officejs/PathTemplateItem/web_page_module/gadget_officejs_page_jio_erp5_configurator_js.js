@@ -14,8 +14,19 @@
         ]);
       })
       .push(function (result) {
+        var portal_type = result[0].split(',');
+        var query = '';
+        for (var i = 0; i < portal_type.length; i++) {
+          if (i + 1 >= portal_type.length)
+            query += '(portal_type:"' + portal_type[i] + '")';
+          else
+            query += '(portal_type:"' + portal_type[i] + '") OR ';
+        }
+      
+      
+      
         var configuration = {},
-          portal_type = result[0],
+          //portal_type = result[0].split(','),
           attachment_synchro = result[1] !== "",
           extended_attachment_url = result[1],
           // https://bugs.chromium.org/p/chromium/issues/detail?id=375297
@@ -27,7 +38,7 @@
           type: "replicate",
           // XXX This drop the signature lists...
           query: {
-            query: 'portal_type:"' + portal_type + '"',
+            query: query,
             limit: [0, 50],
             sort_on: [["modification_date", "descending"]]
           },

@@ -80,7 +80,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_ojs_panel_claudie.html</string> </value>
+            <value> <string>gadget_erp5_ojs_panel_message.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -90,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_panel_claudie_html</string> </value>
+            <value> <string>gadget_officejs_panel_message_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -108,7 +108,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Claudie Panel</string> </value>
+            <value> <string>Gadget ERP5 Message Panel</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -239,7 +239,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.59632.11196.33706</string> </value>
+                <value> <string>965.64033.24168.18329</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -257,7 +257,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520003578.9</float>
+                        <float>1520267632.97</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

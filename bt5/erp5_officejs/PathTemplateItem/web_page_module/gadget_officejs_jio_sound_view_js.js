@@ -29,105 +29,35 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
-      console.log("################");
+     // console.log("################");
       var gadget = this;
       gadget.type = options.doc.type;
       
       var state = {
         title: options.doc.title,
-        upload_name: options.doc.upload
+        jio_key: options.jio_key
       };
-/*      
-      return gadget.jio_get(options.jio_key)
-        .push(function (data) {
 
-          state.doc = options.doc;
-          state.text = data.text;
-          state.audio = data.audio;
-          if (data.image) {
-            return jIO.util.readBlobAsDataURL(data.image);
-          }
+      return gadget.jio_getAttachment(options.jio_key, "data")
+        .push(function (blob_audio) {
+          state.audio = blob_audio;
         })
-        .push(function (image) {
-          if (image){
-            state.image = image.target.result;
-          }
-          else{
-            state.image = null;
-          }
-          gadget.changeState(state);
-        });
-    })
-  */  
     
-      return gadget.jio_getAttachment(options.jio_key, "upload")
-        .push(function (blob) {
-          state.upload = blob;
-          
-          return gadget.jio_getAttachment(options.jio_key, "image");
-        })
-        .push(function (blob) {
-          return jIO.util.readBlobAsDataURL(blob);
-        })
-        .push(function (data) {
-          state.jio_key = options.jio_key;
-          state.image = data.target.result;
-          
-          return gadget.jio_getAttachment(options.jio_key, "text");
-        })
-        .push(function (blob_text) {
-          return jIO.util.readBlobAsText(blob_text);
-        })    
-    
-        .push(function (text) {
-          state.text = text.target.result;
-          
-          return gadget.jio_getAttachment(options.jio_key, "audio");
-        })
-        //.push(function (blob) {
-        //  return jIO.util.readBlobAsDataURL(blob);
-        //})
-        .push(function (blob) {
-          state.audio = blob;
-          
-          gadget.changeState(state);
-        })
         .push(function () {
+          gadget.changeState(state);
           return gadget.updateHeader({
             page_title: 'Claudie',
             save_action: true
           });
         });
-      
     })
-/*
-    .declareMethod('calculateDuration', function (data) {
-      // Create a temporary audio element and assign the data to
-      // calculate the time duration.
-      var gadget = this,
-        audioElement = document.createElement('audio');
-      audioElement.src = URL.createObjectURL(data);
-      return RSVP.Queue()
-        .push(function () {
-          return promiseEventListener(
-            audioElement,
-            'loadedmetadata',
-            false
-          );
-        })
-        .push(function () {
-          gadget.duration = audioElement.duration;
-        });
-    })
-*/
+  
     .onEvent('submit', function () {
       var gadget = this;
-      var blob_upload = new Blob();
-      var blob_image = new Blob();
-      var blob_audio = new Blob();
       var text;
-      var content;
+      var title;
       var global_id;
+    
       return gadget.notifySubmitting()
         .push(function () {
           return gadget.getDeclaredGadget('form_view');
@@ -136,15 +66,34 @@
           return form_gadget.getContent();
         })
         .push(function (result) {
-          if (result.upload)
-            blob_upload = jIO.util.dataURItoBlob(result.upload.url);
-          if (result.image) 
-            blob_image = jIO.util.dataURItoBlob(result.image.url);
-          if (result.audio) 
+          title = result.title;
+          var blob_audio = new Blob();
+        
+          if (result.audio)
             blob_audio = jIO.util.dataURItoBlob(result.audio.url);
+            
+          return gadget.jio_putAttachment(gadget.state.jio_key, 'data', blob_audio);
+        })
+    
+        .push(function () {
+          return gadget.updateDocument({
+            
+            title: title
+          });
+        })
+    
+        .push(function () {
+          return gadget.redirect({
+            command: 'display',
+            options: {
+              jio_key: gadget.state.jio_key,
+              editable: true
+            }
+          });
+        });
+    })
           
-          content = result;
-          return RSVP.all([
+    /*      return RSVP.all([
             gadget.getSetting('portal_type'),
             gadget.getSetting('parent_relative_url')
           ]);
@@ -172,7 +121,7 @@
           return gadget.updateDocument({
             
             title: content.title,
-            upload: upload_name
+            links: id_list
           });
         })
         .push(function () {
@@ -183,14 +132,14 @@
               editable: true
             }
           });
-            /*
+            
             command: 'display',
             options: {
              "page": "ojs_document_list",
               editable: true
-            }});*/
+            }});
         });
-    })
+    })*/
 
     .declareMethod("triggerSubmit", function () {
       return this.element.querySelector('button[type="submit"]').click();
@@ -198,15 +147,6 @@
 
     .onStateChange(function () {
       var gadget = this;
-      //this.element.querySelector("audio").src = gadget.state.audio;
-
-      /*if (gadget.state.audio){
-        this.element.querySelector("audio").src = URL.createObjectURL(gadget.state.audio);
-      }*/
-       // console.log("############");
-      //var audio = document.getElementById("audio");
-
-      //audio.src = gadget.state.audio;
 
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
@@ -225,30 +165,6 @@
                     "hidden": 0,
                     "type": "StringField"
                   },
-                  "my_upload": {
-                    "description": "",
-                    "title": "Upload",
-                    "default": "",
-                    "css_class": "",
-                    "required": 1,
-                    "editable": 1,
-                    "key": "upload",
-                    "hidden": 0,
-                    //"accept": "audio/*",
-                    "type": "FileField"
-                  },
-                  "my_image": {
-                    "description": "",
-                    "title": "Image",
-                    "default": "",
-                    "css_class": "",
-                    "required": 1,
-                    "editable": 1,
-                    "key": "image",
-                    "hidden": 0,
-                    //"accept": "audio/*",
-                    "type": "FileField"
-                  },
                   "my_audio": {
                     "description": "",
                     "title": "Audio",
@@ -258,31 +174,9 @@
                     "editable": 1,
                     "key": "audio",
                     "hidden": 0,
+                    "accept": "audio/*",
+                    "capture": "microphone",
                     "type": "FileField"
-                  },
-                  "my_text": {
-                    "description": "",
-                    "title": "Text",
-                    "default": gadget.state.text,
-                    "css_class": "",
-                    "height" : "100",
-                    "required": 1,
-                    "editable": 1,
-                    "key": "text",
-                    "hidden": 0,
-                    "type": "TextAreaField"
-                  },
-                  "my_image_preview": {
-                    "description": "",
-                    "title": "Image",
-                    "default": gadget.state.image,
-                    "css_class": "",
-                    "height" : "10",
-                    "required": 1,
-                    "editable": 1,
-                    "key": "image_preview",
-                    "hidden": 0,
-                    "type": "ImageField"
                   }
                 }
               },
@@ -296,34 +190,14 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_title"], ["my_upload"], ["my_image"], ["my_audio"], ["my_text"]]
-              ], [
-                "bottom",
-                [["my_image_preview"]]
+                [["my_title"], ["my_audio"]]
               ]]
             }
           });
         })
-        .push(function (form) {
-          if (gadget.state.upload.size !== 0) {
-            var a = document.createElement("a");
-            a.setAttribute('href', URL.createObjectURL(gadget.state.upload));
-            a.setAttribute('download', gadget.state.upload_name);
-            a.innerHTML = gadget.state.upload_name;
-            //audio.src = URL.createObjectURL(gadget.state.audio);
-            
-            var upload_field = document.querySelector("input[id='upload']");
-            var form = upload_field.parentNode;
-            //form.removeChild(audio_field);
-            //form.insertBefore(a,upload_field);
-            form.appendChild(a);
-
-            
-          }
-      })
-
+    
         .push(function () {
-          if (gadget.state.audio.size !== 0) {
+          if (gadget.state.audio) {
             var audio = document.createElement("audio");
             audio.setAttribute('controls', 'controls');
             audio.src = URL.createObjectURL(gadget.state.audio);
@@ -335,8 +209,8 @@
 
             
           }
-          
         })
+
         .push(function () {
           return RSVP.all([
             gadget.getUrlFor({command: 'history_previous'}),

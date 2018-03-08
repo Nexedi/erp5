@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24,6 +24,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -42,6 +43,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -76,16 +79,8 @@
             </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_claudie_document_list.js</string> </value>
+            <value> <string>gadget_message.appcache</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -95,36 +90,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_claudie_document_list_js</string> </value>
+            <value> <string>gadget_officejs_message_appcache</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.18</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -133,8 +107,120 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>CACHE MANIFEST\n
+# generated on Fri, 09 Jun 2016 11:45:33 +0000\n
+# XXX + fonts\n
+# images/ajax-loader.gif\n
+CACHE:\n
+font-awesome/font-awesome.css\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.woff2\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg\n
+gadget_erp5_nojqm.css\n
+jio_ojs_storage.js\n
+gadget_erp5_global.js\n
+URI.js\n
+dygraph.js\n
+handlebars.js\n
+jiodev.js\n
+renderjs.js\n
+rsvp.js\n
+gadget_global.js\n
+erp5_launcher_nojqm.js\n
+gadget_officejs_router.js\n
+gadget_erp5_router.html\n
+gadget_erp5_router.js\n
+gadget_officejs_liberator.html\n
+gadget_officejs_liberator.js\n
+gadget_jio.html\n
+gadget_jio.js\n
+gadget_translate.html\n
+gadget_translate.js\n
+gadget_translation.html\n
+gadget_translation.js\n
+gadget_translation_data.js\n
+gadget_erp5_editor_panel.html\n
+gadget_erp5_editor_panel.js\n
+gadget_erp5_ojs_panel.html\n
+gadget_erp5_ojs_panel.js\n
+gadget_erp5_header.html\n
+gadget_erp5_header.js\n
+gadget_ojs_jio.html\n
+gadget_ojs_jio.js\n
+gadget_erp5_page_ojs_controller.html\n
+gadget_erp5_page_ojs_controller.js\n
+gadget_erp5_page_ojs_add_document.html\n
+gadget_erp5_page_ojs_add_document.js\n
+gadget_erp5_page_ojs_configurator.html\n
+gadget_erp5_page_ojs_configurator.js\n
+gadget_erp5_page_ojs_dav_configurator.html\n
+gadget_erp5_page_ojs_dav_configurator.js\n
+gadget_erp5_page_ojs_erp5_configurator.html\n
+gadget_erp5_page_ojs_erp5_configurator.js\n
+gadget_erp5_page_ojs_dropbox_configurator.html\n
+gadget_erp5_page_ojs_dropbox_configurator.js\n
+gadget_erp5_page_ojs_sync.html\n
+gadget_erp5_page_ojs_sync.js\n
+gadget_erp5_page_ojs_document_list.html\n
+gadget_erp5_page_ojs_document_list.js\n
+gadget_ojs_configurator_access.html\n
+gadget_ojs_configurator_access.js\n
+gadget_html5_input.html\n
+gadget_html5_input.js\n
+gadget_erp5_field_multicheckbox.html\n
+gadget_erp5_field_multicheckbox.js\n
+gadget_erp5_searchfield.html\n
+gadget_erp5_searchfield.js\n
+gadget_erp5_pt_form_list.html\n
+gadget_erp5_pt_form_list.js\n
+gadget_erp5_form.html\n
+gadget_erp5_form.js\n
+gadget_erp5_label_field.html\n
+gadget_erp5_label_field.js\n
+gadget_erp5_field_listbox.html\n
+gadget_erp5_field_listbox.js\n
+gadget_erp5_field_datetime.html\n
+gadget_erp5_field_datetime.js\n
+gadget_html5_element.html\n
+gadget_html5_element.js\n
+gadget_erp5_notification.html\n
+gadget_erp5_notification.js\n
+gadget_erp5_field_string.html\n
+gadget_erp5_field_string.js\n
+gadget_erp5_field_editor.html\n
+gadget_erp5_field_editor.js\n
+gadget_erp5_field_gadget.html\n
+gadget_erp5_field_gadget.js\n
+gadget_erp5_search_editor.html\n
+gadget_erp5_search_editor.js\n
+gadget_erp5_sort_editor.html\n
+gadget_erp5_sort_editor.js\n
+gadget_erp5_field_password.html\n
+gadget_erp5_field_password.js\n
+gadget_erp5_field_textarea.html\n
+gadget_erp5_field_textarea.js\n
+gadget_html5_textarea.html\n
+gadget_html5_textarea.js\n
+gadget_erp5_configure_editor.html\n
+gadget_erp5_configure_editor.js\n
+gadget_editor.html\n
+gadget_editor.js\n
+gadget_button_maximize.html\n
+gadget_button_maximize.js\n
+\n
+#setting\n
+gadget_officejs_setting.js\n
+gadget_officejs_setting.html\n
+\n
+NETWORK:\n
+*</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Document List JS</string> </value>
+            <value> <string>Message AppCache</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -200,7 +286,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -226,7 +312,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520006573.89</float>
+                        <float>1519984689.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -235,7 +321,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -271,7 +357,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.59679.9038.16674</string> </value>
+                <value> <string>965.64032.51068.39048</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -289,7 +375,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520006485.09</float>
+                        <float>1520267575.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -346,7 +432,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520006188.59</float>
+                        <float>1519984670.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

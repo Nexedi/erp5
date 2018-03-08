@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -64,7 +64,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>contributor/person_module/1</string>
                 <string>classification/collaborative/team</string>
               </tuple>
             </value>
@@ -76,20 +75,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_claudie_document_list.html</string> </value>
+            <value> <string>gadget_erp5_ojs_panel_message.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -99,36 +86,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_claudie_document_list_html</string> </value>
+            <value> <string>gadget_officejs_panel_message_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.14</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -138,13 +104,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Claudie Document List</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget Message Panel JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -230,7 +190,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520006583.33</float>
+                        <float>1520002302.38</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -275,7 +235,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.59677.17470.26368</string> </value>
+                <value> <string>965.64034.8601.11554</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -293,7 +253,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520006327.75</float>
+                        <float>1520267682.14</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -350,7 +310,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520006215.05</float>
+                        <float>1520001217.02</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

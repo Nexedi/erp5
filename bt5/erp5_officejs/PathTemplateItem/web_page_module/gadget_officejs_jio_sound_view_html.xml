@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -75,8 +75,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_claudie_router.js</string> </value>
+            <value> <string>gadget_officejs_jio_sound_view.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -86,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_claudie_router_js</string> </value>
+            <value> <string>gadget_officejs_jio_sound_view_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -94,7 +98,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -104,7 +108,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Claudie router Gadget JS</string> </value>
+            <value> <string>Gadget Officejs Sound Viewer View</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -196,7 +200,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1519378178.23</float>
+                        <float>1520439044.89</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -241,7 +245,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.44920.7194.46472</string> </value>
+                <value> <string>966.1350.58854.21230</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -259,7 +263,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1519384087.04</float>
+                        <float>1520438837.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -316,7 +320,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1519377120.78</float>
+                        <float>1520438659.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

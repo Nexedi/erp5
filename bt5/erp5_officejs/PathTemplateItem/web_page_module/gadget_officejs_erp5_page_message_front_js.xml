@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -76,10 +76,6 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>creators</string> </key>
             <value>
               <tuple>
@@ -89,7 +85,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_claudie_front.html</string> </value>
+            <value> <string>gadget_erp5_page_ojs_message_front.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -99,7 +95,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_erp5_page_claudie_front_html</string> </value>
+            <value> <string>gadget_officejs_erp5_page_message_front_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -119,7 +115,7 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1455284352.14</float>
+                    <float>1455284352.18</float>
                     <string>UTC</string>
                   </tuple>
                 </state>
@@ -128,7 +124,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -138,7 +134,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Claudie Front</string> </value>
+            <value> <string>Gadget Message Front JS</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -230,7 +226,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1519634712.7</float>
+                        <float>1519634719.01</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -275,7 +271,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.52358.20782.12509</string> </value>
+                <value> <string>966.1291.49910.59716</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -293,7 +289,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1519827880.37</float>
+                        <float>1520437510.54</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -350,7 +346,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1519633633.26</float>
+                        <float>1519633924.76</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

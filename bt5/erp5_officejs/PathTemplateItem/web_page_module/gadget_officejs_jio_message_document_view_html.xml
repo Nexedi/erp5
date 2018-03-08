@@ -80,7 +80,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_claudie_view.html</string> </value>
+            <value> <string>gadget_officejs_jio_message_document_view.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -90,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_claudie_view_html</string> </value>
+            <value> <string>gadget_officejs_jio_message_document_view_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -108,7 +108,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Officejs Claudie Viewer View</string> </value>
+            <value> <string>Gadget Officejs Message Document Viewer View</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -200,7 +200,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1519392659.12</float>
+                        <float>1520442009.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -245,7 +245,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.58172.4974.59921</string> </value>
+                <value> <string>966.1404.9973.11076</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -263,7 +263,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1519918457.36</float>
+                        <float>1520442033.68</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -320,7 +320,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1519392004.54</float>
+                        <float>1520441988.62</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

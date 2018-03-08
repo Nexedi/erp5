@@ -82,6 +82,16 @@
             ['version', 'Version'],
             ['modification_date', 'Modification Date']
           ];
+        
+          var portal_type = result[1].split(',');
+          var query = "urn:jio:allDocs?query=";
+          for (var i = 0; i < portal_type.length; i++) {
+            if (i + 1 >= portal_type.length)
+              query += '(portal_type%3A%22' + portal_type[i] + '%22)';
+            else
+              query += '(portal_type%3A%22' + portal_type[i] + '%22) OR ';
+          }
+        
           return result[0].render({
             erp5_document: {
               "_embedded": {"_view": {
@@ -94,8 +104,7 @@
                   "key": "field_listbox",
                   "lines": 30,
                   "list_method": "portal_catalog",
-                  "query": "urn:jio:allDocs?query=portal_type%3A%22" +
-                    result[1] + "%22",
+                  "query": query,
                   "portal_type": [],
                   "search_column_list": column_list,
                   "sort_column_list": column_list,
@@ -121,7 +130,7 @@
         })
         .push(function () {
           return RSVP.all([
-            gadget.getUrlFor({command: "change", options: {"page": "ojs_claudie_front"}}),
+            gadget.getUrlFor({command: "change", options: {"page": "ojs_message_front"}}),
             gadget.getSetting('document_title_plural')
           ]);
         })
