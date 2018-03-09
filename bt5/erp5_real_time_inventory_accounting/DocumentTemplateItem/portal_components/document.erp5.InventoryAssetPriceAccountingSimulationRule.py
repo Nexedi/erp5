@@ -109,7 +109,7 @@ class InventoryAssetPriceAccountingRuleMovementGenerator(InvoiceTransactionRuleM
       self,
       input_movement)
 
-    if input_movement.getDeliveryValue().getPortalType().startswith('Purchase Packing List'):
+    if input_movement.getRootAppliedRule().getCausalityValue().getPortalType().startswith('Purchase'):
       update_property_dict['source_section'] = input_movement.getDestinationSection()
 
     return update_property_dict
