@@ -70,8 +70,8 @@
             blob_upload = jIO.util.dataURItoBlob(result.upload.url);
           if (result.image)
             blob_image = jIO.util.dataURItoBlob(result.image.url);
-          if (result.audio)
-            blob_audio = jIO.util.dataURItoBlob(result.audio.url);
+          if (gadget.state.audio)
+            blob_audio = gadget.state.audio;
         
           content = result;
         
@@ -120,9 +120,11 @@
         })
         
         .push(function () {
-          if (content.audio) {
+          if (blob_audio) {
+            var date = new Date();
+            var title = date.getFullYear() + "_" + date.getMonth() + "_" + date.getDate() + "_" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
             return gadget.jio_post({
-              "title": content.audio.file_name,
+              "title": "record_" + title,
               portal_type: portal_type[2],
               parent_relative_url: parent_relative_url[2]
             });
@@ -170,7 +172,63 @@
             }});*/
         });
     })
-  
+
+      .declareService(function () {
+        var gadget = this;
+        var record;
+
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+
+          navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+              record = new MediaRecorder(stream);
+
+              var chunks = [];
+
+              record.onstop = function (e) {
+                var blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
+                
+                gadget.state.audio = blob;
+                
+                
+                
+              };
+
+              record.ondataavailable = function (e) {
+                chunks.push(e.data);
+              };
+            });
+        }
+    
+    
+        var button = document.querySelectorAll("label[for='audio']")[0];
+        var mousedown = loopEventListener(button, "mousedown", false,
+          function (event) {
+            record.start();
+            button.style.background = "red";
+          });
+    
+        var mouseup = loopEventListener(button, "mouseup", false,
+          function (event) {
+            record.stop();
+            button.style.background = "#37A419";
+          });
+    
+        var touchstart = loopEventListener(button, "touchstart", false,
+          function (event) {
+            record.start();
+            button.style.background = "red";
+          });
+    
+        var touchend = loopEventListener(button, "toutchend", false,
+          function (event) {
+            record.stop();
+            button.style.background = "#37A419";
+          });
+    
+        return RSVP.all([mousedown, mouseup, touchstart, touchend]);
+    
+      })
+    
     .declareService(function () {
       var gadget = this;
       var button = document.querySelectorAll("input[type='file']")[0];
@@ -196,7 +254,7 @@
             
         });
     }, false)
-  
+  /*
     .declareService(function () {
       var gadget = this;
       var button = document.querySelectorAll("input[type='file']")[2];
@@ -209,6 +267,7 @@
             
         });
     }, false) 
+    */
   
     .declareService(function () {
       var gadget = this;
@@ -329,7 +388,7 @@
                 "title": " ",
                 "accept": "audio/*",
                 "capture": "microphone",
-                "type": "FileField"
+                "type": "StringField"
               },
               "text_button": {
                 "column_list": [
