@@ -389,7 +389,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
         source_value=organisation_hoge,
         source_section_value=organisation_hoge,
         price_currency_value=currency_eur,
-        specialise_value=self.portal.business_process_module.bpm_hoge)
+        specialise_value=self.portal.business_process_module.bpm_sale_hoge)
     if stc.getValidationState() != 'validated':
       stc.validate()
 
@@ -404,7 +404,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
         destination_value=organisation_hoge,
         destination_section_value=organisation_hoge,
         price_currency_value=currency_eur,
-        specialise_value=self.portal.business_process_module.bpm_hoge)
+        specialise_value=self.portal.business_process_module.bpm_purchase_hoge)
     if ptc.getValidationState() != 'validated':
       ptc.validate()
 
@@ -419,7 +419,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
         source_value=organisation_hoge,
         source_section_value=organisation_hoge,
         price_currency_value=currency_eur,
-        specialise_value=self.portal.business_process_module.bpm_hoge)
+        specialise_value=self.portal.business_process_module.bpm_internal_hoge)
     if itc.getValidationState() != 'validated':
       itc.validate()
 
@@ -986,7 +986,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
   def stepTestProductionPackingList_create(self, sequence=None, sequence_list=None):
     production_packing_list = self.portal.production_packing_list_module.newContent(
       portal_type='Production Packing List',
-      specialise_value=self.portal.business_process_module.bpm_hoge,
+      specialise_value=self.portal.business_process_module.bpm_internal_hoge,
       title='Transfert Workshop to Park',
       start_date=DateTime('2018/03/02 00:00:00 GMT+9'),
       stop_date=DateTime('2018/03/03 00:00:00 GMT+9'),
@@ -1074,7 +1074,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
   def stepTestProductionPackingListNoPriceAndNoSupply_create(self, sequence=None, sequence_list=None):
     production_packing_list = self.portal.production_packing_list_module.newContent(
       portal_type='Production Packing List',
-      specialise_value=self.portal.business_process_module.bpm_hoge,
+      specialise_value=self.portal.business_process_module.bpm_internal_hoge,
       title='Transfer Workshop to Park (No Supply/Price)',
       start_date=DateTime('2018/03/02 00:00:00 GMT+9'),
       stop_date=DateTime('2018/03/02 00:00:00 GMT+9'),
