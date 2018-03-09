@@ -1,1 +1,3 @@
-business_process_module/bpm_hoge
+business_process_module/bpm_internal_hoge
+business_process_module/bpm_purchase_hoge
+business_process_module/bpm_sale_hoge
