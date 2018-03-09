@@ -69,8 +69,8 @@
           title = result.title;
           var blob_audio = new Blob();
         
-          if (result.audio)
-            blob_audio = jIO.util.dataURItoBlob(result.audio.url);
+          if (result.audio_)
+            blob_audio = jIO.util.dataURItoBlob(result.audio_.url);
             
           return gadget.jio_putAttachment(gadget.state.jio_key, 'data', blob_audio);
         })
@@ -172,7 +172,7 @@
                     "css_class": "",
                     "required": 1,
                     "editable": 1,
-                    "key": "audio",
+                    "key": "audio_",
                     "hidden": 0,
                     "accept": "audio/*",
                     "capture": "microphone",
@@ -202,7 +202,7 @@
             audio.setAttribute('controls', 'controls');
             audio.src = URL.createObjectURL(gadget.state.audio);
             
-            var audio_field = document.querySelector("input[id='audio']");
+            var audio_field = document.querySelector("input[id='audio_']");
             var form = audio_field.parentNode;
             //form.removeChild(audio_field);
             form.appendChild(audio);

@@ -97,7 +97,7 @@
     
         .push(function (id_upload) {
           if (id_upload) {
-         //   id_list[0] = id_upload;
+            global_id = id_upload;
             gadget.jio_putAttachment(id_upload, 'data', blob_upload);
           }
         })
@@ -114,7 +114,7 @@
         
         .push(function (id_image) {
           if (id_image) {
-           // id_list[1] = id_image;
+            global_id = id_image;
             gadget.jio_putAttachment(id_image, 'data', blob_image);
           }
         })
@@ -131,27 +131,28 @@
         
         .push(function (id_audio) {
           if (id_audio) {
-          //  id_list[2] = id_audio;
+            global_id = id_audio;
             gadget.jio_putAttachment(id_audio, 'data', blob_audio);
           }
 
-          return gadget.jio_post({
-            "title": content.title,
-          //  "links": id_list,
-            portal_type: portal_type[0],
-            parent_relative_url: parent_relative_url[0]
-          });
+          if (content.text !== "" && document.querySelector("textarea[id='text']").parentNode.parentNode.style.display !== "")
+            return gadget.jio_post({
+              "title": content.text.split(' ').slice(0, 4).join('_'),
+            //  "links": id_list,
+              portal_type: portal_type[0],
+              parent_relative_url: parent_relative_url[0]
+            });
         })
-        .push(function (id) {
-          global_id = id;
-          if (content.text === "")
-            content.text = "Empty";
-          return RSVP.all([
-         //   gadget.jio_putAttachment(id, 'upload', blob_upload),
-         //   gadget.jio_putAttachment(id, 'image', blob_image),
-         //   gadget.jio_putAttachment(id, 'audio', blob_audio),
-            gadget.jio_putAttachment(id, 'data', content.text)
-          ]);
+        .push(function (id_text) {
+          if (id_text) {
+            global_id = id_text;
+            return RSVP.all([
+           //   gadget.jio_putAttachment(id, 'upload', blob_upload),
+           //   gadget.jio_putAttachment(id, 'image', blob_image),
+           //   gadget.jio_putAttachment(id, 'audio', blob_audio),
+              gadget.jio_putAttachment(id_text, 'data', content.text)
+            ]);  
+          }
         }) 
         .push(function () {
           return gadget.redirect({
@@ -170,9 +171,66 @@
         });
     })
   
-    .declareMethod("triggerSubmit", function () {
-      return this.element.querySelector('button[type="submit"]').click();
-    })
+    .declareService(function () {
+      var gadget = this;
+      var button = document.querySelectorAll("input[type='file']")[0];
+      return loopEventListener(button, "change", false,
+        function (event) {
+          if (button.files.length !== 0)
+            button.parentNode.parentNode.previousElementSibling.style.backgroundColor = "#37A419";
+          else
+            button.parentNode.parentNode.previousElementSibling.style.backgroundColor = "";
+            
+        });
+    }, false)
+  
+    .declareService(function () {
+      var gadget = this;
+      var button = document.querySelectorAll("input[type='file']")[1];
+      return loopEventListener(button, "change", false,
+        function (event) {
+          if (button.files.length !== 0)
+            button.parentNode.parentNode.previousElementSibling.style.backgroundColor = "#37A419";
+          else
+            button.parentNode.parentNode.previousElementSibling.style.backgroundColor = "";
+            
+        });
+    }, false)
+  
+    .declareService(function () {
+      var gadget = this;
+      var button = document.querySelectorAll("input[type='file']")[2];
+      return loopEventListener(button, "change", false,
+        function (event) {
+          if (button.files.length !== 0)
+            button.parentNode.parentNode.previousElementSibling.style.backgroundColor = "#37A419";
+          else
+            button.parentNode.parentNode.previousElementSibling.style.backgroundColor = "";
+            
+        });
+    }, false) 
+  
+    .declareService(function () {
+      var gadget = this;
+      var text_label = document.querySelector("label[for='text_button']");
+      return loopEventListener(text_label, "click", false,
+        function (event) {
+          var textarea = document.querySelector("textarea[id='text']").parentNode.parentNode;
+          var button = document.querySelector("label[for='text_button']");
+          if (textarea.style.display != "block") {
+            button.style.background = "#37A419";
+
+            textarea.style.display = "block";
+            document.querySelector("textarea[id='text']").focus();
+          }
+          else {
+            button.style.background = "";
+            textarea.style.display = "";
+          }
+     
+            
+        });
+    }, false)
 
   
     .declareService(function () {
@@ -182,6 +240,8 @@
           show_update_button: false
         });
     })
+  
+    
   
     .declareMethod("render", function () {
       var gadget = this;
@@ -197,7 +257,7 @@
         .push(function (form_gadget) {
           return form_gadget.render({
             erp5_document: {"_embedded": {"_view": {
-                "my_title": {
+                /*"my_title": {
                     "description": "",
                     "title": "Title",
                     "default": "Untitled Document",
@@ -207,7 +267,7 @@
                     "key": "title",
                     "hidden": 0,
                     "type": "StringField"
-                  },
+                  },*/
 
                "upload": {
                 /*"column_list": [
@@ -225,7 +285,7 @@
                 "portal_type": ["Test Result"],
                // "search_column_list": [],
                // "sort_column_list": [],
-                "title": "Upload",
+                "title": " ",
                 "type": "FileField"
               },
               "image": {
@@ -245,7 +305,7 @@
               //  "search_column_list": [],
               //  "sort_column_list": [],
                 "capture": "camera",
-                "title": "Image",
+                "title": " ",
                 "accept": "image/*",
                 "capture": "camera",
                 "type": "FileField"
@@ -266,11 +326,31 @@
                 "portal_type": ["Task Report"],
                 "search_column_list": [],
                 "sort_column_list": [],
-                "title": "Audio",
+                "title": " ",
                 "accept": "audio/*",
                 "capture": "microphone",
                 "type": "FileField"
               },
+              "text_button": {
+                "column_list": [
+                  ['title', 'Title'],
+                  ['translated_simulation_state_title', 'State']
+                ],
+                "show_anchor": 0,
+                "default_params": {},
+                "editable": 1,
+                "editable_column_list": [],
+                "key": "text_button",
+                "lines": 5,
+                "list_method": "portal_catalog",
+                "query": "urn:jio:allDocs?query=portal_type%3A%22Task%20Report%22",
+                "portal_type": ["Task Report"],
+                "search_column_list": [],
+                "sort_column_list": [],
+                "title": " ",
+                "type": "TextAreaField"
+              },
+              
               "text": {
                 "column_list": [
                   ['title', 'Title'],
@@ -287,7 +367,7 @@
                 "portal_type": ["Task Report"],
                 "search_column_list": [],
                 "sort_column_list": [],
-                "title": "Note",
+                "title": " ",
                 "type": "TextAreaField"
               }
             }},
@@ -302,12 +382,16 @@
                 //title: "Upload image",
                // update_action: "",
               //  action: "triggerSubmit",
-                group_list: [
-                  [
-                    "left",
-                    [["my_title"], ["upload"], ["image"], ["audio"], ["text"]]
-                  ]
-                ]
+                group_list: [[
+                  "left",
+                  [["upload"], ["image"]]
+                ], [
+                  "right",
+                  [["audio"], ["text_button"]]
+                ], [
+                  "bottom",
+                  [["text"]]
+                ]]
               }
             });
         });

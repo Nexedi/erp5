@@ -113,6 +113,26 @@
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
+gadget_erp5_field_image.html\n
+gadget_erp5_field_image.js\n
+gadget_erp5_field_file.html\n
+gadget_erp5_field_file.js\n
+gadget_erp5_field_image.html\n
+gadget_erp5_field_image.js\n
+gadget_officejs_message.css\n
+gadget_officejs_jio_photo_view.js\n
+gadget_officejs_jio_photo_view.html\n
+gadget_officejs_jio_sound_view.js\n
+gadget_officejs_jio_sound_view.html\n
+gadget_erp5_ojs_panel_message.js\n
+gadget_erp5_ojs_panel_message.html\n
+gadget_office_message_router.html\n
+gadget_officejs_jio_message_document_view.js\n
+gadget_officejs_jio_message_document_view.html\n
+gadget_officejs_jio_message_view.js\n
+gadget_officejs_jio_message_view.html\n
+gadget_erp5_page_ojs_message_front.html\n
+gadget_erp5_page_ojs_message_front.js\n
 font-awesome/font-awesome.css\n
 font-awesome/font-awesome-webfont.eot\n
 font-awesome/font-awesome-webfont.woff\n
@@ -164,8 +184,8 @@ gadget_erp5_page_ojs_dropbox_configurator.html\n
 gadget_erp5_page_ojs_dropbox_configurator.js\n
 gadget_erp5_page_ojs_sync.html\n
 gadget_erp5_page_ojs_sync.js\n
-gadget_erp5_page_ojs_document_list.html\n
-gadget_erp5_page_ojs_document_list.js\n
+gadget_erp5_page_ojs_message_document_list.html\n
+gadget_erp5_page_ojs_message_document_list.js\n
 gadget_ojs_configurator_access.html\n
 gadget_ojs_configurator_access.js\n
 gadget_html5_input.html\n
@@ -357,7 +377,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.64032.51068.39048</string> </value>
+                <value> <string>966.2816.42103.25207</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -375,7 +395,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520267575.58</float>
+                        <float>1520586385.41</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

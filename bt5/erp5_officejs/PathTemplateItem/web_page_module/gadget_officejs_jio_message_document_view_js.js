@@ -70,7 +70,7 @@
           var blob_upload = new Blob();
         
           if (result.upload)
-            blob_upload = jIO.util.dataURItoBlob(result.upload.url);
+            blob_upload = jIO.util.dataURItoBlob(result.upload_.url);
             
           return gadget.jio_putAttachment(gadget.state.jio_key, 'data', blob_upload);
         })
@@ -172,7 +172,7 @@
                     "css_class": "",
                     "required": 1,
                     "editable": 1,
-                    "key": "upload",
+                    "key": "upload_",
                     "hidden": 0,
                     //"accept": "audio/*",
                     "type": "FileField"
@@ -204,7 +204,7 @@
             a.innerHTML = gadget.state.title;
             //audio.src = URL.createObjectURL(gadget.state.audio);
             
-            var upload_field = document.querySelector("input[id='upload']");
+            var upload_field = document.querySelector("input[id='upload_']");
             var form = upload_field.parentNode;
             //form.removeChild(audio_field);
             //form.insertBefore(a,upload_field);

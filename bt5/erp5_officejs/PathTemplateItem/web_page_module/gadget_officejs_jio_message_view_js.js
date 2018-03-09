@@ -70,10 +70,10 @@
         .push(function (result) {
           title = result.title;
         
-          if (result.text === "")
-            result.text = " ";
+          if (result.text_ === "")
+            result.text_ = " ";
             
-          return gadget.jio_putAttachment(gadget.state.jio_key, 'data', result.text);
+          return gadget.jio_putAttachment(gadget.state.jio_key, 'data', result.text_);
         })
     
         .push(function () {
@@ -174,7 +174,7 @@
                     "height" : "100",
                     "required": 1,
                     "editable": 1,
-                    "key": "text",
+                    "key": "text_",
                     "hidden": 0,
                     "type": "TextAreaField"
                   }

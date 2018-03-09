@@ -74,7 +74,7 @@
           var blob_image = new Blob();
         
           if (result.image)
-            blob_image = jIO.util.dataURItoBlob(result.image.url);
+            blob_image = jIO.util.dataURItoBlob(result.image_.url);
             
           return gadget.jio_putAttachment(gadget.state.jio_key, 'data', blob_image);
         })
@@ -171,12 +171,12 @@
                   },
                   "my_image": {
                     "description": "",
-                    "title": "Image",
+                    "title": "Change it",
                     "default": "",
                     "css_class": "",
                     "required": 1,
                     "editable": 1,
-                    "key": "image",
+                    "key": "image_",
                     "hidden": 0,
                     "accept": "image/*",
                     "capture": "camera",
@@ -184,7 +184,7 @@
                   },
                   "my_image_preview": {
                     "description": "",
-                    "title": "Image",
+                    "title": "Actually",
                     "default": gadget.state.image,
                     "css_class": "",
                     "height" : "10",
