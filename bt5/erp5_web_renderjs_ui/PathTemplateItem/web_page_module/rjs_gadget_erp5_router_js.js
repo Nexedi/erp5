@@ -1069,9 +1069,10 @@
         function (event) {
           if (gadget.props.modified) {
             event.returnValue = 'fake';
+            return 'fake';
           }
-          return 'fake';
-        }
+        },
+        false
       );
     });
 }(window, rJS, RSVP, loopEventListener, document, jIO, URI, URL, Blob));
