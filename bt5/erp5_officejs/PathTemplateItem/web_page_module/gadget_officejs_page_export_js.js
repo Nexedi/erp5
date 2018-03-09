@@ -11,6 +11,10 @@
       "url": "officejs_text_editor/",
       "cache": "gadget_officejs_text_editor.appcache"
     },
+    "Media Player": {
+      "url": "officejs_media_player/",
+      "cache": "gadget_officejs_media_player.appcache"
+    },
     "Illustration Editor": {
       "url": "officejs_svg_editor/",
       "cache": "gadget_officejs_illustration.appcache"
