@@ -85,9 +85,8 @@ class TestSecurityMixin(ERP5TypeTestCase):
       meta_type_dict[meta_type] = True
       if '__roles__' in obj.__class__.__dict__:
         continue
-      method_id_list = [x for x in dir(obj) if callable(getattr(obj, x, None))]
-      for method_id in method_id_list:
-        if method_id.startswith('_') or method_id in white_method_id_list:
+      for method_id in dir(obj):
+        if method_id.startswith('_') or method_id in white_method_id_list or not callable(getattr(obj, method_id, None)):
           continue
         method = getattr(obj, method_id)
         if isinstance(method, MethodType) and \
