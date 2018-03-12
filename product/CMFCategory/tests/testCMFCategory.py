@@ -627,6 +627,21 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.tic()
     self.assertEqual(person.getDefaultDestinationRelated(),
                                   'organisation_module/organisation_test' )
+    self.assertEqual([org], person.getRelatedValueList())
+    self.assertEqual([org], person.getRelatedValueList(base_category_list=["destination"]))
+    self.assertEqual([], person.getRelatedValueList(base_category_list=["skill"]))
+    self.assertEqual([org], person.getRelatedValueList(base_category_list=["destination", "skill"]))
+    self.assertEqual([], person.getRelatedValueList(portal_type="Person"))
+    self.assertEqual([org], person.getRelatedValueList(portal_type="Organisation"))
+
+    other_org = self.portal.organisation_module.newContent(
+                                  role='person_module/person_test')
+    self.tic()
+    self.assertEqual([other_org], person.getRelatedValueList(base_category_list=["role"]))
+    self.assertEqual([other_org], person.getRelatedValueList(
+                     base_category_list=["role"]))
+    self.assertEqual(set([org, other_org]),
+                    set(person.getRelatedValueList(base_category_list=["destination", "role"])))
 
   def test_17_CategoriesAndDomainSelection(self):
     """ Tests Categories and Domain Selection """

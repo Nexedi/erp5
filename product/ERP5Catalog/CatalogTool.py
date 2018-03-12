@@ -1112,7 +1112,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return related_key_list
 
     security.declarePublic('getCategoryValueDictParameterDict')
-    def getCategoryValueDictParameterDict(self, base_category_dict, category_table='category', strict_membership=True, forward=True, onJoin=lambda x: None):
+    def getCategoryValueDictParameterDict(self, base_category_dict, category_table='category', strict_membership=True, forward=True, onJoin=lambda x: None,
+                                          logical_operator='AND'):
       """
       From a mapping from base category ids to lists of documents, produce a
       query tree testing (strict or not, forward or reverse relation)
@@ -1138,6 +1139,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         existing conditions for given pseudo-column.
         This last form should very rarely be needed (ex: when joining with
         predicate_category table as it contains non-standard uid values).
+      logical_operator ('AND' or 'OR')
+        Controls the sql operator used to match categories
 
       Return a query tree.
       """
@@ -1196,7 +1199,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                   break
                 parent_uid_set.add(uid)
           query_list.append(SimpleQuery(uid=parent_uid_set))
-      return ComplexQuery(query_list)
+      return ComplexQuery(query_list, logical_operator=logical_operator)
 
     security.declarePublic('getCategoryParameterDict')
     def getCategoryParameterDict(self, category_list, onMissing=lambda category: True, **kw):
