@@ -640,6 +640,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       if force_update and delivery is None and len(delivery_to_update_list):
         delivery = delivery_to_update_list[0]
 
+      created = False
       if delivery is None:
         if not self.isDeliveryCreatable():
           raise SelectMethodError('No updatable delivery found with %s for %s' \
@@ -648,11 +649,14 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         delivery = self._createDelivery(delivery_module,
                                         movement_group_node.getMovementList(),
                                         activate_kw)
+        created = True
       # Put properties on delivery
       self._setUpdated(delivery, 'delivery')
       if property_dict:
         property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
         delivery.edit(**property_dict)
+
+      if created:
         delivery.immediateReindexObject()
 
       # Then, create delivery line
