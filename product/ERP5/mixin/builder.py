@@ -357,9 +357,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       conversion_ratio = default_quantity_unit_order_quantity_unit_conversion_ratio
 
       delay_second = max_delay_second or min_delay_second or 0
-      # XXX Hardcoded that we need to receive one day before...
-      # Very bad....
-      limit_date = getPreviousValidDate(date) - 1
+      limit_date = getPreviousValidDate(date)
       start_date = getPreviousValidDate(
         addToDate(limit_date, second=-delay_second)
       )
@@ -412,11 +410,12 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         supply=supply,
         history_list=history_list,
         at_date=date,
+        conversion_ratio=default_quantity_unit_order_quantity_unit_conversion_ratio,
         )
-      self.log("at %s min: %s, Ordered: %s, inventory:%s, quantity:%s" % (date, min_inventory, ordered_inventory, inventory, quantity))
-      if ordered_inventory + (inventory) < min_inventory: # SKU
+      #self.log("at %s min: %s, Ordered: %s, inventory:%s, quantity:%s" % (date, min_inventory, ordered_inventory, inventory, quantity))
+      if ordered_inventory + (inventory-quantity) < min_inventory: # SKU
          #import pdb;pdb.set_trace()
-         quantity = min_inventory - (inventory) - ordered_inventory
+         quantity = min_inventory - (inventory-quantity) - ordered_inventory
          ordered_quantity, ordered_unit, effective_date, start_date, delivery_date, quantity = minimalQuantity(quantity, date)
          # XXX CLN This is very naive, it has to be optimized
          if start_date <= supply.getStartDateRangeMax()\
