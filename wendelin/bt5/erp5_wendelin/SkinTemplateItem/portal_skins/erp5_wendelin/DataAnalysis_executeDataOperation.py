@@ -38,8 +38,11 @@ for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
 script_id = operation.getScriptId()
 out = getattr(operation_analysis_line, script_id)(**parameter_dict)
 
-# only stop batch ingestions
-if use == "big_data/ingestion/batch":
-  context.stop()
+if out == 1:
+  context.activate(serialization_tag=str(context.getUid())).DataAnalysis_executeDataOperation()
+else:
+  # only stop batch ingestions
+  if use == "big_data/ingestion/batch":
+    context.stop()
 
 return out
