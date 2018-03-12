@@ -18,12 +18,15 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("jio_post", "jio_post")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("reload", "reload")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("updateDocument", "updateDocument")
+    .declareAcquiredMethod("notifyChange", "notifyChange")
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
 
 
 
@@ -43,11 +46,8 @@
           return result;
         });
     })
-    /////////////////////////////////////////////////////////////////
-    // declared methods
-    /////////////////////////////////////////////////////////////////
-    .onEvent('submit', function () {
-    
+  
+    .declareMethod("send", function () {
       var gadget = this;
       var blob_upload = new Blob();
       var blob_image = new Blob();
@@ -55,9 +55,24 @@
       var text;
       var content;
       var global_id;
+      var form;
       //var id_list = [0, 0, 0];
       var portal_type, parent_relative_url;
     
+      if (!gadget.state.content) {
+        gadget.state.content = {
+          upload: "",
+          image: "",
+          text: ""
+        };
+      }
+     else {
+        if (!gadget.state.content.upload)
+          gadget.state.content.upload = "";
+        if (!gadget.state.content.image)
+          gadget.state.content.image = "";
+      }
+      
       return gadget.notifySubmitting()
         .push(function () {
           return gadget.getDeclaredGadget('form_view');
@@ -66,9 +81,9 @@
           return form_gadget.getContent();
         })
         .push(function (result) {
-          if (result.upload)
+          if (result.upload && result.upload.url != gadget.state.content.upload.url)
             blob_upload = jIO.util.dataURItoBlob(result.upload.url);
-          if (result.image)
+          if (result.image && result.image.url != gadget.state.content.image.url)
             blob_image = jIO.util.dataURItoBlob(result.image.url);
           if (gadget.state.audio)
             blob_audio = gadget.state.audio;
@@ -86,7 +101,7 @@
           parent_relative_url = result[1].split(',');
         
         
-          if (content.upload) {
+          if (content.upload && content.upload.url != gadget.state.content.upload.url) {
             return gadget.jio_post({
               "title": content.upload.file_name,
               portal_type: portal_type[3],
@@ -103,7 +118,7 @@
         })
     
         .push(function () {
-          if (content.image) {
+          if (content.image && content.image.url != gadget.state.content.image.url) {
             return gadget.jio_post({
               "title": content.image.file_name,
               portal_type: portal_type[1],
@@ -120,7 +135,7 @@
         })
         
         .push(function () {
-          if (blob_audio) {
+          if (gadget.state.audio) {
             var date = new Date();
             var title = date.getFullYear() + "_" + date.getMonth() + "_" + date.getDate() + "_" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
             return gadget.jio_post({
@@ -137,7 +152,7 @@
             gadget.jio_putAttachment(id_audio, 'data', blob_audio);
           }
 
-          if (content.text !== "" && document.querySelector("textarea[id='text']").parentNode.parentNode.style.display !== "")
+          if (content.text !== "" && content.text != gadget.state.content.text)
             return gadget.jio_post({
               "title": content.text.split(' ').slice(0, 4).join('_'),
             //  "links": id_list,
@@ -157,13 +172,14 @@
           }
         }) 
         .push(function () {
-          return gadget.redirect({
-            command: 'display',
-            options: {
-              jio_key: global_id,
-              editable: true
-            }
+          gadget.state.content = content;
+          gadget.state.audio = null;
+          
+          gadget.notifySubmitted({
+            "message": "Data created",
+            "status": "success"
           });
+          //return gadget.reload();
             /*
             command: 'display',
             options: {
@@ -172,63 +188,144 @@
             }});*/
         });
     })
+  
+    .allowPublicAcquisition('notifyChange', function () {
+      var gadget = this;
+      var textarea = document.querySelector("textarea[id='text']").parentNode.parentNode;
+      if (document.activeElement.getAttribute("id") != "text" && textarea.style.display === '') {
+        document.querySelector("textarea[id='text']").value = '';
+        gadget.send();
+      }
+      
+    })
+  
+  
+  
+    /////////////////////////////////////////////////////////////////
+    // declared methods
+    /////////////////////////////////////////////////////////////////
+    .onEvent('submit', function () {
+      var gadget = this;
+    
+      var textarea = document.querySelector("textarea[id='text']").parentNode.parentNode;
+      var button = document.querySelector("label[for='text_button']");
+      document.querySelector("button[id='submit']").remove();
+      document.querySelector("textarea[id='text']").value = '';
+
+      button.style.background = "";
+      textarea.style.display = "";
+    
+    
+      gadget.send();
+    })
 
       .declareService(function () {
         var gadget = this;
         var record;
-
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-
-          navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
-              record = new MediaRecorder(stream);
-
-              var chunks = [];
-
-              record.onstop = function (e) {
-                var blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
-                
-                gadget.state.audio = blob;
-                
-                
-                
-              };
-
-              record.ondataavailable = function (e) {
-                chunks.push(e.data);
-              };
-            });
-        }
+        var stop = false;
     
     
         var button = document.querySelectorAll("label[for='audio']")[0];
         var mousedown = loopEventListener(button, "mousedown", false,
           function (event) {
-            record.start();
+          
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+
+              navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+                  record = new MediaRecorder(stream);
+                  record.start();
+                  var chunks = [];
+                
+                  if (stop)
+                    record.stop();
+
+                  record.onstop = function (e) {
+                    stop = false;
+                    
+                    stream.getTracks().forEach(function (track) { track.stop(); });
+                    
+                    button.style.background = "";
+                    
+                    var blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
+                    
+                    if (blob.size > 2000) {
+
+                      gadget.state.audio = blob;
+
+                      document.querySelector("textarea[id='text']").value = '';
+                      gadget.send();
+                    }
+                  };
+
+                  record.ondataavailable = function (e) {
+                    chunks.push(e.data);
+                  };
+                });
+            }
+            
             button.style.background = "red";
           });
     
         var mouseup = loopEventListener(button, "mouseup", false,
           function (event) {
-            record.stop();
-            button.style.background = "#37A419";
+            if (record && record.state == "recording")
+              record.stop();
+            else
+              stop = true;
+            button.style.background = "";
           });
     
         var touchstart = loopEventListener(button, "touchstart", false,
           function (event) {
-            record.start();
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+
+              navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+                  record = new MediaRecorder(stream);
+                  record.start();
+                  var chunks = [];
+                
+                  if (stop)
+                    record.stop();
+
+                  record.onstop = function (e) {
+                    stop = false;
+                    
+                    stream.getTracks().forEach(function (track) { track.stop(); });
+                    
+                    button.style.background = "";
+                    
+                    var blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
+                    
+                    if (blob.size > 2000) {
+
+                      gadget.state.audio = blob;
+
+                      document.querySelector("textarea[id='text']").value = '';
+                      gadget.send();
+                    }
+                  };
+
+                  record.ondataavailable = function (e) {
+                    chunks.push(e.data);
+                  };
+                });
+            }
+          
             button.style.background = "red";
           });
     
-        var touchend = loopEventListener(button, "toutchend", false,
+        var touchend = loopEventListener(button, "touchend", false,
           function (event) {
-            record.stop();
-            button.style.background = "#37A419";
+            if (record && record.state == "recording")
+              record.stop();
+            else
+              stop = true;
           });
     
         return RSVP.all([mousedown, mouseup, touchstart, touchend]);
     
       })
-    
+/*    
     .declareService(function () {
       var gadget = this;
       var button = document.querySelectorAll("input[type='file']")[0];
@@ -277,12 +374,26 @@
           var textarea = document.querySelector("textarea[id='text']").parentNode.parentNode;
           var button = document.querySelector("label[for='text_button']");
           if (textarea.style.display != "block") {
+            if (document.querySelector("button[class='success']"))
+              document.querySelector("button[class='success']").click();
+            
             button.style.background = "#37A419";
 
             textarea.style.display = "block";
             document.querySelector("textarea[id='text']").focus();
+            
+            var button_send = document.createElement("button");
+            button_send.setAttribute('type', 'submit');
+            button_send.setAttribute('id', 'submit');
+            button_send.innerHTML = "Send";
+
+            textarea.appendChild(button_send);
+            
+            
           }
           else {
+            document.querySelector("button[id='submit']").remove();
+            
             button.style.background = "";
             textarea.style.display = "";
           }

@@ -1,3 +1,15 @@
+/* Submit button */
+#submit{
+  text-align: left;
+  width: 180pt;
+  padding: 12pt;
+  color: #f8fff3;
+  border-radius: 0.325em;
+  background-color: #FF6600;
+  position: fixed;
+  bottom: 12pt;
+  right: 24pt;
+}
 /* upload */
 
 label[for='upload'] {
@@ -112,6 +124,7 @@ label[for='audio']::before {
 
 div[data-gadget-scope='audio'] {
   width:100px;
+  /*margin-left:-92%;*/
 }
 
 div[data-gadget-scope='audio'] > div > div {
@@ -152,6 +165,7 @@ label[for='text_button']::before {
 
 div[data-gadget-scope='text_button'] {
   width:100px;
+  /*margin-left:-92%;*/
 }
 
 div[data-gadget-scope='text_button']  > div > div{
@@ -160,4 +174,25 @@ div[data-gadget-scope='text_button']  > div > div{
 
 div[data-gadget-scope='text']  > div > div{
   display:none;
+}
+
+/* 2 x 2 icons */
+.left{
+  display: inline-block;
+  width: auto; 
+}
+
+.right{
+  display: inline-block;
+  width: auto; 
+}
+
+@media only screen and (max-width: 720px) {
+    .right {
+        margin-left: 3%;
+    }
+    #submit{
+      width: 60pt;
+      right: 1pt;
+    }
 }
