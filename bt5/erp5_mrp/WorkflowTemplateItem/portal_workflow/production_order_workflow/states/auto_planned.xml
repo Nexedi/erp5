@@ -42,7 +42,6 @@
             <value>
               <tuple>
                 <string>planned_order</string>
-                <string>future_inventory</string>
               </tuple>
             </value>
         </item>
