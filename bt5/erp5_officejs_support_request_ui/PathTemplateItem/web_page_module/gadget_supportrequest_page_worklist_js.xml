@@ -70,6 +70,10 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>gadget_supportrequest_page_worklist.js</string> </value>
         </item>

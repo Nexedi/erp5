@@ -70,6 +70,10 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>gadget_erp5_pt_form_view_discussable.js</string> </value>
         </item>

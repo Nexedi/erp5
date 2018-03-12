@@ -76,6 +76,10 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>gadget_erp5_page_homepage.js</string> </value>
         </item>
