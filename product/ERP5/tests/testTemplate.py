@@ -346,14 +346,24 @@ class TestTemplate(ERP5TypeTestCase):
     preference.enable()
 
     self.tic()
+    self.assertEqual(
+      self.portal.portal_catalog(
+        path=preference.getPath() + '/%',
+      ).dictionaries(),
+      [],
+    )
 
     document.Base_makeTemplateFromDocument(form_id=None)
-
-    self.commit()
-    # making a new template should not create indexing activities,
-    # either for the new template or one of its subobjects
-    self.assertEqual(self.portal.portal_activities.getMessageList(), [])
     self.tic()
+
+    # making a new template should not create index the new template nor any of
+    # its subobjects
+    self.assertEqual(
+      self.portal.portal_catalog(
+        path=preference.getPath() + '/%',
+      ).dictionaries(),
+      [],
+    )
 
     self.assertTrue(document.isIndexable)
     self.assertEqual(len(preference.objectIds()), 1)
