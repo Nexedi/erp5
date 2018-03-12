@@ -103,9 +103,10 @@ if data_ingestion is None:
       id = data_ingestion_id,
       portal_type = "Data Ingestion",
       reference = data_ingestion_reference,
-      start_date = now,
       specialise_value_list = specialise_value_list)
       
+  composed = data_ingestion.asComposedDocument()
+  
   property_list = ["title",
                    "source",
                    "source_section",
@@ -115,8 +116,11 @@ if data_ingestion is None:
                    "destination_project",
                    "specialise"]
   
-  composed = data_ingestion.asComposedDocument()
-  data_ingestion.edit(**{p: composed.getProperty(p) for p in property_list})
+  property_dict = {p: composed.getProperty(p) for p in property_list}
+  property_dict["start_date"] = composed.getEffectiveDate()
+  property_dict["stop_date"] = composed.getExpirationDate()
+  
+  data_ingestion.edit(**property_dict)
 
   # create ingestion lines from specialise lines and assign input line
   # and operation line
