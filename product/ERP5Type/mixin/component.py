@@ -199,8 +199,11 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     """
     Needed for bootstrap when the WorkflowState Accessor is not defined yet
     """
-    return aq_base(self).workflow_history[
-      'component_validation_workflow'][-1]['validation_state']
+    try:
+      return aq_base(self).workflow_history[
+        'component_validation_workflow'][-1]['validation_state']
+    except (AttributeError, KeyError, IndexError):
+      return 'draft'
 
   security.declareProtected(Permissions.ModifyPortalContent, 'checkConsistency')
   def checkConsistency(self, *args, **kw):
