@@ -127,8 +127,7 @@
         .push(function () {
           return gadget.jio_getAttachment(
             'post_module',
-            gadget.hateoas_url + 'post_module/PostModule_getAscendingRelatedPostListAsJson'
-              + "?follow_up=" + gadget.options.jio_key
+            gadget.hateoas_url + gadget.options.jio_key + "/SupportRequest_getCommentPostListAsJson"
           );
         })
         .push(function (post_list) {

@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>follow_up</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PostModule_getAscendingRelatedPostListAsJson</string> </value>
+            <value> <string>SupportRequest_getCommentPostListAsJson</string> </value>
         </item>
       </dictionary>
     </pickle>
