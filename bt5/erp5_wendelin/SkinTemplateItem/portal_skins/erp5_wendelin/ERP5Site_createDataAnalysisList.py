@@ -1,10 +1,18 @@
 from DateTime import DateTime
-from Products.ZSQLCatalog.SQLCatalog import AndQuery, OrQuery, Query, NegatedQuery, SimpleQuery
+from Products.ZSQLCatalog.SQLCatalog import AndQuery, OrQuery, Query
 
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 
 now = DateTime()
+
+if not include_delivered:
+  batch_simulation_state = "stopped"
+  stream_simulation_state = "started"
+
+else:
+  batch_simulation_state = ["stopped", "delivered"]
+  stream_simulation_state = ["started", "stopped", "delivered"]  
 
 query = AndQuery(
           Query(portal_type = ["Data Ingestion Line", "Data Analysis Line"]),
@@ -12,12 +20,10 @@ query = AndQuery(
           Query(resource_portal_type = "Data Product"),
           # Should be improved to support mor than one analysis per ingestion
           #SimpleQuery(parent_causality_related_relative_url = None),
-          OrQuery(
-            Query(simulation_state = "stopped",
-                  use_relative_url = "use/big_data/ingestion/batch"),
-            AndQuery(
-              Query(simulation_state = "started"),
-              Query(use_relative_url = "use/big_data/ingestion/stream"))))
+          OrQuery(Query(simulation_state = batch_simulation_state,
+                        use_relative_url = "use/big_data/ingestion/batch"),
+                  Query(simulation_state =  stream_simulation_state,
+                        use_relative_url = "use/big_data/ingestion/stream")))
 
 for movement in portal_catalog(query):
   if movement.getQuantity() <= 0:
@@ -44,7 +50,8 @@ for movement in portal_catalog(query):
                   portal_type = "Data Analysis",
                   title = transformation.getTitle(),
                   reference = delivery.getReference(),
-                  start_date = now,
+                  start_date = delivery.getStartDate(),
+                  stop_date = delivery.getStopDate(),
                   specialise_value_list = [transformation] + data_supply,
                   causality_value = delivery,
                   source = delivery.getSource(),
