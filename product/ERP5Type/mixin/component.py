@@ -32,6 +32,7 @@
 from __future__ import absolute_import
 
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5.mixin.property_recordable import PropertyRecordableMixin
 from Products.ERP5Type import Permissions
@@ -198,7 +199,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     """
     Needed for bootstrap when the WorkflowState Accessor is not defined yet
     """
-    return self.workflow_history[
+    return aq_base(self).workflow_history[
       'component_validation_workflow'][-1]['validation_state']
 
   security.declareProtected(Permissions.ModifyPortalContent, 'checkConsistency')
