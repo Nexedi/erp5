@@ -25,6 +25,7 @@
 #
 ##############################################################################
 
+import time
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -77,6 +78,11 @@ class TestRSS(ERP5TypeTestCase):
     if hasattr(self.portal.person_module, 'two'):
       self.portal.person_module.manage_delObjects(['two'])
     self.portal.person_module.newContent(id="one", title="One", description="Person One")
+    # We will be sorting persons by creationg date, and SQL sorting will fail
+    # when documents are created within the same second. So sleep for one
+    # second to make sorting behave reliably. This should not matter in real
+    # use, but is a noisy issue in tests.
+    time.sleep(1)
     self.portal.person_module.newContent(id="two", title="Two", description="Person Two")
     self.tic()
 
