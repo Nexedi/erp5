@@ -562,6 +562,27 @@ class W3Validator(object):
     parses the validation results, returns a list of tuples:
     line_number, col_number, error description
     """
+    # Output is a set of headers then the XML content.
+    header_txt, body_txt = result.split('\n\n', 1)
+    # First, search the X-W3C headers
+    validator_status = 'Unknown'
+    error_count = -1
+    warning_count = -1
+
+    for header_line in header_txt.split('\n'):
+      if header_line.startswith('X-W3C-Validator-Status: '):
+        validator_status = header_line[len('X-W3C-Validator-Status: '):]
+      elif header_line.startswith('X-W3C-Validator-Errors: '):
+        error_count = int(header_line[len('X-W3C-Validator-Errors: '):])
+      elif header_line.startswith('X-W3C-Validator-Warnings: '):
+        warning_count = int(header_line[len('X-W3C-Validator-Warnings: '):])
+
+    if validator_status == 'Valid':
+      return [[], []]
+    if validator_status != 'Invalid':
+      return [[(None, None, 'Wrong validator status: %s' % validator_status)], []]
+
+    # Parsing is invalid
     result_list_list = []
     try:
       xml_doc = minidom.parseString(result)
@@ -587,6 +608,8 @@ class W3Validator(object):
             result.append(None)
         result_list.append(tuple(result))
       result_list_list.append(result_list)
+    if (len(result_list_list[0]) != error_count) or (len(result_list_list[1]) != warning_count):
+      result_list_list[0].append((None, None, 'Could not parse all errors/warnings'))
     return result_list_list
 
   def getErrorAndWarningList(self, page_source):
