@@ -683,7 +683,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
 
   if meta_type in ("CheckBoxField", "MultiCheckBoxField"):
     if meta_type == "MultiCheckBoxField":
-      result["items"] = toBasicTypes(field.get_value("items")),
+      result["items"] = toBasicTypes(field.get_value("items"))
     return result
 
   if meta_type == "GadgetField":
