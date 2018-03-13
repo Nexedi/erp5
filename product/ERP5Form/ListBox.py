@@ -52,6 +52,7 @@ from Products.PythonScripts.Utility import allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from warnings import warn
 import cgi
+from ZTUtils import make_query
 
 DEFAULT_LISTBOX_DISPLAY_STYLE = 'table'
 DEFAULT_LISTBOX_PAGE_NAVIGATION_TEMPLATE = 'ListBox_viewSliderPageNavigationRenderer'
@@ -349,6 +350,15 @@ class ListBoxWidget(Widget.Widget):
                                  default=[],
                                  required=0)
     property_names.append('url_columns')
+
+
+    url_parameter_dict = fields.ListTextAreaField('url_parameter_dict',
+                                 title="URL Parameter Dict",
+                                 description=(
+        "An optional dict of parameter which is used to construct a custom URL."),
+                                 default={},
+                                 required=0)
+    property_names.append('url_parameter_dict')
 
     untranslatable_columns = fields.ListTextAreaField('untranslatable_columns',
                                  title="Untranslatable Columns",
@@ -2291,6 +2301,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     brain = self.getBrain()
     encoding = renderer.getEncoding()
     url_column_dict = dict(renderer.getUrlColumnList())
+    url_parameter_dict = renderer.field.get_value('url_parameter_dict')
     selection = renderer.getSelection()
     selection_name = renderer.getSelectionName()
     ignore_layout = int(request.get('ignore_layout',
@@ -2322,9 +2333,28 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
       no_link = self.isSummary()
       url_method = None
       url = None
+      if url_parameter_dict:
+        if sql in url_parameter_dict:
+          result_dict = url_parameter_dict[sql].copy()
+          for key in result_dict:
+            value = getattr(brain, result_dict[key], None)
+            if key != 'view':
+              if callable(value):
+                try:
+                  result_dict[key] = value(selection=selection, selection_name=selection.getName(), column_id=sql, index=self.index)
+                except TypeError:
+                  result_dict[key] = value()
+          if result_dict:
+            #this one is not good, should get restrivedocumet's path
+            if 'jio_key' not in result_dict:
+              url = request.physicalPathToURL(brain.getPath())
+            else:
+              url =  self.getObject().getPortalObject().restrictedTraverse(result_dict['jio_key']).absolute_url()
+            if 'parameter' in result_dict:
+              url = '%s?%s' % (url, make_query(result_dict['parameter']))
 
       # Find an URL method.
-      if url_column_dict.has_key(sql):
+      elif url_column_dict.has_key(sql):
         url_method_id = url_column_dict.get(sql)
         if url_method_id != sql:
           if url_method_id not in (None, ''):
