@@ -76,11 +76,8 @@ class TestRSS(ERP5TypeTestCase):
       self.portal.person_module.manage_delObjects(['one'])
     if hasattr(self.portal.person_module, 'two'):
       self.portal.person_module.manage_delObjects(['two'])
-    one = self.portal.person_module.newContent(id="one", title="One", description="Person One")
-    two = self.portal.person_module.newContent(id="two", title="Two", description="Person Two")
-    self.commit()
-    one.reindexObject()
-    two.reindexObject()
+    self.portal.person_module.newContent(id="one", title="One", description="Person One")
+    self.portal.person_module.newContent(id="two", title="Two", description="Person Two")
     self.tic()
 
   def test_00_haveData(self, quiet=0, run=run_all_test):
