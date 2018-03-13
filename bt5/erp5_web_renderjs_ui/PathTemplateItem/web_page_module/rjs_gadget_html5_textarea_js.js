@@ -96,8 +96,17 @@
 
     .declareAcquiredMethod("notifySubmit", "notifySubmit")
     .onEvent('keydown', function (evt) {
+      var textarea = this.element.querySelector('textarea');
       if (evt.keyCode === 83 && (navigator.platform.match("Mac") ? evt.metaKey : evt.ctrlKey)) {
+        //Textarea's change event is generally launched by browser when press a predefined key
+        //Call preventDefault prevent change event
         evt.preventDefault();
+        //When lose focus, change event is launched
+        //Without this, after saving, then click other fields or go to other view
+        //Change event will be trigged and there will have a unsaved warning for textarea
+        textarea.blur();
+        //Refocus for consistency
+        textarea.focus();
         return this.notifySubmit();
       }
     }, false, false);
