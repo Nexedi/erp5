@@ -133,6 +133,24 @@ class TestCopySupport(ERP5TypeTestCase):
       ['portal_catalog/uncatalogObjectList', uid_list, 'SQLQueue', False])
     self.assertEqual(len(search_catalog(uid=uid_list)), 0)
 
+  def test_04_duplicate(self):
+    """
+    duplicate is a low level copy method that should preserve workflow histories
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    person.edit(first_name="John")
+    person.edit(last_name="Doe")
+    original_edit_workflow_history = person.workflow_history["edit_workflow"]
+    cp, = self.portal.person_module._duplicate(
+      self.portal.person_module.manage_copyObjects(ids=person.getId()))
+    new_person = self.portal.person_module[cp['new_id']]
+    self.assertNotEqual(new_person.getId(), person.getId())
+    new_edit_workflow_history = new_person.workflow_history["edit_workflow"]
+    self.assertEqual(3, len(original_edit_workflow_history))
+    self.assertEqual(3, len(new_edit_workflow_history))
+    new_person.edit(first_name="Henry")
+    self.assertEqual(3, len(original_edit_workflow_history))
+    self.assertEqual(4, len(new_edit_workflow_history))
 
 def test_suite():
   suite = unittest.TestSuite()

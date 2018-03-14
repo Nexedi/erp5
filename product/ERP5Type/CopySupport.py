@@ -457,7 +457,7 @@ class CopyContainer:
         lambda self, ob: True,
         lambda self, ob: ob._getCopy(self),
         1, # Take ownership.
-        True,
+        not(duplicate),
       ),
       ( # 1: Move
         'cb_isMoveable',
