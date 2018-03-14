@@ -137,7 +137,7 @@
       error = error.target.error;
     }
 
-    if (error.target instanceof XMLHttpRequest) {
+    if ((error !== undefined) && (error.target instanceof XMLHttpRequest)) {
       error_text = error.target.toString() + " " +
         error.target.status + " " +
         error.target.statusText + "\n" +
