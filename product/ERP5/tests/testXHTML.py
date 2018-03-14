@@ -306,6 +306,24 @@ class TestXHTMLMixin(ERP5TypeTestCase):
               error_list.append((form_path, list_method))
     self.assertEqual(error_list, [])
 
+  def test_callableCountMethodInListbox(self):
+    # check all count_method in listboxes
+    skins_tool = self.portal.portal_skins
+    error_list = []
+    for form_path, form in skins_tool.ZopeFind(
+              skins_tool, obj_metatypes=['ERP5 Form'], search_sub=1):
+      for field in self.getFieldList(form, form_path):
+        if field.getRecursiveTemplateField().meta_type == 'ListBox':
+          count_method = field.get_value("count_method")
+          if count_method:
+            if isinstance(count_method, str):
+              method = getattr(self.portal, count_method, None)
+            else:
+              method = count_method
+            if not callable(method):
+              error_list.append((form_path, count_method))
+    self.assertEqual(error_list, [])
+
   def test_listActionInListbox(self):
     # check all list_action in listboxes
     skins_tool = self.portal.portal_skins
