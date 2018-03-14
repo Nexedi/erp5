@@ -356,7 +356,7 @@ class TestTemplate(ERP5TypeTestCase):
     document.Base_makeTemplateFromDocument(form_id=None)
     self.tic()
 
-    # making a new template should not create index the new template nor any of
+    # making a new template should not index the new template nor any of
     # its subobjects
     self.assertEqual(
       self.portal.portal_catalog(
