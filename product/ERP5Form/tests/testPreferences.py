@@ -225,6 +225,7 @@ class TestPreferences(PropertySheetTestCase):
       'preferred_accounting_transaction_simulation_state_list')),
       list(group.getPreferredAccountingTransactionSimulationStateList()))
 
+    self.assertEqual(None, pref_tool.getPreference('this_does_not_exists'))
     self.assertEqual('default', pref_tool.getPreference(
                                         'this_does_not_exists', 'default'))
 

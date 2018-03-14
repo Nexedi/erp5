@@ -130,6 +130,8 @@ class PreferenceTool(BaseTool):
     method = getattr(self, 'get%s' % convertToUpperCase(pref_name), None)
     if method is not None:
       return method(default)
+    if default is _marker:
+      return None
     return default
 
   security.declareProtected(Permissions.ModifyPortalContent, "setPreference")
