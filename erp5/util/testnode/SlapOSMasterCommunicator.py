@@ -104,7 +104,7 @@ class SlapOSMasterCommunicator(object):
     self.latest_state = state
     return self.slap_order.request(
             software_release=self.url,
-            software_type="RootSoftwareInstance",
+            software_type=software_type,
             partition_reference=self.name,
             shared=shared,
             state=state,
@@ -450,9 +450,11 @@ class SlapOSTester(SlapOSMasterCommunicator):
           pass
     return {'instance_guid' : self.instance.getInstanceGuid(), 'frontend_master_ipv6' : frontend_master_ipv6}
 
+  # XXX TODO
+  # In the future, this should allow customization so each project to be tested parses its own information,
+  # probably in the test suite definition class
   def getInstanceUrlDict(self):
     frontend_url_list = []
-    zope_address_list = []
     for instance in self.getInstanceUrlList():
       information = self.getInformationFromInstance(instance["href"])
       if "frontend-" in instance["title"]:
@@ -472,17 +474,7 @@ class SlapOSTester(SlapOSMasterCommunicator):
           password = connection_json["inituser-password"]
         except Exception as e:
           raise ValueError("user and password not found in connection parameters. Error while instantiating?")
-      if "zope-" in instance["title"]:
-        try:
-          connection_dict = information["connection_dict"]["_"]
-          address = json.loads(connection_dict)["zope-address-list"][0][0]
-          zope = [instance["title"].replace("zope-", ""), address]
-          zope_address_list.append(zope)
-        except Exception as e:
-          logger.info("zope address not found in connection parameters. Error while instantiating?")
-          pass
-    return {'zope-address-list' : zope_address_list, 'user' : user,
-            'password' : password, 'frontend-url-list' : frontend_url_list }
+    return {'user' : user, 'password' : password, 'frontend-url-list' : frontend_url_list }
 
 class SoftwareReleaseTester(SlapOSTester):
   deadline = None
