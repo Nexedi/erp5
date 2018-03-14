@@ -542,6 +542,8 @@
             gadget.props.content_element.innerHTML = "<br/><br/><br/><pre></pre>";
             gadget.props.content_element.querySelector('pre').textContent =
               "Error: " + gadget.state.error_text;
+            // reset gadget state
+            gadget.state = {};
             // XXX Notify error
           });
       }
@@ -631,7 +633,7 @@
         }, function (error) {
           return decreaseLoadingCounter(gadget)
             .push(function () {
-              throw error;
+              return displayError(gadget, error);
             });
         });
     })
