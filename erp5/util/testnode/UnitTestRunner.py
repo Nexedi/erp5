@@ -24,23 +24,28 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from datetime import datetime,timedelta
 import os
+import subprocess
+import sys
+import time
 import glob
+import SlapOSControler
 import json
-from . import logger
-from .ProcessManager import SubprocessError
-from .SlapOSControler import SlapOSControler
-from .Utils import createFolder
+import time
+import shutil
+import logging
+import string
+import random
+from ProcessManager import SubprocessError, ProcessManager, CancellationError
+from subprocess import CalledProcessError
+from NodeTestSuite import SlapOSInstance
+from Updater import Updater
+from Utils import dealShebang
+from erp5.util import taskdistribution
 from slapos.grid.utils import md5digest
 
-def dealShebang(run_test_suite_path):
-  with open(run_test_suite_path) as f:
-    if f.read(2) == '#!':
-      return f.readline().split(None, 1)
-  return []
-
-class UnitTestRunner(object):
-
+class UnitTestRunner():
   def __init__(self, testnode):
     self.testnode = testnode
 
@@ -48,22 +53,24 @@ class UnitTestRunner(object):
     """
     Create a SlapOSControler
     """
-    return SlapOSControler(
+    return SlapOSControler.SlapOSControler(
                working_directory,
-               self.testnode.config)
+               self.testnode.config,
+               self.testnode.log)
  
-  def _prepareSlapOS(self, working_directory, slapos_instance,
+
+  def _prepareSlapOS(self, working_directory, slapos_instance, log,
           create_partition=1, software_path_list=None, **kw):
     """
     Launch slapos to build software and partitions
     """
     slapproxy_log = os.path.join(self.testnode.config['log_directory'],
                                   'slapproxy.log')
-    logger.debug('Configured slapproxy log to %r', slapproxy_log)
+    log('Configured slapproxy log to %r' % slapproxy_log)
     reset_software = slapos_instance.retry_software_count > 10
     if reset_software:
       slapos_instance.retry_software_count = 0
-    logger.info('testnode, retry_software_count: %r',
+    log('testnode, retry_software_count : %r' % \
              slapos_instance.retry_software_count)
 
     # XXX Create a new controler because working_directory can be
@@ -80,12 +87,12 @@ class UnitTestRunner(object):
       method_list.append("runComputerPartition")
     for method_name in method_list:
       slapos_method = getattr(slapos_controler, method_name)
-      logger.debug("Before status_dict = slapos_method(...)")
+      log("Before status_dict = slapos_method(...)")
       status_dict = slapos_method(self.testnode.config,
                                   environment=self.testnode.config['environment'],
                                   **kw)
-      logger.info(status_dict)
-      logger.debug("After status_dict = slapos_method(...)")
+      log(status_dict)
+      log("After status_dict = slapos_method(...)")
       if status_dict['status_code'] != 0:
          slapos_instance.retry = True
          slapos_instance.retry_software_count += 1
@@ -101,37 +108,37 @@ class UnitTestRunner(object):
     """
     # report-url, report-project and suite-url are required to seleniumrunner
     # instance. This is a hack which must be removed.
+    cluster_configuration = {}
     config = self.testnode.config
-    return self._prepareSlapOS(test_node_slapos.working_directory,
-              test_node_slapos, create_partition=0,
-              software_path_list=config.get("software_list"),
-              cluster_configuration={
-                'report-url': config.get("report-url", ""),
-                'report-project': config.get("report-project", ""),
-                'suite-url': config.get("suite-url", ""),
-              })
+    cluster_configuration['report-url'] = config.get("report-url", "")
+    cluster_configuration['report-project'] = config.get("report-project", "")
+    cluster_configuration['suite-url'] = config.get("suite-url", "")
+    return self._prepareSlapOS(self.testnode.config['slapos_directory'],
+              test_node_slapos, self.testnode.log, create_partition=0,
+              software_path_list=self.testnode.config.get("software_list"),
+              cluster_configuration=cluster_configuration
+              )
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
     Build softwares needed by testsuites
     """
+    log = self.testnode.log
+    if log is None:
+      log = self.testnode.log
     return self._prepareSlapOS(node_test_suite.working_directory,
-              node_test_suite,
+              node_test_suite, log,
               software_path_list=[node_test_suite.custom_profile_path],
               cluster_configuration={'_': json.dumps(node_test_suite.cluster_configuration)})
 
-  def getInstanceRoot(self, node_test_suite):
-    return self._getSlapOSControler(
-      node_test_suite.working_directory).instance_root
-
-  def runTestSuite(self, node_test_suite, portal_url):
+  def runTestSuite(self, node_test_suite, portal_url, log=None):
     config = self.testnode.config
-    run_test_suite_path_list = glob.glob(
-        self.getInstanceRoot(node_test_suite) + "/*/bin/runTestSuite")
-    try:
-      run_test_suite_path = min(run_test_suite_path_list)
-    except ValueError:
+    slapos_controler = self._getSlapOSControler(self.testnode.working_directory)
+    run_test_suite_path_list = sorted(glob.glob("%s/*/bin/runTestSuite" % \
+        slapos_controler.instance_root))
+    if not len(run_test_suite_path_list):
       raise ValueError('No runTestSuite provided in installed partitions.')
+    run_test_suite_path = run_test_suite_path_list[0]
     # Deal with Shebang size limitation
     invocation_list = dealShebang(run_test_suite_path)
     invocation_list += (run_test_suite_path,
@@ -139,22 +146,18 @@ class UnitTestRunner(object):
       '--revision', node_test_suite.revision,
       '--test_suite', node_test_suite.test_suite,
       '--test_suite_title', node_test_suite.test_suite_title)
-    soft = config['slapos_directory'] + '/soft/'
-    software_list = [soft + md5digest(x) for x in config['software_list']]
-    PATH = os.getenv('PATH', '')
-    PATH = ':'.join(x + '/bin' for x in software_list) + (PATH and ':' + PATH)
     supported_parameter_set = set(self.testnode.process_manager
       .getSupportedParameterList(run_test_suite_path))
-    def path(name, compat): # BBB
-        path, = filter(os.path.exists, (base + relative
-          for relative in ('/bin/' + name, '/parts/' + compat)
-          for base in software_list))
+    def part(path):
+        path = config['slapos_directory'] + '/soft/%s/parts/' + path
+        path, = filter(os.path.exists, (path % md5digest(software)
+            for software in config['software_list']))
         return path
     for option, value in (
-        ('--firefox_bin', lambda: path('firefox', 'firefox/firefox-slapos')),
+        ('--firefox_bin', lambda: part('firefox/firefox-slapos')),
         ('--frontend_url', lambda: config['frontend_url']),
         ('--node_quantity', lambda: config['node_quantity']),
-        ('--xvfb_bin', lambda: path('xvfb', 'xserver/bin/Xvfb')),
+        ('--xvfb_bin', lambda: part('xserver/bin/Xvfb')),
         ):
       if option in supported_parameter_set:
         invocation_list += option, value()
@@ -168,8 +171,9 @@ class UnitTestRunner(object):
     # From this point, test runner becomes responsible for updating test
     # result. We only do cleanup if the test runner itself is not able
     # to run.
-    createFolder(node_test_suite.test_suite_directory, clean=True)
-    self.testnode.process_manager.spawn(*invocation_list, PATH=PATH,
+    SlapOSControler.createFolder(node_test_suite.test_suite_directory,
+                                 clean=True)
+    self.testnode.process_manager.spawn(*invocation_list,
                           cwd=node_test_suite.test_suite_directory,
                           log_prefix='runTestSuite', get_output=False)
 

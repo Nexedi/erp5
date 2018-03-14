@@ -38,87 +38,48 @@ import shutil
 import logging
 import string
 import random
-import urlparse
-import base64
-import httplib
 import Utils
-import requests
-import slapos.slap
 from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
 from erp5.util import taskdistribution
-from erp5.util.benchmark.thread import TestThread
 # for dummy slapos answer
 import signal
-from . import logger
 
-#IPV4 = "163.172.72.96"
-
-INSTANCE_TITLE = "Scalability-Test-Instance-(ERP5-ROQUE-SCALABILITY)-COMP-2732"
-
-# TODO: some hardcoded values for dev purposes that will be removed soon
-FRONTEND_SOFTWARE = "https://lab.node.vifib.com/nexedi/slapos/raw/1.0.56/software/apache-frontend/software.cfg"
-USERHOSTS_BIN = "/opt/slapgrid/e9076dc9420697fbad51eb2e06038e6b/parts/userhosts/userhosts"
-
-FRONTEND_MASTER_DOMAIN = "scalability.nexedi.com"
 # max time to instance changing state: 2 hour
 MAX_INSTANCE_TIME = 60*60*2
-# max time to generate frontend instance: 1.5 hour
-MAX_FRONTEND_TIME = 60*90
-# max time to register instance to slapOSMaster: 10 minutes
+# max time to register instance to slapOSMaster: 5 minutes
 MAX_CREATION_INSTANCE_TIME = 60*10
-# max time for a test: 20 minutes
-MAX_TEST_CASE_TIME = 60*20
-# max time to prepare SlapOS for testsuite (software installation, instances requests, etc.)
-MAX_PREPARE_TEST_SUITE = 3600*10*1.0 # 10 hours
-# max time for a test line creation: 5 minutes
-MAX_CREATION_TEST_LINE = 60*10
-# max time for bootstrapping an instance site
-MAX_BOOTSRAPPING_TIME = 60*30
-# max time to get a connection
-MAX_CONNECTION_TIME = 60*5
-# time to check pending activities
-CHECK_ACTIVITIES_TIME = 60*2
-
-# runner names
-PERFORMANCE_RUNNER_SCRIPT = "performance_tester_erp5"
-SCALABILITY_RUNNER_SCRIPT = "runScalabilityTestSuite"
-REQUEST_URL_SCRIPT = "getRequestUrl"
-SCALABILITY_TEST = "scalability_test"
-TEST_SUITE_INIT = "__init__.py"
-
-# access SR by password
-TESTNODE_USER = "testnode"
-HTACCESS = "/.htaccess"
-HTPASSWD = "/.htpasswd"
-PASSWORD_FILE = "/sr_pass"
-PASSWORD_LENGTH = 10
-HOSTFILE = "/hosts"
+# max time for a test: 1 hour
+MAX_TEST_CASE_TIME = 60*60
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
     self.testnode =  testnode
+    self.log = self.testnode.log
+    
     self.slapos_controler = SlapOSControler.SlapOSControler(
                                   self.testnode.working_directory,
-                                  self.testnode.config)
+                                  self.testnode.config,
+                                  self.log)
     # Create the slapos account configuration file and dir
-    key = self.testnode.taskdistribution.getSlaposAccountKey()
-    certificate = self.testnode.taskdistribution.getSlaposAccountCertificate()
+    key = self.testnode.test_suite_portal.getSlaposAccountKey()
+    certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
+
     # Get Slapos Master Url
     self.slapos_url = ''
     try:
-      self.slapos_url = self.testnode.taskdistribution.getSlaposUrl()
+      self.slapos_url = self.testnode.test_suite_portal.getSlaposUrl()
       if not self.slapos_url:
         self.slapos_url = self.testnode.config['server_url']
     except:
       self.slapos_url = self.testnode.config['server_url']
     
     # Get Slapos Master url used for api rest (using hateoas)
-    self.slapos_api_rest_url = self.testnode.taskdistribution.getSlaposHateoasUrl()
+    self.slapos_api_rest_url = self.testnode.test_suite_portal.getSlaposHateoasUrl()
 
-    logger.info("SlapOS Master url is: %s", self.slapos_url)
-    logger.info("SlapOS Master hateoas url is: %s", self.slapos_api_rest_url)
+    self.log("SlapOS Master url is: %s" %self.slapos_url)
+    self.log("SlapOS Master hateoas url is: %s" %self.slapos_api_rest_url)
     
     self.key_path, self.cert_path, config_path = self.slapos_controler.createSlaposConfigurationFileAccount(
                                         key, certificate, self.slapos_url, self.testnode.config)
@@ -133,17 +94,17 @@ class ScalabilityTestRunner():
     # Used to simulate SlapOS answer (used as a queue)
     self.last_slapos_answer = []
     self.last_slapos_answer_request = []
-    self.frontend_instance_guid = None
     
   def _prepareSlapOS(self, software_path, computer_guid, create_partition=0):
     # create_partition is kept for compatibility
     """
     A proxy to supply : Install a software on a specific node
     """
-    logger.info("testnode, supply : %s %s", software_path, computer_guid)
+    self.log("testnode, supply : %s %s", software_path, computer_guid)
     if self.authorize_supply :
       self.remaining_software_installation_dict[computer_guid] = software_path
-      self.slapos_communicator.supply(software_path, computer_guid)
+      self.slapos_controler.supply(software_path, computer_guid)
+      # Here make a request via slapos controler ?
       return {'status_code' : 0}                                          
     else:
       raise ValueError("Too late to supply now. ('self.authorize_supply' is False)")
@@ -159,39 +120,36 @@ class ScalabilityTestRunner():
     instance_title += str(self.involved_nodes_computer_guid).replace("'","")
     instance_title += "-"+str(datetime.datetime.now().isoformat())+"-"
     instance_title += "timestamp="+str(time.time())
-    instance_title = INSTANCE_TITLE
     return instance_title
 
   def _generateInstanceXML(self, software_configuration,
-                           test_result, test_suite, frontend_software, frontend_instance_guid=None):
+                      test_result, test_suite):
     """
     Generate a complete scalability instance XML configuration
     """
-    config = software_configuration.copy()
+    config_cluster = software_configuration.copy()
+    config = {'cluster':config_cluster}
     config.update({'scalability-launcher-computer-guid':self.launcher_nodes_computer_guid[0]})
-    config.update({'scalability-launcher-title':self.testnode.config['test_node_title']})
+    config.update({'scalability-launcher-title':'MyTestNodeTitle'})
     config.update({'test-result-path':test_result.test_result_path})
     config.update({'test-suite-revision':test_result.revision})
     config.update({'test-suite':test_suite})
     config.update({'test-suite-master-url':self.testnode.config['test_suite_master_url']})
-    if frontend_instance_guid:
-      config["frontend"] = {"software-url": frontend_software,
-                            "virtualhostroot-http-port" : 8080,
-                            "virtualhostroot-https-port" : 4443}
-      config["sla-dict"]["instance_guid=%s" % frontend_instance_guid] = ["frontend"]
     return config
   
   def _createInstance(self, software_path, software_configuration, instance_title,
-                      test_result, test_suite, frontend_software, frontend_instance_guid=None):
+                      test_result, test_suite):
     """
     Create scalability instance
     """
     if self.authorize_request:
-      logger.info("testnode, request : %s", instance_title)
       config = self._generateInstanceXML(software_configuration,
-                                         test_result, test_suite, frontend_software, frontend_instance_guid)
-      request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
-      self.slapos_communicator.requestInstanceStart(instance_title, request_kw)
+                                    test_result, test_suite)
+      self.log("testnode, request : %s", instance_title)
+      config = json.dumps(config)
+      self.slapos_controler.request(instance_title, software_path,
+                             "test", {"_" : config},
+                             self.launcher_nodes_computer_guid[0])
       self.authorize_request = False
       return {'status_code' : 0}                                          
     else:
@@ -203,22 +161,21 @@ ces or already launched.")
     """
     We will build slapos software needed by the testnode itself,
     """
-    if self.testnode.taskdistribution.isMasterTestnode(
+    if self.testnode.test_suite_portal.isMasterTestnode(
                            self.testnode.config['test_node_title']):
       pass
     return {'status_code' : 0} 
 
   # Dummy slapos answering
   def _getSignal(self, signal, frame):
-    logger.debug("Dummy SlapOS Master answer received.")
+    self.log("Dummy SlapOS Master answer received.")
     self.last_slapos_answer.append(True)
   def _prepareDummySlapOSAnswer(self):
-    pid = os.getpid()
-    logger.info("Dummy slapOS answer enabled, send signal to %s (kill -USR1 %s)"
-                " to simulate a SlapOS (positive) answer.", pid, pid)
+    self.log("Dummy slapOS answer enabled, send signal to %s (kill -10 %s) to simu\
+late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     signal.signal(signal.SIGUSR1, self._getSignal)
   def _comeBackFromDummySlapOS(self):
-    logger.info("Dummy slapOS answer disabled, please don't send more signals.")
+    self.log("Dummy slapOS answer disabled, please don't send more signals.")
     # use SIG_USR (kill)
     signal.signal(signal.SIGUSR1, signal.SIG_DFL)
   def simulateSlapOSAnswer(self):
@@ -233,10 +190,10 @@ ces or already launched.")
     Return true if the specified software on the specified node is installed.
     This method should communicates with SlapOS Master.
     """
-    software_state = self.slapos_communicator._getSoftwareState(computer_guid)
-    logger.info("Current software state: %s", software_state)
-    return software_state == SlapOSMasterCommunicator.SOFTWARE_STATE_INSTALLED
-
+    # TODO : implement -> communication with SlapOS master
+    # this simulate a SlapOS answer
+    return self.simulateSlapOSAnswer()
+  
   def remainSoftwareToInstall(self):
     """
     Return True if it remains softwares to install, otherwise return False
@@ -249,221 +206,134 @@ ces or already launched.")
     return len(self.remaining_software_installation_dict) > 0
 
   def _updateInstanceXML(self, software_configuration, instance_title,
-                         test_result, test_suite, frontend_software, frontend_instance_guid=None):
-    logger.info("testnode, updateInstanceXML : %s", instance_title)
+                      test_result, test_suite):
+    """
+    Just a proxy to SlapOSControler.updateInstanceXML.
+    """
     config = self._generateInstanceXML(software_configuration,
-                                       test_result, test_suite, frontend_software, frontend_instance_guid)
-    request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
-    self.slapos_communicator.requestInstanceStart(instance_title, request_kw)
+                                  test_result, test_suite)
+    config = json.dumps(config)
+    self.log("testnode, updateInstanceXML : %s", instance_title)
+    self.slapos_controler.updateInstanceXML(instance_title, {"_" : config})
+    return {'status_code' : 0} 
 
-    logger.info("Waiting for new configuration")
+  def _waitInstance(self, instance_title, state, max_time=MAX_INSTANCE_TIME):
+    """
+    Wait for 'max_time' an instance specific state
+    """
+    self.log("Wait for instance state: %s" %state)
     start_time = time.time()
-    while self.slapos_communicator.newConfigurationReady(instance_title) and MAX_CREATION_INSTANCE_TIME > (time.time()-start_time):
-      time.sleep(60) # wait until new request is processed by slapos
-    while not self.slapos_communicator.newConfigurationReady(instance_title) and MAX_INSTANCE_TIME > (time.time()-start_time):
-      time.sleep(60)
-    if not self.slapos_communicator.newConfigurationReady(instance_title):
-      logger.info("new configuration not ready after %d seconds" % MAX_INSTANCE_TIME)
-      return {'status_code' : 1}
-
-    return {'status_code' : 0}
+    while (not self.slapos_communicator.isHostingSubscriptionReady(instance_title, state)
+         and (max_time > (time.time()-start_time))):
+      self.log("Instance(s) not in %s state yet." % state)
+      time.sleep(15)
+    if (time.time()-start_time) > max_time:
+      error_message = "Instance '%s' not '%s' after %s seconds" %(instance_title, state, str(time.time()-start_time))
+      self.log(error_message)
+      self.log("Do you use instance state propagation in your project?")
+      self.log("Instance '%s' will be stopped and test avorted." %instance_title)
+      # What if we wanted to stop ?
+      self.slapos_controler.stopInstance(instance_title)
+      # XXX: _waitInstance call here ? recursive call ?
+      # XXX: sleep 60 seconds.
+      time.sleep(60) 
+      raise ValueError(error_message)
+    self.log("Instance correctly '%s' after %s seconds." %(state, str(time.time()-start_time)))
 
   def _waitInstanceCreation(self, instance_title, max_time=MAX_CREATION_INSTANCE_TIME):
     """
     Wait for 'max_time' the instance creation
     """
-    logger.debug("Waiting for instance creation...")
+    self.log("Wait for instance creation")
     start_time = time.time()
-    while (not self.slapos_communicator.isInstanceRequested(instance_title) \
-           and (max_time > (time.time()-start_time)) ):
-      logger.debug("Instance not ready yet. Sleeping 5 sec.")
+    while ( not self.slapos_communicator.isRegisteredHostingSubscription(instance_title) \
+         and (max_time > (time.time()-start_time)) ):
       time.sleep(5)
     if (time.time()-start_time) > max_time:
       raise ValueError("Instance '%s' not found after %s seconds" %(instance_title, max_time))
-    logger.debug("Instance found on slapOSMaster")
-
-  def _initializeSlapOSConnection(self):
-    """
-    Initialize communication with slapos 
-    """
-    slap = slapos.slap.slap()
-    retry = 0
-    while True:
-      # wait until _hateoas_navigator is loaded.
-      if retry > 100:
-         break
-      slap.initializeConnection(self.slapos_url, 
-                                self.key_path, 
-                                self.cert_path, 
-                                timeout=120, 
-                                slapgrid_rest_uri=self.slapos_api_rest_url)
-      if getattr(slap, '_hateoas_navigator', None) is None:
-         retry += 1
-         logger.info("Fail to load _hateoas_navigator waiting a bit and retry.")
-         time.sleep(30)
-      else:
-         break
-
-    if getattr(slap, '_hateoas_navigator', None) is None:
-      raise ValueError("Fail to load _hateoas_navigator")
-
-    supply = slap.registerSupply()
-    order = slap.registerOpenOrder()
-    return slap, supply, order
-
-  def generateProfilePasswordAccess(self):
-    software_hash_directory = self.testnode.config['slapos_binary'].rsplit("bin/slapos", 1)[0]
-    apache_htpasswd = software_hash_directory + "parts/apache/bin/htpasswd"
-    testsuite_directory = self.testnode.config['repository_path_list'][0].rsplit('/', 1)[0]
-    htaccess_file = open(testsuite_directory + HTACCESS, "w")
-    file_content = """
-AuthType Basic
-AuthName "Password Protected Area"
-AuthUserFile "%s%s"
-Require valid-user
-""" % (testsuite_directory, HTPASSWD)
-    htaccess_file.write(file_content)
-    htaccess_file.close()
-    password_path = testsuite_directory + PASSWORD_FILE
-    password_file = open(password_path, "r+") if os.path.isfile(password_path) else open(password_path, "w+")
-    password = password_file.read()
-    if len(password) != PASSWORD_LENGTH:
-      password = ''.join(random.choice(string.digits + string.letters) for i in xrange(PASSWORD_LENGTH))
-      password = "XXX"
-      password_file.write(password)
-    password_file.close()
-    user = TESTNODE_USER
-    command = [apache_htpasswd, "-bc", testsuite_directory + HTPASSWD, user, password]
-    self.testnode.process_manager.spawn(*command)
-    return user, password
-
-  def createSoftwareReachableProfilePath(self, node_test_suite):
-    # Create an obfuscated link to the testsuite directory
-    path_to_suite = os.path.join(
-                    self.testnode.config['working_directory'],
-                    node_test_suite.reference)
-    self.obfuscated_link_path = os.path.join(
-                    self.testnode.config['software_directory'],
-                    self.randomized_path)
-    if ( not os.path.lexists(self.obfuscated_link_path) and
-         not os.path.exists(self.obfuscated_link_path) ) :
-      try :
-        os.symlink(path_to_suite, self.obfuscated_link_path)
-        logger.info("testnode, Symbolic link (%s->%s) created.",
-                    self.obfuscated_link_path, path_to_suite)
-      except Exception:
-        msg = "testnode, Unable to create symbolic link to the testsuite."
-        logger.exception(msg)
-        raise ValueError(msg)
-    logger.info("Sym link : %s %s", path_to_suite, self.obfuscated_link_path)
-
-    user, password = self.generateProfilePasswordAccess()
-    password = "XXX"
-    logger.info("Software Profile password: %s" % password)
-    # Construct the ipv6 obfuscated url of the software profile reachable from outside
-    self.reachable_address = "http://%s:%s@%s" % (user, password,
-      os.path.join("["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
-      "software",self.randomized_path))
-    self.reachable_profile = os.path.join(self.reachable_address, "software.cfg")
-    self.reachable_address = "http://testnode:fromrootTN@[2001:67c:1254:e:c2::aae0]:9081/software/cu_Da7chkvxEnrieyQ5Rmr0fzuWubJkO302Otm3SeNVzvdXtUu5LPGFABFzRorUbSAX/"
-    self.reachable_profile = "http://testnode:fromrootTN@[2001:67c:1254:e:c2::aae0]:9081/software/cu_Da7chkvxEnrieyQ5Rmr0fzuWubJkO302Otm3SeNVzvdXtUu5LPGFABFzRorUbSAX/software.cfg"
-    # Write the reachable address in the software.cfg file,
-    # by replacing <obfuscated_url> occurences by the current reachable address.
-    software_file = open(node_test_suite.custom_profile_path, "r")
-    file_content = software_file.readlines()
-    new_file_content = []
-    for line in file_content:
-      new_file_content.append(line.replace('<obfuscated_url>', self.reachable_address))
-    software_file.close()
-    os.remove(node_test_suite.custom_profile_path)
-    software_file = open(node_test_suite.custom_profile_path, "w")
-    for line in new_file_content:
-      software_file.write(line)
-    software_file.close()
-
-  def prepareFrontendMasterInstance(self, computer, frontend_software, test_suite_title):
-    self.frontend_master_reference = "Scalability-Frontend-Master-"
-    self.frontend_master_reference += "("+test_suite_title+")-"
-    self.frontend_master_reference += str(computer).replace("'","")
-    slap, supply, order = self._initializeSlapOSConnection()
-    slapos_communicator = SlapOSMasterCommunicator.SlapOSTester(
-				self.frontend_master_reference, slap, order, supply,
-				frontend_software, computer_guid=computer)
-    # Ask for software installation
-    start_time = time.time()
-    slapos_communicator.supply(frontend_software, computer)
-    while (slapos_communicator._getSoftwareState() != SlapOSMasterCommunicator.SOFTWARE_STATE_INSTALLED
-        and (MAX_PREPARE_TEST_SUITE > (time.time()-start_time))):
-      logger.info("Waiting for frontend software installation")
-      time.sleep(60)
-    if slapos_communicator._getSoftwareState() != SlapOSMasterCommunicator.SOFTWARE_STATE_INSTALLED:
-      raise ValueError("ERROR while installing frontend software")
-    logger.info("Frontend software installed.")
-    # Request master frontend instance
-    master_request_kw = {"partition_parameter_kw": {"domain" : FRONTEND_MASTER_DOMAIN } }
-    slapos_communicator.requestInstanceStart(self.frontend_master_reference, master_request_kw)
-    slapos_communicator.waitInstanceStarted(self.frontend_master_reference)
-    logger.info("Master Frontend instance started.")
-    frontend_master_dict = slapos_communicator.getMasterFrontendDict()
-    if not frontend_master_dict['frontend_master_ipv6']:
-      raise ValueError("ERROR in master frontend: ipv6 url not found")
-    if not frontend_master_dict['instance_guid']:
-      raise ValueError("ERROR in master frontend: instance guid not found")
-    parsed_url = urlparse.urlparse(frontend_master_dict['frontend_master_ipv6'])
-    self.frontend_master_ipv6 = parsed_url.hostname
-    
-    # HACK to restart existing master frontend
-    #slapos_communicator.requestInstanceStop(self.frontend_master_reference, master_request_kw)
-    #slapos_communicator.waitInstanceStopped(self.frontend_master_reference)
-    #slapos_communicator.requestInstanceStart(self.frontend_master_reference, master_request_kw)
-    #slapos_communicator.waitInstanceStarted(self.frontend_master_reference)
-    
-    return frontend_master_dict['instance_guid']
+    self.log("Instance found on slapOSMaster")
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
     Install testsuite softwares
     """
-    logger.debug('Preparing SlapOS for Test Suite...')
-    max_time = MAX_PREPARE_TEST_SUITE
+    self.log('prepareSlapOSForTestSuite')
+    # Define how many time this method can take
+    max_time = 3600*10*1.0 # 10 hours
     interval_time = 60
     start_time = time.time()
-
-    # Initialize communication with slapos
-    slap, supply, order = self._initializeSlapOSConnection()
-
+    # Create a communicator with slapos
+    self.log("creating SlapOs Master communicator...")
+    self.slapos_communicator = SlapOSMasterCommunicator.SlapOSMasterCommunicator(
+                                  self.cert_path,
+                                  self.key_path,
+                                  self.log,
+                                  self.slapos_api_rest_url)
     # Only master testnode must order software installation
-    if self.testnode.taskdistribution.isMasterTestnode(self.testnode.config['test_node_title']):
+    if self.testnode.test_suite_portal.isMasterTestnode(
+            self.testnode.config['test_node_title']):
       # Get from ERP5 Master the configuration of the cluster for the test
       test_configuration = Utils.deunicodeData(
-          json.loads(self.testnode.taskdistribution.generateConfiguration(
-                     node_test_suite.test_suite_title)))
+          json.loads(self.testnode.test_suite_portal.generateConfiguration(
+                      node_test_suite.test_suite_title)
+                    )
+        )
       self.involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
       self.launchable = test_configuration['launchable']
       self.error_message = test_configuration['error_message']
       self.randomized_path = test_configuration['randomized_path']
+      # Avoid the test if it is not launchable
       if not self.launchable:
-        logger.info("Test suite %s is not actually launchable"
-                    " with the current cluster configuration.", node_test_suite.test_suite_title)
-        logger.info("ERP5 Master indicates : %s", self.error_message)
+        self.log("Test suite %s is not actually launchable with \
+  the current cluster configuration." %(node_test_suite.test_suite_title,))
+        self.log("ERP5 Master indicates : %s" %(self.error_message,))
+        # error : wich code to return ?
         return {'status_code' : 1}
 
+      involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
       configuration_list = test_configuration['configuration_list']
       node_test_suite.edit(configuration_list=configuration_list)
       self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
-      self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
+      
+      # Create an obfuscated link to the testsuite directory
+      path_to_suite = os.path.join(
+                      self.testnode.config['working_directory'],
+                      node_test_suite.reference)
+      self.obfuscated_link_path = os.path.join(
+                      self.testnode.config['software_directory'],
+                      self.randomized_path)
+      if ( not os.path.lexists(self.obfuscated_link_path) and
+           not os.path.exists(self.obfuscated_link_path) ) :
+        try :
+          os.symlink(path_to_suite, self.obfuscated_link_path)
+          self.log("testnode, Symbolic link (%s->%s) created."
+                   %(self.obfuscated_link_path, path_to_suite))
+        except :
+          self.log("testnode, Unable to create symbolic link to the testsuite.")
+          raise ValueError("testnode, Unable to create symbolic link to the testsuite.")
+      self.log("Sym link : %s %s" %(path_to_suite, self.obfuscated_link_path))
+      
+      # Construct the ipv6 obfuscated url of the software profile reachable from outside
+      self.reachable_address = os.path.join(
+        "https://","["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
+        self.randomized_path)
+      self.reachable_profile = os.path.join(self.reachable_address, "software.cfg")
 
-      self.createSoftwareReachableProfilePath(node_test_suite)
-      logger.info("Software reachable profile path is: %s", self.reachable_profile)
-
-      # Initialize SlapOS Master Communicator
-      self.slapos_communicator = SlapOSMasterCommunicator.SlapOSTester(
-					self.instance_title,
-					slap, 
-					order, 
-					supply, 
-					self.reachable_profile, 
-					computer_guid=self.launcher_nodes_computer_guid[0])
+      # Write the reachable address in the software.cfg file,
+      # by replacing <obfuscated_url> occurences by the current reachable address.
+      software_file = open(node_test_suite.custom_profile_path, "r")
+      file_content = software_file.readlines()
+      new_file_content = []
+      for line in file_content:
+        new_file_content.append(line.replace('<obfuscated_url>', self.reachable_address))
+      software_file.close()
+      os.remove(node_test_suite.custom_profile_path)
+      software_file = open(node_test_suite.custom_profile_path, "w")
+      for line in new_file_content:
+        software_file.write(line)
+      software_file.close()
+      self.log("Software reachable profile path is : %s "
+                              %(self.reachable_profile,))
 
       # Ask for SR installation
       for computer_guid in self.involved_nodes_computer_guid:
@@ -473,272 +343,167 @@ Require valid-user
       # TODO : remove the line below wich simulate an answer from slapos master
       self._prepareDummySlapOSAnswer()
       # Waiting until all softwares are installed
-      while (self.remainSoftwareToInstall() 
-             and (max_time > (time.time()-start_time))):
-        logger.info("Master testnode is waiting for the end of "
-                    "all software installation (for %ss) PID=%s.",
-                    int(time.time()-start_time), os.getpid())
+      while ( self.remainSoftwareToInstall() 
+         and (max_time > (time.time()-start_time))):
+        self.log("Master testnode is waiting\
+ for the end of all software installation (for %ss) PID=%s.",
+          str(int(time.time()-start_time)), str(os.getpid()))
         time.sleep(interval_time)
       # TODO : remove the line below wich simulate an answer from slapos master
       self._comeBackFromDummySlapOS()
-      # Ask for frontend SR installation and instance request
-      self.frontend_software = FRONTEND_SOFTWARE # XXX this should come in the test_configuration !!
-      self.frontend_instance_guid = self.prepareFrontendMasterInstance(self.launcher_nodes_computer_guid[0],
-                                                                       self.frontend_software,
-                                                                       node_test_suite.test_suite_title)
       if self.remainSoftwareToInstall() :
         # All softwares are not installed, however maxtime is elapsed, that's a failure.
-        logger.error("All softwares are not installed.")
         return {'status_code' : 1}
       self.authorize_request = True
-      logger.debug("Softwares installed.")
+      self.log("Softwares installed")
       # Launch instance
+      self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
       try:
-        self._createInstance(self.reachable_profile, 
-                             configuration_list[0],
-                             self.instance_title,
-                             node_test_suite.test_result,
-                             node_test_suite.test_suite,
-                             self.frontend_software,
-                             self.frontend_instance_guid)
-        logger.debug("Scalability instance requested.")
-      except Exception:
-        msg = "Unable to launch instance"
-        logger.exception(msg)
-        raise ValueError(msg)
+        self._createInstance(self.reachable_profile, configuration_list[0],
+                              self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
+        self.log("Scalability instance requested.")
+      except:
+        self.log("Unable to launch instance")
+        raise ValueError("Unable to launch instance")
+      self.log("Waiting for instance creation..")
       self._waitInstanceCreation(self.instance_title)
-
       return {'status_code' : 0}
     return {'status_code' : 1}
 
-  def isInstanceReady(self, site_availability_url, userhosts_bin, requestUrlScript, exec_env):
-    start_time = time.time()
-    while MAX_BOOTSRAPPING_TIME > time.time()-start_time:
-      try:
-        command = [userhosts_bin, requestUrlScript, site_availability_url]
-        result = self.testnode.process_manager.spawn(*command, **exec_env)
-        if result['status_code']:
-          logger.info("Error checking site availability. Response: " + str(result['stdout']))
-        if int(result['stdout']) == 0:
-          logger.info("Site ready for test.")
-          return True
-        logger.info("Site is not available yet.")
-        logger.info("[DEBUG] Site availability url response: %d" % int(result['stdout']))
-        time.sleep(CHECK_ACTIVITIES_TIME)
-      except Exception as e:
-        logger.info("Error checking site availability: " + str(e))
-        time.sleep(CHECK_ACTIVITIES_TIME)
-    return False
-
   def runTestSuite(self, node_test_suite, portal_url):
-    logger.info("Stop before runTestSuite")
-    time.sleep(999999999) #ROQUE5
     if not self.launchable:
-      return {'status_code' : 1, 'error_message': "Current test_suite is not actually launchable." }
+      self.log("Current test_suite is not actually launchable.")
+      return {'status_code' : 1} # Unable to continue due to not realizable configuration
     configuration_list = node_test_suite.configuration_list
     test_list = range(0, len(configuration_list))
-    try:
-      test_result_proxy = self.testnode.taskdistribution.createTestResult(
-                          node_test_suite.revision, test_list,
-                          self.testnode.config['test_node_title'],
-                          True, node_test_suite.test_suite_title,
-                          node_test_suite.project_title)
-    except Exception as e:
-      return {'status_code' : 1, 'error_message': "Error in communication with master: " + str(e) }
-    logger.debug("Test Result created.")
+    # create test_result
+    test_result_proxy = self.testnode.portal.createTestResult(
+      node_test_suite.revision, test_list,
+      self.testnode.config['test_node_title'],
+      True, node_test_suite.test_suite_title,
+      node_test_suite.project_title)
+  
     count = 0
     error_message = None
 
-    def makeSuite(test_suite, location_list, **kwargs):
-      import imp
-      suite = None
-      repo_location = None
-      for location in location_list:
-        try:
-          module = imp.load_source(SCALABILITY_TEST, "%s/%s/%s" %(location, SCALABILITY_TEST, TEST_SUITE_INIT))
-          suite_class = getattr(module, test_suite)
-          suite = suite_class(**kwargs)
-          repo_location = "%s/%s/" % (location, SCALABILITY_TEST)
-        except:
-          pass
-      return suite, repo_location
-
-    suite, repo_location = makeSuite(node_test_suite.test_suite, self.testnode.config['repository_path_list'])
-    if suite == None:
-      error_message = "Could not find test suite %s in the repositories" % node_test_suite.test_suite
-      return {'status_code' : 1, 'error_message': error_message }
-
-    # Each cluster configuration is tested
+    # Each cluster configuration are tested
     for configuration in configuration_list:
+
       # First configuration doesn't need XML configuration update.
       if count > 0:
-        logger.info("Requesting instance with configuration %d" % count)
+        # Stop instance
+        self.slapos_controler.stopInstance(self.instance_title)
+        self._waitInstance(self.instance_title, 'stopped')
+        # Update instance XML configuration 
         self._updateInstanceXML(configuration, self.instance_title,
-                                node_test_suite.test_result, node_test_suite.test_suite, self.frontend_software, self.frontend_instance_guid)
-
-      self.slapos_communicator.waitInstanceStarted(self.instance_title)
-      logger.debug("INSTANCE CORRECTLY STARTED")
-
+                      node_test_suite.test_result, node_test_suite.test_suite)
+        self._waitInstance(self.instance_title, 'started')
+        # Start instance
+        self.slapos_controler.startInstance(self.instance_title)
+        
+      # XXX: Dirty hack used to force haproxy to restart in time
+      # with all zope informations.
+      self._waitInstance(self.instance_title, 'started')
+      self.slapos_controler.stopInstance(self.instance_title)
+      self._waitInstance(self.instance_title, 'stopped')
+      self.slapos_controler.startInstance(self.instance_title)
+      ##########################################################
+        
+      self._waitInstance(self.instance_title, 'started')
+      
       # Start only the current test
       exclude_list=[x for x in test_list if x!=test_list[count]]
-      try:
-        test_result_line_proxy = test_result_proxy.start(exclude_list)
-      except Exception as e:
-        error_message = "Error in communication with master: " + str(e)
-        break
+      count += 1
+      test_result_line_proxy = test_result_proxy.start(exclude_list)
+
+      # 
       if test_result_line_proxy == None :
         error_message = "Test case already tested."
         break
-      logger.info("Test case for count : %d is in a running state." % count)
 
-      # loop for getting instance information
-      logger.info("Getting instance information:")
-      instance_information_time = time.time()
-      instance_information = self.slapos_communicator.getInstanceUrlDict()
-      while not instance_information['frontend-url-list'] and \
-            time.time() - instance_information_time < MAX_FRONTEND_TIME:
-        time.sleep(5*60)
-        instance_information = self.slapos_communicator.getInstanceUrlDict()
-      logger.info(instance_information)
-      if not instance_information['frontend-url-list']:
-        error_message = "Error getting instance information: frontend url not available"
-        break
-
-      # get information from testsuite
-      try:
-        instance_url = suite.getScalabilityTestUrl(instance_information)
-        bootstrap_url = suite.getBootstrapScalabilityTestUrl(instance_information, count)
-        metric_url = suite.getScalabilityTestMetricUrl(instance_information)
-        site_availability_url = suite.getSiteAvailabilityUrl(instance_information)
-        logger.info("Instance url: " + str(instance_url))
-      except Exception as e:
-        error_message = "Error getting testsuite information: " + str(e)
-        break
-
-      # adding frontend url to userhosts
-      try:
-        parsed_url = urlparse.urlparse(instance_url)
-        testsuite_directory = self.testnode.config['repository_path_list'][0].rsplit('/', 1)[0]
-        host_file_path = testsuite_directory + HOSTFILE
-        hosts_file = open(host_file_path, "w")
-        file_content = """%s %s
-""" % (self.frontend_master_ipv6, parsed_url.hostname)
-        hosts_file.write(file_content)
-        hosts_file.close()
-      except Exception as e:
-        error_message = "Error preparing userhost file: " + str(e)
-        break
-
-      software_bin_directory = self.testnode.config['slapos_binary'].rsplit("slapos", 1)[0]
-      exec_env = os.environ.copy()
-      exec_env.update({'HOSTS': host_file_path})
-      exec_env.update({'raise_error_if_fail': False})
-      software_hash_directory = self.testnode.config['slapos_binary'].rsplit("bin/slapos", 1)[0]
-      userhosts_bin = software_hash_directory + "parts/userhosts/userhosts"
-      userhosts_bin = USERHOSTS_BIN
-      requestUrlScript = software_bin_directory + REQUEST_URL_SCRIPT
-
-      bootstrap_password = "insecure"
-      if bootstrap_url:
-        try:
-            logger.info("Bootstrapping instance...")
-            command = [userhosts_bin, requestUrlScript, bootstrap_url]
-            result = self.testnode.process_manager.spawn(*command, **exec_env)
-            if result['status_code']:
-              error_message = "Error while bootstrapping: " + str(result['stdout'])
-            else:
-              response_dict = json.loads(result['stdout'])
-              if response_dict["status_code"] != 0:
-                error_message = "Error while bootstrapping: " + response_dict["error_message"]
-                break
-              bootstrap_password = response_dict["password"]
-            logger.info("Bootstrap password: " + bootstrap_password)
-        except Exception as e:
-          error_message = "Error while bootstrapping: " + str(e)
-          break
-        if not self.isInstanceReady(site_availability_url, userhosts_bin, requestUrlScript, exec_env):
-          error_message = "Error while bootstrapping: max bootstrap time exceded."
-      if error_message:
-        break
-
-      runner = software_bin_directory + PERFORMANCE_RUNNER_SCRIPT
-      scalabilityRunner = software_bin_directory + SCALABILITY_RUNNER_SCRIPT
-      slappart_directory = self.testnode.config['srv_directory'].rsplit("srv", 1)[0]
-      log_path = slappart_directory + "var/log/"
-      try:
-        current_test = test_result_proxy.getRunningTestCase()
-        current_test_data_json = json.loads(current_test)
-        current_test_data = "%d,%s,%s" % (current_test_data_json["count"], current_test_data_json["title"], current_test_data_json["relative_path"])
-      except Exception as e:
-        error_message = "Error getting current test case information: " + str(e)
-        break
-      command = [ userhosts_bin,
-                  scalabilityRunner,
-                  "--instance-url", instance_url,
-                  "--bootstrap-password", bootstrap_password,
-                  "--test-result-path", node_test_suite.test_result.test_result_path,
-                  "--revision", node_test_suite.revision,
-                  "--current-test-data", current_test_data,
-                  "--node-title", self.testnode.config['test_node_title'],
-                  "--test-suite-master-url", self.testnode.config["test_suite_master_url"],
-                  "--test-suite", node_test_suite.test_suite,
-                  "--runner-path", runner,
-                  "--repo-location", repo_location,
-                  "--log-path", log_path,
-                  "--metric-url", metric_url
-                ]
-      logger.info("Running test case...")
-      test_thread = TestThread(self.testnode.process_manager, command, logger.info, env=exec_env)
-      test_thread.start()
+      self.log("Test for count : %d is in a running state." %count)
 
       # Wait for test case ending
       test_case_start_time = time.time()
-      try:
-        while test_result_line_proxy.isTestCaseAlive() and \
-              test_result_proxy.isAlive() and \
-              time.time() - test_case_start_time < MAX_TEST_CASE_TIME:
-          time.sleep(60)
-        if test_result_line_proxy.isTestCaseAlive():
-          error_message = "Test case during for %s seconds, too long. (max: %s seconds). Test failure." \
-                              %(str(time.time() - test_case_start_time), MAX_TEST_CASE_TIME)
-          break
-        #TODO: ask for test_result_line_proxy result. If it failed, test_result_proxy.reportFailure(stdout=error_message)
-        logger.info("[DEBUG] Test case for current configuration finished")
-        count += 1
-        # Test cancelled, finished or in an undeterminate state.
-        if not test_result_proxy.isAlive():
-          logger.info("[DEBUG] Test case finished")
-          if count == len(configuration_list):
-            break
-          # Cancelled or in an undeterminate state.
-          error_message = "Test case cancelled or undeterminate state."
-          break
-      except Exception as e:
-        error_message = "Error in communication with master: " + str(e)
+      while test_result_line_proxy.isTestCaseAlive() and \
+            test_result_proxy.isAlive() and \
+            time.time() - test_case_start_time < MAX_TEST_CASE_TIME:
+        time.sleep(15)
+
+      # Max time limit reach for current test case: failure.
+      if test_result_line_proxy.isTestCaseAlive():
+        error_message = "Test case during for %s seconds, too long. (max: %s seconds). Test failure." \
+                            %(str(time.time() - test_case_start_time), MAX_TEST_CASE_TIME)
         break
 
+      # Test cancelled, finished or in an undeterminate state.
+      if not test_result_proxy.isAlive():
+        # Test finished
+        if count == len(configuration_list):
+          break
+        # Cancelled or in an undeterminate state.
+        error_message = "Test cancelled or undeterminate state."
+        break
+
+    # Stop current instance
+    self.slapos_controler.stopInstance(self.instance_title)
+    self._waitInstance(self.instance_title, 'stopped')
+
     # Delete old instances
-    logger.info("destroying instances commented")
-    #self._cleanUpOldInstances()
-    
-    logger.info("Stop before RETURN")
-    time.sleep(999999999) #ROQUE5
+    self._cleanUpOldInstance()
 
     # If error appears then that's a test failure.    
     if error_message:
-      logger.info("There was an error during the testsuite run: " + str(error_message))
-      try:
-        test_result_line_proxy.stop(error_count=1, failure_count=1,
-                                    stdout=error_message, stderr=error_message)
-        test_result_proxy.reportFailure(stdout=error_message)
-      except Exception as e:
-        error_message = "Error in communication with master: " + str(e)
-      logger.debug("Test Failed.")
+      test_result_line_proxy.stop(error_count=1, failure_count=1,
+                                  stdout=error_message, stderr=error_message)
+      test_result_proxy.reportFailure(stdout=error_message)
+      self.log("Test Failed.")
       return {'status_code' : 1, 'error_message': error_message} 
     # Test is finished.
-    logger.info("Test finished.")
-
+    self.log("Test finished.")
     return {'status_code' : 0}
+
+  def _cleanUpOldInstance(self):
+    self.log("_cleanUpOldInstance")
+
+    # Get title and link list of all instances
+    instance_dict = self.slapos_communicator.getHostingSubscriptionDict()
+    instance_to_delete_list = []
+    outdated_date = datetime.datetime.fromtimestamp(time.time()) - datetime.timedelta(days=2)
+
+    # Select instances to delete
+    for title,link in instance_dict.items():
+      # Instances created by testnode contains "Scalability-" and
+      # "timestamp=" in the title.
+      if "Scalability-" in title and "timestamp=" in title:
+        # Get timestamp of the instance creation date
+        foo, timestamp = title.split("timestamp=")
+        creation_date = datetime.datetime.fromtimestamp(float(timestamp))
+        # Test if instance is older than the limit
+        if creation_date < outdated_date:
+          instance_to_delete_list.append((title,link))
+    
+    for title,link in instance_to_delete_list:
+      # Get instance information
+      instance_information_dict = self.slapos_communicator.getHostingSubscriptionInformationDict(title)
+      # Delete instance
+      if instance_information_dict:
+        if instance_information_dict['status'] != 'destroyed':
+          self.slapos_controler.request(
+              instance_information_dict['title'],
+              instance_information_dict['software_url'],
+              software_type=instance_information_dict['software_type'],
+              computer_guid=instance_information_dict['computer_guid'],
+              state='destroyed'
+          )
+          self.log("Instance '%s' deleted." %instance_information_dict['title'])
+
+  def _cleanUpNodesInformation(self):
+    self.involved_nodes_computer_guid = []
+    self.launcher_nodes_computer_guid = []
+    self.remaining_software_installation_dict = {}
+    self.authorize_supply = True
+    self.authorize_request = False
 
   def getRelativePathUsage(self):
     """

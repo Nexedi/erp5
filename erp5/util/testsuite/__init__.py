@@ -1,10 +1,6 @@
-import argparse
-import re, os, shlex, glob
-import sys, threading, subprocess
+import re, sys, threading, os, subprocess
 import traceback
 import errno
-
-from erp5.util import taskdistribution
 from pprint import pprint
 
 _format_command_search = re.compile("[[\\s $({?*\\`#~';<>&|]").search
@@ -216,6 +212,15 @@ class TestSuite(object):
 # (XXX) The code bellow is an generic extension to run a test for any egg. 
 #       The code above was moved from ERP5 code base, because it is generic
 #       Enough to be used by others.
+# (FIXME) Imports should be reorganised in a better way
+import argparse
+import sys
+import glob
+import re
+import os
+import shlex
+from erp5.util import taskdistribution
+import re, os, shlex, glob
 
 class EggTestSuite(TestSuite):
 
@@ -292,7 +297,7 @@ def runTestSuite():
                       default='.')
 
   args = parser.parse_args()
-  master = taskdistribution.TaskDistributor(args.master_url)
+  master = taskdistribution.TaskDistributionTool(args.master_url)
   os.environ.setdefault("SOURCE_CODE_TO_TEST", args.source_code_path_list)
   test_suite_title = args.test_suite_title or args.test_suite
   revision = args.revision

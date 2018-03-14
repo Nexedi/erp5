@@ -29,7 +29,7 @@ Client implementation for portal_task_distribution.
 
 Example use:
   import erp5.util.taskdistribution
-  distributor = erp5.util.taskdistribution.TaskDistributor(...)
+  tool = erp5.util.taskdistribution.TaskDistributionTool(...)
   test_result = tool.createTestResult(...)
   test_result.addWatch('foo', open('foo'))
   while True:
@@ -39,14 +39,15 @@ Example use:
       # Run the test_line.name test
       test_line.stop()
 """
-from __future__ import print_function
 import httplib
+import logging
+import select
 import socket
 import threading
 import time
 import xmlrpclib
 
-__all__ = ['TaskDistributor', 'TestResultProxy', 'TestResultLineProxy', 'patchRPCParser']
+__all__ = ['TaskDistributionTool', 'TestResultProxy', 'TestResultLineProxy', 'patchRPCParser']
 
 # Depending on used xmlrpc backend, different exceptions can be thrown.
 SAFE_RPC_EXCEPTION_LIST = [socket.error, xmlrpclib.ProtocolError,
@@ -56,8 +57,8 @@ if xmlrpclib.ExpatParser and isinstance(parser, xmlrpclib.ExpatParser):
     SAFE_RPC_EXCEPTION_LIST.append(xmlrpclib.expat.ExpatError)
 else:
     import sys
-    print('Warning: unhandled xmlrpclib parser %r, some exceptions might get'
-          ' through safeRpcCall' % parser, file=sys.stderr)
+    print >> sys.stderr, 'Warning: unhandled xmlrpclib parser %r, some ' \
+        'exceptions might get through safeRpcCall' % (parser, )
     del sys
 SAFE_RPC_EXCEPTION_LIST = tuple(SAFE_RPC_EXCEPTION_LIST)
 del parser, _
@@ -109,6 +110,7 @@ def binarize_args(arg):
 
 class RPCRetry(object):
     def __init__(self, proxy, retry_time, logger):
+        super(RPCRetry, self).__init__()
         self._proxy = proxy
         self._retry_time = retry_time
         self._logger = logger
@@ -136,7 +138,7 @@ class TestResultLineProxy(RPCRetry):
 
     Properties:
     name (str) (ro)
-      Test name, as provided to TaskDistributor.createTestResult .
+      Test name, as provided to TaskDistributionTool.createTestResult .
     """
     def __init__(self, proxy, retry_time, logger, test_result_line_path,
             test_name):
@@ -157,8 +159,7 @@ class TestResultLineProxy(RPCRetry):
         Tell if test result line is still alive on site.
         """
         try:
-          return bool(self._retryRPC('isTestCaseAlive',
-                                     (self._test_result_line_path,)))
+          return bool(self._retryRPC('isTestCaseAlive', [self._test_result_line_path]))
         except:
           raise ValueError('isTestCaseAlive Failed.')
 
@@ -221,7 +222,6 @@ class TestResultProxy(RPCRetry):
         self._watcher_period = 60
         self._watcher_dict = {}
         self._watcher_condition = threading.Condition()
-
     def __repr__(self):
         return '<%s(%r, %r, %r) at %x>' % (self.__class__.__name__,
             self._test_result_path, self._node_title, self._revision, id(self))
@@ -381,9 +381,10 @@ class TestResultProxy(RPCRetry):
 
     def stop(self):
         """
+        
         """
         return self._retryRPC('stopTest', [self._test_result_path])
-
+        
     def getRunningTestCase(self):
       """
       Return the relative path of the next test with the running state
@@ -406,77 +407,27 @@ class ServerProxy(xmlrpclib.ServerProxy):
         with self.__rpc_lock:
             return xmlrpclib.ServerProxy.__request(self, *args, **kw)
 
-class TaskDistributor(RPCRetry):
-
+class TaskDistributionTool(RPCRetry):
     def __init__(self, portal_url, retry_time=64, logger=None):
+        """
+        portal_url (str, None)
+          Portal URL of ERP5 site to use as a task distributor.
+          If None, single node setup is assumed.
+        """
         if logger is None:
-           logger = null_logger
+            logger = null_logger
         if portal_url is None:
-            proxy = DummyTaskDistributor()
+            proxy = DummyTaskDistributionTool()
         else:
-            proxy = ServerProxy(portal_url, allow_none=True)
-        super(TaskDistributor, self).__init__(proxy, retry_time, logger)
+            proxy = ServerProxy(
+                portal_url,
+                allow_none=True,
+            ).portal_task_distribution
+        super(TaskDistributionTool, self).__init__(proxy, retry_time, logger)
         protocol_revision = self._retryRPC('getProtocolRevision')
         if protocol_revision != 1:
             raise ValueError('Unsupported protocol revision: %r',
                 protocol_revision)
-
-    def startTestSuite(self, node_title, computer_guid='unknown'):
-      """
-        Returns None if no test suite is needed.
-        therwise, returns a JSON with all the test suite parameters.
-      """
-      return self._retryRPC('startTestSuite', (node_title, computer_guid))
-
-    def getTestType(self):
-      """
-        Return the Test Type
-      """
-      return self._retryRPC('getTestType')
-
-    def subscribeNode(self, node_title, computer_guid):
-      """
-        Susbscribes node with the node title and the computer guid.
-      """
-      return self._retryRPC('subscribeNode', (node_title, computer_guid))
-
-    def generateConfiguration(self, test_suite_title):
-      """
-        Generates a configuration from a test_suite_title
-      """
-      return self._retryRPC('generateConfiguration', (test_suite_title,))
-
-
-    def isMasterTestnode(self, test_node_title):
-      """
-        Returns True or False if the testnode is the master
-      """
-      return self._retryRPC('isMasterTestnode', (test_node_title,))
-
-    def getSlaposAccountKey(self):
-      """
-        Returns the slapos account key related to the distributor
-      """
-      return self._retryRPC('getSlaposAccountKey')
-
-    def getSlaposAccountCertificate(self):
-      """
-        Returns the slapos account certificate related to the distributor
-      """
-      return self._retryRPC('getSlaposAccountCertificate')
-
-    def getSlaposUrl(self):
-      """
-        Returns the url of slapos master related to the distributor
-      """
-      return self._retryRPC('getSlaposUrl')
-
-    def getSlaposHateoasUrl(self):
-      """
-        Returns the url of API REST using hateoas of
-        slapos master related to the distributor
-      """
-      return self._retryRPC('getSlaposHateoasUrl')
 
     def createTestResult(self, revision, test_name_list, node_title,
             allow_restart=False, test_title=None, project_title=None):
@@ -511,7 +462,84 @@ class TaskDistributor(RPCRetry):
                 self._logger, test_result_path, node_title, revision)
         return result
 
-class DummyTaskDistributor(object):
+class TaskDistributor(RPCRetry):
+
+    def __init__(self,portal_url,retry_time=64,logger=None):
+        if logger is None:
+           logger = null_logger
+        if portal_url is None:
+            proxy = DummyTaskDistributionTool()
+        else:
+            proxy = ServerProxy(portal_url, allow_none=True)
+        super(TaskDistributor, self).__init__(proxy, retry_time,logger)
+        protocol_revision = self._retryRPC('getProtocolRevision')
+        if protocol_revision != 1:
+            raise ValueError('Unsupported protocol revision: %r',
+                protocol_revision)
+
+    def startTestSuite(self,node_title,computer_guid='unknown'):
+      """
+        Returns None if no test suite is needed.
+        therwise, returns a JSON with all the test suite parameters.
+      """
+      result = self._retryRPC('startTestSuite',(node_title,computer_guid,))
+      return result
+
+    def getTestType(self):
+      """
+        Return the Test Type
+      """
+      result = self._retryRPC('getTestType')
+      return result
+
+    def subscribeNode(self, node_title, computer_guid):
+      """
+        Susbscribes node with the node title and the computer guid.
+      """
+      result = self._retryRPC('subscribeNode', (node_title,computer_guid,))
+      return result
+
+
+    def generateConfiguration(self, test_suite_title):
+      """
+        Generates a configuration from a test_suite_title
+      """
+      return self._retryRPC('generateConfiguration', (test_suite_title,))
+
+
+    def isMasterTestnode(self, test_node_title):
+      """
+        Returns True or False if the testnode is the master
+      """
+      return self._retryRPC('isMasterTestnode', (test_node_title,))
+
+    def getSlaposAccountKey(self):
+      """
+        Returns the slapos account key related to the distributor
+      """
+      return self._retryRPC('getSlaposAccountKey')
+    
+    def getSlaposAccountCertificate(self):
+      """
+        Returns the slapos account certificate related to the distributor
+      """
+      return self._retryRPC('getSlaposAccountCertificate')
+
+    def getSlaposUrl(self):
+      """
+        Returns the url of slapos master related to the distributor
+      """
+      return self._retryRPC('getSlaposUrl')
+      
+    def getSlaposHateoasUrl(self):
+      """
+        Returns the url of API REST using hateoas of
+        slapos master related to the distributor
+      """
+      return self._retryRPC('getSlaposHateoasUrl')
+
+
+class DummyTaskDistributionTool(object):
     """
     Fake remote server.
 

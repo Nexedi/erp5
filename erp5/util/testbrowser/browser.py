@@ -33,11 +33,10 @@
 import logging
 import sys
 import urllib
-import Cookie
 
 from urlparse import urljoin
 from z3c.etestbrowser.browser import ExtendedTestBrowser
-from zope.testbrowser.browser import onlyOne
+from zope.testbrowser.browser import onlyOne, fix_exception_name
 
 def measurementMetaClass(prefix):
   """
@@ -235,6 +234,7 @@ class Browser(ExtendedTestBrowser):
         try:
           response = self.mech_browser.open_novisit(url_or_path, data)
         except Exception, e:
+          fix_exception_name(e)
           raise
       except mechanize.HTTPError, e:
         if e.code >= 200 and e.code <= 299:
@@ -317,10 +317,17 @@ class Browser(ExtendedTestBrowser):
     # just return the main_form instance
     if self._main_form and self._counter == self._main_form._browser_counter:
       return self._main_form
-    main_form = self.getForm(id='main_form')._form
+
+    main_form = None
+    for form in self.mech_browser.forms():
+      if form.attrs.get('id') == 'main_form':
+        main_form = form
+
     if not main_form:
       raise LookupError("Could not get 'main_form'")
-    self._main_form = ContextMainForm(self, main_form)
+
+    self.mech_browser.form = form
+    self._main_form = ContextMainForm(self, form)
     return self._main_form
 
   def getLink(self, text=None, url=None, id=None, index=0,
@@ -697,6 +704,7 @@ class MainForm(Form):
     else:
       if index is None:
         index = 0
+
       super(MainForm, self).submit(label=label, name=name, index=index,
                                    *args, **kwargs)
 
@@ -739,8 +747,8 @@ class MainForm(Form):
     @raise LookupError: The select, option or submit control could not
                         be found
     """
-    
     select_control = self.getControl(name=select_name, index=select_index)
+
     # zope.testbrowser checks for a whole word but it is also useful
     # to match the end of the option control value string because in
     # ERP5, the value could be URL (such as 'http://foo:81/erp5/logout')
@@ -752,10 +760,13 @@ class MainForm(Form):
         if item.endswith(value):
           value = item
           break
+
     self._logger.debug("select_id='%s', label='%s', value='%s'" % \
                                  (select_name, label, value))
+
     select_control.getControl(label=label, value=value,
                               index=control_index).selected = True
+
     self.submit(name=submit_name)
 
   def submitLogin(self):
@@ -783,24 +794,9 @@ class MainForm(Form):
                          (self.browser._username, self.browser._password))
 
     def login(form):
-      print "Login with user-pass: " + self.browser._username + " - " + self.browser._password
       form.getControl(name='__ac_name').value = self.browser._username
       form.getControl(name='__ac_password').value = self.browser._password
       form.submit()
-
-    def setCookies():
-      headers_cookie = self.browser.headers['set-cookie']
-      cookie = Cookie.SimpleCookie()
-      cookie.load(headers_cookie)
-      if '__ac' in cookie.keys():
-        ac_value = cookie['__ac'].value
-      else:
-        for part in headers_cookie.split(","):
-          if '__ac=' in part:
-            for subpart in part.split(";"):
-              if '__ac=' in subpart:
-                ac_value = subpart.split("=")[1].replace('"','')
-      self.browser.cookies["__ac"] = ac_value
 
     try:
       login(self)
@@ -813,7 +809,6 @@ class MainForm(Form):
                          (self.browser._erp5_base_url,
                           self.browser._username,
                           self.browser._password))
-    setCookies()
 
   def submitSelectFavourite(self, label=None, value=None, **kw):
     """
@@ -1192,6 +1187,7 @@ class ContextMainForm(MainForm):
     # control), then get the item from its value
     if isinstance(control, ListControl):
       control = control.getControl(value=input_element.get('value'))
+
     return control
 
 from zope.testbrowser.browser import SubmitControl
