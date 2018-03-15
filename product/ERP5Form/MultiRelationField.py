@@ -379,7 +379,7 @@ $(document).ready(function() {
     else:
       sub_index_string = '_%s' % sub_index
     return '&nbsp;<input type="image" ' \
-      'src="%s/images/exec16.png" value="update..." ' \
+      'src="%s/images/exec16.png" alt="update..." ' \
       'name="%s/viewSearchRelatedDocumentDialog%s%s' \
       ':method"/>' % (
       escape(portal_url()),
