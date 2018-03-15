@@ -7,7 +7,6 @@
          class="listbox-tree-flat-list-mode"
          title="Flat List" 
          name="setFlatListMode:method"
-         value="1" 
          alt="Flat List"
          tal:attributes="src string:${portal_url_string}/images/text_block.png;"
          i18n:domain="ui" i18n:attributes="title; alt" />
@@ -18,7 +17,6 @@
          class="listbox-tree-report-tree-mode"
          title="Report Tree" 
          name="setReportTreeMode:method"
-         value="1" 
          alt="Report Tree"
          tal:attributes="src string:${portal_url_string}/images/view_tree.png;"
          i18n:domain="ui" i18n:attributes="title; alt" />
@@ -29,7 +27,6 @@
          class="listbox-tree-domain-tree-mode"
          title="Domain Tree" 
          name="setDomainTreeMode:method"
-         value="1" 
          alt="Domain Tree"
          tal:attributes="src string:${portal_url_string}/images/view_choose.png;"
          i18n:domain="ui" i18n:attributes="title; alt" />
