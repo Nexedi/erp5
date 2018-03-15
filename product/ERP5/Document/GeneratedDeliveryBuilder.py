@@ -101,6 +101,7 @@ class GeneratedDeliveryBuilder(BuilderMixin):
     property_dict['quantity'] = simulation_movement.getQuantity()
     property_dict['price'] = simulation_movement.getPrice()
     if update_existing_movement:
-      property_dict['quantity'] = (delivery_movement.getQuantity() or 0.0) + property_dict['quantity']
+      #property_dict['quantity'] = (delivery_movement.getQuantity() or 0.0) + property_dict['quantity']
+      property_dict['quantity'] = property_dict['quantity']
     # Update properties on object (quantity, price...)
     delivery_movement._edit(force_update=1, **property_dict)
