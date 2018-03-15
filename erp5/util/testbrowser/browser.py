@@ -34,6 +34,7 @@ import logging
 import sys
 import urllib
 import Cookie
+import re
 
 from urlparse import urljoin
 from z3c.etestbrowser.browser import ExtendedTestBrowser
