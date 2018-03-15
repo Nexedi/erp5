@@ -30,6 +30,7 @@
 import unittest
 import os
 import urllib
+import requests
 
 from subprocess import Popen, PIPE
 from Testing import ZopeTestCase
@@ -483,6 +484,60 @@ class TestXHTML(TestXHTMLMixin):
     if self.portal.portal_workflow.isTransitionPossible(default_site_preference, 'enable'):
       default_site_preference.enable()
 
+
+class NuValidator(object):
+
+  def __init__(self, show_warnings):
+    self.show_warnings = show_warnings
+    self.name = 'nu'
+
+  def _parse_validation_results(self, validator_url, response):
+    """
+    parses the validation results, returns a list of tuples:
+    line_number, col_number, error description
+    """
+    if response.status_code != 200:
+      return [
+        [(None, None,
+          'Contacting the external validator %s failed with status: %i' %
+            (validator_url, response.status_code))],
+        []
+      ]
+
+    content_type = response.headers.get('Content-Type', None)
+    if content_type != 'application/json;charset=utf-8':
+      return [[(None, None, 'Unsupported validator response content type %s' %
+                            content_type)], []]
+
+    result = response.json()
+
+    error_list = []
+    warning_list = []
+    for message in result['messages']:
+      if message['type'] == 'info':
+        severity_list = warning_list
+      else:
+        severity_list = error_list
+      txt = message['message'].encode('UTF-8')
+      if 'extract' in message:
+        txt += ': %s' % message['extract'].encode('UTF-8')
+      severity_list.append([message['lastLine'], message['lastColumn'], txt])
+    return [error_list, warning_list]
+
+  def getErrorAndWarningList(self, page_source):
+    '''
+      retrun two list : a list of errors and an other for warnings
+    '''
+    validator_url = 'https://validator.erp5.net/'
+    response = requests.post(validator_url,
+                             data=page_source.encode('UTF-8'),
+                             params={'out': 'json'},
+                             headers={
+                               'Content-Type': 'text/html; charset=UTF-8'
+                             })
+    return self._parse_validation_results(validator_url, response)
+
+
 class W3Validator(object):
 
   def __init__(self, validator_path, show_warnings):
@@ -775,6 +830,9 @@ elif validator_to_use == 'tidy':
     print 'tidy is not installed at %s' % validator_path
   else:
     validator = TidyValidator(validator_path, show_warnings)
+
+elif validator_to_use == 'nu':
+  validator = NuValidator(show_warnings)
 
 def test_suite():
   # add the tests
