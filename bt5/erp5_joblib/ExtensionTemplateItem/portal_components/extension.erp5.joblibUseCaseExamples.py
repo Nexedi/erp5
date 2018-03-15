@@ -55,7 +55,7 @@ def example_simple_function(self, active_process_path):
 
   # Use CMFActivity as a backend for joblob
   with parallel_backend('CMFActivity', active_process=active_process):
-    result = Parallel(n_jobs=2, pre_dispatch='all', timeout=30, verbose=30)(delayed(sqrt)(i**2) for i in range(5))
+    result = Parallel(n_jobs=2, pre_dispatch='all', timeout=30, verbose=30)(delayed(sqrt)(i**2) for i in range(500))
 
   # Set result value and an id to the active result and post it
   result = ActiveResult(result=result)
@@ -141,3 +141,38 @@ def example_grid_search_function(self, active_process_path):
     clf.fit(X, y)
   return 'ok', joblib.__version__, time.time() - tic
 
+#
+# Example: Ordinary least squares Linear Regression
+#
+
+from sklearn.linear_model import LinearRegression, OrthogonalMatchingPursuitCV
+
+def example_linear_regression_function(self, active_process_path , array_reference):
+  active_process = self.portal_activities.unrestrictedTraverse(active_process_path)
+  data_array = self.portal_catalog.getResultValue(
+                                   portal_type = "Data Array",
+                                   reference = array_reference)
+  data = data_array.getArray()
+
+  data = data[29:] # take off the coulum names
+  data = data.reshape(-1,29) # reshape to matrix
+  log("data.reshape(-1,29)", type(data))
+
+  idy_columns = [3] #,5,7,9,11,13,15,17,19,21]
+  Y = data[:, idy_columns].astype(np.float)
+  log("astype", type(Y))
+
+  idx_columns = [x for x in range(28) if x not in idy_columns] 
+  idx_columns.pop(0)
+  X = data[:, idx_columns].astype(np.float)
+  log("astype", type(X))
+
+  lr = LinearRegression()
+  omp = OrthogonalMatchingPursuitCV()
+  with parallel_backend('CMFActivity', n_jobs=4, pre_dispatch='all', active_process=active_process):
+    lr.fit(X, Y)
+
+  with parallel_backend('multiprocessing', n_jobs=4):#, pre_dispatch='all', active_process=active_process):
+    omp.fit(X, Y)
+
+  log('omp.coef_', omp.coef_)
