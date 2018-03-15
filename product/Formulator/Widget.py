@@ -1156,10 +1156,14 @@ class ListWidget(SingleItemsWidget):
       return "\n".join([list_widget, input_hidden])
 
     def render_item(self, text, value, key, css_class, extra_item):
+        if not text:
+            text = ' '
         return self.render_element('option', contents=text, value=value,
                               extra=extra_item)
 
     def render_selected_item(self, text, value, key, css_class, extra_item):
+        if not text:
+            text = ' '
         return self.render_element('option', contents=text, value=value,
                               selected=None, extra=extra_item)
 
@@ -1195,10 +1199,14 @@ class MultiListWidget(MultiItemsWidget):
       return "\n".join([multi_list,input_hidden])
 
     def render_item(self, text, value, key, css_class, extra_item):
+        if not text:
+            text = ' '
         return self.render_element('option', contents=text, value=value,
                               extra=extra_item)
 
     def render_selected_item(self, text, value, key, css_class, extra_item):
+        if not text:
+            text = ' '
         return self.render_element('option', contents=text, value=value,
                               selected=None, extra=extra_item)
 
