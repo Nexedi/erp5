@@ -92,9 +92,12 @@ class TestNode(object):
     assert len(node_test_suite.vcs_repository_list), "we must have at least one repository"
     software_config_path = None
     profile_content_list = []
+    revision_dict = dict(node_test_suite.revision_list)
+    self.config['repository_path_list'] = []
     for vcs_repository in node_test_suite.vcs_repository_list:
       buildout_section_id = vcs_repository.get('buildout_section_id')
       repository_path = vcs_repository['repository_path']
+      self.config['repository_path_list'].append(repository_path)
       try:
         profile_path = vcs_repository[PROFILE_PATH_KEY]
       except KeyError:
@@ -118,24 +121,9 @@ class TestNode(object):
                                     node_test_suite.reference)
           repository_path = os.path.relpath(repository_path, from_path)
 
-        # XXX: Like in run(), code depending on specific test type must be
-        #      moved to the test type classes. In particular, the use of a
-        #      replacement pattern ('<obfuscated_url>') is ugly: buildout
-        #      has cleaner ways to do that.
         if test_type=="ScalabilityTest":
-#          updater = Updater(repository_path, git_binary=self.config['git_binary'],
-#          branch = vcs_repository.get('branch','master'), log=self.log, process_manager=self.process_manager)
-#          updater.checkout()
-#          revision = updater.getRevision()[1]
-          all_revision = node_test_suite.revision
-          # from 'sec1=xx-azer,sec2=yy-qwer,..' to [[sec1,azer],[sec2,qwer],..]
-          revision_list = [ [x.split('=')[0],x.split('=')[1].split('-')[1]] for x in all_revision.split(',') ]
-          # from [[sec1,azer],[sec2,qwer],..] to {sec1:azer,sec2:qwer,..}
-          revision_dict = {branch:revision for branch,revision in revision_list}
-          # <obfuscated_url> word is modified by in runner.prepareSlapOSForTestSuite()
           profile_content_list.append("""
 [%(buildout_section_id)s]
-repository = <obfuscated_url>/%(buildout_section_id)s/%(buildout_section_id)s.git
 revision = %(revision)s
 ignore-ssl-certificate = true
 develop = false
@@ -272,7 +260,7 @@ develop = false
           begin = time.time()
           taskdistributor = taskdistribution.TaskDistributor(
               portal_url, logger=logger)
-          self.test_suite_portal = taskdistributor # XXX ScalabilityTest
+          self.taskdistribution = taskdistributor
           node_configuration = taskdistributor.subscribeNode(
             node_title=config['test_node_title'],
             computer_guid=config['computer_id'])
