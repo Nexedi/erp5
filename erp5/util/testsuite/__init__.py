@@ -230,9 +230,7 @@ class EggTestSuite(TestSuite):
 
   def runUnitTest(self, *args, **kw):
     try:
-      # (FIXME) The python should be provided by environment with 
-      #         appropriated configuration.
-      runUnitTest = "python setup.py test"
+      runUnitTest = "{python} setup.py test".format(python=self.python_interpreter)
       args = tuple(shlex.split(runUnitTest))
       status_dict = self.spawn(*args, **kw)
     except SubprocessError, e:
@@ -284,6 +282,12 @@ def runTestSuite():
   parser.add_argument('--master_url',
                       help='The Url of Master controling many suites',
                       default=None)
+  parser.add_argument('--frontend_url',
+                      help='The url of the frontend of this test node',
+                      default=None)
+  parser.add_argument('--python_interpreter',
+                      help='Path to python interpreter used to run the test suite',
+                      default='python')
   parser.add_argument('--source_code_path_list',
                       help='List of Eggs folders to test, splited by commam',
                       default='.')
@@ -295,6 +299,7 @@ def runTestSuite():
   revision = args.revision
   suite = EggTestSuite(1, test_suite=args.test_suite,
                     node_quantity=args.node_quantity,
+                    python_interpreter=args.python_interpreter,
                     revision=revision)
 
   test_result = master.createTestResult(revision, suite.getTestList(),
