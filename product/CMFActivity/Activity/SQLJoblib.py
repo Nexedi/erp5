@@ -30,11 +30,6 @@ from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 from SQLBase import SQLBase, sort_message_key, MAX_MESSAGE_LIST_SIZE
 from Products.CMFActivity.ActivityTool import Message
 
-# Stop validating more messages when this limit is reached
-MAX_VALIDATED_LIMIT = 1000
-# Read this many messages to validate.
-READ_MESSAGE_LIMIT = 1000
-
 from SQLDict import SQLDict
 
 class SQLJoblib(SQLDict):
