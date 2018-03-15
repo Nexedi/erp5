@@ -391,48 +391,83 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           )
       return movement
 
-    now = DateTime()
     movement_list = []
-    ordered_inventory = 0
-    order_movement_list = []
-    # XXX This is dangerous if increase and decrease movements happen at 
-    # the same date, 
-    # In order to work at a due date, increase movement must be placed
-    # before decrease movement happening at the same date
+
+    # Prepare history list to work with
     history_list = resource_value.Resource_getInventoryHistoryList(
       from_date=from_date,
       node_uid=supply.getDestinationUid()
       # XXX This should be bound to a stard and stop date
       )
-    while history_list:
-      date, inventory, quantity = history_list[0]
+
+    # evaluate future inventory at date
+    future_inventory_to_date = portal.portal_simulation.getFutureInventory(
+      to_date=from_date,
+      resource_uid=resource_value.getUid(),
+      node_uid=supply.getDestinationUid(),
+      )
+
+    # Prepare period_list
+    limit_date = getPreviousValidDate(from_date)
+    limit_date_list = []
+    last_date = getPreviousValidDate(history_list[-1][0])
+    while limit_date <= last_date:
+      limit_date_list.append(limit_date)
+      limit_date = DateTime(supply.getNextPeriodicalDate(
+        limit_date,
+        # Hackish and dangerous
+        next_start_date=limit_date)).earliestTime()
+
+    # Create a movement per period
+    for period_start_date in limit_date_list:
+
+      # Prepare history list of the current period
+      next_period_start_date = DateTime(supply.getNextPeriodicalDate(
+        period_start_date,
+        next_start_date=period_start_date)).earliestTime()
+      period_history_list = []
+
+      while history_list and history_list[0][0] < next_period_start_date:
+        period_history_list.append(history_list.pop(0))
+
+      # Using period history list calculate min stock
       min_inventory = self.Base_evaluateMinInventoryForSupplyAtDate(
         supply=supply,
-        history_list=history_list,
-        at_date=date,
+        history_list=period_history_list,
+        at_date=period_start_date,
         conversion_ratio=default_quantity_unit_order_quantity_unit_conversion_ratio,
         )
+
+      quantity = 0
       #self.log("at %s min: %s, Ordered: %s, inventory:%s, quantity:%s" % (date, min_inventory, ordered_inventory, inventory, quantity))
-      if ordered_inventory + (inventory-quantity) < min_inventory: # SKU
-         #import pdb;pdb.set_trace()
-         quantity = min_inventory - (inventory-quantity) - ordered_inventory
-         ordered_quantity, ordered_unit, effective_date, start_date, delivery_date, quantity = minimalQuantity(quantity, date)
-         # XXX CLN This is very naive, it has to be optimized
-         if start_date <= supply.getStartDateRangeMax()\
-          and start_date >= supply.getStartDateRangeMin():
-           self.log("Week %s Will order %s at %s" % (delivery_date.week(), quantity, delivery_date))
-           ordered_inventory = ordered_inventory + quantity
-           movement_list.append(
-             newMovement(
-               effective_date,
-               start_date,
-               delivery_date,
-               ordered_quantity,
-               ordered_unit
-              )
-            )
-      history_list.pop(0)
-    return []
+
+      if future_inventory_to_date < min_inventory: # SKU
+         quantity = min_inventory - future_inventory_to_date
+
+      ordered_quantity, ordered_unit, effective_date, start_date, delivery_date, quantity = minimalQuantity(quantity, period_start_date)
+      # XXX CLN This is very naive, it has to be optimized
+      if start_date > supply.getStartDateRangeMax():
+        break
+      if start_date < supply.getStartDateRangeMin():
+        break
+
+      #self.log("Week %s Will order %s at %s for period %s" % (delivery_date.week(), quantity, delivery_date, period_start_date))
+      movement_list.append(
+        newMovement(
+          effective_date,
+          start_date,
+          delivery_date,
+          ordered_quantity,
+          ordered_unit
+        )
+      )
+
+      # calculate inventory at the end of the period
+      future_inventory_to_date += quantity
+      for date, total_inventory, quantity, portal_type in period_history_list:
+        future_inventory_to_date += quantity
+
+    #return []
     return movement_list
 
   def _searchMovementList(self, **kw):
@@ -645,6 +680,13 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         if not self.isDeliveryCreatable():
           raise SelectMethodError('No updatable delivery found with %s for %s' \
                   % (self.getPath(), movement_group_node_list))
+
+        # if total quantity is 0 no need to create anything
+        total_quantity = 0
+        for movement in movement_group_node.getMovementList():
+          total_quantity += movement.getQuantity()
+        if total_quantity == 0:
+          return delivery_list
 
         delivery = self._createDelivery(delivery_module,
                                         movement_group_node.getMovementList(),
