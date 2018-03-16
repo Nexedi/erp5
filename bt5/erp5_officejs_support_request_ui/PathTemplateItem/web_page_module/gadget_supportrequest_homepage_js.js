@@ -86,7 +86,7 @@
           begin_date = new Date(1970, 1, 1);
           end_date = days_30;
         }
-        search_criteria = '( translated_simulation_state_title: "' + seriesName + '" AND modification_date: >= ' + begin_date.toISOString().slice(0, 10) + ' AND modification_date: < ' + end_date.toISOString().slice(0, 10) + ' )';
+        search_criteria = '( translated_simulation_state_title: "' + seriesName + '" AND delivery.start_date: >= ' + begin_date.toISOString().slice(0, 10) + ' AND delivery.start_date: < ' + end_date.toISOString().slice(0, 10) + ' )';
       } else {
         // Situation 2: Search Support Request without date.
         search_criteria = '( translated_simulation_state_title: "' + name + '")';
