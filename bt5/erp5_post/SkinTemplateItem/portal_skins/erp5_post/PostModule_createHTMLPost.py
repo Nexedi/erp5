@@ -9,7 +9,7 @@ post_edit_kw = {
   "follow_up_value": context.getPortalObject().restrictedTraverse(follow_up),
   "text_content": data,
 }
-if predecessor is not None:
+if predecessor not in (None, ""):
   predecessor_value, = portal.portal_catalog(relative_url=predecessor, limit=2)
   post_edit_kw["predecessor_value"] = predecessor_value.getObject()
 post = post_module.newContent(
