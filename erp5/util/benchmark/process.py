@@ -31,6 +31,7 @@ import traceback
 import signal
 import sys
 import socket
+import time
 
 from ..testbrowser.browser import Browser
 from .result import NothingFlushedException
@@ -158,21 +159,29 @@ class BenchmarkProcess(multiprocessing.Process):
     exit_status = 0
     exit_msg = None
 
+    def runIteration(result):
+      self._logger.info("Iteration: %d" % self._current_repeat)
+      self.runBenchmarkSuiteList(result)
+      if not self._current_repeat % REPEAT_NUMBER_BEFORE_FLUSHING:
+        try:
+          result.flush()
+        except NothingFlushedException:
+          pass
+
     try:
       with result_instance as result:
         self._browser = self.getBrowser(result_instance.log_file)
-
-        while self._current_repeat != (self._argument_namespace.repeat + 1):
-          self._logger.info("Iteration: %d" % self._current_repeat)
-          self.runBenchmarkSuiteList(result)
-
-          if not self._current_repeat % REPEAT_NUMBER_BEFORE_FLUSHING:
-            try:
-              result.flush()
-            except NothingFlushedException:
-              pass
-
-          self._current_repeat += 1
+        if self._argument_namespace.duration > 0:
+          self._logger.info("Iterate until duration %d" % self._argument_namespace.duration)
+          start_time = time.time()
+          while self._argument_namespace.duration > (time.time()-start_time):
+            runIteration(result)
+            self._current_repeat += 1
+        else:
+          self._logger.info("Iterate until repeat %d" % self._argument_namespace.repeat)
+          while self._current_repeat != (self._argument_namespace.repeat + 1):
+            runIteration(result)
+            self._current_repeat += 1
 
     except StopIteration, e:
       self._logger.error(e)
