@@ -491,19 +491,10 @@ class SlapOSTester(SlapOSMasterCommunicator):
     if self.getInstanceUrlList():
       for instance in self.getInstanceUrlList():
         if instance["title"] != instance_title:
-          news = self.getNewsFromInstance(instance["href"])
-          instance_state = news[0]
           self._request(INSTANCE_STATE_DESTROYED, instance["title"])
-          news = self.getNewsFromInstance(instance["href"])
-          instance_state = news[0]
         else:
           root_instance = instance
-      news = self.getNewsFromInstance(root_instance["href"])
-      instance_state = news[0]
       self._request(INSTANCE_STATE_DESTROYED, instance_title)
-      time.sleep(30)
-      news = self.getNewsFromInstance(root_instance["href"])
-      instance_state = news[0]
     else:
       logger.info("Instance not found")
 
