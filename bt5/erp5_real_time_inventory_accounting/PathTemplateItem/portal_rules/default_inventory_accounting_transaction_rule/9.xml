@@ -64,6 +64,10 @@
             <value> <string>9</string> </value>
         </item>
         <item>
+            <key> <string>matching_provider</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Float Divergence Tester</string> </value>
         </item>
