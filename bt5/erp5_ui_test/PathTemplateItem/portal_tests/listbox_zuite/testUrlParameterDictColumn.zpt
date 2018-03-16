@@ -32,14 +32,37 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_url_columns=id%7CFoo_getIdUrl%0Atitle%7C</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/FooModule_viewFooList/listbox/manage_talesForm</td>
   <td></td>
 </tr>
+
 <tr>
-  <td>assertTextPresent</td>
-  <td>Set Successfully.</td>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='field_url_parameter_dict']</td>
   <td></td>
 </tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_url_parameter_dict']</td>
+  <td>python: {'id': {'view': 'view', 'jio_key': 'Foo_getIdUrl'}, 'title': {}}</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//input[@value='Save Changes']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='system-msg']</td>
+  <td></td>
+</tr>
+
+
+
 <tr>
   <td>open</td>
   <td>${base_url}/foo_module/view</td>
