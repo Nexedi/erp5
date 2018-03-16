@@ -111,7 +111,7 @@ class SlapOSMasterCommunicator(object):
             **self.request_kw)
 
   def isInstanceRequested(self, instance_title):
-    hateoas = self._hateoas_navigator
+    hateoas = getattr(self.slap, '_hateoas_navigator', None)
     return instance_title in hateoas.getHostingSubscriptionDict()
 
   @retryOnNetworkFailure
@@ -411,11 +411,13 @@ class SlapOSTester(SlapOSMasterCommunicator):
   def requestInstanceStart(self, instance_title=None, request_kw=None, shared=False, software_type="RootSoftwareInstance"):
     self.instance = self._request(INSTANCE_STATE_STARTED, instance_title, request_kw, shared, software_type)
 
-  def requestInstanceStop(self, instance_title=None, request_kw=None, shared=False):
-    self._request(INSTANCE_STATE_STOPPED, instance_title, request_kw, shared)
+  def requestInstanceStop(self, instance_title=None, request_kw=None, shared=False, software_type="RootSoftwareInstance"):
+    self._request(INSTANCE_STATE_STOPPED, instance_title, request_kw, shared, software_type)
 
   def requestInstanceDestroy(self, instance_title=None, request_kw=None, shared=False):
-    self._request(INSTANCE_STATE_DESTROYED, instance_title, request_kw, shared)
+    if not instance_title:
+      instance_title = self.name
+    self.destroyInstance(instance_title)
 
   def waitInstanceStarted(self, instance_title):
     error_message = self._waitInstance(instance_title, INSTANCE_STATE_STARTED)["error_message"]
@@ -439,6 +441,11 @@ class SlapOSTester(SlapOSMasterCommunicator):
       raise ValueError(error_message)
 
   def getMasterFrontendDict(self):
+    def getInstanceGuid():
+      try:
+        return self.instance.getInstanceGuid()
+      except:
+        return None
     frontend_master_ipv6 = None
     instance_guid = None
     for instance in self.getInstanceUrlList():
@@ -448,7 +455,10 @@ class SlapOSTester(SlapOSMasterCommunicator):
           frontend_master_ipv6 = information['parameter_dict']['url']
         except Exception as e:
           pass
-    return {'instance_guid' : self.instance.getInstanceGuid(), 'frontend_master_ipv6' : frontend_master_ipv6}
+    start_time = time.time()
+    while not getInstanceGuid() and time.time()-start_time < 60*5:
+      sleep(60)
+    return {'instance_guid' : getInstanceGuid(), 'frontend_master_ipv6' : frontend_master_ipv6}
 
   # XXX TODO
   # In the future, this should allow customization so each project to be tested parses its own information,
@@ -475,6 +485,27 @@ class SlapOSTester(SlapOSMasterCommunicator):
         except Exception as e:
           raise ValueError("user and password not found in connection parameters. Error while instantiating?")
     return {'user' : user, 'password' : password, 'frontend-url-list' : frontend_url_list }
+
+  def destroyInstance(self, instance_title):
+    self.name = instance_title
+    if self.getInstanceUrlList():
+      for instance in self.getInstanceUrlList():
+        if instance["title"] != instance_title:
+          news = self.getNewsFromInstance(instance["href"])
+          instance_state = news[0]
+          self._request(INSTANCE_STATE_DESTROYED, instance["title"])
+          news = self.getNewsFromInstance(instance["href"])
+          instance_state = news[0]
+        else:
+          root_instance = instance
+      news = self.getNewsFromInstance(root_instance["href"])
+      instance_state = news[0]
+      self._request(INSTANCE_STATE_DESTROYED, instance_title)
+      time.sleep(30)
+      news = self.getNewsFromInstance(root_instance["href"])
+      instance_state = news[0]
+    else:
+      logger.info("Instance not found")
 
 class SoftwareReleaseTester(SlapOSTester):
   deadline = None
