@@ -22,12 +22,7 @@ label[for='upload'] {
 }
 
 label[for='upload']:hover {
-  text-align: center;
-  /*border: 1px solid red;*/
   background: #208577;
-  border-radius: 50%;
-  height: 100px;
-  cursor:pointer;
 }
 
 label[for='upload']::before {
@@ -62,12 +57,7 @@ label[for='image'] {
 }
 
 label[for='image']:hover {
-  text-align: center;
-  /*border: 1px solid red;*/
   background: #208577;
-  border-radius: 50%;
-  height: 100px;
-  cursor:pointer;
 }
 
 label[for='image']::before {
@@ -98,23 +88,18 @@ label[for='audio'] {
   background: #206185;
   border-radius: 50%;
   height: 100px;
+  width: 100px;
   cursor:pointer;
 }
 
 label[for='audio']:hover {
-  text-align: center;
-  /*border: 1px solid red;*/
   background: #208577;
-  border-radius: 50%;
-  height: 100px;
-  cursor:pointer;
 }
 
 label[for='audio']::before {
     content: "\f130";
     position: absolute;
     top: 50%;
-    left: 50%;
     transform: translate(-50%,-50%);
     font-size: 30px;
     font-family: FontAwesome;
@@ -131,6 +116,38 @@ div[data-gadget-scope='audio'] > div > div {
   display:none;
 }
 
+@keyframes anim {
+	to {
+		background-color: #F49797;
+	}
+}
+
+/* audio view */
+
+div[for='audio_view'] {
+  background-color: #E50000;
+  animation-name: anim;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: linear;
+  text-align: center;
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+}
+
+div[id='audio_view'] {
+  font-size: 200%;
+  transform: translate(0,81%);
+}
+
+@keyframes anim {
+	to {
+		background-color: #F49797;
+	}
+}
+
 /* text */
 
 label[for='text_button'] {
@@ -139,23 +156,18 @@ label[for='text_button'] {
   background: #206185;
   border-radius: 50%;
   height: 100px;
+  width: 100px;
   cursor:pointer;
 }
 
 label[for='text_button']:hover {
-  text-align: center;
-  /*border: 1px solid red;*/
   background: #208577;
-  border-radius: 50%;
-  height: 100px;
-  cursor:pointer;
 }
 
 label[for='text_button']::before {
     content: "\f044";
     position: absolute;
     top: 50%;
-    left: 50%;
     transform: translate(-50%,-50%);
     font-size: 30px;
     font-family: FontAwesome;
@@ -195,4 +207,16 @@ div[data-gadget-scope='text']  > div > div{
       width: 60pt;
       right: 1pt;
     }
+  div[for='audio_view'] {
+    transform: translate(12vw,-20%);
+    height: 40vw;
+    width: 40vw;
+  }
+  div[id='audio_view'] {
+    font-size: 10vw;
+    transform: translate(0,13vw);
+  }/*
+  div[class="field_container"] {
+    transform: translate(9vw,-16%);
+  }*/
 }

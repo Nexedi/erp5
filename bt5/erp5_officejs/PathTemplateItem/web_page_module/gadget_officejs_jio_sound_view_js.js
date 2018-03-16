@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, jIO, URL,
+/*global window, rJS, RSVP, jIO, URL, Blob
   promiseEventListener, document*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, jIO, rJS, RSVP, URL, document, promiseEventListener) {
@@ -29,7 +29,6 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
-     // console.log("################");
       var gadget = this;
       gadget.type = options.doc.type;
       
@@ -43,11 +42,22 @@
           state.audio = blob_audio;
         })
     
+
         .push(function () {
+          return RSVP.all([
+            gadget.getUrlFor({command: 'history_previous'}),
+            gadget.getUrlFor({command: 'selection_previous'}),
+            gadget.getUrlFor({command: 'selection_next'})
+          ]);
+        })
+        .push(function (url_list) {
           gadget.changeState(state);
           return gadget.updateHeader({
-            page_title: 'Claudie',
-            save_action: true
+            page_title: "Message",
+            save_action: true,
+            selection_url: url_list[0],
+            previous_url: url_list[1],
+            next_url: url_list[2]
           });
         });
     })
@@ -209,23 +219,7 @@
 
             
           }
-        })
-
-        .push(function () {
-          return RSVP.all([
-            gadget.getUrlFor({command: 'history_previous'}),
-            gadget.getUrlFor({command: 'selection_previous'}),
-            gadget.getUrlFor({command: 'selection_next'})
-          ]);
-        })
-        .push(function (url_list) {
-          return gadget.updateHeader({
-            page_title: "test",
-            save_action: true,
-            selection_url: url_list[0],
-            previous_url: url_list[1],
-            next_url: url_list[2]
-          });
-        }).push(undefined, function (err) { console.log(err); });
+        });
+        //.push(undefined, function (err) { console.log(err); });
     });
 }(window, jIO, rJS, RSVP, URL, document, promiseEventListener));

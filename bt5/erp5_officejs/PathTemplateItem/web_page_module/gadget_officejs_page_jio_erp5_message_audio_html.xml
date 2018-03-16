@@ -80,7 +80,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_ojs_panel_message.html</string> </value>
+            <value> <string>gadget_erp5_page_ojs_message_audio.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -90,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_panel_message_html</string> </value>
+            <value> <string>gadget_officejs_page_jio_erp5_message_audio_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -108,7 +108,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Message Panel</string> </value>
+            <value> <string>OfficeJS Jio Message Audio View</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -194,7 +200,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520002295.54</float>
+                        <float>1521023365.68</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -239,7 +245,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>966.13861.16041.61474</string> </value>
+                <value> <string>966.13981.48032.23244</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -257,7 +263,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1521189521.86</float>
+                        <float>1521210145.97</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -314,7 +320,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520001130.35</float>
+                        <float>1521023265.18</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

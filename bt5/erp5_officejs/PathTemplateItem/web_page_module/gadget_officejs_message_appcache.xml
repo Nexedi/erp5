@@ -113,6 +113,12 @@
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
+gadget_erp5_page_message_text.js\n
+gadget_erp5_page_message_text.html\n
+gadget_erp5_page_ojs_link_field.js\n
+gadget_erp5_page_ojs_link_field.html\n
+gadget_erp5_page_ojs_message_audio.js\n
+gadget_erp5_page_ojs_message_audio.html\n
 gadget_erp5_field_image.html\n
 gadget_erp5_field_image.js\n
 gadget_erp5_field_file.html\n
@@ -230,6 +236,9 @@ gadget_editor.html\n
 gadget_editor.js\n
 gadget_button_maximize.html\n
 gadget_button_maximize.js\n
+\n
+#ooffice\n
+ckeditor.gadget.html\n
 \n
 #setting\n
 gadget_officejs_setting.js\n
@@ -377,7 +386,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>966.2816.42103.25207</string> </value>
+                <value> <string>966.14204.28738.40106</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -395,7 +404,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520586385.41</float>
+                        <float>1521210280.47</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

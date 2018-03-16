@@ -76,10 +76,10 @@
         .push(function (result) {
           var column_list = [
             ['title', 'Title'],
-            ['reference', 'Reference'],
-            ['language', 'Language'],
-            ['description', 'Description'],
-            ['version', 'Version'],
+           // ['reference', 'Reference'],
+           // ['language', 'Language'],
+           // ['description', 'Description'],
+           // ['version', 'Version'],
             ['modification_date', 'Modification Date']
           ];
         
@@ -130,15 +130,17 @@
         })
         .push(function () {
           return RSVP.all([
-            gadget.getUrlFor({command: "change", options: {"page": "ojs_message_front"}}),
-            gadget.getSetting('document_title_plural')
+            gadget.getSetting('document_title_plural'),
+            gadget.getUrlFor({command: "change", options: {"page": "ojs_message_front"}})
           ]);
         })
         .push(function (result) {
           return gadget.updateHeader({
-            page_title: result[1],
+            page_title: result[0],
             filter_action: true,
-            add_url: result[0]
+            selection_url: result[1],
+            page_icon: "exchange"
+            //add_url: result[0]
           });
         });
     });

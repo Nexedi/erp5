@@ -45,11 +45,23 @@
     
         .push(function () {
           gadget.changeState(state);
+
+          return RSVP.all([
+            gadget.getUrlFor({command: 'history_previous'}),
+            gadget.getUrlFor({command: 'selection_previous'}),
+            gadget.getUrlFor({command: 'selection_next'})
+          ]);
+        })
+        .push(function (url_list) {
           return gadget.updateHeader({
-            page_title: 'Claudie',
-            save_action: true
+            page_title: "Message",
+            save_action: true,
+            selection_url: url_list[0],
+            previous_url: url_list[1],
+            next_url: url_list[2]
           });
         });
+
     })
   
     .onEvent('submit', function () {

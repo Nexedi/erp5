@@ -45,11 +45,22 @@
         
         .push(function (text) {
           state.text = text.target.result;
-        
+
           gadget.changeState(state);
+        
+          return RSVP.all([
+            gadget.getUrlFor({command: 'history_previous'}),
+            gadget.getUrlFor({command: 'selection_previous'}),
+            gadget.getUrlFor({command: 'selection_next'})
+          ]);
+        })
+        .push(function (url_list) {
           return gadget.updateHeader({
-            page_title: 'Claudie',
-            save_action: true
+            page_title: "Message",
+            save_action: true,
+            selection_url: url_list[0],
+            previous_url: url_list[1],
+            next_url: url_list[2]
           });
         });
     })
@@ -167,16 +178,17 @@
                     "type": "StringField"
                   },
                   "my_text": {
-                    "description": "",
-                    "title": "Text",
                     "default": gadget.state.text,
                     "css_class": "",
-                    "height" : "100",
-                    "required": 1,
+                    "required": 0,
                     "editable": 1,
                     "key": "text_",
                     "hidden": 0,
-                    "type": "TextAreaField"
+                    "renderjs_extra": '{"editor": "fck_editor",' +
+                      '"maximize": "auto"}',
+                    "type": "GadgetField",
+                    "url": "gadget_editor.html",
+                    "sandbox": "public"
                   }
                 }
               },
@@ -190,13 +202,16 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_title"], ["my_text"]]
+                [["my_title"]]
+              ], [
+                "bottom",
+                [["my_text"]]
               ]]
             }
           });
-        })
+        });
 
-        .push(function () {
+/*        .push(function () {
           return RSVP.all([
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'selection_previous'}),
@@ -211,6 +226,6 @@
             previous_url: url_list[1],
             next_url: url_list[2]
           });
-        }).push(undefined, function (err) { console.log(err); });
+        }).push(undefined, function (err) { console.log(err); });*/
     });
 }(window, jIO, rJS, RSVP, URL, document, promiseEventListener));
