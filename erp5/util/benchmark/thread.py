@@ -56,7 +56,7 @@ class TestMetricThread(threading.Thread):
     while(not self.stop_event.is_set()):
       self.stop_event.wait(-time.time() % self.interval)
       try:
-        response = requests.get(self.metric_url)
+        response = requests.get(self.metric_url, timeout=60)
         if response.status_code == 200:
           self.metric_list.append(response.text)
         else:
@@ -71,6 +71,3 @@ class TestMetricThread(threading.Thread):
 
   def getErrorMessage(self):
     return self.error_message
-
-
-

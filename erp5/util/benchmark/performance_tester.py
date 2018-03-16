@@ -113,6 +113,11 @@ class PerformanceTester(object):
                         help='Repeat the benchmark suite N times for a given '
                              'number of users (default: infinite)')
 
+    parser.add_argument('--duration',
+                        type=int,
+                        default=0,
+                        help='Repeat the benchmark suite until time duration is reached')
+
     parser.add_argument('--repeat-range',
                         type=ArgumentType.checkIntValueWrapper(minimum=1),
                         default=-1,
