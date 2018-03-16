@@ -3,6 +3,7 @@
  <key>child_telephone_SearchableText | catalog,full_text/SearchableText/z_related_child_telephone</key>
  <key>default_email_text | catalog,email/url_string/z_related_default_email</key>
  <key>destination_person_title | category,catalog/title/z_related_destination_person</key>
+ <key>parent_delivery_start_date | delivery/start_date/z_related_parent_delivery</key>
  <key>related_resource_use_uid | category,category,catalog,catalog/uid/z_related_resource_related_use</key>
  <key>source_organisation_title | category,catalog/title/z_related_source_organisation</key>
  <key>source_person_title | category,catalog/title/z_related_source_person</key>
