@@ -4234,7 +4234,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
   @staticmethod
   def _getZodbObjectId(id):
-    return DocumentComponent._getIdPrefix() + '.' + id
+    return DocumentComponent.getIdPrefix() + '.' + id
 
   @staticmethod
   def _getFilesystemPath(class_id):
@@ -4342,7 +4342,7 @@ class ExtensionTemplateItem(DocumentTemplateItem):
 
   @staticmethod
   def _getZodbObjectId(id):
-    return ExtensionComponent._getIdPrefix() + '.' + id
+    return ExtensionComponent.getIdPrefix() + '.' + id
 
   def getTemplateIdList(self):
     return self.getTemplateExtensionIdList()
@@ -4363,7 +4363,7 @@ class TestTemplateItem(DocumentTemplateItem):
 
   @staticmethod
   def _getZodbObjectId(id):
-    return TestComponent._getIdPrefix() + '.' + id
+    return TestComponent.getIdPrefix() + '.' + id
 
   def getTemplateIdList(self):
     return self.getTemplateTestIdList()

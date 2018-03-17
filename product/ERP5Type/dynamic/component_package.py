@@ -39,6 +39,7 @@ from Products.ERP5Type.Globals import get_request
 from . import aq_method_lock
 from types import ModuleType
 from zLOG import LOG, BLATHER, WARNING
+from Acquisition import aq_base
 
 class ComponentVersionPackage(ModuleType):
   """
@@ -73,9 +74,9 @@ class ComponentDynamicPackage(ModuleType):
 
     self._namespace = namespace
     self._namespace_prefix = namespace + '.'
+    self._id_prefix = namespace.rsplit('.', 1)[1]
     self._portal_type = portal_type
     self.__version_suffix_len = len('_version')
-    self.__registry_dict = collections.defaultdict(dict)
     self.__fullname_source_code_dict = {}
 
     # Add this module to sys.path for future imports
@@ -83,48 +84,6 @@ class ComponentDynamicPackage(ModuleType):
 
     # Add the import hook
     sys.meta_path.append(self)
-
-  @property
-  def _registry_dict(self):
-    """
-    Create the component registry, this is very similar to
-    Products.ERP5Type.document_class_registry and avoids checking whether a
-    Component exists at each call at the expense of being slower when being
-    re-generated after a reset. Moreover, it allows to handle reference
-    easily.
-    """
-    if not self.__registry_dict:
-      portal = getSite()
-
-      try:
-        component_tool = portal.portal_components
-      # When installing ERP5 site, erp5_core_components has not been installed
-      # yet, thus this will obviously failed...
-      #
-      # XXX-arnau: Is this needed as it is now done in synchronizeDynamicModules?
-      except AttributeError:
-        return {}
-
-      version_priority_set = set(portal.getVersionPriorityNameList())
-
-      # objectValues should not be used for a large number of objects, but
-      # this is only done upon reset, moreover using the Catalog is too risky
-      # as it lags behind and depends upon objects being reindexed
-      for component in component_tool.objectValues(portal_type=self._portal_type):
-        # Only consider modified or validated states as state transition will
-        # be handled by component_validation_workflow which will take care of
-        # updating the registry
-        validation_state_tuple = component.getValidationState()
-        if validation_state_tuple in ('modified', 'validated'):
-          version = component.getVersion(validated_only=True)
-          # The versions should have always been set on ERP5Site property
-          # beforehand
-          if version in version_priority_set:
-            reference = component.getReference(validated_only=True)
-            self.__registry_dict[reference][version] = (component.getId(),
-                                                        component._p_oid)
-
-    return self.__registry_dict
 
   def get_source(self, fullname):
     """
@@ -160,12 +119,6 @@ class ComponentDynamicPackage(ModuleType):
     except RuntimeError:
       import_lock_held = False
 
-    # The import lock has been released, but as _registry_dict may be
-    # initialized or cleared, no other Components should access this critical
-    # region
-    #
-    # TODO-arnau: Too coarse-grain?
-    aq_method_lock.acquire()
     try:
       site = getSite()
 
@@ -173,6 +126,7 @@ class ComponentDynamicPackage(ModuleType):
       # erp5.component.XXX.YYY.ZZZ where erp5.component.XXX.YYY is the current
       # Component where an import is done
       name = fullname[len(self._namespace_prefix):]
+      # name=VERSION_version.REFERENCE
       if '.' in name:
         try:
           version, name = name.split('.')
@@ -180,23 +134,38 @@ class ComponentDynamicPackage(ModuleType):
         except ValueError:
           return None
 
-        try:
-          self._registry_dict[name][version]
-        except KeyError:
+        id_ = "%s.%s.%s" % (self._id_prefix, version, name)
+        # aq_base() because this should not go up to ERP5Site and trigger
+        # side-effects, after all this only check for existence...
+        component = getattr(aq_base(site.portal_components), id_, None)
+        if component is None or component.getValidationState() not in ('modified',
+                                                                       'validated'):
           return None
 
       # Skip unavailable components, otherwise Products for example could be
       # wrongly considered as importable and thus the actual filesystem class
       # ignored
-      elif (name not in self._registry_dict and
-            name[:-self.__version_suffix_len] not in site.getVersionPriorityNameList()):
-        return None
+      #
+      # name=VERSION_version
+      elif name.endswith('_version'):
+        if name[:-self.__version_suffix_len] not in site.getVersionPriorityNameList():
+          return None
+
+      # name=REFERENCE
+      else:
+        component_tool = aq_base(site.portal_components)
+        for version in site.getVersionPriorityNameList():
+          id_ = "%s.%s.%s" % (self._id_prefix, version, name)
+          component = getattr(component_tool, id_, None)
+          if component is not None and component.getValidationState() in ('modified',
+                                                                          'validated'):
+            break
+        else:
+          return None
 
       return self
 
     finally:
-      aq_method_lock.release()
-
       # Internal release of import lock at the end of import machinery will
       # fail if the hook is not acquired
       if import_lock_held:
@@ -258,25 +227,17 @@ class ComponentDynamicPackage(ModuleType):
         raise ImportError("%s: should be %s.VERSION.COMPONENT_REFERENCE (%s)" % \
                             (fullname, self._namespace, error))
 
-      try:
-        component_id = self._registry_dict[name][version][0]
-      except KeyError:
-        raise ImportError("%s: version %s of Component %s could not be found" % \
-                            (fullname, version, name))
+      component_id = "%s.%s.%s" % (self._id_prefix, version, name)
 
     # Otherwise, find the Component with the highest version priority
     else:
-      try:
-        component_version_dict = self._registry_dict[name]
-      except KeyError:
-        raise ImportError("%s: Component %s could not be found" % (fullname,
-                                                                   name))
-
+      component_tool = aq_base(site.portal_components)
       # Version priority name list is ordered in descending order
       for version in site.getVersionPriorityNameList():
-        component_id_uid_tuple = component_version_dict.get(version)
-        if component_id_uid_tuple is not None:
-          component_id = component_id_uid_tuple[0]
+        component_id = "%s.%s.%s" % (self._id_prefix, version, name)
+        component = getattr(component_tool, component_id, None)
+        if component is not None and component.getValidationState() in ('modified',
+                                                                        'validated'):
           break
       else:
         raise ImportError("%s: no version of Component %s in Site priority" % \
@@ -433,8 +394,7 @@ class ComponentDynamicPackage(ModuleType):
     if sub_package:
       package = sub_package
     else:
-      # Clear the Component registry and source code dict only once
-      self.__registry_dict.clear()
+      # Clear the source code dict only once
       self.__fullname_source_code_dict.clear()
       package = self
 

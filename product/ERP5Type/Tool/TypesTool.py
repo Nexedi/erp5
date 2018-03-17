@@ -210,7 +210,23 @@ class TypesTool(TypeProvider):
     document_type_set = set(document_class_registry)
 
     import erp5.component.document
-    document_type_set.update(erp5.component.document._registry_dict)
+    portal = self.getPortalObject()
+    version_priority_set = set(portal.getVersionPriorityNameList())
+
+    # objectValues should not be used for a large number of objects, but
+    # this is only done upon reset, moreover using the Catalog is too risky
+    # as it lags behind and depends upon objects being reindexed
+    for component in portal.portal_components.objectValues(portal_type='Document Component'):
+      # Only consider modified or validated states as state transition will
+      # be handled by component_validation_workflow which will take care of
+      # updating the registry
+      validation_state_tuple = component.getValidationState()
+      if validation_state_tuple in ('modified', 'validated'):
+        version = component.getVersion(validated_only=True)
+        # The versions should have always been set on ERP5Site property
+        # beforehand
+        if version in version_priority_set:
+          document_type_set.add(component.getReference(validated_only=True))
 
     return sorted(document_type_set)
 

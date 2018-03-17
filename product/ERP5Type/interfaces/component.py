@@ -63,7 +63,7 @@ class IComponent(Interface):
     Return the module name where Component module are loaded into
     """
 
-  def _getIdPrefix():
+  def getIdPrefix():
     """
     Return the ID prefix for Component objects
     """

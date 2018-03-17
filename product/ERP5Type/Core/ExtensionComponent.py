@@ -59,5 +59,5 @@ class ExtensionComponent(ComponentMixin, TextContentHistoryMixin):
     return 'erp5.component.extension'
 
   @staticmethod
-  def _getIdPrefix():
+  def getIdPrefix():
     return 'extension'
