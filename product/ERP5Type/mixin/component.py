@@ -181,14 +181,14 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                                        default='')
     }
 
+  _message_invalid_id = "ID is invalid, should be '${id_prefix}.VERSION.REFERENCE'"
+
   _message_reference_not_set = "Reference must be set"
   _message_invalid_reference = "Reference cannot end with '_version' or "\
       "start with '_' or be equal to find_module, load_module or reset"
 
   _message_version_not_set = "Version must be set"
   _message_invalid_version = "Version cannot start with '_'"
-  _message_duplicated_version_reference = "${id} is validated has the same "\
-       "Reference and Version"
 
   _message_text_content_not_set = "No source code"
   _message_text_content_error = "Error in Source Code: ${error_message}"
@@ -220,10 +220,27 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     """
     error_list = super(ComponentMixin, self).checkConsistency(*args, **kw)
     object_relative_url = self.getRelativeUrl()
+
+    is_id_invalid = False
+    try:
+      prefix, version, reference = self.getId().split('.')
+    except ValueError:
+      is_id_invalid = True
+    else:
+      if (prefix != self.getIdPrefix() or
+          version != self.getVersion() or
+          reference != self.getReference()):
+        is_id_invalid = True
+
+    if is_id_invalid:
+      error_list.append(
+        ConsistencyMessage(self,
+                           object_relative_url,
+                           message=self._message_invalid_id,
+                           mapping={'id_prefix': self.getIdPrefix()}))
+
     reference = self.getReference()
-    reference_has_error = False
     if not reference:
-      reference_has_error = True
       error_list.append(
         ConsistencyMessage(self,
                            object_relative_url,
@@ -233,7 +250,6 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     elif (reference.endswith('_version') or
           reference[0] == '_' or
           reference in ('find_module', 'load_module', 'reset')):
-      reference_has_error = True
       error_list.append(
         ConsistencyMessage(self,
                            object_relative_url,
@@ -251,26 +267,6 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                                            object_relative_url,
                                            message=self._message_invalid_version,
                                            mapping={}))
-    else:
-      package = __import__(self._getDynamicModuleNamespace(), globals(),
-                           fromlist=[self._getDynamicModuleNamespace()], level=0)
-      component_id = None
-      component_uid = None
-      from Products.ERP5Type.dynamic import aq_method_lock
-      with aq_method_lock:
-        component_id_uid_tuple = package._registry_dict.get(
-          self.getReference(), {}).get(self.getVersion(), None)
-        if component_id_uid_tuple:
-          component_id, component_uid = component_id_uid_tuple
-
-      if (component_id is not None and component_uid is not None and
-          not reference_has_error and
-          component_uid != self._p_oid and component_id != self.getId()):
-        error_list.append(
-          ConsistencyMessage(self,
-                             object_relative_url,
-                             message=self._message_duplicated_version_reference,
-                             mapping=dict(id=component_id)))
 
     text_content = self.getTextContent()
     if not text_content:
@@ -364,7 +360,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     # needed when importing from filesystem, moreover errors may occur
     # if in the same transaction a Component is created and another
     # one depending upon the former...
-    object_id = '%s.%s.%s' % (cls._getIdPrefix(), version, reference)
+    object_id = '%s.%s.%s' % (cls.getIdPrefix(), version, reference)
     new_component = context.newContent(id=object_id,
                                        reference=reference,
                                        version=version,

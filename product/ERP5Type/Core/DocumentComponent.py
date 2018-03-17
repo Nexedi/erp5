@@ -60,5 +60,5 @@ class DocumentComponent(ComponentMixin, TextContentHistoryMixin):
     return 'erp5.component.document'
 
   @staticmethod
-  def _getIdPrefix():
+  def getIdPrefix():
     return 'document'

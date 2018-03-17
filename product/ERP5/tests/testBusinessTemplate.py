@@ -7349,7 +7349,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
         Folder._setOb(self, id, object)
     """)
 
-    component_id_prefix = DocumentComponent._getIdPrefix()
+    component_id_prefix = DocumentComponent.getIdPrefix()
     component_portal_type = DocumentComponent.portal_type
     tool_type = 'My Tool'
     tool_class = 'MyTool'
@@ -7859,7 +7859,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  component_id_prefix = DocumentComponent._getIdPrefix()
+  component_id_prefix = DocumentComponent.getIdPrefix()
   component_portal_type = DocumentComponent.portal_type
 
   def stepCreateZodbDocument(self, sequence=None, **kw):
@@ -8345,7 +8345,7 @@ class TestExtensionTemplateItem(TestDocumentTemplateItem):
   template_property = 'template_extension_id_list'
 
   # Specific to ZODB Extension Component
-  component_id_prefix = ExtensionComponent._getIdPrefix()
+  component_id_prefix = ExtensionComponent.getIdPrefix()
   component_portal_type = ExtensionComponent.portal_type
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
@@ -8364,7 +8364,7 @@ class TestTestTemplateItem(TestDocumentTemplateItem):
   template_property = 'template_test_id_list'
 
   # Specific to ZODB Extension Component
-  component_id_prefix = TestComponent._getIdPrefix()
+  component_id_prefix = TestComponent.getIdPrefix()
   component_portal_type = TestComponent.portal_type
 
   def stepAddTestToBusinessTemplate(self, sequence=None, **kw):
