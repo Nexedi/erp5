@@ -44,6 +44,7 @@ import httplib
 import Utils
 import requests
 import slapos.slap
+import cPickle as pickle
 from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
 from Updater import Updater
@@ -90,6 +91,7 @@ HTPASSWD = "/.htpasswd"
 PASSWORD_FILE = "/sr_pass"
 PASSWORD_LENGTH = 10
 HOSTFILE = "/hosts"
+SR_DICT = "frontend_software_dict"
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
@@ -367,15 +369,43 @@ Require valid-user
       software_file.write(line)
     software_file.close()
 
+  def newFrontendMasterSoftware(self, frontend_master_reference, frontend_software):
+    def getSoftwareDictionary(software_dict_file):
+      software_dict = {}
+      if os.path.isfile(software_dict_file):
+        with open(software_dict_file, 'r') as file:
+          software_dict = pickle.loads(file.read())
+      return software_dict
+    def updateSoftwareDictionary(software_dict_file, software_dict, frontend_master_reference, frontend_software):
+      software_dict[frontend_master_reference] = frontend_software
+      with open(software_dict_file, 'w') as file:
+        file.write(pickle.dumps(software_dict))
+    frontend_master_reference = frontend_master_reference.replace(";",",")
+    slappart_directory = self.testnode.config['srv_directory'].rsplit("srv", 1)[0]
+    software_dict_file = slappart_directory + "var/" + SR_DICT
+    software_dict = getSoftwareDictionary(software_dict_file)
+    if frontend_master_reference in software_dict:
+      if software_dict[frontend_master_reference] != frontend_software:
+        updateSoftwareDictionary(software_dict_file, software_dict, frontend_master_reference, frontend_software)
+        return True
+    else:
+      updateSoftwareDictionary(software_dict_file, software_dict, frontend_master_reference, frontend_software)
+      return True
+    return False
+
   def prepareFrontendMasterInstance(self, computer, frontend_software, test_suite_title):
     self.frontend_master_reference = "Scalability-Frontend-Master-"
     self.frontend_master_reference += "("+test_suite_title+")-"
     self.frontend_master_reference += str(computer).replace("'","")
-    self.frontend_master_reference += "-root"
+    restart = True
     slap, supply, order = self._initializeSlapOSConnection()
     slapos_communicator = SlapOSMasterCommunicator.SlapOSTester(
 				self.frontend_master_reference, slap, order, supply,
 				frontend_software, computer_guid=computer)
+    # Destroy old frontend instance if frontend software has changed for this testsuite
+    if self.newFrontendMasterSoftware(self.frontend_master_reference, frontend_software):
+      restart = False
+      slapos_communicator.requestInstanceDestroy(self.frontend_master_reference)
     # Ask for software installation
     start_time = time.time()
     slapos_communicator.supply(frontend_software, computer)
@@ -393,11 +423,16 @@ Require valid-user
     logger.info("Master Frontend instance started.")
     frontend_master_dict = slapos_communicator.getMasterFrontendDict()
     if not frontend_master_dict['frontend_master_ipv6']:
-      raise ValueError("ERROR with master frontend: ipv6 url not found")
+      raise ValueError("ERROR in master frontend: ipv6 url not found")
     if not frontend_master_dict['instance_guid']:
       raise ValueError("ERROR in master frontend: instance guid not found")
     parsed_url = urlparse.urlparse(frontend_master_dict['frontend_master_ipv6'])
     self.frontend_master_ipv6 = parsed_url.hostname
+    if restart:
+      slapos_communicator.requestInstanceStop(self.frontend_master_reference, master_request_kw)
+      slapos_communicator.waitInstanceStopped(self.frontend_master_reference)
+      slapos_communicator.requestInstanceStart(self.frontend_master_reference, master_request_kw)
+      slapos_communicator.waitInstanceStarted(self.frontend_master_reference)
     return frontend_master_dict['instance_guid']
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
