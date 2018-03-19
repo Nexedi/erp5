@@ -5,15 +5,16 @@ form = context.restrictedTraverse(form)
 request = container.REQUEST
 request.other.update(request_other)
 
-if form.meta_type == 'ERP5 Report':
-  report_section_list = getattr(context, form.report_method)()
-elif form.meta_type == 'ERP5 Form':
-  report_section_list = []
-  for field in form.get_fields():
-    if field.getRecursiveTemplateField().meta_type == 'ReportBox':
-      report_section_list.extend(field.render())
-else:
-  raise ValueError, 'form meta_type (%r) unknown' %(form.meta_type,)
+with portal.Localizer.translationContext(localizer_language):
+  if form.meta_type == 'ERP5 Report':
+    report_section_list = getattr(context, form.report_method)()
+  elif form.meta_type == 'ERP5 Form':
+    report_section_list = []
+    for field in form.get_fields():
+      if field.getRecursiveTemplateField().meta_type == 'ReportBox':
+        report_section_list.extend(field.render())
+  else:
+    raise ValueError, 'form meta_type (%r) unknown' %(form.meta_type,)
 
 # Rebuild request_other as report section can have modify request content
 request_other = portal.ERP5Site_filterRequestForDeferredStyle(request)
