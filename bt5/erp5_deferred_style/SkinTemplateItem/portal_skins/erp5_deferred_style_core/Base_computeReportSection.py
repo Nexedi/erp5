@@ -18,7 +18,6 @@ else:
 # Rebuild request_other as report section can have modify request content
 request_other = portal.ERP5Site_filterRequestForDeferredStyle(request)
 
-localizer_language = portal.Localizer.get_selected_language()
 active_process = portal.portal_activities.newActiveProcess()
 
 for idx, report_section in enumerate(report_section_list):
