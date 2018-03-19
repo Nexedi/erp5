@@ -25,6 +25,7 @@ skin_name = request['deferred_portal_skin']
 # request).
 request_other = portal.ERP5Site_filterRequestForDeferredStyle(request)
 
+localizer_language = portal.Localizer.get_selected_language()
 
 context.activate(activity="SQLQueue", tag=tag, after_tag=after_tag,
   priority=priority).Base_computeReportSection(
@@ -34,7 +35,8 @@ context.activate(activity="SQLQueue", tag=tag, after_tag=after_tag,
     tag=tag,
     skin_name=skin_name, 
     format=format,
-    priority=priority, 
+    priority=priority,
+    localizer_language=localizer_language,
     **kw)
 
 context.activate(activity='SQLQueue', after_tag=tag).getTitle()
