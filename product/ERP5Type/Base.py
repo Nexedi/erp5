@@ -1981,7 +1981,11 @@ class Base( CopyContainer,
   getDefaultRelatedValue = _getDefaultRelatedValue
 
   def _getRelatedValueList(self, *args, **kw):
+    # a temp object does not really exist, it has no path, thus there is no
+    # chance to have any single related object.
     # backward compatibility to keep strict keyword working
+    if self.isTempObject():
+      return []
     if 'strict' in kw:
       kw['strict_membership'] = kw.pop('strict')
     return self._getCategoryTool().getRelatedValueList(self, *args, **kw)

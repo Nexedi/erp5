@@ -450,6 +450,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       method = getattr(person_property_sheet, 'getRegionRelatedList', None)
       self.assertNotEquals(None, method)
 
+    def test_04b_CategoryAccessorsOnTempObjects(self):
+      """
+      basic category methods test on temp objects
+      """
+      person_object = self.getPersonModule().newContent(
+              portal_type = "Person",
+              first_name="John", last_name="Smith",
+              temp_object = 1)
+      self.assertEqual([], person_object.getRegionRelatedValueList())
 
     def test_05_setProperty(self):
       """
