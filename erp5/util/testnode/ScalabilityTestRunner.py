@@ -444,6 +444,9 @@ Require valid-user
 					supply, 
 					self.reachable_profile, 
 					computer_guid=self.launcher_nodes_computer_guid[0])
+      # Delete old instances
+      logger.info("Destroying old requested instances")
+      self.slapos_communicator.requestInstanceDestroy(self.instance_title)
       # Ask for SR installation
       for computer_guid in self.involved_nodes_computer_guid:
         self._prepareSlapOS(self.reachable_profile, computer_guid) 
@@ -692,10 +695,6 @@ Require valid-user
       except Exception as e:
         error_message = "Error in communication with master: " + str(e)
         break
-
-    # Delete old instances
-    logger.info("Destroying requested instances")
-    self.slapos_communicator.requestInstanceDestroy(self.instance_title)
 
     # If error appears then that's a test failure.    
     if error_message:
