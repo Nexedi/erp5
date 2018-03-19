@@ -1,5 +1,4 @@
 portal = context.getPortalObject()
-N_ = portal.Base_translateString
 
 form = context.restrictedTraverse(form)
 request = container.REQUEST
@@ -15,6 +14,8 @@ with portal.Localizer.translationContext(localizer_language):
         report_section_list.extend(field.render())
   else:
     raise ValueError, 'form meta_type (%r) unknown' %(form.meta_type,)
+
+  report_title = portal.Base_translateString((form.getProperty('title')))
 
 # Rebuild request_other as report section can have modify request content
 request_other = portal.ERP5Site_filterRequestForDeferredStyle(request)
@@ -45,7 +46,7 @@ activity_context.activate(activity='SQLQueue', after_tag=tag, priority=priority)
            active_process_url=active_process.getRelativeUrl(),
            skin_name=skin_name,
            localizer_language=localizer_language,
-           title=N_(form.getProperty('title')),
+           title=report_title,
            request_other=request_other,
            form_path=form.getPhysicalPath(),
            user_name=user_name,
