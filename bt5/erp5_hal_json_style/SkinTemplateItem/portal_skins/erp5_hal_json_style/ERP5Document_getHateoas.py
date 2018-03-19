@@ -464,7 +464,7 @@ def getFieldDefault(form, field, key, value=None):
   if value is None:
     value = (REQUEST.form.get(field.id, REQUEST.form.get(key, None)) or
              field.get_value('default', request=REQUEST, REQUEST=REQUEST))
-    if field.has_value("unicode") and field.get_value("unicode") and isinstance(value, 'unicode'):
+    if field.has_value("unicode") and field.get_value("unicode") and isinstance(value, unicode):
       value = unicode(value, form.get_form_encoding())
   if getattr(value, 'translate', None) is not None:
     return "%s" % value
