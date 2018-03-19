@@ -393,12 +393,29 @@ class BuilderMixin(XMLObject, Amount, Predicate):
 
     movement_list = []
 
+    # Remove the Past
+    previous_movement_list = portal.portal_catalog(
+      portal_type=self.getDeliveryLinePortalType(),
+      simulation_state="auto_planned",
+      strict_resource_uid=supply.getResourceUid(),
+      #strict_source_uid=supply.getSourceUid(),
+      #strict_source_section_uid=supply.getSourceSectionUid(),
+      #strict_destination_uid=supply.getDestinationUid(),
+      #strict_destination_section_uid=supply.getDestinationSectionUid(),
+      parent_delivery_start_date={'query': (supply.getStartDateRangeMin(), supply.getStartDateRangeMax()),
+                                  'range':"minmax"},
+    )
+    #previous_movement_list= []
+    for brain in previous_movement_list:
+      brain.getObject().setQuantity(0)
+
     # Prepare history list to work with
     history_list = resource_value.Resource_getInventoryHistoryList(
       from_date=from_date,
       node_uid=supply.getDestinationUid()
       # XXX This should be bound to a stard and stop date
       )
+    #self.log("history_list len: %s" % len(history_list))
 
     # evaluate future inventory at date
     future_inventory_to_date = portal.portal_simulation.getFutureInventory(
@@ -418,6 +435,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         # Hackish and dangerous
         next_start_date=limit_date)).earliestTime()
 
+    #self.log(limit_date_list)
     # Create a movement per period
     for period_start_date in limit_date_list:
 
@@ -439,7 +457,6 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         )
 
       quantity = 0
-      #self.log("at %s min: %s, Ordered: %s, inventory:%s, quantity:%s" % (date, min_inventory, ordered_inventory, inventory, quantity))
 
       if future_inventory_to_date < min_inventory: # SKU
          quantity = min_inventory - future_inventory_to_date
@@ -449,18 +466,20 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       if start_date > supply.getStartDateRangeMax():
         break
       if start_date < supply.getStartDateRangeMin():
-        break
+        continue
 
-      #self.log("Week %s Will order %s at %s for period %s" % (delivery_date.week(), quantity, delivery_date, period_start_date))
-      movement_list.append(
-        newMovement(
-          effective_date,
-          start_date,
-          delivery_date,
-          ordered_quantity,
-          ordered_unit
+      #self.log("at %s min: %s, inventory:%s, quantity:%s" % (period_start_date, min_inventory, future_inventory_to_date, quantity))
+      if quantity != 0:
+        self.log("Week %s Will order %s at %s for period %s" % (delivery_date.week(), quantity, delivery_date, period_start_date))
+        movement_list.append(
+          newMovement(
+            effective_date,
+            start_date,
+            delivery_date,
+            ordered_quantity,
+            ordered_unit
+          )
         )
-      )
 
       # calculate inventory at the end of the period
       future_inventory_to_date += quantity
