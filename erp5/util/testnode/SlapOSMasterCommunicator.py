@@ -494,7 +494,7 @@ class SlapOSTester(SlapOSMasterCommunicator):
           self._request(INSTANCE_STATE_DESTROYED, instance["title"])
         else:
           root_instance = instance
-      self._request(INSTANCE_STATE_DESTROYED, instance_title)
+      self._request(INSTANCE_STATE_DESTROYED, root_instance["title"])
     else:
       logger.info("Instance not found")
 
