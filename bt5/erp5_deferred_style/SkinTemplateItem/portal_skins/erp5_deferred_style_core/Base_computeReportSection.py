@@ -16,19 +16,7 @@ else:
   raise ValueError, 'form meta_type (%r) unknown' %(form.meta_type,)
 
 # Rebuild request_other as report section can have modify request content
-request_other = {}
-for k, v in request.items():
-  if k not in ('TraversalRequestNameStack', 'AUTHENTICATED_USER', 'URL',
-      'SERVER_URL', 'AUTHENTICATION_PATH', 'USER_PREF_LANGUAGES', 'PARENTS',
-      'PUBLISHED', 'AcceptLanguage', 'AcceptCharset', 'RESPONSE', 'SESSION',
-      'ACTUAL_URL'):
-    # XXX proxy fields stores a cache in request.other that cannot be pickled
-    if same_type(k, '') and str(k).startswith('field__proxyfield'):
-      continue
-    # Remove FileUpload parameters
-    elif getattr(v, 'headers', ''):
-      continue
-    request_other[k] = v
+request_other = portal.ERP5Site_filterRequestForDeferredStyle(request)
 
 localizer_language = portal.Localizer.get_selected_language()
 active_process = portal.portal_activities.newActiveProcess()
