@@ -70,6 +70,8 @@ param_dict = [
   { 'message': 'Creation Date', 'translation': 'chuangjianshijian', 'language': 'wo'},
   { 'message': 'Modification Date', 'translation': 'xiugaishijian', 'language': 'wo'},
   { 'message': 'Owner', 'translation': 'shuoyouzhe', 'language': 'wo'},
+  { 'message': 'Foo Domain', 'translation': 'Foo quyu', 'language': 'wo'},
+  { 'message': 'Foo Category', 'translation': 'Foo leibie', 'language': 'wo'},
   { 'message': 'Configure', 'translation': 'peizhi', 'language': 'wo'},
   { 'message': 'Configure Editor', 'translation': 'peizhibianjiqi', 'language': 'wo'},
   { 'message': 'This page contains unsaved changes, do you really want to leave the page ?', 'translation': 'querenlikai?', 'language': 'wo'}

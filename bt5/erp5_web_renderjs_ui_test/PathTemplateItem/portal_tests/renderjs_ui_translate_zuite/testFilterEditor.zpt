@@ -11,11 +11,17 @@
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 
+<!-- Let's set up domain property on listbox -->
+<tr><td>open</td>
+    <td>${base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_all_columns=creation_date+%7C+Creation Date+%0A+modification_date+%7C+Modification Date+%0A+owner_title+%7C+Owner&amp;field_domain_root_list=foo_category+%7C+Foo%20Category+%0A+foo_domain+%7C+Foo%20Domain</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Set Successfully.</td><td></td></tr>
+
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/create_translation_data" />
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/wo/#/foo_bar_module</td>
+  <td>${base_url}/web_site_module/renderjs_runner/wo/#/foo_module</td>
   <td></td>
 </tr>
 
@@ -54,7 +60,7 @@
 <tr>
   <td>verifySelectOptions</td>
   <td>//div[@class="filter_item_container"]/div[1]//select[1]</td>
-  <td>ID,biaoti,chuangjianshijian,xiugaishijian,shuoyouzhe,soushuowenben,soushuo</td>
+  <td>ID,biaoti,chuangjianshijian,xiugaishijian,shuoyouzhe,Foo leibie,Foo quyu,soushuowenben,soushuo</td>
 </tr>
 
 <tr>
@@ -68,7 +74,7 @@
 <tr>
   <td>select</td>
   <td>//div[@class="filter_item_container"]/div[1]//select[1]</td>
-  <td>index=5</td>
+  <td>index=7</td>
 </tr>
 
 

@@ -852,7 +852,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
           "query": sql_catalog.buildQuery(
             list_method_query_dict,
             ignore_unknown_columns=True).asSearchTextExpression(sql_catalog)})},
-      "domain_root_list": field.get_value("domain_root_list")
+      "domain_root_list": [(x, Base_translateString(y)) for x, y in field.get_value("domain_root_list")]
     })
     result["domain_dict"] = getDomainSelection([x[0] for x in result["domain_root_list"]])
 
