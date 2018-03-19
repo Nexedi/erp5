@@ -51,8 +51,11 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def getBusinessTemplateList(self):
     return ('erp5_core_proxy_field_legacy',
-            'erp5_base', 'erp5_ods_style',
-            'erp5_odt_style', 'erp5_deferred_style',)
+            'erp5_base',
+            'erp5_ods_style',
+            'erp5_odt_style',
+            'erp5_deferred_style',
+            'erp5_l10n_fr',)
 
   def afterSetUp(self):
     self.login()
@@ -147,6 +150,63 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
         break
     else:
       self.fail('Attachment not found in email\n%s' % message_text)
+
+  def test_lang_negociation(self):
+    # User's Accept-Language header is honored in reports.
+    self.loginAsUser('bob')
+    self.portal.changeSkin('Deferred')
+    response = self.publish(
+        '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
+        % (self.portal.getId(), self.skin),
+        '%s:%s' % (self.username, self.password),
+        extra={
+          'HTTP_ACCEPT_LANGUAGE': 'fr;q=0.9,en;q=0.8',
+          })
+    self.tic()
+    mail_message = email.message_from_string(self.portal.MailHost._last_message[2])
+    # mail subject is translated
+    self.assertEqual('Historique', mail_message['subject'])
+    # content is translated
+    part, = [x for x in mail_message.walk() if x.get_content_type() == self.content_type]
+    self.assertIn(
+        'Historique',
+        self.portal.portal_transforms.convertTo(
+          'text/plain',
+          part.get_payload(decode=True),
+          context=self.portal,
+          mimetype=self.content_type).getData())
+
+  def test_lang_negociation_cookie(self):
+    # User's LOCALIZER_LANGUAGE cookie is honored in reports and have priority over Accept-Language
+    self.loginAsUser('bob')
+    self.portal.changeSkin('Deferred')
+    response = self.publish(
+        '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
+        % (self.portal.getId(), self.skin),
+        '%s:%s' % (self.username, self.password),
+        # user has configured preferred language to english
+        extra={
+          'HTTP_ACCEPT_LANGUAGE': 'en;q=0.9,fr;q=0.8',
+          },
+        # but has forced to french in a Localizer cookie
+        env={
+          'HTTP_COOKIE': 'LOCALIZER_LANGUAGE="fr"',
+          })
+    self.tic()
+    mail_message = email.message_from_string(self.portal.MailHost._last_message[2])
+    # mail subject is translated
+    self.assertEqual('Historique', mail_message['subject'])
+    # content is translated
+    mail_message = email.message_from_string(self.portal.MailHost._last_message[2])
+    part, = [x for x in mail_message.walk() if x.get_content_type() == self.content_type]
+    self.assertIn(
+        'Historique',
+        self.portal.portal_transforms.convertTo(
+          'text/plain',
+          part.get_payload(decode=True),
+          context=self.portal,
+          mimetype=self.content_type).getData())
+
 
 
 class TestODSDeferredStyle(TestDeferredStyle):
