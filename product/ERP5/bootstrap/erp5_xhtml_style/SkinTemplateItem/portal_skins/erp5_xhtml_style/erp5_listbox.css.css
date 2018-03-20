@@ -429,6 +429,10 @@ table.listbox input.listbox-select-action{
   float:none;
 }
 
+.listbox-table-data-cell {
+  text-align: left;
+}
+
 .listbox-table-data-cell > .figure{
   float:right;
   display:block;
