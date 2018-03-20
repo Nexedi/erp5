@@ -26,7 +26,7 @@ comment_list = []
 for post in post_list:
   owner = post.Base_getOwnerTitle()
   time_stamp = formatDate(post.getStartDate())
-  content = post.getTextContent()
+  content = post.asStrippedHTML()
   successor_list = post.getSuccessorValueList()
   successor_name = successor_link = None
   if successor_list:
