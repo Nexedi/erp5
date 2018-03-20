@@ -67,7 +67,7 @@
 </tr>
 <tr>
   <td>clickAndWait</td>
-  <td>//input[preceding-sibling::textarea[@name="field_my_bar_category_id_list"]][@value='update...']</td>
+  <td>//input[preceding-sibling::textarea[@name="field_my_bar_category_id_list"]][@alt='update...']</td>
   <td></td>
 </tr>
 

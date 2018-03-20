@@ -58,7 +58,7 @@
 <tr>
   <td>clickAndWait</td>
   <!-- XXX maybe a better locator for relation field -->
-  <td>//input[@value='update...' and @type='image']</td>
+  <td>//input[@alt='update...' and @type='image']</td>
   <td></td>
 </tr>
 <tr>
@@ -86,7 +86,7 @@
 <tr>
   <td>clickAndWait</td>
   <!-- XXX maybe a better locator for relation field -->
-  <td>//input[@value='update...' and @type='image']</td>
+  <td>//input[@alt='update...' and @type='image']</td>
   <td></td>
 </tr>
 <tr>
@@ -114,7 +114,7 @@
 <tr>
   <td>clickAndWait</td>
   <!-- XXX maybe a better locator for relation field -->
-  <td>//input[@value='update...']</td>
+  <td>//input[@alt='update...']</td>
   <td></td>
 </tr>
 <tr>

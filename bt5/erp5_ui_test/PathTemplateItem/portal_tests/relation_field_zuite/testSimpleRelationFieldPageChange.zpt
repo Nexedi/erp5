@@ -47,7 +47,7 @@
 </tr>
 <tr>
   <td>clickAndWait</td>
-  <td>//input[preceding-sibling::input[@name="field_my_foo_big_category_title"]][@value='update...']</td>
+  <td>//input[preceding-sibling::input[@name="field_my_foo_big_category_title"]][@alt='update...']</td>
   <td></td>
 </tr>
 
