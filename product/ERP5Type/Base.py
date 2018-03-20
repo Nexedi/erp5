@@ -2300,7 +2300,8 @@ class Base( CopyContainer,
     """Returns the mapping which is used to translate IDs.
     """
     property_dict = {
-        'Address': dict(default_address='Default Address'),
+        'Address': dict(default_address='Default Address',
+                        delivery_address='Delivery Address'),
         'Telephone': dict(default_telephone='Default Telephone',
                           mobile_telephone='Mobile Telephone',),
         'Fax': dict(default_fax='Default Fax'),
