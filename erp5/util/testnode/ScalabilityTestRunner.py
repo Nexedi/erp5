@@ -74,8 +74,8 @@ MAX_CREATION_TEST_LINE = 60*10
 MAX_BOOTSRAPPING_TIME = 60*30
 # max time to get a connection
 MAX_CONNECTION_TIME = 60*5
-# time to check pending activities
-CHECK_ACTIVITIES_TIME = 60*2
+# time to check site bootstrap
+CHECK_BOOSTRAPPING_TIME = 60*2
 
 # runner names
 PERFORMANCE_RUNNER_SCRIPT = "performance_tester_erp5"
@@ -529,24 +529,93 @@ Require valid-user
       return {'status_code' : 0}
     return {'status_code' : 1}
 
-  def isInstanceReady(self, site_availability_url, userhosts_bin, requestUrlScript, exec_env):
+  def makeSuite(self, test_suite, location_list, **kwargs):
+    import imp
+    suite = None
+    repo_location = None
+    for location in location_list:
+      try:
+        module = imp.load_source(SCALABILITY_TEST, "%s/%s/%s" %(location, SCALABILITY_TEST, TEST_SUITE_INIT))
+        suite_class = getattr(module, test_suite)
+        suite = suite_class(**kwargs)
+        repo_location = "%s/%s/" % (location, SCALABILITY_TEST)
+      except:
+        pass
+    return suite, repo_location
+
+  def getInstanceInformation(self, suite):
+    logger.info("Getting instance information:")
+    instance_information_time = time.time()
+    instance_information = self.slapos_communicator.getInstanceUrlDict()
+    while not instance_information['frontend-url-list'] and \
+          time.time() - instance_information_time < MAX_FRONTEND_TIME:
+      time.sleep(5*60)
+      instance_information = self.slapos_communicator.getInstanceUrlDict()
+    logger.info(instance_information)
+    if not instance_information['frontend-url-list']:
+      raise ValueError("Error getting instance information: frontend url not available")
+    instance_url = suite.getScalabilityTestUrl(instance_information)
+    bootstrap_url = suite.getBootstrapScalabilityTestUrl(instance_information, count)
+    metric_url = suite.getScalabilityTestMetricUrl(instance_information)
+    site_availability_url = suite.getSiteAvailabilityUrl(instance_information)
+    return instance_url, bootstrap_url, metric_url, site_availability_url
+
+  def bootstrapInstance(self, bootstrap_url):
+    bootstrap_password = error_message = None
+    if bootstrap_url:
+      try:
+          logger.info("Bootstrapping instance...")
+          command = [self.userhosts_bin, self.requestUrlScript, bootstrap_url]
+          result = self.testnode.process_manager.spawn(*command, **self.exec_env)
+          if result['status_code']:
+            error_message = "Error while bootstrapping: " + str(result['stdout'])
+          else:
+            response_dict = json.loads(result['stdout'])
+            if response_dict["status_code"] != 0:
+              error_message = "Error while bootstrapping: " + response_dict["error_message"]
+            bootstrap_password = response_dict["password"]
+          logger.info("Bootstrap password: " + bootstrap_password)
+      except Exception as e:
+        error_message = "Error while bootstrapping: " + str(e)
+    return bootstrap_password, error_message
+
+  def isInstanceReady(self, site_availability_url):
+    error_message = None
+    if not site_availability_url:
+      return True, error_message
     start_time = time.time()
     while MAX_BOOTSRAPPING_TIME > time.time()-start_time:
       try:
-        command = [userhosts_bin, requestUrlScript, site_availability_url]
-        result = self.testnode.process_manager.spawn(*command, **exec_env)
+        command = [self.userhosts_bin, self.requestUrlScript, site_availability_url]
+        result = self.testnode.process_manager.spawn(*command, **self.exec_env)
         if result['status_code']:
           logger.info("Error checking site availability. Response: " + str(result['stdout']))
         if int(result['stdout']) == 0:
           logger.info("Site ready for test.")
-          return True
+          return True, error_message
         logger.info("Site is not available yet.")
         logger.info("[DEBUG] Site availability url response: %d" % int(result['stdout']))
-        time.sleep(CHECK_ACTIVITIES_TIME)
+        time.sleep(CHECK_BOOSTRAPPING_TIME)
       except Exception as e:
         logger.info("Error checking site availability: " + str(e))
-        time.sleep(CHECK_ACTIVITIES_TIME)
-    return False
+        time.sleep(CHECK_BOOSTRAPPING_TIME)
+    error_message = "Error while bootstrapping: max bootstrap time exceded."
+    return False, error_message
+
+  def prepareUserHosts(self, instance_url, software_bin_directory):
+    parsed_url = urlparse.urlparse(instance_url)
+    testsuite_directory = self.testnode.config['repository_path_list'][0].rsplit('/', 1)[0]
+    host_file_path = testsuite_directory + HOSTFILE
+    with open(host_file_path, "w") as hosts_file:
+      file_content = """%s %s
+""" % (self.frontend_master_ipv6, parsed_url.hostname)
+      hosts_file.write(file_content)
+    self.exec_env = os.environ.copy()
+    self.exec_env.update({'HOSTS': host_file_path})
+    self.exec_env.update({'raise_error_if_fail': False})
+    software_hash_directory = self.testnode.config['slapos_binary'].rsplit("bin/slapos", 1)[0]
+    self.userhosts_bin = software_hash_directory + "parts/userhosts/userhosts"
+    self.requestUrlScript = software_bin_directory + REQUEST_URL_SCRIPT
 
   def runTestSuite(self, node_test_suite, portal_url):
     if not self.launchable:
@@ -565,21 +634,7 @@ Require valid-user
     count = 0
     error_message = None
 
-    def makeSuite(test_suite, location_list, **kwargs):
-      import imp
-      suite = None
-      repo_location = None
-      for location in location_list:
-        try:
-          module = imp.load_source(SCALABILITY_TEST, "%s/%s/%s" %(location, SCALABILITY_TEST, TEST_SUITE_INIT))
-          suite_class = getattr(module, test_suite)
-          suite = suite_class(**kwargs)
-          repo_location = "%s/%s/" % (location, SCALABILITY_TEST)
-        except:
-          pass
-      return suite, repo_location
-
-    suite, repo_location = makeSuite(node_test_suite.test_suite, self.testnode.config['repository_path_list'])
+    suite, repo_location = self.makeSuite(node_test_suite.test_suite, self.testnode.config['repository_path_list'])
     if suite == None:
       error_message = "Could not find test suite %s in the repositories" % node_test_suite.test_suite
       return {'status_code' : 1, 'error_message': error_message }
@@ -607,74 +662,23 @@ Require valid-user
         break
       logger.info("Test case for count : %d is in a running state." % count)
 
-      # loop for getting instance information
-      logger.info("Getting instance information:")
-      instance_information_time = time.time()
-      instance_information = self.slapos_communicator.getInstanceUrlDict()
-      while not instance_information['frontend-url-list'] and \
-            time.time() - instance_information_time < MAX_FRONTEND_TIME:
-        time.sleep(5*60)
-        instance_information = self.slapos_communicator.getInstanceUrlDict()
-      logger.info(instance_information)
-      if not instance_information['frontend-url-list']:
-        error_message = "Error getting instance information: frontend url not available"
-        break
-
-      # get information from testsuite
       try:
-        instance_url = suite.getScalabilityTestUrl(instance_information)
-        bootstrap_url = suite.getBootstrapScalabilityTestUrl(instance_information, count)
-        metric_url = suite.getScalabilityTestMetricUrl(instance_information)
-        site_availability_url = suite.getSiteAvailabilityUrl(instance_information)
-        logger.info("Instance url: " + str(instance_url))
+        instance_url, bootstrap_url, metric_url, site_availability_url = self.getInstanceInformation(suite)
       except Exception as e:
         error_message = "Error getting testsuite information: " + str(e)
         break
 
-      # adding frontend url to userhosts
-      try:
-        parsed_url = urlparse.urlparse(instance_url)
-        testsuite_directory = self.testnode.config['repository_path_list'][0].rsplit('/', 1)[0]
-        host_file_path = testsuite_directory + HOSTFILE
-        hosts_file = open(host_file_path, "w")
-        file_content = """%s %s
-""" % (self.frontend_master_ipv6, parsed_url.hostname)
-        hosts_file.write(file_content)
-        hosts_file.close()
-      except Exception as e:
-        error_message = "Error preparing userhost file: " + str(e)
-        break
-
       software_bin_directory = self.testnode.config['slapos_binary'].rsplit("slapos", 1)[0]
-      exec_env = os.environ.copy()
-      exec_env.update({'HOSTS': host_file_path})
-      exec_env.update({'raise_error_if_fail': False})
-      software_hash_directory = self.testnode.config['slapos_binary'].rsplit("bin/slapos", 1)[0]
-      userhosts_bin = software_hash_directory + "parts/userhosts/userhosts"
-      requestUrlScript = software_bin_directory + REQUEST_URL_SCRIPT
-
-      bootstrap_password = "insecure"
-      if bootstrap_url:
-        try:
-            logger.info("Bootstrapping instance...")
-            command = [userhosts_bin, requestUrlScript, bootstrap_url]
-            result = self.testnode.process_manager.spawn(*command, **exec_env)
-            if result['status_code']:
-              error_message = "Error while bootstrapping: " + str(result['stdout'])
-            else:
-              response_dict = json.loads(result['stdout'])
-              if response_dict["status_code"] != 0:
-                error_message = "Error while bootstrapping: " + response_dict["error_message"]
-                break
-              bootstrap_password = response_dict["password"]
-            logger.info("Bootstrap password: " + bootstrap_password)
-        except Exception as e:
-          error_message = "Error while bootstrapping: " + str(e)
-          break
-        if not self.isInstanceReady(site_availability_url, userhosts_bin, requestUrlScript, exec_env):
-          error_message = "Error while bootstrapping: max bootstrap time exceded."
-      if error_message:
+      try:
+        self.prepareUserHosts(instance_url, software_bin_directory)
+      except Exception as e:
+        error_message = "Error preparing userhost: " + str(e)
         break
+
+      bootstrap_password, error_message = self.bootstrapInstance(bootstrap_url)
+      if error_message: break
+      instance_ready, error_message = self.isInstanceReady(site_availability_url)
+      if error_message: break
 
       runner = software_bin_directory + PERFORMANCE_RUNNER_SCRIPT
       scalabilityRunner = software_bin_directory + SCALABILITY_RUNNER_SCRIPT
@@ -687,7 +691,7 @@ Require valid-user
       except Exception as e:
         error_message = "Error getting current test case information: " + str(e)
         break
-      command = [ userhosts_bin,
+      command = [ self.userhosts_bin,
                   scalabilityRunner,
                   "--instance-url", instance_url,
                   "--bootstrap-password", bootstrap_password,
@@ -703,7 +707,7 @@ Require valid-user
                   "--metric-url", metric_url
                 ]
       logger.info("Running test case...")
-      test_thread = TestThread(self.testnode.process_manager, command, logger.info, env=exec_env)
+      test_thread = TestThread(self.testnode.process_manager, command, logger.info, env=self.exec_env)
       test_thread.start()
 
       # Wait for test case ending
