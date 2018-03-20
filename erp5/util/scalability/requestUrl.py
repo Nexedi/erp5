@@ -21,7 +21,7 @@ def main():
   exit_status = 0
   error_message_set = set()
   if len(sys.argv) != 2:
-    error_message_set.add("Error: wrong parameters")
+    error_message_set.add("Error in parameters, please run : requestUrl [URL]")
   else:
     result, error_message_set = Connection().get(sys.argv[1])
   if error_message_set:
