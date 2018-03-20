@@ -56,11 +56,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>32.5</float> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Reader</string> </value>
+            <value> <string>Preview</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
