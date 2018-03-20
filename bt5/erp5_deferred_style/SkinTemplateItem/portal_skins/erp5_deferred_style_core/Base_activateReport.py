@@ -22,22 +22,10 @@ format = request.get('format', '')
 skin_name = request['deferred_portal_skin']
 
 # save request parameters (after calling the report_method which may tweak the
-# request). XXX we exclude some reserved names in a very ad hoc way
-request_other = {}
-for k, v in request.items():
-  if k not in ('TraversalRequestNameStack', 'AUTHENTICATED_USER', 'URL',
-      'SERVER_URL', 'AUTHENTICATION_PATH', 'USER_PREF_LANGUAGES', 'PARENTS',
-      'PUBLISHED', 'AcceptLanguage', 'AcceptCharset', 'RESPONSE', 'SESSION',
-      'ACTUAL_URL'):
-    # XXX proxy fields stores a cache in request.other that cannot be pickled
-    if same_type(k, '') and k.startswith('field__proxyfield'):
-      continue
-    # Remove FileUpload parameters
-    elif getattr(v, 'headers', ''):
-      continue
-    request_other[k] = v
+# request).
+request_other = portal.ERP5Site_filterRequestForDeferredStyle(request)
 
-
+localizer_language = portal.Localizer.get_selected_language()
 
 context.activate(activity="SQLQueue", tag=tag, after_tag=after_tag,
   priority=priority).Base_computeReportSection(
@@ -47,7 +35,8 @@ context.activate(activity="SQLQueue", tag=tag, after_tag=after_tag,
     tag=tag,
     skin_name=skin_name, 
     format=format,
-    priority=priority, 
+    priority=priority,
+    localizer_language=localizer_language,
     **kw)
 
 context.activate(activity='SQLQueue', after_tag=tag).getTitle()

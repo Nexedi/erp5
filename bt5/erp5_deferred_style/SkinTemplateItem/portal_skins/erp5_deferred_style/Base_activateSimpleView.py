@@ -20,22 +20,9 @@ if person_value.getDefaultEmailText('') in ('', None):
   return context.Base_redirect('view', keep_items=dict(
               portal_status_message=translateString(
                         "You haven't defined your email address")))
-  
+
 # save request parameters
-# XXX we exclude some reserved names in a very ad hoc way
-request_form = {}
-for k, v in request.form.items():
-  if k not in ('TraversalRequestNameStack', 'AUTHENTICATED_USER', 'URL',
-      'SERVER_URL', 'AUTHENTICATION_PATH', 'USER_PREF_LANGUAGES', 'PARENTS',
-      'PUBLISHED', 'AcceptLanguage', 'AcceptCharset', 'RESPONSE',
-      'ACTUAL_URL'):
-    # XXX proxy fields stores a cache in request.other that cannot be pickled
-    if str(k).startswith('field__proxyfield'):
-      continue
-    # Remove FileUpload parameters
-    elif getattr(v, 'headers', ''):
-      continue
-    request_form[k] = v
+request_form = portal.ERP5Site_filterRequestForDeferredStyle(request)
 
 localizer_language = portal.Localizer.get_selected_language()
 
