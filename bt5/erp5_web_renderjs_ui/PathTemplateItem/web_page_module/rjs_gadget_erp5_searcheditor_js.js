@@ -212,7 +212,7 @@
         ]);
       }
 
-      len = options.domain_list.length;
+      len = options.domain_list ? options.domain_list.length : 0;
       for (i = 0; i < len; i += 1) {
         search_domain_dict[options.domain_list[i][0]] = true;
         search_column_list.push([
