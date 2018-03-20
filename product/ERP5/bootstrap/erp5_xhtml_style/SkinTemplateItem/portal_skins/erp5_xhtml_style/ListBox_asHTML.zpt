@@ -414,23 +414,6 @@
           </tr>
         </thead>
 
-        <!-- Stats -->
-        <tfoot tal:condition="python:here.showStat() and not hide_rows_on_no_search_criterion">
-            
-          <tr class="listbox_stat_line"
-              tal:attributes="class string:${field_id}_stat_line listbox-stat-line">
-            <td tal:condition="is_report_tree_mode" >&nbsp;</td>
-            <td class="listbox-table-anchor-cell" tal:condition="show_anchor_column">&nbsp;</td>
-            <td class="listbox-table-select-cell" tal:condition="show_select_column">&nbsp;</td>
-            <tal:block tal:repeat="value here/getStatValueList">
-            <td
-               class="listbox-table-data-cell"
-               tal:define="original_value python: value[0]; processed_value python: value[1]"
-               tal:content="structure processed_value" />
-            </tal:block>
-          </tr>
-        </tfoot>
-
         <tbody>
 
           <!-- Render listbox data-->
@@ -514,6 +497,23 @@
               </td>
             </tr>
           </tbody>
+
+        <!-- Stats -->
+        <tfoot tal:condition="python:here.showStat() and not hide_rows_on_no_search_criterion">
+            
+          <tr class="listbox_stat_line"
+              tal:attributes="class string:${field_id}_stat_line listbox-stat-line">
+            <td tal:condition="is_report_tree_mode" >&nbsp;</td>
+            <td class="listbox-table-anchor-cell" tal:condition="show_anchor_column">&nbsp;</td>
+            <td class="listbox-table-select-cell" tal:condition="show_select_column">&nbsp;</td>
+            <tal:block tal:repeat="value here/getStatValueList">
+            <td
+               class="listbox-table-data-cell"
+               tal:define="original_value python: value[0]; processed_value python: value[1]"
+               tal:content="structure processed_value" />
+            </tal:block>
+          </tr>
+        </tfoot>
 
       </table>
       <input type="hidden" name="selection_name_selection_key" value="md5"
