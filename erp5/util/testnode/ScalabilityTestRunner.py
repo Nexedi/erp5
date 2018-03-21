@@ -92,6 +92,7 @@ PASSWORD_FILE = "/sr_pass"
 PASSWORD_LENGTH = 10
 HOSTFILE = "/hosts"
 SR_DICT = "frontend_software_dict"
+INSTANCE_DICT = "instances_dict"
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
@@ -176,25 +177,43 @@ class ScalabilityTestRunner():
                             "virtualhostroot-https-port" : 4443}
       config["sla-dict"]["instance_guid=%s" % frontend_instance_guid] = ["frontend"]
     return config
-  
-  def _createInstance(self, software_path, software_configuration, instance_title,
+
+  def getDictionaryFromFile(self, dict_file):
+    dictionary = {}
+    if os.path.isfile(dict_file):
+      with open(dict_file, 'r') as file:
+        dictionary = pickle.loads(file.read())
+    return dictionary
+
+  def updateDictionaryFile(self, dict_file, dictionary, key, value):
+    dictionary[key] = value
+    with open(dict_file, 'w') as file:
+      file.write(pickle.dumps(dictionary))
+
+  def _createInstance(self, software_path, software_configuration,
                       test_result, test_suite, frontend_software, frontend_instance_guid=None):
     """
-    Create scalability instance
+    Create scalability instance. If there is an old instance for this testsuite, it destroys it.
     """
     if self.authorize_request:
-      logger.info("testnode, request : %s", instance_title)
+      slappart_directory = self.testnode.config['srv_directory'].rsplit("srv", 1)[0]
+      instance_dict_file = slappart_directory + "var/" + INSTANCE_DICT
+      instance_dict = self.getDictionaryFromFile(instance_dict_file)
+      if test_suite in instance_dict:
+        self.slapos_communicator.requestInstanceDestroy(instance_dict[test_suite])
+      self.updateDictionaryFile(instance_dict_file, instance_dict, test_suite, self.instance_title)
+      logger.info("testnode, request : %s", self.instance_title)
       config = self._generateInstanceXML(software_configuration,
                                          test_result, test_suite, frontend_software, frontend_instance_guid)
       request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
-      self.slapos_communicator.requestInstanceStart(instance_title, request_kw)
+      self.slapos_communicator.requestInstanceStart(self.instance_title, request_kw)
       self.authorize_request = False
       return {'status_code' : 0}                                          
     else:
       raise ValueError("Softwares release not ready yet to launch instan\
 ces or already launched.")
       return {'status_code' : 1}  
-      
+
   def prepareSlapOSForTestNode(self, test_node_slapos=None):
     """
     We will build slapos software needed by the testnode itself,
@@ -370,26 +389,16 @@ Require valid-user
     software_file.close()
 
   def newFrontendMasterSoftware(self, frontend_master_reference, frontend_software):
-    def getSoftwareDictionary(software_dict_file):
-      software_dict = {}
-      if os.path.isfile(software_dict_file):
-        with open(software_dict_file, 'r') as file:
-          software_dict = pickle.loads(file.read())
-      return software_dict
-    def updateSoftwareDictionary(software_dict_file, software_dict, frontend_master_reference, frontend_software):
-      software_dict[frontend_master_reference] = frontend_software
-      with open(software_dict_file, 'w') as file:
-        file.write(pickle.dumps(software_dict))
     frontend_master_reference = frontend_master_reference.replace(";",",")
     slappart_directory = self.testnode.config['srv_directory'].rsplit("srv", 1)[0]
     software_dict_file = slappart_directory + "var/" + SR_DICT
-    software_dict = getSoftwareDictionary(software_dict_file)
+    software_dict = self.getDictionaryFromFile(software_dict_file)
     if frontend_master_reference in software_dict:
       if software_dict[frontend_master_reference] != frontend_software:
-        updateSoftwareDictionary(software_dict_file, software_dict, frontend_master_reference, frontend_software)
+        self.updateDictionaryFile(software_dict_file, software_dict, frontend_master_reference, frontend_software)
         return True
     else:
-      updateSoftwareDictionary(software_dict_file, software_dict, frontend_master_reference, frontend_software)
+      self.updateDictionaryFile(software_dict_file, software_dict, frontend_master_reference, frontend_software)
       return True
     return False
 
@@ -479,9 +488,6 @@ Require valid-user
 					supply, 
 					self.reachable_profile, 
 					computer_guid=self.launcher_nodes_computer_guid[0])
-      # Delete old instances
-      logger.info("Destroying old requested instances")
-      self.slapos_communicator.requestInstanceDestroy(self.instance_title)
       # Ask for SR installation
       for computer_guid in self.involved_nodes_computer_guid:
         self._prepareSlapOS(self.reachable_profile, computer_guid) 
@@ -514,7 +520,6 @@ Require valid-user
       try:
         self._createInstance(self.reachable_profile, 
                              configuration_list[0],
-                             self.instance_title,
                              node_test_suite.test_result,
                              node_test_suite.test_suite,
                              self.frontend_software,
@@ -543,7 +548,7 @@ Require valid-user
         pass
     return suite, repo_location
 
-  def getInstanceInformation(self, suite):
+  def getInstanceInformation(self, suite, count):
     logger.info("Getting instance information:")
     instance_information_time = time.time()
     instance_information = self.slapos_communicator.getInstanceUrlDict()
@@ -663,7 +668,7 @@ Require valid-user
       logger.info("Test case for count : %d is in a running state." % count)
 
       try:
-        instance_url, bootstrap_url, metric_url, site_availability_url = self.getInstanceInformation(suite)
+        instance_url, bootstrap_url, metric_url, site_availability_url = self.getInstanceInformation(suite, count)
       except Exception as e:
         error_message = "Error getting testsuite information: " + str(e)
         break
