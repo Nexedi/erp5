@@ -12,7 +12,7 @@ is_temp_object = discussion_thread.isTempObject()
 if is_temp_object:
   # this is a temporary object accessed by its reference
   # we need to get real ZODB one
-  discussion_thread = getattr(discussion_thread.original_container, discussion_thread.original_id)
+  discussion_thread = discussion_thread.getOriginalDocument()
 
 discussion_post = discussion_thread.newContent(
                     portal_type = "Discussion Post",
