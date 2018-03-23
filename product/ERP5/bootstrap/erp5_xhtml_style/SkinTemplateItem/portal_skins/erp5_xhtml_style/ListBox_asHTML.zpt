@@ -478,7 +478,7 @@
             <!-- Hide row on no search criterion-->
             <tr tal:condition="hide_rows_on_no_search_criterion"
                 class="listbox_missing_search_criterion">
-              <td tal:attributes="colspan python: len(here.getSearchValueList()) + 1">
+              <td tal:attributes="colspan python: len(here.getSearchValueList()) + show_select_column + show_anchor_column">
                 <span i18n:translate="" i18n:domain="ui">
                   To display actual content, please fill in one or more search criterion.
                 </span>
@@ -487,7 +487,7 @@
             
             <!-- No results. -->
             <tr tal:condition="python: total_line == 0 and not hide_rows_on_no_search_criterion">
-              <td tal:attributes="colspan python: len(here.getSearchValueList()) + 1"
+              <td tal:attributes="colspan python: len(here.getSearchValueList()) + show_select_column + show_anchor_column"
                   class="listbox-table-no-result-row">
                 <span i18n:translate="" i18n:domain="ui">
                   No result.
