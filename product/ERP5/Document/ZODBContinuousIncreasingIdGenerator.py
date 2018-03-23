@@ -146,7 +146,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
     if not isinstance(id_dict, dict):
       raise TypeError, 'the argument given is not a dictionary'
     for value in id_dict.values():
-      if not isinstance(value, int):
+      if not isinstance(value, (int, long)):
         raise TypeError, 'the value given in dictionary is not a integer'
     self.last_id_dict.update(id_dict)
 
