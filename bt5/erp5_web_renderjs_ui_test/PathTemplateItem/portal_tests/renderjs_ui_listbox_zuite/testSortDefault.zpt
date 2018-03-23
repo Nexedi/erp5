@@ -47,10 +47,7 @@ Frontend should not suppose default sorting
 <tr><td>verifyElementPresent</td>
     <td>//th[@class='']/a[@data-i18n='ID']</td><td></td></tr>
 <!-- Make sure broken definitions don't appear in sort editor -->
-<tr><td>waitForElementPresent</td>
-    <td>//button[@data-i18n='Sort']</td><td></td></tr>
-<tr><td>click</td>
-    <td>//button[@data-i18n='Sort']</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_sort_editor.html']//button[@class="plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all"]</td><td></td></tr>
 <tr><td>verifyElementNotPresent</td>
@@ -71,10 +68,7 @@ Frontend should not suppose default sorting
 <tr><td>verifyElementPresent</td>
     <td>//th[@class='ui-icon ui-icon-sort-amount-asc']/a[@data-i18n='ID']</td><td></td></tr>
 <!-- Verify that the default sort is visible in Sort Editor -->
-<tr><td>waitForElementPresent</td>
-    <td>//button[@data-i18n='Sort']</td><td></td></tr>
-<tr><td>click</td>
-    <td>//button[@data-i18n='Sort']</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr><td>waitForElementPresent</td>
     <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]</td><td></td></tr>
 <tr><td>verifyValue</td>
@@ -102,10 +96,7 @@ Frontend should not suppose default sorting
 <tr><td>verifyElementPresent</td>
     <td>//th[@class='']/a[@data-i18n='ID']</td><td></td></tr>
 <!-- Verify that the default sort is visible in Sort Editor -->
-<tr><td>waitForElementPresent</td>
-    <td>//button[@data-i18n='Sort']</td><td></td></tr>
-<tr><td>click</td>
-    <td>//button[@data-i18n='Sort']</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr><td>waitForElementPresent</td>
     <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]</td><td></td></tr>
 <tr><td>verifyValue</td>
