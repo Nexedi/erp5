@@ -70,7 +70,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/media_player/app#/?page=ojs_document_list&editable=true</td>
+  <td>${base_url}/web_site_module/${test_url}/</td>
   <td></td>
 </tr>
 <tr>
