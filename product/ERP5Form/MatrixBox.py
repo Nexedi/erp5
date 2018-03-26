@@ -310,13 +310,13 @@ class MatrixBoxWidget(Widget.Widget):
             # And work as some kind of parameter
             footer = """\
        <tr>
-        <td colspan="%s"
+        <td colspan="%i"
             class="Data footer">
         </td>
        </tr>
       </table>
      </div>
-    """ % len(columns)
+    """ % (len(columns) + 1)
 
             list_header = """\
     <tr class="matrixbox_label_line"><td class=\"Data\"></td>
