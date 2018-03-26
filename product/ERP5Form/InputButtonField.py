@@ -71,18 +71,21 @@ class InputButtonWidget(Widget.Widget):
     def render(self, field, key, value, REQUEST, render_prefix=None):
         """Render input button.
         """
+        render_kw = {
+          'name': field.get_value('name'),
+          'css_class': field.get_value('css_class'),
+          'value': field.get_value('default'),
+          'extra': field.get_value('extra')
+        }
         image = field.get_value('image')
         if image:
           html_type = "image"
+          render_kw['src'] = image
         else:
           html_type = "submit"
         return Widget.render_element('input',
                               type=html_type,
-                              src=image,
-                              name=field.get_value('name'),
-                              css_class=field.get_value('css_class'),
-                              value=field.get_value('default'),
-                              extra=field.get_value('extra'))
+                              **render_kw)
 
 InputButtonWidgetInstance = InputButtonWidget()
 
