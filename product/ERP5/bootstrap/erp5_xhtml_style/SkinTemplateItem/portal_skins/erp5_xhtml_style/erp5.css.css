@@ -1056,6 +1056,7 @@ div.search .searchPages .selected{
   border-bottom-width: 1px;
   border-left-width: 1px;
   border-right-width: 1px;
+  border-spacing: 1px;
 }
 
 .MatrixContent tr.matrixbox_label_line {
@@ -1095,6 +1096,7 @@ div.search .searchPages .selected{
   border-bottom-width: 0;
   border-left-width: 1px;
   border-right-width: 1px;
+  padding: 0;
   padding-left: 1px;
   padding-right: 1px;
 }
@@ -1105,6 +1107,8 @@ div.search .searchPages .selected{
 
 .MatrixContent td.footer {
   width: 100pt;
+  vertical-align: middle;
+  text-align: center;
 }
 
 
