@@ -27,7 +27,7 @@ DEPRECATION:
           <tal:block metal:use-macro="global_definitions_macros/render_css_js" />
           <tal:block metal:define-slot="head"></tal:block>
         </head>
-        <body tal:attributes="class body_css_class|nothing">
+        <body tal:attributes="class body_css_class|nothing; dir language_direction;">
           <form id="main_form"
                 class="main_form"
                 onsubmit="changed=false; return true"

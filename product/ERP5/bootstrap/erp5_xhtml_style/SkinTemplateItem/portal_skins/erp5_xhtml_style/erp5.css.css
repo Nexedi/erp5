@@ -150,11 +150,24 @@ div.index_html table {
   text-align: left;
 }
 
+body[dir="rtl"] div.index_html table {
+  text-align: right;
+}
+
+body[dir="rtl"] div.index_html {
+  text-align: right !important;
+}
+
 .ModuleShortcut div {
   margin-left: 0.5em;
   text-indent: -0.5em;
   line-height: 1.1em;
   margin-bottom: 0.5em;
+}
+
+body[dir="rtl"] .ModuleShortcut div {
+  margin-left: inherit;
+  margin-right: 0.5em;
 }
 
 #main_bar button .description, /* BBB */
@@ -194,6 +207,13 @@ div.index_html table {
   vertical-align: middle;
 }
 
+body[dir="rtl"] #main_bar .first, /* BBB */
+body[dir="rtl"] .main_bar .first,
+body[dir="rtl"] #context_bar .first, /* BBB */
+body[dir="rtl"] .context_bar .first {
+  float: right;
+}
+
 #context_bar #jump, /* BBB */
 .context_bar .jump,
 #main_bar .jump, /* BBB */
@@ -215,6 +235,13 @@ div.index_html table {
 .context_bar .second {
   float: right;
   vertical-align: middle;
+}
+
+body[dir="rtl"] #main_bar .second, /* BBB */
+body[dir="rtl"] .main_bar .second,
+body[dir="rtl"] #context_bar .second, /* BBB */
+body[dir="rtl"] .context_bar .second {
+  float: left;
 }
 
 #main_bar button, /* BBB */
@@ -251,6 +278,11 @@ div.index_html table {
 #context_bar .tool_buttons button, /* BBB */
 .context_bar .tool_buttons button {
   float: left;
+}
+
+body[dir="rtl"] #context_bar .tool_buttons button, /* BBB */
+body[dir="rtl"] .context_bar .tool_buttons button {
+  float: right;
 }
 
 #main_bar button .image, /* BBB */
@@ -400,10 +432,16 @@ fieldset.bottom > .field > label {
   float: left;
 }
 
+body[dir="rtl"] .content .field label,
+body[dir="rtl"] .content .field .input {
+  float: right;
+}
+
 /* Exception case of the previous generic rule
    The CSS statement below fix bug #517: it doesn't make sense to have
    floating div in bottom field since label are hidden. */
-fieldset.bottom .field .input {
+fieldset.bottom .field .input,
+  body[dir="rtl"] fieldset.bottom .field .input {
   float: inherit;
 }
 
@@ -466,6 +504,21 @@ span.search {
   float: left;
 }
 
+body[dir="rtl"] #jump, /* BBB */
+body[dir="rtl"] span.jump,
+body[dir="rtl"] #action, /* BBB */
+body[dir="rtl"] span.action,
+body[dir="rtl"] #favourites, /* BBB */
+body[dir="rtl"] span.favourites,
+body[dir="rtl"] #modules, /* BBB */
+body[dir="rtl"] span.modules,
+body[dir="rtl"] #language, /* BBB */
+body[dir="rtl"] span.language,
+body[dir="rtl"] #search, /* BBB */
+body[dir="rtl"] span.search {
+  float: right;
+}
+
 #favourites button .image, /* BBB */
 span.favourites button .image {
   background-image: url('images/favourite.png');
@@ -503,6 +556,11 @@ span.search button .image {
   padding-bottom: .4em;
 }
 
+body[dir="rtl"] #status, /* BBB */
+body[dir="rtl"] .status {
+  direction: rtl;
+}
+
 /* Context bar */
 
 #context_bar, /* BBB */
@@ -524,6 +582,11 @@ span.search button .image {
   margin-right: 2px;
 }
 
+body[dir="rtl"] #context_bar .tool_buttons a, /* BBB */
+body[dir="rtl"] .context_bar .tool_buttons a {
+  float: right;
+}
+
 .separator {
   height: 24px;
   width: 2px;
@@ -531,6 +594,10 @@ span.search button .image {
   margin-right: 6px;
   display: block;
   float: left;
+}
+
+body[dir="rtl"] .separator {
+  float: right;
 }
 
 #main_bar .separator, /* BBB */
@@ -697,6 +764,11 @@ span.search button .image {
   margin-bottom: 5px;
 }
 
+body[dir="rtl"] #breadcrumb, /* BBB */
+body[dir="rtl"] .breadcrumb {
+  float: right;
+}
+
 #breadcrumb a, /* BBB */
 .breadcrumb a {
   color: <dtml-var link_color>;
@@ -705,6 +777,11 @@ span.search button .image {
 #logged_in_as, /* BBB */
 .logged_in_as {
   float: right;
+}
+
+body[dir="rtl"] #logged_in_as, /* BBB */
+body[dir="rtl"] .logged_in_as {
+  float: left;
 }
 
 #logged_in_as .logged_txt, /* BBB */
@@ -773,6 +850,10 @@ span.search button .image {
   float: right;
 }
 
+body[dir="rtl"] .document .actions button.save {
+  float: left;
+}
+
 .document .actions button.save span.image {
   width: 48px;
   height: 50px;
@@ -789,6 +870,12 @@ span.search button .image {
   bottom: -1px;
 }
 
+body[dir="rtl"] .document .actions ul {
+  float: right;
+  margin-right: inherit;
+  margin-left: 50px;
+}
+
 .document .actions li {
   float: left;
   border: 1px solid <dtml-var document_border_color>;
@@ -797,6 +884,10 @@ span.search button .image {
   -moz-border-radius: 10px 10px 0 0;
   -webkit-border-top-left-radius: 10px;
   -webkit-border-top-right-radius: 10px;
+}
+
+body[dir="rtl"] .document .actions li {
+  float: right;
 }
 
 .document .actions li.selected {
@@ -1080,6 +1171,10 @@ div.pdf-preview-navigation img.last{
     width: auto;
 }
 
+body[dir="rtl"] .horizontal_align_form_box >  div.input > fieldset > div.field {
+    float: right;
+}
+
 .horizontal_align_form_box >  div.input > fieldset > div.field > label {
     width: auto;
     padding-top: 2px;
@@ -1112,4 +1207,13 @@ fieldset > div.large-gadget {
 
 a.zocial {
   margin-top: 10px;
+}
+
+body[dir="rtl"] .access_tab_table td > div {
+  float: right !important;
+}
+
+body[dir="rtl"] .access_tab_table td > div > ul {
+  padding-right: 10px !important;
+  padding-left: 0 !important;
 }

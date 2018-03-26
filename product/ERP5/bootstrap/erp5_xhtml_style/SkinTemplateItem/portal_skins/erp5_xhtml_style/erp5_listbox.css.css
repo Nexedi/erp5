@@ -106,9 +106,17 @@ div.listbox-head div.listbox-head-title{
   width:auto;
 }
 
+body[dir="rtl"] div.listbox-head div.listbox-head-title{
+  float:right;
+}
+
 div.listbox-head div.listbox-head-navigation{
   float:right;
   width:auto;
+}
+
+body[dir="rtl"] div.listbox-head div.listbox-head-navigation{
+  float:left;
 }
 
 div.listbox-head div.listbox-head-results{
@@ -139,8 +147,18 @@ div.listbox-header-box{
   padding-right: 5px;
 }
 
+body[dir="rtl"] div.listbox-header-box{
+  float:right;
+  padding-left: 5px;
+  padding-right: inherit;
+}
+
 table.listbox tr.listbox-label-line th.listbox-table-header-cell span.listbox-table-header-column-title{
   float:left;
+}
+
+body[dir="rtl"] table.listbox tr.listbox-label-line th.listbox-table-header-cell span.listbox-table-header-column-title{
+  float:right;
 }
 
 /* Listbox Footer */
@@ -343,6 +361,11 @@ table.listbox td {
   font-weight: normal;
 }
 
+body[dir="rtl"] table.listbox th,
+body[dir="rtl"] table.listbox td {
+  text-align:right;
+}
+
 table.listbox tr.listbox-label-line{
   background-color:#C1DAEB;
   color:#001730;
@@ -354,6 +377,11 @@ table.listbox tr.listbox-search-line th{
   padding: 0em;
   padding-right:5px;
   padding-left:1px;
+}
+
+body[dir="rtl"] table.listbox tr.listbox-search-line th{
+  padding-right:1px;
+  padding-left:5px;
 }
 
 /* Select columns */
@@ -422,6 +450,10 @@ table.listbox th button{
   float:left;
   padding:0 6px 0 0;
   background: transparent;
+}
+
+body[dir="rtl"] table.listbox th button{
+  float:right;
 }
 
 table.listbox th button.sort-button {
