@@ -65,6 +65,7 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
                 'erp5_crm', 'erp5_credential',
                 'erp5_rss_style', 'erp5_discussion',
                 'erp5_l10n_fr',
+                'erp5_l10n_fa',
                 # erp5_web_ui_test must run at the last, because it logs out
                 # manager user and continue other tests as a user created in
                 # that test.
