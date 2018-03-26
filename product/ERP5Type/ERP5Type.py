@@ -372,9 +372,6 @@ class ERP5TypeInformation(XMLObject,
       immediate_reindex (bool, ImmediateReindexContextManager)
         Immediately (=during current transaction) reindex created document, so
         it is possible to find it in catalog before transaction ends.
-        Note: this does not apply to subobjects which may be created during
-        document construction. Only the topmost object will be immediately
-        reindexed. Any subobject will be reindexed later, using activities.
 
         If a ImmediateReindexContextManager instance is given, a context (in
         python sense) must have been entered with it, and indexation will
@@ -444,7 +441,17 @@ class ERP5TypeInformation(XMLObject,
         ob._edit(force_update=1, **kw)
 
       if not temp_object:
-        method = ob.immediateReindexObject
+        # As we juste created ob, we assume the whole subtree is of a
+        # reasonable size and hence can be walked in current transaction.
+        # Subtree may come from:
+        # - acquired setter (ex: address on a Person which actually exists on
+        #   a subdocument), which should be in very limited quantity
+        # - type-based init script, which will have to delegate any
+        #   large-document creation needs to later transactions
+        #   (activities). Or just not request immediate indexation.
+        # - if ImmediateReindexContextManager is used, anything until
+        #   context manager exits.
+        method = ob.recursiveImmediateReindexObject
         if reindex_kw is not None:
           method = partial(method, **reindex_kw)
         if isinstance(immediate_reindex, ImmediateReindexContextManager):
