@@ -532,8 +532,16 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>errors</string>
+                          <string>descending</string>
+                        </tuple>
+                        <tuple>
+                          <string>failures</string>
+                          <string>descending</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
-                          <string></string>
+                          <string>ascending</string>
                         </tuple>
                       </list>
                     </value>
