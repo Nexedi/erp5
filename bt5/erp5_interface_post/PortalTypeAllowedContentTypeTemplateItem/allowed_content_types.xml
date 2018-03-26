@@ -1,0 +1,8 @@
+<allowed_content_type_list>
+ <portal_type id="Internet Message Post Module">
+  <item>Internet Message Post</item>
+ </portal_type>
+ <portal_type id="Letter Post Module">
+  <item>Letter Post</item>
+ </portal_type>
+</allowed_content_type_list>
