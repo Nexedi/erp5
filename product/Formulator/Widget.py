@@ -744,7 +744,6 @@ class FileWidget(TextWidget):
                                   type="file",
                                   name=key,
                                   css_class=field.get_value('css_class'),
-                                  value=value,
                                   size=field.get_value('display_width'),
                                   maxlength=display_maxwidth,
                                   extra=field.get_value('extra'))
@@ -753,7 +752,6 @@ class FileWidget(TextWidget):
                                   type="file",
                                   name=key,
                                   css_class=field.get_value('css_class'),
-                                  value=value,
                                   size=field.get_value('display_width'),
                                   extra=field.get_value('extra'))
 
