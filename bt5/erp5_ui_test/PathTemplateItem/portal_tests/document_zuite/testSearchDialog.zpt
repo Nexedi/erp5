@@ -9,7 +9,7 @@
 <thead>
 <tr><td rowspan="1" colspan="3">Test: Folder_viewSearchDialog</td></tr>
 </thead><tbody>
-
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <!--
   Add Folder_viewSearchDialog on the module.
 -->
