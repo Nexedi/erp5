@@ -98,7 +98,7 @@
                           <string>Client</string>
                         </tuple>
                         <tuple>
-                          <string>destination_project</string>
+                          <string>destination_project_title</string>
                           <string>Client Project</string>
                         </tuple>
                         <tuple>
