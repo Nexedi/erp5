@@ -932,7 +932,9 @@ div[data-gadget-scope='header'] .ui-header {
       background-color: lighten(@colorheaderbackground, 20%);
     }
   }
-
+  .ui-active-tab {
+    background-color: lighten(@colorheaderbackground, 20%);
+  }
   .ui-controlgroup-controls {
     // Left, right button next to the page title
 
@@ -948,7 +950,7 @@ div[data-gadget-scope='header'] .ui-header {
       }
 
       transition: background-color @transition-timing;
-      &:hover, &:active {
+      &:hover, &:active, &.ui-active-tab {
         background-color: lighten(@colorheaderbackground, 20%);
       }
 

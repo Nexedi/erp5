@@ -108,7 +108,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Mon, 05 Feb 2018 15:00:00 GMT+0100\n
+# generated on Mon, 09 April 2018 10:00:00 GMT+0100\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -206,6 +206,14 @@ gadget_erp5_page_tab.html\n
 gadget_erp5_page_tab.js\n
 gadget_erp5_page_worklist.html\n
 gadget_erp5_page_worklist.js\n
+gadget_erp5_page_home.html\n
+gadget_erp5_page_home.js\n
+gadget_erp5_page_language.html\n
+gadget_erp5_page_language.js\n
+gadget_erp5_page_rss_reader.html\n
+gadget_erp5_page_rss_reader.js\n
+gadget_erp5_page_links.html\n
+gadget_erp5_page_links.js\n
 gadget_erp5_panel.html\n
 gadget_erp5_panel.js\n
 gadget_erp5_panel.png?format=png\n
@@ -386,7 +394,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.19284.27735.63931</string> </value>
+                <value> <string>966.44454.31251.39014</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -404,8 +412,8 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1517844236.51</float>
-                        <string>UTC</string>
+                        <float>1523261952.97</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
