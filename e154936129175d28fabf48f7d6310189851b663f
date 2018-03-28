@@ -1,0 +1,5 @@
+A possible alternative implementation was discussed on
+  https://lab.nexedi.com/nexedi/erp5/merge_requests/604
+
+Using AUTO_INCREMENT should be safe according to MariaDB documentation,
+but no time was spent to actually test it.
