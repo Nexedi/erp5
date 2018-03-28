@@ -37,6 +37,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.TextDocument import TextDocument
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionError
+from Products.ERP5.mixin.mail_message import MailMessageMixin, testCharsetAndConvert
 from Products.ERP5.mixin.document_proxy import DocumentProxyMixin, DocumentProxyError
 from Products.ERP5.Tool.NotificationTool import buildEmailMessage
 from Products.ERP5Type.Utils import guessEncodingFromText
@@ -122,7 +123,7 @@ for method_id in ('getContentType',
   setattr(EmailDocumentProxyMixin, method_id,
       ProxiedMethod(method_id))
 
-class EmailDocument(TextDocument):
+class EmailDocument(TextDocument, MailMessageMixin):
   """
     EmailDocument is a File which stores its metadata in a form which
     is similar to a TextDocument.
@@ -187,230 +188,12 @@ class EmailDocument(TextDocument):
     except AttributeError:
       pass
 
-  def _getMessageTextPart(self):
-    """
-    Return the main text part of the message data
-
-    Based on rfc: http://tools.ietf.org/html/rfc2046#section-5.1.4)
-    """
-    # Default value if no text is found
-    found_part = None
-
-    part_list = [self._getMessage()]
-    while part_list:
-      part = part_list.pop(0)
-      if part.is_multipart():
-        if part.get_content_subtype() == 'alternative':
-          # Try to get the favourite text format defined on preference
-          preferred_content_type = self.getPortalObject().portal_preferences.\
-                                         getPreferredTextFormat('text/html')
-          favourite_part = None
-          for subpart in part.get_payload():
-            if subpart.get_content_type() == preferred_content_type:
-              part_list.insert(0, subpart)
-            else:
-              part_list.append(subpart)
-        else:
-          part_list.extend(part.get_payload())
-      elif part.get_content_maintype() == 'text':
-        found_part = part
-        break
-
-    return found_part
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isSupportBaseDataConversion')
   def isSupportBaseDataConversion(self):
     """
     """
     return False
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
-  def getContentInformation(self):
-    """
-    Returns the content information from the header information.
-    This is used by the metadata discovery system.
-
-    Header information is converted in UTF-8 since this is the standard
-    way of representing strings in ERP5.
-    """
-    result = {}
-    for (name, value) in self._getMessage().items():
-      try:
-        decoded_header = decode_header(value)
-      except HeaderParseError, error_message:
-        decoded_header = ()
-        LOG('EmailDocument.getContentInformation', INFO,
-            'Failed to decode %s header of %s with error: %s' %
-            (name, self.getPath(), error_message))
-      for text, encoding in decoded_header:
-        text, encoding = testCharsetAndConvert(text, 'text/plain', encoding)
-        if name in result:
-          result[name] = '%s %s' % (result[name], text)
-        else:
-          result[name] = text
-    return result
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAttachmentInformationList')
-  def getAttachmentInformationList(self, **kw):
-    """
-    Returns a list of dictionnaries for every attachment. Each dictionnary
-    represents the metadata of the attachment.
-    **kw - support for listbox (TODO: improve it)
-    """
-    result = []
-    for i, part in enumerate(self._getMessage().walk()):
-      if not part.is_multipart():
-        kw = dict(part.items())
-        kw['uid'] = 'part_%s' % i
-        kw['index'] = i
-        filename = part.get_filename()
-        if not filename:
-          # get_filename return name only from Content-Disposition header
-          # of the message but sometimes this value is stored in
-          # Content-Type header
-          content_type_header = kw.get('Content-Type',
-                                                    kw.get('Content-type', ''))
-          filename_list = re.findall(filename_regexp,
-                                      content_type_header,
-                                      re.MULTILINE)
-          if filename_list:
-            filename = filename_list[0]
-        if filename:
-          kw['filename'] = filename
-        else:
-          content_disposition = kw.get('Content-Disposition',
-                                           kw.get('Content-disposition', None))
-          prefix = 'part_'
-          if content_disposition:
-            if content_disposition.split(';')[0] == 'attachment':
-              prefix = 'attachment_'
-            elif content_disposition.split(';')[0] == 'inline':
-              prefix = 'inline_'
-          kw['filename'] = '%s%s' % (prefix, i)
-        kw['content_type'] = part.get_content_type()
-        result.append(kw)
-    return result
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAttachmentData')
-  def getAttachmentData(self, index, REQUEST=None):
-    """
-    Returns the decoded data of an attachment.
-    """
-    for i, part in enumerate(self._getMessage().walk()):
-      if index == i:
-        # This part should be handled in skin script
-        # but it was a bit easier to access items here
-        kw = dict(part.items())
-        content_type = part.get_content_type()
-        if REQUEST is not None:
-          filename = part.get_filename()
-          if not filename:
-            # get_filename return name only from Content-Disposition header
-            # of the message but sometimes this value is stored in
-            # Content-Type header
-            content_type_header = kw.get('Content-Type',
-                                                    kw.get('Content-type', ''))
-            filename_list = re.findall(filename_regexp,
-                                        content_type_header,
-                                        re.MULTILINE)
-            if filename_list:
-              filename = filename_list[0]
-          RESPONSE = REQUEST.RESPONSE
-          RESPONSE.setHeader('Accept-Ranges', 'bytes')
-          if content_type and filename:
-            RESPONSE.setHeader('Content-Type', content_type)
-            RESPONSE.setHeader('Content-disposition',
-                               'attachment; filename="%s"' % filename)
-        if 'text/html' in content_type:
-          part_encoding = part.get_content_charset()
-          message_text = part.get_payload(decode=1)
-          text_result, encoding = testCharsetAndConvert(message_text,
-                                                        content_type,
-                                                        part_encoding)
-          # Strip out html content in safe mode.
-          mime, content = self.convert(format='html',
-                                       text_content=text_result,
-                                       encoding=part_encoding,
-                                       index=index) # add index to generate
-                                       # a unique cache key per attachment
-        else:
-          content = part.get_payload(decode=1)
-        return content
-    return KeyError, "No attachment with index %s" % index
-
-  # Helper methods which override header property sheet
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSender')
-  def getSender(self, *args):
-    """
-    """
-    if not self.hasData():
-      return self._baseGetSender(*args)
-    return self.getContentInformation().get('From', *args)
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getRecipient')
-  def getRecipient(self, *args):
-    """
-    """
-    if not self.hasData():
-      return self._baseGetRecipient(*args)
-    return self.getContentInformation().get('To', *args)
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCcRecipient')
-  def getCcRecipient(self, *args):
-    """
-    """
-    if not self.hasData():
-      return self._baseGetCcRecipient(*args)
-    return self.getContentInformation().get('Cc', *args)
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getGroupingReference')
-  def getGroupingReference(self, *args):
-    """
-      The reference refers here to the Thread of messages.
-    """
-    if not self.hasData():
-      result = self._baseGetGroupingReference(*args)
-    else:
-      if not len(args):
-        args = (self._baseGetGroupingReference(),)
-      result = self.getContentInformation().get('References', *args)
-      if result:
-        result = result.split() # Only take the first reference
-        if result:
-          result = result[0]
-    if result:
-      return result
-    return self.getFilename(*args)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSourceReference')
-  def getSourceReference(self, *args):
-    """
-      The Message-ID is considered here as the source reference
-      of the message on the sender side (source)
-    """
-    if not self.hasData():
-      return self._baseGetSourceReference(*args)
-    if not len(args):
-      args = (self._baseGetSourceReference(),)
-    content_information = self.getContentInformation()
-    return content_information.get('Message-ID') or content_information.get('Message-Id', *args)
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationReference')
-  def getDestinationReference(self, *args):
-    """
-      The In-Reply-To is considered here as the reference
-      of the thread on the side of a former sender (destination)
-
-      This is a hack which can be acceptable since
-      the reference of an email is shared.
-    """
-    if not self.hasData():
-      return self._baseGetDestinationReference(*args)
-    if not len(args):
-      args = (self._baseGetDestinationReference(),)
-    return self.getContentInformation().get('In-Reply-To', *args)
 
   # Overriden methods
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
@@ -504,7 +287,7 @@ class EmailDocument(TextDocument):
       else:
         return part.get_content_type()
 
-  email_parser = re.compile('[ ;,<>\'"]*([^<> ;,\'"]+?\@[^<> ;,\'"]+)[ ;,<>\'"]*',re.IGNORECASE)
+  email_parser = re.compile('[ ;,<>\'"]*([^<> ;,\'"]+?\@[^<> ;,\'"]+)[ ;,<>\'"]*', re.IGNORECASE)
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentURLList')
   def getContentURLList(self):
     """
@@ -595,20 +378,4 @@ class EmailDocument(TextDocument):
   # getData must be implemented like File.getData is.
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   getData = File.getData
-
-def testCharsetAndConvert(text_content, content_type, encoding):
-  try:
-    if encoding is not None:
-      text_content = text_content.decode(encoding).encode('utf-8')
-    else:
-      text_content = text_content.decode().encode('utf-8')
-  except (UnicodeDecodeError, LookupError), error_message:
-    encoding = guessEncodingFromText(text_content, content_type)
-    if encoding is not None:
-      try:
-        text_content = text_content.decode(encoding).encode('utf-8')
-      except (UnicodeDecodeError, LookupError):
-        text_content = repr(text_content)[1:-1]
-    else:
-      text_content = repr(text_content)[1:-1]
-  return text_content, encoding
+  getContentInformation = MailMessageMixin.getContentInformation
