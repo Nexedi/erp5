@@ -1,0 +1,12 @@
+This commit was reviewed on
+  https://lab.nexedi.com/nexedi/erp5/merge_requests/604
+
+with strong objections from Julien Muchembled:
+
+- whether messages with different dependencies (in particular serialization_tag)
+  are kept rather than deleted is not better, i.e. the problem is elsewhere
+  and this commit is only about performance
+- about performance, the change itself is negligible and not better in all cases
+
+With further optimization to process serialization_tag like other dependencies,
+if possible, this commit may be more meaningful.
