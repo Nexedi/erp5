@@ -418,6 +418,7 @@ url_template_dict = {
   "search_template": "%(root_url)s/%(script_id)s?mode=search" + \
                      "{&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}",
   "worklist_template": "%(root_url)s/%(script_id)s?mode=worklist",
+  "preferences_template": "%(root_url)s/%(script_id)s?mode=preferences",
   "custom_search_template": "%(root_url)s/%(script_id)s?mode=search" + \
                      "&relative_url=%(relative_url)s" \
                      "&form_relative_url=%(form_relative_url)s" \
@@ -1519,6 +1520,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             "script_id": script.id
           }
         }
+      elif relative_url == 'portal_preferences':
+        result_dict['_links']['action_preferences'] = {
+          "href": url_template_dict['preferences_template'] % {
+            "root_url": site_root.absolute_url(),
+            "script_id": script.id
+          }
+        }
       elif relative_url == 'acl_users':
         logout_relative_url = site_root.getLayoutProperty("configuration_logout", default="")
         if (logout_relative_url):
@@ -1898,7 +1906,18 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       response.setStatus(405)
       return ""
     result_dict["result_list"] = [calculateHateoas(mode="traverse", **x) for x in byteify(json.loads(bulk_list))]
-  
+  elif mode == 'preferences':
+    if REQUEST.other['method'] != "GET":
+      response.setStatus(405)
+      return ""
+    preference_tool = portal.portal_preferences
+    preference = preference_tool.getActiveUserPreference()
+    if preference:
+      result_dict["preference"] = preference.getRelativeUrl()
+      result_dict["preferred_user_interface_language_list"] = preference_tool.getPreference('preferred_user_interface_language_list', None)
+    else:
+      result_dict["preference"] = preference_tool.getRelativeUrl()
+
   elif mode == 'worklist':
     #################################################
     # Return all worklist jio urls

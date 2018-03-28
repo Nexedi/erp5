@@ -128,7 +128,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='m']</td>
+  <td>//div[@role='main']</td>
   <td></td>
 </tr>
 <!-- Check is minimize -->

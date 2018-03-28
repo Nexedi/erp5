@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Preference JS</string> </value>
+            <value> <string>Gadget ERP5 Page Preference JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -230,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.31910.8218.62941</string> </value>
+                <value> <string>966.44381.32112.11520</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,8 +248,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1518599460.13</float>
-                        <string>UTC</string>
+                        <float>1523020654.88</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>

@@ -192,7 +192,7 @@
         .push(function () {
           var jio_key = gadget.state.options.jio_key;
           /*jslint regexp: true*/
-          if (/^[^\/]+_module\/.+$/.test(jio_key)) {
+          if ((/^[^\/]+_module\/.+$/.test(jio_key)) || (/^portal_.*\/.+$/.test(jio_key))) {
             /*jslint regexp: false*/
             return gadget.updatePanel({
               erp5_document: erp5_document,

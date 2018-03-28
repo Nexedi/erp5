@@ -20,12 +20,12 @@
 <!-- Module are displayed with form_list by default -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_worklist.html']</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_rss_reader.html']</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>Worklist</td>
+  <td>RSS</td>
   <td></td>
 </tr>
 

@@ -748,6 +748,9 @@ div[data-gadget-scope='header'] .ui-header button:active,
 div[data-gadget-scope='header'] .ui-header a:active {
   background-color: #0e90d8;
 }
+div[data-gadget-scope='header'] .ui-header .ui-active-tab {
+  background-color: #0e90d8;
+}
 div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button,
 div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
   display: block;
@@ -773,7 +776,9 @@ div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
 div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button:hover,
 div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a:hover,
 div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button:active,
-div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a:active {
+div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a:active,
+div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button.ui-active-tab,
+div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a.ui-active-tab {
   background-color: #0e90d8;
 }
 @media only screen and (min-width: 45em) and (max-width: 85em) {
