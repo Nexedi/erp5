@@ -155,8 +155,8 @@ gadget_erp5_page_homepage.html\n
 gadget_erp5_page_homepage.js\n
 gadget_erp5_page_list.html\n
 gadget_erp5_page_list.js\n
-gadget_erp5_page_preference.html\n
-gadget_erp5_page_preference.js\n
+gadget_erp5_page_supportrequest_preference.html\n
+gadget_erp5_page_supportrequest_preference.js\n
 gadget_erp5_page_support_request_fast_view_dialog.html\n
 gadget_erp5_page_support_request_fast_view_dialog.js\n
 gadget_erp5_panel.png?format=png\n
@@ -343,7 +343,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.24350.22363.64716</string> </value>
+                <value> <string>966.44322.37377.38894</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -361,8 +361,8 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1506522160.66</float>
-                        <string>UTC</string>
+                        <float>1523022776.2</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>

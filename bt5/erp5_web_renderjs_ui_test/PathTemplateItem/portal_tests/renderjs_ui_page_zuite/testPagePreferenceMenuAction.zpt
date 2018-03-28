@@ -19,13 +19,8 @@
 
 <!-- Wait for gadget to be loaded -->
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_preference.html']</td>
-  <td></td>
-</tr>
-<tr>
   <td>waitForTextPresent</td>
-  <td>Menu</td>
+  <td>Active</td>
   <td></td>
 </tr>
 

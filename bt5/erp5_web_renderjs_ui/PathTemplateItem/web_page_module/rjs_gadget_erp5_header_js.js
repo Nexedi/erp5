@@ -39,7 +39,8 @@
     possible_right_link_list = [
       ['edit_url', 'Editable', 'pencil'],
       ['view_url', 'Viewable', 'eye'],
-      ['right_url', 'New', 'plus']
+      ['right_url', 'New', 'plus'],
+      ['language_url', 'Language', 'language']
     ],
     possible_right_button_list = [
       ['save_action', 'Save', 'check', 'submit'],
@@ -59,7 +60,9 @@
       ['previous_url', 'Previous', 'carat-l'],
       ['next_url', 'Next', 'carat-r'],
       ['edit_content', 'Content', 'file-text'],
-      ['edit_properties', 'Properties', 'info']
+      ['edit_properties', 'Properties', 'info'],
+      ['rss_reader_url', 'RSS', 'rss'],
+      ['links_url', 'Links', 'link']
     ];
 
   gadget_klass
@@ -191,9 +194,14 @@
       // Handle right link
       for (i = 0; i < possible_right_link_list.length; i += 1) {
         if (options.hasOwnProperty(possible_right_link_list[i][0])) {
-          klass = "";
+          if (options.extra_class &&
+              options.extra_class.hasOwnProperty(possible_right_link_list[i][0])) {
+            klass = options.extra_class[possible_right_link_list[i][0]];
+          } else {
+            klass = "";
+          }
           if (!options[possible_right_link_list[i][0]]) {
-            klass = "ui-disabled";
+            klass += " ui-disabled";
           }
           state.right_link_title = possible_right_link_list[i][1];
           state.right_link_icon = possible_right_link_list[i][2];
@@ -212,9 +220,14 @@
       // Sub header
       for (i = 0; i < possible_sub_header_list.length; i += 1) {
         if (options.hasOwnProperty(possible_sub_header_list[i][0])) {
-          klass = "";
+          if (options.extra_class &&
+              options.extra_class.hasOwnProperty(possible_sub_header_list[i][0])) {
+            klass = options.extra_class[possible_sub_header_list[i][0]];
+          } else {
+            klass = "";
+          }
           if (!options[possible_sub_header_list[i][0]]) {
-            klass = "ui-disabled";
+            klass += " ui-disabled";
           }
           sub_header_list.push({
             title: possible_sub_header_list[i][1],

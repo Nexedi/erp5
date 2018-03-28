@@ -1,0 +1,318 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/create_translation_data" />
+
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/wo/#/?page=home</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Language']</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Language']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//select[@id='field_language']</td>
+  <td></td>
+</tr>
+
+<!-- default has two language -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//option[@data-i18n='Wolof']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//option[@data-i18n='English']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Preferences']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Preferences']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Active</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@name='field_my_description']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>uncheck</td>
+  <td>//span[@data-gadget-scope='wo']//input</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>check</td>
+  <td>//span[@data-gadget-scope='en']//input</td>
+  <td></td>
+</tr>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Home']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Language']</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Language']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//select[@id='field_language']</td>
+  <td></td>
+</tr>
+
+<!-- wo is disabled -->
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//option[@data-i18n='English']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//option[@data-i18n='Wolof']</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Preferences']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Preferences']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@name='field_my_description']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>check</td>
+  <td>//span[@data-gadget-scope='wo']//input</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>check</td>
+  <td>//span[@data-gadget-scope='en']//input</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Home']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Language']</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Language']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>yuyan</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//select[@name="field_language"]</td>
+  <td></td>
+</tr>
+ 
+ 
+ <tr>
+   <td>type</td>
+   <td>//select[@name="field_language"]</td>
+   <td>en</td>
+ </tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Update']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Language</td>
+  <td></td>
+</tr>
+
+
+
+ <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="Home"]</td>
+   <td>Home</td>
+ </tr>
+
+
+ <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="Modules"]</td>
+   <td>Modules</td>
+ </tr>
+ 
+  <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="Worklists"]</td>
+   <td>Worklists</td>
+ </tr>
+ 
+ 
+  <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="History"]</td>
+   <td>History</td>
+ </tr>
+ 
+ 
+  <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="Search"]</td>
+   <td>Search</td>
+ </tr>
+ 
+ 
+  <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="Preferences"]</td>
+   <td>Preferences</td>
+ </tr>
+ 
+ 
+  <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="Logout"]</td>
+   <td>Logout</td>
+ </tr>
+
+
+<tr>
+   <td>waitForElementPresent</td>
+   <td>//button[@data-i18n='Update']</td>
+   <td></td>
+ </tr>
+
+
+<tr>
+   <td>waitForElementPresent</td>
+   <td>//select[@name="field_language"]/option[@selected='selected' and @data-i18n='English']</td>
+   <td></td>
+ </tr>
+
+
+ <tr>
+   <td>type</td>
+   <td>//select[@name="field_language"]</td>
+   <td>wo</td>
+ </tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Update']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>yuyan</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

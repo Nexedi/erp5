@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_form.js</string> </value>
+            <value> <string>gadget_erp5_page_rss_reader.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_page_form_js</string> </value>
+            <value> <string>rjs_gadget_erp5_pt_rss_reader_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Page Form JS</string> </value>
+            <value> <string>Gadget ERP5 Rss Reader JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -163,7 +163,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -185,8 +185,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411464845.21</float>
-                        <string>GMT</string>
+                        <float>1521539013.46</float>
+                        <string>GMT+1</string>
                       </tuple>
                     </state>
                   </object>
@@ -230,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>966.9690.7007.38997</string> </value>
+                <value> <string>966.43071.9620.20548</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,8 +248,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520945628.31</float>
-                        <string>GMT+1</string>
+                        <float>1522942704.99</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
@@ -275,7 +275,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -305,8 +305,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411464822.6</float>
-                        <string>GMT</string>
+                        <float>1521538973.85</float>
+                        <string>GMT+1</string>
                       </tuple>
                     </state>
                   </object>
