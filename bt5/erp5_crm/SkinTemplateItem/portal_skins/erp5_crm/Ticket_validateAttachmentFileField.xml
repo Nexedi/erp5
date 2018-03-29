@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=None, portal_type=None, resource=None,  title=None, text_content=None, start_date=None, event_workflow_action=None, notification_message=None, source=None, destination=None, attachment_file=None, content_type=None, workflow_action=None, **kw</string> </value>
+            <value> <string>editor, request</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Ticket_newEvent</string> </value>
+            <value> <string>Ticket_validateAttachmentFileField</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -1423,6 +1423,138 @@ class TestCRMMailSend(BaseTestCRM):
                      str(document.getTextContent()))
     self.assertEqual(part.get_content_type(), 'text/html')
 
+  def test_AttachPdfToMailUsingNewEventDialog(self):
+    """
+    Make sure that pdf document is correctly attached in email
+    """
+    # Add a document which will be attached.
+    # pdf
+    filename = 'sample_attachment.pdf'
+    file_object = makeFileUpload(filename)
+
+    # Add a ticket
+    ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
+                                                    title='Advertisement')
+    # Create a event
+    ticket.Ticket_newEvent(portal_type='Mail Message',
+                           title='Our new product',
+                           text_content='Buy this now!',
+                           event_workflow_action='plan',
+                           attachment_file=file_object)
+
+    # Check that attachment is embedded in Mail Message
+    event, = self.portal.event_module.objectValues()
+    document, = event.objectValues(portal_type='Embedded File')
+    self.assertEqual(document.getFilename(), filename)
+
+    # Set sender to the event.
+    event.edit(source='person_module/me',
+               destination='person_module/recipient',
+               text_content='This is an advertisement mail.')
+
+    mail_text = event.send(download=True)
+
+    # Check mail text.
+    message = message_from_string(mail_text)
+    part = None
+    for i in message.get_payload():
+      if i.get_content_type()=='text/plain':
+        part = i
+    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+
+    # Check attachment
+    # pdf
+    self.assert_(filename in
+                 [i.get_filename() for i in message.get_payload()])
+    part = None
+    for i in message.get_payload():
+      if i.get_filename()==filename:
+        part = i
+    self.assertEqual(part.get_payload(decode=True), str(document.getData()))
+
+  def test_AttachFileToMailUsingNewEventDialog(self):
+    """
+    Make sure that file document is correctly attached in email
+    """
+    # Add a document which will be attached.
+    filename = 'sample_attachment.zip'
+    file_object = makeFileUpload(filename)
+
+    # Add a ticket
+    ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
+                                                    title='Advertisement')
+    # Create a event
+    ticket.Ticket_newEvent(portal_type='Mail Message',
+                           title='Our new product',
+                           text_content='Buy this now!',
+                           event_workflow_action='plan',
+                           attachment_file=file_object)
+
+    # Check that attachment is embedded in Mail Message
+    event, = self.portal.event_module.objectValues()
+    document, = event.objectValues(portal_type='Embedded File')
+    self.assertEqual(document.getFilename(), filename)
+
+    # Set sender to the event.
+    event, = self.portal.event_module.objectValues()
+    event.edit(source='person_module/me',
+               destination='person_module/recipient',
+               text_content='This is an advertisement mail.')
+
+    mail_text = event.send(download=True)
+    # Check mail text.
+    message = message_from_string(mail_text)
+    part = None
+    for i in message.get_payload():
+      if i.get_content_type()=='text/plain':
+        part = i
+    self.assertEqual(part.get_payload(decode=True), event.getTextContent())
+
+    # Check attachment
+    # zip
+    self.assert_(filename in
+                 [i.get_filename() for i in message.get_payload()])
+    part = None
+    for i in message.get_payload():
+      if i.get_filename() == filename:
+        part = i
+    self.assert_(len(part.get_payload(decode=True))>0)
+
+  def test_testValidatorForAttachmentField(self):
+    """
+    If an Event Type doesn't allow Emebedded Files in its sub portal types,
+    then the dialog should tell the user that attachment can't be uploaded
+    """
+    # Add a document which will be attached.
+    filename = 'sample_attachment.zip'
+    file_object = makeFileUpload(filename)
+
+    # Add a ticket
+    ticket = self.portal.campaign_module.newContent(portal_type='Campaign',
+                                                    title='Advertisement')
+
+    # Check that hypothesis is True
+    self.assertNotIn(
+      'Embedded File',
+      self.portal.portal_types['Phone Call'].getTypeAllowedContentTypeList()
+    )
+
+    request_form = self.portal.REQUEST.form
+    request_form['field_your_portal_type'] = 'Phone Call'
+
+    self.assertFalse(
+      ticket.Ticket_validateAttachmentFileField(file_object, self.portal.REQUEST))
+
+    # Check that hypothesis is True
+    self.assertIn(
+      'Embedded File',
+      self.portal.portal_types['Mail Message'].getTypeAllowedContentTypeList()
+    )
+    request_form['field_your_portal_type'] = 'Mail Message'
+
+    self.assertTrue(
+      ticket.Ticket_validateAttachmentFileField(file_object, self.portal.REQUEST))
+
   def test_MailRespond(self):
     """
     Test we can answer an incoming event and quote it

@@ -20,6 +20,16 @@ response = module.newContent(portal_type=portal_type,
                              follow_up_value=context,
                              content_type=content_type)
 
+if attachment_file:
+  document = response.Base_contribute(
+    batch_mode=True,
+    redirect_to_document=False,
+    use_context_for_container=True,
+    portal_type='Embedded File',
+    file=attachment_file,
+  )
+  response.setAggregateValue(document)
+
 if notification_message:
   response.Event_setTextContentFromNotificationMessage(
     reference=notification_message
