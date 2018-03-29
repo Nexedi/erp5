@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?selection_index=42</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
   <td></td>
 </tr>
 
@@ -29,25 +29,10 @@
   <td></td>
 </tr>
 
-<!-- Header has a link to the previous document in selection -->
+<!-- Header has no link to the previous document in selection -->
 <tr>
-  <td>assertElementPresent</td>
+  <td>assertElementNotPresent</td>
   <td>//div[@data-gadget-scope='header']//a[text()='Previous' and contains(@href, '#!selection_previous')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Previous' and contains(@href, '#!selection_previous')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Foos</td>
   <td></td>
 </tr>
 

@@ -16,6 +16,7 @@
     .declareAcquiredMethod("displayFormulatorValidationError",
                            "displayFormulatorValidationError")
     .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
+    .declareAcquiredMethod('getUrlParameter', 'getUrlParameter')
     .allowPublicAcquisition("notifyChange", function () {
       return this.notifyChange({modified: true});
     })
@@ -99,7 +100,8 @@
              form_gadget.state.erp5_document._links.action_object_jio_exchange ||
              form_gadget.state.erp5_document._links.action_object_jio_print) ?
                 form_gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
-                ""
+                "",
+            form_gadget.getUrlParameter('selection_index')
           ]);
         })
         .push(function (all_result) {
@@ -108,8 +110,10 @@
             actions_url: all_result[1],
             add_url: all_result[2],
             selection_url: all_result[3],
-            previous_url: all_result[4],
-            next_url: all_result[5],
+            // Only display previous/next links if url has a selection_index,
+            // ie, if we can paginate the result list of the search
+            previous_url: all_result[9] ? all_result[4] : '',
+            next_url: all_result[9] ? all_result[5] : '',
             page_title: all_result[6]
           },
             is_desktop = all_result[7];

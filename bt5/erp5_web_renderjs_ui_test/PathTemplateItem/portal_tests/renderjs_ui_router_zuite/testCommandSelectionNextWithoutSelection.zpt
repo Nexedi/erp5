@@ -13,7 +13,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?selection_index=42</td>
   <td></td>
 </tr>
 

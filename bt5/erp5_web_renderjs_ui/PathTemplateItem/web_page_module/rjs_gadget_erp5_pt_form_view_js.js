@@ -23,6 +23,7 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
+    .declareAcquiredMethod('getUrlParameter', 'getUrlParameter')
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
@@ -113,7 +114,8 @@
                   view: gadget.state.erp5_document._links.action_object_new_content_action.href,
                   editable: true
                 }}) :
-                ""
+                "",
+            gadget.getUrlParameter('selection_index')
           ]);
         })
         .push(function (all_result) {
@@ -121,8 +123,10 @@
             edit_url: all_result[0],
             actions_url: all_result[1],
             selection_url: all_result[2],
-            previous_url: all_result[3],
-            next_url: all_result[4],
+            // Only display previous/next links if url has a selection_index,
+            // ie, if we can paginate the result list of the search
+            previous_url: all_result[10] ? all_result[3] : '',
+            next_url: all_result[10] ? all_result[4] : '',
             tab_url: all_result[5],
             export_url: all_result[6],
             page_title: all_result[7]
