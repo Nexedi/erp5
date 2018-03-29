@@ -551,7 +551,11 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
                              if v))
       if parameters:
         result["default"] = '%s?%s' % (result["default"], parameters)
-
+    if meta_type == "FileField":
+      # FileField contain blobs (FileUpload instances), which aren't seriazable,
+      # thus trying to return it to the client, besides being useless, breaks
+      # the hal API
+      del result["default"]
     return result
 
   if meta_type == "DateTimeField":
