@@ -78,7 +78,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: (getattr(object, \'getParentValue\', None) is not None) and (object.getPortalType() not in portal.getPortalModuleTypeList()) and (portal.Base_checkPermission(object.getParentValue().getRelativeUrl(), \'Add portal content\')) and (object.getPortalType() in object.getParentValue().getVisibleAllowedContentTypeList())</string> </value>
+            <value> <string>python: object.Base_checkCloneDocumentPermission()</string> </value>
         </item>
       </dictionary>
     </pickle>
