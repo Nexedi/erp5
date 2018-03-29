@@ -23,6 +23,7 @@ destination_section
 destination_section_administration
 destination_trade
 elementary_type
+flow_quantity_unit
 local_role_group
 mapping
 order
