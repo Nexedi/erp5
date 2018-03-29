@@ -76,6 +76,7 @@
                         <string>my_time_quantity_unit</string>
                         <string>my_min_delay</string>
                         <string>my_max_delay</string>
+                        <string>my_flow_quantity_unit</string>
                         <string>my_min_flow</string>
                         <string>my_max_flow</string>
                         <string>my_order_quantity_unit</string>
