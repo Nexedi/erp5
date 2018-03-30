@@ -1,0 +1,194 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS UI</title>
+  <script src="../../web_site_module/officejs_smart_assistant/app/rsvp.js"></script>
+  <script src="../../web_site_module/officejs_smart_assistant/app/jiodev.js"></script>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/smart_assistant_text_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_smart_assistant?ignore_layout:int=1&editable_mode:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>name=Base_createCloneDocument:method</td>
+  <td></td>field_my_id
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>name=Base_createCloneDocument:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Created Clone Web Site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeValue</td>
+  <td>name=field_my_id</td>
+  <td>test_url</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/${test_url}/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/manage_main</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>name=ids:list</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=ids:list</td>
+  <td>${test_url}</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>name=manage_delObjects:method</td>
+  <td></td>
+</tr>
+<!-- Offline Test -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/${test_url}/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//label[@for='upload']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//label[@for='image']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(@href,'smart_assistant_audio')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@id='audio']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text()="We can't access to your microphone"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(@href,'smart_assistant_text')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@id='text']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tal:block tal:define="text_content python: 'This is a test too simple'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text()='Data created']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(@href,'smart_assistant_audio')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Document']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Filter']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'This_is_a_test'">Title</td>
+  <td>title</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tal:block tal:define="text_content python: '<p>This is a test too simple</p>'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/verify_ckeditor_text_content"/>
+</tal:block>
