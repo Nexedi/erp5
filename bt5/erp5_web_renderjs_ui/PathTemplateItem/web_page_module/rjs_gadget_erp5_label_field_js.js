@@ -105,7 +105,9 @@
 
     .onStateChange(function (modification_dict) {
       var gadget = this,
-        span;
+        span,
+        css_class,
+        i;
 
       if (gadget.state.hidden && !modification_dict.error_text) {
         this.element.hidden = true;
@@ -119,7 +121,10 @@
       this.state.label_element.setAttribute('for', gadget.state.scope);
 
       if (modification_dict.hasOwnProperty('css_class') && this.state.css_class) {
-        this.element.classList.add(this.state.css_class);
+        css_class = this.state.css_class.split(' ');
+        for (i = 0; i < css_class.length; i += 1) {
+          this.element.classList.add(css_class[i]);
+        }
       }
 
       if (modification_dict.hasOwnProperty('error_text')) {
