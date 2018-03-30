@@ -223,16 +223,14 @@ class EggTestSuite(TestSuite):
     print test
     original_dir = os.getcwd()
     try:
-      os.chdir(test)
+      os.chdir(self.egg_test_path_dict[test])
       return self.runUnitTest(test)
     finally:
       os.chdir(original_dir)
 
   def runUnitTest(self, *args, **kw):
     try:
-      # (FIXME) The python should be provided by environment with 
-      #         appropriated configuration.
-      runUnitTest = "python setup.py test"
+      runUnitTest = "{python} setup.py test".format(python=self.python_interpreter)
       args = tuple(shlex.split(runUnitTest))
       status_dict = self.spawn(*args, **kw)
     except SubprocessError, e:
@@ -263,10 +261,7 @@ class EggTestSuite(TestSuite):
     return status_dict
 
   def getTestList(self):
-    # (FIXME) The test name should be nicer in order to provide a good report.
-    #         On task distribution.
-    source_code_to_test = os.environ.get("SOURCE_CODE_TO_TEST", '.')
-    return source_code_to_test.split(",")
+    return self.egg_test_path_dict.keys()
 
 def runTestSuite():
   parser = argparse.ArgumentParser(description='Run a test suite.')
@@ -287,18 +282,24 @@ def runTestSuite():
   parser.add_argument('--frontend_url',
                       help='The url of the frontend of this test node',
                       default=None)
+  parser.add_argument('--python_interpreter',
+                      help='Path to python interpreter used to run the test suite',
+                      default='python')
   parser.add_argument('--source_code_path_list',
-                      help='List of Eggs folders to test, splited by commam',
+                      help='Coma separated list of Eggs folders to test',
                       default='.')
 
   args = parser.parse_args()
   master = taskdistribution.TaskDistributor(args.master_url)
-  os.environ.setdefault("SOURCE_CODE_TO_TEST", args.source_code_path_list)
   test_suite_title = args.test_suite_title or args.test_suite
   revision = args.revision
   suite = EggTestSuite(1, test_suite=args.test_suite,
                     node_quantity=args.node_quantity,
-                    revision=revision)
+                    revision=revision,
+                    python_interpreter=args.python_interpreter,
+                    egg_test_path_dict={os.path.basename(path): path
+                        for path in args.source_code_path_list.split(',')},
+                    )
 
   test_result = master.createTestResult(revision, suite.getTestList(),
     args.test_node_title, suite.allow_restart, test_suite_title,
