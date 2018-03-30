@@ -20,17 +20,25 @@ if response_event_notification_message:
       substitution_method_parameter_dict=dict(reply_body=context.getReplyBody(),
                                               reply_subject=context.getReplySubject()))
 
-message = portal.Base_translateString('Response Created.')
+def redirect(obj, view):
+  if batch_mode:
+    return response
+  else:
+    return obj.Base_redirect(
+      view,
+      keep_items={'portal_status_message': portal.Base_translateString('Response Created.')}
+    )
+
 if response_workflow_action == 'send':
   response.start()
-  return context.Base_redirect(form_id, keep_items={'portal_status_message': message})
+  return redirect(context, form_id)
 elif response_workflow_action == 'plan':
   response.plan()
-  return context.Base_redirect(form_id, keep_items={'portal_status_message': message})
+  return redirect(context, form_id)
 elif response_workflow_action == 'deliver':
   response.deliver()
-  return response.Base_redirect('view', keep_items={'portal_status_message': message})
+  return redirect(response, 'view')
 elif response_workflow_action == 'draft':
-  return response.Base_redirect('view', keep_items={'portal_status_message': message})
+  return redirect(response, 'view')
 else:
   raise NotImplementedError('Do not know what to do')

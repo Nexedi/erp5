@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=None, response_event_portal_type=None, response_event_resource=None,  response_event_title=None, response_event_text_content=None, response_event_start_date=None, response_workflow_action=None, response_event_notification_message=None, default_destination=None, response_event_content_type=None, **kw</string> </value>
+            <value> <string>form_id=None, response_event_portal_type=None, response_event_resource=None, response_event_title=None, response_event_text_content=None, response_event_start_date=None, response_workflow_action=None, response_event_notification_message=None, default_destination=None, response_event_content_type=None, batch_mode=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
