@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, URI, navigator */
+/*global window, rJS, RSVP, URI, SimpleQuery, ComplexQuery, Query, navigator */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP, URI, navigator) {
+(function (window, rJS, RSVP, URI, SimpleQuery, ComplexQuery, Query, navigator) {
   "use strict";
 
   function setjIOERP5Configuration(gadget) {
@@ -15,19 +15,38 @@
       })
       .push(function (result) {
         var configuration = {},
-          portal_type = result[0],
+          jio_query_list = [],
           attachment_synchro = result[1] !== "",
           extended_attachment_url = result[1],
+          portal_type = result[0].split(','),
+          query = '',
+          i,
           // https://bugs.chromium.org/p/chromium/issues/detail?id=375297
           // mobile device memory is limited for blob,
           // we reach this limit with parallel operation.
           is_low_memory = (navigator.userAgent.indexOf("Chrome") > 0) &&
             (navigator.userAgent.indexOf('Mobile') > 0);
+
+        for (i = 0; i < portal_type.length; i += 1) {
+          jio_query_list.push(new SimpleQuery({
+            key: "portal_type",
+            operator: "",
+            type: "simple",
+            value: portal_type[i]
+          }));
+        }
+
+        query = Query.objectToSearchText(new ComplexQuery({
+          operator: "OR",
+          query_list: jio_query_list,
+          type: "complex"
+        }));
+
         configuration = {
           type: "replicate",
           // XXX This drop the signature lists...
           query: {
-            query: 'portal_type:"' + portal_type + '"',
+            query: query,
             limit: [0, 50],
             sort_on: [["modification_date", "descending"]]
           },
@@ -236,4 +255,4 @@
         });
     });
 
-}(window, rJS, RSVP, URI, navigator));
+}(window, rJS, RSVP, URI, SimpleQuery, ComplexQuery, Query, navigator));
