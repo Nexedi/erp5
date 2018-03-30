@@ -813,10 +813,9 @@ def addTestMethodDynamically(test_class, validator, target_business_templates):
                        tested_portal_type_list=tested_portal_type_list)
 
 
-# Two validators are available : tidy and the w3c validator
-# It's hightly recommanded to use the w3c validator because tidy dont show
-# all errors and show more warnings that there is.
-validator_to_use = 'w3c'
+# Three validators are available : nu, tidy and the w3c validator
+# It's hightly recommanded to use the nu validator which validates html5
+validator_to_use = 'nu'
 show_warnings = True
 
 validator = None
