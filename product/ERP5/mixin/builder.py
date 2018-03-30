@@ -299,6 +299,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     resource_value = supply.getResourceValue()
     default_quantity_unit_value = resource_value.getDefaultQuantityUnitValue()
     order_quantity_unit_value = supply.getOrderQuantityUnitValue()
+    flow_quantity_unit_value = supply.getFlowQuantityUnitValue()
     time_quantity_unit_value = supply.getTimeQuantityUnitValue()
     time_second_ratio = resource_value.getQuantityUnitDefinitionRatio(portal.portal_categories.quantity_unit.time.second)
     min_delay = supply.getMinDelay()
@@ -341,6 +342,13 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       default_quantity_unit_order_quantity_unit_conversion_ratio = 1 / order_quantity_unit_default_quantity_unit_conversion_ratio
     else:
       default_quantity_unit_order_quantity_unit_conversion_ratio = 1
+
+    if flow_quantity_unit_value is not None:
+      flow_quantity_unit_relative_url = flow_quantity_unit_value.getCategoryRelativeUrl()
+      flow_quantity_unit_default_quantity_unit_conversion_ratio = resource_value.convertQuantity(1, flow_quantity_unit_relative_url, default_quantity_unit_relative_url)
+      default_quantity_unit_flow_quantity_unit_conversion_ratio = 1 / flow_quantity_unit_default_quantity_unit_conversion_ratio
+    else:
+      default_quantity_unit_flow_quantity_unit_conversion_ratio = 1
 
     def getPreviousValidDate(date):
       # We suppose the system has not been configured to handled per hour commands
@@ -453,7 +461,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         supply=supply,
         history_list=period_history_list,
         at_date=period_start_date,
-        conversion_ratio=default_quantity_unit_order_quantity_unit_conversion_ratio,
+        conversion_ratio=default_quantity_unit_flow_quantity_unit_conversion_ratio,
         )
 
       quantity = 0
