@@ -131,34 +131,33 @@ class FormBoxWidget(Widget.Widget):
 class FormBoxEditor:
   """An editor returned from FormBox validation able to `edit` document."""
 
-  def __init__(self, result, context_method_id=None):
-    """Initialize with all necessary information for editing a document.
+  def __init__(self, result, context):
+    """Initialize with all necessary information for editing.
 
-    :result: tuple of attributes, editors intended as parameters for edit function
-    :context_method_id: editor needs to operate on the correct context (Document)
-                        but it cannot hold reference because then weird failures
-                        appear; thus we keep name of the context-obtaining method
+    Keep a reference to the correct context and don't expect the caller to provide it
+    during the edit phase because they don't have access to the widget anymore.
     """
     self.attr_dict, self.editor_list = result
-    self.context_method_id = context_method_id
+    self.edit = lambda _: self._edit(context)
 
-  def view(self):
-    return self.__dict__
-
-  def __call__(self, REQUEST):
+  def __getstate__(self):
+    # With deferred style, to render reports of form in activities (and never
+    # to edit), we could be pickled but it's always for nothing for the moment.
     pass
 
-  def edit(self, context):
-    if self.context_method_id:
-      context = getattr(context, self.context_method_id)()
+  def __call__(self, REQUEST):
+    # Called by Base_edit in case of FormValidationError
+    pass
 
+  def _edit(self, context):
+    """Edit inside correct context."""
     context.edit(**self.attr_dict)
     for encapsulated_editor in self.editor_list:
       encapsulated_editor.edit(context)
 
   def as_dict(self):
     """
-    This method is used to return parameter dict.
+    This method is used by Base_callDialogMethod.
     XXX This API is probably not stable and may change, as some editors are used to
     edit multiple objects.
     """
@@ -186,7 +185,6 @@ class FormBoxValidator(Validator.Validator):
   def validate(self, field, key, REQUEST):
     # TODO: Handle 'cell' for validation inside listboxes,
     #       like it is done for rendering.
-    context_method_id = field.get_value('context_method_id')
     formbox_target_id = field.get_value('formbox_target_id')
 
     # Get current error fields
@@ -196,7 +194,7 @@ class FormBoxValidator(Validator.Validator):
       # XXX Hardcode script name
       result, result_type = here.Base_edit(formbox_target_id, silent_mode=1, key_prefix=key)
       if result_type == 'edit':
-        return FormBoxEditor(result, context_method_id)
+        return FormBoxEditor(result, here)
       elif result_type == 'form':
         formbox_field_errors = REQUEST.get('field_errors', [])
         current_field_errors.extend(formbox_field_errors)

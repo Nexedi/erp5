@@ -465,9 +465,6 @@ class MultiRelationEditor:
         # Make sure no default value appears
         REQUEST.set(self.field_id, None) # XXX Dirty
 
-    def view(self):
-      return self.__dict__
-
     def edit(self, o):
       if self.relation_editor_list is None:
         return
