@@ -20,7 +20,6 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -86,10 +85,9 @@
               document_list.push(document_dict[id_list[i]]);
             }
           }
-          return gadget.translateHtml(table_template({document_list: document_list}));
-        })
-        .push(function (translated_html) {
-          gadget.element.querySelector('.document_list').innerHTML  = translated_html;
+          gadget.element.querySelector('.document_list').innerHTML = table_template(
+            {document_list: document_list}
+          );
         });
     });
 }(window, rJS, RSVP, Handlebars, SimpleQuery, ComplexQuery, Query));
