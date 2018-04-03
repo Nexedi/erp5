@@ -136,10 +136,10 @@ for folder in tool_list:
 
 # Then we index ERP5 Python Scripts and ERP5 Form
 print "#### Indexing ERP5 Python Scripts, ERP5 Forms and ERP5 Reports ####"
+skin_activate_kw = {'tag': folder_tag, 'priority': object_priority, 'after_tag': folder_after_tag}
 for _, obj in portal.portal_skins.ZopeFind(portal.portal_skins, obj_metatypes=('ERP5 Python Script', 'ERP5 Form', 'ERP5 Report'), search_sub=1):
-  obj.activate(tag=folder_tag,
-               priority=object_priority,
-               after_tag=folder_after_tag).immediateReindexObject(sql_catalog_id=sql_catalog_id)
+  obj.recursiveReindexObject(activate_kw=skin_activate_kw,
+                             sql_catalog_id=sql_catalog_id)
 
 # Then we index everything except inventories
 for folder in portal.objectValues(("ERP5 Folder",)):
