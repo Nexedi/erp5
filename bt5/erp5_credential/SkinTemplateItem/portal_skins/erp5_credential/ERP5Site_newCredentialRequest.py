@@ -68,7 +68,7 @@ else:
                        after_path_and_method_id=path_and_method_id)
     credential_request.activate(**activity_kw).CredentialRequest_sendSubmittedNotification(
       context_url=context.absolute_url(),
-      notification_reference='erp5-subscription.notification')
+      notification_reference='credential_request-subscription')
     message_str = "Thanks for your registration. You will be receive an email to activate your account."
   else:
     # no email verification is needed
