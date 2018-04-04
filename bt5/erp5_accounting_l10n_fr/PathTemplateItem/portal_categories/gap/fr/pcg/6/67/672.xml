@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Charges sur exercices antérieurs</string> </value>
+            <value> <string>(Compte à la disposition des entités pour enregistrer, en cours d\'exercice, les charges sur exercices antérieurs)</string> </value>
         </item>
       </dictionary>
     </pickle>

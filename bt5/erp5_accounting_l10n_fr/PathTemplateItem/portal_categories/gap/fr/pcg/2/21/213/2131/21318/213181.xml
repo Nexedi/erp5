@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Affectés aux opérations professionnelles (a, b...)</string> </value>
+            <value> <string>affectés aux opérations professionnelles (A, B)</string> </value>
         </item>
       </dictionary>
     </pickle>

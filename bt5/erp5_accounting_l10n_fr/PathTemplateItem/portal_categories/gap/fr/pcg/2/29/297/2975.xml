@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Dépôts et cautionnements versés</string> </value>
+            <value> <string>Dépôts et cautionnements versés (même ventilation que celle du compte 275)</string> </value>
         </item>
       </dictionary>
     </pickle>

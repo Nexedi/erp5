@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Taxes sur le chiffre d\'affaires non récupérables</string> </value>
+            <value> <string>Taxe sur le chiffre d\'affaires non récupérables</string> </value>
         </item>
       </dictionary>
     </pickle>

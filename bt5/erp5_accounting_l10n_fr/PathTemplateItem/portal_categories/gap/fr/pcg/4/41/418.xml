@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Clients - produits non encore facturés</string> </value>
+            <value> <string>Clients - Produits non encore facturés</string> </value>
         </item>
       </dictionary>
     </pickle>

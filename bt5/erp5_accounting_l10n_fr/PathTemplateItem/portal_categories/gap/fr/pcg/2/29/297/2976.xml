@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Autres créances immobilisées</string> </value>
+            <value> <string>Autres créances immobilisées (même ventilation que celle du compte 276)</string> </value>
         </item>
       </dictionary>
     </pickle>
