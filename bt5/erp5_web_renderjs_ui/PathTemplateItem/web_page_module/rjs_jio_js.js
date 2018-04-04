@@ -6308,33 +6308,52 @@ return new Parser;
   /**
    * A sort function to sort items by key
    *
-   * @param  {String} key The key to sort on
-   * @param  {String} [way="ascending"] 'ascending' or 'descending'
+   * @param  {Array} sort_list List of couples [key, direction]
    * @return {Function} The sort function
    */
-  function sortFunction(key, way, key_schema) {
-    var result, cast_to;
-    if (way === 'descending') {
-      result = 1;
-    } else if (way === 'ascending') {
-      result = -1;
-    } else {
-      throw new TypeError("Query.sortFunction(): " +
-                          "Argument 2 must be 'ascending' or 'descending'");
-    }
-    if (key_schema !== undefined &&
-        key_schema.key_set !== undefined &&
-        key_schema.key_set[key] !== undefined &&
-        key_schema.key_set[key].cast_to !== undefined) {
-      if (typeof key_schema.key_set[key].cast_to === "string") {
-        cast_to = key_schema.cast_lookup[key_schema.key_set[key].cast_to];
+  function generateSortFunction(key_schema, sort_list) {
+    return function sortByMultipleIndex(a, b) {
+      var result,
+        cast_to,
+        key = sort_list[0][0],
+        way = sort_list[0][1],
+        i,
+        l,
+        a_string_array,
+        b_string_array,
+        f_a,
+        f_b,
+        tmp;
+
+      if (way === 'descending') {
+        result = 1;
+      } else if (way === 'ascending') {
+        result = -1;
       } else {
-        cast_to = key_schema.key_set[key].cast_to;
+        throw new TypeError("Query.sortFunction(): " +
+                            "Argument 2 must be 'ascending' or 'descending'");
       }
-      return function (a, b) {
-        var f_a = cast_to(a[key]), f_b = cast_to(b[key]);
+
+      if (key_schema !== undefined &&
+          key_schema.key_set !== undefined &&
+          key_schema.key_set[key] !== undefined &&
+          key_schema.key_set[key].cast_to !== undefined) {
+        if (typeof key_schema.key_set[key].cast_to === "string") {
+          cast_to = key_schema.cast_lookup[key_schema.key_set[key].cast_to];
+        } else {
+          cast_to = key_schema.key_set[key].cast_to;
+        }
+        f_a = cast_to(a[key]);
+        f_b = cast_to(b[key]);
         if (typeof f_b.cmp === 'function') {
-          return result * f_b.cmp(f_a);
+          tmp = result * f_b.cmp(f_a);
+          if (tmp !== 0) {
+            return tmp;
+          }
+          if (sort_list.length > 1) {
+            return generateSortFunction(key_schema, sort_list.slice(1))(a, b);
+          }
+          return tmp;
         }
         if (f_a > f_b) {
           return -result;
@@ -6342,30 +6361,35 @@ return new Parser;
         if (f_a < f_b) {
           return result;
         }
+        if (sort_list.length > 1) {
+          return generateSortFunction(key_schema, sort_list.slice(1))(a, b);
+        }
         return 0;
-      };
-    }
-    return function (a, b) {
+      }
+
       // this comparison is 5 times faster than json comparison
-      var i, l;
-      a = metadataValueToStringArray(a[key]) || [];
-      b = metadataValueToStringArray(b[key]) || [];
-      l = a.length > b.length ? a.length : b.length;
+      a_string_array = metadataValueToStringArray(a[key]) || [];
+      b_string_array = metadataValueToStringArray(b[key]) || [];
+      l = Math.max(a_string_array.length, b_string_array.length);
       for (i = 0; i < l; i += 1) {
-        if (a[i] === undefined) {
+        if (a_string_array[i] === undefined) {
           return result;
         }
-        if (b[i] === undefined) {
+        if (b_string_array[i] === undefined) {
           return -result;
         }
-        if (a[i] > b[i]) {
+        if (a_string_array[i] > b_string_array[i]) {
           return -result;
         }
-        if (a[i] < b[i]) {
+        if (a_string_array[i] < b_string_array[i]) {
           return result;
         }
       }
+      if (sort_list.length > 1) {
+        return generateSortFunction(key_schema, sort_list.slice(1))(a, b);
+      }
       return 0;
+
     };
   }
 
@@ -6378,19 +6402,14 @@ return new Parser;
    * @return {Array} The filtered list
    */
   function sortOn(sort_on_option, list, key_schema) {
-    var sort_index;
     if (!Array.isArray(sort_on_option)) {
       throw new TypeError("jioquery.sortOn(): " +
                           "Argument 1 is not of type 'array'");
     }
-    for (sort_index = sort_on_option.length - 1; sort_index >= 0;
-         sort_index -= 1) {
-      list.sort(sortFunction(
-        sort_on_option[sort_index][0],
-        sort_on_option[sort_index][1],
-        key_schema
-      ));
-    }
+    list.sort(generateSortFunction(
+      key_schema,
+      sort_on_option
+    ));
     return list;
   }
 
@@ -6756,7 +6775,7 @@ return new Parser;
    * @param  {String} spec.value The value of the metadata to compare
    */
   function ComplexQuery(spec, key_schema) {
-    Query.call(this);
+    Query.call(this, key_schema);
 
     /**
      * Logical operator to use to compare object values
