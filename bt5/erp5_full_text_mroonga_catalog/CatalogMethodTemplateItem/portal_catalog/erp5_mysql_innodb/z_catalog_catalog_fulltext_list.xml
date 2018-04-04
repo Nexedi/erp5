@@ -14,8 +14,8 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\r\n
-getTitle\r\n
+            <value> <string>uid\n
+getTitle\n
 getDescription</string> </value>
         </item>
         <item>

@@ -20,15 +20,15 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\r\n
-getLanguage\r\n
-getVersion\r\n
-getRevision\r\n
-subject_set_uid\r\n
-getEffectiveDate\r\n
-getExpirationDate\r\n
-getCreationDateIndex\r\n
-getFrequencyIndex\r\n
+            <value> <string>uid\n
+getLanguage\n
+getVersion\n
+getRevision\n
+subject_set_uid\n
+getEffectiveDate\n
+getExpirationDate\n
+getCreationDateIndex\n
+getFrequencyIndex\n
 </string> </value>
         </item>
         <item>

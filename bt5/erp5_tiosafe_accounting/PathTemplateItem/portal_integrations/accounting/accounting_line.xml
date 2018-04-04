@@ -129,7 +129,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>id_accounting=""\r\n
+            <value> <string>id_accounting=""\n
 id_account=""</string> </value>
         </item>
         <item>

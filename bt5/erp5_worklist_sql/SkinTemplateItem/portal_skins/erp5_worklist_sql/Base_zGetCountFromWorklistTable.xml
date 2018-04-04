@@ -32,8 +32,8 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>select_expression\r\n
-where_expression\r\n
+            <value> <string>select_expression\n
+where_expression\n
 group_by_expression</string> </value>
         </item>
         <item>

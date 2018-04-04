@@ -14,18 +14,18 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>isMovement\r\n
-uid\r\n
-getExplanationUid\r\n
-getSourceUid\r\n
-getDestinationUid\r\n
-getResourceUid\r\n
-getQuantity\r\n
-getStartDate\r\n
-getStopDate\r\n
-getPrice\r\n
-isAccountable\r\n
-isDivergent\r\n
+            <value> <string>isMovement\n
+uid\n
+getExplanationUid\n
+getSourceUid\n
+getDestinationUid\n
+getResourceUid\n
+getQuantity\n
+getStartDate\n
+getStopDate\n
+getPrice\n
+isAccountable\n
+isDivergent\n
 getVariationText</string> </value>
         </item>
         <item>

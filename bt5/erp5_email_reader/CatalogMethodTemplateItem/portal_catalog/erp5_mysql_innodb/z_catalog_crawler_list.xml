@@ -20,9 +20,9 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\r\n
-getCreationDateIndex\r\n
-getFrequencyIndex\r\n
+            <value> <string>uid\n
+getCreationDateIndex\n
+getFrequencyIndex\n
 </string> </value>
         </item>
         <item>

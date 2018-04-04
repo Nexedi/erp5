@@ -14,13 +14,13 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>where_expression\r\n
-select_expression\r\n
-group_by_expression\r\n
-from_table_list:list\r\n
-from_expression\r\n
-sort_on\r\n
-limit_expression\r\n
+            <value> <string>where_expression\n
+select_expression\n
+group_by_expression\n
+from_table_list:list\n
+from_expression\n
+sort_on\n
+limit_expression\n
 search_mode</string> </value>
         </item>
         <item>

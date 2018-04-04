@@ -417,28 +417,28 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>from_expression\r\n
-from_table_list:list\r\n
-select_expression\r\n
-where_expression\r\n
-order_by_expression\r\n
-group_by_expression\r\n
-limit_expression\r\n
-selection_domain_from_expression\r\n
-selection_domain_where_expression\r\n
-selection_domain_catalog_alias_set\r\n
-ignore_variation\r\n
-standardize\r\n
-omit_simulation\r\n
-only_accountable\r\n
-omit_input\r\n
-omit_output\r\n
-omit_asset_increase\r\n
-omit_asset_decrease\r\n
-initial_running_total_quantity\r\n
-initial_running_total_price\r\n
-input_simulation_state:list\r\n
-output_simulation_state:list\r\n
+            <value> <string>from_expression\n
+from_table_list:list\n
+select_expression\n
+where_expression\n
+order_by_expression\n
+group_by_expression\n
+limit_expression\n
+selection_domain_from_expression\n
+selection_domain_where_expression\n
+selection_domain_catalog_alias_set\n
+ignore_variation\n
+standardize\n
+omit_simulation\n
+only_accountable\n
+omit_input\n
+omit_output\n
+omit_asset_increase\n
+omit_asset_decrease\n
+initial_running_total_quantity\n
+initial_running_total_price\n
+input_simulation_state:list\n
+output_simulation_state:list\n
 precision</string> </value>
         </item>
         <item>

@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>where_expression\r\n
+            <value> <string>where_expression\n
 valuation_method</string> </value>
         </item>
         <item>

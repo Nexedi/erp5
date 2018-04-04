@@ -14,15 +14,15 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>isMovement\r\n
-isAccountable\r\n
-uid\r\n
-getStopDate\r\n
-getBaobabDestinationUid\r\n
-getBaobabDestinationSectionUid\r\n
-getResourceUid\r\n
-getVariationText\r\n
-getSimulationState\r\n
+            <value> <string>isMovement\n
+isAccountable\n
+uid\n
+getStopDate\n
+getBaobabDestinationUid\n
+getBaobabDestinationSectionUid\n
+getResourceUid\n
+getVariationText\n
+getSimulationState\n
 getAggregateUidList</string> </value>
         </item>
         <item>

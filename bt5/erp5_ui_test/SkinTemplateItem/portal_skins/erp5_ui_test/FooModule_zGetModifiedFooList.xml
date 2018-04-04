@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>context\r\n
+            <value> <string>context\n
 </string> </value>
         </item>
         <item>

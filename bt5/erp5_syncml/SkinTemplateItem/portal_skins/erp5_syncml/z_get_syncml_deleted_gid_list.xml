@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>signature_path\r\n
+            <value> <string>signature_path\n
 source_path</string> </value>
         </item>
         <item>

@@ -26,8 +26,8 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>explanation_uid\r\n
-resource_uid\r\n
+            <value> <string>explanation_uid\n
+resource_uid\n
 variation_text</string> </value>
         </item>
         <item>

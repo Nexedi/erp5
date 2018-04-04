@@ -8,8 +8,8 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>id_group\r\n
-id_count:int=1\r\n
+            <value> <string>id_group\n
+id_count:int=1\n
 default:int=0</string> </value>
         </item>
         <item>

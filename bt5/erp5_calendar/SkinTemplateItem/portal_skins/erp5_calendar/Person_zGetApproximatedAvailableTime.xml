@@ -22,10 +22,10 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>from_date\r\n
-to_date\r\n
-node:list\r\n
-resource:list\r\n
+            <value> <string>from_date\n
+to_date\n
+node:list\n
+resource:list\n
 portal_type:list</string> </value>
         </item>
         <item>

@@ -14,10 +14,10 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>language\r\n
-message_context\r\n
-portal_type\r\n
-original_message\r\n
+            <value> <string>language\n
+message_context\n
+portal_type\n
+original_message\n
 translated_message</string> </value>
         </item>
         <item>

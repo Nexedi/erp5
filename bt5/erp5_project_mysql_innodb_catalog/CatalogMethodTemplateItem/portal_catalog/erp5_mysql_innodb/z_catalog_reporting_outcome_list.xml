@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>getOutcomeDescription\r\n
+            <value> <string>getOutcomeDescription\n
 uid</string> </value>
         </item>
         <item>

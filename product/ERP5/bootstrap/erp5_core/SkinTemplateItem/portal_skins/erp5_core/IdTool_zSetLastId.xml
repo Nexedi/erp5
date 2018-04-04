@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>id_group\r\n
+            <value> <string>id_group\n
 last_id:int=0</string> </value>
         </item>
         <item>

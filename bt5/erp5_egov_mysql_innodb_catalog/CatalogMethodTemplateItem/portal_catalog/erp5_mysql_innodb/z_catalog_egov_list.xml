@@ -20,9 +20,9 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>uid\r\n
-getPortalType\r\n
-getTranslatedValidationStateTitle\r\n
+            <value> <string>uid\n
+getPortalType\n
+getTranslatedValidationStateTitle\n
 modification_date </string> </value>
         </item>
         <item>
