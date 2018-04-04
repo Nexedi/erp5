@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Dotations aux dépréciations exceptionnelles</string> </value>
+            <value> <string>Dotations pour dépréciations exceptionnelles</string> </value>
         </item>
       </dictionary>
     </pickle>

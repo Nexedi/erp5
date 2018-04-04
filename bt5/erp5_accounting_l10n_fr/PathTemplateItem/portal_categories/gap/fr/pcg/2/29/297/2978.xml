@@ -34,6 +34,26 @@
             </value>
         </item>
         <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -52,26 +72,12 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>gap/fr/pcg/2/28/281/2818/28181</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>28181</string> </value>
+            <value> <string>2978</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>28181</string> </value>
-        </item>
-        <item>
-            <key> <string>int_index</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>2978</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -79,7 +85,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Amortissement installation générales, agencements, aménagements divers</string> </value>
+            <value> <string>Dépréciation du mali de fusion sur actifs financiers</string> </value>
         </item>
       </dictionary>
     </pickle>

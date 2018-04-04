@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Quotas d\'émission à restituer à l\'etat</string> </value>
+            <value> <string>Quotas d’émission à acquérir</string> </value>
         </item>
       </dictionary>
     </pickle>
