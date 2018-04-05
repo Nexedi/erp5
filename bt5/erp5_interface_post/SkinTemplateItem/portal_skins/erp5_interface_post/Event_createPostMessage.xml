@@ -53,6 +53,14 @@
             <value> <string>post_portal_type, post_message_data, **kw</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Event_createPostMessage</string> </value>
         </item>
