@@ -11,6 +11,7 @@ message_post = post_message_post_module.newContent(
 
 message_post.prepareExport()
 
-event_aggregate_list = context.getAggregateList()
-event_aggregate_list.append(message_post.getRelativeUrl())
-context.setAggregateList(event_aggregate_list)
+if not context.isTempObject():
+  event_aggregate_list = context.getAggregateList()
+  event_aggregate_list.append(message_post.getRelativeUrl())
+  context.setAggregateList(event_aggregate_list)
