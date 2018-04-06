@@ -28,7 +28,6 @@ Payment Simulation Rule | Category Membership Divergence Tester
 Payment Simulation Rule | DateTime Divergence Tester
 Payment Simulation Rule | Float Divergence Tester
 Payment Simulation Rule | Net Converted Quantity Divergence Tester
-Payment Simulation Rule | Predicate
 Payment Simulation Rule | Specialise Divergence Tester
 Payment Simulation Rule | String Divergence Tester
 Payment Simulation Rule | Variation Divergence Tester
