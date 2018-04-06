@@ -448,6 +448,9 @@ iframe {
 img {
   image-orientation: from-image;
 }
+.ui-info-error {
+  color: red;
+}
 /**********************************************
 * Gadget: panel
 **********************************************/
