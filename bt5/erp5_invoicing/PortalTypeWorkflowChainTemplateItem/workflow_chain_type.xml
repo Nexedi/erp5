@@ -13,7 +13,7 @@
  </chain>
  <chain>
   <type>Invoice Transaction Simulation Rule</type>
-  <workflow>edit_workflow, rule_interaction_workflow, rule_validation_workflow</workflow>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Trade Model Simulation Rule</type>
