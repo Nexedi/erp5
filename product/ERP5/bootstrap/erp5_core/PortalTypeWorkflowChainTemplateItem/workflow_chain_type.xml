@@ -113,7 +113,7 @@
  </chain>
  <chain>
   <type>Predicate</type>
-  <workflow>edit_workflow, rule_interaction_workflow</workflow>
+  <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Preference</type>
