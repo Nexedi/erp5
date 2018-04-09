@@ -12,6 +12,7 @@
     // Acquire Method
     //////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
+    .declareAcquiredMethod("redirect", "redirect")
 
     /////////////////////////////////////////////
     // Declare Method
@@ -27,6 +28,9 @@
     })
 
     .allowPublicAcquisition('onEnd', function () {
+      if (this.params.auto_play) {
+        return this.redirect({ command: 'selection_next' });  
+      }
       return this.changeState({ play: false, mute: false });
     })
 
@@ -66,6 +70,7 @@
 
     .declareMethod('render', function (params) {
       var gadget = this;
+      gadget.params = params;
       return gadget.jio_get(params.value)
         .push(function (doc) {
           var name_array = doc.title.split('.'),
@@ -86,6 +91,11 @@
             id: params.value,
             name: params.name
           });
+        })
+        .push(function () {
+          if (params.auto_play) {
+            return gadget.changeState({ play: true });  
+          }
         });
     })
 
