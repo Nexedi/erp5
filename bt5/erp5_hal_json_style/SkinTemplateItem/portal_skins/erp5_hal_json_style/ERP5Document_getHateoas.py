@@ -1920,8 +1920,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           # forbid editability only for fields not specified in editable_columns
           if select in editable_column_set:
             continue
-          if isinstance(line[select], dict) and line[select].get('editable'):
-            line[select]['editable'] = False
+          if (isinstance(line[select], dict) and
+            line[select].get('field_gadget_param', None) is not None):
+            if line[select]['field_gadget_param'].get('editable'):
+              line[select]['field_gadget_param']['editable'] = False
 
     if source_field is not None and source_field_meta_type == "ListBox":
       # Trigger count method if exist
