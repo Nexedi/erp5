@@ -113,7 +113,7 @@
                     "key": "player_content",
                     "hidden": 0,
                     "type": "GadgetField",
-                    "renderjs_extra": '{"name": "data"}',
+                    "renderjs_extra": '{"name": "data", "auto_play": true}',
                     "url": "gadget_custom_player.html",
                     "sandbox": "public"
                   }

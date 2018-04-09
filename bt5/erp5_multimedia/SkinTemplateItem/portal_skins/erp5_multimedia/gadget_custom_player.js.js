@@ -6,12 +6,13 @@
   "use strict";
 
   rJS(window)
-    .setState({ play: false, mute: false })
+    .setState({ play: false, mute: false, auto_play: false })
 
     //////////////////////////////////////////////
     // Acquire Method
     //////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
+    .declareAcquiredMethod("redirect", "redirect")
 
     /////////////////////////////////////////////
     // Declare Method
@@ -27,6 +28,9 @@
     })
 
     .allowPublicAcquisition('onEnd', function () {
+      if (this.state.auto_play) {
+        return this.redirect({ command: 'selection_next' });  
+      }
       return this.changeState({ play: false, mute: false });
     })
 
@@ -86,6 +90,11 @@
             id: params.value,
             name: params.name
           });
+        })
+        .push(function () {
+          if (params.auto_play) {
+            return gadget.changeState({ play: true, auto_play: true });  
+          }
         });
     })
 
