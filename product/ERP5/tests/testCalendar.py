@@ -926,6 +926,97 @@ class TestCalendar(ERP5ReportTestCase):
         to_date=DateTime(2008, 1, 1).latestTime(),
         day=1)])
 
+  def test_CalendarExceptionInLeaveRequest(self):
+    group_calendar = self.portal.group_calendar_module.newContent(
+                                  portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+                                  portal_type='Group Presence Period')
+    group_calendar_period.setStartDate('2008/01/01 08:00')
+    group_calendar_period.setStopDate('2008/01/01 18:00')
+    group_calendar_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar_period.setPeriodicityWeekDayList(
+           ('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'))
+    group_calendar_period.setPeriodicityStopDate('2008/02/01')
+    group_calendar.confirm()
+
+    person1 = self.portal.person_module.newContent(
+                                portal_type='Person',
+                                title='Person 1',)
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      specialise_value=group_calendar,
+                      resource_value=self.portal.portal_categories.calendar_period_type.type1,
+                      start_date=DateTime(2008, 1, 1).earliestTime(),
+                      stop_date=DateTime(2008, 1, 31).latestTime(),
+                      destination_value=person1)
+    assignment.confirm()
+    self.tic()
+    #     January 2008
+    # Su Mo Tu We Th Fr Sa
+    #        1  2  3  4  5
+    #  6  7  8  9 10 11 12
+    # 13 14 15 16 17 18 19
+    # 20 21 22 23 24 25 26
+    # 27 28 29 30 31
+    self.assertEqual(
+        36000 * 31, # 36000 per day for one month
+        self.portal.portal_simulation.getInventory(
+            portal_type=self.portal.getPortalCalendarPeriodTypeList(),
+            from_date=DateTime(2008, 1, 1).earliestTime(),
+            to_date=DateTime(2008, 2, 1).latestTime(),
+            node_uid=person1.getUid()))
+
+    # Now add a leave request "every friday afternoon"
+    leave_request = self.portal.leave_request_module.newContent(
+            portal_type='Leave Request',
+            destination_value=person1,)
+    leave_request_period = leave_request.newContent(
+            portal_type='Leave Request Period',
+            start_date=DateTime('2008/01/04 13:00'),
+            stop_date=DateTime('2008/01/04 17:00'),
+            quantity=4*60,
+            resource_value=self.portal.portal_categories.calendar_period_type.type1,
+            periodicity_stop_date=DateTime('2008/02/01'),
+            periodicity_week_day_list=('Friday',))
+    leave_request.confirm()
+    self.tic()
+
+    self.assertEqual(
+        # 36000 per day for one month - 4 Friday afternoons ( one afternoon is 4 hours)
+        36000 * 31 - 4 * 4 * 60,
+        self.portal.portal_simulation.getInventory(
+            portal_type=self.portal.getPortalCalendarPeriodTypeList(),
+            from_date=DateTime(2008, 1, 1).earliestTime(),
+            to_date=DateTime(2008, 2, 1).latestTime(),
+            node_uid=person1.getUid()))
+
+    # now add an exception on 2008/01/25
+    exception = leave_request_period.newContent(
+            portal_type='Calendar Exception',
+            exception_date=DateTime('2008/01/25'))
+    self.tic()
+
+    self.assertEqual(
+        # 36000 per day for one month - 3 Friday afternoons ( one afternoon is 4 hours)
+        36000 * 31 - 3 * 4 * 60,
+        self.portal.portal_simulation.getInventory(
+            portal_type=self.portal.getPortalCalendarPeriodTypeList(),
+            from_date=DateTime(2008, 1, 1).earliestTime(),
+            to_date=DateTime(2008, 2, 1).latestTime(),
+            node_uid=person1.getUid()))
+
+    # change exception, capacity is automatically updated
+    exception.setExceptionDate('2008/02/02') # out or period
+    self.tic()
+    self.assertEqual(
+        # 36000 per day for one month - 4 Friday afternoons ( one afternoon is 4 hours)
+        36000 * 31 - 4 * 4 * 60,
+        self.portal.portal_simulation.getInventory(
+            portal_type=self.portal.getPortalCalendarPeriodTypeList(),
+            from_date=DateTime(2008, 1, 1).earliestTime(),
+            to_date=DateTime(2008, 2, 1).latestTime(),
+            node_uid=person1.getUid()))
+
   def test_GroupCalendarConstraint(self):
     group_calendar = self.portal.group_calendar_module.newContent(
                                   portal_type='Group Calendar')
