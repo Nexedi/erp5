@@ -82,6 +82,7 @@ class CodingStyleTestCase(ERP5TypeTestCase):
           search_sub=True):
         if getattr(aq_base(document), 'checkConsistency', None) is not None:
           message_list.extend(document.checkConsistency())
+    self.maxDiff = None
     self.assertEqual([], message_list)
 
   def test_PythonSourceCode(self):
