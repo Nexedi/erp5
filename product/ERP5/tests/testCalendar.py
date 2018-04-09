@@ -34,9 +34,9 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
 
+
 class TestCalendar(ERP5ReportTestCase):
 
-  run_all_test = 1
   person_portal_type = "Person"
   group_calendar_portal_type = "Group Calendar"
   leave_request_portal_type = "Leave Request"
@@ -49,20 +49,10 @@ class TestCalendar(ERP5ReportTestCase):
   middle_date = start_date + 0.25
   periodicity_stop_date = start_date + 2
 
-  def getTitle(self):
-    return "Calendar"
-
   def getBusinessTemplateList(self):
     """
     """
     return ('erp5_base', 'erp5_pdm', 'erp5_calendar', 'erp5_core_proxy_field_legacy')
-
-  def login(self, quiet=0, run=run_all_test):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('rc', '', ['Manager', 'Author', 'Assignor',
-                             'Assignee', 'Auditor'], [])
-    user = uf.getUserById('rc').__of__(uf)
-    newSecurityManager(None, user)
 
   def createCategories(self):
     """
@@ -485,12 +475,10 @@ class TestCalendar(ERP5ReportTestCase):
     presence_request.confirm()
     self.assertEqual('confirmed', presence_request.getSimulationState())
 
-  def test_01_CatalogCalendarPeriod(self, quiet=0, run=run_all_test):
+  def test_01_CatalogCalendarPeriod(self):
     """
     Test indexing
     """
-    if not run: return
-
     sequence_list = SequenceList()
     sequence_string = '\
               CreatePerson \
@@ -514,12 +502,10 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_02_CatalogLeaveRequest(self, quiet=0, run=run_all_test):
+  def test_02_CatalogLeaveRequest(self):
     """
     Test indexing
     """
-    if not run: return
-
     sequence_list = SequenceList()
     sequence_string = '\
               CreatePerson \
@@ -544,12 +530,10 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_CatalogPresenceRequest(self, quiet=0, run=run_all_test):
+  def test_CatalogPresenceRequest(self):
     """
     Test indexing
     """
-    if not run: return
-
     sequence_list = SequenceList()
     sequence_string = '''
               CreatePerson
@@ -691,12 +675,10 @@ class TestCalendar(ERP5ReportTestCase):
 #     self.assertEqual(len(date_period_list) * second_availability,
 #                       person.getAvailableTime())
 
-  def test_03_getAvailableTime(self, quiet=0, run=run_all_test):
+  def test_03_getAvailableTime(self):
     """
     Test indexing
     """
-    if not run: return
-
     # Test that calendar group increase time availability
     sequence_list = SequenceList()
     sequence_string = '\
@@ -808,11 +790,11 @@ class TestCalendar(ERP5ReportTestCase):
 
     sequence_list.play(self)
 
-  def test_04_getCapacityAvailability(self, quiet=0, run=0):
+  def test_04_getCapacityAvailability(self):
     """
     Test getCapacityAvailability
     """
-    if not run: return
+    return # XXX this test is disabled
     raise NotImplementedError
 
     # Test that calendar group increase time availability
