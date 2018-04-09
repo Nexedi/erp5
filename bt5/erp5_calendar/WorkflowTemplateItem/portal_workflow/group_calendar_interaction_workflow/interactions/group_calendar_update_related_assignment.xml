@@ -57,6 +57,8 @@
             <value>
               <list>
                 <string>_set.*</string>
+                <string>manage_delObjects</string>
+                <string>deleteContent</string>
               </list>
             </value>
         </item>

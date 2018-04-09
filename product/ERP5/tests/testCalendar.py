@@ -856,10 +856,7 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_CalendarException(self):
-    organisation = self.portal.organisation_module.newContent(
-                                portal_type='Organisation')
-
+  def test_CalendarExceptionInGroupCalendar(self):
     group_calendar = self.portal.group_calendar_module.newContent(
                                   portal_type='Group Calendar')
     group_calendar_period = group_calendar.newContent(
@@ -872,9 +869,7 @@ class TestCalendar(ERP5ReportTestCase):
 
     person1 = self.portal.person_module.newContent(
                                 portal_type='Person',
-                                title='Person 1',
-                                career_reference='1',
-                                subordination_value=organisation)
+                                title='Person 1',)
     self.tic()
     self.assertEqual([0], [x.total_quantity
        for x in person1.getAvailableTimeSequence(
@@ -906,6 +901,24 @@ class TestCalendar(ERP5ReportTestCase):
     # When calendar exception is modified, the assignments on this calendar are
     # automatically updated.
     exception.setExceptionDate(DateTime(2018, 2, 2))
+    self.tic()
+    self.assertEqual([36000], [x.total_quantity
+      for x in person1.getAvailableTimeSequence(
+        from_date=DateTime(2008, 1, 1).earliestTime(),
+        to_date=DateTime(2008, 1, 1).latestTime(),
+        day=1)])
+
+    # "undo" for the rest of the test
+    exception.setExceptionDate(DateTime(2008, 1, 1))
+    self.tic()
+    self.assertEqual([0], [x.total_quantity
+      for x in person1.getAvailableTimeSequence(
+        from_date=DateTime(2008, 1, 1).earliestTime(),
+        to_date=DateTime(2008, 1, 1).latestTime(),
+        day=1)])
+
+    # When calendar exception is deleted, assigments are also automatically updated.
+    group_calendar_period.manage_delObjects(ids=[exception.getId()])
     self.tic()
     self.assertEqual([36000], [x.total_quantity
       for x in person1.getAvailableTimeSequence(
