@@ -170,8 +170,9 @@ class PresencePeriod(Movement, PeriodicityMixin):
              (current_exception_date < next_start_date.Date()):
             # SQL method don't like iterator
   #             yield (next_start_date, next_start_date+duration)
-            result.append([next_start_date,
-               addToDate(next_start_date, second=second_duration)])
+            result.append({'start_date': next_start_date,
+                           'stop_date': addToDate(next_start_date, second=second_duration),
+                           'quantity': self.getQuantity()})
             # Update the next exception date
             if len(exception_date_list) != 0:
               current_exception_date = exception_date_list.pop(0).Date()
