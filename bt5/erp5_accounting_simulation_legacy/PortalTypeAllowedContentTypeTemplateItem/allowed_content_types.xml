@@ -5,8 +5,10 @@
  </portal_type>
  <portal_type id="Invoice Transaction Simulation Rule">
   <item>Accounting Rule Cell</item>
+  <item>Predicate</item>
  </portal_type>
  <portal_type id="Payment Simulation Rule">
   <item>Accounting Rule Cell</item>
+  <item>Predicate</item>
  </portal_type>
 </allowed_content_type_list>
