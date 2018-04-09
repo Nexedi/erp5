@@ -23,6 +23,20 @@
     }
   }
 
+  function loadListboxContent(gadget, result) {
+    var key;
+    if (gadget.state.options.form_content) {
+      for (key in result) {
+        if (result.hasOwnProperty(key)) {
+          if (typeof result[key].field_gadget_param === "object" &&
+              result[key].field_gadget_param.hasOwnProperty("key") &&
+              gadget.state.options.form_content[result[key].field_gadget_param.key]) {
+            result[key].field_gadget_param['default'] = gadget.state.options.form_content[result[key].field_gadget_param.key];
+          }
+        }
+      }
+    }
+  }
 
   rJS(window)
 
@@ -66,7 +80,7 @@
           var i;
           if (result.data.rows.length) {
             for (i = 0; i < result.data.rows.length; i += 1) {
-              loadFormContent(gadget, result.data.rows[i].value);
+              loadListboxContent(gadget, result.data.rows[i].value);
             }
           }
           return result;
