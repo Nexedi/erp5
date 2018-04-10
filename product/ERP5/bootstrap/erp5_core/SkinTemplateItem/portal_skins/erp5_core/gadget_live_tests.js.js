@@ -29,8 +29,8 @@
   // if the user scrolls in the window we do not want it to be updated.
   // so set paused flag to false
   function scrollFunction() {
-    paused = data_textarea.scrollHeight - data_textarea.scrollTop !==
-      data_textarea.clientHeight;
+    paused = (data_textarea.scrollHeight - data_textarea.scrollTop) >
+      (data_textarea.clientHeight + 1);
     // if the service was paused when the tests are finished,
     // set continue_loop to false
     if (!paused && !tests_still_running) {
