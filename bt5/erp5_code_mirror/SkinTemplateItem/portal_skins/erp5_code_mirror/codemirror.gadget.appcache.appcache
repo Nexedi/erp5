@@ -7,6 +7,7 @@ rsvp.js
 codemirror/lib/codemirror.js
 codemirror/lib/codemirror.css
 codemirror/addon/cm_edit/matchbrackets.js
+codemirror/addon/cm_edit/matchtags.js
 codemirror/addon/cm_edit/trailingspace.js
 codemirror/addon/dialog/dialog.css
 codemirror/addon/dialog/dialog.js
@@ -25,6 +26,7 @@ codemirror/addon/fold/foldcode.js
 codemirror/addon/fold/foldgutter.js
 codemirror/addon/fold/indent-fold.js
 codemirror/addon/fold/comment-fold.js
+codemirror/addon/fold/xml-fold.js
 codemirror/addon/merge/merge.css
 diff_match_patch/javascript/diff_match_patch_uncompressed.js
 codemirror/addon/merge/merge.js
