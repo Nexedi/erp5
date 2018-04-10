@@ -3,18 +3,6 @@
 (function (window, rJS, RSVP, Blob) {
   "use strict";
 
-  var content_type = {
-    Spreadsheet: 'application/x-asc-spreadsheet',
-    Presentation: 'application/x-asc-presentation',
-    Text: 'application/x-asc-text'
-  };
-
-  var file_ext = {
-    Spreadsheet: 'xlsy',
-    Presentation: 'ppty',
-    Text: 'docy'
-  };
-
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -34,21 +22,22 @@
         .push(function () {
           return RSVP.all([
             gadget.getSetting('portal_type'),
-            gadget.getSetting('parent_relative_url')
+            gadget.getSetting('parent_relative_url'),
+            gadget.getSetting('content_type', undefined),
+            gadget.getSetting('file_extension', undefined)
           ]);
         })
         .push(function (result) {
-          var ext = file_ext[result[0]],
-            ret = {
+          var doc = {
             title: "Untitled Document",
             portal_type: result[0],
             parent_relative_url: result[1],
-            content_type: content_type[result[0]] || undefined
+            content_type: result[2]
           };
-          if (ext) {
-            ret.filename = "default." + ext;
+          if (result[3]) {
+            doc.filename = "default." + result[3];
           }
-          return gadget.jio_post(ret);
+          return gadget.jio_post(doc);
         })
         .push(function (id) {
           return gadget.redirect({
