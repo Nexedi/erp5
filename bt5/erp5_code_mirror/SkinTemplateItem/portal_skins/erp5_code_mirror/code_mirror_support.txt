@@ -56,6 +56,8 @@
 <script type="text/javascript" src="&dtml-portal_url;/csslint.js"></script>
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/lint/css-lint.js"></script>
 <dtml-elif expr="mode == 'htmlmixed'">
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/fold/xml-fold.js"></script>
+<script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/cm_edit/matchtags.js"></script>
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/mode/xml/xml.js"></script>
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/mode/javascript/javascript.js"></script>
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/mode/css/css.js"></script>
@@ -522,6 +524,7 @@
     tabSize: 2,
     indentWithTabs: false,
     matchBrackets: true,
+    matchTags: {bothTags: true},
     extraKeys: extra_keys,
     foldGutter: true,
     lineWrapping: true,
