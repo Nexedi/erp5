@@ -2,6 +2,9 @@
  <portal_type id="Expense Record Module">
   <item>Expense Record</item>
  </portal_type>
+ <portal_type id="Expense Sheet Module">
+  <item>Expense Sheet</item>
+ </portal_type>
  <portal_type id="Expense Validation Request Module">
   <item>Expense Validation Request</item>
  </portal_type>
