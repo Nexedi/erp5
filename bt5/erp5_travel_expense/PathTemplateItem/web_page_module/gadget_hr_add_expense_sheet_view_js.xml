@@ -68,7 +68,6 @@
             <value>
               <tuple>
                 <string>contributor/person_module/2</string>
-                <string>contributor/person_module/5</string>
               </tuple>
             </value>
         </item>
@@ -79,8 +78,14 @@
             </value>
         </item>
         <item>
+            <key> <string>contributors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_hr_jio.js</string> </value>
+            <value> <string>gadget_officejs_jio_expense_sheet_view.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -90,7 +95,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_hr_jio_js</string> </value>
+            <value> <string>gadget_hr_add_expense_sheet_view_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -108,7 +113,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>HR Gadget JS</string> </value>
+            <value> <string>OfficeJS Jio Expense Sheet JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -194,8 +199,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1479221739.78</float>
-                        <string>UTC</string>
+                        <float>1523287493.09</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
@@ -239,7 +244,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>966.50115.49905.16025</string> </value>
+                <value> <string>966.50120.11780.57907</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -257,7 +262,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1523364927.08</float>
+                        <float>1523365072.38</float>
                         <string>GMT+2</string>
                       </tuple>
                     </state>
@@ -314,8 +319,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1479221698.05</float>
-                        <string>UTC</string>
+                        <float>1523287433.97</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>

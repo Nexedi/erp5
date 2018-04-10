@@ -3,6 +3,9 @@ Currency | jio_view
 Expense Record Module | view
 Expense Record | jio_view
 Expense Record | view
+Expense Sheet Module | view
+Expense Sheet | jio_view
+Expense Sheet | view
 Expense Validation Request Module | view
 Expense Validation Request | jump_to_related_transaction
 Expense Validation Request | records
