@@ -4,6 +4,7 @@ Expense Record | event_interaction_workflow
 Expense Record | event_simulation_workflow
 Expense Record | event_simulation_workflow
 Expense Record | pricing_interaction_workflow
+Expense Sheet | edit_workflow
 Expense Validation Request | edit_workflow
 Expense Validation Request | expense_validation_request_interaction_workflow
 Expense Validation Request | pricing_interaction_workflow

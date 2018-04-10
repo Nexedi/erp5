@@ -4,6 +4,10 @@
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Expense Sheet</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Expense Validation Request</type>
   <workflow>edit_workflow, expense_validation_request_interaction_workflow, pricing_interaction_workflow, ticket_acceptance_simulation_workflow, ticket_interaction_workflow, ticket_record_interaction_workflow</workflow>
  </chain>

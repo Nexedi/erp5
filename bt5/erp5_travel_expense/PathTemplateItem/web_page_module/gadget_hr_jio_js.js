@@ -295,6 +295,7 @@
                 'OR (portal_type: "Leave Report Record" AND simulation_state:"stopped") ' +
                 'OR (portal_type: "Leave Request Record" AND (simulation_state:"draft" OR simulation_state:"sent" OR simulation_state:"stopped")) ' +
                 'OR (portal_type: "Localisation Record" AND (simulation_state:"draft" OR simulation_state:"stopped")) ' +
+                'OR (portal_type: "Expense Sheet" AND (reference: "expense_sheet")) ' +
                 'OR (portal_type: "Currency" AND validation_state:"validated") ' +
                 'OR (portal_type: "Service" AND validation_state:"validated") ' +
                 'OR (portal_type: "Person" AND id: "' + me.split("/")[1] + '")',
