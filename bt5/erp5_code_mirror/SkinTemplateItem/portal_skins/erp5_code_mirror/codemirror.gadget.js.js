@@ -28,6 +28,7 @@
           tabSize: 2,
           indentWithTabs: false,
           matchBrackets: true,
+          matchTags: {bothTags: true},
           rulers: [{
             column: 80,
             color: "#bbb",
