@@ -18,7 +18,11 @@
     selected_option_source = gadget_klass.__template_element
                                .getElementById("selected-option-template")
                                .innerHTML,
-    selected_option_template = Handlebars.compile(selected_option_source);
+    selected_option_template = Handlebars.compile(selected_option_source),
+    disabled_option_source = gadget_klass.__template_element
+                               .getElementById("disabled-option-template")
+                               .innerHTML,
+    disabled_option_template = Handlebars.compile(disabled_option_source);
 
   gadget_klass
     .setState({
@@ -80,7 +84,9 @@
       if (modification_dict.hasOwnProperty('value') ||
           modification_dict.hasOwnProperty('item_list')) {
         for (i = 0; i < item_list.length; i += 1) {
-          if (item_list[i][1] === this.state.value) {
+          if (item_list[i][1] === null) {
+            template = disabled_option_template;
+          } else if (item_list[i][1] === this.state.value) {
             template = selected_option_template;
             found = true;
           } else {
