@@ -471,14 +471,18 @@ def getFieldDefault(form, field, key, value=None):
   return value
 
 
-def renderField(traversed_document, field, form, value=None, meta_type=None, key=None, key_prefix=None, selection_params=None):
+def renderField(traversed_document, field, form, value=None, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True):
   """Extract important field's attributes into `result` dictionary."""
   if selection_params is None:
     selection_params = {}
 
-  # some TALES expressions are using Base_getRelatedObjectParameter which requires that
-  previous_request_field = REQUEST.other.pop('field_id', None)
-  REQUEST.other['field_id'] = field.id
+  # Some field's TALES expressions suppose field_id to be available in the REQUEST
+  # even worse with RelationFields - they render sub-fields (like listbox) but
+  # this listbox expects field_id to point to the "parent" relation field
+  # thus setting the field_id is optional and controlled by `request_field` argument
+  if request_field:
+    previous_request_field = REQUEST.other.pop('field_id', None)
+    REQUEST.set('field_id', field.id)
 
   if meta_type is None:
     meta_type = field.meta_type
@@ -624,15 +628,19 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     for (listbox_path, listbox_name) in listbox_ids:
       (listbox_form_name, listbox_field_name) = listbox_path.split('/', 2)
       # do not override "global" `form`
-      rel_form = getattr(context, listbox_form_name)
+      rel_form = getattr(traversed_document, listbox_form_name)
       # find listbox field
       listbox_form_field = filter(lambda f: f.getId() == listbox_field_name, rel_form.get_fields())[0]
-      rel_cache = {'form_id': REQUEST.get('form_id', MARKER), 'field_id': REQUEST.get('field_id', MARKER)}
-      REQUEST.set('form_id', rel_form.id)
-      REQUEST.set('field_id', listbox_form_field.id)
 
-      # get original definition
-      subfield = renderField(context, listbox_form_field, rel_form)
+      # Set only relation_form_id but do NOT change form_id to the relation_form neither field_id to the listbox
+      # field_id must point to a relation field
+      REQUEST.set('relation_form_id', rel_form.id)
+
+      # Render sub-field of listbox but not as a full-field with its field_id in the REQUEST
+      # because Relation stuff expects the original RelationField to be the one "being rendered"
+      subfield = renderField(traversed_document, listbox_form_field, rel_form, request_field=False)
+      del REQUEST.other['relation_form_id']
+
       # overwrite, like Base_getRelatedObjectParameter does
       if subfield["portal_type"] == []:
         subfield["portal_type"] = field.get_value('portal_type')
@@ -657,10 +665,6 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
         for tmp_column in column_list:
           subfield["column_list"].append((tmp_column[0], Base_translateString(tmp_column[1])))
       listbox[Base_translateString(listbox_name)] = subfield
-
-      for key in rel_cache:
-        if rel_cache[key] is not MARKER:
-          REQUEST.set(key, rel_cache[key])
 
     result.update({
       "url": relative_url,
