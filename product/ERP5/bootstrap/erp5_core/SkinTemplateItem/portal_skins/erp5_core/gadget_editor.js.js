@@ -42,7 +42,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         });
     })
     .declareMethod('render', function (options) {
-      
+
       var state_dict = {
           value: options.value || "",
           editor: options.editor,
@@ -105,7 +105,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         if ((gadget.state.editable &&
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
             (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
-            (gadget.state.editor == 'pdf')) {
+            (gadget.state.editor === 'pdf')) {
           queue
             .push(function () {
               return gadget.declareGadget(
@@ -131,7 +131,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
       if ((gadget.state.editable &&
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
             (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
-            (gadget.state.editor == 'pdf')) {
+            (gadget.state.editor === 'pdf')) {
         queue
           .push(function () {
             return gadget.getDeclaredGadget('editor');
@@ -139,6 +139,16 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
           .push(function (editor_gadget) {
             return editor_gadget.render(gadget.state);
           });
+
+        if (modification_dict.maximize === "auto") {
+          queue
+            .push(function () {
+              return gadget.getDeclaredGadget("maximize");
+            })
+            .push(function (gadget_maximize) {
+              return gadget_maximize.callMaximize(true);
+            });
+        }
       } else if (gadget.state.editable &&
           (gadget.state.editor === 'text_area')) {
         element.querySelector('textarea').value = gadget.state.value;
