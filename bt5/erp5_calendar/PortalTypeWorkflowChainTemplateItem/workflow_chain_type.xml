@@ -1,9 +1,5 @@
 <workflow_chain>
  <chain>
-  <type>Calendar Exception</type>
-  <workflow>group_calendar_interaction_workflow</workflow>
- </chain>
- <chain>
   <type>Group Calendar</type>
   <workflow>edit_workflow, group_calendar_interaction_workflow, group_calendar_workflow</workflow>
  </chain>

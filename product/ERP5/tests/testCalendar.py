@@ -874,54 +874,6 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_CalendarException(self):
-    organisation = self.portal.organisation_module.newContent(
-                                portal_type='Organisation')
-
-    group_calendar = self.portal.group_calendar_module.newContent(
-                                  portal_type='Group Calendar')
-    group_calendar_period = group_calendar.newContent(
-                                  portal_type='Group Presence Period')
-    group_calendar_period.setStartDate('2008/01/01 08:00')
-    group_calendar_period.setStopDate('2008/01/01 18:00')
-    group_calendar_period.setResourceValue(
-          self.portal.portal_categories.calendar_period_type.type1)
-    group_calendar.confirm()
-
-    person1 = self.portal.person_module.newContent(
-                                portal_type='Person',
-                                title='Person 1',
-                                career_reference='1',
-                                subordination_value=organisation)
-    self.tic()
-    self.assertEqual([0], [x.total_quantity
-       for x in person1.getAvailableTimeSequence(
-         from_date=DateTime(2008, 1, 1).earliestTime(),
-         to_date=DateTime(2008, 1, 1).latestTime(),
-         day=1)])
-    assignment = self.portal.group_calendar_assignment_module.newContent(
-                      specialise_value=group_calendar,
-                      resource_value=self.portal.portal_categories.calendar_period_type.type1,
-                      start_date=DateTime(2008, 1, 1).earliestTime(),
-                      stop_date=DateTime(2008, 1, 1).latestTime(),
-                      destination_value=person1)
-    assignment.confirm()
-    self.tic()
-    self.assertEqual([36000], [x.total_quantity
-       for x in person1.getAvailableTimeSequence(
-         from_date=DateTime(2008, 1, 1).earliestTime(),
-         to_date=DateTime(2008, 1, 1).latestTime(),
-         day=1)])
-    exception = group_calendar_period.newContent(
-        portal_type="Calendar Exception",
-        exception_date=DateTime(2008, 1, 1))
-    self.tic()
-    self.assertEqual([0], [x.total_quantity
-       for x in person1.getAvailableTimeSequence(
-         from_date=DateTime(2008, 1, 1).earliestTime(),
-         to_date=DateTime(2008, 1, 1).latestTime(),
-         day=1)])
-
   def test_GroupCalendarConstraint(self):
     group_calendar = self.portal.group_calendar_module.newContent(
                                   portal_type='Group Calendar')

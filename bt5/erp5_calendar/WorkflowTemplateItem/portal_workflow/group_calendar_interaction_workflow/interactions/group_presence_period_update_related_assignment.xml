@@ -27,15 +27,15 @@
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <list>
-                <string>GroupCalendar_callUpdateRelatedAssignment</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>before_commit_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>GroupPresencePeriod_callUpdateRelatedAssignment</string>
+              </list>
             </value>
         </item>
         <item>
@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>group_calendar_update_related_assignment</string> </value>
+            <value> <string>group_presence_period_update_related_assignment</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
@@ -68,7 +68,7 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
-                <string>Group Calendar</string>
+                <string>Group Presence Period</string>
               </list>
             </value>
         </item>
