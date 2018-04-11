@@ -1,20 +1,15 @@
-/*globals window, RSVP, rJS, promiseEventListener, Handlebars*/
+/*globals window, RSVP, rJS*/
 /*jslint indent: 2, maxlen: 80, nomen: true*/
-(function (window, RSVP, rJS, promiseEventListener, Handlebars) {
+(function (window, RSVP, rJS) {
   "use strict";
-  var gadget_klass = rJS(window),
-    templater = gadget_klass.__template_element,
-
-    template = Handlebars.compile(
-      templater.getElementById("page-template").innerHTML
-    );
+  var gadget_klass = rJS(window);
 
   function repair_and_redirect(gadget) {
     return new RSVP.Queue()
       .push(function () {
         return gadget.getSetting('sync_reload', false);
       })
-     .push(function (sync_reload) {
+      .push(function (sync_reload) {
         if (sync_reload) {
           return gadget.setSetting('sync_reload', false)
             .push(function () {
@@ -22,12 +17,17 @@
             });
         }
         return gadget.repair()
-          .push(function (result) {
-            if (result !== undefined && result.hasOwnProperty('redirect')) {
-              return gadget.redirect({
-                command: "display",
-                options: result.redirect
-              });
+          .push(function () {
+            if (gadget.state.cloudooo) {
+              return gadget.getDeclaredGadget('cloudooo')
+                .push(function (cloudooo) {
+                  return cloudooo.repair();
+                });
+            }
+          })
+          .push(function () {
+            if (gadget.state.redirect) {
+              return gadget.redirect(window.JSON.parse(gadget.state.redirect));
             }
             return gadget.redirect({command: "display"});
           });
@@ -35,32 +35,32 @@
   }
 
   gadget_klass
-    .ready(function (g) {
-      g.props = {};
-      g.props.auto_repair = false;
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareMethod("render", function () {
+    .declareMethod("render", function (options) {
       var gadget = this;
-
-      if (arguments[0].auto_repair === "true") {
-        gadget.props.auto_repair = true;
-      }
+      return gadget.getSetting('conversion_dict', false)
+        .push(function (result) {
+          return gadget.changeState({
+            auto_repair: options.auto_repair,
+            redirect: options.redirect,
+            cloudooo: result && true
+          });
+        });
+    })
+    .onStateChange(function (modification_dict) {
+      var gadget = this;
 
       return gadget.updateHeader({
         title: "Synchronize"
       })
         .push(function () {
-          return gadget.translateHtml(template());
-        })
-        .push(function (html) {
-          gadget.props.element.innerHTML = html;
+          if (modification_dict.cloudooo) {
+            return gadget.declareGadget('gadget_cloudooo.html', {
+              element: gadget.element.querySelector('.cloudooo'),
+              scope: "cloudooo"
+            });
+          }
         });
     })
 
@@ -73,21 +73,9 @@
     .declareService(function () {
       var gadget = this;
 
-      if (gadget.props.auto_repair === true) {
+      if (gadget.state.auto_repair) {
         return repair_and_redirect(gadget);
       }
-
-      return new RSVP.Queue()
-        .push(function () {
-          return promiseEventListener(
-            gadget.props.element.querySelector('form.synchro-form'),
-            'submit',
-            false
-          );
-        })
-        .push(function () {
-          return repair_and_redirect(gadget);
-        });
     });
 
-}(window, RSVP, rJS, promiseEventListener, Handlebars));
+}(window, RSVP, rJS));

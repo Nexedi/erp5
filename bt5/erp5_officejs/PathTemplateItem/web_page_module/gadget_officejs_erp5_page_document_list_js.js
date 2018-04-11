@@ -124,15 +124,21 @@
         .push(function () {
           return RSVP.all([
             gadget.getUrlFor({command: "change", options: {"page": "ojs_add_document"}}),
-            gadget.getSetting('document_title_plural')
+            gadget.getSetting('document_title_plural'),
+            gadget.getUrlFor({command: "change", options: {"page": "ojs_upload_convert"}}),
+            gadget.getSetting('conversion_dict', false)
           ]);
         })
         .push(function (result) {
-          return gadget.updateHeader({
+          var header = {
             page_title: result[1],
             filter_action: true,
             add_url: result[0]
-          });
+          };
+          if (result[3]) {
+            header.upload_url = result[2];
+          }
+          return gadget.updateHeader(header);
         });
     });
 }(window, rJS, RSVP));

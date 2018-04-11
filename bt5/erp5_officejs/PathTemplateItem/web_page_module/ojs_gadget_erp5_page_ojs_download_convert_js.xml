@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -76,8 +74,14 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_sync.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_download_convert.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_sync_js</string> </value>
+            <value> <string>ojs_gadget_erp5_page_ojs_download_convert_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -107,13 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Sync Page JS</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget OfficeJS Download And Convert JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -177,7 +175,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -199,7 +197,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481896177.33</float>
+                        <float>1530089814.54</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -230,7 +228,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>P0</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -244,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>969.27633.19787.19507</string> </value>
+                <value> <string>969.32112.45524.32443</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -262,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1533639756.16</float>
+                        <float>1534258975.87</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -289,7 +287,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -319,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481896139.44</float>
+                        <float>1530089796.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
