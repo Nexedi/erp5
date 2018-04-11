@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -76,8 +74,14 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_sync.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_upload_convert.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_sync_js</string> </value>
+            <value> <string>ojs_gadget_erp5_page_ojs_upload_convert_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -107,13 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Sync Page JS</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget OfficeJS Upload And Convert JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -199,7 +197,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481896177.33</float>
+                        <float>1523363636.54</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -262,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1533639756.16</float>
+                        <float>1533639694.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -285,7 +283,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -301,7 +301,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -319,7 +319,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481896139.44</float>
+                        <float>1523361168.55</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

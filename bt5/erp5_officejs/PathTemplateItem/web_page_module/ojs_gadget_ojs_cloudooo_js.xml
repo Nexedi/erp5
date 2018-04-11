@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -76,8 +74,16 @@
             </value>
         </item>
         <item>
+            <key> <string>creators</string> </key>
+            <value>
+              <tuple>
+                <string>cedric.le.ninivin</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_sync.js</string> </value>
+            <value> <string>gadget_ojs_cloudooo.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,12 +93,31 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_sync_js</string> </value>
+            <value> <string>ojs_gadget_ojs_cloudooo_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>modification_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1455284352.18</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
             </value>
         </item>
         <item>
@@ -107,7 +132,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Sync Page JS</string> </value>
+            <value> <string>Gadget OfficeJS Cloudooo JS</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -177,7 +202,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -199,7 +224,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481896177.33</float>
+                        <float>1530535378.61</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -262,7 +287,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1533639756.16</float>
+                        <float>1533639639.47</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -289,7 +314,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -319,7 +344,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481896139.44</float>
+                        <float>1530534996.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
