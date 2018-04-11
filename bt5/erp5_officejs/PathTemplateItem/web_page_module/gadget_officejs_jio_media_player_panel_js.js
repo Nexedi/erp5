@@ -121,7 +121,6 @@
               focus: false
             });
           })
-
           .push(function () {
             context.element.querySelector("div").appendChild(tmp_element);
             return context.listenResize();
@@ -136,7 +135,8 @@
               context.getUrlFor({command: 'display', options: {page: "ojs_media_player_document_list"}}),
               context.getUrlFor({command: 'display', options: {page: "ojs_configurator"}}),
               context.getUrlFor({command: 'display', options: {page: "ojs_sync", 'auto_repair': true}}),
-              context.getUrlFor({command: 'display', options: {page: "ojs_multi_upload"}})
+              context.getUrlFor({command: 'display', options: {page: "ojs_multi_upload"}}),
+              context.getUrlFor({command: 'change', options: {shuffle: true}})
             ]);
           })
           .push(function (result_list) {
@@ -145,7 +145,8 @@
                 "document_list_href": result_list[0],
                 "storage_href": result_list[1],
                 "sync_href": result_list[2],
-                "multi_upload_href": result_list[3]
+                "multi_upload_href": result_list[3],
+                "shuffle_href": result_list[4]
               })
             );
           })
@@ -269,10 +270,7 @@
             return gadget.getContent();
           })
           .push(function (result) {
-            var options = {editable: undefined};
-            if (result.editable.length === 1) {
-              options.editable = true;
-            }
+            var options = {random_play: true};
             return context.redirect({command: 'change', options: options});
           });
       }

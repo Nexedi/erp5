@@ -16,39 +16,65 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+    .declareMethod('randomSort', function () {
+      var i,
+        sort_on = [],
+        sort_keys = ["title", "reference", "language", "description", "version", "modification_date"];
+
+      function getOrder(key) {
+        var num = Math.floor(Math.random() * 10) % 2;
+        return [key, num === 0 ? "descending" : "ascending"];
+      }
+      for (i = 0; i < sort_keys.length; i++ ) {
+        sort_on.push(getOrder(sort_keys[i]));
+      }
+
+      return sort_on;
+    })
 
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this;
-      return gadget.jio_allDocs(param_list[0])
-        .push(function (result) {
-          var i, date, len = result.data.total_rows;
-          for (i = 0; i < len; i += 1) {
-            if (result.data.rows[i].value.hasOwnProperty("modification_date")) {
-              date = new Date(result.data.rows[i].value.modification_date);
-              result.data.rows[i].value.modification_date = {
-                allow_empty_time: 0,
-                ampm_time_style: 0,
-                css_class: "date_field",
-                date_only: 0,
-                description: "The Date",
-                editable: 0,
-                hidden: 0,
-                hidden_day_is_last_day: 0,
-                "default": date.toUTCString(),
-                key: "modification_date",
-                required: 0,
-                timezone_style: 0,
-                title: "Modification Date",
-                type: "DateTimeField"
-              };
-              result.data.rows[i].value["listbox_uid:list"] = {
-                key: "listbox_uid:list",
-                value: 2713
-              };
-            }
+      return gadget.getUrlParameter('shuffle')
+        .push(function (shuffle) {
+          if (shuffle) {
+            return gadget.randomSort();
           }
-          return result;
-        });
+        })
+        .push(function (sort_on) {
+          if (sort_on) {
+            param_list[0].sort_on = sort_on;
+          }
+          return gadget.jio_allDocs(param_list[0])
+            .push(function (result) {
+              var i, date, len = result.data.total_rows;
+              for (i = 0; i < len; i += 1) {
+                if (result.data.rows[i].value.hasOwnProperty("modification_date")) {
+                  date = new Date(result.data.rows[i].value.modification_date);
+                  result.data.rows[i].value.modification_date = {
+                    allow_empty_time: 0,
+                    ampm_time_style: 0,
+                    css_class: "date_field",
+                    date_only: 0,
+                    description: "The Date",
+                    editable: 0,
+                    hidden: 0,
+                    hidden_day_is_last_day: 0,
+                    "default": date.toUTCString(),
+                    key: "modification_date",
+                    required: 0,
+                    timezone_style: 0,
+                    title: "Modification Date",
+                    type: "DateTimeField"
+                  };
+                  result.data.rows[i].value["listbox_uid:list"] = {
+                    key: "listbox_uid:list",
+                    value: 2713
+                  };
+                }
+              }
+              return result;
+            });
+        })
     })
 
     .allowPublicAcquisition('notifySubmit', function () {
@@ -63,7 +89,7 @@
         });
     })
 
-    .declareMethod("render", function () {
+    .declareMethod("render", function (options) {
       var gadget = this;
 
       return new RSVP.Queue()
