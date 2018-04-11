@@ -34,9 +34,9 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
 
+
 class TestCalendar(ERP5ReportTestCase):
 
-  run_all_test = 1
   person_portal_type = "Person"
   group_calendar_portal_type = "Group Calendar"
   leave_request_portal_type = "Leave Request"
@@ -49,20 +49,10 @@ class TestCalendar(ERP5ReportTestCase):
   middle_date = start_date + 0.25
   periodicity_stop_date = start_date + 2
 
-  def getTitle(self):
-    return "Calendar"
-
   def getBusinessTemplateList(self):
     """
     """
     return ('erp5_base', 'erp5_pdm', 'erp5_calendar', 'erp5_core_proxy_field_legacy')
-
-  def login(self, quiet=0, run=run_all_test):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('rc', '', ['Manager', 'Author', 'Assignor',
-                             'Assignee', 'Auditor'], [])
-    user = uf.getUserById('rc').__of__(uf)
-    newSecurityManager(None, user)
 
   def createCategories(self):
     """
@@ -485,12 +475,10 @@ class TestCalendar(ERP5ReportTestCase):
     presence_request.confirm()
     self.assertEqual('confirmed', presence_request.getSimulationState())
 
-  def test_01_CatalogCalendarPeriod(self, quiet=0, run=run_all_test):
+  def test_01_CatalogCalendarPeriod(self):
     """
     Test indexing
     """
-    if not run: return
-
     sequence_list = SequenceList()
     sequence_string = '\
               CreatePerson \
@@ -514,12 +502,10 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_02_CatalogLeaveRequest(self, quiet=0, run=run_all_test):
+  def test_02_CatalogLeaveRequest(self):
     """
     Test indexing
     """
-    if not run: return
-
     sequence_list = SequenceList()
     sequence_string = '\
               CreatePerson \
@@ -544,12 +530,10 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_CatalogPresenceRequest(self, quiet=0, run=run_all_test):
+  def test_CatalogPresenceRequest(self):
     """
     Test indexing
     """
-    if not run: return
-
     sequence_list = SequenceList()
     sequence_string = '''
               CreatePerson
@@ -691,12 +675,10 @@ class TestCalendar(ERP5ReportTestCase):
 #     self.assertEqual(len(date_period_list) * second_availability,
 #                       person.getAvailableTime())
 
-  def test_03_getAvailableTime(self, quiet=0, run=run_all_test):
+  def test_03_getAvailableTime(self):
     """
     Test indexing
     """
-    if not run: return
-
     # Test that calendar group increase time availability
     sequence_list = SequenceList()
     sequence_string = '\
@@ -808,11 +790,11 @@ class TestCalendar(ERP5ReportTestCase):
 
     sequence_list.play(self)
 
-  def test_04_getCapacityAvailability(self, quiet=0, run=0):
+  def test_04_getCapacityAvailability(self):
     """
     Test getCapacityAvailability
     """
-    if not run: return
+    return # XXX this test is disabled
     raise NotImplementedError
 
     # Test that calendar group increase time availability
@@ -874,10 +856,7 @@ class TestCalendar(ERP5ReportTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_CalendarException(self):
-    organisation = self.portal.organisation_module.newContent(
-                                portal_type='Organisation')
-
+  def test_CalendarExceptionInGroupCalendar(self):
     group_calendar = self.portal.group_calendar_module.newContent(
                                   portal_type='Group Calendar')
     group_calendar_period = group_calendar.newContent(
@@ -890,9 +869,7 @@ class TestCalendar(ERP5ReportTestCase):
 
     person1 = self.portal.person_module.newContent(
                                 portal_type='Person',
-                                title='Person 1',
-                                career_reference='1',
-                                subordination_value=organisation)
+                                title='Person 1',)
     self.tic()
     self.assertEqual([0], [x.total_quantity
        for x in person1.getAvailableTimeSequence(
@@ -921,6 +898,124 @@ class TestCalendar(ERP5ReportTestCase):
          from_date=DateTime(2008, 1, 1).earliestTime(),
          to_date=DateTime(2008, 1, 1).latestTime(),
          day=1)])
+    # When calendar exception is modified, the assignments on this calendar are
+    # automatically updated.
+    exception.setExceptionDate(DateTime(2018, 2, 2))
+    self.tic()
+    self.assertEqual([36000], [x.total_quantity
+      for x in person1.getAvailableTimeSequence(
+        from_date=DateTime(2008, 1, 1).earliestTime(),
+        to_date=DateTime(2008, 1, 1).latestTime(),
+        day=1)])
+
+    # "undo" for the rest of the test
+    exception.setExceptionDate(DateTime(2008, 1, 1))
+    self.tic()
+    self.assertEqual([0], [x.total_quantity
+      for x in person1.getAvailableTimeSequence(
+        from_date=DateTime(2008, 1, 1).earliestTime(),
+        to_date=DateTime(2008, 1, 1).latestTime(),
+        day=1)])
+
+    # When calendar exception is deleted, assigments are also automatically updated.
+    group_calendar_period.manage_delObjects(ids=[exception.getId()])
+    self.tic()
+    self.assertEqual([36000], [x.total_quantity
+      for x in person1.getAvailableTimeSequence(
+        from_date=DateTime(2008, 1, 1).earliestTime(),
+        to_date=DateTime(2008, 1, 1).latestTime(),
+        day=1)])
+
+  def test_CalendarExceptionInLeaveRequest(self):
+    group_calendar = self.portal.group_calendar_module.newContent(
+                                  portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+                                  portal_type='Group Presence Period')
+    group_calendar_period.setStartDate('2008/01/01 08:00')
+    group_calendar_period.setStopDate('2008/01/01 18:00')
+    group_calendar_period.setResourceValue(
+          self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar_period.setPeriodicityWeekDayList(
+           ('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'))
+    group_calendar_period.setPeriodicityStopDate('2008/02/01')
+    group_calendar.confirm()
+
+    person1 = self.portal.person_module.newContent(
+                                portal_type='Person',
+                                title='Person 1',)
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+                      specialise_value=group_calendar,
+                      resource_value=self.portal.portal_categories.calendar_period_type.type1,
+                      start_date=DateTime(2008, 1, 1).earliestTime(),
+                      stop_date=DateTime(2008, 1, 31).latestTime(),
+                      destination_value=person1)
+    assignment.confirm()
+    self.tic()
+    #     January 2008
+    # Su Mo Tu We Th Fr Sa
+    #        1  2  3  4  5
+    #  6  7  8  9 10 11 12
+    # 13 14 15 16 17 18 19
+    # 20 21 22 23 24 25 26
+    # 27 28 29 30 31
+    self.assertEqual(
+        36000 * 31, # 36000 per day for one month
+        self.portal.portal_simulation.getInventory(
+            portal_type=self.portal.getPortalCalendarPeriodTypeList(),
+            from_date=DateTime(2008, 1, 1).earliestTime(),
+            to_date=DateTime(2008, 2, 1).latestTime(),
+            node_uid=person1.getUid()))
+
+    # Now add a leave request "every friday afternoon"
+    leave_request = self.portal.leave_request_module.newContent(
+            portal_type='Leave Request',
+            destination_value=person1,)
+    leave_request_period = leave_request.newContent(
+            portal_type='Leave Request Period',
+            start_date=DateTime('2008/01/04 13:00'),
+            stop_date=DateTime('2008/01/04 17:00'),
+            quantity=4*60,
+            resource_value=self.portal.portal_categories.calendar_period_type.type1,
+            periodicity_stop_date=DateTime('2008/02/01'),
+            periodicity_week_day_list=('Friday',))
+    leave_request.confirm()
+    self.tic()
+
+    self.assertEqual(
+        # 36000 per day for one month - 4 Friday afternoons ( one afternoon is 4 hours)
+        36000 * 31 - 4 * 4 * 60,
+        self.portal.portal_simulation.getInventory(
+            portal_type=self.portal.getPortalCalendarPeriodTypeList(),
+            from_date=DateTime(2008, 1, 1).earliestTime(),
+            to_date=DateTime(2008, 2, 1).latestTime(),
+            node_uid=person1.getUid()))
+
+    # now add an exception on 2008/01/25
+    exception = leave_request_period.newContent(
+            portal_type='Calendar Exception',
+            exception_date=DateTime('2008/01/25'))
+    self.tic()
+
+    self.assertEqual(
+        # 36000 per day for one month - 3 Friday afternoons ( one afternoon is 4 hours)
+        36000 * 31 - 3 * 4 * 60,
+        self.portal.portal_simulation.getInventory(
+            portal_type=self.portal.getPortalCalendarPeriodTypeList(),
+            from_date=DateTime(2008, 1, 1).earliestTime(),
+            to_date=DateTime(2008, 2, 1).latestTime(),
+            node_uid=person1.getUid()))
+
+    # change exception, capacity is automatically updated
+    exception.setExceptionDate('2008/02/02') # out or period
+    self.tic()
+    self.assertEqual(
+        # 36000 per day for one month - 4 Friday afternoons ( one afternoon is 4 hours)
+        36000 * 31 - 4 * 4 * 60,
+        self.portal.portal_simulation.getInventory(
+            portal_type=self.portal.getPortalCalendarPeriodTypeList(),
+            from_date=DateTime(2008, 1, 1).earliestTime(),
+            to_date=DateTime(2008, 2, 1).latestTime(),
+            node_uid=person1.getUid()))
 
   def test_GroupCalendarConstraint(self):
     group_calendar = self.portal.group_calendar_module.newContent(
