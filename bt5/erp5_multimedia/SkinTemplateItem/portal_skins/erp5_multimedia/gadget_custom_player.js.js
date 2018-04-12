@@ -106,6 +106,24 @@
         return this.toggleSound(modification_dict.mute);
       }
     })
+    
+    .declareService(function () {
+      var gadget = this,
+       progress_bar = gadget.element.querySelector('progress');
+      return loopEventListener(
+        progress_bar,
+        'click',
+        false,
+        function (event) {
+          return gadget.getDeclaredGadget(gadget.params.scope)
+          .push(function (controller) {
+            var percentage = event.offsetX / progress_bar.offsetWidth;
+            return controller.updateAudioElementCurrentTime(percentage * progress_bar.max, progress_bar.max);
+          });
+        },
+        true
+      );
+    })
 
     .declareService(function () {
       var gadget = this;
@@ -115,6 +133,24 @@
         false,
         function () {
           return gadget.changeState({ play: !gadget.state.play });
+        },
+        true
+      );
+    })
+    
+    .declareService(function () {
+      var gadget = this,
+       progress_bar = gadget.element.querySelector('progress');
+      return loopEventListener(
+        progress_bar,
+        'click',
+        false,
+        function (event) {
+          return gadget.getDeclaredGadget('controller')
+          .push(function (controller) {
+            var percentage = event.offsetX / progress_bar.offsetWidth;
+            return controller.updateAudioElementCurrentTime(percentage * progress_bar.max);
+          });
         },
         true
       );

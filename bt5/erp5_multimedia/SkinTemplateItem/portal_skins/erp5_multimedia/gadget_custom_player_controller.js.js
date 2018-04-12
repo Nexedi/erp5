@@ -56,6 +56,38 @@
           });
         });
     })
+    
+    .declareMethod('updateAudioElementCurrentTime', function (time, max) {
+      // If end already happen, just set the current time of audio element.
+      this.params.max_progress_time = max;
+      if (this.params.end) {
+        this.element.querySelector('audio').currentTime = time;
+        return;
+      }
+
+      var start,
+        end,
+        gadget = this,
+        queue = new RSVP.Queue(),
+        audio = gadget.element.querySelector('audio');
+
+      gadget.params.index = Math.floor((this.params.index / max) * time) - 1000;
+      gadget.params.time_offset = time;
+      gadget.params.replay = true;
+      gadget.params.mediaSource = new MediaSource();
+      audio.src = URL.createObjectURL(gadget.params.mediaSource);
+
+      return queue
+        .push(function () {
+          return gadget.updateCurrentTime(time);
+        })
+        .push(function() {
+          return promiseEventListener(gadget.params.mediaSource, 'sourceopen', false);
+        })
+        .push(function() {
+          return gadget.setSourceBuffer();
+        });
+    })
 
     .declareMethod('handlePlayPause', function (play) {
       var audio = this.element.querySelector('audio');
@@ -82,7 +114,9 @@
           if (buffer instanceof ArrayBuffer && !gadget.params.sourceBuffer.updating) {
             gadget.params.sourceBuffer.appendBuffer(buffer);
             gadget.params.sourceBuffer.onupdateend = function () {
-              this.updateTotalTime(this.params.sourceBuffer.timestampOffset);
+              var total_time = this.params.sourceBuffer.timestampOffset + this.params.time_offset;
+              total_time = total_time > this.params.max_progress_time ? total_time : this.params.max_progress_time;
+              this.updateTotalTime(total_time);
             }.bind(gadget);
           }
           if (buffer === undefined && gadget.params.mediaSource.readyState === 'open') {
@@ -101,6 +135,11 @@
       gadget.params.id = params.id;
       gadget.params.name = params.name;
       gadget.params.index = 0;
+      gadget.params.max_progress_time = 0;
+      gadget.params.time_offset = 0;
+      gadget.params.mediaSource = new MediaSource();
+      
+      audio.src = URL.createObjectURL(gadget.params.mediaSource);
 
       return queue
         .push(function () {
@@ -140,7 +179,7 @@
 
     .onStateChange(function (modification_dict) {
       if (modification_dict.hasOwnProperty('currentTime')) {
-        return this.updateCurrentTime(modification_dict.currentTime);
+        return this.updateCurrentTime(modification_dict.currentTime + this.params.time_offset);
       }
     })
 
