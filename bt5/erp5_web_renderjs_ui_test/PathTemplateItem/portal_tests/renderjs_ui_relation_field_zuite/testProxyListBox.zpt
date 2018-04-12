@@ -203,10 +203,10 @@
   <td>//th/a[@data-i18n="Title"]</td>
   <td></td>
 </tr>
-
+<tr><th colspan="3"><font color="red">Quatity is not sortable but there is a catalog column of such name</font></th></tr>
 <tr>
   <td>verifyElementPresent</td>
-  <td>//th[@data-i18n="Quantity"]</td><!-- Quatity is not sortable (portal column) -->
+  <td>//th/a[@data-i18n="Quantity"]</td><!-- Should be only //th[@data-i18n="Quantity"] -->
   <td></td>
 </tr>
 
