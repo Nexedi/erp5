@@ -1,0 +1,14 @@
+<allowed_content_type_list>
+ <portal_type id="Smart Assistant File Module">
+  <item>Smart Assistant File</item>
+ </portal_type>
+ <portal_type id="Smart Assistant Image Module">
+  <item>Smart Assistant Image</item>
+ </portal_type>
+ <portal_type id="Smart Assistant Sound Module">
+  <item>Smart Assistant Sound</item>
+ </portal_type>
+ <portal_type id="Smart Assistant Text Module">
+  <item>Smart Assistant Text</item>
+ </portal_type>
+</allowed_content_type_list>

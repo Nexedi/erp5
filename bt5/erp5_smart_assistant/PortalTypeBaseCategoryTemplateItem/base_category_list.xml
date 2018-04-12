@@ -1,0 +1,14 @@
+<base_category_list>
+ <portal_type id="Smart Assistant File Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Smart Assistant Image Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Smart Assistant Sound Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Smart Assistant Text Module">
+  <item>business_application</item>
+ </portal_type>
+</base_category_list>
