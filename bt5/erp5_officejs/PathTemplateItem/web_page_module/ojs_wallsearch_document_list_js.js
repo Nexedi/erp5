@@ -29,20 +29,22 @@
             if (result.data.rows[i].value.hasOwnProperty("created_time")) {
               date = new Date(result.data.rows[i].value.created_time);
               result.data.rows[i].value.created_time = {
-                allow_empty_time: 0,
-                ampm_time_style: 0,
-                css_class: "date_field",
-                date_only: 0,
-                description: "The Date",
-                editable: 0,
-                hidden: 0,
-                hidden_day_is_last_day: 0,
-                default: date.toUTCString(),
-                key: "created_time",
-                required: 0,
-                timezone_style: 0,
-                title: "Creation Time",
-                type: "DateTimeField"
+                field_gadget_param: {
+                  allow_empty_time: 0,
+                  ampm_time_style: 0,
+                  css_class: "date_field",
+                  date_only: 0,
+                  description: "The Date",
+                  editable: 0,
+                  hidden: 0,
+                  hidden_day_is_last_day: 0,
+                  "default": date.toUTCString(),
+                  key: "modification_date",
+                  required: 0,
+                  timezone_style: 0,
+                  title: "Modification Date",
+                  type: "DateTimeField"
+                }
               };
               result.data.rows[i].value["listbox_uid:list"] = {
                 key: "listbox_uid:list",
