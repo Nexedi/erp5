@@ -34,6 +34,7 @@
         trim: options.trim || false,
         multiple: options.multiple,
         accept: options.accept,
+        capture: options.capture,
         append: options.append, // text to apend after the field
         prepend: options.prepend // text to prepend infront the field
       });
@@ -61,6 +62,9 @@
       }
       if (this.state.step) {
         textarea.setAttribute('step', this.state.step);
+      }
+      if (this.state.capture) {
+        textarea.setAttribute('capture', this.state.capture);
       }
       if (this.state.accept) {
         textarea.setAttribute('accept', this.state.accept);

@@ -21,7 +21,8 @@
           // as user may have modified the input value
           render_timestamp: new Date().getTime(),
           multiple: field_json.multiple,
-          accept: field_json.accept
+          accept: field_json.accept,
+          capture: field_json.capture
         };
       return this.changeState(state_dict);
     })
