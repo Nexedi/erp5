@@ -1182,8 +1182,8 @@ return context.getPortalObject().foo_module.contentValues()
     )
     result_dict = json.loads(result)
     #editalble creation date is defined at proxy form
-    self.assertEqual(result_dict['_embedded']['contents'][0]['creation_date']['type'], 'DateTimeField')
-    self.assertEqual(result_dict['_embedded']['contents'][0]['modification_date']['type'], 'DateTimeField')
+    self.assertEqual(result_dict['_embedded']['contents'][0]['creation_date']['field_gadget_param']['type'], 'DateTimeField')
+    self.assertEqual(result_dict['_embedded']['contents'][0]['modification_date']['field_gadget_param']['type'], 'DateTimeField')
     # There is a count method on this listbox
     self.assertEqual(result_dict['_embedded']['count'], 0)
 
@@ -1241,12 +1241,12 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     )
     result_dict = json.loads(result)
     self.assertEqual(2, len(result_dict['_embedded']['contents']))
-    self.assertIn("field_listbox", result_dict['_embedded']['contents'][0]['id']['key'])
-    self.assertEqual("StringField", result_dict['_embedded']['contents'][0]['id']['type'])
-    self.assertEqual(document_list[0].getId(), result_dict['_embedded']['contents'][0]['id']['default'])
-    self.assertIn("field_listbox", result_dict['_embedded']['contents'][1]['id']['key'])
-    self.assertEqual("StringField", result_dict['_embedded']['contents'][1]['id']['type'])
-    self.assertEqual(document_list[1].getId(), result_dict['_embedded']['contents'][1]['id']['default'])
+    self.assertIn("field_listbox", result_dict['_embedded']['contents'][0]['id']['field_gadget_param']['key'])
+    self.assertEqual("StringField", result_dict['_embedded']['contents'][0]['id']['field_gadget_param']['type'])
+    self.assertEqual(document_list[0].getId(), result_dict['_embedded']['contents'][0]['id']['field_gadget_param']['default'])
+    self.assertIn("field_listbox", result_dict['_embedded']['contents'][1]['id']['field_gadget_param']['key'])
+    self.assertEqual("StringField", result_dict['_embedded']['contents'][1]['id']['field_gadget_param']['type'])
+    self.assertEqual(document_list[1].getId(), result_dict['_embedded']['contents'][1]['id']['field_gadget_param']['default'])
     # There is a count method on the listbox
     self.assertEqual(result_dict['_embedded']['count'], 0)
 
