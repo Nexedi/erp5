@@ -211,11 +211,11 @@
         buildEditableInputHTML(gadget);
       }
 
+      gadget.element.querySelector(".search_ul").innerHTML = "";
       // Display the airplane link or the search button
       if ((gadget.state.value_relative_url) || (gadget.state.value_text)) {
         createEditableLink(gadget, JUMP_UNKNOWN_CLASS_STR);
       } else {
-        gadget.element.querySelector(".search_ul").innerHTML = "";
         return createEditableButton(gadget, SEARCH_CLASS_STR);
       }
 
@@ -225,7 +225,6 @@
           var plane = gadget.element.querySelector("a"),
             ul = gadget.element.querySelector(".search_ul"),
             input = gadget.element.querySelector("input");
-          ul.innerHTML = "";
           plane.href = '';
 
           if (input.value !== gadget.state.value_text) {
@@ -378,15 +377,20 @@
         data_uid,
         data_portal_type,
         data_explore,
-        new_state = {};
+        new_state = {},
+        tag_name = evt.target.tagName.toLowerCase();
 
-      if (evt.target.tagName.toLowerCase() === 'button') {
+      if (tag_name === 'button') {
         // Go to the search listbox
         return redirectToTheSearchListbox(gadget);
       }
 
-      if (evt.target.tagName.toLowerCase() === 'li') {
-        li = evt.target;
+      if (tag_name === 'li' || tag_name === 'span') {
+        if (tag_name === 'li') {
+          li = evt.target;
+        } else {
+          li = evt.target.parentElement;
+        }
         data_relative_url = li.getAttribute("data-relative-url");
         data_uid = li.getAttribute("data-uid");
         data_portal_type = li.getAttribute("data-create-object");
@@ -395,6 +399,7 @@
         // User want to create a new document
         if (data_portal_type) {
           new_state.value_portal_type = data_portal_type;
+          new_state.has_focus = false;
           return gadget.changeState(new_state);
         }
 
@@ -403,6 +408,7 @@
           new_state.value_text = li.textContent;
           new_state.value_relative_url = data_relative_url;
           new_state.value_uid = data_uid;
+          new_state.has_focus = false;
           return gadget.changeState(new_state);
         }
 
@@ -414,9 +420,26 @@
     }, false, false)
 
     .onEvent('blur', function (evt) {
-      if (evt.target === this.element.querySelector(".search_ul")) {
-        return this.changeState({
-          has_focus: false
+      var gadget = this;
+      if (evt.target.tagName.toLowerCase() === 'input') {
+        return new RSVP.Queue()
+          .push(function () {
+            // Wait a bit to handle click :/
+            return RSVP.delay(200);
+          })
+          .push(function () {
+            return gadget.changeState({
+              has_focus: false
+            });
+          });
+      }
+    }, true, false)
+
+    .onEvent('focus', function (evt) {
+      var gadget = this;
+      if (evt.target.tagName.toLowerCase() === 'input') {
+        return gadget.changeState({
+          has_focus: true
         });
       }
     }, true, false)

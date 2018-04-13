@@ -155,6 +155,11 @@
 </tr>
 
 <tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>focus</td>
+</tr>
+<tr>
   <td>type</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
   <td></td>
