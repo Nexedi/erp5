@@ -468,9 +468,11 @@
           .push(function () {
             var lines = gadget.state.lines,
               promise_list = [],
+              url_promise_list = [],
               allDocs_result = gadget.state.allDocs_result,
               counter,
-              pagination_message = '';
+              pagination_message = '',
+              content_value;
 
             column_list = JSON.parse(gadget.state.column_list_json);
             // for actual allDocs_result structure see ref:gadget_erp5_jio.js
@@ -496,17 +498,35 @@
                   }
                 })
               );
+              for (j = 0; j < column_list.length; j += 1) {
+                content_value = allDocs_result.data.rows[i].value[column_list[j][0]] || "";
+                if (content_value.url_value) {
+                  if (content_value.url_value.command) {
+                    url_promise_list.push(
+                      gadget.getUrlFor(content_value.url_value)
+                    );
+                  } else {
+                    url_promise_list.push(false);
+                  }
+                }
+              }
             }
             return new RSVP.Queue()
               .push(function () {
-                return RSVP.all(promise_list);
+                return RSVP.all([
+                  RSVP.all(promise_list),
+                  RSVP.all(url_promise_list)
+                ]);
               })
-
-              .push(function (line_link_list) {
+              .push(function (result_list) {
                 var row_list = [],
                   value,
                   cell_list,
+                  url_value,
+                  index = 0,
                   listbox_tbody_template,
+                  line_link_list = result_list[0],
+                  url_column_list = result_list[1],
                   setNonEditable = function (cell) {cell.editable = false; };
                 // reset list of UIDs of editable sub-documents
                 gadget.props.listbox_uid_dict = {
@@ -520,15 +540,35 @@
                   cell_list = [];
                   for (j = 0; j < column_list.length; j += 1) {
                     value = allDocs_result.data.rows[i].value[column_list[j][0]] || "";
-                    // value can be simply just a value in case of non-editable field
-                    // thus we construct "field_json" manually and insert the value in "default"
-                    if (value.constructor !== Object) {
+                     //url column
+                    // get url value
+                    if (value.url_value) {
+                      url_value = url_column_list[index];
+                      index += 1;
+                    } else {
+                      url_value = line_link_list[i];
+                    }
+                    // We need to check for field_gadget_param and then update
+                    // value accordingly. value can be simply just a value in
+                    // case of non-editable field thus we construct "field_json"
+                    // manually and insert the value in "default"
+
+                    if (value.constructor === Object) {
+                      if (value.field_gadget_param) {
+                        value = value.field_gadget_param;
+                      } else {
+                        value = {
+                          'editable': 0,
+                          'default': value.default
+                        };
+                      }
+                    } else {
                       value = {
                         'editable': 0,
                         'default': value
                       };
                     }
-                    value.href = line_link_list[i];
+                    value.href = url_value;
                     value.editable = value.editable && gadget.state.editable;
                     value.line = i;
                     value.column = j;

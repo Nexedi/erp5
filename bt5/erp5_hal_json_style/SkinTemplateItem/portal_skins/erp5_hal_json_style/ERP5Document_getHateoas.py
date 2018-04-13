@@ -1,6 +1,6 @@
 """Hello. This will be long because this godly script does almost everything.
 
-In general, it always returns a JSON reponse in HATEOAS format specification.
+In general, it always returns a JSON response in HATEOAS format specification.
 
 :param REQUEST: HttpRequest holding GET and/or POST data
 :param response:
@@ -413,6 +413,8 @@ url_template_dict = {
                        "&relative_url=%(relative_url)s&view=%(view)s",
   "traverse_generator_non_view": "%(root_url)s/%(script_id)s?mode=traverse" + \
                        "&relative_url=%(relative_url)s&view=%(view)s&form_id=%(form_id)s",
+  "traverse_generator_with_parameter": "%(root_url)s/%(script_id)s?mode=traverse" + \
+                       "&relative_url=%(relative_url)s&view=%(view)s&extra_param_json=%(extra_param_json)s",
   "traverse_template": "%(root_url)s/%(script_id)s?mode=traverse" + \
                        "{&relative_url,view}",
   "search_template": "%(root_url)s/%(script_id)s?mode=search" + \
@@ -471,7 +473,7 @@ def getFieldDefault(form, field, key, value=None):
   return value
 
 
-def renderField(traversed_document, field, form, value=None, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True):
+def renderField(traversed_document, field, form, value=None, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True, extra_param_json=None):
   """Extract important field's attributes into `result` dictionary."""
   if selection_params is None:
     selection_params = {}
@@ -750,6 +752,10 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     # listbox's default parameters
     default_params.update(selection_params)
 
+    if extra_param_json is not None:
+      default_params.update(ensureDeserialized(byteify(
+        json.loads(urlsafe_b64decode(extra_param_json)))))
+
     # ListBoxes in report view has portal_type defined already in default_params
     # in that case we prefer non_empty version
     list_method_query_dict = default_params.copy()
@@ -913,7 +919,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
   return result
 
 
-def renderForm(traversed_document, form, response_dict, key_prefix=None, selection_params=None):
+def renderForm(traversed_document, form, response_dict, key_prefix=None, selection_params=None, extra_param_json=None):
   """
   Render a `form` in plain python dict.
 
@@ -996,7 +1002,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       if not field.get_value("enabled"):
         continue
       try:
-        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params)
+        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params, extra_param_json=extra_param_json)
         if field_errors.has_key(field.id):
           response_dict[field.id]["error_text"] = field_errors[field.id].error_text
       except AttributeError:
@@ -1371,8 +1377,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           return traversed_document.Base_redirect(keep_items={
             'portal_status_message': status_message})
 
-        renderForm(traversed_document, renderer_form, embedded_dict)
 
+        renderForm(traversed_document, renderer_form, embedded_dict, extra_param_json=extra_param_json)
         result_dict['_embedded'] = {
           '_view': embedded_dict
         }
@@ -1660,6 +1666,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     # extract form field definition into `editable_field_dict`
     editable_field_dict = {}
+    url_column_dict = {}
     listbox_form = None
     listbox_field_id = None
     source_field_meta_type = source_field.meta_type if source_field is not None else ""
@@ -1669,6 +1676,17 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if source_field is not None and source_field_meta_type == "ListBox":
       listbox_field_id = source_field.id
       listbox_form = getattr(traversed_document, source_field.aq_parent.id)
+
+      url_column_dict = dict(source_field.get_value('url_columns'))
+
+      # support only selection_name for stat methods&url columns because any `selection` is deprecated
+      # and should be removed. Selection_name can be passed in catalog_kw by e.g. reports so it has precedence.
+      # Romain wants full backward compatibility so putting `selection` back in parameters
+      selection_name = catalog_kw.get('selection_name', source_field.get_value('selection_name'))
+      if selection_name and 'selection_name' not in catalog_kw:
+        catalog_kw['selection_name'] = selection_name
+      if 'selection' not in catalog_kw:
+        catalog_kw['selection'] = context.getPortalObject().portal_selections.getSelectionFor(selection_name, REQUEST)
 
       # field TALES expression evaluated by Base_getRelatedObjectParameter requires that
       REQUEST.other['form_id'] = listbox_form.id
@@ -1753,6 +1771,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # put "cell" to request (expected by tales) and let the field evaluate
       REQUEST.set('cell', search_result)
       for select in select_list:
+        contents_item[select] = {}
         default_field_value = None
         # every `select` can have a template field or be just a exotic getter for a value
         if editable_field_dict.has_key(select):
@@ -1777,6 +1796,108 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           # given search_result. This name can unfortunately mean almost anything from
           # a key name to Python Script with variable number of input parameters.
           contents_item[select] = getAttrFromAnything(search_result, select, property_getter, {'brain': search_result})
+
+        # If the contents_item has field rendering in it, better is to add an
+        # extra layer of abstraction to not get conflicts
+        if isinstance(contents_item[select], dict):
+          contents_item[select] = {
+            'field_gadget_param': contents_item[select],
+          }
+
+        # By default, we won't be generating views in the URL
+        generate_view = False
+        url_parameter_dict = {}
+        if select in url_column_dict:
+          # Check if we get URL parameters using listbox field `url_columns`
+          url_column_method = getattr(search_result, url_column_dict[select], None)
+          # If there is empty url_column_method, do nothing and continue. This
+          # will create no URL in these cases
+          if url_column_method is None:
+            continue
+          url_parameter_dict = url_column_method(
+                                      url_dict=True,
+                                      brain=search_result,
+                                      selection=catalog_kw['selection'],
+                                      selection_name=catalog_kw['selection_name'],
+                                      column_id=select)
+          # Since, now we are using url_columns for both XHTML UI and renderJS UI,
+          # its normal to get string as a result of the `url_column_method`
+          # function call. In that cases, we will do nothing. Take note, the
+          # result of `url_column_method` function call which is usable here should
+          # be dictionary in the format :-
+          # {
+          #   'command': <command_name, ex: 'raw', 'push_history'>,
+          #   'options': {
+          #               'url': <Absolute URL>,
+          #               'jio_key': <Relative URL of object>,
+          #               'view': <id of the view>,
+          #               }
+          # }
+          if isinstance(url_parameter_dict, str):
+            continue
+
+        elif getattr(search_result, 'getListItemUrlDict', None) is not None:
+          # Check if we can get URL result from the brain
+          try:
+            url_parameter_dict = search_result.getListItemUrlDict(
+                                                    select,
+                                                    result_index,
+                                                    catalog_kw['selection_name']
+                                                    )
+          except (ConflictError, RuntimeError):
+            raise
+          except:
+            log('could not evaluate the url method getListItemUrlDict with %r' % search_result,
+                level=800)
+            continue
+
+        else:
+          # Continue in case there is no url_column_dict or brain to get URL
+          continue
+
+        url_result_dict = {
+          select: url_parameter_dict
+        }
+
+        # If contents item don't have `field_gadget_param` in it, then add it
+        # to default
+        if not isinstance(contents_item[select], dict):
+          contents_item[select] = {
+            'default': contents_item[select],
+          }
+
+        contents_item[select].update({'url_value': url_result_dict[select]})
+
+        if contents_item[select]['url_value']:
+
+          # We should be generating view if there is extra params for view in
+          # view_kw. These parameters are required to create url at hateoas side
+          # using the URL template as necessary
+          if 'view_kw' in contents_item[select]['url_value']:
+            generate_view = True
+            # Get extra parameters either from url_result_dict or from brain
+            extra_url_param_dict = contents_item[select]['url_value']['view_kw'].get('extra_param_json', {})
+
+          if generate_view:
+            url_template_id = 'traverse_generator'
+            if extra_url_param_dict:
+              url_template_id = 'traverse_generator_with_parameter'
+
+            contents_item[select]['url_value']['options']['view'] =\
+              url_template_dict[url_template_id] % {
+                "root_url": site_root.absolute_url(),
+                "script_id": script.id,
+                "relative_url": contents_item[select]['url_value']['view_kw']['jio_key'].replace("/", "%2F"),
+                "view": contents_item[select]['url_value']['view_kw']['view'],
+                "extra_param_json":  urlsafe_b64encode(
+                  json.dumps(ensureSerializable(extra_url_param_dict)))
+              }
+
+          # Its better to remove the 'view_kw' from the dictionary as it doesn't
+          # serve any purpose further in the result_dict
+          if 'view_kw' in contents_item[select]['url_value']:
+            del contents_item[select]['url_value']['view_kw']
+
       # endfor select
       REQUEST.other.pop('cell', None)
       contents_list.append(contents_item)
@@ -1809,6 +1930,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if count_method != "" and count_method.getMethodName() != list_method:
         count_kw = dict(catalog_kw)
         # Drop not needed parameters
+        count_kw.pop('selection', None)
+        count_kw.pop('selection_name', None)
         count_kw.pop("sort_on", None)
         count_kw.pop("limit", None)
         count_method_result = getattr(traversed_document, count_method.getMethodName())(REQUEST=REQUEST, **count_kw)
@@ -1820,14 +1943,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # XXX: we should check whether they asked for it
       stat_method = source_field.get_value('stat_method')
       stat_columns = source_field.get_value('stat_columns')
-      # support only selection_name for stat methods because any `selection` is deprecated
-      # and should be removed. Selection_name can be passed in catalog_kw by e.g. reports so it has precedence.
-      # Romain wants full backward compatibility so putting `selection` back in parameters
-      selection_name = catalog_kw.get('selection_name', source_field.get_value('selection_name'))
-      if selection_name and 'selection_name' not in catalog_kw:
-        catalog_kw['selection_name'] = selection_name
-      if 'selection' not in catalog_kw:
-        catalog_kw['selection'] = context.getPortalObject().portal_selections.getSelectionFor(selection_name, REQUEST)
 
       contents_stat = {}
       if len(stat_columns) > 0:
