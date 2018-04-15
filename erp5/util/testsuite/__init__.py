@@ -297,7 +297,7 @@ def runTestSuite():
                     node_quantity=args.node_quantity,
                     revision=revision,
                     python_interpreter=args.python_interpreter,
-                    egg_test_path_dict={os.path.basename(path): path
+                    egg_test_path_dict={os.path.basename(os.path.normpath(path)): path
                         for path in args.source_code_path_list.split(',')},
                     )
 
