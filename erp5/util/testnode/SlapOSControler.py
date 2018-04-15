@@ -28,6 +28,8 @@ import os
 import pkg_resources
 import slapos.slap
 import subprocess
+import urllib2
+import socket
 import time
 import xml_marshaller
 import argparse
@@ -234,9 +236,18 @@ class SlapOSControler(object):
     proxy = subprocess.Popen([config['slapos_binary'], 
       'proxy', 'start', '--cfg' , self.slapos_config], **kwargs)
     process_manager.process_pid_set.add(proxy.pid)
-    # XXX: dirty, giving some time for proxy to being able to accept
-    # connections
-    time.sleep(20)
+
+    # wait for proxy to accept connections
+    for _ in range(20):
+      time.sleep(.5)
+      try:
+        urllib2.urlopen(slapos_config_dict['master_url'])
+      except urllib2.URLError, e:
+        if isinstance(e.reason, socket.error):
+          logger.debug("Proxy still not started %s, retrying", e)
+        else:
+          break
+
     try:
       slap = self.slap = slapos.slap.slap()
       slap.initializeConnection(config['master_url'])
