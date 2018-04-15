@@ -234,18 +234,32 @@ class SlapOSControler(object):
     proxy = subprocess.Popen([config['slapos_binary'], 
       'proxy', 'start', '--cfg' , self.slapos_config], **kwargs)
     process_manager.process_pid_set.add(proxy.pid)
-    # XXX: dirty, giving some time for proxy to being able to accept
-    # connections
-    time.sleep(10)
+
+    slap = self.slap = slapos.slap.slap()
+    # Wait for proxy to accept connections
+    retries = 0
+    while True:
+      time.sleep(.5)
+      try:
+        slap.initializeConnection(config['master_url'])
+        computer = slap.registerComputer(config['computer_id'])
+        # Call a method to ensure connection to master can be established
+        computer.getComputerPartitionList()
+      except slapos.slap.ConnectionError, e:
+        retries += 1
+        if retries >= 20:
+          raise
+        logger.debug("Proxy still not started %s, retrying", e)
+      else:
+        break
+
+>>>>>>> 5738af5f6a... testnode: wait for proxy to accept connections
     try:
-      slap = self.slap = slapos.slap.slap()
-      slap.initializeConnection(config['master_url'])
       # register software profile
       for path in self.software_path_list:
         slap.registerSupply().supply(
             path,
             computer_guid=config['computer_id'])
-      computer = slap.registerComputer(config['computer_id'])
     except Exception:
         logger.exception("SlapOSControler.initializeSlapOSControler")
         raise ValueError("Unable to registerSupply")
