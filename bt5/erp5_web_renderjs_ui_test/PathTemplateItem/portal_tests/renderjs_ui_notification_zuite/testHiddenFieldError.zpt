@@ -48,6 +48,8 @@ Check that user gets notified if there is an error on a hidden field.
                                                            'text': 'Input data has errors.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
+<tr><td>verifyVisible</td>
+    <td>//div[@data-gadget-scope='field_my_quantity']//span[text()="Quantity can't be negative."]</td><td></td></tr>
 
 </tbody>
 </table>

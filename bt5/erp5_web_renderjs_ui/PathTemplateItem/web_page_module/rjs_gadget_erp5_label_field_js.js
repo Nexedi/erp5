@@ -107,7 +107,7 @@
       var gadget = this,
         span;
 
-      if (gadget.state.hidden) {
+      if (gadget.state.hidden && !modification_dict.error_text) {
         this.element.hidden = true;
       } else {
         this.element.hidden = false;
