@@ -28,57 +28,96 @@
  
  <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="Home"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="Home"]</td>
    <td>zhuye</td>
  </tr>
 
 
  <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="Modules"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="Modules"]</td>
    <td>mokuai</td>
  </tr>
  
   <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="Worklists"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="Worklists"]</td>
    <td>gongzhuoliebiao</td>
  </tr>
  
  
   <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="History"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="History"]</td>
    <td>lishi</td>
  </tr>
  
  
   <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="Search"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="Search"]</td>
    <td>soushuo</td>
  </tr>
  
  
   <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="Preferences"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="Preferences"]</td>
    <td>pianai</td>
  </tr>
  
  
   <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="Logout"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="Logout"]</td>
    <td>tuichu</td>
  </tr>
 
 
   <tr>
    <td>verifyText</td>
-   <td>//div[@data-gadget-scope="erp5_checkbox"]//label</td>
+   <td>//div[@data-gadget-scope='panel']//div[@data-gadget-scope="erp5_checkbox"]//label</td>
    <td>bianxue</td>
  </tr>
+
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/wo/#/foo_module</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Title 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>link=Title 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Title 1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//dt[@data-i18n="Views"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='panel']//dt[@data-i18n="Views"]</td>
+  <td>shitu</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()="yanzhen"]</td>
+  <td></td>
+</tr>
 
 </tbody></table>
 </body>

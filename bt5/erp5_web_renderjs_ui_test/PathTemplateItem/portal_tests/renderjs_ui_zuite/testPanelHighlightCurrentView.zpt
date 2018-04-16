@@ -53,7 +53,7 @@
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//div[@data-gadget-scope='panel']//a[@data-i18n='View'][contains(@class, 'active')]</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='View' and contains(@class, 'active')]</td>
   <td></td>
 </tr>
 
@@ -61,13 +61,13 @@
 
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//div[@data-gadget-scope='panel']//a[@data-i18n='View'][contains(@class, 'active')]</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='View' and contains(@class, 'active')]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//div[@data-gadget-scope='panel']//a[@data-i18n='Relation Fields'][contains(@class, 'active')]</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Relation Fields' and contains(@class, 'active')]</td>
   <td></td>
 </tr>
 
@@ -103,13 +103,13 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='panel']//a[@data-i18n='Custom Dialog Action'][contains(@class, 'active')]</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Custom Dialog Action' and contains(@class, 'active')]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//div[@data-gadget-scope='panel']//a[@data-i18n='Relation Fields'][contains(@class, 'active')]</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Relation Fields' and contains(@class, 'active')]</td>
   <td></td>
 </tr>
 

@@ -292,11 +292,14 @@
                   href: result_list[i + workflow_list.length + view_list.length]
                 });
               }
-              gadget.element.querySelector("dl").innerHTML = panel_template_body_desktop({
+              return gadget.translateHtml(panel_template_body_desktop({
                 workflow_list: result_workflow_list,
                 view_list: result_view_list,
                 action_list: result_action_list
-              });
+              }));
+            })
+            .push(function (translated_html) {
+              gadget.element.querySelector("dl").innerHTML = translated_html;
             });
         }
       }
