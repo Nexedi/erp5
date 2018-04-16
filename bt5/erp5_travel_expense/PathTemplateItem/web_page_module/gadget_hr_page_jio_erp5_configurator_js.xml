@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Manifest" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,6 +68,7 @@
             <value>
               <tuple>
                 <string>contributor/person_module/2</string>
+                <string>contributor/person_module/5</string>
               </tuple>
             </value>
         </item>
@@ -79,7 +80,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_hr.appcache</string> </value>
+            <value> <string>gadget_officejs_page_jio_erp5_configurator.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_hr_appcache</string> </value>
+            <value> <string>gadget_hr_page_jio_erp5_configurator_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -97,7 +98,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -106,127 +107,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-CACHE MANIFEST\n
-# generated on Fri, 24 August 2017 11:46:33 +0000\n
-# XXX + fonts\n
-# images/ajax-loader.gif\n
-# version 1.0\n
-CACHE:\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
-URI.js\n
-dygraph.js\n
-gadget_erp5.css\n
-gadget_global.js\n
-gadget_jio.html\n
-gadget_jio.js\n
-handlebars.js\n
-jiodev.js\n
-jquery.js\n
-jquerymobile.css\n
-jquerymobile.js\n
-renderjs.js\n
-rsvp.js\n
-gadget_officejs_header.html\n
-gadget_officejs_page_add_document.html\n
-gadget_officejs_page_sync.html\n
-gadget_hr_translation.html\n
-gadget_officejs_widget_listbox.html\n
-gadget_erp5_editor_panel.html\n
-gadget_erp5_editor_panel.js\n
-gadget_officejs_header.js\n
-gadget_officejs_page_add_document.js\n
-gadget_officejs_page_sync.js\n
-gadget_officejs_router.js\n
-gadget_hr_translation.js\n
-gadget_hr_translation_data.js\n
-gadget_officejs_widget_listbox.js\n
-erp5_launcher.js\n
-erp5_launcher.html\n
-\n
-gadget_officejs_page_expense_report.html\n
-gadget_officejs_page_expense_report.js\n
-gadget_officejs_jio_expense_record_view.html\n
-gadget_officejs_jio_expense_record_view.js\n
-gadget_officejs_page_expense_record_list.html\n
-gadget_officejs_page_expense_record_list.js\n
-\n
-gadget_officejs_page_leave_request_record_list.html\n
-gadget_officejs_page_leave_request_record_list.js\n
-gadget_officejs_page_add_leave_request_record.html\n
-gadget_officejs_page_add_leave_request_record.js\n
-gadget_officejs_jio_leave_request_record_view.html\n
-gadget_officejs_jio_leave_request_record_view.js\n
-\n
-gadget_officejs_page_travel_request_record_list.html\n
-gadget_officejs_page_travel_request_record_list.js\n
-gadget_officejs_page_add_travel_request_record.html\n
-gadget_officejs_page_add_travel_request_record.js\n
-gadget_officejs_jio_travel_request_record_view.html\n
-gadget_officejs_jio_travel_request_record_view.js\n
-\n
-gadget_officejs_page_jio_configurator.html\n
-gadget_officejs_page_jio_configurator.js\n
-gadget_officejs_page_jio_erp5_configurator.html\n
-gadget_officejs_page_jio_erp5_configurator.js\n
-gadget_officejs_page_jio_dav_configurator.html\n
-gadget_officejs_page_jio_dav_configurator.js\n
-\n
-\n
-gadget_officejs_page_expense_sheet_list.html\n
-gadget_officejs_page_expense_sheet_list.js\n
-gadget_officejs_page_add_expense_sheet.html\n
-gadget_officejs_page_add_expense_sheet.js\n
-gadget_officejs_jio_expense_sheet_view.html\n
-gadget_officejs_jio_expense_sheet_view.js\n
-\n
-alertify.css\n
-alertify.js\n
-expense_record_image.css\n
-\n
-gadget_officejs_expense_excellentexport.js\n
-gadget_officejs_expense_xlsx.core.min.js\n
-gadget_officejs_expense_filesaver.min.js\n
-gadget_officejs_expense_tableexport.min.js\n
-gadget_officejs_hr_router.html\n
-gadget_officejs_hr_router.js\n
-\n
-gadget_officejs_hr_panel.html\n
-gadget_officejs_application_panel.js\n
-chartist.min.js\n
-chartist.min.css\n
-gadget_officejs_hr_jio.html\n
-gadget_officejs_hr_jio.js\n
-gadget_officejs_jio_text_post.html\n
-gadget_officejs_jio_text_post.js\n
-\n
-gadget_officejs_page_calendar.js\n
-gadget_officejs_page_calendar.html\n
-gadget_officejs_hr_tool.js\n
-gadget_hr_style.css\n
-gadget_officejs_page_hr_front.html\n
-gadget_officejs_page_hr_front.js\n
-gadget_officejs_geoLocalisation.html\n
-gadget_officejs_geoLocalisation.js\n
-gadget_officejs_page_localisation.html\n
-gadget_officejs_page_localisation.js\n
-leaflet.css\n
-leaflet.js\n
-NETWORK:\n
-*
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Gadget HR JS AppCache</string> </value>
+            <value> <string>HR Gadget JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -290,7 +172,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -312,8 +194,8 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481818156.45</float>
-                        <string>UTC</string>
+                        <float>1523377473.27</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
@@ -357,7 +239,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>966.54128.62182.28825</string> </value>
+                <value> <string>966.54482.65236.25924</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -375,7 +257,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1523605559.57</float>
+                        <float>1523627336.66</float>
                         <string>GMT+2</string>
                       </tuple>
                     </state>
@@ -402,7 +284,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -432,8 +314,8 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481818046.36</float>
-                        <string>UTC</string>
+                        <float>1523377452.06</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
