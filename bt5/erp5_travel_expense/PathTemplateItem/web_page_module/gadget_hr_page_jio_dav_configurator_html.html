@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>OfficeJS jIO DAV Configurator Page</title>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+
+    <script src="gadget_officejs_page_jio_dav_configurator.js"></script>
+
+  </head>
+
+  <body>
+    <article class="ui-content ui-body-c">
+      <section class="ui-content-header-plain">
+        <h3 class="ui-content-title ui-body-c">
+          <span class="ui-icon ui-icon-custom ui-icon-database">&nbsp;</span>
+          Your WebDAV Connection parameters
+        </h3>
+      </section>
+      <section class="ui-body-c ui-content-section">
+        <form class="dav-configuration-form">
+
+          <div class="ui-form">
+            <div class="ui-field-contain">
+              <label data-i18n="Connection URL:">Connection URL:</label>
+              <input type="url" name="dav_url" required value=""/>
+            </div>
+            <div class="ui-field-contain">
+              <label data-i18n="Username:">Username:</label>
+              <input type="text" name="dav_username" value=""/>
+            </div>
+            <div class="ui-field-contain">
+              <label data-i18n="Password:">Password:</label>
+              <input type="password" name="dav_password" value=""/>
+            </div>
+          </div>
+          <div class="select-storage ui-controlgroup ui-controlgroup-horizontal">
+            <div class="ui-grid-b ui-responsive">
+              <div class="ui-block-a"></div>
+              <div class="ui-block-b"></div>
+              <div class="ui-block-c">
+                <button type="submit" data-i18n="Connect" class="ui-btn-btn-right">Connect</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </section>
+    </article>
+    <article class="ui-content ui-body-c document-access">
+      <section class="ui-content-header-plain">
+        <h3 class="ui-content-title ui-body-c">
+          <span class="ui-icon ui-icon-custom ui-icon-file-text-o">&nbsp;</span>
+          Your Documents
+        </h3>
+      </section>
+      <section class="ui-body-c ui-content-section">
+        <p style="color: red">Continue by <b>synchronizing</b> with your remote storage or <b>accessing</b> your documents</p>
+        <div class="ui-controlgroup ui-controlgroup-horizontal">
+          <div class="ui-grid-a ui-responsive">
+            <div class="ui-block-a">
+              <a class="ui-btn" href="#page=sync" data-i18n="Synchronize">Synchronize</a>
+            </div>
+            <div class="ui-block-b">
+              <a class="ui-btn" href="#page=hr_front" data-i18n="Go to document List">Access document List</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </article>
+  </body>
+</html>
