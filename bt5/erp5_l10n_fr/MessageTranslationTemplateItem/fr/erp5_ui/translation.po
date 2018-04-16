@@ -883,6 +883,9 @@ msgstr "Tous critères (AND)"
 msgid "All needed information is collected."
 msgstr "Les informations nécessaires ont été collectées"
 
+msgid "All work caught up!"
+msgstr "La liste de travail est vide !"
+
 msgid "Alphabetical"
 msgstr "Alphanumérique"
 
@@ -1291,6 +1294,9 @@ msgstr "Archivé"
 msgid "Archived [state in document_publication_workflow]"
 msgstr "Archivé"
 
+msgid "Archived [state in interface_post_workflow]"
+msgstr "Archivé"
+
 msgid "Area"
 msgstr "Zone"
 
@@ -1446,6 +1452,9 @@ msgstr "Au moins une section doit être définie."
 
 msgid "Attach Document"
 msgstr "Attacher un document"
+
+msgid "Attachment"
+msgstr "Pièce jointe"
 
 msgid "Attachments"
 msgstr "Fichiers joints"
@@ -5350,14 +5359,26 @@ msgstr "Explorer la Liste des Résultats de Recherche"
 msgid "Export"
 msgstr "Exporter"
 
+msgid "Export Acknowledged [state in interface_post_workflow]"
+msgstr "Export pris en compte"
+
 msgid "Export Business Template"
 msgstr "Exporter le Business Template"
+
+msgid "Export Failed [state in interface_post_workflow]"
+msgstr "Export échoué"
 
 msgid "Export Format"
 msgstr "Format de l'export"
 
+msgid "Export Letter Posts"
+msgstr "Exporter les Posts de lettre"
+
 msgid "Export Mode"
 msgstr "Mode d'export"
+
+msgid "Export Prepared"
+msgstr "Export préparé"
 
 msgid "Export Print"
 msgstr "Imprimer facture exportation"
@@ -5370,6 +5391,9 @@ msgstr "Exporter les conditions au format PO"
 
 msgid "Export to Spreadsheet"
 msgstr "Exporter"
+
+msgid "Exported [state in interface_post_workflow]"
+msgstr "Exporté"
 
 msgid "Express Support"
 msgstr "Assistance"
@@ -6160,14 +6184,23 @@ msgstr "Importer un fichier CSV"
 msgid "Import Categories"
 msgstr "Importer des catégories"
 
+msgid "Import Failed [state in interface_post_workflow]"
+msgstr "Import échoué"
+
 msgid "Import OpenOffice Document"
 msgstr "Importer un document OpenOffice"
 
 msgid "Import Persons from OpenOffice Calc"
 msgstr "Importer des personnes depuis OpenOffice calc"
 
+msgid "Import Prepared [state in interface_post_workflow]"
+msgstr "Import préparé"
+
 msgid "Import Signature"
 msgstr "Importer sa signature"
+
+msgid "Imported [state in interface_post_workflow]"
+msgstr "Importé"
 
 msgid "In Payroll, there is generaly some taxes for the employee, and for the employer. This term is used to speak about the rate applied to the base that permit to calculate the amount of the tax paid by the employee."
 msgstr "Dans la paye, il y a généralement des taxes pour l'employé et pour l'employeur. Ce terme est utilisé pour désigner le taux appliqué sur la base qui permet de déterminer le montant de la taxe payé par l'employeur."
@@ -6480,6 +6513,15 @@ msgstr "Conditions de vente interne"
 
 msgid "International Form"
 msgstr "Mode international"
+
+msgid "Internet Message Post"
+msgstr "Post de message internet"
+
+msgid "Internet Message Post Module"
+msgstr "Modules des Posts de message internet"
+
+msgid "Internet Message Posts"
+msgstr "Posts de message internet"
 
 msgid "Intervation Date"
 msgstr "Date d'intervention"
@@ -13960,6 +14002,9 @@ msgstr "Annuler"
 msgid "Undo Reconciliation"
 msgstr "Défaire le rapprochement"
 
+msgid "Unexported [state in interface_post_workflow]"
+msgstr "Non exporté"
+
 msgid "Ungrouping"
 msgstr "Délettrage"
 
@@ -14935,6 +14980,36 @@ msgstr "index utilisé pour classer les pages web."
 msgid "instructions in order to explain how to use the resource"
 msgstr "Instructions qui expliquent comment utiliser une ressource."
 
+msgid "Leave Request"
+msgstr "Demande d'absence"
+
+msgid "Leave Request Module"
+msgstr "Module des demandes d'absence"
+
+msgid "Leave Request Period"
+msgstr "Période d'absence"
+
+msgid "Leave Request Periods"
+msgstr "Périodes d'absence"
+
+msgid "Leave Requests"
+msgstr "Demandes d'absence"
+
+msgid "Leaves"
+msgstr "Absences"
+
+msgid "Letter Post"
+msgstr "Post de lettre"
+
+msgid "Letter Post Module"
+msgstr "Module des Posts de lettre"
+
+msgid "Letter Post related to Letter."
+msgstr "Post de lettre lié à la Lettre"
+
+msgid "Letter Posts"
+msgstr "Posts de lettre"
+
 msgid "language"
 msgstr "langue"
 
@@ -14988,6 +15063,15 @@ msgstr "Indication opératoire"
 
 msgid "portal type"
 msgstr "la règle qu'il faut appliquer à la taxe."
+
+msgid "Presence Request"
+msgstr "Demande de présence"
+
+msgid "Presence Request Module"
+msgstr "Module des demandes de présence"
+
+msgid "Presence Requests"
+msgstr "Demandes de présence"
 
 msgid "preview"
 msgstr "Prévisualiser"
