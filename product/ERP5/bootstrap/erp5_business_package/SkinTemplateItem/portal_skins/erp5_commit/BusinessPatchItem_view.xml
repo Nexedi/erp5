@@ -59,9 +59,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_dependency_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -76,6 +74,7 @@
                       <list>
                         <string>my_item_path</string>
                         <string>my_item_sign</string>
+                        <string>my_item_layer</string>
                       </list>
                     </value>
                 </item>
@@ -83,8 +82,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_item_layer</string>
-                        <string>my_follow_up_title</string>
+                        <string>my_dependency_list</string>
                       </list>
                     </value>
                 </item>

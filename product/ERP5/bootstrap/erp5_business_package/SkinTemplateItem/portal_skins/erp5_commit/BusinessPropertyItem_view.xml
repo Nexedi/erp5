@@ -59,7 +59,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_item_property_name</string>
+                      </list>
                     </value>
                 </item>
                 <item>

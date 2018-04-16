@@ -5,11 +5,11 @@
  </chain>
  <chain>
   <type>Business Item</type>
-  <workflow>business_item_interaction_workflow</workflow>
+  <workflow>business_item_interaction_workflow, business_manager_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Business Property Item</type>
-  <workflow>business_property_item_interaction_workflow</workflow>
+  <workflow>business_manager_interaction_workflow, business_property_item_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Business Snapshot</type>

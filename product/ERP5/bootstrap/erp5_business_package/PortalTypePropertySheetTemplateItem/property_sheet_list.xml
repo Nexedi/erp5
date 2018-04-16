@@ -5,4 +5,7 @@
  <portal_type id="Business Property Item">
   <item>BusinessItemConstraint</item>
  </portal_type>
+ <portal_type id="Commit Tool">
+  <item>CommitTool</item>
+ </portal_type>
 </property_sheet_list>
