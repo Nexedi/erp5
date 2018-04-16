@@ -8,6 +8,3 @@ portal_alarms/create_representative_record_for_leave_request
 portal_alarms/create_representative_record_for_travel_request
 portal_categories/use/hr
 portal_categories/use/hr/**
-web_page_module/gadget_hr_*
-web_site_module/officejs_hr
-web_site_module/officejs_hr/**
