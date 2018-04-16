@@ -142,7 +142,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>context/Event_getPreferredResponseEventSource</string> </value>
+            <value> <string>python:context.Event_getPreferredResponseEventSource()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -155,7 +155,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>context/Event_getPreferredResponseEventSourceItemList</string> </value>
+            <value> <string>python:context.Event_getPreferredResponseEventSourceItemList()</string> </value>
         </item>
       </dictionary>
     </pickle>

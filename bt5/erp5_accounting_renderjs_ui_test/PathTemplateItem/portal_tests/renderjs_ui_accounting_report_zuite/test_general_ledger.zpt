@@ -47,7 +47,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>waitForElementPresent</td><td>//input[@name="field_your_from_date"]</td><td></td></tr>
 <tr><td>type</td>
     <td>//input[@name="field_your_from_date"]</td>
-    <td>${year}-1-1</td></tr>
+    <td>${year}-01-01</td></tr>
 <tr><td>waitForElementPresent</td><td>//input[@name="field_your_at_date"]</td><td></td></tr>
 <tr><td>type</td>
     <td>//input[@name="field_your_at_date"]</td>
@@ -74,6 +74,15 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>select</td>
     <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
     <td>value=delivered</td></tr>
+
+<tr><th colspan="3">Override fields set by Action URL parameters to out values</th></tr>
+<!--  No Titles are displayed if "export" is checked. Should we remove the check for title (<h3>) instead? -->
+<tr><td>click</td>
+  <td>//input[@name="field_your_export"]</td><td></td></tr>
+<!-- Force rendering inplace by replacinf ODS style with Hal -->
+<tr><td>type</td>
+    <td>//input[@name="field_your_portal_skin"]</td>
+    <td>Hal</td></tr>
 
 <tr><td>click</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>

@@ -4,8 +4,9 @@
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr><th rowspan="1" colspan="4">
-Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tests/testAccountingReports.py#L894">testAccountingReports.py:TestAccountingReports.testAccountStatement</a>
+Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tests/testAccountingReports.py#L894">testAccountingReports.py:TestAccountingReports.testAccountStatement</a> (expected failure)
 </th></tr>
+<!-- This report is not using template fields and overwrites columns dynamicaly in Selection. This report will not be tested -->
 </thead>
 
 <tbody
@@ -44,17 +45,6 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>//a[@data-i18n="Account Statement"]</td><td></td></tr>
 
 <tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-scope="field_your_node"]/div/div[1]//select</td><td></td></tr>
-<tr><td>select</td>
-    <td>//div[@data-gadget-scope="field_your_node"]/div/div[1]//select</td>
-    <td>value=account_module/receivable</td></tr>
-
-<tr><td>waitForElementPresent</td>
-    <td>//select[@name="field_your_section_category"]</td><td></td></tr>
-<tr><td>select</td>
-    <td>//select[@name="field_your_section_category"]</td>
-    <td>value=group/demo_group/sub1</td></tr>
-<tr><td>waitForElementPresent</td>
     <td>//input[@name="field_your_at_date"]</td><td></td></tr>
 <tr><td>type</td>
     <td>//input[@name="field_your_at_date"]</td>
@@ -77,14 +67,57 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>select</td>
     <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
     <td>value=delivered</td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_your_node"]/div/div[1]//select</td><td></td></tr>
+<tr><td>select</td>
+    <td>//div[@data-gadget-scope="field_your_node"]/div/div[1]//select</td>
+    <td>value=account_module/receivable</td></tr>
+
+<tr><td colspan="3">Test update button on a valid form</td></tr>
+<!-- group/client does not have any Bank account assigned so we test on empty "Bank Account" field -->
+<tr><td>waitForElementPresent</td>
+    <td>//select[@name="field_your_section_category"]</td><td></td></tr>
+<tr><td>select</td>
+    <td>//select[@name="field_your_section_category"]</td>
+    <td>value=group/client</td></tr>
+
 <tr><td>click</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//button[@type="submit" and @name="action_update"]</td><td></td></tr>
+
+<tr><td>waitForElementNotPresent</td>
+    <td>//select[@name="field_your_payment"]/option[2]</td><td></td></tr>
+<tr><td>assertElementNotPresent</td>
+    <td>//select[@name="field_your_payment"]/option[2]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//select[@name="field_your_section_category"]</td><td></td></tr>
+<tr><td>select</td>
+    <td>//select[@name="field_your_section_category"]</td>
+    <td>value=group/demo_group/sub1</td></tr>
+
+<tr><td>type</td>
+    <td>//input[@name="field_your_portal_skin"]</td>
+    <td>Hal</td></tr>
+
+<tr><td>click</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//button[@type="submit" and @name="action_update"]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//select[@name="field_your_payment"]/option[2]</td><td></td></tr>
+<tr><td>assertElementPresent</td>
+    <td>//select[@name="field_your_payment"]/option[@data-i18n="Bank1"]</td><td></td></tr>
+<tr><td>assertElementPresent</td>
+    <td>//select[@name="field_your_payment"]/option[@data-i18n="Bank2"]</td><td></td></tr>
+
+<tr><td>click</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit" and @name="action_confirm"]</td><td></td></tr>
 
 <tr><td>store</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>${table}//../nav//span[text()="6 Records"]</td><td></td></tr>
+    <td>${table}/../nav//span[text()="6 Records"]</td><td></td></tr>
 
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>

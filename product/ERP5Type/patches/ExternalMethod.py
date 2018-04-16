@@ -25,11 +25,28 @@ class _(PatchClass(ExternalMethod)):
 
     @property
     def func_defaults(self):
+        """Return a tuple of default values.
+        The first value is for the "second" parameter (self is ommited)
+
+        Example:
+          componentFunction(self, form_id='', **kw)
+          will have func_defaults = ('', )
+        """
         return self._getFunction()[1]
 
     @property
     def func_code(self):
         return self._getFunction()[2]
+
+    @property
+    def func_args(self):
+        """Return list of parameter names.
+
+        Example:
+          componentFunction(self, form_id='', **kw)
+          will have func_args = ['self', 'form_id']
+        """
+        return self._getFunction()[4]
 
     def getFunction(self, reload=False):
         return self._getFunction(reload)[0]
@@ -74,14 +91,21 @@ class _(PatchClass(ExternalMethod)):
         except AttributeError:
             pass
         code = f.func_code
-        args = getargs(code)[0]
+        argument_object = getargs(code)
+        # reconstruct back the original names
+        arg_list = argument_object.args[:]
+        if argument_object.varargs:
+            arg_list.append('*' + argument_object.varargs)
+        if argument_object.keywords:
+          arg_list.append('**' + argument_object.keywords)
+
         i = isinstance(f, MethodType)
         ff = f.__func__ if i else f
-        has_self = len(args) > i and args[i] == 'self'
+        has_self = len(arg_list) > i and arg_list[i] == 'self'
         i += has_self
         if i:
             code = FuncCode(ff, i)
-        self._v_f = _f = (f, f.func_defaults, code, has_self)
+        self._v_f = _f = (f, f.func_defaults, code, has_self, arg_list)
         return _f
 
     def __call__(self, *args, **kw):

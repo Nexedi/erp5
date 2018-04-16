@@ -39,7 +39,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
 
 <tal:block tal:define="notification_configuration python: {'class': 'success',
-                                                           'text': 'Data received'}">
+                                                           'text': 'Data received.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />

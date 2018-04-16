@@ -1,10 +1,7 @@
-"""
-   This script factorises code required to redirect to the appropriate
-   page from a script. It should probably be extended, reviewed and documented
-   so that less code is copied and pasted in dialog scripts.
+"""UI Script to redirect the user to `context` with optional custom view `form_id`.
 
-   TODO: improve API and extensively document. ERP5Site_redirect may 
-   be redundant.
+:param keep_items: is used mainly to pass "portal_status_message" to be showed to the user
+                   the new UI supports "portal_status_level" with values "success" or "error"
 """
 from ZTUtils import make_query
 import json
@@ -40,8 +37,15 @@ response.setHeader("X-Location", "urn:jio:get:%s" % context.getRelativeUrl())
 # therefor we don't need to be afraid of clashes
 response.setHeader("Content-type", "application/json; charset=utf-8")
 
+portal_status_level = keep_items.pop("portal_status_level", "success")
+if portal_status_level in ("warning", "error", "fatal"):
+  portal_status_level = "error"
+if portal_status_level in ("info", "debug", "success"):
+  portal_status_level = "success"
+
 result_dict = {
   'portal_status_message': "%s" % keep_items.pop("portal_status_message", ""),
+  'portal_status_level': "%s" % portal_status_level,
   '_links': {
     "self": {
       # XXX Include query parameters

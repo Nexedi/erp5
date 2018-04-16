@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray */
+/*global window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray) {
+(function (window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -19,15 +19,15 @@
    * @param {Array} command_list - array of links obtained from ERP5 HATEOAS
    */
   function renderLinkList(gadget, title, icon, erp5_link_list) {
-    return new RSVP.Queue()
-      .push(function () {
+    return gadget.getUrlParameter("extended_search")
+      .push(function (query) {
         // obtain RJS links from ERP5 links
         return RSVP.all(
           erp5_link_list.map(function (erp5_link) {
             return gadget.getUrlFor({
               "command": 'change',
               "options": {
-                "view": erp5_link.href,
+                "view": UriTemplate.parse(erp5_link.href).expand({query: query}),
                 "page": undefined
               }
             });
@@ -62,6 +62,7 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -72,7 +73,10 @@
 
       // Get the whole view as attachment because actions can change based on
       // what view we are at. If no view available than fallback to "links".
-      return gadget.jio_getAttachment(options.jio_key, options.view || "links")
+      return new RSVP.Queue()
+        .push(function () {
+          return gadget.jio_getAttachment(options.jio_key, options.view || "links");
+        })
         .push(function (jio_attachment) {
           var transition_list = ensureArray(jio_attachment._links.action_workflow),
             action_list = ensureArray(jio_attachment._links.action_object_jio_action)
@@ -105,4 +109,4 @@
         });
     });
 
-}(window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray));
+}(window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray));

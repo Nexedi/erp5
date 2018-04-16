@@ -67,7 +67,7 @@
       return this.changeState({
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
-        form_gadget_url: form_gadget_url,
+        form_gadget_url: form_gadget_url
       });
     })
     .onStateChange(function (modification_dict) {

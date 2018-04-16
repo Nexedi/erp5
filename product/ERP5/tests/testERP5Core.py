@@ -491,7 +491,13 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     portal_selections.setSelectionCheckedUidsFor(selection_name,
       [x.getUid() for x in object_list])
     md5_string = portal_selections.getSelectionChecksum(selection_name)
-    return object_list[0].getParentValue().Folder_delete(
+    object_parent = object_list[0].getParentValue()
+ 
+    # get default form from default view for given context
+    default_view_url = str(self.portal.portal_actions.listFilteredActionsFor(object_parent)['object_view'][0]['url'])
+    form_id = default_view_url.split('?', 1)[0].split("/")[-1]
+
+    return object_parent.Folder_delete(form_id=form_id, dialog_id="Folder_viewDeleteDialog",
       selection_name=selection_name, md5_object_uid_list=md5_string)
 
   def test_Folder_delete(self):
@@ -499,8 +505,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     document_1 = module.newContent(portal_type='Folder', id='1')
     document_2 = module.newContent(portal_type='Folder', id='2')
     self.tic()
-    redirect = self._Folder_delete(document_1, document_2)
-    self.assert_('Deleted.' in redirect, redirect)
+    self._Folder_delete(document_1, document_2)
     self.assertEqual(module.objectCount(), 0)
 
   def test_Folder_delete_related_object(self):
@@ -508,6 +513,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     organisation_module_len = len(self.portal.organisation_module)
     person_module_len = len(self.portal.person_module)
     organisation = self.portal.organisation_module.newContent()
+    initial_organisation_state = organisation.getValidationState()
     person = self.portal.person_module.newContent(
       default_career_subordination_value=organisation)
     for obj in person, organisation:
@@ -517,15 +523,20 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
     self.assertEqual(2, organisation.getRelationCountForDeletion())
     self.assertEqual(0, person.getRelationCountForDeletion())
-    def delete(assert_deleted, obj):
-      redirect = self._Folder_delete(obj)
-      self.assertTrue((urllib.quote('Sorry, 1 item is in use.'), 'Deleted.')[assert_deleted]
-                      in redirect, redirect)
-      self.tic()
-    delete(0, organisation)
-    delete(1, person)
+
+    self._Folder_delete(organisation)
+    self.tic()
+    # here we check that nothing was done because the organisation has relations
+    refreshed_organisation = self.portal.organisation_module[organisation.id]
+    assert initial_organisation_state == refreshed_organisation.getValidationState()
+
+    self._Folder_delete(person)
+    self.tic()
     self.assertEqual(0, organisation.getRelationCountForDeletion())
-    delete(1, organisation)
+
+    self._Folder_delete(organisation)
+    self.tic()
+
     self.assertEqual(organisation_module_len + 1,
                       len(self.portal.organisation_module))
     self.assertEqual(person_module_len + 1,
@@ -547,8 +558,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     document_1.manage_permission('View', [], acquire=0)
     document_1.manage_permission('Access contents information', [], acquire=0)
-    redirect = self._Folder_delete(document_2)
-    self.assert_(urllib.quote('Sorry, 1 item is in use.') in redirect, redirect)
+    self._Folder_delete(document_2)
     self.assertEqual(module.objectCount(), 2)
 
   def test_getPropertyForUid(self):

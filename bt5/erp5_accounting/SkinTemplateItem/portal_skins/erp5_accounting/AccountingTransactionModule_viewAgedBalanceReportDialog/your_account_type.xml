@@ -223,7 +223,7 @@
                 </item>
                 <item>
                     <key> <string>first_item</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>

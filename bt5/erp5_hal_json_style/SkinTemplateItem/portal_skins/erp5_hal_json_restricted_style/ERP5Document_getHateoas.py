@@ -16,6 +16,7 @@ return context.ERP5Document_getHateoas(
   select_list=select_list,
   limit=limit,
   form=form,
+  form_data=form_data,
   relative_url=relative_url,
   list_method=list_method,
   default_param_json=default_param_json,
@@ -24,6 +25,8 @@ return context.ERP5Document_getHateoas(
   sort_on=sort_on,
   local_roles=local_roles,
   selection_domain=selection_domain,
+  restricted=1,
   extra_param_json=extra_param_json,
-  restricted=1
+  portal_status_message=portal_status_message,
+  portal_status_level=portal_status_level
 )

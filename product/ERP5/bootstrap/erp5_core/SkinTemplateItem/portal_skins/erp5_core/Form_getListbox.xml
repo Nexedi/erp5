@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, local_roles=None, form=None, form_data=None, relative_url=None, list_method=None, default_param_json=None, form_relative_url=None, bulk_list="[]", sort_on=None, selection_domain=None, extra_param_json=None, portal_status_message=\'\', portal_status_level=None</string> </value>
+            <value> <string>form=None, form_id=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Document_getHateoas</string> </value>
+            <value> <string>Form_getListbox</string> </value>
         </item>
       </dictionary>
     </pickle>

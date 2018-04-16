@@ -8,11 +8,13 @@ psm = Base_translateString('Nothing matches.')
 request = container.REQUEST
 
 # update selected uids 
-portal.portal_selections.updateSelectionCheckedUidList(
-    list_selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)
-uids = portal.portal_selections.getSelectionCheckedUidsFor(list_selection_name)
+if list_selection_name:
+  portal.portal_selections.updateSelectionCheckedUidList(
+      list_selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)
+  uids = portal.portal_selections.getSelectionCheckedUidsFor(list_selection_name)
 
 # XXX when should it be validated ?
+# Kato: It is already validated because this is Form Dialog script
 if node == '':
   node = context.REQUEST.get('field_your_node', node)
 if mirror_section == '':
@@ -22,13 +24,13 @@ if grouping == '':
   grouping = request.get('your_grouping',
                          request.get('field_your_grouping',
                                      grouping))
-
-# edit selection for dialog parameters
-portal.portal_selections.setSelectionParamsFor(
-              'grouping_reference_fast_input_selection',
-              params=dict(node=node,
-                          grouping=grouping,
-                          mirror_section=mirror_section))
+if list_selection_name:
+  # edit selection for dialog parameters
+  portal.portal_selections.setSelectionParamsFor(
+                'grouping_reference_fast_input_selection',
+                params=dict(node=node,
+                            grouping=grouping,
+                            mirror_section=mirror_section))
 
 # calculate total selected amount 
 total_selected_amount = 0
@@ -42,9 +44,9 @@ if uids:
 request.set('total_selected_amount', total_selected_amount)
 
 if update:
-  request.set('portal_status_message', Base_translateString('Updated'))
-  return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)
-  
+  return context.Base_renderForm('AccountingTransactionModule_viewGroupingFastInputDialog',
+                                keep_items={'portal_status_message': Base_translateString('Updated')})
+
 
 # otherwise, try to group...
 if grouping == 'grouping':
@@ -53,9 +55,9 @@ if grouping == 'grouping':
   if grouped_line_list:
     psm = Base_translateString('${grouped_line_count} lines grouped.',
                                mapping=dict(grouped_line_count=len(grouped_line_list)))
-
-    # make sure nothing will be checked next time
-    portal.portal_selections.setSelectionCheckedUidsFor(list_selection_name, [])
+    if list_selection_name:
+      # make sure nothing will be checked next time
+      portal.portal_selections.setSelectionCheckedUidsFor(list_selection_name, [])
 
     # we check if we can mark some transaction as payed.
     transaction_list = {}
@@ -119,8 +121,9 @@ else:
   psm = Base_translateString('${ungrouped_line_count} lines ungrouped.',
                              mapping=dict(ungrouped_line_count=len(ungrouped_line_list)))
 
-  # make sure nothing will be checked next time
-  portal.portal_selections.setSelectionCheckedUidsFor(list_selection_name, [])
+  if list_selection_name:
+    # make sure nothing will be checked next time
+    portal.portal_selections.setSelectionCheckedUidsFor(list_selection_name, [])
 
-request.set('portal_status_message', psm)
-return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)
+return context.Base_renderForm('AccountingTransactionModule_viewGroupingFastInputDialog',
+                                keep_items={'portal_status_message': psm})

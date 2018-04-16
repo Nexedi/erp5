@@ -138,7 +138,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>context/Event_getPreferredResponseEventPortalType</string> </value>
+            <value> <string>python:context.Event_getPreferredResponseEventPortalType()</string> </value>
         </item>
       </dictionary>
     </pickle>

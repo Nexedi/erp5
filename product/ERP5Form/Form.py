@@ -26,6 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import hashlib
 
 from copy import deepcopy
 
@@ -765,6 +766,15 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
         if len(errors) > 0:
             raise FormValidationError(errors, result)
         return result
+
+    security.declareProtected('View', 'hash_validated_data')
+    def hash_validated_data(self, validated_data):
+      return hashlib.sha256(
+        "".join(
+          str(validated_data[key])
+          for key in sorted(validated_data.keys())
+          if isinstance(validated_data[key], (str, unicode, int, long, float, DateTime)))
+      ).hexdigest()
 
     # FTP/DAV Access
     manage_FTPget = ZMIForm.get_xml

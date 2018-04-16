@@ -19,7 +19,7 @@ if context.isDeletable(check_relation=True):
     else:
       parent.manage_delObjects(ids= [context.getId()])
     # redirect back to the container since the context was deleted
-    return container.Base_redirect(
+    return parent.Base_redirect(
       keep_items={
         "portal_status_message": translate("Document deleted")
       })

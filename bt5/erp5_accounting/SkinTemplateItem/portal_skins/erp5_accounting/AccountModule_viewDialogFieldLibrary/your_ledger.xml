@@ -295,7 +295,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>context/AccountingTransactionModule_getLedgerItemList</string> </value>
+            <value> <string>python: context.AccountingTransactionModule_getLedgerItemList()</string> </value>
         </item>
       </dictionary>
     </pickle>

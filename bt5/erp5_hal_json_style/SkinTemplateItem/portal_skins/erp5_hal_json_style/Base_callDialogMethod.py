@@ -1,20 +1,25 @@
 """
 Generic method called when submitting a form in dialog mode.
 Responsible for validating form data and redirecting to the form action.
+
+Please note that the new UI has deprecated use of Selections. Your scripts
+will no longer receive `selection_name` nor `selection` in their arguments.
+
+There are runtime values hidden in every form (injected by getHateoas Script):
+  form_id - previous form ID (backward compatibility reasons)
+  dialog_id - current form dialog ID
+  dialog_method - method to be called - can be either update_method or dialog_method of the Dialog Form
 """
-from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING
+
+from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING, ERROR
+from Products.Formulator.Errors import FormValidationError, ValidationError
+from ZTUtils import make_query
 import json
 
-# XXX We should not use meta_type properly,
-# XXX We need to discuss this problem.(yusei)
 def isFieldType(field, type_name):
   if field.meta_type == 'ProxyField':
     field = field.getRecursiveTemplateField()
   return field.meta_type == type_name
-
-from Products.Formulator.Errors import FormValidationError, ValidationError
-from ZTUtils import make_query
-
 
 # Kato: I do not understand why we throw away REQUEST from parameters (hidden in **kw)
 # and use container.REQUEST just to introduce yet another global state. Maybe because
@@ -27,30 +32,44 @@ request = kw.get('REQUEST', None) or container.REQUEST
 request_form = request.form
 error_message = ''
 translate = context.Base_translateString
+portal = context.getPortalObject()
 
 # Make this script work alike no matter if called by a script or a request
 kw.update(request_form)
 
+# We need to know form_id! In case of a default view the form_id is empty
+# thus we need to parse it out from the default action definition.
+if not form_id:
+  # get default form from default view for given context
+  default_view_url = str(portal.Base_filterDuplicateActions(
+    portal.portal_actions.listFilteredActionsFor(context))['object_view'][0]['url'])
+  form_id = default_view_url.split('?', 1)[0].split("/")[-1]
+
+#  We do NOT create, use, or modify Selections!
+#  Modify your Scripts instead!
+#  kw['selection_name'] = selection_name
+#  request.set('selection_name', selection_name)
+
 # Exceptions for UI
 if dialog_method == 'Base_configureUI':
-  return context.Base_configureUI(form_id=kw['form_id'],
+  return context.Base_configureUI(form_id=form_id,
                                   selection_name=kw['selection_name'],
                                   field_columns=kw['field_columns'],
                                   stat_columns=kw['stat_columns'])
 # Exceptions for Sort
 if dialog_method == 'Base_configureSortOn':
-  return context.Base_configureSortOn(form_id=kw['form_id'],
+  return context.Base_configureSortOn(form_id=form_id,
                                       selection_name=kw['selection_name'],
                                       field_sort_on=kw['field_sort_on'],
                                       field_sort_order=kw['field_sort_order'])
 # Exceptions for Workflow
 if dialog_method == 'Workflow_statusModify':
-  return context.Workflow_statusModify(form_id=kw['form_id'],
+  return context.Workflow_statusModify(form_id=form_id,
                                         dialog_id=dialog_id)
 
 # Exception for edit relation
 if dialog_method == 'Base_editRelation':
-  return context.Base_editRelation(form_id=kw['form_id'],
+  return context.Base_editRelation(form_id=form_id,
                                    field_id=kw['field_id'],
                                    selection_name=kw['list_selection_name'],
                                    selection_index=kw['selection_index'],
@@ -60,7 +79,7 @@ if dialog_method == 'Base_editRelation':
 # Exception for create relation
 # Not used in new UI - relation field implemented using JIO calls from JS
 if dialog_method == 'Base_createRelation':
-  return context.Base_createRelation(form_id=kw['form_id'],
+  return context.Base_createRelation(form_id=form_id,
                                      selection_name=kw['list_selection_name'],
                                      selection_index=kw['selection_index'],
                                      base_category=kw['base_category'],
@@ -70,13 +89,15 @@ if dialog_method == 'Base_createRelation':
                                      dialog_id=dialog_id,
                                      portal_type=kw['portal_type'],
                                      return_url=kw['cancel_url'])
-# Exception for folder delete
-if dialog_method == 'Folder_delete':
-  return context.Folder_delete(form_id=kw['form_id'],
-                               selection_name=kw['selection_name'],
-                               md5_object_uid_list=kw['md5_object_uid_list'])
+# NO Exception for folder delete
+# if dialog_method == 'Folder_delete':
+#  return context.Folder_delete(form_id=form_id,
+#                               selection_name=kw['selection_name'],
+#                               md5_object_uid_list=kw['md5_object_uid_list'])
 
 form = getattr(context, dialog_id)
+form_data = None
+extra_param = json.loads(extra_param_json or "{}")
 
 # form can be a python script that returns the form
 if not hasattr(form, 'validate_all_to_request'):
@@ -88,10 +109,9 @@ try:
   # data. Otherwise, field appears as non editable.
   editable_mode = request.get('editable_mode', 1)
   request.set('editable_mode', 1)
-  form.validate_all_to_request(request)
+  form_data = form.validate_all_to_request(request)
   request.set('editable_mode', editable_mode)
-
-  default_skin = context.getPortalObject().portal_skins.getDefaultSkin()
+  default_skin = portal.portal_skins.getDefaultSkin()
   allowed_styles = ("ODT", "ODS", "Hal", "HalRestricted")
   if getattr(getattr(context, dialog_method), 'pt', None) == "report_view" and \
      request.get('your_portal_skin', default_skin) not in allowed_styles:
@@ -99,10 +119,11 @@ try:
     # Form is OK, it's just this field - style so we return back form-wide error
     # for which we don't have support out-of-the-box thus we manually craft it
     # XXX TODO: Form-wide validation errors
-    return context.Base_renderMessage(
-      translate('Only ODT, ODS, Hal and HalRestricted skins are allowed for reports '\
-                'in Preferences - User Interface - Report Style'),
-      level=WARNING)
+    return context.Base_renderForm(dialog_id,
+      message=translate('Only ODT, ODS, Hal and HalRestricted skins are allowed for reports '\
+                        'in Preferences - User Interface - Report Style'),
+      level=WARNING,
+      form_data=form_data)
 
 except FormValidationError as validation_errors:
   # Pack errors into the request
@@ -161,38 +182,47 @@ if len(listbox_id_list):
     listbox_line_list = tuple(listbox_line_list)
     kw[listbox_id] = request_form[listbox_id] = listbox_line_list
 
+# Handle selection the new way
+# First check for an query in form parameters - if they are there
+# that means previous view was a listbox with selected stuff so recover here
+query = extra_param.get("query", None)
+select_all = int(extra_param.pop("_select_all", "0"))
+if query != "" or (query == "" and select_all > 0):
+  listbox = getattr(context, form_id).Form_getListbox()
+  if listbox is not None:
+    kw['uids'] = [int(getattr(document, "uid"))
+                  for document in context.Base_searchUsingListbox(listbox, query)]
+  else:
+    log('Action {} should not specify `uids` as its parameters when it does not take object list from the previous view!'.format(dialog_method), level=ERROR)
+elif query == "" and select_all == 0 and dialog_method != update_method:  # do not interrupt on UPDATE
+  return context.Base_renderForm(
+    dialog_id,
+    message=translate("All documents are selected! Submit again to proceed or Cancel and narrow down your search."),
+    level=WARNING,
+    keep_items={'_select_all': 1},
+    query=query,
+    form_data=form_data)
 
-# Check if the selection changed
-if hasattr(kw, 'previous_md5_object_uid_list'):
-  selection_list = context.portal_selections.callSelectionFor(kw['list_selection_name'], context=context)
-  if selection_list is not None:
-    object_uid_list = map(lambda x:x.getObject().getUid(), selection_list)
-    error = context.portal_selections.selectionHasChanged(kw['previous_md5_object_uid_list'], object_uid_list)
-    if error:
-      error_message = context.Base_translateString("Sorry, your selection has changed.")
+# The old way was to set inquire kw for "list_selection_name" and update
+# it with kw["uids"] which means a long URL to call this script
 
 # if dialog_category is object_search, then edit the selection
 if dialog_category == "object_search" :
-  context.portal_selections.setSelectionParamsFor(kw['selection_name'], kw)
+  portal.portal_selections.setSelectionParamsFor(kw['selection_name'], kw)
 
-# if we have checked line in listbox, modify the selection
-listbox_uid = kw.get('listbox_uid', None)
-# In some cases, the listbox exists, is editable, but the selection name
-# has no meaning, for example fast input dialogs.
-# In such cases, we must not try to update a non-existing selection.
-if listbox_uid is not None and kw.has_key('list_selection_name'):
-  uids = kw.get('uids')
-  selected_uids = context.portal_selections.updateSelectionCheckedUidList(
-    kw['list_selection_name'],
-    listbox_uid, uids)
-# Remove empty values for make_query.
-clean_kw = dict((k, v) for k, v in kw.items() if v not in (None, [], ()))
+# Notify the underlying script whether user did modifications
+form_hash = form.hash_validated_data(form_data)
+kw['has_changed'] = (form_hash != extra_param.pop('form_hash', ''))
 
+# Add rest of extra param into arguments of the target method
+kw.update(extra_param)
+
+# Finally we will call the Dialog Method
 # Handle deferred style, unless we are executing the update action
-if dialog_method != update_method and clean_kw.get('deferred_style', 0):
-  clean_kw['deferred_portal_skin'] = clean_kw.get('portal_skin', None)
+if dialog_method != update_method and kw.get('deferred_style', 0):
+  kw['deferred_portal_skin'] = kw.get('portal_skin', None)
   # XXX Hardcoded Deferred style name
-  clean_kw['portal_skin'] = 'Deferred'
+  kw['portal_skin'] = 'Deferred'
 
   page_template = getattr(getattr(context, dialog_method), 'pt', None)
 
@@ -200,20 +230,18 @@ if dialog_method != update_method and clean_kw.get('deferred_style', 0):
     # Limit Reports in Deferred style to known working styles
     if request_form.get('your_portal_skin', None) not in ("ODT", "ODS"):
       # RJS own validation - deferred option works here only with ODS/ODT skins
-      return context.Base_renderMessage(
-        translate('Deferred reports are possible only with preference '\
-                  '"Report Style" set to "ODT" or "ODS"'),
+      return context.Base_renderForm(dialog_id,
+        message=translate('Deferred reports are possible only with preference '\
+                          '"Report Style" set to "ODT" or "ODS"'),
         level=WARNING)
 
   # If the action form has report_view as it's method, it
   if page_template != 'report_view':
     # use simple wrapper
-    clean_kw['deferred_style_dialog_method'] = dialog_method
+    kw['deferred_style_dialog_method'] = dialog_method
     kw['deferred_style_dialog_method'] = dialog_method
     request.set('deferred_style_dialog_method', dialog_method)
     dialog_method = 'Base_activateSimpleView'
-
-url_params_string = make_query(clean_kw)
 
 # Never redirect in JSON style - do as much as possible here.
 # At this point the 'dialog_method' should point to a form (if we are in report)
@@ -223,11 +251,11 @@ if True:
   if dialog_method != update_method:
     # When we are not executing the update action, we have to change the skin
     # manually,
-    if 'portal_skin' in clean_kw:
-      new_skin_name = clean_kw['portal_skin']
-      context.getPortalObject().portal_skins.changeSkin(new_skin_name)
+    if 'portal_skin' in kw:
+      new_skin_name = kw['portal_skin']
+      portal.portal_skins.changeSkin(new_skin_name)
       request.set('portal_skin', new_skin_name)
-      deferred_portal_skin = clean_kw.get('deferred_portal_skin')
+      deferred_portal_skin = kw.get('deferred_portal_skin')
       if deferred_portal_skin:
         # has to be either ODS or ODT because only those contain `form_list`
         request.set('deferred_portal_skin', deferred_portal_skin)
@@ -247,17 +275,21 @@ if True:
   # with the content of REQUEST.URL
   request.set('URL', '%s/%s' % (context.absolute_url(), dialog_method))
 
-  # RJS: If we are in deferred mode - call the form directly and return
-  # dialog method is now `Base_activateSimpleView` - the only script in
-  # deferred portal_skins folder
-  if clean_kw.get('deferred_style', 0):
-    return dialog_form(**kw)  # deferred form should return redirect with a message
+  # Only in case we are not updating but executing - then proceed with direct
+  # execution based on Skin selection
+  if dialog_method != update_method:
+    # RJS: If we are in deferred mode - call the form directly and return
+    # dialog method is now `Base_activateSimpleView` - the only script in
+    # deferred portal_skins folder
+    if kw.get('deferred_style', 0):
+      return dialog_form(**kw)  # deferred form should return redirect with a message
 
-  # RJS: If skin selection is different than Hal* then ERP5Document_getHateoas
-  # does not exist and we call form method directly
-  # If update_method was clicked and the target is the original dialog form then we must not call dialog_form directly because it returns HTML
-  if clean_kw.get("portal_skin", context.getPortalObject().portal_skins.getDefaultSkin()) not in ("Hal", "HalRestricted", "View"):
-    return dialog_form(**kw)
+    # RJS: If skin selection is different than Hal* then ERP5Document_getHateoas
+    # does not exist and we call form method directly
+    # If update_method was clicked and the target is the original dialog for
+    # then we must not call dialog_form directly because it returns HTML
+    if kw.get("portal_skin", portal.portal_skins.getDefaultSkin()) not in ("Hal", "HalRestricted", "View"):
+      return dialog_form(**kw)
 
   # dialog_form can be anything from a pure python function, class method to ERP5 Form or Python Script
   try:
@@ -266,8 +298,7 @@ if True:
     meta_type = ""
 
   if meta_type in ("ERP5 Form", "ERP5 Report"):
-    return context.ERP5Document_getHateoas(REQUEST=request, form=dialog_form, mode="form")
-
+    return context.ERP5Document_getHateoas(REQUEST=request, form=dialog_form, mode="form", form_data=form_data)
   return dialog_form(**kw)
 
 return getattr(context, dialog_method)(**kw)

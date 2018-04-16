@@ -114,6 +114,7 @@ params['select_dict'] = select_dict
 if not params.get('accounting_transaction.section_uid'):
   params.setdefault('group_by', ('uid',))
 
+# Kato: Be explicit! You have no idea what is in the **params!
 if stat:
   return context.countFolder(**params)
 return context.searchFolder(**params)
