@@ -573,7 +573,7 @@ def getFieldDefault(form, field, key, value=None):
   return value
 
 
-def renderField(traversed_document, field, form, value=None, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True, extra_param_json=None):
+def renderField(traversed_document, field, form, value=None, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True):
   """Extract important field's attributes into `result` dictionary."""
   if selection_params is None:
     selection_params = {}
@@ -850,10 +850,6 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     # we abandoned Selections in RJS thus we mix selection query parameters into
     # listbox's default parameters
     default_params.update(selection_params)
-
-    if extra_param_json is not None:
-      default_params.update(ensureDeserialized(byteify(
-        json.loads(urlsafe_b64decode(extra_param_json)))))
 
     # ListBoxes in report view has portal_type defined already in default_params
     # in that case we prefer non_empty version
@@ -1132,12 +1128,12 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       if not field.get_value("enabled"):
         continue
       try:
-        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params, extra_param_json=extra_param_json)
+        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params)
         if field_errors.has_key(field.id):
           response_dict[field.id]["error_text"] = field_errors[field.id].error_text
-      except AttributeError:
+      except AttributeError as error:
         # Do not crash if field configuration is wrong.
-        pass
+        log("Field {} rendering failed because of {!s}".format(field.id, error), level=800)
 
   # Form Edit handler uses form_id to recover the submitted form and to control its
   # properties like editability
@@ -1516,7 +1512,12 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           return traversed_document.Base_redirect(keep_items={
             'portal_status_message': status_message})
 
-        renderForm(traversed_document, view_instance, embedded_dict, extra_param_json=extra_param_json)
+        # Sometimes callables (form dialog's method, listbox's list method...) do not touch
+        # REQUEST but expect all (formerly) URL query parameters to appear in their **kw
+        # thus we send extra_param_json (=rjs way of passing parameters to REQUEST) as
+        # selection_params so they get into callable's **kw.
+        renderForm(traversed_document, view_instance, embedded_dict,
+                   selection_params=extra_param_json, extra_param_json=extra_param_json)
 
         result_dict['_embedded'] = {
           '_view': embedded_dict
@@ -1956,7 +1957,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             # if there is no tales expr (or is empty) we extract the value from search result
             default_field_value = getAttrFromAnything(search_result, select, property_getter, {})
 
-          contents_item[select] = renderField(
+          # If the contents_item has field rendering in it, better is to add an
+          # extra layer of abstraction to not get conflicts
+          contents_item[select]['field_gadget_param'] = renderField(
             traversed_document,
             editable_field_dict[select],
             listbox_form,
@@ -1969,103 +1972,64 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           # a key name to Python Script with variable number of input parameters.
           contents_item[select] = getAttrFromAnything(search_result, select, property_getter, {'brain': search_result})
 
-        # If the contents_item has field rendering in it, better is to add an
-        # extra layer of abstraction to not get conflicts
-        if isinstance(contents_item[select], dict):
-          contents_item[select] = {
-            'field_gadget_param': contents_item[select],
-          }
-
         # By default, we won't be generating views in the URL
         url_parameter_dict = {}
-        if select in url_column_dict:
+        if url_column_dict.get(select, None):
           # Check if we get URL parameters using listbox field `url_columns`
           url_column_method = getattr(search_result, url_column_dict[select], None)
-          # If there is empty url_column_method, do nothing and continue. This
-          # will create no URL in these cases
-          if url_column_method is None:
-            continue
-          url_parameter_dict = url_column_method(
-                                      url_dict=True,
-                                      brain=search_result,
-                                      selection=catalog_kw['selection'],
-                                      selection_name=catalog_kw['selection_name'],
-                                      column_id=select)
-          # Since, now we are using url_columns for both XHTML UI and renderJS UI,
-          # its normal to get string as a result of the `url_column_method`
-          # function call. In that cases, we will do nothing. Take note, the
-          # result of `url_column_method` function call which is usable here should
-          # be dictionary in the format :-
-          # {
-          #   'command': <command_name, ex: 'raw', 'push_history'>,
-          #   'options': {
-          #               'url': <Absolute URL>,
-          #               'jio_key': <Relative URL of object>,
-          #               'view': <id of the view>,
-          #               }
-          # }
-          if isinstance(url_parameter_dict, str):
-            continue
-
+          # Result of `url_column_method` must be a dictionary in the format
+          # {'command': <command_name, ex: 'raw', 'push_history'>,
+          #  'options': {'url': <Absolute URL>, 'jio_key': <Relative URL of object>, 'view': <id of the view>}}
+          url_parameter_dict = url_column_method(url_dict=True,
+                                                 brain=search_result,
+                                                 selection=catalog_kw['selection'],
+                                                 selection_name=catalog_kw['selection_name'],
+                                                 column_id=select)
         elif getattr(search_result, 'getListItemUrlDict', None) is not None:
           # Check if we can get URL result from the brain
           try:
             url_parameter_dict = search_result.getListItemUrlDict(
-                                                    select,
-                                                    result_index,
-                                                    catalog_kw['selection_name']
-                                                    )
+              select, result_index, catalog_kw['selection_name']
+            )
           except (ConflictError, RuntimeError):
             raise
           except:
             log('could not evaluate the url method getListItemUrlDict with %r' % search_result,
                 level=800)
-            continue
 
-        else:
-          # Continue in case there is no url_column_dict or brain to get URL
-          continue
-
-        url_result_dict = {
-          select: url_parameter_dict
-        }
-
-        # If contents item don't have `field_gadget_param` in it, then add it
-        # to default
-        if not isinstance(contents_item[select], dict):
-          contents_item[select] = {
-            'default': contents_item[select],
-          }
-
-        contents_item[select].update({'url_value': url_result_dict[select]})
-
-        if contents_item[select]['url_value']:
-
+        if url_parameter_dict and isinstance(url_parameter_dict, dict):
+          # We need to put URL into rendered field so just ensure it is a dict
+          if not isinstance(contents_item[select], dict):
+            contents_item[select] = {
+              'default': contents_item[select],
+            }
           # We should be generating view if there is extra params for view in
           # view_kw. These parameters are required to create url at hateoas side
           # using the URL template as necessary
-          if 'view_kw' in contents_item[select]['url_value']:
+          if 'view_kw' not in url_parameter_dict:
+            contents_item[select]['url_value'] = url_parameter_dict
+          else:
             # Get extra parameters either from url_result_dict or from brain
-            extra_url_param_dict = contents_item[select]['url_value']['view_kw'].get('extra_param_json', {})
+            extra_url_param_dict = url_parameter_dict['view_kw'].get('extra_param_json', {})
 
             url_template_id = 'traverse_generator'
             if extra_url_param_dict:
               url_template_id = 'traverse_generator_action'
 
-            contents_item[select]['url_value']['options']['view'] =\
-              url_template_dict[url_template_id] % {
-                "root_url": site_root.absolute_url(),
-                "script_id": script.id,
-                "relative_url": contents_item[select]['url_value']['view_kw']['jio_key'].replace("/", "%2F"),
-                "view": contents_item[select]['url_value']['view_kw']['view'],
-                "extra_param_json":  urlsafe_b64encode(
-                  json.dumps(ensureSerializable(extra_url_param_dict)))
+            contents_item[select]['url_value'] = {
+              'command': url_parameter_dict['command'],
+              'options': {
+                'jio_key': url_parameter_dict['view_kw']['jio_key'],
+                'view': url_template_dict[url_template_id] % {
+                  "root_url": site_root.absolute_url(),
+                  "script_id": script.id,
+                  "relative_url": url_parameter_dict['view_kw']['jio_key'].replace("/", "%2F"),
+                  "view": url_parameter_dict['view_kw']['view'],
+                  "extra_param_json": urlsafe_b64encode(
+                    json.dumps(ensureSerializable(extra_url_param_dict)))
+                  }
               }
-
-          # Its better to remove the 'view_kw' from the dictionary as it doesn't
-          # serve any purpose further in the result_dict
-          if 'view_kw' in contents_item[select]['url_value']:
-            del contents_item[select]['url_value']['view_kw']
+            }
 
       # endfor select
       REQUEST.other.pop('cell', None)
@@ -2097,12 +2061,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if source_field is not None and source_field_meta_type == "ListBox":
       # Trigger count method if exist
       # XXX No need to count if no pagination
-      count_method = source_field.get_value('count_method') or None
-      count_method_name = count_method.getMethodName() if count_method is not None else ""
-
-      # Only try to get count method results in case method name exists, in all
-      # other cases, just pass.
-      if count_method_name != "" and count_method_name != list_method:
+      count_method = source_field.get_value('count_method')
+      if count_method != "" and count_method.getMethodName() != list_method:
         count_kw = dict(catalog_kw)
         # Drop not needed parameters
         count_kw.pop('selection', None)
@@ -2110,7 +2070,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         count_kw.pop("sort_on", None)
         count_kw.pop("limit", None)
         try:
-          count_method = getattr(traversed_document, count_method_name)
+          count_method = getattr(traversed_document, count_method.getMethodName())
           count_method_result = count_method(REQUEST=REQUEST, **count_kw)
           result_dict['_embedded']['count'] = ensureSerializable(count_method_result[0][0])
         except AttributeError as error:
@@ -2119,7 +2079,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           # and just pass. This also ensures we have compatibilty with how old
           # UI behave in these cases.
           log('Invalid count method %s' % error, level=800)
-          pass
 
       contents_stat_list = []
       # in case the search was issued by listbox we can provide results of
