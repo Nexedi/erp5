@@ -121,9 +121,15 @@ class TestNode(object):
                                     node_test_suite.reference)
           repository_path = os.path.relpath(repository_path, from_path)
 
+        # XXX: Like in run(), code depending on specific test type must be
+        #      moved to the test type classes. In particular, the use of a
+        #      replacement pattern ('<obfuscated_url>') is ugly: buildout
+        #      has cleaner ways to do that.
         if test_type=="ScalabilityTest":
+          # <obfuscated_url> word is modified by in runner.prepareSlapOSForTestSuite()
           profile_content_list.append("""
 [%(buildout_section_id)s]
+repository = <obfuscated_url>/%(buildout_section_id)s/%(buildout_section_id)s.git
 revision = %(revision)s
 ignore-ssl-certificate = true
 develop = false
