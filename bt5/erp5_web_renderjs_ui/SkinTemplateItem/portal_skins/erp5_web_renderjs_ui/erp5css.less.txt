@@ -997,6 +997,9 @@ div[data-gadget-scope='header'] .ui-header {
       @media @desktop {
         .renderDesktopSubLink();
       }
+      &.ui-icon-warning {
+        background-color: @coloraccent;
+      }
     }
   }
 
@@ -1489,6 +1492,11 @@ div[data-gadget-scope='header'] .ui-header {
 
     }
   }
+  .ui-icon-warning {
+    color: @coloraccent;
+    // Link is disabled in this case
+    opacity: 1;
+  }
 }
 
 /**********************************************
@@ -1896,6 +1904,9 @@ div[data-gadget-scope='notification'] {
       .ui-controlgroup-controls {
         button, a {
           .renderTabletHeaderButton();
+          &.ui-icon-warning {
+            background-color: @coloraccent;
+          }
         }
       }
 
@@ -1950,13 +1961,6 @@ div[data-gadget-scope='maximize'] button {
     font-family: FontAwesome;
     display: inline-block;
     content: "";
-  }
-}
-
-.ui-icon-warning {
-  background-color: @coloraccent !important;
-  &::before {
-    content: "\f071";
   }
 }
 
@@ -2301,6 +2305,9 @@ div[data-gadget-scope='maximize'] button {
 }
 .ui-icon-eye-slash::before {
   content: "\f070";
+}
+.ui-icon-warning::before {
+  content: "\f071";
 }
 .ui-icon-low-vision::before {
   content: "\f2a8";

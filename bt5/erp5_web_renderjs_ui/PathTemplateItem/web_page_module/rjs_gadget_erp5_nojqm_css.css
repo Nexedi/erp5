@@ -823,6 +823,10 @@ div[data-gadget-scope='header'] .ui-header > .ui-btn-left a {
     min-width: 5em;
   }
 }
+div[data-gadget-scope='header'] .ui-header > .ui-btn-right button.ui-icon-warning,
+div[data-gadget-scope='header'] .ui-header > .ui-btn-right a.ui-icon-warning {
+  background-color: #FF6600;
+}
 div[data-gadget-scope='header'] .ui-header h1 {
   text-align: left;
   line-height: 30pt;
@@ -1274,6 +1278,10 @@ div[data-gadget-scope='header'] .ui-header ul {
 .relation-input ul li:active {
   background-color: #1F1F1F;
 }
+.relation-input .ui-icon-warning {
+  color: #FF6600;
+  opacity: 1;
+}
 /**********************************************
 * Gadget: datetime field
 **********************************************/
@@ -1655,6 +1663,10 @@ div[data-gadget-scope='notification'] button.error {
     background-color: #085078;
     width: 8em;
   }
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header .ui-controlgroup-controls button.ui-icon-warning,
+  .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header .ui-controlgroup-controls a.ui-icon-warning {
+    background-color: #FF6600;
+  }
   .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header .ui-subheader {
     flex: 1 100%;
     text-align: center;
@@ -1727,12 +1739,6 @@ div[data-gadget-scope='maximize'] button:active {
   font-family: FontAwesome;
   display: inline-block;
   content: "";
-}
-.ui-icon-warning {
-  background-color: #FF6600 !important;
-}
-.ui-icon-warning::before {
-  content: "\f071";
 }
 .ui-icon-spinner {
   opacity: 1;
@@ -2072,6 +2078,9 @@ div[data-gadget-scope='maximize'] button:active {
 }
 .ui-icon-eye-slash::before {
   content: "\f070";
+}
+.ui-icon-warning::before {
+  content: "\f071";
 }
 .ui-icon-low-vision::before {
   content: "\f2a8";
