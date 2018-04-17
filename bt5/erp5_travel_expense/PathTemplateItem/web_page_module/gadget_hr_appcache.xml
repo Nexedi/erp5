@@ -107,20 +107,18 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-CACHE MANIFEST\n
+            <value> <string>CACHE MANIFEST\n
 # generated on Fri, 24 August 2017 11:46:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 # version 1.0\n
 CACHE:\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
+font-awesome/font-awesome.css\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.woff2\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg\n
 URI.js\n
 dygraph.js\n
 gadget_erp5.css\n
@@ -219,10 +217,35 @@ gadget_officejs_page_localisation.html\n
 gadget_officejs_page_localisation.js\n
 leaflet.css\n
 leaflet.js\n
+gadget_officejs_setting.html\n
+gadget_officejs_setting.js\n
+gadget_officejs_page_preference.html\n
+gadget_officejs_page_preference.js\n
+gadget_officejs_calendar.html\n
+gadget_officejs_calendar.js\n
+gadget_erp5_form.html\n
+gadget_erp5_form.js\n
+gadget_erp5_label_field.html\n
+gadget_erp5_label_field.js\n
+gadget_erp5_field_list.html\n
+gadget_erp5_field_list.js\n
+gadget_erp5_field_string.html\n
+gadget_erp5_field_string.js\n
+gadget_erp5_global.js\n
+gadget_html5_select.html\n
+gadget_html5_select.js\n
+gadget_html5_element.html\n
+gadget_html5_element.js\n
+gadget_officejs_calendar.html\n
+fullcalendar.min.js\n
+gadget_officejs_calendar.js\n
+moment.min.js\n
+fullcalendar.min.js\n
+fullcalendar.min.css\n
+locale-all.js\n
+gadget_officejs_calendar.appcache\n
 NETWORK:\n
-*
-
-]]></string> </value>
+*</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -357,7 +380,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>966.54128.62182.28825</string> </value>
+                <value> <string>966.59986.993.48708</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -375,7 +398,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1523605559.57</float>
+                        <float>1523958492.04</float>
                         <string>GMT+2</string>
                       </tuple>
                     </state>
