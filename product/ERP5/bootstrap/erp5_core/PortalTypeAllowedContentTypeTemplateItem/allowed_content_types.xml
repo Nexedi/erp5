@@ -116,6 +116,7 @@
  </portal_type>
  <portal_type id="Template Tool">
   <item>Business Template</item>
+  <item>Business Template V2</item>
  </portal_type>
  <portal_type id="Trash Tool">
   <item>Trash Bin</item>
