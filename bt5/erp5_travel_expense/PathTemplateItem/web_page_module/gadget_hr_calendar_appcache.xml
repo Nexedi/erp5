@@ -105,16 +105,16 @@
 # images/ajax-loader.gif\n
 # version 1.0\n
 CACHE:\n
-gadget_officejs_calendar.html/gadget_officejs_calendar.html\n
-gadget_officejs_calendar.html/fullcalendar.min.js\n
-gadget_officejs_calendar.html/gadget_officejs_calendar.js\n
-gadget_officejs_calendar.html/moment.min.js\n
-gadget_officejs_calendar.html/rsvp.js\n
-gadget_officejs_calendar.html/renderjs.js\n
-gadget_officejs_calendar.html/jquery.js\n
-gadget_officejs_calendar.html/fullcalendar.min.js\n
-gadget_officejs_calendar.html/fullcalendar.min.css\n
-gadget_officejs_calendar.html/locale-all.js\n
+gadget_officejs_calendar.html\n
+fullcalendar.min.js\n
+gadget_officejs_calendar.js\n
+moment.min.js\n
+rsvp.js\n
+renderjs.js\n
+jquery.js\n
+fullcalendar.min.js\n
+fullcalendar.min.css\n
+locale-all.js\n
 \n
 NETWORK:\n
 *</string> </value>
@@ -252,7 +252,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.44329.14852.21316</string> </value>
+                <value> <string>966.48777.48028.12578</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -270,8 +270,8 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486481468.06</float>
-                        <string>UTC</string>
+                        <float>1523957042.78</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
