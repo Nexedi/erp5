@@ -92,6 +92,11 @@
     "Drive App": {
       "url": "officejs_drive_app/",
       "cache": "gadget_officejs_drive_app.appcache"
+    },
+    "Travel Expense": {
+      "url": "officejs_hr/",
+      "cache": "gadget_officejs_hr.appcache",
+      "no_installer": true
     }
   };
 
