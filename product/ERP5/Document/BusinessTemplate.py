@@ -2232,12 +2232,12 @@ class RegisteredVersionPrioritySelectionTemplateItem(BaseTemplateItem):
         if new_object != old_object:
           modified_object_list[path] = 'Modified', class_name_prefix
       else:
-        modified_object_list.update[path] = 'New', class_name_prefix
+        modified_object_list[path] = 'New', class_name_prefix
 
     # Get removed objects
     for path in installed_item._objects:
       if path not in self._objects:
-        modified_object_list.update[path] = 'Removed', class_name_prefix
+        modified_object_list[path] = 'Removed', class_name_prefix
 
     return modified_object_list
 
