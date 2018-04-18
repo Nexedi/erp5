@@ -88,6 +88,8 @@ class ERP5TestNode(TestCase):
     config["httpd_software_access_port"] = "9080"
     config["frontend_url"] = "http://frontend/"
     config["software_list"] = ["foo", "bar"]
+    config["slapos_binary"] = "/opt/slapgrid/HASH/bin/slapos"
+    config["srv_directory"] = "srv_directory"
 
     testnode = TestNode(config)
     # By default, keep suite logs to stdout for easier debugging
@@ -1028,6 +1030,12 @@ shared = true
       return "ScalabilityTest"
     def patch_runTestSuite(self, *args, **kw):
       return {'status_code':0}
+    def patch_generateProfilePasswordAccess(self, *args, **kw):
+      return "user", "pass"
+    def patch_prepareFrontendMasterInstance(self, *args, **kw):
+      return "dummy_instance_guid"
+    def patch_getDictionaryFromFile(self, *args, **kw):
+      return []
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -1052,6 +1060,12 @@ shared = true
     original_request = SlapOSControler.request
     original_updateInstanceXML = SlapOSControler.updateInstanceXML
     original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
+    original_generateProfilePasswordAccess = RunnerClass.generateProfilePasswordAccess
+    original_prepareFrontendMasterInstance = RunnerClass.prepareFrontendMasterInstance
+    original_getDictionaryFromFile = RunnerClass.getDictionaryFromFile
+    original_updateDictionaryFile = RunnerClass.updateDictionaryFile
+    original__createInstance = RunnerClass._createInstance
+    original__waitInstanceCreation = RunnerClass._waitInstanceCreation
 
     time.sleep = doNothing
     TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
@@ -1070,6 +1084,12 @@ shared = true
     SlapOSControler.request = doNothing
     SlapOSControler.updateInstanceXML = doNothing
     SlapOSMasterCommunicator.__init__ = doNothing
+    RunnerClass.generateProfilePasswordAccess = patch_generateProfilePasswordAccess
+    RunnerClass.prepareFrontendMasterInstance = patch_prepareFrontendMasterInstance
+    RunnerClass.updateDictionaryFile = doNothing
+    RunnerClass.getDictionaryFromFile = patch_getDictionaryFromFile
+    RunnerClass._createInstance = doNothing
+    RunnerClass._waitInstanceCreation = doNothing
     # Run
     test_node = self.getTestNode()
     test_node.run()
@@ -1091,3 +1111,9 @@ shared = true
     SlapOSControler.updateInstanceXML = original_updateInstanceXML
     SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     time.sleep =original_sleep
+    RunnerClass.generateProfilePasswordAccess = original_generateProfilePasswordAccess
+    RunnerClass.prepareFrontendMasterInstance = original_prepareFrontendMasterInstance
+    RunnerClass.getDictionaryFromFile = original_getDictionaryFromFile
+    RunnerClass.updateDictionaryFile = original_updateDictionaryFile
+    RunnerClass._createInstance = original__createInstance
+    RunnerClass._waitInstanceCreation = original__waitInstanceCreation
