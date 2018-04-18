@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2017 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2018 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Ayush Tiwari <ayush.tiwari@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -28,7 +28,7 @@
 ##############################################################################
 
 import deepdiff
-from zLOG import LOG, WARNING
+from zLOG import LOG
 from deepdiff import DeepDiff
 from unidiff import PatchSet
 from AccessControl import ClassSecurityInfo
@@ -167,11 +167,15 @@ class PortalPatch:
     'path', <property_name>
     }
     """
-    old_value_dict = self.removeProperties(self.old_value, export=True)
-    new_value_dict = self.removeProperties(self.new_value, export=True)
+    if isinstance(self.old_value, dict):
+      old_value_dict = self.old_value
+    else:
+      old_value_dict = self.removeProperties(self.old_value, export=True)
 
-    #old_value_dict = self.old_value.__dict__
-    #new_value_dict = self.new_value.__dict__
+    if isinstance(self.new_value, dict):
+      new_value_dict = self.new_value
+    else:
+      new_value_dict = self.removeProperties(self.new_value, export=True)
 
     # Get the DeepDiff in tree format.
     tree_diff = DeepDiff(old_value_dict,
@@ -249,7 +253,7 @@ class PortalPatch:
   def removeProperties(self,
                        obj,
                        export,
-                       properties=[],
+                       properties=None,
                        keep_workflow_history=False,
                        keep_workflow_history_last_history_only=False):
     """
@@ -264,11 +268,14 @@ class PortalPatch:
                 '__ac_local_roles__', '__ac_local_roles_group_id_dict__',
                 'workflow_history', 'subject_set_uid_dict', 'security_uid_dict',
                 'filter_dict', '_max_uid', 'isIndexable', 'id', 'modification_date'}
+
+    # Update the list of properties which were explicilty given in parameters
     if properties:
       for prop in properties:
         if prop.endswith('_list'):
           prop = prop[:-5]
         attr_set.add(prop)
+
     if export:
       if keep_workflow_history_last_history_only:
         self._removeAllButLastWorkflowHistory(obj)
@@ -302,7 +309,6 @@ class PortalPatch:
           continue
 
     return obj_dict
-
 
   def asStrippedHTML(self):
     """
