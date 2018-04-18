@@ -267,14 +267,12 @@ shared = true
 extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 
 [rep1]
-repository = <obfuscated_url>/rep1/rep1.git
 revision = %(revision1)s
 ignore-ssl-certificate = true
 develop = false
 shared = true
 
 [rep2]
-repository = <obfuscated_url>/rep2/rep2.git
 revision = %(revision2)s
 ignore-ssl-certificate = true
 develop = false
