@@ -27,6 +27,7 @@
 #
 ##############################################################################
 from DateTime import DateTime
+from zLOG import LOG, WARNING
 
 def _parseCategory(category):
   if category is None or category.find('/') < 0:
@@ -107,6 +108,7 @@ def getChangeHistoryList(document, size=50, attribute_name=None):
   previous_state = None
   for d_ in result:
     current_state = connection.oldstate(document, d_['tid'])
+    LOG('History', 0, str(current_state))
     changes = {}
     current_datetime = toDateTime(d_['time'])
     record = {'datetime':current_datetime,
@@ -136,5 +138,19 @@ def getChangeHistoryList(document, size=50, attribute_name=None):
   history.extend(_getRecordedPropertyHistory(document, size))
   history.extend(_getAttributeHistory(document, size, attribute_name))
   history.sort(key=lambda x:x['datetime'])
+  return history
+
+def getPreviosTwoStates(document, size=2, attrbute_name=None):
+  """
+  Returs the last 2 states in form of a dictionary
+  """
+  connection = document._p_jar
+  result = document._p_jar.db().history(document._p_oid, size=size)
+  if result is None:
+    return []
+  result = list(reversed(result))
+  history = []
+  for d_ in result:
+    history.append(connection.oldstate(document, d_['tid']))
 
   return history

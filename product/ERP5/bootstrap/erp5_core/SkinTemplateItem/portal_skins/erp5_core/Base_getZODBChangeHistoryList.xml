@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_function</string> </key>
-            <value> <string>getChangeHistoryList</string> </value>
+            <value> <string>getPreviosTwoStates</string> </value>
         </item>
         <item>
             <key> <string>_module</string> </key>

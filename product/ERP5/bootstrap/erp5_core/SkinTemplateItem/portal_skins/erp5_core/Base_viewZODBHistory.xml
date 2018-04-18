@@ -90,6 +90,8 @@
                     <value>
                       <list>
                         <string>listbox_changes</string>
+                        <string>history_listbox</string>
+                        <string>listbox_diff</string>
                       </list>
                     </value>
                 </item>
