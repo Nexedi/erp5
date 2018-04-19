@@ -41,10 +41,10 @@ import time
 from email.Utils import formatdate
 import re
 from zExceptions import Unauthorized
-from Products.ERP5Type.Utils import UpperCase
+from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING, ERROR
 from Products.ERP5Type.Message import Message
+from Products.ERP5Type.Utils import UpperCase
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
-from Products.ERP5Type.Log import log
 from collections import OrderedDict
 from urlparse import urlparse
 
@@ -1190,33 +1190,22 @@ def renderFormDefinition(form, response_dict):
   response_dict["action"] = form.action
   response_dict["update_action"] = form.update_action
 
-mime_type = 'application/hal+json'
-portal = context.getPortalObject()
-sql_catalog = portal.portal_catalog.getSQLCatalog()
+def statusLevelToString(level):
+  """Transform any level format to lowercase string representation"""
+  if isinstance(level, (str, unicode)):
+    if level.lower() == "error":
+      return "error"
+    elif level.lower().startswith("warn"):
+      return "error"  # we might want to add another level for warning
+    else:
+      return "success"
+  if level == ERROR:
+    return "error"
+  elif level == WARNING:
+    return "error"
+  else:
+    return "success"
 
-# Calculate the site root to prevent unexpected browsing
-is_web_mode = (context.REQUEST.get('current_web_section', None) is not None) or (hasattr(context, 'isWebMode') and context.isWebMode())
-# is_web_mode =  traversed_document.isWebMode()
-if is_web_mode:
-  site_root = context.getWebSectionValue()
-  view_action_type = site_root.getLayoutProperty("configuration_view_action_category", default='object_view')
-else:
-  site_root = portal
-  view_action_type = "object_view"
-
-context.Base_prepareCorsResponse(RESPONSE=response)
-
-# Check if traversed_document is the site_root
-if relative_url:
-  temp_traversed_document = site_root.restrictedTraverse(relative_url, None)
-  if (temp_traversed_document is None):
-    response.setStatus(404)
-    return ""
-else:
-  temp_traversed_document = context
-
-temp_is_site_root = (temp_traversed_document.getPath() == site_root.getPath())
-temp_is_portal = (temp_traversed_document.getPath() == portal.getPath())
 
 def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None, REQUEST=None,
                      response=None, view=None, mode=None, query=None,
@@ -1260,9 +1249,18 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         "name": portal.getTitle(),
       }
     }
+    # possible other attributes
+    # _notification {dict} form of {'message': "", 'status': ""}
+    # _embedded {dict} form of {"_view": <erp5_document_properties>}
   }
-  
-  
+
+  # Inject notification into response no matter the kind of request
+  if portal_status_message:
+    result_dict['_notification'] = {
+      'message': str(portal_status_message),
+      'status': statusLevelToString(portal_status_level)
+    }
+
   if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
     login_relative_url = site_root.getLayoutProperty("configuration_login", default="")
     if (login_relative_url):
@@ -2100,6 +2098,35 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     raise NotImplementedError("Unsupported mode %s" % mode)
   
   return result_dict
+
+
+mime_type = 'application/hal+json'
+portal = context.getPortalObject()
+sql_catalog = portal.portal_catalog.getSQLCatalog()
+
+# Calculate the site root to prevent unexpected browsing
+is_web_mode = (context.REQUEST.get('current_web_section', None) is not None) or (hasattr(context, 'isWebMode') and context.isWebMode())
+# is_web_mode =  traversed_document.isWebMode()
+if is_web_mode:
+  site_root = context.getWebSectionValue()
+  view_action_type = site_root.getLayoutProperty("configuration_view_action_category", default='object_view')
+else:
+  site_root = portal
+  view_action_type = "object_view"
+
+context.Base_prepareCorsResponse(RESPONSE=response)
+
+# Check if traversed_document is the site_root
+if relative_url:
+  temp_traversed_document = site_root.restrictedTraverse(relative_url, None)
+  if (temp_traversed_document is None):
+    response.setStatus(404)
+    return ""
+else:
+  temp_traversed_document = context
+
+temp_is_site_root = (temp_traversed_document.getPath() == site_root.getPath())
+temp_is_portal = (temp_traversed_document.getPath() == portal.getPath())
 
 response.setHeader('Content-Type', mime_type)
 hateoas = calculateHateoas(is_portal=temp_is_portal, is_site_root=temp_is_site_root,

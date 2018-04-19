@@ -1615,6 +1615,28 @@ return portal.portal_simulation.getInventoryList(section_uid=context.getUid())
     self.assertEqual(result_dict['_embedded'].get('count', None), None)
 
 
+class TestERP5Document_getHateoas_mode_form(ERP5HALJSONStyleSkinsMixin):
+
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoasForm_message(self, document):
+    fake_request = do_fake_request("POST")
+
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request, mode="form", relative_url=document.getRelativeUrl(),
+      form=getattr(document, 'Foo_view'), portal_status_message="Couscous", portal_status_level='error')
+
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict["_notification"]["status"], "error")
+    self.assertEqual(result_dict["_notification"]["message"], "Couscous")
+
+
 class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
 
   @simulate('Base_getRequestHeader', '*args, **kwargs',
