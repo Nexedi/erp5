@@ -153,7 +153,7 @@
     .onStateChange(function (modification_dict) {
       var form_gadget = this,
         selector = form_gadget.element.querySelector("h3"),
-        view_list,
+        view_list = ensureArray(this.state.erp5_document._links.action_workflow),
         icon,
         title,
         i;
