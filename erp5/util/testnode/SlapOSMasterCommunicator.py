@@ -81,12 +81,12 @@ class SlapOSMasterCommunicator(object):
     self.url = url  
 
   @retryOnNetworkFailure
-  def _supply(self):
+  def _supply(self, state="available"):
     if self.computer_guid is None:
       logger.info('Nothing to supply for %s.', self.name)
       return None
     logger.info('Supply %s@%s', self.url, self.computer_guid)
-    return self.slap_supply.supply(self.url, self.computer_guid)
+    return self.slap_supply.supply(self.url, self.computer_guid, state)
 
   @retryOnNetworkFailure
   def _request(self, state, instance_title=None, request_kw=None, shared=False, software_type="RootSoftwareInstance"):
@@ -401,12 +401,12 @@ class SlapOSTester(SlapOSMasterCommunicator):
     info += "Instance Requested (Parameters): %s\n" % self.request_kw
     return info
 
-  def supply(self, software_path=None, computer_guid=None):
+  def supply(self, software_path=None, computer_guid=None, state="available"):
     if software_path is not None:
       self.url = software_path
     if computer_guid is not None:
       self.computer_guid = computer_guid
-    self._supply()
+    self._supply(state)
 
   def requestInstanceStart(self, instance_title=None, request_kw=None, shared=False, software_type="RootSoftwareInstance"):
     self.instance = self._request(INSTANCE_STATE_STARTED, instance_title, request_kw, shared, software_type)
@@ -494,6 +494,7 @@ class SlapOSTester(SlapOSMasterCommunicator):
           self._request(INSTANCE_STATE_DESTROYED, instance["title"])
         else:
           root_instance = instance
+      logger.info("Going to destroy root partition: " + str(instance_title))
       self._request(INSTANCE_STATE_DESTROYED, root_instance["title"])
     else:
       logger.info("Instance not found")
