@@ -46,9 +46,10 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W: 65, 75: Redefining built-in \'zip\' (redefined-builtin)</string>
-                <string>W: 70,  2: Unreachable code (unreachable)</string>
+                <string>W: 69, 75: Redefining built-in \'zip\' (redefined-builtin)</string>
                 <string>W:  2,  0: Unused import ssl (unused-import)</string>
+                <string>W:  8,  0: Unused urlencode imported from urllib (unused-import)</string>
+                <string>W:  9,  0: Unused urlopen imported from urllib2 (unused-import)</string>
               </tuple>
             </value>
         </item>
