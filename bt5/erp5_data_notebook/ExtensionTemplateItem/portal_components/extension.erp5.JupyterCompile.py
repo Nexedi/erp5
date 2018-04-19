@@ -28,6 +28,19 @@ from ipykernel.jsonutil import json_clean, encode_images
 import threading
 display_data_wrapper_lock = threading.Lock()
 
+# Well known unserializable types
+from Record import Record
+well_known_unserializable_type_tuple = (ModuleType, Record)
+# ZBigArray may not be availableK
+try:
+  from wendelin.bigarray.array_zodb import ZBigArray
+  # FIXME ZBigArrays are regular ZODB objects and must be serializable
+  # FIXME the bug is probably in CanSerialize()
+  # FIXME -> see https://lab.nexedi.com/nexedi/erp5/commit/5fb16acd#note_33582 for details
+  well_known_unserializable_type_tuple = tuple(list(well_known_unserializable_type_tuple) + [ZBigArray])
+except ImportError:
+  pass
+
 def Base_executeJupyter(self, python_expression=None, reference=None, \
                         title=None, request_reference=False, **kw):
   # Check permissions for current user and display message to non-authorized user 
@@ -66,14 +79,22 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
                                       title=title,
                                       reference=reference,
                                       batch_mode=True)
-  
-  # Add new Data Notebook Line to the Data Notebook
-  data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
+
+  # By default, store_history is True
+  store_history = kw.get('store_history', True)
+  # Klaus
+  store_history = False
+  data_notebook_line = None
+  if store_history:
+    # Add new Data Notebook Line to the Data Notebook
+    data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
                                        notebook_code=python_expression,
                                        batch_mode=True)
   
   # Gets the context associated to the data notebook being used
-  old_notebook_context = data_notebook.getNotebookContext()
+  old_notebook_context = None
+  if data_notebook.hasNotebookContext():
+    old_notebook_context = data_notebook.getNotebookContext().copy()
   if not old_notebook_context:
     old_notebook_context = self.Base_createNotebookContext()
   
@@ -82,6 +103,9 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
   final_result = displayDataWrapper(lambda:Base_runJupyterCode(self, python_expression, old_notebook_context))
     
   new_notebook_context = final_result['notebook_context']
+  
+  # Klaus
+  new_notebook_context["variables"] = old_notebook_context["variables"]
   
   result = {
     u'code_result': final_result['result_string'],
@@ -110,6 +134,7 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
     transaction.abort()
     exception_dict = getErrorMessageForException(self, e, new_notebook_context)
     result.update(exception_dict)
+    result['notebook_context'] = None
     return json.dumps(result)
   
   # Catch exception while seriaizing the result to be passed to jupyter frontend
@@ -128,10 +153,11 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
       u'status': u'error',
       u'mime_type': result['mime_type']}
     serialized_result = json.dumps(result)
-  
-  data_notebook_line.edit(
-    notebook_code_result = result['code_result'], 
-    mime_type = result['mime_type'])
+
+  if data_notebook_line is not None:
+    data_notebook_line.edit(
+      notebook_code_result = result['code_result'],
+      mime_type = result['mime_type'])
   
   return serialized_result  
 
@@ -147,7 +173,7 @@ def mergeTracebackListIntoResultDict(result_dict, error_result_dict_list):
 
 
 def matplotlib_pre_run():
-  matplotlib.interactive(True)
+  matplotlib.interactive(False)
   rc = {'figure.figsize': (6.0,4.0),
         'figure.facecolor': (1,1,1,0),
         'figure.edgecolor': (1,1,1,0),
@@ -176,7 +202,10 @@ def matplotlib_post_run(data_list):
 class Displayhook(object):
   def hook(self, value):
     if value is not None:
-      self.result = repr(value)
+      if getattr(value, '_repr_html_', None) is not None:
+        self.result = {'data':{'text/html':value._repr_html_()}, 'metadata':{}}
+      else:
+        self.result = repr(value)
   def pre_run(self):
     self.old_hook = sys.displayhook
     sys.displayhook = self.hook
@@ -277,6 +306,20 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     print_fixer = PrintFixer()
     environment_collector = EnvironmentParser()
     ast_node = import_fixer.visit(ast_node)
+    
+    # Whenever we have new imports we need to warn the user about the 
+    # environment
+    if (import_fixer.warning_module_names != []):
+      warning = ("print '"
+                 "WARNING: You imported from the modules %s without "
+                 "using the environment object, which is not recomended. "
+                 "Your import was automatically converted to use such method. "
+                 "The setup functions were named as *module*_setup. "
+                 "'") % (', '.join(import_fixer.warning_module_names))               
+      tree = ast.parse(warning)
+      tree.body[0].lineno = ast_node.body[-1].lineno+5
+      ast_node.body.append(tree.body[0])    
+
     ast_node = print_fixer.visit(ast_node)
     ast.fix_missing_locations(ast_node)
     
@@ -335,6 +378,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         '_print': CustomPrint()}
       user_context.update(inject_variable_dict)
       user_context.update(notebook_context['variables'])
+      user_context['parameter_dict'] = notebook_context['parameter_dict']
       
       # Getting the environment setup defined in the current code cell
       current_setup_dict = environment_collector.getEnvironmentSetupDict()
@@ -381,6 +425,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           del notebook_context['setup'][key]
       
       # Running all the setup functions that we got
+      failed_setup_key_list = []
       for key, value in notebook_context['setup'].iteritems():
         try:
           code = compile(value['code'], '<string>', 'exec')
@@ -388,12 +433,15 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         # An error happened, so we show the user the stacktrace along with a
         # note that the exception happened in a setup function's code.
         except Exception as e:
+          failed_setup_key_list.append(key)
           if value['func_name'] in user_context:
             del user_context[value['func_name']]
           error_return_dict = getErrorMessageForException(self, e, notebook_context)
           additional_information = "An error happened when trying to run the one of your setup functions:"
           error_return_dict['traceback'].insert(0, additional_information)
           setup_error_return_dict_list.append(error_return_dict)
+      for failed_setup_key in failed_setup_key_list:
+        del notebook_context['setup'][failed_setup_key]
 
       # Iterating over envinronment.define calls captured by the environment collector
       # that are functions and saving them as setup functions.
@@ -420,8 +468,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         user_context['_volatile_variable_list'] += variable
         
       if environment_collector.showEnvironmentSetup():
-        inject_variable_dict.write("%s\n" % str(notebook_context['setup']))
-
+        inject_variable_dict['_print'].write("%s\n" % str(notebook_context['setup']))
+    
       # Execute the nodes with 'exec' mode
       for node in to_run_exec:
         mod = ast.Module([node])
@@ -429,10 +477,12 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         try:
           exec(code, user_context, user_context)
         except Exception as e:
+          error_message = getErrorMessageForException(self, e, notebook_context)
           # Abort the current transaction. As a consequence, the notebook lines
           # are not added if an exception occurs.
           transaction.abort()
-          return mergeTracebackListIntoResultDict(getErrorMessageForException(self, e, notebook_context),
+          log(error_message)
+          return mergeTracebackListIntoResultDict(error_message,
                                                   setup_error_return_dict_list)
 
       # Execute the interactive nodes with 'single' mode
@@ -456,32 +506,36 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     volatile_variable_list = current_setup_dict.keys() + inject_variable_dict.keys() + user_context.get('_volatile_variable_list', [])
     volatile_variable_list.append('__builtins__')
 
-    for key, val in user_context.items():
-      if not key in globals_dict.keys() and not isinstance(val, ModuleType) and not key in volatile_variable_list:
-        if canSerialize(val):
-          notebook_context['variables'][key] = val
-        else:
-          del user_context[key]
-          message = (
-            "Cannot serialize the variable named %s whose value is %s, "
-            "thus it will not be stored in the context. "
-            "You should move it's definition to a function and " 
-            "use the environment object to load it.\n"
-          ) % (key, val)
-          inject_variable_dict['_print'].write(message)
+    # Klaus
+    #for key, val in user_context.items():
+    #  if not key in globals_dict.keys() and not isinstance(val, well_known_unserializable_type_tuple) and not key in volatile_variable_list:
+    #    if canSerialize(val):
+    #      notebook_context['variables'][key] = val
+    #    else:
+    #      del user_context[key]
+    #      message = (
+    #        "Cannot serialize the variable named %s whose value is %s, "
+    #        "thus it will not be stored in the context. "
+    #        "You should move it's definition to a function and " 
+    #        "use the environment object to load it.\n"
+    #      ) % (key, val)
+    #      inject_variable_dict['_print'].write(message)
     
     # Deleting from the variable storage the keys that are not in the user 
     # context anymore (i.e., variables that are deleted by the user).
-    for key in notebook_context['variables'].keys():
-      if not key in user_context:
-        del notebook_context['variables'][key]
+    #for key in notebook_context['variables'].keys():
+    #  if not key in user_context:
+    #    del notebook_context['variables'][key]
     
     if inject_variable_dict.get('_print') is not None:
       output = inject_variable_dict['_print'].getCapturedOutputString()
 
   displayhook_result = {"data":{}, "metadata":{}}
   if displayhook.result is not None:
-    displayhook_result["data"]["text/plain"] = displayhook.result
+    if isinstance(displayhook.result, str):
+      displayhook_result["data"]["text/plain"] = displayhook.result
+    elif isinstance(displayhook.result, dict):
+      displayhook_result = displayhook.result
   result = {
     'result_string': output,
     'print_result': {"data":{"text/plain":output}, "metadata":{}},
@@ -506,7 +560,7 @@ class EnvironmentDefinitionError(TypeError):
 def canSerialize(obj):
 
   container_type_tuple = (list, tuple, dict, set, frozenset)
-  
+
   # if object is a container, we need to check its elements for presence of
   # objects that cannot be put inside the zodb
   if isinstance(obj, container_type_tuple):
@@ -524,7 +578,11 @@ def canSerialize(obj):
     # Need to unwrap the variable, otherwise we get a TypeError, because
     # objects cannot be pickled while inside an acquisition wrapper.
     unwrapped_obj = Acquisition.aq_base(obj)
-    writer = ObjectWriter(unwrapped_obj)
+    try:
+      writer = ObjectWriter(unwrapped_obj)
+    except:
+      # Ignore any exceptions, otherwise Jupyter becomes permanent unusble state.
+      return False
     for obj in writer:
       try:
         writer.serialize(obj)
@@ -727,6 +785,7 @@ class ImportFixer(ast.NodeTransformer):
   
   def __init__(self):
     self.import_func_dict = {}
+    self.warning_module_names = []
   
   def visit_FunctionDef(self, node):
     """
@@ -835,24 +894,26 @@ class ImportFixer(ast.NodeTransformer):
       if not self.import_func_dict.get(name):
         final_module_names.append(name)
 
-    log("module_names[0]: " + module_names[0])
-    log("result_name: " + result_name)
-
     if final_module_names:
       # try to import module before it is added to environment
       # this way if user tries to import non existent module Exception
       # is immediately raised and doesn't block next Jupyter cell execution
       exec(test_import_string)
 
-      empty_function = self.newEmptyFunction("%s_setup" %result_name)
+      dotless_result_name = ""
+      for character in result_name:
+        if character == '.':
+          dotless_result_name = dotless_result_name + '_dot_'
+        else:
+          dotless_result_name = dotless_result_name + character
+      
+      empty_function = self.newEmptyFunction("%s_setup" %dotless_result_name)
       return_dict = self.newReturnDict(final_module_names)
 
-      log(return_dict)
-
       empty_function.body = [node, return_dict]
-      environment_set = self.newEnvironmentSetCall("%s_setup" %result_name)
-      warning = self.newImportWarningCall(root_module_name, result_name)
-      return [empty_function, environment_set, warning]
+      environment_set = self.newEnvironmentSetCall("%s_setup" %dotless_result_name)
+      self.newImportWarningCall(root_module_name, dotless_result_name)
+      return [empty_function, environment_set]
     else:
       return node
 
@@ -872,7 +933,11 @@ class ImportFixer(ast.NodeTransformer):
     """
     return_dict = "return {"
     for name in module_names:
-      return_dict = return_dict + "'%s': %s, " % (name, name)
+      if name.find('.') != -1:
+        base_name = name[:name.find('.')]
+      else:
+        base_name = name
+      return_dict = return_dict + "'%s': %s, " % (base_name, base_name)
     return_dict = return_dict + '}'
     return ast.parse(return_dict).body[0]
 
@@ -887,18 +952,10 @@ class ImportFixer(ast.NodeTransformer):
 
   def newImportWarningCall(self, module_name, function_name):
     """
-      Return an AST.Expr representanting a print statement with a warning to an
-      user about the import of a module named `module_name` and instructs him
-      on how to fix it.
+      Adds a new module to the warning to the user about the importing of new
+      modules.
     """
-    warning = ("print '"
-               "WARNING: Your imported from the module %s without "
-               "using the environment object, which is not recomended. "
-               "Your import was automatically converted to use such method."
-               "The setup function was named as: %s_setup.\\n"
-               "'") % (module_name, function_name)
-    tree = ast.parse(warning)
-    return tree.body[0]
+    self.warning_module_names.append(module_name)
 
   
 def renderAsHtml(self, renderable_object):
@@ -947,11 +1004,12 @@ def getErrorMessageForException(self, exception, notebook_context):
     'traceback': traceback_text
   }
 
-def createNotebookContext(self):
+def createNotebookContext(self, parameter_dict={}):
   """
   Function to create an empty notebook context.
   """
-  return {'variables': {}, 'setup': {}}
+  nbc = {'variables': {}, 'setup': {}, 'parameter_dict': parameter_dict}
+  return nbc
 
 class ObjectProcessor(object):
   '''
@@ -1148,3 +1206,12 @@ def erp5PivotTableUI(self, df):
   iframe_host = self.REQUEST['HTTP_X_FORWARDED_HOST'].split(',')[0]
   url = "https://%s/erp5/Base_displayPivotTableFrame?key=%s" % (iframe_host, key)
   return IFrame(src=url, width='100%', height='500')
+  
+def Base_checkExistingReference(self, reference):
+  existing_notebook = self.portal_catalog.getResultValue(
+                         owner=self.portal_membership.getAuthenticatedMember().getUserName(),
+                         portal_type='Data Notebook',
+                         reference=reference)
+  if not existing_notebook is None:
+    return True
+  return False
