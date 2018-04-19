@@ -1,20 +1,16 @@
-/*global window, rJS, RSVP, calculatePageTitle, jIO */
+/*global window, rJS, RSVP, calculatePageTitle */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle, jIO) {
+(function (window, rJS, RSVP, calculatePageTitle) {
   "use strict";
 
   rJS(window)
 
-    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
+    .declareAcquiredMethod("submitContent", "submitContent")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
-    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("notifyChange", "notifyChange")
-    .declareAcquiredMethod("displayFormulatorValidationError",
-                           "displayFormulatorValidationError")
     .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
     .declareAcquiredMethod('getUrlParameter', 'getUrlParameter')
     .allowPublicAcquisition("notifyChange", function () {
@@ -29,12 +25,14 @@
           return declared_gadget.checkValidity();
         });
     }, {mutex: 'changestate'})
+
     .declareMethod('getContent', function () {
       return this.getDeclaredGadget("erp5_form")
         .push(function (declared_gadget) {
           return declared_gadget.getContent();
         });
     }, {mutex: 'changestate'})
+
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
@@ -64,44 +62,44 @@
     })
 
     .onStateChange(function () {
-      var form_gadget = this;
+      var gadget = this;
 
       // render the erp5 form
-      return form_gadget.getDeclaredGadget("erp5_form")
-        .push(function (erp5_form) {
-          var form_options = form_gadget.state.erp5_form;
+      return gadget.getDeclaredGadget("erp5_form")
+        .push(function (sub_gadget) {
+          var form_options = gadget.state.erp5_form;
 
-          form_options.erp5_document = form_gadget.state.erp5_document;
-          form_options.form_definition = form_gadget.state.form_definition;
-          form_options.view = form_gadget.state.view;
-          form_options.jio_key = form_gadget.state.jio_key;
+          form_options.erp5_document = gadget.state.erp5_document;
+          form_options.form_definition = gadget.state.form_definition;
+          form_options.view = gadget.state.view;
+          form_options.jio_key = gadget.state.jio_key;
           form_options.editable = 1;
 
-          return erp5_form.render(form_options);
+          return sub_gadget.render(form_options);
         })
 
         // render the header
         .push(function () {
           return RSVP.all([
-            form_gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
-            form_gadget.getUrlFor({command: 'change', options: {page: "action"}}),
-            form_gadget.state.erp5_document._links.action_object_new_content_action ?
-                form_gadget.getUrlFor({command: 'change', options: {
-                  view: form_gadget.state.erp5_document._links.action_object_new_content_action.href,
+            gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
+            gadget.getUrlFor({command: 'change', options: {page: "action"}}),
+            gadget.state.erp5_document._links.action_object_new_content_action ?
+                gadget.getUrlFor({command: 'change', options: {
+                  view: gadget.state.erp5_document._links.action_object_new_content_action.href,
                   editable: true
                 }}) :
                 "",
-            form_gadget.getUrlFor({command: 'history_previous'}),
-            form_gadget.getUrlFor({command: 'selection_previous'}),
-            form_gadget.getUrlFor({command: 'selection_next'}),
-            calculatePageTitle(form_gadget, form_gadget.state.erp5_document),
-            form_gadget.isDesktopMedia(),
-            (form_gadget.state.erp5_document._links.action_object_jio_report ||
-             form_gadget.state.erp5_document._links.action_object_jio_exchange ||
-             form_gadget.state.erp5_document._links.action_object_jio_print) ?
-                form_gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
+            gadget.getUrlFor({command: 'history_previous'}),
+            gadget.getUrlFor({command: 'selection_previous'}),
+            gadget.getUrlFor({command: 'selection_next'}),
+            calculatePageTitle(gadget, gadget.state.erp5_document),
+            gadget.isDesktopMedia(),
+            (gadget.state.erp5_document._links.action_object_jio_report ||
+             gadget.state.erp5_document._links.action_object_jio_exchange ||
+             gadget.state.erp5_document._links.action_object_jio_print) ?
+                gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
                 "",
-            form_gadget.getUrlParameter('selection_index')
+            gadget.getUrlParameter('selection_index')
           ]);
         })
         .push(function (all_result) {
@@ -117,13 +115,13 @@
             page_title: all_result[6]
           },
             is_desktop = all_result[7];
-          if (form_gadget.state.save_action === true) {
+          if (gadget.state.save_action === true) {
             header_dict.save_action = true;
           }
           if (is_desktop) {
             header_dict.export_url = all_result[8];
           }
-          return form_gadget.updateHeader(header_dict);
+          return gadget.updateHeader(header_dict);
         });
     })
 
@@ -134,103 +132,36 @@
         return;
       }
 
-      var form_gadget = this,
-        erp5_form,
-        form_id = this.state.erp5_document._embedded._view.form_id,
-        action = form_gadget.state.erp5_document._embedded._view._actions.put;
+      var gadget = this,
+        action = gadget.state.erp5_document._embedded._view._actions.put;
 
-      return form_gadget.getDeclaredGadget("erp5_form")
-        .push(function (gadget) {
-          erp5_form = gadget;
-          return erp5_form.checkValidity();
+      return gadget.getDeclaredGadget("erp5_form")
+        .push(function (sub_gadget) {
+          return sub_gadget.checkValidity();
         })
-        .push(function (validity) {
-          if (validity) {
-            return form_gadget.notifySubmitting()
-              .push(function () {
-                // try to send the form data over the network to jIO storage
-                return erp5_form.getContent();
-              })
-              .push(function (data) {
-
-                data[form_id.key] = form_id['default'];
-
-                return form_gadget.jio_putAttachment(
-                  form_gadget.state.jio_key,
-                  action.href,
-                  data
-                );
-              })
-              // handle response from the server
-              .push(function (result) {
-                if (result.target.responseType === "blob") {
-                  return jIO.util.readBlobAsText(result.target.response);
-                }
-                return {target: {result: result.target.response}};
-              })
-              .push(function (event) {
-                var message;
-                try {
-                  message = JSON.parse(event.target.result).portal_status_message;
-                } catch (ignore) {
-                }
-                return form_gadget.notifySubmitted({
-                  "message": message,
-                  "status": "success"
-                });
-              })
-              .push(function () {
-                return form_gadget.redirect({command: 'reload'});
-              })
-              .push(undefined, function (error) {
-                if (error.target !== undefined) {
-                  var error_text = 'Encountered an unknown error. Try to resubmit',
-                    promise;
-                  // improve error message if we can
-                  if (error.target.status === 400) {
-                    error_text = 'Input data has errors';
-                  } else if (error.target.status === 403) {
-                    error_text = 'You do not have the permissions to edit the object';
-                  } else if (error.target.status === 0) {
-                    // no/default=0 status means a network connection problem 
-                    error_text = 'Document was not saved! Resubmit when you are online or the document accessible';
-                  }
-                  // display translated error_text to user
-                  promise = form_gadget.notifySubmitted()
-                    .push(function () {
-                      return form_gadget.translate(error_text);
-                    })
-                    .push(function (message) {
-                      return form_gadget.notifyChange({
-                        'message': message + '.',
-                        'status': 'error'
-                      });
-                    });
-
-                  // if server validation of form data failed (indicated by response code 400)
-                  // we parse out field errors and display them to the user
-                  if (error.target.status === 400) {
-                    promise
-                      .push(function () {
-                        // when the server-side validation returns the error description
-                        if (error.target.responseType === "blob") {
-                          return jIO.util.readBlobAsText(error.target.response);
-                        }
-                        // otherwise return (most-likely) textual response of the server
-                        return {target: {result: error.target.response}};
-                      })
-                      .push(function (event) {
-                        return form_gadget.displayFormulatorValidationError(JSON.parse(event.target.result));
-                      });
-                  }
-                  return promise;
-                }
-                // throwing an error is the last desperate option
-                throw error;
-              });
+        .push(function (is_valid) {
+          if (!is_valid) {
+            return null;
           }
-        });
+          return gadget.getContent();
+        })
+        .push(function (content_dict) {
+          if (content_dict === null) {
+            return;
+          }
+          return gadget.submitContent(
+            gadget.state.jio_key,
+            action.href,
+            content_dict
+          );
+        })
+        .push(function (jio_key) {
+          if (jio_key) {
+            // success redirect callback receives jio_key
+            return gadget.redirect({command: 'reload'});
+          }
+        }); // page form handles failures well enough
 
     }, false, true);
 
-}(window, rJS, RSVP, calculatePageTitle, jIO));
+}(window, rJS, RSVP, calculatePageTitle));

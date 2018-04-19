@@ -1170,6 +1170,20 @@ def renderFormDefinition(form, response_dict):
         field_list.append((field.id, renderRawField(field)))
 
       group_list.append((group['gid'], field_list))
+
+  # some forms might not have any fields so we put empty bottom group
+  if not group_list:
+    group_list = [('bottom', [])]
+
+  # each form has hidden attribute `form_id`
+  group_list[-1][1].append(('form_id', {'meta_type': 'StringField'}))
+
+  if form.pt == "form_dialog":
+    # every form dialog has its dialog_id and meta (control) attributes in extra_param_json
+    group_list[-1][1].extend([
+      ('dialog_id', {'meta_type': 'StringField'}),
+    ])
+
   response_dict["group_list"] = group_list
   response_dict["title"] = Base_translateString(form.getTitle())
   response_dict["pt"] = form.pt

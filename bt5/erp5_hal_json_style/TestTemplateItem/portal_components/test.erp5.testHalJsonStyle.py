@@ -761,6 +761,28 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertFalse(result_dict['_embedded']['_view'].has_key('_actions'))
 
 
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoasForm_dialog_constants(self, document):
+    fake_request = do_fake_request("GET")
+
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request, mode="traverse", relative_url="portal_skins/erp5_ui_test/Foo_viewDummyDialog")
+
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    _, group_fields = result_dict['group_list'][-1]
+    field_names = [field_name for field_name, field_type in group_fields]
+    self.assertIn("form_id", field_names)
+    self.assertIn("dialog_id", field_names)
+    # no need for dialog_method because that one is hardcoded in javascript
+
+
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs',
