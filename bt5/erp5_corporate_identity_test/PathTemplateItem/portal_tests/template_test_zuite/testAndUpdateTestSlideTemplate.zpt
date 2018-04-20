@@ -1148,10 +1148,10 @@ Note:
   <td>Data updated.</td>
   <td></td>
 </tr>
-<!-- generate image - template_test_slideshow_input_slide_13_004_en_bmp -->
+<!-- generate image - template_test_slideshow_input_slide_6_004_en_bmp -->
 <tr>
   <td>echo</td>
-  <td>update => template_test_slideshow_input_slide_13_004_en_bmp</td>
+  <td>update => template_test_slideshow_input_slide_6_004_en_bmp</td>
   <td></td>
 </tr>
 <tr>
@@ -1166,7 +1166,7 @@ Note:
 </tr>
 <tr>
   <td>open</td>
-  <td>${screenshot_url}/Document_createScreenshot?frame=13&amp;doc_id=template_test_slideshow_input_slide_13_004_en_bmp</td>
+  <td>${screenshot_url}/Document_createScreenshot?frame=6&amp;doc_id=template_test_slideshow_input_slide_6_004_en_bmp</td>
   <td></td>
 </tr>
 <tr>
@@ -1412,7 +1412,7 @@ Note:
 </tr>
 <tr>
   <td>open</td>
-  <td>${screenshot_url}/Document_createScreenshot?shot?frame=0&amp;doc_id=template_test_slideshow_input_slide_0_002_en_bmp</td>
+  <td>${screenshot_url}/Document_createScreenshot?frame=0&amp;doc_id=template_test_slideshow_input_slide_0_002_en_bmp</td>
   <td></td>
 </tr>
 <tr>
@@ -1903,10 +1903,10 @@ Note:
   <td>Data updated.</td>
   <td></td>
 </tr>
-<!-- generate image - template_test_slideshow_input_slide_8_005_de_bmp -->
+<!-- generate image - template_test_slideshow_input_slide_7_005_de_bmp -->
 <tr>
   <td>echo</td>
-  <td>update => template_test_slideshow_input_slide_8_005_de_bmp</td>
+  <td>update => template_test_slideshow_input_slide_7_005_de_bmp</td>
   <td></td>
 </tr>
 <tr>
@@ -1921,7 +1921,7 @@ Note:
 </tr>
 <tr>
   <td>open</td>
-  <td>${screenshot_url}/Document_createScreenshot?frame=8&amp;doc_id=template_test_slideshow_input_slide_8_005_de_bmp</td>
+  <td>${screenshot_url}/Document_createScreenshot?frame=7&amp;doc_id=template_test_slideshow_input_slide_7_005_de_bmp</td>
   <td></td>
 </tr>
 <tr>

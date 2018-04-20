@@ -1,4 +1,4 @@
-/*
+/* CUSTOMIZED to override colors */
 
 Zenburn style from voldmar.ru (c) Vladimir Epifanov <voldmar@voldmar.ru>
 based on dark.css by Ivan Sagalaev
@@ -9,8 +9,10 @@ based on dark.css by Ivan Sagalaev
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  background: #3f3f3f;
-  color: #dcdcdc;
+  /* CUSTOM we do this */
+  /* background: #3f3f3f; */
+  /* color: #dcdcdc; */
+  /* CUSTOM END */
 }
 
 .hljs-keyword,

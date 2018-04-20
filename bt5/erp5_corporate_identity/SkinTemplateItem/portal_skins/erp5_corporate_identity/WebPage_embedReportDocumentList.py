@@ -5,7 +5,9 @@ Insert reports linked to in a document (including backcompat handling)
 """
 # parameters   (* default)
 # ------------------------------------------------------------------------------
-# doc_content                          string representation of document content
+# doc_content                string representation of document content
+# doc_language               language to pass along to report for translations
+# doc_format                 output format being generated
 
 import re
 
@@ -72,6 +74,8 @@ for link in re.findall('([^[]<a.*?</a>[^]])', doc_content):
       link_relative_url = link_split[0]
       link_param_list = link_split[1].replace("&amp;", "&").split("&")
       link_param_dict = {}
+      link_param_dict["document_language"] = doc_language
+      link_param_dict["format"] = doc_format
       for param in link_param_list:
         param_key, param_value = param.split("=")
         if param_key == "report":
@@ -79,6 +83,7 @@ for link in re.findall('([^[]<a.*?</a>[^]])', doc_content):
         else:
           link_param_dict[param_key] = param_value
 
+      # XXX report must be callable directly and generate the full output
       if report_name is not None:
         target_context = document.restrictedTraverse(link_relative_url, None)
         if target_context is not None:

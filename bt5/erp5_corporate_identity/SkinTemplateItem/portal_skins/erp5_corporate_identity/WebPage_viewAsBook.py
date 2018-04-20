@@ -111,6 +111,7 @@ book_source = book.Base_getSourceDict(
 
 # --------------------------- Content Upgrades ---------------------------------
 book_reference_list = []
+book_report_css_list = book_report_js_list = []
 book_applicable_document_list = []
 book_abbreviation_list = []
 book_signature_list = []
@@ -135,7 +136,9 @@ if book_include_linked_content:
 
 # embed reports
 if book_include_report_content:
-  book_content = book.WebPage_embedReportDocumentList(doc_content=book_content)
+  book_report_css_list = book.Base_getTemplateParameter("report_css_list") or []
+  book_report_js_list = book.Base_getTemplateParameter("report_js_list") or []
+  book_content = book.WebPage_embedReportDocumentList(doc_content=book_content, doc_language=book_language, doc_format=book_format)
 
 # table of links
 if book_include_reference_table:
@@ -213,6 +216,8 @@ if book_format == "html" or book_format == "mhtml":
     book_theme_css_font_list=book_theme.get("theme_css_font_list"),
     book_theme_css_url=book_theme.get("theme_css_url"),
     book_template_css_url=book_theme.get("template_css_url"),
+    book_report_css_list=book_report_css_list,
+    book_report_js_list=book_report_js_list,
     book_short_title=book_short_title,
     book_description=book_description,
     book_source_person_title=book_source.get("contributor_title_string").split(','),
@@ -290,6 +295,8 @@ if book_format == "pdf":
     book_theme_css_font_list=book_theme.get("theme_css_font_list"),
     book_theme_css_url=book_theme.get("theme_css_url"),
     book_template_css_url=book_theme.get("template_css_url"),
+    book_report_css_list=book_report_css_list,
+    book_report_js_list=book_report_js_list,
     book_content=book_content,
   )
   book_head = book.WebPage_createBookHeader(

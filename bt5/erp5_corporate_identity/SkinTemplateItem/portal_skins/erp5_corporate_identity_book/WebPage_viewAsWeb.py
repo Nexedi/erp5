@@ -41,9 +41,13 @@ View WebPage as Book or Report
 #
 # display_depth                         depth to report (eg sale order lines)
 # display_detail                        show details on report
+# display_sandbox                       embed report inside iframe
+# display_embedded                      omit footer/header inside iframe
 # display_comment                       show comments on report
 # display_header                        display report header
 # display_svg                           format for svg images (svg, png*)
+# display_milestone                     whether to show milestones or not
+# display_orphan                        display orphan requirements
 
 if context.REQUEST["portal_skin"] == "Report":
   return context.Base_viewAsReport(
@@ -58,6 +62,10 @@ if context.REQUEST["portal_skin"] == "Report":
     display_comment=display_comment,
     display_header=display_header,
     display_depth=display_depth,
+    display_sandbox=display_sandbox,
+    display_embedded=display_embedded,
+    display_milestone=display_milestone,
+    display_orphan=display_orphan,
     report_name=report_name,
     report_title=report_title,
     requirement_relative_url=requirement_relative_url,

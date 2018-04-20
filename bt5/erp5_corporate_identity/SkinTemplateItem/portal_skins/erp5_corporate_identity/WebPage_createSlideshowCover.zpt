@@ -12,7 +12,8 @@ Creates the Slideshow cover section.
                        doc_theme_css_font_list           python: options.get('doc_theme_css_font_list');
                        doc_theme_css_url                 python: options.get('doc_theme_css_url');
                        doc_template_css_url              python: options.get('doc_template_css_url');
-                       doc_css                           python: options.get('doc_css');">
+                       doc_css                           python: options.get('doc_css');
+                       doc_orientation                   python: options.get('doc_orientation');">
   <!DOCTYPE html>
   <html tal:attributes="class python: ''.join(['ci-', doc_theme, ' ci-', doc_language])">
   <head>
@@ -31,7 +32,7 @@ Creates the Slideshow cover section.
     <link rel="stylesheet" tal:attributes="href doc_template_css_url" />
     <style type="text/css" tal:content="doc_css"></style>
     </head>
-    	<body class="ci-slideshow">
+    	<body tal:attributes="class python: ''.join(['ci-slideshow ', doc_orientation])">
     	  <tal:block metal:use-macro="context/WebPage_createSlideshowCover/macros/slide_cover" />
       </body>
 	 </html>

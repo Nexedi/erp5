@@ -26,15 +26,15 @@
   /*  font-size: 5.820833mm; 16.5pt; */ /* 22px */
 }
 .ci-book-ci-book-table-of-content li,
-.ci-book h4, 
-.ci-book h5, 
-.ci-book h6, 
-.ci-book span, 
-.ci-book p, 
-.ci-book a, 
+.ci-book h4,
+.ci-book h5,
+.ci-book h6,
+.ci-book span,
+.ci-book p,
+.ci-book a,
 .ci-book li,
 .ci-book p,
-.ci-book pre {
+.ci-book pre code {
   font-size: 5.29167mm; /* 15pt; */ /* 20px; */
 }
 .ci-book .ci-book-img + span,
@@ -77,42 +77,28 @@
 
 /* === cover === */
 .ci-book .ci-book-cover p.ci-book-cover-faux-h1 {
-  font-family: "Roboto" !important;
-  font-weight: bold !important;
   font-size: 12.7mm; /* 36pt; */ /* 48px; */
 }
 .ci-book .ci-book-cover p.ci-book-cover-faux-h2 {
-  font-family: "Arial";
-  font-weight: lighter;
-  font-style: normal;
   font-size: 12.7mm; /* 36pt; */ /* 48px; */
 }
 .ci-book .ci-book-cover p.ci-book-cover-description {
-  font-family: "Roboto";
-  font-weight: lighter;
-  font-style: italic;
   font-size: 6.35mm; /* 18pt; */ /* 24px; */
 }
 .ci-book .ci-book-cover p.ci-book-cover-author-list span {
-  font-family: "Roboto";
-  font-weight: lighter;
-  font-style: normal;
   font-size: 6.35mm; /* 18pt; */ /* 24px; */
 }
 
 /* === color === */
 /* .ci-book a:not([href*="#"]), */
 .ci-book a:not([id]),
-.ci-book td i, 
-.ci-book a span,
-.ci-book .ci-book-table table td[colspan] {
+.ci-book td i,
+.ci-book a span
+/*.ci-book .ci-book-table table td[colspan]*/ {
   color: #1c76bb !important;
 }
 .ci-book * {
-  color: #000 !important;
-}
-.ci-book code {
-  color: #000 !important;
+  color: #000 /* Why? !important*/;
 }
 .ci-book a {
   text-decoration: none;
@@ -143,11 +129,11 @@
 }
 .ci-book .custom-force-page-break,
 .ci-book .custom-resume {
-  page-break-before: always; 
+  page-break-before: always;
 }
-.ci-book h2, 
-.ci-book h3, 
-.ci-book h4, 
+.ci-book h2,
+.ci-book h3,
+.ci-book h4,
 .ci-book h5 {
   page-break-after: avoid;
 }
@@ -158,8 +144,10 @@
 }
 .ci-book table,
 .ci-book table caption,
-.ci-book img, 
-.ci-book tr {
+.ci-book img,
+.ci-book tr,
+.ci-book pre code,
+.ci-book pre {
   page-break-inside: avoid;
 }
 .ci-book img {
@@ -174,6 +162,7 @@
   page-break-after: avoid !important;
 }
 .ci-book tbody + caption,
+.ci-book .ci-book-caption,
 .ci-book .ci-book-img + span {
   page-break-inside: avoid;
   page-break-before: avoid;
@@ -400,7 +389,7 @@
 
 /* multi-table headers */
 .ci-book table thead {
-  display: table-header-group; 
+  display: table-header-group;
 }
 .ci-book table tfoot {
   display: table-row-group;
@@ -532,13 +521,13 @@
 .ci-book .ci-book-table-of-content + ol li ol li:before {
   content: counters(item, ".") " ";
 }
-.ci-book .ci-book-table-of-content ~ h1 ~ ol > li:before, 
+.ci-book .ci-book-table-of-content ~ h1 ~ ol > li:before,
 .ci-book .ci-book-table-of-content ~ h1 ~ ol ol > li:before,
-.ci-book .ci-book-table-of-content ~ h2 ~ ol > li:before, 
+.ci-book .ci-book-table-of-content ~ h2 ~ ol > li:before,
 .ci-book .ci-book-table-of-content ~ h2 ~ ol ol > li:before,
-.ci-book .ci-book-table-of-content ~ h3 ~ ol > li:before, 
+.ci-book .ci-book-table-of-content ~ h3 ~ ol > li:before,
 .ci-book .ci-book-table-of-content ~ h3 ~ ol ol > li:before,
-.ci-book .ci-book-table-of-content ~ h4 ~ ol > li:before, 
+.ci-book .ci-book-table-of-content ~ h4 ~ ol > li:before,
 .ci-book .ci-book-table-of-content ~ h4 ~ ol ol > li:before {
  counter-increment: initial;
  content: none;
@@ -734,7 +723,8 @@
   text-align: center;
   display: block;
 }
-.ci-book table caption {
+.ci-book table caption,
+.ci-book .ci-book-caption {
   text-align: center;
   padding-top: 4mm;
   padding-bottom: 5mm;
@@ -751,18 +741,16 @@ html .ci-book table td p {
 }
 /* === code boxes === */
 .ci-book pre {
-  border: 1px solid #e0e0e0;
-  background-color: #fafafa;
-  padding: 6pt;
-}
-/* Cedric documentation exports */
-.ci-book pre {
-  white-space: pre-line;
+  white-space: pre;
   word-wrap: break-word;
-  max-width: 100%;
   overflow-wrap: break-word;
-}
+  /*
+  break after 100 characters - https://stackoverflow.com/a/16756641
+  max-width: 40em;
+  max-width: 100ch;
+  */
 
+}
 /* === special headers === */
 /* distribution list */
 .ci-book .ci-book thead th {
@@ -827,6 +815,10 @@ html .ci-book table td p {
 
 /* === box items === */
 /* Project Breakdown/Milestone List */
+.ci-book .ci-book-box-offer,
+.ci-book .ci-book-box-offer-milestone {
+  width: 100%;
+}
 .ci-book .ci-book-box-offer,
 .ci-book .ci-book-box-id,
 .ci-book .ci-book-box-coverage,

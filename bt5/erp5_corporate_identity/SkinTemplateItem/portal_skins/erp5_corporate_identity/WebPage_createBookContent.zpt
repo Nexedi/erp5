@@ -11,6 +11,8 @@ Creates the Book content.
                        book_theme_css_font_list          python: options.get('book_theme_css_font_list');
                        book_theme_css_url                python: options.get('book_theme_css_url');
                        book_template_css_url             python: options.get('book_template_css_url');
+                       book_report_css_list              python: options.get('book_report_css_list');
+                       book_report_js_list               python: options.get('book_report_js_list');
                        book_short_title                  python: options.get('book_short_title');
                        book_description                  python: options.get('book_description');
                        book_source_person_title          python: options.get('book_source_person_title');
@@ -28,9 +30,24 @@ Creates the Book content.
     </tal:block>
     <link rel="stylesheet" tal:attributes="href book_theme_css_url" />
     <link rel="stylesheet" tal:attributes="href book_template_css_url" />
+    <link rel="stylesheet" href="template_css/highlight.css" />
+    <tal:block tal:condition="python: len(book_report_css_list) > 0">
+      <tal:block tal:repeat="css_href book_report_css_list">
+        <link rel="stylesheet" tal:attributes="href css_href" />
+      </tal:block>
+    </tal:block>
     </head>
     	<body class="ci-book ci-book-content">
     	  <tal:block metal:use-macro="context/WebPage_createBookContent/macros/book_content" />
+        <script type="text/javascript" src="template_js/highlight.js"></script>
+        <tal:block tal:condition="python: len(book_report_js_list) > 0">
+          <tal:block tal:repeat="js_src book_report_js_list">
+            <script type="text/javascript" tal:attributes="src js_src"></script>
+          </tal:block>
+        </tal:block>
+        <tal:block tal:condition="python: book_format == 'pdf'">
+         <tal:block tal:content="structure python: book_rendering_fix"></tal:block>
+        </tal:block>
       </body>
 	 </html>
 </tal:block>
@@ -38,8 +55,5 @@ Creates the Book content.
 <tal:block tal:condition="python: False">
   <tal:block metal:define-macro="book_content">
     <tal:block tal:content="structure python: book_content"></tal:block>
-    <tal:block tal:condition="python: book_format == 'pdf'">
-      <tal:block tal:content="structure python: book_rendering_fix"></tal:block>
-    </tal:block>
   </tal:block>
 </tal:block>

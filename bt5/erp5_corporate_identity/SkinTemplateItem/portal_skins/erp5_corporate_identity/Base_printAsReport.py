@@ -22,12 +22,13 @@ Export WebPage as Report
 #
 # display_header            start headers at what level
 # display_comment           include comments where applicable
+# display_orphan            show requirements which have no matching task
 # display_detail            include details where applicable
 # display_depth             level of depth to display
+# display_milestone         show milestones where applicable
 #
 # report_name               report to generate
 # report_title              report title
-# requirement_relative_url  XXX sale order has no direct relation to requirement
 
 return context.Base_viewAsReport(
   format=format,
@@ -40,10 +41,11 @@ return context.Base_viewAsReport(
   display_depth=display_depth,
   display_detail=display_detail,
   display_comment=display_comment,
+  display_orphan=display_orphan,
   display_header=display_header,
+  display_milestone=display_milestone,
   report_name=report_name,
   report_title=report_title,
-  requirement_relative_url=requirement_relative_url,
   batch_mode=batch_mode,
   **kw
 )

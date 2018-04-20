@@ -28,6 +28,7 @@ import re
 from base64 import b64encode
 
 blank = ''
+details_separator = '</section><section class="ci-notes-continue"><section><h1>cont.</h1></section>'
 
 # ------------------ HTML cleanup/converter methods ----------------------------
 def getSlideList(my_content):
@@ -36,15 +37,33 @@ def getSlideList(my_content):
 #def getSectionSlideList(my_content):
 #  return re.findall(r'(<section[^>]*?>.*?</section>)', my_content, re.S)
 
+# https://regex101.com/r/8F8GTx/1/
+def getSlideDetailsList(my_content):
+  return re.findall(r'<section.*?>\s?<section>.*?</details>\s?</section>', my_content, re.S)
+
 def getDetails(my_content):
   return my_content.find("</details>")
+
+def getDetailsList(my_slide):
+  return re.findall(r'<details.*?>.*?<\/details>', my_slide, re.S)
 
 def getNestedSection(my_content):
   return my_content.find("<section") > -1
 
+def splitMultipleDetails(my_content):
+  for slide in getSlideDetailsList(my_content):
+    detail_list = getDetailsList(slide)
+    detail_list_len = len(detail_list)
+    if detail_list_len > 1:
+      counter = 0
+      for detail in detail_list:
+        counter += 1
+        if counter < (detail_list_len):
+          my_content = my_content.replace(detail, ''.join([detail, details_separator]))
+  return my_content
+
 def removeSlidesWithoutDetailsFromNotes(my_content):
-  slide_list = getSlideList(my_content)
-  for slide in slide_list:
+  for slide in getSlideList(my_content):
     if getNestedSection(slide) == False:
       my_content = my_content.replace(slide, blank)
   content = my_content.replace('<section></section>', blank)
@@ -178,7 +197,7 @@ if doc_ooo:
 # -------------------------- Document Parameters  ------------------------------
 doc_dirty_content = doc_converted_content or doc.getTextContent()
 doc_content = removeEmptyDetails(doc_dirty_content)
-doc_title = doc.getTitle()
+doc_title = doc.getShortTitle() or doc.getTitle()
 doc_language = doc.getLanguage()
 doc_description = doc.getDescription()
 doc_creation_year = doc.getCreationDate().strftime('%Y')
@@ -205,7 +224,7 @@ doc_css = ''.join(['.ci-slideshow-intro.present:not(.slide-background):before {'
   'content: "%s";' % (doc_theme.get("theme_logo_description")),
   'background: #FFF url("%s") center no-repeat;' % (doc.Base_setUrl(path=doc_theme.get("theme_logo_url"), display="medium")),
   #'background-size: auto 120px;',
-  'background-size: auto 45% !important;',
+  #'background-size: auto 45% !important;',
 '}'])
 
 # ---------------------------------- Source ------------------------------------
@@ -332,22 +351,23 @@ if doc_format == "pdf" or doc_format == "mhtml":
     doc_template_css_url=doc_theme.get("template_css_url"),
     doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
     doc_theme_css_url=doc_theme.get("theme_css_url"),
-    doc_css=doc_css
+    doc_css=doc_css,
+    doc_orientation="ci-orientation-portrait" if doc_display_notes else "ci-corientation-landscape"
   )
 
   # outputting just the content requires to drop wrapping <divs> (reveal/slides)
   # and add extra css to recreate the same layout. so a separate output=content
   # instead of defaulting to None
-  doc_slideshow_content = doc.WebPage_createSlideshowContent(
-    doc_format=doc_format,
-    doc_theme=doc_theme.get("theme"),
-    doc_title=doc_title,
-    doc_language=doc_language,
-    doc_template_css_url=doc_theme.get("template_css_url"),
-    doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
-    doc_theme_css_url=doc_theme.get("theme_css_url"),
-    doc_content=doc_content
-  )
+  # doc_slideshow_content = doc.WebPage_createSlideshowContent(
+  #  doc_format=doc_format,
+  #  doc_theme=doc_theme.get("theme"),
+  #  doc_title=doc_title,
+  #  doc_language=doc_language,
+  #  doc_template_css_url=doc_theme.get("template_css_url"),
+  #  doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
+  #  doc_theme_css_url=doc_theme.get("theme_css_url"),
+  #  doc_content=doc_content
+  #)
   if doc_display_notes:
     doc_slideshow_notes = doc.WebPage_createSlideshowNotes(
       doc_format=doc_format,
@@ -357,12 +377,23 @@ if doc_format == "pdf" or doc_format == "mhtml":
       doc_template_css_url=doc_theme.get("template_css_url"),
       doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
       doc_theme_css_url=doc_theme.get("theme_css_url"),
-      doc_notes=removeSlidesWithoutDetailsFromNotes(doc_content)
+      doc_notes=splitMultipleDetails(removeSlidesWithoutDetailsFromNotes(doc_content)),
     )
+  else:
+    doc_slideshow_content = doc.WebPage_createSlideshowContent(
+    doc_format=doc_format,
+    doc_theme=doc_theme.get("theme"),
+    doc_title=doc_title,
+    doc_language=doc_language,
+    doc_template_css_url=doc_theme.get("template_css_url"),
+    doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
+    doc_theme_css_url=doc_theme.get("theme_css_url"),
+    doc_content=doc_content
+  )
 
   # ================ encode and build cloudoo elements =========================
   footer_embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_footer, allow_script=True)
-  embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True)
+  #embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True)
   before_body_data_list = [
     b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True)),
   ]
@@ -370,15 +401,19 @@ if doc_format == "pdf" or doc_format == "mhtml":
     context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
     return doc.Base_convertHtmlToSingleFile(doc_slideshow_cover, allow_script=True)
   if doc_display_notes:
-    after_body_data_list = [
-      b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True)),
-    ]
-  else:
+    #after_body_data_list = [
+    #  b64encode(doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True)),
+    #]
+    embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_notes, allow_script=True)
     after_body_data_list = []
+  else:
+    embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_slideshow_content, allow_script=True)
+    after_body_data_list = []
+    #after_body_data_list = []
 
   pdf_file = doc.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
       encoding="utf8",
-      orientation="landscape",
+      orientation= "portrait" if doc_display_notes else "landscape",
       margin_top=12,
       margin_bottom=20,
       before_body_data_list=before_body_data_list,
