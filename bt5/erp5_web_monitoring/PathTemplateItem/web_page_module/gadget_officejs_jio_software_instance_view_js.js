@@ -66,6 +66,13 @@
             private_url,
             current_document = gadget.state.instance;
 
+          if (current_document._embedded !== undefined &&
+              current_document._embedded.hasOwnProperty('instance')) {
+            current_document.ipv6 = current_document._embedded.instance.ipv6;
+            current_document.ipv4 = current_document._embedded.instance.ipv4;
+            current_document.partition_id = current_document._embedded.instance.partition;
+            current_document.software_release = current_document._embedded.instance['software-release'];
+          }
           // fix URLs
           private_url = gadget.state.instance._links
             .private_url.href.replace("jio_private", "private");
@@ -88,11 +95,11 @@
             //process_url: tmp_process_url,
             hosting_title: gadget.state.opml.title,
             hosting_url: hosting_url,
-            partition_ipv6: current_document._embedded.instance.ipv6,
-            partition_ipv4: current_document._embedded.instance.ipv4,
-            computer_partition: current_document._embedded.instance.partition,
-            computer_reference: current_document._embedded.instance.computer,
-            software_release: current_document._embedded.instance['software-release']
+            partition_ipv6: current_document.ipv6,
+            partition_ipv4: current_document.ipv4,
+            computer_partition: current_document.partition_id,
+            computer_reference: current_document.aggregate_reference,
+            software_release: current_document.software_release
           });
         });
     })
@@ -110,7 +117,7 @@
       var gadget = this;
       return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
-          var i, value, len = result.data.total_rows;
+          var i, j, tmp, value, len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {
             if (result.data.rows[i].value.hasOwnProperty("lastBuildDate")) {
               value = new Date(result.data.rows[i].value.lastBuildDate);
@@ -135,26 +142,20 @@
                 value: 2713
               };
             }
-            if (result.data.rows[i].value.hasOwnProperty("comments")) {
-              value = result.data.rows[i].value.comments.slice(0, 30);
-              if (result.data.rows[i].value.comments.length >= 30) {
-                value += "...";
+            if (result.data.rows[i].value.hasOwnProperty("description")) {
+              tmp = result.data.rows[i].value.description.split('\n');
+              value = "";
+              for (j = 1; j < tmp.length; j += 1) {
+                // first line of text is the date and status
+                if (!value && tmp[j].trim() !== "") {
+                  value += tmp[j].slice(0, 50);
+                  if (tmp[j].length >= 50 || j + 1 < tmp.length) {
+                    // a part of text is not shown
+                    value += "...";
+                  }
+                }
               }
-              result.data.rows[i].value.comments = {
-                css_class: "string_field",
-                description: "The Message",
-                editable: 0,
-                hidden: 0,
-                "default": value,
-                key: "comments",
-                required: 0,
-                title: "Message",
-                type: "StringField"
-              };
-              result.data.rows[i].value["listbox_uid:list"] = {
-                key: "listbox_uid:list",
-                value: 2713
-              };
+              result.data.rows[i].value.description = value;
             }
             if (result.data.rows[i].value.hasOwnProperty("category")) {
               value = result.data.rows[i].value.category;
@@ -256,10 +257,10 @@
         })
         .push(function (form_gadget) {
           var column_list = [
+            ['category', 'Status'],
             ['source', 'Promise'],
             ['lastBuildDate', 'Promise Date'],
-            ['comments', 'Message'],
-            ['category', 'Status']
+            ['description', 'Message']
           ];
           return form_gadget.render({
             erp5_document: {

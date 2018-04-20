@@ -113,7 +113,12 @@
               "portal_type",
               "_links",
               "_embedded",
-              "reference"
+              "reference",
+              "aggregate_reference",
+              "ipv6",
+              "ipv4",
+              "partition_id",
+              "software_release"
             ],
             query: '(portal_type:"Software Instance") AND (parent_id:"' +
               options.doc.parent_id + '")'
@@ -148,6 +153,13 @@
                                           public_url: {href: ""}},
                                  _embedded: {instance: {}}};
           }
+          if (software_instance._embedded !== undefined &&
+              software_instance._embedded.hasOwnProperty('instance')) {
+            software_instance.ipv6 = software_instance._embedded.instance.ipv6;
+            software_instance.ipv4 = software_instance._embedded.instance.ipv4;
+            software_instance.partition_id = software_instance._embedded.instance.partition;
+            software_instance.software_release = software_instance._embedded.instance['software-release'];
+          }
           // fix URLs
           software_instance._links.private_url.href = software_instance
             ._links.private_url.href.replace("jio_private", "private");
@@ -171,10 +183,11 @@
             instance_title: software_instance.title,
             hosting_title: opml_doc.title,
             hosting_url: hosting_url,
-            partition_ipv6: software_instance._embedded.instance.ipv6,
-            computer_partition: software_instance._embedded.instance.partition,
-            computer_reference: software_instance._embedded.instance.computer,
-            software_release: software_instance._embedded.instance['software-release']
+            partition_ipv6: software_instance.ipv6,
+            partition_ipv4: software_instance.ipv4,
+            computer_partition: software_instance.partition_id,
+            computer_reference: software_instance.aggregate_reference,
+            software_release: software_instance.software_release
           });
         });
     })
@@ -252,7 +265,10 @@
                       editable: 0,
                       hidden: 0,
                       hidden_day_is_last_day: 0,
-                      "default": new Date(status_history.data[i]['start-date']).toUTCString(),
+                      "default": new Date(
+                        status_history.data[i].date ||
+                          status_history.data[i]['start-date']
+                      ).toUTCString(),
                       key: "start_date",
                       required: 0,
                       timezone_style: 0,
@@ -268,8 +284,10 @@
                       editable: 0,
                       hidden: 0,
                       hidden_day_is_last_day: 0,
-                      "default": new Date(status_history.data[i]['change-time'] * 1000)
-                        .toUTCString(),
+                      "default": new Date(
+                        status_history.data[i]['change-date'] ||
+                          status_history.data[i]['change-time'] * 1000
+                      ).toUTCString(),
                       key: "change_date",
                       required: 0,
                       timezone_style: 0,
