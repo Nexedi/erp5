@@ -103,6 +103,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("translateHtml", "translateHtml")
@@ -135,19 +136,23 @@
     .declareMethod('render', function (options) {
       var gadget = this;
       // copy out wanted items from options and pass it to `changeState`
-      return gadget.changeState({
-        jio_key: options.jio_key,
-        view: options.view,
-        // ignore options.editable because dialog is always editable
-        erp5_document: options.erp5_document,
-        form_definition: options.form_definition,
-        erp5_form: options.erp5_form || {},
-        // editable: true,  // ignore global editable state (be always editable)
-        has_update_action: Boolean(options.form_definition.update_action),
-        // XXX Hack of ERP5 how to express redirect to parent after success
-        redirect_to_parent: options.erp5_document._embedded._view.field_your_redirect_to_parent !== undefined
-      });
-
+      return gadget.getUrlParameter('extended_search')
+        .push(function (extended_search) {
+          return gadget.changeState({
+            jio_key: options.jio_key,
+            view: options.view,
+            // ignore options.editable because dialog is always editable
+            erp5_document: options.erp5_document,
+            form_definition: options.form_definition,
+            erp5_form: options.erp5_form || {},
+            // editable: true,  // ignore global editable state (be always editable)
+            has_update_action: Boolean(options.form_definition.update_action),
+            // pass extended_search from previous view in case any gadget is curious
+            extended_search: extended_search,
+            // XXX Hack of ERP5 how to express redirect to parent after success
+            redirect_to_parent: options.erp5_document._embedded._view.field_your_redirect_to_parent !== undefined
+          });
+        });
     })
 
     .onStateChange(function (modification_dict) {
@@ -224,7 +229,11 @@
           form_options.view = form_gadget.state.view;
           form_options.jio_key = form_gadget.state.jio_key;
           form_options.editable = true; // dialog is always editable
-
+          // this might cause problems if the listbox in the dialog is not curious
+          // about the previous search
+          if (form_gadget.state.extended_search) {
+            form_options.form_definition.extended_search = form_gadget.state.extended_search;
+          }
           return erp5_form.render(form_options);
         })
         .push(function () {

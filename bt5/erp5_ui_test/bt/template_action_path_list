@@ -10,6 +10,7 @@ Foo Line | view_contentlist
 Foo Line | view_dynamic_matrixbox
 Foo Line | view_matrixbox
 Foo Module | do_nothing_report_jio
+Foo Module | empty_mass_action
 Foo Module | list
 Foo Module | list_ui
 Foo Module | search
@@ -22,7 +23,6 @@ Foo | dummy_multicheckboxfield_report
 Foo | dummy_multilistfield_report
 Foo | dummy_radiofield_report
 Foo | dummy_report
-Foo | fail_dialog_action_jio
 Foo | list
 Foo | select_bar
 Foo | view

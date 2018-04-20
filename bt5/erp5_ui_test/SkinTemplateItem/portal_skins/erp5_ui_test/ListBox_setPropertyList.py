@@ -1,8 +1,9 @@
 """
 Used to set properties for Listbox
 """
+from Products.ERP5Type.Log import log
 
-
+field = context
 d = dict(
   field_title = 'Foos',
   field_description = '',
@@ -55,8 +56,20 @@ d = dict(
 
 d.update(context.REQUEST)
 d.update(kw)
+
+# If the listbox is a proxy field, replace it with just a listbox
+# before it was always failing on "form_id was not transferred"
+if field.meta_type == "ProxyField":
+  form = field.aq_parent
+  field_id = field.getId()
+  field_title = field.getTitle()
+  log("Replacing ProxyField with a Listbox for {!s}.{!s}".format(form, context))
+  form.manage_delObjects(field_id)
+  form.manage_addField(field_id, field_title, 'ListBox')
+  field = getattr(form, 'listbox')
+
 #context.log('ListBox_setPropertyList', 'kw = %r, d = %r' % (kw, d,))
-r = context.form.validate(d)
-context.manage_edit_xmlrpc(r)
+r = field.form.validate(d)
+field.manage_edit_xmlrpc(r)
 
 return 'Set Successfully.'

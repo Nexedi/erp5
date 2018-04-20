@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray */
+/*global window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray) {
+(function (window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -19,15 +19,15 @@
    * @param {Array} command_list - array of links obtained from ERP5 HATEOAS
    */
   function renderLinkList(gadget, title, icon, erp5_link_list) {
-    return new RSVP.Queue()
-      .push(function () {
+    return gadget.getUrlParameter("extended_search")
+      .push(function (query) {
         // obtain RJS links from ERP5 links
         return RSVP.all(
           erp5_link_list.map(function (erp5_link) {
             return gadget.getUrlFor({
               "command": 'change',
               "options": {
-                "view": erp5_link.href,
+                "view": UriTemplate.parse(erp5_link.href).expand({query: query}),
                 "page": undefined
               }
             });
@@ -60,6 +60,7 @@
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("updateHeader", "updateHeader")
 
     /////////////////////////////////////////////////////////////////
@@ -100,4 +101,4 @@
         });
     });
 
-}(window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray));
+}(window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray));
