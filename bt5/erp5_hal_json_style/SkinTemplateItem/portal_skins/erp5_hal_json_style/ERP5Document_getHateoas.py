@@ -33,6 +33,9 @@ Traverse renders arbitrary View. It can be a Form or a Script.
 :param relative_url: string, MANDATORY for obtaining the traversed_document. Calling this script directly on an object should be
                      forbidden in code (but it is not now).
 :param view: {str} mandatory. the view reference as defined on a Portal Type (e.g. "view" or "publish_view")
+:param query: {str} optional, is a remaining from the search on a previous view. Query is used to replace selections.
+              It provides complete information together with listbox configuration so we are able to pass a list of UIDs
+              to methods which require it. This allows dialogs to show selection from previous view.
 :param extra_param_json: {str} BASE64 encoded JSON with parameters for getHateoas script. Content will be put to the REQUEST so
                          it is accessible to all Scripts and TALES expressions. If view contains embedded **dialog** form then
                          fields will be added to that form to preserve the values for the next step.
@@ -458,6 +461,8 @@ url_template_dict = {
                        "&relative_url=%(relative_url)s&view=%(view)s",
   "traverse_generator_action": "%(root_url)s/%(script_id)s?mode=traverse" + \
                        "&relative_url=%(relative_url)s&view=%(view)s&extra_param_json=%(extra_param_json)s",
+  "traverse_generator_action_module": "%(root_url)s/%(script_id)s?mode=traverse" + \
+                       "&relative_url=%(relative_url)s&view=%(view)s&extra_param_json=%(extra_param_json)s{&query}",
   "traverse_template": "%(root_url)s/%(script_id)s?mode=traverse" + \
                        "{&relative_url,view}",
 
@@ -465,10 +470,15 @@ url_template_dict = {
   "search_template": "%(root_url)s/%(script_id)s?mode=search" + \
                      "{&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}",
   "worklist_template": "%(root_url)s/%(script_id)s?mode=worklist",
+  # Custom search comes with Listboxes where "list_method" is specified. We pass even listbox's
+  # own URL so the search can resolve template fields for proper rendering/formatting/editability
+  # of the results (because they will be backed up with real documents).
+  # :param extra_param_json: contains mainly previous form id to replicate previous search (it is a replacement for Selections)
   "custom_search_template": "%(root_url)s/%(script_id)s?mode=search" + \
                      "&relative_url=%(relative_url)s" \
                      "&form_relative_url=%(form_relative_url)s" \
                      "&list_method=%(list_method)s" \
+                     "&extra_param_json=%(extra_param_json)s" \
                      "&default_param_json=%(default_param_json)s" \
                      "{&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}",
   # Non-editable searches suppose the search results will be rendered as-is and no template
@@ -493,6 +503,12 @@ url_template_dict = {
 
 default_document_uri_template = url_template_dict["jio_get_template"]
 Base_translateString = context.getPortalObject().Base_translateString
+
+
+def lazyUidList(traversed_document, listbox, query):
+  """Clojure providing lazy list of UIDs selected from a previous Listbox."""
+  return lambda: [int(getattr(document, "uid"))
+                  for document in traversed_document.Base_searchUsingListbox(listbox, query)]
 
 
 def getRealRelativeUrl(document):
@@ -871,7 +887,10 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
         "form_relative_url": "%s/%s" % (getFormRelativeUrl(form), field.id),
         "list_method": list_method_name,
         "default_param_json": urlsafe_b64encode(
-          json.dumps(ensureSerializable(list_method_query_dict)))
+          json.dumps(ensureSerializable(list_method_query_dict))),
+        # in case of a dialog the form_id points to previous form, otherwise current form
+        "extra_param_json": urlsafe_b64encode(
+          json.dumps(ensureSerializable({"form_id": REQUEST.get('form_id', form.id)})))
       }
       # once we imprint `default_params` into query string of 'list method' we
       # don't want them to propagate to the query as well
@@ -1044,6 +1063,19 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     # If there is a "form_id" in the REQUEST then it means that last view was actually a form
     # and we are most likely in a dialog. We save previous form into `last_form_id` ...
     last_form_id =  extra_param_json.pop("form_id", "") or REQUEST.get("form_id", "")
+    last_listbox = None
+    # ... so we can do some magic with it (especially embedded listbox if exists)!
+    try:
+      if last_form_id:
+        last_form = getattr(context, last_form_id)
+        last_listbox = last_form.Form_getListbox()
+        # In order not to use Selections we need to pass all search attributes to *a listbox inside the form dialog*
+        # in case there was a listbox in the previous form. No other case!
+        if last_listbox:
+        # If a Lisbox's list_method takes `uid` as input parameter then it will be ready in the request. But the actual
+        # computation is too expensive so we make it lazy (and evaluate any callable at `selectKwargsForCallable`)
+        # UID will be used in (Listbox's|RelationField's) list_method as a constraint if defined in parameters
+          REQUEST.set("uid", lazyUidList(traversed_document, last_listbox, query))
     except AttributeError:
       pass
 
@@ -1100,6 +1132,18 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     if REQUEST.get('cancel_url', None):
       renderHiddenField(response_dict, "cancel_url", REQUEST.get('cancel_url'))
 
+    # Let's support Selections!
+    # There are two things needed
+    # - `uid` parameter of list_method of listbox (if present) in this dialog
+    # - `uids` or `brain` to a Dialog Form Action Method
+    #
+    # We can serialize `uids` into a hidden form field but we cannot do it with brain so we
+    # simply put "query" in a hidden field and construct `brain` from it in Base_callDialogMethod
+    dialog_method_kwargs = selectKwargsForCallable(getattr(traversed_document, form.action), {}, {'brain': None, 'uids': None})
+    if 'uids' in dialog_method_kwargs:
+      # If we do not have "query" in the REQUEST but the Dialog Method requires uids
+      # then we still should inject empty "query" in the dialog call
+      extra_param_json["query"] = query or REQUEST.get("query", "")
   else:
     # In form_view we place only form_id in the request form
     renderHiddenField(response_dict, 'form_id', form.id)
@@ -1194,11 +1238,6 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   # end-if report_section
 
   if form.pt == "form_dialog":
-    # Insert hash of current values into the form so scripts can see whether data has
-    # changed if they provide multi-step process
-    if form_data:
-      extra_param_json["form_hash"] = form.hash_validated_data(form_data)
-
     # extra_param_json is a special field in forms (just like form_id). extra_param_json field holds JSON
     # metadata about the form (its hash and dynamic fields)
     renderHiddenField(response_dict, 'extra_param_json', json.dumps(extra_param_json))
@@ -1480,11 +1519,18 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
           # select correct URL template based on action_type and form page template
           url_template_key = "traverse_generator"
+          # Modify Actions on Module - they need access to current form_id and runtime
+          # information such as `query` in case they operate on selections!
           if erp5_action_key not in ("view", "object_view", "object_jio_view"):
             url_template_key = "traverse_generator_action"
+            if traversed_document.getPortalType() in portal.getPortalModuleTypeList():
+              url_template_key = "traverse_generator_action_module"
+              erp5_action_list[-1]['templated'] = True
           # but when we do not have the last form id we do not pass is of course
           if not (current_action.get('view_id', '') or last_form_id):
             url_template_key = "traverse_generator"
+            if 'templated' in erp5_action_list[-1]:
+              del erp5_action_list[-1]['templated']
 
           # some dialogs need previous form_id when rendering to pass UID to embedded Listbox
           extra_param_json['form_id'] = current_action['view_id'] \
@@ -1651,6 +1697,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     #  > Method 'search' is used for getting related objects as well which are
     #  > not backed up by a ListBox thus the value resolution would have to be
     #  > there anyway. It is better to use one code for all in this case.
+    #
+    #  How do you deal with old-style Selections?
+    #  > We simply do not use them. All Document selection is handled via passing
+    #  > "query" parameter to Base_callDialogMethod or introspecting list_methods.
     #################################################
     if REQUEST.other['method'] != "GET":
       response.setStatus(405)

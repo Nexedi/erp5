@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form=None</string> </value>
+            <value> <string>form_id, query=\'\', sort_on=(), limit=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_getListbox</string> </value>
+            <value> <string>Base_searchUsingFormIdAndQuery</string> </value>
         </item>
       </dictionary>
     </pickle>

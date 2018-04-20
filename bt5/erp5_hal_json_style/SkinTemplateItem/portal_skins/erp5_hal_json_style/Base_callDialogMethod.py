@@ -97,8 +97,7 @@ try:
   request.set('editable_mode', 1)
   form.validate_all_to_request(request)
   request.set('editable_mode', editable_mode)
-
-  default_skin = context.getPortalObject().portal_skins.getDefaultSkin()
+  default_skin = portal.portal_skins.getDefaultSkin()
   allowed_styles = ("ODT", "ODS", "Hal", "HalRestricted")
   if getattr(getattr(context, dialog_method), 'pt', None) == "report_view" and \
      request.get('your_portal_skin', default_skin) not in allowed_styles:
@@ -106,9 +105,9 @@ try:
     # Form is OK, it's just this field - style so we return back form-wide error
     # for which we don't have support out-of-the-box thus we manually craft it
     # XXX TODO: Form-wide validation errors
-    return context.Base_renderMessage(
-      translate('Only ODT, ODS, Hal and HalRestricted skins are allowed for reports '\
-                'in Preferences - User Interface - Report Style'),
+    return context.Base_renderForm(dialog_id,
+      message=translate('Only ODT, ODS, Hal and HalRestricted skins are allowed for reports '\
+                        'in Preferences - User Interface - Report Style'),
       level=WARNING)
 
 except FormValidationError as validation_errors:
@@ -168,42 +167,43 @@ if len(listbox_id_list):
     listbox_line_list = tuple(listbox_line_list)
     kw[listbox_id] = request_form[listbox_id] = listbox_line_list
 
+# Handle selection the new way
+# First check for an query in form parameters - if they are there
+# that means previous view was a listbox with selected stuff so recover here
+query = extra_param.get("query", None)
+select_all = int(extra_param.pop("_select_all", "0"))
 
-# Check if the selection changed
-if hasattr(kw, 'previous_md5_object_uid_list'):
-  selection_list = context.portal_selections.callSelectionFor(kw['list_selection_name'], context=context)
-  if selection_list is not None:
-    object_uid_list = map(lambda x:x.getObject().getUid(), selection_list)
-    error = context.portal_selections.selectionHasChanged(kw['previous_md5_object_uid_list'], object_uid_list)
-    if error:
-      error_message = context.Base_translateString("Sorry, your selection has changed.")
+if query != "" or (query == "" and select_all > 0):
+  listbox = getattr(context, form_id).Form_getListbox()
+  if listbox is not None:
+    kw['uids'] = [int(getattr(document, "uid"))
+                  for document in context.Base_searchUsingListbox(listbox, query)]
+  else:
+    log('Action {} should not specify `uids` as its parameters when it does not take object list from the previous view!'.format(dialog_method), level=ERROR)
+elif query == "" and select_all == 0 and dialog_method != update_method:  # do not interrupt on UPDATE
+  return context.Base_renderForm(
+    dialog_id,
+    message=translate("All documents are selected! Submit again to proceed or Cancel and narrow down your search."),
+    level=WARNING,
+    keep_items={'_select_all': 1},
+    query=query)
+
+# The old way was to set inquire kw for "list_selection_name" and update
+# it with kw["uids"] which means a long URL to call this script
 
 # if dialog_category is object_search, then edit the selection
 if dialog_category == "object_search" :
-  context.portal_selections.setSelectionParamsFor(kw['selection_name'], kw)
-
-# if we have checked line in listbox, modify the selection
-listbox_uid = kw.get('listbox_uid', None)
-# In some cases, the listbox exists, is editable, but the selection name
-# has no meaning, for example fast input dialogs.
-# In such cases, we must not try to update a non-existing selection.
-if listbox_uid is not None and kw.has_key('list_selection_name'):
-  uids = kw.get('uids')
-  selected_uids = context.portal_selections.updateSelectionCheckedUidList(
-    kw['list_selection_name'],
-    listbox_uid, uids)
-# Remove empty values for make_query.
-clean_kw = dict((k, v) for k, v in kw.items() if v not in (None, [], ()))
+  portal.portal_selections.setSelectionParamsFor(kw['selection_name'], kw)
 
 # Add rest of extra param into arguments of the target method
 kw.update(extra_param)
 
 # Finally we will call the Dialog Method
 # Handle deferred style, unless we are executing the update action
-if dialog_method != update_method and clean_kw.get('deferred_style', 0):
-  clean_kw['deferred_portal_skin'] = clean_kw.get('portal_skin', None)
+if dialog_method != update_method and kw.get('deferred_style', 0):
+  kw['deferred_portal_skin'] = kw.get('portal_skin', None)
   # XXX Hardcoded Deferred style name
-  clean_kw['portal_skin'] = 'Deferred'
+  kw['portal_skin'] = 'Deferred'
 
   page_template = getattr(getattr(context, dialog_method), 'pt', None)
 
@@ -211,20 +211,18 @@ if dialog_method != update_method and clean_kw.get('deferred_style', 0):
     # Limit Reports in Deferred style to known working styles
     if request_form.get('your_portal_skin', None) not in ("ODT", "ODS"):
       # RJS own validation - deferred option works here only with ODS/ODT skins
-      return context.Base_renderMessage(
-        translate('Deferred reports are possible only with preference '\
-                  '"Report Style" set to "ODT" or "ODS"'),
+      return context.Base_renderForm(dialog_id,
+        message=translate('Deferred reports are possible only with preference '\
+                          '"Report Style" set to "ODT" or "ODS"'),
         level=WARNING)
 
   # If the action form has report_view as it's method, it
   if page_template != 'report_view':
     # use simple wrapper
-    clean_kw['deferred_style_dialog_method'] = dialog_method
+    kw['deferred_style_dialog_method'] = dialog_method
     kw['deferred_style_dialog_method'] = dialog_method
     request.set('deferred_style_dialog_method', dialog_method)
     dialog_method = 'Base_activateSimpleView'
-
-url_params_string = make_query(clean_kw)
 
 # Never redirect in JSON style - do as much as possible here.
 # At this point the 'dialog_method' should point to a form (if we are in report)
@@ -234,11 +232,11 @@ if True:
   if dialog_method != update_method:
     # When we are not executing the update action, we have to change the skin
     # manually,
-    if 'portal_skin' in clean_kw:
-      new_skin_name = clean_kw['portal_skin']
-      context.getPortalObject().portal_skins.changeSkin(new_skin_name)
+    if 'portal_skin' in kw:
+      new_skin_name = kw['portal_skin']
+      portal.portal_skins.changeSkin(new_skin_name)
       request.set('portal_skin', new_skin_name)
-      deferred_portal_skin = clean_kw.get('deferred_portal_skin')
+      deferred_portal_skin = kw.get('deferred_portal_skin')
       if deferred_portal_skin:
         # has to be either ODS or ODT because only those contain `form_list`
         request.set('deferred_portal_skin', deferred_portal_skin)
@@ -258,17 +256,21 @@ if True:
   # with the content of REQUEST.URL
   request.set('URL', '%s/%s' % (context.absolute_url(), dialog_method))
 
-  # RJS: If we are in deferred mode - call the form directly and return
-  # dialog method is now `Base_activateSimpleView` - the only script in
-  # deferred portal_skins folder
-  if clean_kw.get('deferred_style', 0):
-    return dialog_form(**kw)  # deferred form should return redirect with a message
+  # Only in case we are not updating but executing - then proceed with direct
+  # execution based on Skin selection
+  if dialog_method != update_method:
+    # RJS: If we are in deferred mode - call the form directly and return
+    # dialog method is now `Base_activateSimpleView` - the only script in
+    # deferred portal_skins folder
+    if kw.get('deferred_style', 0):
+      return dialog_form(**kw)  # deferred form should return redirect with a message
 
-  # RJS: If skin selection is different than Hal* then ERP5Document_getHateoas
-  # does not exist and we call form method directly
-  # If update_method was clicked and the target is the original dialog form then we must not call dialog_form directly because it returns HTML
-  if clean_kw.get("portal_skin", context.getPortalObject().portal_skins.getDefaultSkin()) not in ("Hal", "HalRestricted", "View"):
-    return dialog_form(**kw)
+    # RJS: If skin selection is different than Hal* then ERP5Document_getHateoas
+    # does not exist and we call form method directly
+    # If update_method was clicked and the target is the original dialog for
+    # then we must not call dialog_form directly because it returns HTML
+    if kw.get("portal_skin", portal.portal_skins.getDefaultSkin()) not in ("Hal", "HalRestricted", "View"):
+      return dialog_form(**kw)
 
   # dialog_form can be anything from a pure python function, class method to ERP5 Form or Python Script
   try:
