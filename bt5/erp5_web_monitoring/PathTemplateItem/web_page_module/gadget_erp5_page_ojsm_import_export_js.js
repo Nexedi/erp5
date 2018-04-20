@@ -19,7 +19,7 @@
 
   function getMonitorSetting(gadget) {
     return gadget.jio_allDocs({
-      select_list: ["basic_login", "url", "title", "active"],
+      select_list: ["basic_login", "url", "title", "active", "state"],
       query: '(portal_type:"opml")'
     })
       .push(function (opml_result) {
@@ -61,6 +61,11 @@
                   "description": "OPML active state",
                   "type": "boolean",
                   "default": true
+                },
+                "state": {
+                  "description": "OPML requested state",
+                  "type": "string",
+                  "default": "Started"
                 }
               },
               "additionalProperties": false
@@ -188,8 +193,11 @@
                   item = {
                     title: configuration_dict.opml_description[i].title,
                     url: configuration_dict.opml_description[i].href,
-                    active: true,
-                    portal_type: "opml"
+                    active: configuration_dict.opml_description[i].active,
+                    portal_type: "opml",
+                    has_monitor: configuration_dict.opml_description[i]
+                      .href.startsWith("https://"),
+                    state: configuration_dict.opml_description[i].state || "Started"
                   };
                   for (j = 0; j < configuration_dict.monitor_url.length; j += 1) {
                     if (configuration_dict.monitor_url[j].parent_url ===
@@ -216,6 +224,8 @@
                   cred_list = atob(item.basic_login).split(':');
                   item.username = cred_list[0];
                   item.password = cred_list[1];
+                  item.has_monitor = item.url.startsWith("https://");
+                  item.state = item.state || "Started";
                   pushSetting(item.url, item);
                 }
               }
