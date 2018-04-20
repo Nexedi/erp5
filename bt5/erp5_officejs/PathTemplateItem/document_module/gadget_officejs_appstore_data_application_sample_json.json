@@ -222,5 +222,19 @@
     "application_category":"Documents",
     "application_title_i18n":"application.custom.wallsearch.title",
     "application_description_i18n":"application.custom.wallsearch.description"
+  },
+{
+    "int_index": "20",
+    "application_image_type": "image",
+    "application_image_url": "hr_logo.svg",
+    "application_toc_accept": true,
+    "application_published":"20/04/2018",
+    "application_submitted":"20/04/2018",
+    "application_description": "Business travel, Expense remboursement, Leave request management",
+    "application_url":"https://hr.app.officejs.com",
+    "application_title":"HR",
+    "application_category":"Projects",
+    "application_title_i18n":"application.custom.hr.title",
+    "application_description_i18n":"application.custom.hr.description"
   }
 ]
