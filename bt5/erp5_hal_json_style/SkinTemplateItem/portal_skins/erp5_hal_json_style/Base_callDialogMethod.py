@@ -1,20 +1,25 @@
 """
 Generic method called when submitting a form in dialog mode.
 Responsible for validating form data and redirecting to the form action.
+
+Please note that the new UI has deprecated use of Selections. Your scripts
+will no longer receive `selection_name` nor `selection` in their arguments.
+
+There are runtime values hidden in every form (injected by getHateoas Script):
+  form_id - previous form ID (backward compatibility reasons)
+  dialog_id - current form dialog ID
+  dialog_method - method to be called - can be either update_method or dialog_method of the Dialog Form
 """
-from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING
+
+from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING, ERROR
+from Products.Formulator.Errors import FormValidationError, ValidationError
+from ZTUtils import make_query
 import json
 
-# XXX We should not use meta_type properly,
-# XXX We need to discuss this problem.(yusei)
 def isFieldType(field, type_name):
   if field.meta_type == 'ProxyField':
     field = field.getRecursiveTemplateField()
   return field.meta_type == type_name
-
-from Products.Formulator.Errors import FormValidationError, ValidationError
-from ZTUtils import make_query
-
 
 # Kato: I do not understand why we throw away REQUEST from parameters (hidden in **kw)
 # and use container.REQUEST just to introduce yet another global state. Maybe because
@@ -27,30 +32,31 @@ request = kw.get('REQUEST', None) or container.REQUEST
 request_form = request.form
 error_message = ''
 translate = context.Base_translateString
+portal = context.getPortalObject()
 
 # Make this script work alike no matter if called by a script or a request
 kw.update(request_form)
 
 # Exceptions for UI
 if dialog_method == 'Base_configureUI':
-  return context.Base_configureUI(form_id=kw['form_id'],
+  return context.Base_configureUI(form_id=form_id,
                                   selection_name=kw['selection_name'],
                                   field_columns=kw['field_columns'],
                                   stat_columns=kw['stat_columns'])
 # Exceptions for Sort
 if dialog_method == 'Base_configureSortOn':
-  return context.Base_configureSortOn(form_id=kw['form_id'],
+  return context.Base_configureSortOn(form_id=form_id,
                                       selection_name=kw['selection_name'],
                                       field_sort_on=kw['field_sort_on'],
                                       field_sort_order=kw['field_sort_order'])
 # Exceptions for Workflow
 if dialog_method == 'Workflow_statusModify':
-  return context.Workflow_statusModify(form_id=kw['form_id'],
+  return context.Workflow_statusModify(form_id=form_id,
                                         dialog_id=dialog_id)
 
 # Exception for edit relation
 if dialog_method == 'Base_editRelation':
-  return context.Base_editRelation(form_id=kw['form_id'],
+  return context.Base_editRelation(form_id=form_id,
                                    field_id=kw['field_id'],
                                    selection_name=kw['list_selection_name'],
                                    selection_index=kw['selection_index'],
@@ -60,7 +66,7 @@ if dialog_method == 'Base_editRelation':
 # Exception for create relation
 # Not used in new UI - relation field implemented using JIO calls from JS
 if dialog_method == 'Base_createRelation':
-  return context.Base_createRelation(form_id=kw['form_id'],
+  return context.Base_createRelation(form_id=form_id,
                                      selection_name=kw['list_selection_name'],
                                      selection_index=kw['selection_index'],
                                      base_category=kw['base_category'],
@@ -77,6 +83,7 @@ if dialog_method == 'Folder_delete':
                                md5_object_uid_list=kw['md5_object_uid_list'])
 
 form = getattr(context, dialog_id)
+extra_param = json.loads(extra_param_json or "{}")
 
 # form can be a python script that returns the form
 if not hasattr(form, 'validate_all_to_request'):
@@ -188,6 +195,10 @@ if listbox_uid is not None and kw.has_key('list_selection_name'):
 # Remove empty values for make_query.
 clean_kw = dict((k, v) for k, v in kw.items() if v not in (None, [], ()))
 
+# Add rest of extra param into arguments of the target method
+kw.update(extra_param)
+
+# Finally we will call the Dialog Method
 # Handle deferred style, unless we are executing the update action
 if dialog_method != update_method and clean_kw.get('deferred_style', 0):
   clean_kw['deferred_portal_skin'] = clean_kw.get('portal_skin', None)
