@@ -567,7 +567,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['action_object_view'][0]['name'], "view")
 
     self.assertEqual(result_dict['_links']['action_workflow'][0]['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog&form_id=Foo_view" % (
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog&extra_param_json=eyJmb3JtX2lkIjogIkZvb192aWV3In0=" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_workflow'][0]['title'], "Custom Action No Dialog")
@@ -586,7 +586,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['site_root']['name'], self.portal.web_site_module.hateoas.getTitle())
 
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document&form_id=Foo_view" % (
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document&extra_param_json=eyJmb3JtX2lkIjogIkZvb192aWV3In0=" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['_links']['action_object_new_content_action']['title'], "Create a Document")
@@ -1721,7 +1721,7 @@ class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['result_list'][0]['_links']['action_object_view'][0]['name'], "view")
 
     self.assertEqual(result_dict['result_list'][0]['_links']['action_workflow'][0]['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog&form_id=Foo_view" % (
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog&extra_param_json=eyJmb3JtX2lkIjogIkZvb192aWV3In0=" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['result_list'][0]['_links']['action_workflow'][0]['title'], "Custom Action No Dialog")
@@ -1734,7 +1734,7 @@ class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['result_list'][0]['_links']['site_root']['name'], self.portal.web_site_module.hateoas.getTitle())
 
     self.assertEqual(result_dict['result_list'][0]['_links']['action_object_new_content_action']['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document&form_id=Foo_view" % (
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document&extra_param_json=eyJmb3JtX2lkIjogIkZvb192aWV3In0=" % (
                        self.portal.absolute_url(),
                        urllib.quote_plus(document.getRelativeUrl())))
     self.assertEqual(result_dict['result_list'][0]['_links']['action_object_new_content_action']['title'], "Create a Document")
@@ -1965,6 +1965,7 @@ class TestERP5Action_getHateoas(ERP5HALJSONStyleSkinsMixin):
       REQUEST=fake_request,
       dialog_method='Foo_doNothing',  # 'Workflow_statusModify' would lead us by a different path in the code
       dialog_id='Foo_viewCustomWorkflowRequiredActionDialog',
+      form_id='Foo_view'
     )
     self.assertEqual(fake_request.RESPONSE.status, 400)
 
