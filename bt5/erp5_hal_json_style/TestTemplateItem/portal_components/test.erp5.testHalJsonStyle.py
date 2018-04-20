@@ -3,7 +3,7 @@
 import transaction
 from zExceptions import Unauthorized
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from unittest import skip
+from unittest import skip, expectedFailure
 from functools import wraps
 
 from ZPublisher.HTTPRequest import HTTPRequest
@@ -1350,6 +1350,38 @@ return url
 
     # Test that creation_date doesn't has `url_value` dict in it
     self.assertNotIn('url_value', result_dict['_embedded']['contents'][0]['modification_date'])
+
+    # Reset the url_columns of the listbox
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_url_columns = '')
+
+  @expectedFailure
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Test_listProducts', '*args, **kwargs', """
+return context.getPortalObject().foo_module.contentValues()
+""")
+  def test_getHateoasDocument_listbox_check_url_column_no_url(self):
+    # pass custom list method which expect input arguments
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_url_columns = ['title|',])
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+                  REQUEST=fake_request,
+                  mode="search",
+                  list_method='Test_listProducts',
+                  select_list=['id', 'title', 'creation_date', 'modification_date'],
+                  form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox')
+    result_dict = json.loads(result)
+
+    # Test the URL value
+    self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value'], {})
+
+    # Test if the value of the column is with right key
+    self.assertTrue(result_dict['_embedded']['contents'][0]['title']['default'])
 
     # Reset the url_columns of the listbox
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
