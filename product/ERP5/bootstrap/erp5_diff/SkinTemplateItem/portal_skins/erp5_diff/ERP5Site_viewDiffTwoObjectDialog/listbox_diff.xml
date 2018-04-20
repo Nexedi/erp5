@@ -12,6 +12,7 @@
               <list>
                 <string>default</string>
                 <string>gadget_url</string>
+                <string>js_sandbox</string>
                 <string>title</string>
               </list>
             </value>
@@ -96,6 +97,10 @@
                 <item>
                     <key> <string>gadget_url</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>js_sandbox</string> </key>
+                    <value> <string>iframe</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
