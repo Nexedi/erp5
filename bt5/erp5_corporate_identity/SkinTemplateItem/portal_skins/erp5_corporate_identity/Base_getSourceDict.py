@@ -17,32 +17,36 @@ from Products.PythonScripts.standard import html_quote
 # -------------------------------  Set Source ----------------------------------
 source_logo_url = None
 default_bank_account_uid=context.Base_getTemplateParameter("default_bank_account_uid")
+source_organisation = None
 
 if source is None:
   default_company_title=context.Base_getTemplateParameter("default_company_title")
   contributor_title_string = blank
   source_person = None
   source_person_list = []
-  source_organisation = None
   source_organisation_list = []
   source_organisation_uid = None
   source_set = None
 
-  # source person
+  # source person => override => contributor => source_decision
   if override_source_person_title is not None or override_source_person_title == blank:
     source_person_list = context.Base_getTemplateProxyParameter(parameter="override_person", source_data=override_source_person_title)
   if len(source_person_list) == 0:
     source_person_list = context.Base_getTemplateProxyParameter(parameter="author", source_data=None) or []
+  if len(source_person_list) == 0 and getattr(context, 'getSourceDecisionValue', None) is not None:
+    source_person_candidate = context.getSourceDecisionValue()
+    if source_person_candidate and source_person_candidate.getPortalType() == "Person":
+      source_person_list = [source_person_candidate]
   if len(source_person_list) > 0:
     source_person = source_person_list[0]
     contributor_title_string = ', '.join(x.get("name", blank) for x in source_person_list)
 
   # source organisation
-  # order: override => follow-up => default_organisation_uid => default_company_title => source_person career subordinate
+  # order: override => follow-up => default_organisation_uid => default_company_title => source_person career subordinate => source decision
   if override_source_organisation_title is not None or override_source_organisation_title == blank:
     source_organisation_list = context.Base_getTemplateProxyParameter(parameter="override_organisation", source_data=override_source_organisation_title)
   if len(source_organisation_list) == 0:
-    source_organisation_list = context.Base_getTemplateProxyParameter(parameter="organisation", source_data=None)
+    source_organisation_list = context.Base_getTemplateProxyParameter(parameter="organisation", source_data=None) or []
   if len(source_organisation_list) == 0:
     source_organisation_uid = context.Base_getTemplateParameter("default_source_organisation_uid")
   if source_organisation_uid:
@@ -55,6 +59,10 @@ if source is None:
       if len(organisation_candidate_list) > 0:
         source_organisation_list = organisation_candidate_list
         break
+  if len(source_organisation_list) == 0 and getattr(context, 'getSourceDecisionValue', None) is not None:
+    source_organisation_candidate = context.getSourceDecisionValue()
+    if source_organisation_candidate and source_organisation_candidate.getPortalType() == "Organisation":
+      source_organisation_list = [source_organisation_candidate]
   if len(source_organisation_list) > 0:
     source_organisation = source_organisation_list[0]
 
@@ -76,6 +84,12 @@ if default_bank_account_uid is not None:
     source["bank"] = override_bank_account.get("bank")
     source["bic"] = override_bank_account.get("bic")
     source["iban"] = override_bank_account.get("iban")
+
+# social media
+if source_organisation is not None:
+  source["social_media_handle_facebook"] = context.Base_getTemplateParameter('social_media_handle_facebook')
+  source["social_media_handle_twitter"] = context.Base_getTemplateParameter('social_media_handle_twitter')
+  source["social_media_handle_google"] = context.Base_getTemplateParameter('social_media_handle_google')
 
 # social capital currency and registered court fallbacks
 if source.get("social_capital_currency") is blank:

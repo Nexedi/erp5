@@ -10,12 +10,15 @@
 .ci-slideshow .ci-slideshow-handout h2 {
   font-size: 1.25em;
 }
-.ci-slideshow h1 ~ *,
-.ci-slideshow h2 ~ * {
+.ci-slideshow h1 ~ *:not(h2),
+.ci-slideshow h2 ~ *:not(h2) {
   font-size: 1em;
 }
 .ci-slideshow h1 ~ table {
   font-size: .7em;
+}
+.ci-slideshow section table {
+  font-size: smaller;
 }
 html .ci-slideshow pre,
 html .ci-slideshow code {
@@ -122,6 +125,9 @@ html .ci-slideshow .ci-slideshow-intro.present > h2 {
   box-sizing: border-box;
   padding-top: 6.5em;
 }
+.ci-slideshow-intro.present:not(.slide-background):before {
+  background-size: auto 45%;
+}
 html .ci-slideshow .ci-slideshow-intro.present + .ci-slideshow-header {
   display: none;
 }
@@ -209,6 +215,10 @@ html .ci-slideshow section section *:only-child {
 .ci-slideshow section ol {
   text-align: left;
   display: inline-block;
+}
+.ci-slideshow section details ul,
+.ci-slideshow section details ol {
+  display: block
 }
 /* margin subheader, screenshots */
 .ci-slideshow section h2 + *,

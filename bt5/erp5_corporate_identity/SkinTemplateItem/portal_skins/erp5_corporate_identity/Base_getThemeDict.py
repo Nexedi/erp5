@@ -31,7 +31,7 @@ if theme is not None:
   theme_logo_prefix = context.Base_getTemplateParameter("default_logo_prefix")
   if theme_logo_prefix:
     theme_reference = theme_logo_prefix + theme.capitalize()
-    theme_logo_list = context.Base_getTemplateProxyParameter(parameter="logo", source_data=theme_reference)
+    theme_logo_list = context.Base_getTemplateProxyParameter(parameter="logo", source_data=theme_reference) or []
     if len(theme_logo_list) > 0:
       theme_logo_dict = theme_logo_list[0]
 if theme is None:

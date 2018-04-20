@@ -52,7 +52,7 @@ def changeSkin(skin_name):
     return wrapped
   return decorator
 
-class TestCorporateIdentityTemplates(ERP5TypeTestCase):
+class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
 
   def getTitle(self):
     return "Test ERP5 Corporate Identity templates."
@@ -94,13 +94,15 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
       self.portal.portal_preferences.default_nexedi_system_preference.enable()
     self.tic()
 
-  def createTestEvent(self, target_language):
+  def createTestEvent(self, target_language, source_relative_url, destination_relative_url):
     test_event = self.portal.event_module.newContent(
       portal_type="Letter",
       language=target_language,
       content_type="text/html",
       text_content="Hello",
-      title="Test"
+      title="Test",
+      source=source_relative_url,
+      destination=destination_relative_url,
     )
     return test_event
 
@@ -245,7 +247,15 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     kw["batch_mode"] = 1
 
     if id1 == None:
-      test_page = self.createTestEvent(target_language)
+
+      # overrides are not set explicitly in Event-base letters
+      # source and destination are selectedable, so the desired
+      # values must be passed
+      test_page = self.createTestEvent(
+        target_language,
+        kw["source_relative_url"],
+        kw["destination_relative_url"]
+      )
       self.tic()
     else:
       test_page = getattr(self.portal.web_page_module, id1)
@@ -422,10 +432,10 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     """
     self.runPdfTestPattern(
       "template_test_slideshow_input_001_en_html",
-      "template_test_slideshow_input_slide_13_004_en_bmp",
+      "template_test_slideshow_input_slide_6_004_en_bmp",
       "template_test_slideshow_input_004_en_pdf",
       **dict(
-        page_number=13,
+        page_number=6,
         display_note=1,
         use_skin="Slide",
         test_method="WebPage_exportAsSlideshow",
@@ -536,10 +546,10 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
     """
     self.runPdfTestPattern(
       "template_test_slideshow_input_003_de_html",
-      "template_test_slideshow_input_slide_8_005_de_bmp",
+      "template_test_slideshow_input_slide_7_005_de_bmp",
       "template_test_slideshow_input_005_de_pdf",
       **dict(
-        page_number=8,
+        page_number=7,
         display_note=1,
         lang="de",
         test_method="WebPage_exportAsSlideshow",
@@ -717,8 +727,10 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         test_method="Letter_send",
         format="pdf",
         use_skin="Letter",
-        override_source_organisation_title="Test Organisation",
-        override_destination_organisation_title="Test Organisation",
+        #override_source_organisation_title="Test Organisation",
+        #override_destination_organisation_title="Test Organisation",
+        source_relative_url="organisation_module/template_test_organisation",
+        destination_relative_url="organisation_module/template_test_organisation",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
         subfield_field_override_date_day="31"
@@ -742,8 +754,10 @@ class TestCorporateIdentityTemplates(ERP5TypeTestCase):
         test_method="Letter_send",
         format="pdf",
         use_skin="Letter",
-        override_source_person_title="Test Unassociated Member",
-        override_destination_person_title="Test Unassociated Member",
+        #override_source_person_title="Test Unassociated Member",
+        #override_destination_person_title="Test Unassociated Member",
+        source_relative_url="person_module/template_test_no_member",
+        destination_relative_url="person_module/template_test_no_member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
         subfield_field_override_date_day="31"

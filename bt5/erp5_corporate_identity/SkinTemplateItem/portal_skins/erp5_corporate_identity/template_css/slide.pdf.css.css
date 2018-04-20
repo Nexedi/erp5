@@ -11,16 +11,18 @@ html {
 
 /* === font size === */
 .ci-slideshow h1,
-.ci-slideshow h2,
-.ci-slideshow-handout .ci-slideshow-handout-header {
+.ci-slideshow h2 {
   font-size: 42px;
 }
-.ci-slideshow h1 ~ *,
-.ci-slideshow h2 ~ * {
+.ci-slideshow h1 ~ *:not(h2),
+.ci-slideshow h2 ~ *:not(h2) {
   font-size: 28px;
 }
 .ci-slideshow h1 ~ table {
   font-size: 14px;
+}
+.ci-slideshow section table {
+  font-size: smaller;
 }
 .ci-slideshow pre,
 .ci-slideshow code {
@@ -30,10 +32,16 @@ html {
 .ci-slideshow-handout h2 {
   font-size: 24px;
 }
-.ci-slideshow details,
-.ci-slideshow-handout details,
+.ci-slideshow-handout ul li,
+.ci-slideshow-handout ul li a,
+.ci-slideshow-handout div p {
+  font-size: 24px;
+}
 .ci-slideshow .ci-slideshow-intro:before {
   font-size: 28px;
+}
+.ci-slideshow-handout details {
+  font-size: 20px;
 }
 .ci-slideshow-footer div,
 .ci-slideshow-handout section h1 ~ ul {
@@ -108,6 +116,9 @@ section {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.ci-slideshow-intro.present:not(.slide-background):before {
+  background-size: auto 45%;
 }
 .ci-slideshow .ci-slideshow-intro.present > h2 {
   letter-spacing: normal;
@@ -211,13 +222,17 @@ html .ci-slideshow pre {
   display: inline-block;
   margin-top: 10%;
 }
+.ci-slideshow section details ul,
+.ci-slideshow section details ol {
+  display: block
+}
 /* no margin after subheader, images */
 .ci-slideshow section h2 + *,
 .ci-slideshow section h3 + *,
 .ci-slideshow section img + ul,
 .ci-slideshow section img + ol {
   margin-top: 0%;
-} 
+}
 .ci-slideshow section h1 ~ *,
 .ci-slideshow section h2 ~ *,
 .ci-slideshow section h3 ~ * {
@@ -284,7 +299,8 @@ html .ci-slideshow section img + img:last-child {
   page-break-before: always;
 }
 
-/* notes shrink, grayscale slide */
+/* ==== notes ==== */
+/*
 .ci-slideshow-handout section section {
   -webkit-transform:scale(0.4);
   -moz-transform:scale(0.4);
@@ -294,7 +310,7 @@ html .ci-slideshow section img + img:last-child {
   -moz-transform-origin: 50% 15%;
   -ms-transform-origin: 50% 15%;
   transform-origin: 50% 15%;
-  
+
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -305,7 +321,7 @@ html .ci-slideshow section img + img:last-child {
   text-align: center;
   padding: 10mm;
 }
-/* details grayscale */
+
 .ci-slideshow-handout section section * {
   -webkit-filter: grayscale(100%);
   -moz-filter: grayscale(100%);
@@ -314,17 +330,17 @@ html .ci-slideshow section img + img:last-child {
   filter: grayscale(100%);
   filter: gray;
 }
-
-/* notes re-size header */
 .ci-slideshow-handout section section h1 {
   text-align: center;
-  -webkit-transform:scale(5);
-  -moz-transform:scale(5);
-  -ms-transform:scale(5);
-  transform:scale(5);
+  -webkit-transform:scale(2.5);
+  -moz-transform:scale(2.5);
+  -ms-transform:scale(2.5);
+  transform:scale(2.5);
   position: relative;
   top: 0;
 }
+
+
 .ci-slideshow-handout section {
   position: relative;
 }
@@ -352,6 +368,9 @@ html .ci-slideshow section img + img:last-child {
   width: 49%;
   vertical-align: middle;
 }
+.ci-slideshow-handout section h1 ~ div img {
+  width: inherit;
+}
 .ci-slideshow-handout section h1 ~ div:only-of-type {
   display: block;
   margin: 0 auto;
@@ -371,4 +390,126 @@ html .ci-slideshow section img + img:last-child {
 .ci-slideshow-handout section section ul,
 .ci-slideshow-handout section section ol {
   text-align: left;
+}
+*/
+.ci-slideshow-handout section section {
+  -webkit-transform:scale(0.9);
+  -moz-transform:scale(0.9);
+  -ms-transform:scale(0.9);
+  transform:scale(0.9);
+  -webkit-transform-origin: 50% 15%;
+  -moz-transform-origin: 50% 15%;
+  -ms-transform-origin: 50% 15%;
+  transform-origin: 50% 15%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #a1a1a1;
+  display: table;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+  padding: 5mm;
+}
+.ci-slideshow-handout section section * {
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: grayscale(100%);
+  filter: gray;
+}
+.ci-slideshow-handout section section h1 {
+  text-align: center;
+  -webkit-transform:scale(1);
+  -moz-transform:scale(1);
+  -ms-transform:scale(1);
+  transform:scale(1);
+  position: relative;
+  top: 0;
+}
+
+.ci-slideshow-handout section * {
+  font-size: 10mm;
+}
+.ci-slideshow-handout h1,
+.ci-slideshow-handout section h2,
+.ci-slideshow-handout .ci-slideshow-handout-header {
+  font-size: 12mm;
+  padding: 0;
+  margin: 0;
+}
+.ci-slideshow-handout section details,
+.ci-slideshow-handout section details * {
+  font-size: 5mm;
+}
+.ci-slideshow-handout section {
+  position: relative;
+}
+.ci-slideshow-handout section details {
+  position: absolute;
+  top: 93%;
+}
+.ci-slideshow-handout section details p:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+}
+.ci-slideshow-handout section h1 + img,
+.ci-slideshow-handout section h1 + h2 + img {
+  display: block;
+  height: 100mm;
+  width: auto;
+  text-align: center;
+  margin-top: 5mm;
+  margin-left: auto;
+  margin-right: auto;
+}
+.ci-slideshow-handout section h1 ~ ul {
+  text-align: left;
+  display: inline-block;
+}
+.ci-slideshow-handout section ul {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.ci-slideshow-handout section h1 ~ div {
+  display: inline-block;
+  width: 49%;
+  vertical-align: middle;
+}
+.ci-slideshow-handout section h1 ~ div img {
+  width: inherit;
+}
+.ci-slideshow-handout section h1 ~ div:only-of-type {
+  display: block;
+  margin: 0 auto;
+  width: auto;
+}
+.ci-slideshow-handout,
+.ci-slideshow-handout h1,
+.ci-slideshow-handout details {
+  color: #969696;
+}
+.ci-slideshow-handout section section ul,
+.ci-slideshow-handout section section ol {
+  text-align: left;
+}
+
+.ci-slideshow-handout details > summary:first-of-type {
+  list-style-type: none;
+}
+.ci-slideshow-handout ::-webkit-details-marker {
+  display:none;
+}
+/* the big detail cover-up */
+.ci-slideshow-handout details:before {
+  content: "";
+  position: absolute;
+  background: white;
+  width: 30mm;
+  height: 8mm;
+  top: 0mm;
+  left: 0;
 }

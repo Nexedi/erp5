@@ -3,9 +3,14 @@
 Return local parameters that require proxy role to access
 ================================================================================
 """
+# parameters
+# ------------------------------------------------------------------------------
+# pass_parameter             (portal-) type of data to fetch
+# pass_source_data           followup uid or context for retrieving info
+# pass_flag_site             whether called from a web site (no follow-up)
 
 portal_type_valid_template_list = ["Web Site", "Web Section", "Web Page", "Letter"]
-portal_type_valid_report_list = ["Project", "Sale Order", "Sale Opportunity"]
+portal_type_valid_report_list = ["Project", "Sale Order", "Sale Opportunity", "Requirement Document"]
 portal_type = context.getPortalType()
 portal_object = context.getPortalObject()
 validation_state = ('released', 'released_alive', 'published', 'published_alive',
@@ -218,8 +223,8 @@ if pass_parameter is not None and pass_source_data is not None:
 
   # -------------------------- Contributor -------------------------------------
   # returns [{person_dict}, {person_dict...}]
-  if pass_parameter == "author":
-    if portal_type in portal_type_valid_template_list:
+  if pass_parameter == "author" and getattr(context, 'getContributorValueList', None):
+    if portal_type != "Web Section" and portal_type != "Web Site":
       return populatePersonDict(context.getContributorValueList(*args, **kw))
     return []
 
@@ -228,7 +233,7 @@ if pass_parameter is not None and pass_source_data is not None:
   if pass_parameter == "override_organisation":
     return populateOrganisationDict(portal_object.portal_catalog(
       portal_type="Organisation",
-      title=pass_source_data
+      title=(''.join(["=", str(pass_source_data)]))
     ))
 
   # ----------------------- Sender (Override) ----------------------------------
@@ -263,12 +268,14 @@ if pass_parameter is not None and pass_source_data is not None:
 
   # -------------------- Organisation (Follow-Up) ------------------------------
   # returns [{organisation_dict}, {organisation_dict}, ...] used in leaflet, letter, relrase
-  if pass_parameter == "organisation":
-    return populateOrganisationDict(context.getFollowUpValueList(
-      portal_type=pass_parameter.title(),
-      checked_permission='View',
-      follow_up_related_uid=pass_source_data
-    ))
+  if pass_parameter == "organisation" and getattr(context, 'getFollowUpValueList', None):
+    if portal_type != "Web Site" and portal_type != "Web Section":
+      return populateOrganisationDict(context.getFollowUpValueList(
+        portal_type=pass_parameter.title(),
+        checked_permission='View',
+        follow_up_related_uid=pass_source_data
+      ))
+    return []
 
   # ---------------------- Person (Follow-Up) ----------------------------------
   # returns [{person_dict} used in letter
@@ -300,20 +307,22 @@ if pass_parameter is not None and pass_source_data is not None:
     if pass_flag_site == True:
       return populateProductDictFromCategoryList(
         context.getWebSiteValue().getMembershipCriterionCategoryList() or []
-      )
+      ) or []
     elif pass_source_data is not None:
-      return populateProductDict(context.getFollowUpValueList(
-        portal_type=pass_parameter,
-        checked_permission='View',
-        follow_up_related_uid=pass_source_data
-      ))
+      if getattr(context, 'getFollowUpValueList', None):
+        return populateProductDict(context.getFollowUpValueList(
+          portal_type=pass_parameter.title(),
+          checked_permission='View',
+          follow_up_related_uid=pass_source_data
+        )) or []
+      return []
 
   # --------------------------- Theme (Website) --------------------------------
-  # returns string of theme eg. "foo" or None
-  # tries to match theme to follow-up product
   # XXX custom?
   if pass_parameter == "theme":
     theme = None
+    if portal_type == "Web Site" or portal_type == "Web Section":
+      pass_flag_site = True
     product_candidate_list = callSelf("product", pass_source_data, pass_flag_site)
 
     if product_candidate_list is not None:

@@ -40,9 +40,9 @@ Creates the Slideshow note section.
   <tal:block metal:define-macro="slide_notes">
     <!--div class="reveal">
 			<div class="slides"-->
-		<section>
+		<!--section>
       <h1 class="ci-slideshow-handout-header" i18n:translate="" i18n:domain="erp5_ui">Notes</h1>
-    </section>
+    </section-->
 	  <tal:block tal:content="structure python: doc_notes"></tal:block>
 		<!--/div>
 	  </div-->
