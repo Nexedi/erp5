@@ -45,6 +45,10 @@ for citation in re.findall(r'\[(.*?)\]', document_content or ''):
 
   citation_href = (re.findall(match_href, citation) or [""])[0]
 
+  # disregard non-links:
+  if citation_href == blank:
+    continue
+
   # RD = Referenced Document / AD = Applicable Document
   # input:  bla linked document [<a href="" title="title;version;number">RD</a>]
   # output: bla linked document [<a href="#RD-1">RD-1</a>]

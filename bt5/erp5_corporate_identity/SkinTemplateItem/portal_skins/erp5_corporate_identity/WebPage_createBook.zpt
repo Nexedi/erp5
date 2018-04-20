@@ -13,6 +13,9 @@ Generates the complete book (only called in HTML version)
                        book_theme_css_font_list          python: options.get('book_theme_css_font_list');
                        book_theme_css_url                python: options.get('book_theme_css_url');
                        book_template_css_url             python: options.get('book_template_css_url');
+                       book_report_css_list              python: options.get('book_report_css_list');
+                       book_report_js_list               python: options.get('book_report_js_list');
+                       book_embed                        python: options.get('book_embed');
                        book_short_title                  python: options.get('book_short_title');
                        book_description                  python: options.get('book_description');
                        book_source_person_title          python: options.get('book_source_person_title');
@@ -43,6 +46,12 @@ Generates the complete book (only called in HTML version)
     </tal:block>
     <link rel="stylesheet" tal:attributes="href book_theme_css_url" />
     <link rel="stylesheet" tal:attributes="href book_template_css_url" />
+    <link rel="stylesheet" href="template_css/highlight.css" />
+    <tal:block tal:condition="python: len(book_report_css_list) > 0">
+      <tal:block tal:repeat="css_href book_report_css_list">
+        <link rel="stylesheet" tal:attributes="href css_href" />
+      </tal:block>
+    </tal:block>
     <script type="text/javascript">
       function setPlaceholdersWithUrlParameters() {
         var vars={};
@@ -57,16 +66,26 @@ Generates the complete book (only called in HTML version)
     </script>
     </head>
     	<body class="ci-book" onload="setPlaceholdersWithUrlParameters()">
-    	  <tal:block metal:use-macro="context/WebPage_createBookHeader/macros/book_header" />
-    	  <tal:block tal:condition="python: book_raw_report != True">
-    	    <tal:block metal:use-macro="context/WebPage_createBookCover/macros/book_cover" />
-    	  </tal:block>
-  	    <tal:block tal:condition="python: book_include_history is not None">
-    	    <tal:block metal:use-macro="context/WebPage_createBookTableOfHistory/macros/book_history" />
+    	  <tal:block tal:condition="python: book_embed != 1">
+          <tal:block metal:use-macro="context/WebPage_createBookHeader/macros/book_header" />
+      	  <tal:block tal:condition="python: book_raw_report != True">
+      	    <tal:block metal:use-macro="context/WebPage_createBookCover/macros/book_cover" />
+    	    </tal:block>
+  	      <tal:block tal:condition="python: book_include_history is not None">
+    	      <tal:block metal:use-macro="context/WebPage_createBookTableOfHistory/macros/book_history" />
+          </tal:block>
+          <tal:block tal:replace="structure book_table_of_content"></tal:block>
         </tal:block>
-        <tal:block tal:replace="structure book_table_of_content"></tal:block>
         <tal:block metal:use-macro="context/WebPage_createBookContent/macros/book_content" />
-    	  <tal:block metal:use-macro="context/WebPage_createBookFooter/macros/book_footer" />
+    	  <tal:block tal:condition="python: book_embed != 1">
+          <tal:block metal:use-macro="context/WebPage_createBookFooter/macros/book_footer" />
+        </tal:block>
+        <script type="text/javascript" src="template_js/highlight.js"></script>
+        <tal:block tal:condition="python: len(book_report_js_list) > 0">
+          <tal:block tal:repeat="js_src book_report_js_list">
+            <script type="text/javascript" tal:attributes="src js_src"></script>
+          </tal:block>
+        </tal:block>
       </body>
 	 </html>
 </tal:block>

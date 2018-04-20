@@ -26,6 +26,8 @@ Update a book report dialog with parameters manually entered
 # display_comment           include comments where applicable
 # display_detail            include details where applicable
 # display_depth             level of depth to display
+# display_milestone         show milestones if applicable
+# display_orphan            show requirements not covered by task
 #
 # report_name               report to generate
 # report_title              report title
@@ -46,10 +48,12 @@ if dialog_id is not None:
       document_reference=document_reference,
       document_version=document_version,
       document_title=document_title,
+      display_milestone=display_milestone,
       display_depth=display_depth,
       display_detail=display_detail,
       display_comment=display_comment,
       display_header=display_header,
+      display_orphan=display_orphan,
       report_name=report_name,
       report_title=report_title,
       requirement_relative_url=requirement_relative_url,

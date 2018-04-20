@@ -85,9 +85,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Same slideshow description</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
