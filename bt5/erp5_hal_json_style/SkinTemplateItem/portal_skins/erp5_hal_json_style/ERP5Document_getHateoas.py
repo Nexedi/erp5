@@ -223,15 +223,37 @@ def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
 
   In case the function cannot state required arguments it throws an AttributeError.
   """
-  if not hasattr(func, 'params'):
+
+  if hasattr(func, 'params'):
+    # In case the func is actualy Script (Python) or ERP5 Python Script
+    func_param_list = [tuple(map(lambda x: x.strip(), func_param.split('='))) for func_param in func.params().split(",")]
+
+  elif hasattr(func, "func_args"):
+    # In case the func is an External Method
+    func_param_list = func.func_args
+    if len(func_param_list) > 0 and func_param_list[0] == "self":
+      func_param_list = func_param_list[1:]
+    func_default_list = func.func_defaults
+    func_param_list = [(func_param, func_default_list[i]) if len(func_default_list) >= (i + 1) else (func_param, )
+                        for i, func_param in enumerate(func_param_list)]
+
+  else:
+    # TODO: cover the case of Callables
+    # For anything else give up in advance and just return initial guess of the callee
     return initial_kwargs
 
-  func_param_list = [func_param.strip() for func_param in func.params().split(",")]
-  func_param_name_list = [func_param if '=' not in func_param else func_param.split('=')[0]
-                          for func_param in func_param_list if '*' not in func_param]
+  # func_param_list is a list of tuples - first item is parameter name and optinal second item is the default value
+  func_param_name_list = [item[0] for item in func_param_list]
   for func_param_name in func_param_name_list:
-    if func_param_name in kwargs_dict and func_param_name not in initial_kwargs:
-      initial_kwargs[func_param_name] = kwargs_dict.get(func_param_name)
+    if '*' in func_param_name:
+      continue
+    # move necessary parameters from kwargs_dict to initial_kwargs
+    if func_param_name not in initial_kwargs and func_param_name in kwargs_dict:
+      func_param_value = kwargs_dict.get(func_param_name)
+      if callable(func_param_value):
+        initial_kwargs[func_param_name] = func_param_value()  # evaluate lazy attributes
+      else:
+        initial_kwargs[func_param_name] = func_param_value
   # MIDDLE-DANGEROUS!
   # In case of reports (later even exports) substitute None for unknown
   # parameters. We suppose Python syntax for parameters!
@@ -240,14 +262,21 @@ def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
   # this way we can mimic synchronous rendering when all form field values
   # were available in `kwargs_dict`. It is obviously wrong behaviour.
   for func_param in func_param_list:
-    if "*" in func_param:
+    if "*" in func_param[0]:
       continue
-    if "=" in func_param:
+    if len(func_param) > 1:  # default value exists
       continue
     # now we have only mandatory parameters
-    func_param = func_param.strip()
+    func_param = func_param[0].strip()
     if func_param not in initial_kwargs:
       initial_kwargs[func_param] = None
+  # If the method does not specify **kwargs we need to remove unwanted parameters
+  if len(func_param_name_list) > 0 and "**" not in func_param_name_list[-1]:
+    initial_param_list = tuple(initial_kwargs.keys()) # copy the keys
+    for initial_param in initial_param_list:
+      if initial_param not in func_param_name_list:
+        del initial_kwargs[initial_param]
+
   return initial_kwargs
 
 
@@ -785,17 +814,9 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     # still in the request which is not our case because we do asynchronous rendering
     if list_method is not None:
       selectKwargsForCallable(list_method, list_method_query_dict, REQUEST)
-      # Now if the list_method does not specify **kwargs we need to remove
-      # unwanted parameters like "portal_type" which is everywhere
-      if hasattr(list_method, 'params') and "**" not in list_method.params():
-        _param_key_list = tuple(list_method_query_dict.keys()) # copy the keys
-        for param_key in _param_key_list:
-          if param_key not in list_method.params():  # we search in raw string
-            del list_method_query_dict[param_key]    # but it is enough
 
-    if (True):  # editable_column_list (used to be but we need
-                # template fields resolution (issued by existence of `form_relative_url`)
-                # to always kick in
+    if (True):  # editable_column_list (we need that template fields resolution
+                # (issued by existence of `form_relative_url`) always kicks in
       list_method_custom = url_template_dict["custom_search_template"] % {
         "root_url": site_root.absolute_url(),
         "script_id": script.id,
