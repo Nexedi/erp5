@@ -11,15 +11,14 @@
             <value>
               <list>
                 <string>default</string>
-                <string>gadget_url</string>
-                <string>js_sandbox</string>
+                <string>items</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_diff</string> </value>
+            <value> <string>your_new_state</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -66,7 +65,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
@@ -84,27 +83,27 @@
               <dictionary>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_gadget_field</string> </value>
+                    <value> <string>my_category</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>js_sandbox</string> </key>
-                    <value> <string>iframe</string> </value>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Diff Viewer</string> </value>
+                    <value> <string>New Revision</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -120,7 +119,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.diff</string> </value>
+            <value> <string>python: context.Base_getHistoricalRevisionList(context)[0]</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -133,7 +132,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.restrictedTraverse(\'erp5_side_by_side_diff.html\').absolute_url()</string> </value>
+            <value> <string>python: context.Base_getHistoricalRevisionList(context)</string> </value>
         </item>
       </dictionary>
     </pickle>

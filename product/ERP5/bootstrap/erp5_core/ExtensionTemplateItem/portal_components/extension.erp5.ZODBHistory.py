@@ -154,3 +154,7 @@ def getPreviosTwoStates(document, size=2, attrbute_name=None):
     history.append(connection.oldstate(document, d_['tid']))
 
   return history
+
+def getHistoricalRevisionsDateList(document):
+  result = document._p_jar.db().history(document._p_oid, size=50)
+  return [toDateTime(d_['time']).strftime("%Y-%m-%d %H:%M:%S") for d_ in result]

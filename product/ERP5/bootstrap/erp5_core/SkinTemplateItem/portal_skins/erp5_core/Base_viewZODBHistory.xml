@@ -92,6 +92,7 @@
                         <string>listbox_changes</string>
                         <string>history_listbox</string>
                         <string>listbox_diff</string>
+                        <string>your_workflow_history</string>
                       </list>
                     </value>
                 </item>
@@ -99,14 +100,16 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_workflow_history</string>
+                        <string>your_new_state</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_old_state</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
