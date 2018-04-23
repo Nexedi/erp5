@@ -233,8 +233,7 @@ class FolderMixIn(ExtensionClass.Base):
     of objects inside a module using activities
     We also append random id
     """
-    activity_tool = self.getPortalObject().portal_activities
-    new_id = "%s-%s" %(activity_tool.getCurrentNode().replace("-", "_"),
+    new_id = "%s-%s" %(getCurrentNode().replace("-", "_"),
                        self._generateRandomId())
     try:
        checkValidId(self, new_id)
@@ -250,7 +249,7 @@ class FolderMixIn(ExtensionClass.Base):
     """
     activity_tool = self.getPortalObject().portal_activities
     node_list = list(activity_tool.getNodeList())
-    current_node = activity_tool.getCurrentNode()
+    current_node = getCurrentNode()
     try:
       node_number = node_list.index(current_node) + 1
     except ValueError:
@@ -266,7 +265,7 @@ class FolderMixIn(ExtensionClass.Base):
     """
     activity_tool = self.getPortalObject().portal_activities
     node_list = list(activity_tool.getNodeList())
-    current_node = activity_tool.getCurrentNode()
+    current_node = getCurrentNode()
     try:
       node_number = node_list.index(current_node) + 1
     except ValueError:
@@ -1678,6 +1677,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
         # do not fail in case of accessor is not available
         pass
     return '%s/%s' % (url, icon)
+
+from Products.CMFActivity.ActivityTool import getCurrentNode
 
 # We browse all used class from btree and hbtree and set not implemented
 # class if one method defined on a class is not defined on other, thus if

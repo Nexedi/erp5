@@ -53,6 +53,10 @@ import random
 import threading
 import weakref
 import transaction
+from Products.CMFActivity.ActivityTool import getCurrentNode, getServerAddress
+from App.config import getConfiguration
+from asyncore import socket_map
+import socket
 
 class CommitFailed(Exception):
   pass
@@ -2948,6 +2952,33 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
                      ['bar', 'organisation_module'])
     skin.manage_delObjects([script_id])
     self.tic()
+
+  def testGetCurrentNode(self):
+    current_node = getattr(getConfiguration(),'product_config',{},).get('cmfactivity', {}).get('node-id')
+    if not current_node:
+      current_node = getServerAddress()
+    node = getCurrentNode()
+    self.assertEqual(node, current_node)
+    portal = self.getPortal()
+    activity_node = portal.portal_activities.getCurrentNode()
+    self.assertEqual(activity_node, current_node)
+
+  def testGetServerAddress(self):
+    ip = port = ''
+    for k, v in socket_map.items():
+      if hasattr(v, 'addr'):
+        type = str(getattr(v, '__class__', 'unknown'))
+        if type == 'ZServer.HTTPServer.zhttp_server':
+          ip, port = v.addr
+          break
+    if ip == '0.0.0.0':
+      ip = socket.gethostbyname(socket.gethostname())
+    server_address = '%s:%s' %(ip, port)
+    address = getServerAddress()
+    self.assertEqual(address, server_address)
+    portal = self.getPortal()
+    activity_address = portal.portal_activities.getServerAddress()
+    self.assertEqual(activity_address, server_address)
 
 def test_suite():
   suite = unittest.TestSuite()
