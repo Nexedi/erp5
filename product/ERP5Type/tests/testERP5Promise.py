@@ -55,6 +55,7 @@ class TestERP5Promise(ERP5TypeTestCase):
       self._test_promise_alarm("promise_conversion_server")
 
     def test_promise_kumofs_server(self):
+      self.portal.portal_memcached.persistent_memcached_plugin.setUrlString(None)
       self._test_promise_alarm("promise_kumofs_server")
 
     def test_promise_memcached_server(self):
