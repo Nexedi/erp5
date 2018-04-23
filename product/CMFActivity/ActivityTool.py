@@ -126,6 +126,46 @@ def activity_timing_method(method, args, kw):
     end = time()
     activity_timing_logger.info('%.02fs: %r(*%r, **%r)' % (end - begin, method, args, kw))
 
+def getServerAddress():
+    """
+    Return current server address
+    """
+    global _server_address
+    if _server_address is None:
+        ip = port = ''
+        from asyncore import socket_map
+        for k, v in socket_map.items():
+            if hasattr(v, 'addr'):
+                # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
+                type = str(getattr(v, '__class__', 'unknown'))
+                if type == 'ZServer.HTTPServer.zhttp_server':
+                    ip, port = v.addr
+                    break
+        if ip == '0.0.0.0':
+            ip = socket.gethostbyname(socket.gethostname())
+        _server_address = '%s:%s' %(ip, port)
+    return _server_address
+
+def getCurrentNode():
+    """ Return current node identifier """
+    global currentNode
+    if currentNode is None:
+      currentNode = getattr(
+        getConfiguration(),
+        'product_config',
+        {},
+      ).get('cmfactivity', {}).get('node-id')
+    if currentNode is None:
+      warnings.warn('Node name auto-generation is deprecated, please add a'
+        '\n'
+        '<product-config CMFActivity>\n'
+        '  node-id = ...\n'
+        '</product-config>\n'
+        'section in your zope.conf, replacing "..." with a cluster-unique '
+        'node identifier.', DeprecationWarning)
+      currentNode = getServerAddress()
+    return currentNode
+
 # Here go ActivityBuffer instances
 # Structure:
 #  global_activity_buffer[activity_tool_path][thread_id] = ActivityBuffer
@@ -359,7 +399,7 @@ Method: %s
 Arguments: %r
 Named Parameters: %r
 """ % (email_from_name, activity_tool.email_from_address, user_email, message,
-       path, self.method_id, activity_tool.getCurrentNode(), fail_count,
+       path, self.method_id, getCurrentNode(), fail_count,
        self.user_name, self.line.uid, path, self.method_id, self.args, self.kw)
     if self.traceback:
       mail_text += '\nException:\n' + self.traceback
@@ -819,42 +859,18 @@ class ActivityTool (Folder, UniqueObject):
         """
         Backward-compatibility code only.
         """
-        global _server_address
-        if _server_address is None:
-            ip = port = ''
-            from asyncore import socket_map
-            for k, v in socket_map.items():
-                if hasattr(v, 'addr'):
-                    # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
-                    type = str(getattr(v, '__class__', 'unknown'))
-                    if type == 'ZServer.HTTPServer.zhttp_server':
-                        ip, port = v.addr
-                        break
-            if ip == '0.0.0.0':
-                ip = socket.gethostbyname(socket.gethostname())
-            _server_address = '%s:%s' %(ip, port)
-        return _server_address
+        LOG('ActivityTool', WARNING,
+            '"getServerAddress" class method is deprecated, use "getServerAddress" module-level function instead.')
+        return getServerAddress()
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'getCurrentNode')
     def getCurrentNode(self):
-        """ Return current node identifier """
-        global currentNode
-        if currentNode is None:
-          currentNode = getattr(
-            getConfiguration(),
-            'product_config',
-            {},
-          ).get('cmfactivity', {}).get('node-id')
-        if currentNode is None:
-          warnings.warn('Node name auto-generation is deprecated, please add a'
-            '\n'
-            '<product-config CMFActivity>\n'
-            '  node-id = ...\n'
-            '</product-config>\n'
-            'section in your zope.conf, replacing "..." with a cluster-unique '
-            'node identifier.', DeprecationWarning)
-          currentNode = self.getServerAddress()
-        return currentNode
+        """
+        Backward-compatibility code only.
+        """
+        LOG('ActivityTool', WARNING,
+            '"getCurrentNode" class method is deprecated, use "getCurrentNode" module-level function instead.')
+        return getCurrentNode()
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'getDistributingNode')
     def getDistributingNode(self):
@@ -884,7 +900,7 @@ class ActivityTool (Folder, UniqueObject):
         if node_dict:
           # BBB: check if our node was known by address (processing and/or
           # distribution), and migrate it.
-          server_address = self.getServerAddress()
+          server_address = getServerAddress()
           role = node_dict.pop(server_address, ROLE_IDLE)
           if self.distributingNode == server_address:
             self.distributingNode = node
@@ -1022,7 +1038,7 @@ class ActivityTool (Folder, UniqueObject):
             user = self.portal_catalog.getWrappedOwner()
             newSecurityManager(self.REQUEST, user)
 
-            currentNode = self.getCurrentNode()
+            currentNode = getCurrentNode()
             self.registerNode(currentNode)
             processing_node_list = self.getNodeList(role=ROLE_PROCESSING)
 

@@ -10,6 +10,7 @@ from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import createZServer
+from Products.CMFActivity.ActivityTool import getCurrentNode
 
 
 class DictPersistentWrapper(IterableUserDict, object):
@@ -86,7 +87,7 @@ def patchActivityTool():
   def tic(self, processing_node=1, force=0):
     processing_node_list = self.getProcessingNodeList()
     if len(processing_node_list) > 1 and \
-       self.getCurrentNode() == self.getDistributingNode():
+       getCurrentNode() == self.getDistributingNode():
       # Sleep between each distribute.
       time.sleep(0.3)
       transaction.commit()
@@ -166,7 +167,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     except AttributeError:
       from Products.CMFActivity.ActivityTool import ActivityTool
       activity_tool = ActivityTool().__of__(self.app)
-    currentNode = activity_tool.getCurrentNode()
+    currentNode = getCurrentNode()
     if distributing:
       activity_tool.manage_setDistributingNode(currentNode)
     elif currentNode == activity_tool.getDistributingNode():

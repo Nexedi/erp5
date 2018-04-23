@@ -93,10 +93,11 @@ class TestInvalidationBug(ERP5TypeTestCase):
   def testLateInvalidationFromZEO(self):
     ### Check unit test is run properly
     from ZEO.ClientStorage import ClientStorage
+    from Products.CMFActivity.ActivityTool import getCurrentNode
     storage = self.portal._p_jar._storage
     activity_tool = self.portal.portal_activities
     node_list = list(activity_tool.getProcessingNodeList())
-    node_list.remove(activity_tool.getCurrentNode())
+    node_list.remove(getCurrentNode())
     assert node_list and isinstance(storage, ClientStorage), \
       "this unit test must be run with at least 2 ZEO clients"
 

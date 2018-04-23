@@ -94,9 +94,10 @@ class TestERP5(ERP5TypeTestCase):
     self.login()
 
   def getOtherZopeNode(self):
+    from Products.CMFActivity.ActivityTool import getCurrentNode
     activity_tool = self.portal.portal_activities
     node_list = list(activity_tool.getProcessingNodeList())
-    node_list.remove(activity_tool.getCurrentNode())
+    node_list.remove(getCurrentNode())
     assert node_list, "this unit test must be run with at least 2 Zope nodes"
     return node_list[0]
 
