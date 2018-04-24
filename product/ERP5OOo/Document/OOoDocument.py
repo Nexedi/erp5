@@ -79,46 +79,70 @@ class _ProtocolErrorCatcher(object):
       raise ConversionError("Protocol error while contacting OOo conversion"
                             " server: %s" % (message))
 
-class OOoServerProxy(ServerProxy):
+class OOoServerProxy():
   """
   xmlrpc-like ServerProxy object adapted for OOo conversion server
   """
   def __init__(self, context):
+    self._serverproxy_list = []
     preference_tool = getToolByName(context, 'portal_preferences')
-
-    uri = preference_tool.getPreferredDocumentConversionServerUrl()
-    if not uri:
+    uri_list = preference_tool.getPreferredDocumentConversionServerUrlList()
+    LOG('uri list', 1, uri_list)
+    if not uri_list:
       address = preference_tool.getPreferredOoodocServerAddress()
       port = preference_tool.getPreferredOoodocServerPortNumber()
       if not (address and port):
         raise ConversionError('OOoDocument: cannot proceed with conversion:'
-              ' conversion server url is not defined in preferences')
+              ' conversion server url is not defined in preferences %s' %(uri_list))
 
       LOG('OOoDocument', WARNING, 'PreferredOoodocServer{Address,PortNumber}' + \
           ' are DEPRECATED please use PreferredDocumentServerUrl instead', error=True)
-      scheme = "http"
-      uri = '%s://%s:%s' % (scheme, address, port)
-    else:
+       
+      uri_list =  ['%s://%s:%s' % ('http', address, port)]
+
+    timeout = preference_tool.getPreferredOoodocServerTimeout() \
+                    or OOO_SERVER_PROXY_TIMEOUT
+    for uri in uri_list:
       if uri.startswith("http://"):
         scheme = "http"
       elif uri.startswith("https://"):
         scheme = "https"
       else:
         raise ConversionError('OOoDocument: cannot proceed with conversion:'
-              ' preferred conversion server url is invalid')
+              ' preferred conversion server url is invalid %s' %(uri_list))
 
-    timeout = preference_tool.getPreferredOoodocServerTimeout() \
-                    or OOO_SERVER_PROXY_TIMEOUT
-    transport = TimeoutTransport(timeout=timeout, scheme=scheme)
+      transport = TimeoutTransport(timeout=timeout, scheme=scheme)
+      
+      self._serverproxy_list.append(ServerProxy(uri, allow_none=True, transport=transport))
+  def _proxy_function(self, func_name, *argc):
+    count = 0
+    while count < 5:
+      for server_proxy in self._serverproxy_list:
+        func = server_proxy.__getattr__(func_name)
+        try:
+          return func(*argc)
+        except Exception, e:
+          LOG('excepttion', 1, e)
+          if count < 5:
+            pass
+          else:
+            raise e
+      count += 1  
 
-    ServerProxy.__init__(self, uri, allow_none=True, transport=transport)
-
+  def run_convert(self, filename, data, meta, extension, orig_format):
+     return self._proxy_function('run_convert', filename, data, meta, extension, orig_format)
+  def getAllowedTargetItemList(self, content_type):
+    return self._proxy_function('getAllowedTargetItemList', content_type)
+  def run_generate(self, filename, data, meta, extension, orig_format):
+    return self._proxy_function('run_generate', filename, data, meta, extension, orig_format)
+  """
   def __getattr__(self, attr):
-    obj = ServerProxy.__getattr__(self, attr)
+    LOG('OOoServerProxy __getattr__', 1, attr),
+    obj = self._serverproxy_list[1].__getattr__(attr)
     if callable(obj):
       obj.__call__ = _ProtocolErrorCatcher(obj.__call__)
     return obj
-
+  """
 class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixin, File,
                   TextConvertableMixin, Document):
   """
