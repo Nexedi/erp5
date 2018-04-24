@@ -1,4 +1,3 @@
-import random
 portal = context.getPortalObject()
 at_date = at_date.latestTime()
 
