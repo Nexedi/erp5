@@ -90,7 +90,7 @@ if period_start_date and params.get('node_uid'):
     # beginning of period to the from_date
     at_date = params.pop('at_date', None)
     period_openning_balance = getInventory(
-              selection_domain=getSelectionDomainDictFor(selection_name),
+              selection_domain=getSelectionDomainDictFor(selection_name) or None,
               to_date=period_start_date,
               **params)
     if omit_asset_decrease:
@@ -111,5 +111,5 @@ if period_start_date and params.get('node_uid'):
 return getInventory(
               omit_asset_increase=omit_asset_increase,
               omit_asset_decrease=omit_asset_decrease,
-              selection_domain=getSelectionDomainDictFor(selection_name),
+              selection_domain=getSelectionDomainDictFor(selection_name) or None,
               **params)
