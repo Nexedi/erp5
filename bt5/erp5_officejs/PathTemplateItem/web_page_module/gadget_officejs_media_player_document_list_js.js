@@ -12,6 +12,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod('redirect', 'redirect')
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -83,6 +84,15 @@
             ['description', 'Description'],
             ['version', 'Version'],
             ['modification_date', 'Modification Date']
+          ],
+          sort_list = [
+            ['title', 'Title'],
+            ['reference', 'Reference'],
+            ['language', 'Language'],
+            ['description', 'Description'],
+            ['version', 'Version'],
+            ['modification_date', 'Modification Date'],
+            ['random', 'Random']
           ];
           return result[0].render({
             erp5_document: {
@@ -100,7 +110,7 @@
                     result[1] + "%22",
                   "portal_type": [],
                   "search_column_list": column_list,
-                  "sort_column_list": column_list,
+                  "sort_column_list": sort_list,
                   "sort": [['modification_date', 'descending']],
                   "title": "Documents",
                   "type": "ListBox"

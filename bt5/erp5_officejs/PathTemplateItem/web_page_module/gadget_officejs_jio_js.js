@@ -72,7 +72,10 @@
       }
       jio_options = {
         type: 'dateupdater',
-        sub_storage: jio_options,
+        sub_storage: {
+          type: 'random',
+          sub_storage: jio_options
+        },
         property_list: ['modification_date']
       };
       try {
