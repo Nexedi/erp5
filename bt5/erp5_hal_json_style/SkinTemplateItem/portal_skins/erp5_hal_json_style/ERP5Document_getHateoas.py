@@ -61,7 +61,6 @@ from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Utils import UpperCase
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from collections import OrderedDict
-from urlparse import urlparse
 
 MARKER = []
 
@@ -126,6 +125,8 @@ def byteify(string):
     return {byteify(key): byteify(value) for key, value in string.iteritems()}
   elif isinstance(string, list):
     return [byteify(element) for element in string]
+  elif isinstance(string, tuple):
+    return tuple(byteify(element) for element in string)
   elif isinstance(string, unicode):
     return string.encode('utf-8')
   else:
@@ -151,7 +152,7 @@ time_iso_re = re.compile(r'^(\d{2}):(\d{2}):(\d{2}).*$')
 def ensureDeserialized(obj):
   """Deserialize classes serialized by our own `ensureSerializable`.
 
-  Method `biteify` must not be called on the result because it would revert out
+  Method `byteify` must not be called on the result because it would revert out
   deserialization by calling __str__ on constructed classes.
   """
   if isinstance(obj, dict):
@@ -560,7 +561,7 @@ def getFieldDefault(form, field, key, value=None):
   Previously we used Formulator.Field._get_default which is (for no reason) private.
   """
   if value is None:
-    value = REQUEST.get(key, MARKER)
+    value = REQUEST.form.get(key, MARKER)
     # use marker because default value can be intentionally empty string
     if value is MARKER:
       value = field.get_value('default', request=REQUEST, REQUEST=REQUEST)
@@ -582,7 +583,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
   # thus setting the field_id is optional and controlled by `request_field` argument
   if request_field:
     previous_request_field = REQUEST.other.pop('field_id', None)
-    REQUEST.set('field_id', field.id)
+    REQUEST.other['field_id'] = field.id
 
   if meta_type is None:
     meta_type = field.meta_type
@@ -1125,7 +1126,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   if form.pt == 'form_dialog':
     # overwrite "form_id" field's value because old UI does that by passing
     # the form_id in query string and hidden fields
-    renderHiddenField(response_dict, "form_id", REQUEST.get('form_id') or form.id)
+    renderHiddenField(response_dict, "form_id", last_form_id or REQUEST.get('form_id', '') or form.id)
     # dialog_id is a mandatory field in any form_dialog
     renderHiddenField(response_dict, 'dialog_id', form.id)
     # some dialog actions use custom cancel_url
@@ -1242,7 +1243,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     # metadata about the form (its hash and dynamic fields)
     renderHiddenField(response_dict, 'extra_param_json', json.dumps(extra_param_json))
 
-  for key, value in previous_request_other.items():
+  for key, value in byteify(previous_request_other.items()):
     if value is not None:
       REQUEST.set(key, value)
 
@@ -1403,8 +1404,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if isinstance(extra_param_json, str):
       extra_param_json = ensureDeserialized(json.loads(urlsafe_b64decode(extra_param_json)))
 
-    for key, value in extra_param_json.items():
-      REQUEST.set(key, value)
+    for k, v in byteify(extra_param_json.items()):
+      REQUEST.set(k, v)
 
     # Add a link to the portal type if possible
     if not is_portal:
@@ -1457,36 +1458,31 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           }
         }
 
-        if view_instance.pt == "form_dialog":
-          # If there is a "form_id" in the REQUEST then it means that last view was actually a form
-          # and we are most likely in a dialog. We save previous form into `last_form_id` ...
-          last_form_id =  REQUEST.get('form_id', "") if REQUEST is not None else ""
-
         # Put all query parameters (?reset:int=1&workflow_action=start_action) in request to mimic usual form display
         # Request is later used for method's arguments discovery so set URL params into REQUEST (just like it was sent by form)
-        for query_key, query_value in current_action['params'].items():
+        for query_key, query_value in byteify(current_action['params'].items()):
           REQUEST.set(query_key, query_value)
 
-        # If our "form" is actually a Script (nothing is sure in ERP5) then execute it here
-        try:
-          if "Script" in view_instance.meta_type:
-            # we suppose that the script takes only what is given in the URL params
-            return view_instance(**current_action['params'])
-        except AttributeError:
-          # if renderer form does not have attr meta_type then it is not a document
-          # but most likely bound instance method. Some form_ids do actually point to methods.
+        # If our "form" is actually a Script (nothing is sure in ERP5) or anything else than Form
+        # (e.g. function or bound class method will) not have .meta_type thus be considered a Script
+        # then we execute it directly
+        if "Script" in getattr(view_instance, "meta_type", "Script"):
+          # we suppose that the script takes only what is given in the URL params
           returned_value = view_instance(**current_action['params'])
+
           # returned value is usually REQUEST.RESPONSE.redirect()
           log('ERP5Document_getHateoas', 'HAL_JSON cannot handle returned value "{!s}" from {}({!s})'.format(
             returned_value, current_action['view_id'], current_action['params']), 100)
-          status_message = Base_translateString('Operation executed')
-          if isinstance(returned_value, (str, unicode)) and returned_value.startswith('http'):
-            parsed_url = urlparse(returned_value)
-            parsed_query = parse_qs(parsed_url.query)
-            if len(parsed_query.get('portal_status_message', ())) > 0:
-               status_message = parsed_query.get('portal_status_message')[0]
+          status_message = Base_translateString('Operation executed.')
+          if isinstance(returned_value, str) and "portal_status_message=" in returned_value:  # it is an URL
+            status_message = re.match(r'portal_status_message=([^&]*)', returned_value).group(1).replace('+', ' ')
           return traversed_document.Base_redirect(keep_items={
             'portal_status_message': status_message})
+
+        if view_instance.pt == "form_dialog":
+          # If there is a "form_id" in the REQUEST then it means that last view was actually a form
+          # and we are most likely in a dialog. We save previous form into `last_form_id` ...
+          last_form_id =  REQUEST.get('form_id', "")
 
         # Sometimes callables (form dialog's method, listbox's list method...) do not touch
         # REQUEST but expect all (formerly) URL query parameters to appear in their **kw
@@ -1721,7 +1717,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if isinstance(extra_param_json, str):
       extra_param_json = ensureDeserialized(json.loads(urlsafe_b64decode(extra_param_json)))
 
-    for key, value in extra_param_json.items():
+    for key, value in byteify(extra_param_json.items()):
       REQUEST.set(key, value)
 
     # in case we have custom list method
