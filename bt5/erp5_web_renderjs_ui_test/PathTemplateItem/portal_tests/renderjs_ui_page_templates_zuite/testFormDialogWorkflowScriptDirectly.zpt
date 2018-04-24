@@ -1,0 +1,67 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form View Editable Save Action</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td>Title 1</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='Actions']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text()='Actions']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Custom Action No Dialog']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Custom Action No Dialog']</td>
+  <td></td>
+</tr>
+<tr>
+  <td rowspan="1" colspan="3">
+    Action should succeed and redirect back to the context.<br/>
+    It will not show messages because we do not parse the response.
+  </td>
+</tr>
+  <tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td>Title 1</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

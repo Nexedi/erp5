@@ -38,10 +38,10 @@
           splitted_current_jio_key_list,
           command,
           i;
-        if (is_updating) {
+        if (is_updating || !jio_key) {
           return;
         }
-        if (!jio_key || gadget.state.redirect_to_parent) {
+        if (gadget.state.redirect_to_parent) {
           return gadget.redirect({command: 'history_previous'});
         }
         if (gadget.state.jio_key === jio_key) {
