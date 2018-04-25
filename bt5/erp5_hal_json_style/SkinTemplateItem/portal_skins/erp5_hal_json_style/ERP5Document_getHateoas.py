@@ -26,6 +26,10 @@ Parameters for mode == 'search'
 
 Parameters for mode == 'form'
 :param form: {instace} of a form - obviously this call can be only internal (Script-to-Script)
+:param form_data: {dict} cleaned (validated) form data stored in dict where the key is (prefixed) field.id. We do not use it to
+                         obtain the value of the field because of how the validation itself work. Take a look in
+                         Formulator/Form.validata_all_to_request where REQUEST is modified inplace and in case of first error
+                         an exception is thrown which prevents the return thus form_data are empty in case of partial success.
 :param extra_param_json: {dict} extra fields to be added to the rendered form
 
 Parameters for mode == 'traverse'
@@ -1239,6 +1243,11 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   # end-if report_section
 
   if form.pt == "form_dialog":
+    # Insert hash of current values into the form so scripts can see whether data has
+    # changed if they provide multi-step process
+    if form_data is not None:
+      extra_param_json["form_hash"] = form.hash_validated_data(form_data)
+
     # extra_param_json is a special field in forms (just like form_id). extra_param_json field holds JSON
     # metadata about the form (its hash and dynamic fields)
     renderHiddenField(response_dict, 'extra_param_json', json.dumps(extra_param_json))
