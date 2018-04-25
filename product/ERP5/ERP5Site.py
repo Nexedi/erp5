@@ -286,7 +286,8 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       pref = preference_tool.newContent(id, portal_type,
         priority=Priority.SITE, title='Default ' + portal_type)
       pref.enable()
-    pref.setPreferredDocumentConversionServerUrl(cloudooo_url)
+    cloudooo_url = cloudooo_url.split(',')
+    pref.setPreferredDocumentConversionServerUrlList(cloudooo_url)
 
   def _createInitialSiteManager(self):
     # This section of code is inspired by
