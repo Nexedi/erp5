@@ -83,7 +83,7 @@
                       <list>
                         <string>my_priority</string>
                         <string>my_preferred_time_zone</string>
-                        <string>my_preferred_document_conversion_server_url</string>
+                        <string>my_preferred_document_conversion_server_url_list</string>
                         <string>my_preferred_ooodoc_server_timeout</string>
                         <string>my_preferred_hide_rows_on_no_search_criterion</string>
                         <string>my_translated_preference_state_title</string>
