@@ -50,15 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>section_category, section_category_strict, at_date, simulation_state, ledger, user_name, tag, aggregate_tag, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>section_category, section_category_strict, at_date, group_by, simulation_state, ledger, user_name=None, tag=None, aggregate_tag=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

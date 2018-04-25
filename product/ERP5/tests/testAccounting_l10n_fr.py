@@ -161,7 +161,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(6, len(credit_list))
     self.assertEqual(372, sum([float(x.text) for x in credit_list]))
 
-  def _FECWithLedger(self, ledger_list=None):
+  def _FECWithLedger(self, ledger_list=None, group_by=None):
     self.setUpLedger()
     account_module = self.portal.account_module
     first = self._makeOne(
@@ -215,6 +215,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
         section_category_strict=False,
         at_date=DateTime(2014, 12, 31),
         simulation_state=['delivered'],
+        group_by=group_by,
         ledger=ledger_list)
     self.tic()
 
@@ -249,25 +250,159 @@ class TestAccounting_l10n_fr(AccountingTestCase):
   def test_FECWithOneLedger(self):
     tree = self._FECWithLedger(['accounting/general'])
 
-    debit_list = tree.xpath("//Debit")
+    # 'Purchase Invoice Transaction' portal_type
+    journal_list = tree.xpath("//JournalCode[text()='Purchase Invoice Transaction']/..")
+    self.assertEqual(1, len(journal_list))
+    journal = journal_list[0]
+
+    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    self.assertEqual(['Première Écriture'], ecriture_list)
+
+    debit_list = journal.xpath(".//Debit")
+    self.assertEqual(3, len(debit_list))
+    self.assertEqual(132, sum([float(x.text) for x in debit_list]))
+
+    credit_list = journal.xpath(".//Credit")
+    self.assertEqual(3, len(credit_list))
+    self.assertEqual(132, sum([float(x.text) for x in credit_list]))
+
+    # 'Sale Invoice Transaction' portal_type
+    journal_list = tree.xpath("//JournalCode[text()='Sale Invoice Transaction']/..")
+    self.assertEqual(1, len(journal_list))
+    journal = journal_list[0]
+
+    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    self.assertEqual(['Seconde Écriture'], ecriture_list)
+
+    debit_list = journal.xpath(".//Debit")
+    self.assertEqual(3, len(debit_list))
+    self.assertEqual(240, sum([float(x.text) for x in debit_list]))
+
+    credit_list = journal.xpath(".//Credit")
+    self.assertEqual(3, len(credit_list))
+    self.assertEqual(240, sum([float(x.text) for x in credit_list]))
+
+  def test_FECWithMultipleLedger(self):
+    # group_by=portal_type by default
+    tree = self._FECWithLedger(['accounting/general', 'accounting/detailed'])
+
+    # 'Purchase Invoice Transaction' portal_type
+    journal_list = tree.xpath("//JournalCode[text()='Purchase Invoice Transaction']/..")
+    self.assertEqual(1, len(journal_list))
+    journal = journal_list[0]
+
+    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    self.assertEqual(['Première Écriture'], ecriture_list)
+
+    debit_list = journal.xpath(".//Debit")
+    self.assertEqual(3, len(debit_list))
+    self.assertEqual(132, sum([float(x.text) for x in debit_list]))
+
+    credit_list = journal.xpath(".//Credit")
+    self.assertEqual(3, len(credit_list))
+    self.assertEqual(132, sum([float(x.text) for x in credit_list]))
+
+    # 'Sale Invoice Transaction' portal_type
+    journal_list = tree.xpath("//JournalCode[text()='Sale Invoice Transaction']/..")
+    self.assertEqual(1, len(journal_list))
+    journal = journal_list[0]
+
+    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    self.assertEqual(['Seconde Écriture', 'Troisième Écriture'], ecriture_list)
+
+    debit_list = journal.xpath(".//Debit")
+    self.assertEqual(6, len(debit_list))
+    self.assertEqual(425, sum([float(x.text) for x in debit_list]))
+
+    credit_list = journal.xpath(".//Credit")
+    self.assertEqual(6, len(credit_list))
+    self.assertEqual(425, sum([float(x.text) for x in credit_list]))
+
+  def test_FECWithMultipleLedgerGroupByLedger(self):
+    tree = self._FECWithLedger(['accounting/general', 'accounting/detailed'], group_by='ledger')
+
+    # 'accounting/general' ledger
+    journal_list = tree.xpath("//JournalCode[text()='general']/..")
+    self.assertEqual(1, len(journal_list))
+    journal = journal_list[0]
+
+    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    self.assertEqual(['Première Écriture', 'Seconde Écriture'], ecriture_list)
+
+    debit_list = journal.xpath(".//Debit")
     self.assertEqual(6, len(debit_list))
     self.assertEqual(372, sum([float(x.text) for x in debit_list]))
 
-    credit_list = tree.xpath("//Credit")
+    credit_list = journal.xpath(".//Credit")
     self.assertEqual(6, len(credit_list))
     self.assertEqual(372, sum([float(x.text) for x in credit_list]))
 
+    # 'accounting/detailed' ledger
+    journal_list = tree.xpath("//JournalCode[text()='detailed']/..")
+    self.assertEqual(1, len(journal_list))
+    journal = journal_list[0]
 
-  def test_FECWithMultipleLedger(self):
-    tree = self._FECWithLedger(['accounting/general', 'accounting/detailed'])
+    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    self.assertEqual(['Troisième Écriture'], ecriture_list)
 
-    debit_list = tree.xpath("//Debit")
-    self.assertEqual(9, len(debit_list))
-    self.assertEqual(557, sum([float(x.text) for x in debit_list]))
+    debit_list = journal.xpath(".//Debit")
+    self.assertEqual(3, len(debit_list))
+    self.assertEqual(185, sum([float(x.text) for x in debit_list]))
 
-    credit_list = tree.xpath("//Credit")
-    self.assertEqual(9, len(credit_list))
-    self.assertEqual(557, sum([float(x.text) for x in credit_list]))
+    credit_list = journal.xpath(".//Credit")
+    self.assertEqual(3, len(credit_list))
+    self.assertEqual(185, sum([float(x.text) for x in credit_list]))
+
+  def test_FECWithMultipleLedgerGroupByLedgerAndPortalType(self):
+    tree = self._FECWithLedger(['accounting/general', 'accounting/detailed'], group_by='portal_type_ledger')
+
+    # 'Purchase Invoice Transaction' portal_type and 'accounting/general' ledger
+    journal_list = tree.xpath("//JournalCode[text()='Purchase Invoice Transaction: general']/..")
+    self.assertEqual(1, len(journal_list))
+    journal = journal_list[0]
+
+    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    self.assertEqual(['Première Écriture'], ecriture_list)
+
+    debit_list = journal.xpath(".//Debit")
+    self.assertEqual(3, len(debit_list))
+    self.assertEqual(132, sum([float(x.text) for x in debit_list]))
+
+    credit_list = journal.xpath(".//Credit")
+    self.assertEqual(3, len(credit_list))
+    self.assertEqual(132, sum([float(x.text) for x in credit_list]))
+
+    # 'Sale Invoice Transaction' portal_type and 'accounting/general' ledger
+    journal_list = tree.xpath("//JournalCode[text()='Sale Invoice Transaction: general']/..")
+    self.assertEqual(1, len(journal_list))
+    journal = journal_list[0]
+
+    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    self.assertEqual(['Seconde Écriture'], ecriture_list)
+
+    debit_list = journal.xpath(".//Debit")
+    self.assertEqual(3, len(debit_list))
+    self.assertEqual(240, sum([float(x.text) for x in debit_list]))
+
+    credit_list = journal.xpath(".//Credit")
+    self.assertEqual(3, len(credit_list))
+    self.assertEqual(240, sum([float(x.text) for x in credit_list]))
+
+    # 'Sale Invoice Transaction' portal_type and 'accounting/detailed' ledger
+    journal_list = tree.xpath("//JournalCode[text()='Sale Invoice Transaction: detailed']/..")
+    self.assertEqual(1, len(journal_list))
+    journal = journal_list[0]
+
+    ecriture_list = sorted([x.text.encode('utf-8') for x in journal.xpath(".//EcritureLib")])
+    self.assertEqual(['Troisième Écriture'], ecriture_list)
+
+    debit_list = journal.xpath(".//Debit")
+    self.assertEqual(3, len(debit_list))
+    self.assertEqual(185, sum([float(x.text) for x in debit_list]))
+
+    credit_list = journal.xpath(".//Credit")
+    self.assertEqual(3, len(credit_list))
+    self.assertEqual(185, sum([float(x.text) for x in credit_list]))
 
 def test_suite():
   suite = unittest.TestSuite()

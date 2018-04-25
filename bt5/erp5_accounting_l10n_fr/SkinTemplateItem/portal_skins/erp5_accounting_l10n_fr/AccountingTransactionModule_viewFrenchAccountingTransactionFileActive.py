@@ -7,26 +7,94 @@ section_uid_list = portal.Base_getSectionUidListForSectionCategory(
 from_date = portal.Base_getAccountingPeriodStartDateForSectionCategory(
   section_category, at_date)
 
-# XXX we need proxy role for that
-active_process = portal.portal_activities.newActiveProcess()
+ledger_obj_list = []
+if ledger is not None:
+  if not (isinstance(ledger, list) or isinstance(ledger, tuple)):
+    ledger = (ledger,)
+  category_tool = portal.portal_categories
+  for item in ledger:
+    ledger_obj_list.append(category_tool.ledger.restrictedTraverse(item))
+elif group_by in ('ledger', 'portal_type_ledger'):
+  raise ValueError("At least one Ledger is needed for group_by=%r" % group_by)
+
+def _groupedJournalTupleDict():
+  portal_type_list = portal.getPortalAccountingTransactionTypeList()
+  default_search_kw = {
+    'simulation_state': simulation_state,
+    'accounting_transaction.section_uid': section_uid_list,
+    'operation_date': {'query': (from_date, at_date), 'range': 'minngt' },
+  }
+
+  journal_tuple_list = []
+  if group_by == 'ledger':
+    default_search_kw['portal_type'] = portal_type_list
+    for ledger_obj in ledger_obj_list:
+      journal_code = journal_lib = ledger_obj.getReference(ledger_obj.getId())
+
+      ledger_search_kw = default_search_kw.copy()
+      ledger_search_kw['default_ledger_uid'] = ledger_obj.getUid()
+
+      journal_tuple_list.append((journal_code, journal_lib, ledger_search_kw))
+
+  elif group_by == 'portal_type_ledger':
+    for ledger_obj in ledger_obj_list:
+      for portal_type in portal_type_list:
+        portal_type_obj = portal.portal_types[portal_type]
+        ledger_reference = ledger_obj.getReference(ledger_obj.getId())
+        journal_code = "%s: %s" % (portal_type_obj.getCompactTranslatedTitle(), ledger_reference)
+        journal_lib = "%s: %s" % (portal_type_obj.getTranslatedTitle(), ledger_reference)
+
+        portal_type_ledger_search_kw = default_search_kw.copy()
+        portal_type_ledger_search_kw['default_ledger_uid'] = ledger_obj.getUid()
+        portal_type_ledger_search_kw['portal_type'] = portal_type
+
+        journal_tuple_list.append((journal_code, journal_lib, portal_type_ledger_search_kw))
+
+  # group_by == 'portal_type' (Default)
+  else:
+    if ledger_obj_list:
+      default_search_kw['default_ledger_uid'] = [ ledger_obj.getUid() for ledger_obj in ledger_obj_list ]
+
+    for portal_type in portal_type_list:
+      portal_type_obj = portal.portal_types[portal_type]
+      journal_code = portal_type_obj.getCompactTranslatedTitle()
+      journal_lib = portal_type_obj.getTranslatedTitle()
+
+      portal_type_search_kw = default_search_kw.copy()
+      portal_type_search_kw['portal_type'] = portal_type
+
+      journal_tuple_list.append((journal_code, journal_lib, portal_type_search_kw))
+
+  return journal_tuple_list
 
 priority = 4
+# Proxy Role needed to create an 'Active Process'
+active_process = context.AccountingTransactionModule_createActiveProcessForFrenchAccountingTransactionFile()
 
-for portal_type in portal.getPortalAccountingTransactionTypeList():
-  # XXX we need proxy role for that
-  this_portal_type_active_process = portal.portal_activities.newActiveProcess()
-  context.AccountingTransactionModule_viewFrenchAccountingTransactionFileForPortalType(
-    portal_type,
-    section_uid_list,
-    from_date,
-    at_date,
-    simulation_state,
-    ledger,
-    active_process.getRelativeUrl(),
-    this_portal_type_active_process.getRelativeUrl(),
-    tag,
-    aggregate_tag,
-    priority)
+if tag is None:
+  tag = script.getId()
+if aggregate_tag is None:
+  aggregate_tag = '%s:aggregate' % tag
+
+for journal_code, journal_lib, search_kw in _groupedJournalTupleDict():
+  # This script is executed with Proxy Role, required to create 'Active Process'
+  this_journal_active_process = context.AccountingTransactionModule_createActiveProcessForFrenchAccountingTransactionFile()
+
+  portal.portal_catalog.searchAndActivate(
+    method_id='AccountingTransaction_postFECResult',
+    method_kw=dict(section_uid_list=section_uid_list, active_process=this_journal_active_process.getRelativeUrl()),
+    activate_kw=dict(tag=tag, priority=priority),
+    **search_kw)
+
+  context.activate(
+    tag=aggregate_tag,
+    after_tag=tag,
+    activity='SQLQueue').AccountingTransactionModule_aggregateFrenchAccountingTransactionFileForOneJournal(
+      journal_code,
+      journal_lib,
+      active_process=active_process.getRelativeUrl(),
+      # Proxy Role needed to create an 'Active Process'
+      this_journal_active_process=this_journal_active_process.getRelativeUrl())
 
 context.activate(after_tag=(tag, aggregate_tag)).AccountingTransactionModule_aggregateFrenchAccountingTransactionFile(
   at_date,

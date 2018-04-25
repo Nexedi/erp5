@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type, active_process, this_portal_type_active_process</string> </value>
+            <value> <string>journal_code, journal_lib, active_process, this_journal_active_process</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -62,7 +62,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionModule_aggregateFrenchAccountingTransactionFileForPortalType</string> </value>
+            <value> <string>AccountingTransactionModule_aggregateFrenchAccountingTransactionFileForOneJournal</string> </value>
         </item>
       </dictionary>
     </pickle>

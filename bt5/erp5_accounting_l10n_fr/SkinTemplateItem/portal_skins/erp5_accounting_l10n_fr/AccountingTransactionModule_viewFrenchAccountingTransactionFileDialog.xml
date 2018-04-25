@@ -97,6 +97,7 @@
                         <string>your_section_category_strict</string>
                         <string>your_at_date</string>
                         <string>your_ledger</string>
+                        <string>your_group_by</string>
                       </list>
                     </value>
                 </item>
