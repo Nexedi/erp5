@@ -114,13 +114,13 @@ class OOoServerProxy():
       transport = TimeoutTransport(timeout=timeout, scheme=scheme)
       
       self._serverproxy_list.append(ServerProxy(uri, allow_none=True, transport=transport))
-  def _proxy_function(self, func_name, *argc):
+  def _proxy_function(self, func_name, *argc, **kw):
     count = 0
     while count < 5:
       for server_proxy in self._serverproxy_list:
         func = server_proxy.__getattr__(func_name)
         try:
-          return func(*argc)
+          return func(*argc, **kw)
         except Exception, e:
           LOG('excepttion', 1, e)
           if count < 5:
@@ -135,6 +135,8 @@ class OOoServerProxy():
     return self._proxy_function('getAllowedTargetItemList', content_type)
   def run_generate(self, filename, data, meta, extension, orig_format):
     return self._proxy_function('run_generate', filename, data, meta, extension, orig_format)
+  def convertFile(self, content, source_mimetype, destination_mimetype, **kw):
+    return self._proxy_function('convertFile', content, source_mimetype, destination_mimetype, **kw)
   """
   def __getattr__(self, attr):
     LOG('OOoServerProxy __getattr__', 1, attr),
