@@ -5068,6 +5068,9 @@ msgstr "Activé"
 msgid "Enables a preference"
 msgstr "Cette action permet d'activer une préférence."
 
+msgid "Encountered an unknown error. Try to resubmit."
+msgstr "Une erreur inconnue a été rencontrée. Vous pouvez essayer de soumettre le formulaire à nouveau."
+
 msgid "End"
 msgstr "Fin"
 
