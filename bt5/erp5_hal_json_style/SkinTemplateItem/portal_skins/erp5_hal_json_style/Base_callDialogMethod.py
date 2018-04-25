@@ -83,6 +83,7 @@ if dialog_method == 'Folder_delete':
                                md5_object_uid_list=kw['md5_object_uid_list'])
 
 form = getattr(context, dialog_id)
+form_data = None
 extra_param = json.loads(extra_param_json or "{}")
 
 # form can be a python script that returns the form
@@ -95,7 +96,7 @@ try:
   # data. Otherwise, field appears as non editable.
   editable_mode = request.get('editable_mode', 1)
   request.set('editable_mode', 1)
-  form.validate_all_to_request(request)
+  form_data = form.validate_all_to_request(request)
   request.set('editable_mode', editable_mode)
   default_skin = portal.portal_skins.getDefaultSkin()
   allowed_styles = ("ODT", "ODS", "Hal", "HalRestricted")
@@ -108,7 +109,8 @@ try:
     return context.Base_renderForm(dialog_id,
       message=translate('Only ODT, ODS, Hal and HalRestricted skins are allowed for reports '\
                         'in Preferences - User Interface - Report Style'),
-      level=WARNING)
+      level=WARNING,
+      form_data=form_data)
 
 except FormValidationError as validation_errors:
   # Pack errors into the request
@@ -186,7 +188,8 @@ elif query == "" and select_all == 0 and dialog_method != update_method:  # do n
     message=translate("All documents are selected! Submit again to proceed or Cancel and narrow down your search."),
     level=WARNING,
     keep_items={'_select_all': 1},
-    query=query)
+    query=query,
+    form_data=form_data)
 
 # The old way was to set inquire kw for "list_selection_name" and update
 # it with kw["uids"] which means a long URL to call this script
@@ -194,6 +197,11 @@ elif query == "" and select_all == 0 and dialog_method != update_method:  # do n
 # if dialog_category is object_search, then edit the selection
 if dialog_category == "object_search" :
   portal.portal_selections.setSelectionParamsFor(kw['selection_name'], kw)
+
+# Notify the underlying script whether user did modifications
+form_hash = form.hash_validated_data(form_data)
+if "form_hash" in extra_param:
+  kw['has_changed'] = (form_hash != extra_param.pop('form_hash'))
 
 # Add rest of extra param into arguments of the target method
 kw.update(extra_param)
@@ -279,7 +287,7 @@ if True:
     meta_type = ""
 
   if meta_type in ("ERP5 Form", "ERP5 Report"):
-    return context.ERP5Document_getHateoas(REQUEST=request, form=dialog_form, mode="form")
+    return context.ERP5Document_getHateoas(REQUEST=request, form=dialog_form, mode="form", form_data=form_data)
 
   return dialog_form(**kw)
 

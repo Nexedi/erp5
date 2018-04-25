@@ -16,6 +16,7 @@ return context.ERP5Document_getHateoas(
   select_list=select_list,
   limit=limit,
   form=form,
+  form_data=form_data,
   relative_url=relative_url,
   list_method=list_method,
   default_param_json=default_param_json,
