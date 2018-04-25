@@ -73,7 +73,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Conversion Server URL List</string> </value>
+                    <value> <string>Conversion Server URLs</string> </value>
                 </item>
               </dictionary>
             </value>
