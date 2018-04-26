@@ -60,10 +60,18 @@
           });
         });
     })
-    .onStateChange(function () {
+    .onStateChange(function (modification_dict) {
       var fragment = document.createElement('div'),
         gadget = this;
-
+      if (!modification_dict.hasOwnProperty('child_gadget_url')) {
+        return gadget.getDeclaredGadget('fg')
+          .push(function (child_gadget) {
+            return child_gadget.render({
+              jio_key: modification_dict.jio_key,
+              doc: modification_dict.doc
+            });
+          });
+      }
       // Clear first to DOM, append after to reduce flickering/manip
       while (this.element.firstChild) {
         this.element.removeChild(this.element.firstChild);
