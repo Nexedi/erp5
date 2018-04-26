@@ -90,7 +90,7 @@
              'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language']},
     {name: 'links', items: ['Link', 'Unlink', 'Anchor']},
     {name: 'insert',
-     items: ['Image', 'Table', 'HorizontalRule', 'Smiley',
+     items: ['Image', 'Table', 'HorizontalRule',
              'SpecialChar', 'PageBreak']},
     '/',
     {name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize']},
