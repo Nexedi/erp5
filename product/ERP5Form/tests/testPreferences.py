@@ -494,23 +494,23 @@ class TestPreferences(PropertySheetTestCase):
     preference_tool = self.portal.portal_preferences
     system_pref = preference_tool.newContent(
                           portal_type='System Preference',
-                          preferred_document_conversion_server_url='http://127.0.0.1',
+                          preferred_document_conversion_server_url_list=['http://127.0.0.1'],
                           priority=Priority.SITE)
     # check not taken into account if not enabled
-    self.assertEqual(None,
-                     preference_tool.getPreferredDocumentConversionServerUrl())
-    self.assertEqual('http://localhost',
-                     preference_tool.getPreferredDocumentConversionServerUrl('http://localhost'))
+    self.assertEqual([],
+                     preference_tool.getPreferredDocumentConversionServerUrlList())
+    self.assertEqual(['http://localhost'],
+                     preference_tool.getPreferredDocumentConversionServerUrlList(['http://localhost']))
     self.assertEqual(default_large_image_height,
                      preference_tool.getPreferredLargeImageHeight())
     # enable it and check preference is returned
     self.portal.portal_workflow.doActionFor(system_pref, 'enable_action')
     self.assertEqual(system_pref.getPreferenceState(), 'global')
     self.tic()
-    self.assertEqual('http://127.0.0.1',
-                     preference_tool.getPreferredDocumentConversionServerUrl())
-    self.assertEqual('http://127.0.0.1',
-                     preference_tool.getPreferredDocumentConversionServerUrl('http://localhost'))
+    self.assertEqual(['http://127.0.0.1'],
+                     preference_tool.getPreferredDocumentConversionServerUrlList())
+    self.assertEqual(['http://127.0.0.1'],
+                     preference_tool.getPreferredDocumentConversionServerUrlList(['http://localhost']))
     self.assertEqual(default_large_image_height,
                      preference_tool.getPreferredLargeImageHeight())
     # Default value passed by parameter has priority over the default in the
@@ -526,12 +526,12 @@ class TestPreferences(PropertySheetTestCase):
     # But they can see others
     system_pref.view()
     # check accessors works
-    system_pref.setPreferredDocumentConversionServerUrl('http://1.2.3.4')
+    system_pref.setPreferredDocumentConversionServerUrlList(['http://1.2.3.4'])
     self.tic()
-    self.assertEqual('http://1.2.3.4',
-                     preference_tool.getPreferredDocumentConversionServerUrl())
-    self.assertEqual('http://1.2.3.4',
-                     preference_tool.getPreferredDocumentConversionServerUrl('http://localhost'))
+    self.assertEqual(['http://1.2.3.4'],
+                     preference_tool.getPreferredDocumentConversionServerUrlList())
+    self.assertEqual(['http://1.2.3.4'],
+                     preference_tool.getPreferredDocumentConversionServerUrlList(['http://localhost']))
     self.assertEqual(default_large_image_height,
                      preference_tool.getPreferredLargeImageHeight())
 
@@ -544,15 +544,15 @@ class TestPreferences(PropertySheetTestCase):
     self.portal.portal_workflow.doActionFor(user_pref, 'enable_action')
     self.assertEqual(user_pref.getPreferenceState(), 'enabled')
     self.tic()
-    self.assertEqual('http://1.2.3.4',
-                     preference_tool.getPreferredDocumentConversionServerUrl('http://localhost'))
+    self.assertEqual(['http://1.2.3.4'],
+                     preference_tool.getPreferredDocumentConversionServerUrlList(['http://localhost']))
     self.assertEqual(large_image_height,
                      preference_tool.getPreferredLargeImageHeight())
     self.assertEqual(large_image_height,
                      preference_tool.getPreferredLargeImageHeight(0))
 
     # check a user can't edit preference which are marked for manager
-    self.assertRaises(Unauthorized, user_pref.edit, preferred_document_conversion_server_url="http://localhost")
+    self.assertRaises(Unauthorized, user_pref.edit, preferred_document_conversion_server_url_list=["http://localhost"])
     # even if there is System Preference enabled getActivePreference shall return
     # user preference
     self.assertEqual(user_pref, preference_tool.getActivePreference())
