@@ -5,11 +5,9 @@ if group_by in ('ledger', 'portal_type_ledger') and ledger is None:
   return context.Base_redirect('view', keep_items=dict(
               portal_status_message=translateString("At least one Ledger must be selected")))
 
+# Only for ERP5Site_notifyReportComplete after aggregating all the Journals
 person_value = portal.portal_membership.getAuthenticatedMember().getUserValue()
-if person_value is None:
-  portal.changeSkin(None)
-  return context.Base_redirect('view', keep_items=dict(
-              portal_status_message=translateString("No person found for your user")))
+user_name = person_value.Person_getUserId() if person_value is not None else None
 
 tag = 'AccountingTransactionModule_viewFrenchAccountingTransactionFile'
 aggregate_tag = '%s:aggregate' % tag
@@ -26,7 +24,7 @@ context.activate().AccountingTransactionModule_viewFrenchAccountingTransactionFi
   group_by,
   simulation_state,
   ledger,
-  user_name=person_value.Person_getUserId(),
+  user_name=user_name,
   tag=tag,
   aggregate_tag=aggregate_tag)
 
