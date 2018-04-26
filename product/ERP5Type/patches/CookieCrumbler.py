@@ -96,7 +96,9 @@ def balancer_cookie_hook(ob, req, resp):
       if balancer_cookie in req.cookies:
         resp.expireCookie(balancer_cookie, path=path)
     else:
-      server_id = req['HTTP_X_BALANCER_CURRENT_SERVER']
+      from product.CMFActivity.ActivityTool import getCurrentNode
+      server_id = getCurrentNode()
+      # The format of server_id must be exactly the same for any balancer in front
       if server_id != req.cookies.get(balancer_cookie):
         resp.setCookie(balancer_cookie, server_id, path=path);
 
