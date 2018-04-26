@@ -463,7 +463,6 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         at_date=period_start_date,
         conversion_ratio=default_quantity_unit_flow_quantity_unit_conversion_ratio,
         )
-
       quantity = 0
 
       if future_inventory_to_date < min_inventory: # SKU
@@ -474,6 +473,11 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       if start_date > supply.getStartDateRangeMax():
         break
       if start_date < supply.getStartDateRangeMin():
+        # As we are going to need to go further in time to check if new Movements are needed
+        # we need to keep inventory correct
+        future_inventory_to_date += quantity
+        for date, total_inventory, quantity, portal_type in period_history_list:
+          future_inventory_to_date += quantity
         continue
 
       #self.log("at %s min: %s, inventory:%s, quantity:%s" % (period_start_date, min_inventory, future_inventory_to_date, quantity))
