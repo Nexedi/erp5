@@ -136,7 +136,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     for part in mail_message.walk():
       content_type = part.get_content_type()
       file_name = part.get_filename()
-      if file_name == 'FEC-2014.zip':
+      if file_name == 'FEC-20141231.zip':
         self.assertEqual('application/zip', content_type)
         data = part.get_payload(decode=True)
         zf = zipfile.ZipFile(StringIO(data))
@@ -228,7 +228,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     for part in mail_message.walk():
       content_type = part.get_content_type()
       file_name = part.get_filename()
-      if file_name == 'FEC-2014.zip':
+      if file_name == 'FEC-20141231.zip':
         self.assertEqual('application/zip', content_type)
         data = part.get_payload(decode=True)
         zf = zipfile.ZipFile(StringIO(data))

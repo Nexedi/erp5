@@ -13,7 +13,7 @@ fec_file = context.AccountingTransactionModule_viewComptabiliteAsFECXML(
       result_list=result_list)
 
 zipbuffer = StringIO()
-zipfilename = at_date.strftime('FEC-%Y.zip')
+zipfilename = at_date.strftime('FEC-%Y%m%d.zip')
 zipfileobj = zipfile.ZipFile(zipbuffer, 'w', compression=zipfile.ZIP_DEFLATED)
 zipfileobj.writestr('FEC.xml', fec_file.encode('utf8'))
 zipfileobj.close()
