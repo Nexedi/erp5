@@ -4,8 +4,9 @@ at_date = at_date.latestTime()
 section_uid_list = portal.Base_getSectionUidListForSectionCategory(
   section_category, section_category_strict)
 
-from_date = portal.Base_getAccountingPeriodStartDateForSectionCategory(
-  section_category, at_date)
+if from_date is None:
+  from_date = portal.Base_getAccountingPeriodStartDateForSectionCategory(
+    section_category, at_date)
 
 ledger_obj_list = []
 if ledger is not None:
