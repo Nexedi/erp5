@@ -37,6 +37,7 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
+                <string>aggregate</string>
                 <string>source</string>
                 <string>destination</string>
                 <string>product_line</string>
