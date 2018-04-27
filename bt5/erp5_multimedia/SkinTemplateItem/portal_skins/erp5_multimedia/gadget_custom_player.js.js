@@ -45,7 +45,7 @@
         play_button.classList.add('ui-icon-play');
         play_button.classList.remove('ui-icon-pause');
       }
-      return gadget.getDeclaredGadget('controller')
+      return gadget.getDeclaredGadget(gadget.params.scope)
         .push(function (controller) {
           return controller.handlePlayPause(gadget.state.play);
         });
@@ -62,7 +62,7 @@
         volume_button.classList.remove('ui-icon-volume-off');
         volume_button.classList.add('ui-icon-volume-up');
       }
-      return gadget.getDeclaredGadget('controller')
+      return gadget.getDeclaredGadget(gadget.params.scope)
         .push(function (controller) {
           return controller.handleSound(gadget.state.mute);
         });
@@ -75,14 +75,24 @@
           var name_array = doc.title.split('.'),
             type = name_array[name_array.length - 1];
           if (type === 'mp3' && MediaSource.isTypeSupported('audio/mpeg')) {
+            gadget.params.scope = 'controller';
+            if (gadget.params.controller) {
+              return gadget.getDeclaredGadget('controller');
+            }
+            gadget.params.controller = true;
             return gadget.declareGadget('gadget_custom_player_controller.html', {
               element: gadget.element.querySelector('.controller'),
               scope: 'controller'
             });
           }
+          gadget.params.scope = 'controller_fallback';
+          if (gadget.params.contoller_fallback) {
+            return gadget.getDeclaredGadget('controller_fallback');
+          }
+          gadget.params.controller_fallback = true;
           return gadget.declareGadget('gadget_custom_player_controller_fallback.html', {
             element: gadget.element.querySelector('.controller'),
-            scope: 'controller'
+            scope: 'controller_fallback'
           });
         })
         .push(function (controller) {
@@ -93,18 +103,21 @@
         })
         .push(function () {
           if (params.auto_play) {
-            return gadget.changeState({ play: true, auto_play: true });  
+            return gadget.changeState({ play: true, auto_play: true});  
           }
+        }).push(function() {
+          return RSVP.all([
+            gadget.togglePlayPause(gadget.state.play),
+            gadget.toggleSound(gadget.state.mute)
+          ]);
         });
     })
-
-    .onStateChange(function (modification_dict) {
-      if (modification_dict.hasOwnProperty('play')) {
-        return this.togglePlayPause(modification_dict.play);
-      }
-      if (modification_dict.hasOwnProperty('mute')) {
-        return this.toggleSound(modification_dict.mute);
-      }
+    
+    .ready(function () {
+      this.params = {
+        controller: false,
+        controller_fallback: false
+      };
     })
 
     .declareService(function () {
@@ -114,7 +127,10 @@
         'click',
         false,
         function () {
-          return gadget.changeState({ play: !gadget.state.play });
+          return gadget.changeState({ play: !gadget.state.play })
+            .push(function () {
+              return gadget.togglePlayPause(gadget.state.play);
+            });
         },
         true
       );
@@ -127,7 +143,10 @@
         'click',
         false,
         function () {
-          return gadget.changeState({ mute: !gadget.state.mute });
+          return gadget.changeState({ mute: !gadget.state.mute })
+            .push(function () {
+              return gadget.toggleSound(gadget.state.mute);
+            });
         },
         true
       );

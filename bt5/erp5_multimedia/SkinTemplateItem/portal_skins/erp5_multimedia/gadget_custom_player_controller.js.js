@@ -49,8 +49,8 @@
             return buffer;
           }, function (error) {
             if ((error.constructor.name === 'jIOError' && error.status_code === 404) ||
-                (error.target && error.target.result === undefined)) {
-              return gadget.notifySubmitted({message: error.message || error.target.error, status: 'fail'});
+                (error.target && error.target.error.name === "NotReadableError")) {
+              return gadget.notifySubmitted({message: error.message || error.target.error.message, status: 'fail'});
             }
             throw error;
           });
@@ -97,10 +97,16 @@
 
     .declareMethod('render', function (params) {
       var gadget = this,
+        audio = this.element.querySelector('audio'),
         queue = new RSVP.Queue();
       gadget.params.id = params.id;
       gadget.params.name = params.name;
+      gadget.params.end = false;
       gadget.params.index = 0;
+      gadget.time_offset = 0;
+      gadget.params.mediaSource = new MediaSource();
+      
+      audio.src = URL.createObjectURL(gadget.params.mediaSource);
 
       return queue
         .push(function () {
@@ -126,15 +132,12 @@
       var audioContext = new AudioContext(),
         audio = this.element.querySelector('audio'),
         gain = audioContext.createGain(),
-        source = audioContext.createMediaElementSource(audio),
-        mediaSource = new MediaSource();
+        source = audioContext.createMediaElementSource(audio);
 
-      audio.src =  URL.createObjectURL(mediaSource);
       this.params = {
         audioContext: audioContext,
         gain: gain,
-        source: source,
-        mediaSource: mediaSource
+        source: source
       };
     })
 
@@ -171,7 +174,7 @@
         'timeupdate',
         false,
         function () {
-          if ((gadget.params.sourceBuffer.timestampOffset - audio.currentTime) < 10 && !gadget.params.requested) {
+          if (((gadget.params.sourceBuffer.timestampOffset + gadget.params.time_offset) - audio.currentTime) < 10 && !gadget.params.requested) {
             gadget.params.requested = true;
             return gadget.requestChunk();
           }

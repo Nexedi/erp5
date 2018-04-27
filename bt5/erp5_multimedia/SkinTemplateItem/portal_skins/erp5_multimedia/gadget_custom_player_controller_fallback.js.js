@@ -33,8 +33,8 @@
         })
         .push(undefined, function (error) {
           if ((error.constructor.name === 'jIOError' && error.status_code === 404) ||
-              (error.target && error.target.result === undefined)) {
-            return gadget.notifySubmitted({message: error.message || error.target.error, status: 'fail'});
+              (error.target && error.target.error.name === "NotReadableError")) {
+            return gadget.notifySubmitted({message: error.message || error.target.error.message, status: 'fail'});
           }
           throw error;
         });
