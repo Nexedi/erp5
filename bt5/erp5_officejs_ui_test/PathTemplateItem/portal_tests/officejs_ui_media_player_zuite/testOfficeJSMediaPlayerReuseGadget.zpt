@@ -1,0 +1,203 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Media Player UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+  <tr><td rowspan="1" colspan="3">Test OfficeJS UI</td></tr>
+</thead>
+<tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_media_player/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<!-- Create entry -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_media_player/app/#/?page=ojs_add_document&editable=true</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@class='error']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class='error']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_media_player/app/#/?page=ojs_add_document&editable=true</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@class='error']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class='error']</td>
+  <td></td>
+</tr>
+
+<!-- Modify title -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_media_player/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Add']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@class='ui-link']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@class='ui-link']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@class='error']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class='error']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@id='title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@id='title']</td>
+  <td>1</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='audioplayer']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>getEval</td>
+  <td>window.document.querySelector('.audioplayer').classList.add('test')</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, 'audioplayer test')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Next"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Next"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Untitled Document</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@class='error']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class='error']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, 'audioplayer test')]</td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
