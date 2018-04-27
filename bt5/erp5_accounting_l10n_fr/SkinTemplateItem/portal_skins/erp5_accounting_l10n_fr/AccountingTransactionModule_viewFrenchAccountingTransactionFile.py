@@ -20,6 +20,7 @@ if portal.portal_activities.countMessageWithTag(tag) or \
 context.activate().AccountingTransactionModule_viewFrenchAccountingTransactionFileActive(
   section_category,
   section_category_strict,
+  from_date,
   at_date,
   group_by,
   simulation_state,
