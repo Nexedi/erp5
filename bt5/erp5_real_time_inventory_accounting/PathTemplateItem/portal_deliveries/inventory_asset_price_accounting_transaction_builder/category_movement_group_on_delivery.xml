@@ -39,6 +39,7 @@
               <tuple>
                 <string>specialise</string>
                 <string>resource</string>
+                <string>aggregate</string>
                 <string>delivery_mode</string>
                 <string>incoterm</string>
                 <string>ledger</string>
