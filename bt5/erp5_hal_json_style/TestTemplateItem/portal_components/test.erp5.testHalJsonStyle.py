@@ -777,11 +777,10 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     )
     result_dict = json.loads(result)
     _, group_fields = result_dict['group_list'][-1]
-    field_names = [field_name for field_name, field_type in group_fields]
+    field_names = [field_name for field_name, _ in group_fields]
     self.assertIn("form_id", field_names)
     self.assertIn("dialog_id", field_names)
     # no need for dialog_method because that one is hardcoded in javascript
-
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
@@ -974,10 +973,15 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       "application/hal+json"
     )
     result_dict = json.loads(result)
-    for object_jio_action in result_dict['_links']['action_object_jio_action']:
-      # the link is a template
+    if isinstance(result_dict['_links']['action_object_jio_action'], dict):
+      object_jio_action = result_dict['_links']['action_object_jio_action']
       self.assertTrue(object_jio_action['templated'])
       self.assertTrue("{&" in object_jio_action['href'])
+    else:
+      for object_jio_action in result_dict['_links']['action_object_jio_action']:
+        # the link is a template
+        self.assertTrue(object_jio_action['templated'])
+        self.assertTrue("{&" in object_jio_action['href'])
 
 
 class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
@@ -1428,6 +1432,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     Practically, because we code in python, it can be any object.
     """
     fake_request = do_fake_request("GET")
+    document_list = sorted(document_list, key=lambda d: d.getId())
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
       REQUEST=fake_request,
       mode="search",
