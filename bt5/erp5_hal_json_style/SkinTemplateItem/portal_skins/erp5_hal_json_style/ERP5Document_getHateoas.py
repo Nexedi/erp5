@@ -1963,6 +1963,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                                                    selection_name=catalog_kw['selection_name'],
                                                    column_id=select)
           except AttributeError as e:
+            # In case the URL method is invalid or empty, we expect to have no link
+            # for the column to maintain compatibility with old UI, hence we create
+            # an empty url_parameter_dict for these cases.
+            url_parameter_dict = {}
             if url_column_dict[select]:
               log("Invalid URL method {!s} on column {}".format(url_column_dict[select], select), level=800)
 

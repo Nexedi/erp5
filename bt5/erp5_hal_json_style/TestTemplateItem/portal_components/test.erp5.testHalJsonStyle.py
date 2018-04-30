@@ -3,7 +3,7 @@
 import transaction
 from zExceptions import Unauthorized
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from unittest import skip, expectedFailure
+from unittest import skip
 from functools import wraps
 
 from ZPublisher.HTTPRequest import HTTPRequest
@@ -1378,7 +1378,6 @@ return url
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = '')
 
-  @expectedFailure
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs',
@@ -1386,6 +1385,7 @@ return url
   @simulate('Test_listProducts', '*args, **kwargs', """
 return context.getPortalObject().foo_module.contentValues()
 """)
+  @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_no_url(self):
     # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
