@@ -132,7 +132,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.Base_getHistoricalRevisionList(context)</string> </value>
+            <value> <string>python: [(l, l) for l in context.Base_getHistoricalRevisionList(context)]</string> </value>
         </item>
       </dictionary>
     </pickle>

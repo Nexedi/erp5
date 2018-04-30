@@ -125,11 +125,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_viewZODBHistory</string> </value>
+            <value> <string>Base_getZODBDiff</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>report_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -141,7 +141,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>History</string> </value>
+            <value> <string>History Diff</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -149,11 +149,11 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>ERP5_updateZODBHistoryDiff</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Update History Diff</string> </value>
         </item>
       </dictionary>
     </pickle>
