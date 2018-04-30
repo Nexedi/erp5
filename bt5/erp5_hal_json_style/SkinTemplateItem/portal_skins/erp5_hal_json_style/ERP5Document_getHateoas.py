@@ -565,7 +565,7 @@ def getFieldDefault(form, field, key, value=None):
   Previously we used Formulator.Field._get_default which is (for no reason) private.
   """
   if value is None:
-    value = REQUEST.form.get(key, MARKER)
+    value = REQUEST.form.get(field.id, REQUEST.form.get(key, MARKER))
     # use marker because default value can be intentionally empty string
     if value is MARKER:
       value = field.get_value('default', request=REQUEST, REQUEST=REQUEST)
