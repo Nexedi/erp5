@@ -9,7 +9,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>selection_name</string>
+              </list>
             </value>
         </item>
         <item>
@@ -70,6 +72,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>FooModule_viewFooList</string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>foo_donothing_selection</string> </value>
                 </item>
               </dictionary>
             </value>
