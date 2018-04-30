@@ -76,11 +76,11 @@ if dialog_method == 'Base_createRelation':
                                      dialog_id=dialog_id,
                                      portal_type=kw['portal_type'],
                                      return_url=kw['cancel_url'])
-# Exception for folder delete
-if dialog_method == 'Folder_delete':
-  return context.Folder_delete(form_id=kw['form_id'],
-                               selection_name=kw['selection_name'],
-                               md5_object_uid_list=kw['md5_object_uid_list'])
+# NO Exception for folder delete
+# if dialog_method == 'Folder_delete':
+#  return context.Folder_delete(form_id=form_id,
+#                               selection_name=kw['selection_name'],
+#                               md5_object_uid_list=kw['md5_object_uid_list'])
 
 form = getattr(context, dialog_id)
 form_data = None
@@ -97,6 +97,7 @@ try:
   editable_mode = request.get('editable_mode', 1)
   request.set('editable_mode', 1)
   form_data = form.validate_all_to_request(request)
+
   request.set('editable_mode', editable_mode)
   default_skin = portal.portal_skins.getDefaultSkin()
   allowed_styles = ("ODT", "ODS", "Hal", "HalRestricted")

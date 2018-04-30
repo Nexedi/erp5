@@ -26,8 +26,15 @@ if form is None:
 if form.meta_type not in ('ERP5 Form', 'Folder', 'ERP5 Folder'):
   raise RuntimeError("Cannot get Listbox field from \"{!s}\"! Supported is only ERP5 Form and (ERP5) Folder".format(form.meta_type))
 
-if form.has_field('listbox'):
-  return form.get_field('listbox')
+listbox = None
+
+if "Form" in form.meta_type and form.has_field("listbox"):
+  listbox = form.get_field("listbox")
+elif "Folder" in form.meta_type:
+  listbox = getattr(form, "listbox", None)
+
+if listbox:
+  return listbox
 
 # we start with 'bottom' because most of the time
 # the listbox is there.
