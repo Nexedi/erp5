@@ -58,5 +58,11 @@ if configuration_manifest_url is None:
   mapping_dict["manifest_attribute"] = ''
 else:
   mapping_dict["manifest_attribute"] = 'manifest="%s"' % configuration_manifest_url
+  
+configuration_webapp_manifest_url = web_section.getLayoutProperty("configuration_webapp_manifest_url", default=None)
+if configuration_webapp_manifest_url is None:
+  mapping_dict["webapp_manifest_full_link_tag"] = ''
+else:
+  mapping_dict["webapp_manifest_full_link_tag"] = '<link rel="manifest" href="' + configuration_webapp_manifest_url + '">'
 
 return view_as_web_method(mapping_dict=mapping_dict)
