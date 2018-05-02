@@ -119,6 +119,27 @@
         controller_fallback: false
       };
     })
+    
+    .declareService(function () {
+      var gadget = this,
+       progress_bar = gadget.element.querySelector('progress');
+      return loopEventListener(
+        progress_bar,
+        'click',
+        false,
+        function (event) {
+          return gadget.getDeclaredGadget(gadget.params.scope)
+          .push(function (controller) {
+            var percentage = event.offsetX / progress_bar.offsetWidth;
+            return controller.updateAudioElementCurrentTime(percentage * progress_bar.max, progress_bar.max)
+              .push(function () {
+                return gadget.togglePlayPause(gadget.state.play);
+              });
+          });
+        },
+        true
+      );
+    })
 
     .declareService(function () {
       var gadget = this;

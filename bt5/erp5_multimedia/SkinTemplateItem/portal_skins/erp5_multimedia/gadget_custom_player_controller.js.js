@@ -29,7 +29,7 @@
     .declareMethod('getAudioChunk', function () {
       var gadget = this, start, end;
       start = gadget.params.index;
-      if (gadget.params.end) {
+      if (gadget.params.end || gadget.params.mediaSource.sourceBuffers.length === 0) {
         return;
       }
 
@@ -54,6 +54,35 @@
             }
             throw error;
           });
+        });
+    })
+    
+    .declareMethod('updateAudioElementCurrentTime', function (time, max) {
+      var gadget = this;
+      // If there is no data in sourceBuffer return from here.
+      if (gadget.params.sourceBuffer.buffered.length === 0) {
+        return;
+      }
+      // If time is in range of buffered data, just update the current time of audio.
+      if (time > gadget.params.sourceBuffer.buffered.start(0) && time < gadget.params.sourceBuffer.buffered.end(0)) {
+         gadget.element.querySelector('audio').currentTime = time;
+         return gadget.updateCurrentTime(time);
+      }
+      
+      gadget.params.index = Math.floor((gadget.params.index / max) * time) - 1000;
+      return new RSVP.Queue()
+        .push(function () {
+          gadget.params.sourceBuffer.abort();
+          gadget.params.sourceBuffer.timestampOffset = time;
+          gadget.params.sourceBuffer.remove(
+            gadget.params.sourceBuffer.buffered.start(0),
+            gadget.params.sourceBuffer.buffered.end(0)
+          );
+          return gadget.setUpdateEvent();
+        })
+        .push(function () {
+          gadget.element.querySelector('audio').currentTime = time;
+          return gadget.updateCurrentTime(time);
         });
     })
 
@@ -81,16 +110,18 @@
         .push(function (buffer) {
           if (buffer instanceof ArrayBuffer && !gadget.params.sourceBuffer.updating) {
             gadget.params.sourceBuffer.appendBuffer(buffer);
-            gadget.params.sourceBuffer.onupdateend = function () {
-              this.updateTotalTime(this.params.sourceBuffer.timestampOffset);
-            }.bind(gadget);
+            return new RSVP.Queue()
+              .push(function () {
+                return promiseEventListener(gadget.params.sourceBuffer, 'updateend', false);
+              })
+              .push(function () {
+                gadget.params.max_progress_time = gadget.params.max_progress_time > gadget.params.sourceBuffer.timestampOffset ?
+                  gadget.params.max_progress_time : gadget.params.sourceBuffer.timestampOffset;
+                return gadget.updateTotalTime(gadget.params.max_progress_time);
+              });
           }
           if (buffer === undefined && gadget.params.mediaSource.readyState === 'open') {
             gadget.params.mediaSource.endOfStream();
-          }
-          if (gadget.params.replay) {
-            gadget.element.querySelector('audio').play();
-            gadget.params.replay = false;
           }
         });
     })
@@ -103,7 +134,7 @@
       gadget.params.name = params.name;
       gadget.params.end = false;
       gadget.params.index = 0;
-      gadget.time_offset = 0;
+      gadget.params.max_progress_time = 0;
       gadget.params.mediaSource = new MediaSource();
       
       audio.src = URL.createObjectURL(gadget.params.mediaSource);
@@ -161,7 +192,12 @@
           }
         })
         .push(function () {
-          return gadget.changeState({ currentTime: gadget.element.querySelector('audio').currentTime });
+          return promiseEventListener( gadget.params.sourceBuffer, 'updateend', false);
+        })
+        .push(function () {
+          gadget.params.max_progress_time = gadget.params.max_progress_time > gadget.params.sourceBuffer.timestampOffset ?
+            gadget.params.max_progress_time : gadget.params.sourceBuffer.timestampOffset;
+          return gadget.updateTotalTime(gadget.params.max_progress_time);
         });
     })
 
@@ -174,11 +210,17 @@
         'timeupdate',
         false,
         function () {
-          if (((gadget.params.sourceBuffer.timestampOffset + gadget.params.time_offset) - audio.currentTime) < 10 && !gadget.params.requested) {
-            gadget.params.requested = true;
-            return gadget.requestChunk();
-          }
-          return gadget.changeState({ currentTime: audio.currentTime });
+          return new RSVP.Queue()
+            .push(function () {
+              if ((gadget.params.sourceBuffer.timestampOffset - audio.currentTime) < 10 &&
+                  !gadget.params.requested) {
+                gadget.params.requested = true;
+                return gadget.requestChunk();
+              }
+            })
+            .push(function () {
+              return gadget.changeState({ currentTime: audio.currentTime });
+            });
         },
         true
       );

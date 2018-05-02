@@ -39,6 +39,10 @@
           throw error;
         });
     })
+    
+    .declareMethod('updateAudioElementCurrentTime', function (time) {
+      this.element.querySelector('audio').currentTime = time;
+    })
 
     .declareMethod('handlePlayPause', function (play) {
       var audio = this.element.querySelector('audio');
