@@ -11,3 +11,4 @@ test.erp5.testFunctionalOfficeJSoOoText
 test.erp5.testFunctionalOfficeJSoOoSpreadsheet
 test.erp5.testFunctionalOfficeJSoOoPresentation
 test.erp5.testFunctionalOfficeJSBookmark
+test.erp5.testFunctionalOfficeJSNotebook
