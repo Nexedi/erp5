@@ -129,6 +129,11 @@
 
       graph_data_and_parameter.series = dataset_list;
 
+      // overwrite defaults with custom extra options
+      for (var parameter in (configuration_dict.extra_param || [])) {
+        graph_data_and_parameter[parameter] = configuration_dict.extra_param[parameter];
+      }
+
       return graph_data_and_parameter;
     };
   /////////////////////////////////////////////////////////////////
