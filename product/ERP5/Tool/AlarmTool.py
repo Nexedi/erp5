@@ -32,6 +32,7 @@ import threading
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager, \
         newSecurityManager, setSecurityManager
+from Products.CMFActivity.ActivityTool import getCurrentNode
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -164,7 +165,7 @@ class AlarmTool(TimerServiceMixin, BaseTool):
       self.setupCurrentSkin(self.REQUEST)
       # only start when we are the alarmNode
       alarmNode = self.getAlarmNode()
-      current_node = self.getCurrentNode()
+      current_node = getCurrentNode()
       if alarmNode == '':
         self.setAlarmNode(current_node)
         alarmNode = current_node
