@@ -1,0 +1,246 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS UI (expected failure)</title>
+  <script src="../../web_site_module/officejs_notebook/rsvp.js"></script>
+  <script src="../../web_site_module/officejs_notebook/jiodev.js"></script>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS UI (expected failure)</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_notebook?ignore_layout:int=1&editable_mode:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>name=Base_createCloneDocument:method</td>
+  <td></td>field_my_id
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>name=Base_createCloneDocument:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Created Clone Web Site</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeValue</td>
+  <td>name=field_my_id</td>
+  <td>test_url</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/${test_url}/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/manage_main</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>name=ids:list</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=ids:list</td>
+  <td>${test_url}</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>name=manage_delObjects:method</td>
+  <td></td>
+</tr>
+<!-- Offline Test -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/${test_url}/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Titre %s' % DateTime()">Titre</td>
+  <td>title</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Reference %s' % DateTime()">Reference</td>
+  <td>reference</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Language %s' % DateTime()">Language</td>
+  <td>language</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Version %s' % DateTime()">Version</td>
+  <td>version</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Description %s' % DateTime()">Description</td>
+  <td>description</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@title='Title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Title']</td>
+  <td>${title}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Reference']</td>
+  <td>${reference}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Version']</td>
+  <td>${version}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Language']</td>
+  <td>${language}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//textarea[@title='Description']</td>
+  <td>${description}</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Document']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@title='Description']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Title']</td>
+  <td>${title}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Reference']</td>
+  <td>${reference}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Version']</td>
+  <td>${version}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Language']</td>
+  <td>${language}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//textarea[@title='Description']</td>
+  <td>${description}</td>
+</tr>
+<!-- This part (actually loading the notebook) requires a recent version
+of firefox. Right now (may 2018) the test nodes are running with firefox 51.
+This has been successfully tested with 59. -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>identifier=notebook-container</td>
+  <td></td>
+</tr>
