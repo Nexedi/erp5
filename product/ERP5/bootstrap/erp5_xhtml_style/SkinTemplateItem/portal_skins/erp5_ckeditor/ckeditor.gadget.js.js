@@ -127,6 +127,7 @@
       MATCH_MEDIA = window.matchMedia("not screen and (min-width: 45em)");
 
   rJS(window)
+    .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("notifySubmit", "notifySubmit")
     .declareJob("deferNotifySubmit", function () {
       // Ensure error will be correctly handled
@@ -212,6 +213,22 @@
           event.editor.execCommand('maximize');
         });
         gadget.ckeditor.on('change', gadget.deferNotifyChange.bind(gadget));
+        // Let CKEDITOR open inner links when in read-only mode
+        gadget.ckeditor.on('contentDom', function () {
+          var editable = gadget.ckeditor.editable();
+          editable.attachListener(editable, 'click', function (event) {
+            var link = new CKEDITOR.dom.elementPath(
+              event.data.getTarget(), this).contains('a');
+            if (link && event.data.$.button != 2 && link.isReadOnly()) {
+              return gadget.redirect({
+                'command': 'raw',
+                'options': {
+                  'url': link.getAttribute('href')
+                }
+              }, true);
+            }
+          }, null, null, 15);
+        });
       }
       if (modification_dict.hasOwnProperty('value')) {
         this.ckeditor.setData(this.state.value);
