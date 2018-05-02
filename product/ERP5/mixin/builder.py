@@ -425,6 +425,17 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       )
     #self.log("history_list len: %s" % len(history_list))
 
+    # We only consider resources that have consumption movements in
+    # the future, for those who don't we do not build anything.
+    has_consumption_movement = False
+    for date, inventory, quantity, portal_type in history_list:
+      if quantity < 0:
+        has_consumption_movement = True
+        break
+
+    if not has_consumption_movement:
+      return []
+
     # evaluate future inventory at date
     future_inventory_to_date = portal.portal_simulation.getFutureInventory(
       to_date=from_date,
