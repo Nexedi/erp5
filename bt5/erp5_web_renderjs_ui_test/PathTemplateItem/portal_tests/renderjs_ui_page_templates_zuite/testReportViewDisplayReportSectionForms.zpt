@@ -58,9 +58,9 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='x0_listbox']//a[text()='Current']</td>
-  <td></td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='x0_listbox']//table/tbody/tr[1]/td[2]</td>
+  <td>Current</td>
 </tr>
 
 <tr>
@@ -69,9 +69,9 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='x1_listbox']//a[text()='Draft']</td>
-  <td></td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='x1_listbox']//table/tbody/tr[1]/td[2]</td>
+  <td>Draft</td>
 </tr>
 
 
