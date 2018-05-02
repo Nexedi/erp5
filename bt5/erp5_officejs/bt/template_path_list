@@ -29,6 +29,8 @@ web_site_module/officejs_drive_app/**
 web_site_module/officejs_export
 web_site_module/officejs_media_player
 web_site_module/officejs_media_player/**
+web_site_module/officejs_notebook
+web_site_module/officejs_notebook/**
 web_site_module/officejs_pdf_viewer
 web_site_module/officejs_pdf_viewer/**
 web_site_module/officejs_smart_assistant
