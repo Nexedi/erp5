@@ -5,7 +5,7 @@ from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Log import log, WARNING
 
 portal = context.getPortalObject()
-request = kw.get("REQUEST", None) or context.REQUEST
+request = REQUEST or context.REQUEST
 
 form = getattr(context, dialog_id)
 
@@ -90,7 +90,6 @@ else:
   message = request.get('portal_status_message')
   if message is None:
     message = translateString('Status changed.')
-  kw.clear() # useful ?
 
 # Allow to redirect to another document
 redirect_document_path = request.get('redirect_document_path', None)
@@ -101,4 +100,4 @@ else:
   redirect_document = context
 
 return redirect_document.Base_redirect(form_id,
-                keep_items={'portal_status_message': message}, **kw)
+                keep_items={'portal_status_message': message})
