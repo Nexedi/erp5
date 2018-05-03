@@ -2497,7 +2497,7 @@ msgstr "Inglês"
 msgid "Entity"
 msgstr "Entidade"
 
-msgid "Equals To"
+msgid "Equal to"
 msgstr "Igual a"
 
 msgid "Error Message"

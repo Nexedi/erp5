@@ -2441,7 +2441,7 @@ msgstr "降序"
 msgid "EAN-13 Code"
 msgstr "EAN-13位代码"
 
-msgid "Equals To"
+msgid "Equal to"
 msgstr "等于"
 
 msgid "ERP5 Configuration"
@@ -2864,7 +2864,7 @@ msgstr "职称"
 msgid "Graph"
 msgstr "图表"
 
-msgid "Greater Than"
+msgid "Greater than"
 msgstr "大于"
 
 msgid "Gross Weight"
@@ -3511,7 +3511,7 @@ msgstr "该商业公司的法律形式"
 msgid "Length (m)"
 msgstr "长度(米)"
 
-msgid "Less Than"
+msgid "Less than"
 msgstr "小于"
 
 msgid "Letter"
@@ -3887,10 +3887,10 @@ msgstr "正常工作时数"
 msgid "Not Installed"
 msgstr "未安装"
 
-msgid "Not Greater Than"
+msgid "Less than or Equal to"
 msgstr "小于等于"
 
-msgid "Not Less Than"
+msgid "Greater than or Equal to"
 msgstr "大于等于"
 
 msgid "Note"

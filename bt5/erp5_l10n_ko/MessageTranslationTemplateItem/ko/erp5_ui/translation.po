@@ -2172,7 +2172,7 @@ msgstr "영어"
 msgid "Enquired"
 msgstr "질의됨"
 
-msgid "Equals To"
+msgid "Equal to"
 msgstr "와 동일"
 
 msgid "Equity + Liability"
@@ -2631,7 +2631,7 @@ msgstr "가기"
 msgid "Grade"
 msgstr "등급"
 
-msgid "Greater Than"
+msgid "Greater than"
 msgstr "보다 큼"
 
 msgid "Gross"
@@ -3114,7 +3114,7 @@ msgstr "기업의 법적 형태"
 msgid "Length (m)"
 msgstr "길이 (m)"
 
-msgid "Less Than"
+msgid "Less than"
 msgstr "보다 적음"
 
 msgid "Letter"
@@ -3588,9 +3588,6 @@ msgstr "평균 밸런스"
 msgid "Normal Credit Balance"
 msgstr "일반 크레디트 잔액"
 
-msgid "Not Greater Than"
-msgstr "보다 크지 않음."
-
 msgid "Not Grouped Lines in Beginning Balance"
 msgstr "시작 밸런스 내의 그룹화되지 않은 라인들"
 
@@ -3599,9 +3596,6 @@ msgstr "설치되지 않음"
 
 msgid "Not Installed Business Template"
 msgstr "설치된 비즈니스 템플릿이 없음."
-
-msgid "Not Less Than"
-msgstr "보다 작지 않음"
 
 msgid "Not available"
 msgstr "사용 불가"
