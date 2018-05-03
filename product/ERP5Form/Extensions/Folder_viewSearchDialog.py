@@ -143,10 +143,10 @@ def getSearchDialog(self, REQUEST=None):
                             mapping=dict(key=translateString(column_title),
                                          usage=translateString('Usage'))),
       items=[(translateString('Equals To'), ''),
-             (translateString('Greater Than'), 'min'),
-             (translateString('Less Than'),'max'),
-             (translateString('Not Greater Than'), 'ngt'),
-             (translateString('Not Less Than'), 'nlt'),
+             (translateString('Greater Than'), '>'),
+             (translateString('Less Than'),'<'),
+             (translateString('Greater Or Equals To'), '>='),
+             (translateString('Less Or Equals To'), '<='),
              ]),
 
                            ['title', 'items'])
@@ -180,10 +180,10 @@ def getSearchDialog(self, REQUEST=None):
         field_id='your_category'))
     field._surcharged_edit(dict(title=translateString('${key} ${usage}', mapping=dict(key=translateString(column_title), usage=translateString('Usage'))),
                                 items=[(translateString('Equals To'), ''),
-                                       (translateString('Greater Than'), 'min'),
-                                       (translateString('Less Than'),'max'),
-                                       (translateString('Not Greater Than'), 'ngt'),
-                                       (translateString('Not Less Than'), 'nlt'),
+                                       (translateString('Greater Than'), '>'),
+                                       (translateString('Less Than'),'<'),
+                                       (translateString('Greater Or Equals To'), '>='),
+                                       (translateString('Less Or Equals To'), '<='),
                                        ]),
 
                            ['title', 'items'])
