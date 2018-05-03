@@ -15,11 +15,6 @@ def sorted(seq):
 # Note that we don't use queries, because we want to let the catalog filter out
 # ignored parameters by itself.
 
-usage_map = dict(min='>=',
-                 max='<',
-                 ngt='<=',
-                 nlt='>',)
-
 new_mapping = dict(ignore_hide_rows=1)
 query_list = []
 left_join_list = []
@@ -52,7 +47,7 @@ for key in sorted(request.form.keys()):
     # TODO: this is a quick and dirty implementation of what should be done by
     # Query.asSearchTextExpression. Instead of keeping '%s_value_' and '%s_usage_',
     # we'll simply keep the query.
-    new_mapping[real_key] = '%s %s' % (usage_map[value], new_mapping[real_key])
+    new_mapping[real_key] = '%s %s' % (value, new_mapping[real_key])
 
   else:
     if request.form.get('%s_is_excluded_' % key):
