@@ -15,6 +15,4 @@ if 1: # keep indentation
     if getattr(message, 'msg', None) and same_type(message.msg, []):
       message = '. '.join('%s' % x for x in message.msg)
     if not batch :
-      context.REQUEST.RESPONSE.redirect(
-                 "%s/view?portal_status_message=%s" %
-                 (context.absolute_url(), message))
+      return context.Base_redirect(keep_items={'portal_status_message': str(message)})
