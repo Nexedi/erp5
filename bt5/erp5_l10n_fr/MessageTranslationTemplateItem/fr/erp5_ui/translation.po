@@ -5894,7 +5894,7 @@ msgid "Government"
 msgstr "Gouvernement"
 
 msgid "Greater Than"
-msgstr "Plus grand que"
+msgstr "Supérieur à"
 
 msgid "Gross"
 msgstr "Brut"
@@ -6911,7 +6911,7 @@ msgid "Length quantity"
 msgstr "Longueur équivalente"
 
 msgid "Less Than"
-msgstr "Moins que"
+msgstr "Inférieur à"
 
 msgid "Letter"
 msgstr "Lettre"
@@ -7868,7 +7868,7 @@ msgid "Normal Working Hours"
 msgstr "Heures normales"
 
 msgid "Less Or Equals To"
-msgstr "Pas plus grand que"
+msgstr "Inférieur ou égal à"
 
 msgid "Not Grouped Lines in Beginning Balance"
 msgstr "Lignes non lettrées du solde initial"
@@ -7880,7 +7880,7 @@ msgid "Not Installed [state in business_template_installation_workflow]"
 msgstr "Pas installé"
 
 msgid "Greater Or Equals To"
-msgstr "Pas moins que"
+msgstr "Supérieur ou égal à"
 
 msgid "Not Payed"
 msgstr "Non payé"
