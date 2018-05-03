@@ -76,6 +76,7 @@ else:
   # cut corner to retrieve path to css files
   letter_version = "001"
   letter_reference = letter.getReference()
+  extra_template_kw = letter.Letter_getExtraTemplateVariableDict()
 
 # overrides for tests
 if override_batch_mode:
@@ -157,7 +158,8 @@ if letter_format == "html":
     letter_source_website=letter_source.get("website", blank),
     letter_source_bank=letter_source.get("bank", blank),
     letter_source_bic=letter_source.get("bic", blank),
-    letter_source_iban=letter_source.get("iban", blank)
+    letter_source_iban=letter_source.get("iban", blank),
+    **extra_template_kw
   )
   return letter.Base_finishWebPageCreation(
     doc_download=letter_download,
@@ -186,7 +188,8 @@ if letter_format == "pdf":
     letter_theme_logo_url=letter.Base_setUrl(path=letter_source.get("enhanced_logo_url"), display=None),
     letter_theme_logo_alt=letter_theme.get("theme_logo_description"),
     letter_timestamp=letter_modification_date.strftime('%Y-%m-%d'),
-    letter_source_city=letter_source.get("city", blank)
+    letter_source_city=letter_source.get("city", blank),
+    **extra_template_kw
   )
 
   letter_content = letter.Letter_createLetterContent(
@@ -212,7 +215,8 @@ if letter_format == "pdf":
     letter_source_city=letter_source.get("city", blank),
     letter_source_country_code=letter_source.get("codification", blank),
     letter_display_source_adress=letter_display_source_adress,
-    letter_content = letter_content
+    letter_content = letter_content,
+    **extra_template_kw
   )
 
   letter_foot = letter.Letter_createLetterFooter(
@@ -241,6 +245,7 @@ if letter_format == "pdf":
     letter_source_bank=letter_source.get("bank", blank),
     letter_source_bic=letter_source.get("bic", blank),
     letter_source_iban=letter_source.get("iban", blank),
+    **extra_template_kw
   )
 
   # ================ encode and build cloudoo elements =========================
