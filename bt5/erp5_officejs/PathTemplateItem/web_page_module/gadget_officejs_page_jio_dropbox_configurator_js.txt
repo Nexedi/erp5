@@ -34,6 +34,8 @@
           check_remote_modification: true,
           check_remote_creation: true,
           check_remote_deletion: true,
+          parallel_operation_attachment_amount: 50,
+          parallel_operation_amount: 50,
           signature_sub_storage: {
             type: "query",
             sub_storage: {
@@ -45,12 +47,21 @@
             }
           },
           local_sub_storage: {
-            type: "query",
+            type: "mapping",
+            attachment: {
+              DOCUMENT_REGEXP  : {
+                get: {uri_template: 'enclosure'},
+                put: {uri_template: 'enclosure'}
+              }
+            },
             sub_storage: {
-              type: "uuid",
+              type: "query",
               sub_storage: {
-                type: "indexeddb",
-                database: "officejs-dropbox"
+                type: "uuid",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "officejs-dropbox"
+                }
               }
             }
           },
@@ -70,9 +81,13 @@
               sub_storage: {
                 type: "drivetojiomapping",
                 sub_storage: {
-                  type: "dropbox",
-                  access_token: token,
-                  root: "sandbox"
+                  type: "crypt",
+                  key: 'amrani',
+                  sub_storage: {
+                    type: "dropbox",
+                    access_token: token,
+                    root: "sandbox"
+                  }
                 }
               }
             }
