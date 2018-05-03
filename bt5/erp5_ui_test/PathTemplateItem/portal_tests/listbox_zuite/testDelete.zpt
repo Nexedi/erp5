@@ -110,7 +110,7 @@ It contains the same columns
   <td></td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
+  <td>assertTextPresent</td>
   <td>Deleted.</td>
   <td></td>
 </tr>
@@ -186,9 +186,10 @@ It contains the same columns
   <td></td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
-  <td>Sorry, you can not delete 1 item.</td>
+  <td>assertTextPresent</td>
+  <td>Deleted.</td>
   <td></td>
+  <td>We used to report error on user deleting deleted document ... but user does not care, does she?</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
