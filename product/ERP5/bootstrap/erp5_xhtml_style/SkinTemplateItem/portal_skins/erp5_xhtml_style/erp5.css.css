@@ -42,18 +42,22 @@ option {
   white-space: pre;
 }
 
-div.pre div {
+div.field pre, div.pre div {
  background: #FFF;
 }
 
 span.pre_wrap {
  white-space: pre-wrap;
 }
-div.pre, span.pre {
+div.field pre, div.pre, span.pre {
  font-family: monospace;
  color: black;
  white-space: pre-wrap;
  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+div.field pre {
+  font-family: inherit;
 }
 
 button, select, input {
