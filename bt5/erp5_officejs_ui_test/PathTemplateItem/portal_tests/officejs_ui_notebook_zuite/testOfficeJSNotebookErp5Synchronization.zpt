@@ -218,7 +218,7 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>${reference}</td>
   <td></td>
 </tr>
 <tr>
@@ -233,7 +233,7 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
 </tr>
 <tr>
   <td>click</td>
-  <td>link=${title}</td>
+  <td>link=${reference}</td>
   <td></td>
 </tr>
 <tr>
@@ -308,12 +308,12 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>${reference}</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>link=${title}</td>
+  <td>link=${reference}</td>
   <td></td>
 </tr>
 <tr>
