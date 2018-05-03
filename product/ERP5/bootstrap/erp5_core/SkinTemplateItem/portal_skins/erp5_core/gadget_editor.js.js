@@ -12,7 +12,8 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
     "svg_editor" : {"url": "method-draw/method-draw.gadget.html"},
     "minipaint": {"url": "minipaint.gadget.html"},
     "jquery-sheets": {"url": "jquery-sheets.gadget.html"},
-    "pdf": {"url": "pdf_js/pdfjs.gadget.html"}
+    "pdf": {"url": "pdf_js/pdfjs.gadget.html"},
+    "notebook_editor": {"url": "gadget_notebook.html"}
   };
 
 
