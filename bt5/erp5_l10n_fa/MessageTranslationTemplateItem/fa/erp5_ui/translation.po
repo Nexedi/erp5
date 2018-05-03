@@ -4080,7 +4080,7 @@ msgstr "درخواست شده"
 msgid "Enter the number of user accounts you want to create. In your company, each person using ERP5 should have his own user account."
 msgstr ""
 
-msgid "Equals To"
+msgid "Equal to"
 msgstr "برابر با"
 
 msgid "Equity + Liability"
@@ -4689,8 +4689,11 @@ msgstr "برو"
 msgid "Gourde"
 msgstr ""
 
-msgid "Greater Than"
+msgid "Greater than"
 msgstr "بزرگتر از"
+
+msgid "Greater than or Equal to"
+msgstr "بزرگتر یا مساوی با از"
 
 msgid "Gross"
 msgstr "ناخالص"
@@ -5427,8 +5430,11 @@ msgstr ""
 msgid "Leone"
 msgstr ""
 
-msgid "Less Than"
+msgid "Less than"
 msgstr "کمتر از"
+
+msgid "Less than or Equal to"
+msgstr "کمتر از یا برابر است"
 
 msgid "Letter"
 msgstr "نامه"
@@ -6048,9 +6054,6 @@ msgstr ""
 msgid "Norwegian Krone"
 msgstr ""
 
-msgid "Not Greater Than"
-msgstr "نه بیشتر از"
-
 msgid "Not Grouped Lines in Beginning Balance"
 msgstr "خطوط در آغاز باقیمانده گروه بندی نشده"
 
@@ -6059,9 +6062,6 @@ msgstr "نصب نشده است"
 
 msgid "Not Installed [state in business_template_installation_workflow]"
 msgstr "نصب نشده است"
-
-msgid "Not Less Than"
-msgstr "نه کمتر از"
 
 msgid "Not available"
 msgstr "در دسترس نیست"

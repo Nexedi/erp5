@@ -89,7 +89,7 @@
 <!-- Check the operation selectable -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@class='filter_item_container']/div[1]//select[2]//option[1][@value='exact_match' and text()='Equals To']</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[2]//option[1][@value='exact_match' and text()='Equal to']</td>
   <td></td>
 </tr>
 <tr>

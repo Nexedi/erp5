@@ -14,16 +14,16 @@
                          .getElementById("filter-template")
                          .innerHTML),
     NUMERIC = [
-      ["Equals To", "="], ["Greater Than", ">"],
-      ["Less Than", "<"], ["Not Greater Than", "<="],
-      ["Not Less Than", ">="]
+      ["Equal to", "="], ["Greater than", ">"],
+      ["Less than", "<"], ["Less than or Equal to", "<="],
+      ["Greater than or Equal to", ">="]
     ],
     OTHER = [
-      ["Equals To", "exact_match"],
+      ["Equal to", "exact_match"],
       ["Contains", "keyword"]
     ],
     DOMAIN = [
-      ["Equals To", "exact_match"]
+      ["Equal to", "exact_match"]
     ],
     DEFAULT = [["Contains", "contain"]],
     PREFIX_COLUMN = 'COLUMN_',

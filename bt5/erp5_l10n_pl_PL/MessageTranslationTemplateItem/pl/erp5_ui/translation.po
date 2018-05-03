@@ -1083,7 +1083,7 @@ msgstr "Data końcowa"
 msgid "English"
 msgstr "Angielski"
 
-msgid "Equals To"
+msgid "Equal to"
 msgstr "Równy"
 
 msgid "Error Message"
@@ -1266,7 +1266,7 @@ msgstr "Idź"
 msgid "Grade"
 msgstr "Stopień"
 
-msgid "Greater Than"
+msgid "Greater than"
 msgstr "Większy niż"
 
 msgid "Gross Salary"

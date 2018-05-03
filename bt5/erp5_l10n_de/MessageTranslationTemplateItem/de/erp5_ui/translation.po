@@ -1877,7 +1877,7 @@ msgstr "Kontaktnummer Acclaro"
 msgid "Entity Role"
 msgstr "Rolle Personenkonten"
 
-msgid "Equals To"
+msgid "Equal to"
 msgstr "Ist Gleich"
 
 msgid "Equity + Liability"
@@ -2318,8 +2318,11 @@ msgstr "Einstellungen Für Google Suchen Gadget"
 msgid "Grade"
 msgstr "Rang"
 
-msgid "Greater Than"
+msgid "Greater than"
 msgstr "Größer als"
+
+msgid "Greater than or Equal to"
+msgstr "Größer oder Gleich"
 
 msgid "Gross"
 msgstr "Brutto"
@@ -2762,8 +2765,11 @@ msgstr "Länge (cm)"
 msgid "Length (m)"
 msgstr "Länge (m)"
 
-msgid "Less Than"
+msgid "Less than"
 msgstr "Kleiner Als"
+
+msgid "Less than or Equal to"
+msgstr "Kleiner oder Gleich"
 
 msgid "Letter"
 msgstr "Brief"
@@ -3106,12 +3112,6 @@ msgstr "Nichts"
 
 msgid "Normal Credit Balance"
 msgstr "Natürliches Habenkonto"
-
-msgid "Not Greater Than"
-msgstr "Nicht Größer Als"
-
-msgid "Not Less Than"
-msgstr "Nicht Kleiner Als"
 
 msgid "Note"
 msgstr "Notiz"

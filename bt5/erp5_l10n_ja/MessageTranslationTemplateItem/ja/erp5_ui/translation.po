@@ -2205,7 +2205,7 @@ msgstr "問い合わせ済み"
 msgid "Entity"
 msgstr "タイトル"
 
-msgid "Equals To"
+msgid "Equal to"
 msgstr "等しい"
 
 msgid "Equity"
@@ -2553,8 +2553,11 @@ msgstr "行く"
 msgid "Grade"
 msgstr "職階"
 
-msgid "Greater Than"
+msgid "Greater than"
 msgstr "より大きい"
+
+msgid "Greater than or Equal to"
+msgstr "以上"
 
 msgid "Gross"
 msgstr "総計"
@@ -2951,6 +2954,12 @@ msgstr "長さ (cm)"
 
 msgid "Length (m)"
 msgstr "長さ (m)"
+
+msgid "Less than"
+msgstr "より小さい"
+
+msgid "Less than or Equal to"
+msgstr "以下"
 
 msgid "Letter"
 msgstr "手紙"

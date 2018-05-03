@@ -5110,7 +5110,7 @@ msgstr "Entité"
 msgid "Entity Role"
 msgstr "Rôle du tiers"
 
-msgid "Equals To"
+msgid "Equal to"
 msgstr "Égal à "
 
 msgid "Equity"
@@ -5893,8 +5893,11 @@ msgstr "Calendrier Google"
 msgid "Government"
 msgstr "Gouvernement"
 
-msgid "Greater Than"
-msgstr "Plus grand que"
+msgid "Greater than"
+msgstr "Supérieur à"
+
+msgid "Greater than or Equal to"
+msgstr "Supérieur ou égal à"
 
 msgid "Gross"
 msgstr "Brut"
@@ -6910,8 +6913,11 @@ msgstr "Longueur (m)"
 msgid "Length quantity"
 msgstr "Longueur équivalente"
 
-msgid "Less Than"
-msgstr "Moins que"
+msgid "Less than"
+msgstr "Inférieur à"
+
+msgid "Less than or Equal to"
+msgstr "Inférieur ou égal à"
 
 msgid "Letter"
 msgstr "Lettre"
@@ -7867,9 +7873,6 @@ msgstr "Valeurs normales"
 msgid "Normal Working Hours"
 msgstr "Heures normales"
 
-msgid "Not Greater Than"
-msgstr "Pas plus grand que"
-
 msgid "Not Grouped Lines in Beginning Balance"
 msgstr "Lignes non lettrées du solde initial"
 
@@ -7878,9 +7881,6 @@ msgstr "Pas installé"
 
 msgid "Not Installed [state in business_template_installation_workflow]"
 msgstr "Pas installé"
-
-msgid "Not Less Than"
-msgstr "Pas moins que"
 
 msgid "Not Payed"
 msgstr "Non payé"
