@@ -102,8 +102,12 @@
   //////////////////////////////////////////////////////////////////
   // Change URL functions
   //////////////////////////////////////////////////////////////////
-  function synchronousChangeState(hash) {
-    window.location.replace(hash);
+  function synchronousChangeState(hash, push_history) {
+    if (push_history) {
+      window.location = hash;
+    } else {
+      window.location.replace(hash);
+    }
     // Prevent execution of all next asynchronous code
     throw new RSVP.CancellationError('Redirecting to ' + hash);
   }
@@ -970,14 +974,14 @@
       return hash;
     })
 
-    .declareMethod('redirect', function (options) {
+    .declareMethod('redirect', function (options, push_history) {
       this.props.form_content = options.form_content;
       // XXX Should we make it a second method parameter
       this.props.keep_message = true;
       delete options.form_content;
       return this.getCommandUrlFor(options)
         .push(function (hash) {
-          return synchronousChangeState(hash);
+          return synchronousChangeState(hash, push_history);
         });
     })
 
