@@ -3887,10 +3887,10 @@ msgstr "正常工作时数"
 msgid "Not Installed"
 msgstr "未安装"
 
-msgid "Not Greater Than"
+msgid "Less Or Equals To"
 msgstr "小于等于"
 
-msgid "Not Less Than"
+msgid "Greater Or Equals To"
 msgstr "大于等于"
 
 msgid "Note"

@@ -15,8 +15,8 @@
                          .innerHTML),
     NUMERIC = [
       ["Equals To", "="], ["Greater Than", ">"],
-      ["Less Than", "<"], ["Not Greater Than", "<="],
-      ["Not Less Than", ">="]
+      ["Less Than", "<"], ["Less Or Equals To", "<="],
+      ["Greater Or Equals To", ">="]
     ],
     OTHER = [
       ["Equals To", "exact_match"],

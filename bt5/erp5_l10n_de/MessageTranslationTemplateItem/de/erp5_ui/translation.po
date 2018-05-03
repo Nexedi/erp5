@@ -3107,10 +3107,10 @@ msgstr "Nichts"
 msgid "Normal Credit Balance"
 msgstr "Natürliches Habenkonto"
 
-msgid "Not Greater Than"
+msgid "Less Or Equals To"
 msgstr "Nicht Größer Als"
 
-msgid "Not Less Than"
+msgid "Greater Or Equals To"
 msgstr "Nicht Kleiner Als"
 
 msgid "Note"

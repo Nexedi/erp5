@@ -7867,7 +7867,7 @@ msgstr "Valeurs normales"
 msgid "Normal Working Hours"
 msgstr "Heures normales"
 
-msgid "Not Greater Than"
+msgid "Less Or Equals To"
 msgstr "Pas plus grand que"
 
 msgid "Not Grouped Lines in Beginning Balance"
@@ -7879,7 +7879,7 @@ msgstr "Pas installé"
 msgid "Not Installed [state in business_template_installation_workflow]"
 msgstr "Pas installé"
 
-msgid "Not Less Than"
+msgid "Greater Or Equals To"
 msgstr "Pas moins que"
 
 msgid "Not Payed"

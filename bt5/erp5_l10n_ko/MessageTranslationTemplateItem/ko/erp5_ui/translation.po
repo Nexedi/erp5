@@ -3588,7 +3588,7 @@ msgstr "평균 밸런스"
 msgid "Normal Credit Balance"
 msgstr "일반 크레디트 잔액"
 
-msgid "Not Greater Than"
+msgid "Less Or Equals To"
 msgstr "보다 크지 않음."
 
 msgid "Not Grouped Lines in Beginning Balance"
@@ -3600,7 +3600,7 @@ msgstr "설치되지 않음"
 msgid "Not Installed Business Template"
 msgstr "설치된 비즈니스 템플릿이 없음."
 
-msgid "Not Less Than"
+msgid "Greater Or Equals To"
 msgstr "보다 작지 않음"
 
 msgid "Not available"

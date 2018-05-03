@@ -6048,7 +6048,7 @@ msgstr ""
 msgid "Norwegian Krone"
 msgstr ""
 
-msgid "Not Greater Than"
+msgid "Less Or Equals To"
 msgstr "نه بیشتر از"
 
 msgid "Not Grouped Lines in Beginning Balance"
@@ -6060,7 +6060,7 @@ msgstr "نصب نشده است"
 msgid "Not Installed [state in business_template_installation_workflow]"
 msgstr "نصب نشده است"
 
-msgid "Not Less Than"
+msgid "Greater Or Equals To"
 msgstr "نه کمتر از"
 
 msgid "Not available"
