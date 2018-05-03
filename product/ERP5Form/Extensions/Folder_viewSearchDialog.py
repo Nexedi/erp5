@@ -142,11 +142,11 @@ def getSearchDialog(self, REQUEST=None):
       title=translateString('${key} ${usage}',
                             mapping=dict(key=translateString(column_title),
                                          usage=translateString('Usage'))),
-      items=[(translateString('Equals To'), ''),
-             (translateString('Greater Than'), 'min'),
-             (translateString('Less Than'),'max'),
-             (translateString('Not Greater Than'), 'ngt'),
-             (translateString('Not Less Than'), 'nlt'),
+      items=[(translateString('Equal to'), ''),
+             (translateString('Greater than'), '>'),
+             (translateString('Less than'), '<'),
+             (translateString('Greater than or Equal to'), '>='),
+             (translateString('Less than or Equal to'), '<='),
              ]),
 
                            ['title', 'items'])
@@ -179,11 +179,11 @@ def getSearchDialog(self, REQUEST=None):
         form_id='Base_viewDialogFieldLibrary',
         field_id='your_category'))
     field._surcharged_edit(dict(title=translateString('${key} ${usage}', mapping=dict(key=translateString(column_title), usage=translateString('Usage'))),
-                                items=[(translateString('Equals To'), ''),
-                                       (translateString('Greater Than'), 'min'),
-                                       (translateString('Less Than'),'max'),
-                                       (translateString('Not Greater Than'), 'ngt'),
-                                       (translateString('Not Less Than'), 'nlt'),
+                                items=[(translateString('Equal to'), ''),
+                                       (translateString('Greater than'), '>'),
+                                       (translateString('Less than'), '<'),
+                                       (translateString('Greater than or Equal to'), '>='),
+                                       (translateString('Less than or Equal to'), '<='),
                                        ]),
 
                            ['title', 'items'])
