@@ -1,0 +1,11 @@
+{
+      "short_name": "OfficeJS Smart Assistant",
+      "name": "OfficeJS Smart Assistant",
+      "icons": [{
+        "src": "image_module/gadget_officejs_smart_assistant_icon_png?quality=75&format=png",
+        "sizes": "any",
+        "type": "image/png"
+      }],
+      "start_url": "./",
+      "display": "standalone"
+}
