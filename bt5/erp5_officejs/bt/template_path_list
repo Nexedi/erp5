@@ -29,6 +29,8 @@ web_site_module/officejs_media_player
 web_site_module/officejs_media_player/**
 web_site_module/officejs_pdf_viewer
 web_site_module/officejs_pdf_viewer/**
+web_site_module/officejs_smart_assistant
+web_site_module/officejs_smart_assistant/**
 web_site_module/officejs_svg_editor
 web_site_module/officejs_svg_editor/**
 web_site_module/officejs_text_editor
