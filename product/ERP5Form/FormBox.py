@@ -186,7 +186,8 @@ class FormBoxValidator(Validator.Validator):
     # TODO: Handle 'cell' for validation inside listboxes,
     #       like it is done for rendering.
     formbox_target_id = field.get_value('formbox_target_id')
-
+    if not formbox_target_id:
+      return None
     # Get current error fields
     current_field_errors = REQUEST.get('field_errors', [])
 
