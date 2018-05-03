@@ -119,7 +119,8 @@ and handling data send&receive.
           options: options,
           erp5_document: undefined,
           erp5_form: undefined,
-          url: undefined
+          url: undefined,
+          embedded: asBoolean(options.embedded)
         };
 
       if (options.hasOwnProperty('erp5_document')) {
@@ -161,7 +162,11 @@ and handling data send&receive.
           return gadget.jio_getAttachment(uri.segment(2), "view");
         })
         .push(function (erp5_form) {
-          var url = "gadget_erp5_pt_" + erp5_form.pt;
+          var url;
+          if (new_state.embedded) {
+            erp5_form.pt = "embedded_form_render";  // hard-coded erp5 naming
+          }
+          url = "gadget_erp5_pt_" + erp5_form.pt;
           // XXX Hardcoded specific behaviour for form_view
           if ((options.editable === 1) && (erp5_form.pt === "form_view")) {
             url += "_editable";

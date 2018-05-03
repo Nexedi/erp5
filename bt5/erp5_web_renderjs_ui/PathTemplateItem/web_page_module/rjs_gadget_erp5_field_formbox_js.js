@@ -69,7 +69,8 @@
           key: gadget.state.name,
           view: gadget.state.view,
           jio_key: erp5_document_uri.segment(2),
-          editable: gadget.state.editable
+          editable: gadget.state.editable,
+          embedded: true
         };
 
       // do not preserve objects in the state
