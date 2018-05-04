@@ -6,5 +6,6 @@ Letter Post Module | view
 Letter Post | preview_pdf
 Letter Post | view
 Letter | jump_to_letter_post
+Letter | letter_preview
 Mail Message | jump_to_internet_message_post
 Mail Message | mail_message_preview
