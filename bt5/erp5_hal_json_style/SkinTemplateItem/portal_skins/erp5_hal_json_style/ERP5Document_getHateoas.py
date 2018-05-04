@@ -1243,11 +1243,6 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   # end-if report_section
 
   if form.pt == "form_dialog":
-    # Insert hash of current values into the form so scripts can see whether data has
-    # changed if they provide multi-step process
-    if form_data is not None:
-      extra_param_json["form_hash"] = form.hash_validated_data(form_data)
-
     # extra_param_json is a special field in forms (just like form_id). extra_param_json field holds JSON
     # metadata about the form (its hash and dynamic fields)
     renderHiddenField(response_dict, 'extra_param_json', json.dumps(extra_param_json))

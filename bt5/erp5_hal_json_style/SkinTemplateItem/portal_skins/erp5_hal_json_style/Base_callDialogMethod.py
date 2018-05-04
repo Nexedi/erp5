@@ -5,10 +5,11 @@ Responsible for validating form data and redirecting to the form action.
 Please note that the new UI has deprecated use of Selections. Your scripts
 will no longer receive `selection_name` nor `selection` in their arguments.
 
-There are runtime values hidden in every form (injected by getHateoas Script):
+There are runtime values hidden in every dialog form (injected by getHateoas Script):
   form_id - previous form ID (backward compatibility reasons)
   dialog_id - current form dialog ID
   dialog_method - method to be called - can be either update_method or dialog_method of the Dialog Form
+  extra_param_json - JSON serialized extra parameters for the dialog script
 """
 
 from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING, ERROR
@@ -110,6 +111,21 @@ try:
   editable_mode = request.get('editable_mode', 1)
   request.set('editable_mode', 1)
   form_data = form.validate_all_to_request(request)
+  # Notify the underlying script whether user did modifications
+  form_hash = form.hash_validated_data(form_data)
+  # Inject `has_changed` parameter to arguments
+  if "form_hash" in extra_param:
+    kw['has_changed'] = (form_hash != extra_param.get('form_hash'))
+  # update form_hash here so we do not rely on developer/Dialog Script
+  # to pass it correctly
+  extra_param["form_hash"] = form_hash
+
+  # Put extra_param into request so we can pass it behind developers back
+  # it is picked up at Base_renderForm so the developer does not need to
+  # know that they should pass it.
+  # We cannot use **kwargs because all form fields get injected there so
+  # from our point of view it contains random garbage
+  request.set('extra_param', extra_param)
 
   request.set('editable_mode', editable_mode)
   default_skin = portal.portal_skins.getDefaultSkin()
@@ -187,7 +203,7 @@ if len(listbox_id_list):
 # First check for an query in form parameters - if they are there
 # that means previous view was a listbox with selected stuff so recover here
 query = extra_param.get("query", None)
-select_all = int(extra_param.pop("_select_all", "0"))
+select_all = extra_param.get("_select_all", 0)
 
 # inject `uids` into Scripts **kwargs when we got any `query` (empty or filled)
 if query is not None:
@@ -200,11 +216,12 @@ if query is not None:
 
 # early-stop if user selected all documents
 if query == "" and select_all == 0 and dialog_method != update_method:  # do not interrupt on UPDATE
+  extra_param["_select_all"] = 1
   return context.Base_renderForm(
     dialog_id,
     message=translate("All documents are selected! Submit again to proceed or Cancel and narrow down your search."),
     level=WARNING,
-    keep_items={'_select_all': 1},
+    keep_items=extra_param,
     query=query,
     form_data=form_data)
 
@@ -215,13 +232,9 @@ if query == "" and select_all == 0 and dialog_method != update_method:  # do not
 if dialog_category == "object_search" :
   portal.portal_selections.setSelectionParamsFor(kw['selection_name'], kw)
 
-# Notify the underlying script whether user did modifications
-form_hash = form.hash_validated_data(form_data)
-if "form_hash" in extra_param:
-  kw['has_changed'] = (form_hash != extra_param.pop('form_hash'))
-
 # Add rest of extra param into arguments of the target method
-kw.update(extra_param)
+kw.update(**extra_param)
+kw.update(keep_items=extra_param)  # better backward compatibility
 
 # Finally we will call the Dialog Method
 # Handle deferred style, unless we are executing the update action
@@ -239,7 +252,8 @@ if dialog_method != update_method and kw.get('deferred_style', 0):
       return context.Base_renderForm(dialog_id,
         message=translate('Deferred reports are possible only with preference '\
                           '"Report Style" set to "ODT" or "ODS"'),
-        level=WARNING)
+        level=WARNING,
+        keep_items=extra_param)
 
   # If the action form has report_view as it's method, it
   if page_template != 'report_view':
@@ -304,7 +318,7 @@ if True:
     meta_type = ""
 
   if meta_type in ("ERP5 Form", "ERP5 Report"):
-    return context.ERP5Document_getHateoas(REQUEST=request, form=dialog_form, mode="form", form_data=form_data)
+    return context.ERP5Document_getHateoas(REQUEST=request, form=dialog_form, mode="form", form_data=form_data, extra_param_json=extra_param)
 
   return dialog_form(**kw)
 

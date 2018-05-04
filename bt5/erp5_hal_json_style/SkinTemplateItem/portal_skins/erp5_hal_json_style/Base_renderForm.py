@@ -9,16 +9,21 @@ This script differs from Base_redirect that it keeps the form values in place.
 :param REQUEST: request
 :param **kwargs: should contain parameters to ERP5Document_getHateoas such as 'query' to replace Selections
 """
-
-keep_items = keep_items or {}
+REQUEST = REQUEST or context.REQUEST
 
 form = getattr(context, form_id)
 
-if not message and "portal_status_message" in keep_items:
-  message = keep_items.pop("portal_status_message")
+# recover "hidden field" from HAL_JSON interface behind developers back (sorry)
+extra_param_json = REQUEST.get('extra_param', {})
 
-if not level and "portal_status_level" in keep_items:
-  level = keep_items.pop("portal_status_level")
+if keep_items is not None:
+  if not message and "portal_status_message" in keep_items:
+    message = keep_items.pop("portal_status_message")
 
-return context.ERP5Document_getHateoas(form=form, mode='form', REQUEST=REQUEST, extra_param_json=keep_items,
+  if not level and "portal_status_level" in keep_items:
+    level = keep_items.pop("portal_status_level")
+
+  extra_param_json.update(keep_items)
+
+return context.ERP5Document_getHateoas(form=form, mode='form', REQUEST=REQUEST, extra_param_json=extra_param_json,
                                        portal_status_message=message, portal_status_level=level, **kwargs)

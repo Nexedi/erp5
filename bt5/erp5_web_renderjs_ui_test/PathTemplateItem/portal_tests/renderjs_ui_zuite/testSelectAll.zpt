@@ -95,7 +95,7 @@
 <tr><th rowspan="1" colspan="3">Updating the dialog must not trigger warning about all selected</th></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block tal:define="notification_configuration python: {'class': 'success', 'text': 'Data received.'}">
+<tal:block tal:define="notification_configuration python: {'class': 'success', 'text': 'Updated. First submission.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 
@@ -106,7 +106,22 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 
+<tr><td>assertValue</td>
+    <td>//input[@name="field_custom_variable"]</td>
+    <td>couscous</td></tr>
+
 <tr><td>type</td>
+    <td>//input[@name="field_custom_variable"]</td>
+    <td>couscous</td></tr>
+
+<tr><th rowspan="1" colspan="3">Submitting, however, must warn the user</th></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Submit again to confirm. Data the same.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<tr><td>assertValue</td>
     <td>//input[@name="field_custom_variable"]</td>
     <td>couscous</td></tr>
 
@@ -138,6 +153,19 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'All documents are selected! Submit again to proceed or Cancel and narrow down your search.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<tr><td>waitForElementPresent</td>
+    <td>//input[@name="field_custom_variable"]</td><td></td></tr>
+<tr><td>type</td>
+    <td>//input[@name="field_custom_variable"]</td>
+    <td>musaka</td></tr>
+
+<tr><th rowspan="1" colspan="3">Now the user-script confirmation should kick in</th></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Submit again to confirm. Data has changed.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 
@@ -189,7 +217,13 @@
 <tr><th rowspan="1" colspan="3">Second submission must work as advertised</th></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block tal:define="notification_configuration python: {'class': 'success', 'text': 'Did nothing.'}">
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Submit again to confirm. First submission.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'success', 'text': 'Data the same.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 

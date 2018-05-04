@@ -121,7 +121,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>Folder_doNothingDialog</string> </value>
+            <value> <string>Folder_doNothing</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
