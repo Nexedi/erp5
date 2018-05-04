@@ -1148,7 +1148,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     if 'uids' in dialog_method_kwargs:
       # If we do not have "query" in the REQUEST but the Dialog Method requires uids
       # then we still should inject empty "query" in the dialog call
-      extra_param_json["query"] = query or REQUEST.get("query", "")
+      extra_param_json["query"] = query or extra_param_json.get("query", "") or REQUEST.get("query", "")
   else:
     # In form_view we place only form_id in the request form
     renderHiddenField(response_dict, 'form_id', form.id)
