@@ -2,14 +2,14 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test OfficeJS UI</title>
+<title>Test OfficeJS UI (expected failure)</title>
   <script src="../../web_site_module/officejs_notebook/rsvp.js"></script>
   <script src="../../web_site_module/officejs_notebook/jiodev.js"></script>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test OfficeJS UI</td></tr>
+<tr><td rowspan="1" colspan="3">Test OfficeJS UI (expected failure)</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <!-- Clean Up -->
