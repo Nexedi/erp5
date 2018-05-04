@@ -1,0 +1,186 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI Module Action Change State</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><th rowspan="1" colspan="3">Test RenderJS UI Module Action Change State</th></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr><td>open</td>
+    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Reset Successfully.</td><td></td></tr>
+
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<tr><th colspan="3">Create Foo objects with distinguishible titles (Title 1%, Title 2%)</th></tr>
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=10&amp;num:int=2</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=20&amp;num:int=2</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=30&amp;num:int=2</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr><td>open</td>
+    <td>${base_url}/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_columns=id%7CID%0Atitle%7CTitle%0Asimulation_state%7CState&field_lines=3</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Set Successfully.</td><td></td></tr>
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-role="header"]//a[@data-i18n="Actions"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//div[@data-role="header"]//a[@data-i18n="Actions"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//ul[@data-role="listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//ul[@data-role="listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
+
+<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 6)', 'footer': 'Records 1 - 3 / 6'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+
+<tr><th colspan="3">Check that sort and pagination work</th></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/thead/tr/th//a[@data-i18n="ID"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/thead/tr/th//a[@data-i18n="ID"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 6)', 'footer': 'Records 1 - 3 / 6'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+
+<tr><td>waitForText</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[1]/td[1]//p</td>
+    <td>31</td></tr>
+<tr><td>assertText</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[1]/td[1]//p</td>
+    <td>31</td></tr>
+<tr><td>assertText</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[1]/td[3]//a</td>
+    <td>draft</td></tr>
+<tr><td>assertText</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[2]/td[1]//p</td>
+    <td>30</td></tr>
+<tr><td>assertText</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[3]/td[1]//p</td>
+    <td>21</td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//nav/a[@data-i18n="Next"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//nav/a[@data-i18n="Next"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(4 - 6 / 6)', 'footer': 'Records 4 - 6 / 6'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tr><td>waitForElementPresent</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[3]/</td><td></td></tr>
+<tr><td>assertText</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[1]/td[1]//p</td>
+    <td>20</td></tr>
+<tr><td>assertText</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[1]/td[3]//a</td>
+    <td>draft</td></tr>
+<tr><td>assertText</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[2]/td[1]//p</td>
+    <td>11</td></tr>
+<tr><td>assertText</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[3]/td[1]//p</td>
+    <td>10</td></tr>
+
+<tr><th colspan="3">Search <em>( title:  "Title 1%" OR title:  "Title 3%" )</em> so we work on subset</th></tr>
+<tr><td>click</td>
+    <td>//div[@data-role="header"]//h1//a</td><td></td></tr>
+<tal:block tal:define='search_query string:( title: "Title 1%" OR title: "Title 3%" )'>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
+</tal:block>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-role="header"]//a[@data-i18n="Actions"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//div[@data-role="header"]//a[@data-i18n="Actions"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//ul[@data-role="listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//ul[@data-role="listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
+
+<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 4)', 'footer': 'Records 1 - 3 / 4'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+
+<tr><td>waitForElementPresent</td>
+    <td>//select[@name="field_workflow_action"]</td><td></td></tr>
+<tr><td>select</td>
+    <td>//select[@name="field_workflow_action"]</td>
+    <td>value=validate_action</td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Form updated.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<tr><td>waitForElementPresent</td>
+    <td>//textarea[@name="field_workflow_dialog_your_comment"]</td><td></td></tr>
+<tr><td>type</td>
+    <td>//textarea[@name="field_workflow_dialog_your_comment"]</td>
+    <td>Crème brulée</td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success', 'text': 'Workflow modification in progress.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
+
+<tr><td>open</td>
+    <td>${base_url}/Zuite_waitForActivities</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Done.</td><td></td></tr>
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+
+<tr><th colspan="3">Check statuses </th></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/thead/tr/th//a[@data-i18n="ID"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/thead/tr/th//a[@data-i18n="ID"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 6)', 'footer': 'Records 1 - 3 / 6'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+
+<tr><td>waitForText</td>
+<tr><td>assertText</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[1]/td[3]//a</td>
+    <td>validated</td></tr>
+<tr><td>assertText</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[2]/td[3]//a</td>
+    <td>validated</td></tr>
+<tr><td>assertText</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[3]/td[3]//a</td>
+    <td>draft</td></tr>
+
+
+<!-- clear_query -->
+
+</tbody></table>
+</body>
+</html>

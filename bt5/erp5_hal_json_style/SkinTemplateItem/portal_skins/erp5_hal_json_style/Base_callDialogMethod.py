@@ -279,12 +279,6 @@ if True:
       if deferred_portal_skin:
         # has to be either ODS or ODT because only those contain `form_list`
         request.set('deferred_portal_skin', deferred_portal_skin)
-    # and to cleanup formulator's special key in request
-    # XXX unless we are in Folder_modifyWorkflowStatus which validates again !
-    if dialog_method != 'Folder_modifyWorkflowStatus':
-      for key in list(request.keys()):
-        if str(key).startswith('field') or str(key).startswith('subfield'):
-          request.form.pop(key, None)
 
   # now get dialog_method after skin re-selection and dialog_method mingling
   dialog_form = getattr(context, dialog_method)
