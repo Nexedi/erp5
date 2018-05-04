@@ -9,7 +9,6 @@ portal =  context.getPortalObject()
 portal_diff = portal.portal_diff
 
 history = []
-
 # Get the old and new state dates from the dialog submit
 new_state_date = kw.get('new_state', None)
 old_state_date = kw.get('old_state', None)

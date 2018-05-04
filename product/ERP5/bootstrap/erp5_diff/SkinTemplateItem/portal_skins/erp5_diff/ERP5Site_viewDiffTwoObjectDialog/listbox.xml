@@ -117,7 +117,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>DiffTool_generateDiffNicolas</string> </value>
+            <value> <string>DiffTool_generateDiff</string> </value>
         </item>
       </dictionary>
     </pickle>
