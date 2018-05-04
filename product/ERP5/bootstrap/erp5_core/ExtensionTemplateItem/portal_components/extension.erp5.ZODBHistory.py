@@ -1,8 +1,9 @@
 ##############################################################################
 #
-# Copyright (c) 2014 Nexedi KK and Contributors. All Rights Reserved.
+# Copyright (c) 2018 Nexedi KK and Contributors. All Rights Reserved.
 #                    Yusei Tahara <yusei@nexedi.com>
 #                    Tatuya Kamada <tatuya@nexedi.com>
+#                    Ayush Tiwari <ayush.tiwari@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,7 +28,6 @@
 #
 ##############################################################################
 from DateTime import DateTime
-from zLOG import LOG
 
 def _parseCategory(category):
   if category is None or category.find('/') < 0:
@@ -108,7 +108,6 @@ def getChangeHistoryList(document, size=50, attribute_name=None):
   previous_state = None
   for d_ in result:
     current_state = connection.oldstate(document, d_['tid'])
-    LOG('History', 0, str(current_state))
     changes = {}
     current_datetime = toDateTime(d_['time'])
     record = {'datetime':current_datetime,
@@ -152,7 +151,6 @@ def getPreviousTwoStates(document, size=2, attrbute_name=None):
   history = []
   for d_ in result:
     history.append(connection.oldstate(document, d_['tid']))
-
   return history
 
 def getHistoricalRevisionsDateList(document):
