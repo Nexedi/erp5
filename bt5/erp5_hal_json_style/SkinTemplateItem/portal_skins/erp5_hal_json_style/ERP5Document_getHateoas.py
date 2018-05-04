@@ -1033,7 +1033,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   # Following pop/push of form_id resp. dialog_id is here because of FormBox - an embedded form in a form
   # Fields of forms use form_id in their TALES expressions and obviously FormBox's form_id is different
   # from its parent's form. It is very important that we do not remove form_id in case of a Dialog Form.
-  if form.pt == "form_dialog":
+  if form.pt.endswith("form_dialog"):
     previous_request_other['dialog_id'] = REQUEST.other.pop('dialog_id', None)
     REQUEST.set('dialog_id', form.id)
   else:
@@ -1043,7 +1043,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   field_errors = REQUEST.get('field_errors', {})
 
   include_action = True
-  if form.pt == 'form_dialog':
+  if form.pt.endswith('form_dialog'):
     action_to_call = "Base_callDialogMethod"
   else:
     action_to_call = form.action
@@ -1064,7 +1064,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       }
     }
 
-  if form.pt == "form_dialog":
+  if form.pt.endswith("form_dialog"):
     # If there is a "form_id" in the REQUEST then it means that last view was actually a form
     # and we are most likely in a dialog. We save previous form into `last_form_id` ...
     last_form_id =  extra_param_json.pop("form_id", "") or REQUEST.get("form_id", "")
@@ -1127,7 +1127,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
 
   # Form Edit handler uses form_id to recover the submitted form and to control its
   # properties like editability
-  if form.pt == 'form_dialog':
+  if form.pt.endswith('form_dialog'):
     # overwrite "form_id" field's value because old UI does that by passing
     # the form_id in query string and hidden fields
     renderHiddenField(response_dict, "form_id", last_form_id or REQUEST.get('form_id', '') or form.id)
@@ -1242,7 +1242,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     response_dict['report_section_list'] = report_result_list
   # end-if report_section
 
-  if form.pt == "form_dialog":
+  if form.pt.endswith("form_dialog"):
     # Insert hash of current values into the form so scripts can see whether data has
     # changed if they provide multi-step process
     if form_data is not None:
@@ -1281,7 +1281,7 @@ def renderFormDefinition(form, response_dict):
   # each form has hidden attribute `form_id`
   group_list[-1][1].append(('form_id', {'meta_type': 'StringField'}))
 
-  if form.pt == "form_dialog":
+  if form.pt.endswith("form_dialog"):
     # every form dialog has its dialog_id and meta (control) attributes in extra_param_json
     group_list[-1][1].extend([
       ('dialog_id', {'meta_type': 'StringField'}),
@@ -1488,7 +1488,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           return traversed_document.Base_redirect(keep_items={
             'portal_status_message': status_message})
 
-        if view_instance.pt == "form_dialog":
+        if view_instance.pt.endswith("form_dialog"):
           # If there is a "form_id" in the REQUEST then it means that last view was actually a form
           # and we are most likely in a dialog. We save previous form into `last_form_id` ...
           last_form_id =  REQUEST.get('form_id', "")
