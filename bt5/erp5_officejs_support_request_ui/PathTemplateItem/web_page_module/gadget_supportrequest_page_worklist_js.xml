@@ -220,7 +220,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>nicolas.wavrant</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -234,7 +234,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.26499.5927.24507</string> </value>
+                <value> <string>966.58922.42880.38826</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,8 +252,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1506651141.01</float>
-                        <string>UTC</string>
+                        <float>1525441951.04</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
