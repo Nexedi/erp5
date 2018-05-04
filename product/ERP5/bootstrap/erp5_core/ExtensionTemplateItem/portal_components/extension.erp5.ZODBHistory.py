@@ -27,7 +27,7 @@
 #
 ##############################################################################
 from DateTime import DateTime
-from zLOG import LOG, WARNING
+from zLOG import LOG
 
 def _parseCategory(category):
   if category is None or category.find('/') < 0:
@@ -140,9 +140,9 @@ def getChangeHistoryList(document, size=50, attribute_name=None):
   history.sort(key=lambda x:x['datetime'])
   return history
 
-def getPreviosTwoStates(document, size=2, attrbute_name=None):
+def getPreviousTwoStates(document, size=2, attrbute_name=None):
   """
-  Returs the last 2 states in form of a dictionary
+  Returns the last two versions of document.
   """
   connection = document._p_jar
   result = document._p_jar.db().history(document._p_oid, size=size)
@@ -156,5 +156,27 @@ def getPreviosTwoStates(document, size=2, attrbute_name=None):
   return history
 
 def getHistoricalRevisionsDateList(document):
+  """
+  Returns the list of dates for the last 50 versions of the document.
+  """
   result = document._p_jar.db().history(document._p_oid, size=50)
-  return [toDateTime(d_['time']).strftime("%Y-%m-%d %H:%M:%S") for d_ in result]
+  return [toDateTime(d_['time']).strftime("%Y-%m-%d %H:%M:%S.%f") for d_ in result]
+
+def getRevisionFromDate(document, date):
+  """
+  Function to return the dictionary of object revision and hence use
+  it to the object to update the status.
+  Note that the `date` sent here is in string format.
+  """
+  if date is not None:
+    result = document._p_jar.db().history(document._p_oid, size=50)
+    # Convert the python datetime to zope DateTime because the objects
+    # inside ZODB use Zope DateTime
+    # Get the required revision using the datetime
+    # XXX: This extra conversion using strftime is due to the fact that
+    # in ZODB, we use DateTime which don't have `strptime`. This leads
+    # to the problem of not being able to use conversion properly.
+    result_obj = [l for l in result if toDateTime(l['time']).strftime("%Y-%m-%d %H:%M:%S.%f") == date][0]
+    # Return the history state of the object
+    connection = document._p_jar
+    return connection.oldstate(document, result_obj['tid'])
