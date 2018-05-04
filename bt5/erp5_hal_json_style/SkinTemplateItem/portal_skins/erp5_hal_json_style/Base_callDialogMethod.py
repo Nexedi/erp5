@@ -203,7 +203,7 @@ if len(listbox_id_list):
 # First check for an query in form parameters - if they are there
 # that means previous view was a listbox with selected stuff so recover here
 query = extra_param.get("query", None)
-select_all = extra_param.get("_select_all", 0)
+select_all = extra_param.get("basedialog_select_all", 0)
 
 # inject `uids` into Scripts **kwargs when we got any `query` (empty or filled)
 if query is not None:
@@ -216,7 +216,7 @@ if query is not None:
 
 # early-stop if user selected all documents
 if query == "" and select_all == 0 and dialog_method != update_method:  # do not interrupt on UPDATE
-  extra_param["_select_all"] = 1
+  extra_param["basedialog_select_all"] = 1
   return context.Base_renderForm(
     dialog_id,
     message=translate("All documents are selected! Submit again to proceed or Cancel and narrow down your search."),

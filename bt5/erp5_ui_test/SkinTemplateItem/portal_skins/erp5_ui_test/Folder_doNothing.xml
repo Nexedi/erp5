@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id, form_id, uids, _my_confirmation=0, **kwargs</string> </value>
+            <value> <string>dialog_id, form_id, uids, donothing_confirmation=0, **kwargs</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
