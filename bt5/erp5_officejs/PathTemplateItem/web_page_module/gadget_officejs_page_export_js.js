@@ -11,6 +11,10 @@
       "url": "officejs_text_editor/",
       "cache": "gadget_officejs_text_editor.appcache"
     },
+    "Smart Assistant": {
+      "url": "officejs_smart_assistant/",
+      "cache": "gadget_smart_assistant.appcache"
+    },
     "Media Player": {
       "url": "officejs_media_player/",
       "cache": "gadget_officejs_media_player.appcache"
