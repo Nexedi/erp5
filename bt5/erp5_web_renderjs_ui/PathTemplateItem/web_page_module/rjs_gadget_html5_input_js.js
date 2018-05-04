@@ -209,13 +209,13 @@
     .onEvent('change', function () {
       return RSVP.all([
         this.checkValidity(),
-        this.notifyChange()
+        this.notifyChange("change")
       ]);
     }, false, false)
     .onEvent('input', function () {
       return RSVP.all([
         this.checkValidity(),
-        this.notifyChange()
+        this.notifyChange("input")
       ]);
     }, false, false)
 
