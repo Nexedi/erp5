@@ -55,7 +55,7 @@ if indent_category == indent_resource == compact == None:
 accessor_id = 'getCompactTranslatedTitle' if compact else 'getTranslatedTitle'
 
 def getResourceItemList():
-  INDENT = '\xc2\xa0' * 2 # UTF-8 Non-breaking space
+  INDENT = portal_preferences.getPreferredWhitespaceNumberForChildItemIndentation() * '\xc2\xa0' # UTF-8 Non-breaking space
   RESOURCE_INDENT = INDENT if indent_resource else ''
   getResourceTitle = lambda resource, category, depth: RESOURCE_INDENT * depth + getattr(resource, accessor_id)()
   if indent_category:
