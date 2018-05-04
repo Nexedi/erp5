@@ -78,9 +78,12 @@
               count: result_list[i][2]
             });
           }
-          gadget.element.querySelector('.document_list').innerHTML = table_template({
+          return gadget.translateHtml(table_template({
             document_list: line_list
-          });
+          }));
+        })
+        .push(function (translated_html) {
+          gadget.element.querySelector('.document_list').innerHTML = translated_html;
         });
     });
 }(window, rJS, RSVP, Handlebars, Query));
