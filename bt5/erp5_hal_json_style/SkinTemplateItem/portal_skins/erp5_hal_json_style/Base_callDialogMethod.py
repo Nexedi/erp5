@@ -16,6 +16,19 @@ from Products.Formulator.Errors import FormValidationError, ValidationError
 from ZTUtils import make_query
 import json
 
+# http://stackoverflow.com/a/13105359
+def byteify(value):
+  if isinstance(value, dict):
+    return {byteify(key): byteify(value) for key, value in value.iteritems()}
+  elif isinstance(value, list):
+    return [byteify(element) for element in value]
+  elif isinstance(value, tuple):
+    return tuple(byteify(element) for element in value)
+  elif isinstance(value, unicode):
+    return value.encode('utf-8')
+  else:
+    return value
+
 def isFieldType(field, type_name):
   if field.meta_type == 'ProxyField':
     field = field.getRecursiveTemplateField()
@@ -84,7 +97,7 @@ if dialog_method == 'Base_createRelation':
 
 form = getattr(context, dialog_id)
 form_data = None
-extra_param = json.loads(extra_param_json or "{}")
+extra_param = byteify(json.loads(extra_param_json or "{}"))
 
 # form can be a python script that returns the form
 if not hasattr(form, 'validate_all_to_request'):
