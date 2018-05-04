@@ -189,14 +189,17 @@ if len(listbox_id_list):
 query = extra_param.get("query", None)
 select_all = int(extra_param.pop("_select_all", "0"))
 
-if query != "" or (query == "" and select_all > 0):
+# inject `uids` into Scripts **kwargs when we got any `query` (empty or filled)
+if query is not None:
   listbox = getattr(context, form_id).Form_getListbox()
   if listbox is not None:
     kw['uids'] = [int(getattr(document, "uid"))
                   for document in context.Base_searchUsingListbox(listbox, query)]
   else:
     log('Action {} should not specify `uids` as its parameters when it does not take object list from the previous view!'.format(dialog_method), level=ERROR)
-elif query == "" and select_all == 0 and dialog_method != update_method:  # do not interrupt on UPDATE
+
+# early-stop if user selected all documents
+if query == "" and select_all == 0 and dialog_method != update_method:  # do not interrupt on UPDATE
   return context.Base_renderForm(
     dialog_id,
     message=translate("All documents are selected! Submit again to proceed or Cancel and narrow down your search."),
