@@ -74,7 +74,9 @@
     })
     .allowPublicAcquisition('notifyChange', function (result, scope) {
       /*jslint unparam: true*/
-      return this.send(scope);
+      if (result[0] === "change") {
+        return this.send(scope);
+      }
     })
 
 
