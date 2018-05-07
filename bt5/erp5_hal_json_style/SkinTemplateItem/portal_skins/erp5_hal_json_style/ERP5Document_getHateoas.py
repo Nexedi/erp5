@@ -730,13 +730,10 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       listbox_ids = [('Base_viewRelatedObjectListBase/listbox','default')]
     listbox = {}
 
+    rel_form = getattr(traversed_document, 'Base_viewRelatedObjectList')
+    listbox_form_field = rel_form.get_field('listbox')
     for (listbox_path, listbox_name) in listbox_ids:
-      (listbox_form_name, listbox_field_name) = listbox_path.split('/', 2)
-      # do not override "global" `form`
-      rel_form = getattr(traversed_document, listbox_form_name)
-      # find listbox field
-      listbox_form_field = filter(lambda f: f.getId() == listbox_field_name, rel_form.get_fields())[0]
-
+      REQUEST.set('proxy_listbox_id', listbox_path)
       # Set only relation_form_id but do NOT change form_id to the relation_form neither field_id to the listbox
       # field_id must point to a relation field
       REQUEST.set('relation_form_id', rel_form.id)
@@ -745,30 +742,8 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       # because Relation stuff expects the original RelationField to be the one "being rendered"
       subfield = renderField(traversed_document, listbox_form_field, rel_form, request_field=False)
       del REQUEST.other['relation_form_id']
+      del REQUEST.other['proxy_listbox_id']
 
-      # overwrite, like Base_getRelatedObjectParameter does
-      if subfield["portal_type"] == []:
-        subfield["portal_type"] = field.get_value('portal_type')
-      if relation_sort:
-        subfield["sort"] = relation_sort
-      listbox_query_kw = kw.copy()
-      listbox_query_kw.update(dict(portal_type = [x[-1] for x in subfield["portal_type"]],
-            **subfield["default_params"]))
-      subfield["query"] = url_template_dict["jio_search_template"] % {
-        "query": make_query({"query": sql_catalog.buildQuery(
-          listbox_query_kw, ignore_unknown_columns=True
-        ).asSearchTextExpression(sql_catalog)})
-      }
-      # Kato: why?
-      if "list_method_template" in subfield:
-        del subfield["list_method_template"]
-      subfield["list_method"] = "portal_catalog"
-      subfield["title"] = Base_translateString(title)
-      #set default listbox's column list to relation's column list
-      if listbox_form_name == 'Base_viewRelatedObjectListBase' and len(column_list) > 0:
-        subfield["column_list"] = []
-        for tmp_column in column_list:
-          subfield["column_list"].append((tmp_column[0], Base_translateString(tmp_column[1])))
       listbox[Base_translateString(listbox_name)] = subfield
 
     result.update({
@@ -885,6 +860,15 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
 
     if (True):  # editable_column_list (we need that template fields resolution
                 # (issued by existence of `form_relative_url`) always kicks in
+      extra_param_dict = {
+        # in case of a dialog the form_id points to previous form, otherwise current form
+        "form_id": REQUEST.get('form_id', form.id)
+      }
+      # Proxy listbox id is an hardcoded parameter used in relation field listbox
+      # For now, keep it hardcoded, until another use case is found to provide
+      # a default extra_param_dict
+      if REQUEST.get('proxy_listbox_id', None) is not None:
+        extra_param_dict['proxy_listbox_id'] = REQUEST.get('proxy_listbox_id')
       list_method_custom = url_template_dict["custom_search_template"] % {
         "root_url": site_root.absolute_url(),
         "script_id": script.id,
@@ -893,9 +877,8 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
         "list_method": list_method_name,
         "default_param_json": urlsafe_b64encode(
           json.dumps(ensureSerializable(list_method_query_dict))),
-        # in case of a dialog the form_id points to previous form, otherwise current form
         "extra_param_json": urlsafe_b64encode(
-          json.dumps(ensureSerializable({"form_id": REQUEST.get('form_id', form.id)})))
+          json.dumps(ensureSerializable(extra_param_dict)))
       }
       # once we imprint `default_params` into query string of 'list method' we
       # don't want them to propagate to the query as well
