@@ -57,8 +57,10 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   Base_translateString = portal.Base_translateString
   wf_tool = portal.portal_workflow
   selection_tool = portal.portal_selections
+  last_form = getattr(self, form_id)
 
-  selection_name = request['selection_name']
+  last_listbox = last_form.Base_getListbox()
+  selection_name = last_listbox.get_value('selection_name')
 
   # guess all column name from catalog schema
   possible_state_list = [column_name.split('.')[1] for column_name in

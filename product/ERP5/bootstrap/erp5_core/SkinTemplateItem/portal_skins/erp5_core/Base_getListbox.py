@@ -2,8 +2,7 @@
 
 This script should be used to detect a listbox without having to name it "listbox".
 
-:param form: {Form} optional Form instance instead of calling this script directly on a Form
-:param form_id: {str} if specified the Script must be called on currently traversed document
+:param form_or_id: {Form/str} optional Form instance (otherwise context-Form) or form_id (will be retrieved on context-Document)
 
 Christophe Dumez <christophe@nexedi.com>
 """
@@ -17,11 +16,12 @@ def isListBox(field):
       return True
   return False
 
-if form_id is not None:
-  form = getattr(context, form_id)
-
-if form is None:
+if form_or_id is None:
   form = context
+elif isinstance(form_or_id, str):
+  form = getattr(context, form_or_id)
+else:
+  form = form_or_id
 
 if form.meta_type not in ('ERP5 Form', 'Folder', 'ERP5 Folder'):
   raise RuntimeError("Cannot get Listbox field from \"{!s}\"! Supported is only ERP5 Form and (ERP5) Folder".format(form.meta_type))

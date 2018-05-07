@@ -207,7 +207,7 @@ select_all = extra_param.get("basedialog_select_all", 0)
 
 # inject `uids` into Scripts **kwargs when we got any `query` (empty or filled)
 if query is not None:
-  listbox = getattr(context, form_id).Form_getListbox()
+  listbox = getattr(context, form_id).Base_getListbox()
   if listbox is not None:
     kw['uids'] = [int(getattr(document, "uid"))
                   for document in context.Base_searchUsingListbox(listbox, query)]

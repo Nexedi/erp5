@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form=None, form_id=None</string> </value>
+            <value> <string>form_or_id=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Form_getListbox</string> </value>
+            <value> <string>Base_getListbox</string> </value>
         </item>
       </dictionary>
     </pickle>

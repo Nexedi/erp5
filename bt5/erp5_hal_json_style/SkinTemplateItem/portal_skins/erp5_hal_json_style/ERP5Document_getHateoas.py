@@ -1073,7 +1073,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     try:
       if last_form_id:
         last_form = getattr(context, last_form_id)
-        last_listbox = last_form.Form_getListbox()
+        last_listbox = last_form.Base_getListbox()
         # In order not to use Selections we need to pass all search attributes to *a listbox inside the form dialog*
         # in case there was a listbox in the previous form. No other case!
         if last_listbox:

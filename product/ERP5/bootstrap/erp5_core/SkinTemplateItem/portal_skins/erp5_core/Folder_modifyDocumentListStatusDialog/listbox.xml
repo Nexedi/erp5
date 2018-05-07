@@ -95,7 +95,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Form_getListbox(form_id=request.get(\'form_id\')).getId()</string> </value>
+            <value> <string>python: here.Base_getListbox(request.get("form_id")).getId()</string> </value>
         </item>
       </dictionary>
     </pickle>

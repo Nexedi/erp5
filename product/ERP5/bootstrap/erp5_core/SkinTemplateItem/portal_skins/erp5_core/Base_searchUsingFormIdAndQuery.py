@@ -4,6 +4,6 @@ This script is intended to be used only internally.
 """
 
 form = getattr(context, form_id)
-listbox = form.Form_getListbox()
+listbox = form.Base_getListbox()
 
 return context.Base_searchUsingListbox(listbox, query, sort_on, limit)
