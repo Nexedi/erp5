@@ -30,6 +30,7 @@ from collections import deque
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.CMFCategory.Category import NBSP_UTF8
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
@@ -730,6 +731,15 @@ class TestCMFCategory(ERP5TypeTestCase):
                           base_category='test1',
                           strict_membership=1,
                           portal_type='Organisation')], [organisation])
+
+  def test_20_CategoryChildIndentedTitle(self):
+    base_cat = self.getCategoryTool().newContent(portal_type='Base Category')
+    cat = base_cat.newContent(portal_type='Category',
+                              id='the_id', title='The Title')
+    sub_cat = cat.newContent(portal_type='Category',
+                             id='the_sub_id', title='The Sub Title')
+    whitespace_number = self.portal.portal_preferences.getPreferredWhitespaceNumberForChildItemIndentation()
+    self.assertEqual(NBSP_UTF8 * whitespace_number + 'The Sub Title', sub_cat.getIndentedTitle())
 
   def test_20_CategoryChildTitleAndIdItemList(self):
     """Tests getCategoryChildTitleAndIdItemList."""
