@@ -67,8 +67,8 @@
         return gadget.getDeclaredGadget('fg')
           .push(function (child_gadget) {
             return child_gadget.render({
-              jio_key: modification_dict.jio_key,
-              doc: modification_dict.doc
+              jio_key: gadget.state.jio_key,
+              doc: gadget.state.doc
             });
           });
       }
