@@ -12,8 +12,16 @@
     if (field.type === "FormBox") {return true; }
     // hidden fields should not be obviously rendered
     if (field.hidden === 1) {return false; }
-    // empty default value is bad and final decision
-    return !isEmpty(field['default']);
+    // empty default value must not be displayed
+    if (isEmpty(field['default'])) {
+      return false;
+    }
+    // relation field with no value must not be displayed too
+    if ((field['default'].length === 1) && (isEmpty(field['default'][0]))) {
+      return false;
+    }
+    // display the field by default
+    return true;
   }
 
   rJS(window)
