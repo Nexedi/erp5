@@ -39,6 +39,10 @@ try:
                                      'recursiveImmediateReindexObject',
                                      'immediateReindexObject')
                                      ).ERP5Site_createTestData(user_quantity, password)
+  context.portal_categories.activate(after_method_id = ('ERP5Site_afterConfigurationSetup',
+                                     'recursiveImmediateReindexObject',
+                                     'immediateReindexObject')
+                                     ).ERP5Site_setIdGenerator()
 except Exception as e:
   status_code = 1
   error_message = "Error calling ERP5Site_createTestData script: " + str(e)
