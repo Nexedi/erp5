@@ -19,7 +19,7 @@ Format of Action returned by getFilteredActions['workflow'] = [{
 """
 action_tool = context.getPortalObject().portal_actions
 id_form_dict = dict()
-context.log("called with form_id {}, query {}, workflow_action {}".format(form_id, query, workflow_action))
+
 for result in context.Base_searchUsingFormIdAndQuery(form_id, query):
   for action in action_tool.listFilteredActionsFor(result.getObject()).get('workflow', []):
     id_form_dict[action['id']] = action['url'].rsplit('/', 1)[1].split('?')[0]
