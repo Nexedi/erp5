@@ -572,7 +572,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
   def stepTestSalePackingList_checkAllAccountingTransaction(self, sequence=None, sequence_list=None):
     accounting_transaction_list = sequence['current_accounting_transaction_list']
     for accounting_transaction in accounting_transaction_list:
-      self.assertEquals(accounting_transaction.getSimulationState(), 'draft')
+      self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
       if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.sortie:
         self._checkDelivery(
           accounting_transaction,
@@ -731,7 +731,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
   def stepTestPurchasePackingList_checkAllAccountingTransaction(self, sequence=None, sequence_list=None):
     accounting_transaction_list = sequence['current_accounting_transaction_list']
     for accounting_transaction in accounting_transaction_list:
-      self.assertEquals(accounting_transaction.getSimulationState(), 'draft')
+      self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
       if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.entree:
         self._checkDelivery(
         accounting_transaction,
@@ -880,7 +880,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
   def stepTestInternalPackingList_checkAllAccountingTransaction(self, sequence=None, sequence_list=None):
     accounting_transaction_list = sequence['current_accounting_transaction_list']
     for accounting_transaction in accounting_transaction_list:
-      self.assertEquals(accounting_transaction.getSimulationState(), 'draft')
+      self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
       if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.entree:
         self._checkDelivery(
           accounting_transaction,
@@ -1010,7 +1010,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
   def stepTestProductionPackingList_checkAllAccountingTransaction(self, sequence=None, sequence_list=None):
     accounting_transaction_list = sequence['current_accounting_transaction_list']
     for accounting_transaction in accounting_transaction_list:
-      self.assertEquals(accounting_transaction.getSimulationState(), 'draft')
+      self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
       if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.entree:
         self._checkDelivery(
           accounting_transaction,

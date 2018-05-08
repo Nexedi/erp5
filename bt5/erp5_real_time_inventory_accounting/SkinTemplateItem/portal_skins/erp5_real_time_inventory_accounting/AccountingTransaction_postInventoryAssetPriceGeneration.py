@@ -24,3 +24,6 @@ for accounting_transaction_line in accounting_transaction.contentValues(portal_t
 
 accounting_transaction.setResource(resource)
 accounting_transaction.setLedger(ledger)
+
+# Posted to General Ledger
+accounting_transaction.stop()
