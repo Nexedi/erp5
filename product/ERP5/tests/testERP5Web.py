@@ -2107,6 +2107,12 @@ class TestERP5WebCategoryPublicationWorkflow(ERP5TypeTestCase):
     self.doActionFor(self.category, 'expire_action')
     self.assertEqual('expired_published', self.category.getValidationState())
 
+  def test_category_embedded_delete(self):
+    """On category publication workflow, deletion are "real"
+    """
+    self.doActionFor(self.category, 'delete_action')
+    self.assertEqual([], self.category.getParentValue().contentValues())
+
 
 def test_suite():
   suite = unittest.TestSuite()
