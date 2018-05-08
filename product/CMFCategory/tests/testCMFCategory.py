@@ -661,6 +661,40 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertTrue('region/europe' in europe.getCategoryList())
     self.assertTrue(europe.isMemberOf('region/europe'))
 
+  def test_CategoryCloneIsNotMemberOfCopiedCategory(self):
+    # This is a bug reproduction test for problems happening when membership to
+    # self was saved in .categories.
+    europe_west = self.portal.portal_categories['region']['europe']['west']
+    france = europe_west.france
+
+    # Initially, categories' getCategoryList dynamically returns the
+    # "membership to self" eventhough it's not part of .categories, but after a
+    # category ID is changed, interaction update it's .categories to set the
+    # categories.
+    france.setCategoryList(france.getCategoryList())
+
+    cb_data = europe_west.manage_copyObjects(['france'])
+    destination = self.portal.portal_categories.region
+    copy_info, = destination.manage_pasteObjects(cb_data)
+    clone = destination[copy_info['new_id']]
+    self.assertEqual([clone.getRelativeUrl()], clone.getCategoryList())
+
+  def test_CategoryMovedIsNotMemberOfCopiedCategory(self):
+    # This is a bug reproduction test for problems happening when membership to
+    # self was saved in .categories.
+    original_container = self.portal.portal_categories['region']['europe']['west']
+    new_category = original_container.newContent(id=self.id())
+
+    # This sets membership to self in .categories
+    new_category.setCategoryList(new_category.getCategoryList())
+    self.commit()
+
+    cb_data = original_container.manage_cutObjects([new_category.getId()])
+    destination = self.portal.portal_categories.region
+    copy_info, = destination.manage_pasteObjects(cb_data)
+    clone = destination[copy_info['new_id']]
+    self.assertEqual([clone.getRelativeUrl()], clone.getCategoryList())
+
   def test_19_getCategoryList(self):
     """
     check that getCategoryList called on a category does not append self again
