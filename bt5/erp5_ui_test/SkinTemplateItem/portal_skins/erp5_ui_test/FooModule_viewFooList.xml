@@ -85,6 +85,7 @@
                         <string>listbox_delivery_start_date</string>
                         <string>listbox_causality_title</string>
                         <string>listbox_modification_date</string>
+                        <string>listbox_getQuantity</string>
                       </list>
                     </value>
                 </item>
