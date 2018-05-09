@@ -483,8 +483,12 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     self.assertEqual(west,
       self.portal.portal_categories.resolveCategory('region/europe/ouest'))
+    # documents using this category are updated
     self.assertEqual(p1.getRegion(), 'europe/ouest/france')
     self.assertTrue(p1 in west.getRegionRelatedValueList())
+    # category itself is also updated
+    self.assertEqual(['region/europe/ouest'], west.getCategoryList())
+    self.assertEqual(['region/europe/ouest/france'], west.france.getCategoryList())
 
   def test_13b_RenameCategoryUsingCutAndPaste(self):
     france = self.portal.portal_categories.resolveCategory(
@@ -503,8 +507,11 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     self.assertEqual(west,
       self.portal.portal_categories.resolveCategory('region/west'))
+    # documents using this category are updated
     self.assertEqual(p1.getRegion(), 'west/france')
     self.assertTrue(p1 in west.getRegionRelatedValueList())
+    # category itself is also updated ( but we need to get it in its new acquisition context )
+    self.assertEqual(['region/west'], self.portal.portal_categories.region.west.getCategoryList())
 
   def test_13c_RenameCategoryUsingCutAndPasteButNotCopy(self):
     france = self.portal.portal_categories.resolveCategory(
@@ -524,10 +531,9 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(west,
       self.portal.portal_categories.resolveCategory('region/europe/west'))
     self.assertEqual(p1.getRegion(), 'europe/west/france')
-    # we are not member of the copy
+    # documents using the category are not member of the copy
     self.assertTrue('west/france' not in p1.getRegionList())
     self.assertTrue(p1 in west.getRegionRelatedValueList())
-
 
   def test_14_MultiplePortalTypes(self):
     """ Checks that categories support different value per portal_type,
