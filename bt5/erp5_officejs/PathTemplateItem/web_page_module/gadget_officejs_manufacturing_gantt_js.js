@@ -55,11 +55,36 @@
          element: gadget.element.querySelector(".gantt-content")
       })
       .push(function (gantt_widget) {
-        // First search all production report not finished to find out the
-        // list of production orders still having work on them
-        var query, delivery_uid_list;
         gadget.property_dict.gantt_widget = gantt_widget;
-        console.log("gantt_widget", gantt_widget);
+        var query, delivery_uid_list;
+        query = 'portal_type:="Manufacturing Order" AND simulation_state:="planned"';
+        delivery_uid_list = option_dict.delivery_uid_list;
+        if ((delivery_uid_list !== undefined) && (delivery_uid_list.length > 0)) {
+          query = query + ' AND uid: (' + delivery_uid_list.join(', ') + ')';
+        }
+        console.log("orders query", query);
+        return gadget.jio_allDocs({
+          query: query,
+          limit: 10000,
+          sort_on: [['delivery.start_date', 'ascending']],
+          //select_list: ['reference', 'title', 'uid']
+          select_list: ['reference', 'title', 'start_date', 'stop_date', 'uid']
+        });
+      })
+      .push(function (order_list) {
+        var query, delivery_uid_list, empty_causality_delivery_list = [], i, order;
+        gadget.property_dict.empty_causality_delivery_list = empty_causality_delivery_list;
+        order_list = order_list.data.rows;
+        console.log("order_list", order_list);
+        console.log("order_list.length", order_list.length);
+        for (i = 0; i < order_list.length; i = i + 1) {
+          order = order_list[i].value;
+          order.gantt_color = "rgb(208, 72, 72)";
+          empty_causality_delivery_list.push(order);
+        }
+        console.log("empty_causality_delivery_list with orders", empty_causality_delivery_list);
+        // Then search all production report not finished to find out the
+        // list of production orders still having work on them
         query = 'portal_type:="Manufacturing Execution" AND NOT simulation_state: ("draft", "cancelled", "delivered")';
         delivery_uid_list = option_dict.delivery_uid_list;
         if ((delivery_uid_list !== undefined) && (delivery_uid_list.length > 0)) {
@@ -76,13 +101,15 @@
         // try to search for other manufacturing execution having same causality as
         // other manufacturing execution already found
         var causality_uid_list = [0], // Initiliaze with 0 to make sure to have at least one uid to search for
-            i, delivery, query, empty_causality_delivery_list = [],
+            i, delivery, query, empty_causality_delivery_list = gadget.property_dict.empty_causality_delivery_list,
             delivery_uid_list;
 
         delivery_list = delivery_list.data.rows;
         for (i = 0; i < delivery_list.length; i = i + 1) {
           delivery = delivery_list[i].value;
-          if (delivery.causality_uid !== undefined) {
+          delivery.gantt_color = "#3db9d3";
+          console.log("delivery.causality_uid", delivery.causality_uid);
+          if ((delivery.causality_uid || 0) > 0) {
             if (causality_uid_list.indexOf(delivery.causality_uid) === -1) {
               causality_uid_list.push(delivery.causality_uid);
             }
@@ -92,7 +119,6 @@
         }
         query = 'portal_type:="Manufacturing Execution" AND causality_uid: (' + causality_uid_list.join(', ') + ') AND NOT simulation_state: ("draft", "cancelled")';
         console.log("QUERY", query);
-        gadget.property_dict.empty_causality_delivery_list = empty_causality_delivery_list;
         delivery_uid_list = option_dict.delivery_uid_list;
         // No need to get more
         if ((delivery_uid_list !== undefined) && (delivery_uid_list.length > 0)) {
@@ -120,11 +146,12 @@
           delivery_list.push(initial_delivery_list[i].value);
         }
         for (i = 0; i < gadget.property_dict.empty_causality_delivery_list.length; i = i + 1) {
+          console.log("pushing empty causality delivery", gadget.property_dict.empty_causality_delivery_list[i]);
           delivery_list.push(gadget.property_dict.empty_causality_delivery_list[i]);
         }
         for (i = 0; i < delivery_list.length; i = i + 1) {
           delivery = delivery_list[i];
-          if (delivery.causality_uid !== undefined) {
+          if ((delivery.causality_uid || 0) > 0) {
             if (causality_list.indexOf(delivery.causality_uid) === -1) {
               causality_list.push(delivery.causality_uid);
             }
@@ -147,7 +174,8 @@
             delivery_data = {'title': delivery.title,
                          'id': delivery.uid,
                          'start_date': delivery.start_date,
-                         'stop_date': delivery.stop_date};
+                         'stop_date': delivery.stop_date,
+                         'background_color': delivery.gantt_color};
             if (delivery.causality_uid !== undefined) {
               delivery_data.parent_id = delivery.causality_uid;
             }

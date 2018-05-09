@@ -48,6 +48,9 @@
       if (data.type === 'project') {
         task.type = gantt.config.types.project;
       }
+      if (data.background_color) {
+        task.color = data.background_color;
+      }
       task.start_date = transformDateStringToDhtmlxDate(data.start_date);
       start_date = new Date(data.start_date);
       gantt_configuration.start_date_list.push(start_date);
