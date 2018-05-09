@@ -1189,11 +1189,19 @@ class CategoryTool(BaseTool):
     security.declareProtected( Permissions.ModifyPortalContent, '_setCategoryList' )
     def _setCategoryList(self, context, value):
       old = set(getattr(aq_base(context), 'categories', ()))
+      relative_url = context.getRelativeUrl()
+
+      # Pure category are member of itself, but we don't store this membership
+      # (because of issues when the category is renamed/moved or cloned)
+      if getattr(context, 'isCategory', 0) and relative_url in value:
+        # note that we don't want to cast as set at this point to keep ordering (and duplicates).
+        value = [x for x in tuple(value) if x != relative_url]
+
       context.categories = value = tuple(value)
       if context.isTempDocument():
         return
+
       value = set(value)
-      relative_url = context.getRelativeUrl()
       for edit, value in ("remove", old - value), ("add", value - old):
         for path in value:
           base = self.getBaseCategoryId(path)
