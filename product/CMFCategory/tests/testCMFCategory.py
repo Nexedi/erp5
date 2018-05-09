@@ -675,6 +675,22 @@ class TestCMFCategory(ERP5TypeTestCase):
     clone = destination[copy_info['new_id']]
     self.assertEqual([clone.getRelativeUrl()], clone.getCategoryList())
 
+  def test_CategoryMovedIsNotMemberOfCopiedCategory(self):
+    original_container = self.portal.portal_categories['region']['europe']['west']
+    new_category = original_container.newContent(id=self.id())
+    # Initially, categories' getCategoryList is dynamic and not stored in
+    # .categories, but after a category ID is changed, interaction will update
+    # it's .categories to set the categories.
+    # We want to reproduce how .categories is handled when category is cloned.
+    new_category.setCategoryList(new_category.getCategoryList())
+    self.commit()
+
+    cb_data = original_container.manage_cutObjects([new_category.getId()])
+    destination = self.portal.portal_categories.region
+    copy_info, = destination.manage_pasteObjects(cb_data)
+    clone = destination[copy_info['new_id']]
+    self.assertEqual([clone.getRelativeUrl()], clone.getCategoryList())
+
   def test_19_getCategoryList(self):
     """
     check that getCategoryList called on a category does not append self again
