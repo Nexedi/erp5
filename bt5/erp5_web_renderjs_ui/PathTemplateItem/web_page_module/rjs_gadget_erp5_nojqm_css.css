@@ -786,9 +786,9 @@ div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a:active {
 @media only screen and (min-width: 45em) and (max-width: 85em), not screen and (max-width: 85em) {
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button::before,
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a::before {
-    width: 1em;
     margin-right: 6pt;
     text-align: center;
+    width: 1em;
   }
 }
 @media not screen and (min-width: 45em) {
@@ -973,7 +973,9 @@ div[data-gadget-scope='header'] .ui-header ul {
     min-width: 5em;
   }
   div[data-gadget-scope='header'] .ui-header ul li a::before {
-    display: none;
+    margin-right: 6pt;
+    text-align: center;
+    width: 1em;
   }
 }
 /**********************************************

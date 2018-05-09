@@ -371,6 +371,11 @@ a {
     background-color: @colorblocklinkbackground;
   }
 }
+.beforeHeaderButton() {
+  margin-right: @margin-size;
+  text-align: center;
+  width: 1em;
+}
 
 /**********************************************
 * Preformatted
@@ -960,9 +965,7 @@ div[data-gadget-scope='header'] .ui-header {
 
       &::before {
         @media @tablet, @desktop {
-          width: 1em;
-          margin-right: @margin-size;
-          text-align: center;
+          .beforeHeaderButton()
         }
 
         @media @smartphone {
@@ -1135,7 +1138,7 @@ div[data-gadget-scope='header'] .ui-header {
           white-space: nowrap;
           overflow: hidden;
           &::before {
-            display: none;
+            .beforeHeaderButton()
           }
         }
       }
