@@ -111,6 +111,8 @@
 <tr><th colspan="3">Search <em>( title:  "Title 1%" OR title:  "Title 3%" )</em> so we work on subset</th></tr>
 <tr><td>click</td>
     <td>//div[@data-role="header"]//h1//a</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tal:block tal:define='search_query string:( title: "Title 1%" OR title: "Title 3%" )'>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
 </tal:block>
