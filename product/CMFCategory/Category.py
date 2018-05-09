@@ -154,6 +154,12 @@ class Category(Folder):
                 meta_types.append(meta_type)
         return meta_types
 
+    def _postCopy(self, container, op=0):
+      # This method is a hook from CopySupport.
+      # When category is cloned or moved, we have to update the category membership to itself.
+      self.setCategoryMembership(self.getBaseCategoryId(), None)
+      return super(Category, self)._postCopy(container, op)
+
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getLogicalPath')
     def getLogicalPath(self, item_method = 'getTitle'):
