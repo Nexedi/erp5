@@ -29,6 +29,7 @@
 from collections import deque
 import unittest
 
+from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.CMFCategory.Category import NBSP_UTF8
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
@@ -483,8 +484,12 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     self.assertEqual(west,
       self.portal.portal_categories.resolveCategory('region/europe/ouest'))
+    # documents using this category are updated
     self.assertEqual(p1.getRegion(), 'europe/ouest/france')
     self.assertTrue(p1 in west.getRegionRelatedValueList())
+    # category itself is also updated
+    self.assertEqual(['region/europe/ouest'], west.getCategoryList())
+    self.assertEqual(['region/europe/ouest/france'], west.france.getCategoryList())
 
   def test_13b_RenameCategoryUsingCutAndPaste(self):
     france = self.portal.portal_categories.resolveCategory(
@@ -503,8 +508,11 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     self.assertEqual(west,
       self.portal.portal_categories.resolveCategory('region/west'))
+    # documents using this category are updated
     self.assertEqual(p1.getRegion(), 'west/france')
     self.assertTrue(p1 in west.getRegionRelatedValueList())
+    # category itself is also updated ( but we need to get it in its new acquisition context )
+    self.assertEqual(['region/west'], self.portal.portal_categories.region.west.getCategoryList())
 
   def test_13c_RenameCategoryUsingCutAndPasteButNotCopy(self):
     france = self.portal.portal_categories.resolveCategory(
@@ -524,10 +532,9 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(west,
       self.portal.portal_categories.resolveCategory('region/europe/west'))
     self.assertEqual(p1.getRegion(), 'europe/west/france')
-    # we are not member of the copy
+    # documents using the category are not member of the copy
     self.assertTrue('west/france' not in p1.getRegionList())
     self.assertTrue(p1 in west.getRegionRelatedValueList())
-
 
   def test_14_MultiplePortalTypes(self):
     """ Checks that categories support different value per portal_type,
@@ -648,22 +655,29 @@ class TestCMFCategory(ERP5TypeTestCase):
       a document has destination category C and we look for all documents
       which destination is part of C category, we will not find it.
 
-      For example, the following commit was a mistake:
-    http://svn.erp5.org/erp5/trunk/products/CMFCategory/CategoryTool.py?r1=8850&r2=9997
+      ( XXX not sure of this example, I guess it works because non strict
+      membership is indexed -jerome )
+
     """
     europe = self.portal.portal_categories.resolveCategory('region/europe')
-    self.assertTrue('region/europe' in europe.getCategoryList())
+    self.assertIn('region/europe', europe.getCategoryList())
     self.assertTrue(europe.isMemberOf('region/europe'))
 
-  def test_19_getCategoryList(self):
-    """
-    check that getCategoryList called on a category does not append self again
-    and again
-    """
-    region_value = self.portal.portal_categories.resolveCategory('region/%s' % self.region1)
-    category_list = region_value.getCategoryList()
-    region_value.setCategoryList(category_list)
-    self.assertEqual(category_list, region_value.getCategoryList())
+    # this membership is not saved in .categories
+    self.assertNotIn('region/europe', getattr(aq_base(europe), 'categories', ()))
+
+    # even if we set explicitly
+    europe.setCategoryList(europe.getCategoryList())
+    self.assertNotIn('region/europe', getattr(aq_base(europe), 'categories', ()))
+
+    # or if we set other categories
+    europe.setCategoryList(['subordination/person_module'])
+    self.assertItemsEqual(
+            ['region/europe', 'subordination/person_module'],
+            europe.getCategoryList())
+    self.assertEqual(
+            ('subordination/person_module',),
+            getattr(aq_base(europe), 'categories', ()))
 
   def test_19_CategoryMemberValueList(self):
     """Test strict_membership parameter to Category Member Value List """
