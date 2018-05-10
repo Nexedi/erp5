@@ -6588,9 +6588,6 @@ msgstr "صفحه ${page} از ${total_pages}"
 msgid "Pakistani Rupee"
 msgstr ""
 
-msgid "Parent Delivery Category Movement Group"
-msgstr ""
-
 msgid "Parent Delivery Property Movement Group"
 msgstr ""
 
