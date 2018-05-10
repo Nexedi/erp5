@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Parent Delivery Property Movement Group" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>divergence_scope/category</string>
+                <string>collect_order_group/line</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>parent_delivery_resource_movement_group</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Parent Delivery Property Movement Group</string> </value>
+        </item>
+        <item>
+            <key> <string>tested_property</string> </key>
+            <value>
+              <tuple>
+                <string>resource</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Parent Delivery Resource Movement Group</string> </value>
+        </item>
+        <item>
+            <key> <string>update_always</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
