@@ -744,12 +744,16 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
         movement_property_dict_tuple=(
           dict(portal_type='Accounting Transaction Line',
                source_value=self.portal.account_module.stock_parts_port,
-               # sum(PPLL.price)
-               quantity=-14000),
+               quantity=-6000),
           dict(portal_type='Accounting Transaction Line',
                source_value=self.portal.account_module.variation_parts,
-               # sum(PPLL.price)
-               quantity=14000)))
+               quantity=6000),
+          dict(portal_type='Accounting Transaction Line',
+               source_value=self.portal.account_module.stock_parts_port,
+               quantity=-8000),
+          dict(portal_type='Accounting Transaction Line',
+               source_value=self.portal.account_module.variation_parts,
+               quantity=8000)))
 
       elif accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.transit.entree:
         self._checkDelivery(
@@ -763,12 +767,16 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
         movement_property_dict_tuple=(
           dict(portal_type='Accounting Transaction Line',
                source_value=self.portal.account_module.stock_parts_transit,
-               # sum(PPLL.price)
-               quantity=-14000),
+               quantity=-6000),
           dict(portal_type='Accounting Transaction Line',
                source_value=self.portal.account_module.variation_parts,
-               # sum(PPLL.price)
-               quantity=14000)))
+               quantity=6000),
+          dict(portal_type='Accounting Transaction Line',
+               source_value=self.portal.account_module.stock_parts_transit,
+               quantity=-8000),
+          dict(portal_type='Accounting Transaction Line',
+               source_value=self.portal.account_module.variation_parts,
+               quantity=8000)))
 
       # ledger/stock/transit/sortie
       else:
@@ -784,12 +792,16 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
         movement_property_dict_tuple=(
           dict(portal_type='Accounting Transaction Line',
                source_value=self.portal.account_module.stock_parts_transit,
-               # sum(PPLL.price)
-               quantity=14000),
+               quantity=6000),
           dict(portal_type='Accounting Transaction Line',
                source_value=self.portal.account_module.variation_parts,
-               # sum(PPLL.price)
-               quantity=-14000)))
+               quantity=-6000),
+          dict(portal_type='Accounting Transaction Line',
+               source_value=self.portal.account_module.stock_parts_transit,
+               quantity=8000),
+          dict(portal_type='Accounting Transaction Line',
+               source_value=self.portal.account_module.variation_parts,
+               quantity=-8000)))
 
   def testPurchasePackingList(self):
     sequence_list = SequenceList()
