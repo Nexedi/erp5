@@ -13,7 +13,6 @@ Delivery Builder | Invoice Movement Group
 Delivery Builder | Monthly Range Movement Group
 Delivery Builder | Nested Line Movement Group
 Delivery Builder | Order Movement Group
-Delivery Builder | Parent Delivery Category Movement Group
 Delivery Builder | Parent Delivery Property Movement Group
 Delivery Builder | Parent Explanation Movement Group
 Delivery Builder | Predicate
@@ -46,7 +45,6 @@ Order Builder | Invoice Movement Group
 Order Builder | Monthly Range Movement Group
 Order Builder | Nested Line Movement Group
 Order Builder | Order Movement Group
-Order Builder | Parent Delivery Category Movement Group
 Order Builder | Parent Delivery Property Movement Group
 Order Builder | Parent Explanation Movement Group
 Order Builder | Predicate
