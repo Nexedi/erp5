@@ -16,21 +16,23 @@ if ledger is not None:
   for item in ledger:
     ledger_obj_list.append(category_tool.ledger.restrictedTraverse(item))
 
+if search_kw is None:
+  search_kw = {}
+
 def _groupedJournalTupleDict():
   portal_type_list = portal.getPortalAccountingTransactionTypeList()
-  default_search_kw = {
-    'simulation_state': simulation_state,
-    'accounting_transaction.section_uid': section_uid_list,
-    'operation_date': {'query': (from_date, at_date), 'range': 'minngt' },
-  }
+
+  search_kw['simulation_state'] = simulation_state
+  search_kw['accounting_transaction.section_uid'] = section_uid_list
+  search_kw['operation_date'] = {'query': (from_date, at_date), 'range': 'minngt' }
 
   journal_tuple_list = []
   if group_by == 'ledger':
-    default_search_kw['portal_type'] = portal_type_list
+    search_kw['portal_type'] = portal_type_list
     for ledger_obj in ledger_obj_list:
       journal_code = journal_lib = ledger_obj.getReference(ledger_obj.getId())
 
-      ledger_search_kw = default_search_kw.copy()
+      ledger_search_kw = search_kw.copy()
       ledger_search_kw['default_ledger_uid'] = ledger_obj.getUid()
 
       journal_tuple_list.append((journal_code, journal_lib, ledger_search_kw))
@@ -43,7 +45,7 @@ def _groupedJournalTupleDict():
         journal_code = "%s: %s" % (portal_type_obj.getCompactTranslatedTitle(), ledger_reference)
         journal_lib = "%s: %s" % (portal_type_obj.getTranslatedTitle(), ledger_reference)
 
-        portal_type_ledger_search_kw = default_search_kw.copy()
+        portal_type_ledger_search_kw = search_kw.copy()
         portal_type_ledger_search_kw['default_ledger_uid'] = ledger_obj.getUid()
         portal_type_ledger_search_kw['portal_type'] = portal_type
 
@@ -52,14 +54,14 @@ def _groupedJournalTupleDict():
   # group_by == 'portal_type' (Default)
   else:
     if ledger_obj_list:
-      default_search_kw['default_ledger_uid'] = [ ledger_obj.getUid() for ledger_obj in ledger_obj_list ]
+      search_kw['default_ledger_uid'] = [ ledger_obj.getUid() for ledger_obj in ledger_obj_list ]
 
     for portal_type in portal_type_list:
       portal_type_obj = portal.portal_types[portal_type]
       journal_code = portal_type_obj.getCompactTranslatedTitle()
       journal_lib = portal_type_obj.getTranslatedTitle()
 
-      portal_type_search_kw = default_search_kw.copy()
+      portal_type_search_kw = search_kw.copy()
       portal_type_search_kw['portal_type'] = portal_type
 
       journal_tuple_list.append((journal_code, journal_lib, portal_type_search_kw))
@@ -70,16 +72,15 @@ priority = 4
 # Proxy Role needed to create an 'Active Process'
 active_process = context.AccountingTransactionModule_createActiveProcessForFrenchAccountingTransactionFile()
 
-for journal_code, journal_lib, search_kw in _groupedJournalTupleDict():
+for journal_code, journal_lib, journal_search_kw in _groupedJournalTupleDict():
   # This script is executed with Proxy Role, required to create 'Active Process'
   this_journal_active_process = context.AccountingTransactionModule_createActiveProcessForFrenchAccountingTransactionFile()
-  context.log("%r: %r: %r" % (journal_code, journal_lib, search_kw))
 
   portal.portal_catalog.searchAndActivate(
     method_id='AccountingTransaction_postFECResult',
     method_kw=dict(section_uid_list=section_uid_list, active_process=this_journal_active_process.getRelativeUrl()),
     activate_kw=dict(tag=tag, priority=priority),
-    **search_kw)
+    **journal_search_kw)
 
   context.activate(
     tag=aggregate_tag,
