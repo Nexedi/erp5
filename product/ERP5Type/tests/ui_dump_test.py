@@ -121,6 +121,7 @@ class ui_dump_test(object):
   _module_tracking_blacklist = {
     'portal_simulation',
     'portal_solver_processes',
+    'portal_activities',
   }
 
   def trackObject(self, path, ob):
