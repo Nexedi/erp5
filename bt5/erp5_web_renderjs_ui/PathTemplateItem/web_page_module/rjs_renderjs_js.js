@@ -728,6 +728,25 @@ if (typeof document.contains !== 'function') {
                        Event, URL) {
   "use strict";
 
+  function ensurePushableQueue(callback, argument_list, context) {
+    var result;
+    try {
+      result = callback.apply(context, argument_list);
+    } catch (e) {
+      return new RSVP.Queue()
+        .push(function returnPushableError() {
+          return RSVP.reject(e);
+        });
+    }
+    if (result instanceof RSVP.Queue) {
+      return result;
+    }
+    return new RSVP.Queue()
+      .push(function returnPushableResult() {
+        return result;
+      });
+  }
+
   function readBlobAsDataURL(blob) {
     var fr = new FileReader();
     return new RSVP.Promise(function waitFormDataURLRead(resolve, reject) {
@@ -884,54 +903,22 @@ if (typeof document.contains !== 'function') {
     if (!(this instanceof Mutex)) {
       return new Mutex();
     }
-    this._latest_defer = null;
+    this._latest_promise = null;
   };
 
   Mutex.prototype = {
     constructor: Mutex,
-
-    lock: function lockMutex() {
-      var previous_defer = this._latest_defer,
-        current_defer = RSVP.defer(),
-        queue = new RSVP.Queue();
-
-      this._latest_defer = current_defer;
-
-      if (previous_defer !== null) {
-        queue.push(function acquireMutex() {
-          return previous_defer.promise;
-        });
+    lockAndRun: function lockMutexAndRun(callback) {
+      var previous_promise = this._latest_promise;
+      if (previous_promise === null) {
+        this._latest_promise = RSVP.resolve(callback());
+      } else {
+        this._latest_promise = this._latest_promise
+          .always(function () {
+            return callback();
+          });
       }
-
-      // Create a new promise (.then) not cancellable
-      // to allow external cancellation of the callback
-      // without breaking the mutex implementation
-      queue
-        .fail(current_defer.resolve.bind(current_defer));
-
-      return queue
-        .push(function generateMutexUnlock() {
-          return function runAndUnlock(callback) {
-            return new RSVP.Queue()
-              .push(function executeMutexCallback() {
-                return callback();
-              })
-              .push(function releaseMutexAfterSuccess(result) {
-                current_defer.resolve(result);
-                return result;
-              }, function releaseMutexAfterError(error) {
-                current_defer.resolve(error);
-                throw error;
-              });
-          };
-        });
-    },
-
-    lockAndRun: function (callback) {
-      return this.lock()
-        .push(function executeLockAndRunCallback(runAndUnlock) {
-          return runAndUnlock(callback);
-        });
+      return this._latest_promise;
     }
   };
 
@@ -1178,13 +1165,17 @@ if (typeof document.contains !== 'function') {
   RenderJSGadget.prototype.__required_css_list = [];
   RenderJSGadget.prototype.__required_js_list = [];
 
-  function createGadgetMonitor(g) {
-    if (g.__monitor !== undefined) {
+  function deleteGadgetMonitor(g) {
+    if (g.hasOwnProperty('__monitor')) {
       g.__monitor.cancel();
+      delete g.__monitor;
+      g.__job_list = [];
     }
+  }
+
+  function createGadgetMonitor(g) {
     g.__monitor = new Monitor();
     g.__job_dict = {};
-    g.__job_list = [];
     g.__job_triggered = false;
     g.__monitor.fail(function handleGadgetMonitorError(error) {
       if (!(error instanceof RSVP.CancellationError)) {
@@ -1194,9 +1185,12 @@ if (typeof document.contains !== 'function') {
     }).fail(letsCrash);
   }
 
-  function clearGadgetInternalParameters() {
-    this.__sub_gadget_dict = {};
-    createGadgetMonitor(this);
+  function clearGadgetInternalParameters(gadget) {
+    gadget.__sub_gadget_dict = {};
+    gadget.__job_list = [];
+    if (gadget.__json_state !== undefined) {
+      gadget.state = JSON.parse(gadget.__json_state);
+    }
   }
 
   function loadSubGadgetDOMDeclaration() {
@@ -1241,17 +1235,13 @@ if (typeof document.contains !== 'function') {
     return RSVP.all(promise_list);
   }
 
-  RenderJSGadget.__ready_list = [clearGadgetInternalParameters,
-                                 loadSubGadgetDOMDeclaration];
+  RenderJSGadget.__ready_list = [];
   RenderJSGadget.ready = function ready(callback) {
     this.__ready_list.push(callback);
     return this;
   };
   RenderJSGadget.setState = function setState(state_dict) {
-    var json_state = JSON.stringify(state_dict);
-    this.__ready_list.unshift(function setStateDefaultValue() {
-      this.state = JSON.parse(json_state);
-    });
+    this.prototype.__json_state = JSON.stringify(state_dict);
     return this;
   };
   RenderJSGadget.onStateChange = function onStateChange(callback) {
@@ -1301,10 +1291,7 @@ if (typeof document.contains !== 'function') {
   };
 
   function runJob(gadget, name, callback, argument_list) {
-    var job_promise = new RSVP.Queue()
-      .push(function waitForJobCallback() {
-        return callback.apply(gadget, argument_list);
-      });
+    var job_promise = ensurePushableQueue(callback, argument_list, gadget);
     if (gadget.__job_dict.hasOwnProperty(name)) {
       gadget.__job_dict[name].cancel();
     }
@@ -1321,6 +1308,11 @@ if (typeof document.contains !== 'function') {
   }
 
   function startService(gadget) {
+    if ((gadget.constructor.__service_list.length === 0) &&
+        (!gadget.constructor.__job_declared)) {
+      return;
+    }
+    createGadgetMonitor(gadget);
     gadget.__monitor.monitor(new RSVP.Queue()
       .push(function monitorAllServiceList() {
         var i,
@@ -1344,6 +1336,7 @@ if (typeof document.contains !== 'function') {
   // of a function inside a service
   /////////////////////////////////////////////////////////////////
   RenderJSGadget.declareJob = function declareJob(name, callback) {
+    this.__job_declared = true;
     this.prototype[name] = function triggerJob() {
       var context = this,
         argument_list = arguments;
@@ -1377,10 +1370,11 @@ if (typeof document.contains !== 'function') {
         if (!context.hasOwnProperty(mutex_name)) {
           context[mutex_name] = new Mutex();
         }
-        return context[mutex_name].lockAndRun(waitForMethodCallback);
+        return ensurePushableQueue(context[mutex_name].lockAndRun,
+                                   [waitForMethodCallback],
+                                   context[mutex_name]);
       }
-      return new RSVP.Queue()
-        .push(waitForMethodCallback);
+      return ensurePushableQueue(callback, argument_list, context);
     };
     // Allow chain
     return this;
@@ -1437,10 +1431,11 @@ if (typeof document.contains !== 'function') {
       }
       if (modified && context.__state_change_callback !== undefined) {
         context.__modification_dict = modification_dict;
-        return new RSVP.Queue()
-          .push(function waitForStateChangeCallback() {
-            return context.__state_change_callback(modification_dict);
-          })
+        return ensurePushableQueue(
+          context.__state_change_callback,
+          [modification_dict],
+          context
+        )
           .push(function handleStateChangeSuccess(result) {
             delete context.__modification_dict;
             return result;
@@ -1453,8 +1448,17 @@ if (typeof document.contains !== 'function') {
   /////////////////////////////////////////////////////////////////
   function acquire(child_gadget, method_name, argument_list) {
     var gadget = this,
+      // Do not specify default __acquired_method_dict on prototype
+      // to prevent modifying this default value (with
+      // allowPublicAcquiredMethod for example)
+      aq_dict = gadget.__acquired_method_dict || {},
       key,
       gadget_scope;
+
+    if (!aq_dict.hasOwnProperty(method_name)) {
+      // "aq_dynamic is not defined"
+      return gadget.__aq_parent(method_name, argument_list);
+    }
 
     for (key in gadget.__sub_gadget_dict) {
       if (gadget.__sub_gadget_dict.hasOwnProperty(key)) {
@@ -1463,18 +1467,12 @@ if (typeof document.contains !== 'function') {
         }
       }
     }
-    return new RSVP.Queue()
-      .push(function waitForAcquireMethod() {
-        // Do not specify default __acquired_method_dict on prototype
-        // to prevent modifying this default value (with
-        // allowPublicAcquiredMethod for example)
-        var aq_dict = gadget.__acquired_method_dict || {};
-        if (aq_dict.hasOwnProperty(method_name)) {
-          return aq_dict[method_name].apply(gadget,
-                                            [argument_list, gadget_scope]);
-        }
-        throw new renderJS.AcquisitionError("aq_dynamic is not defined");
-      })
+
+    return ensurePushableQueue(
+      aq_dict[method_name],
+      [argument_list, gadget_scope],
+      gadget
+    )
       .push(undefined, function handleAcquireMethodError(error) {
         if (error instanceof renderJS.AcquisitionError) {
           return gadget.__aq_parent(method_name, argument_list);
@@ -1488,10 +1486,11 @@ if (typeof document.contains !== 'function') {
       this.prototype[name] = function acquireMethod() {
         var argument_list = Array.prototype.slice.call(arguments, 0),
           gadget = this;
-        return new RSVP.Queue()
-          .push(function waitForAqParent() {
-            return gadget.__aq_parent(method_name_to_acquire, argument_list);
-          });
+        return ensurePushableQueue(
+          gadget.__aq_parent,
+          [method_name_to_acquire, argument_list],
+          gadget
+        );
       };
 
       // Allow chain
@@ -1532,7 +1531,7 @@ if (typeof document.contains !== 'function') {
     }
     RenderJSGadget.call(this);
   }
-  RenderJSEmbeddedGadget.__ready_list = RenderJSGadget.__ready_list.slice();
+  RenderJSEmbeddedGadget.__ready_list = [];
   RenderJSEmbeddedGadget.__service_list =
     RenderJSGadget.__service_list.slice();
   RenderJSEmbeddedGadget.ready =
@@ -1553,34 +1552,40 @@ if (typeof document.contains !== 'function') {
   /////////////////////////////////////////////////////////////////
   // privateDeclarePublicGadget
   /////////////////////////////////////////////////////////////////
-  function privateDeclarePublicGadget(url, options, parent_gadget) {
+  function createPrivateInstanceFromKlass(Klass, options, parent_gadget) {
+    // Get the gadget class and instanciate it
+    if (options.element === undefined) {
+      options.element = document.createElement("div");
+    }
+    var i,
+      gadget_instance,
+      template_node_list = Klass.__template_element.body.childNodes,
+      fragment = document.createDocumentFragment();
+    gadget_instance = new Klass();
+    gadget_instance.element = options.element;
+    gadget_instance.state = {};
+    for (i = 0; i < template_node_list.length; i += 1) {
+      fragment.appendChild(
+        template_node_list[i].cloneNode(true)
+      );
+    }
+    gadget_instance.element.appendChild(fragment);
+    setAqParent(gadget_instance, parent_gadget);
+    return gadget_instance;
+  }
 
-    return renderJS.declareGadgetKlass(url)
-      // gadget loading should not be interrupted
-      // if not, gadget's definition will not be complete
-      //.then will return another promise
-      //so loading_klass_promise can't be cancel
-      .then(function createPrivateInstanceFromKlass(Klass) {
-        // Get the gadget class and instanciate it
-        if (options.element === undefined) {
-          options.element = document.createElement("div");
-        }
-        var i,
-          gadget_instance,
-          template_node_list = Klass.__template_element.body.childNodes,
-          fragment = document.createDocumentFragment();
-        gadget_instance = new Klass();
-        gadget_instance.element = options.element;
-        gadget_instance.state = {};
-        for (i = 0; i < template_node_list.length; i += 1) {
-          fragment.appendChild(
-            template_node_list[i].cloneNode(true)
-          );
-        }
-        gadget_instance.element.appendChild(fragment);
-        setAqParent(gadget_instance, parent_gadget);
-        return gadget_instance;
+  function privateDeclarePublicGadget(url, options, parent_gadget) {
+    var klass = renderJS.declareGadgetKlass(url);
+    // gadget loading should not be interrupted
+    // if not, gadget's definition will not be complete
+    //.then will return another promise
+    //so loading_klass_promise can't be cancel
+    if (typeof klass.then === 'function') {
+      return klass.then(function createAsyncPrivateInstanceFromKlass(Klass) {
+        return createPrivateInstanceFromKlass(Klass, options, parent_gadget);
       });
+    }
+    return createPrivateInstanceFromKlass(klass, options, parent_gadget);
   }
 
   /////////////////////////////////////////////////////////////////
@@ -1592,14 +1597,14 @@ if (typeof document.contains !== 'function') {
     }
     RenderJSGadget.call(this);
   }
-  RenderJSIframeGadget.__ready_list = RenderJSGadget.__ready_list.slice();
+  RenderJSIframeGadget.__ready_list = [];
   RenderJSIframeGadget.ready =
     RenderJSGadget.ready;
   RenderJSIframeGadget.setState =
     RenderJSGadget.setState;
   RenderJSIframeGadget.onStateChange =
     RenderJSGadget.onStateChange;
-  RenderJSIframeGadget.__service_list = RenderJSGadget.__service_list.slice();
+  RenderJSIframeGadget.__service_list = [];
   RenderJSIframeGadget.declareService =
     RenderJSGadget.declareService;
   RenderJSIframeGadget.onEvent =
@@ -1677,10 +1682,10 @@ if (typeof document.contains !== 'function') {
                 });
               }
             );
-          return new RSVP.Queue()
-            .push(function waitForChannelCall() {
-              return wait_promise;
-            });
+
+          return ensurePushableQueue(function waitForChannelCall() {
+            return wait_promise;
+          });
         };
         return "OK";
       }
@@ -1698,7 +1703,10 @@ if (typeof document.contains !== 'function') {
       });
     gadget_instance.__chan.bind("acquire",
                                 function handleChannelAcquire(trans, params) {
-        gadget_instance.__aq_parent.apply(gadget_instance, params)
+        new RSVP.Queue()
+          .push(function () {
+            return gadget_instance.__aq_parent.apply(gadget_instance, params);
+          })
           .then(trans.complete)
           .fail(function handleChannelAcquireError(e) {
             trans.error(e.toString());
@@ -1739,9 +1747,68 @@ if (typeof document.contains !== 'function') {
   /////////////////////////////////////////////////////////////////
   // RenderJSGadget.declareGadget
   /////////////////////////////////////////////////////////////////
+  function setGadgetInstanceHTMLContext(gadget_instance, options,
+                                        parent_gadget, url) {
+    var i,
+      scope,
+      queue;
+    clearGadgetInternalParameters(gadget_instance);
+
+    // Store local reference to the gadget instance
+    scope = options.scope;
+    if (scope === undefined) {
+      scope = 'RJS_' + scope_increment;
+      scope_increment += 1;
+      while (parent_gadget.__sub_gadget_dict.hasOwnProperty(scope)) {
+        scope = 'RJS_' + scope_increment;
+        scope_increment += 1;
+      }
+    }
+    parent_gadget.__sub_gadget_dict[scope] = gadget_instance;
+    gadget_instance.element.setAttribute("data-gadget-scope",
+                                         scope);
+
+    // Put some attribute to ease page layout comprehension
+    gadget_instance.element.setAttribute("data-gadget-url", url);
+    gadget_instance.element.setAttribute("data-gadget-sandbox",
+                                         options.sandbox);
+    gadget_instance.element._gadget = gadget_instance;
+
+    function ready_executable_wrapper(fct) {
+      return function executeReadyWrapper() {
+        return fct.call(gadget_instance, gadget_instance);
+      };
+    }
+
+    function ready_wrapper() {
+      if (document.contains(gadget_instance.element)) {
+        startService(gadget_instance);
+      }
+      // Always return the gadget instance after ready function
+      return gadget_instance;
+    }
+
+    if (gadget_instance.constructor.__ready_list.length) {
+      queue = new RSVP.Queue();
+      // Trigger calling of all ready callback
+      for (i = 0; i < gadget_instance.constructor.__ready_list.length;
+           i += 1) {
+        // Put a timeout?
+        queue.push(ready_executable_wrapper(
+          gadget_instance.constructor.__ready_list[i]
+        ));
+      }
+      queue.push(ready_wrapper);
+      return queue;
+    }
+    return ready_wrapper();
+  }
+
   RenderJSGadget
     .declareMethod('declareGadget', function declareGadget(url, options) {
-      var parent_gadget = this;
+      var parent_gadget = this,
+        method,
+        result;
 
       if (options === undefined) {
         options = {};
@@ -1753,74 +1820,30 @@ if (typeof document.contains !== 'function') {
       // transform url to absolute url if it is relative
       url = renderJS.getAbsoluteURL(url, this.__path);
 
-      return new RSVP.Queue()
-        .push(function waitForPrivateDeclareGadget() {
-          var method;
-          if (options.sandbox === "public") {
-            method = privateDeclarePublicGadget;
-          } else if (options.sandbox === "iframe") {
-            method = privateDeclareIframeGadget;
-          } else if (options.sandbox === "dataurl") {
-            method = privateDeclareDataUrlGadget;
-          } else {
-            throw new Error("Unsupported sandbox options '" +
-                            options.sandbox + "'");
-          }
-          return method(url, options, parent_gadget);
-        })
-        // Set the HTML context
-        .push(function setGadgetInstanceHTMLContext(gadget_instance) {
-          var i,
-            scope,
-            queue = new RSVP.Queue();
-          // Trigger calling of all ready callback
-          function ready_wrapper() {
-            return gadget_instance;
-          }
-          function ready_executable_wrapper(fct) {
-            return function executeReadyWrapper() {
-              return fct.call(gadget_instance, gadget_instance);
-            };
-          }
-          for (i = 0; i < gadget_instance.constructor.__ready_list.length;
-               i += 1) {
-            // Put a timeout?
-            queue.push(ready_executable_wrapper(
-              gadget_instance.constructor.__ready_list[i]
-            ));
-            // Always return the gadget instance after ready function
-            queue.push(ready_wrapper);
-          }
-
-          // Store local reference to the gadget instance
-          scope = options.scope;
-          if (scope === undefined) {
-            scope = 'RJS_' + scope_increment;
-            scope_increment += 1;
-            while (parent_gadget.__sub_gadget_dict.hasOwnProperty(scope)) {
-              scope = 'RJS_' + scope_increment;
-              scope_increment += 1;
-            }
-          }
-          parent_gadget.__sub_gadget_dict[scope] = gadget_instance;
-          gadget_instance.element.setAttribute("data-gadget-scope",
-                                               scope);
-
-          // Put some attribute to ease page layout comprehension
-          gadget_instance.element.setAttribute("data-gadget-url", url);
-          gadget_instance.element.setAttribute("data-gadget-sandbox",
-                                               options.sandbox);
-          gadget_instance.element._gadget = gadget_instance;
-
-          if (document.contains(gadget_instance.element)) {
-            // Put a timeout
-            queue.push(startService);
-          }
-          // Always return the gadget instance after ready function
-          queue.push(ready_wrapper);
-
-          return queue;
-        });
+      if (options.sandbox === "public") {
+        method = privateDeclarePublicGadget;
+      } else if (options.sandbox === "iframe") {
+        method = privateDeclareIframeGadget;
+      } else if (options.sandbox === "dataurl") {
+        method = privateDeclareDataUrlGadget;
+      } else {
+        throw new Error("Unsupported sandbox options '" +
+                        options.sandbox + "'");
+      }
+      result = method(url, options, parent_gadget);
+      // Set the HTML context
+      if (typeof result.then === 'function') {
+        return new RSVP.Queue()
+          .push(function () {
+            return result;
+          })
+          .push(function setAsyncGadgetInstanceHTMLContext(gadget_instance) {
+            return setGadgetInstanceHTMLContext(gadget_instance, options,
+                                                parent_gadget, url);
+          });
+      }
+      return setGadgetInstanceHTMLContext(result, options,
+                                          parent_gadget, url);
     })
     .declareMethod('getDeclaredGadget',
       function getDeclaredGadget(gadget_scope) {
@@ -1958,7 +1981,7 @@ if (typeof document.contains !== 'function') {
     tmp_constructor = function createSuperKlass() {
       RenderJSGadget.call(this);
     };
-    tmp_constructor.__ready_list = RenderJSGadget.__ready_list.slice();
+    tmp_constructor.__ready_list = [];
     tmp_constructor.__service_list = RenderJSGadget.__service_list.slice();
     tmp_constructor.declareMethod =
       RenderJSGadget.declareMethod;
@@ -1998,6 +2021,11 @@ if (typeof document.contains !== 'function') {
         tmp_constructor.prototype['__' + key] = parsed_html[key];
       }
     }
+    // Check if there is a HTML declared subgadget
+    if (tmp_constructor.__template_element
+                       .querySelectorAll('[data-gadget-url]').length) {
+      tmp_constructor.__ready_list.push(loadSubGadgetDOMDeclaration);
+    }
     return tmp_constructor;
   }
 
@@ -2015,9 +2043,9 @@ if (typeof document.contains !== 'function') {
         return defer.promise;
       }
       if (gadget_model_defer_dict[url].is_resolved) {
-        return RSVP.resolve(gadget_model_defer_dict[url].result);
+        return gadget_model_defer_dict[url].result;
       }
-      return RSVP.reject(gadget_model_defer_dict[url].result);
+      throw gadget_model_defer_dict[url].result;
     }
 
     gadget_model_defer_dict[url] = {
@@ -2213,7 +2241,7 @@ if (typeof document.contains !== 'function') {
                   if (node.nodeType === Node.ELEMENT_NODE) {
                     if (node.hasAttribute("data-gadget-url") &&
                         (node._gadget !== undefined)) {
-                      createGadgetMonitor(node._gadget);
+                      deleteGadgetMonitor(node._gadget);
                     }
                     added_list =
                       node.querySelectorAll("[data-gadget-url]");
@@ -2221,7 +2249,7 @@ if (typeof document.contains !== 'function') {
                     for (k = 0; k < len2; k += 1) {
                       node = added_list[k];
                       if (node._gadget !== undefined) {
-                        createGadgetMonitor(node._gadget);
+                        deleteGadgetMonitor(node._gadget);
                       }
                     }
                   }
@@ -2311,7 +2339,7 @@ if (typeof document.contains !== 'function') {
 
     // Create the root gadget instance and put it in the loading stack
     TmpConstructor = RenderJSEmbeddedGadget;
-    TmpConstructor.__ready_list = RenderJSGadget.__ready_list.slice();
+    TmpConstructor.__ready_list = [];
     TmpConstructor.__service_list = RenderJSGadget.__service_list.slice();
     TmpConstructor.prototype.__path = url;
     root_gadget = new RenderJSEmbeddedGadget();
@@ -2419,25 +2447,19 @@ if (typeof document.contains !== 'function') {
     var i,
       ready_queue = new RSVP.Queue();
 
-    function ready_wrapper() {
-      return root_gadget;
-    }
     function ready_executable_wrapper(fct) {
-      return function wrapReadyFunction(g) {
-        return fct.call(g, g);
+      return function wrapReadyFunction() {
+        return fct.call(root_gadget, root_gadget);
       };
     }
     TmpConstructor.ready(function startServiceInReady() {
-      return startService(this);
+      return startService(root_gadget);
     });
 
-    ready_queue.push(ready_wrapper);
     for (i = 0; i < TmpConstructor.__ready_list.length; i += 1) {
       // Put a timeout?
       ready_queue
-        .push(ready_executable_wrapper(TmpConstructor.__ready_list[i]))
-        // Always return the gadget instance after ready function
-        .push(ready_wrapper);
+        .push(ready_executable_wrapper(TmpConstructor.__ready_list[i]));
     }
     return ready_queue;
   }
@@ -2510,6 +2532,8 @@ if (typeof document.contains !== 'function') {
         return configureMutationObserver(TmpConstructor, url, root_gadget);
       })
       .push(function waitForReadyList() {
+        clearGadgetInternalParameters(root_gadget);
+        TmpConstructor.__ready_list.unshift(loadSubGadgetDOMDeclaration);
         // Trigger all ready functions
         return triggerReadyList(TmpConstructor, root_gadget);
       })
