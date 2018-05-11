@@ -1383,7 +1383,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       extra_param_json = {}
 
     if isinstance(extra_param_json, str):
-      extra_param_json = ensureDeserialized(json.loads(urlsafe_b64decode(extra_param_json)))
+      extra_param_json = ensureDeserialized(byteify(json.loads(urlsafe_b64decode(extra_param_json))))
 
     for k, v in byteify(extra_param_json.items()):
       REQUEST.set(k, v)
@@ -1696,7 +1696,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       extra_param_json = {}
 
     if isinstance(extra_param_json, str):
-      extra_param_json = ensureDeserialized(json.loads(urlsafe_b64decode(extra_param_json)))
+      extra_param_json = ensureDeserialized(byteify(json.loads(urlsafe_b64decode(extra_param_json))))
 
     for key, value in byteify(extra_param_json.items()):
       REQUEST.set(key, value)
