@@ -662,6 +662,11 @@
       <td colspan="3"><b>Change the filter to OR mode</b></td>
     </tr>
     <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//select[@name='heard_about']</td>
+      <td></td>
+    </tr>
+    <tr>
       <td>select</td>
       <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//select[@name='heard_about']</td>
       <td>index=1</td>
@@ -950,7 +955,7 @@
     <!-- Wait for ckeditor to be loaded :/ How to inspect inside another iframe? -->
     <tr>
       <td>pause</td>
-      <td>20000</td>
+      <td>2000</td>
       <td></td>
     </tr>
     <tr>

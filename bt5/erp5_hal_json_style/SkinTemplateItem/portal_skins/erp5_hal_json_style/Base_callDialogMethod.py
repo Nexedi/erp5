@@ -205,6 +205,27 @@ if len(listbox_id_list):
 kw.update(**extra_param)
 kw.update(keep_items=extra_param)  # better backward compatibility
 
+# early-stop if user selected all or too many documents
+if len(extra_param.get("uids", ())) >= 1000 or extra_param.get("query", MARKER) == "":
+  if dialog_method == update_method:
+    pass  # do not interrupt on UPDATE
+  elif extra_param.get("basedialog_force_submit", 0) == 0:
+    extra_param["basedialog_force_submit"] = 1
+    if len(extra_param.get("uids", ())) >= 1000:
+      translated_message=translate("Too many documents selected! Submit again to proceed with the first 1000 or Cancel and narrow down your search.")
+    else:
+      translated_message=translate("All documents are selected! Submit again to proceed or Cancel and narrow down your search.")
+    return context.Base_renderForm(
+      dialog_id,
+      message=translated_message,
+      level=WARNING,
+      keep_items=extra_param,
+      form_data=form_data)
+  elif len(extra_param.get("uids", ())) >= 1000:
+    # no force-submit and no update so we cut the UIDS
+    kw['uids'] = extra_param['uids'][:1000]
+    del extra_param['uids']  # remove UIDS from the extra_param to force re-computation
+
 # if dialog_category is object_search, then edit the selection
 if dialog_category == "object_search" :
   portal.portal_selections.setSelectionParamsFor(kw['selection_name'], kw)
