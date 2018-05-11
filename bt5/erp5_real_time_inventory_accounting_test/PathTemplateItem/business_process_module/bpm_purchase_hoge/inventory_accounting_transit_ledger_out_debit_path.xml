@@ -40,7 +40,7 @@
             <value>
               <tuple>
                 <string>trade_phase/trade/inventory_accounting</string>
-                <string>ledger/transit/sortie</string>
+                <string>ledger/stock/transit/sortie</string>
               </tuple>
             </value>
         </item>

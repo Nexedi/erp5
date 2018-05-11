@@ -4,6 +4,7 @@ business_process_module/bpm_purchase_hoge
 business_process_module/bpm_purchase_hoge/**
 business_process_module/bpm_sale_hoge
 business_process_module/bpm_sale_hoge/**
-portal_categories/ledger/**
+portal_categories/ledger/stock
+portal_categories/ledger/stock/**
 portal_rules/default_delivery_root_simulation_rule
 portal_rules/default_delivery_root_simulation_rule/**

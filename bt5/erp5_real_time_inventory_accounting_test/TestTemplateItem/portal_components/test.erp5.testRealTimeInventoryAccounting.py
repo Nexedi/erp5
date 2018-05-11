@@ -199,14 +199,14 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
     category_tool = self.portal.portal_categories
 
     getattr(self.portal.portal_types, 'Accounting Transaction').setLedgerValueList(
-      [category_tool.ledger.achat,
-       category_tool.ledger.preparation,
-       category_tool.ledger.production,
-       category_tool.ledger.stock.entree,
-       category_tool.ledger.stock.sortie,
-       category_tool.ledger.transit.entree,
-       category_tool.ledger.transit.sortie,
-       category_tool.ledger.vente])
+      [category_tool.ledger.stock.achat,
+       category_tool.ledger.stock.preparation,
+       category_tool.ledger.stock.production,
+       category_tool.ledger.stock.stock.entree,
+       category_tool.ledger.stock.stock.sortie,
+       category_tool.ledger.stock.transit.entree,
+       category_tool.ledger.stock.transit.sortie,
+       category_tool.ledger.stock.vente])
 
     if 'my_group' not in category_tool.group:
       category_tool.group.newContent(portal_type='Category',
@@ -573,7 +573,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
     accounting_transaction_list = sequence['current_accounting_transaction_list']
     for accounting_transaction in accounting_transaction_list:
       self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
-      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.sortie:
+      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.stock.sortie:
         self._checkDelivery(
           accounting_transaction,
           delivery_property_dict=dict(
@@ -592,7 +592,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
                  # sum(SPLL.price)
                  quantity=17100)))
 
-      elif accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.transit.entree:
+      elif accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.transit.entree:
         self._checkDelivery(
           accounting_transaction,
           delivery_property_dict=dict(
@@ -611,14 +611,14 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
                  # sum(SPLL.price)
                  quantity=17100)))
 
-      # ledger/transit/sortie
+      # ledger/stock/transit/sortie
       else:
         self._checkDelivery(
           accounting_transaction,
           delivery_property_dict=dict(
             source_section_value=self.portal.organisation_module.hoge,
             resource_value=self.portal.currency_module.DOL,
-            ledger_value=self.portal.portal_categories.ledger.transit.sortie,
+            ledger_value=self.portal.portal_categories.ledger.stock.transit.sortie,
             # start_date=stop_date=SPL.stop_date
             start_date=DateTime('2018/01/31 00:00:00 GMT+9'),
             stop_date=DateTime('2018/01/31 00:00:00 GMT+9')),
@@ -732,7 +732,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
     accounting_transaction_list = sequence['current_accounting_transaction_list']
     for accounting_transaction in accounting_transaction_list:
       self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
-      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.entree:
+      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.stock.entree:
         self._checkDelivery(
         accounting_transaction,
         delivery_property_dict=dict(
@@ -751,7 +751,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
                # sum(PPLL.price)
                quantity=14000)))
 
-      elif accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.transit.entree:
+      elif accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.transit.entree:
         self._checkDelivery(
         accounting_transaction,
         delivery_property_dict=dict(
@@ -770,14 +770,14 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
                # sum(PPLL.price)
                quantity=14000)))
 
-      # ledger/transit/sortie
+      # ledger/stock/transit/sortie
       else:
         self._checkDelivery(
         accounting_transaction,
         delivery_property_dict=dict(
           source_section_value=self.portal.organisation_module.hoge,
           resource_value=self.portal.currency_module.DOL,
-          ledger_value=self.portal.portal_categories.ledger.transit.sortie,
+          ledger_value=self.portal.portal_categories.ledger.stock.transit.sortie,
           # start_date=stop_date=PPL.stop_date
           start_date=DateTime('2018/01/10 00:00:00 GMT+9'),
           stop_date=DateTime('2018/01/10 00:00:00 GMT+9')),
@@ -881,7 +881,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
     accounting_transaction_list = sequence['current_accounting_transaction_list']
     for accounting_transaction in accounting_transaction_list:
       self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
-      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.entree:
+      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.stock.entree:
         self._checkDelivery(
           accounting_transaction,
           delivery_property_dict=dict(
@@ -900,14 +900,14 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
                  # sum(IPLL.price)
                  quantity=4242)))
 
-      # ledger/stock/sortie
+      # ledger/stock/stock/sortie
       else:
         self._checkDelivery(
           accounting_transaction,
           delivery_property_dict=dict(
             source_section_value=self.portal.organisation_module.hoge,
             resource_value=self.portal.currency_module.DOL,
-            ledger_value=self.portal.portal_categories.ledger.stock.sortie,
+            ledger_value=self.portal.portal_categories.ledger.stock.stock.sortie,
             # start_date=stop_date=IPL.start_date
             start_date=DateTime('2018/03/02 00:00:00 GMT+9'),
             stop_date=DateTime('2018/03/02 00:00:00 GMT+9')),
@@ -1011,7 +1011,7 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
     accounting_transaction_list = sequence['current_accounting_transaction_list']
     for accounting_transaction in accounting_transaction_list:
       self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
-      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.entree:
+      if accounting_transaction.getLedgerValue() == self.portal.portal_categories.ledger.stock.stock.entree:
         self._checkDelivery(
           accounting_transaction,
           delivery_property_dict=dict(
@@ -1030,14 +1030,14 @@ class TestRealTimeInventoryAccounting(ERP5TypeTestCase, TestRealTimeInventoryAcc
                  # sum(IPLL.price)
                  quantity=4242)))
 
-      # ledger/stock/sortie
+      # ledger/stock/stock/sortie
       else:
         self._checkDelivery(
           accounting_transaction,
           delivery_property_dict=dict(
             source_section_value=self.portal.organisation_module.hoge,
             resource_value=self.portal.currency_module.DOL,
-            ledger_value=self.portal.portal_categories.ledger.stock.sortie,
+            ledger_value=self.portal.portal_categories.ledger.stock.stock.sortie,
             # start_date=stop_date=IPL.start_date
             start_date=DateTime('2018/03/02 00:00:00 GMT+9'),
             stop_date=DateTime('2018/03/02 00:00:00 GMT+9')),

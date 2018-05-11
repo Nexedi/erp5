@@ -71,13 +71,13 @@ class InventoryAssetPriceAccountingRuleMovementGenerator(InvoiceTransactionRuleM
                                                                  update_property_dict=update_property_dict):
         # PATCH-BEGIN
         update_dict = {}
-        if movement.getLedger() == 'stock/entree':
+        if movement.getLedger() == 'stock/stock/entree':
           update_dict['start_date'] = update_dict['stop_date'] = input_movement.getStopDate()
-        elif movement.getLedger() == 'stock/sortie':
+        elif movement.getLedger() == 'stock/stock/sortie':
           update_dict['start_date'] = update_dict['stop_date'] = input_movement.getStartDate()
-        elif movement.getLedger() == 'transit/entree':
+        elif movement.getLedger() == 'stock/transit/entree':
           update_dict['start_date'] = update_dict['stop_date'] = input_movement.getStartDate()
-        elif movement.getLedger() == 'transit/sortie':
+        elif movement.getLedger() == 'stock/transit/sortie':
           update_dict['start_date'] = update_dict['stop_date'] = input_movement.getStopDate()
         movement._edit(**update_dict)
 
