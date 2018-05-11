@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, query, workflow_action=\'\'</string> </value>
+            <value> <string>form_id, query=\'\', workflow_action=\'\', uids=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

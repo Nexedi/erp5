@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox, query=\'\', sort_on=(), limit=None</string> </value>
+            <value> <string>listbox, query=\'\', full_text=\'\', sort_on=(), limit=None, portal_types=None, **kwargs</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

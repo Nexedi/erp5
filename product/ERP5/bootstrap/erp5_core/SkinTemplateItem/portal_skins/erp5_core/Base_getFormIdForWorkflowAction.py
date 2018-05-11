@@ -20,17 +20,22 @@ Format of Action returned by getFilteredActions['workflow'] = [{
 action_tool = context.getPortalObject().portal_actions
 id_form_dict = dict()
 
-for result in context.Base_searchUsingFormIdAndQuery(form_id, query):
+result_list = ()
+if uids is not None:
+  result_list = context.getPortalObject().portal_catalog(uid=uids)
+else:
+  result_list = context.Base_searchUsingFormIdAndQuery(form_id, query)
+
+for result in result_list:
   for action in action_tool.listFilteredActionsFor(result.getObject()).get('workflow', []):
-    id_form_dict[action['id']] = action['url'].rsplit('/', 1)[1].split('?')[0]
+    action_form_id = action['url'].rsplit('/', 1)[1].split('?')[0]
+    id_form_dict[action['id']] = action_form_id
+    if workflow_action == action['id']:
+      return action_form_id  # early return for performance reasons
 
 if not workflow_action and len(id_form_dict) == 1:
   # if we have only one possible workflow transition we suppose it is the default one
   return id_form_dict.items()[0][1]
-
-if workflow_action in id_form_dict:
-  # if the workflow_action is done and we found it then return related form dialog
-  return id_form_dict[workflow_action]
 
 # if we have no idea what workflow form we should use - just use ~~the default one~~ nothing
 return ""

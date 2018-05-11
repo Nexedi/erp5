@@ -8,18 +8,18 @@ Returns an iterable (most likely SearchResult instance depending on list_method 
 list_method_kwargs = dict(listbox.get_value('default_params')) or {}
 
 # Listbox contraints portal types
-portal_types = listbox.get_value('portal_types')
-if portal_types:
+if portal_types is not None:
+  list_method_kwargs.update(portal_types=portal_types)
+else:
   if "portal_type" in list_method_kwargs:
-    if isinstance(list_method_kwargs['portal_type'], (str, unicode)):
+    if isinstance(list_method_kwargs['portal_type'], str):
       list_method_kwargs['portal_type'] = [list_method_kwargs['portal_type'], ]
-  else:
-    list_method_kwargs['portal_type'] = []
-  list_method_kwargs['portal_type'].extend(portal_type_name for portal_type_name, _ in portal_types)
+  elif listbox.get_value("portal_types"):
+    list_method_kwargs['portal_type'] = [portal_type_name for portal_type_name, _ in listbox.get_value("portal_types")]
 
 # query is provided by the caller because it is a runtime information
-if query:
-  list_method_kwargs.update(full_text=query) # second overwrite the query
+if query or full_text:
+  list_method_kwargs.update(full_text=query or full_text) # second overwrite the query
 
 if limit:
   list_method_kwargs.update(limit=limit)

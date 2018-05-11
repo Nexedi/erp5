@@ -6,6 +6,7 @@ This script should be used to detect a listbox without having to name it "listbo
 
 Christophe Dumez <christophe@nexedi.com>
 """
+from Products.ERP5Type.Log import log, ERROR
 
 def isListBox(field):
   if field.meta_type == "ListBox":
@@ -19,7 +20,11 @@ def isListBox(field):
 if form_or_id is None:
   form = context
 elif isinstance(form_or_id, str):
-  form = getattr(context, form_or_id)
+  try:
+    form = getattr(context, form_or_id)
+  except AttributeError:
+    log("Form '{}' does not exist!", level=ERROR)
+    return None
 else:
   form = form_or_id
 

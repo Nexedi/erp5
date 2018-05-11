@@ -9,6 +9,8 @@ This script is intended as a dialog target.
 """
 from Products.CMFCore.WorkflowCore import WorkflowException
 
+MARKER = []
+
 portal = context.getPortalObject()
 request = kwargs.get("REQUEST", None) or context.REQUEST
 translate = portal.Base_translateString
@@ -27,11 +29,28 @@ if not workflow_action:
 # and we diallow submit if different action is selected and different dialog embedded
 request.form['workflow_action_rendered'] = workflow_action
 
-if is_updating or workflow_action_rendered != workflow_action:
+if kwargs.get("update_method", ""):
   return context.Base_renderForm(dialog_id,
                                  message=translate("Form updated."),
                                  level="warning",
                                  REQUEST=request)
+
+if workflow_action_rendered != workflow_action:
+  # if we get all fields for the workflow form - do not bother user and proceed
+  try:
+    workflow_form_name = context.Base_getFormIdForWorkflowAction(form_id, '', workflow_action, uids=uids)
+    workflow_form = getattr(context, workflow_form_name)  # this can throw if form is not defined yet
+    for group in workflow_form.get_groups():
+      if group.lower() == 'hidden':
+        continue
+      for field in workflow_form.get_fields_in_group(group):
+        if request.form.get("field_workflow_dialog_" + field.id, MARKER) is MARKER:
+          raise AttributeError("field_workflow_dialog_" + field.id)  # direct access request.form["key"] does not throw because publisher eats the exception
+  except AttributeError:
+    return context.Base_renderForm(dialog_id,
+                                   message=translate("Form updated."),
+                                   level="warning",
+                                   REQUEST=request)
 
 for document in document_list:
   try:
