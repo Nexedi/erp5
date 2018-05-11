@@ -141,6 +141,11 @@ def _getConversionServerUrl():
       'Using %s as conversion_server_url instead' % url, DeprecationWarning)
   return url
 
+def _getConversionServerRetryCount():
+  """ Return retry count for Conversion Server (Cloudooo)
+  """
+  return os.environ.get('conversion_server_retry_count', 2)
+
 def _getVolatileMemcachedServerDict():
   """Returns a dict with hostname and port for volatile memcached Server
   """
@@ -952,6 +957,9 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       url = _getConversionServerUrl()
       pref = self.getDefaultSystemPreference()
       pref._setPreferredDocumentConversionServerUrl(url)
+     # set default retry count in test for network issue
+      retry_count = _getConversionServerRetryCount()
+      pref._setPreferredDocumentConversionServerRetry(retry_count)
 
     def _updateMemcachedConfiguration(self):
       """Update default memcached plugin configuration
