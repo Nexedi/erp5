@@ -966,6 +966,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       url = _getConversionServerUrl()
       pref = self.getDefaultSystemPreference()
       pref._setPreferredDocumentConversionServerUrl(url)
+      # set default retry count in test for network issue
+      pref._setPreferredDocumentConversionServerRetry(2)
 
     def _updateMemcachedConfiguration(self):
       """Update default memcached plugin configuration
