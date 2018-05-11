@@ -250,7 +250,9 @@ def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
 
   if hasattr(func, 'params'):
     # In case the func is actualy Script (Python) or ERP5 Python Script
-    func_param_list = [tuple(map(lambda x: x.strip(), func_param.split('='))) for func_param in func.params().split(",")]
+    func_param_list = [tuple(map(lambda x: x.strip(), func_param.split('=')))
+                       for func_param in func.Script_getParams().split(",")
+                       if func_param.strip()]
 
   elif hasattr(func, "func_args"):
     # In case the func is an External Method
@@ -274,7 +276,7 @@ def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
     # move necessary parameters from kwargs_dict to initial_kwargs
     if func_param_name not in initial_kwargs and func_param_name in kwargs_dict:
       func_param_value = kwargs_dict.get(func_param_name)
-      if callable(func_param_value):
+      if hasattr(func_param_value, "__call__"):
         initial_kwargs[func_param_name] = func_param_value()  # evaluate lazy attributes
       else:
         initial_kwargs[func_param_name] = func_param_value
@@ -426,21 +428,13 @@ def getAttrFromAnything(search_result, select, search_property_getter, kwargs):
       pass
 
   if callable(contents_value):
-    has_mandatory_param = False
-    has_brain_param = False
-    if hasattr(contents_value, "params"):
-      has_mandatory_param = any(map(lambda param: '=' not in param and '*' not in param,
-                                    contents_value.params().split(","))) \
-                            if contents_value.params() \
-                            else False # because any([]) == True
-      has_brain_param = "brain" in contents_value.params()
+    callable_args = selectKwargsForCallable(contents_value, {}, {'brain': search_result})
     try:
-      if has_mandatory_param:
+      if len(callable_args) == 1 and 'brain' not in callable_args:
+        # function has one mandatory parameter
         contents_value = contents_value(search_result)
-      elif has_brain_param:
-        contents_value = contents_value(brain=search_result)
       else:
-        contents_value = contents_value()
+        contents_value = contents_value(**callable_args)
     except (AttributeError, KeyError, Unauthorized) as error:
       log("Could not evaluate {} on {} with error {!s}".format(
         contents_value, search_result, error), level=200)  # ERROR
