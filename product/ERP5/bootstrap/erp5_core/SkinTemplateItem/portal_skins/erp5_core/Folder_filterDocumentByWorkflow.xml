@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>uid, workflow_action=\'\', sort_on=(), limit=None, **kwargs</string> </value>
+            <value> <string>workflow_action=\'\', sort_on=(), limit=None, **kwargs</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
