@@ -103,6 +103,8 @@ Options:
                              URL used to connect to document conversion server,
                              this value will stored at default preference.
                              Empty by default.
+  --conversion_server_retry_count=INTEGER
+                             Retry Count for conversion error in case of network issue
   --conversion_server_hostname=STRING
                              Hostname used to connect to conversion server (Oood),
                              this value will stored at default preference.
@@ -703,6 +705,7 @@ def main(argument_list=None):
         "cmf_activity_sql_connection_string=",
         "extra_sql_connection_string_list=",
         "conversion_server_url=",
+        "conversion_server_retry_count=",
         "conversion_server_port=",
         "conversion_server_hostname=",
         "volatile_memcached_server_port=",
@@ -805,6 +808,8 @@ def main(argument_list=None):
       os.environ["update_business_templates"] = "1"
     elif opt == "--conversion_server_url":
       os.environ["conversion_server_url"] = arg
+    elif opt == "--conversion_server_retry_count":
+      os.environ["conversion_server_retry_count"] = arg
     elif opt == "--conversion_server_hostname":
       os.environ["conversion_server_hostname"] = arg
     elif opt == "--conversion_server_port":
