@@ -108,17 +108,16 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Mon, 05 Feb 2018 15:00:00 GMT+0100\n
+# generated on Fri, 11 May 2018 16:00:00 GMT+0200\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
 favicon.ico\n
-font-awesome/font-awesome-webfont.eot?v=4.6.3\n
-font-awesome/font-awesome-webfont.eot?#iefix&v=4.6.3\n
-font-awesome/font-awesome-webfont.woff?v=4.6.3\n
-font-awesome/font-awesome-webfont.woff2?v=4.6.3\n
-font-awesome/font-awesome-webfont.ttf?v=4.6.3\n
-font-awesome/font-awesome-webfont.svg?v=4.6.3#fontawesomeregular\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.woff2\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg\n
 gadget_erp5_worklist_empty.svg?format=svg\n
 erp5_launcher_nojqm.js\n
 gadget_erp5_nojqm.css\n
