@@ -200,41 +200,14 @@ if len(listbox_id_list):
     kw[listbox_id] = request_form[listbox_id] = listbox_line_list
 
 # Handle selection the new way
-# First check for an query in form parameters - if they are there
-# that means previous view was a listbox with selected stuff so recover here
-query = extra_param.get("query", None)
-select_all = extra_param.get("basedialog_select_all", 0)
-
-# inject `uids` into Scripts **kwargs when we got any `query` (empty or filled)
-if query is not None:
-  listbox = getattr(context, form_id).Base_getListbox()
-  if listbox is not None:
-    kw['uids'] = [int(getattr(document, "uid"))
-                  for document in context.Base_searchUsingListbox(listbox, query)]
-  else:
-    log('Action {} should not specify `uids` as its parameters when it does not take object list from the previous view!'.format(dialog_method), level=ERROR)
-
-# early-stop if user selected all documents
-if query == "" and select_all == 0 and dialog_method != update_method:  # do not interrupt on UPDATE
-  extra_param["basedialog_select_all"] = 1
-  return context.Base_renderForm(
-    dialog_id,
-    message=translate("All documents are selected! Submit again to proceed or Cancel and narrow down your search."),
-    level=WARNING,
-    keep_items=extra_param,
-    query=query,
-    form_data=form_data)
-
-# The old way was to set inquire kw for "list_selection_name" and update
-# it with kw["uids"] which means a long URL to call this script
+# We expect selection-related parameters (query, uids...) in extra_param_json
+# thus it is enough to update dialog_method parameters with it
+kw.update(**extra_param)
+kw.update(keep_items=extra_param)  # better backward compatibility
 
 # if dialog_category is object_search, then edit the selection
 if dialog_category == "object_search" :
   portal.portal_selections.setSelectionParamsFor(kw['selection_name'], kw)
-
-# Add rest of extra param into arguments of the target method
-kw.update(**extra_param)
-kw.update(keep_items=extra_param)  # better backward compatibility
 
 # Finally we will call the Dialog Method
 # Handle deferred style, unless we are executing the update action

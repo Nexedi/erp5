@@ -275,11 +275,7 @@ def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
       continue
     # move necessary parameters from kwargs_dict to initial_kwargs
     if func_param_name not in initial_kwargs and func_param_name in kwargs_dict:
-      func_param_value = kwargs_dict.get(func_param_name)
-      if hasattr(func_param_value, "__call__"):
-        initial_kwargs[func_param_name] = func_param_value()  # evaluate lazy attributes
-      else:
-        initial_kwargs[func_param_name] = func_param_value
+      initial_kwargs[func_param_name] = kwargs_dict.get(func_param_name)
   # MIDDLE-DANGEROUS!
   # In case of reports (later even exports) substitute None for unknown
   # parameters. We suppose Python syntax for parameters!
@@ -502,12 +498,6 @@ url_template_dict = {
 
 default_document_uri_template = url_template_dict["jio_get_template"]
 Base_translateString = context.getPortalObject().Base_translateString
-
-
-def lazyUidList(traversed_document, listbox, query):
-  """Clojure providing lazy list of UIDs selected from a previous Listbox."""
-  return lambda: [int(getattr(document, "uid"))
-                  for document in traversed_document.Base_searchUsingListbox(listbox, query)]
 
 
 def getRealRelativeUrl(document):
@@ -1051,15 +1041,9 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       if last_form_id:
         last_form = getattr(context, last_form_id)
         last_listbox = last_form.Base_getListbox()
-        # In order not to use Selections we need to pass all search attributes to *a listbox inside the form dialog*
-        # in case there was a listbox in the previous form. No other case!
-        if last_listbox:
-        # If a Lisbox's list_method takes `uid` as input parameter then it will be ready in the request. But the actual
-        # computation is too expensive so we make it lazy (and evaluate any callable at `selectKwargsForCallable`)
-        # UID will be used in (Listbox's|RelationField's) list_method as a constraint if defined in parameters
-          REQUEST.set("uid", lazyUidList(traversed_document, last_listbox, query))
     except AttributeError:
       pass
+    REQUEST.set("form_id", last_form_id)  # to be accessible in field rendering (namely ListBox)
 
   # Form traversed_document
   response_dict['_links']['traversed_document'] = {
@@ -1107,7 +1091,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   if form.pt == 'form_dialog':
     # overwrite "form_id" field's value because old UI does that by passing
     # the form_id in query string and hidden fields
-    renderHiddenField(response_dict, "form_id", last_form_id or REQUEST.get('form_id', '') or form.id)
+    renderHiddenField(response_dict, "form_id", last_form_id)
     # dialog_id is a mandatory field in any form_dialog
     renderHiddenField(response_dict, 'dialog_id', form.id)
     # some dialog actions use custom cancel_url
@@ -1115,17 +1099,15 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       renderHiddenField(response_dict, "cancel_url", REQUEST.get('cancel_url'))
 
     # Let's support Selections!
-    # There are two things needed
-    # - `uid` parameter of list_method of listbox (if present) in this dialog
-    # - `uids` or `brain` to a Dialog Form Action Method
-    #
-    # We can serialize `uids` into a hidden form field but we cannot do it with brain so we
-    # simply put "query" in a hidden field and construct `brain` from it in Base_callDialogMethod
-    dialog_method_kwargs = selectKwargsForCallable(getattr(traversed_document, form.action), {}, {'brain': None, 'uids': None})
-    if 'uids' in dialog_method_kwargs:
-      # If we do not have "query" in the REQUEST but the Dialog Method requires uids
-      # then we still should inject empty "query" in the dialog call
-      extra_param_json["query"] = query or extra_param_json.get("query", "") or REQUEST.get("query", "")
+    # If extra_param_json already contains necessary arrtibutes: mandatory `query` and optional `uids`
+    # then our job is done! If not we need to generate them to become parameters for Dialog method.
+    if "uids" not in extra_param_json:
+      method_args = selectKwargsForCallable(getattr(traversed_document, form.action), {}, {'uids': None})
+      if "uids" in method_args:
+        extra_param_json["uids"] = [int(getattr(document, "uid"))
+                                    for document in traversed_document.Base_searchUsingListbox(last_listbox, query or extra_param_json.get("query", None))]
+      if query is not None:
+        extra_param_json["query"] = query
   else:
     # In form_view we place only form_id in the request form
     renderHiddenField(response_dict, 'form_id', form.id)
@@ -1719,7 +1701,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
       catalog_kw = {
         "local_roles": local_roles,
-        "limit": limit,
         "sort_on": ()  # default is an empty tuple
       }
       if default_param_json is not None:
@@ -1727,8 +1708,18 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           ensureDeserialized(
             byteify(
               json.loads(urlsafe_b64decode(default_param_json)))))
-      if query:
+
+      if catalog_kw.get("uid", MARKER) is None and extra_param_json.get("form_id", MARKER) is not MARKER:
+        # a UID == None is a bit hack-ish way of signaling that the list_method
+        # needs list of UID instead of a regular query
+        catalog_kw["uid"] = [int(getattr(document, "uid"))
+                             for document in traversed_document.Base_searchUsingListbox(context.Base_getListbox(extra_param_json["form_id"]), query, limit=1000, **catalog_kw)]
+      elif query:
         catalog_kw["full_text"] = query
+
+      # add limit after resolving possible UID because that call (unfortunately) must be unrestricted
+      if limit:
+        catalog_kw["limit"] = limit
 
       if selection_domain is not None:
         selection_domain_dict = ensureDeserialized(
