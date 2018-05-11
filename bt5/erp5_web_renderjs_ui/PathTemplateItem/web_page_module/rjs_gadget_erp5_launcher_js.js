@@ -38,10 +38,7 @@
   }
 
   function route(my_root_gadget, my_scope, my_method, argument_list) {
-    return RSVP.Queue()
-      .push(function () {
-        return my_root_gadget.getDeclaredGadget(my_scope);
-      })
+    return my_root_gadget.getDeclaredGadget(my_scope)
       .push(function (my_gadget) {
         if (argument_list) {
           return my_gadget[my_method].apply(my_gadget, argument_list);
@@ -310,10 +307,7 @@
       var gadget = this,
         key = argument_list[0],
         default_value = argument_list[1];
-      return gadget.getDeclaredGadget("setting_gadget")
-        .push(function (jio_gadget) {
-          return jio_gadget.get(gadget.props.setting_id);
-        })
+      return route(gadget, 'setting_gadget', 'get', [gadget.props.setting_id])
         .push(function (doc) {
           return doc[key] || default_value;
         }, function (error) {
@@ -345,10 +339,7 @@
         });
     })
     .allowPublicAcquisition("translateHtml", function (argument_list) {
-      return this.getDeclaredGadget("translation_gadget")
-        .push(function (translation_gadget) {
-          return translation_gadget.translateHtml(argument_list[0]);
-        });
+      return route(this, 'translation_gadget', 'translateHtml', argument_list);
     })
 
     // XXX Those methods may be directly integrated into the header,
@@ -391,33 +382,20 @@
     })
 
     .allowPublicAcquisition("translate", function (argument_list) {
-      return this.getDeclaredGadget("translation_gadget")
-        .push(function (translation_gadget) {
-          return translation_gadget.translate(argument_list[0]);
-        });
+      return route(this, 'translation_gadget', 'translate', argument_list);
     })
 
     .allowPublicAcquisition("redirect", function (param_list) {
-      return this.getDeclaredGadget('router')
-        .push(function (router_gadget) {
-          return router_gadget.redirect.apply(router_gadget, param_list);
-        });
+      return route(this, 'router', 'redirect', param_list);
     })
     .allowPublicAcquisition('reload', function () {
       return location.reload();
     })
     .allowPublicAcquisition("getUrlParameter", function (param_list) {
-      return this.getDeclaredGadget('router')
-        .push(function (router_gadget) {
-          return router_gadget.getUrlParameter.apply(router_gadget, param_list);
-        });
+      return route(this, 'router', 'getUrlParameter', param_list);
     })
     .allowPublicAcquisition("getUrlFor", function (param_list) {
-      return this.getDeclaredGadget('router')
-        .push(function (router_gadget) {
-          return router_gadget.getCommandUrlFor.apply(router_gadget,
-                                                      param_list);
-        });
+      return route(this, 'router', 'getCommandUrlFor', param_list);
     })
 
     .allowPublicAcquisition("updateHeader", function (param_list) {
