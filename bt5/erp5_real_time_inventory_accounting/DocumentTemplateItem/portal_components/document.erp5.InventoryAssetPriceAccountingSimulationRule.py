@@ -72,6 +72,7 @@ class InventoryAssetPriceAccountingRuleMovementGenerator(InvoiceTransactionRuleM
         # PATCH-BEGIN
         update_dict = {}
         if movement.getLedger() in ('stock/stock/entree',
+                                    'stock/preparation/entree',
                                     'stock/transit/sortie'):
           update_dict['start_date'] = update_dict['stop_date'] = input_movement.getStopDate()
         elif movement.getLedger() in ('stock/stock/sortie',
