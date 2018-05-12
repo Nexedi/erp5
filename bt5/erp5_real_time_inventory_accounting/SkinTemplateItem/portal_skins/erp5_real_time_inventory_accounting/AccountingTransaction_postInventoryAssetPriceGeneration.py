@@ -2,8 +2,11 @@
 accounting_transaction = context
 
 related_packing_list = accounting_transaction.getDefaultCausalityValue()
-if not accounting_transaction.hasTitle() and related_packing_list is not None and related_packing_list.hasTitle():
-  accounting_transaction.setTitle(related_packing_list.getTitle())
+if related_packing_list is not None:
+  if not accounting_transaction.hasTitle() and related_packing_list.hasTitle():
+    accounting_transaction.setTitle(related_packing_list.getTitle())
+  if not accounting_transaction.hasReference() and related_packing_list.hasReference():
+    accounting_transaction.setReference(related_packing_list.getReference())
 
 resource = None
 ledger = None
