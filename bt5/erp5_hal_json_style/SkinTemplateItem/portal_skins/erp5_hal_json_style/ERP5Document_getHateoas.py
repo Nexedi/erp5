@@ -67,6 +67,7 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from collections import OrderedDict
 
 MARKER = []
+DOCUMENT_COUNT_LIMIT = 50
 
 if REQUEST is None:
   REQUEST = context.REQUEST
@@ -1108,7 +1109,8 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       method_args = selectKwargsForCallable(getattr(traversed_document, form.action), {}, {'uids': None})
       if "uids" in method_args:
         extra_param_json["uids"] = [int(getattr(document, "uid"))
-                                    for document in traversed_document.Base_searchUsingListbox(last_listbox, query or extra_param_json.get("query", None), limit=1000)]
+                                    for document in traversed_document.Base_searchUsingListbox(
+                                      last_listbox, query or extra_param_json.get("query", None), limit=DOCUMENT_COUNT_LIMIT)]
       if query is not None:
         extra_param_json["query"] = query
   else:
@@ -1716,7 +1718,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # a UID == None is a bit hack-ish way of signaling that the list_method
         # needs list of UID instead of a regular query
         catalog_kw["uid"] = [int(getattr(document, "uid"))
-                             for document in traversed_document.Base_searchUsingListbox(context.Base_getListbox(extra_param_json["form_id"]), query, limit=1000, **catalog_kw)]
+                             for document in traversed_document.Base_searchUsingListbox(
+                               context.Base_getListbox(extra_param_json["form_id"]), query, limit=DOCUMENT_COUNT_LIMIT, **catalog_kw)]
       elif query:
         catalog_kw["full_text"] = query
 

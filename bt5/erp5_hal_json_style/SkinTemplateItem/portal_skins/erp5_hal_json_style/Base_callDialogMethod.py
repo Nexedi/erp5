@@ -17,6 +17,8 @@ from Products.Formulator.Errors import FormValidationError, ValidationError
 from ZTUtils import make_query
 import json
 
+DOCUMENT_COUNT_LIMIT = 50
+
 # http://stackoverflow.com/a/13105359
 def byteify(value):
   if isinstance(value, dict):
@@ -206,13 +208,14 @@ kw.update(**extra_param)
 kw.update(keep_items=extra_param)  # better backward compatibility
 
 # early-stop if user selected all or too many documents
-if len(extra_param.get("uids", ())) >= 1000 or extra_param.get("query", MARKER) == "":
+if len(extra_param.get("uids", ())) >= DOCUMENT_COUNT_LIMIT or extra_param.get("query", MARKER) == "":
   if dialog_method == update_method:
     pass  # do not interrupt on UPDATE
   elif extra_param.get("basedialog_force_submit", 0) == 0:
     extra_param["basedialog_force_submit"] = 1
-    if len(extra_param.get("uids", ())) >= 1000:
-      translated_message=translate("Too many documents selected! Submit again to proceed with the first 1000 or Cancel and narrow down your search.")
+    if len(extra_param.get("uids", ())) >= DOCUMENT_COUNT_LIMIT:
+      translated_message=translate("Too many documents selected! Submit again to proceed with the first ${limit} or Cancel and narrow down your search.",
+                                   mapping={'limit': DOCUMENT_COUNT_LIMIT})
     else:
       translated_message=translate("All documents are selected! Submit again to proceed or Cancel and narrow down your search.")
     return context.Base_renderForm(
@@ -221,7 +224,7 @@ if len(extra_param.get("uids", ())) >= 1000 or extra_param.get("query", MARKER) 
       level=WARNING,
       keep_items=extra_param,
       form_data=form_data)
-  elif len(extra_param.get("uids", ())) >= 1000:
+  elif len(extra_param.get("uids", ())) >= DOCUMENT_COUNT_LIMIT:
     # remove UIDS from the extra_param to force re-computation because the
     # query will be the same but UIDS should change
     del extra_param['uids']

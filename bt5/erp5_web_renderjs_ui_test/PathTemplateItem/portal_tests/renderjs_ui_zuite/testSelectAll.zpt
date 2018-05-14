@@ -23,11 +23,11 @@
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1000&amp;num:int=600</td><td></td></tr>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1000&amp;num:int=40</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?start:int=2000&amp;num:int=600</td><td></td></tr>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=2000&amp;num:int=40</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 
@@ -45,7 +45,7 @@
 <tr><td>click</td>
     <td>//ul[@data-role="listview"]//a[@data-i18n="Empty Mass Action"]</td><td></td></tr>
 
-<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 1200)', 'footer': 'Records 1 - 3 / 1200'}">
+<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 80)', 'footer': 'Records 1 - 3 / 80'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 
@@ -55,18 +55,18 @@
 <tr><td>click</td>
     <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/thead/tr/th//a[@data-i18n="ID"]</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 1200)', 'footer': 'Records 1 - 3 / 1200'}">
+<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 80)', 'footer': 'Records 1 - 3 / 80'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 <tr><td>waitForText</td>
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[1]/td[1]//p</td>
-  <td>2599</td></tr>
+  <td>2039</td></tr>
 <tr><td>waitForText</td>
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[2]/td[1]//p</td>
-  <td>2598</td></tr>
+  <td>2038</td></tr>
 <tr><td>waitForText</td>
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[3]/td[1]//p</td>
-  <td>2597</td></tr>
+  <td>2037</td></tr>
 
 
 <tr><td>type</td>
@@ -78,18 +78,18 @@
 <tr><td>click</td>
     <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//nav/a[@data-i18n="Next"]</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block tal:define="pagination_configuration python: {'header': '(4 - 6 / 1200)', 'footer': 'Records 4 - 6 / 1200'}">
+<tal:block tal:define="pagination_configuration python: {'header': '(4 - 6 / 80)', 'footer': 'Records 4 - 6 / 80'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 <tr><td>waitForText</td>
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[1]/td[1]//p</td>
-  <td>2596</td></tr>
+  <td>2036</td></tr>
 <tr><td>waitForText</td>
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[2]/td[1]//p</td>
-  <td>2595</td></tr>
+  <td>2035</td></tr>
 <tr><td>waitForText</td>
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//table/tbody/tr[3]/td[1]//p</td>
-  <td>2594</td></tr>
+  <td>2034</td></tr>
 
 
 <tr><th rowspan="1" colspan="3">Updating the dialog must not trigger warning about all selected</th></tr>
@@ -102,7 +102,7 @@
 <tr><th rowspan="1" colspan="3">Submitting, however, must warn the user</th></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Too many documents selected! Submit again to proceed with the first 1000 or Cancel and narrow down your search.'}">
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Too many documents selected! Submit again to proceed with the first 50 or Cancel and narrow down your search.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 
@@ -152,7 +152,7 @@
 <tr><th rowspan="1" colspan="3">Warn the user and compute form_hash in the background</th></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Too many documents selected! Submit again to proceed with the first 1000 or Cancel and narrow down your search.'}">
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Too many documents selected! Submit again to proceed with the first 50 or Cancel and narrow down your search.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 
@@ -186,7 +186,7 @@
 <tal:block tal:define='search_query string:( title: "Title 1%" )'>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
 </tal:block>
-<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 600)', 'footer': 'Records 1 - 3 / 600'}">
+<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 40)', 'footer': 'Records 1 - 3 / 40'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 
@@ -200,7 +200,7 @@
     <td>//ul[@data-role="listview"]//a[@data-i18n="Empty Mass Action"]</td><td></td></tr>
 
 <tr><th colspan="3">Make sure that search stays</th></tr>
-<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 600)', 'footer': 'Records 1 - 3 / 600'}">
+<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 40)', 'footer': 'Records 1 - 3 / 40'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 
@@ -210,7 +210,7 @@
 <tr><td>click</td>
     <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//nav/a[@data-i18n="Next"]</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block tal:define="pagination_configuration python: {'header': '(4 - 6 / 600)', 'footer': 'Records 4 - 6 / 600'}">
+<tal:block tal:define="pagination_configuration python: {'header': '(4 - 6 / 40)', 'footer': 'Records 4 - 6 / 40'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 
@@ -234,7 +234,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/change_filter_to_or" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_filter" />
-<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 1200)', 'footer': 'Records 1 - 3 / 1200'}">
+<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 80)', 'footer': 'Records 1 - 3 / 80'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 
@@ -247,13 +247,13 @@
 <tr><td>click</td>
     <td>//ul[@data-role="listview"]//a[@data-i18n="Empty Mass Action"]</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 1200)', 'footer': 'Records 1 - 3 / 1200'}">
+<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 80)', 'footer': 'Records 1 - 3 / 80'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Too many documents selected! Submit again to proceed with the first 1000 or Cancel and narrow down your search.'}">
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Too many documents selected! Submit again to proceed with the first 50 or Cancel and narrow down your search.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 
