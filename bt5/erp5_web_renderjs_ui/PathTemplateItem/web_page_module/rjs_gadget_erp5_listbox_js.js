@@ -146,6 +146,7 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
     .declareAcquiredMethod("redirect", "redirect")
@@ -482,35 +483,28 @@
             sort_list = JSON.parse(gadget.state.sort_list_json);
             // Every line points to a sub-document so we need those links
             for (i = 0; i < counter; i += 1) {
-              promise_list.push(
-                gadget.getUrlFor({
-                  command: gadget.state.command,
-                  options: {
-                    jio_key: allDocs_result.data.rows[i].id,
-                    uid: allDocs_result.data.rows[i].value.uid,
-                    selection_index: gadget.state.begin_from + i,
-                    query: gadget.state.query_string,
-                    list_method_template: gadget.state.list_method_template,
-                    "sort_list:json": sort_list
-                  }
-                })
-              );
+              promise_list.push({
+                command: gadget.state.command,
+                options: {
+                  jio_key: allDocs_result.data.rows[i].id,
+                  uid: allDocs_result.data.rows[i].value.uid,
+                  selection_index: gadget.state.begin_from + i,
+                  query: gadget.state.query_string,
+                  list_method_template: gadget.state.list_method_template,
+                  "sort_list:json": sort_list
+                }
+              });
               for (j = 0; j < column_list.length; j += 1) {
                 content_value = allDocs_result.data.rows[i].value[column_list[j][0]] || "";
                 if (content_value.url_value) {
                   if (content_value.url_value.command) {
-                    url_promise_list.push(
-                      gadget.getUrlFor(content_value.url_value)
-                    );
+                    url_promise_list.push(content_value.url_value);
                   }
                 }
               }
             }
             promise_list.push.apply(promise_list, url_promise_list);
-            return new RSVP.Queue()
-              .push(function () {
-                return RSVP.all(promise_list);
-              })
+            return gadget.getUrlForList(promise_list)
               .push(function (line_link_list) {
                 var row_list = [],
                   value,
@@ -610,9 +604,9 @@
                   prev_param[gadget.state.key + '_begin_from'] = gadget.state.begin_from - lines;
                   setNext();
                 }
-                return RSVP.all([
-                  gadget.getUrlFor({command: 'change', options: prev_param}),
-                  gadget.getUrlFor({command: 'change', options: next_param})
+                return gadget.getUrlForList([
+                  {command: 'change', options: prev_param},
+                  {command: 'change', options: next_param}
                 ]);
 
               })

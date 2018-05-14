@@ -9,6 +9,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
@@ -18,14 +19,21 @@
     .allowPublicAcquisition('updateHeader', function () {
       return;
     })
-    .allowPublicAcquisition('getUrlFor', function (argument_list) {
-      if (argument_list[0].command === 'index') {
-        return this.getUrlFor({
-          command: 'display_stored_state',
-          options: {jio_key: argument_list[0].options.jio_key}
-        });
+    .allowPublicAcquisition('getUrlForList', function (argument_list) {
+      var i,
+        options_list = argument_list[0],
+        result_list = [];
+      for (i = 0; i < options_list.length; i += 1) {
+        if (options_list[i].command === 'index') {
+          result_list.push({
+            command: 'display_stored_state',
+            options: {jio_key: options_list[i].options.jio_key}
+          });
+        } else {
+          result_list.push(options_list[i]);
+        }
       }
-      return this.getUrlFor.apply(this, argument_list);
+      return this.getUrlForList.apply(this, [result_list]);
     })
 
     .allowPublicAcquisition('jio_allDocs', function (argument_list) {
