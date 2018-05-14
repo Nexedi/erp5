@@ -506,22 +506,18 @@
                 }
               }
             }
+            promise_list.push.apply(promise_list, url_promise_list);
             return new RSVP.Queue()
               .push(function () {
-                return RSVP.all([
-                  RSVP.all(promise_list),
-                  RSVP.all(url_promise_list)
-                ]);
+                return RSVP.all(promise_list);
               })
-              .push(function (result_list) {
+              .push(function (line_link_list) {
                 var row_list = [],
                   value,
                   cell_list,
                   url_value,
                   index = 0,
                   listbox_tbody_template,
-                  line_link_list = result_list[0],
-                  url_column_list = result_list[1],
                   setNonEditable = function (cell) {cell.editable = false; };
                 // reset list of UIDs of editable sub-documents
                 gadget.props.listbox_uid_dict = {
@@ -539,7 +535,7 @@
                     // get url value
                     if (value.url_value) {
                       if (value.url_value.command) {
-                        url_value = url_column_list[index];
+                        url_value = line_link_list[counter + index];
                         index += 1;
                       } else {
                         url_value = false;
