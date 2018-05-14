@@ -96,16 +96,14 @@
     var container,
       column_list = JSON.parse(gadget.state.column_list_json);
 
-    return gadget.translateHtml(template(
-      {
-        "row_list": row_list,
-        "show_anchor": gadget.state.show_anchor,
-        "column_list": column_list
-      }
-    ))
-      .push(function (table_part_html) {
-        container = document.createElement(container_name);
-        container.innerHTML = table_part_html;
+    container = document.createElement(container_name);
+    container.innerHTML = template({
+      "row_list": row_list,
+      "show_anchor": gadget.state.show_anchor,
+      "column_list": column_list
+    });
+    return new RSVP.Queue()
+      .push(function () {
         return renderEditableField(gadget, container, row_list);
       })
       .push(function () {
