@@ -502,8 +502,6 @@
                     url_promise_list.push(
                       gadget.getUrlFor(content_value.url_value)
                     );
-                  } else {
-                    url_promise_list.push(false);
                   }
                 }
               }
@@ -540,8 +538,12 @@
                      //url column
                     // get url value
                     if (value.url_value) {
-                      url_value = url_column_list[index];
-                      index += 1;
+                      if (value.url_value.command) {
+                        url_value = url_column_list[index];
+                        index += 1;
+                      } else {
+                        url_value = false;
+                      }
                     } else {
                       url_value = line_link_list[i];
                     }
