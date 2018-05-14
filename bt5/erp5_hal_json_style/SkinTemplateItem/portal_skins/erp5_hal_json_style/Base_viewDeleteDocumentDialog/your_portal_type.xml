@@ -251,7 +251,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Portal Type</string> </value>
+                    <value> <string>Document Type</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getPortalType()</string> </value>
+            <value> <string>python: here.Base_translateString(here.getPortalType())</string> </value>
         </item>
       </dictionary>
     </pickle>
