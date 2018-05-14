@@ -24,9 +24,12 @@ for obj in object_list:
   obj = obj.getObject()
   if countMessage(path=obj.getPath(),
                   method_id='AccountingTransaction_createReversalTransaction'):
-    raise Redirect, "%s/view?portal_status_message=%s" % (
-              context.absolute_url(), translateString(
-      'Reversal creation already in progress, abandon.'))
+    return context.Base_redirect(form_id,
+      abort_transaction=True,
+      keep_items={
+        "portal_status_message": translateString('Reversal creation already in progress, abandon.'),
+        "portal_status_level": 'error'
+      })
   obj.activate(tag=tag).AccountingTransaction_createReversalTransaction(
                                 cancellation_amount=cancellation_amount,
                                 date=date,

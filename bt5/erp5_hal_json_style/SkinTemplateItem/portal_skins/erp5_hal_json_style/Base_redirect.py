@@ -6,6 +6,11 @@
 from ZTUtils import make_query
 import json
 
+if abort_transaction:
+  # Old UI simply throws a Redirect exception and Published does its job
+  # but we cannot use it here so we abort using External Method
+  context.getPortalObject().Portal_abortTransaction()
+
 request_form = context.REQUEST.form
 request_form.update(kw)
 request_form = context.ERP5Site_filterParameterList(request_form)
