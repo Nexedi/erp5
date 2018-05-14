@@ -33,7 +33,7 @@ if add_empty:
 
 transition_dict = {}
 
-for result in context.Base_searchUsingFormIdAndQuery(form_id, query):
+for result in context.Base_searchUsingFormIdAndQuery(form_id, query, limit=1000):
   for action in action_tool.listFilteredActionsFor(result.getObject()).get('workflow', []):
     transition_dict[action['id']] = action['title']
 
