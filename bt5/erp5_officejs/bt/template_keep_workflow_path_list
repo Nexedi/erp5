@@ -1,5 +1,6 @@
 document_module/gadget_field_*
 document_module/gadget_officejs_*
+image_module/gadget_officejs_smart_assistant_icon_png
 image_module/gadget_officejs_*
 image_module/hr_logo_svg
 image_module/officejs_audioplayer_*

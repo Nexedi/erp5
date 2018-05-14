@@ -126,6 +126,20 @@
     "application_description_i18n":"application.custom.svg_editor.description"
   },
   {
+    "int_index": "19",
+    "application_image_type": "image",
+    "application_image_url": "officejs_smart_assistant_icon.png",
+    "application_toc_accept": true,
+    "application_published":"11/08/2014",
+    "application_submitted":"11/08/2014",
+    "application_description":"Assist you with using an ERP",
+    "application_url":"https://smartassistant.app.officejs.com/",
+    "application_title":"Smart Assistant",
+    "application_category":"Documents",
+    "application_title_i18n":"application.custom.smart_assistant.title",
+    "application_description_i18n":"application.custom.smart_assistant.description"
+  },
+  {
     "int_index": "10",
     "application_image_type": "image",
     "application_image_url": "media_player_app_logo.jpg",
