@@ -1956,7 +1956,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           if not isinstance(contents_item[select], dict):
             contents_item[select] = {
               'default': contents_item[select],
-              'editable': False
             }
           # We should be generating view if there is extra params for view in
           # view_kw. These parameters are required to create url at hateoas side
@@ -1970,21 +1969,21 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             if extra_url_param_dict:
               url_template_id = 'traverse_generator_action'
 
-            contents_item[select]['url_value'] = {
-              'command': url_parameter_dict['command'],
-              'options': {
-                'jio_key': url_parameter_dict.get('options', {}).get('jio_key', url_parameter_dict['view_kw']['jio_key']),
-                'editable': url_parameter_dict.get('options', {}).get('editable', None),
-                'view': url_template_dict[url_template_id] % {
-                  "root_url": site_root.absolute_url(),
-                  "script_id": script.id,
-                  "relative_url": url_parameter_dict['view_kw']['jio_key'].replace("/", "%2F"),
-                  "view": url_parameter_dict['view_kw']['view'],
-                  "extra_param_json": urlsafe_b64encode(
-                    json.dumps(ensureSerializable(extra_url_param_dict)))
-                  }
+            # Explicity populate url_value dict. This way we can ensure that whatever been
+            # sent via url_parameter_dict goes directly in url_value dict
+            contents_item[select]['url_value'] = {}
+            contents_item[select]['url_value']['command'] = url_parameter_dict['command']
+            contents_item[select]['url_value']['options'] = url_parameter_dict['options']
+            # Generate `view` to be used to construct URL
+            contents_item[select]['url_value']['options']['view'] = url_template_dict[url_template_id] % {
+              "root_url": site_root.absolute_url(),
+              "script_id": script.id,
+              "relative_url": url_parameter_dict['view_kw']['jio_key'].replace("/", "%2F"),
+              "view": url_parameter_dict['view_kw']['view'],
+              "extra_param_json": urlsafe_b64encode(
+                json.dumps(ensureSerializable(extra_url_param_dict)))
               }
-            }
+
       # endfor select
       REQUEST.other.pop('cell', None)
       contents_list.append(contents_item)
