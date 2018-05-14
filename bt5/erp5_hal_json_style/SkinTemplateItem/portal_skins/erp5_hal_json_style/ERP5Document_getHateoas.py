@@ -247,13 +247,16 @@ def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
 
   In case the function cannot state required arguments it throws an AttributeError.
   """
+  # TODO: replace `Script_getParams()` with `params()` when https://github.com/zopefoundation/Products.PythonScripts/pull/15 is merged
+  script_params = None
+  if hasattr(func, 'meta_type'):
+    script_params = func.Script_getParams()
 
-  if hasattr(func, 'params'):
+  if script_params is not None:
     # In case the func is actualy Script (Python) or ERP5 Python Script
     func_param_list = [tuple(map(lambda x: x.strip(), func_param.split('=')))
-                       for func_param in func.Script_getParams().split(",")
+                       for func_param in script_params.split(",")
                        if func_param.strip()]
-
   elif hasattr(func, "func_args"):
     # In case the func is an External Method
     func_param_list = func.func_args
