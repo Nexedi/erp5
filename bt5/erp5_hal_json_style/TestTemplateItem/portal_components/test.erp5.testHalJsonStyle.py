@@ -1410,6 +1410,58 @@ return context.getPortalObject().foo_module.contentValues()
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = '')
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Test_listProducts', '*args, **kwargs', """
+return context.getPortalObject().foo_module.contentValues()
+""")
+  @simulate('Base_getUrl', 'url_dict=False, *args, **kwargs', """
+url =  "https://officejs.com"
+if url_dict:
+  return {'command': 'raw',
+          'options': {
+            'url': url,
+            'reset': 1
+            }
+    }
+return url
+""")
+  @changeSkin('Hal')
+  def test_getHateoasDocument_listbox_check_url_column_option_parameters(self):
+    # pass custom list method which expect input arguments
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_url_columns = ['title | Base_getUrl',])
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+                  REQUEST=fake_request,
+                  mode="search",
+                  list_method='Test_listProducts',
+                  select_list=['id', 'title', 'creation_date', 'modification_date'],
+                  form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox')
+    result_dict = json.loads(result)
+
+    # Test the URL value
+    self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value']['command'], 'raw')
+    self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value']['options'].keys(), [u'url', u'reset'])
+    self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value']['options']['url'], 'https://officejs.com')
+
+    # Test if the value of the column is with right key
+    self.assertTrue(result_dict['_embedded']['contents'][0]['title']['default'])
+
+    # Test if the field_gadget_param even if there is no url_value
+    self.assertTrue(result_dict['_embedded']['contents'][0]['modification_date']['field_gadget_param'])
+    self.assertEqual(result_dict['_embedded']['contents'][0]['modification_date']['field_gadget_param']['type'], 'DateTimeField')
+
+    # Test that creation_date doesn't has `url_value` dict in it
+    self.assertNotIn('url_value', result_dict['_embedded']['contents'][0]['modification_date'])
+
+    # Reset the url_columns of the listbox
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_url_columns = '')
+
   @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
   @simulate('Test_listObjects', '*args, **kwargs', """
