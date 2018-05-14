@@ -222,9 +222,9 @@ if len(extra_param.get("uids", ())) >= 1000 or extra_param.get("query", MARKER) 
       keep_items=extra_param,
       form_data=form_data)
   elif len(extra_param.get("uids", ())) >= 1000:
-    # no force-submit and no update so we cut the UIDS
-    kw['uids'] = extra_param['uids'][:1000]
-    del extra_param['uids']  # remove UIDS from the extra_param to force re-computation
+    # remove UIDS from the extra_param to force re-computation because the
+    # query will be the same but UIDS should change
+    del extra_param['uids']
 
 # if dialog_category is object_search, then edit the selection
 if dialog_category == "object_search" :

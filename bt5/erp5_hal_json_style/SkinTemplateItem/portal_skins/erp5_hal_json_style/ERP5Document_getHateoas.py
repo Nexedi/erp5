@@ -1108,7 +1108,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       method_args = selectKwargsForCallable(getattr(traversed_document, form.action), {}, {'uids': None})
       if "uids" in method_args:
         extra_param_json["uids"] = [int(getattr(document, "uid"))
-                                    for document in traversed_document.Base_searchUsingListbox(last_listbox, query or extra_param_json.get("query", None))]
+                                    for document in traversed_document.Base_searchUsingListbox(last_listbox, query or extra_param_json.get("query", None), limit=1000)]
       if query is not None:
         extra_param_json["query"] = query
   else:
