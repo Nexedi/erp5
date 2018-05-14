@@ -194,19 +194,19 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//th/a[@data-i18n="Title"]</td><!-- Title is sortable -->
+  <td>//th/a[text()="Title"]</td><!-- Title is sortable -->
   <td></td>
 </tr>
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//th/a[@data-i18n="Title"]</td>
+  <td>//th/a[text()="Title"]</td>
   <td></td>
 </tr>
 <tr><th colspan="3"><font color="red">Quatity is not sortable but there is a catalog column of such name</font></th></tr>
 <tr>
   <td>verifyElementPresent</td>
-  <td>//th/a[@data-i18n="Quantity"]</td><!-- Should be only //th[@data-i18n="Quantity"] -->
+  <td>//th/a[text()="Quantity"]</td><!-- Should be only //th[text()="Quantity"] -->
   <td></td>
 </tr>
 

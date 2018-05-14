@@ -405,7 +405,6 @@
                 }
 
                 return {
-                  "data-i18n": column[1],
                   "class_value": class_value,
                   "sort_link": column_sort_link_list[index],
                   "text": column[1]

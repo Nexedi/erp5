@@ -55,13 +55,13 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//th/a[@data-i18n='ID']</td>
+  <td>//th/a[text()='ID']</td>
   <td></td>
 </tr>
 <!-- Issue sorting - should cycle from DESC to ASC -->
 <tr>
   <td>click</td>
-  <td>//th/a[@data-i18n='ID']</td>
+  <td>//th/a[text()='ID']</td>
   <td></td>
 </tr>
 
@@ -69,14 +69,14 @@
 
 <tr>
   <td>waitForElementPresent</td><!-- verification -->
-  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[@data-i18n='ID']</td>
+  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='ID']</td>
   <td></td>
 </tr>
 
 <!-- The default sort should cycle back on the next click -->
 <tr>
   <td>click</td>
-  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[@data-i18n='ID']</td>
+  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='ID']</td>
   <td></td>
 </tr>
 
@@ -84,7 +84,7 @@
 
 <tr>
   <td>waitForElementPresent</td><!-- verification -->
-  <td>//th[@class='ui-icon ui-icon-sort-amount-asc']/a[@data-i18n='ID']</td>
+  <td>//th[@class='ui-icon ui-icon-sort-amount-asc']/a[text()='ID']</td>
   <td></td>
 </tr>
 
@@ -111,7 +111,7 @@
 <!-- Click to a different column should reset the default (and any other sort) --> 
 <tr>
   <td>click</td>
-  <td>//th/a[@data-i18n='Title']</td>
+  <td>//th/a[text()='Title']</td>
   <td></td>
 </tr>
 
@@ -120,19 +120,19 @@
 <!-- Test that the first sort is DESC -->
 <tr>
   <td>waitForElementPresent</td><!-- verification -->
-  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[@data-i18n='Title']</td>
+  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Title']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//th[@class='ui-icon ui-icon-sort-amount-asc']/a[@data-i18n='ID']</td>
+  <td>//th[@class='ui-icon ui-icon-sort-amount-asc']/a[text()='ID']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//th[@class='ui-icon ui-icon-sort-amount-asc']/a[@data-i18n='ID']</td>
+  <td>//th[@class='ui-icon ui-icon-sort-amount-asc']/a[text()='ID']</td>
   <td></td>
 </tr>
 
@@ -179,7 +179,7 @@ Test whether search query stays if we change the sort order
 <!-- That the last sort stayed -->
 <tr>
   <td>waitForElementPresent</td><!-- verification -->
-  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[@data-i18n='Title']</td>
+  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Title']</td>
   <td></td>
 </tr>
 

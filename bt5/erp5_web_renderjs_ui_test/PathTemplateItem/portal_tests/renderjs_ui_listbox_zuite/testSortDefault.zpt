@@ -42,10 +42,10 @@ Frontend should not suppose default sorting
 <tr><td>open</td>
     <td>${renderjs_url}/#/foo_module</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n='ID']</td><td></td></tr>
+    <td>//a[text()='ID']</td><td></td></tr>
 <!-- No default sort must be shown because the definition is broken "id | id" -->
 <tr><td>verifyElementPresent</td>
-    <td>//th[@class='']/a[@data-i18n='ID']</td><td></td></tr>
+    <td>//th[@class='']/a[text()='ID']</td><td></td></tr>
 <!-- Make sure broken definitions don't appear in sort editor -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr><td>waitForElementPresent</td>
@@ -63,10 +63,10 @@ Frontend should not suppose default sorting
 <tr><td>open</td>
     <td>${renderjs_url}//#/foo_module</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n='ID']</td><td></td></tr>
+    <td>//a[text()='ID']</td><td></td></tr>
 <!-- Default sort on ID column has to be ASCENDING -->
 <tr><td>verifyElementPresent</td>
-    <td>//th[@class='ui-icon ui-icon-sort-amount-asc']/a[@data-i18n='ID']</td><td></td></tr>
+    <td>//th[@class='ui-icon ui-icon-sort-amount-asc']/a[text()='ID']</td><td></td></tr>
 <!-- Verify that the default sort is visible in Sort Editor -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr><td>waitForElementPresent</td>
@@ -88,13 +88,13 @@ Frontend should not suppose default sorting
 <tr><td>open</td>
     <td>${renderjs_url}/#/foo_module</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n='Title']</td><td></td></tr>
+    <td>//a[text()='Title']</td><td></td></tr>
 <!-- Default sort on Title column has to be DESCENDING -->
 <tr><td>verifyElementPresent</td>
-    <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[@data-i18n='Title']</td><td></td></tr>
+    <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Title']</td><td></td></tr>
 <!-- No other sort must be shown -->
 <tr><td>verifyElementPresent</td>
-    <td>//th[@class='']/a[@data-i18n='ID']</td><td></td></tr>
+    <td>//th[@class='']/a[text()='ID']</td><td></td></tr>
 <!-- Verify that the default sort is visible in Sort Editor -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr><td>waitForElementPresent</td>
@@ -119,9 +119,9 @@ Frontend should not suppose default sorting
 
 <!-- Verify that default sort arrow disappeared -->
 <tr><td>verifyElementPresent</td>
-    <td>//th[@class='']/a[@data-i18n='Title']</td><td></td></tr>
+    <td>//th[@class='']/a[text()='Title']</td><td></td></tr>
 <tr><td>verifyElementPresent</td>
-    <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[@data-i18n='ID']</td><td></td></tr>
+    <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='ID']</td><td></td></tr>
 
 </tbody></table>
 </body>

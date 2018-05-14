@@ -29,9 +29,9 @@
            {{/if}}
            {{#each head_value}}
               {{#if sort_link}}
-              <th class="{{class_value}}"><a href="{{sort_link}}" data-i18n="{{data-i18n}}">{{text}}</a></th>
+              <th class="{{class_value}}"><a href="{{sort_link}}">{{text}}</a></th>
               {{else}}
-              <th data-i18n="{{data-i18n}}" class="{{class_value}}">{{text}}</th>
+              <th class="{{class_value}}">{{text}}</th>
               {{/if}}
            {{/each}}
            {{#if line_icon}}
@@ -51,7 +51,7 @@
            {{/if}}
            <th></th>
            {{#each head_value}}
-              <th  data-i18n="{{data-i18n}}" class="{{class_value}}">{{text}}</th>
+              <th class="{{class_value}}">{{text}}</th>
            {{/each}}
            {{#if line_icon}}
              <th></th>

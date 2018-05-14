@@ -27,7 +27,7 @@ bar</td></tr>
 
 <!-- Change sorting of the listbox -->
 <tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table/thead/tr/th/a[@data-i18n='Title']</td><td></td></tr>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table/thead/tr/th/a[text()='Title']</td><td></td></tr>
 <tr>
   <td>chooseOkOnNextConfirmation</td>
   <td></td>
@@ -35,7 +35,7 @@ bar</td></tr>
 </tr>
 
 <tr><td>click</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table/thead/tr/th/a[@data-i18n='Title']</td><td></td></tr>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table/thead/tr/th/a[text()='Title']</td><td></td></tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_confirmation" />
 
@@ -75,7 +75,7 @@ bar</td></tr>
   <td></td>
 </tr>
 <tr><td>click</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table/thead/tr/th/a[@data-i18n='Title']</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table/thead/tr/th/a[text()='Title']</td>
     <td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_confirmation" />
 
