@@ -397,6 +397,9 @@
     .allowPublicAcquisition("getUrlFor", function (param_list) {
       return route(this, 'router', 'getCommandUrlFor', param_list);
     })
+    .allowPublicAcquisition("getUrlForList", function (param_list) {
+      return route(this, 'router', 'getCommandUrlForList', param_list);
+    })
 
     .allowPublicAcquisition("updateHeader", function (param_list) {
       var gadget = this;

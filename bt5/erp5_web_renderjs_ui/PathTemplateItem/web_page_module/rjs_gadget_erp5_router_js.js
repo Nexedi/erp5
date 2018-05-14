@@ -169,10 +169,7 @@
       return options.url;
     }
     if (command === COMMAND_CHANGE_LANGUAGE) {
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.getSetting("website_url_set");
-        })
+      return gadget.getSetting("website_url_set")
         .push(function (result) {
           var param_list =  window.location.hash.split('#')[1],
             new_url = JSON.parse(result)[options.language];
@@ -218,6 +215,34 @@
       result += '{' + prefix + 'n.me}';
     }
     return result;
+  }
+
+  function getCommandUrlForMethod(gadget, options) {
+    var command = options.command,
+      absolute_url = options.absolute_url,
+      hash,
+      args = options.options,
+      valid = true,
+      key;
+    // Only authorize 'command', 'options', 'absolute_url' keys
+    // Drop all other kind of parameters, to detect issue more easily
+    for (key in options) {
+      if (options.hasOwnProperty(key)) {
+        if ((key !== 'command') && (key !== 'options') && (key !== 'absolute_url')) {
+          valid = false;
+        }
+      }
+    }
+    if (valid && (options.command) && (VALID_URL_COMMAND_DICT.hasOwnProperty(options.command))) {
+      hash = getCommandUrlFor(gadget, command, args);
+    } else {
+      hash = getCommandUrlFor(gadget, 'error', options);
+    }
+
+    if (absolute_url) {
+      hash = new URL(hash, window.location.href).href;
+    }
+    return hash;
   }
 
   function getDisplayUrlFor(jio_key, options) {
@@ -946,32 +971,16 @@
         });
     })
 
+    .declareMethod('getCommandUrlForList', function (options_list) {
+      var i,
+        result_list = [];
+      for (i = 0; i < options_list.length; i += 1) {
+        result_list.push(getCommandUrlForMethod(this, options_list[i]));
+      }
+      return result_list;
+    })
     .declareMethod('getCommandUrlFor', function (options) {
-      var command = options.command,
-        absolute_url = options.absolute_url,
-        hash,
-        args = options.options,
-        valid = true,
-        key;
-      // Only authorize 'command', 'options', 'absolute_url' keys
-      // Drop all other kind of parameters, to detect issue more easily
-      for (key in options) {
-        if (options.hasOwnProperty(key)) {
-          if ((key !== 'command') && (key !== 'options') && (key !== 'absolute_url')) {
-            valid = false;
-          }
-        }
-      }
-      if (valid && (options.command) && (VALID_URL_COMMAND_DICT.hasOwnProperty(options.command))) {
-        hash = getCommandUrlFor(this, command, args);
-      } else {
-        hash = getCommandUrlFor(this, 'error', options);
-      }
-
-      if (absolute_url) {
-        hash = new URL(hash, window.location.href).href;
-      }
-      return hash;
+      return getCommandUrlForMethod(this, options);
     })
 
     .declareMethod('redirect', function (options, push_history) {
