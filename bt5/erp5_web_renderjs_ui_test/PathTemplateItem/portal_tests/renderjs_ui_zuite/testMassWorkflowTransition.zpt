@@ -131,7 +131,7 @@
 </tal:block>
 
 <tr><td>waitForElementPresent</td>
-    <td>//select[@name="field_workflow_action"]</td><td></td></tr>
+    <td>//select[@name="field_workflow_action"]/option[@value="validate_action"]</td><td></td></tr>
 <tr><td>select</td>
     <td>//select[@name="field_workflow_action"]</td>
     <td>value=validate_action</td></tr>

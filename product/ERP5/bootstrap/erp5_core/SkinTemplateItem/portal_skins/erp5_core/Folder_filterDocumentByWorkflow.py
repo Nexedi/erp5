@@ -3,7 +3,7 @@
 portal_catalog = context.getPortalObject().portal_catalog
 action_tool = context.getPortalObject().portal_actions
 
-document_list = [result.getObject() for result in portal_catalog.searchResults(sort_on=limit, limit=limit, **kwargs)]
+document_list = [result.getObject() for result in portal_catalog.searchResults(sort_on=sort_on, limit=limit, **kwargs)]
 
 if not workflow_action:
   # if we have no filter (=workflow action) we return back all documents
