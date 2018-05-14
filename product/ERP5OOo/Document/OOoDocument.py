@@ -44,7 +44,7 @@ from Products.ERP5.Document.Document import Document, \
 from Products.ERP5.Document.Image import getDefaultImageQuality
 from Products.ERP5Type.Utils import fill_args_from_request
 from zLOG import LOG, WARNING, ERROR
-
+from functools import partial
 # Mixin Import
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
@@ -58,36 +58,18 @@ dec=base64.decodestring
 
 EMBEDDED_FORMAT = '_embedded'
 OOO_SERVER_PROXY_TIMEOUT = 360
+OOO_SERVER_RETRY = 0
 
-class _ProtocolErrorCatcher(object):
-  def __init__(self, orig_callable):
-    self.__callable = orig_callable
-  def __call__(self, *args, **kw):
-    """
-    Catch Protocol Errors (transport layer) and specifically
-    identify them as OOo server network/communication error
-
-    xml-rpc application level errors still go through: if a wrong method
-    is called, or with wrong parameters, xmlrpclib.Fault will be raised.
-    """
-    try:
-      return self.__callable(*args, **kw)
-    except ProtocolError, e:
-      message = "%s %s" % (e.errcode, e.errmsg)
-      if e.errcode == -1:
-        message = "Connection refused"
-      raise ConversionError("Protocol error while contacting OOo conversion"
-                            " server: %s" % (message))
-
-class OOoServerProxy(ServerProxy):
+class OOoServerProxy():
   """
   xmlrpc-like ServerProxy object adapted for OOo conversion server
   """
   def __init__(self, context):
+    self._serverproxy_list = []
     preference_tool = getToolByName(context, 'portal_preferences')
-
-    uri = preference_tool.getPreferredDocumentConversionServerUrl()
-    if not uri:
+    self._ooo_server_retry = preference_tool.getPreferredDocumentConversionServerRetry() or OOO_SERVER_RETRY
+    uri_list = preference_tool.getPreferredDocumentConversionServerUrlList()
+    if not uri_list:
       address = preference_tool.getPreferredOoodocServerAddress()
       port = preference_tool.getPreferredOoodocServerPortNumber()
       if not (address and port):
@@ -96,9 +78,12 @@ class OOoServerProxy(ServerProxy):
 
       LOG('OOoDocument', WARNING, 'PreferredOoodocServer{Address,PortNumber}' + \
           ' are DEPRECATED please use PreferredDocumentServerUrl instead', error=True)
-      scheme = "http"
-      uri = '%s://%s:%s' % (scheme, address, port)
-    else:
+       
+      uri_list =  ['%s://%s:%s' % ('http', address, port)]
+
+    timeout = preference_tool.getPreferredOoodocServerTimeout() \
+                    or OOO_SERVER_PROXY_TIMEOUT
+    for uri in uri_list:
       if uri.startswith("http://"):
         scheme = "http"
       elif uri.startswith("https://"):
@@ -107,17 +92,67 @@ class OOoServerProxy(ServerProxy):
         raise ConversionError('OOoDocument: cannot proceed with conversion:'
               ' preferred conversion server url is invalid')
 
-    timeout = preference_tool.getPreferredOoodocServerTimeout() \
-                    or OOO_SERVER_PROXY_TIMEOUT
-    transport = TimeoutTransport(timeout=timeout, scheme=scheme)
+      transport = TimeoutTransport(timeout=timeout, scheme=scheme)
+      
+      self._serverproxy_list.append(ServerProxy(uri, allow_none=True, transport=transport))
+  def _proxy_function(self, func_name, *args, **kw):
+    result_error_set_list = []
+    protocol_error_list = []
+    fault_error_list = []
+    count = 0
+    serverproxy_list = self._serverproxy_list
+    while True:
+      retry_server_list = []
+      for server_proxy in serverproxy_list:
+        func = getattr(server_proxy, func_name)
+        try:
+          # Cloudooo return result in (200 or 402, dict(), '') format or just based type
+          # 402 for error and 200 for ok
+          result_set =  func(*args, **kw)
+        except ProtocolError, e:
+          # Network issue
+          message = "%s: %s %s" % (e.url, e.errcode, e.errmsg)
+          if e.errcode == -1:
+            message = "%s: Connection refused" % (e.url)
+          protocol_error_list.append(message)
+          retry_server_list.append(server_proxy)
+          continue
+        except Fault, e:
+          # Return not supported data types
+          fault_error_list.append(e)
+          continue
 
-    ServerProxy.__init__(self, uri, allow_none=True, transport=transport)
+        try:
+          response_code, response_dict, response_message = result_set
+        except ValueError:
+          # Compatibility for old oood, result is based type, like string
+           response_code = 200
 
+        if response_code == 200:
+          return result_set
+        else:
+          # If error, try next one
+          result_error_set_list.append(result_set)
+
+      # All servers are failed
+      if count == self._ooo_server_retry or len(retry_server_list) == 0:
+        break
+      count += 1
+      serverproxy_list = retry_server_list
+
+    # Check error type
+    # Return only one error result for compability
+    if len(result_error_set_list):
+      return result_error_set_list[0]
+
+    if len(protocol_error_list):
+      raise ConversionError("Protocol error while contacting OOo conversion: "
+                          "%s" % (','.join(protocol_error_list)))
+    if len(fault_error_list):
+      raise fault_error_list[0]
+   
   def __getattr__(self, attr):
-    obj = ServerProxy.__getattr__(self, attr)
-    if callable(obj):
-      obj.__call__ = _ProtocolErrorCatcher(obj.__call__)
-    return obj
+    return partial(self._proxy_function, attr)
 
 class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixin, File,
                   TextConvertableMixin, Document):
