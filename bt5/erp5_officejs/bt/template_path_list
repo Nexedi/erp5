@@ -14,6 +14,8 @@ web_page_module/officejs_audioplayer_*
 web_page_module/officejs_todomvc_*
 web_page_module/ojs_*
 web_page_module/wallsearch_privacy_policy_html
+web_site_module/officejs_appstore
+web_site_module/officejs_appstore/**
 web_site_module/officejs_audioplayer
 web_site_module/officejs_audioplayer/**
 web_site_module/officejs_bookmark_manager
@@ -39,5 +41,3 @@ web_site_module/officejs_todomvc
 web_site_module/officejs_wallsearch
 web_site_module/officejs_wallsearch/**
 web_site_module/officejs_whiteboard
-web_site_module/officejsoldv1
-web_site_module/officejsoldv1/**
