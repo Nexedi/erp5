@@ -226,6 +226,8 @@
                         <string>my_max_order_quantity_variation_base_category_list</string>
                         <string>matrixbox_for_max_order_quantity</string>
                         <string>my_view_mode_target_delivery</string>
+                        <string>my_destination_trade_title</string>
+                        <string>my_source_trade_title</string>
                       </list>
                     </value>
                 </item>
