@@ -1,9 +1,9 @@
 """Return a list of Documents specified by `uid` which provide `workflow_id` transition."""
 
-portal_catalog = context.getPortalObject().portal_catalog
 action_tool = context.getPortalObject().portal_actions
 
-result_list = portal_catalog.searchResults(sort_on=sort_on, limit=limit, **kwargs)
+result_list = context.Base_searchUsingListbox(
+  context.Base_getListbox(context.getPortalObject().REQUEST.get("form_id")), sort_on=sort_on, limit=limit, **kwargs)
 
 if not workflow_action:
   # if we have no filter (=workflow action) we return back all documents
