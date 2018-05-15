@@ -2,7 +2,7 @@
   "portal_type_source": "Applications",
   "portal_type_title": "application",
   "portal_type_fields": "application_fieldlist",
-  "initial_query": {"sort": ["int_index", "descending"], "include_documents": true, "limit":[0,16]},
+  "initial_query": {"sort": ["int_index", "descending"], "include_documents": true, "limit":[0,32]},
   "form": null,
   "id":"all_apps",
   "property_dict": {},
