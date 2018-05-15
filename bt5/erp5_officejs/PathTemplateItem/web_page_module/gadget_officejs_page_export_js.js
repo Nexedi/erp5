@@ -70,7 +70,7 @@
       "cache" : "gadget_officejs_monitoring.appcache"
     },
     "App Store": {
-      "url": "officejsoldv1/",
+      "url": "officejs_appstore/",
       "cache": "officejs_store.appcache",
       "no_installer": true
     },
