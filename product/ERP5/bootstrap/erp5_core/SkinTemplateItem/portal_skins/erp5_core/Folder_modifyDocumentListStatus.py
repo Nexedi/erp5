@@ -9,6 +9,10 @@ This script is intended as a dialog target.
 """
 from Products.CMFCore.WorkflowCore import WorkflowException
 
+def stripMyYour(key):
+  if key.startswith("your_") or key.startswith("my_"):
+    return key.split("_", 1)[1]
+
 MARKER = []
 
 portal = context.getPortalObject()
@@ -34,16 +38,16 @@ if kwargs.get("update_method", ""):
                                  message=translate("Form updated."),
                                  level="warning",
                                  REQUEST=request)
-
+workflow_dialog = None
 if workflow_action_rendered != workflow_action:
   # if we get all fields for the workflow form - do not bother user and proceed
   try:
-    workflow_form_name = context.Base_getFormIdForWorkflowAction(form_id, '', workflow_action, uids=uids)
-    workflow_form = getattr(context, workflow_form_name)  # this can throw if form is not defined yet
-    for group in workflow_form.get_groups():
+    workflow_dialog_id = context.Base_getFormIdForWorkflowAction(form_id, '', workflow_action, uids=uids)
+    workflow_dialog = getattr(context, workflow_dialog_id)  # this can throw if form is not defined yet
+    for group in workflow_dialog.get_groups():
       if group.lower() == 'hidden':
         continue
-      for field in workflow_form.get_fields_in_group(group):
+      for field in workflow_dialog.get_fields_in_group(group):
         if request.form.get("field_workflow_dialog_" + field.id, MARKER) is MARKER:
           raise AttributeError("field_workflow_dialog_" + field.id)  # direct access request.form["key"] does not throw because publisher eats the exception
   except AttributeError:
@@ -69,11 +73,18 @@ tag = 'folder_workflow_action_{:d}'.format(random.randint(0, 1000))  # Kato: how
 priority = 3
 batch_size = 100
 
+if workflow_dialog is None:
+  workflow_dialog_id = context.Base_getFormIdForWorkflowAction(form_id, '', workflow_action, uids=uids)
+  workflow_dialog = getattr(context, workflow_dialog_id)
+workflow_action_kwargs = workflow_dialog.validate_all(request, key_prefix='field_workflow_dialog')
+workflow_action_kwargs = {stripMyYour(key): value for key, value in workflow_action_kwargs.items()}
+workflow_action_kwargs['workflow_action'] = workflow_action
+
 for i in xrange(0, len(workflowable_list), batch_size):
   context.activate(activity='SQLQueue', priority=priority, tag=tag).callMethodOnObjectList(
     [doc.getRelativeUrl() for doc in workflowable_list[i:i+batch_size]],
     'Base_workflowStatusModify',
-    batch_mode=True, workflow_action=workflow_action, comment=comment)
+    batch_mode=True, **workflow_action_kwargs)
 
 # activate something on the module after everything, so that user can know that
 # something is happening in the background
