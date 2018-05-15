@@ -40,9 +40,6 @@ for result in context.Base_searchUsingFormIdAndQuery(form_id, query, limit=50):
 if not transition_dict:
   workflow_list.append((translate("No state change possible"), ""))
 
-if len(transition_dict) == 1:
-  workflow_list = []  # if there is only one workflow possible - do not bother with an empty option
-
 # transition_dict.items() is in form (id, title) but ERP5 requires (title, id) so we reverse
 if transition_dict:
   workflow_list.extend((title, id) for id, title in sorted(transition_dict.items(), key=lambda x: x[1]))

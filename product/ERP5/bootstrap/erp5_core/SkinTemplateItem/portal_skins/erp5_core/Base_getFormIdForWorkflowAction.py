@@ -33,9 +33,5 @@ for result in result_list:
     if workflow_action == action['id']:
       return action_form_id  # early return for performance reasons
 
-if not workflow_action and len(id_form_dict) == 1:
-  # if we have only one possible workflow transition we suppose it is the default one
-  return id_form_dict.items()[0][1]
-
 # if we have no idea what workflow form we should use - just use ~~the default one~~ nothing
 return ""
