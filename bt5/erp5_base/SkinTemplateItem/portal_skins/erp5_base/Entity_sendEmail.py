@@ -33,4 +33,4 @@ create_post_message_method = event.getTypeBasedMethod('createPostMessage')
 if create_post_message_method:
   create_post_message_method(mail_message)
 else:
-  event.sendMailHostMessage(mail_message)
+  event.activate(activity='SQLQueue', conflict_retry=False).sendMailHostMessage(mail_message)
