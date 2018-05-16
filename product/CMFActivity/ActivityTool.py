@@ -859,8 +859,11 @@ class ActivityTool (Folder, UniqueObject):
         """
         Backward-compatibility code only.
         """
-        LOG('ActivityTool', WARNING,
-            '"getServerAddress" class method is deprecated, use "getServerAddress" module-level function instead.')
+        warnings.warn(
+          '"getServerAddress" class method is deprecated, use "getServerAddress" module-level function instead.',
+          DeprecationWarning,
+          stacklevel=2,
+        )
         return getServerAddress()
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'getCurrentNode')
@@ -868,8 +871,11 @@ class ActivityTool (Folder, UniqueObject):
         """
         Backward-compatibility code only.
         """
-        LOG('ActivityTool', WARNING,
-            '"getCurrentNode" class method is deprecated, use "getCurrentNode" module-level function instead.')
+        warnings.warn(
+          '"getCurrentNode" class method is deprecated, use "getCurrentNode" module-level function instead.',
+          DeprecationWarning,
+          stacklevel=2,
+        )
         return getCurrentNode()
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'getDistributingNode')
