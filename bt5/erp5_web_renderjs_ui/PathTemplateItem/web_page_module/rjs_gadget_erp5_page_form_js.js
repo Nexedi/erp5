@@ -227,14 +227,18 @@ and handling data send&receive.
         .push(function () {
           var jio_key = gadget.state.options.jio_key;
           /*jslint regexp: true*/
-          if (/^[^\/]+_module\/.+$/.test(jio_key)) {
-            /*jslint regexp: false*/
-            return gadget.updatePanel({
-              erp5_document: erp5_document,
-              editable: gadget.state.options.editable,
-              view: options.view
-            });
+          if (/^[^\/]+_module$/.test(jio_key)) {
+            erp5_document._links.action_object_view =
+              [{"name": "view", "title": "View", "href": "view", "icon": null}];
+          } else if (!(/^[^\/]+_module\/.+$/.test(jio_key))) {
+            return;
           }
+          /*jslint regexp: false*/
+          return gadget.updatePanel({
+            erp5_document: erp5_document,
+            editable: gadget.state.options.editable,
+            view: options.view
+          });
         });
     })
     /** SubmitContent should be called by the gadget which renders submit button
