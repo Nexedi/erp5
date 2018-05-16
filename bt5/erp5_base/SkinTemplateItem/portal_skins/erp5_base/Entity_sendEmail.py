@@ -33,4 +33,9 @@ create_post_message_method = event.getTypeBasedMethod('createPostMessage')
 if create_post_message_method:
   create_post_message_method(mail_message)
 else:
-  event.sendMailHostMessage(mail_message)
+  # We do not want to retry those activities, as sending email is not transactional safe
+  event.activate(
+    activity='SQLQueue',
+    conflict_retry=False,
+    max_retry=0
+  ).sendMailHostMessage(mail_message)
