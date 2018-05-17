@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_viewZODBHistory</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -98,7 +98,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_new_state</string>
+                        <string>new_state</string>
                       </list>
                     </value>
                 </item>
@@ -106,7 +106,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>your_old_state</string>
+                        <string>old_state</string>
                       </list>
                     </value>
                 </item>
@@ -147,7 +147,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>ERP5_updateZODBHistoryDiff</string> </value>
+            <value> <string>Base_viewZODBHistory</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
