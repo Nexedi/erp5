@@ -21,7 +21,7 @@ request = kwargs.get("REQUEST", None) or context.REQUEST
 translate = portal.Base_translateString
 
 # Ensure the selected action is doable on received objects
-document_list = [result.getObject() for result in portal.portal_catalog.searchResults(uid=uids)]
+document_list = context.Base_searchUsingFormIdAndQuery(form_id, query, limit=50)
 workflowable_list = []
 
 if not workflow_action:
@@ -43,7 +43,7 @@ workflow_dialog = None
 if workflow_action_rendered != workflow_action:
   # if we get all fields for the workflow form - do not bother user and proceed
   try:
-    workflow_dialog_id = context.Base_getFormIdForWorkflowAction(form_id, '', workflow_action, uids=uids)
+    workflow_dialog_id = context.Base_getFormIdForWorkflowAction(form_id, query, workflow_action)
     workflow_dialog = getattr(context, workflow_dialog_id)  # this can throw if form is not defined yet
     for group in workflow_dialog.get_groups():
       if group.lower() == 'hidden':
@@ -57,9 +57,10 @@ if workflow_action_rendered != workflow_action:
                                    level="warning",
                                    REQUEST=request)
 
-for document in document_list:
+for document in (result.getObject() for result in document_list):
   try:
     # Kato: Why does it throw an axception instead of just returning False?
+    # And even more it works only on real objects and not "brains"
     portal.portal_workflow.canDoActionFor(document, workflow_action)
   except WorkflowException as exception:
     pass
@@ -76,7 +77,7 @@ batch_size = 100
 
 workflow_action_kwargs = {}
 if workflow_dialog is None:
-  workflow_dialog_id = context.Base_getFormIdForWorkflowAction(form_id, '', workflow_action, uids=uids)
+  workflow_dialog_id = context.Base_getFormIdForWorkflowAction(form_id, query, workflow_action)
   workflow_dialog = getattr(context, workflow_dialog_id)
 try:
   workflow_action_kwargs = workflow_dialog.validate_all(request, key_prefix='field_workflow_dialog')

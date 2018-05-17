@@ -66,7 +66,7 @@
     <td>value=validate_action</td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Too many documents selected! Submit again to proceed with the first 50 or Cancel and narrow down your search.'}">
+<tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'All documents are selected! Submit again to proceed or Cancel and narrow down your search.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tr><td>pause</td>
