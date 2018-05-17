@@ -193,7 +193,7 @@
               <dictionary>
                 <item>
                     <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>my_workflow_action</string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -201,7 +201,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>non-existing-dummy</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -249,7 +249,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>workflow_dialog_my_action</string> </value>
+                    <value> <string>workflow_dialog_my_workflow_action</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

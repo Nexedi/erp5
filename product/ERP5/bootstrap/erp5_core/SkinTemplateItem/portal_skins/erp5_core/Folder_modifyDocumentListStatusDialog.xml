@@ -75,10 +75,10 @@
                     <value>
                       <list>
                         <string>workflow_action</string>
-                        <string>workflow_dialog</string>
                         <string>workflow_dialog_my_workflow_action</string>
                         <string>workflow_dialog_your_workflow_action</string>
                         <string>workflow_action_rendered</string>
+                        <string>workflow_dialog</string>
                       </list>
                     </value>
                 </item>
