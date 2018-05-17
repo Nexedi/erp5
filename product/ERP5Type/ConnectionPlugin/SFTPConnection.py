@@ -28,6 +28,7 @@
 ##############################################################################
 
 import os, socket
+import operator
 from urlparse import urlparse
 from socket import gaierror, error, socket, getaddrinfo, AF_UNSPEC, SOCK_STREAM
 from xmlrpclib import Binary
@@ -136,9 +137,17 @@ class SFTPConnection:
     # normalise CRLF/CR/LF like FTP's ASCII mode transfer.
     return os.linesep.join(self._getFile(filepath).splitlines())
 
-  def getDirectoryContent(self, path):
-    """retrieve all entries in a givan path as a list"""
+  def getDirectoryContent(self, path, sort_on=None):
+    """retrieve all entries in a givan path as a list.
+
+    `sort_on` parameter allows to retrieve the directory content in a sorted
+    order, it understands all parameters from
+    paramiko.sftp_attr.SFTPAttributes, the most useful being `st_mtime` to sort
+    by modification date.
+    """
     try:
+      if sort_on:
+        return [x.filename for x in sorted(self.conn.listdir_attr(path), key=operator.attrgetter(sort_on))]
       return self.conn.listdir(path)
     except (EOFError, error), msg:
       raise SFTPError(str(msg) + ' while trying to list %s on %s' % (path, self.url))
