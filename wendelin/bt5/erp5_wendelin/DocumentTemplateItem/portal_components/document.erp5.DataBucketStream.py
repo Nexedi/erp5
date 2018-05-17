@@ -33,6 +33,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5.Document.Document import Document
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.BTreeData import PersistentString
+from Products.ERP5Type.Log import log
 
 class IndexSequence:
   """
@@ -180,6 +181,7 @@ class DataBucketStream(Document):
     
   def _getOb(self, id, *args, **kw):
     return None
+
     
   def getBucketByKey(self, key=None):
     """
@@ -193,6 +195,10 @@ class DataBucketStream(Document):
     """
     key = self._long_index_tree[index]
     return self.getBucketByKey(key).value
+
+  def getBucket(self, key):
+    log('DeprecationWarning: Please use getBucketByKey')
+    return self.getBucketByKey(key)
     
   def hasBucketKey(self, key):
     """
@@ -250,6 +256,10 @@ class DataBucketStream(Document):
       return sequence
     return sequence[:count]
 
+  def getBucketKeySequence(self, start_key=None, count=None):
+    log('DeprecationWarning: Please use getBucketKeySequenceByKey')
+    return self.getBucketKeySequenceByKey(start_key=start_key, count=count)
+
   def getBucketIndexKeySequenceByIndex(self, start_index=None, stop_index=None,
               count=None, exclude_start_index=False, exclude_stop_index=False):
     """
@@ -297,6 +307,10 @@ class DataBucketStream(Document):
     if count is not None:
       sequence = sequence[:count]
     return IndexValueSequence(self, sequence)
+
+  def getBucketValueSequence(self, start_key=None, count=None):
+    log('DeprecationWarning: Please use getBucketValueSequenceByKey')
+    return self.getBucketValueSequenceByKey(start_key=start_key, count=count)
     
   def getBucketKeyItemSequenceByKey(self, start_key=None, stop_key=None,
                    count=None, exclude_start_key=False, exclude_stop_key=False):
@@ -309,6 +323,12 @@ class DataBucketStream(Document):
     if count is None:
       return sequence
     return sequence[:count]
+
+  def getBucketItemSequence(self, start_key=None, count=None,
+                            exclude_start_key=False):
+    log('DeprecationWarning: Please use getBucketKeyItemSequenceByKey')
+    return self.getBucketKeyItemSequenceByKey(start_key=start_key, count=count,
+                                           exclude_start_key=exclude_start_key)
     
   def getBucketIndexItemSequenceByIndex(self, start_index=None, stop_index=None,
               count=None, exclude_start_index=False, exclude_stop_index=False):
@@ -392,3 +412,4 @@ class DataBucketStream(Document):
     self.initIndexTree()
     for count, key in enumerate(self.getBucketKeySequenceByKey()):
       self._long_index_tree.insert(count, key)
+
