@@ -9,19 +9,19 @@ portal =  context.getPortalObject()
 portal_diff = portal.portal_diff
 
 history = []
-# Get the old and new state dates from the dialog submit
-new_state_date = kw.get('new_state', None)
-old_state_date = kw.get('old_state', None)
+
+old_state_date = old_state
+new_state_date = new_state
 
 # Get object revision from the date of the revisions.
 # The default dates for revision are the 1st and 2nd
 # revision dates.
 if old_state_date is not None:
-  old_state = context.Base_getRevisionFromDate(context, old_state_date)
-  history.append(old_state)
+  old_state_revision = context.Base_getRevisionFromDate(context, old_state_date)
+  history.append(old_state_revision)
 if new_state_date is not None:
-  new_state = context.Base_getRevisionFromDate(context, new_state_date)
-  history.append(new_state)
+  new_state_revision = context.Base_getRevisionFromDate(context, new_state_date)
+  history.append(new_state_revision)
 
 if not history:
   history = context.Base_getZODBChangeHistoryList(context, size=2)
