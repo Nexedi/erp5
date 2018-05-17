@@ -22,6 +22,7 @@ for data_stream in data_stream_list:
     # Data Stream or Data Bucket Stream needs to have data ...
     tag = '%s_consistency_check' %data_stream.getPath()
     data_stream.activate(tag = tag,
+                         priority = 100,
                          active_process = active_process.getPath()).DataStream_checkIfNEOCloneBackupIsConsistent(
                                                                     neo_node_list,
                                                                     neo_cert_list,
