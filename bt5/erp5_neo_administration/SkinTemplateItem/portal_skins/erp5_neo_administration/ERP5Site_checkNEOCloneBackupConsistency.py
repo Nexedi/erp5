@@ -15,13 +15,14 @@ active_process.setTitle("NEO_Clone_check")
 # which Data Streams to check ...
 data_stream_list = context.ERP5Site_getDataStreamListToCheck()
 
-# we can only check if we have some data inside thus filter out
-data_stream_list = [x for x in data_stream_list if x.getSize() > 0]
-
 for data_stream in data_stream_list:
-  tag = '%s_consistency_check' %data_stream.getPath()
-  data_stream.activate(tag = tag,
-                       active_process = active_process.getPath()).DataStream_checkIfNEOCloneBackupIsConsistent(
+  portal_type = data_stream.getPortalType()
+  if ((portal_type == "Data Stream" and data_stream.getSize() > 0) or
+     (portal_type == "Data Bucket Stream" and len(data_stream.getKeyList()) > 0)):
+    # Data Stream or Data Bucket Stream needs to have data ...
+    tag = '%s_consistency_check' %data_stream.getPath()
+    data_stream.activate(tag = tag,
+                         active_process = active_process.getPath()).DataStream_checkIfNEOCloneBackupIsConsistent(
                                                                     neo_node_list,
                                                                     neo_cert_list,
                                                                     threshold)
