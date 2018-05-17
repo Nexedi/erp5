@@ -71,6 +71,10 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>${multi_select}/div[3]//select</td>
     <td></td></tr>
 
+<tr><td>type</td>
+    <td>//input[@name="field_your_portal_skin"]</td>
+    <td>Hal</td></tr>
+
 <tr><td>click</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
 
@@ -83,51 +87,42 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>
 
+<!-- node_id mapping
+Sometimes the display of node_id changes between numbers and strings.
+  A-EQUITY = 1
+  A-FIX-ASSETS = 2
+  A-STOCK = 3
+  A-PAY = 40
+  A-REC = 41
+  A-REF-VAT = 4456
+  A-COLLECTED-VAT = 4457
+  A-BANK = 5
+  A-GP = 6
+  A-GS = 7
+->
 
 <!-- ListBox sorts the result in different order than they are returned by its
-     List Method. Seems they are sorted on Title alphabetically -->
+     List Method. Seems they are sorted on node_id -->
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
-                        node_id string:A-BANK;
-                        node_title string:Bank (Bank1);
-                        credit string:3300;
-                        final_balance string:-3300;
-                        final_credit_balance string:3300;
-                        final_balance_if_credit string:3300">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
-</tal:block>
-
-<tal:block tal:define="row_selector string:$${table}/tbody/tr[2];
-                        node_id string:A-COLLECTED-VAT;
-                        node_title string:Collected VAT 10%">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
-</tal:block>
-
-<tal:block tal:define="row_selector string:$${table}/tbody/tr[3];
-                        node_id string:A-EQUITY;
+                        node_id string:1;
                         node_title string:Equity">
     <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
 </tal:block>
 
-<tal:block tal:define="row_selector string:$${table}/tbody/tr[4];
-                        node_id string:A-FIX-ASSETS;
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[2];
+                        node_id string:2;
                         node_title string:Fixed Assets">
     <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
 </tal:block>
 
-<tal:block tal:define="row_selector string:$${table}/tbody/tr[5];
-                        node_id string:A-GP;
-                        node_title string:Goods Purchase">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[3];
+                       node_title string:Stocks;
+                       node_id string:3">
+  <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table"></tal:block>
 </tal:block>
 
-<tal:block tal:define="row_selector string:$${table}/tbody/tr[6];
-                        node_id string:A-GS;
-                        node_title string:Goods Sales">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
-</tal:block>
-
-<tal:block tal:define="row_selector string:$${table}/tbody/tr[7];
-                        node_id string:A-PAY;
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[4];
+                        node_id string:40;
                         node_title string:Payable;
                         debit string:200;
                         credit string:100;
@@ -138,8 +133,8 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
 </tal:block>
 
-<tal:block tal:define="row_selector string:$${table}/tbody/tr[8];
-                        node_id string:A-REC;
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[5];
+                        node_id string:41;
                         node_title string:Receivable;
                         debit string:3400;
                         credit string:200;
@@ -150,16 +145,38 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
 </tal:block>
 
-<tal:block tal:define="row_selector string:$${table}/tbody/tr[9];
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[6];
                        node_title string:Refundable VAT 10%;
-                       node_id string:A-REF-VAT">
+                       node_id string:4456">
   <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table"></tal:block>
 </tal:block>
 
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[7];
+                        node_id string:4457;
+                        node_title string:Collected VAT 10%">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[8];
+                        node_id string:5;
+                        node_title string:Bank (Bank1);
+                        credit string:3300;
+                        final_balance string:-3300;
+                        final_credit_balance string:3300;
+                        final_balance_if_credit string:3300">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+</tal:block>
+
+<tal:block tal:define="row_selector string:$${table}/tbody/tr[9];
+                        node_id string:6;
+                        node_title string:Goods Purchase">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+</tal:block>
+
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[10];
-                       node_title string:Stocks;
-                       node_id string:A-STOCK">
-  <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table"></tal:block>
+                        node_id string:7;
+                        node_title string:Goods Sales">
+    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
 </tal:block>
 
 <!-- Stats line -->

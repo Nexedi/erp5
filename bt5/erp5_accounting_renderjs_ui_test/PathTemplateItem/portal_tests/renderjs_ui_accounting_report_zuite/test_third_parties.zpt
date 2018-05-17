@@ -71,6 +71,11 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>select</td>
     <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
     <td>value=delivered</td></tr>
+
+<tr><td>type</td>
+    <td>//input[@name="field_your_portal_skin"]</td>
+    <td>Hal</td></tr>
+
 <tr><td>click</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
 
@@ -82,12 +87,15 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>
-
+<!-- GAP mapping:
+  A-REC = 41
+  A-PAY = 40
+-->
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
                        Movement_getExplanationTitle string:Transaction 1;
                        section_title string:;
                        Movement_getExplanationTranslatedPortalType string:Accounting Transaction;
-                       Movement_getNodeGapId string:A-REC;
+                       Movement_getNodeGapId string:41;
                        Movement_getExplanationReference string:;
                        Movement_getSpecificReference string:1;
                        getTranslatedSimulationStateTitle string:Closed;
@@ -101,7 +109,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
                        Movement_getExplanationTitle string:Transaction 2;
                        section_title string:;
                        Movement_getExplanationTranslatedPortalType string:Accounting Transaction;
-                       Movement_getNodeGapId string:A-PAY;
+                       Movement_getNodeGapId string:40;
                        Movement_getExplanationReference string:;
                        Movement_getSpecificReference string:2;
                        getTranslatedSimulationStateTitle string:Closed;

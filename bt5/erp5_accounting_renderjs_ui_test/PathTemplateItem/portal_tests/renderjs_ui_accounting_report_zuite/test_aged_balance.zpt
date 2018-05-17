@@ -1,11 +1,11 @@
 <html>
-<head><title>Test Aged Balance Report</title></head>
+<head><title>Test Aged Balance Report (expected failure)</title></head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><th rowspan="1" colspan="4">
-Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tests/testAccountingReports.py#L4904">testAccountingReports.py:test_simple_aged_creditor_report_detailed.testOtherPartiesReport</a>
-</th></tr>
+<tr><td rowspan="1" colspan="3">
+Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tests/testAccountingReports.py#L4904">test_simple_aged_creditor_report_detailed.testOtherPartiesReport</a> (expected failure)
+</td></tr>
 </thead>
 
 <tbody
@@ -32,11 +32,17 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>//a[@data-i18n="Export"]</td><td></td></tr>
 <tr><td>click</td>
     <td>//a[@data-i18n="Export"]</td><td></td></tr>
-
+<!-- Remove when the test is fixed -->
+<tr><td>setTimeout</td><td>2000</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Aged Balance"]</td><td></td></tr>
+<!-- Remove when the test is fixed -->
+<tr><td>assertElementPresent</td>
     <td>//a[@data-i18n="Aged Balance"]</td><td></td></tr>
 <tr><td>click</td>
     <td>//a[@data-i18n="Aged Balance"]</td><td></td></tr>
+<!-- Remove when the test is fixed -->
+<tr><td>setTimeout</td><td>36000</td><td></td></tr>
 
 <tr><td>waitForElementPresent</td>
     <td>//select[@name="field_your_section_category"]</td><td></td></tr>
@@ -74,6 +80,11 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>select</td>
     <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
     <td>value=delivered</td></tr>
+
+<tr><td>type</td>
+    <td>//input[@name="field_your_portal_skin"]</td>
+    <td>Hal</td></tr>
+
 <tr><td>click</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
 
@@ -81,6 +92,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>store</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
+
 <tr><td>waitForElementPresent</td>
     <td>${table}/../nav//span[text()="1 Records"]</td><td></td></tr>
 

@@ -69,6 +69,11 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
 <tr><td>select</td>
     <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
     <td>value=delivered</td></tr>
+
+<tr><td>type</td>
+    <td>//input[@name="field_your_portal_skin"]</td>
+    <td>Hal</td></tr>
+
 <tr><td>click</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
 
@@ -84,12 +89,16 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.day())"></td><td>day</td></tr>
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.month())"></td><td>month</td></tr>
 <tr><td>store</td><td tal:content="python: now.year()"></td><td>year</td></tr>
-
+<!-- node_title mapping
+A-REC = 41
+A-COLLECTED-VAT = 4457
+A-GS = 7
+-->
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
                         date string:$${year}-$${month}-$${day};
                         title string:First One;
                         parent_reference string:1;
-                        node_title string:A-REC;
+                        node_title string:41;
                         mirror_section_title string:Client 1;
                         debit string:119.60;
                         credit string:0">
@@ -99,7 +108,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         specific_reference string:;
                         title string:;
                         parent_reference string:;
-                        node_title string:A-COLLECTED-VAT;
+                        node_title string:4457;
                         mirror_section_title string:Client 1;
                         debit string:0,
                         credit string:19.60">
@@ -110,7 +119,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         specific_reference string:;
                         title string:;
                         parent_reference string:;
-                        node_title string:A-GS;
+                        node_title string:7;
                         mirror_section_title string:Client 1;
                         debit string:0;
                         credit string:100">
@@ -122,7 +131,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         date string:$${year}-$${month}-$${day};
                         title string:Second One;
                         parent_reference string:2;
-                        node_title string:A-REC;
+                        node_title string:41;
                         mirror_section_title string:Client 2;
                         debit string:239.20;
                         credit string:0">
@@ -132,7 +141,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         specific_reference string:;
                         title string:;
                         parent_reference string:;
-                        node_title string:A-COLLECTED-VAT;
+                        node_title string:4457;
                         mirror_section_title string:Client 2;
                         debit string:0;
                         credit string:39.20">
@@ -142,7 +151,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         specific_reference string:;
                         title string:;
                         parent_reference string:;
-                        node_title string:A-GS;
+                        node_title string:7;
                         mirror_section_title string:Client 2;
                         debit string:0;
                         credit string:200">
@@ -154,7 +163,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         date string:$${year}-$${month}-$${day};
                         title string:Third One;
                         parent_reference string:3;
-                        node_title string:A-REC;
+                        node_title string:41;
                         mirror_section_title string:John Smith;
                         debit string:358.80;
                         credit string:0">
@@ -164,7 +173,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         specific_reference string:;
                         title string:;
                         parent_reference string:;
-                        node_title string:A-COLLECTED-VAT;
+                        node_title string:4457;
                         mirror_section_title string:John Smith;
                         debit string:0;
                         credit string:58.80">
@@ -174,7 +183,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         specific_reference string:;
                         title string:Line Title;
                         parent_reference string:;
-                        node_title string:A-GS;
+                        node_title string:7;
                         mirror_section_title string:John Smith;
                         debit string:0;
                         credit string:300">
