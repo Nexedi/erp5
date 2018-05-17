@@ -1037,16 +1037,22 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
 
   if form.pt == "form_dialog":
     # If there is a "form_id" in the REQUEST then it means that last view was actually a form
-    # and we are most likely in a dialog. We save previous form into `last_form_id` ...
-    last_form_id =  extra_param_json.pop("form_id", "") or REQUEST.get("form_id", "")
-    last_listbox = None
-    # ... so we can do some magic with it (especially embedded listbox if exists)!
-    try:
-      if last_form_id:
-        last_form = getattr(context, last_form_id)
-        last_listbox = last_form.Base_getListbox()
-    except AttributeError:
-      pass
+    # and we are most likely in a dialog. We save previous form into `last_form_id`
+    last_form_id =  extra_param_json.pop("form_id", "") or REQUEST.get("form_id", "") or form.id
+    last_form = getattr(context, last_form_id)
+    # So we can support Selections! Yay!
+    # If extra_param_json already contains necessary arrtibutes: mandatory `query` and optional `uids`
+    # then our job is done! If not we need to generate them to become parameters for Dialog method.
+    if last_form.pt == "form_list":
+      # on a module-level (form_list page template) always put a not-None query in the extra_param_json
+      extra_param_json["query"] = extra_param_json.get("query", query) or ""
+      # only if Dialog Method specifies UIDS then we generate them into the `extra_param_json`
+      if "uids" not in extra_param_json:
+        method_args = selectKwargsForCallable(getattr(traversed_document, form.action), {}, {'uids': None})
+        if "uids" in method_args:
+          extra_param_json["uids"] = [int(getattr(document, "uid"))
+                                      for document in traversed_document.Base_searchUsingListbox(
+                                        last_form.Base_getListbox(), extra_param_json["query"], limit=DOCUMENT_COUNT_LIMIT)]
     REQUEST.set("form_id", last_form_id)  # to be accessible in field rendering (namely ListBox)
 
   # Form traversed_document
@@ -1101,18 +1107,6 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     # some dialog actions use custom cancel_url
     if REQUEST.get('cancel_url', None):
       renderHiddenField(response_dict, "cancel_url", REQUEST.get('cancel_url'))
-
-    # Let's support Selections!
-    # If extra_param_json already contains necessary arrtibutes: mandatory `query` and optional `uids`
-    # then our job is done! If not we need to generate them to become parameters for Dialog method.
-    if "uids" not in extra_param_json:
-      method_args = selectKwargsForCallable(getattr(traversed_document, form.action), {}, {'uids': None})
-      if "uids" in method_args:
-        extra_param_json["uids"] = [int(getattr(document, "uid"))
-                                    for document in traversed_document.Base_searchUsingListbox(
-                                      last_listbox, query or extra_param_json.get("query", None), limit=DOCUMENT_COUNT_LIMIT)]
-      if query is not None:
-        extra_param_json["query"] = query
   else:
     # In form_view we place only form_id in the request form
     renderHiddenField(response_dict, 'form_id', form.id)
