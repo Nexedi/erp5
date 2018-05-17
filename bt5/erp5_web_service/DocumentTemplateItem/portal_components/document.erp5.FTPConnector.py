@@ -80,11 +80,11 @@ class FTPConnector(XMLObject):
     finally:
       conn.logout()
 
-  def listFiles(self, path="."):
+  def listFiles(self, path=".", sort_on=None):
     """ List file of a directory """
     conn = self.getConnection()
     try:
-      return conn.getDirectoryContent(path)
+      return conn.getDirectoryContent(path, sort_on=sort_on)
     finally:
       conn.logout()
 
