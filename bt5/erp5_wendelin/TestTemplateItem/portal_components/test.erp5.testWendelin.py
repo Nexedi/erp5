@@ -241,13 +241,13 @@ class Test(ERP5TypeTestCase):
     bin_string = "1"*100000
     key = len(bucket_stream) + 1
     bucket_stream.insertBucket(key, bin_string )
-    self.assertEqual(bin_string, bucket_stream.getBucket(key))
+    self.assertEqual(bin_string, bucket_stream.getBucketByKey(key))
     
     # test sequence
     self.assertEqual(1, len(bucket_stream))
     
-    # test pop
-    bucket_stream.popBucket(key)
+    # test delete bucket by key
+    bucket_stream.delBucketByKey(key)
     self.assertEqual(0, len(bucket_stream))
     
     # set many buckets
@@ -258,5 +258,5 @@ class Test(ERP5TypeTestCase):
     self.assertEqual(range(100), bucket_stream.getKeyList())
     
     # test as sequence
-    bucket = bucket_stream.getBucketItemSequence(start_key=10, count=1)[0]
+    bucket = bucket_stream.getBucketKeyItemSequenceByKey(start_key=10, count=1)[0]
     self.assertEqual(100000, bucket[1].value)
