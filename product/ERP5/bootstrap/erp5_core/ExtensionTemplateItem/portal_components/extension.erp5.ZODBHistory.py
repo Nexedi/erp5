@@ -156,9 +156,12 @@ def getPreviousTwoStates(document, size=2, attrbute_name=None):
 def getHistoricalRevisionsDateList(document):
   """
   Returns the list of dates for the last 50 versions of the document.
+  The items inside the list should be in 2 difeerent format, with the
+  first object being in simplified format and second one being in normal
+  format.
   """
   result = document._p_jar.db().history(document._p_oid, size=50)
-  return [toDateTime(d_['time']).strftime("%Y-%m-%d %H:%M:%S.%f") for d_ in result]
+  return [(str(toDateTime(d_['time']).strftime("%Y-%m-%d %H:%M")), str(d_['time'])) for d_ in result]
 
 def getRevisionFromDate(document, date):
   """
@@ -174,7 +177,7 @@ def getRevisionFromDate(document, date):
     # XXX: This extra conversion using strftime is due to the fact that
     # in ZODB, we use DateTime which don't have `strptime`. This leads
     # to the problem of not being able to use conversion properly.
-    result_obj = [l for l in result if toDateTime(l['time']).strftime("%Y-%m-%d %H:%M:%S.%f") == date][0]
+    result_obj = [l for l in result if str(l['time']) == str(date)][0]
     # Return the history state of the object
     connection = document._p_jar
     return connection.oldstate(document, result_obj['tid'])
