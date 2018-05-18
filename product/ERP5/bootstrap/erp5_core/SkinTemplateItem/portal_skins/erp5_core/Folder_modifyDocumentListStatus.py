@@ -8,7 +8,6 @@ This script is intended as a dialog target.
 :param comment: {str} optional comment
 """
 from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.Formulator.Errors import FormValidationError, ValidationError
 
 def stripMyYour(key):
   if key.startswith("your_") or key.startswith("my_"):
@@ -74,17 +73,10 @@ tag = 'folder_workflow_action_{:d}'.format(random.randint(0, 1000))  # Kato: how
 priority = 3
 batch_size = 100
 
-workflow_action_kwargs = {}
 if workflow_dialog is None:
   workflow_dialog_id = context.Base_getFormIdForWorkflowAction(form_id, '', workflow_action, uids=uids)
   workflow_dialog = getattr(context, workflow_dialog_id)
-try:
-  workflow_action_kwargs = workflow_dialog.validate_all(request, key_prefix='field_workflow_dialog')
-except FormValidationError, ValidationError:
-  workflow_action_kwargs["comment"] = (comment or
-                                       kwargs.get("field_workflow_dialog_your_comment", "") or
-                                       kwargs.get("field_workflow_dialog_my_comment", "") or
-                                       kwargs.get("field_workflow_dialog_comment", ""))
+workflow_action_kwargs = workflow_dialog.validate_all(request, key_prefix='field_workflow_dialog')
 workflow_action_kwargs = {stripMyYour(key): value for key, value in workflow_action_kwargs.items()}
 workflow_action_kwargs['workflow_action'] = workflow_action
 
