@@ -28,7 +28,6 @@
 ##############################################################################
 
 import deepdiff
-from zLOG import LOG
 from deepdiff import DeepDiff
 from unidiff import PatchSet
 from AccessControl import ClassSecurityInfo
@@ -66,13 +65,11 @@ class DiffTool(BaseTool):
     Receives the dict with old object, diff value and returns a new object from
     the diff and the old value
     """
-    #LOG('DiffTool', 0, str(diff_list))
 
     copy_data = old.aq_parent.manage_copyObjects([old.id,])
     new_id = old.aq_parent.manage_pasteObjects(copy_data)[0]['new_id']
     new_obj = old.aq_parent[new_id]
 
-    LOG('DiffTool', 0, str([l['path'] for l in diff_list]))
     for diff in diff_list:
       setattr(new_obj, diff['path'], diff['t2'])
 
@@ -125,13 +122,6 @@ class PortalPatch:
     # values in one list
     flatten_change_list = [item for sublist in change_list for item in sublist]
     return flatten_change_list
-
-  def patchPortalObject(self, obj):
-    """
-    Apply patch to an object by applying
-    one by one each PortalPatchItem
-    """
-    pass
 
   def asDeepDiffPatch(self):
     """
@@ -200,7 +190,6 @@ class PortalPatch:
 
     # Create a beautified list from the diff
     diff_list = []
-
     for val in diff_tree_list:
       new_val = {}
 
@@ -309,92 +298,5 @@ class PortalPatch:
           continue
 
     return obj_dict
-
-  def asStrippedHTML(self):
-    """
-    Returns an HTML representation of the whole patch
-    that can be embedded
-    """
-    pass
-
-  def asHTML(self):
-    """
-    Returns an HTML representation of the whole patch
-    that can be displayed in a standalone way
-    """
-    pass
-
-class PortalPatchOperation:
-  """
-    Provides an abstraction to a patch operation that
-    depends on the patch format.
-
-    In the case of deepdiff, each operation defines
-    actually a desired state in a declarative way.
-
-    In the case of rfc6902, each operation is defined
-    in an imperative manner.
-  """
-
-  def patchPortalObject(self, obj, unified_diff_selection=None):
-    """
-      Apply patch to an object
-
-      unified_diff_selection -- a selection of lines in the unified diff
-                                that will be applied
-    """
-    pass
-
-  def getOperation(self):
-    """
-      Returns one of "replace", "add" or "remove"
-
-      (hopefully, this can also be used for deepdiff format)
-      set_item_added, values_changed, etc.
-    """
-    pass
-
-  def getPath(self):
-    """
-      Returns a path representing the value that is changed
-      (hopefully, this can also be used for deepdiff format)
-    """
-    pass
-
-  def getOldValue(self):
-    """
-      Returns the old value
-    """
-    pass
-
-  def getNewValue(self):
-    """
-      Returns the new value
-    """
-    pass
-
-  def getUnifiedDiff(self):
-    """
-      Returns a unified diff of the value changed
-      (this is useful for a text value) or None if
-      there is no such change.
-
-      (see String difference 2 in deepdiff)
-    """
-    pass
-
-  def asStrippedHTML(self):
-    """
-      Returns an HTML representation of the change
-      that can be embedded
-    """
-    pass
-
-  def asHTML(self):
-    """
-      Returns an HTML representation that can be displayed
-      in a standalone way
-    """
-    pass
 
 InitializeClass(DiffTool)
