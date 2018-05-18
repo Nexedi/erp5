@@ -54,9 +54,6 @@ from erp5.util.benchmark.thread import TestThread
 import signal
 from . import logger
 
-# TODO: some hardcoded values for dev purposes that will be removed soon
-FRONTEND_SOFTWARE = "https://lab.node.vifib.com/nexedi/slapos/raw/1.0.56/software/apache-frontend/software.cfg"
-
 FRONTEND_MASTER_DOMAIN = "scalability.nexedi.com"
 # max time to instance changing state: 2 hour
 MAX_INSTANCE_TIME = 60*60*2
@@ -206,6 +203,7 @@ class ScalabilityTestRunner():
       config = self._generateInstanceXML(software_configuration,
                                          test_result, test_suite, frontend_software, frontend_instance_guid)
       request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
+
       self.slapos_communicator.requestInstanceStart(self.instance_title, request_kw)
       self.authorize_request = False
       return {'status_code' : 0}                                          
@@ -386,6 +384,8 @@ Require valid-user
     return False
 
   def prepareFrontendMasterInstance(self, computer, frontend_software, test_suite_title):
+    if not frontend_software:
+      return None
     self.frontend_master_reference = "Scalability-Frontend-Master-"
     self.frontend_master_reference += "("+test_suite_title+")-"
     self.frontend_master_reference += str(computer).replace("'","")
@@ -459,6 +459,7 @@ Require valid-user
       node_test_suite.edit(configuration_list=configuration_list)
       self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
       self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
+      self.frontend_software = configuration_list[0].get("frontend-url")
 
       self.createSoftwareReachableProfilePath(node_test_suite)
       logger.info("Software reachable profile path is: %s", self.reachable_profile)
@@ -471,7 +472,6 @@ Require valid-user
 					supply, 
 					self.reachable_profile, 
 					computer_guid=self.launcher_nodes_computer_guid[0])
-
       # Ask for SR installation
       for computer_guid in self.involved_nodes_computer_guid:
         self._prepareSlapOS(self.reachable_profile, computer_guid) 
@@ -488,9 +488,6 @@ Require valid-user
         time.sleep(interval_time)
       # TODO : remove the line below wich simulate an answer from slapos master
       self._comeBackFromDummySlapOS()
-      # Ask for frontend SR installation and instance request
-      # XXX TODO: frontend software url will come from test_configuration soon
-      self.frontend_software = FRONTEND_SOFTWARE
       try:
         self.frontend_instance_guid = self.prepareFrontendMasterInstance(self.launcher_nodes_computer_guid[0],
                                                                          self.frontend_software,
@@ -503,8 +500,7 @@ Require valid-user
         logger.error("All softwares are not installed.")
         return {'status_code' : 1}
       self.authorize_request = True
-      logger.debug("Softwares installed.")
-
+      logger.debug("All software installed.")
       # Launch instance
       try:
         self._createInstance(self.reachable_profile, 
