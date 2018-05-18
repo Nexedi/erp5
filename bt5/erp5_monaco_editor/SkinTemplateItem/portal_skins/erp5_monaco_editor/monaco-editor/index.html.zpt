@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+</head>
+<body>
+
+<style>
+  .decoration-error {
+    text-decoration: underline wavy red;
+  }
+  .decoration-error-line {
+    background: red;
+  }
+  .decoration-warning {
+    background: lightblue;
+    width: 5px !important;
+    left: 3px;
+  }
+  </style>
+<div id="container" style="width:800px;height:600px;border:1px solid #ccc"></div>
+
+<script src="monaco-editor/app.bundle.js"></script>
+<script>
+  var editor = monaco.editor.create(document.getElementById('container'), {
+	value: [
+    '"use strict";',
+'function Person(age) {',
+'	if (age) {',
+'		this.age = age;',
+'	}',
+'}',
+'Person.prototype.getAge = function () {',
+'	return this.age;',
+'}'
+	].join('\n'),
+	language: 'javascript'
+});
+
+var decorations = editor.deltaDecorations([], [
+	{ range: new monaco.Range(3,1,5,1), options: {
+    isWholeLine: true,
+    linesDecorationsClassName: 'decoration-error-line',
+    inlineClassName: 'decoration-error',
+    hoverMessage: {value: 'this is wrong'} }},
+	{ range: new monaco.Range(7,1,7,24), options: { inlineClassName: 'decoration-warning' }},
+]);
+
+  </script>
+</body>
+</html>

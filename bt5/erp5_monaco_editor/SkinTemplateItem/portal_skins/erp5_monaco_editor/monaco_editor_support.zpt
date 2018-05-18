@@ -1,0 +1,84 @@
+<div id="monaco-container" style="width:100%;height:800px;border:1px solid grey;"></div>
+
+<script tal:content='python: "window.monacoEditorWebPackResourceBaseUrl = " + modules["json"].dumps(options["portal_url"]) + " + \"/monaco-editor/\""'></script>
+<textarea tal:attributes="id options/field_id;
+                          name options/field_id" style="display:none" tal:content="options/content" tal:condition="options/field_id | nothing">
+</textarea>
+<script tal:content='python: "var field_id=" + modules["json"].dumps(options.get("field_id"))'></script>
+<script tal:content='python: "var mode=" + modules["json"].dumps(options["mode"])'></script>
+<script tal:content='python: "var textarea_selector=" + modules["json"].dumps(options.get("textarea_selector"))'></script>
+<script>
+	/* we need to defer import for the monacoEditorWebPackResourceBaseUrl trick to work as expected in ZMI */
+var $script = document.createElement('script');
+$script.src = window.monacoEditorWebPackResourceBaseUrl + '/monaco-editor/app.bundle.js';
+document.head.appendChild($script);
+
+$script.onload = function() {
+
+  var $textarea = document.querySelector(textarea_selector) || document.getElementById(field_id);
+  if (textarea_selector) {
+    /* ZMI mode */
+    var $monacoContainer = document.getElementById('monaco-container');
+    $monacoContainer.parentNode.removeChild($monacoContainer);
+    $textarea.parentNode.appendChild($monacoContainer);
+    $monacoContainer.style.width = ($textarea.parentNode.offsetWidth - 10) + "px";
+    $monacoContainer.style.height = $textarea.parentNode.offsetHeight + "px";
+    $textarea.style.display = "none";
+
+    function saveDocument() {
+      var $saveButton = document.querySelector('input[value="Save Changes"]');
+      $saveButton.click();
+      return false;
+    }
+  } else {
+    /* ERP5 editor field mode */
+
+    /* all ERP5 field have a .title that shows a popup, we don't want this popup on this editor */
+    $textarea.parentNode.title = "";
+
+    function saveDocument() {
+      clickSaveButton('Base_edit');
+      document.getElementById("main_form").submit()
+    }
+  }
+  var editor = monaco.editor.create(document.getElementById('monaco-container'), {
+    value: $textarea.value,
+    language: mode,
+	  multiCursorModifier: 'ctrlCmd', /* because Alt+Click is LeftClick on ChromeOS */
+
+    /* XXX audoindent experiments */
+    autoIndent: true,
+    formatOnPaste: true,
+    formatOnType: true,
+  });
+  if (mode == "python") {
+    editor.model.updateOptions({ tabSize: 2 });
+	  monaco.languages.setLanguageConfiguration(
+      "python",
+      { indentationRules: { increaseIndentPattern: /^.*:$/, }});
+  }
+
+  editor.model.onDidChangeContent((event) => {
+    $textarea.value = editor.getValue();
+    changed = true; /* global variable used in erp5.js for onbeforeunload event */
+  });
+
+  editor.addAction({
+    id: 'save',
+    label: 'Save',
+    keybindings: [
+      monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
+    ],
+    precondition: null,
+    keybindingContext: null,
+    contextMenuGroupId: 'navigation',
+    contextMenuOrder: 1.5,
+    run: function(ed) {
+      return saveDocument();
+    }
+  });
+
+  window.monacoEditor = editor; // XXX debug
+}
+
+</script>
