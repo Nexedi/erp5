@@ -19,9 +19,13 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-input, textarea, select, button, body, div, span, fieldset {
+/* XXX is this everything ? */
+.field, .breadcrumb > a, .actions > ul > li > a, .logged_in_as, textarea, .transition_message {
   font-family: <dtml-var font_family>;
   font-size: <dtml-var font_size>;
+}
+
+input, textarea, select, button, body, div, span, fieldset {
   margin: 0;
   padding: 0;
 }
@@ -80,10 +84,11 @@ body, div, span, fieldset {
   color: <dtml-var font_color>;
 }
 
+/* XXX why do we have this ???
 div, span, fieldset {
   background-color: inherit;
 }
-
+*/
 body {
   background-color: <dtml-var background_color>;
 }
@@ -411,7 +416,7 @@ fieldset.bottom .field .input {
 }
 
 .content .field .error {
-  background-color: inherit;
+  /* background-color: inherit; */ /*monaco*/
   color: #f40;
 }
 
