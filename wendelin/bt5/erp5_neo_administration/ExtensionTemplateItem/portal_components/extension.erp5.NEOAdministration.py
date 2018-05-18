@@ -19,7 +19,7 @@ def DataBucketStream_getChecksumListFromNEONodeListForKey(self, \
   checksum_list = []
 
   # get directly checksum as we have access to data stream over self
-  data = self.getBucket(key)
+  data = self.getBucketByKey(key)
   data = data[:threshold]
   checksum = hashlib.sha256(data).hexdigest()
   checksum_list.append(checksum)
@@ -38,7 +38,7 @@ def DataBucketStream_getChecksumListFromNEONodeListForKey(self, \
     root = conn.root()
     data_stream_id = self.getId()
     data_stream = root['Application'].erp5.data_stream_module[data_stream_id]
-    data = data_stream.getBucket(key)
+    data = data_stream.getBucketByKey(key)
     data = data[:threshold]
     conn.close()
     db.close()
