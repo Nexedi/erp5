@@ -51,7 +51,7 @@
 <!-- Field are displayed -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//label[@for='field_your_portal_type' and text()='Portal Type']</td>
+  <td>//label[@for='field_your_portal_type' and text()='Document Type']</td>
   <td></td>
 </tr>
 <tr>
