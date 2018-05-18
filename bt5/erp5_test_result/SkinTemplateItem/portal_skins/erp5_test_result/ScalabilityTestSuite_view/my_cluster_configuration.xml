@@ -259,7 +259,7 @@ Configuration structure has to look like a python dict, ex:\n
                 </item>
                 <item>
                     <key> <string>max_linelength</string> </key>
-                    <value> <int>80</int> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>max_lines</string> </key>
