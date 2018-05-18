@@ -104,7 +104,6 @@ class SlapOSMasterCommunicator(object):
     self.latest_state = state
     return self.slap_order.request(
             software_release=self.url,
-            software_type=software_type,
             partition_reference=self.name,
             shared=shared,
             state=state,
@@ -412,7 +411,7 @@ class SlapOSTester(SlapOSMasterCommunicator):
     self.instance = self._request(INSTANCE_STATE_STARTED, instance_title, request_kw, shared, software_type)
 
   def requestInstanceStop(self, instance_title=None, request_kw=None, shared=False, software_type="RootSoftwareInstance"):
-    self._request(INSTANCE_STATE_STOPPED, instance_title, request_kw, shared, software_type)
+    self.instance = self._request(INSTANCE_STATE_STOPPED, instance_title, request_kw, shared, software_type)
 
   def requestInstanceDestroy(self, instance_title=None, request_kw=None, shared=False):
     if not instance_title:
