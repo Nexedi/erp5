@@ -18,7 +18,7 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function () {
       var gadget = this;
       return this.getDeclaredGadget('p')
         .push(function (input) {

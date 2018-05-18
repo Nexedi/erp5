@@ -130,8 +130,8 @@
         evt.preventDefault();
         return createSortItemTemplate(gadget)
           .push(function (template) {
-            var tmp = document.createElement("div"),
-              container = gadget.element.querySelector(".sort_item_container");
+            var tmp = document.createElement("div");
+            container = gadget.element.querySelector(".sort_item_container");
             tmp.innerHTML = template;
             container.appendChild(tmp);
           });

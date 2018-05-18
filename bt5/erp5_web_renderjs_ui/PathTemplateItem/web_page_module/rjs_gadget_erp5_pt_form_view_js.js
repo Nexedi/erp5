@@ -73,14 +73,14 @@
           var form_options = gadget.state.erp5_form,
             embedded_form = gadget.state.erp5_document._embedded._view,
             rendered_form = {},
-            key, field;
+            key;
 
           /* Remove empty non-editable fields to prevent them from displaying (business requirement).
              Deleting objects inplace was not a good idea.
              So we pass through only non-empty (non-editable) fields.
           */
           for (key in embedded_form) {
-            if (key[0] !== "_" && embedded_form.hasOwnProperty(key)) {
+            if (embedded_form.hasOwnProperty(key) && key[0] !== "_") {
               if (isNonEmptyNonEditableField(embedded_form[key])) {
                 rendered_form[key] = embedded_form[key];
               }
@@ -113,8 +113,8 @@
             (gadget.state.erp5_document._links.action_object_jio_report ||
              gadget.state.erp5_document._links.action_object_jio_exchange ||
              gadget.state.erp5_document._links.action_object_jio_print) ?
-              gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
-              "",
+                gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
+                "",
             calculatePageTitle(gadget, gadget.state.erp5_document),
             gadget.isDesktopMedia(),
             gadget.state.erp5_document._links.action_object_new_content_action ?

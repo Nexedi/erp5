@@ -1,4 +1,4 @@
-/*global window, document, rJS, RSVP */
+/*global window, document, rJS */
 /*jslint indent: 2, maxerr: 3 */
 /**
  * Label gadget takes care of displaying validation errors and label.
@@ -11,7 +11,7 @@
  *    -  class "horizontal_align_form_box" will prevent any label to show as well
  *
  */
-(function (window, document, rJS, RSVP) {
+(function (window, document, rJS) {
   "use strict";
 
   var SCOPE = 'field';
@@ -231,4 +231,4 @@
       return this.changeState({first_call: true, error_text: error_text});
     });
 
-}(window, document, rJS, RSVP));
+}(window, document, rJS));

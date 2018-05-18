@@ -365,7 +365,7 @@
       ]);
     })
 
-    .allowPublicAcquisition('isDesktopMedia', function (argument_list) {
+    .allowPublicAcquisition('isDesktopMedia', function () {
       return window.matchMedia("(min-width: 85em)").matches;
     })
 
@@ -520,7 +520,8 @@
           })
           .push(function () {
             // XXX Improve error rendering
-            gadget.props.content_element.innerHTML = "<br/><br/><br/><pre></pre>";
+            gadget.props.content_element.innerHTML =
+              "<br/><br/><br/><pre></pre>";
             gadget.props.content_element.querySelector('pre').textContent =
               "Error: " + gadget.state.error_text;
             // reset gadget state

@@ -41,7 +41,8 @@
       var element = this.element,
         new_element = document.createElement(this.state.tag),
         content = this.state.text_content,
-        data, data_attr;
+        data,
+        data_attr;
       if (!isEmpty(this.state.text_content)) {
         if (this.state.prepend) {
           content = this.state.prepend + "&nbsp;" + content;

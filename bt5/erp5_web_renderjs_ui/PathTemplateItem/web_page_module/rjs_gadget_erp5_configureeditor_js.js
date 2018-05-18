@@ -112,8 +112,8 @@
         evt.preventDefault();
         return createColumnItemTemplate(gadget, undefined, gadget.state.displayable_column_list)
           .push(function (template) {
-            var tmp = document.createElement("div"),
-              container = gadget.element.querySelector(".column_item_container");
+            var tmp = document.createElement("div");
+            container = gadget.element.querySelector(".column_item_container");
             tmp.innerHTML = template;
             container.appendChild(tmp);
           });
