@@ -156,27 +156,25 @@ def getPreviousTwoStates(document, size=2, attrbute_name=None):
 def getHistoricalRevisionsDateList(document):
   """
   Returns the list of dates for the last 50 versions of the document.
+
   The items inside the list should be in 2 difeerent format, with the
-  first object being in simplified format and second one being in normal
-  format.
+  first object being in simplified date format and second one being the float format
+  converted to string.
   """
   result = document._p_jar.db().history(document._p_oid, size=50)
   return [(str(toDateTime(d_['time']).strftime("%Y-%m-%d %H:%M")), str(d_['time'])) for d_ in result]
 
 def getRevisionFromDate(document, date):
   """
-  Function to return the dictionary of object revision and hence use
-  it to the object to update the status.
-  Note that the `date` sent here is in string format.
+  Function to return the dictionary of object revision using the date
+
+  params:
+    date - It shold be in float format (or float converted to string)
   """
   if date is not None:
+    # Get the last 50 historical versions
     result = document._p_jar.db().history(document._p_oid, size=50)
-    # Convert the python datetime to zope DateTime because the objects
-    # inside ZODB use Zope DateTime
-    # Get the required revision using the datetime
-    # XXX: This extra conversion using strftime is due to the fact that
-    # in ZODB, we use DateTime which don't have `strptime`. This leads
-    # to the problem of not being able to use conversion properly.
+    # Get the version of object using the date
     result_obj = [l for l in result if str(l['time']) == str(date)][0]
     # Return the history state of the object
     connection = document._p_jar
