@@ -13,20 +13,20 @@
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
     .declareAcquiredMethod('getUrlParameter', 'getUrlParameter')
-    .allowPublicAcquisition("notifyChange", function () {
+    .allowPublicAcquisition("notifyChange", function notifyChange() {
       return this.notifyChange({modified: true});
     })
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
     /////////////////////////////////////////////////////////////////
-    .declareMethod('checkValidity', function () {
+    .declareMethod('checkValidity', function checkValidity() {
       return this.getDeclaredGadget("erp5_form")
         .push(function (declared_gadget) {
           return declared_gadget.checkValidity();
         });
     }, {mutex: 'changestate'})
 
-    .declareMethod('getContent', function () {
+    .declareMethod('getContent', function getContent() {
       return this.getDeclaredGadget("erp5_form")
         .push(function (declared_gadget) {
           return declared_gadget.getContent();
@@ -36,11 +36,11 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('triggerSubmit', function () {
+    .declareMethod('triggerSubmit', function triggerSubmit() {
       this.element.querySelector('button').click();
     })
 
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       var state_dict = {
         jio_key: options.jio_key,
         view: options.view,
@@ -61,7 +61,7 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function () {
+    .onStateChange(function onStateChange() {
       var gadget = this;
 
       // render the erp5 form
@@ -125,7 +125,7 @@
         });
     })
 
-    .onEvent('submit', function () {
+    .onEvent('submit', function submit() {
 
       if (this.state.save_action !== true) {
         // If not action is defined on form, do nothing

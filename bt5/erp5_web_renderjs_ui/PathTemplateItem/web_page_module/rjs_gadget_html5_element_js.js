@@ -16,7 +16,7 @@
       prepend: ''
     })
 
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       var state_dict = {
           text_content: getFirstNonEmpty(options.text_content, ""),
           inner_html: getFirstNonEmpty(options.inner_html, ""),
@@ -37,7 +37,7 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function onStateChange(modification_dict) {
       var element = this.element,
         new_element = document.createElement(this.state.tag),
         content = this.state.text_content,
@@ -82,7 +82,7 @@
      * obtain value of readonly fields.
      * In order to make it more developer-friendly, only named fields return their values.
      */
-    .declareMethod("getContent", function () {
+    .declareMethod("getContent", function getContent() {
       var data = {};
       if (!this.state.name) {
         return data;

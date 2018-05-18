@@ -155,7 +155,7 @@
     //////////////////////////////////////////////
     // initialize the gadget content
     //////////////////////////////////////////////
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       var gadget = this,
         field_json = options.field_json,
         sort_column_list = [],
@@ -308,7 +308,7 @@
       return queue;
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
         sort_key = gadget.state.key + "_sort_list:json",
         sort_list,
@@ -691,7 +691,7 @@
       return result_queue;
     })
 
-    .declareMethod('getListboxInfo', function () {
+    .declareMethod('getListboxInfo', function getListboxInfo() {
       var domain_list = JSON.parse(this.state.domain_list_json),
         domain_dict = JSON.parse(this.state.domain_dict_json),
         i,
@@ -717,7 +717,7 @@
     //////////////////////////////////////////////
     // render the listbox in an asynchronous way
     //////////////////////////////////////////////
-    .declareJob('fetchLineContent', function (only_cancel) {
+    .declareJob('fetchLineContent', function fetchLineContent(only_cancel) {
       if (only_cancel) {
         return;
       }
@@ -785,7 +785,7 @@
         });
     })
 
-    .declareMethod("getContent", function (options) {
+    .declareMethod("getContent", function getContent(options) {
       var form_gadget = this,
         k,
         field_gadget,
@@ -818,7 +818,7 @@
         });
     }, {mutex: 'changestate'})
 
-    .onEvent('click', function (evt) {
+    .onEvent('click', function click(evt) {
       var gadget = this,
         sort_button = gadget.element.querySelector('button[name="Sort"]'),
         hide_button = gadget.element.querySelector('button[name="Hide"]'),
@@ -905,11 +905,11 @@
 
     }, false, false)
 
-    .allowPublicAcquisition("notifyInvalid", function () {
+    .allowPublicAcquisition("notifyInvalid", function notifyInvalid() {
       return;
     })
 
-    .allowPublicAcquisition("notifyValid", function () {
+    .allowPublicAcquisition("notifyValid", function notifyValid() {
       return;
     });
 

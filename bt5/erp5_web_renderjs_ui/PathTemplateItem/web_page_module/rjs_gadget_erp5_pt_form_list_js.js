@@ -16,13 +16,13 @@
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
     /////////////////////////////////////////////////////////////////
-    .declareMethod('checkValidity', function () {
+    .declareMethod('checkValidity', function checkValidity() {
       return this.getDeclaredGadget("erp5_form")
         .push(function (declared_gadget) {
           return declared_gadget.checkValidity();
         });
     }, {mutex: 'changestate'})
-    .declareMethod('getContent', function () {
+    .declareMethod('getContent', function getContent() {
       return this.getDeclaredGadget("erp5_form")
         .push(function (declared_gadget) {
           return declared_gadget.getContent();
@@ -31,7 +31,7 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       var gadget = this;
       return gadget.getUrlParameter('extended_search')
         .push(function (extended_search) {
@@ -48,7 +48,7 @@
         });
     })
 
-    .onStateChange(function () {
+    .onStateChange(function onStateChange() {
       var form_gadget = this;
 
       // render the erp5 form
@@ -125,7 +125,7 @@
 
     })
 
-    .declareMethod('triggerSubmit', function (options) {
+    .declareMethod('triggerSubmit', function triggerSubmit(options) {
       var gadget = this,
         extended_search = '',
         focus_on;
@@ -156,7 +156,7 @@
         });
     }, {mutex: 'changestate'})
 
-    .onEvent('submit', function () {
+    .onEvent('submit', function submit() {
       var gadget = this;
 
       return gadget.getDeclaredGadget("erp5_searchfield")

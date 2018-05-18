@@ -38,18 +38,18 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('toggle', function () {
+    .declareMethod('toggle', function toggle() {
       return this.changeState({
         visible: !this.state.visible
       });
     })
-    .declareMethod('close', function () {
+    .declareMethod('close', function close() {
       return this.changeState({
         visible: false
       });
     })
 
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       var erp5_document = options.erp5_document,
         view = options.view,
         context = this,
@@ -98,7 +98,7 @@
         });
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function onStateChange(modification_dict) {
       var context = this,
         gadget = this,
         queue = new RSVP.Queue(),
@@ -310,14 +310,17 @@
     /////////////////////////////////////////////////////////////////
     // declared services
     /////////////////////////////////////////////////////////////////
-    .onEvent('click', function (evt) {
+    .onEvent('click', function click(evt) {
       if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
           (evt.target.tagName === 'BUTTON')) {
         return this.toggle();
       }
     }, false, false)
 
-    .allowPublicAcquisition('notifyChange', function (argument_list, scope) {
+    .allowPublicAcquisition('notifyChange', function notifyChange(
+      argument_list,
+      scope
+    ) {
       if (scope === 'erp5_checkbox') {
         var context = this;
         return context.getDeclaredGadget('erp5_checkbox')
@@ -335,12 +338,12 @@
       // Typing a search query should not modify the header status
       return;
     }, {mutex: 'changestate'})
-    .allowPublicAcquisition('notifyValid', function () {
+    .allowPublicAcquisition('notifyValid', function notifyValid() {
       // Typing a search query should not modify the header status
       return;
     })
 
-    .onEvent('submit', function (event) {
+    .onEvent('submit', function submit(event) {
       var gadget = this,
         search_gadget,
         redirect_options = {

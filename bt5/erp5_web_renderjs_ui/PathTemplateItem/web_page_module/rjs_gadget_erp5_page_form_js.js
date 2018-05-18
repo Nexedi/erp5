@@ -63,20 +63,20 @@ and handling data send&receive.
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
     /////////////////////////////////////////////////////////////////
-    .declareMethod('triggerSubmit', function () {
+    .declareMethod('triggerSubmit', function triggerSubmit() {
       return this.getDeclaredGadget('fg')
         .push(function (g) {
           return g.triggerSubmit();
         });
     }, {mutex: 'changestate'})
-    .declareMethod('checkValidity', function () {
+    .declareMethod('checkValidity', function checkValidity() {
       return this.getDeclaredGadget('fg')
         .push(function (declared_gadget) {
           return declared_gadget.checkValidity();
         });
     }, {mutex: 'changestate'})
 
-    .declareMethod('getContent', function () {
+    .declareMethod('getContent', function getContent() {
       var gadget = this;
       // no need to add runtime information in general for forms ...
       // each Form Page Template handles that on their own
@@ -89,7 +89,7 @@ and handling data send&receive.
     /////////////////////////////////////////////////////////////////
     // Own methods
     /////////////////////////////////////////////////////////////////
-    .allowPublicAcquisition("jio_allDocs", function (param_list) {
+    .allowPublicAcquisition("jio_allDocs", function jio_allDocs(param_list) {
       var gadget = this;
       return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
@@ -102,7 +102,7 @@ and handling data send&receive.
           return result;
         });
     })
-    .allowPublicAcquisition('notifySubmit', function () {
+    .allowPublicAcquisition('notifySubmit', function notifySubmit() {
       return this.triggerSubmit();
     })
     /**
@@ -112,7 +112,7 @@ and handling data send&receive.
      * `erp5_document` or parameters to obtain one: `jio_key`, `view`
      * `editable`
      */
-    .declareMethod("render", function (options) {
+    .declareMethod("render", function render(options) {
       var gadget = this,
         promise_queue = new RSVP.Queue(),
         new_state = {
@@ -181,7 +181,7 @@ and handling data send&receive.
         });
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function onStateChange(modification_dict) {
       var queue,
         gadget = this,
         options = gadget.state.options,
@@ -249,7 +249,7 @@ and handling data send&receive.
         Returns: on success it returns a Promise with {string} JIO key
                  on failure it throws an error with the invalid response
     */
-    .allowPublicAcquisition("submitContent", function (param_list) {
+    .allowPublicAcquisition("submitContent", function submitContent(param_list) {
       var gadget = this,
         jio_key = param_list[0],
         target_url = param_list[1],
@@ -482,7 +482,7 @@ and handling data send&receive.
     /** The only way how to force download from javascript (working everywhere)
      * is unfortunately constructing <a> and clicking on it
      */
-    .declareJob("forceDownload", function (attachment) {
+    .declareJob("forceDownload", function forceDownload(attachment) {
       var attachment_data = attachment.target.response,
         filename = /(?:^|;)\s*filename\s*=\s*"?([^";]+)/i.exec(
           attachment.target.getResponseHeader("Content-Disposition") || ""

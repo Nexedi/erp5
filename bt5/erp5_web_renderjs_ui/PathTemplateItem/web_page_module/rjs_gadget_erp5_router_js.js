@@ -916,13 +916,13 @@
 
 
   rJS(window)
-    .ready(function (gadget) {
+    .ready(function createProps(gadget) {
       gadget.props = {
         options: {}
       };
     })
 
-    .ready(function (gadget) {
+    .ready(function createJioSelection(gadget) {
       return gadget.getDeclaredGadget("jio_selection")
         .push(function (jio_gadget) {
           gadget.props.jio_gadget = jio_gadget;
@@ -936,7 +936,7 @@
         });
     })
 
-    .ready(function (gadget) {
+    .ready(function createJioNavigationHistory(gadget) {
       return gadget.getDeclaredGadget("jio_navigation_history")
         .push(function (jio_gadget) {
           gadget.props.jio_navigation_gadget = jio_gadget;
@@ -950,7 +950,7 @@
         });
     })
 
-    .ready(function (gadget) {
+    .ready(function createJioDocumentState(gadget) {
       return gadget.getDeclaredGadget("jio_document_state")
         .push(function (jio_gadget) {
           gadget.props.jio_state_gadget = jio_gadget;
@@ -960,7 +960,7 @@
           });
         });
     })
-    .ready(function (g) {
+    .ready(function createJioForContent(g) {
       return g.getDeclaredGadget("jio_form_content")
         .push(function (jio_form_content) {
           g.props.jio_form_content = jio_form_content;
@@ -971,7 +971,9 @@
         });
     })
 
-    .declareMethod('getCommandUrlForList', function (options_list) {
+    .declareMethod('getCommandUrlForList', function getCommandUrlForList(
+      options_list
+    ) {
       var i,
         result_list = [];
       for (i = 0; i < options_list.length; i += 1) {
@@ -979,11 +981,11 @@
       }
       return result_list;
     })
-    .declareMethod('getCommandUrlFor', function (options) {
+    .declareMethod('getCommandUrlFor', function getCommandUrlFor(options) {
       return getCommandUrlForMethod(this, options);
     })
 
-    .declareMethod('redirect', function (options, push_history) {
+    .declareMethod('redirect', function redirect(options, push_history) {
       this.props.form_content = options.form_content;
       // XXX Should we make it a second method parameter
       this.props.keep_message = true;
@@ -994,11 +996,11 @@
         });
     })
 
-    .declareMethod('getUrlParameter', function (key) {
+    .declareMethod('getUrlParameter', function getUrlParameter(key) {
       return this.props.options[key];
     })
 
-    .declareMethod('route', function (command_options) {
+    .declareMethod('route', function route(command_options) {
       var gadget = this,
         result;
 
@@ -1027,7 +1029,7 @@
         });
     })
 
-    .declareMethod('start', function () {
+    .declareMethod('start', function start() {
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
@@ -1057,7 +1059,7 @@
           throw error;
         });
     })
-    .declareMethod('notify', function (options) {
+    .declareMethod('notify', function notify(options) {
       this.props.modified = (options && options.modified);
     })
 
@@ -1070,10 +1072,10 @@
     .declareAcquiredMethod('translate', 'translate')
     .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
 
-    .declareJob('listenHashChange', function () {
+    .declareJob('listenHashChange', function listenHashChangeJob() {
       return listenHashChange(this);
     })
-    .declareService(function () {
+    .declareService(function beforeunload() {
       var gadget = this;
       return loopEventListener(
         window,

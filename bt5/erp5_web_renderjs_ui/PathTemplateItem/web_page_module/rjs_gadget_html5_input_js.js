@@ -18,7 +18,7 @@
 
   rJS(window)
 
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       return this.changeState({
         value: getFirstNonEmpty(options.value, ""),
         checked: options.checked,
@@ -40,7 +40,7 @@
       });
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function onStateChange(modification_dict) {
       var textarea = this.element.querySelector('input'),
         tmp; // general use short-scope variable
 
@@ -119,13 +119,13 @@
       }
     })
 
-    .declareService(function () {
+    .declareService(function focus() {
       if (this.state.focus === true) {
         this.element.querySelector('input').focus();
       }
     })
 
-    .declareMethod('getContent', function () {
+    .declareMethod('getContent', function getContent() {
       var gadget = this,
         result = {},
         input;
@@ -175,7 +175,7 @@
     }, {mutex: 'changestate'})
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
-    .declareMethod('checkValidity', function () {
+    .declareMethod('checkValidity', function checkValidity() {
       var result = this.element.querySelector('input').checkValidity(),
         gadget = this;
       if (result) {
@@ -206,13 +206,13 @@
     }, {mutex: 'changestate'})
 
     .declareAcquiredMethod("notifyChange", "notifyChange")
-    .onEvent('change', function () {
+    .onEvent('change', function change() {
       return RSVP.all([
         this.checkValidity(),
         this.notifyChange("change")
       ]);
     }, false, false)
-    .onEvent('input', function () {
+    .onEvent('input', function input() {
       return RSVP.all([
         this.checkValidity(),
         this.notifyChange("input")
@@ -220,7 +220,7 @@
     }, false, false)
 
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
-    .onEvent('invalid', function (evt) {
+    .onEvent('invalid', function invalid(evt) {
       // invalid event does not bubble
       return this.notifyInvalid(evt.target.validationMessage);
     }, true, false);

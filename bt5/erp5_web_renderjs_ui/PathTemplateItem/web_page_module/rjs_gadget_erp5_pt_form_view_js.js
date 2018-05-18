@@ -36,13 +36,13 @@
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
     /////////////////////////////////////////////////////////////////
-    .declareMethod('checkValidity', function () {
+    .declareMethod('checkValidity', function checkValidity() {
       return this.getDeclaredGadget("erp5_form")
         .push(function (declared_gadget) {
           return declared_gadget.checkValidity();
         });
     }, {mutex: 'changestate'})
-    .declareMethod('getContent', function () {
+    .declareMethod('getContent', function getContent() {
       return this.getDeclaredGadget("erp5_form")
         .push(function (declared_gadget) {
           return declared_gadget.getContent();
@@ -51,7 +51,7 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       var state_dict = {
         jio_key: options.jio_key,
         title: options.title,
@@ -64,7 +64,7 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function () {
+    .onStateChange(function onStateChange() {
       var gadget = this;
 
       // render the erp5 form

@@ -112,14 +112,14 @@
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
     /////////////////////////////////////////////////////////////////
-    .declareMethod('checkValidity', function () {
+    .declareMethod('checkValidity', function checkValidity() {
       return this.getDeclaredGadget("erp5_form")
         .push(function (declared_gadget) {
           return declared_gadget.checkValidity();
         });
     }, {mutex: 'changestate'})
 
-    .declareMethod('getContent', function () {
+    .declareMethod('getContent', function getContent() {
       return this.getDeclaredGadget("erp5_form")
         .push(function (sub_gadget) {
           return sub_gadget.getContent();
@@ -129,11 +129,11 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('triggerSubmit', function () {
+    .declareMethod('triggerSubmit', function triggerSubmit() {
       this.element.querySelector('input[type="submit"]').click();
     }, {mutex: 'changestate'})
 
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       var gadget = this;
       // copy out wanted items from options and pass it to `changeState`
       return gadget.getUrlParameter('extended_search')
@@ -155,7 +155,7 @@
         });
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function onStateChange(modification_dict) {
       var form_gadget = this,
         selector = form_gadget.element.querySelector("h3"),
         view_list = ensureArray(this.state.erp5_document._links.action_workflow),
@@ -252,7 +252,7 @@
         });
     })
 
-    .onEvent('submit', function () {
+    .onEvent('submit', function submit() {
       if (this.state.has_update_action === true) {
         // default action on submit is update in case of its existence
         return submitDialog(this, true);
@@ -260,7 +260,7 @@
       return submitDialog(this, false);
     }, false, true)
 
-    .onEvent('click', function (evt) {
+    .onEvent('click', function click(evt) {
       if (evt.target.name === "action_confirm") {
         evt.preventDefault();
         return submitDialog(this, false);

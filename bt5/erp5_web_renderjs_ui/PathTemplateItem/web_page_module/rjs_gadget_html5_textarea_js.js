@@ -17,11 +17,11 @@
       value: ''
     })
 
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       return this.changeState(options);
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function onStateChange(modification_dict) {
       var textarea = this.element.querySelector('textarea');
 
       if (modification_dict.hasOwnProperty("value")) {
@@ -57,7 +57,7 @@
 
     })
 
-    .declareMethod('getContent', function () {
+    .declareMethod('getContent', function getContent() {
       var result = {},
         input;
       if (this.state.editable) {
@@ -73,7 +73,7 @@
     })
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
-    .declareMethod('checkValidity', function () {
+    .declareMethod('checkValidity', function checkValidity() {
       var result = this.element.querySelector('textarea').checkValidity();
       if (result) {
         return this.notifyValid()
@@ -89,13 +89,13 @@
     .onEvent('input', checkChange, false, true)
 
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
-    .onEvent('invalid', function (evt) {
+    .onEvent('invalid', function invalid(evt) {
       // invalid event does not bubble
       return this.notifyInvalid(evt.target.validationMessage);
     }, true, true)
 
     .declareAcquiredMethod("notifySubmit", "notifySubmit")
-    .onEvent('keydown', function (evt) {
+    .onEvent('keydown', function keydown(evt) {
       var textarea = this.element.querySelector('textarea');
       if (evt.keyCode === 83 && (navigator.platform.match("Mac") ? evt.metaKey : evt.ctrlKey)) {
         //Textarea's change event is generally launched by browser when press a predefined key

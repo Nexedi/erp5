@@ -8,7 +8,7 @@
       tag: 'p'
     })
 
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       var field_json = options.field_json || {},
         state_dict = {
           text_content: field_json.value || field_json.default || "",
@@ -18,7 +18,7 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function () {
+    .onStateChange(function onStateChange() {
       var gadget = this;
       return this.getDeclaredGadget('p')
         .push(function (input) {

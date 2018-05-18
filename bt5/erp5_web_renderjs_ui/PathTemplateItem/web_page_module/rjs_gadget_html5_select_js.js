@@ -34,7 +34,7 @@
       required: false
     })
 
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       var state_dict = {
           value: getFirstNonEmpty(options.value, ""),
           item_list: JSON.stringify(options.item_list),
@@ -48,7 +48,7 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function onStateChange(modification_dict) {
       var i,
         found = false,
         template,
@@ -108,7 +108,7 @@
       }
     })
 
-    .declareMethod('getContent', function () {
+    .declareMethod('getContent', function getContent() {
       var result = {},
         select = this.element.querySelector('select');
       if (this.state.editable) {
@@ -124,7 +124,7 @@
     })
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
-    .declareMethod('checkValidity', function () {
+    .declareMethod('checkValidity', function checkValidity() {
       var result = this.element.querySelector('select').checkValidity();
       if (result) {
         return this.notifyValid()
@@ -136,13 +136,13 @@
     })
 
     .declareAcquiredMethod("notifyChange", "notifyChange")
-    .onEvent('change', function () {
+    .onEvent('change', function change() {
       return RSVP.all([
         this.checkValidity(),
         this.notifyChange()
       ]);
     }, false, false)
-    .onEvent('input', function () {
+    .onEvent('input', function input() {
       return RSVP.all([
         this.checkValidity(),
         this.notifyChange()
@@ -150,7 +150,7 @@
     }, false, false)
 
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
-    .onEvent('invalid', function (evt) {
+    .onEvent('invalid', function invalid(evt) {
       // invalid event does not bubble
       return this.notifyInvalid(evt.target.validationMessage);
     }, true, false);

@@ -192,7 +192,7 @@
     //////////////////////////////////////////////
     // initialize the gadget content
     //////////////////////////////////////////////
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       var operator = 'AND',
         query_list = [],
         i,
@@ -322,7 +322,7 @@
       });
     })
 
-    .onStateChange(function () {
+    .onStateChange(function onStateChange() {
       var gadget = this,
         container = gadget.element.querySelector(".container"),
         div = document.createElement("div"),
@@ -359,7 +359,7 @@
         });
     })
 
-    .declareJob('focusOnLastInput', function (index) {
+    .declareJob('focusOnLastInput', function focusOnLastInput(index) {
       var input_list = this.element.querySelectorAll('input');
       if (index === undefined) {
         index = input_list.length - 1;
@@ -369,7 +369,7 @@
       }
     })
 
-    .onEvent('submit', function () {
+    .onEvent('submit', function submit() {
       var new_state = getQueryStateFromDOM(this),
         operator = new_state.operator,
         query_list = new_state.query_list,
@@ -430,7 +430,7 @@
 
     })
 
-    .onEvent('click', function (evt) {
+    .onEvent('click', function click(evt) {
       var new_state;
 
       if (evt.target.classList.contains('trash')) {
@@ -464,7 +464,7 @@
       }
     }, false, false)
 
-    .onEvent('change', function (evt) {
+    .onEvent('change', function change(evt) {
       if (evt.target.classList.contains('column')) {
         // Reset the operator when user change the column/key
         evt.preventDefault();

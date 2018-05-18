@@ -76,7 +76,7 @@
     // ready
     /////////////////////////////////////////////////////////////////
     // Init local properties
-    .ready(function () {
+    .ready(function ready() {
       this.props = {
         element_list: [
           this.element.querySelector("h1"),
@@ -98,41 +98,41 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('notifyLoaded', function () {
+    .declareMethod('notifyLoaded', function notifyLoaded() {
       return this.changeState({
         loaded: true
       });
     })
-    .declareMethod('notifyLoading', function () {
+    .declareMethod('notifyLoading', function notifyLoading() {
       return this.changeState({
         loaded: false
       });
     })
-    .declareMethod('notifySubmitted', function () {
+    .declareMethod('notifySubmitted', function notifySubmitted() {
       return this.changeState({
         submitted: true,
         // Change modify here, to allow user to redo some modification and being correctly notified
         modified: false
       });
     })
-    .declareMethod('notifySubmitting', function () {
+    .declareMethod('notifySubmitting', function notifySubmitting() {
       return this.changeState({
         submitted: false
       });
     })
-    .declareMethod('notifyError', function () {
+    .declareMethod('notifyError', function notifyError() {
       return this.changeState({
         loaded: true,
         submitted: true,
         error: true
       });
     })
-    .declareMethod('notifyChange', function () {
+    .declareMethod('notifyChange', function notifyChange() {
       return this.changeState({
         modified: true
       });
     })
-    .declareMethod('setButtonTitle', function (options) {
+    .declareMethod('setButtonTitle', function setButtonTitle(options) {
       return this.changeState({
         title_button_icon: options.icon,
         title_button_name: options.action
@@ -143,7 +143,7 @@
       return this.render(this.stats.options);
     })
 */
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       var state = {
         error: false,
         title_text: '',
@@ -229,7 +229,7 @@
       return this.changeState(state);
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
         right_link,
         right_button,
@@ -254,7 +254,10 @@
           default_title_icon = "spinner";
         }
         // Updating globally the page title. Does not follow RenderJS philosophy, but, it is enough for now
-        document.title = gadget.state.title_text;
+        if (modification_dict.hasOwnProperty('title_text')) {
+          // Be careful, this is CPU costly
+          document.title = gadget.state.title_text;
+        }
         title_link = {
           title: gadget.state.title_text,
           icon: default_title_icon || gadget.state.title_icon,
@@ -362,7 +365,7 @@
     //////////////////////////////////////////////
     // handle button submit
     //////////////////////////////////////////////
-    .onEvent('submit', function (evt) {
+    .onEvent('submit', function submit(evt) {
       var name = evt.target[0].getAttribute("name");
       if (name === "panel") {
         return this.triggerPanel();

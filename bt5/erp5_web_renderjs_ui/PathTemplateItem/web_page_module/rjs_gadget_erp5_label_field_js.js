@@ -78,7 +78,7 @@
       first_call: false
     })
 
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function render(options) {
       var state_dict = {
         first_call: true,
         label_text: options.field_json.title || '',
@@ -98,7 +98,7 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
         span,
         css_class,
@@ -185,7 +185,7 @@
       }
     })
 
-    .declareMethod("checkValidity", function () {
+    .declareMethod("checkValidity", function checkValidity() {
       return this.getDeclaredGadget(SCOPE)
         .push(function (gadget) {
           // XXX Implement checkValidity on all fields
@@ -196,7 +196,7 @@
         });
     }, {mutex: 'changestate'})
 
-    .declareMethod('getContent', function () {
+    .declareMethod('getContent', function getContent() {
       var argument_list = arguments;
       return this.getDeclaredGadget(SCOPE)
         .push(function (gadget) {
@@ -207,7 +207,7 @@
         });
     }, {mutex: 'changestate'})
 
-    .declareMethod('getListboxInfo', function () {
+    .declareMethod('getListboxInfo', function getListboxInfo() {
       var argument_list = arguments;
       return this.getDeclaredGadget(SCOPE)
         .push(function (gadget) {
@@ -215,19 +215,19 @@
         });
     }, {mutex: 'changestate'})
 
-    .allowPublicAcquisition("notifyInvalid", function (param_list) {
+    .allowPublicAcquisition("notifyInvalid", function notifyInvalid(param_list) {
       // Label doesn't know when a subgadget calls notifyInvalid
       // Prevent mutex dead lock by defering the changeState call
       return this.deferErrorTextRender(param_list[0]);
     })
 
-    .allowPublicAcquisition("notifyValid", function () {
+    .allowPublicAcquisition("notifyValid", function notifyValid() {
       // Label doesn't know when a subgadget calls notifyValid
       // Prevent mutex dead lock by defering the changeState call
       return this.deferErrorTextRender('');
     })
 
-    .declareJob('deferErrorTextRender', function (error_text) {
+    .declareJob('deferErrorTextRender', function deferErrorTextRender(error_text) {
       return this.changeState({first_call: true, error_text: error_text});
     });
 

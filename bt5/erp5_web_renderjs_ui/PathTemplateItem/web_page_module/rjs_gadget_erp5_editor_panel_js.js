@@ -7,11 +7,11 @@
     //////////////////////////////////////////////
     // acquired method
     //////////////////////////////////////////////
-    .allowPublicAcquisition('trigger', function () {
+    .allowPublicAcquisition('trigger', function trigger() {
       return this.toggle();
     })
 
-    .declareMethod('toggle', function () {
+    .declareMethod('toggle', function toggle() {
       if (this.state.visible) {
         return this.close();
       }
@@ -20,7 +20,7 @@
       });
     })
 
-    .declareMethod('close', function () {
+    .declareMethod('close', function close() {
       return this.changeState({
         visible: false,
         url: undefined,
@@ -28,7 +28,7 @@
       });
     })
 
-    .declareMethod('render', function (url, options) {
+    .declareMethod('render', function render(url, options) {
       // XXX Hack to close the panel if the sort/filter button
       // is clicked twice
       if (url === this.state.url) {
@@ -45,7 +45,7 @@
       });
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function onStateChange(modification_dict) {
       var queue,
         gadget = this;
       if (this.state.visible) {
