@@ -20,7 +20,7 @@ request = kwargs.get("REQUEST", None) or context.REQUEST
 translate = portal.Base_translateString
 
 # Ensure the selected action is doable on received objects
-document_list = [result.getObject() for result in portal.portal_catalog.searchResults(uid=uids)]
+document_list = portal.portal_catalog.searchResults(uid=uids)
 workflowable_list = []
 
 if not workflow_action:
@@ -56,9 +56,10 @@ if workflow_action_rendered != workflow_action:
                                    level="warning",
                                    REQUEST=request)
 
-for document in document_list:
+for document in (result.getObject() for result in document_list):
   try:
     # Kato: Why does it throw an axception instead of just returning False?
+    # And even more it works only on real objects and not "brains"
     portal.portal_workflow.canDoActionFor(document, workflow_action)
   except WorkflowException as exception:
     pass
