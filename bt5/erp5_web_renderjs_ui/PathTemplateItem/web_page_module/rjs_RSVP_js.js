@@ -60,7 +60,7 @@ define("rsvp/all",
         }
       }
 
-      return new Promise(function(resolve, reject, notify) {
+      return new Promise(function(resolve, reject) {
         var results = [], remaining = promises.length,
         promise, remaining_count = promises.length - expected_count;
 
@@ -90,12 +90,6 @@ define("rsvp/all",
           }
         }
 
-        function notifier(index) {
-          return function(value) {
-            notify({"index": index, "value": value});
-          };
-        }
-
         function cancelAll(rejectionValue) {
           reject(rejectionValue);
           canceller();
@@ -105,7 +99,7 @@ define("rsvp/all",
           promise = promises[i];
 
           if (promise && typeof promise.then === 'function') {
-            promise.then(resolver(i), cancelAll, notifier(i));
+            promise.then(resolver(i), cancelAll);
           } else {
             resolveAll(i, promise);
           }
@@ -213,14 +207,14 @@ define("rsvp/async",
       };
     }
 
-    if (typeof setImmediate === 'function') {
+    if (checkNativePromise()) {
+      async = useNativePromise();
+    } else if (typeof setImmediate === 'function') {
       async = useSetImmediate();
     } else if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
       async = useNextTick();
     } else if (BrowserMutationObserver) {
       async = useMutationObserver();
-    } else if (checkNativePromise()) {
-      async = useNativePromise();
     } else {
       async = useSetTimeout();
     }
@@ -529,11 +523,6 @@ define("rsvp/promise",
         reject(promise, value);
       };
 
-      var notifyPromise = function(value) {
-        if (resolved) { return; }
-        notify(promise, value);
-      };
-
       this.on('promise:failed', function(event) {
         this.trigger('error', { detail: event.detail });
       }, this);
@@ -557,7 +546,7 @@ define("rsvp/promise",
       };
 
       try {
-        resolver(resolvePromise, rejectPromise, notifyPromise);
+        resolver(resolvePromise, rejectPromise);
       } catch(e) {
         rejectPromise(e);
       }
@@ -602,22 +591,6 @@ define("rsvp/promise",
       }
     };
 
-
-    var invokeNotifyCallback = function(promise, callback, event) {
-      var value;
-      if (typeof callback === 'function') {
-        try {
-          value = callback(event.detail);
-        } catch (e) {
-          // stop propagating
-          return;
-        }
-        notify(promise, value);
-      } else {
-        notify(promise, event.detail);
-      }
-    };
-
     Promise.prototype = {
       constructor: Promise,
 
@@ -626,7 +599,7 @@ define("rsvp/promise",
       rejectedReason: undefined,
       fulfillmentValue: undefined,
 
-      then: function(done, fail, progress) {
+      then: function(done, fail) {
         this.off('error', onerror);
 
         var thenPromise = new this.constructor(function() {},
@@ -652,10 +625,6 @@ define("rsvp/promise",
 
         this.on('promise:failed', function(event) {
           invokeCallback('reject', thenPromise, fail, event);
-        });
-
-        this.on('promise:notified', function (event) {
-          invokeNotifyCallback(thenPromise, progress, event);
         });
 
         return thenPromise;
@@ -693,11 +662,6 @@ define("rsvp/promise",
           then = value.then;
 
           if (isFunction(then)) {
-            if (isFunction(value.on)) {
-              value.on('promise:notified', function (event) {
-                notify(promise, event.detail);
-              });
-            }
             promise.on('promise:cancelled', function(event) {
               if (isFunction(value.cancel)) {
                 value.cancel();
@@ -750,12 +714,6 @@ define("rsvp/promise",
       });
     }
 
-    function notify(promise, value) {
-      config.async(function() {
-        promise.trigger('promise:notified', { detail: value });
-      });
-    }
-
 
     __exports__.Promise = Promise;
   });
@@ -783,7 +741,6 @@ define("rsvp/queue",
         promise,
         fulfill,
         reject,
-        notify,
         resolved;
 
       if (!(this instanceof Queue)) {
@@ -796,7 +753,7 @@ define("rsvp/queue",
         }
       }
 
-      promise = new Promise(function(done, fail, progress) {
+      promise = new Promise(function(done, fail) {
         fulfill = function (fulfillmentValue) {
           if (resolved) {return;}
           queue.isFulfilled = true;
@@ -811,7 +768,6 @@ define("rsvp/queue",
           resolved = true;
           return fail(rejectedReason);
         };
-        notify = progress;
       }, canceller);
 
       promise_list.push(resolve());
@@ -835,7 +791,7 @@ define("rsvp/queue",
         return promise.then.apply(promise, arguments);
       };
 
-      queue.push = function(done, fail, progress) {
+      queue.push = function(done, fail) {
         var last_promise = promise_list[promise_list.length - 1],
           next_promise;
 
@@ -843,11 +799,11 @@ define("rsvp/queue",
           throw new ResolvedQueueError();
         }
 
-        next_promise = last_promise.then(done, fail, progress);
+        next_promise = last_promise.then(done, fail);
         promise_list.push(next_promise);
 
         // Handle pop
-        last_promise = next_promise.then(function (fulfillmentValue) {
+        promise_list.push(next_promise.then(function (fulfillmentValue) {
           promise_list.splice(0, 2);
           if (promise_list.length === 0) {
             fulfill(fulfillmentValue);
@@ -861,13 +817,7 @@ define("rsvp/queue",
           } else {
             throw rejectedReason;
           }
-        }, function (notificationValue) {
-          if (promise_list[promise_list.length - 1] === last_promise) {
-            notify(notificationValue);
-          }
-          return notificationValue;
-        });
-        promise_list.push(last_promise);
+        }));
 
         return this;
       };
