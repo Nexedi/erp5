@@ -3,9 +3,39 @@
 (function (window, rJS, RSVP, calculatePageTitle, Handlebars, ensureArray) {
   "use strict";
 
-  function submitDialog(gadget, is_updating) {
+  function checkValidity() {
+    return this.getDeclaredGadget("erp5_form")
+      .push(function (declared_gadget) {
+        return declared_gadget.checkValidity();
+      });
+  }
 
-    return gadget.getContent()
+  function getContent() {
+    return this.getDeclaredGadget("erp5_form")
+      .push(function (sub_gadget) {
+        return sub_gadget.getContent();
+      });
+  }
+
+  function submitDialog(is_updating) {
+    var gadget = this,
+      button_container =
+          gadget.element.querySelector('.dialog_button_container'),
+      update_button = button_container.querySelector('button'),
+      submit_input = button_container.querySelector('input');
+    submit_input.disabled = true;
+    if (update_button !== null) {
+      update_button.disabled = true;
+    }
+
+    function enableButton() {
+      submit_input.disabled = false;
+      if (update_button !== null) {
+        update_button.disabled = false;
+      }
+    }
+
+    return getContent.apply(this)
       .push(function (content_dict) {
         var data = {},
           key;
@@ -80,6 +110,13 @@
             // do not mingle with editable because it isn't necessary
           }
         });
+      })
+      .push(function (result) {
+        enableButton();
+        return result;
+      }, function (error) {
+        enableButton();
+        throw error;
       });
       // We do not handle submit failures because Page Form handles them well
       // If any error bubbles here we do not know what to do with it anyway
@@ -112,19 +149,9 @@
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
     /////////////////////////////////////////////////////////////////
-    .declareMethod('checkValidity', function checkValidity() {
-      return this.getDeclaredGadget("erp5_form")
-        .push(function (declared_gadget) {
-          return declared_gadget.checkValidity();
-        });
-    }, {mutex: 'changestate'})
+    .declareMethod('checkValidity', checkValidity, {mutex: 'changestate'})
 
-    .declareMethod('getContent', function getContent() {
-      return this.getDeclaredGadget("erp5_form")
-        .push(function (sub_gadget) {
-          return sub_gadget.getContent();
-        });
-    }, {mutex: 'changestate'})
+    .declareMethod('getContent', getContent, {mutex: 'changestate'})
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -154,6 +181,8 @@
           });
         });
     })
+
+    // .declareMethod('submitDialog', submitDialog, {mutex: 'changestate'})
 
     .onStateChange(function onStateChange(modification_dict) {
       var form_gadget = this,
@@ -255,20 +284,34 @@
     .onEvent('submit', function submit() {
       if (this.state.has_update_action === true) {
         // default action on submit is update in case of its existence
-        return submitDialog(this, true);
+        return submitDialog.apply(this, [true]);
       }
-      return submitDialog(this, false);
+      return submitDialog.apply(this, [false]);
     }, false, true)
 
     .onEvent('click', function click(evt) {
       if (evt.target.name === "action_confirm") {
         evt.preventDefault();
-        return submitDialog(this, false);
+        return submitDialog.apply(this, [false]);
       }
       if (evt.target.name === "action_update") {
         evt.preventDefault();
-        return submitDialog(this, true);
+        return submitDialog.apply(this, [true]);
       }
-    }, false, false);
+    }, false, false)
+
+    .declareService(function enableButton() {
+      // click event listener is now activated
+      // Change the state of the gadget
+      var gadget = this,
+        button_container =
+            gadget.element.querySelector('.dialog_button_container'),
+        update_button = button_container.querySelector('button'),
+        submit_input = button_container.querySelector('input');
+      submit_input.disabled = false;
+      if (update_button !== null) {
+        update_button.disabled = false;
+      }
+    });
 
 }(window, rJS, RSVP, calculatePageTitle, Handlebars, ensureArray));

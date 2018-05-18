@@ -13,9 +13,9 @@
 
     <script id="dialog-button-template" type="text/x-handlebars-template">
       {{#if show_update_button}}
-        <button name="action_update" type="submit" data-i18n="Update">Update</button>
+        <button disabled name="action_update" type="submit" data-i18n="Update">Update</button>
       {{/if}}
-      <input name="action_confirm" class="dialogconfirm" data-theme="b" data-inline="true" type="submit" data-i18n="[value]Proceed" value="Proceed" data-icon="check" />
+      <input disabled name="action_confirm" class="dialogconfirm" data-theme="b" data-inline="true" type="submit" data-i18n="[value]Proceed" value="Proceed" data-icon="check" />
       <a class="dialogcancel" data-i18n="Cancel">Cancel</a>
     </script>
 
