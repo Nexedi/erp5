@@ -61,9 +61,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>merge_method_id</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -71,6 +69,9 @@
                     <value>
                       <list>
                         <string>listbox_diff</string>
+                        <string>merge_method_id</string>
+                        <string>first_object_date</string>
+                        <string>second_object_date</string>
                       </list>
                     </value>
                 </item>
@@ -79,7 +80,6 @@
                     <value>
                       <list>
                         <string>first_object_path</string>
-                        <string>first_object_date</string>
                       </list>
                     </value>
                 </item>
@@ -88,7 +88,6 @@
                     <value>
                       <list>
                         <string>second_object_path</string>
-                        <string>second_object_date</string>
                       </list>
                     </value>
                 </item>
