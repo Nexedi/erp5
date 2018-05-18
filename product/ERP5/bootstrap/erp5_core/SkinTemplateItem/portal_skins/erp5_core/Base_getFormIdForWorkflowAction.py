@@ -21,10 +21,11 @@ action_tool = context.getPortalObject().portal_actions
 id_form_dict = dict()
 
 result_list = ()
+
 if uids is not None:
-  result_list = context.getPortalObject().portal_catalog(uid=uids)
+  result_list = context.getPortalObject().portal_catalog(uid=uids, limit=50)
 else:
-  result_list = context.Base_searchUsingFormIdAndQuery(form_id, query)
+  result_list = context.Base_searchUsingFormIdAndQuery(form_id, query, limit=50)
 
 for result in result_list:
   for action in action_tool.listFilteredActionsFor(result.getObject()).get('workflow', []):
