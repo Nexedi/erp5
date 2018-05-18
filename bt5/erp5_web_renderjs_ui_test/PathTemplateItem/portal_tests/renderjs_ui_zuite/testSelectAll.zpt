@@ -2,7 +2,7 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test RenderJS UI Module Action Selecting All</title>
+<title>Test RenderJS UI Module Action Selecting All (expected failure)</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
