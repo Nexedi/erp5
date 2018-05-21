@@ -28,6 +28,13 @@
         });
     })
 
+    .declareMethod('getCommandUrlForList', function (param_list) {
+      return this.getDeclaredGadget('erp5_router')
+        .push(function (router) {
+          return router.getCommandUrlForList(param_list);
+        });
+    })
+
     .declareMethod('notify', function (param_list) {
       return this.getDeclaredGadget('erp5_router')
         .push(function (router) {
