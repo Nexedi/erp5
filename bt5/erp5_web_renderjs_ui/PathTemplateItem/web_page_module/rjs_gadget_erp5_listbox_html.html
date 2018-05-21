@@ -193,9 +193,9 @@
     <script id="listbox-template" type="text/x-handlebars-template">
       <div class="ui-table-header ui-header ui-bar-c ui-corner-all">
         <h1 data-i18n="{{title}}" class="ui-title ui-override-theme">{{title}}<span> <span class="listboxloader ui-icon-spinner ui-btn-icon-left"></span></span></h1>
-          <button data-rel="hide" data-i18n="{{hide_button_text}}" name="{{hide_button_name}}" type="button" class="submit responsive ui-last-child ui-btn ui-icon-low-vision ui-btn-icon-left {{hide_class}}">{{hide_button_text}}</button>
-          <button data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="submit responsive ui-last-child ui-btn ui-icon-wrench ui-btn-icon-left {{configure_class}}">Configure</button>
-          <button data-rel="Sort" data-i18n="Sort" name="Sort" type="button" class="submit responsive ui-last-child ui-btn ui-icon-sort-amount-desc ui-btn-icon-left {{sort_class}}">Sort</button>
+          <button {{disabled}} data-rel="hide" data-i18n="{{hide_button_text}}" name="{{hide_button_name}}" type="button" class="submit responsive ui-last-child ui-btn ui-icon-low-vision ui-btn-icon-left {{hide_class}}">{{hide_button_text}}</button>
+          <button {{disabled}} data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="submit responsive ui-last-child ui-btn ui-icon-wrench ui-btn-icon-left {{configure_class}}">Configure</button>
+          <button {{disabled}} data-rel="Sort" data-i18n="Sort" name="Sort" type="button" class="submit responsive ui-last-child ui-btn ui-icon-sort-amount-desc ui-btn-icon-left {{sort_class}}">Sort</button>
       </div>
       <table class="ui-responsive ui-body-c ui-table-inset">
         <thead class="ui-bar-inherit thead"></thead>

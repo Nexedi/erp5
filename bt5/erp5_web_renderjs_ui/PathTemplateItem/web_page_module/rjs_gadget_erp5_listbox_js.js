@@ -129,6 +129,7 @@
     /////////////////////////////////////////////////////////////////
     // ready
     /////////////////////////////////////////////////////////////////
+    .setState({disabled: true})
     // Init local properties
     .ready(function () {
       this.props = {
@@ -316,7 +317,11 @@
         sort_column_list,
         i,
         j,
-        result_queue = new RSVP.Queue();
+        result_queue = new RSVP.Queue(),
+        button_selector_list = ['button[name="Sort"]', 'button[name="Hide"]',
+                                'button[name="Configure"]',
+                                'button[name="SelectRows"]'],
+        button;
 
 /*
       if (modification_dict.hasOwnProperty('error_text') && this.state.error_text !== undefined) {
@@ -348,7 +353,16 @@
           });
       }
 
-
+      if (modification_dict.hasOwnProperty('disabled')) {
+        // Mark buttons as enabled/disabled
+        // so that Zelenium can explicitely wait for enabled button
+        for (i = 0; i < button_selector_list.length; i += 1) {
+          button = gadget.element.querySelector(button_selector_list[i]);
+          if (button !== null) {
+            button.disabled = gadget.state.disabled;
+          }
+        }
+      }
 
       if ((modification_dict.hasOwnProperty('sort_list_json')) ||
           (modification_dict.hasOwnProperty('column_list_json')) ||
@@ -426,7 +440,8 @@
                 configure_class: gadget.state.configure_class,
                 title: gadget.state.title,
                 hide_button_text: hide_button_text,
-                hide_button_name: hide_button_name
+                hide_button_name: hide_button_name,
+                disabled: gadget.state.disabled ? 'disabled' : ''
               })),
               gadget.translateHtml(listbox_thead_template({
                 head_value: head_value_list,
@@ -819,6 +834,12 @@
     }, {mutex: 'changestate'})
 
     .onEvent('click', function click(evt) {
+      // For some reason, Zelenium can click even if button has the disabled
+      // attribute. So, it is needed for now to manually checks
+      if (this.state.disabled) {
+        return;
+      }
+
       var gadget = this,
         sort_button = gadget.element.querySelector('button[name="Sort"]'),
         hide_button = gadget.element.querySelector('button[name="Hide"]'),
@@ -904,6 +925,12 @@
       }
 
     }, false, false)
+
+    .declareService(function enableButton() {
+      // click event listener is now activated
+      // Change the state of the gadget
+      return this.changeState({disabled: false});
+    })
 
     .allowPublicAcquisition("notifyInvalid", function notifyInvalid() {
       return;
