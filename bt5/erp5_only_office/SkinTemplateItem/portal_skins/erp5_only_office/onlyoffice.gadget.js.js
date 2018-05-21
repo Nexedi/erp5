@@ -173,35 +173,38 @@ DocsAPI.DocEditor.version = function () {
     .declareMethod('appReady', function () {
       var g = this;
       console.log('appReady');
-      g.props.handlers.init({
-        config: {
-          lang: 'en',
-          canAutosave: false,
-          canCoAuthoring: false,
-          canBackToFolder: true,
-          canCreateNew: false,
-          canAnalytics: false,
-          customization: {
-            autosave: false,
-            about: false,
-            feedback: false
-          }
-        }
-      });
-      g.props.handlers.opendocument({
-        doc: {
-          key: g.props.jio_key,
-          //title: g.props.doc.title || "",
-          //fileType: undefined,
-          //vkey: undefined,
-          url: "_offline_",
-          permissions: {
-            edit: true,
-            download: true,
-            reader: true
-          }
-        }
-      });
+      return new RSVP.Queue()
+        .push(function () {
+          g.props.handlers.init({
+            config: {
+              lang: 'en',
+              canAutosave: false,
+              canCoAuthoring: false,
+              canBackToFolder: true,
+              canCreateNew: false,
+              canAnalytics: false,
+              customization: {
+                autosave: false,
+                about: false,
+                feedback: false
+              }
+            }
+          });
+          g.props.handlers.opendocument({
+            doc: {
+              key: g.props.jio_key,
+              //title: g.props.doc.title || "",
+              //fileType: undefined,
+              //vkey: undefined,
+              url: "_offline_",
+              permissions: {
+                edit: true,
+                download: true,
+                reader: true
+              }
+            }
+          });
+        });
     })
     .declareMethod('documentReady', function () {
       console.log();
