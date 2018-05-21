@@ -35,7 +35,7 @@ from lxml import etree
 from DateTime import DateTime
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import (
-  ERP5TypeTestCase, _getConversionServerUrl)
+  ERP5TypeTestCase, _getConversionServerUrlList)
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
 from Products.ERP5OOo.OOoUtils import OOoBuilder
@@ -1040,8 +1040,8 @@ class TestIngestion(ERP5TypeTestCase):
       Make sure that preferences are set up properly and accessible
     """
     preference_tool = self.portal.portal_preferences
-    self.assertEqual(preference_tool.getPreferredDocumentConversionServerUrl(),
-                     _getConversionServerUrl())
+    self.assertEqual(preference_tool.getPreferredDocumentConversionServerUrlList(),
+                     _getConversionServerUrlList())
     self.assertEqual(preference_tool.getPreferredDocumentFilenameRegularExpression(), FILENAME_REGULAR_EXPRESSION)
     self.assertEqual(preference_tool.getPreferredDocumentReferenceRegularExpression(), REFERENCE_REGULAR_EXPRESSION)
 
