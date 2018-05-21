@@ -211,6 +211,26 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="wait_for_app_loaded">
+    <tr>
+      <td colspan="3"><b>Wait for the application to be loaded</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class="ui-icon-spinner ui-btn-icon-notext first-loader"]</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//div[@class="ui-icon-spinner ui-btn-icon-notext first-loader"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
   <tal:block metal:define-macro="wait_for_content_loaded">
     <tr>
       <td colspan="3"><b>Wait for the content to be loaded</b></td>
