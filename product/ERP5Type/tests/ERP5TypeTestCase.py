@@ -129,7 +129,7 @@ def _getConnectionStringDict():
       os.environ.get(connection, '-' + connection_string)
   return connection_string_dict
 
-def _getConversionServerUrl():
+def _getConversionServerUrlList():
   """ Return the url for Conversion Server (Cloudooo)
   """
   url = os.environ.get('conversion_server_url')
@@ -139,7 +139,7 @@ def _getConversionServerUrl():
       os.environ.get('conversion_server_port', 8008))
     warn('conversion_server_hostname/conversion_server_port are deprecated.\n'
       'Using %s as conversion_server_url instead' % url, DeprecationWarning)
-  return url
+  return url.split(',')
 
 def _getConversionServerRetryCount():
   """ Return retry count for Conversion Server (Cloudooo)
@@ -167,11 +167,11 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
                              _getPersistentMemcachedServerDict()
   memcached_url = "memcached://%(hostname)s:%(port)s/" % \
                              _getVolatileMemcachedServerDict()
-  cloudooo_url = _getConversionServerUrl()
+  cloudooo_url_list = _getConversionServerUrlList()
 
   promise_config = ConfigParser.RawConfigParser()
   promise_config.add_section('external_service')
-  promise_config.set('external_service', 'cloudooo_url', cloudooo_url)
+  promise_config.set('external_service', 'cloudooo_url_list', cloudooo_url_list)
   promise_config.set('external_service', 'memcached_url',memcached_url)
   promise_config.set('external_service', 'kumofs_url', kumofs_url)
 
@@ -968,9 +968,9 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
     def _updateConversionServerConfiguration(self):
       """Update conversion server (Cloudooo) at default site preferences.
       """
-      url = _getConversionServerUrl()
+      url_list = _getConversionServerUrlList()
       pref = self.getDefaultSystemPreference()
-      pref._setPreferredDocumentConversionServerUrl(url)
+      pref._setPreferredDocumentConversionServerUrlList(url_list)
      # set default retry count in test for network issue
       retry_count = _getConversionServerRetryCount()
       pref._setPreferredDocumentConversionServerRetry(retry_count)
