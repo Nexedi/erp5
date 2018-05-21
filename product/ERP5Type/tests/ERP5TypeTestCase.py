@@ -968,9 +968,9 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
     def _updateConversionServerConfiguration(self):
       """Update conversion server (Cloudooo) at default site preferences.
       """
-      url = _getConversionServerUrl()
+      url_list = _getConversionServerUrl().split(',')
       pref = self.getDefaultSystemPreference()
-      pref._setPreferredDocumentConversionServerUrl(url)
+      pref._setPreferredDocumentConversionServerUrlList(url_list)
      # set default retry count in test for network issue
       retry_count = _getConversionServerRetryCount()
       pref._setPreferredDocumentConversionServerRetry(retry_count)
