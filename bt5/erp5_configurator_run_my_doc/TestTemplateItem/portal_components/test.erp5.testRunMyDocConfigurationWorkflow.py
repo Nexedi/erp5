@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerUrl
+from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerUrlList
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
                                              TestLiveConfiguratorWorkflowMixin
@@ -185,8 +185,8 @@ class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
   def stepCheckSystemPreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
     """ Check System Preference"""
     system_preference = self.getDefaultSystemPreference()
-    self.assertEqual(system_preference.getPreferredDocumentConversionServerUrl(),
-                     _getConversionServerUrl())
+    self.assertEqual(system_preference.getPreferredDocumentConversionServerUrlList(),
+                     _getConversionServerUrlList())
 
   def _stepCheckKnowledgePadRole(self):
     """ Check if Knowledge Pad is configured correctly """
