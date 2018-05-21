@@ -1,20 +1,22 @@
 from Products.CMFActivity.ActiveResult import ActiveResult
+import json
 
 portal = context.getPortalObject()
 portal_preferences = portal.portal_preferences
-promise_url = portal.getPromiseParameter('external_service', 'cloudooo_url')
+promise_url_list_string = portal.getPromiseParameter('external_service', 'cloudooo_url_list')
+promise_url_list = json.loads(promise_url_list_string.replace('\'', '\"'))
 
-if promise_url is None:
+if promise_url_list is None:
   return
 
-url = portal_preferences.getPreferredDocumentConversionServerUrl()
+url_list = portal_preferences.getPreferredDocumentConversionServerUrlList()
 
 active_result = ActiveResult()
 
-if promise_url != url:
+if promise_url_list != url_list:
   severity = 1
   summary = "Conversion Server not configured as expected"
-  detail = "Expect %s\nGot %s" % (promise_url, url)
+  detail = "Expect %s\nGot %s" % (promise_url_list, url_list)
 else:
   severity = 0
   summary = "Nothing to do."
