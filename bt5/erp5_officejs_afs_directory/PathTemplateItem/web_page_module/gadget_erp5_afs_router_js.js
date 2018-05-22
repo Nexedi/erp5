@@ -16,6 +16,32 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+    .declareMethod('getCommandUrlForList', function (options_list) {
+      var i,
+        result_list = [],
+        dict,
+        key,
+        portal;
+
+      for (i = 0; i < options_list.length; i += 1) {
+        dict = options_list[i];
+        // XXX better way than to extract from query like this?
+        if (dict.command === "index") {
+          key = dict.options.jio_key;
+          portal = dict.options.query.split(":")[1].split('"')[1];
+          result_list.push("#/" + key + "?page=afs_" + portal + "&view=view");
+        }
+      }
+
+      if (result_list.length) {
+        return result_list;
+      }
+
+      return this.getDeclaredGadget("router")
+        .push(function (router) {
+          return router.getCommandUrlForList.apply(router, [options_list]);
+        });
+    })
     .declareMethod('getCommandUrlFor', function () {
       var argument_list = arguments,
         dict = argument_list[0],
