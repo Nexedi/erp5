@@ -37,9 +37,6 @@ Traverse renders arbitrary View. It can be a Form or a Script.
 :param relative_url: string, MANDATORY for obtaining the traversed_document. Calling this script directly on an object should be
                      forbidden in code (but it is not now).
 :param view: {str} mandatory. the view reference as defined on a Portal Type (e.g. "view" or "publish_view")
-:param query: {str} optional, is a remaining from the search on a previous view. Query is used to replace selections.
-              It provides complete information together with listbox configuration so we are able to pass a list of UIDs
-              to methods which require it. This allows dialogs to show selection from previous view.
 :param extra_param_json: {str} BASE64 encoded JSON with parameters for getHateoas script. Content will be put to the REQUEST so
                          it is accessible to all Scripts and TALES expressions. If view contains embedded **dialog** form then
                          fields will be added to that form to preserve the values for the next step.
@@ -67,7 +64,6 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from collections import OrderedDict
 
 MARKER = []
-DOCUMENT_COUNT_LIMIT = 50
 
 if REQUEST is None:
   REQUEST = context.REQUEST
@@ -460,8 +456,6 @@ url_template_dict = {
                        "&relative_url=%(relative_url)s&view=%(view)s",
   "traverse_generator_action": "%(root_url)s/%(script_id)s?mode=traverse" + \
                        "&relative_url=%(relative_url)s&view=%(view)s&extra_param_json=%(extra_param_json)s",
-  "traverse_generator_action_module": "%(root_url)s/%(script_id)s?mode=traverse" + \
-                       "&relative_url=%(relative_url)s&view=%(view)s&extra_param_json=%(extra_param_json)s{&query}",
   "traverse_template": "%(root_url)s/%(script_id)s?mode=traverse" + \
                        "{&relative_url,view}",
 
@@ -1102,17 +1096,6 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     if REQUEST.get('cancel_url', None):
       renderHiddenField(response_dict, "cancel_url", REQUEST.get('cancel_url'))
 
-    # Let's support Selections!
-    # If extra_param_json already contains necessary arrtibutes: mandatory `query` and optional `uids`
-    # then our job is done! If not we need to generate them to become parameters for Dialog method.
-    if "uids" not in extra_param_json:
-      method_args = selectKwargsForCallable(getattr(traversed_document, form.action), {}, {'uids': None})
-      if "uids" in method_args:
-        extra_param_json["uids"] = [int(getattr(document, "uid"))
-                                    for document in traversed_document.Base_searchUsingListbox(
-                                      last_listbox, query or extra_param_json.get("query", None), limit=DOCUMENT_COUNT_LIMIT)]
-      if query is not None:
-        extra_param_json["query"] = query
   else:
     # In form_view we place only form_id in the request form
     renderHiddenField(response_dict, 'form_id', form.id)
@@ -1271,8 +1254,8 @@ def statusLevelToString(level):
 
 
 def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None, REQUEST=None,
-                     response=None, view=None, mode=None, query=None,
-                     select_list=None, limit=None, form=None,
+                     response=None, view=None, mode=None,
+                     query=None, select_list=None, limit=None, form=None,
                      relative_url=None, restricted=None, list_method=None,
                      default_param_json=None, form_relative_url=None, extra_param_json=None):
 
@@ -1483,18 +1466,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
           # select correct URL template based on action_type and form page template
           url_template_key = "traverse_generator"
-          # Modify Actions on Module - they need access to current form_id and runtime
-          # information such as `query` in case they operate on selections!
           if erp5_action_key not in ("view", "object_view", "object_jio_view"):
             url_template_key = "traverse_generator_action"
-            if traversed_document.getPortalType() in portal.getPortalModuleTypeList():
-              url_template_key = "traverse_generator_action_module"
-              erp5_action_list[-1]['templated'] = True
           # but when we do not have the last form id we do not pass is of course
           if not (current_action.get('view_id', '') or last_form_id):
             url_template_key = "traverse_generator"
-            if 'templated' in erp5_action_list[-1]:
-              del erp5_action_list[-1]['templated']
 
           # some dialogs need previous form_id when rendering to pass UID to embedded Listbox
           extra_param_json['form_id'] = current_action['view_id'] \
@@ -1713,17 +1689,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           ensureDeserialized(
             byteify(
               json.loads(urlsafe_b64decode(default_param_json)))))
-
-      if catalog_kw.get("uid", MARKER) is None and extra_param_json.get("form_id", MARKER) is not MARKER:
-        # a UID == None is a bit hack-ish way of signaling that the list_method
-        # needs list of UID instead of a regular query
-        catalog_kw["uid"] = [int(getattr(document, "uid"))
-                             for document in traversed_document.Base_searchUsingListbox(
-                               context.Base_getListbox(extra_param_json["form_id"]), query, limit=DOCUMENT_COUNT_LIMIT, **catalog_kw)]
-      elif query:
+      if query:
         catalog_kw["full_text"] = query
 
-      # add limit after resolving possible UID because that call (unfortunately) must be unrestricted
       if limit:
         catalog_kw["limit"] = limit
 
