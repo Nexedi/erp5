@@ -15,6 +15,10 @@
       "url": "officejs_media_player/",
       "cache": "gadget_officejs_media_player.appcache"
     },
+    "Notebook": {
+      "url": "officejs_notebook/",
+      "cache": "gadget_officejs_notebook.appcache"
+    },
     "Illustration Editor": {
       "url": "officejs_svg_editor/",
       "cache": "gadget_officejs_illustration.appcache"
