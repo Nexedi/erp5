@@ -102,16 +102,14 @@
   <td>${base_url}/web_site_module/officejs_media_player/</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Add']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Title']</td>
-  <td></td>
-</tr>
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@class='ui-link']</td>
