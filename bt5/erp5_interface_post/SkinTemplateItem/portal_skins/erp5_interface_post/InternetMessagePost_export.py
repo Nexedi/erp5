@@ -3,7 +3,7 @@
 
 # internet_message_post_module because we need an object supporting
 # the activate method
-context.getPortalObject().internet_message_post_module.activate(
+context.activate(
   activity='SQLQueue',
   conflict_retry=False,
   max_retry=0,
