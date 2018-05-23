@@ -22,11 +22,11 @@ translate = Base_translateString
 REQUEST = kwargs.get("REQUEST", None) or portal.REQUEST
 
 if selection_name:
-  uids = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)
-  if portal.portal_selections.selectionHasChanged(md5_object_uid_list, uids):
+  listbox_uid = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)
+  if portal.portal_selections.selectionHasChanged(md5_object_uid_list, listbox_uid):
     return context.Base_redirect(keep_items={'portal_status_message': translate("Sorry, your selection has changed.")})
 
-if not uids:
+if not listbox_uid:
   return context.Base_redirect(keep_items={
     'portal_status_message': translate("Please select one or more items first."),
     'portal_status_level': "warning"})
@@ -34,8 +34,8 @@ if not uids:
 
 if True:
   # already filters out documents with relations that cannot be deleted
-  object_list = context.Folder_getDeleteObjectList(uid=uids)
-  object_not_deletable_len = len(uids) - len(object_list)
+  object_list = context.Folder_getDeleteObjectList(uid=listbox_uid)
+  object_not_deletable_len = len(listbox_uid) - len(object_list)
 
   # some documents cannot be deleted thus we stop and warn the user
   if object_not_deletable_len == 1:

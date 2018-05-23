@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'\',dialog_id=\'\',selection_index=None,object_uid=None,selection_name=None,field_id=None,cancel_url=\'\',md5_object_uid_list=\'\', uids=(), **kwargs</string> </value>
+            <value> <string>form_id=\'\',dialog_id=\'\',selection_index=None,object_uid=None,selection_name=None,field_id=None,cancel_url=\'\',md5_object_uid_list=\'\', listbox_uid=(), **kwargs</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
