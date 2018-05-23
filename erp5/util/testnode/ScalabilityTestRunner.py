@@ -74,9 +74,6 @@ MAX_CONNECTION_TIME = 60*5
 # time to check site bootstrap
 CHECK_BOOSTRAPPING_TIME = 60*2
 
-# runner names
-PERFORMANCE_RUNNER_SCRIPT = "performance_tester_erp5"
-SCALABILITY_RUNNER_SCRIPT = "runScalabilityTestSuite"
 REQUEST_URL_SCRIPT = "requestUrl"
 SCALABILITY_TEST = "scalability_test"
 TEST_SUITE_INIT = "__init__.py"
@@ -203,7 +200,6 @@ class ScalabilityTestRunner():
       config = self._generateInstanceXML(software_configuration,
                                          test_result, test_suite, frontend_software, frontend_instance_guid)
       request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
-
       self.slapos_communicator.requestInstanceStart(self.instance_title, request_kw)
       self.authorize_request = False
       return {'status_code' : 0}                                          
@@ -386,7 +382,7 @@ Require valid-user
   def prepareFrontendMasterInstance(self, computer, frontend_software, test_suite_title):
     if not frontend_software:
       return None
-    self.frontend_master_reference = "Scalability-Frontend-Master-"
+    self.frontend_master_reference = "Scalability-Master-Frontend-"
     self.frontend_master_reference += "("+test_suite_title+")-"
     self.frontend_master_reference += str(computer).replace("'","")
     restart = True
@@ -678,8 +674,6 @@ Require valid-user
       instance_ready, error_message = self.isInstanceReady(site_availability_url)
       if error_message: break
 
-      runner = software_bin_directory + PERFORMANCE_RUNNER_SCRIPT
-      scalabilityRunner = software_bin_directory + SCALABILITY_RUNNER_SCRIPT
       slappart_directory = self.testnode.config['srv_directory'].rsplit("srv", 1)[0]
       log_path = slappart_directory + "var/log/"
       try:
@@ -689,21 +683,23 @@ Require valid-user
       except Exception as e:
         error_message = "Error getting current test case information: " + str(e)
         break
-      command = [ self.userhosts_bin,
-                  scalabilityRunner,
-                  "--instance-url", instance_url,
-                  "--bootstrap-password", bootstrap_password,
-                  "--test-result-path", node_test_suite.test_result.test_result_path,
-                  "--revision", node_test_suite.revision,
-                  "--current-test-data", current_test_data,
-                  "--node-title", self.testnode.config['test_node_title'],
-                  "--test-suite-master-url", self.testnode.config["test_suite_master_url"],
-                  "--test-suite", node_test_suite.test_suite,
-                  "--runner-path", runner,
-                  "--repo-location", repo_location,
-                  "--log-path", log_path,
-                  "--metric-url", metric_url
-                ]
+      try:
+        command = [ self.userhosts_bin ] + suite.getScalabilityRunCommand(software_bin_directory,
+                                                   instance_url,
+                                                   bootstrap_password,
+                                                   node_test_suite.test_result.test_result_path,
+                                                   node_test_suite.revision,
+                                                   current_test_data,
+                                                   self.testnode.config['test_node_title'],
+                                                   self.testnode.config["test_suite_master_url"],
+                                                   node_test_suite.test_suite,
+                                                   repo_location,
+                                                   log_path,
+                                                   metric_url)
+      except Exception as e:
+        error_message = "Error getting current run scalability command from testsuite: " + str(e)
+        break
+
       logger.info("Running test case...")
       test_thread = TestThread(self.testnode.process_manager, command, logger.info, env=self.exec_env)
       test_thread.start()
