@@ -3,9 +3,6 @@ from ZODB.POSException import ConflictError
 from zExceptions import Unauthorized
 Base_translateString = context.Base_translateString
 
-serial = context.REQUEST['serial']
-next_serial = context.REQUEST['next_serial']
-
 try:
   context.HistoricalRevisions[serial]
 except (ConflictError, Unauthorized):

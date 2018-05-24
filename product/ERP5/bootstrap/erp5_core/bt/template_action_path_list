@@ -168,6 +168,7 @@ portal_actions | property_sheet_tool
 portal_actions | search
 portal_actions | sort_on
 portal_actions | types_tool
+portal_actions | view_historical_comparison
 portal_membership | login
 portal_membership | logout
 portal_membership | preferences
