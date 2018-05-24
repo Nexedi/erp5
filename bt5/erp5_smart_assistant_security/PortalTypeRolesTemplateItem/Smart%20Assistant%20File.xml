@@ -1,0 +1,7 @@
+<type_roles>
+  <role id='Assignor'>
+   <property id='title'>Miner</property>
+   <property id='description'>Miners should be able to view all the document and validate them</property>
+   <multi_property id='category'>function/smart_assistant/miner</multi_property>
+  </role>
+</type_roles>
