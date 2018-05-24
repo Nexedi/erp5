@@ -6,8 +6,6 @@ ZOPE_USER_FAMILY = "user"
 ZOPE_ACTIVITIES_FAMILIY = "activities"
 PERSON_KEY = "person_per_hour"
 ORDER_KEY = "sale_order_per_hour"
-PERFORMANCE_RUNNER_SCRIPT = "performance_tester_erp5"
-SCALABILITY_RUNNER_SCRIPT = "runScalabilityTestSuite"
 
 class ERP5_scalability():
 
@@ -75,33 +73,3 @@ class ERP5_scalability():
         output_json[ORDER_KEY] = metric_json[ORDER_KEY]
     return "Person: %s doc/hour; SaleOrder: %s doc/hour;" % (
             str(output_json[PERSON_KEY]), str(output_json[ORDER_KEY]))
-
-  def getScalabilityRunCommand(self,
-                               software_bin_directory,
-                               instance_url,
-                               bootstrap_password,
-                               test_result_path,
-                               revision,
-                               current_test_data,
-                               test_node_title,
-                               test_suite_master_url,
-                               test_suite,
-                               repo_location,
-                               log_path,
-                               metric_url):
-    runner = software_bin_directory + PERFORMANCE_RUNNER_SCRIPT
-    scalabilityRunner = software_bin_directory + SCALABILITY_RUNNER_SCRIPT
-    return [ scalabilityRunner,
-             "--instance-url", instance_url,
-             "--bootstrap-password", bootstrap_password,
-             "--test-result-path", test_result_path,
-             "--revision", revision,
-             "--current-test-data", current_test_data,
-             "--node-title", test_node_title,
-             "--test-suite-master-url", test_suite_master_url,
-             "--test-suite", test_suite,
-             "--runner-path", runner,
-             "--repo-location", repo_location,
-             "--log-path", log_path,
-             "--metric-url", metric_url
-           ]
