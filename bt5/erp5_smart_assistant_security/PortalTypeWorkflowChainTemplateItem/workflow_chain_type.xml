@@ -1,0 +1,18 @@
+<workflow_chain>
+ <chain>
+  <type>Smart Assistant File</type>
+  <workflow>smart_assistant_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Smart Assistant Image</type>
+  <workflow>smart_assistant_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Smart Assistant Sound</type>
+  <workflow>smart_assistant_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Smart Assistant Text</type>
+  <workflow>smart_assistant_workflow</workflow>
+ </chain>
+</workflow_chain>
