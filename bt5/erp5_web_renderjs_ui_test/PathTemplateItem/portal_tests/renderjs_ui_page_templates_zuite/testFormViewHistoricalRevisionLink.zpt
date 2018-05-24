@@ -1,0 +1,148 @@
+<!-- Test whether URLs in History tab works correclty showing the old
+     value, new value and current value
+-->
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Add']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Document created.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='field_my_short_title']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_my_short_title']</td>
+  <td>A new foo</td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+<!-- Go to History tab -->
+<tr>
+  <td colspan="3"><b>Go to History view</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//ul[@class='document-listview']//a[@data-i18n='History']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//ul[@class='document-listview']//a[@data-i18n='History']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<!-- Check the links in hardcoded way -->
+<!-- TODO: If possible, move to macros -->
+<!-- The links for 1st row shouldn't be working as we don't compare the intial state in History view.
+     Also, the links are on 4th column only, which is DateTime column -->
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='x0_listbox']//table/tbody/tr[1]/td[4]/a</td>
+  <td></td>
+</tr>
+
+<!-- Link should be working on second row -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='x0_listbox']//table/tbody/tr[2]/td[4]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='x0_listbox']//table/tbody/tr[2]/td[4]/a</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/tbody</td>
+  <td></td>
+  </tr>
+<!-- Check if the columns exists or not. Can be done by just checking the head -->
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/thead/tr[1]/th[1]</td>
+  <td>Property Name</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/thead/tr[1]/th[2]</td>
+  <td>Old Value</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/thead/tr[1]/th[3]</td>
+  <td>New Value</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/thead/tr[1]/th[4]</td>
+  <td>Current Value</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
