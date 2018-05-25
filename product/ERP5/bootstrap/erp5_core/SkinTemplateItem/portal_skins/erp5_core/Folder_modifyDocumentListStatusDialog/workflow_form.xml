@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="StringField" module="Products.Formulator.StandardFields"/>
+      <global name="FormBox" module="Products.ERP5Form.FormBox"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>workflow_dialog_your_workflow_action</string> </value>
+            <value> <string>workflow_form</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -19,12 +19,12 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>required_not_found</string> </key>
-                    <value> <string>Input is required but no input given.</string> </value>
+                    <key> <string>form_invalidated</string> </key>
+                    <value> <string>Form invalidated.</string> </value>
                 </item>
                 <item>
-                    <key> <string>too_long</string> </key>
-                    <value> <string>Too much input was given.</string> </value>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -35,6 +35,10 @@
               <dictionary>
                 <item>
                     <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>context_method_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -50,14 +54,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -70,7 +66,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>formbox_target_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -78,31 +74,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>input_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -117,6 +89,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>context_method_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -126,14 +102,6 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -149,39 +117,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>formbox_target_id</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>input_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -196,8 +142,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>css_class</string> </key>
+                    <key> <string>context_method_id</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>invisible</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -206,14 +156,6 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -228,43 +170,36 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>formbox_target_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>input_type</string> </key>
-                    <value> <string>text</string> </value>
-                </item>
-                <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>workflow_dialog_my_workflow_action</string> </value>
+                    <value> <string>Workflow Dialog</string> </value>
                 </item>
                 <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>validator_form_field_prefix</string> </key>
+                    <value> <string>your_</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.Module_getWorkflowTransitionDialogId(request)</string> </value>
         </item>
       </dictionary>
     </pickle>

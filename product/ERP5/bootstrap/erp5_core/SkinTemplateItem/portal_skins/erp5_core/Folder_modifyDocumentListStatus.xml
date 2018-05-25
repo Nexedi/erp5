@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, dialog_id, uids, workflow_action, workflow_action_rendered, comment=\'\', **kwargs</string> </value>
+            <value> <string>form_id, dialog_id, mass_workflow_action, previous_mass_workflow_action=None, listbox_uid=None, workflow_form=None, update_method=None, **kwargs</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

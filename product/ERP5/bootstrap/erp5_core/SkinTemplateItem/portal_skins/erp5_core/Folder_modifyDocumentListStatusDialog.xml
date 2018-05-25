@@ -74,11 +74,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>workflow_action</string>
-                        <string>workflow_dialog</string>
-                        <string>workflow_dialog_my_workflow_action</string>
-                        <string>workflow_dialog_your_workflow_action</string>
-                        <string>workflow_action_rendered</string>
+                        <string>your_mass_workflow_action</string>
+                        <string>workflow_form</string>
+                        <string>your_previous_mass_workflow_action</string>
                       </list>
                     </value>
                 </item>
