@@ -1184,6 +1184,9 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content .bottom iframe {
   height: 80vh;
 }
+.gadget-content .bottom .listbox-gadget iframe {
+  height: 30vh;
+}
 .gadget-content form .ui-field-contain {
   position: relative;
 }
