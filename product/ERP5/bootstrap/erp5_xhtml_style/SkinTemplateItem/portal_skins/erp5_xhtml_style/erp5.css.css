@@ -28,7 +28,7 @@ input, textarea, select, button, body, div, span, fieldset {
 
 iframe {
   width: 100%;
-  height: 50vh;
+  height: 30vh;
 }
 
 div.input > select, div.input > input, div.listbox select {
@@ -1211,6 +1211,10 @@ body[dir="rtl"] .horizontal_align_form_box >  div.input > fieldset > div.field {
 
 fieldset > div.large-gadget {
   height: 85vh;
+}
+
+diff-gadget {
+  height: 40vh;
 }
 
 a.zocial {
