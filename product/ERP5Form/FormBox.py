@@ -175,7 +175,17 @@ class FormBoxValidator(Validator.Validator):
     Validate all fields of the form and return
     the result as a single variable.
   """
-  property_names = Validator.Validator.property_names
+  validator_form_field_prefix = fields.StringField(
+    'validator_form_field_prefix',
+    title='Validator Form Field Prefix',
+    description= "Field prefix value used when validating fields",
+    default="my_",
+    display_width=40,
+    required=1
+  )
+
+  property_names = Validator.Validator.property_names + \
+                   ['validator_form_field_prefix']
   message_names = Validator.Validator.message_names + \
                   ['form_invalidated', 'required_not_found']
 
@@ -193,7 +203,8 @@ class FormBoxValidator(Validator.Validator):
 
     with getFormBoxContext(field, REQUEST) as here:
       # XXX Hardcode script name
-      result, result_type = here.Base_edit(formbox_target_id, silent_mode=1, key_prefix=key)
+      result, result_type = here.Base_edit(formbox_target_id, silent_mode=1, key_prefix=key,
+                                           field_prefix=field.get_value('validator_form_field_prefix'))
       if result_type == 'edit':
         return FormBoxEditor(result, here)
       elif result_type == 'form':
