@@ -1178,9 +1178,16 @@ div[data-gadget-scope='header'] .ui-header ul {
     flex: 7;
   }
 }
+
+
+.gadget-content .bottom .diff-gadget iframe {
+  height: 30vh;
+}
+
 .gadget-content .bottom iframe {
   height: 80vh;
 }
+
 .gadget-content form .ui-field-contain {
   position: relative;
 }
