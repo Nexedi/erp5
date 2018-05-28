@@ -961,12 +961,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td tal:content="python: '//div[@data-gadget-scope=\'notification\']//button[@class=\'%(class)s\' and text()=\'%(text)s\']' % notification_configuration"></td>
+      <td tal:content="python: '//div[@data-gadget-scope=\'notification\' and @class=\'visible\']//button[@class=\'%(class)s\' and text()=\'%(text)s\']' % notification_configuration"></td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td tal:content="python: '//div[@data-gadget-scope=\'notification\']//button[@class=\'%(class)s\' and text()=\'%(text)s\']' % notification_configuration"></td>
+      <td tal:content="python: '//div[@data-gadget-scope=\'notification\' and @class=\'visible\']//button[@class=\'%(class)s\' and text()=\'%(text)s\']' % notification_configuration"></td>
       <td></td>
     </tr>
     <tr>
