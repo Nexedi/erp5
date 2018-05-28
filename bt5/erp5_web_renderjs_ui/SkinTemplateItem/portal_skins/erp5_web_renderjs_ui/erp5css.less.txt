@@ -1380,6 +1380,11 @@ div[data-gadget-scope='header'] .ui-header {
     iframe {
       height: 80vh;
     }
+    .diff-gadget {
+      iframe {
+        height: 30vh;
+      }
+    }
   }
 
 /*
