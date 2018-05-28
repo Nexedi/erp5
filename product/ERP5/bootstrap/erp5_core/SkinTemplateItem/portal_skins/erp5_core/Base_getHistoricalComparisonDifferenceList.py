@@ -16,7 +16,10 @@ except Exception:# POSKeyError
                       ' not available, maybe the database has been packed'))]
 
 if next_serial == '0.0.0.0':
+  # In case the next serial is 0.0.0.0, we should always be considering the
+  # new object as the current context
   new_getProperty = context.getProperty
+  new = context
 else:
   new = context.HistoricalRevisions[next_serial]
   new_getProperty = new.getProperty
