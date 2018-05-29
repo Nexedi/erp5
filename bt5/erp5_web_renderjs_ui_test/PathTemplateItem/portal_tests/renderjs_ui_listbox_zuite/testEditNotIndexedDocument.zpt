@@ -85,6 +85,8 @@
   <td></td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@data-gadget-scope="INPUT"]</td>
