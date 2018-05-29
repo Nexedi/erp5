@@ -158,6 +158,9 @@ and handling data send&receive.
 
       return promise_queue
         .push(function () {
+          if (new_state.erp5_document._embedded._view.hasOwnProperty('_embedded')) {
+            return new_state.erp5_document._embedded._view._embedded.form_definition;
+          }
           var uri = new URI(new_state.erp5_document._embedded._view._links.form_definition.href);
           return gadget.jio_getAttachment(uri.segment(2), "view");
         })

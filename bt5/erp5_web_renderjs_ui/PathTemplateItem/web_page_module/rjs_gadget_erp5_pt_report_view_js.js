@@ -5,10 +5,13 @@
 
   function createSectionGadget(gadget, queue, report_section,
                                section_list_element) {
-    var uri = new URI(report_section._links.form_definition.href),
-      form_definition;
+    var form_definition;
     queue
       .push(function () {
+        if (report_section.hasOwnProperty('_embedded')) {
+          return report_section._embedded.form_definition;
+        }
+        var uri = new URI(report_section._links.form_definition.href);
         return gadget.jio_getAttachment(uri.segment(2), "view");
       })
       .push(function (result) {
