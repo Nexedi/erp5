@@ -157,26 +157,6 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
   def call(self, *args, **kw):
     return args[0](*args[1:], **kw)
 
-  def callWithPublicCloudoooOnSystemPreference(self, *args, **kw):
-    """
-    Calls 'doSomething' with '*args' and '**kw' after setting cloudooo server 
-    url preference to 'https://cloudooo.erp5.net/' and finally restores the 
-    preference to its original value.
-    """
-    system_preference = self.portal.portal_preferences.getActiveSystemPreference()
-    if system_preference is None:
-      return args[0](*args[1:], **kw)
-    preferred_document_conversion_server_url = system_preference.getPreferredDocumentConversionServerUrl()
-    try:
-      system_preference.edit(
-        preferred_document_conversion_server_url="https://cloudooo.erp5.net/",
-      )
-      return args[0](*args[1:], **kw)
-    finally:
-      system_preference.edit(
-        preferred_document_conversion_server_url=preferred_document_conversion_server_url,
-      )
-
   def callWithNewRequestAcceptLanguage(self, *args, **kw):
     """
     Call 'doSomething' with '*args' and '**kw' after setting 
@@ -266,7 +246,6 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     )
 
     pdf_data = self.call(
-      self.callWithPublicCloudoooOnSystemPreference,
       self.callWithNewRequestAcceptLanguage,
       self.callWithNewRequestForm,
       pdf_kw,
