@@ -105,20 +105,30 @@ for movement in portal_catalog(query):
           # Except if it is a Data Array Line, then it is currently created by
           # data operation itself (probably this exception is inconsistent)
           if item_type not in aggregate_type_set and item_type != "Data Array Line":
-            module = portal.getDefaultModule(item_type)
-            item = module.newContent(portal_type = item_type,
-                              title = transformation.getTitle(),
-                              reference = "%s-%s" %(transformation.getTitle(),
-                                                    delivery.getReference()),
-                              version = '001')
-            try:
-              item.validate()
-            except AttributeError:
-              pass
+            item = portal.portal_catalog.getResultValue(
+              portal_type=item_type,
+              validation_state="validated",
+              item_variation_text=transformation_line.getVariationText(),
+              item_device_relative_url=movement.getAggregateDevice(),
+              item_project_relative_url=data_analysis.getDestinationProject(),
+              item_resource_uid=resource.getUid(),
+              item_source_relative_url=data_analysis.getSource())
+            if item is None:
+              module = portal.getDefaultModule(item_type)
+              item = module.newContent(portal_type = item_type,
+                                title = transformation.getTitle(),
+                                reference = "%s-%s" %(transformation.getTitle(),
+                                                      delivery.getReference()),
+                                version = '001')
+              try:
+                item.validate()
+              except AttributeError:
+                pass
             aggregate_set.add(item.getRelativeUrl())
       # find other items such as device configuration and data configuration
       # from data ingestion and data supply
       composed = data_analysis.asComposedDocument()
+      data_analysis.checkConsistency(fixit=True)
       line_list = [l for l in delivery.objectValues(portal_type="Data Ingestion Line")]
       line_list +=  [l for l in composed.objectValues(portal_type="Data Supply Line")]
       for line in line_list:
