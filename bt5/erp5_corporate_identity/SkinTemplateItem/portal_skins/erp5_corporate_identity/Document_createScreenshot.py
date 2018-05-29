@@ -18,25 +18,11 @@ if context.getId().find("template_") == -1:
 pdf_page = context
 portal = pdf_page.getPortalObject()
 
-system_preference = (
-  portal.portal_preferences.getActiveSystemPreference()
+_, bmp_data = pdf_page.convert("bmp", frame=frame)
+image = portal.portal_catalog(
+  portal_type="Image",
+  id=doc_id,
+  limit=1
 )
-preferred_document_conversion_server_url = (
-  system_preference.getPreferredDocumentConversionServerUrl()
-)
-try:
-  system_preference.edit(
-    preferred_document_conversion_server_url="https://cloudooo.erp5.net/"
-  )
-  _, bmp_data = pdf_page.convert("bmp", frame=frame)
-  image = portal.portal_catalog(
-    portal_type="Image",
-    id=doc_id,
-    limit=1
-  )
-  image[0].edit(data=bmp_data)
-  return "Screenshot updated."
-finally:
-  system_preference.edit(
-    preferred_document_conversion_server_url=preferred_document_conversion_server_url,
-  )
+image[0].edit(data=bmp_data)
+return "Screenshot updated."
