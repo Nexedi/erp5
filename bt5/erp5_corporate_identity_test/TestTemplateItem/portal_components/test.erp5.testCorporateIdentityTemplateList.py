@@ -87,11 +87,9 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.message_catalog.message_edit('Press Release', 'de', 'Pressemeldung', '')
 
     # Activating a system preference if none is activated
-    for preference in self.portal.portal_catalog(portal_type="System Preference"):
-      if preference.getPreferenceState() == "global":
-        break
-    else:
-      self.portal.portal_preferences.default_nexedi_system_preference.enable()
+    preference = self.getDefaultSystemPreference()
+    if preference.getPreferenceState() != "global":
+      preference.enable()
     self.tic()
 
   def createTestEvent(self, target_language, source_relative_url, destination_relative_url):
