@@ -41,5 +41,6 @@ Data Transformation | validation_workflow
 Ingestion Policy | edit_workflow
 Ingestion Policy | validation_workflow
 Progress Indicator | edit_workflow
+Progress Indicator | validation_workflow
 Sensor | edit_workflow
 Sensor | validation_workflow

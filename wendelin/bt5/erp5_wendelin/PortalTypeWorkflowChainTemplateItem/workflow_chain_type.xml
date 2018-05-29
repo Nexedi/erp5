@@ -89,7 +89,7 @@
  </chain>
  <chain>
   <type>Progress Indicator</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Sensor</type>
