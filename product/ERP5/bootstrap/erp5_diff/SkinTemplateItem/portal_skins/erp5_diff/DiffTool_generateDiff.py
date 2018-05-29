@@ -4,7 +4,11 @@ portal =  context.getPortalObject()
 portal_diff = portal.portal_diff
 
 request = container.REQUEST
-if request.get('first_object_path', None) is None:
+
+# In case we have first_object_path or second_object_path, we just display the
+# paths. Only in case we have both is when we try to get the diff
+if (request.get('first_object_path', None) is None or
+    request.get('second_object_path', None) is None):
   return []
 
 first_doc = portal.restrictedTraverse(request['first_object_path'])
