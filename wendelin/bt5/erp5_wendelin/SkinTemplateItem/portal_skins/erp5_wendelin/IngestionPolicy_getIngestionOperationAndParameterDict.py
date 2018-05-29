@@ -70,10 +70,20 @@ def init_input_line(input_line, operation_line):
     for data_sink_type in data_sink_type_list:
       # This should be more generic
       if data_sink_type not in ("Progress Indicator", "Data Ingestion Batch"):
-        data_sink = portal.getDefaultModule(data_sink_type).newContent(
-          portal_type = data_sink_type,
-          reference = "%s-%s" %(data_ingestion_reference, resource_reference))
-        data_sink.validate()
+        # first try to find existing validated data sink
+        # with same device, project, resource (but can be different source)
+        data_sink = portal.portal_catalog.getResultValue(
+          portal_type=data_sink_type,
+          validation_state="validated",
+          item_device_relative_url=operation_line.getAggregateDevice(),
+          item_project_relative_url=input_line.getDestinationProject(),
+          item_resource_uid=input_line.getResourceUid())
+          
+        if data_sink is None:  
+          data_sink = portal.getDefaultModule(data_sink_type).newContent(
+            portal_type = data_sink_type,
+            reference = "%s-%s" %(data_ingestion_reference, resource_reference))
+          data_sink.validate()
         data_sink_list.append(data_sink)
   
   input_line.setAggregateValueList(
