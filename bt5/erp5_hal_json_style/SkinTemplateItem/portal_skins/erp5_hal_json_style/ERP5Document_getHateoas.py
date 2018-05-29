@@ -102,7 +102,7 @@ def renderHiddenField(form, name, value):
     form['_embedded'] = {}
     form['_embedded']['_view'] = {}
 
-  if '_embedded' in form:
+  if ('_embedded' in form) and ('_view' in form['_embedded']):
     field_dict = form['_embedded']['_view']
   else:
     field_dict = form
@@ -1055,16 +1055,25 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   }
 
   form_relative_url = getFormRelativeUrl(form)
+
+  # Kept for compatibility
   response_dict['_links']['form_definition'] = {
-#     "href": default_document_uri_template % {
-#       "root_url": site_root.absolute_url(),
-#       "script_id": script.id,
-#       "relative_url": getFormRelativeUrl(form)
-#     },
     "href": default_document_uri_template % {
       "relative_url": form_relative_url
     },
     'name': form.id
+  }
+
+  response_dict['_embedded'] = {
+    'form_definition': calculateHateoas(
+      traversed_document=form,
+      relative_url=form_relative_url,
+      is_site_root=False,
+      is_portal=False,
+      mode='traverse',
+      restricted=1,
+      view='view'
+    )
   }
 
   # Go through all groups ("left", "bottom", "hidden" etc.) and add fields from
@@ -1586,10 +1595,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       traversed_document_portal_type = traversed_document.getPortalType()
       if traversed_document_portal_type in ("ERP5 Form", "ERP5 Report"):
         renderFormDefinition(traversed_document, result_dict)
-        response.setHeader("Cache-Control", "private, max-age=1800")
-        response.setHeader("Vary", "Cookie,Authorization,Accept-Encoding")
-        response.setHeader("Last-Modified", DateTime().rfc822())
-        REQUEST.set("X-HATEOAS-CACHE", 1)
+        if response is not None:
+          response.setHeader("Cache-Control", "private, max-age=1800")
+          response.setHeader("Vary", "Cookie,Authorization,Accept-Encoding")
+          response.setHeader("Last-Modified", DateTime().rfc822())
+          REQUEST.set("X-HATEOAS-CACHE", 1)
       elif relative_url == 'portal_workflow':
         result_dict['_links']['action_worklist'] = {
           "href": url_template_dict['worklist_template'] % {

@@ -645,6 +645,18 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
 
     self.assertEqual(result_dict['_embedded']['_view']['_links']['form_definition']['href'], 'urn:jio:get:portal_skins/erp5_ui_test/Foo_view')
     self.assertEqual(result_dict['_embedded']['_view']['_links']['form_definition']['name'], 'Foo_view')
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['group_list'][0][0],
+      'left'
+    )
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['group_list'][0][1][0],
+      ['my_id', {'meta_type': 'ProxyField'}]
+    )
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['pt'],
+      'form_view'
+    )
 
     self.assertEqual(result_dict['_embedded']['_view']['_actions']['put']['href'], '%s/web_site_module/hateoas/%s/Base_edit' % (
                                                                                      self.portal.absolute_url(),
@@ -757,6 +769,18 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
 
     self.assertEqual(result_dict['_embedded']['_view']['_links']['form_definition']['href'], 'urn:jio:get:portal_skins/erp5_ui_test/Foo_view')
     self.assertEqual(result_dict['_embedded']['_view']['_links']['form_definition']['name'], 'Foo_view')
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['group_list'][0][0],
+      'left'
+    )
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['group_list'][0][1][0],
+      ['my_id', {'meta_type': 'ProxyField'}]
+    )
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['pt'],
+      'form_view'
+    )
 
     self.assertFalse(result_dict['_embedded']['_view'].has_key('_actions'))
 
@@ -889,6 +913,18 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
 
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['_links']['form_definition']['href'], 'urn:jio:get:portal_skins/erp5_core/Base_viewWorkflowHistory')
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['_links']['form_definition']['name'], 'Base_viewWorkflowHistory')
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['group_list'][0][0],
+      'center'
+    )
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['group_list'][0][1][0],
+      ['your_zodb_history', {'meta_type': 'LinkField'}]
+    )
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['pt'],
+      'report_view'
+    )
 
     self.assertSameSet(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['default_params'].keys(), ['checked_permission', 'ignore_unknown_columns', 'workflow_id', 'workflow_title'])
     self.assertTrue(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['default_params']['ignore_unknown_columns'])
@@ -1825,6 +1861,18 @@ class TestERP5Document_getHateoas_mode_bulk(ERP5HALJSONStyleSkinsMixin):
 
     self.assertEqual(result_dict['result_list'][0]['_embedded']['_view']['_links']['form_definition']['href'], 'urn:jio:get:portal_skins/erp5_ui_test/Foo_view')
     self.assertEqual(result_dict['result_list'][0]['_embedded']['_view']['_links']['form_definition']['name'], 'Foo_view')
+    self.assertEqual(
+      result_dict['result_list'][0]['_embedded']['_view']['_embedded']['form_definition']['group_list'][0][0],
+      'left'
+    )
+    self.assertEqual(
+      result_dict['result_list'][0]['_embedded']['_view']['_embedded']['form_definition']['group_list'][0][1][0],
+      ['my_id', {'meta_type': 'ProxyField'}]
+    )
+    self.assertEqual(
+      result_dict['result_list'][0]['_embedded']['_view']['_embedded']['form_definition']['pt'],
+      'form_view'
+    )
 
     self.assertEqual(result_dict['result_list'][0]['_embedded']['_view']['_actions']['put']['href'], '%s/web_site_module/hateoas/%s/Base_edit' % (
                                                                                      self.portal.absolute_url(),
