@@ -28,7 +28,7 @@
 # Cloudooo uses zip= argument, which is also a python builtin
 # pylint: disable=redefined-builtin
 
-from xmlrpclib import ServerProxy
+from Products.ERP5OOo.Document.OOoDocument import OOoServerProxy
 from base64 import b64encode, b64decode
 from zExceptions import Unauthorized
 
@@ -45,10 +45,7 @@ def convertDocumentByConversionServer(
   if REQUEST is not None:
     raise Unauthorized
 
-  proxy = ServerProxy(
-    self.getPortalObject().portal_preferences.getPreferredDocumentConversionServerUrl(),
-    allow_none=True
-  )
+  proxy = OOoServerProxy(self)
   return b64decode(
     proxy.convertFile(
       b64encode(data),
