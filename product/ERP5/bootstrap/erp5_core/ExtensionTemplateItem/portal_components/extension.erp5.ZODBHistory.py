@@ -1,8 +1,9 @@
 ##############################################################################
 #
-# Copyright (c) 2014 Nexedi KK and Contributors. All Rights Reserved.
+# Copyright (c) 2018 Nexedi KK and Contributors. All Rights Reserved.
 #                    Yusei Tahara <yusei@nexedi.com>
 #                    Tatuya Kamada <tatuya@nexedi.com>
+#                    Ayush Tiwari <ayush.tiwari@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -138,3 +139,27 @@ def getChangeHistoryList(document, size=50, attribute_name=None):
   history.sort(key=lambda x:x['datetime'])
 
   return history
+
+def getHistoricalRevisionsDateList(document, size=50):
+  """
+  Returns the list dates in float format for the last
+  50 versions of the document.
+  """
+  result = document._p_jar.db().history(document._p_oid, size)
+  return [d_['time'] for d_ in result]
+
+def getRevisionFromDate(document, date, size=50):
+  """
+  Returns the attribute/property dict of an object from its revision date
+
+  params:
+    date - It shold be in float format (or float converted to string)
+    size -- How long history do you need
+  """
+  result = document._p_jar.db().history(document._p_oid, size)
+  # Get the version of object using the date
+  result_obj = [l for l in result if str(l['time']) == str(date)][0]
+
+  # Return the history state of the object
+  connection = document._p_jar
+  return connection.oldstate(document, result_obj['tid'])

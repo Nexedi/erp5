@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>ERP5Site_viewDiffTwoObjectDialog</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -53,7 +53,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -65,21 +67,27 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_diff</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
+                        <string>your_first_path</string>
+                        <string>your_first_date</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_second_path</string>
+                        <string>your_second_date</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -87,7 +95,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiffTool_view</string> </value>
+            <value> <string>ERP5Site_viewDiffTwoObjectDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -95,11 +103,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DiffTool_view</string> </value>
+            <value> <string>ERP5Site_viewDiffTwoObjectDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -111,7 +119,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Diff Tool</string> </value>
+            <value> <string>View Diff</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
