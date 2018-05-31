@@ -26,15 +26,11 @@
         </item>
         <item>
             <key> <string>condition</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>python: object is not None and not object.isWebMode()</string> </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -76,19 +72,6 @@
         <item>
             <key> <string>text</string> </key>
             <value> <string>string:${object_url}/ComponentMixin_view</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="Expression" module="Products.CMFCore.Expression"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python: object is not None and not object.isWebMode()</string> </value>
         </item>
       </dictionary>
     </pickle>
