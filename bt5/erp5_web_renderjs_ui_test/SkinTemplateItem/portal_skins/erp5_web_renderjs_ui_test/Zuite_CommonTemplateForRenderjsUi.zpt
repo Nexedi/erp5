@@ -154,6 +154,16 @@
       <td></td>
     </tr>
     <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//button[@name='action_update' and @type='submit' and @disabled]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//button[@name='action_update' and @type='submit' and @disabled]</td>
+      <td></td>
+    </tr>
+    <tr>
       <td>waitForElementPresent</td>
       <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//button[@name='action_update' and @type='submit']</td>
       <td></td>
