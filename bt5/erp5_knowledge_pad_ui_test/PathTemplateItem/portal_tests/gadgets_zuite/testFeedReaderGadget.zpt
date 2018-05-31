@@ -56,7 +56,7 @@
   <td>Please enter a valid Rss or Atom url in the preference form</td>
   <td></td>
 </tr>
-<!-- Set an URL of ERP5 so test do not depend on external RSS provider (http://www.lemonde.fr/rss/une.xml) -->
+<!-- Set an URL of ERP5 so test do not depend on external RSS provider (https://www.lemonde.fr/rss/une.xml) -->
 <tr>
   <td>click</td>
   <td>//div[@id='${erp5_rss_box_id}']/h3/span/a[2]</td>
@@ -65,7 +65,7 @@
 <tr>
   <td>type</td>
   <td>gadget_preference_${erp5_rss_box_id}_field_my_preferred_rss_feed</td>
-  <td>http://www.lemonde.fr/rss/une.xml</td>
+  <td>https://www.lemonde.fr/rss/une.xml</td>
 </tr>
 <tr>
   <td>keyPressAndWait</td>
