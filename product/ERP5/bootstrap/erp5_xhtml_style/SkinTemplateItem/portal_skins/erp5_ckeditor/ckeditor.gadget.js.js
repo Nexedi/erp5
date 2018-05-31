@@ -196,6 +196,7 @@
         } else {
           configuration = gadget.state.configuration;
         }
+        gadget.on_change_listener = gadget.deferNotifyChange.bind(gadget);
         gadget.ckeditor = CKEDITOR.replace(
           this.element.querySelector('textarea'),
           configuration
@@ -212,7 +213,7 @@
         gadget.ckeditor.on('instanceReady', function (event) {
           event.editor.execCommand('maximize');
         });
-        gadget.ckeditor.on('change', gadget.deferNotifyChange.bind(gadget));
+
         // Let CKEDITOR open inner links when in read-only mode
         gadget.ckeditor.on('contentDom', function () {
           var editable = gadget.ckeditor.editable();
@@ -231,7 +232,12 @@
         });
       }
       if (modification_dict.hasOwnProperty('value')) {
-        this.ckeditor.setData(this.state.value);
+        // Prevent triggering notifyChange method when render is called
+        // remove the change listener before calling setData and restore it after
+        this.ckeditor.removeListener('change', this.on_change_listener);
+        this.ckeditor.setData(this.state.value, {callback: function () {
+          gadget.ckeditor.on('change', gadget.on_change_listener);
+        }});
       }
     })
 
