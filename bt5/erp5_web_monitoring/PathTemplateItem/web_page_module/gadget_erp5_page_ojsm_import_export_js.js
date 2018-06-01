@@ -260,41 +260,69 @@
       });
   }
 
+  function getParameterDictFromUrl(uri_param) {
+    if (uri_param.has('url') && uri_param.has('password') &&
+        uri_param.has('username') && uri_param.get('url').startsWith('http')) {
+      return {
+        opml_url: uri_param.get('url'),
+        username: uri_param.get('username'),
+        password: uri_param.get('password')
+      };
+    }
+  }
+
+  function getParameterFromconnectionDict(connection_dict) {
+    if (connection_dict["monitor-url"] &&
+        connection_dict["monitor-url"].startsWith('http') &&
+        connection_dict["monitor-user"] &&
+        connection_dict["monitor-password"]) {
+      return {
+        opml_url: connection_dict["monitor-url"],
+        username: connection_dict["monitor-user"],
+        password: connection_dict["monitor-password"]
+      };
+    }
+  }
+
   function readMonitoringParameter(parmeter_xml) {
     var parser = new DOMParser(),
       xmlDoc = parser.parseFromString(parmeter_xml, "text/xml"),
       parameter,
       uri_param,
+      json_parameter,
+      parameter_dict,
       monitor_dict = {};
 
+    json_parameter = xmlDoc.getElementById("_");
+    if (json_parameter !== undefined && json_parameter !== null) {
+      parameter_dict = JSON.parse(json_parameter.textContent);
+      if (parameter_dict.hasOwnProperty("monitor-setup-url")) {
+        return getParameterDictFromUrl(
+          new URLSearchParams(parameter_dict["monitor-setup-url"])
+        );
+      }
+      return getParameterFromconnectionDict(parameter_dict);
+    }
     parameter = xmlDoc.getElementById("monitor-setup-url");
     if (parameter !== undefined && parameter !== null) {
       // monitor-setup-url exists
       uri_param = new URLSearchParams(parameter.textContent);
-      if (uri_param.has('url') && uri_param.has('password') &&
-          uri_param.has('username') && uri_param.get('url').startsWith('http')) {
-        return {
-          opml_url: uri_param.get('url'),
-          username: uri_param.get('username'),
-          password: uri_param.get('password')
-        };
+      return getParameterDictFromUrl(uri_param);
+    }
+    parameter = xmlDoc.getElementById("monitor-url");
+    if (parameter !== undefined && parameter !== null) {
+      monitor_dict.url = parameter.textContent.trim();
+      parameter = xmlDoc.getElementById("monitor-user");
+      if (parameter === undefined && parameter !== null) {
+        return;
       }
-    } else {
-      parameter = xmlDoc.getElementById("monitor-url");
-      if (parameter !== undefined && parameter !== null) {
-        monitor_dict.url = parameter.textContent.trim();
-        parameter = xmlDoc.getElementById("monitor-user");
-        if (parameter === undefined && parameter !== null) {
-          return;
-        }
-        monitor_dict.username = parameter.textContent.trim();
-        parameter = xmlDoc.getElementById("monitor-password");
-        if (parameter === undefined && parameter !== null) {
-          return;
-        }
-        monitor_dict.password = parameter.textContent.trim();
-        return monitor_dict;
+      monitor_dict.username = parameter.textContent.trim();
+      parameter = xmlDoc.getElementById("monitor-password");
+      if (parameter === undefined && parameter !== null) {
+        return;
       }
+      monitor_dict.password = parameter.textContent.trim();
+      return monitor_dict;
     }
   }
 
