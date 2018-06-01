@@ -7,6 +7,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_text_content</string> </value>
         </item>
@@ -33,10 +41,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -53,7 +57,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -65,15 +69,15 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_data</string> </value>
+                    <value> <string>my_text_content</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Document_viewSVGEditor</string> </value>
+                    <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>Page Content</string> </value>
                 </item>
               </dictionary>
             </value>
