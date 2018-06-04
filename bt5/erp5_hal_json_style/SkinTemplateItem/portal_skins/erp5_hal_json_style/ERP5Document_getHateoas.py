@@ -64,6 +64,7 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from collections import OrderedDict
 
 MARKER = []
+COUNT_LIMIT = 1000
 
 if REQUEST is None:
   REQUEST = context.REQUEST
@@ -1677,6 +1678,18 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # in case we have custom list method
     catalog_kw = {}
 
+    # form field issuing this search
+    source_field = portal.restrictedTraverse(form_relative_url) if form_relative_url else None
+    source_field_meta_type = source_field.meta_type if source_field is not None else ""
+    if source_field_meta_type == "ProxyField":
+      source_field_meta_type = source_field.getRecursiveTemplateField().meta_type
+    is_rendering_listbox = (source_field is not None) and (source_field_meta_type == "ListBox")
+
+    count_method = ""
+    if is_rendering_listbox:
+      count_method = source_field.get_value('count_method')
+    has_listbox_a_count_method = (count_method != "") and (count_method.getMethodName() != list_method)
+
     # hardcoded responses for site and portal objects (which are not Documents!)
     # we let the flow to continue because the result of a list_method call can
     # be similar - they can in practice return anything
@@ -1701,9 +1714,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
               json.loads(urlsafe_b64decode(default_param_json)))))
       if query:
         catalog_kw["full_text"] = query
-
-      if limit:
-        catalog_kw["limit"] = limit
 
       if selection_domain is not None:
         selection_domain_dict = ensureDeserialized(
@@ -1740,6 +1750,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         else:
           catalog_kw['sort_on'] = [parseSortOn(sort_on), ]
 
+      if limit:
+        catalog_kw["limit"] = limit
+      if is_rendering_listbox and not has_listbox_a_count_method:
+        # When rendering a listbox without count method, add a dummy manual count
+        # by fetching more documents than requested
+        catalog_kw["limit"] = [0, COUNT_LIMIT]
+
       # Some search scripts impertinently grab their arguments from REQUEST
       # instead of being nice and specify them as their input parameters.
       #
@@ -1760,19 +1777,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     elif same_type(select_list, ""):
       select_list = [select_list]
 
-    # form field issuing this search
-    source_field = portal.restrictedTraverse(form_relative_url) if form_relative_url else None
-
     # extract form field definition into `editable_field_dict`
     editable_field_dict = {}
     url_column_dict = {}
     listbox_form = None
     listbox_field_id = None
-    source_field_meta_type = source_field.meta_type if source_field is not None else ""
-    if source_field_meta_type == "ProxyField":
-      source_field_meta_type = source_field.getRecursiveTemplateField().meta_type
 
-    if source_field is not None and source_field_meta_type == "ListBox":
+    if is_rendering_listbox:
       listbox_field_id = source_field.id
       listbox_form = getattr(traversed_document, source_field.aq_parent.id)
 
@@ -1807,8 +1818,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             editable_field_dict[select] = proxy_form.get_field(proxy_field_name, include_disabled=1)
 
     # handle the case when list-scripts are ignoring `limit` - paginate for them
-    if limit is not None and isinstance(limit, (tuple, list)):
-      start, num_items = map(int, limit)
+    if limit is not None:
+      if isinstance(limit, (tuple, list)):
+        start, num_items = map(int, limit)
+      elif isinstance(limit, int):
+        start, num_items = 0, limit
+      else:
+        start, num_items = 0, int(limit)
       if len(search_result_iterable) <= num_items:
         # the limit was most likely taken into account thus we don't need to slice
         start, num_items = 0, len(search_result_iterable)
@@ -1969,14 +1985,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     # Compute statistics if the search issuer was ListBox
     # or in future if the stats (SUM) are required by JIO call
-    source_field_meta_type = source_field.meta_type if source_field is not None else ""
-    if source_field_meta_type == "ProxyField":
-      source_field_meta_type = source_field.getRecursiveTemplateField().meta_type
 
     # Lets mingle with editability of fields here
     # Original Listbox.py modifies editability during field rendering (method `render`),
     # which is done on frontend side, so we overwrite result's own editability
-    if source_field is not None and source_field_meta_type == "ListBox":
+    if is_rendering_listbox:
       editable_column_set = set(name for name, _ in source_field.get_value("editable_columns"))
       for line in result_dict['_embedded']['contents']:
         for select in line:
@@ -1986,11 +1999,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           if isinstance(line[select], dict) and 'field_gadget_param' in line[select]:
             line[select]['field_gadget_param']['editable'] = False
 
-    if source_field is not None and source_field_meta_type == "ListBox":
       # Trigger count method if exist
       # XXX No need to count if no pagination
-      count_method = source_field.get_value('count_method')
-      if count_method != "" and count_method.getMethodName() != list_method:
+      if has_listbox_a_count_method:
         count_kw = dict(catalog_kw)
         # Drop not needed parameters
         count_kw.pop('selection', None)
@@ -2007,6 +2018,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           # and just pass. This also ensures we have compatibilty with how old
           # UI behave in these cases.
           log('Invalid count method %s' % error, level=800)
+      else:
+        result_dict['_embedded']['count'] = ensureSerializable(len(search_result_iterable))
 
       contents_stat_list = []
       # in case the search was issued by listbox we can provide results of

@@ -1300,6 +1300,8 @@ return '%s/Base_viewMetadata?reset:int=1' % context.getRelativeUrl()
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = '')
 
+    self.assertEqual(result_dict['_embedded']['count'], 1)
+
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs',
@@ -1571,6 +1573,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     """Test that count method also uses the query parameters.
     """
     fake_request = do_fake_request("GET")
+    # Reset the listbox
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList()
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
       REQUEST=fake_request,
       mode="search",
@@ -1613,6 +1617,60 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
     self.assertEqual(result_dict['_embedded']['count'], 1)
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
+  @createIndexedDocument(quantity=2)
+  @changeSkin('Hal')
+  def test_getHateoas_length_as_count_method(self, document_list):
+    """Test that erp5 listbox manually count result length.
+    """
+    fake_request = do_fake_request("GET")
+    # Reset the listbox
+    # self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList()
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_count_method = '')
+
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      relative_url='foo_module',
+      list_method="searchFolder",
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(len(result_dict['_embedded']['contents']), 2)
+    self.assertEqual(result_dict['_embedded']['count'], 2)
+
+    # Check that limiting the number of result doesn't impact count
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      relative_url='foo_module',
+      list_method="searchFolder",
+      query='portal_type:"Foo"',
+      limit=1,
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+    )
+    result_dict = json.loads(result)
+    # There is a count method on this listbox
+    self.assertEqual(len(result_dict['_embedded']['contents']), 1)
+    self.assertEqual(result_dict['_embedded']['count'], 2)
+
+    # Check that query parameters are passed to the count method
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      relative_url='foo_module',
+      list_method="searchFolder",
+      query='id:"%s"' % self.portal.foo_module.contentIds()[0],
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+    )
+    result_dict = json.loads(result)
+    # There is a count method on this listbox
+    self.assertEqual(len(result_dict['_embedded']['contents']), 1)
+    self.assertEqual(result_dict['_embedded']['count'], 1)
 
 class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   """Test HAL_JSON operations on cataloged Persons and other allowed content types of Person Module."""
