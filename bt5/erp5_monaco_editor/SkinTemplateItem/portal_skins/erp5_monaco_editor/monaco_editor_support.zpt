@@ -1,7 +1,7 @@
 <div id="monaco-container" style="width:100%;height:800px;border:1px solid grey;"></div>
 
 <tal:block tal:condition="options/field_id | nothing">
-  <tal:comment>When rendered as an ERP5 field, we need to add a textarea and adjust CSS.</tal:comment>
+  <tal:comment tal:replace="nothing">When rendered as an ERP5 field, we need to add a textarea and adjust CSS.</tal:comment>
   <textarea tal:attributes="id options/field_id;
                             name options/field_id"
             style="display:none"
