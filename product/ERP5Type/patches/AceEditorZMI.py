@@ -94,6 +94,16 @@ def manage_page_footer(self):
                                                      bound_names=bound_names,
                                                      mode=mode,
                                                      keymap=keymap))
+  if editor == 'monaco' and getattr(portal, 'monaco_editor_support', None) is not None:
+    return '''<script type="text/javascript" src="%s/jquery/core/jquery.min.js"></script>
+              %s
+              </body>
+            </html>''' % (portal_url,
+                          portal.monaco_editor_support(
+                              textarea_selector=textarea_selector,
+                              portal_url=portal_url,
+                              bound_names=bound_names,
+                              mode=mode))
   else:
     return '''
 <script type="text/javascript" src="%(portal_url)s/jquery/core/jquery.min.js"></script>
