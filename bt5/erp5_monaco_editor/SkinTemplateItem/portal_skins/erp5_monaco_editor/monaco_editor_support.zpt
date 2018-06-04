@@ -116,7 +116,22 @@ $script.onload = function() {
   }
 
   var timeout = null;
-  function checkPythonSourceCode() {
+
+  // minimal pollyfil for AbortController
+  if (self.AbortController === undefined) {
+    class AbortController {
+      constructor() {
+        this.signal = { aborted: false };
+      }
+      abort() {
+        this.signal.aborted = true;
+      }
+    }
+    console.warn("AbortController not available");
+    self.AbortController = AbortController;
+  }
+
+  function checkPythonSourceCode(controller) {
     const data = new FormData();
     const checker_parameters = {
       code: editor.getValue()
@@ -132,7 +147,8 @@ $script.onload = function() {
     data.append("data", JSON.stringify(checker_parameters));
     fetch(portal_url + "/ERP5Site_checkPythonSourceCodeAsJSON", {
       method: "POST",
-      body: data
+      body: data,
+      signal: controller.signal
     })
       .then(response => response.json())
       .then(data => {
@@ -154,25 +170,39 @@ $script.onload = function() {
           })
         );
         timeout = null;
-      });
+      }, e => {
+        if (!e instanceof DOMException /* AbortError */ ) {
+          throw e;
+        }
+        /* ignore aborted requests */
+    });
   }
 
+  var controller;
   editor.getModel().onDidChangeContent(event => {
     $textarea.value = editor.getValue();
     changed = true; /* global variable used in erp5.js for onbeforeunload event */
     if (mode == "python") {
       // debounced `checkPythonSourceCode`
+      if (controller) {
+        controller.abort();
+      }
+      controller = new AbortController();
       if (timeout) {
         clearTimeout(timeout);
       }
-      timeout = setTimeout(checkPythonSourceCode, 300);
+      function makeTimeoutFunction(ac){
+        return () => checkPythonSourceCode(ac)
+      }
+      timeout = setTimeout(makeTimeoutFunction(controller), 300);
     }
   });
 
   if (mode === "python") {
     // Perform a first check when loading document.
-    checkPythonSourceCode();
+    checkPythonSourceCode(new AbortController());
   }
+
 
   editor.addAction({
     id: "save",
