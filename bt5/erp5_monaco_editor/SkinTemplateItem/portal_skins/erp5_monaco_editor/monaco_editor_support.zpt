@@ -1,0 +1,181 @@
+<div id="monaco-container" style="width:100%;height:800px;border:1px solid grey;"></div>
+
+<tal:block tal:condition="options/field_id | nothing">
+  <tal:comment tal:replace="nothing">When rendered as an ERP5 field, we need to add a textarea and adjust CSS.</tal:comment>
+  <textarea tal:attributes="id options/field_id;
+                            name options/field_id"
+            style="display:none"
+            tal:content="options/content">
+  </textarea>
+  <style>
+  /* Override some conflicting default erp5.css styles */
+  /*  - font size and indentation rules */
+  span {
+    font-family: unset !important;
+  }
+  div#monaco-container * {
+    font-family: Menlo, Monaco, "Courier New", monospace ;
+    font-size: unset !important;
+  }
+
+  /*  - selected text highlight */
+  .monaco-editor .view-lines  {
+    background-color: transparent !important;
+  }
+
+  /* - popup menu */
+  .monaco-action-bar .action-label.disabled {
+    height: 0px;
+  }
+  .monaco-menu li.action-item a.action-label {
+    font-family: "Segoe WPC", "Segoe UI", ".SFNSDisplay-Light", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback" !important;
+  }
+
+  /* - Command palette (FIXME: background color inherits ERP5 page background color) */
+  .quick-open-entry * {
+    font-family: "Segoe WPC", "Segoe UI", ".SFNSDisplay-Light", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback" !important;
+  }
+  </style>
+</tal:block>
+
+<script tal:content='python: "var portal_url=" + modules["json"].dumps(options.get("portal_url"))'></script>
+<script tal:content='python: "var field_id=" + modules["json"].dumps(options.get("field_id"))'></script>
+<script tal:content='python: "var mode=" + modules["json"].dumps(options["mode"])'></script>
+<script tal:content='python: "var textarea_selector=" + modules["json"].dumps(options.get("textarea_selector"))'></script>
+<script tal:content='python: "var bound_names=" + modules["json"].dumps(options.get("bound_names"))'></script>
+
+<script tal:content='python: "window.monacoEditorWebPackResourceBaseUrl = " + modules["json"].dumps(options["portal_url"]) + " + \"/monaco-editor/\""'></script>
+
+<script>
+/* we need to defer import for the monacoEditorWebPackResourceBaseUrl trick to work as expected in ZMI */
+var $script = document.createElement("script");
+$script.src =
+  window.monacoEditorWebPackResourceBaseUrl + "/monaco-editor/app.bundle.min.js";
+document.head.appendChild($script);
+
+$script.onload = function() {
+  var $textarea =
+    document.querySelector(textarea_selector) ||
+    document.getElementById(field_id);
+  if (textarea_selector) {
+    /* ZMI mode */
+    /* create a div instead of the default textarea */
+    var $monacoContainer = document.getElementById("monaco-container");
+    $monacoContainer.parentNode.removeChild($monacoContainer);
+    $textarea.parentNode.appendChild($monacoContainer);
+    $monacoContainer.style.width = $textarea.parentNode.offsetWidth - 10 + "px";
+    $monacoContainer.style.height = $textarea.parentNode.offsetHeight + "px";
+    $textarea.style.display = "none";
+
+    function saveDocument() {
+      var $saveButton = document.querySelector('input[value="Save Changes"]');
+      $saveButton.click();
+      return false;
+    }
+  } else {
+    /* ERP5 editor field mode */
+
+    /* all ERP5 field have a .title that shows a popup, we don't want this popup on this editor */
+    $textarea.parentNode.title = "";
+
+    function saveDocument() {
+      clickSaveButton("Base_edit");
+      document.getElementById("main_form").submit();
+    }
+  }
+  var editor = monaco.editor.create(
+    document.getElementById("monaco-container"),
+    {
+      value: $textarea.value,
+      language: mode,
+
+      /* because Alt+Click is LeftClick on ChromeOS */
+      multiCursorModifier: "ctrlCmd",
+
+      autoIndent: true
+    }
+  );
+  if (mode == "python") {
+    editor.model.updateOptions({ tabSize: 2 });
+    monaco.languages.setLanguageConfiguration("python", {
+      indentationRules: {
+        increaseIndentPattern: /^.*:$/
+        // decreaseIndentPattern: /^$/
+        // TODO: unindent rule
+      }
+    });
+  }
+
+  var timeout = null;
+  function checkPythonSourceCode() {
+    const data = new FormData();
+    const checker_parameters = {
+      code: editor.getValue()
+    };
+    // ZMI python scripts pass extra parameters to linter
+    if (bound_names) {
+      checker_parameters["bound_names"] = JSON.parse(bound_names);
+      checker_parameters["params"] = document.querySelector(
+        'input[name="params"]'
+      ).value;
+    }
+
+    data.append("data", JSON.stringify(checker_parameters));
+    fetch(portal_url + "/ERP5Site_checkPythonSourceCodeAsJSON", {
+      method: "POST",
+      body: data
+    })
+      .then(response => response.json())
+      .then(data => {
+        monaco.editor.setModelMarkers(
+          editor.model,
+          "pylint",
+          data["annotations"].map(annotation => {
+            return {
+              startLineNumber: annotation.row + 1,
+              endLineNumber: annotation.row + 1,
+              startColumn: annotation.col,
+              endColumn: Infinity,
+              message: annotation.text,
+              severity:
+                annotation.type === "error"
+                  ? monaco.Severity.Error
+                  : monaco.Severity.Warning
+            };
+          })
+        );
+        timeout = null;
+      });
+  }
+
+  editor.model.onDidChangeContent(event => {
+    $textarea.value = editor.getValue();
+    changed = true; /* global variable used in erp5.js for onbeforeunload event */
+    if (mode == "python") {
+      // debounced `checkPythonSourceCode`
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout(checkPythonSourceCode, 300);
+    }
+  });
+
+  if (mode === "python") {
+    // Perform a first check when loading document.
+    checkPythonSourceCode();
+  }
+
+  editor.addAction({
+    id: "save",
+    label: "Save",
+    keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S],
+    precondition: null,
+    keybindingContext: null,
+    contextMenuGroupId: "navigation",
+    contextMenuOrder: 1.5,
+    run: function(ed) {
+      return saveDocument();
+    }
+  });
+};
+</script>
