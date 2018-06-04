@@ -107,6 +107,8 @@ $script.onload = function() {
   }
 
   var timeout = null;
+  var controller = new AbortController();
+
   function checkPythonSourceCode() {
     const data = new FormData();
     const checker_parameters = {
@@ -123,7 +125,8 @@ $script.onload = function() {
     data.append("data", JSON.stringify(checker_parameters));
     fetch(portal_url + "/ERP5Site_checkPythonSourceCodeAsJSON", {
       method: "POST",
-      body: data
+      body: data,
+      signal: controller.signal
     })
       .then(response => response.json())
       .then(data => {
@@ -145,7 +148,12 @@ $script.onload = function() {
           })
         );
         timeout = null;
-      });
+      }, e => {
+        if (!e instanceof DOMException /* AbortError */ ) {
+          throw e;
+        }
+        /* ignore aborted requests */
+    });
   }
 
   editor.model.onDidChangeContent(event => {
@@ -153,6 +161,8 @@ $script.onload = function() {
     changed = true; /* global variable used in erp5.js for onbeforeunload event */
     if (mode == "python") {
       // debounced `checkPythonSourceCode`
+      controller.abort();
+      controller = new AbortController();
       if (timeout) {
         clearTimeout(timeout);
       }
