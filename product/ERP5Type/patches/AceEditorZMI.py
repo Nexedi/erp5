@@ -19,9 +19,6 @@ def manage_page_footer(self):
   except:
     editor = None
 
-  if editor not in ('ace', 'codemirror'):
-    return default
-
   # REQUEST['PUBLISHED'] can be the form in the acquisition context of the
   # document, or a method bound to the document (after a POST it is a bound method)
   published = self.REQUEST.get('PUBLISHED')
@@ -96,7 +93,15 @@ def manage_page_footer(self):
                                                      mode=mode,
                                                      keymap=keymap,
                                                      portal_type=portal_type))
-  else:
+  elif editor == 'monaco' and getattr(portal, 'monaco_editor_support', None) is not None:
+    return '''%s
+              </body>
+            </html>''' % (portal.monaco_editor_support(
+                              textarea_selector=textarea_selector,
+                              portal_url=portal_url,
+                              bound_names=bound_names,
+                              mode=mode).encode('utf-8'))
+  elif editor == 'ace':
     return '''
 <script type="text/javascript" src="%(portal_url)s/jquery/core/jquery.min.js"></script>
 <script type="text/javascript" src="%(portal_url)s/ace/ace.js"></script>
@@ -182,5 +187,7 @@ $(document).ready(function() {
 </script>
 </body>
 </html>''' % locals()
+
+  return default
 
 Navigation.manage_page_footer = manage_page_footer
