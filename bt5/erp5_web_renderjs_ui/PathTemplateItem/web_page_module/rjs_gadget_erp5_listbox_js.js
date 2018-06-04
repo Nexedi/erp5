@@ -619,14 +619,18 @@
                   prev_param[gadget.state.key + '_begin_from'] = gadget.state.begin_from - lines;
                   setNext();
                 }
-                return gadget.getUrlForList([
-                  {command: 'change', options: prev_param},
-                  {command: 'change', options: next_param}
+                return RSVP.all([
+                  gadget.translate('sample of'),
+                  gadget.getUrlForList([
+                    {command: 'change', options: prev_param},
+                    {command: 'change', options: next_param}
+                  ])
                 ]);
-
               })
-              .push(function (url_list) {
-                var record,
+              .push(function (result_list) {
+                var sample_string = result_list[0],
+                  url_list = result_list[1],
+                  record,
                   previous_url = url_list[0],
                   next_url = url_list[1],
                   previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child",
@@ -641,7 +645,11 @@
                 } else {
                   pagination_message = (((gadget.state.begin_from + lines) / lines - 1) * lines + 1) + " - " + (((gadget.state.begin_from + lines) / lines - 1) * lines + counter);
                   if (allDocs_result.count !== undefined) {
-                    pagination_message += ' / ' + allDocs_result.count;
+                    if ((allDocs_result.count === 1000) && (!gadget.state.show_count)) {
+                      pagination_message += ' / ' + sample_string + ' ' + allDocs_result.count;
+                    } else {
+                      pagination_message += ' / ' + allDocs_result.count;
+                    }
                   }
                   record = variable.translated_records + " " + pagination_message;
                 }
