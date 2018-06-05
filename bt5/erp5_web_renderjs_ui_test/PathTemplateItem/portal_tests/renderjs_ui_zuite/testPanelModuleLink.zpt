@@ -17,58 +17,18 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/?page=front</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=worklist</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<tal:block tal:define="search_query python: 'Foos'">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
-</tal:block>
-
-<!-- Check sorted by modification date -->
+<!-- Check the global modules link -->
 <tr>
-  <td colspan="3"><b>Check sorted by modification date</b></td>
-</tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']//select</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
-  <td>translated_title</td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
-  <td>ascending</td>
-</tr>
-
-<!-- Go to another page than search -->
-<tr>
-  <td colspan="3"><b>Go to another page than search</b></td>
+  <td colspan="3"><b>Check the global modules link</b></td>
 </tr>
 <tr>
  <td>click</td>
- <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//a[@data-i18n='Preferences']</td>
- <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Language</td>
-  <td></td>
-</tr>
-
-<!-- Check the the global modules link restore the search state -->
-<tr>
-  <td colspan="3"><b>Check the the global modules link restore the search state</b></td>
-</tr>
-<tr>
- <td>click</td>
- <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//a[@data-i18n='Modules' and contains(@href, '#!display_stored_state') and contains(@href, 'n.page=front')]</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//a[@data-i18n='Modules' and contains(@href, '#!display') and contains(@href, 'n.page=front')]</td>
  <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
@@ -80,10 +40,6 @@
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_front.html']</td>
   <td></td>
 </tr>
-<tal:block tal:define="parsed_query python: '';
-                       search_query python: 'Foos'">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
-</tal:block>
 
 </tbody></table>
 </body>

@@ -24,6 +24,13 @@
   <td></td>
 </tr>
 
+<!-- Check that there is a card -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_front.html']//ul/li/h2[text()='Others']</td>
+  <td></td>
+</tr>
+
 <!-- Generate links to module -->
 <tr>
   <td>waitForElementPresent</td>

@@ -158,7 +158,7 @@
           // Update the global links
           .push(function () {
             return RSVP.all([
-              context.getUrlFor({command: 'display_stored_state', options: {page: "front"}}),
+              context.getUrlFor({command: 'display', options: {page: "front"}}),
               context.getUrlFor({command: 'display', options: {page: "history"}}),
               context.getUrlFor({command: 'display', options: {page: "preference"}}),
               context.getUrlFor({command: 'display', options: {page: "logout"}}),

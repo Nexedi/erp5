@@ -1957,6 +1957,45 @@ div[data-gadget-scope='maximize'] button {
 }
 
 /**********************************************
+* Front page
+**********************************************/
+div[data-gadget-url$="gadget_erp5_page_front.html"] {
+  > ul {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+    > li {
+      flex-shrink: 1;
+      @media @smartphone {
+        flex-basis: 100%;
+        margin-bottom: @margin-size;
+      }
+      @media @tablet, @desktop {
+        margin-right: @quadruple-margin-size;
+        margin-bottom: @quadruple-margin-size;
+        flex-basis: 20em;
+      }
+
+      vertical-align: top;
+      padding: @half-margin-size;
+      border: @border;
+      border-radius: @border-radius;
+      box-shadow: 2px 2px 2px rgba(0,0,0,.15);
+      h2 {
+        font-weight: @header-font-weight;
+        background: @colorheaderbackground;
+        color: @white;
+        padding: @margin-size;
+      }
+      li {
+        padding: @half-margin-size @margin-size;
+      }
+    }
+  }
+}
+
+/**********************************************
 * Icons
 **********************************************/
 .ui-btn-icon-top, .ui-btn-icon-left, .ui-btn-icon-right, .ui-icon, .ui-btn-icon-notext {
