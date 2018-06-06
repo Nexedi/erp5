@@ -215,15 +215,15 @@ for movement in context.PaySheetTransaction_getMovementList():
     trainee_bonus = movement.base
     result['taxable_base'][('02', '')] = {
       'code': '02',
-      'start_date': '',
-      'stop_date': '',
+      'start_date': movement.getStartDate(),
+      'stop_date': movement.getStopDate(),
       'base': 0.,
       'contract_id': ''
     }
     result['taxable_base'][('03', '')] = {
       'code': '03',
-      'start_date': '',
-      'stop_date': '',
+      'start_date': movement.getStartDate(),
+      'stop_date': movement.getStopDate(),
       'base': 0.,
       'contract_id': ''
     }
