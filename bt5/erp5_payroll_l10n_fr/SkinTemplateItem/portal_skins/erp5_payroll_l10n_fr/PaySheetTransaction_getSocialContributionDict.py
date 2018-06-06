@@ -141,8 +141,8 @@ def makeOtherBonusBlock(movement, category):
   return {
     'code': category,
     'quantity': movement.base,
-    'start_date': movement.getStartDate(),
-    'stop_date': movement.getStopDate()
+    'start_date': (movement.getStartDate() if category in ('026', '027', '029') else ''),
+    'stop_date': (movement.getStopDate()  if category in ('026', '027', '029') else ''),
   }
 
 for movement in context.PaySheetTransaction_getMovementList():
