@@ -1,6 +1,4 @@
-portal = context.getPortalObject()
-
-enrollment_record = context.Person_getPayrollEnrollmentRecord()
+enrollment_record = context.Person_getCareerRecord('DSN Enrollment Record')
 
 if dsn_report is None:
   dsn_report = context

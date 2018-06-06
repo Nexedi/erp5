@@ -53,7 +53,7 @@ if block_id == 'S10.G00.00':
   rubric_value_dict['S10.G00.00.003'] = ''
   rubric_value_dict['S10.G00.00.004'] = ''
   rubric_value_dict['S10.G00.00.005'] = '01'
-  rubric_value_dict['S10.G00.00.006'] = 'P03V01'
+  rubric_value_dict['S10.G00.00.006'] = 'P18V01'
   rubric_value_dict['S10.G00.00.007'] = '01'
   rubric_value_dict['S10.G00.00.008'] = kw.get('type', '01')
 
@@ -110,7 +110,7 @@ if block_id == 'S21.G00.06':
       return ''
   def calculateManPower():
     manpower_dict = {}
-    social_declaration_module = portal.getDefaultModule("DSN Monthly Report")
+    social_declaration_module = portal.social_declaration_report_module
     report_list = social_declaration_module.searchFolder(
       portal_type="DSN Monthly Report",
       effective_date=str(context.getEffectiveDate().year()),
@@ -274,7 +274,7 @@ if block_id == 'S21.G00.40':
   rubric_value_dict["S21.G00.40.008"] = enrollment_record.getSpecialContractType()
   rubric_value_dict["S21.G00.40.009"] = '00000'
   rubric_value_dict["S21.G00.40.010"] = ('' if enrollment_record.getContractType() not in ('02', '29') else formatDate(enrollment_record.getCareerStopDate()))
-  if enrollment_record.getCareerStopDate() and enrollment_record.getCareerStopDate() <= context.getEffectiveDate():
+  if enrollment_record.getCareerStopDate() and enrollment_record.getCareerStopDate() <= getLastDateOfMonth(context.getEffectiveDate()):
     rubric_value_dict["S21.G00.40.010"] = formatDate(enrollment_record.getCareerStopDate())
   rubric_value_dict["S21.G00.40.011"] = enrollment_record.getWorkingUnitType()
   rubric_value_dict["S21.G00.40.012"] = formatFloat(enrollment_record.getStandardWorkingUnit())
@@ -319,7 +319,7 @@ if block_id == 'S21.G00.44':
 # Versement Individu
 if block_id == 'S21.G00.50':
   # target is a paysheet
-  rubric_value_dict['S21.G00.50.001'] = formatDate(context.getEffectiveDate())
+  rubric_value_dict['S21.G00.50.001'] = formatDate(context.getEffectiveDate() or kw.get('date', None))
   rubric_value_dict['S21.G00.50.002'] = formatFloat(kw['net_taxable_salary'])
   rubric_value_dict['S21.G00.50.003'] = ''
   rubric_value_dict['S21.G00.50.004'] = formatFloat(kw['net_salary'])
@@ -360,19 +360,20 @@ if block_id == 'S21.G00.62':
   rubric_value_dict['S21.G00.62.001'] = formatDate(enrollment_record.getCareerStopDate())
   if enrollment_record.getContractType() == '29':
     rubric_value_dict['S21.G00.62.002'] = '999'
-  # TODO : currently only works for end of training periods
-  rubric_value_dict['S21.G00.62.003'] = ''
-  rubric_value_dict['S21.G00.62.004'] = ''
-  rubric_value_dict['S21.G00.62.005'] = ''
-  rubric_value_dict['S21.G00.62.006'] = ''
-  rubric_value_dict['S21.G00.62.007'] = ''
-  rubric_value_dict['S21.G00.62.008'] = ''
-  rubric_value_dict['S21.G00.62.009'] = ''
-  rubric_value_dict['S21.G00.62.010'] = ''
-  rubric_value_dict['S21.G00.62.011'] = ''
-  rubric_value_dict['S21.G00.62.012'] = ''
-  rubric_value_dict['S21.G00.62.013'] = ''
-  rubric_value_dict['S21.G00.62.014'] = ''
+  else:
+    disenrollment_record = kw['disenrollment_record']
+    rubric_value_dict['S21.G00.62.002'] = '059'
+    rubric_value_dict['S21.G00.62.003'] = formatDate(disenrollment_record.getNotificationDate())
+    rubric_value_dict['S21.G00.62.006'] = formatDate(disenrollment_record.getLastWorkedDate())
+    rubric_value_dict['S21.G00.62.008'] = '02'
+
+if block_id == 'S21.G00.63':
+  disenrollment_record = kw['disenrollment_record']
+  rubric_value_dict['S21.G00.63.001'] = disenrollment_record.getNoticeType()
+  # notified leave
+  if disenrollment_record.getNoticeType() == '60':
+    rubric_value_dict['S21.G00.63.001'] = formatDate(disenrollment_record.getNotificationDate())
+    rubric_value_dict['S21.G00.63.001'] = formatDate(enrollment_record.getContractStopDate())
 
 # Autre suspension du contrat
 if block_id == 'S21.G00.65':

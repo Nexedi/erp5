@@ -26,6 +26,8 @@ all_other_income_set = set(portal_categories.getCategoryValue('base_amount/payro
 all_other_bonus_set = set(portal_categories.getCategoryValue('base_amount/payroll/l10n/fr/other_bonus').objectValues(portal_type='Category'))
 trainee_base_contribution = portal_categories.getCategoryValue('base_amount/payroll/l10n/fr/base/gratification_stage')
 
+enrollment_record = context.getSourceSectionValue().Person_getCareerRecord('DSN Enrollment Record')
+
 def formatDate(datetime):
   return "%02d%02d%04d" % (datetime.day(), datetime.month(), datetime.year())
 
@@ -90,7 +92,6 @@ def makeTaxableBaseComponentBlock(movement, category):
     if isFullMonthPaysheet(context):
       base = minimum_salary
     else:
-      enrollment_record = context.getSourceSectionValue().Person_getPayrollEnrollmentRecord()
       worked_time = float(enrollment_record.getWorkingUnitQuantity())
       normal_working_time = float(enrollment_record.getStandardWorkingUnit())
       base = minimum_salary * (worked_time / normal_working_time)
@@ -141,8 +142,8 @@ def makeOtherBonusBlock(movement, category):
   return {
     'code': category,
     'quantity': movement.base,
-    'start_date': movement.getStartDate(),
-    'stop_date': movement.getStopDate()
+    'start_date': (movement.getStartDate() if category in ('026', '027', '029') else ''),
+    'stop_date': (movement.getStopDate()  if category in ('026', '027', '029') else ''),
   }
 
 for movement in context.PaySheetTransaction_getMovementList():
@@ -215,15 +216,15 @@ for movement in context.PaySheetTransaction_getMovementList():
     trainee_bonus = movement.base
     result['taxable_base'][('02', '')] = {
       'code': '02',
-      'start_date': '',
-      'stop_date': '',
+      'start_date': movement.getStartDate(),
+      'stop_date': movement.getStopDate(),
       'base': 0.,
       'contract_id': ''
     }
     result['taxable_base'][('03', '')] = {
       'code': '03',
-      'start_date': '',
-      'stop_date': '',
+      'start_date': movement.getStartDate(),
+      'stop_date': movement.getStopDate(),
       'base': 0.,
       'contract_id': ''
     }
@@ -258,7 +259,6 @@ if len(result['ctp']):
 ######################################################################
 # Remuneration and Activity
 
-enrollment_record = context.getSourceSectionValue().Person_getPayrollEnrollmentRecord()
 is_trainee = (True if enrollment_record.getContractType() == '29' else False)
 is_corporate_executive = (True if enrollment_record.getContractType() == '80' else False)
 career_start_date = enrollment_record.getCareerStartDate()

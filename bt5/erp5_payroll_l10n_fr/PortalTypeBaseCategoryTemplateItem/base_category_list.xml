@@ -5,6 +5,9 @@
  <portal_type id="DSN Early Recovery Report">
   <item>source_administration</item>
  </portal_type>
+ <portal_type id="DSN End Of Contract Report">
+  <item>source_administration</item>
+ </portal_type>
  <portal_type id="DSN Monthly Report">
   <item>source_administration</item>
   <item>source_section</item>

@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>DSN Disenrollment Record</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>DSN Early Recovery Report</type>
   <workflow>dsn_social_declaration_report_workflow, edit_workflow</workflow>
  </chain>
