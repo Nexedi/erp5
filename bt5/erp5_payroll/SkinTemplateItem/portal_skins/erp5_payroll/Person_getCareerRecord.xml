@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>organisation=None</string> </value>
+            <value> <string>portal_type, organisation=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_getPayrollEnrollmentRecord</string> </value>
+            <value> <string>Person_getCareerRecord</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -26,8 +26,8 @@ else:
   # and Organisation is taken into account
   career_step = career_step_list[0]
 
-record = career_step.getAggregateValue()
+record = career_step.getAggregateValue(portal_type=portal_type)
 if record is None:
-  raise AttributeError("No Payroll Enrollment Record found for employee %s" % context.getRelativeUrl())
+  raise AttributeError("No %s found for employee %s" % (portal_type, context.getRelativeUrl()))
 
 return record
