@@ -53,7 +53,7 @@ if block_id == 'S10.G00.00':
   rubric_value_dict['S10.G00.00.003'] = ''
   rubric_value_dict['S10.G00.00.004'] = ''
   rubric_value_dict['S10.G00.00.005'] = '01'
-  rubric_value_dict['S10.G00.00.006'] = 'P03V01'
+  rubric_value_dict['S10.G00.00.006'] = 'P18V01'
   rubric_value_dict['S10.G00.00.007'] = '01'
   rubric_value_dict['S10.G00.00.008'] = kw.get('type', '01')
 
