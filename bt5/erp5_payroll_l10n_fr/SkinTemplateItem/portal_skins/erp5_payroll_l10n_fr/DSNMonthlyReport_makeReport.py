@@ -204,8 +204,6 @@ elif len(paysheet_list):
 if organisation == establishment:
   tax_list = organisation.Organisation_getAnnualTaxDictList(context)
   for tax in tax_list:
-    if tax['tax_code'] == '011':
-      dsn_file.append(getDSNBlockDict(block_id='S21.G00.42', target=establishment))
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.44', target=establishment, **tax))
 
 
