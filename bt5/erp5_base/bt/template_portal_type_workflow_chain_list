@@ -1,4 +1,5 @@
 Address | edit_workflow
+Address | reachability_workflow
 Agent | edit_workflow
 Assignment | assignment_workflow
 Assignment | edit_workflow
@@ -7,6 +8,7 @@ Bank Account | validation_workflow
 Career | career_workflow
 Career | edit_workflow
 Chat Address | edit_workflow
+Chat Address | reachability_workflow
 Credit Card | edit_workflow
 Credit Card | validation_workflow
 Currency Exchange Line | currency_exchange_line_interaction_workflow
@@ -20,13 +22,16 @@ Delivery Type | dynamic_class_generation_interaction_workflow
 ERP5 Login | edit_workflow
 ERP5 Login | login_validation_workflow
 Email | edit_workflow
+Email | reachability_workflow
 Embedded File | document_conversion_interaction_workflow
 Embedded File | edit_workflow
 Embedded File | embedded_workflow
 Embedded Folder | edit_workflow
 Embedded Folder | embedded_workflow
 External Identifier | edit_workflow
+External Identifier | reachability_workflow
 Fax | edit_workflow
+Fax | reachability_workflow
 File | document_conversion_interaction_workflow
 File | document_security_interaction_workflow
 File | edit_workflow
@@ -36,6 +41,7 @@ Image | document_conversion_interaction_workflow
 Image | document_security_interaction_workflow
 Image | edit_workflow
 Link | edit_workflow
+Link | reachability_workflow
 Notification Message | document_conversion_interaction_workflow
 Notification Message | document_security_interaction_workflow
 Notification Message | edit_workflow
@@ -53,3 +59,4 @@ Role Definition | local_permission_interaction_workflow
 Rounding Model | validation_workflow
 Simulation Movement | simulation_movement_causality_interaction_workflow
 Telephone | edit_workflow
+Telephone | reachability_workflow
