@@ -16,25 +16,18 @@ tax_property_name_list = {
   'continuous_short_term_professional_training_fee_liability': ('013', '014'),
 }
 
-if dsn_report.getEffectiveDate().month() == 5:
-  tax = 'cvae_fee_liability'
-  result = {
-    'tax_code': '',
-    'amount': 0., # TODO: get amount right
-  }
-  if context.getProperty(tax, False):
-    result['tax_code'] = tax_property_name_list['cvae_fee_liability'][0]
-  else:
-    result['tax_code'] = tax_property_name_list['cvae_fee_liability'][1]
-  return result
-
-
 year_start_date = DateTime(dsn_report.getEffectiveDate().year(), 1, 1)
 year_stop_date = DateTime(dsn_report.getEffectiveDate().year(), 12, 31)
 
 for tax, value_list in tax_property_name_list.items():
-  is_subjected = context.getProperty(tax, False)
-  amount = 0.
+  # CVAE is now out of DSN's scope, so always declare as not subjected
+  # http://dsn-info.custhelp.com/app/answers/detail/a_id/1885
+  if tax == 'cvae_fee_liability':
+    is_subjected = False
+  else:
+    is_subjected = context.getProperty(tax, False)
+    amount = 0.
+
   if is_subjected:
     amount = portal.portal_simulation.getInventory(
       node_uid=portal.account_module.remuneration_personnel.getUid(), # XXX: hardcoded
