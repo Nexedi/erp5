@@ -84,6 +84,7 @@
                     <value>
                       <list>
                         <string>my_translated_id</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

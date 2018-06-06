@@ -92,6 +92,7 @@
                     <value>
                       <list>
                         <string>my_url_string</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
