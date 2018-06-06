@@ -26,8 +26,8 @@ for tax, value_list in tax_property_name_list.items():
     is_subjected = False
   else:
     is_subjected = context.getProperty(tax, False)
-    amount = 0.
 
+  amount = 0.
   if is_subjected:
     amount = portal.portal_simulation.getInventory(
       node_uid=portal.account_module.remuneration_personnel.getUid(), # XXX: hardcoded
