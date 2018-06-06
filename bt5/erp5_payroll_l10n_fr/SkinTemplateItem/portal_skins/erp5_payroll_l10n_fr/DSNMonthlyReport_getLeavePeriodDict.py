@@ -33,17 +33,13 @@ def getLeaveBlocAsDict(leave_period, leave_category):
   bloc['S21.G00.60.001'] = leave_category.getCodification()
   bloc['S21.G00.60.002'] = formatDate(leave_period.getStartDate())
   bloc['S21.G00.60.003'] = formatDate(leave_period.getStopDate())
-  # employee left during this period
-  if from_date < leave_period.getStartDate() < effective_date:
-    bloc['S21.G00.60.004'] = '01' # we do subrogation
-    first_subrogation_day = addToDate(leave_period.getStartDate(), day=3)
-    bloc['S21.G00.60.005'] = formatDate(first_subrogation_day)
-    # 3 months of subrogation, as defined in the collective agreement
-    bloc['S21.G00.60.006'] = formatDate(addToDate(first_subrogation_day, month=3, days=-1))
-    bloc['S21.G00.60.007'] = bank_account.getIban()
-    bloc['S21.G00.60.008'] = bank_account.getBicCode()
-  else:
-    bloc['S21.G00.60.004'] = '02' # we don't do subrogation
+  bloc['S21.G00.60.004'] = '01' # we do subrogation
+  first_subrogation_day = addToDate(leave_period.getStartDate(), day=3)
+  bloc['S21.G00.60.005'] = formatDate(first_subrogation_day)
+  # 3 months of subrogation, as defined in the collective agreement
+  bloc['S21.G00.60.006'] = formatDate(addToDate(first_subrogation_day, month=3, days=-1))
+  bloc['S21.G00.60.007'] = bank_account.getIban()
+  bloc['S21.G00.60.008'] = bank_account.getBicCode()
   # employee restarted work during this period
   if getattr(leave_period, 'expiration_date', None):
     bloc['S21.G00.60.010'] = formatDate(leave_period.getExpirationDate())
