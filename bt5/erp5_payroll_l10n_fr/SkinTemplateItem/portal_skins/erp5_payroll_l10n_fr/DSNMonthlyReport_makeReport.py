@@ -201,7 +201,7 @@ elif len(paysheet_list):
                                     target=aggregated_social_contribution_dict[ctp_code]))
 
 # Annual Taxes
-if organisation == establishment:
+if organisation == establishment and declared_month == 12:
   tax_list = organisation.Organisation_getAnnualTaxDictList(context)
   for tax in tax_list:
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.44', target=establishment, **tax))
