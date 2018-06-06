@@ -361,18 +361,16 @@ if block_id == 'S21.G00.62':
   if enrollment_record.getContractType() == '29':
     rubric_value_dict['S21.G00.62.002'] = '999'
   # TODO : currently only works for end of training periods
-  rubric_value_dict['S21.G00.62.003'] = ''
-  rubric_value_dict['S21.G00.62.004'] = ''
-  rubric_value_dict['S21.G00.62.005'] = ''
-  rubric_value_dict['S21.G00.62.006'] = ''
-  rubric_value_dict['S21.G00.62.007'] = ''
-  rubric_value_dict['S21.G00.62.008'] = ''
-  rubric_value_dict['S21.G00.62.009'] = ''
-  rubric_value_dict['S21.G00.62.010'] = ''
-  rubric_value_dict['S21.G00.62.011'] = ''
-  rubric_value_dict['S21.G00.62.012'] = ''
-  rubric_value_dict['S21.G00.62.013'] = ''
-  rubric_value_dict['S21.G00.62.014'] = ''
+  else:
+    disenrollment_record = kw['disenrollment_record']
+    rubric_value_dict['S21.G00.62.002'] = '059'
+    rubric_value_dict['S21.G00.62.003'] = formatDate(disenrollment_record.getNotificationDate())
+    rubric_value_dict['S21.G00.62.006'] = formatDate(disenrollment_record.getLastWorkedDate())
+    rubric_value_dict['S21.G00.62.008'] = '02'
+
+if block_id == 'S21.G00.63':
+  disenrollment_record = kw['disenrollment_record']
+  rubric_value_dict['S21.G00.63.001'] = disenrollment_record.getNoticeType()
 
 # Autre suspension du contrat
 if block_id == 'S21.G00.65':

@@ -241,6 +241,18 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
                                      'S21.G00.60.012')}
       dsn_file.append(leave_block)
 
+  if enrollment_record.getCareerStopDate() != None and \
+     first_date_of_month <= enrollment_record.getCareerStopDate() <= last_date_of_month:
+    if enrollment_record.getContractType() != '29':
+      disenrollment_record = employee.Person_getCareerRecord('DSN Disenrollment Record')
+      dsn_file.append({rubric: value
+                       for rubric, value in getDSNBlockDict("S21.G00.62", enrollment_record=enrollment_record, disenrollment_record=disenrollment_record)
+                       if rubric in ('S21.G00.62.001',
+                                     'S21.G00.62.002',
+                                     'S21.G00.62.006',
+                                     'S21.G00.62.016',
+                                     'S21.G00.62.017')})
+
   # All employees don't share all the insurance contract, so here we need to 
   # know to which the employee contributes. Let's loop over the keys of
   # paysheet_data_dict['taxable_base'],

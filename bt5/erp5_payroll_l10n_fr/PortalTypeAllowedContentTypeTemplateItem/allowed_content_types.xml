@@ -2,6 +2,9 @@
  <portal_type id="DSN Monthly Report">
   <item>DSN Change Block</item>
  </portal_type>
+ <portal_type id="Payroll Disenrollment Record Module">
+  <item>DSN Disenrollment Record</item>
+ </portal_type>
  <portal_type id="Payroll Enrollment Record Module">
   <item>DSN Enrollment Record</item>
  </portal_type>

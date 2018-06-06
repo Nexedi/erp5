@@ -3,6 +3,9 @@
   <item>Data</item>
   <item>Event</item>
  </portal_type>
+ <portal_type id="DSN Disenrollment Record">
+  <item>DsnDisenrollmentRecord</item>
+ </portal_type>
  <portal_type id="DSN Enrollment Record">
   <item>DsnEnrollmentRecord</item>
  </portal_type>
