@@ -2,6 +2,6 @@ context.getPortalObject().portal_catalog.searchAndActivate(
   portal_type="Software Publication",
   simulation_state=["draft"],
   method_id='SoftwarePublication_submitSoftwarePublication',
-  activate_kw={'tag': tag}
+  activate_kw={'tag': tag, 'after_tag': 'create_software_publication'},
 )
 context.activate(after_tag=tag).getId()

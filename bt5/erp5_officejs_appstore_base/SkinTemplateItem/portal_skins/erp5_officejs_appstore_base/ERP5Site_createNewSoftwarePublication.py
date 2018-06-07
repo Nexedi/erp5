@@ -5,7 +5,7 @@ person = context.ERP5Site_getAuthenticatedMemberPersonValue()
 # XXX Should Check that version of this software doesn't already exists
 import hashlib
 version = hashlib.sha224("%s-%s" % (version_title, DateTime())).hexdigest()[:10]
-
+tag = "create_software_publication"
 # Create Software Publication
 # It carries the software publication process
 software_publication = portal.software_publication_module.newContent(
@@ -16,6 +16,7 @@ software_publication = portal.software_publication_module.newContent(
   reference="SP-" + version,
   title='publication ' + version_title,
   start_date=DateTime(),
+  activate_kw={'tag': tag}
 )
 
 # Create Software Release
@@ -25,6 +26,7 @@ software_release = portal.software_release_module.newContent(
   reference=version,
   title='release ' + version_title + '-' + version,
   version=version_title,
+  activate_kw={'tag': tag}
 )
 
 # Create Software Publication Line
@@ -33,7 +35,8 @@ software_publication_line = software_publication.newContent(
   title=software_publication.getTitle() + " Publication",
   aggregate=[
     software_release.getRelativeUrl(),
-  ]
+  ],
+  activate_kw={'tag': tag}
 )
 
 zip_file = software_publication.Base_contribute(
@@ -42,7 +45,7 @@ zip_file = software_publication.Base_contribute(
   portal_type="File",
   publication_section="publication_section/application/package",
   redirect_to_document=False,
-  version=version,
+  version=version
 )
 
 return software_publication.SoftwarePublication_attachSoftwareProduct(
@@ -50,4 +53,5 @@ return software_publication.SoftwarePublication_attachSoftwareProduct(
   title=title,
   description=description,
   product_line=product_line,
+  activate_kw = {'tag': tag}
 )
