@@ -16,6 +16,8 @@ else:
 
 if description:
   edit_kw['description'] = description
+if activate_kw:
+  edit_kw['activate_kw'] = activate_kw
 
 context.log(edit_kw)
 software_product.edit(**edit_kw)
@@ -26,6 +28,7 @@ software_publication = context
 
 software_publication.edit(
   title=title + " " + software_publication.getTitle(),
+  activate_kw=activate_kw
 )
 
 software_publication_line = software_publication.objectValues(
@@ -37,6 +40,7 @@ software_release = software_publication_line.getAggregateValue(portal_type="Soft
 software_release.edit(
   title=title + " " + software_release.getTitle(),
   follow_up=software_product_url,
+  activate_kw=activate_kw
 )
 
 software_publication_line.edit(
@@ -44,7 +48,8 @@ software_publication_line.edit(
   aggregate=[
     software_release.getRelativeUrl(),
     software_product.getSaleSupplyLineAggregate(),
-  ]
+  ],
+  activate_kw=activate_kw
 )
 
 return software_publication.Base_redirect(
