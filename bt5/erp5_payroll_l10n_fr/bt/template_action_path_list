@@ -4,6 +4,10 @@ DSN Early Recovery Report | generate_report
 DSN Early Recovery Report | print
 DSN Early Recovery Report | view
 DSN Early Recovery Report | view_editor
+DSN End Of Contract Report | generate_report
+DSN End Of Contract Report | print
+DSN End Of Contract Report | view
+DSN End Of Contract Report | view_editor
 DSN Enrollment Record | view
 DSN Monthly Report | create_replacement
 DSN Monthly Report | generate_report

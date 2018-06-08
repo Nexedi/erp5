@@ -10,6 +10,7 @@
  </portal_type>
  <portal_type id="Social Declaration Report Module">
   <item>DSN Early Recovery Report</item>
+  <item>DSN End Of Contract Report</item>
   <item>DSN Monthly Report</item>
  </portal_type>
 </allowed_content_type_list>

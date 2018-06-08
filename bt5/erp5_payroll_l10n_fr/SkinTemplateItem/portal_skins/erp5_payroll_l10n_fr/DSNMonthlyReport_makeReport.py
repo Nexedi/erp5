@@ -62,6 +62,7 @@ else:
                    if bank_account.getValidationState() == 'validated']
 leave_period_dict = context.DSNMonthlyReport_getLeavePeriodDict(bank_account)
 employee_list = []
+leaving_employee_list = []
 
 # DSN HEADERS
 dsn_type = ('01' if len(paysheet_list) else '02')
@@ -70,7 +71,7 @@ dsn_file.append(getDSNBlockDict(block_id='S10.G00.01', target=organisation))
 dsn_file.append(getDSNBlockDict(block_id='S10.G00.02', target=organisation_contact))
 
 # Monthly DSN
-dsn_file.append(getDSNBlockDict(block_id='S20.G00.05', year=declared_year, month=declared_month, order=nb_dsn, type=dsn_type))
+dsn_file.append(getDSNBlockDict(block_id='S20.G00.05', year=declared_year, month=declared_month, order=nb_dsn, type='01'))
 
 dsn_file.append(getDSNBlockDict(block_id='S21.G00.06', target=organisation))
 
@@ -244,9 +245,10 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
   if enrollment_record.getCareerStopDate() != None and \
      first_date_of_month <= enrollment_record.getCareerStopDate() <= last_date_of_month:
     if enrollment_record.getContractType() != '29':
-      disenrollment_record = employee.Person_getCareerRecord('DSN Disenrollment Record')
+      leaving_employee_list.append(employee)
+      disenrollment_record = portal.restrictedTraverse(employee).Person_getCareerRecord('DSN Disenrollment Record')
       dsn_file.append({rubric: value
-                       for rubric, value in getDSNBlockDict("S21.G00.62", enrollment_record=enrollment_record, disenrollment_record=disenrollment_record)
+                       for rubric, value in getDSNBlockDict("S21.G00.62", enrollment_record=enrollment_record, disenrollment_record=disenrollment_record).items()
                        if rubric in ('S21.G00.62.001',
                                      'S21.G00.62.002',
                                      'S21.G00.62.006',
@@ -341,13 +343,60 @@ if len(leave_period_dict):
           id_generator='continuous_integer_increasing',
           id_group='dsn_event_counter')
         employee = portal.restrictedTraverse(employee)
-        dsn_file.append(getEventDSNBlockDict(block_id='S20.G00.05', dsn_type='04', order=dsn_order)) #'04' is DSN Leave Event
+        dsn_file.append(getEventDSNBlockDict(block_id='S20.G00.05', dsn_type='04', order=dsn_order))
         dsn_file.append(getEventDSNBlockDict(block_id='S20.G00.07', target=organisation_contact))
         dsn_file.append(getEventDSNBlockDict(block_id='S21.G00.06', target=organisation))
         dsn_file.append(getEventDSNBlockDict(block_id='S21.G00.11', target=establishment))
         dsn_file.append(getEventDSNBlockDict(block_id='S21.G00.30', target=employee))
         dsn_file.append(getEventDSNBlockDict(block_id='S21.G00.40', target=employee.getDefaultCareerValue()))
         dsn_file.append(period)
+
+
+# Add end of contract event DSN if needed
+# Usually we don't merge the monthly DSN with the End of Contract DSN,
+# but if we need the code is below :
+
+#for employee in leaving_employee_list:
+#  nb_dsn += 1
+#  employee = portal.restrictedTraverse(employee)
+#  dsn_order = portal.portal_ids.generateNewId(
+#    id_generator='continuous_integer_increasing',
+#    id_group='dsn_event_counter')
+#  disenrollment_record = employee.Person_getCareerRecord('DSN Disenrollment Record')
+#  enrollment_record = employee.Person_getCareerRecord('DSN Enrollment Record')
+#  for employee_data_dict, paysheet_data_dict in employee_result_list:
+#    if employee_data_dict['person_relative_url'] == employee.getRelativeUrl():
+#      break
+#  dsn_file.append(context.DSNEndOfContractReport_getDataDict(
+#    block_id='S20.G00.05', order=dsn_order
+#  ))
+#  dsn_file.append(getEventDSNBlockDict(block_id='S21.G00.06', target=organisation))
+#  dsn_file.append(getEventDSNBlockDict(block_id='S21.G00.11', target=establishment))
+#  for collective_contract in collective_contract_list:
+#    if collective_contract['S21.G00.15.005'] in set([x[1] for x in paysheet_data_dict['taxable_base']]):
+#      dsn_file.append({key: value for key, value in collective_contract.items() if key != 'S21.G00.15.004'})
+#  dsn_file.append(getEventDSNBlockDict(block_id='S21.G00.30', target=employee))
+#  dsn_file.append(
+#    context.DSNEndOfContractReport_getDataDict(
+#      block_id='S21.G00.40', target=employee.getDefaultCareerValue(), enrollment_record=enrollment_record
+#    )
+#  )
+#  dsn_file.append(getDSNBlockDict("S21.G00.62", enrollment_record=enrollment_record, disenrollment_record=disenrollment_record))
+#  dsn_file.append(getDSNBlockDict("S21.G00.63", enrollment_record=enrollment_record, disenrollment_record=disenrollment_record))
+#  dsn_file.append(getDSNBlockDict(block_id='S21.G00.71', enrollment_record=enrollment_record))
+#  dsn_file.append(getDSNBlockDict(block_id='S21.G00.50',
+#                                  net_salary=paysheet_data_dict['net_salary'],
+#                                  net_taxable_salary=paysheet_data_dict['net_taxable_salary']))
+#  for remuneration_block in paysheet_data_dict['remuneration']:
+#    if 'S21.G00.51.011' in remuneration_block and remuneration_block['S21.G00.51.011'] not in ('001', '002'):
+#      continue
+#    dsn_file.append(remuneration_block)
+#  for bonus_category in paysheet_data_dict['other_bonus'].itervalues():
+#    dsn_file.append(getDSNBlockDict(block_id='S21.G00.52', target=bonus_category))
+#
+#  for bonus_category in paysheet_data_dict['other_income'].itervalues():
+#    dsn_file.append(getDSNBlockDict(block_id='S21.G00.54', target=bonus_category))
+
 
 # Print DSN Record
 last_block = ''
