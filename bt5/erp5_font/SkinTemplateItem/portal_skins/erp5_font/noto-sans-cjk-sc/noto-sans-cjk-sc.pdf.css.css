@@ -1,0 +1,23 @@
+/*
+* Noto Sans SC (Chinese Simplified) http://www.google.com/fonts/earlyaccess
+XXX missing .ttf required for wkhtmltopdf
+ */
+@font-face {
+  font-family: 'Noto Sans Sc';
+  src: url('noto-sans-cjk-sc/noto-sans-cjk-sc-regular.otf') format('otf');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Noto Sans Sc';
+  src: url('noto-sans-cjk-sc/noto-sans-cjk-sc-thin.otf') format('otf');
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Noto Sans Sc';
+  src: url('noto-sans-cjk-sc/noto-sans-cjk-sc-bold.otf') format('otf');
+  font-weight: 700;
+  font-style: normal;
+}
+

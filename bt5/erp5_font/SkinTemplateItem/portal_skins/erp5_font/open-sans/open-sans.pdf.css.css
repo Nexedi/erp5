@@ -1,0 +1,31 @@
+/* 
+taken from https://github.com/FontFaceKit/open-sans
+==============================
+Apache License v2.00
+Copyright 2012 Google Inc. All Rights Reserved.
+==============================
+*/
+@font-face {
+  font-family: 'Open Sans';
+  src: url('open-sans/open-sans-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('open-sans/open-sans-light.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('open-sans/open-sans-italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('open-sans/open-sans-bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
