@@ -1190,11 +1190,11 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content form .ui-field-contain {
   position: relative;
 }
-.gadget-content form .ui-field-contain > span {
+.gadget-content form .ui-field-contain > span.error {
   animation: fadein 0.2s ease-out;
 }
 @media not screen and (max-width: 85em), only screen and (min-width: 45em) and (max-width: 85em) {
-  .gadget-content form .ui-field-contain > span {
+  .gadget-content form .ui-field-contain > span.error {
     background-color: #FF6600;
     color: #f8fff3;
     left: 25%;
@@ -1206,7 +1206,7 @@ div[data-gadget-scope='header'] .ui-header ul {
     width: auto;
     z-index: 1001;
   }
-  .gadget-content form .ui-field-contain > span:before {
+  .gadget-content form .ui-field-contain > span.error:before {
     position: absolute;
     top: 100%;
     left: 2em;
@@ -1218,7 +1218,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   }
 }
 @media not screen and (min-width: 45em) {
-  .gadget-content form .ui-field-contain > span {
+  .gadget-content form .ui-field-contain > span.error {
     margin-left: 6pt;
     color: #FF6600;
   }
