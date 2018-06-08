@@ -80,7 +80,7 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
     config_list = super(CloudPerformanceUnitTestDistributor,
                         self).startTestSuite(title, batch_mode=1)
     for config in config_list:
-      config["test_suite_title"] = config["test_suite_title"] + "-%s" % title
+      config["test_suite_title"] = config["test_suite_title"] + "|%s" % title
     return json.dumps(config_list)
 
   security.declarePublic("generateConfiguration")
@@ -95,3 +95,7 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
     # effort to run tests.
     return super(CloudPerformanceUnitTestDistributor, self) \
       .generateConfiguration("ERP5-Cloud-Reliability", batch_mode)
+
+  def _getTestSuiteFromTitle(self, suite_title):
+    return super(CloudPerformanceUnitTestDistributor,
+                 self)._getTestSuiteFromTitle(suite_title.split("|")[0])

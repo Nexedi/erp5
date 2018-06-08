@@ -328,10 +328,12 @@ class TestTaskDistribution(ERP5TypeTestCase):
 
   def _createTestResult(self, revision="r0=a,r1=a", node_title='Node0',
                               test_list=None, tic=1, allow_restart=False,
-                              test_title=None):
+                              test_title=None, distributor=None):
     if test_title is None:
       test_title = self.default_test_title
-    result =  self.distributor.createTestResult(
+    if distributor is None:
+      distributor = self.distributor
+    result =  distributor.createTestResult(
                                "", revision, test_list or [], allow_restart,
                                test_title=test_title, node_title=node_title)
     # we commit, since usually we have a remote call only doing this
@@ -837,20 +839,31 @@ class TestTaskDistribution(ERP5TypeTestCase):
           [test_node_two, ["one", "two", "three"]])
     # now we are going to
 
-  def test_13_startTestSuiteWithOneTestNodeAndPerformanceDistributor(self):
+  def test_13_startTestSuiteAndCreateTestResultWithOneTestNodeAndPerformanceDistributor(self):
     config_list = json.loads(self.performance_distributor.startTestSuite(
                              title="COMP32-Node1"))
     self.assertEqual([], config_list)
-    self._createTestSuite(quantity=2, 
+    self._createTestSuite(quantity=2,
                           specialise_value=self.performance_distributor)
     self.tic()
     self._callOptimizeAlarm()
     config_list = json.loads(self.performance_distributor.startTestSuite(
                              title="COMP32-Node1"))
     self.assertEqual(2, len(config_list))
-    self.assertEqual(set(['test suite 1-COMP32-Node1',
-                           'test suite 2-COMP32-Node1']),
+    self.assertEqual(set(['test suite 1|COMP32-Node1',
+                           'test suite 2|COMP32-Node1']),
                       set([x['test_suite_title'] for x in config_list]))
+    revision = 'a=a,b=b,c=c'
+    result = self._createTestResult(test_title='test suite 1|COMP32-Node1',
+                                    distributor=self.performance_distributor)
+    self.tic()
+    self.assertNotEqual(None, result)
+    first_path = result[0]
+    next_result = self._createTestResult(test_title='test suite 1|COMP42-Node1',
+                                    distributor=self.performance_distributor)
+    self.assertNotEqual(None, result)
+    next_path = next_result[0]
+    self.assertTrue(first_path != next_path)
 
   def test_14_subscribeNodeCheckERP5ScalabilityDistributor(self):
     """
