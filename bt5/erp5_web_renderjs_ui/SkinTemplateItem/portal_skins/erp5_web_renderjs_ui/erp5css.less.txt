@@ -1403,7 +1403,7 @@ div[data-gadget-scope='header'] .ui-header {
     // relative for displaying popups with errors
     position: relative;
 
-    & > span {
+    & > span.error {
       animation: fadein @transition-timing;
 
       @media @desktop, @tablet {

@@ -141,6 +141,7 @@
         if (this.state.error_text) {
           if (span === null) {
             span = document.createElement('span');
+            span.setAttribute('class', 'error');
             span.textContent = this.state.error_text;
             this.props.container_element.appendChild(span);
           } else {
