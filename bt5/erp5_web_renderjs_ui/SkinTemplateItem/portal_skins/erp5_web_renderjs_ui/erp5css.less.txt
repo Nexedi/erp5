@@ -2051,6 +2051,42 @@ div[data-gadget-url$="gadget_erp5_page_front.html"] {
 }
 
 /**********************************************
+* JSONForm
+**********************************************/
+
+fieldset > .jsonformfield {
+  padding-left: 0
+}
+
+.jsonformfield {
+  display: flex;
+  /*padding-left: 20px;*/
+  padding-top: 3px;
+  /*margin-left: 15px;*/
+  button {
+    display: block;
+    vertical-align: top;
+  }
+  .ui-btn-icon-top::before {
+    vertical-align: top;
+  }
+  label {
+    word-break: keep-all;
+    hyphens: none;
+  }
+  span {
+    color: rgb(94, 127, 141)
+  }
+  .error {
+    color: #E82525;
+    font-weight: 600;
+  }
+  input[type=number] {
+    text-align:right;
+  }
+}
+
+/**********************************************
 * Icons
 **********************************************/
 .ui-btn-icon-top, .ui-btn-icon-left, .ui-btn-icon-right, .ui-icon, .ui-btn-icon-notext {

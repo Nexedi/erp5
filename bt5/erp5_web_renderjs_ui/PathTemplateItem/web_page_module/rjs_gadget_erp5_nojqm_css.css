@@ -1807,6 +1807,39 @@ div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li li {
   padding: 3pt 6pt;
 }
 /**********************************************
+* JSONForm
+**********************************************/
+fieldset > .jsonformfield {
+  padding-left: 0;
+}
+.jsonformfield {
+  display: flex;
+  /*padding-left: 20px;*/
+  padding-top: 3px;
+  /*margin-left: 15px;*/
+}
+.jsonformfield button {
+  display: block;
+  vertical-align: top;
+}
+.jsonformfield .ui-btn-icon-top::before {
+  vertical-align: top;
+}
+.jsonformfield label {
+  word-break: keep-all;
+  hyphens: none;
+}
+.jsonformfield span {
+  color: #5e7f8d;
+}
+.jsonformfield .error {
+  color: #E82525;
+  font-weight: 600;
+}
+.jsonformfield input[type=number] {
+  text-align: right;
+}
+/**********************************************
 * Icons
 **********************************************/
 .ui-btn-icon-top::before,
