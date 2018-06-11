@@ -729,7 +729,7 @@ div[data-gadget-scope='header'] .ui-header {
   flex-flow: row wrap;
   width: 100%;
   color: #FFFFFF;
-  background-color: #E9D758;
+  background-color: #94a095;
 }
 @media not screen and (max-width: 85em) {
   div[data-gadget-scope='header'] .ui-header {
@@ -746,7 +746,7 @@ div[data-gadget-scope='header'] .ui-header button:hover,
 div[data-gadget-scope='header'] .ui-header a:hover,
 div[data-gadget-scope='header'] .ui-header button:active,
 div[data-gadget-scope='header'] .ui-header a:active {
-  background-color: #ffcdb8;
+  background-color: #5bf235;
 }
 div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button,
 div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
@@ -757,13 +757,13 @@ div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
 @media not screen and (max-width: 85em) {
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button,
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
-    background-color: #E9D758;
+    background-color: #94a095;
   }
 }
 @media not screen and (min-width: 45em) {
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button,
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
-    background-color: #FF8552;
+    background-color: #2eb50c;
     width: 3em;
     overflow: hidden;
     text-indent: -9999px;
@@ -774,12 +774,12 @@ div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button:hove
 div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a:hover,
 div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button:active,
 div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a:active {
-  background-color: #ffcdb8;
+  background-color: #5bf235;
 }
 @media only screen and (min-width: 45em) and (max-width: 85em) {
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button,
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
-    background-color: #FF8552;
+    background-color: #2eb50c;
     width: 8em;
   }
 }
@@ -831,7 +831,7 @@ div[data-gadget-scope='header'] .ui-header h1 {
   text-align: left;
   line-height: 30pt;
   flex: 1;
-  background-color: #FF8552;
+  background-color: #2eb50c;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1343,7 +1343,7 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
 }
 @media not screen and (min-width: 45em) {
   .document_table .ui-table-header {
-    border-bottom: 2px solid #FF8552;
+    border-bottom: 2px solid #2eb50c;
   }
 }
 .document_table .ui-table-header h1 {
@@ -1396,7 +1396,7 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
 }
 .document_table table thead,
 .document_table table tfoot {
-  background-color: #FF8552;
+  background-color: #2eb50c;
   color: #FFFFFF;
 }
 .document_table table thead a,
@@ -1662,7 +1662,7 @@ div[data-gadget-scope='notification'] button.error {
   }
   .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header .ui-controlgroup-controls button,
   .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header .ui-controlgroup-controls a {
-    background-color: #FF8552;
+    background-color: #2eb50c;
     width: 8em;
   }
   .desktop-panel-hidden div[data-gadget-scope="header"] .ui-header .ui-controlgroup-controls button.ui-icon-warning,
@@ -1761,7 +1761,7 @@ div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li {
 }
 div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li h2 {
   font-weight: 700;
-  background: #FF8552;
+  background: #2eb50c;
   color: #FFFFFF;
   padding: 6pt;
 }
