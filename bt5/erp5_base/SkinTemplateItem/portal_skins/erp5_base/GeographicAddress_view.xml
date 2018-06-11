@@ -85,6 +85,7 @@
                         <string>my_zip_code</string>
                         <string>my_city</string>
                         <string>my_region</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

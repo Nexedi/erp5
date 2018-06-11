@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
   <type>Address</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>coordinate_interaction_workflow, edit_workflow, reachability_workflow</workflow>
  </chain>
  <chain>
   <type>Agent</type>
@@ -21,7 +21,7 @@
  </chain>
  <chain>
   <type>Chat Address</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>coordinate_interaction_workflow, edit_workflow, reachability_workflow</workflow>
  </chain>
  <chain>
   <type>Credit Card</type>
@@ -45,7 +45,7 @@
  </chain>
  <chain>
   <type>Email</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>coordinate_interaction_workflow, edit_workflow, reachability_workflow</workflow>
  </chain>
  <chain>
   <type>Embedded File</type>
@@ -57,11 +57,11 @@
  </chain>
  <chain>
   <type>External Identifier</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>coordinate_interaction_workflow, edit_workflow, reachability_workflow</workflow>
  </chain>
  <chain>
   <type>Fax</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>coordinate_interaction_workflow, edit_workflow, reachability_workflow</workflow>
  </chain>
  <chain>
   <type>File</type>
@@ -81,7 +81,7 @@
  </chain>
  <chain>
   <type>Link</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>coordinate_interaction_workflow, edit_workflow, reachability_workflow</workflow>
  </chain>
  <chain>
   <type>Notification Message</type>
@@ -113,6 +113,6 @@
  </chain>
  <chain>
   <type>Telephone</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>coordinate_interaction_workflow, edit_workflow, reachability_workflow</workflow>
  </chain>
 </workflow_chain>

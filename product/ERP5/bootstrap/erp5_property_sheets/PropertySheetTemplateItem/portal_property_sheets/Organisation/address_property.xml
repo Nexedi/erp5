@@ -109,6 +109,7 @@
                 <string>region_title</string>
                 <string>prefecture</string>
                 <string>coordinate_text</string>
+                <string>validation_state</string>
               </tuple>
             </value>
         </item>
