@@ -1,5 +1,4 @@
 from Products.ERP5Type.Message import translateString
-from zExceptions import Redirect
 portal = context.getPortalObject()
 countMessage = portal.portal_activities.countMessage
 
