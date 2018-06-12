@@ -108,6 +108,7 @@
                 <string>telephone_extension</string>
                 <string>telephone_number</string>
                 <string>coordinate_text</string>
+                <string>validation_state</string>
               </tuple>
             </value>
         </item>

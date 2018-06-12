@@ -104,6 +104,7 @@
                 <string>coordinate_text</string>
                 <string>text</string>
                 <string>url_string</string>
+                <string>validation_state</string>
               </tuple>
             </value>
         </item>
