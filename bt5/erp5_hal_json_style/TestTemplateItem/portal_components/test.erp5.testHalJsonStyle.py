@@ -1240,6 +1240,8 @@ return context.getPortalObject().foo_module.contentValues()
     )
     result_dict = json.loads(result)
     #editalble creation date is defined at proxy form
+    # Test the listbox_uid parameter
+    self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
     self.assertEqual(result_dict['_embedded']['contents'][0]['creation_date']['field_gadget_param']['type'], 'DateTimeField')
     self.assertEqual(result_dict['_embedded']['contents'][0]['modification_date']['field_gadget_param']['type'], 'DateTimeField')
     # There is a count method on this listbox
@@ -1283,6 +1285,9 @@ return '%s/Base_viewMetadata?reset:int=1' % context.getRelativeUrl()
                   select_list=['id', 'title', 'creation_date', 'modification_date'],
                   form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox')
     result_dict = json.loads(result)
+
+    # Test the listbox_uid parameter
+    self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
 
     # Test the URL value
     self.assertEqual(result_dict['_embedded']['contents'][0]['modification_date']['url_value']['command'], 'push_history')
@@ -1331,6 +1336,9 @@ return url
                   form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox')
     result_dict = json.loads(result)
 
+    # Test the listbox_uid parameter
+    self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
+
     # Test the URL value
     self.assertEqual(result_dict['_embedded']['contents'][0]['modification_date']['url_value']['command'], 'raw')
     self.assertEqual(result_dict['_embedded']['contents'][0]['modification_date']['url_value']['options']['url'], 'https://officejs.com')
@@ -1375,6 +1383,9 @@ return url
                   form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox')
     result_dict = json.loads(result)
 
+    # Test the listbox_uid parameter
+    self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
+
     # Test the URL value
     self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value']['command'], 'raw')
     self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value']['options']['url'], 'https://officejs.com')
@@ -1414,6 +1425,9 @@ return context.getPortalObject().foo_module.contentValues()
                   select_list=['id', 'title', 'creation_date', 'modification_date'],
                   form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox')
     result_dict = json.loads(result)
+
+    # Test the listbox_uid parameter
+    self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
 
     # Test the URL value
     self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value'], {})
@@ -1457,6 +1471,9 @@ return url
                   select_list=['id', 'title', 'creation_date', 'modification_date'],
                   form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox')
     result_dict = json.loads(result)
+
+    # Test the listbox_uid parameter
+    self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
 
     # Test the URL value
     self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value']['command'], 'raw')
@@ -1531,6 +1548,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     )
     result_dict = json.loads(result)
     self.assertEqual(2, len(result_dict['_embedded']['contents']))
+    # Test the listbox_uid parameter
+    self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
     self.assertIn("field_listbox", result_dict['_embedded']['contents'][0]['id']['field_gadget_param']['key'])
     self.assertEqual("StringField", result_dict['_embedded']['contents'][0]['id']['field_gadget_param']['type'])
     self.assertEqual(document_list[0].getId(), result_dict['_embedded']['contents'][0]['id']['field_gadget_param']['default'])
@@ -1539,6 +1558,25 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     self.assertEqual(document_list[1].getId(), result_dict['_embedded']['contents'][1]['id']['field_gadget_param']['default'])
     # There is a count method on the listbox
     self.assertEqual(result_dict['_embedded']['count'], 0)
+
+
+    # Render a Document without using Form Field template ('reference')
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      local_roles=["Assignor", "Assignee"],
+      list_method='Test_listProducts',
+      select_list=['reference'],
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(2, len(result_dict['_embedded']['contents']))
+    # Test the listbox_uid parameter
+    self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
+    self.assertEqual(document_list[0].getReference(), result_dict['_embedded']['contents'][0]['reference'].encode('UTF-8'))
+    # There is a count method on the listbox
+    self.assertEqual(result_dict['_embedded']['count'], 0)
+
 
     # Test rendering without form template of attribute, getterm and a script
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(

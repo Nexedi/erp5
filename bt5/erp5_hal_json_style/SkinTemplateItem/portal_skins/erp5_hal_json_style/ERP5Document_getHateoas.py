@@ -1873,7 +1873,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
       # ERP5 stores&send the list of editable elements in a hidden field called
       # only database results can be editable so it belongs here
-      if editable_field_dict and listbox_field_id:
+      if listbox_field_id:# and source_field.get_value("editable"):
         contents_item['listbox_uid:list'] = {
           'key': "%s_uid:list" % listbox_field_id,
           'value': contents_uid
