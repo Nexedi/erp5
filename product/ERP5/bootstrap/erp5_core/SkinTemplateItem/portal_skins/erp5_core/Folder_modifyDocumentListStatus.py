@@ -23,6 +23,8 @@ if not mass_workflow_action:
 request.form['field_your_previous_mass_workflow_action'] = mass_workflow_action
 # XXX This is hardcoded for the hidden field inside Base_viewWorkflowActionDialog
 request.form['field_workflow_form_your_workflow_action'] = mass_workflow_action
+# XXX This is hardcoded for the hidden field inside BaseWorkflow_viewWorkflowActionDialog
+request.form['field_workflow_form_my_workflow_action'] = mass_workflow_action
 
 if update_method or (previous_mass_workflow_action != mass_workflow_action):
   return context.Base_renderForm(dialog_id,
