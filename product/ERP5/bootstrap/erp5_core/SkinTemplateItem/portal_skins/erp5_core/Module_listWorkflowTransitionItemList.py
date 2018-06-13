@@ -47,6 +47,8 @@ for document_portal_type_id in module_portal_type.getTypeAllowedContentTypeList(
             # XXX portal_type parameter must also probably be added too
             # This would required to detect identical transition id for different workflow
             result['listbox_parameter_dict'][transition_id] = [(state_variable, allowed_state_dict[transition_id])]
+          elif (transition.trigger_type == TRIGGER_USER_ACTION) and (transition_id == 'delete_action'):
+            result['listbox_parameter_dict'][transition_id] = [(state_variable, allowed_state_dict[transition_id])]
 
 result['transition_item_list'].sort()
 result['transition_item_list'].insert(0, ('', ''))
