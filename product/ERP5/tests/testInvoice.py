@@ -1762,6 +1762,53 @@ class TestInvoice(TestInvoiceMixin):
     if err_list:
       self.fail(''.join(err_list))
 
+  def test_Invoice_viewAsODT_date_before_1900(self):
+    # Regression test for invoices with a date before 1900, which
+    # python-2.7's strftime does not support.
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type
+    ).newContent(
+        portal_type=self.resource_portal_type,
+        title='Resource',)
+    file_data = FileUpload(__file__)
+    client = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+        title='Client')
+    vendor = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+        title='Vendor')
+
+    invoice = self.portal.getDefaultModule(
+        self.invoice_portal_type
+    ).newContent(
+        portal_type=self.invoice_portal_type,
+        start_date=DateTime(102, 12, 31),
+        stop_date=DateTime(103, 12, 31),
+        title='Invoice',
+        specialise=self.business_process,
+        source_value=vendor,
+        source_section_value=vendor,
+        destination_value=client,
+        destination_section_value=client)
+    invoice.newContent(
+        portal_type=self.invoice_line_portal_type,
+        resource_value=resource,
+        quantity=10,
+        price=3)
+    invoice.confirm()
+    self.tic()
+
+    data_dict = invoice.Invoice_getODTDataDict()
+    self.assertEqual('0102/12/31', data_dict['start_date'])
+    self.assertEqual('0103/12/31', data_dict['stop_date'])
+    # rendering is valid odf
+    odt = invoice.Invoice_viewAsODT()
+    from Products.ERP5OOo.tests.utils import Validator
+    odf_validator = Validator()
+    err_list = odf_validator.validate(odt)
+    if err_list:
+      self.fail(''.join(err_list))
+
   def test_invoice_building_with_cells(self):
     # if the order has cells, the invoice built from that order must have
     # cells too
