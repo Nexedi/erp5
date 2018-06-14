@@ -63,9 +63,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -206,10 +204,28 @@ gadget_editor.html\n
 gadget_editor.js\n
 gadget_button_maximize.html\n
 gadget_button_maximize.js\n
+gadget_erp5_pt_form_dialog.html\n
+gadget_erp5_pt_form_dialog.js\n
+gadget_erp5_field_file.html\n
+gadget_erp5_field_file.js\n
+gadget_erp5_field_list.html\n
+gadget_erp5_field_list.js\n
+gadget_html5_select.html\n
+gadget_html5_select.js\n
 \n
 #setting\n
 gadget_officejs_setting.js\n
 gadget_officejs_setting.html\n
+\n
+#cloudooo\n
+gadget_ojs_cloudooo.html\n
+gadget_ojs_cloudooo.js\n
+gadget_cloudooo.html\n
+gadget_cloudooo.js\n
+gadget_erp5_page_ojs_upload_convert.html\n
+gadget_erp5_page_ojs_upload_convert.js\n
+gadget_erp5_page_ojs_download_convert.html\n
+gadget_erp5_page_ojs_download_convert.js\n
 \n
 #spreadsheet\n
 gadget_ooffice_spreadsheet_router.html\n
@@ -1359,7 +1375,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P0</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -1373,7 +1389,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.1012.19255.29354</string> </value>
+                <value> <string>969.27633.19787.19507</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1391,7 +1407,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1517243409.91</float>
+                        <float>1533639878.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

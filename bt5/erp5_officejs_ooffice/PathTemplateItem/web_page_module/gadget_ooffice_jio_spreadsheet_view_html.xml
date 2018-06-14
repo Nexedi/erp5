@@ -61,6 +61,12 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -223,7 +229,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P0</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -237,7 +243,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.645.13018.3652</string> </value>
+                <value> <string>969.27633.19787.19507</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -255,7 +261,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501252130.3</float>
+                        <float>1533639597.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
