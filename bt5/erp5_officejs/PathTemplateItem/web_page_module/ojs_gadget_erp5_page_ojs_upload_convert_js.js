@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, jIO */
+/*global window, rJS, RSVP, jIO, JSON */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, jIO) {
+(function (window, rJS, RSVP, jIO, JSON) {
   "use strict";
 
   rJS(window)
@@ -10,6 +10,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("jio_post", "jio_post")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
@@ -17,12 +18,8 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-
-    .allowPublicAcquisition('jio_putAttachment', function () {
-      var gadget = this,
-        file_name,
-        jio_key,
-        data;
+    .allowPublicAcquisition('submitContent', function () {
+      var gadget = this;
 
       return gadget.notifySubmitting()
         .push(function () {
@@ -32,25 +29,51 @@
           return RSVP.all([
             form_gadget.getContent(),
             gadget.getSetting('portal_type'),
-            gadget.getSetting('content_type')
+            gadget.getSetting('content_type'),
+            gadget.getSetting('file_extension')
           ]);
         })
         .push(function (result) {
-          file_name = result[0].file.file_name.split(gadget.state.upload_extension)[0];
-          data = jIO.util.dataURItoBlob(result[0].file.url);
-          return gadget.jio_post({
-            title: file_name,
-            portal_type: result[1],
-            content_type: result[2],
-            filename: file_name
+          var file_name_list, file_name, from, jio_key, data, to,
+              att_id;
+          if (result[0].file !== undefined) {
+            file_name_list = result[0].file.file_name.split('.');
+            from = file_name_list.pop();
+            if (gadget.state.upload.hasOwnProperty(from)) {
+              to = gadget.state.upload[from];
+              att_id = "data?from=" + from + "&to=" + to;
+            } else if (from === result[3]) {
+              att_id = "data";
+            } else {
+              return gadget.notifySubmitted({
+                message: "Can convert, avaible format : " +
+                    gadget.state.upload,
+                status: "error"
+              });
+            }
+            file_name = file_name_list.join('.');
+            data = jIO.util.dataURItoBlob(result[0].file.url);
+            return gadget.jio_post({
+              title: file_name,
+              portal_type: result[1],
+              content_type: result[2],
+              filename: file_name
+            })
+              .push(function (doc_id) {
+                jio_key = doc_id;
+                return gadget.jio_putAttachment(jio_key, "data?from=" + from + '?to=' + gadget.state.upload_extension, data);
+              })
+              .push(function () {
+                return jio_key;
+              });
+          }
+          return gadget.notifySubmitted({
+            message: "File is required",
+            status: "error"
           });
         })
-        .push(function (doc_id) {
-          jio_key = doc_id;
-          return gadget.jio_putAttachment(jio_key, "data?" + gadget.state.upload_extension, data);
-        })
         .push(function () {
-          return gadget.redirect({command: 'display', options: {jio_key: jio_key}});
+          return;
         });
     })
 
@@ -60,10 +83,10 @@
 
     .declareMethod("render", function () {
       var gadget = this;
-      return gadget.getSetting('upload_extension')
-        .push(function (upload_extension) {
+      return gadget.getSetting('upload_dict')
+        .push(function (upload_dict) {
           return gadget.changeState({
-            upload_extension: upload_extension
+            upload: upload_dict
           });
         });
     })
@@ -88,11 +111,6 @@
                   "key": "file",
                   "hidden": 0,
                   "type": "FileField"
-                },
-                "your_format": {
-                  "title": "Format",
-                  "default": gadget.state.upload_extension,
-                  "editable": 0
                 }
               }},
               "_links": {
@@ -113,9 +131,7 @@
         })
         .push(function () {
           return RSVP.all([
-            gadget.getUrlFor({command: 'history_previous'}),
-            gadget.getUrlFor({command: 'selection_previous'}),
-            gadget.getUrlFor({command: 'selection_next'})
+            gadget.getUrlFor({command: 'history_previous'})
           ]);
         })
         .push(function (url_list) {
@@ -127,4 +143,4 @@
           });
         });
     });
-}(window, rJS, RSVP, jIO));
+}(window, rJS, RSVP, jIO, JSON));
