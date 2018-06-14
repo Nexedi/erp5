@@ -100,13 +100,15 @@ year_to_date_total_employer_tax = paysheet.PaySheetTransaction_getYearToDateMove
 
 preferred_date_order = portal.portal_preferences\
                        .getPreferredDateOrder() or 'ymd'
-separator = '/'
 def getOrderedDate(date):
   if date is None:
     return ''
-  pattern = separator.join(['%%%s' % s for s in list(preferred_date_order)])
-  pattern = pattern.replace('y', 'Y')
-  return date.strftime(pattern)
+  date_parts = {
+    'y': '%04d' % date.year(),
+    'm': '%02d' % date.month(),
+    'd': '%02d' % date.day(),
+  }
+  return '/'.join([date_parts[part] for part in preferred_date_order])
 
 def getPaymentConditionText(paysheet):
   date = ''
