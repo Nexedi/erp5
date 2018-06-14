@@ -86,6 +86,7 @@ from Products.ERP5Type.Accessor.TypeDefinition import asDate
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, super_user
+from Products.ERP5Type.mixin.json_representable import JSONRepresentableMixin
 
 from zope.interface import classImplementsOnly, implementedBy
 
@@ -675,7 +676,8 @@ class Base( CopyContainer,
             ActiveObject,
             OFS.History.Historical,
             ERP5PropertyManager,
-            PropertyTranslatableBuiltInDictMixIn
+            PropertyTranslatableBuiltInDictMixIn,
+            JSONRepresentableMixin,
             ):
   """
     This is the base class for all ERP5 Zope objects.
