@@ -107,6 +107,16 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//tr[@id='${application_title}_test_missing_interface_declaration_gadget']//td[@class='validation_status final']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@id='${application_title}_test_missing_interface_declaration_gadget']//td[@class='validation_status final']</td>
+  <td>N/A</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
   <td>//button[@data-i18n='Menu']</td>
   <td></td>
 </tr>
