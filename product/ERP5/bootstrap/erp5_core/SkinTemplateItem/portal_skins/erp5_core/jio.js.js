@@ -8195,47 +8195,64 @@ return new Parser;
     }
   }
 
+  function ensurePushableQueue(callback, argument_list, context) {
+    var result;
+    try {
+      result = callback.apply(context, argument_list);
+    } catch (e) {
+      return new RSVP.Queue()
+        .push(function returnPushableError() {
+          return RSVP.reject(e);
+        });
+    }
+    if (result instanceof RSVP.Queue) {
+      return result;
+    }
+    return new RSVP.Queue()
+      .push(function returnPushableResult() {
+        return result;
+      });
+  }
+
   function declareMethod(klass, name, precondition_function, post_function) {
     klass.prototype[name] = function () {
       var argument_list = arguments,
         context = this,
-        precondition_result;
+        precondition_result,
+        storage_method,
+        queue;
 
-      return new RSVP.Queue()
-        .push(function () {
-          if (precondition_function !== undefined) {
-            return precondition_function.apply(
-              context.__storage,
-              [argument_list, context, name]
-            );
-          }
-        })
-        .push(function (result) {
-          var storage_method = context.__storage[name];
-          precondition_result = result;
-          if (storage_method === undefined) {
-            throw new jIO.util.jIOError(
-              "Capacity '" + name + "' is not implemented on '" +
-                context.__type + "'",
-              501
-            );
-          }
-          return storage_method.apply(
-            context.__storage,
-            argument_list
-          );
-        })
-        .push(function (result) {
-          if (post_function !== undefined) {
+      // Precondition function are not asynchronous
+      if (precondition_function !== undefined) {
+        precondition_result = precondition_function.apply(
+          context.__storage,
+          [argument_list, context, name]
+        );
+      }
+
+      storage_method = context.__storage[name];
+      if (storage_method === undefined) {
+        throw new jIO.util.jIOError(
+          "Capacity '" + name + "' is not implemented on '" +
+            context.__type + "'",
+          501
+        );
+      }
+      queue = ensurePushableQueue(storage_method, argument_list,
+                                  context.__storage);
+
+      if (post_function !== undefined) {
+        queue
+          .push(function (result) {
             return post_function.call(
               context,
               argument_list,
               result,
               precondition_result
             );
-          }
-          return result;
-        });
+          });
+      }
+      return queue;
     };
     // Allow chain
     return this;
@@ -8267,17 +8284,16 @@ return new Parser;
   JioProxyStorage.prototype.post = function () {
     var context = this,
       argument_list = arguments;
-    return new RSVP.Queue()
-      .push(function () {
-        var storage_method = context.__storage.post;
-        if (storage_method === undefined) {
-          throw new jIO.util.jIOError(
-            "Capacity 'post' is not implemented on '" + context.__type + "'",
-            501
-          );
-        }
-        return context.__storage.post.apply(context.__storage, argument_list);
-      });
+    return ensurePushableQueue(function () {
+      var storage_method = context.__storage.post;
+      if (storage_method === undefined) {
+        throw new jIO.util.jIOError(
+          "Capacity 'post' is not implemented on '" + context.__type + "'",
+          501
+        );
+      }
+      return context.__storage.post.apply(context.__storage, argument_list);
+    });
   };
 
   declareMethod(JioProxyStorage, 'putAttachment', function (argument_list,
@@ -8395,13 +8411,8 @@ return new Parser;
         501
       );
     }
-    return new RSVP.Queue()
-      .push(function () {
-        return storage_method.apply(
-          context.__storage,
-          argument_list
-        );
-      });
+    return ensurePushableQueue(storage_method, argument_list,
+                               context.__storage);
   };
 
   JioProxyStorage.prototype.hasCapacity = function (name) {
@@ -8425,27 +8436,26 @@ return new Parser;
     if (options === undefined) {
       options = {};
     }
-    return new RSVP.Queue()
-      .push(function () {
-        if (context.hasCapacity("list") &&
-            ((options.query === undefined) || context.hasCapacity("query")) &&
-            ((options.sort_on === undefined) || context.hasCapacity("sort")) &&
-            ((options.select_list === undefined) ||
-             context.hasCapacity("select")) &&
-            ((options.include_docs === undefined) ||
-             context.hasCapacity("include")) &&
-            ((options.limit === undefined) || context.hasCapacity("limit"))) {
-          return context.buildQuery(options);
-        }
-      })
-      .push(function (result) {
-        return {
-          data: {
-            rows: result,
-            total_rows: result.length
-          }
-        };
-      });
+    return ensurePushableQueue(function () {
+      if (context.hasCapacity("list") &&
+          ((options.query === undefined) || context.hasCapacity("query")) &&
+          ((options.sort_on === undefined) || context.hasCapacity("sort")) &&
+          ((options.select_list === undefined) ||
+           context.hasCapacity("select")) &&
+          ((options.include_docs === undefined) ||
+           context.hasCapacity("include")) &&
+          ((options.limit === undefined) || context.hasCapacity("limit"))) {
+        return context.buildQuery(options)
+          .push(function (result) {
+            return {
+              data: {
+                rows: result,
+                total_rows: result.length
+              }
+            };
+          });
+      }
+    });
   };
 
   declareMethod(JioProxyStorage, "allAttachments", checkId);
@@ -8454,14 +8464,13 @@ return new Parser;
   JioProxyStorage.prototype.repair = function () {
     var context = this,
       argument_list = arguments;
-    return new RSVP.Queue()
-      .push(function () {
-        var storage_method = context.__storage.repair;
-        if (storage_method !== undefined) {
-          return context.__storage.repair.apply(context.__storage,
-                                                argument_list);
-        }
-      });
+    return ensurePushableQueue(function () {
+      var storage_method = context.__storage.repair;
+      if (storage_method !== undefined) {
+        return context.__storage.repair.apply(context.__storage,
+                                              argument_list);
+      }
+    });
   };
 
   /////////////////////////////////////////////////////////////////
@@ -12385,59 +12394,56 @@ return new Parser;
   };
 
   function extractPropertyFromFormJSON(json) {
-    return new RSVP.Queue()
-      .push(function () {
-        var form = json._embedded._view,
-          converted_json = {
-            portal_type: json._links.type.name
-          },
-          form_data_json = {},
-          field,
-          key,
-          prefix_length,
-          result;
+    var form = json._embedded._view,
+      converted_json = {
+        portal_type: json._links.type.name
+      },
+      form_data_json = {},
+      field,
+      key,
+      prefix_length,
+      result;
 
-        if (json._links.hasOwnProperty('parent')) {
-          converted_json.parent_relative_url =
-            new URI(json._links.parent.href).segment(2);
-        }
+    if (json._links.hasOwnProperty('parent')) {
+      converted_json.parent_relative_url =
+        new URI(json._links.parent.href).segment(2);
+    }
 
-        form_data_json.form_id = {
-          "key": [form.form_id.key],
-          "default": form.form_id["default"]
-        };
-        // XXX How to store datetime
-        for (key in form) {
-          if (form.hasOwnProperty(key)) {
-            field = form[key];
-            prefix_length = 0;
-            if (key.indexOf('my_') === 0 && field.editable) {
-              prefix_length = 3;
-            }
-            if (key.indexOf('your_') === 0) {
-              prefix_length = 5;
-            }
-            if ((prefix_length !== 0) &&
-                (allowed_field_dict.hasOwnProperty(field.type))) {
-              form_data_json[key.substring(prefix_length)] = {
-                "default": field["default"],
-                "key": field.key
-              };
-              converted_json[key.substring(prefix_length)] = field["default"];
-            }
-          }
+    form_data_json.form_id = {
+      "key": [form.form_id.key],
+      "default": form.form_id["default"]
+    };
+    // XXX How to store datetime
+    for (key in form) {
+      if (form.hasOwnProperty(key)) {
+        field = form[key];
+        prefix_length = 0;
+        if (key.indexOf('my_') === 0 && field.editable) {
+          prefix_length = 3;
         }
+        if (key.indexOf('your_') === 0) {
+          prefix_length = 5;
+        }
+        if ((prefix_length !== 0) &&
+            (allowed_field_dict.hasOwnProperty(field.type))) {
+          form_data_json[key.substring(prefix_length)] = {
+            "default": field["default"],
+            "key": field.key
+          };
+          converted_json[key.substring(prefix_length)] = field["default"];
+        }
+      }
+    }
 
-        result = {
-          data: converted_json,
-          form_data: form_data_json
-        };
-        if (form.hasOwnProperty('_actions') &&
-            form._actions.hasOwnProperty('put')) {
-          result.action_href = form._actions.put.href;
-        }
-        return result;
-      });
+    result = {
+      data: converted_json,
+      form_data: form_data_json
+    };
+    if (form.hasOwnProperty('_actions') &&
+        form._actions.hasOwnProperty('put')) {
+      result.action_href = form._actions.put.href;
+    }
+    return result;
   }
 
   function extractPropertyFromForm(context, id) {
