@@ -1,9 +1,9 @@
-/*global window, rJS */
-/*jslint nomen: true, indent: 2 */
-(function (window, rJS) {
+/*global window, rJS, document, loopEventListener, RSVP */
+/*jslint nomen: true, indent: 2, maxlen: 80 */
+(function (window, rJS, document, loopEventListener, RSVP) {
   "use strict";
-  
-   var MAIN_PAGE_PREFIX = "gadget_interface_validator_",
+
+  var MAIN_PAGE_PREFIX = "gadget_interface_validator_",
     DEFAULT_PAGE = "form",
     REDIRECT_TIMEOUT = 5000;
 
@@ -23,7 +23,8 @@
             if (subhash !== '') {
               keyvalue = subhash.split('=');
               if (keyvalue.length === 2) {
-                args[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);
+                args[decodeURIComponent(keyvalue[0])] =
+                  decodeURIComponent(keyvalue[1]);
               }
             }
           }
@@ -52,7 +53,7 @@
       };
     })
 
-    .declareMethod("getCommandUrlFor", function(options) {
+    .declareMethod("getCommandUrlFor", function (options) {
       var prefix = '',
         result,
         key;
@@ -60,7 +61,8 @@
       for (key in options) {
         if (options.hasOwnProperty(key) && options[key] !== undefined) {
           // Don't keep empty values
-          result += prefix + encodeURIComponent(key) + "=" + encodeURIComponent(options[key]);
+          result += prefix + encodeURIComponent(key) + "=" +
+            encodeURIComponent(options[key]);
           prefix = '&';
         }
       }
@@ -79,8 +81,7 @@
     })
 
     .declareMethod('route', function (options) {
-      var gadget = this,
-        args = options.args,
+      var args = options.args,
         page;
 
       page = args.page || DEFAULT_PAGE;
@@ -105,4 +106,4 @@
         });
     });
 
-}(window, rJS));
+}(window, rJS, document, loopEventListener, RSVP));

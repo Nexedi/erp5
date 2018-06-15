@@ -1,36 +1,41 @@
-/*global window, rJS, RSVP, Handlebars */
-/*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+/*global window, rJS, RSVP, Handlebars, loopEventListener, $, document */
+/*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
+(function (window, rJS, RSVP, Handlebars, loopEventListener, $, document) {
   "use strict";
 
-  var INTERFACE_GADGET_SCOPE = "interface_gadget";
+  var INTERFACE_GADGET_SCOPE = "interface_gadget",
+  /////////////////////////////////////////////////////////////////
+  // Handlebars
+  /////////////////////////////////////////////////////////////////
+    // Precompile the templates while loading the first gadget instance
+    gadget_klass = rJS(window),
+    templater = gadget_klass.__template_element,
+    report_widget_table = Handlebars.compile(
+      templater.getElementById("report-widget-table").innerHTML
+    );
 
   function renderInitialReport(gadget, gadget_list) {
-    var gadget_info_list = [],
-      row_list = [],
+    var row_list = [],
       column_list = ['Gadget Name', 'Declared Interfaces', 'Validation Status'],
       cell_list,
       default_status = "In Progress",
       content = '',
-      item;
-    for(item in gadget_list) {
-      cell_list = [];
-      cell_list.push({
+      i;
+    for (i = 0; i < gadget_list.length; i += 1) {
+      cell_list = [{
         default_class: "gadget_name",
-        value: gadget_list[item]
-      });
-      cell_list.push({
+        value: gadget_list[i]
+      }, {
         default_class: "interface_list",
         value: default_status
-      });
-      cell_list.push({
+      }, {
         default_class: "validation_status",
         value: default_status
-      });
+      }];
       row_list.push({
         "cell_list": cell_list,
-        "default_id": gadget_list[item].substr(0, gadget_list[item].indexOf('.'))
-        });
+        "default_id": gadget_list[i].substr(0, gadget_list[i].indexOf('.'))
+      });
     }
     content += report_widget_table({
       column_list: column_list,
@@ -40,19 +45,81 @@
     $(gadget.props.element).trigger("create");
   }
 
-  function validateAppGadgetList(gadget, gadget_list){
-    var item;
-    for(item in gadget_list) {
-      updateGadgetData(gadget, gadget_list[item]);
+
+  function verifyGadgetImplementation(gadget, verify_gadget_url) {
+    var interface_gadget,
+      interface_list = [],
+      default_validation_status = {result: "N/A"};
+    return new RSVP.Queue()
+      .push(function () {
+        return gadget.getDeclaredGadget(INTERFACE_GADGET_SCOPE);
+      })
+      .push(function (i_gadget) {
+        interface_gadget = i_gadget;
+        return interface_gadget.getDeclaredGadgetInterfaceList(
+          verify_gadget_url
+        );
+      })
+      .push(function (temp_interface_list) {
+        interface_list = temp_interface_list;
+        if (interface_list.length > 0) {
+          return interface_gadget.verifyGadgetInterfaceImplementation(
+            verify_gadget_url
+          );
+        }
+        return default_validation_status;
+      })
+      .push(function (validation_status) {
+        return [interface_list, validation_status];
+      }, function (error) {
+        default_validation_status.result = false;
+        default_validation_status.result_message = "Error with gadget loading";
+        default_validation_status.details = error.message;
+        return [interface_list, default_validation_status];
+      });
+  }
+
+  function updateReportData(gadget, report_data) {
+    var id = "#" + report_data.id.replace('/', '\\/'),
+      update_element = gadget.props.content_element.querySelector(id),
+      interface_data = '',
+      validation_status = report_data.validation_status,
+      validation_message = report_data.validation_message,
+      i,
+      interface_name;
+    if (report_data.interface_list.length) {
+      for (i = 0; i < report_data.interface_list.length; i += 1) {
+        interface_name = report_data.interface_list[i].substr(
+          report_data.interface_list[i].lastIndexOf('/') + 1
+        );
+        interface_data += (interface_name + '<br />');
+      }
+    } else {
+      interface_data = 'None';
     }
+    if (report_data.validation_status === true) {
+      validation_status = "Success";
+      update_element.setAttribute('style', 'color: green');
+    }
+    if (report_data.validation_status === false) {
+      validation_status =
+        (validation_message !== undefined ? validation_message : "Failure");
+      update_element.setAttribute('style', 'cursor: pointer; color: red');
+      update_element.className += "error expand";
+    }
+    gadget.props.error_data[report_data.id] = report_data.error_detail;
+    update_element.querySelector(".validation_status").innerHTML =
+      validation_status;
+    update_element.querySelector(".validation_status").className += " final";
+    update_element.querySelector(".interface_list").innerHTML = interface_data;
   }
 
   function updateGadgetData(gadget, verify_gadget_url) {
     return RSVP.Queue()
-      .push(function() {
+      .push(function () {
         return verifyGadgetImplementation(gadget, verify_gadget_url);
       })
-      .push(function(verify_result) {
+      .push(function (verify_result) {
         var result_dict = {
           id: verify_gadget_url.substr(0, verify_gadget_url.indexOf('.')),
           gadget_name: verify_gadget_url,
@@ -65,94 +132,33 @@
       });
   }
 
-  function verifyGadgetImplementation(gadget, verify_gadget_url) {
-    var interface_gadget,
-      interface_list = [],
-      default_validation_status = {result:"N/A"};
-    return new RSVP.Queue()
-      .push(function() {
-        return gadget.getDeclaredGadget(INTERFACE_GADGET_SCOPE);
-      })
-      .push(function(i_gadget) {
-        interface_gadget = i_gadget;
-        return interface_gadget.getDeclaredGadgetInterfaceList(verify_gadget_url);
-      })
-      .push(function(temp_interface_list) {
-        interface_list = temp_interface_list;
-        if(interface_list.length > 0) {
-          return interface_gadget.verifyGadgetInterfaceImplementation(verify_gadget_url);
-        }
-        else {
-          return default_validation_status;
-        }
-      })
-      .push(function(validation_status) {
-        return [interface_list, validation_status];
-      }, function(error) {
-        default_validation_status.result = false;
-        default_validation_status.result_message = "Error with gadget loading";
-        default_validation_status.details = error.message;
-        return [interface_list, default_validation_status];
-      });
-  }
-
-  function updateReportData(gadget, report_data) {
-    var id = "#" + report_data.id.replace('/','\\/'),
-      update_element = gadget.props.content_element.querySelector(id),
-      interface_data = '',
-      validation_status = report_data.validation_status,
-      validation_message = report_data.validation_message;
-    if (report_data.interface_list.length) {
-      var item,
-        interface_name;
-      for (item in report_data.interface_list) {
-        interface_name = report_data.interface_list[item].substr(report_data.interface_list[item].lastIndexOf('/') + 1);
-        interface_data += (interface_name + '<br />');
-      }
-    } else {
-      interface_data = 'None';
+  function validateAppGadgetList(gadget, gadget_list) {
+    var i;
+    for (i = 0; i < gadget_list.length; i += 1) {
+      updateGadgetData(gadget, gadget_list[i]);
     }
-    if(report_data.validation_status === true) {
-      validation_status = "Success";
-      update_element.setAttribute('style', 'color: green');
-    }
-    if(report_data.validation_status === false) {
-      validation_status = (validation_message !== undefined? validation_message : "Failure");
-      update_element.setAttribute('style', 'cursor: pointer; color: red');
-      update_element.className += "error expand";
-    }
-    gadget.props.error_data[report_data.id] = report_data.error_detail;
-    update_element.querySelector(".validation_status").innerHTML = validation_status;
-    update_element.querySelector(".validation_status").className += " final";
-    update_element.querySelector(".interface_list").innerHTML = interface_data;
   }
 
   function toggleErrorRow(gadget, source_element) {
-    if(source_element.className.indexOf("expand") > -1) {
+    if (source_element.className.indexOf("expand") > -1) {
       var error_tr = document.createElement('tr'),
         error_td = error_tr.insertCell(0);
       error_tr.id = source_element.id + '_errordata';
       error_td.className = 'errordata';
       error_td.colSpan = "3";
       error_td.innerText = gadget.props.error_data[source_element.id];
-      source_element.parentNode.insertBefore(error_tr, source_element.nextSibling);
-      source_element.className = source_element.className.replace("expand","shrink");
-    } else if(source_element.className.indexOf("shrink") > -1) {
+      source_element.parentNode.insertBefore(error_tr,
+                                             source_element.nextSibling);
+      source_element.className = source_element.className.replace("expand",
+                                                                  "shrink");
+    } else if (source_element.className.indexOf("shrink") > -1) {
       source_element.parentNode.removeChild(source_element.nextSibling);
-      source_element.className = source_element.className.replace("shrink","expand");
+      source_element.className = source_element.className.replace("shrink",
+                                                                  "expand");
     }
     return;
   }
 
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    templater = gadget_klass.__template_element,
-    report_widget_table = Handlebars.compile(
-      templater.getElementById("report-widget-table").innerHTML
-    );
   Handlebars.registerPartial(
     "report-widget-table-partial",
     templater.getElementById("report-widget-table-partial").innerHTML
@@ -172,7 +178,7 @@
     .ready(function (g) {
       return g.getElement()
         .push(function (element) {
-          g.props.element = element,
+          g.props.element = element;
           g.props.content_element = element.querySelector('.validation_report');
         });
     })
@@ -182,26 +188,26 @@
         appcache_url = options.appcache_url,
         gadget_list;
       return new RSVP.Queue()
-        .push(function() {
+        .push(function () {
           return gadget.getDeclaredGadget(INTERFACE_GADGET_SCOPE);
         })
-        .push(function(interface_gadget) {
+        .push(function (interface_gadget) {
           return interface_gadget.getGadgetListFromAppcache(appcache_url);
         })
-        .push(function(filtered_gadget_list) {
+        .push(function (filtered_gadget_list) {
           gadget_list = filtered_gadget_list;
           return renderInitialReport(gadget, gadget_list);
         })
-        .push(function() {
+        .push(function () {
           return validateAppGadgetList(gadget, gadget_list);
-        }, function(error) {
+        }, function () {
           return gadget.redirect({
             found: false
           });
         });
     })
 
-    .declareMethod("reportPageDummyMethod1", function(param1) {
+    .declareMethod("reportPageDummyMethod1", function () {
       // A dummy method to fulfil the interface implementation requirement.
       return;
     })
@@ -219,7 +225,7 @@
 
       function rowSubmit(submit_data) {
         var parent_element = submit_data.target.parentElement;
-        if(parent_element.className.indexOf("error") > -1) {
+        if (parent_element.className.indexOf("error") > -1) {
           return toggleErrorRow(gadget, parent_element);
         }
       }
@@ -232,4 +238,4 @@
       );
     });
 
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS, RSVP, Handlebars, loopEventListener, $, document));
