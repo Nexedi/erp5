@@ -43,16 +43,6 @@
     return gadget_list;
   }
 
-  function generateErrorMessage(error) {
-    var error_message = '';
-    error_message = error_message +
-                    error.toString() +
-                    (error.message !== undefined ? error.message : '') +
-                    (error.status ? error.status.toString() + ' ' : '') +
-                    (error.statusText !== undefined ? error.statusText : '');
-    return error_message;
-  }
-
   function getInterfaceListFromURL(gadget_url) {
     return new RSVP.Queue()
       .push(function () {
@@ -82,10 +72,6 @@
           }
         }
         return interface_list;
-      }, function (error) {
-        var message = "Error with loading the gadget data.\n";
-        error.message = message + generateErrorMessage(error);
-        throw error;
       });
   }
 
@@ -146,10 +132,6 @@
           }
           next_element = next_element.nextElementSibling;
         }
-      }, function (error) {
-        var message = "Error with loading the interface data.\n";
-        error.message = message + generateErrorMessage(error);
-        throw error;
       });
   }
 
@@ -278,12 +260,7 @@
       var interface_gadget = this;
       return interface_gadget.declareGadget(gadget_url, {
         scope: gadget_url
-      })
-        .push(undefined, function (error) {
-          var message = "Error with loading the gadget.\n";
-          error.message = message + error.message;
-          throw error;
-        });
+      });
     })
 
     .declareMethod("getDeclaredGadgetInterfaceList", function (gadget_data) {
@@ -386,10 +363,6 @@
             interface_data.method_list.push(method);
           }
           return interface_data;
-        }, function (error) {
-          var message = "Error with loading the interface data.\n";
-          error.message = message + generateErrorMessage(error);
-          throw error;
         });
     })
 
