@@ -50,6 +50,10 @@
   <td>//table</td>
   <td></td>
 </tr>
+
+<tr>
+  <td colspan="3"><b>Check correct use case</b></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//tr[@id='${application_title}_test_correct_implemented_gadget']//td[@class='validation_status final']</td>
@@ -60,15 +64,9 @@
   <td>//tr[@id='${application_title}_test_correct_implemented_gadget']//td[@class='validation_status final']</td>
   <td>Success</td>
 </tr>
+
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//tr[@id='${application_title}_test_invalid_interface_gadget']//td[@class='validation_status final']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//tr[@id='${application_title}_test_invalid_interface_gadget']//td[@class='validation_status final']</td>
-  <td>Failure</td>
+  <td colspan="3"><b>Check not existent gadget</b></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -79,6 +77,20 @@
   <td>assertText</td>
   <td>//tr[@id='${application_title}_test_nonexistent_gadget']//td[@class='validation_status final']</td>
   <td>Error with gadget loading</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check interface with invalid syntax</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//tr[@id='${application_title}_test_invalid_interface_gadget']//td[@class='validation_status final']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@id='${application_title}_test_invalid_interface_gadget']//td[@class='validation_status final']</td>
+  <td>Failure</td>
 </tr>
 <tr>
   <td>click</td>
@@ -105,6 +117,10 @@
   <td>//tr[@id='${application_title}_test_invalid_interface_gadget_errordata']//td[@class='errordata']</td>
   <td></td>
 </tr>
+
+<tr>
+  <td colspan="3"><b>Check missing interface</b></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//tr[@id='${application_title}_test_missing_interface_declaration_gadget']//td[@class='validation_status final']</td>
@@ -114,6 +130,25 @@
   <td>assertText</td>
   <td>//tr[@id='${application_title}_test_missing_interface_declaration_gadget']//td[@class='validation_status final']</td>
   <td>N/A</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check missing method declaration</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//tr[@id='${application_title}_test_missing_method_declaration_gadget']//td[@class='validation_status final']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@id='${application_title}_test_missing_method_declaration_gadget']//td[@class='validation_status final']</td>
+  <td>Failure</td>
+</tr>
+
+
+<tr>
+  <td colspan="3"><b>Check invalid appcache</b></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
