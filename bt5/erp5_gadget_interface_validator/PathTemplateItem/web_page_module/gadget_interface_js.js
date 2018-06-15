@@ -1,7 +1,7 @@
 /*jslint nomen: true, indent: 2, maxerr: 30, maxlen: 80 */
-/*global DOMParser, document, rJS, renderJS, RSVP, window,
+/*global DOMParser, document, rJS, RSVP, window,
          jIO*/
-(function (window, rJS, RSVP, DOMParser, renderJS, jIO) {
+(function (window, rJS, RSVP, DOMParser, jIO) {
   "use strict";
 
   function fetchAppcacheData(appcache_url) {
@@ -75,8 +75,8 @@
             if (element.href !== null &&
                 element.rel === "http://www.renderjs.org/rel/interface") {
               interface_list.push(
-                renderJS.getAbsoluteURL(element.getAttribute("href"),
-                                        window.location.href)
+                rJS.getAbsoluteURL(element.getAttribute("href"),
+                                   window.location.href)
               );
             }
           }
@@ -279,9 +279,7 @@
       return interface_gadget.declareGadget(gadget_url, {
         scope: gadget_url
       })
-        .push(function () {
-          return interface_gadget.getDeclaredGadget(gadget_url);
-        }, function (error) {
+        .push(undefined, function (error) {
           var message = "Error with loading the gadget.\n";
           error.message = message + error.message;
           throw error;
@@ -590,4 +588,4 @@
           });
       });
 
-}(window, rJS, RSVP, DOMParser, renderJS, jIO));
+}(window, rJS, RSVP, DOMParser, jIO));
