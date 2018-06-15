@@ -85,17 +85,12 @@
   }
 
   function fetchAppcacheData(appcache_url) {
-    var defer = RSVP.defer();
     return new RSVP.Queue()
       .push(function () {
         return ajax(appcache_url);
       })
       .push(function (xhr) {
-        var filename_list = xhr.responseText.split('\n');
-        return filename_list;
-      }, function (error) {
-        defer.reject(error);
-        return defer.promise;
+        return xhr.responseText.split('\n');
       });
   }
 
@@ -136,7 +131,6 @@
   }
 
   function getInterfaceListFromURL(gadget_url) {
-    var defer = RSVP.defer();
     return new RSVP.Queue()
       .push(function () {
         return ajax(gadget_url);
@@ -165,16 +159,14 @@
       }, function (error) {
         var message = "Error with loading the gadget data.\n";
         error.message = message + generateErrorMessage(error);
-        defer.reject(error);
-        return defer.promise;
+        throw error;
       });
   }
 
   function verifyInterfaceDefinition(interface_url) {
     //to verify if interface definition follows the correct template.
     var error_message = "Interface definition is incorrect: " +
-                        "One or more required tags are missing.",
-      defer = RSVP.defer();
+                        "One or more required tags are missing.";
     return new RSVP.Queue()
       .push(function () {
         return ajax(interface_url);
@@ -192,66 +184,52 @@
         if (dl_list[0].childElementCount !== 3 * method_len) {
           throw new Error(error_message);
         }
-        try {
-          for (i = 0; i < method_len; i += 1) {
-            if ((next_element === null) ||
-                (next_element.localName.toLowerCase() !== 'dt')) {
-              throw new Error(error_message);
-            }
-            next_element = next_element.nextElementSibling;
-            if (next_element.localName.toLowerCase() !== 'dd') {
-              throw new Error(error_message);
-            }
-            next_element = next_element.nextElementSibling;
-            if (next_element.localName.toLowerCase() !== 'dl') {
-              throw new Error(error_message);
-            }
-
-            if (next_element.getElementsByTagName('dt').length !==
-                next_element.getElementsByTagName('dd').length) {
-              throw new Error(error_message);
-            }
-            argument_len = next_element.getElementsByTagName('dt').length;
-            next_child_element = next_element.firstElementChild;
-            for (j = 0; j < argument_len; j += 1) {
-              if ((next_child_element === null) ||
-                  (next_child_element.localName.toLowerCase() !== 'dt')) {
-                throw new Error(error_message);
-              }
-              next_child_element = next_child_element.nextElementSibling;
-              if (next_child_element.localName.toLowerCase() !== 'dd') {
-                throw new Error(error_message);
-              }
-              next_child_element = next_child_element.nextElementSibling;
-            }
-            next_element = next_element.nextElementSibling;
+        for (i = 0; i < method_len; i += 1) {
+          if ((next_element === null) ||
+              (next_element.localName.toLowerCase() !== 'dt')) {
+            throw new Error(error_message);
           }
-          defer.resolve("Success");
-        } catch (error) {
-          defer.reject(error);
+          next_element = next_element.nextElementSibling;
+          if (next_element.localName.toLowerCase() !== 'dd') {
+            throw new Error(error_message);
+          }
+          next_element = next_element.nextElementSibling;
+          if (next_element.localName.toLowerCase() !== 'dl') {
+            throw new Error(error_message);
+          }
+
+          if (next_element.getElementsByTagName('dt').length !==
+              next_element.getElementsByTagName('dd').length) {
+            throw new Error(error_message);
+          }
+          argument_len = next_element.getElementsByTagName('dt').length;
+          next_child_element = next_element.firstElementChild;
+          for (j = 0; j < argument_len; j += 1) {
+            if ((next_child_element === null) ||
+                (next_child_element.localName.toLowerCase() !== 'dt')) {
+              throw new Error(error_message);
+            }
+            next_child_element = next_child_element.nextElementSibling;
+            if (next_child_element.localName.toLowerCase() !== 'dd') {
+              throw new Error(error_message);
+            }
+            next_child_element = next_child_element.nextElementSibling;
+          }
+          next_element = next_element.nextElementSibling;
         }
-        return defer.promise;
       }, function (error) {
         var message = "Error with loading the interface data.\n";
         error.message = message + generateErrorMessage(error);
-        defer.reject(error);
-        return defer.promise;
+        throw error;
       });
   }
 
   function verifyInterfaceDeclaration(interface_url, declared_interface_list) {
     //to verify if gadget declares the interface.
-    var defer = RSVP.defer();
-    try {
-      if (declared_interface_list.indexOf(interface_url) > -1) {
-        defer.resolve("Success");
-      } else {
-        throw new Error("Interface is not declared.");
-      }
-    } catch (error) {
-      defer.reject(error);
+    if (declared_interface_list.indexOf(interface_url) > -1) {
+      return "Success";
     }
-    return defer.promise;
+    throw new Error("Interface is not declared.");
   }
 
 /*
@@ -320,8 +298,7 @@
 
   function verifyAllMethodDeclared(interface_method_list, gadget_method_list) {
     //to verify if all the interface methods are declared by the gadget.
-    var defer = RSVP.defer(),
-      gadget_method_name_list = gadget_method_list,
+    var gadget_method_name_list = gadget_method_list,
       interface_method_name_list = [],
       i,
       j,
@@ -331,38 +308,32 @@
     for (i = 0; i < interface_method_list.length; i += 1) {
       interface_method_name_list.push(interface_method_list[i].name);
     }
-    try {
-      for (j = 0; j < interface_method_name_list.length; j += 1) {
-        if (gadget_method_name_list.indexOf(
-            interface_method_name_list[j]
-          ) < 0) {
-          failed = true;
-          failed_methods.push(interface_method_name_list[j]);
-        }
+    for (j = 0; j < interface_method_name_list.length; j += 1) {
+      if (gadget_method_name_list.indexOf(
+          interface_method_name_list[j]
+        ) < 0) {
+        failed = true;
+        failed_methods.push(interface_method_name_list[j]);
       }
-      if (failed) {
-        error_message =
-            "Following required methods are not declared in the gadget: ";
-        for (i = 0; i < failed_methods.length; i += 1) {
-          error_message += ("\n" + failed_methods[i]);
-        }
-        throw new Error(error_message);
-      }
-      defer.resolve("Success");
-    } catch (error) {
-      defer.reject(error);
     }
-    return defer.promise;
+    if (failed) {
+      error_message =
+          "Following required methods are not declared in the gadget: ";
+      for (i = 0; i < failed_methods.length; i += 1) {
+        error_message += ("\n" + failed_methods[i]);
+      }
+      throw new Error(error_message);
+    }
+    return "Success";
   }
 
   function verifyAllMethod(interface_method_list, gadget_method_list) {
     //to verify all methods of gadget and interface.
-    var defer = RSVP.defer();
     return new RSVP.Queue()
       .push(function () {
         return verifyAllMethodDeclared(interface_method_list,
                                        gadget_method_list[0]);
-      })
+      });
 /*    Commented till figure out the way to fetch the argument length of a
       defined function.
       .push(function() {
@@ -370,54 +341,29 @@
                                         gadget_method_list[1]);
       })
 */
-      .push(function () {
-        defer.resolve("Success");
-        return defer.promise;
-      }, function (error) {
-        defer.reject(error);
-        return defer.promise;
-      });
   }
 
   rJS(window)
-    .ready(function (g) {
-      g.props = {};
-    })
 
     .declareMethod("getVerifyGadget", function (gadget_url) {
-      var interface_gadget = this,
-        defer = RSVP.defer();
-      return new RSVP.Queue()
-        .push(function () {
-          return interface_gadget.declareGadget(gadget_url, {
-            scope: gadget_url
-          });
-        })
+      var interface_gadget = this;
+      return interface_gadget.declareGadget(gadget_url, {
+        scope: gadget_url
+      })
         .push(function () {
           return interface_gadget.getDeclaredGadget(gadget_url);
         }, function (error) {
           var message = "Error with loading the gadget.\n";
           error.message = message + error.message;
-          defer.reject(error);
-          return defer.promise;
+          throw error;
         });
     })
 
     .declareMethod("getDeclaredGadgetInterfaceList", function (gadget_data) {
-      var defer = RSVP.defer();
-      return new RSVP.Queue()
-        .push(function () {
-          if (gadget_data.constructor === String) {
-            return getInterfaceListFromURL(gadget_data);
-          }
-          return gadget_data.getInterfaceList();
-        })
-        .push(function (interface_list) {
-          return interface_list;
-        }, function (error) {
-          defer.reject(error);
-          return defer.promise;
-        });
+      if (gadget_data.constructor === String) {
+        return getInterfaceListFromURL(gadget_data);
+      }
+      return gadget_data.getInterfaceList();
     })
 
     .declareMethod("getDeclaredGadgetMethodList", function (gadget) {
@@ -443,27 +389,17 @@
     })
 
     .declareMethod("getGadgetListFromAppcache", function (appcache_url) {
-      var defer = RSVP.defer();
       return new RSVP.Queue()
         .push(function () {
           return fetchAppcacheData(appcache_url);
         })
         .push(function (filename_list) {
           return filterGadgetList(filename_list);
-        })
-        .push(function (filtered_gadget_list) {
-          return filtered_gadget_list;
-        }, function (error) {
-          defer.reject(error);
-          return defer.promise;
         });
     })
 
     .declareMethod("getAbsoluteURL", function (gadget, url) {
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.getPath();
-        })
+      return gadget.getPath()
         .push(function (base_url) {
           return rJS.getAbsoluteURL(url, base_url);
         });
@@ -474,8 +410,7 @@
           name: "",
           description: "",
           method_list: []
-        },
-        defer = RSVP.defer();
+        };
       return new RSVP.Queue()
         .push(function () {
           return ajax(interface_url);
@@ -483,9 +418,9 @@
         .push(function (xhr) {
           var doc = (new DOMParser()).parseFromString(xhr.responseText,
                                                       'text/html').body,
-            dl_list = doc.getElementsByTagName('dl'),
-            dt_list = doc.getElementsByTagName('dt'),
-            dd_list = doc.getElementsByTagName('dd'),
+            dl_list = doc.querySelectorAll('dl'),
+            dt_list = doc.querySelectorAll('dt'),
+            dd_list = doc.querySelectorAll('dd'),
             method_len = dl_list.length - 1,
             dt_count = 0,
             dl_count = 1,
@@ -494,16 +429,16 @@
             argument_len,
             j,
             argument_item;
-          interface_data.name = doc.getElementsByTagName('h1')[0].innerHTML;
+          interface_data.name = doc.querySelector('h1').innerHTML;
           interface_data.description =
-            doc.getElementsByTagName('h3')[0].innerHTML;
+            doc.querySelector('h3').innerHTML;
           for (i = 0; i < method_len; i += 1) {
             method = {
               name: dt_list[dt_count].innerHTML,
               description: dd_list[dt_count].innerHTML,
               argument_list: []
             };
-            argument_len = dl_list[dl_count].getElementsByTagName('dt')
+            argument_len = dl_list[dl_count].querySelectorAll('dt')
                                             .length;
             dt_count += 1;
             dl_count += 1;
@@ -524,19 +459,14 @@
         }, function (error) {
           var message = "Error with loading the interface data.\n";
           error.message = message + generateErrorMessage(error);
-          defer.reject(error);
-          return defer.promise;
+          throw error;
         });
     })
 
     .declareMethod("getDefinedInterfaceMethodList", function (interface_url) {
-      var defer = RSVP.defer();
       return this.getInterfaceData(interface_url)
         .push(function (interface_data) {
           return interface_data.method_list;
-        }, function (error) {
-          defer.reject(error);
-          return defer.promise;
         });
     })
 
