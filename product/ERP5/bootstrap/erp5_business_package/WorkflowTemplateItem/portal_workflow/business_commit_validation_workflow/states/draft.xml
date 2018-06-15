@@ -30,6 +30,8 @@
               <tuple>
                 <string>commit</string>
                 <string>commit_action</string>
+                <string>delete</string>
+                <string>delete_action</string>
               </tuple>
             </value>
         </item>

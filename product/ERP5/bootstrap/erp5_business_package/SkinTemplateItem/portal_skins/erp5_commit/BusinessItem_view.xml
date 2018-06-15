@@ -53,9 +53,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -74,8 +72,11 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_id</string>
                         <string>my_item_path</string>
-                        <string>my_item_sign</string>
+                        <string>my_follow_up_title_list</string>
+                        <string>my_predecessor_id</string>
+                        <string>my_item_patch_behaviour</string>
                       </list>
                     </value>
                 </item>
@@ -83,8 +84,10 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_item_layer</string>
-                        <string>my_follow_up_title</string>
+                        <string>my_portal_type</string>
+                        <string>my_creation_date</string>
+                        <string>my_modification_date</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>

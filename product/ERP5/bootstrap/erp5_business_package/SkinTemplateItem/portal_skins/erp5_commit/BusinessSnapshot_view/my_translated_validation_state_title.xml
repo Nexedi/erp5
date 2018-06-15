@@ -205,7 +205,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Draft, Installed, Not Installed</string> </value>
+                    <value> <string>Draft, Built, Committed, Pushed</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

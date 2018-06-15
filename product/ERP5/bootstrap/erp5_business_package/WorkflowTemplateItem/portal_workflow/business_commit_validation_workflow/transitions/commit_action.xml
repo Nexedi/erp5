@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>BusinessCommit_commit</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -69,7 +69,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>Modify portal content</string>
+                <string>Manage portal</string>
               </tuple>
             </value>
         </item>

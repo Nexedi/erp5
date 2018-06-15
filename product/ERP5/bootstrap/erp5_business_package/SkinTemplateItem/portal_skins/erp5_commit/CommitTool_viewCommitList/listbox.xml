@@ -11,13 +11,11 @@
             <value>
               <list>
                 <string>all_columns</string>
-                <string>anchor</string>
                 <string>columns</string>
-                <string>editable_columns</string>
+                <string>hide_rows_on_no_search_criterion</string>
                 <string>lines</string>
                 <string>list_method</string>
                 <string>search</string>
-                <string>search_columns</string>
                 <string>select</string>
                 <string>selection_name</string>
                 <string>sort</string>
@@ -79,12 +77,20 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>predecessor_title</string>
-                          <string>Predecessor</string>
+                          <string>authors</string>
+                          <string>Contributors</string>
                         </tuple>
                         <tuple>
-                          <string>similar_title</string>
-                          <string>Similar</string>
+                          <string>subject</string>
+                          <string>Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>business_template_title_list</string>
+                          <string>Business Templates</string>
                         </tuple>
                         <tuple>
                           <string>path_list</string>
@@ -94,44 +100,34 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>anchor</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
                         <tuple>
                           <string>portal_type</string>
                           <string>Type</string>
                         </tuple>
                         <tuple>
-                          <string>creation_date</string>
-                          <string>Date</string>
+                          <string>id</string>
+                          <string>UUID</string>
+                        </tuple>
+                        <tuple>
+                          <string>predecessor_id</string>
+                          <string>Predecessor / Equivalent Commit</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>business_template_title_list</string>
-                          <string>Business Templates</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
                         </tuple>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>
@@ -143,8 +139,12 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>50</int> </value>
+                    <value> <int>100</int> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -157,50 +157,35 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>search_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Date</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>select</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>commit_tool_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
+                          <string>portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
                           <string>creation_date</string>
-                          <string>Date</string>
+                          <string>Creation Date</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Commits</string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+Commits & Snapshots
+
+]]></string> </value>
                 </item>
               </dictionary>
             </value>
@@ -216,7 +201,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>objectValues</string> </value>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>

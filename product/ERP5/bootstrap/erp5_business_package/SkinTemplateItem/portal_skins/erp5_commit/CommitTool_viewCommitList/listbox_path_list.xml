@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Paths</string> </value>
+                    <value> <string>listbox_path_list</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -106,7 +106,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getItemPathList()</string> </value>
+            <value> <string>python: \'\\n \'.join(list(set([item.getItemPath() for item in cell.objectValues() if cell.getPortalType() == \'Business Commit\'])))</string> </value>
         </item>
       </dictionary>
     </pickle>

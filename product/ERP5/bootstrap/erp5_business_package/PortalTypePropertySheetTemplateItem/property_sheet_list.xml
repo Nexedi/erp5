@@ -1,9 +1,13 @@
 <property_sheet_list>
+ <portal_type id="Business Commit">
+  <item>BusinessCommit</item>
+ </portal_type>
  <portal_type id="Business Item">
+  <item>BusinessItem</item>
   <item>BusinessItemConstraint</item>
  </portal_type>
- <portal_type id="Business Property Item">
-  <item>BusinessItemConstraint</item>
+ <portal_type id="Business Snapshot">
+  <item>BusinessCommit</item>
  </portal_type>
  <portal_type id="Commit Tool">
   <item>CommitTool</item>

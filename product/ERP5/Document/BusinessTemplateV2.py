@@ -2,7 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2017 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Ayush-Tiwari <ayush.tiwari@nexedi.com>
+#                    Ayush Tiwari <ayush.tiwari@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -143,9 +143,9 @@ def _recursiveRemoveUid(obj):
 
 
 # New BusinessItem addition function
-def manage_addBusinessItem(self, item_path='', item_sign=1, item_layer=0, *args, **kw):
+def manage_addBusinessItem(self, item_path='', *args, **kw):
   # Create BusinessItem object container
-  c = BusinessItem(item_path, item_sign, item_layer)
+  c = BusinessItem(item_path)
 
   return c
 
@@ -721,21 +721,7 @@ class BusinessItem(XMLObject):
   icon = None
   isProperty = False
 
-  def _edit(self, item_path='', item_sign=1, item_layer=0, *args, **kw):
-    """
-    Overriden function so that we can update attributes for BusinessItem objects
-    """
-
-    edited = super(BusinessItem, self)._edit(item_path=item_path,
-                                             item_sign=item_sign,
-                                             item_layer=item_layer,
-                                             **kw)
-
-    # Build the object here, if the item_path has been added/updated
-    # XXX: We also need to add attribute to ensure that this doesn't happen
-    # while in tests or while creating them on the fly
-    if 'item_path' in self._v_modified_property_dict:
-      self.build(self.aq_parent)
+  id_generator = '_generateUniversalUniqueId'
 
   def getZODBDiff(self):
     """
@@ -802,57 +788,57 @@ class BusinessItem(XMLObject):
       # Complain loudly if the follow_up is not there
       raise ValueError('Follow Up Business Template V2 is not set or defined yet')
 
-  def build(self, context, **kw):
-    """
-    Extract value for the given path from the OFS
+  #def build(self, context, **kw):
+  #  """
+  #  Extract value for the given path from the OFS
 
-    Three different situations to extract value:
-    1. For paths which point directly to an object in OFS
-    2. For paths which point to multiple objects inside a folder
-    3. For paths which point to property of an object in OFS : In this case,
-    we can have URL delimiters like ?, #, = in the path
-    """
-    LOG('Business Template V2', INFO, 'Building Business Item')
+  #  Three different situations to extract value:
+  #  1. For paths which point directly to an object in OFS
+  #  2. For paths which point to multiple objects inside a folder
+  #  3. For paths which point to property of an object in OFS : In this case,
+  #  we can have URL delimiters like ?, #, = in the path
+  #  """
+  #  LOG('Business Template V2', INFO, 'Building Business Item')
 
-    # Remove the old sub-objects if exisiting before building
-    id_list = [l for l in self.objectIds()]
-    if id_list:
-      self.manage_delObjects(ids=id_list)
+  #  # Remove the old sub-objects if exisiting before building
+  #  id_list = [l for l in self.objectIds()]
+  #  if id_list:
+  #    self.manage_delObjects(ids=id_list)
 
-    p = context.getPortalObject()
-    path = self.getProperty('item_path')
-    obj = p.unrestrictedTraverse(path)
-    obj = obj._getCopy(context)
+  #  p = context.getPortalObject()
+  #  path = self.getProperty('item_path')
+  #  obj = p.unrestrictedTraverse(path)
+  #  obj = obj._getCopy(context)
 
-    # We should remove the extra properties of object so that there
-    # shouldn't be redundancy of the proeprties
-    removable_property_list = kw.get('removable_property_list', [])
+  #  # We should remove the extra properties of object so that there
+  #  # shouldn't be redundancy of the proeprties
+  #  removable_property_list = kw.get('removable_property_list', [])
 
-    # We should also add extra parameter to remove sub-objects by removing
-    # `_tree` for any erp5 object. This way we can have control over adding
-    # sub-objects as new Business Item objects
-    remove_sub_objects = kw.get('remove_sub_objects', False)
-    if remove_sub_objects:
-      removable_property_list.append('_tree')
-    keep_workflow_history = False
-    # For portal_components object, we need validation_history
-    if self.getProperty('item_path').startswith('portal_components'):
-      keep_workflow_history = True
-    obj = self.removeProperties(obj,
-                                1,
-                                properties=removable_property_list,
-                                keep_workflow_history=keep_workflow_history,
-                                )
-    obj = obj.__of__(context)
-    # XXX: '_recursiveRemoveUid' is not working as expected
-    _recursiveRemoveUid(obj)
-    obj = aq_base(obj)
-    obj.isIndexable = ConstantGetter('isIndexable', value=False)
-    # In general, one Business Item only has one object in it, so we never end
-    # up in conflict as we'll always be having its unique path(due to GUID of
-    # Business Item), thus we can just use object Id as it is while making it
-    # a sub-object of Business Item
-    self._setObject(obj.id, obj, suppress_events=True)
+  #  # We should also add extra parameter to remove sub-objects by removing
+  #  # `_tree` for any erp5 object. This way we can have control over adding
+  #  # sub-objects as new Business Item objects
+  #  remove_sub_objects = kw.get('remove_sub_objects', False)
+  #  if remove_sub_objects:
+  #    removable_property_list.append('_tree')
+  #  keep_workflow_history = False
+  #  # For portal_components object, we need validation_history
+  #  if self.getProperty('item_path').startswith('portal_components'):
+  #    keep_workflow_history = True
+  #  obj = self.removeProperties(obj,
+  #                              1,
+  #                              properties=removable_property_list,
+  #                              keep_workflow_history=keep_workflow_history,
+  #                              )
+  #  obj = obj.__of__(context)
+  #  # XXX: '_recursiveRemoveUid' is not working as expected
+  #  _recursiveRemoveUid(obj)
+  #  obj = aq_base(obj)
+  #  obj.isIndexable = ConstantGetter('isIndexable', value=False)
+  #  # In general, one Business Item only has one object in it, so we never end
+  #  # up in conflict as we'll always be having its unique path(due to GUID of
+  #  # Business Item), thus we can just use object Id as it is while making it
+  #  # a sub-object of Business Item
+  #  self._setObject(obj.id, obj, suppress_events=True)
 
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
@@ -1116,14 +1102,8 @@ class BusinessItem(XMLObject):
   def getBusinessPath(self):
     return self.getProperty('item_path')
 
-  def getBusinessPathSign(self):
-    return self.getProperty('item_sign', 1)
-
-  def getBusinessPathLayer(self):
-    return self.getProperty('item_layer', 1)
-
-  def getParentBusinessTemplateV2(self):
-    return self.aq_parent
+  #def getParentBusinessTemplateV2(self):
+  #  return self.aq_parent
 
 class BusinessPropertyItem(XMLObject):
 

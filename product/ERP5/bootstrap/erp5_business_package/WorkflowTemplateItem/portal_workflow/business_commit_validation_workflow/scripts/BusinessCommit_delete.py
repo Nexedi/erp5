@@ -1,0 +1,1 @@
+context.BusinessCommit_deleteItemsOnCommitDelete(state_change)

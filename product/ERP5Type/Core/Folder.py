@@ -71,6 +71,7 @@ except ImportError:
     pass
 from DateTime import DateTime
 from random import randint
+import uuid
 import os
 from zLOG import LOG, WARNING
 import warnings
@@ -277,6 +278,12 @@ class FolderMixIn(ExtensionClass.Base):
     current_date = DateTime().strftime('%Y%m%d')
     my_id = self._generateRandomId()
     return "%s.%03d-%s" %(current_date, node_number, my_id)
+
+  def _generateUniversalUniqueId(self):
+    """
+    Generates a version 1 Universally Unique Identifier (UUID).
+    """
+    return str(uuid.uuid1())
 
   # Getter defines to address migration of a site to ZODB Property Sheets,
   # otherwise installing erp5_property_sheets fails in generateNewId() as

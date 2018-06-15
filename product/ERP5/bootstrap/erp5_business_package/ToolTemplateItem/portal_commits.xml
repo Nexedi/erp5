@@ -25,6 +25,10 @@
             </value>
         </item>
         <item>
+            <key> <string>head_commit_id</string> </key>
+            <value> <string>ed17780c-424a-11e8-9b15-0cc47ae46e4c</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>portal_commits</string> </value>
         </item>

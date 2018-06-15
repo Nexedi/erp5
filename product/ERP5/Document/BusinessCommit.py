@@ -2,7 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2017 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Ayush-Tiwari <ayush.tiwari@nexedi.com>
+#                    Ayush Tiwari <ayush.tiwari@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -39,7 +39,6 @@ import fnmatch
 import re
 import threading
 import pprint
-import uuid
 
 from copy import deepcopy
 from collections import defaultdict
@@ -73,9 +72,9 @@ class BusinessCommit(Folder):
   meta_type = 'ERP5 Business Commit'
   portal_type = 'Business Commit'
   add_permission = Permissions.AddPortalContent
-  allowed_types = ('Business Item',
-                   'Business Property Item',
-                   'Business Patch item',)
+  allowed_types = ('Business Item',)
+
+  id_generator = '_generateUniversalUniqueId'
 
   template_format_version = 3
 
@@ -89,10 +88,7 @@ class BusinessCommit(Folder):
        , 'type_class'     : 'BusinessCommit'
        , 'immediate_view' : 'BusinessCommit_view'
        , 'allow_discussion'     : 1
-       , 'allowed_content_types': ( 'Business Item',
-                                    'Business Property Item',
-                                    'Business Patch Item',
-                                    )
+       , 'allowed_content_types': ('Business Item',)
        , 'filter_content_types' : 1
     }
 
@@ -108,17 +104,6 @@ class BusinessCommit(Folder):
                       PropertySheet.CategoryCore,
                       PropertySheet.Version,
                     )
-
-  security.declarePublic('newContent')
-  def newContent(self, id=None, **kw):
-    """
-    Override newContent so as to use 'id' generated like hash.
-    Also, copy the objects in the Business Commit after creating new object
-    """
-    if id is None:
-      id = uuid.uuid1()
-
-    return super(BusinessCommit, self).newContent(id, **kw)
 
   def createEquivalentSnapshot(self):
     """

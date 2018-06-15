@@ -11,9 +11,9 @@
             <value>
               <list>
                 <string>columns</string>
-                <string>editable_columns</string>
                 <string>lines</string>
                 <string>list_method</string>
+                <string>search</string>
                 <string>selection_name</string>
                 <string>sort</string>
                 <string>title</string>
@@ -74,43 +74,28 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>item_path</string>
-                          <string>Path</string>
+                          <string>id</string>
+                          <string>UUID</string>
                         </tuple>
                         <tuple>
-                          <string>item_sign</string>
-                          <string>Sign</string>
+                          <string>predecessor_id</string>
+                          <string>Reference Item</string>
                         </tuple>
                         <tuple>
-                          <string>item_layer</string>
-                          <string>Layer</string>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
-                          <string>Portal Type</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
-                        <tuple>
-                          <string>follow_up</string>
-                          <string>Business Manager</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
                         <tuple>
                           <string>item_path</string>
                           <string>Path</string>
                         </tuple>
                         <tuple>
-                          <string>item_sign</string>
-                          <string>Sign</string>
-                        </tuple>
-                        <tuple>
-                          <string>item_layer</string>
-                          <string>Layer</string>
+                          <string>follow_up_title_list</string>
+                          <string>Business Templates</string>
                         </tuple>
                       </list>
                     </value>
@@ -134,6 +119,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>search</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>business_manager_view_selection</string> </value>
                 </item>
@@ -142,15 +131,15 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>item_path</string>
-                          <string>Path</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Commit Items</string> </value>
+                    <value> <string>Items</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -166,7 +155,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>objectValues</string> </value>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>

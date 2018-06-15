@@ -68,8 +68,9 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_business_template_title_list</string>
                         <string>listbox_path_list</string>
+                        <string>listbox_description</string>
+                        <string>listbox_business_template_title_list</string>
                       </list>
                     </value>
                 </item>

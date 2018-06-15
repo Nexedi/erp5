@@ -3,6 +3,7 @@
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Hugo Ricateau <hugo.ricateau@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -37,7 +38,6 @@ import sys
 import hashlib
 import pprint
 import transaction
-import uuid
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
@@ -133,7 +133,7 @@ class CommitTool (BaseTool):
         - portal_commits/387897938794876-9 (Snapshort of erp5_trade)
         - portal_commits/387897938794876-10 (Snapshot of erp5_base)
 
-      Draft -> Commited -> Pushed (to repo)  |Commit]
+      Draft -> Committed -> Pushed (to repo)  |Commit]
       Draft -> Installed <-> Uninstalled |Snapshot]
 
       Developer mode: make commits and push them (nothing else)
@@ -154,6 +154,7 @@ class CommitTool (BaseTool):
 
       We should try first with Commit and Snapshot
     """
+
     id = 'portal_commits'
     title = 'Commit Tool'
     meta_type = 'ERP5 Commit Tool'
@@ -162,6 +163,8 @@ class CommitTool (BaseTool):
       'Business Commit',
       'Business Snapshot',
       )
+
+    id_generator = '_generateUniversalUniqueId'
 
     # This stores information on repositories.
     repository_dict = {}
@@ -204,39 +207,23 @@ class CommitTool (BaseTool):
     security.declarePublic('newContent')
     def newContent(self, id=None, portal_type=None, **kw):
       """
-      Override newContent so as to use 'id' generated like hash
-      Also, create new commit only when all old commits are committed
+      Overrides newContent in order to automatically hint the predecessor.
       """
-      old_commit_list = self.objectValues(portal_type='Business Commit')
-      # Check if all the commits created before are commited or not
-      all_commited = all([l.getTranslatedValidationState() == 'commited'
-                           for l in old_commit_list])
 
-      if not all_commited and (portal_type == 'Business Commit'):
-        raise ValueError('Please commit your last commit before creating new one')
+      new_object = super(CommitTool, self).newContent(id, portal_type, **kw)
 
-      if id is None:
-        id = uuid.uuid1()
+      # Adds the last committed or pushed commit as its predecessor if there is one
+      committed_or_pushed_commit_list = [c for c
+                                           in self.searchFolder(portal_type='Business Commit')
+                                           if c != new_object and
+                                              c.getValidationState() != 'draft' and
+                                              c.getValidationState() != 'deleted']
 
-      new_obj =  super(CommitTool, self).newContent(id, portal_type,**kw)
+      if committed_or_pushed_commit_list:
+        latest_committed_or_pushed_commit = max(committed_or_pushed_commit_list,
+                                                key=(lambda c:c.getModificationDate()))
+        new_object.setPredecessorValue(latest_committed_or_pushed_commit)
 
-      # Add the last commit as its predecessor
-      commit_list = [l for l
-                     in self.objectValues(portal_type='Business Commit')
-                     if l != new_obj]
-
-      if commit_list:
-        latest_commit = max(commit_list, key=(lambda x: x.getCreationDate()))
-
-        if new_obj.getPortalType() == 'Business Commit':
-          # TODO: Add check for no latest_commit. Usable especially for 1st BC
-          new_obj.setPredecessorValue(latest_commit)
-        else:
-          # If the new_obj is Business Snapshot, create a similar value for the
-          # latest commit
-          new_obj.setSimilarValue(latest_commit)
-          latest_commit.setSimilarValue(new_obj)
-
-      return new_obj
+      return new_object
 
 InitializeClass(CommitTool)

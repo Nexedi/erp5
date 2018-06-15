@@ -1,7 +1,7 @@
 modified = state_change['object']
 site = context.getPortalObject()
 
-if modified.getValidationState() == 'commited':
+if modified.getValidationState() == 'committed':
   # Get all Business Template which are affected by this commit
   bt_list = list(set([item for sublist
                       in [l.getFollowUpValueList()

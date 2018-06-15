@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Interaction between Business Commit and the Business Templates affected by this commit</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>

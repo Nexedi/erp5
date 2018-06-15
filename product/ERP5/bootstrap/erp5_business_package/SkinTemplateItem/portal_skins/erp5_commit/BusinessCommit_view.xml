@@ -70,10 +70,7 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_item_layer</string>
-                        <string>listbox_item_path</string>
-                        <string>listbox_item_sign</string>
-                        <string>listbox_follow_up_title</string>
+                        <string>listbox_follow_up_title_list</string>
                       </list>
                     </value>
                 </item>
@@ -81,11 +78,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
                         <string>my_id</string>
-                        <string>my_predecessor_title</string>
-                        <string>my_source_project_title</string>
-                        <string>your_business_template_title_list</string>
+                        <string>my_predecessor_id</string>
+                        <string>my_authors</string>
+                        <string>my_subject</string>
                       </list>
                     </value>
                 </item>
@@ -93,6 +89,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_portal_type</string>
                         <string>my_creation_date</string>
                         <string>my_modification_date</string>
                         <string>my_translated_validation_state_title</string>

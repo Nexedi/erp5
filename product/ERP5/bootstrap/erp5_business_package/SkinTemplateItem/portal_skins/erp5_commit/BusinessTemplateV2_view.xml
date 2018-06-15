@@ -53,34 +53,36 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
                       <list>
                         <string>my_item_path_list</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>my_id</string>
+                        <string>my_provision_list</string>
+                        <string>my_version</string>
+                        <string>my_translated_availability_state_title</string>
+                        <string>my_change_log</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
                         <string>my_title</string>
-                        <string>my_comment</string>
                         <string>my_description</string>
-                        <string>my_provision_list</string>
-                        <string>my_version</string>
-                        <string>my_translated_availability_state_title</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>
@@ -88,7 +90,6 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_change_log</string>
                         <string>my_dependency_list</string>
                         <string>my_test_dependency_list</string>
                         <string>my_copyright_list</string>
