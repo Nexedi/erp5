@@ -1,5 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 30, maxlen: 80 */
-/*global DOMParser, document, XMLHttpRequest, rJS, renderJS, RSVP, window*/
+/*global DOMParser, document, rJS, renderJS, RSVP, window,
+         jIO*/
 /*
  * DOMParser HTML extension
  * 2012-09-04
@@ -45,52 +46,19 @@
   };
 }(DOMParser, document));
 
-(function (window, rJS, RSVP, DOMParser, XMLHttpRequest, renderJS) {
+(function (window, rJS, RSVP, DOMParser, renderJS, jIO) {
   "use strict";
-  function ajax(url) {
-    var xhr;
-    function resolver(resolve, reject) {
-      function handler() {
-        try {
-          if (xhr.readyState === 0) {
-            // UNSENT
-            reject(xhr);
-          } else if (xhr.readyState === 4) {
-            // DONE
-            if ((xhr.status < 200) || (xhr.status >= 300)) {
-              reject(xhr);
-            } else {
-              resolve(xhr);
-            }
-          }
-        } catch (e) {
-          reject(e);
-        }
-      }
-
-      xhr = new XMLHttpRequest();
-      xhr.open("GET", url);
-      xhr.onreadystatechange = handler;
-      xhr.setRequestHeader('Accept', 'text/html');
-      xhr.withCredentials = true;
-      xhr.send();
-    }
-
-    function canceller() {
-      if ((xhr !== undefined) && (xhr.readyState !== xhr.DONE)) {
-        xhr.abort();
-      }
-    }
-    return new RSVP.Promise(resolver, canceller);
-  }
 
   function fetchAppcacheData(appcache_url) {
     return new RSVP.Queue()
       .push(function () {
-        return ajax(appcache_url);
+        return jIO.util.ajax({
+          url: appcache_url,
+          dataType: 'text'
+        });
       })
-      .push(function (xhr) {
-        return xhr.responseText.split('\n');
+      .push(function (evt) {
+        return evt.target.responseText.split('\n');
       });
   }
 
@@ -133,11 +101,14 @@
   function getInterfaceListFromURL(gadget_url) {
     return new RSVP.Queue()
       .push(function () {
-        return ajax(gadget_url);
+        return jIO.util.ajax({
+          url: gadget_url,
+          dataType: 'text'
+        });
       })
-      .push(function (xhr) {
+      .push(function (evt) {
         var document_element = (new DOMParser()).parseFromString(
-            xhr.responseText,
+            evt.target.responseText,
             'text/html'
           ),
           interface_list = [],
@@ -169,10 +140,13 @@
                         "One or more required tags are missing.";
     return new RSVP.Queue()
       .push(function () {
-        return ajax(interface_url);
+        return jIO.util.ajax({
+          url: interface_url,
+          dataType: 'text'
+        });
       })
-      .push(function (xhr) {
-        var doc = (new DOMParser()).parseFromString(xhr.responseText,
+      .push(function (evt) {
+        var doc = (new DOMParser()).parseFromString(evt.target.responseText,
                                                     'text/html').body,
           dl_list = doc.getElementsByTagName('dl'),
           next_element = dl_list[0].firstElementChild,
@@ -413,10 +387,13 @@
         };
       return new RSVP.Queue()
         .push(function () {
-          return ajax(interface_url);
+          return jIO.util.ajax({
+            url: interface_url,
+            dataType: 'text'
+          });
         })
-        .push(function (xhr) {
-          var doc = (new DOMParser()).parseFromString(xhr.responseText,
+        .push(function (evt) {
+          var doc = (new DOMParser()).parseFromString(evt.target.responseText,
                                                       'text/html').body,
             dl_list = doc.querySelectorAll('dl'),
             dt_list = doc.querySelectorAll('dt'),
@@ -658,4 +635,4 @@
           });
       });
 
-}(window, rJS, RSVP, DOMParser, XMLHttpRequest, renderJS));
+}(window, rJS, RSVP, DOMParser, renderJS, jIO));
