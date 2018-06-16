@@ -46,6 +46,9 @@
         };
 
       post_variables.title = data.file_name || post_variables.title;
+      if (data.file_name) {
+        post_variables.reference = data.file_name;
+      }
       return gadget.jio_post(post_variables)
         .push(function (id) {
           return gadget.jio_putAttachment(id, 'data', blob);
