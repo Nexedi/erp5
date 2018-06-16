@@ -22,6 +22,20 @@
                                   .getElementById("panel-template-body-desktop")
                                   .innerHTML);
 
+  function createElement(type, props, innerText) {
+    var element = document.createElement(type),
+      key;
+    for (key in props) {
+      if (props.hasOwnProperty(key)) {
+        element.setAttribute(key, props[key]);
+      }
+    }
+    if (innerText) {
+      element.innerText = innerText;
+    }
+    return element;
+  }
+
   gadget_klass
     .setState({
       visible: false,
@@ -35,6 +49,7 @@
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -132,17 +147,58 @@
         queue
           // Update the global links
           .push(function () {
-            return RSVP.all([
-              context.getUrlFor({command: 'display', options: {page: "ojs_schema_document_list"}}),
-              context.getUrlFor({command: 'display', options: {page: "ojs_configurator"}}),
-              context.getUrlFor({command: 'display', options: {page: "ojs_sync", 'auto_repair': true}}),
-              context.getUrlFor({command: 'index', options: {page: "ojs_multi_upload"}})
-            ]);
+            return context.jio_allDocs({
+              "query": 'portal_type:"Json Schema"',
+              "limit": [0, 31],
+              "select_list": ["title", "reference"],
+              "sort_on": [["title", "descending"]]
+            });
+          })
+          .push(function (result) {
+            return result.data.rows;
+          })
+          .push(undefined, function () {
+            return [];
+          })
+          .push(function (result) {
+            function gen_element(row, css) {
+              return context.getUrlFor({command: 'display', options: {
+                  page: "ojs_schema_document_list",
+                  portal_type: "JSON Document",
+                  schema: row.id,
+                  schema_title: row.value.title
+              }})
+                .push(function (url) {
+                  var element = createElement("li");
+                  element.appendChild(createElement("a", {
+                    href: url,
+                    class: "ui-btn ui-btn-icon-left " + css
+                  }, row.value.title));
+                  return element.outerHTML;
+                });
+            }
+            var i,
+              tasks = [
+                context.getUrlFor({command: 'display', options: {page: "ojs_schema_document_list"}}),
+                context.getUrlFor({command: 'display', options: {page: "ojs_configurator"}}),
+                context.getUrlFor({command: 'display', options: {page: "ojs_sync", 'auto_repair': true}}),
+                context.getUrlFor({command: 'index', options: {page: "ojs_multi_upload"}})
+              ];
+            for (i = 0; i < result.length; i += 1) {
+              tasks.push(gen_element(result[i], "ui-icon-search"));
+            }
+            return RSVP.all(tasks);
           })
           .push(function (result_list) {
+            var i,
+                html = "";
+            for (i = 4; i < result_list.length; i += 1 ) {
+              html += result_list[i];
+            }
             return context.translateHtml(
               panel_template_body_list({
                 "document_list_href": result_list[0],
+                "list": new Handlebars.SafeString(html),
                 "storage_href": result_list[1],
                 "sync_href": result_list[2],
                 "multi_upload_href": result_list[3]
