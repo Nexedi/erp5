@@ -106,6 +106,17 @@
                     "hidden": 0,
                     "type": "StringField"
                   },
+                  "my_reference": {
+                    "description": "",
+                    "title": "Reference",
+                    "default": gadget.state.doc.reference,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 1,
+                    "key": "reference",
+                    "hidden": 0,
+                    "type": "StringField"
+                  },
                   "my_file": {
                     "description": "",
                     "title": "Upload and rewrite this document",
@@ -142,7 +153,7 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_title"], ["my_file"]]
+                [["my_title"], ["my_reference"], ["my_file"]]
               ], [
                 "bottom",
                 [["my_content"]]
