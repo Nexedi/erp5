@@ -11,6 +11,8 @@ var global = self, window = self;
   self.openDatabase = {};
   self.DOMError = {};
   self.Node = {};
+  self.XMLSerializer = Object;
+  self.DOMParser = Object;
   self.postMessage = function () {return; };
 
   self.importScripts('app/rsvp.js', 'app/jiodev.js');
