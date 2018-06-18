@@ -65,14 +65,14 @@
         });
     })
 
-    .declareMethod("render", function () {
+    .declareMethod("render", function (options) {
       var gadget = this;
-
       return new RSVP.Queue()
         .push(function () {
+          var portal_type = options.portal_type || gadget.getSetting("portal_type");
           return RSVP.all([
             gadget.getDeclaredGadget('form_list'),
-            gadget.getSetting("portal_type")
+            portal_type
           ]);
         })
         .push(function (result) {
@@ -83,7 +83,12 @@
             ['description', 'Description'],
             ['version', 'Version'],
             ['modification_date', 'Modification Date']
-          ];
+          ],
+            query = 'portal_type:"' + result[1] + '"';
+          if (options.schema) {
+            query += ' AND schema:"' + options.schema + '"';
+          }
+          query = encodeURIComponent(query);
           return result[0].render({
             erp5_document: {
               "_embedded": {"_view": {
@@ -96,13 +101,12 @@
                   "key": "field_listbox",
                   "lines": 30,
                   "list_method": "portal_catalog",
-                  "query": "urn:jio:allDocs?query=portal_type%3A%22" +
-                    result[1] + "%22",
+                  "query": "urn:jio:allDocs?query=" + query,
                   "portal_type": [],
                   "search_column_list": column_list,
                   "sort_column_list": column_list,
                   "sort": [['modification_date', 'descending']],
-                  "title": "Schemas",
+                  "title": options.schema_title || "Schemas",
                   "type": "ListBox"
                 }
               }},
@@ -122,14 +126,26 @@
           });
         })
         .push(function () {
-          return RSVP.all([
-            gadget.getUrlFor({command: "index", options: {"page": "ojs_multi_upload"}}),
-            gadget.getSetting('document_title_plural')
-          ]);
+          var tasks;
+          if (options.portal_type === "JSON Document") {
+            tasks = [
+              gadget.getUrlFor({command: "index", options: {
+                  page: "ojs_add_json_document",
+                  schema: options.schema
+                }}),
+              gadget.getSetting('document_title_plural')
+            ];
+          } else {
+            tasks = [
+              gadget.getUrlFor({command: "index", options: {"page": "ojs_multi_upload"}}),
+              gadget.getSetting('document_title_plural')
+            ];
+          }
+          return RSVP.all(tasks);
         })
         .push(function (result) {
           return gadget.updateHeader({
-            page_title: result[1],
+            page_title: options.schema_title || result[1],
             filter_action: true,
             add_url: result[0]
           });
