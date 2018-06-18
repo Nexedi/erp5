@@ -5,6 +5,36 @@
   "use strict";
   var expandSchema;
 
+  function URLwithJio(url, base_url) {
+    var urn_prefix,
+      pathname,
+      fake_prefix = "https://jio_urn_prefix/";
+    // XXX urn: can any case
+    if (url.startsWith("urn:jio:reference?")) {
+      urn_prefix = url.indexOf("?") + 1;
+      urn_prefix = url.slice(0, urn_prefix);
+      url = fake_prefix + decodeURIComponent(url.replace(urn_prefix, ""));
+    }
+    if (typeof base_url === "string" && base_url.startsWith("urn:jio:reference?")) {
+      if (!urn_prefix) {
+        urn_prefix = base_url.indexOf("?") + 1;
+        urn_prefix = base_url.slice(0, urn_prefix);
+      }
+      base_url = fake_prefix + decodeURIComponent(base_url.replace(urn_prefix, ""));
+    }
+    url = new URL(url, base_url);
+    if (urn_prefix) {
+      pathname = url.pathname.slice(1);
+      return {
+        href: urn_prefix + encodeURIComponent(pathname + url.search + url.hash),
+        origin: urn_prefix,
+        pathname: encodeURIComponent(pathname),
+        hash: url.hash
+      };
+    }
+    return url;
+  }
+
   function decodeJsonPointer(_str) {
     // https://tools.ietf.org/html/rfc6901#section-5
     return _str.replace(/~1/g, '/').replace(/~0/g, '~');
@@ -87,9 +117,9 @@
       base_url = convertToRealWorldSchemaPath(g, path),
       absolute_url;
     if (base_url === "" || base_url.indexOf("#") === 0) {
-      absolute_url = new URL(url, base_url_failback);
+      absolute_url = URLwithJio(url, base_url_failback);
     } else {
-      absolute_url = new URL(url, base_url);
+      absolute_url = URLwithJio(url, base_url);
     }
     return absolute_url;
   }
@@ -154,7 +184,8 @@
       url,
       download_url,
       hash,
-      schema_url_map;
+      schema_url_map,
+      queue;
     // XXX need use `id` property
     if (!path) {
       path = "/";
@@ -179,7 +210,18 @@
     }
     hash = url.hash;
     url = url.href;
-    return downloadJSON(download_url)
+    if (download_url.startsWith("urn:jio:")) {
+      queue = RSVP.Queue()
+        .push(function () {
+          return g.downloadJSON(download_url);
+        });
+    } else {
+      queue = RSVP.Queue()
+        .push(function () {
+          return downloadJSON(download_url);
+        });
+    }
+    return queue
       .push(function (json) {
         checkCircular(g, path, url);
         return resolveLocalReference(json, hash);
@@ -192,9 +234,9 @@
           schema_a = document.createElement("a"),
           pointed_a = document.createElement("a");
         schema_a.setAttribute("href", download_url);
-        schema_a.text = (new URL(download_url)).pathname;
+        schema_a.text = (URLwithJio(download_url)).pathname;
         pointed_a.setAttribute("href", url_from_pointed);
-        pointed_a.text = (new URL(url_from_pointed)).pathname;
+        pointed_a.text = (URLwithJio(url_from_pointed)).pathname;
         g.props.schema_resolve_errors[url_from_pointed] = {
           schemaPath: path,
           message: [
@@ -373,6 +415,7 @@
       g.props = {};
       g.options = {};
     })
+    .declareAcquiredMethod("downloadJSON", "downloadJSON")
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .allowPublicAcquisition("notifyChange", function () {
       return this.notifyChange();
@@ -500,14 +543,19 @@
     .declareMethod('render', function (options) {
       return this.changeState({
         key: options.key,
-        value: options.value || "",
-        schema: options.schema,
+        value: JSON.stringify(options.value) || '""',
+        schema: JSON.stringify(options.schema),
         schema_url: options.schema_url,
         editable: options.editable === undefined ? true : options.editable
       });
     })
-    .onStateChange(function (options) {
-      var g = this;
+    .onStateChange(function () {
+      var g = this,
+        json_document = JSON.parse(g.state.value),
+        schema;
+      if (g.state.schema !== undefined) {
+        schema = JSON.parse(g.state.schema);
+      }
       g.props.toplevel = true;
       // contain map of current normalized schema
       // json pointer and corresponding url
@@ -537,11 +585,11 @@
           }
         })
         .push(function () {
-          if (options.schema) {
-            return options.schema;
+          if (schema) {
+            return schema;
           }
-          var schema_url = options.schema_url ||
-            (options.value && options.value.$schema);
+          var schema_url = g.state.schema_url ||
+            (json_document && json_document.$schema);
           if (schema_url) {
             return loadJSONSchema(g, schema_url)
               .push(function (schema_arr) {
@@ -551,11 +599,10 @@
           return {};
         })
         .push(function (schema) {
-          g.options.schema = schema;
           return g.props.form_gadget.renderForm({
             schema: schema,
             schema_path: "",
-            document: options.value,
+            document: json_document,
             required: true,
             top: true
           });
@@ -603,7 +650,8 @@
             // This will prevent the gadget to be changed if
             // its parent call render with the same value
             // (as ERP5 does in case of formulator error)
-            g.state.value = value;
+            g.state.value = JSON.stringify(value);
+            console.log(g.state.value);
             if (g.state.key) {
               var form_data = {};
               value = JSON.stringify(value);
