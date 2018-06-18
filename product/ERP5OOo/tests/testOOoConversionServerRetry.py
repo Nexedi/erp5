@@ -103,3 +103,16 @@ class TestOOoConversionServerRetry(ERP5TypeTestCase):
     system_pref.setPreferredDocumentConversionServerUrlList(saved_server_list)
     self.commit()
 
+  def test_03_retry_for_socket_issue(self):
+    system_pref = self.getDefaultSystemPreference()
+    server_list = system_pref.getPreferredDocumentConversionServerUrlList()
+    system_pref.setPreferredDocumentConversionServerRetry(self.retry_count)
+    system_pref.setPreferredOoodocServerTimeout(1)
+    self.tic()
+    filename = 'TEST-en-002.doc'
+    file = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file)
+
+    message = document.Document_tryToConvertToBaseFormat()
+    if 'Socket Error: SSLError' in message:
+      self.assertEqual(message.count('Socket Error: SSLError'), (self.retry_count + 1) * len(server_list))
