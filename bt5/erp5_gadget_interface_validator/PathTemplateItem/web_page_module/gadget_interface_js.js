@@ -276,7 +276,8 @@
         item;
       for (item in gadget.constructor.prototype) {
         if (gadget.constructor.prototype.hasOwnProperty(item)) {
-          if (!(/__/).test(item)) {
+          if (!(/__/).test(item) && (item !== 'constructor') &&
+              (typeof gadget[item] === "function")) {
             declared_method_dict[item] = gadget[item];
           }
         }
