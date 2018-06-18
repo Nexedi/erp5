@@ -52,6 +52,7 @@ from Products.ERP5.mixin.extensible_traversable import OOoDocumentExtensibleTrav
 
 # connection plugins
 from Products.ERP5Type.ConnectionPlugin.TimeoutTransport import TimeoutTransport
+from socket import error as SocketError
 
 enc=base64.encodestring
 dec=base64.decodestring
@@ -98,6 +99,7 @@ class OOoServerProxy():
   def _proxy_function(self, func_name, *args, **kw):
     result_error_set_list = []
     protocol_error_list = []
+    socket_error_list = []
     fault_error_list = []
     count = 0
     serverproxy_list = self._serverproxy_list
@@ -109,6 +111,11 @@ class OOoServerProxy():
           # Cloudooo return result in (200 or 402, dict(), '') format or just based type
           # 402 for error and 200 for ok
           result_set =  func(*args, **kw)
+        except SocketError, e:
+          message = 'Socket Error: %s' % (repr(e) or 'undefined.')
+          socket_error_list.append(message)
+          retry_server_list.append(server_proxy)
+          continue
         except ProtocolError, e:
           # Network issue
           message = "%s: %s %s" % (e.url, e.errcode, e.errmsg)
@@ -148,6 +155,8 @@ class OOoServerProxy():
     if len(protocol_error_list):
       raise ConversionError("Protocol error while contacting OOo conversion: "
                           "%s" % (','.join(protocol_error_list)))
+    if len(socket_error_list):
+      raise SocketError("%s" % (','.join(socket_error_list)))
     if len(fault_error_list):
       raise fault_error_list[0]
    
