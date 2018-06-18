@@ -35,7 +35,7 @@
         })
         .push(function (result) {
           var file_name_list, file_name, from, jio_key, data, to,
-              att_id;
+              att_id, msg;
           if (result[0].file !== undefined) {
             file_name_list = result[0].file.file_name.split('.');
             from = file_name_list.pop();
@@ -45,9 +45,15 @@
             } else if (from === result[3]) {
               att_id = "data";
             } else {
+              msg = "Can convert, avaible formats : ";
+              for (data in gadget.state.upload) {
+                if (gadget.state.upload.hasOwnProperty(data)) {
+                  msg += data + ", ";
+                }
+              }
+              msg += result[3];
               return gadget.notifySubmitted({
-                message: "Can convert, avaible format : " +
-                    gadget.state.upload,
+                message: msg,
                 status: "error"
               });
             }
@@ -65,6 +71,11 @@
               })
               .push(function () {
                 return jio_key;
+              }, function (error) {
+                return gadget.notifySubmitted({
+                  message: "Can not convert",
+                  status: "error"
+                });
               });
           }
           return gadget.notifySubmitted({
@@ -86,7 +97,7 @@
       return gadget.getSetting('upload_dict')
         .push(function (upload_dict) {
           return gadget.changeState({
-            upload: upload_dict
+            upload: JSON.parse(upload_dict)
           });
         });
     })
