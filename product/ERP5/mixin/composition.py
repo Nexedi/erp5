@@ -256,6 +256,29 @@ class CompositionMixin:
         specialise_type_list, portal_type_set)
     return specialise_list
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getInheritedCategoryValueList')
+  def getInheritedCategoryValueList(self, category, category_type_list=None,
+                                      exclude_category_type_list=()):
+    """Get inherited category values
+
+    Values are inherited from parent only if portal types differ,
+    so that a child can override.
+    """
+    portal_type_set = set()
+    category_list = []
+    for value in self._getValueList(category):
+      portal_type = value.getPortalType()
+      if not (portal_type in exclude_category_type_list or
+          category_type_list and portal_type not in category_type_list):
+        portal_type_set.add(portal_type)
+        category_list.append(value)
+    parent = self.getParentValue()
+    if isinstance(parent, CompositionMixin):
+      portal_type_set.update(exclude_category_type_list)
+      category_list += parent.getInheritedCategoryValueList(
+        category, category_type_list, portal_type_set)
+    return category_list
 del asComposedDocument # to be unhidden (and renamed ?) if needed
 
 InitializeClass(CompositionMixin)
