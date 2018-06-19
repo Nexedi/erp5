@@ -92,7 +92,7 @@
       if (url.startsWith("urn:jio:reference?")) {
         reference = decodeURIComponent(url.replace("urn:jio:reference?", ""));
         args = {
-          query: '(portal_type: "Json Schema") AND ((reference: "' + reference + '"))',
+          query: '(portal_type: "JSON Schema") AND ((reference: "' + reference + '"))',
           limit: [0, 1],
           select_list: [],
           sort_on: [["modification_date", "descending"]]
