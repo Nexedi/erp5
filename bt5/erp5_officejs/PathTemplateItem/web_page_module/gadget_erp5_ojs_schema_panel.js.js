@@ -148,7 +148,7 @@
           // Update the global links
           .push(function () {
             return context.jio_allDocs({
-              "query": 'portal_type:"Json Schema"',
+              "query": 'portal_type:"JSON Schema"',
               "limit": [0, 31],
               "select_list": ["title", "reference"],
               "sort_on": [["title", "descending"]]
