@@ -1,4 +1,7 @@
 <property_sheet_list>
+ <portal_type id="Filtered Category Membership Equivalence Tester">
+  <item>FilteredCategoryMembershipEquivalenceTester</item>
+ </portal_type>
  <portal_type id="Net Converted Quantity Divergence Tester">
   <item>MultiPropertyEquivalenceTester</item>
  </portal_type>

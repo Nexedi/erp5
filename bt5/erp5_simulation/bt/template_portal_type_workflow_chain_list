@@ -1,5 +1,6 @@
 Category Membership Divergence Tester | edit_workflow
 DateTime Divergence Tester | edit_workflow
+Filtered Category Membership Equivalence Tester | edit_workflow
 Float Divergence Tester | edit_workflow
 Net Converted Quantity Divergence Tester | edit_workflow
 Solver Process | solver_process_workflow

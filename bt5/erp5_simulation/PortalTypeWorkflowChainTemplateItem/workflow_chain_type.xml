@@ -8,6 +8,10 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Filtered Category Membership Equivalence Tester</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Float Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>

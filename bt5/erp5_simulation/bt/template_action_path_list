@@ -5,6 +5,9 @@ Category Membership Divergence Tester | view
 DateTime Divergence Tester | configuration
 DateTime Divergence Tester | predicate
 DateTime Divergence Tester | view
+Filtered Category Membership Equivalence Tester | configuration
+Filtered Category Membership Equivalence Tester | predicate
+Filtered Category Membership Equivalence Tester | view
 Float Divergence Tester | configuration
 Float Divergence Tester | predicate
 Float Divergence Tester | view
