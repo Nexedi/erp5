@@ -134,7 +134,7 @@
                   },
                   "my_file": {
                     "description": "",
-                    "title": "Upload",
+                    "title": "Upload and rewrite this document",
                     "default": "",
                     "css_class": "",
                     "required": 0,
