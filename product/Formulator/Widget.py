@@ -11,6 +11,7 @@ from lxml import etree
 from lxml.etree import Element, SubElement
 from lxml.builder import ElementMaker
 import re
+import sys
 
 DRAW_URI = 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
 TEXT_URI = 'urn:oasis:names:tc:opendocument:xmlns:text:1.0'
@@ -48,10 +49,47 @@ class OOoEscaper:
       line_break = SubElement(self.parent_node, '{%s}%s' % (TEXT_URI, 'tab'))
       line_break.tail = match_object.group(2)
 
+
+# OD* Styles vs XML control characters TODO:
+#  - check `pdf` here. Don't we need something more generic like render_text ?
+#  - ods_style also uses _pdf where odt_style uses render_odt
+#  - merge _convert_to_xml_compatible_string and convertToString
+def _convert_to_xml_compatible_string(value):
+  """Convert value to an XML 1.0 compatible string.
+
+  This helper makes sure the value is compatible with this requirement of lxml:
+      All strings must be XML compatible: Unicode or ASCII, no NULL bytes
+  """
+  if not value:
+    return ''
+  if isinstance(value, str):
+    value = value.decode('utf-8')
+
+  # remove control characters as described in the example from
+  # https://bugs.python.org/issue5166#msg95689
+
+  # http://www.w3.org/TR/REC-xml/#NT-Char
+  # Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] |
+  #          [#x10000- #x10FFFF]
+  # (any Unicode character, excluding the surrogate blocks, FFFE, and FFFF)
+  _char_tail = ''
+  if sys.maxunicode > 0x10000:
+    _char_tail = u'%s-%s' % (unichr(0x10000),
+                             unichr(min(sys.maxunicode, 0x10FFFF)))
+  # TODO: compile this at import time
+  _nontext_sub = re.compile(
+          ur'[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD%s]' % _char_tail,
+          re.U).sub
+  return _nontext_sub(u'\uFFFD', value)
+
+
+# TODO: drop this method / merge with _convert_to_xml_compatible_string
+#  ( _convert_to_xml_compatible_string was from an old patch then convertToString and this conflict was not yet resolved)
 def convertToString(value):
   if not isinstance(value, (str, unicode)):
-    return str(value)
-  return value
+    return _convert_to_xml_compatible_string(str(value))
+  return _convert_to_xml_compatible_string(value)
+
 
 class Widget:
   """A field widget that knows how to display itself as HTML.
@@ -221,11 +259,7 @@ class Widget:
     """
     if attr_dict is None:
       attr_dict = {}
-    if isinstance(value, str):
-      #required by lxml
-      value = value.decode('utf-8')
-    if value is None:
-      value = ''
+    value = _convert_to_xml_compatible_string(value)
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     if escape:
       RE_OOO_ESCAPE.sub(OOoEscaper(text_node), value)
@@ -248,11 +282,7 @@ class Widget:
     if attr_dict is None:
       attr_dict = {}
     attr_dict['{%s}value-type' % OFFICE_URI] = 'string'
-    if isinstance(value, str):
-      #required by lxml
-      value = value.decode('utf-8')
-    if value is None:
-      value = ''
+    value = _convert_to_xml_compatible_string(value)
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     text_node.text = value
     text_node.attrib.update(attr_dict)
@@ -291,11 +321,7 @@ class Widget:
     """
     if attr_dict is None:
       attr_dict = {}
-    if isinstance(value, str):
-      #required by lxml
-      value = value.decode('utf-8')
-    if value is None:
-      value = ''
+    value = _convert_to_xml_compatible_string(value)
     draw_frame_tag_name = '{%s}%s' % (DRAW_URI, 'frame')
     draw_frame_node = Element(draw_frame_tag_name, nsmap=NSMAP)
     draw_frame_attribute_list = attr_dict.get(draw_frame_tag_name)
@@ -559,11 +585,7 @@ class CheckBoxWidget(Widget):
     """
     if attr_dict is None:
       attr_dict = {}
-    if isinstance(value, int):
-      value = str(value)
-    if isinstance(value, str):
-      #required by lxml
-      value = value.decode('utf-8')
+    value = _convert_to_xml_compatible_string(value)
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     text_node.text = value
     text_node.attrib.update(attr_dict)
@@ -663,9 +685,7 @@ class TextAreaWidget(Widget):
         render_prefix, attr_dict, local_name):
         if attr_dict is None:
             attr_dict = {}
-        if isinstance(value, str):
-            #required by lxml
-            value = value.decode('utf-8')
+        value = _convert_to_xml_compatible_string(value)
         text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
 
         RE_OOO_ESCAPE.sub(OOoEscaper(text_node), value)
@@ -930,9 +950,7 @@ class SingleItemsWidget(ItemsWidget):
 
     if attr_dict is None:
       attr_dict = {}
-    if isinstance(value, str):
-      #required by lxml
-      value = value.decode('utf-8')
+    value = _convert_to_xml_compatible_string(value)
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
 
     RE_OOO_ESCAPE.sub(OOoEscaper(text_node), value)
@@ -1079,6 +1097,7 @@ class MultiItemsWidget(ItemsWidget):
     if value is None:
       return None
     value_list = self.render_items_odf(field, value, REQUEST)
+    # XXX is this handling unicode properly ???
     value = ', '.join(value_list).decode('utf-8')
     return Widget.render_odg(self, field, value, as_string, ooo_builder,
                              REQUEST, render_prefix, attr_dict, local_name)
@@ -1111,9 +1130,7 @@ class MultiItemsWidget(ItemsWidget):
 
     if attr_dict is None:
       attr_dict = {}
-    if isinstance(value, str):
-      #required by lxml
-      value = value.decode('utf-8')
+    value = _convert_to_xml_compatible_string(value)
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
 
     RE_OOO_ESCAPE.sub(OOoEscaper(text_node), value)

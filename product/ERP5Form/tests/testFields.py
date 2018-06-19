@@ -341,6 +341,12 @@ class TestStringField(ERP5TypeTestCase):
     self.assertEqual('Hello World! <&> &lt;&mp;&gt;', self.field.render_odt(as_string=False).text)
     self.assertEqual('Hello World!', self.field.render_odt(value='Hello World!', as_string=False).text)
 
+  def test_render_odt_escape_control_characters(self):
+    self.field.values['default'] = 'Hello \x10\x13 World!'
+    self.assertEqual(
+        'Hello \ufffd\ufffd World!',
+        self.field.render_odt(as_string=False).text)
+
   def test_render_odg(self):
     self.field.values['default'] = 'Hello World! <&> &lt;&mp;&gt;'
     test_value = self.field.render_odg(as_string=False)\
@@ -350,11 +356,26 @@ class TestStringField(ERP5TypeTestCase):
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
     self.assertEqual('Hello World!', test_value)
 
+  def test_render_odg_escape_control_characters(self):
+    self.field.values['default'] = 'Hello \x10\x13 World!'
+    self.assertEqual(
+        'Hello \ufffd\ufffd World!',
+        self.field.render_odg(as_string=False).xpath(
+          '%s/text()' % ODG_XML_WRAPPING_XPATH,
+          namespaces=NSMAP)[0])
+
   def test_render_odt_variable(self):
     self.field.values['default'] = 'Hello World! <&> &lt;&mp;&gt;'
     node = self.field.render_odt_variable(as_string=False)
     self.assertEqual(node.get('{%s}value-type' % NSMAP['office']), 'string')
     self.assertEqual(node.text, 'Hello World! <&> &lt;&mp;&gt;')
+
+  def test_render_odt_variable_escape_control_characters(self):
+    self.field.values['default'] = 'Hello \x10\x13 World!'
+    self.assertEqual(
+        'Hello \ufffd\ufffd World!',
+        self.field.render_odt_variable(as_string=False).text)
+
 
 class TestDateTimeField(ERP5TypeTestCase):
   """Tests DateTime field
