@@ -19,9 +19,6 @@ def manage_page_footer(self):
   except:
     editor = None
 
-  if editor not in ('ace', 'codemirror'):
-    return default
-
   # REQUEST['PUBLISHED'] can be the form in the acquisition context of the
   # document, or a method bound to the document (after a POST it is a bound method)
   published = self.REQUEST.get('PUBLISHED')
@@ -104,7 +101,7 @@ def manage_page_footer(self):
                               portal_url=portal_url,
                               bound_names=bound_names,
                               mode=mode))
-  else:
+  elif editor == 'ace':
     return '''
 <script type="text/javascript" src="%(portal_url)s/jquery/core/jquery.min.js"></script>
 <script type="text/javascript" src="%(portal_url)s/ace/ace.js"></script>
@@ -189,5 +186,7 @@ $(document).ready(function() {
 </script>
 </body>
 </html>''' % locals()
+
+  return default
 
 Navigation.manage_page_footer = manage_page_footer
