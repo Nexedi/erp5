@@ -28,6 +28,7 @@
  <portal_type id="Delivery Root Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
+  <item>Filtered Category Membership Equivalence Tester</item>
   <item>Float Divergence Tester</item>
   <item>Net Converted Quantity Divergence Tester</item>
   <item>Specialise Divergence Tester</item>
@@ -37,6 +38,7 @@
  <portal_type id="Delivery Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
+  <item>Filtered Category Membership Equivalence Tester</item>
   <item>Float Divergence Tester</item>
   <item>Net Converted Quantity Divergence Tester</item>
   <item>Specialise Divergence Tester</item>
@@ -84,6 +86,7 @@
  <portal_type id="Order Root Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
+  <item>Filtered Category Membership Equivalence Tester</item>
   <item>Float Divergence Tester</item>
   <item>Net Converted Quantity Divergence Tester</item>
   <item>Specialise Divergence Tester</item>

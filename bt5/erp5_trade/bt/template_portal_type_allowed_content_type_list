@@ -12,6 +12,7 @@ Delivery Node | Fax
 Delivery Node | Telephone
 Delivery Root Simulation Rule | Category Membership Divergence Tester
 Delivery Root Simulation Rule | DateTime Divergence Tester
+Delivery Root Simulation Rule | Filtered Category Membership Equivalence Tester
 Delivery Root Simulation Rule | Float Divergence Tester
 Delivery Root Simulation Rule | Net Converted Quantity Divergence Tester
 Delivery Root Simulation Rule | Specialise Divergence Tester
@@ -19,6 +20,7 @@ Delivery Root Simulation Rule | String Divergence Tester
 Delivery Root Simulation Rule | Variation Divergence Tester
 Delivery Simulation Rule | Category Membership Divergence Tester
 Delivery Simulation Rule | DateTime Divergence Tester
+Delivery Simulation Rule | Filtered Category Membership Equivalence Tester
 Delivery Simulation Rule | Float Divergence Tester
 Delivery Simulation Rule | Net Converted Quantity Divergence Tester
 Delivery Simulation Rule | Specialise Divergence Tester
@@ -42,6 +44,7 @@ Inventory Module | Inventory
 Inventory | Inventory Line
 Order Root Simulation Rule | Category Membership Divergence Tester
 Order Root Simulation Rule | DateTime Divergence Tester
+Order Root Simulation Rule | Filtered Category Membership Equivalence Tester
 Order Root Simulation Rule | Float Divergence Tester
 Order Root Simulation Rule | Net Converted Quantity Divergence Tester
 Order Root Simulation Rule | Specialise Divergence Tester
