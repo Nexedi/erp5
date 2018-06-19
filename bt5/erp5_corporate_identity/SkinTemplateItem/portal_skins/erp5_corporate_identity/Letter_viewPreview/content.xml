@@ -11,8 +11,7 @@
             <value>
               <list>
                 <string>default</string>
-                <string>description</string>
-                <string>gadget_url</string>
+                <string>renderjs_extra</string>
                 <string>title</string>
               </list>
             </value>
@@ -58,10 +57,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -70,7 +65,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
+                    <key> <string>renderjs_extra</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
@@ -91,20 +86,18 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_iframe_gadget_field</string> </value>
+                    <value> <string>my_view_mode_text_content</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -124,7 +117,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.Letter_getPredecessor(context_url=context.getRelativeUrl()).getData().encode("base64")</string> </value>
+            <value> <string>python: context.Letter_getPredecessor(context_url=context.getRelativeUrl()).absolute_url()+\'/getData\'</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -137,7 +130,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.restrictedTraverse(\'pdf_js/pdfjs.gadget.html\').absolute_url() + "?auto_focus=1"</string> </value>
+            <value> <string>python: context.Letter_getRenderJSExtraPreviewParameterList(context_url=context.getRelativeUrl())</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -33,6 +33,7 @@ if doc_save:
       source_reference=''.join([doc_reference, '.pdf']),
       file=doc_pdf_file
     )
+    document.setContentType("application/pdf")
 
     # setting aggregate in case context is an event
     if context.portal_type != 'Web Page':

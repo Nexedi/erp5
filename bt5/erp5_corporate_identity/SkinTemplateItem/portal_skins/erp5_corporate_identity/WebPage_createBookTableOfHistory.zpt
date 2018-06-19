@@ -148,7 +148,7 @@ Creates the Book sections (version, authors, etc).
                 <td width="15%">001</td>
                 <td width="20%">20xx-xx-xx</td>
                 <td width="15%">All</td>
-                <td width="55%" style="text-align: left">Added example content, corrections.</td>
+                <td width="55%" style="text-align: right">Added example content, corrections.</td>
               </tr>
             </tal:block>
           </tbody>
