@@ -64,7 +64,6 @@ localizer_contexts = Products.Localizer.patches._requests
 LocalizerContext = lambda request: request
 
 
-from ZODB.POSException import ConflictError
 from Products.MailHost.MailHost import MailHostError
 
 from zLOG import LOG, INFO, WARNING, ERROR
