@@ -15,7 +15,9 @@
       urn_prefix = url.slice(0, urn_prefix);
       url = fake_prefix + decodeURIComponent(url.replace(urn_prefix, ""));
     }
-    if (typeof base_url === "string" && base_url.startsWith("urn:jio:reference?")) {
+    if (typeof base_url === "string" &&
+      !(url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//")) &&
+      base_url.startsWith("urn:jio:reference?")) {
       if (!urn_prefix) {
         urn_prefix = base_url.indexOf("?") + 1;
         urn_prefix = base_url.slice(0, urn_prefix);
@@ -200,14 +202,15 @@
     };
     if (schema_url_map.hasOwnProperty(download_url)) {
       url = new URL(schema_url_map[download_url], g.__path);
-      download_url = url.origin + url.pathname;
     }
     protocol = url.protocol;
     if (protocol === "http:" || protocol === "https:") {
       if (window.location.protocol !==  protocol) {
-        throw new Error("You cannot mixed http and https calls");
+        url = new URL($ref.replace(protocol + "//", window.location.protocol + "//"));
+        // throw new Error("You cannot mixed http and https calls");
       }
     }
+    download_url = url.origin + url.pathname;
     hash = url.hash;
     url = url.href;
     if (download_url.startsWith("urn:jio:")) {
