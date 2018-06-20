@@ -8,7 +8,7 @@ REPLACE INTO
 VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">
 (
-  <dtml-sqlvar expr="uid[loop_item]" type="int">,  
+  <dtml-sqlvar expr="uid[loop_item]" type="int">,
   <dtml-sqlvar expr="security_uid[loop_item]" type="int">,
   <dtml-sqlvar expr="getOwnerInfo[loop_item]['id']" type="string">,
   <dtml-sqlvar expr="(getViewPermissionOwner[loop_item] is not None) and getViewPermissionOwner[loop_item] or ''" type="string" optional>,

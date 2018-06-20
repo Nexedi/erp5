@@ -3,7 +3,7 @@
     <dtml-if "not(isInventoryMovement[loop_item]) and isMovement[loop_item] and getResourceUid[loop_item]">
       <dtml-if "getDestinationUid[loop_item]">
         <dtml-call expr="row_list.append([
-                    uid[loop_item], 
+                    uid[loop_item],
                     order_id[loop_item],
                     getExplanationUid[loop_item],
                     getDestinationUid[loop_item],
@@ -20,17 +20,18 @@
                     getInventoriatedQuantity[loop_item],
                     isCancellationAmount[loop_item],
                     isAccountable[loop_item],
-                    getStopDate[loop_item], 
-                    getStartDate[loop_item], 
-                    getDestinationInventoriatedTotalAssetPrice[loop_item], 
-                    getPortalType[loop_item], 
-                    getSimulationState[loop_item], 
+                    getStopDate[loop_item],
+                    getStartDate[loop_item],
+                    getDestinationInventoriatedTotalAssetPrice[loop_item],
+                    getPortalType[loop_item],
+                    getSimulationState[loop_item],
                     getVariationText[loop_item],
-                    getSubVariationText[loop_item]])">
+                    getSubVariationText[loop_item],
+        ])">
       </dtml-if>
       <dtml-if "getSourceUid[loop_item]">
         <dtml-call expr="row_list.append([
-                    uid[loop_item], 
+                    uid[loop_item],
                     mirror_order_id[loop_item],
                     getExplanationUid[loop_item],
                     getSourceUid[loop_item],
@@ -44,19 +45,20 @@
                     getDestinationSectionUid[loop_item], 
                     getDestinationUid[loop_item], 
                     getResourceUid[loop_item],
-                    -(getInventoriatedQuantity[loop_item] or 0), 
+                    -(getInventoriatedQuantity[loop_item] or 0),
                     isCancellationAmount[loop_item],
                     isAccountable[loop_item],
-                    getStartDate[loop_item], 
+                    getStartDate[loop_item],
                     getStopDate[loop_item],
-                    getSourceInventoriatedTotalAssetPrice[loop_item], 
-                    getPortalType[loop_item], 
-                    getSimulationState[loop_item], 
+                    getSourceInventoriatedTotalAssetPrice[loop_item],
+                    getPortalType[loop_item],
+                    getSimulationState[loop_item],
                     getVariationText[loop_item],
-                    getSubVariationText[loop_item]])">
+                    getSubVariationText[loop_item],
+        ])">
       </dtml-if>
     </dtml-if>
-  </dtml-in>  
+  </dtml-in>
   <dtml-if "row_list">
 INSERT INTO
   stock
@@ -67,8 +69,8 @@ VALUES
   <dtml-sqlvar expr="row_item[1]" type="int">,
   <dtml-sqlvar expr="row_item[2]" type="int" optional>,
   <dtml-sqlvar expr="row_item[3]" type="int">,
-  <dtml-sqlvar expr="row_item[4]" type="int" optional>, 
-  <dtml-sqlvar expr="row_item[5]" type="int" optional>, 
+  <dtml-sqlvar expr="row_item[4]" type="int" optional>,
+  <dtml-sqlvar expr="row_item[5]" type="int" optional>,
   <dtml-sqlvar expr="row_item[6]" type="int" optional>,
   <dtml-sqlvar expr="row_item[7]" type="int" optional>,
   <dtml-sqlvar expr="row_item[8]" type="int" optional>,

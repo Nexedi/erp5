@@ -13,61 +13,63 @@ WHERE
         <dtml-if "getDestinationUid[loop_item]">
           <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">
           <dtml-call expr="row_list.append([
-                      uid[loop_item], 
+                      uid[loop_item],
                       uid_dict[uid[loop_item]],
                       getExplanationUid[loop_item],
                       getDestinationUid[loop_item],
                       getDestinationSectionUid[loop_item],
                       getDestinationPaymentUid[loop_item],
                       getDestinationFunctionUid[loop_item],
-                      getDestinationProjectUid[loop_item], 
-                      getDestinationFundingUid[loop_item], 
+                      getDestinationProjectUid[loop_item],
+                      getDestinationFundingUid[loop_item],
                       getLedgerUid[loop_item],
-                      getDestinationPaymentRequestUid[loop_item], 
-                      getSourceSectionUid[loop_item], 
-                      getSourceUid[loop_item], 
+                      getDestinationPaymentRequestUid[loop_item],
+                      getSourceSectionUid[loop_item],
+                      getSourceUid[loop_item],
                       getResourceUid[loop_item],
                       movement_item_quantity,
                       isCancellationAmount[loop_item],
                       isAccountable[loop_item],
                       movement_item.getStopDate(),
                       movement_item.getStartDate(),
-                      getDestinationInventoriatedTotalAssetPrice[loop_item], 
-                      getPortalType[loop_item], 
-                      getSimulationState[loop_item], 
+                      getDestinationInventoriatedTotalAssetPrice[loop_item],
+                      getPortalType[loop_item],
+                      getSimulationState[loop_item],
                       getVariationText[loop_item],
-                      getSubVariationText[loop_item]])">
+                      getSubVariationText[loop_item],
+          ])">
         </dtml-if>
         <dtml-if "getSourceUid[loop_item]">
           <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">
           <dtml-call expr="row_list.append([
-                      uid[loop_item], 
+                      uid[loop_item],
                       uid_dict[uid[loop_item]],
                       getExplanationUid[loop_item],
                       getSourceUid[loop_item],
                       getSourceSectionUid[loop_item],
                       getSourcePaymentUid[loop_item],
                       getSourceFunctionUid[loop_item],
-                      getSourceProjectUid[loop_item], 
-                      getSourceFundingUid[loop_item], 
+                      getSourceProjectUid[loop_item],
+                      getSourceFundingUid[loop_item],
                       getLedgerUid[loop_item],
-                      getSourcePaymentRequestUid[loop_item], 
-                      getDestinationSectionUid[loop_item], 
-                      getDestinationUid[loop_item], 
+                      getSourcePaymentRequestUid[loop_item],
+                      getDestinationSectionUid[loop_item],
+                      getDestinationUid[loop_item],
                       getResourceUid[loop_item],
                       -movement_item_quantity,
                       isCancellationAmount[loop_item],
                       isAccountable[loop_item],
                       movement_item.getStartDate(),
                       movement_item.getStopDate(),
-                      getSourceInventoriatedTotalAssetPrice[loop_item], 
-                      getPortalType[loop_item], 
-                      getSimulationState[loop_item], 
+                      getSourceInventoriatedTotalAssetPrice[loop_item],
+                      getPortalType[loop_item],
+                      getSimulationState[loop_item],
                       getVariationText[loop_item],
-                      getSubVariationText[loop_item]])">
+                      getSubVariationText[loop_item],
+          ])">
         </dtml-if>
         </dtml-let>
-     </dtml-in>
+      </dtml-in>
     </dtml-if>
   </dtml-in>
 
@@ -107,8 +109,8 @@ VALUES
   <dtml-sqlvar expr="row_item[1]" type="int">,
   <dtml-sqlvar expr="row_item[2]" type="int" optional>,
   <dtml-sqlvar expr="row_item[3]" type="int">,
-  <dtml-sqlvar expr="row_item[4]" type="int" optional>, 
-  <dtml-sqlvar expr="row_item[5]" type="int" optional>, 
+  <dtml-sqlvar expr="row_item[4]" type="int" optional>,
+  <dtml-sqlvar expr="row_item[5]" type="int" optional>,
   <dtml-sqlvar expr="row_item[6]" type="int" optional>,
   <dtml-sqlvar expr="row_item[7]" type="int" optional>,
   <dtml-sqlvar expr="row_item[8]" type="int" optional>,
