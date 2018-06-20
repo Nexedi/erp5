@@ -125,16 +125,16 @@
     })
 
     .declareAcquiredMethod("notifyChange", "notifyChange")
-    .onEvent('change', function change() {
+    .onEvent('change', function change(e) {
       return RSVP.all([
         this.checkValidity(),
-        this.notifyChange()
+        this.notifyChange(e)
       ]);
     }, false, false)
-    .onEvent('input', function input() {
+    .onEvent('input', function input(e) {
       return RSVP.all([
         this.checkValidity(),
-        this.notifyChange()
+        this.notifyChange(e)
       ]);
     }, false, false)
 
