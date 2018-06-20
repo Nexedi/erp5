@@ -137,7 +137,9 @@
             ];
           } else {
             tasks = [
-              gadget.getUrlFor({command: "index", options: {"page": "ojs_multi_upload"}}),
+              gadget.getUrlFor({command: "index", options: {
+                  page: "ojs_add_json_schema"
+                }}),
               gadget.getSetting('document_title_plural')
             ];
           }
