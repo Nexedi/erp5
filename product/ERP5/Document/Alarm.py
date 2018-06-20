@@ -29,6 +29,7 @@
 
 from compiler.consts import CO_VARKEYWORDS
 from random import getrandbits
+from Acquisition import aq_base
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.SecurityManagement import getSecurityManager, \
@@ -327,9 +328,19 @@ class Alarm(XMLObject, PeriodicityMixin):
 
     portal = self.getPortalObject()
     notification_tool = portal.portal_notifications
-    candidate_list = self.getDestinationValueList()
-    if not candidate_list:
-      candidate_list = None
+    candidate_list = []
+    domain_type_set = portal.getPortalDomainTypeList()
+    for candidate_value in self.getDestinationValueList():
+      if candidate_value.getPortalType() in domain_type_set:
+        test = candidate_value.test
+        for recipient in portal.portal_catalog(
+          query=candidate_value.asQuery(),
+        ):
+          recipient_value = recipient.getObject()
+          if test(recipient_value):
+            candidate_list.append(recipient_value)
+      else:
+        candidate_list.append(candidate_value)
     result_list = [x for x in active_process.getResultList() if x is not None]
     attachment_list = []
     if len(result_list):

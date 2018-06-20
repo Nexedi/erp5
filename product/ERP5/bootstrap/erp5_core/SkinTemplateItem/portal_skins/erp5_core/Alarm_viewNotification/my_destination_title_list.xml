@@ -511,6 +511,10 @@
                           <string>Person</string>
                           <string>Person</string>
                         </tuple>
+                        <tuple>
+                          <string>Domain</string>
+                          <string>Domain</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
