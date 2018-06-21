@@ -10,10 +10,43 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+    .allowPublicAcquisition("jio_allDocs", function (param_list) {
+      var gadget = this;
+      return gadget.jio_allDocs(param_list[0])
+        .push(function (result) {
+          var i, date, len = result.data.total_rows;
+          for (i = 0; i < len; i += 1) {
+            if (result.data.rows[i].value.hasOwnProperty("modification_date")) {
+              date = new Date(result.data.rows[i].value.modification_date);
+              result.data.rows[i].value.modification_date = {
+                field_gadget_param: {
+                  allow_empty_time: 0,
+                  ampm_time_style: 0,
+                  css_class: "date_field",
+                  date_only: true,
+                  description: "The Date",
+                  editable: 1,
+                  hidden: 0,
+                  hidden_day_is_last_day: 0,
+                  "default": date.toUTCString(),
+                  key: "modification_date",
+                  required: 0,
+                  timezone_style: 0,
+                  title: "Modification Date",
+                  type: "DateTimeField"
+                }
+              };
+            }
+          }
+          return result;
+        });
+    })
+
     .allowPublicAcquisition('updateHeader', function () {
       return;
     })
@@ -65,11 +98,11 @@
         .push(function (form_gadget) {
           var column_list = [
             ['translated_portal_type', 'Type'],
+            ['modification_date', 'Modification Date'],
             ['title', 'Title'],
             ['reference', 'Reference'],
             ['description', 'Description'],
             ['translated_validation_state_title', 'State']
-            // ['modification_date', 'Modification Date']
           ];
           return form_gadget.render({
             erp5_document: {"_embedded": {"_view": {
@@ -88,12 +121,6 @@
                 "sort_column_list": column_list,
                 "title": "Documents",
                 "type": "ListBox"
-              },
-              "listbox_modification_date": {
-                "date_only": true,
-                "title": "Modification Date",
-                "type": "DateTimeField",
-                "editable": 1
               }
             }},
               "_links": {
