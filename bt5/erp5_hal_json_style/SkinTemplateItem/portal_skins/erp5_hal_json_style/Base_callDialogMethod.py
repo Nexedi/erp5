@@ -214,6 +214,7 @@ if dialog_category == "object_search" :
 # Handle deferred style, unless we are executing the update action
 if dialog_method != update_method and kw.get('deferred_style', 0):
   kw['deferred_portal_skin'] = kw.get('portal_skin', None)
+  kw['previous_skin_selection'] = portal.portal_skins.getCurrentSkinName()
   # XXX Hardcoded Deferred style name
   kw['portal_skin'] = 'Deferred'
 
