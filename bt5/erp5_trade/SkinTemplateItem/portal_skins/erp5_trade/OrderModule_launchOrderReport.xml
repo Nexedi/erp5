@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>report_method_id, deferred_portal_skin, *args, **kw</string> </value>
+            <value> <string>report_method_id, deferred_portal_skin, previous_skin_selection=None, *args, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
