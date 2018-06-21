@@ -228,7 +228,7 @@ return portal.portal_simulation.getMovementHistoryList(
                  from_date=from_date,
                  initial_running_total_price=net_balance,
                  # initial_running_quantity=net_balance, TODO
-                 selection_domain=context.portal_selections.getSelectionDomainDictFor(selection_name) ir None,
+                 selection_domain=context.portal_selections.getSelectionDomainDictFor(selection_name) or None,
                  sort_on=sort_on,
                  ignore_group_by=True,
                  src__=src__,
