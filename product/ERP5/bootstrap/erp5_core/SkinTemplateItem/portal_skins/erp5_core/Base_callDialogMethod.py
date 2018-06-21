@@ -178,6 +178,7 @@ for k, v in kw.items() :
 
 # Handle deferred style, unless we are executing the update action
 if dialog_method != update_method and clean_kw.get('deferred_style', 0):
+  clean_kw['previous_skin_selection'] = context.getPortalObject().portal_skins.getCurrentSkinName()
   clean_kw['deferred_portal_skin'] = clean_kw.get('portal_skin', None)
   # XXX Hardcoded Deferred style name
   clean_kw['portal_skin'] = 'Deferred'

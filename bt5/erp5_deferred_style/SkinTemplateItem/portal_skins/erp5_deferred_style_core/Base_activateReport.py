@@ -3,15 +3,17 @@ request = container.REQUEST
 portal = context.getPortalObject()
 N_ = portal.Base_translateString
 
+previous_skin_selection = request.get('previous_skin_selection', None)
+
 user = portal.portal_membership.getAuthenticatedMember()
 person_value = user.getUserValue()
 if person_value is None:
-  portal.changeSkin(None)
+  portal.changeSkin(previous_skin_selection)
   return context.Base_redirect('view', keep_items=dict(
               portal_status_message=N_("No person found for your user")))
 
 if person_value.getDefaultEmailText('') in ('', None):
-  portal.changeSkin(None)
+  portal.changeSkin(previous_skin_selection)
   return context.Base_redirect('view', keep_items=dict(
               portal_status_message=N_("You haven't defined your email address")))
 
@@ -41,6 +43,6 @@ context.activate(activity="SQLQueue", tag=tag, after_tag=after_tag,
 
 context.activate(activity='SQLQueue', after_tag=tag).getTitle()
 
-portal.changeSkin(None)
+portal.changeSkin(previous_skin_selection)
 return context.Base_redirect('view', keep_items=dict(
               portal_status_message=N_("Report Started")))
