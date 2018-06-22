@@ -437,6 +437,43 @@
     </tr>
   </tal:block>
 
+
+  <tal:block metal:define-macro="go_to_foo_default_view">
+    <tr>
+      <td colspan="3"><b>Go to default view</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//ul[@class='document-listview']//a[@data-i18n='View']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//ul[@class='document-listview']//a[@data-i18n='View']</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//input[@name='field_my_id']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+
   <tal:block metal:define-macro="go_to_foo_relation_field_view">
     <tr>
       <td colspan="3"><b>Go to relation field view</b></td>

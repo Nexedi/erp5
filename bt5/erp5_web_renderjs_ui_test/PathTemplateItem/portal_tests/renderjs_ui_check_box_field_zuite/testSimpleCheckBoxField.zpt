@@ -47,11 +47,8 @@
 </tal:block>
 
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Save</td>
-  <td></td>
+  <td colspan="3"><b>Verify checked save</b></td>
 </tr>
-
 <tr>
   <td>waitForElementPresent</td>
   <td>//input[@name="field_my_frozen"]</td>
@@ -71,6 +68,12 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
+<tr>
+  <td>assertChecked</td>
+  <td>//input[@name="field_my_frozen"]</td>
+  <td></td>
+</tr>
+
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_foo_relation_field_view" />
 
 
@@ -87,7 +90,35 @@
 </tr>
 
 <tr>
+  <td colspan="3"><b>Verify unchecked save</b></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_foo_default_view" />
+
+<tr>
   <td>click</td>
+  <td>//input[@name="field_my_frozen"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertNotChecked</td>
+  <td>//input[@name="field_my_frozen"]</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+<tr>
+  <td>assertNotChecked</td>
+  <td>//input[@name="field_my_frozen"]</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_foo_relation_field_view" />
+
+
+<tr>
+  <td>waitForElementPresent</td>
   <td>//input[@name="field_my_frozen"]</td>
   <td></td>
 </tr>

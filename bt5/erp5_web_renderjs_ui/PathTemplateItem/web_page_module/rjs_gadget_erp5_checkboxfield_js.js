@@ -12,7 +12,8 @@
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
-          checked: asBoolean(getFirstNonEmpty(field_json.value, field_json.default)),
+          checked: asBoolean(getFirstNonEmpty(field_json.value,
+                                              field_json.default)),
           editable: field_json.editable,
           id: field_json.key,
           name: field_json.key,
@@ -56,19 +57,24 @@
     })
 
     .declareMethod('getContent', function () {
+      var context = this;
       if (this.state.editable) {
         return this.getDeclaredGadget('sub')
           .push(function (gadget) {
             return gadget.getContent();
           })
           .push(function (result) {
+            var final_result = {};
             // Automatically add default_%s:int:0
-            //   https://lab.nexedi.com/nexedi/erp5/blob/8ae0706177/product/Formulator/Widget.py#L476
-            var key_list = Object.keys(result), i;
-            for (i = 0; i < key_list.length; i += 1) {
-              result["default_" + key_list[i] + ":int"] = 0;
+            //   erp5/blob/8ae0706177/product/Formulator/Widget.py#L476
+            final_result["default_" + context.state.name + ":int"] = 0;
+            if (result[context.state.name]) {
+              // from MDN checkbox spec:
+              // checkbox input send 'on' value when checked
+              // and is not present in the request when unchecked
+              final_result[context.state.name] = 'on';
             }
-            return result;
+            return final_result;
           });
       }
       return {};
