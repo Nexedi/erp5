@@ -564,7 +564,9 @@
         if (parent_link !== undefined) {
           uri = new URI(parent_link.href);
           copyStickyParameterDict(previous_options, options);
-          return addNavigationHistoryAndDisplay(gadget, uri.segment(2), options);
+          options.jio_key = uri.segment(2);
+          // When redirecting to parent, always try to restore the state
+          return execDisplayStoredStateCommand(gadget, options);
         }
       }, function (error) {
         if ((error instanceof jIO.util.jIOError) &&
