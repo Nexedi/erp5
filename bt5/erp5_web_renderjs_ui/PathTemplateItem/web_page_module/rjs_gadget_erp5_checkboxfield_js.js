@@ -11,18 +11,24 @@
 
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
-        state_dict = {
-          checked: asBoolean(getFirstNonEmpty(field_json.value,
-                                              field_json.default)),
-          editable: field_json.editable,
-          id: field_json.key,
-          name: field_json.key,
-          title: field_json.title,
-          hidden: field_json.hidden,
-          // Force calling subfield render
-          // as user may have modified the input value
-          render_timestamp: new Date().getTime()
-        };
+        state_dict,
+        value;
+      if (field_json.default === 'on') {
+        value = 1;
+      } else {
+        value = field_json.default;
+      }
+      state_dict = {
+        checked: asBoolean(getFirstNonEmpty(field_json.value, value)),
+        editable: field_json.editable,
+        id: field_json.key,
+        name: field_json.key,
+        title: field_json.title,
+        hidden: field_json.hidden,
+        // Force calling subfield render
+        // as user may have modified the input value
+        render_timestamp: new Date().getTime()
+      };
       state_dict.text_content = state_dict.checked ? '✓' : '';
       return this.changeState(state_dict);
     })
