@@ -270,6 +270,19 @@
           // Only notify when page has no focused.
           // It simplifies a lot notification status
           document.querySelector("link[rel='shortcut icon']").setAttribute("href", "gadget_jabberclient_notification_warning.ico");
+
+	  if ("Notification" in window) {
+            if (Notification.permission === "granted") {
+              var notification = new Notification(argument_list[0], {body: argument_list[2]});
+            }
+            else if (Notification.permission !== "denied") {
+              Notification.requestPermission(function (permission) {
+                if (permission === "granted") {
+                  var notification = new Notification(argument_list[0], {body: argument_list[2]});
+                }
+              });
+            }
+          }
         }
 
         var gadget = this;
