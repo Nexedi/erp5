@@ -54,6 +54,7 @@ def main():
   parser.add_argument('--db_list', help='A list of sql connection strings')
   # parameters that needs to be passed to runUnitTest
   parser.add_argument('--conversion_server_url', default=None)
+  parser.add_argument('--conversion_server_retry_count', default=None)
   parser.add_argument('--conversion_server_hostname', default=None)
   parser.add_argument('--conversion_server_port', default=None)
   parser.add_argument('--volatile_memcached_server_hostname', default=None)
