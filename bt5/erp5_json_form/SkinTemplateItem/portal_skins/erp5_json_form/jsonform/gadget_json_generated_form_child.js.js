@@ -834,10 +834,118 @@
       });
   }
 
+  function checkSchemaIsMetaSchema(schema) {
+    if (schema instanceof Array) {
+      var i,
+        sch;
+      for (i = 0; i < schema.length; i += 1) {
+        sch = schema[i].schema;
+        if (sch.hasOwnProperty("properties") &&
+            sch.properties.hasOwnProperty("$schema")) {
+          return true;
+        }
+      }
+      return false;
+    }
+    return schema.hasOwnProperty("properties") &&
+           schema.properties.hasOwnProperty("$schema");
+  }
+
+  function checkSchemaType(type, check) {
+    if (type instanceof Array) {
+      return type.indexOf(check) >= 0;
+    }
+    return type === check;
+  }
+
+  // filter property for schema editor mode
+  function filterPropery(property_name, current_document) {
+    if (current_document.hasOwnProperty("type")) {
+      switch (property_name) {
+      case "allOf":
+      case "anyOf":
+      case "oneOf":
+        return false;
+      case "additionalItems":
+      case "items":
+      case "maxItems":
+      case "minItems":
+      case "uniqueItems":
+        if (!checkSchemaType(current_document.type, "array")) {
+          return false;
+        }
+        break;
+      case "required":
+      case "maxProperties":
+      case "minProperties":
+      case "additionalProperties":
+      case "properties":
+      case "patternProperties":
+      case "propertyNames":
+        if (!checkSchemaType(current_document.type, "object")) {
+          return false;
+        }
+        break;
+      case "maxLength":
+      case "minLength":
+      case "pattern":
+        if (!checkSchemaType(current_document.type, "string")) {
+          return false;
+        }
+        break;
+      case "multipleOf":
+      case "maximum":
+      case "exclusiveMaximum":
+      case "minimum":
+      case "exclusiveMinimum":
+        if (!(checkSchemaType(current_document.type, "number") ||
+              checkSchemaType(current_document.type, "integer"))) {
+          return false;
+        }
+        break;
+      }
+    } else {
+      if (current_document.hasOwnProperty("allOf") ||
+          current_document.hasOwnProperty("anyOf") ||
+          current_document.hasOwnProperty("oneOf")) {
+        switch (property_name) {
+        case "type":
+        case "allOf":
+        case "anyOf":
+        case "oneOf":
+          return false;
+        }
+      }
+      switch (property_name) {
+      case "additionalItems":
+      case "items":
+      case "maxItems":
+      case "minItems":
+      case "uniqueItems":
+      case "required":
+      case "maxProperties":
+      case "minProperties":
+      case "additionalProperties":
+      case "properties":
+      case "patternProperties":
+      case "propertyNames":
+      case "maxLength":
+      case "minLength":
+      case "pattern":
+      case "multipleOf":
+      case "maximum":
+      case "exclusiveMaximum":
+      case "minimum":
+      case "exclusiveMinimum":
+        return false;
+      }
+    }
+    return true;
+  }
+
   render_object = function (g, json_field, default_dict, root, path, schema_path) {
     var required = json_field.required || [],
-      schema_editor = json_field.hasOwnProperty("properties") &&
-        json_field.properties.hasOwnProperty("$schema"),
+      schema_editor = checkSchemaIsMetaSchema(json_field),
       used_properties = {},
       properties,
       selector = {};
@@ -930,11 +1038,14 @@
           function (gadget_s, schema_alternatives) {
             var x,
               item_list = [["add property", "add property"]],
-              item;
+              item,
+              current_document = g.props.current_document;
             if (schema_alternatives) {
               for (x = 0; x < schema_alternatives.length; x += 1) {
                 item = schema_alternatives[x];
-                if (!used_properties.hasOwnProperty(item.value.property_name)) {
+                if (!used_properties.hasOwnProperty(item.value.property_name) &&
+                    !(schema_editor && current_document &&
+                      !filterPropery(item.value.property_name, current_document))) {
                   item_list.push([item.title, x]);
                 }
               }
@@ -1369,6 +1480,10 @@
       while (root.firstChild) {
         root.removeChild(root.firstChild);
       }
+      if (checkSchemaIsMetaSchema(schema)) {
+        g.props.updatePropertySelectors = true;
+        g.props.current_document = options.document;
+      }
       return render_field(g, property_name, "", schema,
         options.document, root, options.schema_path,
         {
@@ -1378,7 +1493,6 @@
           top: options.top
         })
         .push(function () {
-          g.listenEvents();
           return g.element;
         });
     })
@@ -1411,20 +1525,39 @@
 
       var field_list = this.props.inputs,
         i;
+      // on form data field
       for (i = 0; i < field_list.length; i = i + 1) {
         if (evt.target === field_list[i]) {
           return checkValidityAndNotifyChange(this);
         }
       }
     })
-    .declareJob('listenEvents', function () {
-      // XXX Disable
-      return;
-    })
 
     .declareMethod('getContent', function () {
       var g = this;
-      return getFormValuesAsJSONDict(g);
+      return getFormValuesAsJSONDict(g)
+        .push(function (data) {
+          if (g.props.updatePropertySelectors) {
+            g.props.current_document = data;
+            var key,
+              tasks = [];
+            for (key in g.props.add_custom_data) {
+              if (g.props.add_custom_data.hasOwnProperty(key)) {
+                tasks.push(g.props.add_custom_data[key].rerender());
+              }
+            }
+            if (tasks.length > 0) {
+              return RSVP.Queue()
+                .push(function () {
+                  return RSVP.all(tasks);
+                })
+                .push(function () {
+                  return data;
+                });
+            }
+          }
+          return data;
+        });
     });
 
 }(window, document, location, rJS, RSVP, jIO, tv4));
