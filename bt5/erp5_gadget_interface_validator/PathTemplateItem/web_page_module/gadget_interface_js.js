@@ -1,84 +1,125 @@
-/*jslint nomen: true, indent: 2, maxerr: 30, maxlen: 80 */
+/*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
 /*global DOMParser, document, rJS, RSVP, window,
          jIO*/
 (function (window, rJS, RSVP, DOMParser, jIO) {
   "use strict";
 
-  function fetchAppcacheData(appcache_url) {
-    return new RSVP.Queue()
-      .push(function () {
-        return jIO.util.ajax({
-          url: appcache_url,
-          dataType: 'text'
-        });
-      })
-      .push(function (evt) {
-        return evt.target.responseText.split('\n');
-      });
+  //////////////////////////////////////////////
+  // Interface reader
+  //////////////////////////////////////////////
+  function GadgetInterface() {
+    if (!(this instanceof GadgetInterface)) {
+      return new GadgetInterface();
+    }
+    this.title = '';
+    this.description = '';
+    this.method_list = [];
   }
 
-  function filterGadgetList(filename_list) {
-    var html_list = [],
-      js_list = [],
-      gadget_list = [],
-      ext,
-      file_name,
-      last_index,
-      i;
-    for (i = 0; i < filename_list.length; i += 1) {
-      last_index = filename_list[i].lastIndexOf('.');
-      file_name = filename_list[i].substr(0, last_index);
-      ext = filename_list[i].substr(last_index + 1);
-      if (ext === "html") {
-        html_list.push(file_name);
-      } else if (ext === "js") {
-        js_list.push(file_name);
-      }
+  GadgetInterface.parse = function (txt) {
+    var parser = (new DOMParser()).parseFromString(txt, 'text/html').body,
+      reader = new GadgetInterface(),
+      element,
+      sub_element,
+      method,
+      argument;
+    // Extract title
+    element = parser.firstElementChild;
+    if (element.tagName !== 'H1') {
+      throw new Error("Can't find gadget interface title from " +
+                      element.outerHTML);
     }
-    for (i = 0; i < html_list.length; i += 1) {
-      if (js_list.indexOf(html_list[i]) > -1) {
-        gadget_list.push(html_list[i] + ".html");
-      }
-    }
-    return gadget_list;
-  }
+    reader.title = element.textContent;
 
-  function getInterfaceListFromURL(gadget_url) {
-    return new RSVP.Queue()
-      .push(function () {
-        return jIO.util.ajax({
-          url: gadget_url,
-          dataType: 'text'
-        });
-      })
-      .push(function (evt) {
-        var document_element = (new DOMParser()).parseFromString(
-            evt.target.responseText,
-            'text/html'
-          ),
-          interface_list = [],
-          element,
-          i;
-        if (document_element.nodeType === 9 && document_element.head !== null) {
-          for (i = 0; i < document_element.head.children.length; i += 1) {
-            element = document_element.head.children[i];
-            if (element.href !== null &&
-                element.rel === "http://www.renderjs.org/rel/interface") {
-              interface_list.push(
-                rJS.getAbsoluteURL(element.getAttribute("href"),
-                                   window.location.href)
-              );
-            }
-          }
+    // Extract description
+    element = element.nextElementSibling;
+    if (element.tagName !== 'H3') {
+      throw new Error("Can't find gadget interface description from " +
+                      element.outerHTML);
+    }
+    reader.description = element.textContent;
+
+    // Extract method list
+    element = element.nextElementSibling;
+    if (element.tagName !== 'DL') {
+      throw new Error("Can't find gadget interface method list from " +
+                      element.outerHTML);
+    }
+    if (element.nextElementSibling !== null) {
+      // Ensure the HTML doesn't contain unexpected tags after methods
+      // definition
+      throw new Error("Unexpected element " + element.tagName +
+                      " from " + element.outerHTML);
+    }
+
+    // Parse all methods
+    element = element.firstElementChild;
+    while (element !== null) {
+      // Loop on all methods
+      method = {};
+
+      // Extract method title
+      if (element.tagName !== 'DT') {
+        throw new Error("Can't find gadget interface method name from " +
+                        element.outerHTML);
+      }
+      method.name = element.textContent;
+
+      // Extract method description
+      element = element.nextElementSibling;
+      if (element.tagName !== 'DD') {
+        throw new Error("Can't find gadget interface method description " +
+                        "from " + element.outerHTML);
+      }
+      method.description = element.textContent;
+
+      // Extract method argument list
+      element = element.nextElementSibling;
+      if (element.tagName !== 'DL') {
+        throw new Error("Can't find gadget interface method argument list " +
+                        "from " + element.outerHTML);
+      }
+
+      // Parse all arguments
+      method.argument_list = [];
+      sub_element = element.firstElementChild;
+      while (sub_element !== null) {
+        // Loop on all arguments
+        argument = {};
+
+        // Extract argument name
+        if (sub_element.tagName !== 'DT') {
+          throw new Error("Can't find gadget interface argument name from " +
+                          sub_element.outerHTML);
         }
-        return interface_list;
-      });
-  }
+        argument.name = sub_element.textContent;
+        argument.required =
+          sub_element.getAttribute("data-parameter-required") !== "optional";
+        argument.type = sub_element.getAttribute("data-parameter-type");
 
-  function verifyInterfaceDefinition(interface_url) {
-    //to verify if interface definition follows the correct template.
-    var error_message = "Interface definition is incorrect: " +
-                        "One or more required tags are missing.";
+        // Extract argument description
+        sub_element = sub_element.nextElementSibling;
+        if (sub_element.tagName !== 'DD') {
+          throw new Error("Can't find gadget interface argument description " +
+                          "from " + sub_element.outerHTML);
+        }
+        argument.description = sub_element.textContent;
+
+        // Next argument
+        method.argument_list.push(argument);
+        sub_element = sub_element.nextElementSibling;
+      }
+
+      // Next method
+      reader.method_list.push(method);
+      element = element.nextElementSibling;
+    }
+
+    return reader;
+  };
+
+  GadgetInterface.fetch = function (interface_url) {
+    var context = this;
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax({
@@ -87,61 +128,9 @@
         });
       })
       .push(function (evt) {
-        var doc = (new DOMParser()).parseFromString(evt.target.responseText,
-                                                    'text/html').body,
-          dl_list = doc.getElementsByTagName('dl'),
-          next_element = dl_list[0].firstElementChild,
-          method_len = dl_list.length - 1,
-          argument_len,
-          next_child_element,
-          i,
-          j;
-        if (dl_list[0].childElementCount !== 3 * method_len) {
-          throw new Error(error_message);
-        }
-        for (i = 0; i < method_len; i += 1) {
-          if ((next_element === null) ||
-              (next_element.localName.toLowerCase() !== 'dt')) {
-            throw new Error(error_message);
-          }
-          next_element = next_element.nextElementSibling;
-          if (next_element.localName.toLowerCase() !== 'dd') {
-            throw new Error(error_message);
-          }
-          next_element = next_element.nextElementSibling;
-          if (next_element.localName.toLowerCase() !== 'dl') {
-            throw new Error(error_message);
-          }
-
-          if (next_element.getElementsByTagName('dt').length !==
-              next_element.getElementsByTagName('dd').length) {
-            throw new Error(error_message);
-          }
-          argument_len = next_element.getElementsByTagName('dt').length;
-          next_child_element = next_element.firstElementChild;
-          for (j = 0; j < argument_len; j += 1) {
-            if ((next_child_element === null) ||
-                (next_child_element.localName.toLowerCase() !== 'dt')) {
-              throw new Error(error_message);
-            }
-            next_child_element = next_child_element.nextElementSibling;
-            if (next_child_element.localName.toLowerCase() !== 'dd') {
-              throw new Error(error_message);
-            }
-            next_child_element = next_child_element.nextElementSibling;
-          }
-          next_element = next_element.nextElementSibling;
-        }
+        return context.parse(evt.target.responseText);
       });
-  }
-
-  function verifyInterfaceDeclaration(interface_url, declared_interface_list) {
-    //to verify if gadget declares the interface.
-    if (declared_interface_list.indexOf(interface_url) > -1) {
-      return "Success";
-    }
-    throw new Error("Interface is not declared.");
-  }
+  };
 
 /*
   function verifyMethodSignature(interface_method, gadget_method) {
@@ -240,11 +229,8 @@
 
   function verifyAllMethod(interface_method_list, gadget_method_list) {
     //to verify all methods of gadget and interface.
-    return new RSVP.Queue()
-      .push(function () {
-        return verifyAllMethodDeclared(interface_method_list,
-                                       gadget_method_list[0]);
-      });
+    return verifyAllMethodDeclared(interface_method_list,
+                                   gadget_method_list);
 /*    Commented till figure out the way to fetch the argument length of a
       defined function.
       .push(function() {
@@ -254,128 +240,86 @@
 */
   }
 
-  rJS(window)
-
-    .declareMethod("getVerifyGadget", function (gadget_url) {
-      var interface_gadget = this;
-      return interface_gadget.declareGadget(gadget_url, {
-        scope: gadget_url
-      });
-    })
-
-    .declareMethod("getDeclaredGadgetInterfaceList", function (gadget_data) {
-      if (gadget_data.constructor === String) {
-        return getInterfaceListFromURL(gadget_data);
-      }
-      return gadget_data.getInterfaceList();
-    })
-
-    .declareMethod("getDeclaredGadgetMethodList", function (gadget) {
-      var declared_method_dict = {},
-        declared_method_list = [],
-        item;
-      for (item in gadget.constructor.prototype) {
-        if (gadget.constructor.prototype.hasOwnProperty(item)) {
-          if (!(/__/).test(item) && (item !== 'constructor') &&
-              (typeof gadget[item] === "function")) {
-            declared_method_dict[item] = gadget[item];
-          }
-        }
-      }
-      for (item in declared_method_dict) {
-        if (declared_method_dict.hasOwnProperty(item)) {
-          declared_method_list.push(item);
-        }
-      }
-      return RSVP.all([
-        declared_method_list //,
-        // gadget.getDeclaredMethodList()
-      ]);
-    })
-
-    .declareMethod("getGadgetListFromAppcache", function (appcache_url) {
-      return new RSVP.Queue()
-        .push(function () {
-          return fetchAppcacheData(appcache_url);
-        })
-        .push(function (filename_list) {
-          return filterGadgetList(filename_list);
-        });
-    })
-
-    .declareMethod("getAbsoluteURL", function (gadget, url) {
-      return gadget.getPath()
-        .push(function (base_url) {
-          return rJS.getAbsoluteURL(url, base_url);
-        });
-    })
-
-    .declareMethod("getInterfaceData", function (interface_url) {
-      var interface_data = {
-          name: "",
-          description: "",
-          method_list: []
-        };
-      return new RSVP.Queue()
-        .push(function () {
-          return jIO.util.ajax({
-            url: interface_url,
-            dataType: 'text'
+  function getOrDeclareGadget(context, gadget_to_check_url) {
+    return context.getDeclaredGadget(gadget_to_check_url)
+      .push(undefined, function (error) {
+        if (error instanceof rJS.ScopeError) {
+          // XXX Load in an iframe
+          return context.declareGadget(gadget_to_check_url, {
+            scope: gadget_to_check_url
           });
-        })
-        .push(function (evt) {
-          var doc = (new DOMParser()).parseFromString(evt.target.responseText,
-                                                      'text/html').body,
-            dl_list = doc.querySelectorAll('dl'),
-            dt_list = doc.querySelectorAll('dt'),
-            dd_list = doc.querySelectorAll('dd'),
-            method_len = dl_list.length - 1,
-            dt_count = 0,
-            dl_count = 1,
-            i,
-            method,
-            argument_len,
-            j,
-            argument_item;
-          interface_data.name = doc.querySelector('h1').innerHTML;
-          interface_data.description =
-            doc.querySelector('h3').innerHTML;
-          for (i = 0; i < method_len; i += 1) {
-            method = {
-              name: dt_list[dt_count].innerHTML,
-              description: dd_list[dt_count].innerHTML,
-              argument_list: []
-            };
-            argument_len = dl_list[dl_count].querySelectorAll('dt')
-                                            .length;
-            dt_count += 1;
-            dl_count += 1;
-            for (j = 0; j < argument_len; j += 1) {
-              argument_item = {
-                name: dt_list[dt_count].innerHTML,
-                description: dd_list[dt_count].innerHTML,
-                required: dt_list[dt_count]
-                  .getAttribute("data-parameter-required") !== "optional",
-                type: dt_list[dt_count].getAttribute("data-parameter-type")
-              };
-              dt_count += 1;
-              method.argument_list.push(argument_item);
+        }
+        throw error;
+      });
+  }
+
+  function getDefinedInterfaceMethodList(interface_url) {
+    return GadgetInterface.fetch(interface_url)
+      .push(function (interface_data) {
+        return interface_data.method_list;
+      });
+  }
+
+  function getGadgetMethodList(context, gadget_to_check_url) {
+    return getOrDeclareGadget(context, gadget_to_check_url)
+      .push(function (gadget) {
+        var declared_method_dict = {},
+          declared_method_list = [],
+          item;
+        for (item in gadget.constructor.prototype) {
+          if (gadget.constructor.prototype.hasOwnProperty(item)) {
+            if (!(/__/).test(item) && (item !== 'constructor') &&
+                (typeof gadget[item] === "function")) {
+              declared_method_dict[item] = gadget[item];
             }
-            interface_data.method_list.push(method);
           }
-          return interface_data;
-        });
-    })
+        }
+        for (item in declared_method_dict) {
+          if (declared_method_dict.hasOwnProperty(item)) {
+            declared_method_list.push(item);
+          }
+        }
+        return declared_method_list;
+          // gadget.getDeclaredMethodList()
+      });
+  }
 
-    .declareMethod("getDefinedInterfaceMethodList", function (interface_url) {
-      return this.getInterfaceData(interface_url)
-        .push(function (interface_data) {
-          return interface_data.method_list;
-        });
-    })
+  function verifyGadgetSingleInterfaceImplementation(interface_gadget,
+                                                     gadget_to_check_url,
+                                                     absolute_interface_url) {
+    var verify_result = {};
+    return new RSVP.Queue()
+      .push(function () {
+        return RSVP.all([
+          getDefinedInterfaceMethodList(
+            absolute_interface_url
+          ),
+          getGadgetMethodList(interface_gadget, gadget_to_check_url)
+        ]);
+      })
+      .push(function (method_list) {
+        return verifyAllMethod(method_list[0], method_list[1]);
+      })
+      .push(function () {
+        verify_result.result = true;
+        return verify_result;
+      }, function (error) {
+        var interface_name = absolute_interface_url.substr(
+          absolute_interface_url.lastIndexOf('/') + 1
+        ),
+          error_message;
+        error_message = "Interface Name: " + interface_name + "\n" +
+                        "Error Details : \n" + error.message + "\n";
+        verify_result.result = false;
+        verify_result.details = error_message;
+        return verify_result;
+      });
+  }
 
+  rJS(window)
+/*
     .declareMethod("getGadgetListImplementingInterface",
-                   function (interface_data, gadget_source_data) {
+                   function (interface_data, appcache_url) {
         var interface_gadget = this,
           interface_list,
           gadget_list;
@@ -397,25 +341,10 @@
             return required_interface_list;
           })
           .push(function (i_list) {
-            var source_gadget_list = [];
             interface_list = i_list;
-            if (!gadget_source_data) {
-              throw new Error(
-                "Invalid input: No gadget source information is provided."
-              );
-            }
-            if (gadget_source_data.constructor === Array) {
-              source_gadget_list = gadget_source_data;
-            } else if (gadget_source_data.constructor === String) {
-              source_gadget_list = interface_gadget.getGadgetListFromAppcache(
-                gadget_source_data
-              );
-            } else {
-              throw new Error(
-                "Invalid input: Invalid gadget source information is provided."
-              );
-            }
-            return source_gadget_list;
+            return interface_gadget.getGadgetListFromAppcache(
+              appcache_url
+            );
           })
           .push(function (g_list) {
             var i,
@@ -442,124 +371,71 @@
             return result_gadget_list;
           });
       })
+*/
 
-    .declareMethod("verifyGadgetSingleInterfaceImplementation",
-                   function (verify_gadget, interface_url) {
-        var interface_gadget = this,
-          absolute_interface_url,
-          verify_result = {};
-        return new RSVP.Queue()
-          .push(function () {
-            return RSVP.all([
-              interface_gadget.getDeclaredGadgetInterfaceList(verify_gadget),
-              interface_gadget.getAbsoluteURL(verify_gadget, interface_url)
-            ]);
-          })
-          .push(function (interface_detail) {
-            var declared_interface_list = interface_detail[0];
-            absolute_interface_url = interface_detail[1];
-            return verifyInterfaceDeclaration(absolute_interface_url,
-                                              declared_interface_list);
-          })
-          .push(function () {
-            return verifyInterfaceDefinition(absolute_interface_url);
-          })
-          .push(function () {
-            return RSVP.all([
-              interface_gadget.getDefinedInterfaceMethodList(
-                absolute_interface_url
-              ),
-              interface_gadget.getDeclaredGadgetMethodList(verify_gadget)
-            ]);
-          })
-          .push(function (method_list) {
-            return verifyAllMethod(method_list[0], method_list[1]);
-          })
-          .push(function () {
-            verify_result.result = true;
-            return verify_result;
-          }, function (error) {
-            var interface_name = absolute_interface_url.substr(
-              absolute_interface_url.lastIndexOf('/') + 1
-            ),
-              error_message;
-            error_message = "Interface Name: " + interface_name + "\n" +
-                            "Error Details : \n" + error.message + "\n";
-            verify_result.result = false;
-            verify_result.details = error_message;
-            return verify_result;
-          });
-      })
+    .declareMethod("render", function (options) {
+      return this.changeState(options);
+    })
 
-    .declareMethod("verifyGadgetInterfaceImplementation",
-                   function (gadget_data, interface_data) {
-        var interface_gadget = this,
-          verify_gadget,
-          interface_list,
-          verify_result = {};
-        return new RSVP.Queue()
-          .push(function () {
-            var required_gadget;
-            if (!gadget_data) {
-              throw new Error("Invalid input: No gadget data is provided.");
+    .onStateChange(function () {
+      var context = this,
+        gadget_to_check;
+
+      return getOrDeclareGadget(context, context.state.gadget_to_check_url)
+        .push(function (result) {
+          gadget_to_check = result;
+          return gadget_to_check.getInterfaceList();
+        })
+        .push(function (required_interface_list) {
+          var result_list = [],
+            i;
+          for (i = 0; i < required_interface_list.length; i += 1) {
+            result_list.push(
+              verifyGadgetSingleInterfaceImplementation(
+                context,
+                context.state.gadget_to_check_url,
+                required_interface_list[i]
+              )
+            );
+          }
+          return RSVP.all(result_list);
+        })
+        .push(function (result_list) {
+          var i,
+            failed = false,
+            error_message = '';
+          for (i = 0; i < result_list.length; i += 1) {
+            if (!result_list[i].result) {
+              failed = true;
+              error_message += (result_list[i].details + '\n');
             }
-            if (gadget_data.constructor === String) {
-              verify_result.gadget_url = gadget_data;
-              required_gadget = interface_gadget.getVerifyGadget(gadget_data);
-            } else {
-              required_gadget = gadget_data;
+          }
+          if (result_list.length === 0) {
+            context.element.firstElementChild.textContent = 'N/A';
+            if (!context.state.summary) {
+              context.element.firstElementChild.textContent +=
+                '\n' + error_message;
             }
-            return required_gadget;
-          })
-          .push(function (required_gadget) {
-            var required_interface_list = [];
-            verify_gadget = required_gadget;
-            if (!interface_data) {
-              required_interface_list =
-                interface_gadget.getDeclaredGadgetInterfaceList(verify_gadget);
-            } else if (interface_data.constructor === Array) {
-              required_interface_list = interface_data;
-            } else if (interface_data.constructor === String) {
-              required_interface_list.push(interface_data);
+          } else if (failed) {
+            context.element.firstElementChild.textContent = 'Failure';
+            if (!context.state.summary) {
+              context.element.firstElementChild.textContent +=
+                '\n' + error_message;
             }
-            return required_interface_list;
-          })
-          .push(function (required_interface_list) {
-            var result_list = [],
-              i;
-            interface_list = required_interface_list;
-            for (i = 0; i < interface_list.length; i += 1) {
-              result_list.push(
-                interface_gadget.verifyGadgetSingleInterfaceImplementation(
-                  verify_gadget,
-                  interface_list[i]
-                )
-              );
+          } else {
+            context.element.firstElementChild.textContent = 'Success';
+            if (!context.state.summary) {
+              context.element.firstElementChild.textContent +=
+                '\n' + error_message;
             }
-            return RSVP.all(result_list);
-          })
-          .push(function (result_list) {
-            var i,
-              failed = false,
-              error_message = '';
-            for (i = 0; i < result_list.length; i += 1) {
-              if (!result_list[i].result) {
-                failed = true;
-                error_message += (result_list[i].details + '\n');
-              }
-            }
-            if (failed) {
-              throw new Error(error_message);
-            }
-          })
-          .push(function () {
-            verify_result.result = true;
-            return verify_result;
-          }, function (error) {
-            verify_result.result = false;
-            verify_result.details = error.message;
-            return verify_result;
-          });
-      });
+          }
+        })
+        .push(undefined, function (error) {
+          console.warn(error);
+          context.element.firstElementChild.textContent =
+            "Error with gadget loading";
+        });
+
+    });
 
 }(window, rJS, RSVP, DOMParser, jIO));

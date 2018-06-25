@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -75,7 +73,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_interface_validator_router.html</string> </value>
+            <value> <string>gadget_erp5_page_validator_result_list.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_interface_validator_router_html</string> </value>
+            <value> <string>gadget_interface_validator_page_result_list_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -103,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Interface Validator Router</string> </value>
+            <value> <string>Gadget Interface Validator Result List</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -189,7 +187,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444136839.34</float>
+                        <float>1530085036.04</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -234,7 +232,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.44766.54929.30600</string> </value>
+                <value> <string>968.32488.17521.20138</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,7 +250,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446476270.36</float>
+                        <float>1530085029.94</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -309,7 +307,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444133648.59</float>
+                        <float>1530084873.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

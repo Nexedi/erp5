@@ -7,24 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_Access_contents_information_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Anonymous</string>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Authenticated</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Member</string>
-                <string>Owner</string>
-                <string>Reviewer</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -67,24 +49,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_View_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Anonymous</string>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Authenticated</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Member</string>
                 <string>Owner</string>
-                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -111,13 +76,6 @@
                         <value>
                           <list>
                             <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                            <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                            <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                            <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-                            <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
-                            <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
-                            <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
-                            <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                           </list>
                         </value>
                     </item>
@@ -140,88 +98,11 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Web Site/bug_tracker</string>
-                      </tuple>
-                    </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key>
-                      <tuple>
-                        <int>99</int>
-                        <string>ERP5 Web Site/e5g_ecommerce</string>
-                      </tuple>
-                    </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key>
-                      <tuple>
-                        <int>99</int>
-                        <string>ERP5 Web Site/e5g_ehr</string>
-                      </tuple>
-                    </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key>
-                      <tuple>
-                        <int>99</int>
-                        <string>ERP5 Web Site/e5g_eprocurement</string>
-                      </tuple>
-                    </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key>
-                      <tuple>
-                        <int>99</int>
                         <string>ERP5 Web Site/gadget_interface_validator</string>
                       </tuple>
                     </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key>
-                      <tuple>
-                        <int>99</int>
-                        <string>ERP5 Web Site/officejs_text_editor</string>
-                      </tuple>
-                    </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key>
-                      <tuple>
-                        <int>99</int>
-                        <string>ERP5 Web Site/renderjs_runner</string>
-                      </tuple>
-                    </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key>
-                      <tuple>
-                        <int>99</int>
-                        <string>ERP5 Web Site/spread</string>
-                      </tuple>
-                    </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -230,13 +111,13 @@
         <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_identity_criterion</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
@@ -246,87 +127,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>frontpage_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_frontpage_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_application_title</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_hateoas_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_view_action_category</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_default_view_action_reference</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_panel_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_router_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_jio_gadget_url</string> </value>
+                      <value> <string>configuration_content_security_policy</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -346,7 +147,57 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
+                      <value> <string>configuration_application_title</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_router_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
                       <value> <string>configuration_manifest_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_jio_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_panel_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_x_frame_options</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -366,7 +217,37 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_content_security_policy</string> </value>
+                      <value> <string>configuration_frontpage_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_webapp_manifest_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_stylesheet_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_default_jio_document_page_gadget_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -379,19 +260,19 @@
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAw=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_range_criterion</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAA0=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAA4=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
             </value>
         </item>
         <item>
@@ -406,8 +287,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>aggregate/web_page_module/rjs_gadget_erp5_html</string>
                 <string>caching_policy/must-revalidate</string>
+                <string>aggregate/web_page_module/rjs_gadget_erp5_launcher_html</string>
               </tuple>
             </value>
         </item>
@@ -417,31 +298,25 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\' \'unsafe-eval\'; font-src \'self\'; style-src \'self\' \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
-            <key> <string>configuration_default_view_action_reference</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>configuration_default_jio_document_page_gadget_url</string> </key>
+            <value> <string>validator_report</string> </value>
         </item>
         <item>
             <key> <string>configuration_frontpage_gadget_url</string> </key>
+            <value> <string>validator_result_list</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_header_gadget_url</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>configuration_hateoas_url</string> </key>
-            <value> <string>hateoas/</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_header_gadget_url</string> </key>
-            <value> <string>gadget_officejs_header.html</string> </value>
-        </item>
-        <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
-            <value> <string>gadget_erp5_jio.html</string> </value>
+            <value> <string>gadget_interface_validator_jio.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
@@ -453,17 +328,31 @@
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
-            <value> <string>gadget_interface_validator_router.html</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_translation.html</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_view_action_category</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>configuration_stylesheet_url</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>configuration_translation_gadget_url</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>configuration_webapp_manifest_url</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>configuration_x_frame_options</string> </key>
+            <value> <string>SAMEORIGIN</string> </value>
         </item>
         <item>
             <key> <string>container_layout</string> </key>
@@ -482,10 +371,6 @@
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>frontpage_gadget_url</string> </key>
-            <value> <string>gadget_woelfel_pt_frontpage.html</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -524,7 +409,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAA8=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
             </value>
         </item>
       </dictionary>
@@ -540,67 +425,11 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
-    </pickle>
-    <pickle>
-      <dictionary/>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
-    </pickle>
-    <pickle>
-      <dictionary/>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
-    </pickle>
-    <pickle>
-      <dictionary/>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
-    </pickle>
-    <pickle>
-      <dictionary/>
-    </pickle>
-  </record>
-  <record id="7" aka="AAAAAAAAAAc=">
-    <pickle>
-      <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
-    </pickle>
-    <pickle>
-      <dictionary/>
-    </pickle>
-  </record>
-  <record id="8" aka="AAAAAAAAAAg=">
-    <pickle>
-      <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
-    </pickle>
-    <pickle>
-      <dictionary/>
-    </pickle>
-  </record>
-  <record id="9" aka="AAAAAAAAAAk=">
-    <pickle>
-      <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
-    </pickle>
-    <pickle>
-      <dictionary/>
-    </pickle>
-  </record>
-  <record id="10" aka="AAAAAAAAAAo=">
-    <pickle>
       <global name="Length" module="BTrees.Length"/>
     </pickle>
     <pickle> <int>0</int> </pickle>
   </record>
-  <record id="11" aka="AAAAAAAAAAs=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -615,7 +444,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="12" aka="AAAAAAAAAAw=">
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
@@ -623,7 +452,7 @@
       <none/>
     </pickle>
   </record>
-  <record id="13" aka="AAAAAAAAAA0=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -638,7 +467,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="14" aka="AAAAAAAAAA4=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
@@ -646,7 +475,7 @@
       <none/>
     </pickle>
   </record>
-  <record id="15" aka="AAAAAAAAAA8=">
+  <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -659,13 +488,13 @@
                 <item>
                     <key> <string>category_publication_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAABA=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAABE=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -674,7 +503,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="16" aka="AAAAAAAAABA=">
+  <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
@@ -685,7 +514,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -711,7 +542,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444138397.81</float>
+                        <float>1530019487.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -720,14 +551,14 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>embedded</string> </value>
             </item>
           </dictionary>
         </list>
       </tuple>
     </pickle>
   </record>
-  <record id="17" aka="AAAAAAAAABE=">
+  <record id="10" aka="AAAAAAAAAAo=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
@@ -756,7 +587,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.50251.37668.4232</string> </value>
+                <value> <string>968.34333.9892.31675</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -774,7 +605,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1453976386.25</float>
+                        <float>1530201187.52</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -1,100 +1,238 @@
-/*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener */
-(function (window, rJS, Handlebars, $, RSVP, loopEventListener) {
+/*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
+/*global window, document, rJS, Handlebars, RSVP, Node, loopEventListener */
+(function (window, document, rJS, Handlebars, RSVP, Node, loopEventListener) {
   "use strict";
 
+  /////////////////////////////////////////////////////////////////
+  // temlates
+  /////////////////////////////////////////////////////////////////
+  // Precompile templates while loading the first gadget instance
   var gadget_klass = rJS(window),
-    source_header = gadget_klass.__template_element
+    template_element = gadget_klass.__template_element,
+    panel_template_header = Handlebars.compile(template_element
                          .getElementById("panel-template-header")
-                         .innerHTML,
-    panel_template_header = Handlebars.compile(source_header),
-    source_body = gadget_klass.__template_element
+                         .innerHTML),
+    panel_template_body = Handlebars.compile(template_element
                          .getElementById("panel-template-body")
-                         .innerHTML,
-    panel_template_body = Handlebars.compile(source_body);
+                         .innerHTML),
+    panel_template_body_list = Handlebars.compile(template_element
+                         .getElementById("panel-template-body-list")
+                         .innerHTML);
 
   gadget_klass
-
+    .setState({
+      visible: false,
+      desktop: false
+    })
+    //////////////////////////////////////////////
+    // acquired method
+    //////////////////////////////////////////////
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
 
-    // Assign the element to a variable
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
+    /////////////////////////////////////////////////////////////////
+    // declared methods
+    /////////////////////////////////////////////////////////////////
+    .declareMethod('toggle', function () {
+      return this.changeState({
+        visible: !this.state.visible
+      });
     })
-
-
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-          g.props.jelement = $(element.querySelector("div"));
-        });
-    })
-
-    .ready(function (g) {
-      g.props.jelement.panel({
-        display: "overlay",
-        position: "left",
-        theme: "d"
-        // animate: false
+    .declareMethod('close', function () {
+      return this.changeState({
+        visible: false
       });
     })
 
-
-    .declareMethod('render', function () {
-      var g = this;
-      return g.translateHtml(panel_template_header() + panel_template_body())
-        .push(function (my_translated_or_plain_html) {
-          g.props.jelement.html(my_translated_or_plain_html);
-          g.props.jelement.trigger("create");
+    .declareMethod('render', function (options) {
+      var erp5_document = options.erp5_document,
+        workflow_list,
+        view_list,
+        context = this;
+      if (erp5_document !== undefined) {
+        workflow_list = erp5_document._links.action_workflow || [];
+        view_list = erp5_document._links.action_object_view || [];
+        if (workflow_list.constructor !== Array) {
+          workflow_list = [workflow_list];
+        }
+        if (view_list.constructor !== Array) {
+          view_list = [view_list];
+        }
+        // Prevent has much as possible to modify the DOM panel
+        // stateChange prefer to compare strings
+        workflow_list = JSON.stringify(workflow_list);
+        view_list = JSON.stringify(view_list);
+      }
+      return context.getUrlParameter('editable')
+        .push(function (editable) {
+          return context.changeState({
+            workflow_list: workflow_list,
+            view_list: view_list,
+            global: true,
+            editable: options.editable || editable || false
+          });
         });
     })
 
-    .declareMethod('toggle', function () {
-      this.props.jelement.panel("toggle");
-    })
+    .onStateChange(function (modification_dict) {
+      var context = this,
+        queue = new RSVP.Queue(),
+        tmp_element;
 
-    .declareMethod('close', function () {
-      this.props.jelement.panel("close");
-    })
-
-
-
-    /////////////////////////////////////////////////////////////////
-    // declared services
-    /////////////////////////////////////////////////////////////////
-    .declareService(function () {
-      var panel_gadget,
-        form_list,
-        event_list,
-        i,
-        len;
-
-
-      function formSubmit() {
-        panel_gadget.toggle();
+      if (modification_dict.hasOwnProperty("visible")) {
+        if (this.state.visible) {
+          if (!this.element.classList.contains('visible')) {
+            this.element.classList.toggle('visible');
+          }
+        } else {
+          if (this.element.classList.contains('visible')) {
+            this.element.classList.remove('visible');
+          }
+        }
       }
 
-      panel_gadget = this;
-      form_list = panel_gadget.props.element.querySelectorAll('form');
-      event_list = [];
-
-      // XXX: not robust - Will break when search field is active
-      for (i = 0, len = form_list.length; i < len; i += 1) {
-        event_list[i] = loopEventListener(
-          form_list[i],
-          'submit',
-          false,
-          formSubmit
-        );
+      if (modification_dict.hasOwnProperty("global")) {
+        queue
+          .push(function () {
+            // XXX: Customize panel header!
+            return context.translateHtml(
+              panel_template_header() +
+                panel_template_body()
+            );
+          })
+          .push(function (my_translated_or_plain_html) {
+            tmp_element = document.createElement('div');
+            tmp_element.innerHTML = my_translated_or_plain_html;
+            context.element.querySelector("div").appendChild(tmp_element);
+            return context.listenResize();
+          });
       }
 
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all(event_list);
+      if (modification_dict.hasOwnProperty("editable")) {
+        queue
+          // Update the global links
+          .push(function () {
+            return RSVP.all([
+              context.getUrlFor({command: 'display', options: {page: "validator_form"}})
+            ]);
+          })
+          .push(function (result_list) {
+            return context.translateHtml(
+              panel_template_body_list({
+                "form_href": result_list[0]
+              })
+            );
+          })
+
+          .push(function (result) {
+            context.element.querySelector("ul").innerHTML = result;
+          });
+      }
+/*
+      if ((this.state.global === true) &&
+          (modification_dict.hasOwnProperty("desktop") ||
+          modification_dict.hasOwnProperty("editable") ||
+          modification_dict.hasOwnProperty("workflow_list") ||
+          modification_dict.hasOwnProperty("view_list"))) {
+        if (!(this.state.desktop && (this.state.view_list !== undefined))) {
+          queue
+            .push(function () {
+              gadget.element.querySelector("dl").textContent = '';
+            });
+        } else {
+          queue
+            .push(function () {
+              var i = 0,
+                promise_list = [],
+                workflow_list = JSON.parse(gadget.state.workflow_list),
+                view_list = JSON.parse(gadget.state.view_list);
+
+              for (i = 0; i < workflow_list.length; i += 1) {
+                promise_list.push(
+                  gadget.getUrlFor({
+                    command: 'change',
+                    options: {
+                      view: workflow_list[i].href,
+                      page: undefined
+                    }
+                  })
+                );
+              }
+              for (i = 0; i < view_list.length; i += 1) {
+                promise_list.push(
+                  gadget.getUrlFor({
+                    command: 'change',
+                    options: {
+                      view: view_list[i].href,
+                      page: undefined
+                    }
+                  })
+                );
+              }
+              return RSVP.all(promise_list);
+            })
+            .push(function (result_list) {
+              var i,
+                result_workflow_list = [],
+                result_view_list = [],
+                workflow_list = JSON.parse(gadget.state.workflow_list),
+                view_list = JSON.parse(gadget.state.view_list);
+
+              for (i = 0; i < workflow_list.length; i += 1) {
+                result_workflow_list.push({
+                  title: workflow_list[i].title,
+                  href: result_list[i]
+                });
+              }
+              for (i = 0; i < view_list.length; i += 1) {
+                result_view_list.push({
+                  title: view_list[i].title,
+                  href: result_list[i + workflow_list.length]
+                });
+              }
+              gadget.element.querySelector("dl").innerHTML = panel_template_body_desktop({
+                workflow_list: result_workflow_list,
+                view_list: result_view_list
+              });
+            });
+        }
+      }
+*/
+      return queue;
+    })
+
+    .declareJob('listenResize', function () {
+      // resize should be only trigger after the render method
+      // as displaying the panel rely on external gadget (for translation for example)
+      var result,
+        event,
+        context = this;
+      function extractSizeAndDispatch() {
+        if (window.matchMedia("(min-width: 85em)").matches) {
+          return context.changeState({
+            desktop: true
+          });
+        }
+        return context.changeState({
+          desktop: false
         });
-    });
+      }
+      result = loopEventListener(window, 'resize', false,
+                                 extractSizeAndDispatch);
+      event = document.createEvent("Event");
+      event.initEvent('resize', true, true);
+      window.dispatchEvent(event);
+      return result;
+    })
 
+    .onEvent('click', function (evt) {
+      if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
+          (evt.target.tagName === 'BUTTON')) {
+        return this.toggle();
+      }
+    }, false, false);
 
-}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));
+}(window, document, rJS, Handlebars, RSVP, Node, loopEventListener));

@@ -20,34 +20,32 @@
   <td>${base_url}/web_site_module/${application_title}/</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
+<tal:block tal:define="filter_section_configuration python: {'key': 'COLUMN_appcache_url', 'value': 'gadget_interface_validator_test.appcache', 'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/set_filter_section" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_filter" />
+
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>waitForTextPresent</td>
+  <td>In Progress</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//form[@class='interface-validation-form']</td>
+  <td>assertTextPresent</td>
+  <td>In Progress</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='Submit']</td>
+  <td>waitForTextNotPresent</td>
+  <td>In Progress</td>
   <td></td>
 </tr>
 <tr>
-  <td>type</td>
-  <td>name=appcache_url</td>
-  <td>${application_title}_test.appcache</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//input[@name='Submit']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//table</td>
+  <td>assertTextNotPresent</td>
+  <td>In Progress</td>
   <td></td>
 </tr>
 
@@ -55,80 +53,41 @@
   <td colspan="3"><b>Check correct use case</b></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//tr[@id='${application_title}_test_correct_implemented_gadget']//td[@class='validation_status final']</td>
-  <td></td>
+  <td>assertText</td>
+  <td>//tbody/tr/td</td>
+  <td>gadget_interface_validator_test_correct_implemented_gadget.html</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tr[@id='${application_title}_test_correct_implemented_gadget']//td[@class='validation_status final']</td>
+  <td>//tbody/tr/td[2]</td>
   <td>Success</td>
-</tr>
-
-<tr>
-  <td colspan="3"><b>Check not existent gadget</b></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//tr[@id='${application_title}_test_nonexistent_gadget']//td[@class='validation_status final']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//tr[@id='${application_title}_test_nonexistent_gadget']//td[@class='validation_status final']</td>
-  <td>Error with gadget loading</td>
 </tr>
 
 <tr>
   <td colspan="3"><b>Check interface with invalid syntax</b></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//tr[@id='${application_title}_test_invalid_interface_gadget']//td[@class='validation_status final']</td>
-  <td></td>
+  <td>assertText</td>
+  <td>//tbody/tr[2]/td</td>
+  <td>gadget_interface_validator_test_invalid_interface_gadget.html</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tr[@id='${application_title}_test_invalid_interface_gadget']//td[@class='validation_status final']</td>
+  <td>//tbody/tr[2]/td[2]</td>
   <td>Failure</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//tr[@id='${application_title}_test_invalid_interface_gadget']//td[@class='validation_status final']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//tr[@id='${application_title}_test_invalid_interface_gadget_errordata']//td[@class='errordata']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//tr[@id='${application_title}_test_invalid_interface_gadget_errordata']//td[@class='errordata']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//tr[@id='${application_title}_test_invalid_interface_gadget']//td[@class='validation_status final']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//tr[@id='${application_title}_test_invalid_interface_gadget_errordata']//td[@class='errordata']</td>
-  <td></td>
 </tr>
 
 <tr>
   <td colspan="3"><b>Check missing interface</b></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//tr[@id='${application_title}_test_missing_interface_declaration_gadget']//td[@class='validation_status final']</td>
-  <td></td>
+  <td>assertText</td>
+  <td>//tbody/tr[3]/td</td>
+  <td>gadget_interface_validator_test_missing_interface_declaration_gadget.html</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tr[@id='${application_title}_test_missing_interface_declaration_gadget']//td[@class='validation_status final']</td>
+  <td>//tbody/tr[3]/td[2]</td>
   <td>N/A</td>
 </tr>
 
@@ -136,85 +95,44 @@
   <td colspan="3"><b>Check missing method declaration</b></td>
 </tr>
 <tr>
+  <td>assertText</td>
+  <td>//tbody/tr[4]/td</td>
+  <td>gadget_interface_validator_test_missing_method_declaration_gadget.html</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tbody/tr[4]/td[2]</td>
+  <td>Failure</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check not existent gadget</b></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tbody/tr[5]/td</td>
+  <td>gadget_interface_validator_test_nonexistent_gadget.html</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tbody/tr[5]/td[2]</td>
+  <td>Error with gadget loading</td>
+</tr>
+
+<!--tr>
+  <td colspan="3"><b>Check unknown method declaration</b></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
-  <td>//tr[@id='${application_title}_test_missing_method_declaration_gadget']//td[@class='validation_status final']</td>
+  <td>//tr[@id='${application_title}_test_unknown_method_declaration_gadget']//td[@class='validation_status final']</td>
   <td></td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tr[@id='${application_title}_test_missing_method_declaration_gadget']//td[@class='validation_status final']</td>
+  <td>//tr[@id='${application_title}_test_unknown_method_declaration_gadget']//td[@class='validation_status final']</td>
   <td>Failure</td>
-</tr>
+</tr-->
 
-
-<tr>
-  <td colspan="3"><b>Check invalid appcache</b></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Interface Validation Form']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Interface Validation Form']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//form[@class='interface-validation-form']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>name=appcache_url</td>
-  <td>${application_title}_invalid.appcache</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//input[@name='Submit']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Error</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Error</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Home']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//form[@class='interface-validation-form']</td>
-  <td></td>
-</tr>
 </tbody></table>
 </body>
 </html>

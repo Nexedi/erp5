@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -75,7 +73,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_interface_validator_page_report.html</string> </value>
+            <value> <string>gadget_erp5_page_validator_report.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -103,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Interface Validator Reportpage</string> </value>
+            <value> <string>Gadget Interface Validator Report</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -189,7 +187,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444139553.25</float>
+                        <float>1530102579.71</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -234,7 +232,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.45995.23548.62924</string> </value>
+                <value> <string>968.32782.54767.17032</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,7 +250,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445964486.74</float>
+                        <float>1530102674.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -309,7 +307,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444138661.93</float>
+                        <float>1530102237.61</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

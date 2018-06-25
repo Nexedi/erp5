@@ -100,34 +100,75 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 06 Feb 2015 15:31:33 +0000\n
-# XXX + fonts\n
-# images/ajax-loader.gif\n
+# generated on Thu, 28 Jun 2018 15:31:33 +0000\n
 CACHE:\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
-URI.js\n
-gadget_erp5.css\n
+favicon.ico\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.woff2\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg#fontawesomeregular\n
+erp5_launcher_nojqm.js\n
+gadget_erp5_nojqm.css\n
+gadget_erp5_configure_editor.html\n
+gadget_erp5_configure_editor.js\n
+gadget_erp5_editor_panel.html\n
+gadget_erp5_editor_panel.js\n
+gadget_erp5_field_gadget.html\n
+gadget_erp5_field_gadget.js\n
+gadget_erp5_field_listbox.html\n
+gadget_erp5_field_listbox.js\n
+gadget_erp5_field_readonly.html\n
+gadget_erp5_field_readonly.js\n
+gadget_erp5_field_string.html\n
+gadget_erp5_field_string.js\n
+gadget_erp5_form.html\n
+gadget_erp5_form.js\n
+gadget_erp5_header.html\n
+gadget_erp5_header.js\n
+gadget_erp5_label_field.html\n
+gadget_erp5_label_field.js\n
+gadget_erp5_notification.html\n
+gadget_erp5_notification.js\n
+gadget_erp5_pt_form_list.html\n
+gadget_erp5_pt_form_list.js\n
+gadget_erp5_pt_form_view.html\n
+gadget_erp5_pt_form_view.js\n
+gadget_erp5_router.html\n
+gadget_erp5_router.js\n
+gadget_erp5_search_editor.html\n
+gadget_erp5_search_editor.js\n
+gadget_erp5_searchfield.html\n
+gadget_erp5_searchfield.js\n
+gadget_erp5_sort_editor.html\n
+gadget_erp5_sort_editor.js\n
 gadget_global.js\n
+gadget_html5_element.html\n
+gadget_html5_element.js\n
+gadget_html5_input.html\n
+gadget_html5_input.js\n
+gadget_html5_textarea.html\n
+gadget_html5_textarea.js\n
+gadget_erp5_global.js\n
 gadget_jio.html\n
 gadget_jio.js\n
-gadget_translate.html\n
-gadget_translate.js\n
+gadget_translation.html\n
+gadget_translation.js\n
+gadget_translation_data.js\n
 handlebars.js\n
 jiodev.js\n
-jquery.js\n
-jquerymobile.css\n
-jquerymobile.js\n
 renderjs.js\n
 rsvp.js\n
-gadget_interface_validator_page_form.html\n
-gadget_interface_validator_page_form.js\n
-gadget_interface_validator_page_report.html\n
-gadget_interface_validator_page_report.js\n
+gadget_erp5_page_validator_report.html\n
+gadget_erp5_page_validator_report.js\n
+gadget_erp5_page_validator_result_list.html\n
+gadget_erp5_page_validator_result_list.js\n
 gadget_interface_validator_panel.html\n
 gadget_interface_validator_panel.js\n
-gadget_interface_validator_reportpage_interface.html\n
-gadget_interface_validator_router.html\n
-gadget_interface_validator_router.js\n
+gadget_interface_validator_jio.html\n
+gadget_interface_validator_jio.js\n
+gadget_interface.html\n
+gadget_interface.js\n
 NETWORK:\n
 *</string> </value>
         </item>
@@ -264,7 +305,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.52766.8191.15001</string> </value>
+                <value> <string>968.34429.27639.36556</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -282,7 +323,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1476100685.39</float>
+                        <float>1530201523.97</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
