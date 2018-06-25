@@ -110,7 +110,7 @@
             module_list.push(document_list[i]);
           }
           pushNewCard();
-          if (other_module_list) {
+          if (other_module_list.length) {
             card_list.push({
               business_application_translated_title: translated_other_title,
               module_list: other_module_list
