@@ -36,7 +36,7 @@
           var portal_type = options.portal_type,
             ext = file_ext[portal_type],
             ret = {
-              title: "Untitled Document",
+              title: "Untitled Schema",
               portal_type: "JSON Schema",
               parent_relative_url: "schema_module",
               content_type: content_type[portal_type] || undefined
