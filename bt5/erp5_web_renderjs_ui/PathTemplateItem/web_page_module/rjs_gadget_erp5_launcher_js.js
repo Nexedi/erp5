@@ -472,10 +472,11 @@
         });
     })
 
-    .allowPublicAcquisition("updatePanel", function updatePanel(param_list) {
+    .allowPublicAcquisition("updatePanel", function (param_list) {
       var gadget = this;
       initPanelOptions(gadget);
       gadget.props.panel_argument_list = param_list[0];
+      return updatePanel(gadget);
     })
 
     .allowPublicAcquisition('hidePanel', function hidePanel(param_list) {
