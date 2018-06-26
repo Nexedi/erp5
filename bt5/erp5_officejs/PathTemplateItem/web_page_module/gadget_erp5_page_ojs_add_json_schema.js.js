@@ -20,6 +20,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("updatePanel", "updatePanel")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("redirect", "redirect")
@@ -48,6 +49,9 @@
         .push(function (id) {
           return gadget.jio_putAttachment(id, 'data',
             new Blob(['{"$schema": "http://json-schema.org/draft-04/schema#" }']))
+            .push(function () {
+              return gadget.updatePanel({editable: true});
+            })
             .push(function () {
               return gadget.redirect({
                 command: 'display',
