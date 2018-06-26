@@ -486,11 +486,13 @@ and handling data send&receive.
      * is unfortunately constructing <a> and clicking on it
      */
     .declareJob("forceDownload", function forceDownload(attachment) {
+      /*jslint regexp: true */
       var attachment_data = attachment.target.response,
         filename = /(?:^|;)\s*filename\s*=\s*"?([^";]+)/i.exec(
           attachment.target.getResponseHeader("Content-Disposition") || ""
         ),
         a_tag = document.createElement("a");
+      /*jslint regexp: false */
 
       if (attachment.target.responseType !== "blob") {
         attachment_data = new Blob(
