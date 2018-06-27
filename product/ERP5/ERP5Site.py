@@ -1249,6 +1249,14 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
                   'portal_balance_transaction_line_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalDomainTypeList')
+  def getPortalDomainTypeList(self):
+    """
+      Return domain types.
+    """
+    return self._getPortalGroupedTypeList('domain')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalCurrentInventoryStateList')
   def getPortalCurrentInventoryStateList(self):
     """

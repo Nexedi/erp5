@@ -309,6 +309,8 @@ class ERP5TypeInformation(XMLObject,
       'personal_item',
       # Base
       'entity', 'login',
+      # Core
+      'domain',
       # Wendelin
       'device',
       'device_configuration',
