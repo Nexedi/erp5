@@ -226,7 +226,7 @@
 
       gadget.element.querySelector(".search_ul").innerHTML = "";
       // Display the airplane link or the search button
-      if ((gadget.state.value_relative_url) || (gadget.state.value_text)) {
+      if ((gadget.state.value_relative_url) || (gadget.state.value_text !== undefined)) {
         createEditableLink(gadget, JUMP_UNKNOWN_CLASS_STR);
       } else {
         return createEditableButton(gadget, SEARCH_CLASS_STR);
