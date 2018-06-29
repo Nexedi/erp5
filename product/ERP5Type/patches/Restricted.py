@@ -222,6 +222,13 @@ allow_module('StringIO')
 allow_type(type(f_cStringIO))
 allow_type(type(f_StringIO))
 
+allow_module('xfw')
+try:
+  import xfw
+  allow_type(xfw.FieldList)
+except ImportError:
+  pass
+
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
 allow_module('datetime')
 import datetime
