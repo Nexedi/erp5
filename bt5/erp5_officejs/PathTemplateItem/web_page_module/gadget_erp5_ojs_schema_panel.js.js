@@ -22,20 +22,6 @@
                                   .getElementById("panel-template-body-desktop")
                                   .innerHTML);
 
-  function createElement(type, props, innerText) {
-    var element = document.createElement(type),
-      key;
-    for (key in props) {
-      if (props.hasOwnProperty(key)) {
-        element.setAttribute(key, props[key]);
-      }
-    }
-    if (innerText) {
-      element.innerText = innerText;
-    }
-    return element;
-  }
-
   gadget_klass
     .setState({
       visible: false,
@@ -84,11 +70,31 @@
         workflow_list = JSON.stringify(workflow_list);
         view_list = JSON.stringify(view_list);
       }
-      return context.getUrlParameter('editable')
-        .push(function (editable) {
+      return RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            context.jio_allDocs({
+              "query": 'portal_type:"JSON Schema"',
+              "limit": [0, 31],
+              "select_list": ["title", "reference"],
+              "sort_on": [["title", "descending"]]
+            })
+              .push(function (result) {
+                return JSON.stringify(result.data.rows);
+              })
+              .push(undefined, function () {
+                return "[]";
+              }),
+            context.getUrlParameter('editable')
+          ]);
+        })
+        .push(function (ret) {
+          var schema_list = ret[0],
+            editable = ret[1];
           return context.changeState({
             workflow_list: workflow_list,
             view_list: view_list,
+            schema_list: schema_list,
             global: true,
             editable: options.editable || editable || false
           });
@@ -136,78 +142,90 @@
               focus: false
             });
           })
-
+          .push(function () {
+            return context.declareGadget('gadget_erp5_field_multicheckbox.html', {
+              scope: "editable_mode",
+              element: tmp_element.querySelector('[data-gadget-scope="editable_mode"]')
+            });
+          })
           .push(function () {
             context.element.querySelector("div").appendChild(tmp_element);
             return context.listenResize();
           });
       }
 
-      if (modification_dict.hasOwnProperty("editable")) {
+      if (modification_dict.hasOwnProperty("schema_list") ||
+          modification_dict.hasOwnProperty("editable")) {
         queue
-          // Update the global links
           .push(function () {
-            return context.jio_allDocs({
-              "query": 'portal_type:"JSON Schema"',
-              "limit": [0, 31],
-              "select_list": ["title", "reference"],
-              "sort_on": [["title", "descending"]]
-            });
-          })
-          .push(function (result) {
-            return result.data.rows;
-          })
-          .push(undefined, function () {
-            return [];
-          })
-          .push(function (result) {
-            function gen_element(row, css) {
-              return context.getUrlFor({command: 'display', options: {
+            function gen_element(element, title, css, accesskey) {
+              return context.getUrlFor(element)
+                .push(function (url) {
+                  return {
+                    title: title,
+                    href: url,
+                    icon_class: css,
+                    accesskey: accesskey
+                  };
+                });
+            }
+            var i,
+              row,
+              tasks = [],
+              schema_list = JSON.parse(context.state.schema_list);
+            if (context.state.editable) {
+              tasks.push(gen_element({command: 'display', options: {page: "ojs_schema_document_list"}},
+                "Schemas", "search", "s"));
+            }
+            for (i = 0; i < schema_list.length; i += 1) {
+              row = schema_list[i];
+              tasks.push(gen_element({command: 'display', options: {
                   page: "ojs_schema_document_list",
                   portal_type: "JSON Document",
                   schema: row.id,
                   schema_title: row.value.title
-              }})
-                .push(function (url) {
-                  var element = createElement("li");
-                  element.appendChild(createElement("a", {
-                    href: url,
-                    class: "ui-btn ui-btn-icon-left " + css
-                  }, row.value.title));
-                  return element.outerHTML;
-                });
+                }}, row.value.title, "search"));
             }
-            var i,
-              tasks = [
-                context.getUrlFor({command: 'display', options: {page: "ojs_schema_document_list"}}),
-                context.getUrlFor({command: 'display', options: {page: "ojs_configurator"}}),
-                context.getUrlFor({command: 'display', options: {page: "ojs_sync", 'auto_repair': true}}),
-                context.getUrlFor({command: 'index', options: {page: "ojs_multi_upload"}})
-              ];
-            for (i = 0; i < result.length; i += 1) {
-              tasks.push(gen_element(result[i], "ui-icon-search"));
+            tasks.push(gen_element({command: 'display', options: {page: "ojs_sync", 'auto_repair': true}},
+              "Synchronize", "refresh"));
+            tasks.push(gen_element({command: 'display', options: {page: "ojs_configurator"}},
+              "Storages", "dropbox"));
+            if (context.state.editable) {
+              tasks.push(gen_element({command: 'index', options: {page: "ojs_multi_upload"}},
+                "Upload", "upload"));
             }
             return RSVP.all(tasks);
           })
           .push(function (result_list) {
-            var i,
-                html = "";
-            for (i = 4; i < result_list.length; i += 1 ) {
-              html += result_list[i];
-            }
             return context.translateHtml(
-              panel_template_body_list({
-                "document_list_href": result_list[0],
-                "list": new Handlebars.SafeString(html),
-                "storage_href": result_list[1],
-                "sync_href": result_list[2],
-                "multi_upload_href": result_list[3]
-              })
+              panel_template_body_list(result_list)
             );
           })
 
           .push(function (result) {
             context.element.querySelector("ul").innerHTML = result;
+
+            // Update the checkbox field value
+            return RSVP.all([
+              context.getDeclaredGadget("editable_mode"),
+              context.translate("Developer Mode")
+            ]);
+          })
+          .push(function (result_list) {
+            var value = [],
+              search_gadget = result_list[0],
+              title = result_list[1];
+            if (context.state.editable) {
+              value = ['editable'];
+            }
+            return search_gadget.render({field_json: {
+                editable: true,
+                name: 'editable',
+                key: 'editable',
+                hidden: false,
+                items: [[title, 'editable']],
+                default: value
+              }});
           });
       }
 
@@ -318,9 +336,9 @@
     })
 
     .allowPublicAcquisition('notifyChange', function (argument_list, scope) {
-      if (scope === 'erp5_checkbox') {
+      if (scope === 'editable_mode') {
         var context = this;
-        return context.getDeclaredGadget('erp5_checkbox')
+        return context.getDeclaredGadget('editable_mode')
           .push(function (gadget) {
             return gadget.getContent();
           })
@@ -334,7 +352,7 @@
       }
       // Typing a search query should not modify the header status
       return;
-    })
+    }, {mutex: 'changestate'})
     .allowPublicAcquisition('notifyValid', function () {
       // Typing a search query should not modify the header status
       return;

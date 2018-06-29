@@ -36,16 +36,15 @@
         </form>
 
         <ul data-role="listview" class="ui-listview" data-enhanced="true"></ul>
+        <div data-gadget-url="gadget_erp5_field_checkbox.html"
+             data-gadget-scope="editable_mode"
+             data-gadget-sandbox="public"></div>
         <dl></dl>
       </div>
     </script>
 
     <script id="panel-template-body-list" type="text/x-handlebars-template">
-      <li><a href="{{document_list_href}}" class="ui-btn ui-btn-icon-left ui-icon-search" data-i18n="Schemas" accesskey="s">Schemas</a></li>
-      {{list}}
-      <li><a href="{{sync_href}}" class="ui-btn ui-btn-icon-left ui-icon-refresh" data-i18n="Synchronize">Synchronize</a></li>
-      <li><a href="{{storage_href}}" class="ui-btn ui-btn-icon-left ui-icon-dropbox" data-i18n="Storages">Storages</a></li>
-      <li><a href="{{multi_upload_href}}" class="ui-btn ui-btn-icon-left ui-icon-upload" data-i18n="Upload">Upload</a></li>
+      {{#each this}}<li><a href="{{href}}" class="ui-btn ui-btn-icon-left ui-icon-{{icon_class}}" {{#if accesskey}}accesskey="{{accesskey}}"{{/if}} data-i18n="{{title}}">{{title}}</a></li>{{/each}}
     </script>
 
     <script id="panel-template-body-desktop" type="text/x-handlebars-template">
