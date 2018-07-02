@@ -28,19 +28,6 @@ ORDER BY
   During normal operation, sorting by date (as 2nd criteria) is fairer
   for users and reduce the probability to do the same work several times
   (think of an object that is modified several times in a short period of time).
-  However, current implementation is not optimal when reindexing a whole site
-  with several mount points (to different ZEO servers), because modules may not
-  be processed in parallel. If you want to speed up ERP5Site_reindexAll,
-  consider:
-  - ordering by 'priority, RAND()' temporarily;
-  - or better, hack ERP5Site_reindexAll so that all reindex messages have
-    identical/random dates (hint: add optional parameter to Folder_reindexAll
-    and Folder_reindexObjectList in order to forward a date from
-    ERP5Site_reindexAll, e.g. current date would work if MySQL
-    shuffles enough lines with same priority/date).
-  - or even better, use NEO <http://www.neoppod.org/>
-  For higher concurrency than 10 or 20 nodes of activity, it might be required
-  to add a random start point to reduce the risk of MySQL locks.
 </dtml-comment>
   priority, date
 LIMIT <dtml-sqlvar count type="int">
