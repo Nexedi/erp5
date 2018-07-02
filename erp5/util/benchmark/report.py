@@ -329,7 +329,7 @@ def drawBarDiagram(axes, stat_list, only_average=False):
                        width, color='r', label='Mean')
 
   axes.errorbar(numpy.arange(0.5, len(stat_list)), mean_list,
-                yerr=[yerr_lower, yerr_upper], fmt=None,
+                yerr=[yerr_lower, yerr_upper], fmt='none',
                 label='Standard deviation')
 
   if not only_average:
