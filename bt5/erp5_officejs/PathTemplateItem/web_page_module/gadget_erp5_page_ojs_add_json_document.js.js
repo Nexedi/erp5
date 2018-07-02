@@ -47,7 +47,7 @@
           return gadget.jio_post(ret);
         })
         .push(function (id) {
-          return gadget.jio_putAttachment(id, 'data', new Blob(["{}"]))
+          return gadget.jio_putAttachment(id, 'data', new Blob(['""']))
             .push(function () {
               return gadget.redirect({
                 command: 'display',
