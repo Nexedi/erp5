@@ -1699,8 +1699,8 @@ div[data-gadget-scope='erp5_searchfield'] {
               display: inline-block;
               width: 100%;
 
-              a {
-                // stretch first link to full width (positioned relative to <tr>)
+              a, label {
+                // stretch first link/label to full width (positioned relative to <tr>)
                 position: absolute;
                 width: 100%;
                 top: 0;
@@ -1710,24 +1710,25 @@ div[data-gadget-scope='erp5_searchfield'] {
                 text-overflow: ellipsis;
                 // Reduce the gap between the first and second visible lines
                 padding-top: @margin-size;
+              }
 
-                &:after {
-                  // XXX copy/pasted
-                  font-family: FontAwesome;
-                  content: "\f0da";
-                  font-size: 1.25em;
-                  position: absolute;
-                  right: @margin-size;
-                  top: 50%;
-                  margin-top: -0.75em;
+              // In link mode, lines will display a icon on the right
+              // So that user knows he can goes to the document line
+              a:after {
+                // XXX copy/pasted
+                font-family: FontAwesome;
+                content: "\f0da";
+                font-size: 1.25em;
+                position: absolute;
+                right: @margin-size;
+                top: 50%;
+                margin-top: -0.75em;
 
-                  background-color: @colorbackground;
-                  border-radius: 0.5em;
-                  width: 1em;
-                  text-align: center;
-                  line-height: 1em;
-                }
-
+                background-color: @colorbackground;
+                border-radius: 0.5em;
+                width: 1em;
+                text-align: center;
+                line-height: 1em;
               }
 
               ~ th, ~ td {
@@ -1738,15 +1739,19 @@ div[data-gadget-scope='erp5_searchfield'] {
                 display: inline;
                 word-break: break-word;
 
-                a {
+                a, label {
                   pointer-events: none;
                   // Add contrast with the first column content
                   color: @grey;
                 }
 
-                &:not(:last-child) a:not(:empty):after {
-                  // add tide
-                  content: " ~ ";
+                &:not(:last-child) {
+                  a, label {
+                    &:not(:empty):after {
+                      // add tide
+                      content: " ~ ";
+                    }
+                  }
                 }
               }
             }
@@ -1792,6 +1797,43 @@ div[data-gadget-scope='erp5_searchfield'] {
       }
     }
   }
+
+
+  tbody {
+    tr {
+      td {
+        // In select mode, hide the listbox line checkbox.
+        // Instead, display an icon before the first label
+        // (it is only to make the checkbox rendering nicer)
+        &:first-child {
+          input.hide_element[type="checkbox"] {
+            display: none;
+            & + label::before {
+                width: 1em;
+                display: inline-block;
+                font-weight: bold;
+                content: '☐';
+                color: @border-color;
+                margin-right: @margin-size;
+              }
+            &:checked + label {
+              // font-weight: bold;
+              &::before {
+                color: @colortextboxforeground;
+                content: '☒';
+              }
+            }
+          }
+        }
+        label {
+          // Show a pointer on top of label so that user knows he can click
+          // to change the checkbox
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
 }
 
 /**********************************************

@@ -1457,7 +1457,9 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
     width: 100%;
   }
   .document_table table tbody tr td:first-child a,
-  .document_table table tbody tr th:first-child a {
+  .document_table table tbody tr th:first-child a,
+  .document_table table tbody tr td:first-child label,
+  .document_table table tbody tr th:first-child label {
     position: absolute;
     width: 100%;
     top: 0;
@@ -1493,14 +1495,22 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
   .document_table table tbody tr td:first-child ~ th a,
   .document_table table tbody tr th:first-child ~ th a,
   .document_table table tbody tr td:first-child ~ td a,
-  .document_table table tbody tr th:first-child ~ td a {
+  .document_table table tbody tr th:first-child ~ td a,
+  .document_table table tbody tr td:first-child ~ th label,
+  .document_table table tbody tr th:first-child ~ th label,
+  .document_table table tbody tr td:first-child ~ td label,
+  .document_table table tbody tr th:first-child ~ td label {
     pointer-events: none;
     color: #767676;
   }
   .document_table table tbody tr td:first-child ~ th:not(:last-child) a:not(:empty):after,
   .document_table table tbody tr th:first-child ~ th:not(:last-child) a:not(:empty):after,
   .document_table table tbody tr td:first-child ~ td:not(:last-child) a:not(:empty):after,
-  .document_table table tbody tr th:first-child ~ td:not(:last-child) a:not(:empty):after {
+  .document_table table tbody tr th:first-child ~ td:not(:last-child) a:not(:empty):after,
+  .document_table table tbody tr td:first-child ~ th:not(:last-child) label:not(:empty):after,
+  .document_table table tbody tr th:first-child ~ th:not(:last-child) label:not(:empty):after,
+  .document_table table tbody tr td:first-child ~ td:not(:last-child) label:not(:empty):after,
+  .document_table table tbody tr th:first-child ~ td:not(:last-child) label:not(:empty):after {
     content: " ~ ";
   }
 }
@@ -1510,7 +1520,7 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
   border-top: 2px solid rgba(0, 0, 0, 0.14902);
 }
 .document_table nav span {
-  opacity: .3;
+  opacity: 0.3;
   flex: 2;
   text-align: right;
   float: right;
@@ -1547,6 +1557,24 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
     float: left;
     text-indent: 6pt;
   }
+}
+.document_table tbody tr td:first-child input.hide_element[type="checkbox"] {
+  display: none;
+}
+.document_table tbody tr td:first-child input.hide_element[type="checkbox"] + label::before {
+  width: 1em;
+  display: inline-block;
+  font-weight: bold;
+  content: '☐';
+  color: rgba(0, 0, 0, 0.3);
+  margin-right: 6pt;
+}
+.document_table tbody tr td:first-child input.hide_element[type="checkbox"]:checked + label::before {
+  color: #1F1F1F;
+  content: '☒';
+}
+.document_table tbody tr td label {
+  cursor: pointer;
 }
 /**********************************************
 * Notification
@@ -1608,7 +1636,7 @@ div[data-gadget-scope='notification'] button.error {
 * JQM
 **********************************************/
 .ui-disabled {
-  opacity: .3;
+  opacity: 0.3;
   cursor: default;
   pointer-events: none;
 }
@@ -1791,7 +1819,7 @@ div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li li {
 }
 .ui-icon-spinner::before {
   content: "\f110";
-  animation: spin .5s infinite linear;
+  animation: spin 0.5s infinite linear;
 }
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
    readers do not read off random characters that represent icons */

@@ -58,7 +58,7 @@
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//button[text() = 'yanchanlie']</td>
+  <td>//button[text() = 'xuanze']</td>
   <td></td>
 </tr>
 

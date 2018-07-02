@@ -5,23 +5,15 @@
   SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory) {
   "use strict";
   var gadget_klass = rJS(window),
-    listbox_hidden_thead_source = gadget_klass.__template_element
-                         .getElementById("listbox-hidden-thead-template")
+    listbox_thead_source = gadget_klass.__template_element
+                         .getElementById("listbox-thead-template")
                          .innerHTML,
-    listbox_hidden_thead_template = Handlebars.compile(listbox_hidden_thead_source),
-    listbox_show_thead_source = gadget_klass.__template_element
-                         .getElementById("listbox-show-thead-template")
-                         .innerHTML,
-    listbox_show_thead_template = Handlebars.compile(listbox_show_thead_source),
+    listbox_thead_template = Handlebars.compile(listbox_thead_source),
 
-    listbox_hidden_tbody_source = gadget_klass.__template_element
-                         .getElementById("listbox-hidden-tbody-template")
+    listbox_tbody_source = gadget_klass.__template_element
+                         .getElementById("listbox-tbody-template")
                          .innerHTML,
-    listbox_hidden_tbody_template = Handlebars.compile(listbox_hidden_tbody_source),
-    listbox_show_tbody_source = gadget_klass.__template_element
-                         .getElementById("listbox-show-tbody-template")
-                         .innerHTML,
-    listbox_show_tbody_template = Handlebars.compile(listbox_show_tbody_source),
+    listbox_tbody_template = Handlebars.compile(listbox_tbody_source),
 
     listbox_tfoot_source = gadget_klass.__template_element
                          .getElementById("listbox-tfoot-template")
@@ -100,7 +92,8 @@
     container.innerHTML = template({
       "row_list": row_list,
       "show_anchor": gadget.state.show_anchor,
-      "column_list": column_list
+      "column_list": column_list,
+      "show_line_selector": gadget.state.show_line_selector
     });
     return new RSVP.Queue()
       .push(function () {
@@ -401,8 +394,7 @@
           .push(function (column_sort_link_list) {
             // here we obtain links for sorting by columns
             // so we can construct array of header objects to be rendered in the header template
-            var listbox_thead_template,
-              hide_button_text,
+            var hide_button_text,
               hide_button_name,
               head_value_list = column_list.map(function (column, index) {
                 var current_sort = sort_list.find(hasSameFirstItem(column)),
@@ -425,12 +417,10 @@
               });
 
             if (gadget.state.show_line_selector) {
-              listbox_thead_template = listbox_show_thead_template;
               hide_button_text = 'Submit';
               hide_button_name = 'SelectRows';
             } else {
-              listbox_thead_template = listbox_hidden_thead_template;
-              hide_button_text = 'Hide Rows';
+              hide_button_text = 'Select';
               hide_button_name = 'Hide';
             }
             return RSVP.all([
@@ -441,12 +431,14 @@
                 title: gadget.state.title,
                 hide_button_text: hide_button_text,
                 hide_button_name: hide_button_name,
-                disabled: gadget.state.disabled ? 'disabled' : ''
+                disabled: gadget.state.disabled ? 'disabled' : '',
+                show_line_selector: gadget.state.show_line_selector
               })),
               gadget.translateHtml(listbox_thead_template({
                 head_value: head_value_list,
                 show_anchor: gadget.state.show_anchor,
-                line_icon: gadget.state.line_icon
+                line_icon: gadget.state.line_icon,
+                show_line_selector: gadget.state.show_line_selector
               }))
             ]);
           })
@@ -526,7 +518,6 @@
                   cell_list,
                   url_value,
                   index = 0,
-                  listbox_tbody_template,
                   setNonEditable = function (cell) {cell.editable = false; };
                 // reset list of UIDs of editable sub-documents
                 gadget.props.listbox_uid_dict = {
@@ -594,12 +585,6 @@
                     "cell_list": cell_list,
                     "line_icon": gadget.state.line_icon
                   });
-                }
-
-                if (gadget.state.show_line_selector) {
-                  listbox_tbody_template = listbox_show_tbody_template;
-                } else {
-                  listbox_tbody_template = listbox_hidden_tbody_template;
                 }
 
                 return renderTablePart(gadget, listbox_tbody_template, row_list, "tbody");
@@ -852,7 +837,8 @@
         sort_button = gadget.element.querySelector('button[name="Sort"]'),
         hide_button = gadget.element.querySelector('button[name="Hide"]'),
         configure_button = gadget.element.querySelector('button[name="Configure"]'),
-        select_button = gadget.element.querySelector('button[name="SelectRows"]'),
+        include_button = gadget.element.querySelector('button[name="IncludeRows"]'),
+        exclude_button = gadget.element.querySelector('button[name="ExcludeRows"]'),
         url,
         options = {},
         all_hide_element_list,
@@ -886,14 +872,14 @@
         });
       }
 
-      if (evt.target === select_button) {
+      if ((evt.target === include_button) || (evt.target === exclude_button)) {
         evt.preventDefault();
 
         //hide closed
         //maybe submit
         all_hide_element_list = gadget.element.querySelectorAll(".hide_element");
         for (i = 0; i < all_hide_element_list.length; i += 1) {
-          if (!all_hide_element_list[i].checked) {
+          if (all_hide_element_list[i].checked) {
             hide_element_list.push(all_hide_element_list[i]);
           }
         }
@@ -902,21 +888,50 @@
             query_list.push(new SimpleQuery({
               key: "catalog.uid",
               type: "simple",
-              operator: "!=",
-              value: hide_element_list[i].getAttribute("value")
+              operator: (evt.target === include_button) ? "=" : "!=",
+              value: hide_element_list[i].getAttribute("data-uid")
             }));
           }
           if (gadget.state.extended_search) {
             search_query = QueryFactory.create(gadget.state.extended_search);
           }
-          if (search_query) {
-            query_list.push(search_query);
+          if (evt.target === include_button) {
+            // Lines must match the existing query and be one of the selected
+            // line. Which means that is user change the query, one of the
+            // selected line could disappear.
+            if (search_query) {
+              search_query = new ComplexQuery({
+                operator: "AND",
+                query_list: [
+                  new ComplexQuery({
+                    operator: "OR",
+                    query_list: query_list,
+                    type: "complex"
+                  }),
+                  search_query
+                ],
+                type: "complex"
+              });
+            } else {
+              search_query = new ComplexQuery({
+                operator: "OR",
+                query_list: query_list,
+                type: "complex"
+              });
+            }
+
+          } else {
+            // Lines must match the existing query and must not be one of the
+            // selected line.
+            if (search_query) {
+              query_list.push(search_query);
+            }
+            search_query = new ComplexQuery({
+              operator: "AND",
+              query_list: query_list,
+              type: "complex"
+            });
           }
-          search_query = new ComplexQuery({
-            operator: "AND",
-            query_list: query_list,
-            type: "complex"
-          });
 
           return gadget.redirect({
             command: 'store_and_change',

@@ -78,7 +78,7 @@
 
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n="Hide Rows"]</td>
+  <td>//button[@data-i18n="Select"]</td>
   <td></td>
 </tr>
 

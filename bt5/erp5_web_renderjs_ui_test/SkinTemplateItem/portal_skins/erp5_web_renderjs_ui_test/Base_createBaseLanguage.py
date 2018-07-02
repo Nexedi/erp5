@@ -47,7 +47,7 @@ param_dict = [
   { 'message': 'Select Template', 'translation': 'xuanzhemoban', 'language': 'wo'},
   { 'message': 'descending', 'translation': 'xiajiang', 'language': 'wo'},
   { 'message': 'Views', 'translation': 'shitu', 'language': 'wo'},
-  { 'message': 'Hide Rows', 'translation': 'yanchanlie', 'language': 'wo'},
+  { 'message': 'Select', 'translation': 'xuanze', 'language': 'wo'},
   { 'message': 'Jump', 'translation': 'tiaozhuan', 'language': 'wo'},
   { 'message': 'Export', 'translation': 'daochu', 'language': 'wo'},
   { 'message': 'At least one (OR)', 'translation': 'zhishaoyige', 'language': 'wo'},
