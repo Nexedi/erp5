@@ -20,29 +20,20 @@
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function () {
       var gadget = this,
-        header_dict = {
-          page_title: 'Worklist',
-          page_icon: 'tasks'
-        };
+        action_list;
 
-      return gadget.getUrlFor({command: 'display'})
-        .push(function (url) {
-          header_dict.front_url = url;
-          return gadget.updateHeader(header_dict);
-        })
-        .push(function () {
-          return gadget.jio_getAttachment(
-            'portal_workflow',
-            'links'
-          );
-        })
+      // Fetch worklist data
+      return gadget.jio_getAttachment(
+        'portal_workflow',
+        'links'
+      )
         .push(function (result) {
           return gadget.jio_getAttachment(
             // result.data.rows[0].id,
@@ -50,12 +41,15 @@
             result._links.action_worklist.href
           );
         })
+
+        // Calculate all URLs
         .push(function (links) {
-          var action_list = links.worklist,
-            query_string,
-            promise_list = [gadget.translate('All work caught up!')],
+          var query_string,
+            // Back URL
+            url_for_parameter_list = [{command: 'display'}],
             display_options,
             i;
+          action_list = links.worklist;
           for (i = 0; i < action_list.length; i += 1) {
             query_string = new URI(action_list[i].href).query(true).query;
             display_options = {extended_search: query_string};
@@ -73,31 +67,39 @@
                 page: 'search'
               };
             }
-            promise_list.push(RSVP.all([
-              gadget.getUrlFor({command: 'display_stored_state', options: display_options}),
-              // Remove the counter from the title
-              action_list[i].name,
-              action_list[i].count
-            ]));
-
+            url_for_parameter_list.push(
+              {command: 'display_stored_state', options: display_options}
+            );
           }
-          return RSVP.all(promise_list);
+          return RSVP.all([
+            gadget.translate('All work caught up!'),
+            gadget.getUrlForList(url_for_parameter_list)
+          ]);
         })
+        // Add in the page
         .push(function (result_list) {
           var line_list = [],
+            url_list = result_list[1],
             i;
-          for (i = 1; i < result_list.length; i += 1) {
+          for (i = 1; i < url_list.length; i += 1) {
             line_list.push({
-              link: result_list[i][0],
-              title: result_list[i][1],
-              count: result_list[i][2]
+              link: url_list[i],
+              // Remove the counter from the title
+              title: action_list[i - 1].name,
+              count: action_list[i - 1].count
             });
           }
+
           gadget.element.querySelector('.document_list').innerHTML =
             table_template({
               document_list: line_list,
               empty_text: result_list[0]
             });
+          return gadget.updateHeader({
+            page_title: 'Worklist',
+            page_icon: 'tasks',
+            front_url: url_list[0]
+          });
         });
     });
 
