@@ -36,9 +36,10 @@ import urllib
 import Cookie
 import re
 
-from urlparse import urljoin
+from zope.testbrowser._compat import urlparse
 from z3c.etestbrowser.browser import ExtendedTestBrowser
 from zope.testbrowser.browser import onlyOne
+from contextlib import contextmanager
 
 def measurementMetaClass(prefix):
   """
@@ -201,13 +202,107 @@ class Browser(ExtendedTestBrowser):
       # In case url_or_path is an absolute URL, urljoin() will return
       # it, otherwise it is a relative path and will be concatenated to
       # ERP5 base URL
-      url_or_path = urljoin(self._erp5_base_url, url_or_path)
+      url_or_path = urlparse.urljoin(self._erp5_base_url, url_or_path)
 
     if isinstance(data, dict):
       data = urllib.urlencode(data)
 
     self._logger.debug("Opening: " + url_or_path)
     super(Browser, self).open(url_or_path, data)
+
+  @contextmanager
+  def _preparedRequest(self, url, no_visit=False):
+    """
+    Monkey patched for openNoVisit()
+    """
+    from zope.testbrowser._compat import urlparse
+
+    self.timer.start()
+
+    headers = {}
+    if self.url:
+      headers['Referer'] = self.url
+
+    if self._req_content_type:
+      headers['Content-Type'] = self._req_content_type
+
+    headers['Connection'] = 'close'
+    headers['Host'] = urlparse.urlparse(url).netloc
+    headers['User-Agent'] = 'Python-urllib/2.4'
+
+    headers.update(self._req_headers)
+
+    extra_environ = {}
+    if self.handleErrors:
+      extra_environ['paste.throw_errors'] = None
+      headers['X-zope-handle-errors'] = 'True'
+    else:
+      extra_environ['wsgi.handleErrors'] = False
+      extra_environ['paste.throw_errors'] = True
+      extra_environ['x-wsgiorg.throw_errors'] = True
+      headers.pop('X-zope-handle-errors', None)
+
+    kwargs = {'headers': sorted(headers.items()),
+              'extra_environ': extra_environ,
+              'expect_errors': True}
+
+    yield kwargs
+
+    if not no_visit:
+      self._changed()
+
+    self.timer.stop()
+
+  def _processRequest(self, url, make_request, no_visit=False):
+    """
+    Monkey patched for openNoVisit()
+    """
+    from zope.testbrowser.browser import REDIRECTS
+    from zope.testbrowser._compat import urlparse
+
+    with self._preparedRequest(url, no_visit=no_visit) as reqargs:
+      if not no_visit:
+        self._history.add(self._response)
+
+      resp = make_request(reqargs)
+      remaining_redirects = 100  # infinite loops protection
+      while resp.status_int in REDIRECTS and remaining_redirects:
+        remaining_redirects -= 1
+        # BEGIN: Bugfix
+        location = resp.headers['location']
+        if '?' in location:
+          location_without_query_string, query_string = location.split('?')
+          location = (
+            location_without_query_string +
+            '?' + urllib.urlencode(urlparse.parse_qs(query_string,
+                                                     strict_parsing=True),
+                                   doseq=True))
+        # END: Bugfix
+        url = urlparse.urljoin(url, location)
+
+        with self._preparedRequest(url, no_visit=no_visit) as reqargs:
+          resp = self.testapp.get(url, **reqargs)
+      assert remaining_redirects > 0, "redirects chain looks infinite"
+
+      if not no_visit:
+        self._setResponse(resp)
+      self._checkStatus()
+
+    return resp
+
+  def _absoluteUrl(self, url):
+    absolute = url.startswith('http://') or url.startswith('https://')
+    if absolute:
+      return str(url)
+
+    if self._response is None:
+      raise BrowserStateError(
+        "can't fetch relative reference: not viewing any document")
+
+    if not isinstance(url, unicode):
+      url = url.decode('utf-8')
+
+    return str(urlparse.urljoin(self._getBaseUrl(), url).encode('utf-8'))
 
   def openNoVisit(self, url_or_path, data=None, site_relative=True):
     """
@@ -220,40 +315,22 @@ class Browser(ExtendedTestBrowser):
       # In case url_or_path is an absolute URL, urljoin() will return
       # it, otherwise it is a relative path and will be concatenated to
       # ERP5 base URL
-      url_or_path = urljoin(self._erp5_base_url, url_or_path)
-
-    import mechanize
+      url_or_path = urlparse.urljoin(self._erp5_base_url, url_or_path)
 
     if isinstance(data, dict):
       data = urllib.urlencode(data)
 
-    response = None
-    url_or_path = str(url_or_path)
-    self._logger.debug("Opening: " + url_or_path)
-    self._start_timer()
-    try:
-      try:
-        try:
-          response = self.mech_browser.open_novisit(url_or_path, data)
-        except Exception, e:
-          raise
-      except mechanize.HTTPError, e:
-        if e.code >= 200 and e.code <= 299:
-          # 200s aren't really errors
-          pass
-        elif self.raiseHttpErrors:
-          raise
-    finally:
-      self._stop_timer()
+    url = self._absoluteUrl(url_or_path)
+    self._logger.debug("Opening: " + url)
 
-    # if the headers don't have a status, I suppose there can't be an error
-    if 'Status' in self.headers:
-      code, msg = self.headers['Status'].split(' ', 1)
-      code = int(code)
-      if self.raiseHttpErrors and code >= 400:
-        raise mechanize.HTTPError(url_or_path, code, msg, self.headers, fp=None)
+    if data is not None:
+      def make_request(args):
+        return self.testapp.post(url, data, **args)
+    else:
+      def make_request(args):
+        return self.testapp.get(url, **args)
 
-    return response
+    return self._processRequest(url, make_request, no_visit=True)
 
   def randomSleep(self, minimum, maximum):
     """
@@ -357,31 +434,28 @@ class Browser(ExtendedTestBrowser):
     elif url and '?' not in url:
       url += '?'
 
-    if id is not None:
-      def predicate(link):
-        return dict(link.attrs).get('id') == id
-      args = {'predicate': predicate}
-    else:
-      import re
-      from zope.testbrowser.browser import RegexType
+    from zope.testbrowser.browser import isMatching, LinkNotFoundError
+    qa = 'a' if id is None else 'a#%s' % id
+    qarea = 'area' if id is None else 'area#%s' % id
+    html = self._html
+    links = html.select(qa)
+    links.extend(html.select(qarea))
 
-      if isinstance(text, RegexType):
-        text_regex = text
-      elif text is not None:
-        text_regex = re.compile(re.escape(text), re.DOTALL)
-      else:
-        text_regex = None
+    matching = []
+    for elem in links:
+      matches = (isMatching(elem.text.encode('utf-8'), text) and
+                 isMatching(elem.get('href', ''), url))
 
-      if isinstance(url, RegexType):
-        url_regex = url
-      elif url is not None:
-        url_regex = re.compile(re.escape(url), re.DOTALL)
-      else:
-        url_regex = None
-      args = {'text_regex': text_regex, 'url_regex': url_regex}
+      if matches:
+        matching.append(elem)
 
-    args['nr'] = index
-    return LinkWithTime(self.mech_browser.find_link(**args), self)
+    if index >= len(matching):
+      raise LinkNotFoundError()
+    elem = matching[index]
+
+    baseurl = self._getBaseUrl()
+
+    return LinkWithTime(elem, self, baseurl)
 
   def getImportExportLink(self):
     """
@@ -607,8 +681,8 @@ class Browser(ExtendedTestBrowser):
     @rtype: int
     """
     self._logger.debug("Checking the number of remaining activities")
-    activity_counter = self.mech_browser.open_novisit(
-      self._erp5_base_url + 'portal_activities/countMessage').read()
+    response = self.openNoVisit('portal_activities/countMessage')[1]
+    activity_counter = response.body
 
     activity_counter = activity_counter and int(activity_counter) or 0
     self._logger.debug("Remaining activities: %d" % activity_counter)
@@ -1215,26 +1289,23 @@ class ImageControlWithTime(ImageControl):
 
 import zope.testbrowser.browser
 
-browser_controlFactory = zope.testbrowser.browser.controlFactory
-def controlFactory(control, *args, **kwargs):
+browser_simpleControlFactory = zope.testbrowser.browser.simpleControlFactory
+def simpleControlFactory(wtcontrol, form, elemindex, browser):
   """
-  Monkey patch controlFactory in zope.testbrowser to get elapsed time on
-  ImageControl and SubmitControl
+  Monkey patched to get elapsed time on ImageControl and SubmitControl
   """
-  try:
-    t = control.type
-  except AttributeError:
-    # This is a subcontrol
-    pass
-  else:
-    if t in ('submit', 'submitbutton'):
-      return SubmitControlWithTime(control, *args, **kwargs)
-    elif t == 'image':
-      return ImageControlWithTime(control, *args, **kwargs)
+  import webtest
 
-  return browser_controlFactory(control, *args, **kwargs)
+  elem = elemindex[wtcontrol.pos]
+  if isinstance(wtcontrol, webtest.forms.Submit):
+    if wtcontrol.attrs.get('type', 'submit') == 'image':
+      return ImageControlWithTime(wtcontrol, form, elem, browser)
+    else:
+      return SubmitControlWithTime(wtcontrol, form, elem, browser)
 
-zope.testbrowser.browser.controlFactory = controlFactory
+  return browser_simpleControlFactory(wtcontrol, form, elemindex, browser)
+
+zope.testbrowser.browser.simpleControlFactory = simpleControlFactory
 
 from zope.testbrowser.browser import Link
 
