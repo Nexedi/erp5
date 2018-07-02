@@ -389,40 +389,16 @@ class CopyContainer:
       The op variable is 0 for a copy, 1 for a move.
       """
       if op == 1: # move
-          self._v_category_url_before_move = self.getRelativeUrl()
           self._recursiveSetActivityAfterTag(self)
 
   def _setId(self, id):
     # Called to set the new id of a copied object.
-    # XXX It is bad to use volatile attribute, because we may have naming
-    # conflict later.
-    # Currently, it is required to use this volatile attribute
-    # when we do a copy/paste, in order to change the relation in _postCopy.
-    # Such implementation is due to the limitation of CopySuport API, which prevent
-    # to pass parameter to manage_afterClone.
-    self._v_previous_id = self.id
     self.id=id
 
   def _postCopy(self, container, op=0):
     # Called after the copy is finished to accomodate special cases.
     # The op var is 0 for a copy, 1 for a move.
-    if op == 1:
-      # In our case, we want to notify the category system that our path
-      # changed, so that it updates related objects.
-      old_url = getattr(self, '_v_category_url_before_move', None)
-      if old_url is not None:
-          self.activate(after_method_id='unindexObject').updateRelatedContent(
-                                old_url,
-                                self.getRelativeUrl())
-    elif op == 0:
-      # Paste a object.
-      # Update related subcontent
-      previous_path = self.getRelativeUrl().split('/')
-      previous_path[-1] = self._v_previous_id
-
-      self._updateInternalRelatedContent(object=self,
-                                         path_item_list=previous_path,
-                                         new_id=self.id)
+    pass
 
   def _duplicate(self, cp, reindex_kw=None, immediate_reindex=False):
     _, result = self.__duplicate(
@@ -502,11 +478,24 @@ class CopyContainer:
       new_ob = self._getOb(new_id)
       new_ob._postCopy(self, op=op)
       if is_clone:
+        # Update related subcontent
+        new_ob._updateInternalRelatedContent(
+          object=new_ob,
+          path_item_list=ob.getRelativeUrl().split('/'),
+          new_id=new_id
+        )
         if duplicate:
           new_ob._postDuplicate()
         else:
           new_ob.manage_afterClone(new_ob)
         new_ob.wl_clearLocks()
+      else:
+        # Notify the category system that our path
+        # changed, so that it updates related objects.
+        new_ob.activate(after_method_id='unindexObject').updateRelatedContent(
+          ob.getRelativeUrl(),
+          new_ob.getRelativeUrl(),
+        )
       if not set_owner:
         # try to make ownership implicit if possible
         new_ob.manage_changeOwnershipType(explicit=0)
