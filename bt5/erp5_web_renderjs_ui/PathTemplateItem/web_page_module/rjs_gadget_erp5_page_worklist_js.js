@@ -18,7 +18,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
 
@@ -53,7 +53,7 @@
         .push(function (links) {
           var action_list = links.worklist,
             query_string,
-            promise_list = [],
+            promise_list = [gadget.translate('All work caught up!')],
             display_options,
             i;
           for (i = 0; i < action_list.length; i += 1) {
@@ -86,19 +86,18 @@
         .push(function (result_list) {
           var line_list = [],
             i;
-          for (i = 0; i < result_list.length; i += 1) {
+          for (i = 1; i < result_list.length; i += 1) {
             line_list.push({
               link: result_list[i][0],
               title: result_list[i][1],
               count: result_list[i][2]
             });
           }
-          return gadget.translateHtml(table_template({
-            document_list: line_list
-          }));
-        })
-        .push(function (translated_html) {
-          gadget.element.querySelector('.document_list').innerHTML = translated_html;
+          gadget.element.querySelector('.document_list').innerHTML =
+            table_template({
+              document_list: line_list,
+              empty_text: result_list[0]
+            });
         });
     });
 
