@@ -313,7 +313,7 @@ class CopyContainer:
 
     # Call a type based method to reset so properties if necessary
     script = self._getTypeBasedMethod('afterClone')
-    if script is not None and callable(script):
+    if callable(script):
       script()
 
 
