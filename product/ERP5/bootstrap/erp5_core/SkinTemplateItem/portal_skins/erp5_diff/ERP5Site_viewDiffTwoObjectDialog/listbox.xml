@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_list_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -112,7 +112,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Differences</string> </value>
+                    <value> <string>Diff</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -143,7 +143,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Base_getHistoricalComparisonDifferenceList</string> </value>
+            <value> <string>Base_getObjectDiffList</string> </value>
         </item>
       </dictionary>
     </pickle>

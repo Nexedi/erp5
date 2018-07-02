@@ -206,11 +206,11 @@ class PortalPatch:
 
   security.declarePrivate('removePropertyList')
   def removePropertyList(self,
-                       obj,
-                       export,
-                       property_list=None,
-                       keep_workflow_history=False,
-                       keep_workflow_history_last_history_only=False):
+                         obj,
+                         export,
+                         property_list=None,
+                         keep_workflow_history=False,
+                         keep_workflow_history_last_history_only=False):
     """
     This function removes un-necessary properties and attributes from the
     object dict.
