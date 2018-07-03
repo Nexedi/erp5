@@ -23,12 +23,15 @@
     "local": {
       "setConfiguration": function (gadget) {
         var configuration = {
-          type: "query",
+          type: "uuid",
           sub_storage: {
-            type: "uuid",
+            type: "history",
             sub_storage: {
-              type: "indexeddb",
-              database: "local_default"
+              type: "query",
+              sub_storage: {
+                type: "indexeddb",
+                database: "local_default"
+              }
             }
           }
         };
