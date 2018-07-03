@@ -1,38 +1,46 @@
-/*global window, rJS, UriTemplate */
+/*global window, rJS, UriTemplate, Handlebars */
 /*jslint indent: 2, maxerr: 3, nomen: true */
-(function (window, rJS, UriTemplate) {
+(function (window, rJS, UriTemplate, Handlebars) {
   "use strict";
 
-  rJS(window)
+  var gadget_klass = rJS(window),
+    form_template = Handlebars.compile(
+      gadget_klass.__template_element
+                  .getElementById("form-template")
+                  .innerHTML
+    );
+
+  gadget_klass
     /////////////////////////////////////////////////////////////////
     // handle acquisition
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("updateHeader", "updateHeader")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-     .declareMethod("render", function () {
-      var gadget = this,
-        header_dict = {
-          page_title: 'Logout',
-          page_icon: 'power-off'
-        };
+    .declareMethod("render", function () {
+      var gadget = this;
 
       return gadget.getUrlFor({command: 'display'})
         .push(function (front_url) {
-          header_dict.front_url = front_url;
-          return gadget.updateHeader(header_dict);
+          return gadget.updateHeader({
+            page_title: 'Logout',
+            page_icon: 'power-off',
+            front_url: front_url
+          });
         })
         .push(function () {
-          return gadget.translateHtml(gadget.element.innerHTML);
+          return gadget.translate('Confirm');
         })
-        .push(function (my_translated_html) {
-          gadget.element.innerHTML = my_translated_html;
+        .push(function (translated_text) {
+          gadget.element.innerHTML = form_template({
+            button_text: translated_text
+          });
         });
     })
 
@@ -58,4 +66,4 @@
           });
         });
     });
-}(window, rJS, UriTemplate));
+}(window, rJS, UriTemplate, Handlebars));
