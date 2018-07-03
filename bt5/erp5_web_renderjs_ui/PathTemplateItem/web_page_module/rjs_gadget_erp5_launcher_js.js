@@ -303,6 +303,24 @@
     //////////////////////////////////////////
     // Allow Acquisition
     //////////////////////////////////////////
+    .allowPublicAcquisition("getSettingList",
+                            function getSettingList(argument_list) {
+        var key_list = argument_list[0];
+        return route(this, 'setting_gadget', 'get', [this.props.setting_id])
+          .push(function (doc) {
+            var i,
+              result_list = [];
+            for (i = 0; i < key_list.length; i += 1) {
+              result_list[i] = doc[key_list[i]];
+            }
+            return result_list;
+          }, function (error) {
+            if (error.status_code === 404) {
+              return new Array(key_list.length);
+            }
+            throw error;
+          });
+      })
     .allowPublicAcquisition("getSetting", function getSetting(argument_list) {
       var gadget = this,
         key = argument_list[0],
