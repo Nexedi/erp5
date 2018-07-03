@@ -1,6 +1,6 @@
-/*global document, window, rJS, translation_data, RSVP */
+/*global document, window, rJS, translation_data */
 /*jslint nomen: true, indent: 2 */
-(function (document, window, rJS, translation_data, RSVP) {
+(function (document, window, rJS, translation_data) {
   "use strict";
 
   function translate(string, gadget) {
@@ -93,43 +93,51 @@
     return temp.innerHTML;
   }
 
+  function translateList(gadget, string_list, only_first) {
+    var i,
+      result_list = [];
+    for (i = 0; i < string_list.length; i += 1) {
+      result_list.push(translate(string_list[i], gadget));
+    }
+    if (only_first) {
+      return result_list[0];
+    }
+    return result_list;
+  }
+
+  function promiseTranslateList(gadget, string_list, only_first) {
+    // XXX Allow to change the language
+    if (!gadget.state.language) {
+      return gadget.getSettingList(["selected_language",
+                                    "default_selected_language"])
+        .push(function (result_list) {
+          gadget.state.language = result_list[0] || result_list[1];
+          return translateList(gadget, string_list, only_first);
+        });
+    }
+    return translateList(gadget, string_list, only_first);
+  }
+
   rJS(window)
-    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getSettingList", "getSettingList")
+    .declareMethod('getTranslationList', function (string_list) {
+      return promiseTranslateList(this, string_list);
+    })
     .declareMethod('translate', function (string) {
-      // XXX Allow to change the language
-      var gadget = this;
-      if (!gadget.state.language) {
-        return new RSVP.Queue()
-          .push(function () {
-            return RSVP.all([
-              gadget.getSetting("selected_language"),
-              gadget.getSetting("default_selected_language")
-            ]);
-          })
-          .push(function (results) {
-            gadget.state.language = results[0] || results[1];
-            return translate(string, gadget);
-          });
-      }
-      return translate(string, gadget);
+      return promiseTranslateList(this, [string], true);
     })
 
     .declareMethod('translateHtml', function (string) {
       var gadget = this;
       if (!gadget.state.language) {
-        return new RSVP.Queue()
-          .push(function () {
-            return RSVP.all([
-              gadget.getSetting("selected_language"),
-              gadget.getSetting("default_selected_language")
-            ]);
-          })
-          .push(function (results) {
-            gadget.state.language = results[0] || results[1];
+        return gadget.getSettingList(["selected_language",
+                                      "default_selected_language"])
+          .push(function (result_list) {
+            gadget.state.language = result_list[0] || result_list[1];
             return translateHtml(string, gadget);
           });
       }
       return translateHtml(string, gadget);
     });
 
-}(document, window, rJS, translation_data, RSVP));
+}(document, window, rJS, translation_data));

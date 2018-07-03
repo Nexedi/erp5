@@ -410,6 +410,11 @@
     .allowPublicAcquisition("translate", function translate(argument_list) {
       return route(this, 'translation_gadget', 'translate', argument_list);
     })
+    .allowPublicAcquisition("getTranslationList",
+                            function getTranslationList(argument_list) {
+        return route(this, 'translation_gadget', 'getTranslationList',
+                     argument_list);
+      })
 
     .allowPublicAcquisition("redirect", function redirect(param_list) {
       return route(this, 'router', 'redirect', param_list);
