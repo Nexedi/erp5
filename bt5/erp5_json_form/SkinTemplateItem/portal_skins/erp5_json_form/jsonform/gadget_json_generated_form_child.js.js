@@ -871,6 +871,7 @@
       case "maxItems":
       case "minItems":
       case "uniqueItems":
+      case "contains":
         if (!checkSchemaType(current_document.type, "array")) {
           return false;
         }
@@ -881,6 +882,7 @@
       case "additionalProperties":
       case "properties":
       case "patternProperties":
+      case "dependencies":
       case "propertyNames":
         if (!checkSchemaType(current_document.type, "object")) {
           return false;
@@ -889,6 +891,8 @@
       case "maxLength":
       case "minLength":
       case "pattern":
+      case "contentEncoding":
+      case "contentMediaType":
         if (!checkSchemaType(current_document.type, "string")) {
           return false;
         }
@@ -937,6 +941,10 @@
       case "exclusiveMaximum":
       case "minimum":
       case "exclusiveMinimum":
+      case "contains":
+      case "dependencies":
+      case "contentEncoding":
+      case "contentMediaType":
         return false;
       }
     }
