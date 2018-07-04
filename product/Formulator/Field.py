@@ -295,6 +295,12 @@ class Field:
       """
       return self.widget.render_view(self, value, REQUEST=REQUEST)
 
+    security.declareProtected('View', 'render_raw')
+    def render_raw(self, value=None, REQUEST=None, key=None, **kw):
+      """Render value as a raw text, for use in non-HTML templates.
+      """
+      return self.widget.render_raw(self, value)
+
     security.declareProtected('View', 'render_pdf')
     def render_pdf(self, value=None, REQUEST=None, key=None, **kw):
       """

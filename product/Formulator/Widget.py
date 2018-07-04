@@ -195,7 +195,7 @@ class Widget:
       return ''
     return value
 
-  render_pdf = render_view
+  render_raw = render_pdf = render_view
 
   def render_html(self, *args, **kw):
     return self.render(*args, **kw)
@@ -925,7 +925,7 @@ class SingleItemsWidget(ItemsWidget):
       return title_list[0]
     return value
 
-  render_pdf = render_view
+  render_raw = render_pdf = render_view
 
   def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
       render_prefix, attr_dict, local_name):
@@ -1612,6 +1612,9 @@ class DateTimeWidget(Widget):
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
     return self.format_value(field, value, mode='html')
 
+  def render_raw(self, field, value, render_prefix=None):
+    return self.format_value(field, value, mode='raw')
+
   def render_pdf(self, field, value, render_prefix=None):
     return self.format_value(field, value, mode='pdf')
 
@@ -1628,7 +1631,7 @@ class DateTimeWidget(Widget):
     # get the field value
     if not value and field.get_value('default_now'):
       value = DateTime()
-    text_node.text = self.format_value(field, value, mode='pdf').decode('utf-8')
+    text_node.text = self.format_value(field, value, mode='raw').decode('utf-8')
     text_node.attrib.update(attr_dict)
     if as_string:
       return etree.tostring(text_node)
@@ -1670,7 +1673,7 @@ class DateTimeWidget(Widget):
     """
     if not value and field.get_value('default_now'):
       value = DateTime()
-    value_as_text = self.format_value(field, value, mode='pdf').decode('utf-8')
+    value_as_text = self.format_value(field, value, mode='raw').decode('utf-8')
     return Widget.render_odg_view(self, field, value_as_text, as_string,
                                       ooo_builder, REQUEST, render_prefix,
                                       attr_dict, local_name)
@@ -1998,9 +2001,11 @@ class FloatWidget(TextWidget):
       return "<span class='%s'>%s</span>" % (css_class, value)
     return value
 
-  def render_pdf(self, field, value, render_prefix=None):
-    """Render the field as PDF."""
+  def render_raw(self, field, value, render_prefix=None):
+    """Render the field as a string for inclusion in non-HTML template"""
     return self.format_value(field, value)
+
+  render_pdf= render_raw
 
   def render_dict(self, field, value, render_prefix=None):
     """
@@ -2070,7 +2075,7 @@ class FloatWidget(TextWidget):
       render_prefix, attr_dict, local_name):
     if attr_dict is None:
       attr_dict = {}
-    value = field.render_pdf(value)
+    value = field.render_raw(value)
     return Widget.render_odg(self, field, value, as_string, ooo_builder,
                              REQUEST, render_prefix, attr_dict, local_name)
 

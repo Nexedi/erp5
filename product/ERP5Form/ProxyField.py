@@ -116,6 +116,7 @@ class ProxyWidget(Widget.Widget):
   render = WidgetDelegatedMethod('render', default='')
   render_htmlgrid = WidgetDelegatedMethod('render_htmlgrid', default='')
   render_view = WidgetDelegatedMethod('render_view', default='')
+  render_raw = WidgetDelegatedMethod('render_raw', default='')
   render_pdf = WidgetDelegatedMethod('render_pdf', default='')
   render_css = WidgetDelegatedMethod('render_css', default='')
   render_dict = WidgetDelegatedMethod('render_dict', default=None)
