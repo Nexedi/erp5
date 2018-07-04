@@ -129,7 +129,7 @@
                 <table:table-column table:style-name='field-table.A'/>
                 <tal:block tal:repeat="field field_list">
                   <tal:block tal:define="field_type python: field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type or field.meta_type">
-                    <tal:block tal:condition="python:field_type not in ('HiddenStringField', 'FileField')">
+                    <tal:block tal:condition="python:field_type not in ('HiddenStringField', 'FileField')"> <!-- XXX how about a do-nothing render_odt for these fields ? -->
                       <table:table-row>
                       <table:table-cell table:style-name='field-table.A1' office:value-type='string'>
                         <text:p tal:replace="structure python:render_text(here.Base_translateString(field.get_value('title')),
@@ -143,6 +143,7 @@
                             <text:p tal:replace="structure python:field.render_odt(REQUEST=request, attr_dict={'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name': 'field-content'})"
                                     />
                           </tal:block>
+                          <!-- TODO: render_odt for image field! -->
                           <!-- With this max_size, pictures and graph stay in a table cell-->
                           <tal:block tal:define="global max_size python:9;"/>
                           <tal:block tal:condition="python: field_type == 'ImageField'">
@@ -157,6 +158,8 @@
                               </tal:block>
                             </text:p>
                           </tal:block>
+
+                          <!-- TODO: render_odt for OOoChart ! -->
                           <tal:block tal:condition="python: field_type == 'OOoChart'">
                             <tal:block tal:define="display python: field.get_value('image_display');
                             preferred_method_height_id python: 'getPreferred%sImageHeight' % (display.capitalize());
@@ -199,6 +202,8 @@
                                               {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name': 'field-label-center'})"/>
               <text:p tal:replace="structure python:field.render_odt(REQUEST=request, attr_dict={'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name': 'field-content-center'})"/>
             </tal:block>
+
+            <!-- TODO: render_odt for ImageField ! -->
             <tal:block tal:condition="python: field_type == 'ImageField'">
               <text:p text:style-name='field-label-center' i18n:domain="ui"
                       i18n:translate=""
@@ -211,6 +216,8 @@
                                     path python: '/'.join(request.physicalPathFromURL(field.get_value('default')));"/>
               </text:p>
             </tal:block>
+
+            <!-- TODO: render_odt for OOoChart ! -->
             <tal:block tal:condition="python: field_type == 'OOoChart'">
               <text:p text:style-name='field-label-center' i18n:domain="ui" i18n:translate=""
               tal:content="python: field.get_value('title')"/>
@@ -244,11 +251,13 @@
         <tal:block tal:define="field_list python: form.get_fields_in_group('bottom')">
           <tal:block tal:repeat="field field_list">
             <tal:block tal:define="field_type python: field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type or field.meta_type">
+              <!-- TODO: render_odt for MatrixBox -->
               <tal:block tal:condition="python: field_type == 'MatrixBox'">
                 <tal:block  tal:define="matrixbox python:field;">
                   <div metal:use-macro="here/matrixbox_odt_macro/macros/matrixbox" />
                 </tal:block>
               </tal:block>
+              <!-- TODO: render_odt for ListBox -->
               <tal:block tal:condition="python: field_type == 'ListBox'">
                 <tal:block  tal:define="listbox python:field;" >
                   <div metal:use-macro="here/listbox_odt_macro/macros/listbox" />
@@ -268,8 +277,9 @@
                            tal:condition="item_list" />
                     </tal:block>
                   </tal:block>
+                  <!-- TODO: render_odt support for editor field -->
                   <tal:block tal:condition="python: (not (same_type(value,[]) or same_type(value,()) )) and (value != None)">
-                    <tal:block tal:condition="python: field_type=='EditorField' and field.get_value('text_editor')=='fck_editor'">
+                    <tal:block tal:condition="python: field_type=='EditorField' and field.get_value('text_editor')=='fck_editor'"> <!-- XXX can we have a better condition that fck_editor ? -->
                         <text:p tal:replace="structure python:field.render_odt(value=here.getPortalObject().portal_transforms.convertToData('text/plain', value), REQUEST=request, attr_dict={'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name': 'field-content-center'})"/>
                     </tal:block>
                     <tal:block tal:condition="python: field_type in ('EditorField',) and field.get_value('text_editor')=='text_area'">
@@ -284,6 +294,8 @@
                   </tal:block>
                 </tal:block>
               </tal:block>
+                  <!-- TODO: render_odt support for ImageField -->
+
               <tal:block tal:condition="python: field_type == 'ImageField'">
                 <text:p text:style-name='field-content-center'
                         tal:define="preferred_width python: preference_tool.getPreference('preferred_%s_image_width' % (field.get_value('image_display')))">
@@ -292,6 +304,7 @@
                                       path python: '/'.join(request.physicalPathFromURL(field.get_value('default')));"/>
               </text:p>
             </tal:block>
+            <!-- TODO: render_odt support for OOoChart -->
             <tal:block tal:condition="python: field_type == 'OOoChart'">
               <tal:block tal:define="display python: field.get_value('image_display') "
                       tal:condition="display">
