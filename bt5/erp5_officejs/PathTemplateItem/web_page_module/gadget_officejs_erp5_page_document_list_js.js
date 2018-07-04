@@ -126,7 +126,7 @@
             gadget.getUrlFor({command: "change", options: {"page": "ojs_add_document"}}),
             gadget.getSetting('document_title_plural'),
             gadget.getUrlFor({command: "change", options: {"page": "ojs_upload_convert"}}),
-            gadget.getSetting('upload_dict', false)
+            gadget.getSetting('conversion_dict', false)
           ]);
         })
         .push(function (result) {
