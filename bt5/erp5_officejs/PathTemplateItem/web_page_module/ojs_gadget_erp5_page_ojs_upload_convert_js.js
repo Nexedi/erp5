@@ -1,7 +1,9 @@
-/*global window, rJS, RSVP, jIO, JSON */
+/*global window, rJS, RSVP, jIO */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, jIO, JSON) {
+(function (window, rJS, RSVP, jIO) {
   "use strict";
+
+  var ATT_NAME = "data";
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -12,6 +14,7 @@
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("jio_post", "jio_post")
+    .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("redirect", "redirect")
@@ -34,57 +37,71 @@
           ]);
         })
         .push(function (result) {
-          var file_name_list, file_name, from, jio_key, data, to,
-              att_id, msg;
+          var file_name_list, file_name, from, jio_key, data,
+              att_id, msg, id_list, to;
           if (result[0].file !== undefined) {
             file_name_list = result[0].file.file_name.split('.');
             from = file_name_list.pop();
-            if (gadget.state.upload.hasOwnProperty(from)) {
-              to = gadget.state.upload[from];
-              att_id = "data?from=" + from + "&to=" + to;
-            } else if (from === result[3]) {
-              att_id = "data";
-            } else {
-              msg = "Can convert, avaible formats : ";
-              for (data in gadget.state.upload) {
-                if (gadget.state.upload.hasOwnProperty(data)) {
-                  msg += data + ", ";
-                }
-              }
-              msg += result[3];
-              return gadget.notifySubmitted({
-                message: msg,
-                status: "error"
-              });
-            }
             file_name = file_name_list.join('.');
             data = jIO.util.dataURItoBlob(result[0].file.url);
-            return gadget.jio_post({
-              title: file_name,
-              portal_type: result[1],
-              content_type: result[2],
-              filename: file_name
-            })
-              .push(function (doc_id) {
-                jio_key = doc_id;
-                return gadget.jio_putAttachment(jio_key, "data?from=" + from + '?to=' + gadget.state.upload_extension, data);
+            if (gadget.state.upload.hasOwnProperty(from)) {
+              to = gadget.state.upload[from];
+              return gadget.jio_post({
+                title: file_name,
+                portal_type: result[1],
+                content_type: result[2],
+                filename: file_name,
+                mime_type: from
               })
-              .push(function () {
-                return jio_key;
-              }, function (error) {
-                return gadget.notifySubmitted({
-                  message: "Can not convert",
-                  status: "error"
+                .push(function (doc_id) {
+                  jio_key = doc_id;
+                  return gadget.jio_putAttachment(jio_key, ATT_NAME, data);
+                })
+                .push(function () {
+                  if (result[3] === from) {
+                    return;
+                  }
+                  return gadget.getDeclaredGadget('ojs_cloudooo')
+                    .push(function (ojs_cloudooo) {
+                      return ojs_cloudooo.putCloudoooConvertOperation({
+                        status: "convert",
+                        from: from,
+                        to: to,
+                        id: jio_key,
+                        name: ATT_NAME
+                      });
+                    });
+                })
+                .push(function () {
+                  return gadget.redirect({
+                    'command': 'display',
+                    'options': {
+                      'page': 'ojs_sync',
+                      'auto_repair': true,
+                      'redirect': jIO.util.stringify({
+                        'command': 'display',
+                        'options': {'jio_key': jio_key}
+                      })
+                    }
+                  });
                 });
-              });
+            }
+            return gadget.notifySubmitted({
+              message: "Can not convert, use format : " +
+                window.Object.keys(gadget.state.upload).join(', '),
+              status: "error"
+            })
+            .push(function () {
+              return;
+            });
           }
           return gadget.notifySubmitted({
             message: "File is required",
             status: "error"
-          });
-        })
-        .push(function () {
-          return;
+          })
+            .push(function () {
+              return;
+            });
         });
     })
 
@@ -97,7 +114,7 @@
       return gadget.getSetting('upload_dict')
         .push(function (upload_dict) {
           return gadget.changeState({
-            upload: JSON.parse(upload_dict)
+            upload: window.JSON.parse(upload_dict)
           });
         });
     })
@@ -122,6 +139,13 @@
                   "key": "file",
                   "hidden": 0,
                   "type": "FileField"
+                },
+                "your_format": {
+                  "title": "Format Avaible",
+                  "required": 0,
+                  "editable": 0,
+                  "default": window.Object.keys(gadget.state.upload).join(', '),
+                  "type": "StringField"
                 }
               }},
               "_links": {
@@ -142,16 +166,14 @@
         })
         .push(function () {
           return RSVP.all([
-            gadget.getUrlFor({command: 'history_previous'})
+            gadget.getUrlFor({command: 'display'})
           ]);
         })
         .push(function (url_list) {
           return gadget.updateHeader({
             page_title: "Upload File",
-            selection_url: url_list[0],
-            previous_url: url_list[1],
-            next_url: url_list[2]
+            selection_url: url_list[0]
           });
         });
     });
-}(window, rJS, RSVP, jIO, JSON));
+}(window, rJS, RSVP, jIO));
