@@ -1608,6 +1608,19 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             "script_id": script.id
           }
         }
+
+      elif relative_url == 'portal_preferences':
+        preference_tool = portal.portal_preferences
+        preference = traversed_document.getActiveUserPreference()
+        if preference:
+          result_dict['_links']['active_preference'] = {
+            "href": default_document_uri_template % {
+              "root_url": site_root.absolute_url(),
+              "relative_url": preference.getRelativeUrl(),
+              "script_id": script.id
+            }
+          }
+
       elif relative_url == 'acl_users':
         logout_relative_url = site_root.getLayoutProperty("configuration_logout", default="")
         if (logout_relative_url):
