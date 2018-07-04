@@ -65,6 +65,7 @@
             <value>
               <tuple>
                 <string>contributor/person_module/1</string>
+                <string>contributor/person_module/2</string>
               </tuple>
             </value>
         </item>
@@ -210,6 +211,16 @@ gadget_button_maximize.js\n
 #setting\n
 gadget_officejs_setting.js\n
 gadget_officejs_setting.html\n
+\n
+#cloudooo\n
+gadget_ojs_cloudooo.html\n
+gadget_ojs_cloudooo.js\n
+gadget_cloudooo.html\n
+gadget_cloudooo.js\n
+gadget_erp5_page_ojs_upload_convert.html\n
+gadget_erp5_page_ojs_upload_convert.js\n
+gadget_erp5_page_ojs_download_convert.html\n
+gadget_erp5_page_ojs_download_convert.js\n
 \n
 #text\n
 gadget_ooffice_text_router.html\n
@@ -1359,7 +1370,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -1373,7 +1384,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.1007.59634.37529</string> </value>
+                <value> <string>968.44103.40227.36471</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1391,7 +1402,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1517243378.3</float>
+                        <float>1530695546.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
