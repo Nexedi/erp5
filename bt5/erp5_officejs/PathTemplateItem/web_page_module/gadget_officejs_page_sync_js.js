@@ -1,6 +1,6 @@
-/*globals window, RSVP, rJS, promiseEventListener, Handlebars*/
+/*globals window, RSVP, rJS, Handlebars*/
 /*jslint indent: 2, maxlen: 80, nomen: true*/
-(function (window, RSVP, rJS, promiseEventListener, Handlebars) {
+(function (window, RSVP, rJS, Handlebars) {
   "use strict";
   var gadget_klass = rJS(window),
     templater = gadget_klass.__template_element,
@@ -22,12 +22,9 @@
             });
         }
         return gadget.repair()
-          .push(function (result) {
-            if (result !== undefined && result.hasOwnProperty('redirect')) {
-              return gadget.redirect({
-                command: "display",
-                options: result.redirect
-              });
+          .push(function () {
+            if (gadget.state.redirect) {
+              return gadget.redirect(window.JSON.parse(gadget.state.redirect));
             }
             return gadget.redirect({command: "display"});
           });
@@ -35,23 +32,16 @@
   }
 
   gadget_klass
-    .ready(function (g) {
-      g.props = {};
-      g.props.auto_repair = false;
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareMethod("render", function () {
+    .declareMethod("render", function (options) {
+      return this.changeState({
+        auto_repair: options.auto_repair,
+        redirect: options.redirect
+      });
+    })
+    .onStateChange(function () {
       var gadget = this;
-
-      if (arguments[0].auto_repair === "true") {
-        gadget.props.auto_repair = true;
-      }
 
       return gadget.updateHeader({
         title: "Synchronize"
@@ -60,7 +50,7 @@
           return gadget.translateHtml(template());
         })
         .push(function (html) {
-          gadget.props.element.innerHTML = html;
+          gadget.element.innerHTML = html;
         });
     })
 
@@ -73,21 +63,9 @@
     .declareService(function () {
       var gadget = this;
 
-      if (gadget.props.auto_repair === true) {
+      if (gadget.state.auto_repair) {
         return repair_and_redirect(gadget);
       }
-
-      return new RSVP.Queue()
-        .push(function () {
-          return promiseEventListener(
-            gadget.props.element.querySelector('form.synchro-form'),
-            'submit',
-            false
-          );
-        })
-        .push(function () {
-          return repair_and_redirect(gadget);
-        });
     });
 
-}(window, RSVP, rJS, promiseEventListener, Handlebars));
+}(window, RSVP, rJS, Handlebars));
