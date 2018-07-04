@@ -65,6 +65,8 @@
           }
           // Add global url calculation
           url_dict_list.push({command: 'display'});
+          // Add change language url calculation
+          url_dict_list.push({command: 'display', options: {page: 'language'}});
           return RSVP.all([
             document_list,
             gadget.translate('Others'),
@@ -123,7 +125,8 @@
           return gadget.updateHeader({
             page_title: 'Modules',
             page_icon: 'puzzle-piece',
-            front_url: url_list[i]
+            front_url: url_list[i],
+            language_url: url_list[i + 1]
           });
         });
     });

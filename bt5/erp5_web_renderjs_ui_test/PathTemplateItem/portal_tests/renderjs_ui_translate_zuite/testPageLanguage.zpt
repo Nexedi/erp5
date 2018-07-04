@@ -16,7 +16,33 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/wo/#/?page=preference</td>
+  <td>${base_url}/web_site_module/renderjs_runner/wo/#/?page=language</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//select[@id='field_language']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//select[@id='field_language']</td>
+  <td></td>
+</tr>
+
+<!-- default has two language -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//option[@data-i18n='Wolof']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//option[@data-i18n='English']</td>
   <td></td>
 </tr>
 
@@ -42,10 +68,22 @@
 
 
 <tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
+  <td colspan="3"><b>Submit the dialog</b></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_language.html')]//input[@type='submit']</td>
   <td></td>
 </tr>
+<tr>
+  <td>click</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_language.html')]//input[@type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td colspan="3"><p></p></td>
+</tr>
+
 
 <tr>
   <td>waitForTextPresent</td>
@@ -103,20 +141,12 @@
  </tr>
 
 
-<tr>
-   <td>waitForElementPresent</td>
-   <td>//button[@data-i18n='Save']</td>
-   <td></td>
- </tr>
-
 
 <tr>
    <td>waitForElementPresent</td>
    <td>//select[@name="field_language"]/option[@selected='selected' and @data-i18n='English']</td>
    <td></td>
  </tr>
-
-
  <tr>
    <td>type</td>
    <td>//select[@name="field_language"]</td>
@@ -125,9 +155,20 @@
 
 
 <tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
+  <td colspan="3"><b>Submit the dialog</b></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_language.html')]//input[@type='submit']</td>
   <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_language.html')]//input[@type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td colspan="3"><p></p></td>
 </tr>
 
 

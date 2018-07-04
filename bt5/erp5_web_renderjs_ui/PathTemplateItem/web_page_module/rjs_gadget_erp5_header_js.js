@@ -39,7 +39,8 @@
     possible_right_link_list = [
       ['edit_url', 'Editable', 'pencil'],
       ['view_url', 'Viewable', 'eye'],
-      ['right_url', 'New', 'plus']
+      ['right_url', 'New', 'plus'],
+      ['language_url', 'Language', 'flag']
     ],
     possible_right_button_list = [
       ['save_action', 'Save', 'check', 'submit'],
@@ -191,9 +192,14 @@
       // Handle right link
       for (i = 0; i < possible_right_link_list.length; i += 1) {
         if (options.hasOwnProperty(possible_right_link_list[i][0])) {
-          klass = "";
+          if (options.extra_class &&
+              options.extra_class.hasOwnProperty(possible_right_link_list[i][0])) {
+            klass = options.extra_class[possible_right_link_list[i][0]];
+          } else {
+            klass = "";
+          }
           if (!options[possible_right_link_list[i][0]]) {
-            klass = "ui-disabled";
+            klass += " ui-disabled";
           }
           state.right_link_title = possible_right_link_list[i][1];
           state.right_link_icon = possible_right_link_list[i][2];

@@ -45,8 +45,12 @@
         // Calculate all URLs
         .push(function (links) {
           var query_string,
-            // Back URL
-            url_for_parameter_list = [{command: 'display'}],
+            url_for_parameter_list = [
+              // Back URL
+              {command: 'display'},
+              // Change language URL
+              {command: 'display', options: {page: 'language'}}
+            ],
             display_options,
             i;
           action_list = links.worklist;
@@ -81,12 +85,12 @@
           var line_list = [],
             url_list = result_list[1],
             i;
-          for (i = 1; i < url_list.length; i += 1) {
+          for (i = 2; i < url_list.length; i += 1) {
             line_list.push({
               link: url_list[i],
               // Remove the counter from the title
-              title: action_list[i - 1].name,
-              count: action_list[i - 1].count
+              title: action_list[i - 2].name,
+              count: action_list[i - 2].count
             });
           }
 
@@ -98,7 +102,8 @@
           return gadget.updateHeader({
             page_title: 'Worklist',
             page_icon: 'tasks',
-            front_url: url_list[0]
+            front_url: url_list[0],
+            language_url: url_list[1]
           });
         });
     });

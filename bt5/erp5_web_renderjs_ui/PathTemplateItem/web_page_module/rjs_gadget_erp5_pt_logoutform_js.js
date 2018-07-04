@@ -16,6 +16,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("updateHeader", "updateHeader")
@@ -26,12 +27,18 @@
     .declareMethod("render", function () {
       var gadget = this;
 
-      return gadget.getUrlFor({command: 'display'})
-        .push(function (front_url) {
+      return gadget.getUrlForList([
+        // Back url
+        {command: 'display'},
+        // Change language
+        {command: 'display', options: {page: 'language'}}
+      ])
+        .push(function (url_list) {
           return gadget.updateHeader({
             page_title: 'Logout',
             page_icon: 'power-off',
-            front_url: front_url
+            front_url: url_list[0],
+            language_url: url_list[1]
           });
         })
         .push(function () {
