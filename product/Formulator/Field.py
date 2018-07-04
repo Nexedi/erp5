@@ -283,9 +283,15 @@ class Field:
         **kw
       )
 
+    security.declareProtected('View', 'render_html')
+    def render_html(self, *args, **kw):
+      """Render as an editable HTML field.
+      """
+      return self.render(*args, **kw)
+
     security.declareProtected('View', 'render_view')
     def render_view(self, value=None, REQUEST=None, render_prefix=None):
-      """Render value to be viewed.
+      """Render value as a read-only HTML field.
       """
       return self.widget.render_view(self, value, REQUEST=REQUEST)
 
@@ -295,13 +301,6 @@ class Field:
       render_pdf renders the field for reportlab
       """
       return self.widget.render_pdf(self, value)
-
-    security.declareProtected('View', 'render_html')
-    def render_html(self, *args, **kw):
-      """
-      render_html is used to as definition of render method in Formulator.
-      """
-      return self.render(*args, **kw)
 
     security.declareProtected('View', 'render_htmlgrid')
     def render_htmlgrid(self, value=None, REQUEST=None, key=None, render_prefix=None, key_prefix=None):
@@ -317,6 +316,10 @@ class Field:
     security.declareProtected('View', 'render_odf')
     def render_odf(self, field=None, key=None, value=None, REQUEST=None,
                      render_format='ooo', render_prefix=None):
+      """Render value in a ODF format.
+
+      XXX used by OOoChart only
+      """
       return self.widget.render_odf(self, key, value, REQUEST, render_format,
                                 render_prefix)
 
@@ -324,6 +327,8 @@ class Field:
     def render_odt(self, key=None, value=None, as_string=True, ooo_builder=None,
         REQUEST=None, render_prefix=None, attr_dict=None, local_name='p',
         key_prefix=None):
+      """Render value as a lxml Element for use in ODT templates
+      """
       field_key = self.generate_field_key(key=key, key_prefix=key_prefix)
       return self._render_odt_helper(field_key, value, as_string,
                                      ooo_builder, REQUEST, render_prefix,
@@ -333,6 +338,8 @@ class Field:
     def render_odt_variable(self, key=None, value=None, as_string=True,
         ooo_builder=None, REQUEST=None, render_prefix=None, attr_dict=None,
         local_name='variable-set', key_prefix=None):
+      """Render value as a lxml Element for use as a variable in ODT templates
+      """
       field_key = self.generate_field_key(key=key, key_prefix=key_prefix)
       return self._render_odt_variable_helper(field_key, value, as_string,
                                      ooo_builder, REQUEST, render_prefix,
@@ -341,7 +348,7 @@ class Field:
     security.declareProtected('View', 'render_odt_view')
     def render_odt_view(self, value=None, as_string=True, ooo_builder=None,
         REQUEST=None, render_prefix=None, attr_dict=None, local_name='p'):
-      """Call read-only renderer
+      """Render value as a read-only lxml Element for use as a variable in ODT templates
       """
       return self.widget.render_odt_view(self, value, as_string, ooo_builder,
                                          REQUEST, render_prefix, attr_dict,
@@ -351,6 +358,8 @@ class Field:
     def render_odg(self, key=None, value=None, as_string=True, ooo_builder=None,
         REQUEST=None, render_prefix=None, attr_dict=None, local_name='p',
         key_prefix=None):
+      """Render value as a read-only lxml Element for use as a variable in ODG templates
+      """
       widget_key = self.generate_field_key(key=key, key_prefix=key_prefix)
       value = self._get_default(widget_key, value, REQUEST)
       return self.widget.render_odg(self, value, as_string, ooo_builder,
@@ -384,7 +393,8 @@ class Field:
 
     security.declareProtected('View', 'render_dict')
     def render_dict(self, value=None, REQUEST=None, key=None, **kw):
-      """
+      """Render field as a mapping that ERP5Catalog understands.
+
       This is yet another field rendering. It is designed to allow code to
       understand field's value data by providing its type and format when
       applicable.
