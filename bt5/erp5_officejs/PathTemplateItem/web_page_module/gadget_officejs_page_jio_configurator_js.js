@@ -25,12 +25,15 @@
         var configuration = {
           type: "uuid",
           sub_storage: {
-            type: "history",
+            type: "query",
             sub_storage: {
-              type: "query",
+              type: "history",
               sub_storage: {
-                type: "indexeddb",
-                database: "local_default"
+                type: "query",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "local_default"
+                }
               }
             }
           }
