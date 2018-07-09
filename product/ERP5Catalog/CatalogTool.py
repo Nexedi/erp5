@@ -837,12 +837,34 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         """
         return ZCatalog.countResults(self, REQUEST, **kw)
 
+    def _filterUserIdSet(id_set):
+      """
+      This is the historical implementation answering the need to sort out
+      which identifiers are actual users, the others being assumed to be
+      security groups.
+      The issue with this approach is that searchUsers, when involving
+      ERP5 user plugins, relies on the catalog. Which means that if a user
+      document (ex: Person) grants a local role to its user, the first
+      indexation will be unable to find that user through searchUsers, and
+      hence will assume it is a security group. In turn, this means that
+      role-specific catalog columns cannot be used for this role on such
+      document, causing a security uid to be allocated. On second
+      reindexation, the user will be properly identified as a user, but
+      security uids are never de-allocated and so the cost of having that
+      extra entry around (longer list of possible values applying to
+      security_uid column) will persist.
+      """
+      return (
+        x['id'] for x in self.getPortalObject().acl_users.searchUsers(
+          id=list(id_set),
+          exact_match=True,
+        )
+      )
+
     def wrapObjectList(self, object_value_list, catalog_value):
       """
         Return a list of wrapped objects for reindexing.
       """
-      portal = self.getPortalObject()
-
       user_set = set()
       role_dict = dict(catalog_value.getSQLCatalogRoleKeysList())
       catalog_security_uid_groups_columns_dict = catalog_value.getSQLCatalogSecurityUidGroupsColumnsDict()
@@ -879,10 +901,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       # affected by this, which must happen before _getSecurityParameterList
       # is called (which happens when calling getSecurityUidDict below).
       user_set.update(
-        x['id'] for x in portal.acl_users.searchUsers(
-          id=list(security_group_set),
-          exact_match=True,
-        )
+        getattr(
+          self,
+          'ERP5Site_filterUserIdSet',
+          self._filterUserIdSet,
+        )(security_group_set),
       )
 
       getSecurityUidDict = catalog_value.getSecurityUidDict
