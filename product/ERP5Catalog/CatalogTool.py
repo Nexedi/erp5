@@ -856,20 +856,18 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """
         Return a list of wrapped objects for reindexing.
       """
-      portal = self.getPortalObject()
-
       user_set = set()
       catalog_role_set = {x for x, _ in catalog_value.getSQLCatalogRoleKeysList()}
       catalog_security_uid_groups_columns_dict = catalog_value.getSQLCatalogSecurityUidGroupsColumnsDict()
       default_security_uid_column = catalog_security_uid_groups_columns_dict['']
       getPredicatePropertyDict = catalog_value.getPredicatePropertyDict
-      security_group_set = set()
+      group_id_set = set()
       wrapper_list = []
       for object_value in object_value_list:
         document_object = aq_inner(object_value)
         w = IndexableObjectWrapper(document_object, user_set, catalog_role_set)
         w.predicate_property_dict = getPredicatePropertyDict(object_value) or {}
-        security_group_set.update(w._getSecurityGroupIdGenerator())
+        group_id_set.update(w._getSecurityGroupIdGenerator())
 
         # Find the parent definition for security
         is_acquired = 0
@@ -885,22 +883,19 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             break
         if is_acquired:
           document_w = IndexableObjectWrapper(document_object, user_set, catalog_role_set)
-          security_group_set.update(document_w._getSecurityGroupIdGenerator())
+          group_id_set.update(document_w._getSecurityGroupIdGenerator())
         else:
           document_w = w
         wrapper_list.append((document_object, w, document_w))
 
-      security_group_set.difference_update(user_set)
-      if security_group_set:
+      group_id_set.difference_update(user_set)
+      if group_id_set:
         # Note: we mutate the set, so all related wrappers get (purposedly)
         # affected by this, which must happen before _getSecurityParameterList
         # is called (which happens when calling getSecurityUidDict below).
-        user_set.update(
-          x['id'] for x in portal.acl_users.searchUsers(
-            id=list(security_group_set),
-            exact_match=True,
-          )
-        )
+        user_set.update(self.ERP5Site_filterUserIdSet(
+          group_id_set=group_id_set,
+        ))
 
       getSecurityUidDict = catalog_value.getSecurityUidDict
       getSubjectSetUid = catalog_value.getSubjectSetUid
