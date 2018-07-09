@@ -214,44 +214,43 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     # Some tests like testDeferredStyle require that we use self.getPortal()
     # instead of self.portal in order to setup current skin.
     portal_activities = self.getPortal().portal_activities
-    if 1:
-      if verbose:
-        ZopeTestCase._print('Executing pending activities ...')
-        old_message_count = 0
-        start = time.time()
-      count = 1000
-      getMessageList = portal_activities.getMessageList
+    if verbose:
+      ZopeTestCase._print('Executing pending activities ...')
+      old_message_count = 0
+      start = time.time()
+    count = 1000
+    getMessageList = portal_activities.getMessageList
+    message_list = getMessageList()
+    message_count = len(message_list)
+    while message_count and not stop_condition(message_list):
+      if verbose and old_message_count != message_count:
+        ZopeTestCase._print(' %i' % message_count)
+        old_message_count = message_count
+      portal_activities.process_timer(None, None)
+      if Lifetime._shutdown_phase:
+        # XXX CMFActivity contains bare excepts
+        raise KeyboardInterrupt
       message_list = getMessageList()
       message_count = len(message_list)
-      while message_count and not stop_condition(message_list):
-        if verbose and old_message_count != message_count:
-          ZopeTestCase._print(' %i' % message_count)
-          old_message_count = message_count
-        portal_activities.process_timer(None, None)
-        if Lifetime._shutdown_phase:
-          # XXX CMFActivity contains bare excepts
-          raise KeyboardInterrupt
-        message_list = getMessageList()
-        message_count = len(message_list)
-        # This prevents an infinite loop.
-        count -= 1
-        if not count or message_count and all(x.processing_node == -2
-                                              for x in message_list):
-          # We're about to raise RuntimeError, but maybe we've reached
-          # the stop condition, so check just once more:
-          if stop_condition(message_list):
-            break
-          error_message = 'tic is looping forever. '
-          try:
-            self.assertNoPendingMessage()
-          except AssertionError, e:
-            error_message += str(e)
-          raise RuntimeError(error_message)
-        # This give some time between messages
-        if count % 10 == 0:
-          portal_activities.timeShift(3 * VALIDATION_ERROR_DELAY)
-      if verbose:
-        ZopeTestCase._print(' done (%.3fs)\n' % (time.time() - start))
+      # This prevents an infinite loop.
+      count -= 1
+      if not count or message_count and all(x.processing_node == -2
+                                            for x in message_list):
+        # We're about to raise RuntimeError, but maybe we've reached
+        # the stop condition, so check just once more:
+        if stop_condition(message_list):
+          break
+        error_message = 'tic is looping forever. '
+        try:
+          self.assertNoPendingMessage()
+        except AssertionError, e:
+          error_message += str(e)
+        raise RuntimeError(error_message)
+      # This give some time between messages
+      if count % 10 == 0:
+        portal_activities.timeShift(3 * VALIDATION_ERROR_DELAY)
+    if verbose:
+      ZopeTestCase._print(' done (%.3fs)\n' % (time.time() - start))
     self.abort()
 
   def afterSetUp(self):
