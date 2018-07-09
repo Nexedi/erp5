@@ -28,8 +28,6 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from ZODB.POSException import ConflictError
 
-import sys
-
 from zLOG import LOG, WARNING
 
 from Products import ERP5Security
@@ -88,11 +86,6 @@ class ERP5GroupManager(BasePlugin):
 
     @UnrestrictedMethod
     def _getGroupsForPrincipal(user_id, path):
-      security_category_dict = {} # key is the base_category_list,
-                                  # value is the list of fetched categories
-      security_group_list = []
-      security_definition_list = ()
-
       # To get the complete list of groups, we try to call the
       # ERP5Type_getSecurityCategoryMapping which should return a list
       # of lists of two elements (script, base_category_list) like :
@@ -116,7 +109,6 @@ class ERP5GroupManager(BasePlugin):
       else:
         security_definition_list = mapping_method()
 
-      # get the person from its login - no security check needed
       user_path_set = {
         x['path']
         for x in self.searchUsers(id=user_id, exact_match=True)
@@ -125,28 +117,36 @@ class ERP5GroupManager(BasePlugin):
       if not user_path_set:
         return ()
       user_path, = user_path_set
-      person_object = self.getPortalObject().unrestrictedTraverse(user_path)
-
-      # Fetch category values from defined scripts
+      user_value = self.getPortalObject().unrestrictedTraverse(user_path)
+      security_category_dict = {}
       for (method_name, base_category_list) in security_definition_list:
         base_category_list = tuple(base_category_list)
         security_category_list = security_category_dict.setdefault(
-                                          base_category_list, [])
+          base_category_list,
+          [],
+        )
         try:
           # The called script may want to distinguish if it is called
           # from here or from _updateLocalRolesOnSecurityGroups.
           # Currently, passing portal_type='' (instead of 'Person')
           # is the only way to make the difference.
-          method = getattr(self, method_name)
           security_category_list.extend(
-            method(base_category_list, user_id, person_object, '')
+            getattr(self, method_name)(
+              base_category_list,
+              user_id,
+              user_value,
+              '',
+            )
           )
         except ConflictError:
           raise
-        except:
-          LOG('ERP5GroupManager', WARNING,
-              'could not get security categories from %s' % (method_name,),
-              error = sys.exc_info())
+        except Exception:
+          LOG(
+            'ERP5GroupManager',
+            WARNING,
+            'could not get security categories from %s' % (method_name, ),
+            error=True,
+          )
 
       # Get group names from category values
       # XXX try ERP5Type_asSecurityGroupIdList first for compatibility
@@ -155,23 +155,26 @@ class ERP5GroupManager(BasePlugin):
       if group_id_list_generator is None:
         generator_name = ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
         group_id_list_generator = getattr(self, generator_name, None)
-      for base_category_list, category_value_list in \
-          security_category_dict.iteritems():
+      security_group_list = []
+      for base_category_list, category_value_list in security_category_dict.iteritems():
         for category_dict in category_value_list:
           try:
             group_id_list = group_id_list_generator(
-                                      category_order=base_category_list,
-                                      **category_dict)
+              category_order=base_category_list,
+              **category_dict
+            )
             if isinstance(group_id_list, str):
               group_id_list = [group_id_list]
             security_group_list.extend(group_id_list)
           except ConflictError:
             raise
-          except:
-            LOG('ERP5GroupManager', WARNING,
-                'could not get security groups from %s' %
-                generator_name,
-                error = sys.exc_info())
+          except Exception:
+            LOG(
+              'ERP5GroupManager',
+              WARNING,
+              'could not get security groups from %s' % (generator_name, ),
+              error=True,
+            )
       return tuple(security_group_list)
 
     if not NO_CACHE_MODE:
