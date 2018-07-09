@@ -1412,6 +1412,31 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     return self._getPortalGroupedCategoryList('assignment') or \
         self._getPortalConfiguration('portal_assignment_base_category_list')
 
+  def getPortalSecurityCategoryMapping(self):
+    """
+      Returns a list of pairs composed of a script id and a list of base
+      category ids to use for computing security groups.
+
+      This is used during indexation, so involved scripts must not rely on
+      catalog at any point in their execution.
+
+      Example:
+        (
+          ('script_1', ['base_category_1', 'base_category_2', ...]),
+          ('script_2', ['base_category_1', 'base_category_3', ...])
+        )
+    """
+    return getattr(
+      self,
+      'ERP5Type_getSecurityCategoryMapping',
+      lambda: ( # BBB
+        (
+          'ERP5Type_getSecurityCategoryFromAssignment',
+          self.getPortalAssignmentBaseCategoryList(),
+        ),
+      ),
+    )()
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalTicketTypeList')
   def getPortalTicketTypeList(self):
