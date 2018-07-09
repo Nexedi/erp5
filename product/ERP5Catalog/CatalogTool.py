@@ -579,14 +579,13 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       role_column_dict = {}
       local_role_column_dict = {}
       catalog = self.getSQLCatalog(sql_catalog_id)
-      column_map = catalog.getColumnMap()
 
       # We only consider here the Owner role (since it was not indexed)
       # since some objects may only be visible by their owner
       # which was not indexed
-      for role, column_id in catalog.getSQLCatalogRoleKeysList():
-        # XXX This should be a list
-        if not user_is_superuser:
+      if not user_is_superuser:
+        for role, column_id in catalog.getSQLCatalogRoleKeysList():
+          # XXX This should be a list
           try:
             # if called by an executable with proxy roles, we don't use
             # owner, but only roles from the proxy.
@@ -633,7 +632,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                 column_id = role_dict[role]
                 new_role_column_dict[column_id] = user_str
             new_allowedRolesAndUsers.append('%s:%s' % (user_or_group, role))
-        if local_role_column_dict == {}:
+        if not local_role_column_dict:
           allowedRolesAndUsers = new_allowedRolesAndUsers
           role_column_dict = new_role_column_dict
 
