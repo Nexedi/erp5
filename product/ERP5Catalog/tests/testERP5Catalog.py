@@ -2329,7 +2329,7 @@ VALUES
   def test_UserOrGroupRoleIndexing(self):
     logout = self.logout
     user1 = 'a_great_user_name'
-    user1_group = 'a_great_user_group'
+    user1_group = 'a-great-user-group'
     uf = self.getPortal().acl_users
     uf._doAddUser(user1, user1, ['Member', ], [])
     uf.zodb_groups.addGroup( user1_group, user1_group, user1_group)
@@ -2589,7 +2589,7 @@ VALUES
   def test_UserOrGroupLocalRoleIndexing(self):
     logout = self.logout
     user1 = 'another_great_user_name'
-    user1_group = 'another_great_user_group'
+    user1_group = 'another-great-user-group'
     uf = self.getPortal().acl_users
     uf._doAddUser(user1, user1, ['Member', ], [])
     uf.zodb_groups.addGroup( user1_group, user1_group, user1_group)
@@ -2827,9 +2827,6 @@ VALUES
       sql_catalog.sql_search_tables = current_sql_search_tables
       self.commit()
 
-  # Low priority bug, which needs a lot of time to be fixed
-  # Marked as expectedFailure
-  @expectedFailure
   def test_PersonDocumentWithMonovaluedLocalRole(self):
     """Test when user is added, which has local roles on own Person Document
 

@@ -837,29 +837,74 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         """
         return ZCatalog.countResults(self, REQUEST, **kw)
 
-    def _filterUserIdSet(id_set):
-      """
-      This is the historical implementation answering the need to sort out
-      which identifiers are actual users, the others being assumed to be
-      security groups.
-      The issue with this approach is that searchUsers, when involving
-      ERP5 user plugins, relies on the catalog. Which means that if a user
-      document (ex: Person) grants a local role to its user, the first
-      indexation will be unable to find that user through searchUsers, and
-      hence will assume it is a security group. In turn, this means that
-      role-specific catalog columns cannot be used for this role on such
-      document, causing a security uid to be allocated. On second
-      reindexation, the user will be properly identified as a user, but
-      security uids are never de-allocated and so the cost of having that
-      extra entry around (longer list of possible values applying to
-      security_uid column) will persist.
-      """
-      return (
-        x['id'] for x in self.getPortalObject().acl_users.searchUsers(
-          id=list(id_set),
-          exact_match=True,
+    def _getAllGroupIdSet(self):
+      # Note to developpers: you may try to optimise this, but please, please
+      # do no use caching. If you want caching, implement
+      # ERP5Site_filderUserIdSet to return exactly the values you need: it
+      # will be even simpler and more efficient than adding an uggly cache
+      # here.
+      portal = self.getPortalObject()
+      base_category_id_set = {
+        base_category_id
+        for _, base_category_id_list in portal.getPortalSecurityCategoryMapping()
+        for base_category_id in base_category_id_list
+      }
+      portal_categories = portal.portal_categories
+      todo_list = []
+      for base_category_id in base_category_id_set:
+        try:
+          base_category_value = portal_categories[base_category_id]
+        except KeyError:
+          LOG(
+            'CatalogTool._getAllGroupIdSet',
+            WARNING,
+            'Base category declared in category mapping, but missing in '
+            'portal_categories: %r' % (base_category_id, ),
+          )
+          continue
+        todo_list.extend(base_category_value.objectValues())
+      group_id_set = set(portal.acl_users.zodb_groups.listGroupIds())
+      while todo_list:
+        category_value = todo_list.pop()
+        group_id = (
+          category_value.getProperty('codification') or
+          category_value.getProperty('reference') or
+          category_value.getId()
         )
-      )
+        if '_' in group_id or group_id[-1] == '*':
+          LOG(
+            'CatalogTool._getAllGroupIdSet',
+            WARNING,
+            'Malformed group id on %s: %r' % (
+              category_value.getPath(),
+              group_id,
+            ),
+          )
+          continue
+        group_id_set.add(group_id)
+        todo_list.extend(category_value.objectValues())
+      return group_id_set
+
+    def _filterUserIdSet(self, id_set):
+      """
+      User identifiers do not follow a strict set of rules.
+      On recent instances, they should start with the letter "P", followed by
+      the ASCII decimal representation of an integer, but this cannot be
+      relied upon without breaking older instances.
+      Non-user identifiers are combination of group codifications, joined by
+      "_". Each group codification may be followed by one "*".
+      """
+      group_id_set = self._getAllGroupIdSet()
+      user_id_set = []
+      for identifier in id_set:
+        for chunk in identifier.split('_'):
+          if chunk[-1:] == '*':
+            chunk = chunk[:-1]
+          if chunk not in group_id_set:
+            # Unexpected chunk, must be a user id
+            user_id_set.append(identifier)
+            break
+      return user_id_set
 
     def wrapObjectList(self, object_value_list, catalog_value):
       """
