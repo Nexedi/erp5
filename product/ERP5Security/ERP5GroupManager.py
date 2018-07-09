@@ -86,29 +86,6 @@ class ERP5GroupManager(BasePlugin):
 
     @UnrestrictedMethod
     def _getGroupsForPrincipal(user_id, path):
-      # To get the complete list of groups, we try to call the
-      # ERP5Type_getSecurityCategoryMapping which should return a list
-      # of lists of two elements (script, base_category_list) like :
-      # (
-      #   ('script_1', ['base_category_1', 'base_category_2', ...]),
-      #   ('script_2', ['base_category_1', 'base_category_3', ...])
-      # )
-      #
-      # else, if the script does not exist, falls back to a list containng
-      # only one list :
-      # (('ERP5Type_getSecurityCategoryFromAssignment',
-      #   self.getPortalAssignmentBaseCategoryList() ),)
-
-      mapping_method = getattr(self,
-          'ERP5Type_getSecurityCategoryMapping', None)
-      if mapping_method is None:
-        security_definition_list = ((
-            'ERP5Type_getSecurityCategoryFromAssignment',
-            self.getPortalAssignmentBaseCategoryList()
-        ),)
-      else:
-        security_definition_list = mapping_method()
-
       user_path_set = {
         x['path']
         for x in self.searchUsers(id=user_id, exact_match=True)
@@ -119,7 +96,7 @@ class ERP5GroupManager(BasePlugin):
       user_path, = user_path_set
       user_value = self.getPortalObject().unrestrictedTraverse(user_path)
       security_category_dict = {}
-      for (method_name, base_category_list) in security_definition_list:
+      for method_name, base_category_list in self.getPortalSecurityCategoryMapping():
         base_category_list = tuple(base_category_list)
         security_category_list = security_category_dict.setdefault(
           base_category_list,
