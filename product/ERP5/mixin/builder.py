@@ -664,7 +664,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     delivery = delivery_module.newContent(
       portal_type=self.getDeliveryPortalType(),
       created_by_builder=1)
-    if self.getPortalObject().portal_workflow.isTransitionPossible(delivery, "auto_plan"):
+    if self.getDeliveryIsAutoPlanned() \
+        and self.getPortalObject().portal_workflow.isTransitionPossible(delivery, "auto_plan"):
       delivery.autoPlan()
     return delivery
 
