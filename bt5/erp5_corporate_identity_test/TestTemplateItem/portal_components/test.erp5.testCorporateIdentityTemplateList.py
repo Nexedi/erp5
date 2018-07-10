@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2017 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2018 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -212,7 +212,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     if dump:
       expected_page.edit(text_content=html)
       self.tic()
-    self.assertEquals(html, expected_page.getData())
+    self.assertEquals(html.encode('UTF-8'), expected_page.getData())
 
   def runPdfTestPattern(self, id1, id2, id3, **kw):
     """

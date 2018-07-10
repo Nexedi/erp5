@@ -11,7 +11,8 @@ html {
 
 /* === font size === */
 .ci-slideshow h1,
-.ci-slideshow h2 {
+.ci-slideshow h2,
+.ci-slideshow-handout .ci-slideshow-handout-header {
   font-size: 42px;
 }
 .ci-slideshow h1 ~ *:not(h2),
@@ -28,19 +29,25 @@ html {
 .ci-slideshow code {
   font-size: 20px;
 }
+.ci-slideshow-handout section section pre,
+.ci-slideshow-handout section section code {
+  font-size: 5mm;
+}
 .ci-slideshow-handout h1,
 .ci-slideshow-handout h2 {
   font-size: 24px;
+}
+.ci-slideshow .ci-slideshow-intro:before {
+  font-size: 28px;
 }
 .ci-slideshow-handout ul li,
 .ci-slideshow-handout ul li a,
 .ci-slideshow-handout div p {
   font-size: 24px;
 }
-.ci-slideshow .ci-slideshow-intro:before {
-  font-size: 28px;
-}
-.ci-slideshow-handout details {
+.ci-slideshow-handout details,
+.ci-slideshow-handout details ul li,
+.ci-slideshow-handout details ul li a {
   font-size: 20px;
 }
 .ci-slideshow-footer div,
@@ -195,10 +202,12 @@ section {
   width: auto;
 }
 /* code */
-html .ci-slideshow code {
+html .ci-slideshow code,
+html .ci-slideshow-handout code {
   background-color: #eee;
 }
-html .ci-slideshow pre {
+html .ci-slideshow pre,
+html .ci-slideshow-handout pre {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -221,6 +230,15 @@ html .ci-slideshow pre {
   text-align: left;
   display: inline-block;
   margin-top: 10%;
+}
+.ci-slideshow section ul ul,
+.ci-slideshow section ul ol,
+.ci-slideshow section ol ul,
+.ci-slideshow section ol ol {
+  padding: 0;
+  margin: 0;
+  margin-left: 4%;
+  margin-top: 1%;
 }
 .ci-slideshow section details ul,
 .ci-slideshow section details ol {
@@ -490,7 +508,7 @@ html .ci-slideshow section img + img:last-child {
 .ci-slideshow-handout,
 .ci-slideshow-handout h1,
 .ci-slideshow-handout details {
-  color: #969696;
+  color: #000; /* JP can't read #969696; */
 }
 .ci-slideshow-handout section section ul,
 .ci-slideshow-handout section section ol {
