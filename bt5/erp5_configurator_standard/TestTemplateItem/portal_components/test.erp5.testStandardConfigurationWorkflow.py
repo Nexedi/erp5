@@ -912,27 +912,13 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     """
       Configurator can configure some PropertySheets.
     """
-    portal = self.portal
-    purchase_order = portal.portal_types['Purchase Order']
-    purchase_order_line = portal.portal_types['Purchase Order Line']
-    sale_order = portal.portal_types['Sale Order']
-    sale_order_line = portal.portal_types['Sale Order Line']
-    inventory = portal.portal_types['Inventory']
-    sale_packing_list = portal.portal_types['Sale Packing List']
-    sale_packing_list_line = portal.portal_types['Sale Packing List Line']
-    self.assertEqual(True,
-                      'TradeOrderLine' in sale_packing_list_line.getTypePropertySheetList())
-    self.assertEqual(True,
-                      'TradeOrder' in purchase_order.getTypePropertySheetList())
-    self.assertEqual(True,
-                      'TradeOrderLine' in purchase_order_line.getTypePropertySheetList())
-    self.assertEqual(True,
-                      'TradeOrder' in sale_order.getTypePropertySheetList())
-    self.assertEqual(True,
-                      'TradeOrderLine' in sale_order_line.getTypePropertySheetList())
-    self.assertEqual(True,
-                      'InventoryConstraint' in inventory.getTypePropertySheetList())
-
+    portal_types = self.portal.portal_types
+    self.assertIn('TradeOrderLine', portal_types['Sale Packing List Line'].getTypePropertySheetList())
+    self.assertIn('TradeOrder', portal_types['Purchase Order'].getTypePropertySheetList())
+    self.assertIn('TradeOrderLine', portal_types['Purchase Order Line'].getTypePropertySheetList())
+    self.assertIn('TradeOrder', portal_types['Sale Order'].getTypePropertySheetList())
+    self.assertIn('TradeOrderLine', portal_types['Sale Order Line'].getTypePropertySheetList())
+    self.assertIn('InventoryConstraint', portal_types['Inventory'].getTypePropertySheetList())
 
   def stepCheckSaleOrderSimulation(self, sequence=None, sequence_list=None, **kw):
     """
