@@ -111,6 +111,7 @@
                         <string>my_delivery_cell_portal_type</string>
                         <string>my_delivery_after_generation_script_id</string>
                         <string>my_delivery_creatable</string>
+                        <string>my_delivery_is_auto_planned</string>
                       </list>
                     </value>
                 </item>
