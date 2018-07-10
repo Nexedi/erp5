@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>description</string>
-                <string>external_validator</string>
                 <string>title</string>
               </list>
             </value>
@@ -86,12 +85,6 @@
                     <value> <string>ISO code of the currency or something similar</string> </value>
                 </item>
                 <item>
-                    <key> <string>external_validator</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_string_field</string> </value>
                 </item>
@@ -109,25 +102,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>Base_uniqueReferenceInFolderValidator</string> </value>
         </item>
       </dictionary>
     </pickle>
