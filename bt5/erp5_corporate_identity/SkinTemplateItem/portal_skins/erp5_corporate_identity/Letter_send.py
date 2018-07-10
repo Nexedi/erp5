@@ -8,7 +8,7 @@ Print letter in any of the supported formats
 
 # parameters (*default)
 # ------------------------------------------------------------------------------
-# #REQUEST:                  request object
+# #REQUEST:                 request object
 # format:                   output format
 # portal_skin:              skin to use for output
 # batch_mode:               used for tests
