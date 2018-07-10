@@ -41,7 +41,7 @@ blank = ''
 
 # ------------------ HTML cleanup/converter methods ----------------------------
 def translateText(snip):
-  return book_localiser.erp5_ui.gettext(snip, lang=book_language).encode('utf-8').strip()
+  return book_localiser.erp5_ui.gettext(snip, lang=book_language).encode('UTF-8').strip()
 
 # -------------------------- Setup ---------------------------------------------
 book = context
@@ -84,6 +84,13 @@ book_version = html_quote(override_document_version) if override_document_versio
 book_description = html_quote(override_document_description) if override_document_description else book.getDescription()
 book_title = html_quote(override_document_title) if override_document_title else book.getTitle()
 
+# unicode
+if isinstance(book_content, unicode):
+  book_content = book_content.encode("UTF-8")
+
+# backcompat
+book_history_section_list = re.findall('<section*?>.+?</section>', book_content, re.S)
+
 # override for tests
 if override_batch_mode:
   book_modification_date = DateTime("1976-11-04")
@@ -122,7 +129,7 @@ book_table_list = []
 book_table_of_content = blank
 
 # backcompat
-book_content.replace("${WebPage_insertTableOfReferences}", blank)
+book_content = book_content.replace("${WebPage_insertTableOfReferences}", blank)
 
 # XXX: not done
 if book_include_history_table:
@@ -178,8 +185,15 @@ if book_include_reference_table:
     book_image_list=book_image_list,
     book_table_list=book_table_list
   )
-  if book_format == 'html' or book_format == 'mhtml':
-    book_content = book_references.encode('utf-8').strip() + book_content
+  #if book_format == 'html' or book_format == 'mhtml':
+  #  book_references = book_references.encode('UTF-8').strip()
+
+  # backcompat for manual history tables at the beginning of documents
+  # NOTE: assumes <section>s are not used elsewhere!
+  if len(book_history_section_list) > 0:
+    book_content = book_content.replace(book_history_section_list[-1], (book_history_section_list[-1] + book_references.encode('UTF-8').strip()))
+  else:
+    book_content = book_references.encode('UTF-8').strip() + book_content
 
 # table of content has to be created manually to run over everything that
 # should be indexed in the toc
@@ -188,7 +202,7 @@ if book_include_content_table:
   if book_format == "pdf":
     book_table_of_content = book.WebPage_createBookXslTableOfContent(
       book_toc_title=book_translated_toc_title
-    ).encode('utf-8').strip()
+    ).encode('UTF-8').strip()
   elif book_format == "html":
     book_content, book_table_of_content = book.WebPage_createTableOfContent(
       doc_content=book_content,
@@ -209,6 +223,7 @@ for image in re.findall('(<img.*?/>)', book_content):
 
 # ========================== Format: mhtml/html ================================
 if book_format == "html" or book_format == "mhtml":
+  context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html; charset=utf-8")
   book_output = book.WebPage_createBook(
     book_theme=book_theme.get("theme"),
     book_title=book_title,
@@ -252,7 +267,6 @@ if book_format == "html" or book_format == "mhtml":
     )
 
   if book_format == "mhtml":
-    context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
     return book.Base_convertHtmlToSingleFile(book_output, allow_script=True)
 
 # ============================= Format: pdf ====================================
@@ -284,7 +298,7 @@ if book_format == "pdf":
     book_distribution_list=book_distribution_list,
   )
 
-  # book_references created above
+  # book_references created and added above
 
   book_content = book.WebPage_createBookContent(
     book_format=book_format,
@@ -338,10 +352,10 @@ if book_format == "pdf":
     before_toc_data_list.append(
       b64encode(book.Base_convertHtmlToSingleFile(book_history, allow_script=True))
     )
-  if book_include_reference_table:
-    after_toc_data_list.append(
-      b64encode(book.Base_convertHtmlToSingleFile(book_references, allow_script=True))
-    )
+  #if book_include_reference_table:
+  #  after_toc_data_list.append(
+  #    b64encode(book.Base_convertHtmlToSingleFile(book_references, allow_script=True))
+  #  )
   xsl_style_sheet_data = book_table_of_content
   embedded_html_data = book.Base_convertHtmlToSingleFile(book_content, allow_script=True)
   footer_embedded_html_data = book.Base_convertHtmlToSingleFile(book_foot, allow_script=True)

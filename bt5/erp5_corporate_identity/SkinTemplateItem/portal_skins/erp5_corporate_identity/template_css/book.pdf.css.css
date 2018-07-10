@@ -421,6 +421,15 @@
   padding: 0 2mm;
   text-align: center;
 }
+/* opinionated align for content tables, overwrite in html if required */
+.ci-book a + table tbody tr td:first-child,
+.ci-book a + table tbody tr th:first-child {
+  text-align: center;
+}
+.ci-book a + table tbody tr td:not(:first-child),
+.ci-book a + table tbody tr th:not(:first-child) {
+  text-align: right;
+}
 .ci-book table thead tr th p {
   color: black !important;
 }
@@ -758,23 +767,29 @@ html .ci-book table td p {
   padding-top: 2mm;
   padding-bottom: 2mm;
 }
-.ci-book .ci-book-distribution-list tbody tr td ul {
+.ci-book .ci-book-distribution-list tbody tr td ul,
+/* backcompat */
+.ci-book section tbody tr td ul {
   vertical-align: top;
   margin-left: 0;
   padding-left: 0;
   display: inline-block;
-  width: 49%;
+  width: 47%;
   padding-top: 5mm;
   padding-bottom: 5mm;
 }
-.ci-book .ci-book-distribution-list tbody tr td ul li {
+.ci-book .ci-book-distribution-list tbody tr td ul li,
+/* backcompat */
+.ci-book section tbody tr td ul li {
   padding: 0;
   list-style: none;
   text-indent: 0;
   line-height: 18pt;
   text-align: left;
 }
-.ci-book .ci-book-distribution-list tbody tr td ul li:before {
+.ci-book .ci-book-distribution-list tbody tr td ul li:before,
+/* backcompat */
+.ci-book section tbody tr td ul li:before {
   content: "■";
   padding-right: 8px;
   vertical-align: middle;
@@ -787,9 +802,20 @@ html .ci-book table td p {
   box-sizing: border-box;
   display: inline-block;
 }
+/* backcompat */
+.ci-book section tbody tr td ul li span,
+.ci-book section tbody tr td ul li div,
+.ci-book section tbody tr td ul li p {
+  display: inline-block;
+}
 .ci-book .ci-book-distribution-list tbody tr td ul li,
 .ci-book .ci-book-distribution-list tbody tr td ul div,
-.ci-book .ci-book-distribution-list tbody tr td ul span {
+.ci-book .ci-book-distribution-list tbody tr td ul span,
+/* backcompat */
+.ci-book section tbody tr td ul li,
+.ci-book section tbody tr td ul div,
+.ci-book section tbody tr td ul span,
+.ci-book section tbody tr td ul p {
   vertical-align: middle;
 }
 /* Version List */
