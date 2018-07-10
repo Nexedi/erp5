@@ -919,6 +919,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertIn('TradeOrder', portal_types['Sale Order'].getTypePropertySheetList())
     self.assertIn('TradeOrderLine', portal_types['Sale Order Line'].getTypePropertySheetList())
     self.assertIn('InventoryConstraint', portal_types['Inventory'].getTypePropertySheetList())
+    self.assertIn('CurrencyConstraint', portal_types['Currency'].getTypePropertySheetList())
 
   def stepCheckSaleOrderSimulation(self, sequence=None, sequence_list=None, **kw):
     """
