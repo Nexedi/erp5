@@ -25,3 +25,7 @@ for portal_type in ['Purchase Order Line', 'Sale Order Line','Sale Packing List 
 configuration_save.addConfigurationItem("Portal Type Configurator Item",
                                         target_portal_type='Inventory',
                                         add_propertysheet_list=('InventoryConstraint',))
+
+configuration_save.addConfigurationItem("Portal Type Configurator Item",
+                                        target_portal_type='Currency',
+                                        add_propertysheet_list=('CurrencyConstraint',))
