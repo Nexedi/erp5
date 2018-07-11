@@ -98,6 +98,11 @@ if block_id == 'S20.G00.05':
   rubric_value_dict['S20.G00.05.009'] = ''
   rubric_value_dict['S20.G00.05.010'] = '01'
 
+# Empty DSN
+if block_id == 'S10.G00.08':
+  # This information has as destination the retirement organisation
+  rubric_value_dict['S20.G00.08.001'] = '88'
+
 # Entreprise
 if block_id == 'S21.G00.06':
   # Calculate the average manpower of all year, if month is December

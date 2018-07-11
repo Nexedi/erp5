@@ -71,7 +71,11 @@ dsn_file.append(getDSNBlockDict(block_id='S10.G00.01', target=organisation))
 dsn_file.append(getDSNBlockDict(block_id='S10.G00.02', target=organisation_contact))
 
 # Monthly DSN
-dsn_file.append(getDSNBlockDict(block_id='S20.G00.05', year=declared_year, month=declared_month, order=nb_dsn, type='01'))
+dsn_file.append(getDSNBlockDict(block_id='S20.G00.05', year=declared_year, month=declared_month, order=nb_dsn, type=dsn_type))
+
+# empty DSN
+if dsn_type == '02':
+  dsn_file.append(getDSNBlockDict(block_id='S10.G00.08', target=organisation_contact))
 
 dsn_file.append(getDSNBlockDict(block_id='S21.G00.06', target=organisation))
 
