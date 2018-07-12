@@ -118,19 +118,31 @@ class IndexableObjectWrapper(object):
             if role[:1] == '-':
               skip_role(role[1:])
             elif role not in skip_role_set:
+              if role == 'Owner':
+                # Owner role may only be granted to users, not to groups so we
+                # can immediately know this security group id is a user.
+                self.__user_set.add(group_id)
               new_role(role)
           if new_role_list:
             local_role_dict[group_id] = new_role_list
         self.__local_role_cache = local_role_dict
       return local_role_dict
 
-    def _getSecurityGroupIdList(self):
+    def _getSecurityGroupIdGenerator(self):
       """
       Return the list of security group identifiers this document is
-      interested in. They may be actual user identifiers or not.
+      interested to know whether they are users or groups: this only matters
+      for security group ids which are granted at least one role mapping to a
+      role column.
+      They may be user identifiers or group identifiers.
       Supposed to be accessed by CatalogTool.
       """
-      return self.__getLocalRoleDict().keys()
+      return (
+        group_id
+        for group_id, role_list in self.__getLocalRoleDict().iteritems()
+        if group_id not in self.__user_set and
+          any(role in self.__catalog_role_set for role in role_list)
+      )
 
     def _getSecurityParameterList(self):
       result = self.__security_parameter_cache
@@ -197,6 +209,8 @@ class IndexableObjectWrapper(object):
         catalog_role_set = self.__catalog_role_set
         user_set = self.__user_set
         for group_id, role_list in self.__getLocalRoleDict().iteritems():
+          # Warning: only valid when group_id is candidate for indexation in a
+          # catalog_role column !
           group_id_is_user = group_id in user_set
           prefix = 'user:' + group_id
           for role in role_list:
@@ -855,7 +869,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         document_object = aq_inner(object_value)
         w = IndexableObjectWrapper(document_object, user_set, catalog_role_set)
         w.predicate_property_dict = getPredicatePropertyDict(object_value) or {}
-        security_group_set.update(w._getSecurityGroupIdList())
+        security_group_set.update(w._getSecurityGroupIdGenerator())
 
         # Find the parent definition for security
         is_acquired = 0
@@ -871,20 +885,22 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             break
         if is_acquired:
           document_w = IndexableObjectWrapper(document_object, user_set, catalog_role_set)
-          security_group_set.update(document_w._getSecurityGroupIdList())
+          security_group_set.update(document_w._getSecurityGroupIdGenerator())
         else:
           document_w = w
         wrapper_list.append((document_object, w, document_w))
 
-      # Note: we mutate the set, so all related wrappers get (purposedly)
-      # affected by this, which must happen before _getSecurityParameterList
-      # is called (which happens when calling getSecurityUidDict below).
-      user_set.update(
-        x['id'] for x in portal.acl_users.searchUsers(
-          id=list(security_group_set),
-          exact_match=True,
+      security_group_set.difference_update(user_set)
+      if security_group_set:
+        # Note: we mutate the set, so all related wrappers get (purposedly)
+        # affected by this, which must happen before _getSecurityParameterList
+        # is called (which happens when calling getSecurityUidDict below).
+        user_set.update(
+          x['id'] for x in portal.acl_users.searchUsers(
+            id=list(security_group_set),
+            exact_match=True,
+          )
         )
-      )
 
       getSecurityUidDict = catalog_value.getSecurityUidDict
       getSubjectSetUid = catalog_value.getSubjectSetUid
