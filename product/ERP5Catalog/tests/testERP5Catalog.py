@@ -2837,9 +2837,6 @@ VALUES
       sql_catalog.sql_search_tables = current_sql_search_tables
       self.commit()
 
-  # Low priority bug, which needs a lot of time to be fixed
-  # Marked as expectedFailure
-  @expectedFailure
   def test_PersonDocumentWithMonovaluedLocalRole(self):
     """Test when user is added, which has local roles on own Person Document
 
