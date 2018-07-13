@@ -169,7 +169,7 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_title"], ["my_reference"], ["my_file"]]
+                [["my_title"], ["my_reference"]]
               ], [
                 "bottom",
                 [["my_content"]]
