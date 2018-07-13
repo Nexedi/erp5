@@ -16,8 +16,8 @@
       url = fake_prefix + decodeURIComponent(url.replace(urn_prefix, ""));
     }
     if (typeof base_url === "string" &&
-      !(url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//")) &&
-      base_url.startsWith("urn:jio:reference?")) {
+        !(url.startsWith("http://") || url.startsWith("https://") || url.startsWith("//")) &&
+        base_url.startsWith("urn:jio:reference?")) {
       if (!urn_prefix) {
         urn_prefix = base_url.indexOf("?") + 1;
         urn_prefix = base_url.slice(0, urn_prefix);
@@ -654,7 +654,6 @@
             // its parent call render with the same value
             // (as ERP5 does in case of formulator error)
             g.state.value = JSON.stringify(value);
-            console.log(g.state.value);
             if (g.state.key) {
               var form_data = {};
               value = JSON.stringify(value);
