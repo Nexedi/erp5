@@ -314,48 +314,36 @@ class TestAlarm(ERP5TypeTestCase):
     self.assertEqual(active_process, alarm.getLastActiveProcess())
 
   def test_15_FailedAlarmsDoNotBlockFutureAlarms(self):
+    sense_method_id = 'Alarm_testSenseMethod'
+    skin_folder_id = 'custom'
+    skin_folder = self.getPortal().portal_skins[skin_folder_id]
+    skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(id=sense_method_id)
+    # Make the sense method fail
+    skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw', 'raise Exception')
+    del skin_folder
+    alarm = self.newAlarm(enabled=True)
+    self.tic()
+    alarm.setActiveSenseMethodId(sense_method_id)
+    self.assertEqual(alarm.isActive(), 0)
+    alarm.activeSense()
     try:
-      sense_method_id = 'Alarm_testSenseMethod'
-      skin_folder_id = 'custom'
-      skin_folder = self.getPortal().portal_skins[skin_folder_id]
-      skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(id=sense_method_id)
-      # Make the sense method fail
-      skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw', 'raise Exception')
-      del skin_folder
-      alarm = self.newAlarm(enabled=True)
       self.tic()
-      now = DateTime()
-      alarm.setActiveSenseMethodId(sense_method_id)
-      self.assertEqual(alarm.isActive(), 0)
-      alarm.activeSense()
-      self.commit()
+    except RuntimeError:
       try:
-        self.tic()
-      except RuntimeError:
-        pass
-      else:
-        raise Exception, 'Tic did not raise though activity was supposed to fail'
-      # Check that the alarm is not considered active, although there is a remaining activity.
-      self.assertEqual(alarm.hasActivity(), 1)
-      self.assertEqual(alarm.isActive(), 0)
-      self.assertEqual(alarm.getLastActiveProcess(), None)
-      # Make the sense method succeed and leave a trace
-      self.getPortal().portal_skins[skin_folder_id][sense_method_id].ZPythonScript_edit('*args,**kw', 'context.newActiveProcess()')
-      alarm.activeSense()
-      self.commit()
-      # Note: this call to tic will fail, because the previous message is still there
-      # This behaviour is logical if we consider that we want to keep errors
-      # in order to know that an error occured.
-      try:
-        self.tic()
-      except RuntimeError:
-        pass
-      else:
-        raise Exception, 'Tic did not raise though activity was supposed to fail'
-      # Chen that the second alarm execution did happen
-      self.assertNotEquals(alarm.getLastActiveProcess(), None)
-    finally:
-      self.portal.portal_activities.manageClearActivities(keep=0)
+        # Check that the alarm is not considered active, although there is a remaining activity.
+        self.assertEqual(alarm.hasActivity(), 1)
+        self.assertEqual(alarm.isActive(), 0)
+        self.assertEqual(alarm.getLastActiveProcess(), None)
+      finally:
+        self.portal.portal_activities.manageClearActivities(keep=0)
+    else:
+      raise Exception, 'Tic did not raise though activity was supposed to fail'
+    # Make the sense method succeed and leave a trace
+    self.getPortal().portal_skins[skin_folder_id][sense_method_id].ZPythonScript_edit('*args,**kw', 'context.newActiveProcess()')
+    alarm.activeSense()
+    self.tic()
+    # Chen that the second alarm execution did happen
+    self.assertNotEquals(alarm.getLastActiveProcess(), None)
 
   def test_16_uncatalog(self):
     """
