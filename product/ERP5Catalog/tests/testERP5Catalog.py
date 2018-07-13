@@ -2836,8 +2836,6 @@ VALUES
     This is a case when Person document containting reference with local role
     which shall be monovalued is reindexed for first time.
     """
-    user = 'person_document_user_name'
-
     sql_connection = self.getSQLConnection()
     def query(sql):
       result = sql_connection.manage_test(sql)
@@ -2931,9 +2929,10 @@ VALUES
       self.portal.portal_caches.clearAllCache()
       self.commit()
 
-      person = self.portal.person_module.newContent(portal_type='Person',
-          reference=user)
-      person.manage_setLocalRoles(user, ['Assignee'])
+      person = self.portal.person_module.newContent(portal_type='Person')
+      user_id = person.Person_getUserId()
+      person.manage_setLocalRoles(user_id, ['Assignee'])
+
       self.tic()
 
       roles_and_users_result = query('select * from roles_and_users where uid = (select security_uid from catalog where uid = %s)' % person.getUid())
@@ -2945,7 +2944,7 @@ VALUES
           ['Assignee', 'Assignor', 'Associate', 'Auditor', 'Author', 'Manager']
       )
       # check that user has optimised security declaration
-      self.assertEqual(local_roles_table_result['viewable_assignee_reference'], user)
+      self.assertEqual(local_roles_table_result['viewable_assignee_reference'], user_id)
     finally:
       sql_catalog.sql_catalog_object_list = \
         current_sql_catalog_object_list
