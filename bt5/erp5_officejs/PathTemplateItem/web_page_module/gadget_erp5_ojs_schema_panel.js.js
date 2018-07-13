@@ -74,7 +74,7 @@
         .push(function () {
           return RSVP.all([
             context.jio_allDocs({
-              "query": 'portal_type:"JSON Schema"',
+              "query": '(portal_type:"JSON Schema") AND (NOT (title:""))',
               "limit": [0, 31],
               "select_list": ["title", "reference"],
               "sort_on": [["title", "descending"]]
