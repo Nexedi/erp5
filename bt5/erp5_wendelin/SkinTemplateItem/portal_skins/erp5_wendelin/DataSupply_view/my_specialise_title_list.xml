@@ -559,6 +559,10 @@
                           <string>Data Supply</string>
                         </tuple>
                         <tuple>
+                          <string>Data Transformation</string>
+                          <string>Data Transformation</string>
+                        </tuple>
+                        <tuple>
                           <string>Business Process</string>
                           <string>Business Process</string>
                         </tuple>
@@ -572,6 +576,10 @@
                         <tuple>
                           <string>DataSupplyModule_viewDataSupplyList/listbox</string>
                           <string>Data Supplies</string>
+                        </tuple>
+                        <tuple>
+                          <string>DataTransformationModule_viewDataTransformationList/listbox</string>
+                          <string>Data Transformations</string>
                         </tuple>
                         <tuple>
                           <string>BusinessProcessModule_viewBusinessProcessList/listbox</string>
@@ -604,7 +612,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Specialised Data Supplies and Business Processes</string> </value>
+                    <value> <string>Specialises</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
