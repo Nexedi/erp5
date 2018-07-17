@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.51 (2017-07-17)
+-------------------
+
+ * erp5.util
+
+   - scalability testing framework  [Roque Porchetto]
+
 0.4.50 (2017-11-22)
 -------------------
 
