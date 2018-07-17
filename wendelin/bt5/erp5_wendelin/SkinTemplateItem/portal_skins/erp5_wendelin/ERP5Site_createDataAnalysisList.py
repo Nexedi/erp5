@@ -12,7 +12,7 @@ if not include_delivered:
 
 else:
   batch_simulation_state = ["stopped", "delivered"]
-  stream_simulation_state = ["started", "stopped", "delivered"]  
+  stream_simulation_state = ["started", "stopped", "delivered"]
 
 query = AndQuery(
           Query(portal_type = ["Data Ingestion Line", "Data Analysis Line"]),
@@ -32,11 +32,21 @@ for movement in portal_catalog(query):
     raise ValueError("Transformation requires movement to have " +
                      "aggregated data ingestion batch")
   delivery = movement.getParentValue()
+  data_supply = delivery.getSpecialiseValue(portal_type="Data Supply")
+  data_supply_list = delivery.getSpecialiseValueList(portal_type="Data Supply")
+  composed_data_supply = data_supply.asComposedDocument()
   # Get applicable transformation
-  for transformation in portal_catalog(
-                  portal_type = "Data Transformation",
-                  validation_state = "validated",
-                  resource_relative_url = movement.getResource()):
+  transformation_list = []
+  for transformation in composed_data_supply.getSpecialiseValueList(portal_type="Data Transformation"):
+    for line in transformation.objectValues():
+      if line.getResourceValue() == movement.getResourceValue() and line.getQuantity() < 0:
+        transformation_list.append(transformation)
+        break
+  transformation_list += list(portal.portal_catalog(
+    portal_type = "Data Transformation",
+    validation_state = "validated",
+    resource_relative_url = movement.getResource()))
+  for transformation in transformation_list:
     # Check if analysis already exists
     data_analysis = portal_catalog.getResultValue(
       portal_type="Data Analysis",
@@ -44,7 +54,6 @@ for movement in portal_catalog(query):
       causality_relative_url = delivery.getRelativeUrl())
     if data_analysis is not None:
       continue
-    data_supply = delivery.getSpecialiseValueList(portal_type="Data Supply")
     # Create Analysis
     data_analysis = portal.data_analysis_module.newContent(
                   portal_type = "Data Analysis",
@@ -52,7 +61,7 @@ for movement in portal_catalog(query):
                   reference = delivery.getReference(),
                   start_date = delivery.getStartDate(),
                   stop_date = delivery.getStopDate(),
-                  specialise_value_list = [transformation] + data_supply,
+                  specialise_value_list = [transformation] + data_supply_list,
                   causality_value = delivery,
                   source = delivery.getSource(),
                   source_section = delivery.getSourceSection(),
@@ -127,8 +136,8 @@ for movement in portal_catalog(query):
             aggregate_set.add(item.getRelativeUrl())
       # find other items such as device configuration and data configuration
       # from data ingestion and data supply
-      composed = data_analysis.asComposedDocument()
       data_analysis.checkConsistency(fixit=True)
+      composed = data_analysis.asComposedDocument()
       line_list = [l for l in delivery.objectValues(portal_type="Data Ingestion Line")]
       line_list +=  [l for l in composed.objectValues(portal_type="Data Supply Line")]
       for line in line_list:
