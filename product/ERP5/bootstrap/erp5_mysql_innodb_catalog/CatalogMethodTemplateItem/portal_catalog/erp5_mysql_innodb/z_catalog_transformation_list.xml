@@ -59,7 +59,7 @@
 DELETE FROM `transformation` WHERE\n
   <dtml-sqltest expr="outer_item[\'uid\']" column="uid" type="int">\n
   AND\n
-  <dtml-sqltest expr="outer_item[\'variation_text\']" column="variation_text" type="string">;\n
+  <dtml-sqltest expr="outer_item[\'variation_text\']" column="variation_text" type="string"><dtml-var sql_delimiter>\n
 <dtml-var sql_delimiter>\n
 <dtml-call "row_list.extend(outer_item[\'row_dict_list\'])">\n
 </dtml-in>\n

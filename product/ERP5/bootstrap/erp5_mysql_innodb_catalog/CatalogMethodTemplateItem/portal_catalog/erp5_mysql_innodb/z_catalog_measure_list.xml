@@ -56,7 +56,7 @@ getMeasureRowList</string> </value>
             <value> <string encoding="cdata"><![CDATA[
 
 DELETE FROM `measure` WHERE\n
-  <dtml-sqltest uid column="resource_uid" type="int" multiple>;\n
+  <dtml-sqltest uid column="resource_uid" type="int" multiple><dtml-var sql_delimiter>\n
 \n
 <dtml-let measure_list="[]">\n
   <dtml-in getMeasureRowList prefix="loop">\n

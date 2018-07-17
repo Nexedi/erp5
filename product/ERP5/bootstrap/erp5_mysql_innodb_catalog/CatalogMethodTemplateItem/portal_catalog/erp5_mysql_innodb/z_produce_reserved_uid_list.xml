@@ -61,7 +61,7 @@ VALUES\n
 <dtml-in "_.range(count - 1)">\n
 ( <dtml-sqlvar instance_id type="string"> , \'reserved\' ) ,\n
 </dtml-in>\n
-( <dtml-sqlvar instance_id type="string"> , \'reserved\' );\n
+( <dtml-sqlvar instance_id type="string"> , \'reserved\' )<dtml-var sql_delimiter>\n
 \n
 <dtml-var "\'\\0\'">\n
 \n

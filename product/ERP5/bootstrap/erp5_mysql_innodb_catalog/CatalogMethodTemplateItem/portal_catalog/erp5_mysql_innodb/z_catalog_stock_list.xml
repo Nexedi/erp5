@@ -89,7 +89,7 @@ WHERE\n
 <dtml-in uid>\n
   uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
 </dtml-in>\n
-;\n
+<dtml-var sql_delimiter>\n
 \n
 <dtml-var "\'\\0\'">\n
 <dtml-let row_list="[]" uid_dict="{}">\n

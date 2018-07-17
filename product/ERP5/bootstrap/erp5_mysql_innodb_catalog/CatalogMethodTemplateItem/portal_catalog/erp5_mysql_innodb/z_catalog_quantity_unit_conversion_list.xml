@@ -39,7 +39,7 @@ getQuantityUnitConversionDefinitionRowList\r\n
 \n
 <dtml-if quantity_unit_conversion_dict>\n
 DELETE FROM `quantity_unit_conversion` WHERE\n
-  <dtml-sqltest "quantity_unit_conversion_dict.keys()" column="resource_uid" type="int" multiple>;\n
+  <dtml-sqltest "quantity_unit_conversion_dict.keys()" column="resource_uid" type="int" multiple><dtml-var sql_delimiter>\n
 \n
 \n
   <dtml-var sql_delimiter>\n
