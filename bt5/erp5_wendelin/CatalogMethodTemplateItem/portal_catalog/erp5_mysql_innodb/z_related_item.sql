@@ -1,0 +1,1 @@
+<dtml-var table_0>.aggregate_uid = catalog.uid
