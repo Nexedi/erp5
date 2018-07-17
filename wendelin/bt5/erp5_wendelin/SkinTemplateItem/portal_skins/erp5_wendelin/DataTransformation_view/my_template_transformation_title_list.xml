@@ -97,7 +97,7 @@
                       <list>
                         <tuple>
                           <string>DataTransformationModule_viewDataTransformationList/listbox</string>
-                          <string>Transformation</string>
+                          <string>Data Transformation</string>
                         </tuple>
                       </list>
                     </value>
