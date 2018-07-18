@@ -191,7 +191,7 @@
             tasks.push(gen_element({command: 'display', options: {page: "ojs_configurator"}},
               "Storages", "dropbox"));
             if (context.state.editable) {
-              tasks.push(gen_element({command: 'index', options: {page: "ojs_multi_upload"}},
+              tasks.push(gen_element({command: 'index', options: {page: "ojs_zip_upload"}},
                 "Upload", "upload"));
             }
             return RSVP.all(tasks);
