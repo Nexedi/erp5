@@ -90,7 +90,7 @@
                           <string>Subscription</string>
                         </tuple>
                         <tuple>
-                          <string>free_subscription_request_type_title</string>
+                          <string>free_subscription_request_type_translated_title</string>
                           <string>Type</string>
                         </tuple>
                         <tuple>

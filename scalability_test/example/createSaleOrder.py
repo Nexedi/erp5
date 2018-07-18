@@ -85,7 +85,7 @@ def createSaleOrder(result, browser):
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
-  sale_order_url = browser.url
+  sale_order_url = my_order_sale_url
 
   # Set Sale Trade Condition, Client and Beneficiary
   for number_button in (2,4,5):
