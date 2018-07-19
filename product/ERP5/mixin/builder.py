@@ -727,7 +727,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         # if total quantity is 0 no need to create anything
         total_quantity = 0
         for movement in movement_group_node.getMovementList():
-          total_quantity += movement.getQuantity()
+          total_quantity += abs(movement.getQuantity())
         if total_quantity == 0:
           return delivery_list
 
