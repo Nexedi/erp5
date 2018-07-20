@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Image_toOrient</string> </value>
+            <value> <string>Image_reorient</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -14,4 +14,4 @@ proof_list = portal.portal_catalog(
 if not proof_list:
   return ""
 
-return proof_list[0].Image_toOrient()
+return proof_list[0].Image_reorient()
