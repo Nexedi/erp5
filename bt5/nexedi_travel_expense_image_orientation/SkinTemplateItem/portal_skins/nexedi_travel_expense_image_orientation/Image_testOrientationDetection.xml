@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_testOrientationDetection</string> </value>
+            <value> <string>Image_testOrientationDetection</string> </value>
         </item>
       </dictionary>
     </pickle>

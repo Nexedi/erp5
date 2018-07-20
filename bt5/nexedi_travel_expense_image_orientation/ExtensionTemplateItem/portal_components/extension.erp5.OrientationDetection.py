@@ -10,6 +10,7 @@ from PIL import Image
 from scipy import ndimage as ndi
 import collections
 import pytesseract
+import StringIO
 
 
 # In[2]:
@@ -229,5 +230,16 @@ def orientation(image) :
   cropped_images.append(image_binnarize_tesseract)
   result = tess_prediction_list(cropped_images)
   
-  return "Result : "+str(result)
+  return result
 
+def image_well_oriented(image) :
+  rotation = orientation(image)
+  
+  image_reoriented = Image.open(image).rotate(rotation)
+    
+  # put orientation
+  image_export = StringIO.StringIO()
+  image_reoriented.save(image_export, 'png')
+  
+  return image_export
+    
