@@ -242,4 +242,13 @@ def image_well_oriented(image) :
   image_reoriented.save(image_export, 'png')
   
   return image_export
+  
+def rotate_image(image, rotation) :
+  image_reoriented = Image.open(image).rotate(rotation, expand=True)
+    
+  # put orientation
+  image_export = StringIO.StringIO()
+  image_reoriented.save(image_export, 'png')
+  
+  return image_export
     
