@@ -139,6 +139,26 @@ for(d=1;d<=W;d++)f[d]=g=g+c[d-1]<<1;for(e=0;e<=b;e++){var h=a[2*e+1];0!==h&&(a[2
       });
   };
 
+  ZipFileStorage.prototype.hasCapacity = function (name) {
+    return (name === "list");
+  };
+
+  ZipFileStorage.prototype.buildQuery = function () {
+    return loadZip(this)
+      .push(function (zip) {
+        var dirname,
+          dir_list = [{id: '/', value: {}}];
+        for (dirname in zip.files) {
+          if (zip.files.hasOwnProperty(dirname)) {
+            if (zip.files[dirname].dir) {
+              dir_list.push({id: '/' + dirname, value: {}});
+            }
+          }
+        }
+        return dir_list;
+      });
+  };
+
   ZipFileStorage.prototype.allAttachments = function (id) {
     id = restrictDocumentId(id);
     return loadZip(this)
@@ -204,8 +224,8 @@ for(d=1;d<=W;d++)f[d]=g=g+c[d-1]<<1;for(e=0;e<=b;e++){var h=a[2*e+1];0!==h&&(a[2
           throw new jIO.util.jIOError("Cannot find document", 404);
         }
         if (!(zip.files.hasOwnProperty(attachId) && !zip.files[attachId].dir)) {
-          throw new jIO.util.jIOError("Cannot find attachment: "
-            + '/' + id + " , " + name,
+          throw new jIO.util.jIOError("Cannot find attachment: " +
+            '/' + id + " , " + name,
             404);
         }
         return zip.file(attachId).async('blob');
@@ -222,8 +242,8 @@ for(d=1;d<=W;d++)f[d]=g=g+c[d-1]<<1;for(e=0;e<=b;e++){var h=a[2*e+1];0!==h&&(a[2
           throw new jIO.util.jIOError("Cannot find document", 404);
         }
         if (!(zip.files.hasOwnProperty(attachId) && !zip.files[attachId].dir)) {
-          throw new jIO.util.jIOError("Cannot find attachment: "
-            + '/' + id + " , " + name,
+          throw new jIO.util.jIOError("Cannot find attachment: " +
+            '/' + id + " , " + name,
             404);
         }
         zip.remove(attachId);
