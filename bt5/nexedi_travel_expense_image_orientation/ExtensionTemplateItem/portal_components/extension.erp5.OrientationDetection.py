@@ -235,7 +235,7 @@ def orientation(image) :
 def image_well_oriented(image) :
   rotation = orientation(image)
   
-  image_reoriented = Image.open(image).rotate(rotation)
+  image_reoriented = Image.open(image).rotate(rotation, expand=True)
     
   # put orientation
   image_export = StringIO.StringIO()

@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Expense Validation Request</type>
+  <workflow>nexedi_expense_validation_request_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>
