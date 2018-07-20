@@ -58,7 +58,7 @@ class Test(ERP5TypeTestCase):
     self.assertEqual(rotation, expected_rotation)
     
     # image rotation
-    image = Image.open(data).rotate(rotation)
+    image = Image.open(data).rotate(rotation, expand=True)
     
     # put orientation
     image_export = StringIO.StringIO()
