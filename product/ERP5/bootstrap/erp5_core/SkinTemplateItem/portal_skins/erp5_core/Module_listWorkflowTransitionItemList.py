@@ -36,7 +36,7 @@ for document_portal_type_id in module_portal_type.getTypeAllowedContentTypeList(
             else:
               allowed_state_dict[possible_transition_id] = [state_id]
 
-        for transition_id in workflow.transitions:
+        for transition_id in allowed_state_dict:
           transition = workflow.transitions[transition_id]
           # Only display user action transition with a dialog to show to user
           if (transition.trigger_type == TRIGGER_USER_ACTION) and (transition.actbox_url) and (transition.actbox_name):
