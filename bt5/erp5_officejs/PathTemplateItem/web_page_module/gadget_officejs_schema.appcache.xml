@@ -219,6 +219,8 @@ gadget_erp5_ojs_schema_panel.html\n
 gadget_erp5_ojs_schema_panel.js\n
 gadget_officejs_jio_json_schema_view.html\n
 gadget_officejs_jio_json_schema_view.js\n
+gadget_officejs_jio_json_document_view.html\n
+gadget_officejs_jio_json_document_view.js\n
 gadget_erp5_page_ojs_multi_upload.html\n
 gadget_erp5_page_ojs_multi_upload.js\n
 gadget_erp5_page_ojs_zip_upload.html\n
@@ -386,7 +388,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>968.64276.14441.43929</string> </value>
+                <value> <string>968.64277.23410.35857</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -404,7 +406,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1531905921.42</float>
+                        <float>1531936654.32</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
