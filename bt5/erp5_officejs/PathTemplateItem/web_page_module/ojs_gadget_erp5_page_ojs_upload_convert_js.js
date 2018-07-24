@@ -37,12 +37,10 @@
           ]);
         })
         .push(function (result) {
-          var file_name_list, file_name, from, jio_key, data,
-              att_id, msg, id_list, to;
+          var file_name, from, jio_key, data, to;
           if (result[0].file !== undefined) {
-            file_name_list = result[0].file.file_name.split('.');
-            from = file_name_list.pop();
-            file_name = file_name_list.join('.');
+            file_name = result[0].file.file_name;
+            from = file_name.split('.').pop();
             data = jIO.util.dataURItoBlob(result[0].file.url);
             if (gadget.state.upload.hasOwnProperty(from)) {
               to = gadget.state.upload[from];
@@ -91,9 +89,9 @@
                 window.Object.keys(gadget.state.upload).join(', '),
               status: "error"
             })
-            .push(function () {
-              return;
-            });
+              .push(function () {
+                return;
+              });
           }
           return gadget.notifySubmitted({
             message: "File is required",
