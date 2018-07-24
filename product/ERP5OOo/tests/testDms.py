@@ -1455,7 +1455,7 @@ class TestDocument(TestDocumentMixin):
     upload_file = makeFileUpload('cmyk_sample.jpg')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('Image', document.getPortalType())
-    self.assertEqual('ERP5 is a free software\n\x0c', document.asText())
+    self.assertEqual('ERP5 is a free software.\n\x0c', document.asText())
 
   def test_MonochromeImageResize(self):
     upload_file = makeFileUpload('monochrome_sample.tiff')
@@ -1464,7 +1464,7 @@ class TestDocument(TestDocumentMixin):
     resized_image = document.convert(format='png', display='small')[1]
     identify_output = Popen(['identify', '-verbose', '-'], stdin=PIPE, stdout=PIPE).communicate(resized_image)[0]
     self.assertFalse('1-bit' in identify_output)
-    self.assertEqual('ERP5 is a free software\n\x0c', document.asText())
+    self.assertEqual('ERP5 is a free software.\n\x0c', document.asText())
 
   def test_Base_showFoundText(self):
     # Create document with good content
