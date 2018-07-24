@@ -9,7 +9,7 @@
         .push(function (jio_gadget) {
           return jio_gadget.createJio({
             type: "cloudooo",
-            url: "https://cloudooo.erp5.net/"
+            url: "https://softinst104018.host.vifib.net/"
           });
         });
     })
@@ -77,9 +77,9 @@
       return gadget.jio_allDocs({
         'query': 'status: "convert"'
       })
-      .push(function (result) {
-        var i = result.data.total_rows - 1;
-        return convertAndPush(result.data.rows, i);
-      });
+        .push(function (result) {
+          var i = result.data.total_rows - 1;
+          return convertAndPush(result.data.rows, i);
+        });
     });
 }(window, rJS, jIO, RSVP));
