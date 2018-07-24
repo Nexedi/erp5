@@ -1,5 +1,5 @@
 /*global window, rJS, RSVP, loopEventListener,
-  jIO, document */
+  jIO, document, URL */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, jIO, RSVP) {
   "use strict";
@@ -9,6 +9,17 @@
     Presentation: 'application/x-asc-presentation',
     Text: 'application/x-asc-text'
   };
+
+  function displayError(g, text) {
+    return g.notifySubmitted({
+      message: text,
+      status: 'fail'
+    })
+      .push(function () {
+        // return undefined for fail detection
+        return;
+      });
+  }
 
   function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
@@ -109,8 +120,54 @@
           return form_gadget.getContent();
         })
         .push(function (content) {
+          var data_array,
+            protocol,
+            i;
+          if (!content.data) {
+            content.data = [];
+          }
+          data_array = content.data;
+          for (i = 0; i < data_array.length; i += 1) {
+            data_array[i].blob = jIO.util.dataURItoBlob(data_array[i].url);
+            data_array[i].url = undefined;
+          }
+          if (content.data_url) {
+            protocol = (new URL(content.data_url, gadget.__path)).protocol;
+            if (protocol === "http:") {
+              if (window.location.protocol !==  protocol) {
+                return displayError(gadget, "You cannot mixed http and https calls");
+              }
+            }
+            return RSVP.Queue()
+              .push(function () {
+                return jIO.util.ajax({
+                  dataType: "blob",
+                  url: content.data_url
+                });
+              })
+              .push(function (evt) {
+                content.data.push({
+                  blob: evt.target.response,
+                  file_name: content.data_url
+                });
+                return content;
+              }, function () {
+                return displayError(gadget, 'Download ' + content.data_url + ' Failed');
+              });
+          }
+          return content;
+        })
+        .push(function (content) {
+          if (!content) {
+            // fail while downloading
+            return;
+          }
+          if (content.data.length === 0) {
+            return gadget.notifySubmitted({message: 'You need enter data', status: 'fail'});
+          }
           return new RSVP.Queue()
             .push(function () {
+
               return RSVP.all([
                 gadget.getSetting('jio_storage_name'),
                 gadget.getSetting('jio_storage_description')
@@ -133,7 +190,7 @@
               }
 
               for (i = 0; i < data_array.length; i += 1) {
-                blob = jIO.util.dataURItoBlob(data_array[i].url);
+                blob = data_array[i].blob;
                 if (endsWith(data_array[i].file_name, ".zip")) {
                   configuration = {
                     type: "replicate",
@@ -172,13 +229,13 @@
                 }
               }
               return RSVP.all(promiseArray);
+            })
+            .push(function () {
+              return RSVP.all([
+                gadget.notifySubmitted({message: 'Data Updated', status: 'success'}),
+                gadget.redirect({command: 'history_previous'})
+              ]);
             });
-        })
-        .push(function () {
-          return RSVP.all([
-            gadget.notifySubmitted({message: 'Data Updated', status: 'success'}),
-            gadget.redirect({command: 'history_previous'})
-          ]);
         });
     })
 
@@ -201,13 +258,24 @@
                     "title": "Upload files and Zip archive containing files",
                     "default": "",
                     "css_class": "",
-                    "required": 1,
+                    "required": 0,
                     "editable": 1,
                     "key": "data",
                     "hidden": 0,
                     "multiple": "true",
                     "accept": "application/zip," + result[1],
                     "type": "FileField"
+                  },
+                  "my_url": {
+                    "description": "",
+                    "title": "Fetch and Upload files and Zip archive containing files",
+                    "default": "",
+                    "css_class": "",
+                    "required": 0,
+                    "editable": 1,
+                    "key": "data_url",
+                    "hidden": 0,
+                    "type": "StringField"
                   }
                 }
               },
@@ -221,7 +289,7 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_file"]]
+                [["my_file"], ["my_url"]]
               ]]
             }
           });
