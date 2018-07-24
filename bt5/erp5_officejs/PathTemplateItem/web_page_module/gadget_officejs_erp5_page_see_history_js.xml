@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -24,7 +23,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +41,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -59,7 +55,14 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
               </tuple>
             </value>
         </item>
@@ -70,8 +73,16 @@
             </value>
         </item>
         <item>
+            <key> <string>creators</string> </key>
+            <value>
+              <tuple>
+                <string>cedric.le.ninivin</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_drive_app_configurator.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_see_history.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,11 +92,32 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ojs_page_drive_app_configurator_js</string> </value>
+            <value> <string>gadget_officejs_erp5_page_see_history_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>modification_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1455284351.49</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -99,7 +131,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS jIO Configurator Gadget JS</string> </value>
+            <value> <string>OfficeJS See History JS</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -165,7 +197,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -191,7 +223,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1503468815.72</float>
+                        <float>1531744666.92</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -200,7 +232,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -236,7 +268,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>968.44071.55411.42615</string> </value>
+                <value> <string>968.63165.50418.55142</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +286,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1530708459.0</float>
+                        <float>1531839433.13</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -311,7 +343,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1503468797.44</float>
+                        <float>1531478632.37</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

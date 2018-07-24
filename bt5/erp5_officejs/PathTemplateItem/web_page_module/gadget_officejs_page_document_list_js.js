@@ -36,8 +36,11 @@
     .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("jio_toggleRevisionOption",
+                           "jio_toggleRevisionOption")
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this;
+      gadget.jio_toggleRevisionOption(false);
       return this.jio_allDocs.apply(this, param_list)
         .push(function (result) {
           var i,

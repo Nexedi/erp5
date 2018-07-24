@@ -12,6 +12,8 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("jio_toggleRevisionOption",
+                           "jio_toggleRevisionOption")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -67,7 +69,6 @@
 
     .declareMethod("render", function () {
       var gadget = this;
-
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([

@@ -41,7 +41,6 @@
     .declareMethod("render", function (options) {
       var gadget = this,
         child_gadget_url;
-
       return gadget.jio_get(options.jio_key)
         .push(function (result) {
 
