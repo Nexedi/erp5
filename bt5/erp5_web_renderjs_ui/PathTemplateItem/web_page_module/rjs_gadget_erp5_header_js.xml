@@ -64,6 +64,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -216,7 +224,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P0</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -230,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>968.41228.46964.12441</string> </value>
+                <value> <string>969.7397.15413.28347</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,7 +256,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1530711582.16</float>
+                        <float>1532440978.1</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
