@@ -10,14 +10,12 @@
     var element = gadget.element,
       a = window.document.createElement("a"),
       url = window.URL.createObjectURL(blob),
-      name = [
-        gadget.state.doc.filename,
-        format
-      ].join('.');
+      name_list = gadget.state.doc.filename.split('.');
+    name_list[name_list.length - 1] = format;
     element.appendChild(a);
     a.style = "display: none";
     a.href = url;
-    a.download = name;
+    a.download = name_list.join('.');
     a.click();
     element.removeChild(a);
     window.URL.revokeObjectURL(url);
@@ -92,7 +90,7 @@
           }
           throw error;
         })
-       .push(function () {
+        .push(function () {
           return;
         });
     })
