@@ -61,7 +61,11 @@
             });
         })
         .push(function (result) {
-          if (window.Array.isArray(result)) {
+          return downloadFromBlob(gadget, result, format);
+        }, function (error) {
+          if (error instanceof jIO.util.jIOError &&
+              error.status_code === 500 &&
+              error.message === "Not converted") {
             return gadget.redirect({
               'command': 'display',
               'options': {
@@ -77,7 +81,7 @@
               }
             });
           }
-          return downloadFromBlob(gadget, result, format);
+          throw error;
         })
         .push(function () {
           return gadget.notifySubmitted();
@@ -176,8 +180,7 @@
             page_title: "Download",
             selection_url: url_list[0],
             previous_url: url_list[1],
-            next_url: url_list[2],
-            save_action: true
+            next_url: url_list[2]
           });
         });
     });
