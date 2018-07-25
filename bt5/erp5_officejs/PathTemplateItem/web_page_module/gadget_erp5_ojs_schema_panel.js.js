@@ -75,6 +75,12 @@
       }
       return RSVP.Queue()
         .push(function () {
+          return context.getSetting('jio_storage_name');
+        })
+        .push(function (storage_name) {
+          if (!storage_name) {
+            return ["[]", true];
+          }
           return RSVP.all([
             context.jio_allDocs({
               "query": '(portal_type:"JSON Schema") AND (NOT (title:""))',
@@ -84,14 +90,8 @@
             })
               .push(function (result) {
                 return JSON.stringify(result.data.rows);
-              })
-              .push(undefined, function () {
-                return "[]";
               }),
             context.getSetting('developer_mode')
-              .push(undefined, function () {
-                return true;
-              })
           ]);
         })
         .push(function (ret) {
