@@ -34,6 +34,9 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("updatePanel", "updatePanel")
+    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
@@ -85,18 +88,27 @@
               .push(undefined, function () {
                 return "[]";
               }),
-            context.getUrlParameter('editable')
+            context.getSetting('developer_mode')
+              .push(undefined, function () {
+                return true;
+              })
           ]);
         })
         .push(function (ret) {
           var schema_list = ret[0],
-            editable = ret[1];
+            developer_mode = ret[1];
+          if (developer_mode === undefined) {
+            developer_mode = true;
+          }
+          if (developer_mode === "false") {
+            developer_mode = false;
+          }
           return context.changeState({
             workflow_list: workflow_list,
             view_list: view_list,
             schema_list: schema_list,
             global: true,
-            editable: options.editable || editable || false
+            developer_mode: developer_mode
           });
         });
     })
@@ -144,8 +156,8 @@
           })
           .push(function () {
             return context.declareGadget('gadget_erp5_field_multicheckbox.html', {
-              scope: "editable_mode",
-              element: tmp_element.querySelector('[data-gadget-scope="editable_mode"]')
+              scope: "developer_mode",
+              element: tmp_element.querySelector('[data-gadget-scope="developer_mode"]')
             });
           })
           .push(function () {
@@ -155,7 +167,7 @@
       }
 
       if (modification_dict.hasOwnProperty("schema_list") ||
-          modification_dict.hasOwnProperty("editable")) {
+          modification_dict.hasOwnProperty("developer_mode")) {
         queue
           .push(function () {
             function gen_element(element, title, css, accesskey) {
@@ -173,24 +185,24 @@
               row,
               tasks = [],
               schema_list = JSON.parse(context.state.schema_list);
-            if (context.state.editable) {
+            if (context.state.developer_mode) {
               tasks.push(gen_element({command: 'display', options: {page: "ojs_schema_document_list"}},
                 "Schemas", "search", "s"));
             }
             for (i = 0; i < schema_list.length; i += 1) {
               row = schema_list[i];
               tasks.push(gen_element({command: 'display', options: {
-                  page: "ojs_schema_document_list",
-                  portal_type: "JSON Document",
-                  schema: row.id,
-                  schema_title: row.value.title
-                }}, row.value.title, "search"));
+                page: "ojs_schema_document_list",
+                portal_type: "JSON Document",
+                schema: row.id,
+                schema_title: row.value.title
+              }}, row.value.title, "search"));
             }
             tasks.push(gen_element({command: 'display', options: {page: "ojs_sync", 'auto_repair': true}},
               "Synchronize", "refresh"));
             tasks.push(gen_element({command: 'display', options: {page: "ojs_configurator"}},
               "Storages", "dropbox"));
-            if (context.state.editable) {
+            if (context.state.developer_mode) {
               tasks.push(gen_element({command: 'index', options: {page: "ojs_zip_upload"}},
                 "Upload", "upload"));
             }
@@ -207,25 +219,25 @@
 
             // Update the checkbox field value
             return RSVP.all([
-              context.getDeclaredGadget("editable_mode"),
+              context.getDeclaredGadget("developer_mode"),
               context.translate("Developer Mode")
             ]);
           })
           .push(function (result_list) {
             var value = [],
-              search_gadget = result_list[0],
+              developer_mode_gadget = result_list[0],
               title = result_list[1];
-            if (context.state.editable) {
-              value = ['editable'];
+            if (context.state.developer_mode) {
+              value = ['developer'];
             }
-            return search_gadget.render({field_json: {
-                editable: true,
-                name: 'editable',
-                key: 'editable',
-                hidden: false,
-                items: [[title, 'editable']],
-                default: value
-              }});
+            return developer_mode_gadget.render({field_json: {
+              editable: true,
+              name: 'developer',
+              key: 'developer',
+              hidden: false,
+              items: [[title, 'developer']],
+              default: value
+            }});
           });
       }
 
@@ -336,18 +348,21 @@
     })
 
     .allowPublicAcquisition('notifyChange', function (argument_list, scope) {
-      if (scope === 'editable_mode') {
+      if (scope === 'developer_mode' && argument_list[0] === "change") {
         var context = this;
-        return context.getDeclaredGadget('editable_mode')
+        return context.getDeclaredGadget('developer_mode')
           .push(function (gadget) {
             return gadget.getContent();
           })
           .push(function (result) {
-            var options = {editable: undefined};
-            if (result.editable.length === 1) {
-              options.editable = true;
+            var value = "false";
+            if (result.developer.length === 1) {
+              value = true;
             }
-            return context.redirect({command: 'change', options: options});
+            return context.setSetting("developer_mode", value);
+          })
+          .push(function () {
+            return context.updatePanel({});
           });
       }
       // Typing a search query should not modify the header status
