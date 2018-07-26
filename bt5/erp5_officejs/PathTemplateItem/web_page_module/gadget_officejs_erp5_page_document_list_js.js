@@ -21,7 +21,10 @@
 
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this;
-      return gadget.jio_allDocs(param_list[0])
+      return gadget.jio_toggleRevisionOption(false)
+        .push(function () {
+          return gadget.jio_allDocs(param_list[0]);
+        })
         .push(function (result) {
           var i, date, len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {

@@ -53,8 +53,6 @@
               };
             }
           }
-        .push(function () {
-          gadget.jio_toggleRevisionOption(false);
           return result;
         });
     })
