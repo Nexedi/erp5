@@ -3,6 +3,8 @@
 (function (window, rJS, RSVP, jIO, Blob) {
   "use strict";
 
+  var ATT_NAME = "data";
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -10,8 +12,11 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("updateDocument", "updateDocument")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .declareAcquiredMethod("jio_get", "jio_get")
+    .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
@@ -20,12 +25,17 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
-      return this.changeState({
-        jio_key: options.jio_key,
-        doc: options.doc,
-        content_editable: options.doc.content_type === undefined ||
-            options.doc.content_type.indexOf("application/x-asc") === 0
-      });
+      var gadget = this;
+      return gadget.getSetting('file_extension', "")
+        .push(function (result) {
+          return gadget.changeState({
+            jio_key: options.jio_key,
+            doc: options.doc,
+            mime_type: result,
+            content_editable: options.doc.content_type === undefined ||
+                options.doc.content_type.indexOf("application/x-asc") === 0
+          });
+        });
     })
 
     .onEvent('submit', function () {
@@ -40,6 +50,9 @@
         .push(function (content) {
           data = content.text_content;
           delete content.text_content;
+          if (gadget.state.content_editable) {
+            content.mime_type = gadget.state.mime_type;
+          }
           return gadget.updateDocument(content);
         })
         .push(function () {
@@ -48,7 +61,16 @@
               gadget.state.jio_key,
               "data",
               jIO.util.dataURItoBlob(data)
-            );
+            )
+              .push(function () {
+                return gadget.getDeclaredGadget("ojs_cloudooo");
+              })
+              .push(function (cloudooo) {
+                return cloudooo.putAllCloudoooConvertionOperation({
+                  format: gadget.state.mime_type,
+                  jio_key: gadget.state.jio_key
+                });
+              });
           }
         })
         .push(function () {
@@ -61,19 +83,32 @@
     })
 
     .onStateChange(function () {
-      var gadget = this, data;
+      var gadget = this,
+        data,
+        editable = gadget.state.content_editable;
       return new RSVP.Queue()
         .push(function () {
-          return gadget.jio_getAttachment(gadget.state.jio_key, "data")
-            .push(undefined, function (error) {
-              if (error.status_code === 404) {
-                return new Blob();
-              }
-              throw error;
+          if ((!gadget.state.doc.mime_type && editable) ||
+              gadget.state.doc.mime_type === gadget.state.mime_type ||
+              !editable) {
+            return gadget.jio_getAttachment(gadget.state.jio_key, "data");
+          }
+          return gadget.getDeclaredGadget("ojs_cloudooo")
+            .push(function (ojs_cloudooo) {
+              return ojs_cloudooo.getConvertedBlob({
+                jio_key: gadget.state.jio_key,
+                format: gadget.state.mime_type
+              });
             });
         })
+        .push(undefined, function (error) {
+          if (error instanceof jIO.util.jIOError && error.status_code === 404) {
+            return new Blob();
+          }
+          throw error;
+        })
         .push(function (blob) {
-          if (gadget.state.content_editable) {
+          if (editable) {
             return jIO.util.readBlobAsDataURL(blob);
           }
           return jIO.util.readBlobAsText(blob);
@@ -83,7 +118,6 @@
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
-          var editable = gadget.state.content_editable;
           return form_gadget.render({
             erp5_document: {
               "_embedded": {"_view": {
@@ -150,7 +184,7 @@
                   "key": "text_content",
                   "hidden": 0,
                   "type": editable ? "GadgetField" : "EditorField",
-                  "renderjs_extra": '{"editor": "onlyoffice", ' +
+                  "renderjs_extra": '{"editor": "onlyoffice",' +
                     '"maximize": true}',
                   "url": "gadget_editor.html",
                   "sandbox": "public"
@@ -184,7 +218,11 @@
           return RSVP.all([
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'selection_previous'}),
-            gadget.getUrlFor({command: 'selection_next'})
+            gadget.getUrlFor({command: 'selection_next'}),
+            gadget.getUrlFor({
+              command: 'change',
+              options: {'page': "ojs_download_convert"}
+            })
           ]);
         })
         .push(function (url_list) {
@@ -193,7 +231,8 @@
             selection_url: url_list[0],
             previous_url: url_list[1],
             next_url: url_list[2],
-            save_action: true
+            save_action: true,
+            download_url: url_list[3]
           });
         });
     });

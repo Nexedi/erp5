@@ -211,6 +211,17 @@ gadget_button_maximize.js\n
 gadget_officejs_setting.js\n
 gadget_officejs_setting.html\n
 \n
+\n
+#cloudooo\n
+gadget_ojs_cloudooo.html\n
+gadget_ojs_cloudooo.js\n
+gadget_cloudooo.html\n
+gadget_cloudooo.js\n
+gadget_erp5_page_ojs_upload_convert.html\n
+gadget_erp5_page_ojs_upload_convert.js\n
+gadget_erp5_page_ojs_download_convert.html\n
+gadget_erp5_page_ojs_download_convert.js\n
+\n
 #presentation\n
 gadget_ooffice_presentation_router.html\n
 gadget_officejs_jio_presentation_view.html\n
@@ -1359,7 +1370,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P0</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -1373,7 +1384,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.1014.10748.13687</string> </value>
+                <value> <string>969.7402.15061.37341</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1391,7 +1402,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1517243462.59</float>
+                        <float>1532607126.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
