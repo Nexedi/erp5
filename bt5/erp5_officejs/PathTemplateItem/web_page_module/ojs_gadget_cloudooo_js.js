@@ -9,7 +9,7 @@
         .push(function (jio_gadget) {
           return jio_gadget.createJio({
             type: "cloudooo",
-            url: "https://softinst104018.host.vifib.net/"
+            url: "https://cloudooo.erp5.net/"
           });
         });
     })
