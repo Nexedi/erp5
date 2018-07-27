@@ -1,7 +1,7 @@
 /*jslint nomen: true, maxlen: 200, indent: 2, maxerr: 100*/
 /*global window, document, URL, rJS, RSVP, jIO, tv4, location */
 
-(function (window, document, location, rJS, RSVP, jIO, tv4) {
+(function (window, document, location, rJS, RSVP, tv4) {
   "use strict";
   var render_object;
 
@@ -101,13 +101,13 @@
     return input;
   }
 
-  function render_textarea(json_field, default_value, data_format) {
+  function render_textarea(json_document, data_format) {
     var input = document.createElement("textarea");
-    if (default_value !== undefined) {
-      if (default_value instanceof Array) {
-        input.value = default_value.join("\n");
+    if (json_document !== undefined) {
+      if (typeof json_document === "object") {
+        input.value = JSON.stringify(json_document, null, 2);
       } else {
-        input.value = default_value;
+        input.value = json_document;
       }
     }
     input["data-format"] = data_format;
@@ -273,13 +273,6 @@
     return ret_arr[0];
   }
 
-  function checkValidityAndNotifyChange(g) {
-    return RSVP.all([
-      g.checkValidity(),
-      g.notifyChange()
-    ]);
-  }
-
   function render_schema_selector(gadget, title, schema_arr, event, rerender) {
     return RSVP.Queue()
       .push(function () {
@@ -385,7 +378,7 @@
                           return event(schema_alternatives[value[scope]].value);
                         })
                         .push(function () {
-                          return checkValidityAndNotifyChange(gadget);
+                          return gadget.rootNotifyChange();
                         })
                         .push(function () {
                           if (rerender) {
@@ -450,7 +443,7 @@
                       } else {
                         input.removeAttribute("style");
                       }
-                      return checkValidityAndNotifyChange(gadget);
+                      return gadget.rootNotifyChange();
                     });
                 },
                 rerender: function () {
@@ -681,10 +674,13 @@
 
     if (!input && ["string", "integer", "number"].indexOf(type) >= 0) {
       if (json_field.contentMediaType === "text/plain") {
-        input = render_textarea(json_field, default_value, "string");
+        input = render_textarea(default_value, "string");
       } else {
         input = document.createElement("input");
         if (default_value !== undefined) {
+          if (typeof default_value === "object") {
+            default_value = JSON.stringify(default_value);
+          }
           input.value = default_value;
         }
 
@@ -1295,7 +1291,7 @@
       g.props = {};
       g.options = {};
     })
-    .declareAcquiredMethod("notifyChange", "notifyChange")
+    .declareAcquiredMethod("rootNotifyChange", "rootNotifyChange")
     .declareAcquiredMethod("renameChildrenParent", "renameChildren")
     .allowPublicAcquisition("renameChildren", function (opt_arr, scope) {
       var property_name,
@@ -1359,7 +1355,7 @@
       for (i = 0; i < button_list.length; i = i + 1) {
         tasks.push(button_list[i].rerender());
       }
-      tasks.push(checkValidityAndNotifyChange(g));
+      tasks.push(g.rootNotifyChange());
       return RSVP.Queue()
         .push(function () {
           return RSVP.all(tasks);
@@ -1458,7 +1454,7 @@
       if (event_object && opt.type === "change") {
         return event_object.event();
       }
-      return g.notifyChange();
+      return g.rootNotifyChange();
     })
     .declareMethod('renderForm', function (options) {
       var g = this,
@@ -1484,6 +1480,12 @@
         } else {
           options.delete_button = !options.required;
         }
+      }
+      if (options.top && !options.type && !schema.type) {
+        // XXX use "object" as type for support buggy
+        // slapos schemas where some times type absent
+        // i need remove it in future
+        options.type = "object";
       }
       while (root.firstChild) {
         root.removeChild(root.firstChild);
@@ -1526,18 +1528,23 @@
       }
     })
 
-    .onEvent('change', function (evt) {
+    .onEvent('input', function (evt) {
       if (evt.target === this.props.property_name_edit) {
         return this.rename(this.props.property_name_edit.value, evt);
       }
 
-      var field_list = this.props.inputs,
-        i;
+      var gadget = this,
+        field_list = this.props.inputs,
+        i,
+        changed = false;
       // on form data field
       for (i = 0; i < field_list.length; i = i + 1) {
         if (evt.target === field_list[i]) {
-          return checkValidityAndNotifyChange(this);
+          changed = true;
         }
+      }
+      if (changed) {
+        return gadget.rootNotifyChange();
       }
     })
 
@@ -1568,4 +1575,4 @@
         });
     });
 
-}(window, document, location, rJS, RSVP, jIO, tv4));
+}(window, document, location, rJS, RSVP, tv4));

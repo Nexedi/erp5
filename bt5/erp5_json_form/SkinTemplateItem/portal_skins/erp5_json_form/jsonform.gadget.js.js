@@ -420,7 +420,8 @@
     })
     .declareAcquiredMethod("downloadJSON", "downloadJSON")
     .declareAcquiredMethod("notifyChange", "notifyChange")
-    .allowPublicAcquisition("notifyChange", function () {
+    .allowPublicAcquisition("rootNotifyChange", function () {
+      this.props.changed = true;
       return this.notifyChange();
     })
     .declareAcquiredMethod("notifyValid", "notifyValid")
@@ -508,6 +509,7 @@
               } else {
                 error_message.appendChild(createTextNode(error.message));
               }
+              error_message.appendChild(document.createElement("br"));
               error_message.hidden = false;
 
               a = document.createElement("a");
@@ -643,6 +645,15 @@
       // XXX Disable
       return;
     })
+    .onLoop(function () {
+      var gadget = this;
+      if (this.props.changed) {
+        return this.checkValidity()
+          .push(function () {
+            gadget.props.changed = false;
+          });
+      }
+    }, 500)
 
     .declareMethod('getContent', function () {
       var g = this;
