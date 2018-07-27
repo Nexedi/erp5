@@ -259,8 +259,8 @@
     "application_published":"21/05/2018",
     "application_submitted":"21/05/2018",
     "application_description":"In-browser python/js notebooks",
-    "application_url":"https://notebook.app.officejs.com",
-    "application_title":"Notebooks",
+    "application_url":"https://iodide-notebook.app.officejs.com",
+    "application_title":"Iodide Notebook",
     "application_category":"Documents",
     "application_title_i18n":"application.custom.notebook.title",
     "application_description_i18n":"application.custom.notebook.description"
