@@ -675,6 +675,6 @@
           });
       }
       return {};
-    });
+    }, {mutex: 'changestate'});
 
 }(window, document, location, rJS, RSVP, jIO, tv4));
