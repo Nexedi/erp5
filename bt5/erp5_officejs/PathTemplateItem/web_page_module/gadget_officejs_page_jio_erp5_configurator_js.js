@@ -20,6 +20,7 @@
           attachment_synchro = result[1] !== "",
           extended_attachment_url = result[1],
           portal_type = result[0].split(','),
+          parent_relative_url = result[3].split(','),
           query = '',
           i,
           // https://bugs.chromium.org/p/chromium/issues/detail?id=375297
@@ -29,29 +30,26 @@
             (navigator.userAgent.indexOf('Mobile') > 0);
 
         for (i = 0; i < portal_type.length; i += 1) {
-          jio_query_list.push(new SimpleQuery({
-            key: "portal_type",
-            operator: "",
-            type: "simple",
-            value: portal_type[i]
+          jio_query_list.push(new ComplexQuery({
+            operator: "AND",
+            query_list: [new SimpleQuery({
+              key: "portal_type",
+              operator: "",
+              type: "simple",
+              value: portal_type[i]
+            }), new SimpleQuery({
+              key: "parent_relative_url",
+              operator: "",
+              type: "simple",
+              value: parent_relative_url[i]
+            })],
+            type: "complex"
           }));
         }
 
         query = Query.objectToSearchText(new ComplexQuery({
-          operator: 'AND',
-          query_list: [
-            new ComplexQuery({
-              operator: "OR",
-              query_list: jio_query_list,
-              type: "complex"
-            }),
-            new SimpleQuery({
-              key: "parent_relative_url",
-              operator: "",
-              type: "simple",
-              value: result[3]
-            })
-          ],
+          operator: "OR",
+          query_list: jio_query_list,
           type: "complex"
         }));
 
