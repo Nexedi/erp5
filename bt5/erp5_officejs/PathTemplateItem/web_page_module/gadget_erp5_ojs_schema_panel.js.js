@@ -75,10 +75,15 @@
       }
       return RSVP.Queue()
         .push(function () {
-          return context.getSetting('jio_storage_name');
+          return RSVP.all([
+            context.getSetting('jio_storage_name'),
+            context.getSetting('sync_reload', false)
+          ]);
         })
-        .push(function (storage_name) {
-          if (!storage_name) {
+        .push(function (result) {
+          var storage_name = result[0],
+            sync_reload = result[1];
+          if (!storage_name || sync_reload) {
             return ["[]", true];
           }
           return RSVP.all([
