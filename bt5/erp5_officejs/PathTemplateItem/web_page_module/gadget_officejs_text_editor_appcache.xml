@@ -153,6 +153,8 @@ gadget_erp5_page_ojs_controller.html\n
 gadget_erp5_page_ojs_controller.js\n
 gadget_erp5_page_ojs_add_document.html\n
 gadget_erp5_page_ojs_add_document.js\n
+gadget_erp5_page_ojs_see_history.html\n
+gadget_erp5_page_ojs_see_history.js\n
 gadget_erp5_page_ojs_configurator.html\n
 gadget_erp5_page_ojs_configurator.js\n
 gadget_erp5_page_ojs_dav_configurator.html\n
@@ -685,7 +687,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>vincent</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -699,7 +701,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.48519.41997.58350</string> </value>
+                <value> <string>969.16222.16646.56320</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -717,7 +719,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1515675473.77</float>
+                        <float>1532954835.43</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
