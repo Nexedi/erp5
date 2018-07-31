@@ -182,6 +182,8 @@ gadget_erp5_label_field.html\n
 gadget_erp5_label_field.js\n
 gadget_erp5_notification.html\n
 gadget_erp5_notification.js\n
+gadget_erp5_popup.html\n
+gadget_erp5_popup.js\n
 gadget_erp5_page_action.html\n
 gadget_erp5_page_action.js\n
 gadget_erp5_page_export.html\n
@@ -386,7 +388,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.19284.27735.63931</string> </value>
+                <value> <string>969.16049.29484.11946</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -404,7 +406,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1517844236.51</float>
+                        <float>1532944412.48</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

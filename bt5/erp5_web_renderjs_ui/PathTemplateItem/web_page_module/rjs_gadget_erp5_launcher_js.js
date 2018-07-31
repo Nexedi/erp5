@@ -374,6 +374,12 @@
       ]);
     })
 
+    .allowPublicAcquisition('popupshow', function (argument_list) {
+      return RSVP.all([
+        route(this, "popup", 'display_popup', argument_list)
+      ]);
+    })
+
     .allowPublicAcquisition('isDesktopMedia', function (argument_list) {
       return window.matchMedia("(min-width: 85em)").matches;
     })
