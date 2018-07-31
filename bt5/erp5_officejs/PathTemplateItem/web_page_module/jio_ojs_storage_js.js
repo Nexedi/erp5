@@ -178,9 +178,10 @@
     }
   }
 
-  function MappingStorage(spec) {
+  function MappingStorage(spec, utils) {
+    this.utils = utils;
     this._mapping_dict = spec.property || {};
-    this._sub_storage = jIO.createJIO(spec.sub_storage);
+    this._sub_storage = jIO.createJIO(spec.sub_storage, utils);
     this._map_all_property = spec.map_all_property !== undefined ?
         spec.map_all_property : true;
     this._no_sub_query_id = spec.no_sub_query_id;
@@ -648,8 +649,9 @@
     return doc;
   }
 
-  function DateUpdaterStorage(spec) {
-    this._sub_storage = jIO.createJIO(spec.sub_storage);
+  function DateUpdaterStorage(spec, utils) {
+    this.utils = utils; 
+    this._sub_storage = jIO.createJIO(spec.sub_storage, utils);
     this._property_list = spec.property_list || [];
   }
 
@@ -726,8 +728,9 @@
    */
 
 
-  function SafeRepairStorage(spec) {
-    this._sub_storage = jIO.createJIO(spec.sub_storage);
+  function SafeRepairStorage(spec, utils) {
+    this.utils = utils;
+    this._sub_storage = jIO.createJIO(spec.sub_storage, utils);
     this._id_dict = {};
   }
 

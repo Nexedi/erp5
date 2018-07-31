@@ -1,6 +1,8 @@
 /*global window, rJS, jIO, FormData, UriTemplate */
+
+/*global window, rJS, jIO, FormData, UriTemplate */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS, jIO) {
+(function (window, rJS, jIO, RSVP) {
   "use strict";
 
   // jIO call wrapper for redirection to authentication page if needed
@@ -49,6 +51,11 @@
             return gadget.redirect({ command: "row", url: site});
           }
         }
+        if (error.hasOwnProperty("status_code") && error.status_code === 801) {
+          if (gadget.state_parameter_dict.jio_storage_name === "DROPBOX") {
+            throw error.message;
+          }
+        }
         throw error;
       });
   }
@@ -64,9 +71,21 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
-
+    .declareAcquiredMethod('popupshow', 'popupshow')
     .declareMethod('createJio', function (jio_options) {
-      var gadget = this;
+      var gadget = this,
+          utils = {"crypto_getCryptoKey": function (callback) {
+          return new RSVP.Queue()
+          .push(function () {
+            return gadget.popupshow({message: "Provide your password for dropbox encryption ",
+                                     addkey: callback.addkey_crypto,
+                                     error: callback.error_crypto });
+          })
+            .push(undefined, function (error) {
+              throw error; 
+            });
+        }
+      };
       if (jio_options === undefined) {
         return;
       }
@@ -76,7 +95,7 @@
         property_list: ['modification_date']
       };
       try {
-        this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);
+        this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options, utils);
       } catch (error) {
         this.state_parameter_dict.jio_storage = undefined;
       }
@@ -116,4 +135,4 @@
       return wrapJioCall(this, 'repair', arguments);
     });
 
-}(window, rJS, jIO));
+}(window, rJS, jIO, RSVP));

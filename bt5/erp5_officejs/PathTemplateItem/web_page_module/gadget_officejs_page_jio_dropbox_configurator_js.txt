@@ -4,6 +4,7 @@
   "use strict";
 
   function setDropboxConfiguration(gadget, token) {
+    var keyid = "key" + Math.floor(Math.random() * 7000).toString();
     return new RSVP.Queue()
       .push(function () {
         return RSVP.all([
@@ -34,8 +35,6 @@
           check_remote_modification: true,
           check_remote_creation: true,
           check_remote_deletion: true,
-          parallel_operation_attachment_amount: 50,
-          parallel_operation_amount: 50,
           signature_sub_storage: {
             type: "query",
             sub_storage: {
@@ -47,21 +46,12 @@
             }
           },
           local_sub_storage: {
-            type: "mapping",
-            attachment: {
-              DOCUMENT_REGEXP  : {
-                get: {uri_template: 'enclosure'},
-                put: {uri_template: 'enclosure'}
-              }
-            },
+            type: "query",
             sub_storage: {
-              type: "query",
+              type: "uuid",
               sub_storage: {
-                type: "uuid",
-                sub_storage: {
-                  type: "indexeddb",
-                  database: "officejs-dropbox"
-                }
+                type: "indexeddb",
+                database: "officejs-dropbox"
               }
             }
           },
@@ -82,7 +72,7 @@
                 type: "drivetojiomapping",
                 sub_storage: {
                   type: "crypt",
-                  key: 'amrani',
+                  keyid: keyid,
                   sub_storage: {
                     type: "dropbox",
                     access_token: token,

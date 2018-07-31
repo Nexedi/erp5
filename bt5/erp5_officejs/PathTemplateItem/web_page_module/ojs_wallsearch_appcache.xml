@@ -175,6 +175,8 @@ gadget_html5_element.html\n
 gadget_html5_element.js\n
 gadget_erp5_notification.html\n
 gadget_erp5_notification.js\n
+gadget_erp5_popup.html\n
+gadget_erp5_popup.js\n
 gadget_erp5_field_string.html\n
 gadget_erp5_field_string.js\n
 gadget_erp5_field_editor.html\n
@@ -326,7 +328,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>vincent</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -340,7 +342,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.45561.47559.9591</string> </value>
+                <value> <string>966.44456.34486.30566</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -358,7 +360,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1515773947.57</float>
+                        <float>1532963857.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

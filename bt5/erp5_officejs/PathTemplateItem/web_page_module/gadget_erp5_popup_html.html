@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+      <meta name="viewport" content="width=device-width, user-scalable=no" />
+      <title>ERP5 OJS POPUP</title>
+      <!-- renderjs -->
+      <script src="rsvp.js" type="text/javascript"></script>
+      <script src="renderjs.js" type="text/javascript"></script>
+      <script src="handlebars.js" type="text/javascript"></script>
+      <script id="popup_password" type="text/x-handlebars-template">
+         <div class="overlay">
+         <h3 class="header">{{message}}</h3>
+         <span class="ui-icon ui-icon-lock"></span>
+            <form>
+            <input placeholder="Password" autocomplete="off" class="ui-password-overlay" type="password" required>
+            <br>
+            <button type="submit" >Proceed</button>
+          </form>
+         </div>
+      </script>
+      <!-- custom script -->
+      <script src="gadget_erp5_popup.js" type="text/javascript"></script>
+   </head>
+   <body>
+   </body>
+</html>
