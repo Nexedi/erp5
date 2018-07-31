@@ -10,8 +10,7 @@
         return RSVP.all([
           gadget.getSetting("portal_type", "Web Page"),
           gadget.getSetting("erp5_attachment_synchro", ""),
-          gadget.getSetting("default_view_reference", 'jio_view'),
-          gadget.getSetting("parent_relative_url")
+          gadget.getSetting("default_view_reference", 'jio_view')
         ]);
       })
       .push(function (result) {
@@ -38,20 +37,8 @@
         }
 
         query = Query.objectToSearchText(new ComplexQuery({
-          operator: 'AND',
-          query_list: [
-            new ComplexQuery({
-              operator: "OR",
-              query_list: jio_query_list,
-              type: "complex"
-            }),
-            new SimpleQuery({
-              key: "parent_relative_url",
-              operator: "",
-              type: "simple",
-              value: result[3]
-            })
-          ],
+          operator: "OR",
+          query_list: jio_query_list,
           type: "complex"
         }));
 
