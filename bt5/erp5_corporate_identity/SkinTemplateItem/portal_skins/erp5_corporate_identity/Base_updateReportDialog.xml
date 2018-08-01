@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id=None, cancel_url=None, requirement_relative_url=None, report_name=None, report_title=None, portal_skin=None, display_milestone=None, format=None, display_comment=None, document_title=None, document_save=None, document_download=None, document_language=None, document_version=None, document_reference=None, display_orphan=None, display_detail=None, display_depth=None, display_header=None ,*args,**kw</string> </value>
+            <value> <string>dialog_id=None, cancel_url=None, override_source_organisation_title=None, requirement_relative_url=None, report_name=None, report_title=None, portal_skin=None, display_milestone=None, format=None, display_comment=None, document_title=None, document_save=None, document_download=None, document_language=None, document_version=None, document_reference=None, display_orphan=None, display_detail=None, display_depth=None, display_header=None, start_date=None, stop_date=None, *args,**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
