@@ -15,7 +15,7 @@ for base_cat_id in context.REQUEST['category_list']:
   for cat in context.portal_catalog(portal_type='Category',
                                     sort_on=(('path', 'ascending'),),# This sorting is not enough.
                                     limit=None,
-                                    **{'default_%s_uid' % (base_cat.getId(),): base_cat.getUid()}):
+                                    relative_url="%s/%%" % base_cat.getRelativeUrl()):
     cat_relative_url_path_list = cat.getRelativeUrl().split('/')
     cat_depth = len(cat_relative_url_path_list)
     temporary_category_list.append((cat_relative_url_path_list, cat))
