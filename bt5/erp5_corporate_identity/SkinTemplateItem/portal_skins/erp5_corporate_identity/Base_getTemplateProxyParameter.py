@@ -10,7 +10,7 @@ Return local parameters that require proxy role to access
 # pass_flag_site             whether called from a web site (no follow-up)
 
 portal_type_valid_template_list = ["Web Site", "Web Section", "Web Page", "Letter"]
-portal_type_valid_report_list = ["Project", "Sale Order", "Sale Opportunity", "Requirement Document"]
+portal_type_valid_report_list = ["Project", "Sale Order", "Sale Opportunity", "Requirement Document", "Person"]
 portal_type = context.getPortalType()
 portal_object = context.getPortalObject()
 validation_state = ('released', 'released_alive', 'published', 'published_alive',
@@ -233,7 +233,8 @@ if pass_parameter is not None and pass_source_data is not None:
   if pass_parameter == "override_organisation":
     return populateOrganisationDict(portal_object.portal_catalog(
       portal_type="Organisation",
-      title=(''.join(["=", str(pass_source_data)]))
+      #title=(''.join(["=", str(pass_source_data)]))
+      title=pass_source_data
     ))
 
   # ----------------------- Sender (Override) ----------------------------------
