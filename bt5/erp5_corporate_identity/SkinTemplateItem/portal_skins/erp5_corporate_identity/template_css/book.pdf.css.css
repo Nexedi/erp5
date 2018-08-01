@@ -34,7 +34,7 @@
 .ci-book a,
 .ci-book li,
 .ci-book p,
-.ci-book pre code {
+.ci-book pre {
   font-size: 5.29167mm; /* 15pt; */ /* 20px; */
 }
 .ci-book .ci-book-img + span,
@@ -43,7 +43,6 @@
 .ci-book table thead td,
 .ci-book table tbody td,
 .ci-book table tbody td span,
-.ci-book table tbody td p,
 .ci-book table tbody td li,
 .ci-book table tbody td em,
 .ci-book table tbody td strong,
@@ -54,6 +53,9 @@
 }
 .ci-book .ci-book-header td:last-child div {
   font-size: 4.7625mm; /* 13.5pt; */ /* 18px; */
+}
+.ci-book table tbody td p {
+  font-size: inherit;
 }
 
 .ci-book .ci-book-header .ci-book-header-subtitle,
@@ -119,6 +121,12 @@
 /* Chinese */
 .ci-zh .ci-book p {
   text-align: initial;
+}
+
+/* === word breaks (long urls eg) === */
+.ci-book p {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 /* === page breaks === */
@@ -418,10 +426,22 @@
 .ci-book table th,
 .ci-book table td {
   border: 1px solid #a1a1a1;
-  padding: 0 2mm;
-  text-align: center;
+  padding: 0 2mm;  text-align: center;
 }
 /* opinionated align for content tables, overwrite in html if required */
+.ci-book table:not(.ci-book-header):not(.ci-book-footer):not(.ci-book-table) tbody td,
+.ci-book table:not(.ci-book-header):not(.ci-book-footer):not(.ci-book-table) tbody th {
+  text-align: left;
+}
+/*
+.ci-book table:not(.ci-book-header):not(.ci-book-footer):not(.ci-book-table) tbody tr td:first-child,
+.ci-book table:not(.ci-book-header):not(.ci-book-footer):not(.ci-book-table) tbody tr th:first-child {
+  text-align: left;
+}
+*/
+.ci-book table thead tr th p {
+  color: black !important;
+}
 .ci-book a + table tbody tr td:first-child,
 .ci-book a + table tbody tr th:first-child {
   text-align: center;
@@ -430,13 +450,9 @@
 .ci-book a + table tbody tr th:not(:first-child) {
   text-align: right;
 }
-.ci-book table thead tr th p {
-  color: black !important;
-}
 .ci-book p + table td a {
   display: block;
 }
-
 /* table formatting */
 .ci-book table {
   border-collapse: collapse;
@@ -453,6 +469,11 @@
 .ci-book table:not(.ci-book-header):not(.ci-book-footer) tbody tr:first-child th {
   background-color: #e0e0e0;
   font-weight: bold;
+  text-align: center;
+}
+.ci-book .ci-book-table tbody tr td,
+.ci-book .ci-book-table tbody tr th {
+  text-align: center;
 }
 
 .ci-book table thead tr td,
@@ -750,16 +771,31 @@ html .ci-book table td p {
 }
 /* === code boxes === */
 .ci-book pre {
+	text-align: left;
+	white-space: pre-line;
+	word-wrap: break-word;
+  padding: 10px 20px 36px;
+  background-color: rgb(234,246,246);
+  /*
   white-space: pre;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  */
   /*
   break after 100 characters - https://stackoverflow.com/a/16756641
   max-width: 40em;
   max-width: 100ch;
   */
-
 }
+.ci-book pre code {
+  display: block;
+	background-color: rgb(234,246,246);
+}
+.ci-book p code,
+.ci-book blockquote {
+	background-color: rgb(234,246,246);
+}
+
 /* === special headers === */
 /* distribution list */
 .ci-book .ci-book thead th {
@@ -842,7 +878,10 @@ html .ci-book table td p {
 /* === box items === */
 /* Project Breakdown/Milestone List */
 .ci-book .ci-book-box-offer,
-.ci-book .ci-book-box-offer-milestone {
+.ci-book div.ci-book-box-offer-milestone,
+/* backcompat */
+.ci-document-box-offer,
+div.ci-document-box-offer-milestone {
   width: 100%;
 }
 .ci-book .ci-book-box-offer,
@@ -861,15 +900,25 @@ html .ci-book table td p {
 }
 .ci-book .ci-book-box-offer b,
 .ci-book .ci-book-box-offer-milestone b,
-.ci-book .ci-book-box-offer-line b {
+.ci-book .ci-book-box-offer-line b,
+/* backcompat */
+.ci-document-box-offer b,
+.ci-document-box-offer-milestone b,
+.ci-document-box-offer-line b{
   font-weight: bold;
 }
-.ci-book .ci-book-box-detail {
+.ci-book .ci-book-box-detail,
+/* backcompat */
+.ci-document-box-detail {
   table-layout: fixed;
 }
 .ci-book .ci-book-box-offer,
 .ci-book .ci-book-box-offer-line,
-.ci-book .ci-book-box-offer-milestone {
+.ci-book .ci-book-box-offer-milestone,
+/* backcompat */
+.ci-document-box-offer,
+.ci-document-box-offer-line,
+.ci-document-box-offer-milestone {
   border: 1px solid #a1a1a1;
   padding: 2px;
   -webkit-box-sizing: border-box;
@@ -880,37 +929,54 @@ html .ci-book table td p {
   box-shadow: 10px 10px 0 #a1a1a1;
   background-color: #fff;
 }
-.ci-book .ci-book-box-coverage {
+.ci-book .ci-book-box-coverage,
+/* backcompat */
+.ci-document-box-coverage {
   display: inline-block;
   vertical-align: top;
   width: 66%;
 }
-.ci-book .ci-book-box-location,
-.ci-book .ci-book-box-resources,
-.ci-book .ci-book-box-leader {
+.ci-book-box-location,
+.ci-book-box-resources,
+.ci-book-box-leader,
+/* backcompat */
+.ci-document-box-location,
+.ci-document-box-resources,
+.ci-document-box-leader {
   display: inline-block;
   vertical-align: top;
   width: 33%;
 }
 .ci-book .ci-book-box-begin,
-.ci-book .ci-book-box-end {
+.ci-book .ci-book-box-end,
+/* backcompat */
+.ci-document-box-begin,
+.ci-document-box-end {
   display: inline-block;
   vertical-align: top;
   width: 33%;
 }
-.ci-book .ci-book-box-id {
+.ci-book .ci-book-box-id,
+/* backcompat */
+.ci-document-box-id {
   display: inline-block;
   vertical-align: top;
   width: 33%;
 }
-.ci-book .ci-book-box-duration {
+.ci-book .ci-book-box-duration,
+/* backcompat */
+.ci-document-box-duration {
   display: inline-block;
   vertical-align: top;
   width: 33%;
 }
-.ci-book .ci-book-box-end + .ci-book-box-resources {
+.ci-book .ci-book-box-end + .ci-book-box-resources,
+/* backcompat */
+.ci-document-box-end + .ci-document-box-resources {
   margin-left: 20%;
 }
-.ci-book .ci-book-box-end + .ci-book-box-resources {
+.ci-book .ci-book-box-end + .ci-book-box-resources,
+/* backcompat */
+.ci-document-box-end + .ci-document-box-resources {
   margin-left: 20%;
 }
