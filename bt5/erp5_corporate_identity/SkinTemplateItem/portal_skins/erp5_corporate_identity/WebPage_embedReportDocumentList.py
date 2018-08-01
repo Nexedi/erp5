@@ -90,6 +90,7 @@ for link in re.findall('([^[]<a.*?</a>[^]])', doc_content):
           target_caller = getattr(target_context, report_name, None)
           if target_caller is not None:
             substitution_content = target_caller(**link_param_dict)
-            doc_content = doc_content.replace(link, substitution_content.encode("utf-8").strip())
+            # Note: switched to report returning a tuple with (content, header-title, header-subtitle)
+            doc_content = doc_content.replace(link, substitution_content[0].encode("utf-8").strip())
 
 return doc_content

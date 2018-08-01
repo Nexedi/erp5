@@ -36,6 +36,9 @@ View WebPage as Book or Report
 #
 # requirement_relative_url              XXX relate sale order to requirement
 #
+# start_date                            start date of the report
+# stop_date                             stop date of the report
+#
 # report_name                           name of report to call
 # report_title                          title of report
 #
@@ -66,6 +69,8 @@ if context.REQUEST["portal_skin"] == "Report":
     display_embedded=display_embedded,
     display_milestone=display_milestone,
     display_orphan=display_orphan,
+    start_date=start_date,
+    stop_date=stop_date,
     report_name=report_name,
     report_title=report_title,
     requirement_relative_url=requirement_relative_url,

@@ -14,6 +14,8 @@ MAIN FILE: generate report (book header/footer and report content)
 # document_language:        use as document version
 # document_reference:       use as document reference
 # document_title            use as document title
+
+# override_source_organisation organisation for report header/footer
 # override_batch_mode       used for tests
 # ------
 # document_download:        download file directly (default None)
@@ -26,6 +28,9 @@ MAIN FILE: generate report (book header/footer and report content)
 # display_sandbox           sandbox report for display in another html document
 # display_milestone         show associated milestones
 # display_orphan            show requirements not covered by task/item
+# --------
+# start_date                the start date of the report
+# stop_date                 the stop date of the report
 # --------
 # report_name               report to generate
 # report_title              report title
@@ -55,7 +60,11 @@ override_document_title = kw.get('document_title')
 override_document_version = kw.get('document_version')
 override_document_reference = kw.get('document_reference')
 override_document_language = kw.get('document_language')
+override_source_organisation_title=kw.get('override_source_organisation', None)
 override_batch_mode = kw.get('batch_mode')
+
+doc_report_start_date = DateTime(kw.get('start_date', None) or getattr(context.REQUEST.form, 'start_date', None) or DateTime(DateTime().year(), DateTime().month(), 1))
+doc_report_stop_date = DateTime(kw.get('stop_date', None) or getattr(context.REQUEST.form, 'stop_date', None) or DateTime())
 
 doc_report_name = kw.get('report_name')
 doc_report_title = kw.get('report_title')
@@ -70,15 +79,13 @@ doc_aggregate_list = []
 doc_revision = "1"
 doc_modification_date = DateTime()
 doc_language = doc.getLanguage() if getattr(doc, 'getLanguage', None) else None
-
-doc_reference = html_quote(override_document_reference) if override_document_reference else doc.getReference() or blank
-doc_short_title = html_quote(doc_report_title) if doc_report_title else doc.getShortTitle() or blank
-doc_version = html_quote(override_document_version) if override_document_version else getattr(doc, "version", None) or "001"
-doc_title = html_quote(override_document_title) if override_document_title else doc.getTitle() or blank
-doc_language = html_quote(override_document_language) if override_document_language else doc_language
 doc_translated_title = translateText(doc_report_title) if doc_report_title else blank
 
-doc_content = doc_report(
+# fallback in case language is still None
+if doc_language is None or doc_language == "":
+  doc_language = doc_localiser.get_selected_language() or doc_localiser.get_default_language() or "en"
+
+doc_content, report_override_doc_title, report_override_doc_subtitle = doc_report(
   display_report=None if doc_embed else True,
   format=doc_format,
   display_depth=doc_display_depth,
@@ -89,8 +96,17 @@ doc_content = doc_report(
   display_embedded=doc_display_embedded,
   display_milestone=doc_display_milestone,
   display_orphan=doc_display_orphan,
-  report_title=doc_translated_title
+  start_date=doc_report_start_date,
+  stop_date=doc_report_stop_date,
+  report_title=doc_translated_title,
+  override_batch_mode=override_batch_mode
 )
+
+doc_reference = html_quote(override_document_reference) if override_document_reference else doc.getReference() or blank
+doc_short_title = translateText(report_override_doc_subtitle if report_override_doc_subtitle else html_quote(doc_report_title) if doc_report_title else doc.getShortTitle() or blank)
+doc_version = html_quote(override_document_version) if override_document_version else getattr(doc, "version", None) or "001"
+doc_title = translateText(html_quote(override_document_title) if override_document_title else report_override_doc_title if report_override_doc_title else doc.getTitle() or blank)
+doc_language = html_quote(override_document_language) if override_document_language else doc_language
 
 # test overrides
 if override_batch_mode:
@@ -111,7 +127,7 @@ doc_theme = doc.Base_getThemeDict(doc_format=doc_format, css_path="template_css/
 # --------------------------- Source/Destination -------------------------------
 doc_source = doc.Base_getSourceDict(
   override_source_person_title=None,
-  override_source_organisation_title=None,
+  override_source_organisation_title=override_source_organisation_title,
   theme_logo_url=doc_theme.get("theme_logo_url", None)
 )
 

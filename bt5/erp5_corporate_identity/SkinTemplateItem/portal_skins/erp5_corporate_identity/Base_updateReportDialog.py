@@ -18,6 +18,7 @@ Update a book report dialog with parameters manually entered
 # document_reference:       use as document reference
 # document_title            use as document title
 # override_batch_mode       used for tests
+# override_source_organisation_title organisation for report header/footer
 #
 # document_download:        download file directly
 # document_save:            save file in document module
@@ -28,6 +29,9 @@ Update a book report dialog with parameters manually entered
 # display_depth             level of depth to display
 # display_milestone         show milestones if applicable
 # display_orphan            show requirements not covered by task
+#
+# start_date                the start date of a report
+# stop_date                 the stop date of a report
 #
 # report_name               report to generate
 # report_title              report title
@@ -54,8 +58,11 @@ if dialog_id is not None:
       display_comment=display_comment,
       display_header=display_header,
       display_orphan=display_orphan,
+      start_date=start_date,
+      stop_date=stop_date,
       report_name=report_name,
       report_title=report_title,
+      override_source_organisation_title=override_source_organisation_title,
       requirement_relative_url=requirement_relative_url,
       **kw
     )

@@ -140,7 +140,14 @@ if leaflet_display_side:
     leaflet_year=leaflet_year,
     leaflet_recycle_url=leaflet_recycle_url
   )
-  leaflet_content = leaflet_legalese.decode() + leaflet_content.decode()
+  #leaflet_content = leaflet_legalese.decode() + leaflet_content.decode()
+
+  if isinstance(leaflet_legalese, unicode):
+    leaflet_legalese = leaflet_legalese.encode("UTF-8")
+  if isinstance(leaflet_content, unicode):
+    leaflet_content = leaflet_content.encode("UTF-8")
+
+  leaflet_content = leaflet_legalese + leaflet_content
 
 # ========================= TRANSFORMATION: book ===============================
 # XXX still dirty
