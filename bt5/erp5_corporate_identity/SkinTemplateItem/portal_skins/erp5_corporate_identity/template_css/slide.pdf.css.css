@@ -202,18 +202,21 @@ section {
   width: auto;
 }
 /* code */
-html .ci-slideshow code,
-html .ci-slideshow-handout code {
-  background-color: #eee;
-}
 html .ci-slideshow pre,
 html .ci-slideshow-handout pre {
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background-color: #eee;
-  text-align: left;
-  padding: 16px;
+	text-align: left;
+	white-space: pre-line;
+	word-wrap: break-word;
+  padding: 10px 20px 36px;
+  background-color: rgb(234,246,246);
+}
+html .ci-slideshow pre code
+html .ci-slideshow-handout pre code {
+  display: block;
+	background-color: rgb(234,246,246);
+}
+html .ci-slideshow p code {
+	background-color: rgb(234,246,246);
 }
 
 
