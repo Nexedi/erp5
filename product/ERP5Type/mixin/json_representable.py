@@ -28,7 +28,13 @@
 ##############################################################################
 
 import json
-import xmltodict
+import warnings
+try:
+  import xmltodict
+except ImportError:
+  xmltodict = None
+  warnings.warn("Please install xmltodict, it is needed by json_representable mixin",
+                 DeprecationWarning)
 import zope.interface
 from OFS import XMLExportImport
 from StringIO import StringIO
