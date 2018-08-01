@@ -16,6 +16,7 @@ Export WebPage as Report
 # document_reference:       use as document reference
 # document_title            use as document title
 # override_batch_mode       used for tests
+# override_source_organisation_title organisation for report header/footer
 #
 # document_download:        download file directly
 # document_save:            save file in document module
@@ -26,6 +27,9 @@ Export WebPage as Report
 # display_detail            include details where applicable
 # display_depth             level of depth to display
 # display_milestone         show milestones where applicable
+#
+# start_date                start_date of report
+# stop_date                 stop_date of report
 #
 # report_name               report to generate
 # report_title              report title
@@ -46,6 +50,9 @@ return context.Base_viewAsReport(
   display_milestone=display_milestone,
   report_name=report_name,
   report_title=report_title,
+  start_date=start_date,
+  stop_date=stop_date,
   batch_mode=batch_mode,
+  override_source_organisation_title=override_source_organisation_title,
   **kw
 )
