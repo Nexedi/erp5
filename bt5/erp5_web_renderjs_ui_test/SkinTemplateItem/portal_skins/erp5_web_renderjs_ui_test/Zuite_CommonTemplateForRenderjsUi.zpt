@@ -812,7 +812,8 @@
 
   <tal:block metal:define-macro="set_filter_section">
     <tr>
-      <td colspan="3"><b tal:content="python: 'Set the filter section %(index)i to %(key)s - %(value)s' % filter_section_configuration"></b></td>
+      <td tal:condition="python: filter_section_configuration.get('operator')" colspan="3"><b tal:content="python: 'Set the filter section %(index)i to %(key)s %(operator)s %(value)s' % filter_section_configuration"></b></td>
+      <td tal:condition="python: not filter_section_configuration.get('operator')" colspan="3"><b tal:content="python: 'Set the filter section %(index)i to %(key)s - %(value)s' % filter_section_configuration"></b></td>
     </tr>
     <tr>
       <td>waitForElementPresent</td>
@@ -821,14 +822,22 @@
     </tr>
     <tr>
       <td>select</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select' % (filter_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select[@class=\'column\']' % (filter_section_configuration['index'] + 1)"></td>
       <td tal:content="python: 'value=%s' % filter_section_configuration['key']"></td>
     </tr>
+    <tr tal:condition="python: filter_section_configuration.get('operator')">
+      <td>select</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select[@class=\'operator\']' % (filter_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: 'value=%s' % filter_section_configuration['operator']"></td>
+    </tr>
+    <tal:block tal:define="_set_filter_section_value_list python: filter_section_configuration['value'] if isinstance(filter_section_configuration['value'], (tuple, list)) else [filter_section_configuration['value']]"
+               tal:repeat="_set_filter_section_index python: range(len(_set_filter_section_value_list))">
     <tr>
       <td>type</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//input' % (filter_section_configuration['index'] + 1)"></td>
-      <td tal:content="python: filter_section_configuration['value']"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//input[%i]' % (filter_section_configuration['index'] + 1, _set_filter_section_index + 1)"></td>
+      <td tal:content="python: _set_filter_section_value_list[_set_filter_section_index]"></td>
     </tr>
+    </tal:block>
     <tr>
       <td colspan="3"><p></p></td>
     </tr>
@@ -842,6 +851,30 @@
       <td>click</td>
       <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//button[@class="ui-btn-icon-left ui-icon-check"]</td>
       <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="change_filter_to_and">
+    <tr>
+      <td colspan="3"><b>Change the filter to AND mode</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//select[@name='heard_about']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>select</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//select[@name='heard_about']</td>
+      <td>index=0</td>
+    </tr>
+    <tr>
+      <td>verifyValue</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//select[@name='heard_about']</td>
+      <td>AND</td>
     </tr>
     <tr>
       <td colspan="3"><p></p></td>
@@ -908,14 +941,22 @@
     </tr>
     <tr>
       <td>verifyValue</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select' % (filter_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select[@class=\'column\']' % (filter_section_configuration['index'] + 1)"></td>
       <td tal:content="python: filter_section_configuration['key']"></td>
     </tr>
+    <tr tal:condition="python: filter_section_configuration.get('operator')">
+      <td>verifyValue</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select[@class=\'operator\']' % (filter_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: filter_section_configuration['operator']"></td>
+    </tr>
+    <tal:block tal:define="_check_filter_section_value_list python: filter_section_configuration['value'] if isinstance(filter_section_configuration['value'], (tuple, list)) else [filter_section_configuration['value']]"
+               tal:repeat="_check_filter_section_index python: range(len(_check_filter_section_value_list))">
     <tr>
       <td>verifyValue</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//input' % (filter_section_configuration['index'] + 1)"></td>
-      <td tal:content="python: filter_section_configuration['value']"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//input[%i]' % (filter_section_configuration['index'] + 1, _check_filter_section_index + 1)"></td>
+      <td tal:content="python: _check_filter_section_value_list[_check_filter_section_index]"></td>
     </tr>
+    </tal:block>
     <tr>
       <td colspan="3"><p></p></td>
     </tr>

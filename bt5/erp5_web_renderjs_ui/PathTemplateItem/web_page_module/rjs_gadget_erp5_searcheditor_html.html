@@ -35,7 +35,7 @@
             <option {{#if selected}}selected="selected"{{/if}} data-i18n="{{text}}" value="{{value}}">{{text}}</option>
           {{/each}}
         </select>
-        <select>
+        <select class="operator">
           {{#each operator_option}}
             <option {{#if selected}}selected="selected"{{/if}} data-i18n="{{text}}" value="{{value}}">{{text}}</option>
           {{/each}}
@@ -47,7 +47,13 @@
           {{/each}}
         </select>
         {{else}}
+          {{#if input_list}}
+            {{#each input_list}}
+        <input type="{{type}}" value="{{value}}" {{required}}></input>
+            {{/each}}
+          {{else}}
         <input type="{{input_type}}" value="{{input_value}}" required></input>
+          {{/if}}
         {{/if}}
       </div>
     </script>
