@@ -63,8 +63,15 @@ override_document_language = kw.get('document_language')
 override_source_organisation_title=kw.get('override_source_organisation', None)
 override_batch_mode = kw.get('batch_mode')
 
-doc_report_start_date = DateTime(kw.get('start_date', None) or getattr(context.REQUEST.form, 'start_date', None) or DateTime(DateTime().year(), DateTime().month(), 1))
-doc_report_stop_date = DateTime(kw.get('stop_date', None) or getattr(context.REQUEST.form, 'stop_date', None) or DateTime())
+# we are just caller, so if no dates are passed, the report must decide what to set
+doc_report_start_date_input = kw.get('start_date', None) or getattr(context.REQUEST.form, 'start_date', None)
+doc_report_start_date = None
+if doc_report_start_date_input:
+  doc_report_start_date = DateTime(doc_report_start_date_input)
+doc_report_stop_date_input = kw.get('stop_date', None) or getattr(context.REQUEST.form, 'stop_date', None)
+doc_report_stop_date = None
+if doc_report_stop_date_input:
+  doc_report_stop_date = DateTime(doc_report_stop_date_input)
 
 doc_report_name = kw.get('report_name')
 doc_report_title = kw.get('report_title')
