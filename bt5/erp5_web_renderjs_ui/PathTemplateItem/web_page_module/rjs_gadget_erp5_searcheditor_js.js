@@ -20,6 +20,7 @@
     ],
     OTHER = [
       ["Equal to", "exact_match"],
+      ["Equal to (at least one)", "at_least_one_exact_match"],
       ["Contains", "keyword"]
     ],
     DOMAIN = [
@@ -40,15 +41,136 @@
       value.indexOf('price') !== -1;
   }
 
+  function makeFilterItemInput(param) {
+    var input = document.createElement("input");
+    input.type = param.type;
+    input.value = param.value;
+    return input;
+  }
+  function appendInputToFilterItem(item_element) {
+    item_element.appendChild(makeFilterItemInput({
+      type: "search",
+      value: ""
+    }));
+  }
+  function getFilterItemElementFromEvent(event, gadget_element) {
+    var element = event.target;
+    while (!element.classList.contains("filter_item")) {
+      element = element.parentElement;
+      if (!element || element === gadget_element) { return null; }
+    }
+    return element;
+  }
+  function updateFilterForAtleastoneexactmatch(gadget_element, auto_remove) {
+    var item_list = gadget_element.querySelectorAll(".filter_item"),
+      input_list = null,
+      last_input = null,
+      i = 0,
+      j = 0;
+    for (i = 0; i < item_list.length; i += 1) {
+      if ("at_least_one_exact_match" ===
+          item_list[i].querySelector(".operator").value) {
+        if (auto_remove) {
+          input_list = item_list[i].querySelectorAll("input");
+          for (j = input_list.length - 2; j >= 0; j -= 1) {
+            if (!input_list[j].value) {
+              input_list[j].remove();
+            }
+          }
+        }
+        input_list = item_list[i].querySelectorAll("input");
+        last_input = input_list[input_list.length - 1];
+        if (last_input.value) {
+          appendInputToFilterItem(item_list[i]);
+        }
+        input_list = item_list[i].querySelectorAll("input");
+        if (input_list.length === 1) {
+          input_list[0].required = true;
+        }
+      }
+    }
+  }
+
+  function detectAtleastoneexactmatchComplexQuery(query) {
+    var i = 0, key = "", operator = "", difference_count = 0, value_list = [];
+    if (query.type !== "complex" || query.operator !== "OR") { return null; }
+    for (i = 0; i < query.query_list.length; i += 1) {
+      if (difference_count === 1) {
+        if (key      !== (query.query_list[i].key      || "") ||
+            operator !== (query.query_list[i].operator || "")) {
+          return null;
+        }
+      } else if (difference_count === 0) {
+        key = query.query_list[i].key || "";
+        operator = query.query_list[i].operator || "";
+        difference_count = 1;
+      }
+    }
+    return {key: key, operator: operator, value_list: value_list};
+  }
+
   function createFilterItemTemplate(gadget, query_dict) {
     var operator_default_list = DEFAULT,
       operator_option_list = [],
       column_option_list = [],
+      input_list = [],
       input_type = "search",
       i,
       is_selected,
+      query_detail_dict,
       domain_list,
       domain_option_list;
+
+    if (query_dict.type === "complex") {
+      query_detail_dict = detectAtleastoneexactmatchComplexQuery(query_dict);
+      operator_default_list = OTHER;
+
+      is_selected = false;
+      for (i = 0; i < gadget.state.search_column_list.length; i += 1) {
+        is_selected = is_selected ||
+          (query_detail_dict.key === gadget.state.search_column_list[i][0]);
+        column_option_list.push({
+          text: gadget.state.search_column_list[i][1],
+          value: gadget.state.search_column_list[i][0],
+          selected: (query_detail_dict.key === gadget.state.search_column_list[i][0])
+        });
+      }
+      if (!is_selected) {
+        throw new Error('SearchEditor: no key found for: ' + query_detail_dict.key);
+      }
+      is_selected = false;
+      for (i = 0; i < operator_default_list.length; i += 1) {
+        is_selected = is_selected ||
+          ("at_least_one_exact_match" === operator_default_list[i][1]);
+        operator_option_list.push({
+          text: operator_default_list[i][0],
+          value: operator_default_list[i][1],
+          selected: ("at_least_one_exact_match" === operator_default_list[i][1])
+        });
+      }
+      if (!is_selected) {
+        throw new Error('SearchEditor: no operator found for: at_least_one_exact_match');
+      }
+
+      for (i = 0; i < query_dict.query_list.length; i += 1) {
+        input_list.push({
+          type: "search",
+          value: query_dict.query_list[i].value,
+          required: ""
+        });
+      }
+      input_list.push({
+        type: "search",
+        value: "",
+        required: ""
+      });
+      return filter_item_template({
+        option: column_option_list,
+        operator_option: operator_option_list,
+        input_list: input_list,
+        domain_option: domain_option_list
+      });
+    }
 
     if (query_dict.key.indexOf(PREFIX_COLUMN) === 0) {
       if (isNumericComparison(query_dict.key)) {
@@ -144,6 +266,29 @@
     });
   }
 
+  function mapGetElementValue(element_list) {
+    var i = 0, value_list = new Array(element_list.length);
+    for (i = 0; i < element_list.length; i += 1) {
+      value_list[i] = element_list[i].value;
+    }
+    return value_list;
+  }
+
+  function makeComplexQueryFromValueList(key, value_list, operator, logical_operator) {
+    var query_list = [],
+      complex = {type: "complex", operator: logical_operator, query_list: query_list},
+      i = 0;
+    for (i = 0; i < value_list.length; i += 1) {
+      query_list.push({
+        type: "simple",
+        key: key,
+        operator: operator,
+        value: value_list[i]
+      });
+    }
+    return complex;
+  }
+
   function getQueryStateFromDOM(gadget) {
     var operator_select = gadget.element.querySelector("select"),
       state = {
@@ -153,23 +298,68 @@
       i,
       filter_item_list = gadget.element.querySelectorAll(".filter_item"),
       select_list,
+      key,
+      operator,
       value;
 
     for (i = 0; i < filter_item_list.length; i += 1) {
       select_list = filter_item_list[i].querySelectorAll("select");
+      key = select_list[0][select_list[0].selectedIndex].value;
+      operator = select_list[1][select_list[1].selectedIndex].value;
       if (select_list.length === 3) {
         value = select_list[2][select_list[2].selectedIndex].value;
       } else {
+        if (operator === "at_least_one_exact_match") {
+          value = mapGetElementValue(
+            filter_item_list[i].querySelectorAll("input")
+          );
+          if (!value[value.length - 1]) { value.length -= 1; }
+          if (value.length > 1) {
+            state.query_list.push(makeComplexQueryFromValueList(key, value, "", "OR"));
+            /*jslint continue: true */
+            continue;
+          }
+          /*jslint continue: false */
+        }
         value = filter_item_list[i].querySelector("input").value;
       }
       state.query_list.push({
+        type: "simple",
         value: value,
-        operator: select_list[1][select_list[1].selectedIndex].value,
-        key: select_list[0][select_list[0].selectedIndex].value
+        operator: operator,
+        key: key
       });
     }
 
     return state;
+  }
+
+  function queryRemovePrefixInDeep(query) {
+    var i = 0;
+    if (query.type === "simple") {
+      if (query.key.indexOf(PREFIX_COLUMN) === 0) {
+        query.key = query.key.slice(PREFIX_COLUMN.length);
+      } else if (query.key.indexOf(PREFIX_DOMAIN) === 0) {
+        query.key = query.key.slice(PREFIX_DOMAIN.length);
+      } else {
+        query.key = '';
+      }
+    } else {
+      for (i = 0; i < query.query_list.length; i += 1) {
+        queryRemovePrefixInDeep(query.query_list[i]);
+      }
+    }
+  }
+
+  function querySetKeyInDeep(query, key) {
+    var i = 0;
+    if (query.type === "complex") {
+      for (i = 0; i < query.query_list.length; i += 1) {
+        querySetKeyInDeep(query.query_list[i], key);
+      }
+    } else {
+      query.key = key;
+    }
   }
 
   function getElementIndex(node) {
@@ -199,6 +389,8 @@
         jio_query,
         len,
         sub_jio_query,
+        sub_jio_query_dict,
+        sub_jio_query_detail_dict,
         search_column_list = [],
         search_column_dict = {},
         search_domain_dict = {};
@@ -265,6 +457,16 @@
 
         } else if (jio_query instanceof ComplexQuery) {
           operator = jio_query.operator;
+          sub_jio_query_dict = jio_query.toJSON();
+          sub_jio_query_detail_dict =
+            detectAtleastoneexactmatchComplexQuery(sub_jio_query_dict);
+          if (sub_jio_query_detail_dict &&
+              search_column_dict.hasOwnProperty(sub_jio_query_detail_dict.key)) {
+            querySetKeyInDeep(sub_jio_query_dict, PREFIX_COLUMN + sub_jio_query_detail_dict.key);
+            query_list.push(sub_jio_query_dict);
+            operator = "AND";
+            jio_query = {query_list: []};  // This line acts like a "go to end of this function"
+          }
 
           len = jio_query.query_list.length;
           for (i = 0; i < len; i += 1) {
@@ -296,10 +498,22 @@
                 });
               }
             } else {
-              query_list.push({
-                key: PREFIX_RAW,
-                value: Query.objectToSearchText(sub_jio_query)
-              });
+              sub_jio_query_dict = sub_jio_query.toJSON();
+              sub_jio_query_detail_dict =
+                detectAtleastoneexactmatchComplexQuery(sub_jio_query_dict);
+              if (sub_jio_query_detail_dict &&
+                  search_column_dict.hasOwnProperty(sub_jio_query_detail_dict.key)) {
+                querySetKeyInDeep(
+                  sub_jio_query_dict,
+                  PREFIX_COLUMN + sub_jio_query_detail_dict.key
+                );
+                query_list.push(sub_jio_query_dict);
+              } else {
+                query_list.push({
+                  key: PREFIX_RAW,
+                  value: Query.objectToSearchText(sub_jio_query)
+                });
+              }
             }
           }
         }
@@ -381,35 +595,34 @@
 
       for (i = 0; i < len; i += 1) {
         query = query_list[i];
-        if (query.operator === 'keyword') {
-          query.value = '%' + query.value + '%';
-          query.operator = '';
-        } else if (["", ">", "<", "<=", ">="].indexOf(query.operator) === -1) {
-          query.operator = '';
-        }
-
-        if (query.key === PREFIX_RAW) {
-          try {
-            jio_query_list.push(QueryFactory.create(query.value));
-          } catch (ignore) {
-            // If the value can not be parsed by jio, drop it
-          }
+        if (query.type === "complex") {
+          queryRemovePrefixInDeep(query);
+          jio_query_list.push(new ComplexQuery(query));
         } else {
-          if (query.key.indexOf(PREFIX_COLUMN) === 0) {
-            query.key = query.key.slice(PREFIX_COLUMN.length);
-          } else if (query.key.indexOf(PREFIX_DOMAIN) === 0) {
-            query.key = query.key.slice(PREFIX_DOMAIN.length);
-          } else {
-            query.key = '';
+          if (query.operator === 'keyword') {
+            query.value = '%' + query.value + '%';
+            query.operator = '';
+          } else if (["", ">", "<", "<=", ">="].indexOf(query.operator) === -1) {
+            query.operator = '';
           }
 
-          jio_query_list.push(new SimpleQuery({
-            key: query.key,
-            operator: query.operator,
-            type: "simple",
-            value: query.value
-          }));
+          if (query.key === PREFIX_RAW) {
+            try {
+              jio_query_list.push(QueryFactory.create(query.value));
+            } catch (ignore) {
+              // If the value can not be parsed by jio, drop it
+            }
+          } else {
+            queryRemovePrefixInDeep(query);
 
+            jio_query_list.push(new SimpleQuery({
+              key: query.key,
+              operator: query.operator,
+              type: "simple",
+              value: query.value
+            }));
+
+          }
         }
       }
 
@@ -464,7 +677,17 @@
       }
     }, false, false)
 
+    .onEvent('input', function input(evt) {
+      var filter_item_element = getFilterItemElementFromEvent(evt, this.element);
+      if (filter_item_element) {
+        if (filter_item_element.querySelector(".operator").value === "at_least_one_exact_match") {
+          updateFilterForAtleastoneexactmatch(this.element);
+        }
+      }
+    }, false, false)
+
     .onEvent('change', function change(evt) {
+      updateFilterForAtleastoneexactmatch(this.element, true);
       if (evt.target.classList.contains('column')) {
         // Reset the operator when user change the column/key
         evt.preventDefault();
