@@ -42,6 +42,7 @@ except ImportError:
   warnings.warn("Please install unidiff, it is needed by Diff Tool",
                 DeprecationWarning)
 from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.patches.diff import DeepDiff
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -134,7 +135,7 @@ class PortalPatch:
     new_value_dict = self.removePropertyList(self.new_value, export=True)
 
     # Get the DeepDiff in tree format.
-    tree_diff = deepdiff.DeepDiff(old_value_dict,
+    tree_diff = DeepDiff(old_value_dict,
                          new_value_dict,
                          view='tree')
     diff_tree_list = []
