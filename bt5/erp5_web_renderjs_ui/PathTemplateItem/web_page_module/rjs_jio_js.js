@@ -6060,9 +6060,9 @@ var arrayExtend = function () {
   if (query.operator === "NOT") {
     return query.query_list[0];
   }
-  return {"type": "complex", "key": "", "operator": "NOT", "query_list": [query]};
+  return {"type": "complex", "operator": "NOT", "query_list": [query]};
 
-}, mkComplexQuery = function (key, operator, query_list) {
+}, mkComplexQuery = function (operator, query_list) {
   var i, query_list2 = [];
   for (i = 0; i < query_list.length; i += 1) {
     if (query_list[i].operator === operator) {
@@ -6071,10 +6071,17 @@ var arrayExtend = function () {
       query_list2.push(query_list[i]);
     }
   }
-  return {type:"complex",key:key,operator:operator,query_list:query_list2};
+  return {type:"complex",operator:operator,query_list:query_list2};
 
 }, querySetKey = function (query, key) {
-  if (({simple: 1, complex: 1})[query.type] && !query.key) {
+  var i;
+  if (query.type === "complex") {
+    for (i = 0; i < query.query_list.length; ++i) {
+      querySetKey(query.query_list[i], key);
+    }
+    return true;
+  }
+  if (query.type === "simple" && !query.key) {
     query.key = key;
     return true;
   }
@@ -6176,13 +6183,13 @@ case 5: case 8: case 11: case 14: case 16:
  this.$ = $$[$0]; 
 break;
 case 6:
- this.$ = mkComplexQuery('', 'AND', [$$[$0-1], $$[$0]]); 
+ this.$ = mkComplexQuery('AND', [$$[$0-1], $$[$0]]); 
 break;
 case 7:
- this.$ = mkComplexQuery('', 'OR', [$$[$0-2], $$[$0]]); 
+ this.$ = mkComplexQuery('OR', [$$[$0-2], $$[$0]]); 
 break;
 case 9:
- this.$ = mkComplexQuery('', 'AND', [$$[$0-2], $$[$0]]); 
+ this.$ = mkComplexQuery('AND', [$$[$0-2], $$[$0]]); 
 break;
 case 10:
  this.$ = mkNotQuery($$[$0]); 
@@ -6723,7 +6730,8 @@ function Parser () {
 }
 Parser.prototype = parser;parser.Parser = Parser;
 return new Parser;
-})();;  return parser.parse(string);
+})();
+;  return parser.parse(string);
 } // parseStringToObject
 
 ;/*global RSVP, window, parseStringToObject*/
@@ -7247,8 +7255,6 @@ return new Parser;
      */
     this.operator = spec.operator;
 
-    this.key = spec.key || this.key;
-
     /**
      * The sub Query list which are used to query an item.
      *
@@ -7268,7 +7274,6 @@ return new Parser;
 
   ComplexQuery.prototype.operator = "AND";
   ComplexQuery.prototype.type = "complex";
-  ComplexQuery.prototype.key = "";
 
   /**
    * #crossLink "Query/match:method"
@@ -7296,7 +7301,6 @@ return new Parser;
     var s = {
       "type": "complex",
       "operator": this.operator,
-      "key": this.key,
       "query_list": []
     };
     this.query_list.forEach(function (query) {
@@ -7386,34 +7390,60 @@ return new Parser;
   };
 
   function objectToSearchText(query) {
-    var str_list = [], operator = "", query_list = null;
+    var i = 0,
+      query_list = null,
+      string_list = null,
+      operator = "",
+      common_key = "";
+    if (query.type === "simple") {
+      return (query.key ? query.key + ": " : "") +
+        (query.operator || "") +
+        ' "' + query.value + '"';
+    }
     if (query.type === "complex") {
-      query_list = query.query_list || [];
-      if (query_list.length === 0) {
+      query_list = query.query_list;
+      if (!query_list || query_list.length === 0) {
         return "";
       }
       operator = query.operator;
       if (operator === "NOT") {
-        str_list.push("NOT");
         // fallback to AND operator if several queries are given
         // i.e. `NOT ( a AND b )`
-        operator = "AND";
+        return "NOT ( " + objectToSearchText(
+          {type: "complex", operator: "AND", query_list: query_list}
+        ) + " )";
       }
-      if (query.key) {
-        str_list.push(query.key + ":");
+      if (query_list.length === 1) {
+        return objectToSearchText(query_list[0]);
       }
-      str_list.push("(");
-      query_list.forEach(function (sub_query) {
-        str_list.push(objectToSearchText(sub_query));
-        str_list.push(operator);
-      });
-      str_list.length -= 1;
-      str_list.push(")");
-      return str_list.join(" ");
-    }
-    if (query.type === "simple") {
-      return (query.key ? query.key + ": " : "") +
-        (query.operator || "") + ' "' + query.value + '"';
+
+      common_key = query_list[i].key;
+      for (i = 1; i < query_list.length; i += 1) {
+        if (query_list[i].type !== "simple" ||
+            query_list[i].key !== common_key) {
+          break;
+        }
+      }
+      string_list = [];
+      if (i === query_list.length) {
+        for (i = 0; i < query_list.length; i += 1) {
+          string_list.push(
+            (query_list[i].operator || "") +
+              ' "' + query_list[i].value + '"'
+          );
+        }
+      } else {
+        common_key = "";
+        for (i = 0; i < query_list.length; i += 1) {
+          string_list.push(objectToSearchText(query_list[i]));
+        }
+      }
+      if (string_list.length > 1) {
+        return (common_key ? common_key + ": " : "") +
+          "( " + string_list.join(" " + operator + " ") + " )";
+      }
+      return (common_key ? common_key + ": " : "") +
+        string_list[0];
     }
     throw new TypeError("This object is not a query");
   }
