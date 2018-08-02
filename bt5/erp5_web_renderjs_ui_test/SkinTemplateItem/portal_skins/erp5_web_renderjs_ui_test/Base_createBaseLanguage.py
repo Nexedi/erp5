@@ -5,6 +5,7 @@ param_dict = [
   { 'message': 'Proceed', 'translation': 'jixu', 'language': 'wo'},
   { 'message': 'Title', 'translation': 'biaoti', 'language': 'wo'},
   { 'message': 'Equal to', 'translation': 'dengyu', 'language': 'wo'},
+  { 'message': 'Equal to (at least one)', 'translation': 'dengyu(zhishaoyige)', 'language': 'wo'},
   { 'message': 'Contains', 'translation': 'baohang', 'language': 'wo'},
   { 'message': 'Search', 'translation': 'soushuo', 'language': 'wo'},
   { 'message': 'Next', 'translation': 'houyige', 'language': 'wo'},

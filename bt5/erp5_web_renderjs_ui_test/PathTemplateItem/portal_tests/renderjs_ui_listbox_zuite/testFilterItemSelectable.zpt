@@ -94,12 +94,17 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@class='filter_item_container']/div[1]//select[2]//option[2][@value='keyword' and text()='Contains']</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[2]//option[2][@value='at_least_one_exact_match' and text()='Equal to (at least one)']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[2]//option[3][@value='keyword' and text()='Contains']</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@class='filter_item_container']/div[1]//select[2]//option[3]</td>
+  <td>//div[@class='filter_item_container']/div[1]//select[2]//option[4]</td>
   <td></td>
 </tr>
 <tr>
