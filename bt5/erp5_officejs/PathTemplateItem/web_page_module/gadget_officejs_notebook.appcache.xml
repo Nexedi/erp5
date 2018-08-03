@@ -7,63 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_Access_contents_information_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Anonymous</string>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Add_portal_content_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Change_local_roles_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Modify_portal_content_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_View_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Anonymous</string>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
@@ -372,7 +315,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>967.7693.5072.29149</string> </value>
+                <value> <string>969.41850.61151.55500</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -390,7 +333,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1525268788.94</float>
+                        <float>1534492524.35</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
