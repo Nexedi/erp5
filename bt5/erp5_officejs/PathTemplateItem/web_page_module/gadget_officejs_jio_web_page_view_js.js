@@ -17,7 +17,6 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-
     .declareMethod("render", function (options) {
       return this.changeState({
         jio_key: options.jio_key,
@@ -150,7 +149,8 @@
           return RSVP.all([
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'selection_previous'}),
-            gadget.getUrlFor({command: 'selection_next'})
+            gadget.getUrlFor({command: 'selection_next'}),
+            gadget.getUrlFor({command: "change", options: {"page": "ojs_see_history"}})
           ]);
         })
         .push(function (url_list) {
@@ -159,7 +159,8 @@
             save_action: true,
             selection_url: url_list[0],
             previous_url: url_list[1],
-            next_url: url_list[2]
+            next_url: url_list[2],
+            see_history: url_list[3]
           });
         });
     });

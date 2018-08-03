@@ -128,16 +128,14 @@
         .push(function () {
           return RSVP.all([
             gadget.getUrlFor({command: "change", options: {"page": "ojs_add_document"}}),
-            gadget.getSetting('document_title_plural'),
-            gadget.getUrlFor({command: "change", options: {"page": "ojs_see_history"}})
+            gadget.getSetting('document_title_plural')
           ]);
         })
         .push(function (result) {
           return gadget.updateHeader({
             page_title: result[1],
             filter_action: true,
-            add_url: result[0],
-            see_history: result[2]
+            add_url: result[0]
           });
         });
     });
