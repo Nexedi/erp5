@@ -160,6 +160,13 @@ class PortalPatch:
     for val in diff_tree_list:
       new_val = {}
 
+      # In case both the old and new value are one of empty data type or None or
+      # an instance of 'deepdiff NotPresent', there is no need to show the empty
+      # diff, hence its better to continue
+      if ((not val.t1 or isinstance(val.t1, deepdiff.helper.NotPresent)) and
+          (not val.t2 or isinstance(val.t2, deepdiff.helper.NotPresent))):
+        continue
+
       diff = val.additional.get('diff', None)
       # If there is diff in additional property, save it separately
       if diff:
