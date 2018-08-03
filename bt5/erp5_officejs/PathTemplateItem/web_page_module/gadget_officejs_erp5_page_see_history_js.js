@@ -14,17 +14,33 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("jio_toggleRevisionOption",
                            "jio_toggleRevisionOption")
+    //.declareAcquiredMethod("getId")
+
+    .setState({jio_key: undefined})
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
-      var gadget = this;
+      var gadget = this,
+          jio_key,
+          result;
       return gadget.jio_toggleRevisionOption(true)
         .push(function () {
-          return gadget.jio_allDocs(param_list[0]);
+          console.log(param_list[0]);
+          console.log(gadget.state.jio_key);
+          return gadget.jio_allDocs({query: "doc_id: " + gadget.state.jio_key);
         })
-        .push(function (result) {
+        .push(function (timestamps) {
+          console.log("timestamps: ", timestamps);
+          param_list[0].select_list.push(gadget.state.jio_key);
+        })
+        .push(function (res) {
+          result = res;
+          return gadget.jio_toggleRevisionOption(false);
+        })
+        .push(function () {
+          console.log(result);
           var i, date, len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {
             if (result.data.rows[i].value.hasOwnProperty("modification_date")) {
@@ -68,17 +84,19 @@
         });
     })
 
-    .declareMethod("render", function () {
+    .declareMethod("render", function (options) {
       var gadget = this;
 
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.getDeclaredGadget('form_list'),
-            gadget.getSetting("portal_type")
+            gadget.getSetting("portal_type"),
+            gadget.changeState({jio_key: options.jio_key})
           ]);
         })
         .push(function (result) {
+          console.log("result 1: ", result[1]);
           var column_list = [
             ['title', 'Title'],
             ['reference', 'Reference'],
@@ -121,7 +139,8 @@
                 "bottom",
                 [["listbox"]]
               ]]
-            }
+            },
+            jio_key: options.jio_key
           });
         })
         .push(function () {
