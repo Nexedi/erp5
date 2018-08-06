@@ -163,6 +163,8 @@
           }
 
           if (result.search) {
+            // User search query is always considered as an argument of an AND
+            // complex query (this gadget does not allow to extend OR query)
             jio_query = undefined;
             // XXX trim from input gadget?
             try {
@@ -177,7 +179,21 @@
               jio_query_list = jio_query.query_list;
               operator = jio_query.operator;
             } else if (jio_query !== undefined) {
-              jio_query_list.push(jio_query);
+              // Keep user search as last argument
+              // so that it is still editable after a refresh
+              if (operator === 'AND') {
+                jio_query_list.push(jio_query);
+              } else {
+                jio_query_list = [
+                  new ComplexQuery({
+                    operator: operator,
+                    query_list: jio_query_list,
+                    type: "complex"
+                  }),
+                  jio_query
+                ];
+                operator = 'AND';
+              }
             }
           }
 
