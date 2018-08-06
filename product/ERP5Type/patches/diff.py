@@ -91,5 +91,11 @@ def DeepDiff__diff(self, level, parents_ids=frozenset({})):
 # was too complicated in DeepDiff(doing recursive diff inside the iterables).
 # Rather than doing that, now we treat the iterables as string and calculate
 # the diff accordingly
-DeepDiff._DeepDiff__diff_iterable = DeepDiff__diff_iterable
-DeepDiff._DeepDiff__diff = DeepDiff__diff
+# Do not try to monkey-patch when there is no DeepDiff class imported. This is
+# because we don't want any component(for ex DiffTool) be acting as Broken Modified
+# if the DeepDiff patch is not working properly
+try:
+  DeepDiff._DeepDiff__diff_iterable = DeepDiff__diff_iterable
+  DeepDiff._DeepDiff__diff = DeepDiff__diff
+except AttributeError:
+  pass
