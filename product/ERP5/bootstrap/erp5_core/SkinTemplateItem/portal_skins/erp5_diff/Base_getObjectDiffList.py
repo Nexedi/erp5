@@ -30,6 +30,9 @@ if first_path is None and second_path is None:
   # create diff.
   if list_selection_name is not None:
     selected_obj_list = portal.portal_selections.getSelectionCheckedValueList(selection_name=list_selection_name)
+    # Check if the number of selected object is 2 only. otherwise raise an error
+    if len(selected_obj_list) != 2:
+      raise ValueError('Please select accurately 2 objects.')
     object_revision_list.extend(selected_obj_list)
   else:
     # Return an empty list here. This would be the case when we first access
