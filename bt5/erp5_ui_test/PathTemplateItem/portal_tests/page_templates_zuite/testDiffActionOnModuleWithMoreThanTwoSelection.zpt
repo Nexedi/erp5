@@ -1,0 +1,110 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Generic Search Dialog</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Portal Diff<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/bar_module/FooModule_createObjects?start:int=1&num:int=1"/>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/bar_module/FooModule_createObjects?start:int=2&num:int=1"/>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/bar_module/FooModule_createObjects?start:int=3&num:int=1"/>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/view</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]//input[@type="checkbox"]</td>
+  <td></td>
+</tr>
+
+<!-- Click on the action to check the diff between the 2 objects -->
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Diff Module Objects</td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//*[@class="listbox-data-line-0 DataA"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//*[@class="listbox-data-line-1 DataB"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//*[@class="listbox-data-line-2 DataA"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>This action can only compare exactly 2 objects.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>This action can only compare exactly 2 objects.</td>
+  <td></td>
+</tr>
+
+</body>
+</html>
