@@ -1380,7 +1380,7 @@ div[data-gadget-scope='header'] .ui-header {
     iframe {
       height: 80vh;
     }
-    .listbox-gadget {
+    div[data-gadget-url$="gadget_erp5_field_listbox.html"] {
       iframe {
         height: 30vh;
       }
