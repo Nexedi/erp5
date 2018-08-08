@@ -1724,7 +1724,6 @@ div[data-gadget-scope='erp5_searchfield'] {
                 top: 50%;
                 margin-top: -0.75em;
 
-                background-color: @colorbackground;
                 border-radius: 0.5em;
                 width: 1em;
                 text-align: center;
