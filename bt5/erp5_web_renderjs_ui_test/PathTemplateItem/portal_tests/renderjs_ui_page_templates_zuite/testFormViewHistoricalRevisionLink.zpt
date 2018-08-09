@@ -135,7 +135,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[4]/td[2]//iframe</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[2]//iframe</td>
   <td></td>
 </tr>
 <tr>
@@ -146,7 +146,7 @@
 <!-- Check for the value of diff in Iframe -->
 <tr>
   <td>storeEval</td>
-  <td>document.querySelector('#selenium_myiframe').contentWindow.document.evaluate("//div[@data-gadget-scope='field_listbox']//table/tbody/tr[4]/td[2]//iframe", document.querySelector('#selenium_myiframe').contentWindow.document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.contentWindow.document.body.textContent</td>
+  <td>document.querySelector('#selenium_myiframe').contentWindow.document.evaluate("//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[2]//iframe", document.querySelector('#selenium_myiframe').contentWindow.document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.contentWindow.document.body.textContent</td>
   <td>diff_content</td>
 </tr>
 <tr>
