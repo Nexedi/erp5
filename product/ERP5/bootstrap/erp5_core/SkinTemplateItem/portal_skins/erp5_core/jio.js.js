@@ -6032,7 +6032,26 @@ hooks.HTML5_FMT = {
 return hooks;
 
 })));
-;/**
+;/*
+ * Copyright 2013, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+/**
  * Parse a text request to a json query object tree
  *
  * @param  {String} string The string to parse
@@ -6723,10 +6742,48 @@ function Parser () {
 }
 Parser.prototype = parser;parser.Parser = Parser;
 return new Parser;
-})();;  return parser.parse(string);
+})();;/*
+ * Copyright 2013, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+  return parser.parse(string);
 } // parseStringToObject
 
-;/*global RSVP, window, parseStringToObject*/
+;/*
+ * Copyright 2013, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+/*global RSVP, window, parseStringToObject*/
 /*jslint nomen: true, maxlen: 90*/
 (function (RSVP, window, parseStringToObject) {
   "use strict";
@@ -7794,7 +7851,26 @@ return new Parser;
   window.QueryFactory = QueryFactory;
 
 }(RSVP, window, parseStringToObject));
-;/*global window, moment */
+;/*
+ * Copyright 2014, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+/*global window, moment */
 /*jslint nomen: true, maxlen: 200*/
 (function (window, moment) {
   "use strict";
@@ -7981,7 +8057,26 @@ return new Parser;
     MSEC: MSEC
   };
 }(window, moment));
-;/*global window, RSVP, Blob, XMLHttpRequest, QueryFactory, Query, atob,
+;/*
+ * Copyright 2014, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+/*global window, RSVP, Blob, XMLHttpRequest, QueryFactory, Query, atob,
   FileReader, ArrayBuffer, Uint8Array, navigator */
 (function (window, RSVP, Blob, QueryFactory, Query, atob,
            FileReader, ArrayBuffer, Uint8Array, navigator) {
@@ -8148,6 +8243,20 @@ return new Parser;
   }
   util.stringify = stringify;
 
+  function base64toBlob(b64String, mimeString) {
+
+    var byteString = atob(b64String),
+    // write the bytes of the string to an ArrayBuffer
+      arrayBuffer = new ArrayBuffer(byteString.length),
+      _ia = new Uint8Array(arrayBuffer),
+      i;
+    for (i = 0; i < byteString.length; i += 1) {
+      _ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([arrayBuffer], {type: mimeString});
+  }
+
+  util.base64toBlob = base64toBlob;
 
   // https://gist.github.com/davoclavo/4424731
   function dataURItoBlob(dataURI) {
@@ -8155,18 +8264,9 @@ return new Parser;
       return new Blob();
     }
     // convert base64 to raw binary data held in a string
-    var byteString = atob(dataURI.split(',')[1]),
-    // separate out the mime component
-      mimeString = dataURI.split(',')[0].split(':')[1],
-    // write the bytes of the string to an ArrayBuffer
-      arrayBuffer = new ArrayBuffer(byteString.length),
-      _ia = new Uint8Array(arrayBuffer),
-      i;
+    var mimeString = dataURI.split(',')[0].split(':')[1];
     mimeString = mimeString.slice(0, mimeString.length - ";base64".length);
-    for (i = 0; i < byteString.length; i += 1) {
-      _ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([arrayBuffer], {type: mimeString});
+    return base64toBlob(dataURI.split(',')[1], mimeString);
   }
 
   util.dataURItoBlob = dataURItoBlob;
@@ -8945,18 +9045,21 @@ return new Parser;
  * JIO extension for resource replication.
  * Copyright (C) 2013, 2015  Nexedi SA
  *
- *   This library is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU Lesser General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
  *
- *   This library is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU Lesser General Public License for more details.
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
  *
- *   You should have received a copy of the GNU Lesser General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
  */
 
 /*jslint nomen: true*/
@@ -10405,8 +10508,22 @@ return new Parser;
 }(jIO, RSVP, Rusha, jIO.util.stringify));
 ;/*
  * Copyright 2015, Nexedi SA
- * Released under the LGPL license.
- * http://www.gnu.org/licenses/lgpl.html
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
  */
 
 /*jslint nomen: true*/
@@ -10464,7 +10581,26 @@ return new Parser;
   jIO.addStorage('sha', ShaStorage);
 
 }(Rusha));
-;/*jslint nomen: true*/
+;/*
+ * Copyright 2015, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+/*jslint nomen: true*/
 (function (jIO) {
   "use strict";
 
@@ -10532,8 +10668,22 @@ return new Parser;
 }(jIO));
 ;/*
  * Copyright 2013, Nexedi SA
- * Released under the LGPL license.
- * http://www.gnu.org/licenses/lgpl.html
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
  */
 
 /*jslint nomen: true*/
@@ -10700,7 +10850,26 @@ return new Parser;
   jIO.addStorage('memory', MemoryStorage);
 
 }(jIO, JSON, RSVP));
-;/*jslint nomen: true*/
+;/*
+ * Copyright 2015, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+/*jslint nomen: true*/
 /*global RSVP, Blob, LZString, DOMException*/
 (function (RSVP, Blob, LZString, DOMException) {
   "use strict";
@@ -10814,7 +10983,26 @@ return new Parser;
 
   jIO.addStorage('zip', ZipStorage);
 }(RSVP, Blob, LZString, DOMException));
-;/*jslint nomen: true*/
+;/*
+ * Copyright 2017, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+/*jslint nomen: true*/
 /*global jIO, DOMParser, Node */
 (function (jIO, DOMParser, Node) {
   "use strict";
@@ -11092,7 +11280,26 @@ return new Parser;
   jIO.addStorage('parser', ParserStorage);
 
 }(jIO, DOMParser, Node));
-;/*global RSVP, Blob*/
+;/*
+ * Copyright 2017, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+/*global RSVP, Blob*/
 /*jslint nomen: true*/
 (function (jIO, RSVP, Blob) {
   "use strict";
@@ -11191,8 +11398,22 @@ return new Parser;
 
 }(jIO, RSVP, Blob));;/*
  * Copyright 2013, Nexedi SA
- * Released under the LGPL license.
- * http://www.gnu.org/licenses/lgpl.html
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
  */
 /**
  * JIO Dropbox Storage. Type = "dropbox".
@@ -11519,8 +11740,22 @@ return new Parser;
 }(jIO, RSVP, Blob, JSON));
 ;/*
  * Copyright 2013, Nexedi SA
- * Released under the LGPL license.
- * http://www.gnu.org/licenses/lgpl.html
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
  */
 
 /*jslint nomen: true*/
@@ -11828,8 +12063,22 @@ return new Parser;
 }(jIO, RSVP, DOMParser, Blob));
 ;/*
  * Copyright 2015, Nexedi SA
- * Released under the LGPL license.
- * http://www.gnu.org/licenses/lgpl.html
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
  */
 /**
  * JIO Google Drive Storage. Type = "gdrive".
@@ -12070,7 +12319,26 @@ return new Parser;
   jIO.addStorage('gdrive', GdriveStorage);
 
 }(jIO, Blob, RSVP, UriTemplate, JSON));
-;/*jslint nomen: true */
+;/*
+ * Copyright 2014, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+/*jslint nomen: true */
 /*global RSVP*/
 
 /**
@@ -12318,8 +12586,22 @@ return new Parser;
 }(jIO, RSVP));
 ;/*
  * Copyright 2013, Nexedi SA
- * Released under the LGPL license.
- * http://www.gnu.org/licenses/lgpl.html
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
  */
 // JIO ERP5 Storage Description :
 // {
@@ -12900,7 +13182,26 @@ return new Parser;
 
 }(jIO, UriTemplate, FormData, RSVP, URI, Blob,
   SimpleQuery, ComplexQuery));
-;/*jslint nomen: true*/
+;/*
+ * Copyright 2014, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+/*jslint nomen: true*/
 /*global RSVP, jiodate*/
 (function (jIO, RSVP, jiodate) {
   "use strict";
@@ -13142,7 +13443,26 @@ return new Parser;
   jIO.addStorage('query', QueryStorage);
 
 }(jIO, RSVP, jiodate));
-;/*jslint nomen: true*/
+;/*
+ * Copyright 2014, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+/*jslint nomen: true*/
 /*global RSVP, Blob*/
 (function (jIO, RSVP, Blob) {
   "use strict";
@@ -13398,7 +13718,26 @@ return new Parser;
   jIO.addStorage('drivetojiomapping', FileSystemBridgeStorage);
 
 }(jIO, RSVP, Blob));
-;/*jslint nomen: true*/
+;/*
+ * Copyright 2015, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+/*jslint nomen: true*/
 /*global Blob, RSVP, unescape, escape*/
 (function (jIO, Blob, RSVP, unescape, escape) {
   "use strict";
@@ -13633,8 +13972,22 @@ return new Parser;
 }(jIO, Blob, RSVP, unescape, escape));
 ;/*
  * Copyright 2013, Nexedi SA
- * Released under the LGPL license.
- * http://www.gnu.org/licenses/lgpl.html
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
  */
 
 /*jslint nomen: true*/
@@ -13742,8 +14095,22 @@ return new Parser;
 }(jIO, sessionStorage, localStorage, RSVP));
 ;/*
  * Copyright 2014, Nexedi SA
- * Released under the LGPL license.
- * http://www.gnu.org/licenses/lgpl.html
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
  */
 
 /**
@@ -14274,8 +14641,22 @@ return new Parser;
 }(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange, IDBOpenDBRequest, DOMError));
 ;/*
  * Copyright 2015, Nexedi SA
- * Released under the LGPL license.
- * http://www.gnu.org/licenses/lgpl.html
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
  */
 
 /*jslint nomen: true*/
@@ -14466,8 +14847,22 @@ return new Parser;
 }(jIO, RSVP, DOMException, Blob, crypto, Uint8Array, ArrayBuffer));
 ;/*
  * Copyright 2013, Nexedi SA
- * Released under the LGPL license.
- * http://www.gnu.org/licenses/lgpl.html
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
  */
 /**
  * JIO Websql Storage. Type = "websql".
@@ -14829,7 +15224,26 @@ return new Parser;
   jIO.addStorage('websql', WebSQLStorage);
 
 }(jIO, RSVP, Blob, openDatabase));
-;/*jslint nomen: true */
+;/*
+ * Copyright 2017, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+/*jslint nomen: true */
 /*global RSVP, UriTemplate*/
 (function (jIO, RSVP, UriTemplate) {
   "use strict";
@@ -14942,4 +15356,144 @@ return new Parser;
 
   jIO.addStorage('facebook', FBStorage);
 
-}(jIO, RSVP, UriTemplate));
+}(jIO, RSVP, UriTemplate));;/*
+ * Copyright 2018, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
+
+/*jslint nomen: true*/
+/*global jIO, RSVP, DOMParser, XMLSerializer*/
+(function (jIO, RSVP, DOMParser, XMLSerializer) {
+  "use strict";
+
+  var parser = new DOMParser(),
+    serializer = new XMLSerializer();
+
+  function makeXmlRpcRequest(file, from, to) {
+    var xml = parser.parseFromString(
+      '<?xml version="1.0" encoding="UTF-8"?><methodCall>' +
+        '<methodName>convertFile</methodName><params>' +
+        '<param><value><string></string></value></param>' +
+        '<param><value><string></string></value></param>' +
+        '<param><value><string></string></value></param></params></methodCall>',
+      'text/xml'
+    ),
+      string_list = xml.getElementsByTagName('string');
+    string_list[0].textContent = file;
+    string_list[1].textContent = from;
+    string_list[2].textContent = to;
+    return serializer.serializeToString(xml);
+  }
+
+  /**
+   * convert a blob 
+   * from a format to another
+   * return converted blob.
+   **/
+  function convert(url, blob, from, to) {
+    return new RSVP.Queue()
+      .push(function () {
+        return jIO.util.readBlobAsDataURL(blob);
+      })
+      .push(function (result) {
+        return jIO.util.ajax({
+          type: 'POST',
+          url: url,
+          data: makeXmlRpcRequest(
+            result.target.result.split('base64,')[1],
+            from,
+            to
+          )
+        });
+      })
+      .push(function (result) {
+        var data = parser.parseFromString(
+          result.target.responseText,
+          "application/xml"
+        ), error;
+        if (data.getElementsByTagName('fault').length === 0) {
+          return jIO.util.base64toBlob(
+            data.querySelector('string').textContent,
+            to
+          );
+        }
+        error = new jIO.util.jIOError('Conversion failed', 500);
+        error.detail = data.querySelector('string').textContent;
+        throw error;
+      });
+  }
+
+  /**
+   * The jIO CloudoooStorage extension
+   *
+   * Convert attachment : att_id?from="format"&to="format"
+   * 
+   * @class CloudoooStorage
+   * @constructor
+   */
+  function CloudoooStorage(spec) {
+    this._url = spec.url;
+    this._sub_storage = jIO.createJIO(spec.sub_storage);
+  }
+
+  CloudoooStorage.prototype.get = function () {
+    return this._sub_storage.get.apply(this._sub_storage, arguments);
+  };
+
+  CloudoooStorage.prototype.put = function () {
+    return this._sub_storage.put.apply(this._sub_storage, arguments);
+  };
+
+  CloudoooStorage.prototype.remove = function () {
+    return this._sub_storage.remove.apply(this._sub_storage, arguments);
+  };
+
+  CloudoooStorage.prototype.getAttachment = function () {
+    return this._sub_storage.getAttachment.apply(this._sub_storage, arguments);
+  };
+
+  CloudoooStorage.prototype.putAttachment = function (id, name, blob) {
+    var storage = this;
+    return storage.get(id)
+      .push(function (doc) {
+        return convert(storage._url, blob, doc.from, doc.to);
+      })
+      .push(function (converted_blob) {
+        return storage._sub_storage.putAttachment(id, name, converted_blob);
+      });
+  };
+
+  CloudoooStorage.prototype.allAttachments = function () {
+    return this._sub_storage.allAttachments.apply(this._sub_storage, arguments);
+  };
+
+  CloudoooStorage.prototype.repair = function () {
+    return this._sub_storage.repair.apply(this._sub_storage, arguments);
+  };
+
+  CloudoooStorage.prototype.hasCapacity = function () {
+    return this._sub_storage.hasCapacity.apply(this._sub_storage, arguments);
+  };
+
+  CloudoooStorage.prototype.buildQuery = function () {
+    return this._sub_storage.buildQuery.apply(this._sub_storage, arguments);
+  };
+
+  jIO.addStorage('cloudooo', CloudoooStorage);
+
+}(jIO, RSVP, DOMParser, XMLSerializer));
