@@ -26,29 +26,6 @@ def err(my_value):
   #return "XXX No " + my_value + " defined."
   return ""
 
-def getCoordinateText(obj):
-  # This prevent obj.getCoordinateText to use a type-based method like
-  # Telephone_asText, this is required because the proxy roles privileges of
-  # this script are not propagated to the type-based method.
-  output = []
-  country = obj.getTelephoneCountry()
-  area = obj.getTelephoneArea()
-  city = obj.getTelephoneCity()
-  number = obj.getTelephoneNumber()
-  extension = obj.getTelephoneExtension()
-  if country:
-    output.append("+" + country + "(0)")
-  if area:
-    output.append(area)
-  if city:
-    output.append(city)
-  if number:
-    output.append(number)
-  output = "-".join(output)
-  if extension:
-    output += "/" + extension
-  return output
-
 def populateProductDictFromCategoryList(my_category_list):
   result_list = []
   for category in my_category_list:
@@ -118,7 +95,7 @@ def populatePersonDict(my_person_list):
       output_dict["country"] = err("country")
       output_dict["codification"] = err("country code")
     if person_default_telephone is not None:
-      output_dict["phone"] = getCoordinateText(person_default_telephone) or err("phone")
+      output_dict["phone"] = person_default_telephone.getCoordinateText() or err("phone")
     else:
       output_dict["phone"] = err("phone")
     if person_default_mail is not None:
@@ -175,11 +152,11 @@ def populateOrganisationDict(my_organisation_list):
       output_dict["country"] = err("country")
       output_dict["codification"] = err("country code")
     if organisation_phone is not None:
-      output_dict["phone"] = getCoordinateText(organisation_phone) or err("phone")
+      output_dict["phone"] = organisation_phone.getCoordinateText() or err("phone")
     else:
       output_dict["phone"] = err("phone")
     if organisation_fax is not None:
-      output_dict["fax"] = getCoordinateText(organisation_fax) or err("fax")
+      output_dict["fax"] = organisation_fax.getCoordinateText() or err("fax")
     else:
       output_dict["fax"] = err("fax")
     if len(organisation_link_list) == 1:
