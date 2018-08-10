@@ -418,10 +418,6 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
           'portal_deliveries/advanced_purchase_invoice_transaction_builder',
           'portal_deliveries/advanced_sale_invoice_transaction_builder',
           ])
-    # This is quite ugly, we should use late import/export functions of generators
-    self.portal.erp5_sql_transactionless_connection.manage_test(
-     "delete from portal_ids where \
-       id_group='Accounting_Transaction_Module-Sale_Invoice_Transaction'")
     self.commit()
 
   def stepCheckInvoicesAndTransactionsConsistency(self, sequence=None, sequence_list=None,
