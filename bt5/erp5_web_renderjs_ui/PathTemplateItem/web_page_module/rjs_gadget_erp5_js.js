@@ -288,6 +288,24 @@
     .allowPublicAcquisition("getSetting", function (argument_list) {
       return getSetting(this, argument_list[0], argument_list[1]);
     })
+    .allowPublicAcquisition("getSettingList",
+                            function getSettingList(argument_list) {
+        var key_list = argument_list[0];
+        return route(this, 'setting_gadget', 'get', ['setting'])
+          .push(function (doc) {
+            var i,
+              result_list = [];
+            for (i = 0; i < key_list.length; i += 1) {
+              result_list[i] = doc[key_list[i]];
+            }
+            return result_list;
+          }, function (error) {
+            if (error.status_code === 404) {
+              return new Array(key_list.length);
+            }
+            throw error;
+          });
+      })
     .allowPublicAcquisition("setSetting", function (argument_list) {
       return setSetting(this, argument_list[0], argument_list[1]);
     })
@@ -331,6 +349,11 @@
           return translation_gadget.translate(argument_list[0]);
         });
     })
+    .allowPublicAcquisition("getTranslationList",
+                            function getTranslationList(argument_list) {
+        return route(this, 'translation_gadget', 'getTranslationList',
+                     argument_list);
+      })
 
     .allowPublicAcquisition("redirect", function (param_list) {
       return this.getDeclaredGadget('router')
