@@ -1331,4 +1331,35 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="go_to_selected_exchange_dialog">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Go to the exchange dialog: %(action_title)s' % exchange_configuration"></b></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Export']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Export']</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tr>
+      <td>assertElementPresent</td>
+      <td tal:content="python: '//ul[@class=\'document-listview\']//a[@data-i18n=\'%(action_title)s\']' % exchange_configuration"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td tal:content="python: '//ul[@class=\'document-listview\']//a[@data-i18n=\'%(action_title)s\']' % exchange_configuration"></td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
 </tal:block>

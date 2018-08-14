@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>index_html</string> </value>
+            <value> <string>OOoDocument_convert</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
