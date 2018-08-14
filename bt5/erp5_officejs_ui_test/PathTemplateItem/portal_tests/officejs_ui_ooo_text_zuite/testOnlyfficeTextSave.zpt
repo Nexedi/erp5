@@ -21,18 +21,12 @@
   <td>Reset Successfully.</td>
   <td></td>
 </tr>
-<!-- Initialize -->
 <tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/ooffice_text/</td>
-  <td></td>
+  <td>store</td>
+  <td>ooffice_text</td>
+  <td>install_url</td>
 </tr>
-<!-- Install can be longer than 90s -->
-<tr>
-  <td>pause</td>
-  <td>60000</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n="Storages"]</td>

@@ -83,16 +83,11 @@
   </tr>
 
   <tr>
-    <td>open</td>
-    <td>${base_url}/web_site_module/ooffice_spreadsheet/</td>
-    <td></td>
+    <td>store</td>
+    <td>ooffice_spreadsheet</td>
+    <td>install_url</td>
   </tr>
-  <!-- Install can be longer than 90s -->
-  <tr>
-    <td>pause</td>
-    <td>30000</td>
-    <td></td>
-  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/choice_erp5_storage"/>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
 
