@@ -654,8 +654,9 @@ class TestCMFCategory(ERP5TypeTestCase):
       a document has destination category C and we look for all documents
       which destination is part of C category, we will not find it.
 
-      For example, the following commit was a mistake:
-    http://svn.erp5.org/erp5/trunk/products/CMFCategory/CategoryTool.py?r1=8850&r2=9997
+      ( XXX not sure of this example, I guess it works because non strict
+      membership is indexed -jerome )
+
     """
     europe = self.portal.portal_categories.resolveCategory('region/europe')
     self.assertTrue('region/europe' in europe.getCategoryList())
