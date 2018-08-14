@@ -197,7 +197,7 @@
 <!-- Add bookmark With Dispatcher Command -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/${test_url}/</td>
+  <td>${base_url}/web_site_module/${install_url}/</td>
   <td></td>
 </tr>
 <tr>
@@ -299,7 +299,7 @@
 <!-- Set preferences -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/${test_url}/</td>
+  <td>${base_url}/web_site_module/${install_url}/</td>
   <td></td>
 </tr>
 <tr>

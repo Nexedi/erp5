@@ -20,10 +20,11 @@
     <td>title</td>
   </tr>
   <tr>
-    <td>open</td>
-    <td>${base_url}/web_site_module/ooffice_spreadsheet/</td>
-    <td></td>
+    <td>store</td>
+    <td>ooffice_spreadsheet</td>
+    <td>install_url</td>
   </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/choice_erp5_storage"/>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/open_document_with_title"/>
@@ -39,7 +40,7 @@
 
   <tr>
     <td>open</td>
-    <td>${base_url}/web_site_module/${test_url}/</td>
+    <td>${base_url}/web_site_module/${install_url}/</td>
     <td></td>
   </tr>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/open_document_with_title"/>
