@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -70,8 +68,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_interface.js</string> </value>
+            <value> <string>gadget_interface_validator_test_unknown_method_declaration_gadget.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_interface_js</string> </value>
+            <value> <string>gadget_test_interface_validator_unknown_method_declaration_gadget_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +91,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -99,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Interface JS</string> </value>
+            <value> <string>Unknown Method Test Gadget</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -185,7 +187,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444121210.22</float>
+                        <float>1528991689.22</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -230,7 +232,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>969.37975.64169.12509</string> </value>
+                <value> <string>968.14266.53823.24900</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,7 +250,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1534260072.07</float>
+                        <float>1528991735.38</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -271,9 +273,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>detect_converted_file</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -289,7 +289,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>empty</string> </value>
+                <value> <string>converted</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -307,7 +307,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1444121103.94</float>
+                        <float>1528991450.57</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

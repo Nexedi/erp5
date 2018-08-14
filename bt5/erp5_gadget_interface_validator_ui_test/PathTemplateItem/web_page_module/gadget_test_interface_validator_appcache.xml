@@ -100,21 +100,23 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 06 Feb 2015 15:31:33 +0000\n
+# generated on Fri, 14 Jun 2018 15:31:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
 URI.js\n
 gadget_interface_validator_test_correct_implemented_gadget.html\n
 gadget_interface_validator_test_correct_implemented_gadget.js\n
+gadget_interface_validator_test_nonexistent_gadget.html\n
+gadget_interface_validator_test_nonexistent_gadget.js\n
 gadget_interface_validator_test_invalid_interface_gadget.html\n
 gadget_interface_validator_test_invalid_interface_gadget.js\n
 gadget_interface_validator_test_missing_interface_declaration_gadget.html\n
 gadget_interface_validator_test_missing_interface_declaration_gadget.js\n
 gadget_interface_validator_test_missing_method_declaration_gadget.html\n
 gadget_interface_validator_test_missing_method_declaration_gadget.js\n
-gadget_interface_validator_test_nonexistent_gadget.html\n
-gadget_interface_validator_test_nonexistent_gadget.js\n
+gadget_interface_validator_test_unknown_method_declaration_gadget.html\n
+gadget_interface_validator_test_unknown_method_declaration_gadget.js\n
 i18next.js\n
 jquery.js\n
 jquerymobile.css\n
@@ -257,7 +259,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.44862.31274.46370</string> </value>
+                <value> <string>968.14266.18355.13568</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -275,7 +277,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1445875941.09</float>
+                        <float>1529048876.03</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -202,25 +202,42 @@
       interface_method_name_list = [],
       i,
       j,
-      failed = false,
-      failed_methods = [],
+      missing_method_list = [],
+      unknown_method_list = [],
       error_message;
     for (i = 0; i < interface_method_list.length; i += 1) {
       interface_method_name_list.push(interface_method_list[i].name);
     }
+    // Check missing method declaration
     for (j = 0; j < interface_method_name_list.length; j += 1) {
       if (gadget_method_name_list.indexOf(
           interface_method_name_list[j]
         ) < 0) {
-        failed = true;
-        failed_methods.push(interface_method_name_list[j]);
+        missing_method_list.push(interface_method_name_list[j]);
       }
     }
-    if (failed) {
+    if (missing_method_list.length) {
       error_message =
           "Following required methods are not declared in the gadget: ";
-      for (i = 0; i < failed_methods.length; i += 1) {
-        error_message += ("\n" + failed_methods[i]);
+      for (i = 0; i < missing_method_list.length; i += 1) {
+        error_message += ("\n" + missing_method_list[i]);
+      }
+      throw new Error(error_message);
+    }
+
+    // Check unknown method declaration
+    for (j = 0; j < gadget_method_name_list.length; j += 1) {
+      if (interface_method_name_list.indexOf(
+          gadget_method_name_list[j]
+        ) < 0) {
+        unknown_method_list.push(gadget_method_name_list[j]);
+      }
+    }
+    if (unknown_method_list.length) {
+      error_message =
+          "Following methods are not documents in the interface: ";
+      for (i = 0; i < unknown_method_list.length; i += 1) {
+        error_message += ("\n" + unknown_method_list[i]);
       }
       throw new Error(error_message);
     }

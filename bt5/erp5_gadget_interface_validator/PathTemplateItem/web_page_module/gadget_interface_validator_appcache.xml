@@ -100,7 +100,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Thu, 28 Jun 2018 15:31:33 +0000\n
+# generated on Thu, 14 Aug 2018 15:31:33 +0000\n
 CACHE:\n
 favicon.ico\n
 font-awesome/font-awesome-webfont.eot\n
@@ -305,7 +305,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>968.34429.27639.36556</string> </value>
+                <value> <string>968.41228.46964.12441</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -323,7 +323,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1530201523.97</float>
+                        <float>1534260712.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

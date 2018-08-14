@@ -119,19 +119,19 @@
   <td>Error with gadget loading</td>
 </tr>
 
-<!--tr>
+<tr>
   <td colspan="3"><b>Check unknown method declaration</b></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//tr[@id='${application_title}_test_unknown_method_declaration_gadget']//td[@class='validation_status final']</td>
-  <td></td>
+  <td>assertText</td>
+  <td>//tbody/tr[6]/td</td>
+  <td>gadget_interface_validator_test_unknown_method_declaration_gadget.html</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tr[@id='${application_title}_test_unknown_method_declaration_gadget']//td[@class='validation_status final']</td>
+  <td>//tbody/tr[6]/td[2]</td>
   <td>Failure</td>
-</tr-->
+</tr>
 
 </tbody></table>
 </body>
