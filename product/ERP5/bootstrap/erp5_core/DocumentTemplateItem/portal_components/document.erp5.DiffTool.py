@@ -195,9 +195,16 @@ class PortalPatch:
         if (val.t2 == None) or isinstance(val.t2, deepdiff.helper.NotPresent):
           new_value = ''
 
+        # Deepdiff doesn't creates diff for anything other than string, thus for all other cases,
+        # we rely on difflib to maually create a diff.
         try:
-          # Create unified diff for single string cases
-          new_val['diff'] = ''.join(difflib.unified_diff([str(old_value)+'\n'], [str(new_value)+'\n'])).replace('\n', ' \n')
+          # If the old or new value is a multiline string, split the lines and then convert them
+          # to correct format of unified diff which can be displayed properly
+          if '\n' in str(old_value) or '\n' in str(old_value):
+            new_val['diff'] = ''.join(difflib.unified_diff(old_value.splitlines(1), new_value.splitlines(1))).replace('\n', ' \n')
+          else:
+            # Create unified diff for single string cases
+            new_val['diff'] = ''.join(difflib.unified_diff([str(old_value)+'\n'], [str(new_value)+'\n'])).replace('\n', ' \n')
         except ValueError:
           # Show empty diff in case of error in new or old value type
           new_val['diff'] = None
