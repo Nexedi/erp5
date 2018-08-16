@@ -35,6 +35,7 @@ for x in diff:
   temp_obj = newTempBase(portal,
                         x['path'],
                         **x)
+  temp_obj.setProperty('current_value', context.getProperty(x['path']))
   temp_obj.setUid('new_%s' % uid)
   uid = uid + 1
   tempbase_list.append(temp_obj)

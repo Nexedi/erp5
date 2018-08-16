@@ -81,6 +81,10 @@
                           <string>diff</string>
                           <string>Diff Viewer</string>
                         </tuple>
+                        <tuple>
+                          <string>current_value</string>
+                          <string>Current Value</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -124,6 +128,10 @@
                         </tuple>
                         <tuple>
                           <string>diff</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>current_value</string>
                           <string></string>
                         </tuple>
                       </list>
