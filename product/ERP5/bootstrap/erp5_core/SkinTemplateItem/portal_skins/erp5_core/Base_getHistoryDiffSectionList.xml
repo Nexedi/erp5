@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>property_set, serial, next_serial, **kw</string> </value>
+            <value> <string>serial=None, next_serial=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getHistoricalComparisonDifferenceList</string> </value>
+            <value> <string>Base_getHistoryDiffSectionList</string> </value>
         </item>
       </dictionary>
     </pickle>
