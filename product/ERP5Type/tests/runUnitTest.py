@@ -141,8 +141,11 @@ Options:
                              activities.
   --zeo_server=[[HOST:]PORT] Bind the ZEO server to the given host/port.
   --zeo_client=[HOST:]PORT   Use specified ZEO server as storage.
-  --zserver=[HOST:]PORT[,...]
-                             Make ZServer listen on given host:port
+  --zserver=ADDRESS[,...]    Make ZServer listen on given IPv4 address.
+                             Adresses can be given in the following syntaxs:
+                               - HOST:PORT
+                               - PORT in this case, host will be 127.0.0.1
+                               - HOST in this case a free port will be assigned
                              If used with --activity_node=, this can be a
                              comma-separated list of addresses.
   --neo_storage              Use a NEO storage (SQLite) instead of FileStorage.
