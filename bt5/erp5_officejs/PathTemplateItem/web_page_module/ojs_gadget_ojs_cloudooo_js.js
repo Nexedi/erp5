@@ -48,7 +48,7 @@
         }, function (error) {
           if (error instanceof jIO.util.jIOError && error.status_code === 404) {
             return gadget.putAllCloudoooConvertionOperation({
-              format: options.mime_type,
+              format: mime_type,
               jio_key: options.jio_key
             });
           }

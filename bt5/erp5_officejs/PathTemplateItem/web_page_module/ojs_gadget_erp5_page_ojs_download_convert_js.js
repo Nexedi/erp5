@@ -56,7 +56,7 @@
               return ojs_cloudooo.getConvertedBlob({
                 jio_key: gadget.state.jio_key,
                 format: format,
-                mime_type: gadget.state.format
+                filename: gadget.state.doc.filename
               });
             });
         })
