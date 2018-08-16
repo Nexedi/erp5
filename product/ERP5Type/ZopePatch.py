@@ -82,6 +82,7 @@ from Products.ERP5Type.patches import CachingPolicyManager
 from Products.ERP5Type.patches import AcceleratedHTTPCacheManager
 from Products.ERP5Type.patches import ExceptionFormatter
 from Products.ERP5Type.patches import WebDAV
+from Products.ERP5Type.patches import ZApplication
 from Products.ERP5Type.patches import DTMLMethod
 from Products.ERP5Type.patches import DTMLDocument
 from Products.ERP5Type.patches import CMFCoreUtils
