@@ -13,7 +13,7 @@ specialise_reference = movement_dict.get('specialise_reference', None)
 # first search for applicable data ingestion
 data_ingestion = portal_catalog.getResultValue(
   portal_type = 'Data Ingestion',
-  simulation_state = 'started',
+  simulation_state = ['started', 'stopped'],
   reference =data_ingestion_reference)
   
 def init_input_line(input_line, operation_line):
