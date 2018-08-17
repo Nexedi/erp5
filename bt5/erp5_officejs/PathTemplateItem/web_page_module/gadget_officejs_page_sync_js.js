@@ -16,7 +16,7 @@
               return gadget.reload();
             });
         }
-        return gadget.repair()
+        return new RSVP.Queue()
           .push(function () {
             if (gadget.state.cloudooo) {
               return gadget.getDeclaredGadget('cloudooo')
@@ -24,6 +24,9 @@
                   return cloudooo.repair();
                 });
             }
+          })
+          .push(function () {
+            return gadget.repair();
           })
           .push(function () {
             if (gadget.state.redirect) {
