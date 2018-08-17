@@ -468,10 +468,8 @@ class SlapOSTester(SlapOSMasterCommunicator):
       information = self.getInformationFromInstance(instance["href"])
       if "frontend-" in instance["title"]:
         try:
-          # TODO: this should get "secure_access" value (https). Until having a
-          # valid certificate, the "site_url" (http) will be used.
           frontend = [instance["title"].replace("frontend-", ""),
-                      information["connection_dict"]["site_url"]]
+                      information["connection_dict"]["secure_access"]]
           frontend_url_list.append(frontend)
         except Exception as e:
           logger.info("Frontend url not generated yet for instance: " + instance["title"])
