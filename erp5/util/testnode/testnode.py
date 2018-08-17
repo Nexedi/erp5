@@ -124,11 +124,14 @@ class TestNode(object):
         if test_type=="ScalabilityTest":
           profile_content_list.append("""
 [%(buildout_section_id)s]
+repository = %(url)s
 revision = %(revision)s
 ignore-ssl-certificate = true
 develop = false
-""" %     {'buildout_section_id': buildout_section_id,
-          'revision': revision_dict[buildout_section_id]})
+shared = true
+""" %     {'url': vcs_repository['url'],
+           'buildout_section_id': buildout_section_id,
+          'revision': revision_dict[buildout_section_id][1]})
         else:
           profile_content_list.append("""
 [%(buildout_section_id)s]
