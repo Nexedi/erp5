@@ -39,13 +39,15 @@ DRAW_URI = 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
 TEXT_URI = 'urn:oasis:names:tc:opendocument:xmlns:text:1.0'
 XLINK_URI = 'http://www.w3.org/1999/xlink'
 SVG_URI = 'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0'
+OFFICE_URI = 'urn:oasis:names:tc:opendocument:xmlns:office:1.0'
 
 
 NSMAP = {
           'draw': DRAW_URI,
           'text': TEXT_URI,
           'xlink': XLINK_URI,
-          'svg': SVG_URI
+          'svg': SVG_URI,
+          'office': OFFICE_URI,
         }
 
 class ImageFieldWidget(Widget.TextWidget):
@@ -206,6 +208,36 @@ class ImageFieldWidget(Widget.TextWidget):
       if as_string:
         return etree.tostring(draw_frame_node)
       return draw_frame_node
+
+    def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
+                        render_prefix, attr_dict, local_name, escape=False):
+      """
+        Returns the field for inclusion in odt style, using `office:include_img`
+      """
+      p_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
+      if attr_dict is None:
+        attr_dict = {}
+      p_node.attrib.update(attr_dict)
+
+      # <office:include_img> tags are substitued by OOoTemplate, by regexp, so
+      # we have to make sure serialisation uses `office` as namespace prefix
+      # here.
+      include_img_node = Element('{%s}include_img' % NSMAP['office'], nsmap=NSMAP)
+
+      # preference return width unit in pixel, office:include_img expect cm.
+      preferred_width = field.getPortalObject().portal_preferences.getPreference(
+          'preferred_%s_image_width' % (field.get_value('image_display')), 100);
+      include_img_node.attrib['width'] = '%.2f' % max(preferred_width / 20., 9)
+      include_img_node.attrib['{%s}style' % NSMAP['draw']] = 'inline-graphic'
+      field_value = field.get_value('default')
+      if field_value:
+        include_img_node.attrib['path'] = '/'.join(REQUEST.physicalPathFromURL(field_value));
+
+      p_node.append(include_img_node)
+
+      if as_string:
+        return etree.tostring(p_node)
+      return p_node
 
     def _getPictureSize(self, picture_width, picture_height, target_width,
         target_height):
