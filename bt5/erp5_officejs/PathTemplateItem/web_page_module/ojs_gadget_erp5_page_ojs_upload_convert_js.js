@@ -33,27 +33,34 @@
             form_gadget.getContent(),
             gadget.getSetting('portal_type'),
             gadget.getSetting('content_type'),
-            gadget.getSetting('file_extension')
+            gadget.getSetting('file_extension'),
+            gadget.getSetting('parent_relative_url')
           ]);
         })
         .push(function (result) {
-          var file_name, from, jio_key, data, to;
+          var file_name_list, from, jio_key, data, to, att_name = ATT_NAME,
+            filename;
           if (result[0].file !== undefined) {
-            file_name = result[0].file.file_name;
-            from = file_name.split('.').pop();
+            file_name_list = result[0].file.file_name.split('.');
+            from = file_name_list.pop();
+            file_name_list.push(result[3]);
+            filename = file_name_list.join('.');
             data = jIO.util.dataURItoBlob(result[0].file.url);
             if (gadget.state.upload.hasOwnProperty(from)) {
+              if (result[3] !== from) {
+                att_name = from;
+              }
               to = gadget.state.upload[from];
               return gadget.jio_post({
-                title: file_name,
+                title: filename,
                 portal_type: result[1],
                 content_type: result[2],
-                filename: file_name,
-                mime_type: from
+                filename: filename,
+                parent_relative_url: result[4]
               })
                 .push(function (doc_id) {
                   jio_key = doc_id;
-                  return gadget.jio_putAttachment(jio_key, ATT_NAME, data);
+                  return gadget.jio_putAttachment(jio_key, att_name, data);
                 })
                 .push(function () {
                   if (result[3] === from) {
@@ -61,12 +68,31 @@
                   }
                   return gadget.getDeclaredGadget('ojs_cloudooo')
                     .push(function (ojs_cloudooo) {
-                      return ojs_cloudooo.putCloudoooConvertOperation({
-                        status: "convert",
-                        from: from,
-                        to: to,
-                        id: jio_key,
-                        name: ATT_NAME
+                      return RSVP.all([
+                        ojs_cloudooo.putCloudoooConvertOperation({
+                          status: "convert",
+                          from: from,
+                          to: to,
+                          id: jio_key,
+                          name: att_name,
+                          to_name: ATT_NAME
+                        }),
+                        ojs_cloudooo.putCloudoooConvertOperation({
+                          status: "converted",
+                          from: to,
+                          to: from,
+                          id: jio_key,
+                          name: ATT_NAME
+                        })
+                      ]);
+                    })
+                    .push(function () {
+                      return gadget.redirect({
+                        'command': 'display',
+                        'options': {
+                          'page': 'ojs_sync',
+                          'auto_repair': true
+                        }
                       });
                     });
                 })
@@ -74,12 +100,7 @@
                   return gadget.redirect({
                     'command': 'display',
                     'options': {
-                      'page': 'ojs_sync',
-                      'auto_repair': true,
-                      'redirect': jIO.util.stringify({
-                        'command': 'display',
-                        'options': {'jio_key': jio_key}
-                      })
+                      'jio_key': jio_key
                     }
                   });
                 });
@@ -88,18 +109,15 @@
               message: "Can not convert, use format : " +
                 window.Object.keys(gadget.state.upload).join(', '),
               status: "error"
-            })
-              .push(function () {
-                return;
-              });
+            });
           }
           return gadget.notifySubmitted({
             message: "File is required",
             status: "error"
-          })
-            .push(function () {
-              return;
-            });
+          });
+        })
+        .push(function () {
+          return;
         });
     })
 

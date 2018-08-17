@@ -3,9 +3,6 @@
 (function (window, rJS, RSVP, jIO) {
   "use strict";
 
-  var ATT_NAME = "data";
-
-
   function downloadFromBlob(gadget, blob, format) {
     var element = gadget.element,
       a = window.document.createElement("a"),
@@ -21,12 +18,43 @@
     window.URL.revokeObjectURL(url);
   }
 
+  function downloadFromFormat(gadget, format) {
+    return gadget.getDeclaredGadget('ojs_cloudooo')
+      .push(function (ojs_cloudooo) {
+        return ojs_cloudooo.getConvertedBlob({
+          jio_key: gadget.state.jio_key,
+          format: format,
+          redirect: jIO.util.stringify({
+            'command': 'display',
+            'options': {
+              'page': 'ojs_download_convert',
+              'jio_key': gadget.state.jio_key,
+              'download_format': format
+            }
+          })
+        });
+      })
+      .push(function (result) {
+        return downloadFromBlob(gadget, result, format);
+      })
+      .push(function () {
+        return gadget.notifySubmitted();
+      }, function (error) {
+        if (error instanceof jIO.util.jIOError) {
+          return gadget.notifySubmitted({
+            message: "Conversion Failed",
+            status: "error"
+          });
+        }
+        throw error;
+      });
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("jio_get", "jio_get")
@@ -37,7 +65,7 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .allowPublicAcquisition('submitContent', function () {
-      var gadget = this, format;
+      var gadget = this;
 
       return gadget.notifySubmitting()
         .push(function () {
@@ -47,52 +75,7 @@
           return form_gadget.getContent();
         })
         .push(function (result) {
-          format = result.format;
-          if (format === gadget.state.format) {
-            return gadget.jio_getAttachment(gadget.state.jio_key, ATT_NAME);
-          }
-          return gadget.getDeclaredGadget('ojs_cloudooo')
-            .push(function (ojs_cloudooo) {
-              return ojs_cloudooo.getConvertedBlob({
-                jio_key: gadget.state.jio_key,
-                format: format,
-                filename: gadget.state.doc.filename
-              });
-            });
-        })
-        .push(function (result) {
-          return downloadFromBlob(gadget, result, format);
-        }, function (error) {
-          if (error instanceof jIO.util.jIOError &&
-              error.status_code === 500 &&
-              error.message === "Not converted") {
-            return gadget.redirect({
-              'command': 'display',
-              'options': {
-                'page': 'ojs_sync',
-                'auto_repair': true,
-                'redirect': jIO.util.stringify({
-                  'command': 'display',
-                  'options': {
-                    'page': 'ojs_download_convert',
-                    'jio_key': gadget.state.jio_key
-                  }
-                })
-              }
-            });
-          }
-          throw error;
-        })
-        .push(function () {
-          return gadget.notifySubmitted();
-        }, function (error) {
-          if (error instanceof jIO.util.jIOError) {
-            return gadget.notifySubmitted({
-              message: "Conversion Failed",
-              status: "error"
-            });
-          }
-          throw error;
+          return downloadFromFormat(gadget, result.format);
         })
         .push(function () {
           return;
@@ -105,12 +88,19 @@
 
     .declareMethod("render", function (options) {
       var gadget = this;
-      return gadget.jio_get(options.jio_key)
-        .push(function (doc) {
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.jio_get(options.jio_key),
+            gadget.getSetting('file_extension')
+          ]);
+        })
+        .push(function (result) {
           return gadget.changeState({
             jio_key: options.jio_key,
-            doc: doc,
-            format: doc.filename.split('.').pop()
+            doc: result[0],
+            format: result[1],
+            download_format: options.download_format
           });
         });
     })
@@ -173,6 +163,11 @@
             previous_url: url_list[1],
             next_url: url_list[2]
           });
+        })
+        .push(function () {
+          if (gadget.state.download_format) {
+            return downloadFromFormat(gadget, gadget.state.download_format);
+          }
         });
     });
 }(window, rJS, RSVP, jIO));

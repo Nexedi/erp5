@@ -19,40 +19,62 @@
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("redirect", "redirect")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("getConvertedBlob", function (options) {
-      var gadget = this,
-        mime_type = options.filename.split('.').pop();
-      if (mime_type === options.format) {
-        return gadget.jio_getAttachment(options.jio_key, ATT_NAME);
-      }
-      return gadget.jio_get(
-        getCloudoooId(options.jio_key, options.format)
-      )
-        .push(function (doc) {
-          var err, obj;
-          if (doc.status === "converted") {
-            return gadget.jio_getAttachment(options.jio_key, options.format);
+      var gadget = this;
+      return gadget.getSetting('file_extension')
+        .push(function (file_extension) {
+          if (file_extension === options.format) {
+            return gadget.jio_getAttachment(options.jio_key, ATT_NAME);
           }
-          if (doc.status === "error") {
-            obj = window.JSON.parse(doc.error);
-            err = new jIO.util.jIOError(obj.message, obj.status_code);
-            err.detail = obj.detail;
-          } else {
-            err = new jIO.util.jIOError("Not converted", 500);
-          }
-          throw err;
-        }, function (error) {
-          if (error instanceof jIO.util.jIOError && error.status_code === 404) {
-            return gadget.putAllCloudoooConvertionOperation({
-              format: mime_type,
-              jio_key: options.jio_key
+          return gadget.jio_get(
+            getCloudoooId(options.jio_key, options.format)
+          )
+            .push(function (doc) {
+              var err, obj;
+              if (doc.status === "converted") {
+                return gadget.jio_getAttachment(options.jio_key, options.format);
+              }
+              if (doc.status === "error") {
+                obj = window.JSON.parse(doc.error);
+                err = new jIO.util.jIOError(obj.message, obj.status_code);
+                err.detail = obj.detail;
+              } else {
+                return gadget.redirect({
+                  'command': 'display',
+                  'options': {
+                    'page': 'ojs_sync',
+                    'auto_repair': true,
+                    'redirect': options.redirect
+                  }
+                });
+              }
+              throw err;
+            }, function (error) {
+              if (error instanceof jIO.util.jIOError && error.status_code === 404) {
+                return gadget.putAllCloudoooConvertionOperation({
+                  format: file_extension,
+                  jio_key: options.jio_key
+                })
+                .push(function () {
+                  if (options.redirect) {
+                    return gadget.redirect({
+                      'command': 'display',
+                      'options': {
+                        'page': 'ojs_sync',
+                        'auto_repair': true,
+                        'redirect': options.redirect
+                      }
+                    });
+                  }
+                });
+              }
+              throw error;
             });
-          }
-          throw error;
         });
     })
     .declareMethod("putCloudoooConvertOperation", function (options) {
@@ -78,7 +100,7 @@
               from: options.format,
               to: format_list[i],
               id: options.jio_key,
-              name: ATT_NAME
+              name: options.format === result[1] ? ATT_NAME : options.format
             }));
           }
           return RSVP.all(promise_list);
