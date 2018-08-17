@@ -221,7 +221,7 @@ class ProcessManager(object):
       self.under_cancellation = True
     for timer in self.timer_set:
       timer.cancel()
-    for pgpid in self.process_pid_set:
+    for pgpid in tuple(self.process_pid_set):
       killCommand(pgpid)
     try:
       pid_file = self.supervisord_pid_file
