@@ -213,7 +213,7 @@ class ScalabilityLauncher(object):
     self.log("Instance url: %s" %self.__argumentNamespace.instance_url)
 
     error_message_set, exit_status = set(), 0
-    process_manager = ProcessManager(self.log)
+    process_manager = ProcessManager()
 
     # Get suite informations
     suite = makeSuite(self.__argumentNamespace.test_suite, self.__argumentNamespace.repo_location, self.log)
