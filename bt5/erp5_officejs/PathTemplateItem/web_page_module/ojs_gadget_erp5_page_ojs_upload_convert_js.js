@@ -33,7 +33,8 @@
             form_gadget.getContent(),
             gadget.getSetting('portal_type'),
             gadget.getSetting('content_type'),
-            gadget.getSetting('file_extension')
+            gadget.getSetting('file_extension'),
+            gadget.getSetting('parent_relative_url')
           ]);
         })
         .push(function (result) {
@@ -49,7 +50,7 @@
                 portal_type: result[1],
                 content_type: result[2],
                 filename: file_name,
-                mime_type: from
+                parent_relative_url: result[4]
               })
                 .push(function (doc_id) {
                   jio_key = doc_id;
