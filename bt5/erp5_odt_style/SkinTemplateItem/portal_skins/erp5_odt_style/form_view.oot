@@ -139,27 +139,12 @@
                         <table:table-cell table:style-name='field-table.B1' 
                                       office:value-type='string'
                                       tal:define="value python: field.get_value('default')">
-                          <tal:block tal:condition="python: field_type not in ('ImageField','OOoChart' )">
+                          <tal:block tal:condition="python: field_type not in ('OOoChart', )">
                             <text:p tal:replace="structure python:field.render_odt(REQUEST=request, attr_dict={'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name': 'field-content'})"
                                     />
                           </tal:block>
-                          <!-- TODO: render_odt for image field! -->
-                          <!-- With this max_size, pictures and graph stay in a table cell-->
-                          <tal:block tal:define="global max_size python:9;"/>
-                          <tal:block tal:condition="python: field_type == 'ImageField'">
-                            <text:p text:style-name='field-content'
-                                    tal:define="preferred_width python: preference_tool.getPreference('preferred_%s_image_width' % (field.get_value('image_display')), 100);
-                                    width python:(preferred_width / 20.) &lt; max_size and (preferred_width / 20.) or max_size;
-                                    field_value python: field.get_value('default')">
-                              <tal:block tal:condition="field_value">
-                                <office:include_img tal:attributes="width width;
-                                path python: '/'.join(request.physicalPathFromURL(field_value));"
-                                style="inline-graphic"/>
-                              </tal:block>
-                            </text:p>
-                          </tal:block>
 
-                          <!-- TODO: render_odt for OOoChart ! -->
+                          <!-- TODO: render_odt for OOoChart ? (or drop support ?) -->
                           <tal:block tal:condition="python: field_type == 'OOoChart'">
                             <tal:block tal:define="display python: field.get_value('image_display');
                             preferred_method_height_id python: 'getPreferred%sImageHeight' % (display.capitalize());
@@ -197,27 +182,13 @@
       <tal:block tal:define="field_list python: form.get_fields_in_group('center')">
         <tal:block tal:repeat="field field_list">
           <tal:block tal:define="field_type python: field.meta_type == 'ProxyField' and field.getRecursiveTemplateField().meta_type or field.meta_type">
-            <tal:block tal:condition="python: field_type not in ('ImageField','OOoChart' )">
+            <tal:block tal:condition="python: field_type not in ('OOoChart', )">
               <text:p tal:replace="structure python:render_text(here.Base_translateString(field.get_value('title')),
                                               {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name': 'field-label-center'})"/>
               <text:p tal:replace="structure python:field.render_odt(REQUEST=request, attr_dict={'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}style-name': 'field-content-center'})"/>
             </tal:block>
 
-            <!-- TODO: render_odt for ImageField ! -->
-            <tal:block tal:condition="python: field_type == 'ImageField'">
-              <text:p text:style-name='field-label-center' i18n:domain="ui"
-                      i18n:translate=""
-                      tal:content="python: field.get_value('title')"/>
-
-              <text:p text:style-name='field-content-center'
-                      tal:define="preferred_width python: preference_tool.getPreference('preferred_%s_image_width' % (field.get_value('image_display')));">
-                <office:include_img style="inline-graphic"
-                                    tal:attributes="width python: (preferred_width or 100) / 20.;
-                                    path python: '/'.join(request.physicalPathFromURL(field.get_value('default')));"/>
-              </text:p>
-            </tal:block>
-
-            <!-- TODO: render_odt for OOoChart ! -->
+            <!-- TODO: render_odt for OOoChart ? or drop support ? -->
             <tal:block tal:condition="python: field_type == 'OOoChart'">
               <text:p text:style-name='field-label-center' i18n:domain="ui" i18n:translate=""
               tal:content="python: field.get_value('title')"/>
@@ -263,7 +234,7 @@
                   <div metal:use-macro="here/listbox_odt_macro/macros/listbox" />
                 </tal:block>
               </tal:block>
-              <tal:block tal:condition="python: field_type not in ('ImageField', 'OOoChart')">
+              <tal:block tal:condition="python: field_type not in ('OOoChart', )">
                 <tal:block tal:define="item_list python:field.has_value('items') and field.get_value('items') or None;
                                        value python: field.get_value('default')">
                   <tal:block tal:condition="python: same_type(value,[]) or same_type(value,())">
@@ -294,17 +265,8 @@
                   </tal:block>
                 </tal:block>
               </tal:block>
-                  <!-- TODO: render_odt support for ImageField -->
 
-              <tal:block tal:condition="python: field_type == 'ImageField'">
-                <text:p text:style-name='field-content-center'
-                        tal:define="preferred_width python: preference_tool.getPreference('preferred_%s_image_width' % (field.get_value('image_display')))">
-                  <office:include_img style="inline-graphic"
-                                      tal:attributes="width python: preferred_width or (100 / 20.);
-                                      path python: '/'.join(request.physicalPathFromURL(field.get_value('default')));"/>
-              </text:p>
-            </tal:block>
-            <!-- TODO: render_odt support for OOoChart -->
+            <!-- TODO: render_odt support for OOoChart ? or drop support ? -->
             <tal:block tal:condition="python: field_type == 'OOoChart'">
               <tal:block tal:define="display python: field.get_value('image_display') "
                       tal:condition="display">
