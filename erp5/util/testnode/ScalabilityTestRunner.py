@@ -128,6 +128,7 @@ class ScalabilityTestRunner():
     # Use *.host.vifib.net frontend
     self.frontend_software = 'http://git.erp5.org/gitweb/slapos.git/blob_plain/HEAD:/software/apache-frontend/software.cfg'
     self.frontend_instance_guid = 'SOFTINST-9238'
+    self.exec_env = os.environ.copy()
     
   def _prepareSlapOS(self, software_path, computer_guid, create_partition=0, state="available"):
     # create_partition is kept for compatibility
