@@ -54,9 +54,6 @@ from erp5.util.benchmark.thread import TestThread
 import signal
 from . import logger
 
-FRONTEND_MASTER_DOMAIN = "scalability.nexedi.com"
-# max time to instance changing state: 2 hour
-MAX_INSTANCE_TIME = 60*60*2
 # max time to generate frontend instance: 1.5 hour
 MAX_FRONTEND_TIME = 60*90
 # max time to register instance to slapOSMaster: 5 minutes
@@ -128,7 +125,9 @@ class ScalabilityTestRunner():
     # Used to simulate SlapOS answer (used as a queue)
     self.last_slapos_answer = []
     self.last_slapos_answer_request = []
-    self.frontend_instance_guid = None
+    # Use *.host.vifib.net frontend
+    self.frontend_software = 'http://git.erp5.org/gitweb/slapos.git/blob_plain/HEAD:/software/apache-frontend/software.cfg'
+    self.frontend_instance_guid = 'SOFTINST-9238'
     
   def _prepareSlapOS(self, software_path, computer_guid, create_partition=0, state="available"):
     # create_partition is kept for compatibility
@@ -169,9 +168,7 @@ class ScalabilityTestRunner():
     config.update({'test-suite':test_suite})
     config.update({'test-suite-master-url':self.testnode.config['test_suite_master_url']})
     if frontend_instance_guid:
-      config["frontend"] = {"software-url": frontend_software,
-                            "virtualhostroot-http-port" : 8080,
-                            "virtualhostroot-https-port" : 4443}
+      config["frontend"] = {"software-url": frontend_software}
       config["sla-dict"]["instance_guid=%s" % frontend_instance_guid] = ["frontend"]
     return config
 
@@ -364,68 +361,9 @@ Require valid-user
 
     user, password = self.generateProfilePasswordAccess()
     logger.info("Software Profile password: %s" % password)
-    # Construct the ipv6 obfuscated url of the software profile reachable from outside
-    self.reachable_address = "http://%s:%s@%s" % (user, password,
-      os.path.join("["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
-      "software",self.randomized_path))
-    self.reachable_profile = os.path.join(self.reachable_address, "software.cfg")
-
-  def newFrontendMasterSoftware(self, frontend_master_reference, frontend_software):
-    slappart_directory = self.testnode.config['srv_directory'].rsplit("srv", 1)[0]
-    software_dict_file = slappart_directory + "var/" + SR_DICT
-    software_dict = self.getDictionaryFromFile(software_dict_file)
-    if frontend_master_reference in software_dict:
-      if software_dict[frontend_master_reference] != frontend_software:
-        self.updateDictionaryFile(software_dict_file, software_dict, frontend_master_reference, frontend_software)
-        return True
-    else:
-      self.updateDictionaryFile(software_dict_file, software_dict, frontend_master_reference, frontend_software)
-      return True
-    return False
-
-  def prepareFrontendMasterInstance(self, computer, frontend_software, test_suite_title):
-    if not frontend_software:
-      return None
-    self.frontend_master_reference = "Scalability-Frontend-Master-"
-    self.frontend_master_reference += "("+test_suite_title+")-"
-    self.frontend_master_reference += str(computer).replace("'","")
-    restart = True
-    slap, supply, order = self._initializeSlapOSConnection()
-    slapos_communicator = SlapOSMasterCommunicator.SlapOSTester(
-				self.frontend_master_reference, slap, order, supply,
-				frontend_software, computer_guid=computer)
-    # Destroy old frontend instance if frontend software has changed for this testsuite
-    if self.newFrontendMasterSoftware(self.frontend_master_reference, frontend_software):
-      restart = False
-      slapos_communicator.requestInstanceDestroy(self.frontend_master_reference)
-    # Ask for software installation
-    start_time = time.time()
-    slapos_communicator.supply(frontend_software, computer)
-    while (slapos_communicator._getSoftwareState() != SlapOSMasterCommunicator.SOFTWARE_STATE_INSTALLED
-        and (MAX_PREPARE_TEST_SUITE > (time.time()-start_time))):
-      logger.info("Waiting for frontend software installation")
-      time.sleep(60)
-    if slapos_communicator._getSoftwareState() != SlapOSMasterCommunicator.SOFTWARE_STATE_INSTALLED:
-      raise ValueError("ERROR while installing frontend software")
-    logger.info("Frontend software installed.")
-    # Request master frontend instance
-    master_request_kw = {"partition_parameter_kw": {"domain" : FRONTEND_MASTER_DOMAIN } }
-    slapos_communicator.requestInstanceStart(self.frontend_master_reference, master_request_kw)
-    slapos_communicator.waitInstanceStarted(self.frontend_master_reference)
-    logger.info("Master Frontend instance started.")
-    frontend_master_dict = slapos_communicator.getMasterFrontendDict()
-    if not frontend_master_dict['frontend_master_ipv6']:
-      raise ValueError("ERROR in master frontend: ipv6 url not found")
-    if not frontend_master_dict['instance_guid']:
-      raise ValueError("ERROR in master frontend: instance guid not found")
-    parsed_url = urlparse.urlparse(frontend_master_dict['frontend_master_ipv6'])
-    self.frontend_master_ipv6 = parsed_url.hostname
-    if restart:
-      slapos_communicator.requestInstanceStop(self.frontend_master_reference, master_request_kw)
-      slapos_communicator.waitInstanceStopped(self.frontend_master_reference)
-      slapos_communicator.requestInstanceStart(self.frontend_master_reference, master_request_kw)
-      slapos_communicator.waitInstanceStarted(self.frontend_master_reference)
-    return frontend_master_dict['instance_guid']
+    self.reachable_profile = "https://%s:%s@%s" % (user, password,
+      os.path.join(urlparse.urlparse(self.testnode.config['frontend_url']).netloc,
+                   "software", self.randomized_path, "software.cfg"))
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
@@ -459,7 +397,6 @@ Require valid-user
       node_test_suite.edit(configuration_list=configuration_list)
       self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
       self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
-      self.frontend_software = configuration_list[0].get("frontend-url")
 
       self.createSoftwareReachableProfilePath(node_test_suite)
       logger.info("Software reachable profile path is: %s", self.reachable_profile)
@@ -488,13 +425,6 @@ Require valid-user
         time.sleep(interval_time)
       # TODO : remove the line below wich simulate an answer from slapos master
       self._comeBackFromDummySlapOS()
-      try:
-        self.frontend_instance_guid = self.prepareFrontendMasterInstance(self.launcher_nodes_computer_guid[0],
-                                                                         self.frontend_software,
-                                                                         node_test_suite.test_suite_title)
-      except Exception as e:
-        logger.error("Error preparing frontend master instance: " + str(e))
-        return {'status_code' : 1}
       if self.remainSoftwareToInstall() :
         # All softwares are not installed, however maxtime is elapsed, that's a failure.
         logger.error("All softwares are not installed.")
@@ -554,7 +484,7 @@ Require valid-user
     if bootstrap_url:
       try:
           logger.info("Bootstrapping instance...")
-          command = [self.userhosts_bin, self.requestUrlScript, bootstrap_url]
+          command = [self.requestUrlScript, bootstrap_url]
           result = self.testnode.process_manager.spawn(*command, **self.exec_env)
           if result['status_code']:
             error_message = "Error while bootstrapping: " + str(result['stdout'])
@@ -575,7 +505,7 @@ Require valid-user
     start_time = time.time()
     while MAX_BOOTSRAPPING_TIME > time.time()-start_time:
       try:
-        command = [self.userhosts_bin, self.requestUrlScript, site_availability_url]
+        command = [self.requestUrlScript, site_availability_url]
         result = self.testnode.process_manager.spawn(*command, **self.exec_env)
         if result['status_code']:
           logger.info("Error checking site availability. Response: " + str(result['stdout']))
@@ -590,21 +520,6 @@ Require valid-user
         time.sleep(CHECK_BOOSTRAPPING_TIME)
     error_message = "Error while bootstrapping: max bootstrap time exceded."
     return False, error_message
-
-  def prepareUserHosts(self, instance_url, software_bin_directory):
-    parsed_url = urlparse.urlparse(instance_url)
-    testsuite_directory = self.testnode.config['repository_path_list'][0].rsplit('/', 1)[0]
-    host_file_path = testsuite_directory + HOSTFILE
-    with open(host_file_path, "w") as hosts_file:
-      file_content = """%s %s
-""" % (self.frontend_master_ipv6, parsed_url.hostname)
-      hosts_file.write(file_content)
-    self.exec_env = os.environ.copy()
-    self.exec_env.update({'HOSTS': host_file_path})
-    self.exec_env.update({'raise_error_if_fail': False})
-    software_hash_directory = self.testnode.config['slapos_binary'].rsplit("bin/slapos", 1)[0]
-    self.userhosts_bin = software_hash_directory + "parts/userhosts/userhosts"
-    self.requestUrlScript = software_bin_directory + REQUEST_URL_SCRIPT
 
   def runTestSuite(self, node_test_suite, portal_url):
     if not self.launchable:
@@ -667,11 +582,7 @@ Require valid-user
         break
 
       software_bin_directory = self.testnode.config['slapos_binary'].rsplit("slapos", 1)[0]
-      try:
-        self.prepareUserHosts(instance_url, software_bin_directory)
-      except Exception as e:
-        error_message = "Error preparing userhost: " + str(e)
-        break
+      self.requestUrlScript = software_bin_directory + REQUEST_URL_SCRIPT
 
       bootstrap_password, error_message = self.bootstrapInstance(bootstrap_url)
       if error_message: break
@@ -689,8 +600,7 @@ Require valid-user
       except Exception as e:
         error_message = "Error getting current test case information: " + str(e)
         break
-      command = [ self.userhosts_bin,
-                  scalabilityRunner,
+      command = [ scalabilityRunner,
                   "--instance-url", instance_url,
                   "--bootstrap-password", bootstrap_password,
                   "--test-result-path", node_test_suite.test_result.test_result_path,
