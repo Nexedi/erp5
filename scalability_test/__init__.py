@@ -1,6 +1,5 @@
 import os.path
 import json
-import urlparse
 
 ZOPE_USER_FAMILY = "user"
 ZOPE_ACTIVITIES_FAMILIY = "activities"
@@ -32,8 +31,7 @@ class ERP5_scalability():
       if frontend[0] == ZOPE_USER_FAMILY:
         frontend_address = frontend[1]
         break
-    port = 4443 if urlparse.urlparse(frontend_address).scheme == 'https' else 8080
-    return "%s:%d/erp5" % (frontend_address, port)
+    return "%s/erp5" % (frontend_address)
 
   def getScalabilityTestMetricUrl(self, instance_information_dict, **kw):
     frontend_address = self.getScalabilityTestUrl(instance_information_dict)
