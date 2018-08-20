@@ -27,6 +27,12 @@
   <td>${base_url}/web_site_module/officejs_notebook/</td>
   <td></td>
 </tr>
+!-- Install can be longer than 90s -->
+  <tr>
+    <td>waitForCondition</td>
+    <td>selenium.browserbot.currentWindow.applicationCache.status !== window.applicationCache.DOWNLOADING</td>
+    <td>50000</td>
+  </tr>  
 <tr>
   <td>waitForElementPresent</td>
   <td>link=Storages</td>
@@ -212,7 +218,7 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
   <td></td>
 </tr>
 <tal:block tal:define="search_query python: 'Titre'">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list_without_header_url" />
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
 </tal:block>
 <tr>
   <td>waitForElementPresent</td>
@@ -345,8 +351,8 @@ For that I'm using this undocumented triggerOnKeyDown() method -->
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>Done.</td>
+  <td>waitForElementPresent</td>
+  <td>//pre[contains(text(), Done.)]</td>
   <td></td>
 </tr>
 <tr>
