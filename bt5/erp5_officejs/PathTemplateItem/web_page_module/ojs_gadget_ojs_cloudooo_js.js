@@ -19,6 +19,7 @@
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("redirect", "redirect")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -42,7 +43,14 @@
             err = new jIO.util.jIOError(obj.message, obj.status_code);
             err.detail = obj.detail;
           } else {
-            err = new jIO.util.jIOError("Not converted", 500);
+            return gadget.redirect({
+              'command': 'display',
+              'options': {
+                'page': 'ojs_sync',
+                'auto_repair': true,
+                'redirect': options.redirect
+              }
+            });
           }
           throw err;
         }, function (error) {
@@ -50,6 +58,18 @@
             return gadget.putAllCloudoooConvertionOperation({
               format: mime_type,
               jio_key: options.jio_key
+            })
+            .push(function () {
+              if (options.redirect) {
+                return gadget.redirect({
+                  'command': 'display',
+                  'options': {
+                    'page': 'ojs_sync',
+                    'auto_repair': true,
+                    'redirect': options.redirect
+                  }
+                });
+              }
             });
           }
           throw error;

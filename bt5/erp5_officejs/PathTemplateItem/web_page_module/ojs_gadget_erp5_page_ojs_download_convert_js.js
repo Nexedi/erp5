@@ -26,7 +26,6 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("jio_get", "jio_get")
@@ -56,32 +55,19 @@
               return ojs_cloudooo.getConvertedBlob({
                 jio_key: gadget.state.jio_key,
                 format: format,
-                filename: gadget.state.doc.filename
-              });
-            });
-        })
-        .push(function (result) {
-          return downloadFromBlob(gadget, result, format);
-        }, function (error) {
-          if (error instanceof jIO.util.jIOError &&
-              error.status_code === 500 &&
-              error.message === "Not converted") {
-            return gadget.redirect({
-              'command': 'display',
-              'options': {
-                'page': 'ojs_sync',
-                'auto_repair': true,
-                'redirect': jIO.util.stringify({
+                filename: gadget.state.doc.filename,
+                redirect: jIO.util.stringify({
                   'command': 'display',
                   'options': {
                     'page': 'ojs_download_convert',
                     'jio_key': gadget.state.jio_key
                   }
                 })
-              }
+              });
             });
-          }
-          throw error;
+        })
+        .push(function (result) {
+          return downloadFromBlob(gadget, result, format);
         })
         .push(function () {
           return gadget.notifySubmitted();

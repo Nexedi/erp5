@@ -38,12 +38,15 @@
           ]);
         })
         .push(function (result) {
-          var file_name, from, jio_key, data, to;
+          var file_name, from, jio_key, data, to, att_name = ATT_NAME;
           if (result[0].file !== undefined) {
             file_name = result[0].file.file_name;
             from = file_name.split('.').pop();
             data = jIO.util.dataURItoBlob(result[0].file.url);
             if (gadget.state.upload.hasOwnProperty(from)) {
+              if (result[3] !== from) {
+                att_name = from;
+              }
               to = gadget.state.upload[from];
               return gadget.jio_post({
                 title: file_name,
@@ -54,7 +57,7 @@
               })
                 .push(function (doc_id) {
                   jio_key = doc_id;
-                  return gadget.jio_putAttachment(jio_key, ATT_NAME, data);
+                  return gadget.jio_putAttachment(jio_key, att_name, data);
                 })
                 .push(function () {
                   if (result[3] === from) {
@@ -67,7 +70,7 @@
                         from: from,
                         to: to,
                         id: jio_key,
-                        name: ATT_NAME
+                        name: att_name
                       });
                     });
                 })
@@ -75,12 +78,8 @@
                   return gadget.redirect({
                     'command': 'display',
                     'options': {
-                      'page': 'ojs_sync',
-                      'auto_repair': true,
-                      'redirect': jIO.util.stringify({
-                        'command': 'display',
-                        'options': {'jio_key': jio_key}
-                      })
+                      'jio_key': 'ojs_sync',
+                      'auto_repair': true
                     }
                   });
                 });
