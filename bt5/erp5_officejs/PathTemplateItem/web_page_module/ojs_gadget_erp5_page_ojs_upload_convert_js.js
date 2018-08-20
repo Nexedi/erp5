@@ -101,18 +101,15 @@
               message: "Can not convert, use format : " +
                 window.Object.keys(gadget.state.upload).join(', '),
               status: "error"
-            })
-              .push(function () {
-                return;
-              });
+            });
           }
           return gadget.notifySubmitted({
             message: "File is required",
             status: "error"
-          })
-            .push(function () {
-              return;
-            });
+          });
+        })
+        .push(function () {
+          return;
         });
     })
 
