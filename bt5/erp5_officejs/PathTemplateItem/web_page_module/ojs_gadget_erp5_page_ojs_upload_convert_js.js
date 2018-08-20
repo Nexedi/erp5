@@ -85,14 +85,22 @@
                           name: ATT_NAME
                         })
                       ]);
+                    })
+                    .push(function () {
+                      return gadget.redirect({
+                        'command': 'display',
+                        'options': {
+                          'page': 'ojs_sync',
+                          'auto_repair': true
+                        }
+                      });
                     });
                 })
                 .push(function () {
                   return gadget.redirect({
                     'command': 'display',
                     'options': {
-                      'page': 'ojs_sync',
-                      'auto_repair': true
+                      'jio_key': jio_key
                     }
                   });
                 });
