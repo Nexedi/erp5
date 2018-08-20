@@ -1032,8 +1032,6 @@ shared = true
       return {'status_code':0}
     def patch_generateProfilePasswordAccess(self, *args, **kw):
       return "user", "pass"
-    def patch_prepareFrontendMasterInstance(self, *args, **kw):
-      return "dummy_instance_guid"
     def patch_getDictionaryFromFile(self, *args, **kw):
       return []
     test_self = self
@@ -1061,7 +1059,6 @@ shared = true
     original_updateInstanceXML = SlapOSControler.updateInstanceXML
     original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
     original_generateProfilePasswordAccess = RunnerClass.generateProfilePasswordAccess
-    original_prepareFrontendMasterInstance = RunnerClass.prepareFrontendMasterInstance
     original_getDictionaryFromFile = RunnerClass.getDictionaryFromFile
     original_updateDictionaryFile = RunnerClass.updateDictionaryFile
     original__createInstance = RunnerClass._createInstance
@@ -1085,7 +1082,6 @@ shared = true
     SlapOSControler.updateInstanceXML = doNothing
     SlapOSMasterCommunicator.__init__ = doNothing
     RunnerClass.generateProfilePasswordAccess = patch_generateProfilePasswordAccess
-    RunnerClass.prepareFrontendMasterInstance = patch_prepareFrontendMasterInstance
     RunnerClass.updateDictionaryFile = doNothing
     RunnerClass.getDictionaryFromFile = patch_getDictionaryFromFile
     RunnerClass._createInstance = doNothing
@@ -1112,7 +1108,6 @@ shared = true
     SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     time.sleep =original_sleep
     RunnerClass.generateProfilePasswordAccess = original_generateProfilePasswordAccess
-    RunnerClass.prepareFrontendMasterInstance = original_prepareFrontendMasterInstance
     RunnerClass.getDictionaryFromFile = original_getDictionaryFromFile
     RunnerClass.updateDictionaryFile = original_updateDictionaryFile
     RunnerClass._createInstance = original__createInstance
