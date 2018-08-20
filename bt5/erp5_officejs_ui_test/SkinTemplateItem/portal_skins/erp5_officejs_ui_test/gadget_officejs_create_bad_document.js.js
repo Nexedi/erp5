@@ -29,7 +29,7 @@
           });
       })
       .push(function () {
-        return storage.put('CloudoooConversion/bad_document/xlxy', {
+        return storage.put('CloudoooConversion/bad_document/xlsy', {
           'from': "xlsx",
           'id': 'bad_document',
           'modification_date': "Fri, 17 Aug 2018 11:21:22 +0000",
