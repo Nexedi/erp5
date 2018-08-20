@@ -269,12 +269,14 @@ shared = true
 extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
 
 [rep1]
+repository = %(temp_dir)s/rep1
 revision = %(revision1)s
 ignore-ssl-certificate = true
 develop = false
 shared = true
 
 [rep2]
+repository = %(temp_dir)s/rep2
 revision = %(revision2)s
 ignore-ssl-certificate = true
 develop = false
