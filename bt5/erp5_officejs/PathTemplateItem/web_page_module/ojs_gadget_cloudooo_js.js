@@ -125,7 +125,7 @@
         .push(function (converted_blob) {
           return gadget.jio_putAttachment(
             options.id,
-            options.to_name ? options.to_name : options.to,
+            options.to_name || options.to,
             converted_blob
           );
         });
