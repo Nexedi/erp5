@@ -19,21 +19,25 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
-        this.options = options;
-        var script = document.createElement('script');
-        script.setAttribute('id', 'jsmd');
-        script.setAttribute('type', 'text/jsmd');
-        script.innerHTML = options.value;
-        document.body.appendChild(script);
-
-        var iodide = document.createElement("script");
-        iodide.src = "iodide_master.js";
-        document.body.appendChild(iodide);
+      return this.changeState({
+        key: options.key,
+        value: options.value,
+        first_render: true
+      });
+    })
+    .onStateChange(function (modified_dict) {
+      this.element.querySelector('script').textContent = this.state.value;
+      if (!modified_dict.hasOwnProperty('first_render')) {
+        throw new Error('Sorry, it is not possible to dynamically change the iodide content');
+       }
+       var iodide = document.createElement("script");
+       iodide.src = "iodide_master.js";
+       this.element.appendChild(iodide);
 
     })
     .declareMethod("getContent", function () {
         var dict = {};
-        dict[this.options.key] = localStorage.getItem('AUTOSAVE: untitled');
+        dict[this.state.key] = localStorage.getItem('AUTOSAVE: untitled');
         return dict;
     });
 }(window, rJS, RSVP));

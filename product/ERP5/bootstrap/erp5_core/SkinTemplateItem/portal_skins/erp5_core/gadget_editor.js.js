@@ -72,12 +72,14 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         queue = lockGadgetInQueue(gadget)();
 
       if ((modification_dict.hasOwnProperty('editable')) ||
-          (modification_dict.hasOwnProperty('editor'))) {
+          (modification_dict.hasOwnProperty('editor')) || 
+          (gadget.state.editor == 'notebook_editor')) {
         // Clear first to DOM, append after to reduce flickering/manip
         while (element.firstChild) {
           element.removeChild(element.firstChild);
         }
-        if (modification_dict.hasOwnProperty('maximize')) {
+        if (modification_dict.hasOwnProperty('maximize') || 
+          (gadget.state.editor == 'notebook_editor')) {
           // for fck_editor fields, we want to be able to maximize also in non editable
           if ((gadget.state.maximize && gadget.state.editable) ||
               (gadget.state.maximize && gadget.state.editor === 'fck_editor')) {

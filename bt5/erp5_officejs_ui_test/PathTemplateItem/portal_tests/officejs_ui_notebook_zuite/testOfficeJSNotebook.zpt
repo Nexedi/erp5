@@ -23,69 +23,11 @@
   <td>Reset Successfully.</td>
   <td></td>
 </tr>
-<!-- Initialize -->
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/officejs_notebook?ignore_layout:int=1&editable_mode:int=1</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>name=Base_createCloneDocument:method</td>
-  <td></td>field_my_id
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>name=Base_createCloneDocument:method</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Created Clone Web Site</td>
-  <td></td>
-</tr>
-<tr>
-  <td>storeValue</td>
-  <td>name=field_my_id</td>
-  <td>test_url</td>
-</tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/${test_url}/</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Storages']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/manage_main</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>name=ids:list</td>
-  <td></td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>name=ids:list</td>
-  <td>${test_url}</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>name=manage_delObjects:method</td>
-  <td></td>
-</tr>
-<!-- Offline Test -->
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/${test_url}/</td>
-  <td></td>
-</tr>
+<tal:block tal:define="web_site_name python: 'officejs_notebook'">
+  <tal:block 
+metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/install_offline_and_redirect" 
+/>
+</tal:block>
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Storages']</td>
