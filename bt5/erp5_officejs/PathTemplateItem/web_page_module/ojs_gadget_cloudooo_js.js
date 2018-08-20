@@ -32,7 +32,7 @@
       var gadget = this;
       return gadget.jio_get(id)
         .push(function (doc) {
-          return gadget.convert(doc.id, doc.name, doc.from, doc.to)
+          return gadget.convert(doc)
             .push(function () {
               doc.status = "converted";
               return gadget.jio_put(id, doc);
@@ -46,24 +46,28 @@
             });
         });
     })
-    .declareMethod("convert", function (id, name, from, to) {
+    .declareMethod("convert", function (options) {
       var gadget = this, jio_gadget;
       return gadget.getDeclaredGadget("jio")
         .push(function (sub_gadget) {
           jio_gadget = sub_gadget;
           return RSVP.all([
-            gadget.jio_getAttachment(id, name),
-            jio_gadget.put(id, {from: from, to: to})
+            gadget.jio_getAttachment(options.id, options.name),
+            jio_gadget.put(options.id, {from: options.from, to: options.to})
           ]);
         })
         .push(function (result) {
-          return jio_gadget.putAttachment(id, name, result[0]);
+          return jio_gadget.putAttachment(options.id, options.name, result[0]);
         })
         .push(function () {
-          return jio_gadget.getAttachment(id, name);
+          return jio_gadget.getAttachment(options.id, options.name);
         })
         .push(function (converted_blob) {
-          return gadget.jio_putAttachment(id, to, converted_blob);
+          return gadget.jio_putAttachment(
+            options.id,
+            options.to_name ? options.to_name : options.to,
+            converted_blob
+          );
         });
     })
     .declareMethod('repair', function () {
