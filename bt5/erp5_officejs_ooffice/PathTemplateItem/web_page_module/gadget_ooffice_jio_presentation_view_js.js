@@ -87,7 +87,7 @@
     .onStateChange(function () {
       var gadget = this,
         data,
-        editable = gadget.state.content_editable;
+        editable = gadget.state.content_editable ? 1 : 0;
       return new RSVP.Queue()
         .push(function () {
           if (!editable) {
@@ -128,7 +128,7 @@
                   "default": gadget.state.doc.title,
                   "css_class": "",
                   "required": 1,
-                  "editable": 1,
+                  "editable": editable,
                   "key": "title",
                   "hidden": 0,
                   "type": "StringField"
@@ -139,7 +139,7 @@
                   "default": gadget.state.doc.reference,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1,
+                  "editable": editable,
                   "key": "reference",
                   "hidden": 0,
                   "type": "StringField"
@@ -150,7 +150,7 @@
                   "default": gadget.state.doc.version,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1,
+                  "editable": editable,
                   "key": "version",
                   "hidden": 0,
                   "type": "StringField"
@@ -161,7 +161,7 @@
                   "default": gadget.state.doc.language,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1,
+                  "editable": editable,
                   "key": "language",
                   "hidden": 0,
                   "type": "StringField"
@@ -172,7 +172,7 @@
                   "default": gadget.state.doc.description,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1,
+                  "editable": editable,
                   "key": "description",
                   "hidden": 0,
                   "type": "TextAreaField"
@@ -232,7 +232,7 @@
             selection_url: url_list[0],
             previous_url: url_list[1],
             next_url: url_list[2],
-            save_action: true,
+            save_action: editable,
             download_url: url_list[3]
           });
         });
