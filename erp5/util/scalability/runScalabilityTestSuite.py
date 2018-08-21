@@ -170,6 +170,8 @@ class ScalabilityLauncher(object):
       os.makedirs(new_directory_path)
     for file_to_move in file_to_move_list:
       shutil.move(file_to_move, new_directory_path)
+    self.log("Logs were moved from %s to %s" % (
+      self.__argumentNamespace.log_path, new_directory_path))
 
   def getRunningTest(self):
     """
