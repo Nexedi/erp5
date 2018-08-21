@@ -54,7 +54,7 @@
           conflict_handling: 1,
           parallel_operation_attachment_amount: is_low_memory ? 1 : 10,
           parallel_operation_amount: is_low_memory ? 1 : 10,
-//          signature_hash_key: "modification_date",
+          signature_hash_key: "modification_date",
           check_local_attachment_modification: attachment_synchro,
           check_local_attachment_creation: attachment_synchro,
           check_remote_attachment_modification: attachment_synchro,
