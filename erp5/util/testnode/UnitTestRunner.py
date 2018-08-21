@@ -155,6 +155,7 @@ class UnitTestRunner(object):
         ('--frontend_url', lambda: config['frontend_url']),
         ('--node_quantity', lambda: config['node_quantity']),
         ('--xvfb_bin', lambda: path('xvfb', 'xserver/bin/Xvfb')),
+        ('--project_title', lambda: node_test_suite.project_title),
         ):
       if option in supported_parameter_set:
         invocation_list += option, value()
