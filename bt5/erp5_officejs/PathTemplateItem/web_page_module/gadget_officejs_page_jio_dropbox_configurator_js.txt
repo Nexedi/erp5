@@ -56,6 +56,7 @@
           },
           remote_sub_storage: {
             type: "mapping",
+            attachment_list: ["data"],
             attachment: {
               'data': {
                 get: {uri_template: 'enclosure'},
