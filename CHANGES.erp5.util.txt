@@ -1,6 +1,16 @@
 Changes
 =======
 
+0.4.52 (2018-08-21)
+-------------------
+
+ * erp5.util
+
+   - Make scalability testing framework more stable. Stop using a dummy frontend master
+     and use host.vifib.net frontend with a valid SSL certificate instead. Always use
+     https.
+     [Yusei Tahara]
+
 0.4.51 (2017-07-17)
 -------------------
 
