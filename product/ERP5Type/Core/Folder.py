@@ -1245,7 +1245,8 @@ class Folder(CopyContainer, OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, F
       )
 
   def _isDocumentNonIndexable(self, document):
-    return not document.isSubtreeIndexable()
+    return (getattr(aq_base(document), 'isSubtreeIndexable', None) is None
+            or not document.isSubtreeIndexable())
 
   def _updateActivateKwWithSerialisationTag(self, document, activate_kw):
     activate_kw['serialization_tag'] = document.getRootDocumentPath()
