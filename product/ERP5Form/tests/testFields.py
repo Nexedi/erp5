@@ -34,7 +34,6 @@ import unittest
 
 # Initialize ERP5Form Product to load monkey patches
 
-from Acquisition import aq_base
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator.Validator import ValidationError
 from Products.Formulator.StandardFields import FloatField, StringField,\

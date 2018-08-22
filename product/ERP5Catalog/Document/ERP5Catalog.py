@@ -30,16 +30,10 @@
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.patches.PropertyManager import PropertyManager
 from Products.ZSQLCatalog.SQLCatalog import Catalog, CatalogError
-
-import OFS.History
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base
-from zLOG import LOG, INFO, TRACE, WARNING, ERROR
-
 import time
 import urllib
 

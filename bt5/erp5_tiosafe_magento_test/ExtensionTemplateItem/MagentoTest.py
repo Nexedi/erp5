@@ -27,10 +27,8 @@
 
 from lxml import etree
 from cStringIO import StringIO
-from zLOG import LOG, ERROR
-from Acquisition import aq_base
-import transaction 
-from DateTime import DateTime
+from zLOG import LOG
+import transaction
 
 class MagentoTestConnector:
 

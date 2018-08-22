@@ -23,7 +23,7 @@ from Shared.DC.ZRDB.Results import Results
 from App.Extensions import getBrain
 from AccessControl import ClassSecurityInfo, getSecurityManager 
 from Products.ERP5Type.Globals import InitializeClass
-from Acquisition import aq_base, aq_parent
+from Acquisition import aq_parent
 from zLOG import LOG, INFO, ERROR
 from cStringIO import StringIO
 from Products.ERP5Type import Permissions

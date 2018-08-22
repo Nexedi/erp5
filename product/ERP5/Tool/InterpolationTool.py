@@ -27,13 +27,8 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser
+from Products.CMFCore.utils import UniqueObject
 from Products.ERP5Type.Globals import InitializeClass
-from Acquisition import aq_base
-from DateTime import DateTime
-
-from zLOG import LOG
-
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 

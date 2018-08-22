@@ -27,7 +27,6 @@
 
 import zope.interface
 from zLOG import LOG, INFO
-from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject

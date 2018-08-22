@@ -29,7 +29,6 @@
 
 from compiler.consts import CO_VARKEYWORDS
 from random import getrandbits
-from Acquisition import aq_base
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.SecurityManagement import getSecurityManager, \

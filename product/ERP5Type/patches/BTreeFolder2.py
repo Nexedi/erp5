@@ -16,7 +16,6 @@
 # Stribger repair of BTreeFolder2
 import sys
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
-from Acquisition import aq_base
 from BTrees.OOBTree import OOBTree
 from BTrees.OIBTree import OIBTree, union
 from BTrees.Length import Length

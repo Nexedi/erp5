@@ -28,10 +28,7 @@
 ##############################################################################
 
 from App.Extensions import getBrain
-from Acquisition import Explicit, aq_base
 from lxml import etree
-from zLOG import LOG, ERROR, INFO
-from base64 import b16encode, b16decode
 
 SEPARATOR = '\n'
 
@@ -124,7 +121,4 @@ class Transaction(TransactionBrain):
         category.text = category_value
 
 
-    xml = etree.tostring(transaction, pretty_print=True, encoding='utf-8')
-    #LOG("asXML returns transaction %s" %(xml,), 300, "")
-    return xml
-
+    return etree.tostring(transaction, pretty_print=True, encoding='utf-8')

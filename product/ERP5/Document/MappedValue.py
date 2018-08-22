@@ -29,7 +29,6 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Core.Predicate import Predicate
 
