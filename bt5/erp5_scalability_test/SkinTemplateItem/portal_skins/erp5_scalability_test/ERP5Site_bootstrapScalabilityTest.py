@@ -11,6 +11,8 @@ portal_catalog = portal.portal_catalog
 status_code = 0
 error_message = "No error."
 
+context.ERP5Site_setUpActivityTool()
+
 user_quantity = request.get('user_quantity')
 if user_quantity is None: return json.dumps({"status_code" : 1, "error_message": "Parameter 'user_quantity' is required.", "password" : None })
 password = ''.join(random.choice(string.digits + string.letters) for i in xrange(10))
