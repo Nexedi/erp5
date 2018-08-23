@@ -525,7 +525,7 @@
         </item>
         <item>
             <key> <string>skin_selection_name</string> </key>
-            <value> <string>Officejs</string> </value>
+            <value> <string>RJS</string> </value>
         </item>
         <item>
             <key> <string>static_language_selection</string> </key>
@@ -718,7 +718,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.16277.24517.44253</string> </value>
+                <value> <string>969.28974.58282.11758</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -736,7 +736,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502106380.69</float>
+                        <float>1535026289.76</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
