@@ -361,7 +361,7 @@
           </tr> 
           <tr> 
             <td>verifyTextPresent</td> 
-            <td>What is the name of your company?</td> 
+            <td>What is the Name of your Company?</td> 
             <td> </td> 
           </tr> 
           <tr> 
@@ -561,7 +561,7 @@
           </tr> 
           <tr> 
             <td>verifyTextPresent</td> 
-            <td>Select the number of user accounts you want to configure</td> 
+            <td>Select the Number of User Accounts you Want to Configure</td> 
             <td> </td> 
           </tr> 
           <tr> 
@@ -641,7 +641,7 @@
           </tr> 
           <tr> 
             <td>verifyTextPresent</td> 
-            <td>What is the name of your company?</td> 
+            <td>What is the Name of your Company?</td> 
             <td> </td> 
           </tr> 
           <tr> 
@@ -781,7 +781,7 @@
           </tr> 
           <tr> 
             <td>verifyTextPresent</td> 
-            <td>Select the number of user accounts you want to configure</td> 
+            <td>Select the Number of User Accounts you Want to Configure</td> 
             <td> </td> 
           </tr> 
           <tr> 
@@ -1058,7 +1058,7 @@
           </tr> 
           <tr> 
             <td>verifyTextPresent</td> 
-            <td>Which accouting plan do you use?</td> 
+            <td>Which Accounting Plan do you Use</td> 
             <td> </td> 
           </tr> 
           <tr> 
@@ -1078,17 +1078,17 @@
           </tr> 
           <tr> 
             <td>verifyTextPresent</td> 
-            <td>What is the begin date of your current accounting period?</td> 
+            <td>What is the Begin Date of your Current Accounting Period?</td> 
             <td> </td> 
           </tr> 
           <tr> 
             <td>verifyTextPresent</td> 
-            <td>What will be the end date of your current accounting period?</td> 
+            <td>What will be the End Date of your Current Accounting Period?</td> 
             <td> </td> 
           </tr> 
           <tr> 
             <td>verifyTextPresent</td> 
-            <td>What is the name of this period?</td> 
+            <td>What is the Name of this Period?</td> 
             <td> </td> 
           </tr> 
           <tr> 
@@ -1114,8 +1114,7 @@
           <tr> 
             <td>verifyValue</td> 
             <td>//input[@name=&quot;subfield_field_your_period_start_date_year&quot;]</td> 
-            <td tal:content="python:
-                modules['DateTime'].DateTime(modules['DateTime'].DateTime().year(), 1, 1).strftime('%Y')"> </td> 
+            <td tal:content="python: DateTime().year()"></td> 
           </tr> 
           <tr> 
             <td>verifyValue</td> 
@@ -1130,7 +1129,7 @@
           <tr> 
             <td>verifyValue</td> 
             <td>//input[@name=&quot;subfield_field_your_period_stop_date_year&quot;]</td> 
-            <td tal:content="python:  modules['DateTime'].DateTime(modules['DateTime'].DateTime().year(), 1, 1).strftime('%Y')"> </td> 
+            <td tal:content="python: DateTime().year()"></td> 
           </tr> 
           <tr> 
             <td>verifyValue</td> 
@@ -1145,7 +1144,7 @@
           <tr> 
             <td>verifyValue</td> 
             <td>//input[@name=&quot;field_your_period_title&quot;]</td> 
-            <td tal:content="python:  modules['DateTime'].DateTime(modules['DateTime'].DateTime().year(), 1, 1).strftime('%Y')"> </td> 
+            <td tal:content="python: DateTime().year()"></td> 
           </tr> 
           <tr> 
             <td>clickAndWait</td> 
@@ -1215,22 +1214,22 @@
           </tr> 
           <tr> 
             <td>verifyTextPresent</td> 
-            <td>What email address should be used as From email address for automatically generated emails?</td> 
+            <td>What Sender Address should be Used for Automatically Generated Emails?</td> 
             <td> </td> 
           </tr> 
           <tr> 
             <td>verifyTextPresent</td> 
-            <td>What is the currency used in your company?</td> 
+            <td>What is the Currency Used in your Company?</td> 
             <td> </td> 
           </tr> 
           <tr> 
             <td>verifyTextPresent</td> 
-            <td>Which date format do you use?</td> 
+            <td>Which Date Format do you Use?</td> 
             <td> </td> 
           </tr> 
           <tr> 
             <td>verifyTextPresent</td> 
-            <td>Which translations do you want to use?</td> 
+            <td>Which Translations do you Want to Use?</td> 
             <td> </td> 
           </tr> 
           <tr> 

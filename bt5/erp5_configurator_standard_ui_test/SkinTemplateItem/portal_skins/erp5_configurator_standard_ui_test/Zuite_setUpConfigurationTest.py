@@ -42,12 +42,15 @@ business_configuration = context.business_configuration_module.newContent(
 
 business_configuration.setResource(workflow_path)
 
-# (Re)Create the Person with already used login.
-kw = dict(portal_type="Person",
+# (Re)Create the Person and its ERP5 Login used to check that for user login
+# (ERP5 Login.reference) unicity
+kw = dict(portal_type="ERP5 Login",
           reference=customer_user1_used_reference)
-person = context.portal_catalog.getResultValue(**kw)
-if person is None:
-  context.person_module.newContent(**kw)
+erp5_login = context.portal_catalog.getResultValue(**kw)
+if erp5_login is None:
+  erp5_login = context.person_module.newContent(portal_type='Person').newContent(**kw)
+if erp5_login.getValidationState() != 'validated':
+  erp5_login.validate()
 
 kw['reference'] = customer_user1_reference
 person = context.portal_catalog.getResultValue(**kw)
