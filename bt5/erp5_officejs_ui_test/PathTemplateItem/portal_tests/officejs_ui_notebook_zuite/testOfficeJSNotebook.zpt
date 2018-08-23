@@ -24,10 +24,8 @@
   <td></td>
 </tr>
 <tal:block tal:define="web_site_name python: 'officejs_notebook'">
-  <tal:block 
-metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/install_offline_and_redirect" 
-/>
-</tal:block>
+   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/install_offline_and_redirect" />
+ </tal:block>
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Storages']</td>
