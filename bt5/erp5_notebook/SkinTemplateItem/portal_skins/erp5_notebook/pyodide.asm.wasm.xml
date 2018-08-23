@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/octet-stream</string> </value>
+            <value> <string>application/wasm</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>

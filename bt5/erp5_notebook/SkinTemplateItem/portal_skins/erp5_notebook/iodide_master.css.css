@@ -2859,6 +2859,7 @@ li.CodeMirror-hint-active {
   color: #333;
   background-color: #fff;
   overflow: hidden;
+  position: relative;
 }
 
 div#page {
@@ -2897,12 +2898,16 @@ div#cells.presentation {
   height: inherit;
 }
 
-div#cells.pane-open {
-  width: calc(100% - 575px);
-}
-
 /************************************************/
 /* cell output styles */
+
+.rep-container {
+  overflow-x: auto;
+}
+
+.array-rep {
+  overflow-x: auto;
+}
 
 .data-set-info {
   color: #888;
@@ -2948,11 +2953,15 @@ div.promise-handler-value {
   margin-top:6px;
 }
 
+.undefined-rep, .null-rep {
+  display: inline-block;
+}
+
 /************************************************/
 /* header bar styles */
 
 .notebook-toolbar-container {
-  background-color: black; 
+  background-color: black;
   height: 50px
 }
 
@@ -2966,11 +2975,11 @@ div.promise-handler-value {
 }
 
 div.editor-mode-controls {
-  width: 260px; 
+  width: 300px;
 }
 
 div.view-controls {
-  width: 300px;
+  width: 375px;
   display:flex;
   align-items:center;
 }
@@ -2993,7 +3002,7 @@ div.title-field-contents {
 }
 
 @media (max-width:1100px) {
-  
+
   .last-saved-text {
     display:none !important;
   }
@@ -3099,7 +3108,7 @@ div.iodide-tooltip {
 }
 
 .dependency-src a {
-	color: black;	
+	color: black;
 	font-weight:normal
 }
 
@@ -3123,7 +3132,7 @@ code {
   border-radius: 3px;
 }
 .side-pane {
-  width:575px !important;
+  width:auto !important;
   top: 50px !important;
   border: none !important;
   border-left: 2px solid lightgray !important;
@@ -3134,6 +3143,7 @@ code {
     top: 0;
     z-index: 10;
     background: #fff;
+    padding-top: 1px;
 }
 
 .pane-title {
@@ -3163,18 +3173,28 @@ div.history-cells {
   padding-right: 20px;
 }
 
+div.history-cell {
+  width: inherit
+}
+
 div.history-cells .CodeMirror {
   height: auto;
 }
 
+div.history-cells div.cell-container {
+  padding-right:0px;
+}
+
 pre.history-item-code {
-  overflow:scroll;
+  overflow: scroll;
   padding:3px;
 }
 
-div.history-content {
-  outline: 1px solid lightgray;
 
+
+div.history-content {
+  outline: 1px solid #f1f1f1;
+  width: calc(100% - 1px)
 }
 
 div.history-date {
@@ -3201,7 +3221,7 @@ div.side-pane {
   border: 2px solid gray;
   border-right: none;
   width: 75%;
-  overflow: scroll;
+  overflow: auto;
   height: 100%;
   background-color: rgba(255, 255, 255);
 }
@@ -3210,8 +3230,36 @@ i.close-side-pane:hover {
   outline: 1px solid lightgray;
 }
 
+div.frozen-variables {
+  display: grid;
+  grid-template-columns: minmax(100px, min-content) 100px;
+  grid-column-gap: 0px;
+}
+
+div.frozen-variable-name {
+  border: 1px solid #f1f1f1;
+  background: #f9f9f9;
+  font-family: monospace;
+  padding-left:5px;
+  padding-right:20px;
+  overflow-wrap: break-word;
+  max-width: calc(100% - 25px);
+}
+
+div.frozen-variable-value {
+  border: 1px solid #f1f1f1;
+  background: #f9f9f9;
+  font-family: monospace;
+  color:gray;
+  justify-self: end;
+  white-space: pre;
+  padding-left:5px;
+  padding-right:5px;
+  width: 100%;
+}
+
 div.declared-variables-list {
-padding: 15px
+padding: 15px;
 }
 
 div.declared-variable {
@@ -3220,7 +3268,7 @@ div.declared-variable {
 
 div.declared-variable-name {
     font-size: 14px;
-    font-family: "monospace";
+    font-family: monospace;
     background: #f9f9f9;
     border: 1px solid #f1f1f1;
     padding: 1px 10px;
@@ -3236,11 +3284,17 @@ div.app-info-message {
   padding-right: 10px;
   padding-top: 20px;
 }
+
+div.app-message-when {
+  font-style:italic;
+  color:gray;
+  font-size:12px;
+}
 .medium-menu {
   display: flex !important;
   justify-content: space-between;
   flex-flow: row wrap;
-  max-height:32px !important; 
+  max-height:32px !important;
 }
 
 .iodide-menu-item {
@@ -3293,6 +3347,11 @@ div.app-info-message {
   top: 10px;
   z-index:100;
 }
+
+.user-avatar {
+  height: 24px;
+  border-radius: 50%;
+}
 /*  cell and cell container styles*/
 
 div.cell-container {
@@ -3343,15 +3402,16 @@ div#cells.presentation div.cell-row.input {
 }
 
 .cell-menu-container {
-    width: 64px;
+    width: 76px;
     font-size:12px;
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 .cell-type-label {
   text-align: right;
   color: hsl(275, 12%, 75%);
   cursor: pointer;
-  padding: 0px 6px 0px 0px;
   height: 18px;
   border: 1px solid rgba(0,0,0,0);
   display: flex;
@@ -3391,7 +3451,9 @@ div#cells.presentation div.cell-row.input {
 
 
 div.cell-row-container {
-  width: calc(100% - 64px); /* 100% minus cell-menu-contatiner width*/
+  width: calc(100% - 76px); /* 100% minus cell-menu-contatiner width*/
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 div.cell-row {
@@ -3407,7 +3469,8 @@ div.collapse-button {
   margin-right: 5px;
   margin-left: 3px;
   width: 18px;
-  height: 100%;
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 div.collapse-button:hover {
@@ -3422,15 +3485,18 @@ div.HIDDEN div.collapse-button-tooltip-wrapper {
 }
 
 div.HIDDEN div.collapse-button {
-    width: calc(100%);
+    width: calc(100% - 3px);
     /* when collapsed, make the button visible*/
   background: #fdfdfd;
   outline: 1px solid #ddd;
   cursor: pointer;
+  height: 20px;
 }
 
 div.main-component {
-    width: calc(100% - 24px); /* 100% minus .collapse-button width (including margins) */
+    width: calc(100% - 25px); /* 100% minus .collapse-button width (including margins) */
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 div.input div.main-component {
@@ -3487,8 +3553,9 @@ div.SCROLL div.main-component div.CodeMirror div.CodeMirror-scroll {
 div.SCROLL.output .main-component {
   max-height: 300px;
   outline: 1px solid #ddd;
-    overflow-y: scroll;
+  overflow-y: scroll;
 }
+
 
 
 /* FIX ME i think this style is never used, double check it*/
@@ -3550,7 +3617,18 @@ div#cells.presentation div.cell-row-container {
 div#cells.presentation div.main-component {
   width: 100%;
 }
- 
+
+
+/* which side-effects are shown in the report view*/
+div#cells.presentation .side-effect-target {
+  max-width:800px;
+  margin: auto;
+}
+
+div#cells.presentation div.side-effect-target div.hide-side-effect {
+  display: none;
+}
+
  /* div#cells.presentation {
   padding-top:30px;
 }  */
@@ -3571,8 +3649,7 @@ div#cells.presentation div.main-component {
 
 /* establish block-level elements to be a certain width. This
 lets us create full width divs using css if necessary, while still
-retaining the narrower colum view for readability and flow.
-
+retaining the narrower column view for readability and flow.
 */
 
 .user-markdown p,
