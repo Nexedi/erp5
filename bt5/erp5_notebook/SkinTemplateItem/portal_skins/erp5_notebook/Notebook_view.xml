@@ -53,7 +53,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_text_content</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -73,7 +75,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_text_content</string>
                       </list>
                     </value>
                 </item>
