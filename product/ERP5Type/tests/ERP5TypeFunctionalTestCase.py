@@ -144,7 +144,7 @@ class FunctionalTestRunner:
   def test(self, debug=0):
     xvfb = Xvfb(self.instance_home)
     try:
-      if not debug:
+      if not (debug and os.getenv('DISPLAY')):
         print("\nSet 'erp5_debug_mode' environment variable to 1"
               " to use your existing display instead of Xvfb.")
         xvfb.run()
