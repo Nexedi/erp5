@@ -46,7 +46,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 ZELENIUM_BASE_URL = "%s/portal_tests/%s/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=../postResults&__ac_name=%s&__ac_password=%s"
 
@@ -246,7 +245,8 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
       self.portal.manage_addProduct['Sessions'].constructBrowserIdManager()
     self.commit()
     self.setSystemPreference()
-    self.portal.portal_tests.TestTool_cleanUpTestResults()
+    # non-recursive results clean of portal_tests/ or portal_tests/``run_only``
+    self.portal.portal_tests.TestTool_cleanUpTestResults(self.run_only or None)
     self.tic()
     host, port = self.startZServer()
     self.runner = FunctionalTestRunner(host, port,
