@@ -27,9 +27,9 @@
 import errno
 import os
 import re
-import shutil
 from . import logger
 from .ProcessManager import SubprocessError
+from .Utils import rmtree
 
 SVN_UP_REV = re.compile(r'^(?:At|Updated to) revision (\d+).$')
 SVN_CHANGED_REV = re.compile(r'^Last Changed Rev.*:\s*(\d+)', re.MULTILINE)
@@ -149,7 +149,7 @@ class Updater(object):
   def deleteRepository(self):
     logger.info("Wrong repository or wrong url, deleting repos %s",
              self.repository_path)
-    shutil.rmtree(self.repository_path)
+    rmtree(self.repository_path)
 
   def checkRepository(self):
     # make sure that the repository is like we expect
