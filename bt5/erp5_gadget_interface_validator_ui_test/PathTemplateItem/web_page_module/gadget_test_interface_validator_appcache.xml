@@ -115,6 +115,10 @@ gadget_interface_validator_test_missing_interface_declaration_gadget.html\n
 gadget_interface_validator_test_missing_interface_declaration_gadget.js\n
 gadget_interface_validator_test_missing_method_declaration_gadget.html\n
 gadget_interface_validator_test_missing_method_declaration_gadget.js\n
+gadget_interface_validator_test_multiple_interface_correct_implemented_gadget.html\n
+gadget_interface_validator_test_multiple_interface_correct_implemented_gadget.js\n
+gadget_interface_validator_test_multiple_interface_duplicated_method_name.html\n
+gadget_interface_validator_test_multiple_interface_duplicated_method_name.js\n
 gadget_interface_validator_test_unknown_method_declaration_gadget.html\n
 gadget_interface_validator_test_unknown_method_declaration_gadget.js\n
 i18next.js\n
@@ -259,7 +263,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>968.14266.18355.13568</string> </value>
+                <value> <string>970.12316.58397.42922</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -277,7 +281,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1529048876.03</float>
+                        <float>1536652656.93</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

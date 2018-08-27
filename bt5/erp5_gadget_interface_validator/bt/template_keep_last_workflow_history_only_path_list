@@ -1,4 +1,6 @@
 web_page_module/gadget_interface_js
 web_page_module/gadget_interface_html
+web_page_module/gadget_interface_loader_html
+web_page_module/gadget_interface_loader_js
 web_page_module/gadget_interface_validator_*
 web_site_module/gadget_interface_validator

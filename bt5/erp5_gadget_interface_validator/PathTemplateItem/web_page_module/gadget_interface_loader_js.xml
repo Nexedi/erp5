@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_validator_result_list.js</string> </value>
+            <value> <string>gadget_interface_loader.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_interface_validator_page_result_list_js</string> </value>
+            <value> <string>gadget_interface_loader_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -97,7 +97,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Interface Validator Result List JS</string> </value>
+            <value> <string>Gadget Interface Loader JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -183,7 +183,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1530085115.14</float>
+                        <float>1536842219.71</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -228,7 +228,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.16729.9437.60518</string> </value>
+                <value> <string>970.15515.25000.46984</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -246,7 +246,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1536917386.61</float>
+                        <float>1536845809.9</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -303,7 +303,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1530085046.39</float>
+                        <float>1536842183.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

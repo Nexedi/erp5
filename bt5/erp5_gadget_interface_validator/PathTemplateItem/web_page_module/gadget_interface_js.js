@@ -1,7 +1,7 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
-/*global DOMParser, document, rJS, RSVP, window,
-         jIO*/
-(function (window, rJS, RSVP, DOMParser, jIO) {
+/*global DOMParser, rJS, RSVP, window,
+         jIO, console, document*/
+(function (window, rJS, RSVP, DOMParser, jIO, console, document) {
   "use strict";
 
   //////////////////////////////////////////////
@@ -196,14 +196,14 @@
   }
 */
 
-  function verifyAllMethodDeclared(interface_method_list, gadget_method_list) {
+  function verifyAllMethodDeclared(interface_method_list, gadget_method_list,
+                                   error_list) {
     //to verify if all the interface methods are declared by the gadget.
     var gadget_method_name_list = gadget_method_list,
       interface_method_name_list = [],
       i,
       j,
       missing_method_list = [],
-      unknown_method_list = [],
       error_message;
     for (i = 0; i < interface_method_list.length; i += 1) {
       interface_method_name_list.push(interface_method_list[i].name);
@@ -222,114 +222,58 @@
       for (i = 0; i < missing_method_list.length; i += 1) {
         error_message += ("\n" + missing_method_list[i]);
       }
-      throw new Error(error_message);
+      error_list.push({
+        details: error_message
+      });
     }
-
-    // Check unknown method declaration
-    for (j = 0; j < gadget_method_name_list.length; j += 1) {
-      if (interface_method_name_list.indexOf(
-          gadget_method_name_list[j]
-        ) < 0) {
-        unknown_method_list.push(gadget_method_name_list[j]);
-      }
-    }
-    if (unknown_method_list.length) {
-      error_message =
-          "Following methods are not documents in the interface: ";
-      for (i = 0; i < unknown_method_list.length; i += 1) {
-        error_message += ("\n" + unknown_method_list[i]);
-      }
-      throw new Error(error_message);
-    }
-    return "Success";
-  }
-
-  function verifyAllMethod(interface_method_list, gadget_method_list) {
-    //to verify all methods of gadget and interface.
-    return verifyAllMethodDeclared(interface_method_list,
-                                   gadget_method_list);
-/*    Commented till figure out the way to fetch the argument length of a
-      defined function.
-      .push(function() {
-        return verifyAllMethodSignature(interface_method_list,
-                                        gadget_method_list[1]);
-      })
-*/
   }
 
   function getOrDeclareGadget(context, gadget_to_check_url) {
     return context.getDeclaredGadget(gadget_to_check_url)
       .push(undefined, function (error) {
+        var element,
+          loader_gadget;
         if (error instanceof rJS.ScopeError) {
-          // XXX Load in an iframe
-          return context.declareGadget(gadget_to_check_url, {
-            scope: gadget_to_check_url
-          });
+          element = document.createElement('div');
+          context.element.querySelector('div').appendChild(element);
+          return new RSVP.Queue()
+            .push(function () {
+              return RSVP.delay(context.state.delay || 0);
+            })
+            .push(function () {
+              // XXX Load in an iframe
+              return context.declareGadget('gadget_interface_loader.html', {
+                scope: gadget_to_check_url,
+                element: element,
+                sandbox: 'iframe'
+              });
+            })
+            .push(function (result) {
+              loader_gadget = result;
+              return loader_gadget.declareGadgetToCheck(gadget_to_check_url);
+            })
+            .push(function () {
+              return loader_gadget;
+            });
         }
         throw error;
       });
   }
 
-  function getDefinedInterfaceMethodList(interface_url) {
+  function getDefinedInterfaceMethodList(interface_url, error_list) {
     return GadgetInterface.fetch(interface_url)
       .push(function (interface_data) {
         return interface_data.method_list;
-      });
-  }
-
-  function getGadgetMethodList(context, gadget_to_check_url) {
-    return getOrDeclareGadget(context, gadget_to_check_url)
-      .push(function (gadget) {
-        var declared_method_dict = {},
-          declared_method_list = [],
-          item;
-        for (item in gadget.constructor.prototype) {
-          if (gadget.constructor.prototype.hasOwnProperty(item)) {
-            if (!(/__/).test(item) && (item !== 'constructor') &&
-                (typeof gadget[item] === "function")) {
-              declared_method_dict[item] = gadget[item];
-            }
-          }
-        }
-        for (item in declared_method_dict) {
-          if (declared_method_dict.hasOwnProperty(item)) {
-            declared_method_list.push(item);
-          }
-        }
-        return declared_method_list;
-          // gadget.getDeclaredMethodList()
-      });
-  }
-
-  function verifyGadgetSingleInterfaceImplementation(interface_gadget,
-                                                     gadget_to_check_url,
-                                                     absolute_interface_url) {
-    var verify_result = {};
-    return new RSVP.Queue()
-      .push(function () {
-        return RSVP.all([
-          getDefinedInterfaceMethodList(
-            absolute_interface_url
-          ),
-          getGadgetMethodList(interface_gadget, gadget_to_check_url)
-        ]);
-      })
-      .push(function (method_list) {
-        return verifyAllMethod(method_list[0], method_list[1]);
-      })
-      .push(function () {
-        verify_result.result = true;
-        return verify_result;
       }, function (error) {
-        var interface_name = absolute_interface_url.substr(
-          absolute_interface_url.lastIndexOf('/') + 1
-        ),
-          error_message;
-        error_message = "Interface Name: " + interface_name + "\n" +
-                        "Error Details : \n" + error.message + "\n";
-        verify_result.result = false;
-        verify_result.details = error_message;
-        return verify_result;
+        var interface_name = interface_url.substr(
+          interface_url.lastIndexOf('/') + 1
+        );
+        error_list.push({
+          details: "Interface Name: " + interface_name + "\n" +
+                   "Error Details : \n" + error.message + "\n"
+        });
+        // As interface can't be parsed, no method is found
+        return [];
       });
   }
 
@@ -396,63 +340,113 @@
 
     .onStateChange(function () {
       var context = this,
-        gadget_to_check;
+        required_interface_list = [],
+        gadget_method_list = [],
+        error_list = [];
 
       return getOrDeclareGadget(context, context.state.gadget_to_check_url)
-        .push(function (result) {
-          gadget_to_check = result;
-          return gadget_to_check.getInterfaceList();
-        })
-        .push(function (required_interface_list) {
-          var result_list = [],
-            i;
-          for (i = 0; i < required_interface_list.length; i += 1) {
-            result_list.push(
-              verifyGadgetSingleInterfaceImplementation(
-                context,
-                context.state.gadget_to_check_url,
-                required_interface_list[i]
-              )
-            );
-          }
-          return RSVP.all(result_list);
+
+        .push(function (gadget_to_check) {
+          // Get the list of interfaces/methods
+          return RSVP.all([
+            gadget_to_check.getGadgetToCheckInterfaceList(),
+            gadget_to_check.getGadgetToCheckMethodList('method')
+          ]);
         })
         .push(function (result_list) {
-          var i,
-            failed = false,
-            error_message = '';
-          for (i = 0; i < result_list.length; i += 1) {
-            if (!result_list[i].result) {
-              failed = true;
-              error_message += (result_list[i].details + '\n');
-            }
-          }
-          if (result_list.length === 0) {
-            context.element.firstElementChild.textContent = 'N/A';
-            if (!context.state.summary) {
-              context.element.firstElementChild.textContent +=
-                '\n' + error_message;
-            }
-          } else if (failed) {
-            context.element.firstElementChild.textContent = 'Failure';
-            if (!context.state.summary) {
-              context.element.firstElementChild.textContent +=
-                '\n' + error_message;
-            }
-          } else {
-            context.element.firstElementChild.textContent = 'Success';
-            if (!context.state.summary) {
-              context.element.firstElementChild.textContent +=
-                '\n' + error_message;
-            }
-          }
+          required_interface_list = result_list[0];
+          gadget_method_list = result_list[1];
+        }, function (error) {
+          error_list.push({
+            details: "Error with gadget loading\n" + (error.message || '')
+          });
         })
+
+        .push(function () {
+          // Get all methods definition for every interface
+          var promise_list = [],
+            i;
+          for (i = 0; i < required_interface_list.length; i += 1) {
+            promise_list.push(
+              getDefinedInterfaceMethodList(required_interface_list[i],
+                                            error_list)
+            );
+          }
+          return RSVP.all(promise_list);
+        })
+
+        .push(function (method_table) {
+          var interface_method_list = [],
+            i,
+            j,
+            promise_list = [];
+
+          for (i = 0; i < method_table.length; i += 1) {
+            for (j = 0; j < method_table[i].length; j += 1) {
+              // Check method declared twice
+              if (interface_method_list.indexOf(method_table[i][j].name) >= 0) {
+                error_list.push({
+                  details: "Method documented in multiple interface\n" +
+                           method_table[i][j].name
+                });
+              } else {
+                interface_method_list.push(method_table[i][j].name);
+              }
+            }
+          }
+
+          // Check unknown method declaration
+          for (i = 0; i < gadget_method_list.length; i += 1) {
+            if (interface_method_list.indexOf(
+                gadget_method_list[i]
+              ) < 0) {
+              error_list.push({
+                details: "Method not documented in the interface\n" +
+                         gadget_method_list[i]
+              });
+            }
+          }
+
+          // Check that all interfaces are implemented
+          for (i = 0; i < required_interface_list.length; i += 1) {
+            promise_list.push(
+              verifyAllMethodDeclared(method_table[i], gadget_method_list,
+                                      error_list)
+            );
+          }
+          return RSVP.all(promise_list);
+
+        })
+        .push(function () {
+          // Display result
+          var i,
+            error_message = '',
+            summary_message;
+
+          if (error_list.length === 0) {
+            summary_message = 'Success';
+          } else {
+            summary_message = 'Failure';
+          }
+
+          for (i = 0; i < error_list.length; i += 1) {
+            error_message += (error_list[i].details + '\n\n');
+          }
+
+          if (context.state.summary) {
+            error_message = summary_message;
+          } else {
+            error_message = summary_message + '\n\n' + error_message;
+          }
+          context.element.firstElementChild.textContent = error_message;
+        })
+
         .push(undefined, function (error) {
           console.warn(error);
           context.element.firstElementChild.textContent =
-            "Error with gadget loading";
+            "Unexpected error";
         });
 
     });
 
-}(window, rJS, RSVP, DOMParser, jIO));
+}(window, rJS, RSVP, DOMParser, jIO, console, document));

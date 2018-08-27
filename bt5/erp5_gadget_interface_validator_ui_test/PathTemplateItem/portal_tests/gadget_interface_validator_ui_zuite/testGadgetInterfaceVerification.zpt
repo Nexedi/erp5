@@ -88,7 +88,7 @@
 <tr>
   <td>assertText</td>
   <td>//tbody/tr[3]/td[2]</td>
-  <td>N/A</td>
+  <td>Failure</td>
 </tr>
 
 <tr>
@@ -106,17 +106,45 @@
 </tr>
 
 <tr>
-  <td colspan="3"><b>Check not existent gadget</b></td>
+  <td colspan="3"><b>Check correct use case for multiple interface</b></td>
 </tr>
 <tr>
   <td>assertText</td>
   <td>//tbody/tr[5]/td</td>
-  <td>gadget_interface_validator_test_nonexistent_gadget.html</td>
+  <td>gadget_interface_validator_test_multiple_interface_correct_implemented_gadget.html</td>
 </tr>
 <tr>
   <td>assertText</td>
   <td>//tbody/tr[5]/td[2]</td>
-  <td>Error with gadget loading</td>
+  <td>Success</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check duplicated method name declaration</b></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tbody/tr[6]/td</td>
+  <td>gadget_interface_validator_test_multiple_interface_duplicated_method_name.html</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tbody/tr[6]/td[2]</td>
+  <td>Failure</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check not existent gadget</b></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tbody/tr[7]/td</td>
+  <td>gadget_interface_validator_test_nonexistent_gadget.html</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tbody/tr[7]/td[2]</td>
+  <td>Failure</td>
 </tr>
 
 <tr>
@@ -124,12 +152,12 @@
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tbody/tr[6]/td</td>
+  <td>//tbody/tr[8]/td</td>
   <td>gadget_interface_validator_test_unknown_method_declaration_gadget.html</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tbody/tr[6]/td[2]</td>
+  <td>//tbody/tr[8]/td[2]</td>
   <td>Failure</td>
 </tr>
 

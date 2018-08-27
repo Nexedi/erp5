@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,8 +68,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_validator_result_list.js</string> </value>
+            <value> <string>gadget_interface_loader.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_interface_validator_page_result_list_js</string> </value>
+            <value> <string>gadget_interface_loader_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -87,7 +91,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -97,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Interface Validator Result List JS</string> </value>
+            <value> <string>Gadget Interface Loader</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -183,7 +187,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1530085115.14</float>
+                        <float>1536842166.93</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -228,7 +232,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.16729.9437.60518</string> </value>
+                <value> <string>970.15475.26621.32819</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -246,7 +250,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1536917386.61</float>
+                        <float>1536842150.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -303,7 +307,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1530085046.39</float>
+                        <float>1536842090.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
