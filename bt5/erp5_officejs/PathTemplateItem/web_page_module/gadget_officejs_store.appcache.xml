@@ -119,6 +119,7 @@ appstore/pdf_viewer_app_logo.svg\n
 appstore/image_editor_app_logo.svg\n
 appstore/media_player_app_logo.jpg\n
 appstore/web_table_app_logo.svg\n
+appstore/nexedi_logo_officejs_iodide.svg\n
 appstore/forum_app_logo.png\n
 appstore/wallsearch_icon.svg\n
 appstore/hr_logo.svg\n
@@ -369,7 +370,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>967.13490.46878.24849</string> </value>
+                <value> <string>969.56500.38539.51370</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -387,7 +388,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1526286345.4</float>
+                        <float>1535371498.01</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -24,7 +24,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +42,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -82,16 +79,8 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>classification/collaborative/team</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>73dd0b32e6721571d7172b5a73b4c889</string> </value>
+            <value> <string>a2a46d486978e7b30607e35290794b9f</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -99,17 +88,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>notebook_logo.svg</string> </value>
+            <value> <string>nexedi_logo_officejs_iodide.svg</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Officejs Iodide</string> </value>
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>notebook_logo.svg</string> </value>
+            <value> <string>NXD-Media.Logo.Officejs.Iodide-003-en.svg</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -117,13 +104,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>notebook_logo.svg</string> </value>
+            <value> <string>gadget_officejs_notebook_app_logo_svg</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -131,17 +116,17 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>notebook_logo.svg</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>notebook_logo.svg</string> </value>
-        </item>
-        <item>
-            <key> <string>version</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>OfficeJS Iodide Logo</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>003</string> </value>
         </item>
         <item>
             <key> <string>width</string> </key>
@@ -217,7 +202,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -243,7 +228,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1526977958.18</float>
+                        <float>1535369489.72</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -252,7 +237,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -288,7 +273,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>967.40754.10456.61849</string> </value>
+                <value> <string>969.56466.19683.4676</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -306,7 +291,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1526648919.05</float>
+                        <float>1535369478.66</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
