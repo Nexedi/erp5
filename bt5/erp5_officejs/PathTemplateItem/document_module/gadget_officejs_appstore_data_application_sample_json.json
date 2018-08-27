@@ -252,9 +252,9 @@
     "application_description_i18n":"application.custom.hr.description"
    },
 {
-    "int_index": "71",
+    "int_index": "18",
     "application_image_type": "image",
-    "application_image_url": "notebook_logo.svg",
+    "application_image_url": "nexedi_logo_officejs_iodide.svg",
     "application_toc_accept": true,
     "application_published":"21/05/2018",
     "application_submitted":"21/05/2018",
