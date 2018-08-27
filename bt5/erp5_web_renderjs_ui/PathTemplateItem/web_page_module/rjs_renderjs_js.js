@@ -1,3 +1,4 @@
+
 /*
  * js_channel is a very lightweight abstraction on top of
  * postMessage which defines message formats and semantics
@@ -716,9 +717,26 @@ if (typeof document.contains !== 'function') {
 
   window.URL = URL;
 
-}(DOMParser));;/*! RenderJs */
+}(DOMParser));;/*
+ * Copyright 2012, Nexedi SA
+ *
+ * This program is free software: you can Use, Study, Modify and Redistribute
+ * it under the terms of the GNU General Public License version 3, or (at your
+ * option) any later version, as published by the Free Software Foundation.
+ *
+ * You can also Link and Combine this program with other software covered by
+ * the terms of any of the Free Software licenses or any of the Open Source
+ * Initiative approved licenses and Convey the resulting work. Corresponding
+ * source of such a combination shall include the source code for all other
+ * software used.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See COPYING file for full licensing terms.
+ * See https://www.nexedi.com/licensing for rationale and options.
+ */
 /*jslint nomen: true*/
-
 /*
  * renderJs - Generic Gadget library renderer.
  * https://renderjs.nexedi.com/
@@ -1343,6 +1361,13 @@ if (typeof document.contains !== 'function') {
       );
   }
 
+  function registerMethod(gadget_klass, method_name, method_type) {
+    if (!gadget_klass.hasOwnProperty('__method_type_dict')) {
+      gadget_klass.__method_type_dict = {};
+    }
+    gadget_klass.__method_type_dict[method_name] = method_type;
+  }
+
   /////////////////////////////////////////////////////////////////
   // RenderJSGadget.declareJob
   // gadget internal method, which trigger execution
@@ -1360,6 +1385,7 @@ if (typeof document.contains !== 'function') {
         context.__job_list.push([name, callback, argument_list]);
       }
     };
+    registerMethod(this, name, 'job');
     // Allow chain
     return this;
   };
@@ -1389,6 +1415,7 @@ if (typeof document.contains !== 'function') {
       }
       return ensurePushableQueue(callback, argument_list, context);
     };
+    registerMethod(this, name, 'method');
     // Allow chain
     return this;
   };
@@ -1397,6 +1424,21 @@ if (typeof document.contains !== 'function') {
     .declareMethod('getInterfaceList', function getInterfaceList() {
       // Returns the list of gadget prototype
       return this.__interface_list;
+    })
+    .declareMethod('getMethodList', function getMethodList(type) {
+      // Returns the list of gadget methods
+      var key,
+        method_list = [],
+        method_dict = this.constructor.__method_type_dict || {};
+      for (key in method_dict) {
+        if (method_dict.hasOwnProperty(key)) {
+          if ((type === undefined) ||
+              (type === method_dict[key])) {
+            method_list.push(key);
+          }
+        }
+      }
+      return method_list;
     })
     .declareMethod('getRequiredCSSList', function getRequiredCSSList() {
       // Returns a list of CSS required by the gadget
@@ -1505,7 +1547,7 @@ if (typeof document.contains !== 'function') {
           gadget
         );
       };
-
+      registerMethod(this, name, 'acquired_method');
       // Allow chain
       return this;
     };
@@ -2358,7 +2400,7 @@ if (typeof document.contains !== 'function') {
     TmpConstructor.__ready_list = [];
     TmpConstructor.__service_list = RenderJSGadget.__service_list.slice();
     TmpConstructor.prototype.__path = url;
-    root_gadget = new RenderJSEmbeddedGadget();
+    root_gadget = new TmpConstructor();
     setAqParent(root_gadget, createLastAcquisitionGadget());
 
     declare_method_list_waiting = [
@@ -2366,7 +2408,8 @@ if (typeof document.contains !== 'function') {
       "getRequiredCSSList",
       "getRequiredJSList",
       "getPath",
-      "getTitle"
+      "getTitle",
+      "getMethodList"
     ];
 
     // Inform parent gadget about declareMethod calls here.
