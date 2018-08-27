@@ -1,0 +1,25 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg" class="nexedi-logo nexedi-logo-officejs">
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="101.999995" height="101.999995" id="canvas_background" fill="none"/>
+ </g>
+
+ <g>
+  <title>Officejs Logo</title>
+  <g id="svg_2">
+   <path id="svg_3" d="m389.50001,261.5226c-17.13288,85.66439 -101.23973,105.91233 -215.45891,104.87397l0,-152.11918l215.45891,47.24521z" fill="#D9D9D9"/>
+   <path id="svg_4" d="m365.61782,214.27739c0,101.23973 -87.22192,152.11918 -191.57672,152.11918l0,-198.32603l191.57672,46.20685z" fill="#0082b9"/>
+   <path id="svg_5" d="m174.0411,366.39657l0,0c-90.33699,1.55753 -163.5411,-64.89726 -163.02192,-151.6c0,-50.36028 0,-74.76165 0,-125.12192c56.59041,7.78767 110.58493,3.63425 163.02192,-25.9589l0,302.68083l0,-0.00001z" fill="#0082B9"/>
+   <path id="svg_6" d="m251.39863,104.73082c0,10.38356 -9.34521,17.13288 -20.76712,15.05616l-36.34247,-6.23014c-11.42192,-2.07671 -20.76712,-11.9411 -20.76712,-22.32466l0,-42.05343c0,-10.38356 9.34521,-17.13288 20.76712,-15.05616l36.34247,6.23014c11.42192,2.07671 20.76712,11.9411 20.76712,22.32466l0,42.05343z" fill="#0A506D"/>
+   <path id="svg_7" d="m316.2959,82.40616l-65.41644,-9.34521c-6.74932,-1.03836 -12.46027,1.03836 -16.6137,4.6726c-21.80548,-8.30685 -43.61096,-14.53699 -60.22466,-14.53699l0,303.20001c90.33699,1.55753 163.5411,-64.89726 163.02192,-151.6c0,-28.5548 0,-52.43699 0,-68.01233c0,-11.9411 0,-18.69041 0,-18.69041l0,-23.36301c0,-10.38356 -9.34521,-20.24795 -20.76712,-22.32466z" fill="#0A506D"/>
+   <rect rx="8" stroke="null" id="svg_8" height="42.750739" width="62.000762" y="124.600963" x="228.500365" stroke-opacity="null" stroke-width="null" fill="#d9d9d9"/>
+   <text font-weight="bold" stroke="null" xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="58" id="svg_9" y="155.331439" x="38.992317" stroke-opacity="null" stroke-width="0" fill="#ffffff">53</text>
+   <g stroke="null" id="svg_10">
+    <path stroke="null" id="svg_11" d="m174.25,349.49868c-12.08339,-0.38555 -23.41678,-2.91601 -33.25019,-9.02133l-1,-235.97851c7.667322,-1.833057 27.582128,-10.289768 33.87488,-21.24749" stroke-opacity="null" stroke-width="null" fill="#ffffff"/>
+    <path stroke="null" id="svg_12" d="m174.32636,349.49868c12.42387,0.015812 25.59773,-3.551703 32.02166,-9.269216l0.4781,-235.97502c0.286969,-19.149909 -21.173518,-21.40261 -33.135227,-20.901958" stroke-opacity="null" stroke-width="null" fill="#d9d9d9"/>
+   </g>
+   <text fill="#ffffff" stroke="#000" stroke-width="0" x="48.5" y="302" id="svg_13" font-size="58" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" font-weight="bold">Iod</text>
+   <text fill="#d9d9d9" stroke="#000" stroke-width="0" x="212.5" y="302" id="svg_14" font-size="58" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" font-weight="bold">de</text>
+  </g>
+ </g>
+</svg>
