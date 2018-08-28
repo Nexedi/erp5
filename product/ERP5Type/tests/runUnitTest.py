@@ -141,10 +141,17 @@ Options:
                              activities.
   --zeo_server=[[HOST:]PORT] Bind the ZEO server to the given host/port.
   --zeo_client=[HOST:]PORT   Use specified ZEO server as storage.
-  --zserver=[HOST:]PORT[,...]
-                             Make ZServer listen on given host:port
+  --zserver=ADDRESS[,...]    Make ZServer listen on given IPv4 address.
+                             Adresses can be given in the following syntaxs:
+                               - HOST:PORT
+                               - PORT in this case, host will be 127.0.0.1
+                               - HOST in this case a free port will be assigned
                              If used with --activity_node=, this can be a
                              comma-separated list of addresses.
+  --zserver_frontend_url=STRING
+                             URL of an http proxy where the zserver is reachable.
+                             When running zelenium tests, the zserver will be
+                             accessed from this URL.
   --neo_storage              Use a NEO storage (SQLite) instead of FileStorage.
   --products_path=path,path  Comma-separated list of products paths locations
                              which shall be used in test environment.
@@ -727,6 +734,7 @@ def main(argument_list=None):
         "zeo_client=",
         "zeo_server=",
         "zserver=",
+        "zserver_frontend_url=",
         "neo_storage",
         "products_path=",
         "sys_path=",
@@ -839,6 +847,8 @@ def main(argument_list=None):
       os.environ["zeo_server"] = arg
     elif opt == "--zserver":
       os.environ["zserver"] = arg
+    elif opt == "--zserver_frontend_url":
+      os.environ["zserver_frontend_url"] = arg
     elif opt == "--neo_storage":
       os.environ["neo_storage"] = ""
     elif opt == "--products_path":

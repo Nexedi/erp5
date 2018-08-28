@@ -172,19 +172,30 @@ class FunctionalTestRunner:
     return self.portal.portal_tests.TestTool_getResults(self.run_only)
 
   def _getTestURL(self):
-    return ZELENIUM_BASE_URL % (self.portal.portal_url(), self.run_only,
-                       self.user, self.password)
+    # Access the https proxy in front of runUnitTest's zserver
+    base_url = os.getenv('zserver_frontend_url')
+    if base_url:
+      base_url = '%s%s' % (base_url, self.portal.getId())
+    else:
+      base_url = self.portal.portal_url()
+    return ZELENIUM_BASE_URL % (
+        base_url,
+        self.run_only,
+        self.user,
+        self.password)
 
   def test(self, debug=0):
     xvfb = Xvfb(self.instance_home)
     try:
-      if not debug:
+      if not (debug and os.getenv('DISPLAY')):
         print("\nSet 'erp5_debug_mode' environment variable to 1"
               " to use your existing display instead of Xvfb.")
         xvfb.run()
       capabilities = webdriver.common.desired_capabilities \
         .DesiredCapabilities.FIREFOX.copy()
       capabilities['marionette'] = True
+      # Zope is accessed through apache with a certificate not trusted by firefox
+      capabilities['acceptInsecureCerts'] = True
       # Service workers are disabled on Firefox 52 ESR:
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1338144
       options = webdriver.FirefoxOptions()

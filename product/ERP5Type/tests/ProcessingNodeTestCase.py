@@ -154,7 +154,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         try:
           _print(createZServer(log, zserver_type='webdav'))
         except RuntimeError, e:
-          ZopeTestCase._print(str(e))
+          ZopeTestCase._print('Could not start webdav zserver: %s\n' % e)
         t = Thread(target=Lifetime.loop)
         t.setDaemon(1)
         t.start()
