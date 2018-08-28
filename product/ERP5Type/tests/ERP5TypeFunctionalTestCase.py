@@ -138,8 +138,17 @@ class FunctionalTestRunner:
     return self.portal.portal_tests.TestTool_getResults(self.run_only)
 
   def _getTestURL(self):
-    return ZELENIUM_BASE_URL % (self.portal.portal_url(), self.run_only,
-                       self.user, self.password)
+    # Access the https proxy in front of runUnitTest's zserver
+    base_url = os.getenv('zserver_frontend_url')
+    if base_url:
+      base_url = '%s%s' % (base_url, self.portal.getId())
+    else:
+      base_url = self.portal.portal_url()
+    return ZELENIUM_BASE_URL % (
+        base_url,
+        self.run_only,
+        self.user,
+        self.password)
 
   def test(self, debug=0):
     xvfb = Xvfb(self.instance_home)
