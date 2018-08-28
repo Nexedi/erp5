@@ -27,12 +27,12 @@
     url = new URL(url, base_url);
     if (urn_prefix) {
       pathname = url.pathname.slice(1);
-      return {
-        href: urn_prefix + encodeURIComponent(pathname + url.search + url.hash),
-        origin: urn_prefix,
-        pathname: encodeURIComponent(pathname),
-        hash: url.hash
-      };
+      this.href = urn_prefix + encodeURIComponent(pathname + url.search + url.hash);
+      this.origin = urn_prefix;
+      this.pathname = encodeURIComponent(pathname);
+      this.hash = url.hash;
+      this.search = "";
+      return this;
     }
     return url;
   }
@@ -119,9 +119,9 @@
       base_url = convertToRealWorldSchemaPath(g, path),
       absolute_url;
     if (base_url === "" || base_url.indexOf("#") === 0) {
-      absolute_url = URLwithJio(url, base_url_failback);
+      absolute_url = new URLwithJio(url, base_url_failback);
     } else {
-      absolute_url = URLwithJio(url, base_url);
+      absolute_url = new URLwithJio(url, base_url);
     }
     return absolute_url;
   }
@@ -181,54 +181,85 @@
     }
   }
 
+  function map_url(g, download_url) {
+    var mapped_url = download_url,
+      hash = mapped_url.hash,
+      i,
+      schemas = g.props.schemas,
+      next_mapped_url;
+    // simple defence forever loop
+    for (i = 0; i < Object.keys(schemas).length; i += 1) {
+      next_mapped_url = g.props.schemas[mapped_url.origin + mapped_url.pathname + mapped_url.search];
+      if (next_mapped_url === undefined) {
+        break;
+      }
+      mapped_url = next_mapped_url;
+      if (typeof mapped_url !== "string") {
+        mapped_url = resolveLocalReference(mapped_url, hash);
+        break;
+      }
+      mapped_url = new URL(mapped_url, g.__path);
+      if (hash[0] === '#') {
+        hash = hash.slice(1);
+      }
+      if (hash === '/') {
+        hash = '';
+      }
+      hash = mapped_url.hash + hash;
+    }
+    return mapped_url;
+  }
+
   function loadJSONSchema(g, $ref, path) {
     var protocol,
       url,
       download_url,
       hash,
-      schema_url_map,
+      mapped_url,
       queue;
     // XXX need use `id` property
     if (!path) {
       path = "/";
     }
-    url = convertUrlToAbsolute(g, path, $ref, window.location);
-    download_url = url.origin + url.pathname;
-    schema_url_map = {
-      "http://json-schema.org/draft-04/schema": "json-schema/schema4.json",
-      "http://json-schema.org/draft-06/schema": "json-schema/schema6.json",
-      "http://json-schema.org/draft-07/schema": "json-schema/schema7.json",
-      "http://json-schema.org/schema": "json-schema/schema7.json"
-    };
-    if (schema_url_map.hasOwnProperty(download_url)) {
-      url = new URL(schema_url_map[download_url], g.__path);
+    url = convertUrlToAbsolute(g, path, decodeURI($ref), window.location);
+    mapped_url = map_url(g, url);
+    if (mapped_url instanceof URL || mapped_url instanceof URLwithJio) {
+      url = mapped_url;
     }
     protocol = url.protocol;
     if (protocol === "http:" || protocol === "https:") {
       if (window.location.protocol !==  protocol) {
-        url = new URL($ref.replace(protocol + "//", window.location.protocol + "//"));
+        url = new URL(decodeURI($ref).replace(protocol + "//", window.location.protocol + "//"));
         // throw new Error("You cannot mixed http and https calls");
       }
     }
-    download_url = url.origin + url.pathname;
+    download_url = url.origin + url.pathname + url.search;
     hash = url.hash;
     url = url.href;
-    if (download_url.startsWith("urn:jio:")) {
+    if (!(mapped_url instanceof URL || mapped_url instanceof URLwithJio)) {
       queue = RSVP.Queue()
         .push(function () {
-          return g.downloadJSON(download_url);
+          return mapped_url;
         });
     } else {
-      queue = RSVP.Queue()
-        .push(function () {
-          return downloadJSON(download_url);
+      if (download_url.startsWith("urn:jio:")) {
+        queue = RSVP.Queue()
+          .push(function () {
+            return g.downloadJSON(download_url);
+          });
+      } else {
+        queue = RSVP.Queue()
+          .push(function () {
+            return downloadJSON(download_url);
+          });
+      }
+      queue
+        .push(function (json) {
+          checkCircular(g, path, url);
+          return resolveLocalReference(json, hash);
         });
     }
     return queue
-      .push(function (json) {
-        checkCircular(g, path, url);
-        return resolveLocalReference(json, hash);
-      })
       .push(undefined, function (err) {
         // XXX it will be great to have ability convert json_pointers(hash)
         // in line numbers for pointed to line in rich editors.
@@ -237,9 +268,9 @@
           schema_a = document.createElement("a"),
           pointed_a = document.createElement("a");
         schema_a.setAttribute("href", download_url);
-        schema_a.text = (URLwithJio(download_url)).pathname;
+        schema_a.text = (new URLwithJio(download_url)).pathname;
         pointed_a.setAttribute("href", url_from_pointed);
-        pointed_a.text = (URLwithJio(url_from_pointed)).pathname;
+        pointed_a.text = (new URLwithJio(url_from_pointed)).pathname;
         g.props.schema_resolve_errors[url_from_pointed] = {
           schemaPath: path,
           message: [
@@ -377,7 +408,8 @@
     // XXX `if then else` construction can be simplify to
     // anyOf(allOf(if_schema, then_schema), else_schema)
     // and realized by existed rails
-    if (schema === undefined) {
+    if (schema === undefined ||
+        Object.keys(schema).length === 0) {
       schema = true;
     }
     if (schema.anyOf !== undefined) {
@@ -388,6 +420,24 @@
     }
     if (schema.$ref) {
       return loadJSONSchema(g, schema.$ref, schema_path);
+    }
+    if (schema.definitions) {
+      var key,
+        d,
+        url,
+        mapped_url;
+      for (key in schema.definitions) {
+        if (schema.definitions.hasOwnProperty(key)) {
+          d = schema.definitions[key];
+          url = d.$id || d.id;
+          if (url) {
+            mapped_url = convertUrlToAbsolute(g, schema_path, '#' + schema_path, window.location);
+            // XXX                     /?
+            mapped_url = mapped_url + 'definitions/' + key;
+            g.props.schemas[url] = mapped_url;
+          }
+        }
+      }
     }
     return RSVP.Queue()
       .push(function () {
@@ -499,7 +549,7 @@
               a.setAttribute("href", "#" + errorUid);
               a.text = errorId;
               element.setAttribute("class", "error-input");
-              error_message = element.querySelector("#" + id.replace(/\//g, "\\/") + " > .error");
+              error_message = document.getElementById(id).querySelector(".error");
               error_message.appendChild(a);
               error_message.setAttribute("id", errorUid);
               if (error.message instanceof Array) {
@@ -548,16 +598,20 @@
     .declareMethod('render', function (options) {
       return this.changeState({
         key: options.key,
-        value: JSON.stringify(options.value) || '""',
+        value: JSON.stringify(options.value),
         schema: JSON.stringify(options.schema),
+        saveOrigValue: options.saveOrigValue,
         schema_url: options.schema_url,
         editable: options.editable === undefined ? true : options.editable
       });
     })
     .onStateChange(function () {
       var g = this,
-        json_document = JSON.parse(g.state.value),
+        json_document = g.state.value,
         schema;
+      if (json_document !== undefined) {
+        json_document = JSON.parse(json_document);
+      }
       if (g.state.schema !== undefined) {
         schema = JSON.parse(g.state.schema);
       }
@@ -567,6 +621,12 @@
       // it's need for schema uri computation
       g.props.schema = {};
       g.props.schema_map = {};
+      g.props.schemas = {
+        "http://json-schema.org/draft-04/schema": "json-schema/schema4.json",
+        "http://json-schema.org/draft-06/schema": "json-schema/schema6.json",
+        "http://json-schema.org/draft-07/schema": "json-schema/schema7.json",
+        "http://json-schema.org/schema": "json-schema/schema7.json"
+      };
       // schema_required_urls[path] = [
       // stack required urls, on every unrequired field stack begining from []
       // "url1",
@@ -590,14 +650,28 @@
           }
         })
         .push(function () {
-          if (schema) {
-            return schema;
+          var schema_url,
+            queue;
+          if (schema !== undefined) {
+            schema_url = g.state.schema_url ||
+                  schema.$id ||
+                  schema.id ||
+                  window.location.toString();
+            g.props.schema[""] = schema;
+            g.props.schema_map["/"] = schema_url;
+            g.props.schemas[schema_url] = schema;
+            queue = expandSchemaForField(g, schema, "/", true);
+          } else {
+            schema_url = g.state.schema_url ||
+                         (json_document && json_document.$schema);
+            if (schema_url) {
+              queue = loadJSONSchema(g, schema_url);
+            }
           }
-          var schema_url = g.state.schema_url ||
-            (json_document && json_document.$schema);
-          if (schema_url) {
-            return loadJSONSchema(g, schema_url)
+          if (queue) {
+            return queue
               .push(function (schema_arr) {
+                // XXX for root of form use first schema selection
                 return schema_arr[0].schema;
               });
           }
@@ -608,12 +682,18 @@
             schema: schema,
             schema_path: "",
             document: json_document,
+            saveOrigValue: g.state.saveOrigValue,
             required: true,
             top: true
           });
         })
         .push(function () {
           return g.checkValidity();
+        })
+        .push(function () {
+          if (g.props.form_gadget.props.changed) {
+            g.notifyChange();
+          }
         })
         .push(function () {
           return g;
