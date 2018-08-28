@@ -160,6 +160,8 @@ class FunctionalTestRunner:
       capabilities = webdriver.common.desired_capabilities \
         .DesiredCapabilities.FIREFOX.copy()
       capabilities['marionette'] = True
+      # Zope is accessed through apache with a certificate not trusted by firefox
+      capabilities['acceptInsecureCerts'] = True
       # Service workers are disabled on Firefox 52 ESR:
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1338144
       options = webdriver.FirefoxOptions()
