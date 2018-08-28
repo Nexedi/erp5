@@ -396,11 +396,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-<<<<<<< HEAD
                 <value> <string>969.50674.1572.7867</string> </value>
-=======
-                <value> <string>969.27899.61405.31965</string> </value>
->>>>>>> fd1027b... [erp5_officejs]: add python libraries to notebook appcache
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -418,19 +414,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-<<<<<<< HEAD
-                        <float>1535021998.08</float>
-=======
-<<<<<<< HEAD
-                        <float>1525268788.94</float>
-=======
-<<<<<<< HEAD
-                        <float>1534492524.35</float>
-=======
                         <float>1533713860.15</float>
->>>>>>> [erp5_officejs]: add python libraries to notebook appcache
->>>>>>> 9f0892d... [erp5_officejs]: add python libraries to notebook appcache
->>>>>>> fd1027b... [erp5_officejs]: add python libraries to notebook appcache
                         <string>UTC</string>
                       </tuple>
                     </state>
