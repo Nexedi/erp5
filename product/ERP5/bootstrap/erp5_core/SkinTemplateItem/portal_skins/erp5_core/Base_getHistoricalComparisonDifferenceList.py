@@ -2,6 +2,7 @@ from Products.ERP5Type.Document import newTempBase
 from ZODB.POSException import ConflictError
 from zExceptions import Unauthorized
 Base_translateString = context.Base_translateString
+from Products.ERP5Type.Log import log
 
 portal =  context.getPortalObject()
 portal_diff = portal.portal_diff
