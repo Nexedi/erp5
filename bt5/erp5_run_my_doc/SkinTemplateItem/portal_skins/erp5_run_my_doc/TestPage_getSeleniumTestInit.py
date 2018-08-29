@@ -13,16 +13,15 @@ else:
 
 html_init += """        <tr>
           <td>store</td>
-          <!-- ERP5TypeTestCase is the default for any UnitTest -->
           <td>%s</td>
           <td>base_user</td>
          </tr>
-""" % request.get('user', "ERP5TypeTestCase")
+""" % request.get('user', manager_username)
 
 html_init += """        <tr>
           <td>store</td>
           <td>%s</td>
           <td>base_password</td>
-         </tr>""" % request.get('password', "")
+         </tr>""" % request.get('password', manager_password)
 
 return html_init

@@ -115,8 +115,11 @@ class TestInvalidationBug(ERP5TypeTestCase):
     ## make sure activity tool's OOBTree for family mapping is loaded before the test
     _ = activity_tool.getCurrentNodeFamilyIdSet()
     ## url to create some content using another zope
-    new_content_url = "http://ERP5TypeTestCase:@%s%s/Folder_create" % (
-      node_list[0], self.portal.organisation_module.getPath())
+    new_content_url = "http://%s:%s@%s%s/Folder_create" % (
+        self.manager_username,
+        self.manager_password,
+        node_list[0],
+        self.portal.organisation_module.getPath())
     ## prepare freeze/unfreeze of ZEO storage
     zeo_connection = storage._connection
     socket_map = zeo_connection._map

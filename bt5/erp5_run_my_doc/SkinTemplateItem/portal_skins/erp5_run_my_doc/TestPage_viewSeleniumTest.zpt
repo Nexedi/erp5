@@ -12,7 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <tal:block tal:replace="structure python:context.TestPage_getSeleniumTestInit()" />
+        <tal:block tal:replace="structure python:context.TestPage_getSeleniumTestInit(manager_username=options.get('manager_username'), manager_password=options.get('manager_password'))" />
         <tal:block tal:replace="structure python:context.TestPage_extractTest(context.asStrippedHTML())" />
       </tbody>
     </table>
