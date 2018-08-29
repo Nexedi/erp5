@@ -128,10 +128,7 @@ class TestWebSectionTraversalHook(WebTraversalHookTestMixin, ERP5TypeTestCase):
 class TestERP5Web(ERP5TypeTestCase):
   """Test for erp5_web business template.
   """
-  manager_username = 'zope'
-  manager_password = 'zope'
   website_id = 'test'
-  credential = '%s:%s' % (manager_username, manager_password)
 
   def getTitle(self):
     return "ERP5Web"
@@ -147,17 +144,11 @@ class TestERP5Web(ERP5TypeTestCase):
             )
 
   def afterSetUp(self):
-    portal = self.getPortal()
-
-    uf = portal.acl_users
-    uf._doAddUser(self.manager_username,
-                  self.manager_password,
-                  ['Manager'], [])
-    self.loginByUserName(self.manager_username)
+    self.credential = '%s:%s' % (self.manager_username, self.manager_password)
 
     self.web_page_module = self.portal.getDefaultModule('Web Page Module')
     self.web_site_module = self.portal.getDefaultModule('Web Site Module')
-    portal.Localizer.manage_changeDefaultLang(language='en')
+    self.portal.Localizer.manage_changeDefaultLang(language='en')
     self.portal_id = self.portal.getId()
 
   def clearModule(self, module):

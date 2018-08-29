@@ -101,9 +101,6 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
   run_all_test = 1
   quiet = 1
 
-  manager_username = 'rc'
-  manager_password = 'w'
-
   def getTitle(self):
     return "ERP5Core"
 
@@ -111,12 +108,6 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     """
     return ('erp5_core_proxy_field_legacy', 'erp5_base', )
-
-  def login(self, quiet=0, run=run_all_test):
-    uf = self.getPortal().acl_users
-    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
-    user = uf.getUserById(self.manager_username).__of__(uf)
-    newSecurityManager(None, user)
 
   def afterSetUp(self):
     self.login()
@@ -519,8 +510,6 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     organisation = self.portal.organisation_module.newContent()
     person = self.portal.person_module.newContent(
       default_career_subordination_value=organisation)
-    for obj in person, organisation:
-      obj.manage_addLocalRoles(self.manager_username, ['Assignor'])
     self.commit()
     self.assertEqual(0, organisation.getRelationCountForDeletion())
     self.tic()

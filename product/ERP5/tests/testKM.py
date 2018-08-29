@@ -44,9 +44,6 @@ class TestKMMixIn(TestDocumentMixin):
   """
     Mix in class for Knowledge Management system.
   """
-
-  manager_username = 'ivan'
-  manager_password = ''
   website_id = 'km_test'
   business_template_list = ['erp5_core_proxy_field_legacy',
                             'erp5_full_text_mroonga_catalog','erp5_base',

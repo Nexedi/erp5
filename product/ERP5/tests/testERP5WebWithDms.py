@@ -115,18 +115,10 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
   """
   run_all_test = 1
   quiet = 0
-  manager_username = 'zope'
-  manager_password = 'zope'
   website_id = 'test'
 
   def getTitle(self):
     return "ERP5WebWithDms"
-
-  def login(self, quiet=0, run=run_all_test):
-    uf = self.getPortal().acl_users
-    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
-    user = uf.getUserById(self.manager_username).__of__(uf)
-    newSecurityManager(None, user)
 
   def getBusinessTemplateList(self):
     """

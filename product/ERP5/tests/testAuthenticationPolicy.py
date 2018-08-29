@@ -41,10 +41,6 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
   """
   Test for erp5_authentication_policy business template.
   """
-  manager_username = 'zope'
-  manager_password = 'zope'
-
-  credential = '%s:%s' % (manager_username, manager_password)
   def getTitle(self):
     return "TestAuthenticationPolicy"
 
@@ -62,9 +58,6 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
   def afterSetUp(self):
     portal = self.getPortal()
 
-    uf = portal.acl_users
-    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
-    self.loginByUserName(self.manager_username)
     kw = dict(portal_type='Person',
               reference = 'test')
     if portal.portal_catalog.getResultValue(**kw) is None:
