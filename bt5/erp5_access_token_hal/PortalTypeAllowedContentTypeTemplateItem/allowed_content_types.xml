@@ -1,0 +1,5 @@
+<allowed_content_type_list>
+ <portal_type id="Access Token Module">
+  <item>HAL Access Token</item>
+ </portal_type>
+</allowed_content_type_list>
