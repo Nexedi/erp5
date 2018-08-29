@@ -46,3 +46,4 @@ portal_tests/renderjs_ui_translate_zuite
 portal_tests/renderjs_ui_translate_zuite/**
 portal_tests/renderjs_ui_zuite
 portal_tests/renderjs_ui_zuite/**
+web_page_module/gadget_erp5_page_router_test_*
