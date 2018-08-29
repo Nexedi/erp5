@@ -102,6 +102,8 @@ from Acquisition import aq_base
 
 portal_name = 'erp5_portal'
 
+_MARKER = object()
+
 # we keep a reference to all sites for which setup failed the first time, to
 # prevent replaying the same failing setup step for each test.
 failed_portal_installation = {}
@@ -218,6 +220,8 @@ DateTime._parse_args = _parse_args
 class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     """Mixin class for ERP5 based tests.
     """
+    manager_username = 'ERP5TypeTestCase'
+    manager_password = _MARKER
     def dummy_test(self):
       ZopeTestCase._print('All tests are skipped when --save option is passed '
                           'with --update_business_templates or without --load')
@@ -235,13 +239,18 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       """
       return str(self.__class__)
 
-    def addERP5TypeTestCaseUser(self, password=None, user_folder=None):
+    def addERP5TypeTestCaseUser(self, user_folder, password=None):
+      """Adds a user with login ERP5TypeTestCase
+
+      If password is None, a random password will be generated.
+
+      Returns the password.
+      """
       if password is None:
         password = self.newPassword()
-      if user_folder is None:
-        user_folder = self.portal.acl_users
       user_folder._doAddUser('ERP5TypeTestCase', password, ['Manager', 'Member', 'Assignee',
                     'Assignor', 'Author', 'Auditor', 'Associate'], [])
+      return password
 
     def newPassword(self):
       """ Generate a password """
@@ -258,7 +267,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       try:
         PortalTestCase.login(self, user_name)
       except AttributeError:
-        self.addERP5TypeTestCaseUser()
+        self.addERP5TypeTestCaseUser(user_folder=self.portal.acl_users)
         return PortalTestCase.login(self, user_name)
 
     def loginByUserName(self, user_name='ERP5TypeTestCase', quiet=0):
@@ -274,8 +283,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
           newSecurityManager(None, user)
           return
         except AttributeError:
-          uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
-                        'Assignor', 'Author', 'Auditor', 'Associate'], [])
+          self.addERP5TypeTestCaseUser(user_folder=uf)
 
     def changeSkin(self, skin_name):
       """
@@ -811,9 +819,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
 class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
-    def addERP5TypeTestCaseUser(self, password=None, **kw):
-      return super(ERP5TypeCommandLineTestCase, self).addERP5TypeTestCaseUser(password='', **kw)
-
     def getPortalName(self):
       """
         Return the name of a portal for this test case.
@@ -1143,10 +1148,15 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
           try:
             _start = time.time()
             # Add user and log in
-            if not quiet:
-              ZopeTestCase._print('Adding ERP5TypeTestCase user ...\n')
             uf = app.acl_users
-            self.addERP5TypeTestCaseUser(user_folder=uf)
+            if self.manager_password is not _MARKER:
+              return self.fail(
+                  'TestCase classes should no longer have a manager_password attribute. '
+                  'A random password is now generated on test portal creation.')
+            # set as a class attribute, because each test run in a different instance
+            self.__class__.manager_password = self.addERP5TypeTestCaseUser(user_folder=uf)
+            if not quiet:
+              ZopeTestCase._print('Added ERP5TypeTestCase user with password %s ...\n' % self.manager_password)
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
             newSecurityManager(None, user)
 
@@ -1197,9 +1207,9 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             self._updateTranslationTable()
             self._updateConversionServerConfiguration()
             self._updateMemcachedConfiguration()
-            # Create a Manager user at the Portal level
+            # Create a Manager user at the Portal level, with same login/password as the root Manager.
             uf = self.getPortal().acl_users
-            self.addERP5TypeTestCaseUser()
+            self.addERP5TypeTestCaseUser(user_folder=uf, password=self.manager_password)
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
 
             self._callSetUpOnce()
