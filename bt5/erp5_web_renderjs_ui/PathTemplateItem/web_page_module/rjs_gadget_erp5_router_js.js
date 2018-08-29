@@ -29,7 +29,7 @@
     // Display the latest state stored for a jio document
     COMMAND_DISPLAY_STORED_STATE = "display_stored_state",
     // Display an action on the jio document,
-    COMMAND_DISPLAY_ACTION = "display_action",
+    COMMAND_DISPLAY_ERP5_ACTION = "display_erp5_action",
     // Display the current jio document, but change some URL parameters
     COMMAND_CHANGE_STATE = "change",
     // Like change, but also store the current jio document display state
@@ -58,7 +58,7 @@
   VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STORED_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_CHANGE_STATE] = null;
-  VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_ACTION] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_ERP5_ACTION] = null;
   VALID_URL_COMMAND_DICT[COMMAND_STORE_AND_CHANGE_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_STORE_AND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_INDEX_STATE] = null;
@@ -384,13 +384,13 @@
     );
   }
 
-  function execDisplayActionCommand(gadget, options) {
+  function execDisplayERP5ActionCommand(gadget, options) {
     return new RSVP.Queue()
       .push(function () {
         return gadget.jio_getAttachment(options.jio_key, 'links');
       })
       .push(function (document_view) {
-        var i, j, action, action_data, action_url;
+        var action, action_data, action_url, i, j;
 
         for (i = 0; i < Object.keys(document_view._links).length; i = i + 1) {
           action = Object.keys(document_view._links)[i];
@@ -855,8 +855,8 @@
     if (command_options.path === COMMAND_CHANGE_STATE) {
       return execChangeCommand(previous_options, next_options, drop_options);
     }
-    if (command_options.path === COMMAND_DISPLAY_ACTION) {
-      return execDisplayActionCommand(gadget, next_options);
+    if (command_options.path === COMMAND_DISPLAY_ERP5_ACTION) {
+      return execDisplayERP5ActionCommand(gadget, next_options);
     }
     if (command_options.path === COMMAND_STORE_AND_CHANGE_STATE) {
       return execStoreAndChangeCommand(gadget, previous_options, next_options, drop_options);
