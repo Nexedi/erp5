@@ -40,12 +40,6 @@ class TestFormPrintoutMixin(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_ui_test', 'erp5_odt_style')
 
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('zope', '', ['Manager'], [])
-    user = uf.getUserById('zope').__of__(uf)
-    newSecurityManager(None, user)
-
   def _validate(self, odf_file_data):
     error_list = self.validator.validate(odf_file_data)
     if error_list:

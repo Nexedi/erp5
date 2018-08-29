@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>url_list, zuite_id=\'tutorial_zuite\'</string> </value>
+            <value> <string>url_list, zuite_id=\'tutorial_zuite\', manager_username=None, manager_password=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

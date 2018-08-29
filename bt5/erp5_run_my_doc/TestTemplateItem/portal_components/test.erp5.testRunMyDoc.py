@@ -189,7 +189,6 @@ class TestRunMyDoc(ERP5TypeTestCase):
       <tbody>
         <span metal:use-macro="container/Zuite_CommonTemplate/macros/init" style="display: none;">init</span>        <tr>
           <td>store</td>
-          <!-- ERP5TypeTestCase is the default for any UnitTest -->
           <td>%s</td>
           <td>base_user</td>
          </tr>
@@ -226,7 +225,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
                                                         reference='TESTPAGEREFERENCE',
                                                         text_content=test_page_html)
     self.assertEqual(test_page.TestPage_viewSeleniumTest(), expected_test_html %
-                                 ("ERP5TypeTestCase", ""))
+                                 (self.manager_username, self.manager_password))
 
     self.tic()
     test_page.TestPage_runSeleniumTest()
@@ -237,7 +236,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
     zptest = getattr(zuite, "TEST", None)
     self.assertNotEqual(zptest, None)
 
-    expected_html = expected_test_html % ("ERP5TypeTestCase", "")
+    expected_html = expected_test_html % (self.manager_username, self.manager_password)
 
     self.assertEqual(zptest._text, expected_html.strip())
 
@@ -261,7 +260,6 @@ class TestRunMyDoc(ERP5TypeTestCase):
         </tr>
         <tr>
           <td>store</td>
-          <!-- ERP5TypeTestCase is the default for any UnitTest -->
           <td>%s</td>
           <td>base_user</td>
          </tr>

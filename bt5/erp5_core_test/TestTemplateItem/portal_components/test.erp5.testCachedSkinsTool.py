@@ -57,12 +57,6 @@ class TestCachedSkinsTool(ERP5TypeTestCase):
     # Use None as skinname to keep using the default one.
     self.getSkinnableObject().changeSkin(skinname=None)
 
-  def login(self): # pylint:disable=arguments-differ
-    uf = self.portal.acl_users
-    uf._doAddUser('vincent', '', ['Manager'], [])
-    user = uf.getUserById('vincent').__of__(uf)
-    newSecurityManager(None, user)
-
   def getSkinnableObject(self):
     """
       Return the skinnable object (access to SkinsTool through cache).
@@ -137,7 +131,7 @@ class TestCachedSkinsTool(ERP5TypeTestCase):
     script_id = 'Base_getOwnerId'
     ob = self.portal.portal_activities
     orig = getattr(ob, script_id)()
-    self.assertEqual(orig, 'ERP5TypeTestCase')
+    self.assertEqual(orig, ob.getOwner().getId())
     try:
       script = createZODBPythonScript(tested_skin_folder, script_id, '',
           'return not %r' % orig)
