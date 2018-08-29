@@ -57,16 +57,7 @@ class TestRSS(ERP5TypeTestCase):
     return ('erp5_base', 'erp5_rss_style')
 
   def afterSetUp(self):
-    self.portal = self.getPortal()
     self.makeDataObjects()
-    #self.login()
-
-  def login(self, quiet=0, run=run_all_test):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
-    newSecurityManager(None, user)
 
   def makeDataObjects(self, quiet=0, run=run_all_test):
     """
