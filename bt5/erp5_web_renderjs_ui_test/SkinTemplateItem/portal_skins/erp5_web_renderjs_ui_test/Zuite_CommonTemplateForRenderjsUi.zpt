@@ -287,6 +287,22 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="wait_for_dialog_loaded">
+    <tr>
+      <td colspan="3"><b>Wait for the dialog to be loaded</b></td>
+    </tr>
+
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//form[@class="dialog_form"]//div[@class="dialog_button_container"]//input[@name="action_confirm"]</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
   <tal:block metal:define-macro="check_listbox_pagination_text">
     <tr>
       <td colspan="3"><b tal:content="python: 'Check the listbox pagination text: %s' % pagination_configuration"></b></td>
