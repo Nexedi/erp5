@@ -123,7 +123,7 @@ class FunctionalTestRunner:
   # There is no test that can take more than 6 hours
   timeout = 6.0 * 3600
 
-  def __init__(self, host, port, portal, user, password, run_only=''):
+  def __init__(self, portal, user, password, run_only=''):
     self.instance_home = os.environ['INSTANCE_HOME']
 
     self.user = user
@@ -258,10 +258,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     # non-recursive results clean of portal_tests/ or portal_tests/``run_only`` 
     self.portal.portal_tests.TestTool_cleanUpTestResults(self.run_only or None)
     self.tic()
-    host, port = self.startZServer()
     self.runner = FunctionalTestRunner(
-        host,
-        port,
         self.portal,
         self.manager_username,
         self.manager_password,
