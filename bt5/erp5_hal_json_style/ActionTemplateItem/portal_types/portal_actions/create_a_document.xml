@@ -78,7 +78,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: (portal.Base_checkPermission(object.getRelativeUrl(), \'Add portal content\')) and (len(object.getVisibleAllowedContentTypeList()) != 0)</string> </value>
+            <value> <string>python: portal.portal_membership.checkPermission(\'Add portal content\', object) and object.getVisibleAllowedContentTypeList()</string> </value>
         </item>
       </dictionary>
     </pickle>
