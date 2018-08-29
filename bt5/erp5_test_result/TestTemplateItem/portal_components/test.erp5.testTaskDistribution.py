@@ -465,6 +465,34 @@ class TestTaskDistribution(ERP5TypeTestCase):
     next_line_url, next_test = self.tool.startUnitTest(next_test_result_path)
     self.assertEqual(['testFoo', 'testBar'], [test, next_test])
 
+  def test_startUnitTestRunsFailedTestFirst(self):
+    # simulate previous run
+    test_result = self.portal.test_result_module.newContent(
+            portal_type='Test Result',
+            title=self.default_test_title,
+            start_date=DateTime())
+    test_result.newContent(
+            portal_type='Test Result Line',
+            title='testFailing',
+            ).stop(test_count=1, duration=100, failure_count=1)
+    test_result.newContent(
+            portal_type='Test Result Line',
+            title='testFast',
+            ).stop(test_count=1, duration=50)
+    test_result.newContent(
+            portal_type='Test Result Line',
+            title='testSlow',
+            ).stop(test_count=1, duration=1000)
+    test_result.stop()
+    self.tic()
+
+    test_result_path, _ = self._createTestResult(
+      test_list=['testSlow', 'testFast', 'testFailing'])
+    # we run first the tests failing in previous run
+    self.assertEqual(
+        ['testFailing', 'testSlow', 'testFast'],
+        [self.tool.startUnitTest(test_result_path)[1] for _ in range(3)])
+
   def test_06b_restartStuckTest(self):
     """
     Check if a test result line is not stuck in 'started', if so, redraft
