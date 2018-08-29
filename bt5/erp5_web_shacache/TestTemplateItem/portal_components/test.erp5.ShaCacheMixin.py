@@ -31,6 +31,8 @@
 import base64
 import hashlib
 import random
+from Products.ERP5Type.Utils import bytes2str, str2bytes
+
 
 class ShaCacheMixin(object):
   """
@@ -48,7 +50,8 @@ class ShaCacheMixin(object):
     self.shacache.publish()
     self.header_dict = {
       'Content-Type': 'application/json',
-      'Authorization': 'Basic %s' % (base64.encodestring('ERP5TypeTestCase:').strip())
+      'Authorization': 'Basic ' + bytes2str(base64.b64encode(str2bytes(
+        '%s:%s' % self.manager_username, self.manager_password)))
     }
     self.shacache_url = self.shacache.absolute_url()
     self.tic()

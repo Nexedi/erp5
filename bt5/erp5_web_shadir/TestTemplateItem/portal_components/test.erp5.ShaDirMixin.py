@@ -33,6 +33,7 @@ import platform
 import random
 from base64 import b64encode
 from DateTime import DateTime
+from Products.ERP5Type.Utils import bytes2str, str2bytes
 
 
 class ShaDirMixin(object):
@@ -69,7 +70,8 @@ class ShaDirMixin(object):
 
     self.header_dict = {
       'Content-Type': 'application/json',
-      'Authorization': 'Basic ' + b64encode('ERP5TypeTestCase:'),
+      'Authorization': 'Basic ' + bytes2str(b64encode(str2bytes(
+        '%s:%s' % self.manager_username, self.manager_password)))
     }
 
     module = self.portal.web_site_module

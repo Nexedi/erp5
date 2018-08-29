@@ -197,14 +197,9 @@ class FunctionalTestRunner:
   # There is no test that can take more than 6 hours
   timeout = 6.0 * 3600
 
-  def __init__(self, host, port, testcase):
-    self.instance_home = os.environ['INSTANCE_HOME']
-
-    # Such information should be automatically loaded
-    self.user = 'ERP5TypeTestCase'
-    self.password = ''
+  def __init__(self, testcase):
     self.testcase = testcase
-    profile_dir = os.path.join(self.instance_home, 'profile')
+    self.instance_home = os.environ['INSTANCE_HOME']
 
   def getStatus(self):
     transaction.begin()
@@ -326,10 +321,10 @@ class FunctionalTestRunner:
       EC.presence_of_element_located((By.ID, 'name')),
     )
     login_field.clear()
-    login_field.send_keys(self.user)
+    login_field.send_keys(self.testcase.manager_username)
     password_field = browser.find_element_by_id('password')
     password_field.clear()
-    password_field.send_keys(self.password)
+    password_field.send_keys(self.testcase.manager_password)
     login_form_url = browser.current_url
     # Note: password_field.submit() (and in general, x.submit(), even if x is
     # an <input type="submit"...>) does not work: it seems to submit only
@@ -444,8 +439,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     # non-recursive results clean of portal_tests/ or portal_tests/``run_only``
     self.portal.portal_tests.TestTool_cleanUpTestResults(self.run_only or None)
     self.tic()
-    host, port = self.startHTTPServer()
-    self.runner = FunctionalTestRunner(host, port, self)
+    self.runner = FunctionalTestRunner(self)
 
   def setSystemPreference(self):
     self.portal.Zuite_setPreference(

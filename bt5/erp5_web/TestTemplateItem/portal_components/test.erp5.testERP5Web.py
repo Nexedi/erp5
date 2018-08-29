@@ -129,10 +129,7 @@ class TestWebSectionTraversalHook(WebTraversalHookTestMixin, ERP5TypeTestCase):
 class TestERP5Web(ERP5TypeTestCase):
   """Test for erp5_web business template.
   """
-  manager_username = 'zope'
-  manager_password = 'zope'
   website_id = 'test'
-  credential = '%s:%s' % (manager_username, manager_password)
 
   def getTitle(self):
     return "ERP5Web"
@@ -148,17 +145,11 @@ class TestERP5Web(ERP5TypeTestCase):
             )
 
   def afterSetUp(self):
-    portal = self.getPortal()
-
-    uf = portal.acl_users
-    uf._doAddUser(self.manager_username,
-                  self.manager_password,
-                  ['Manager'], [])
-    self.loginByUserName(self.manager_username)
+    self.credential = '%s:%s' % (self.manager_username, self.manager_password)
 
     self.web_page_module = self.portal.getDefaultModule('Web Page Module')
     self.web_site_module = self.portal.getDefaultModule('Web Site Module')
-    portal.Localizer.manage_changeDefaultLang(language='en')
+    self.portal.Localizer.manage_changeDefaultLang(language='en')
     self.portal_id = self.portal.getId()
 
   def clearModule(self, module):
@@ -1394,7 +1385,7 @@ Hé Hé Hé!""", page.asText().strip())
     response = self.publish('/%s/%s/%s/%s/Base_editAndEditAsWeb' % \
                     (self.portal.getId(), website.getRelativeUrl(),
                      language, websection.getId()),
-                     basic='ERP5TypeTestCase:',
+                     basic='%s:%s' % (self.manager_username, self.manager_password),
                      request_method='POST',
                      stdin=StringIO(urlencode({
                        'form_id': 'WebSection_view',
@@ -1412,7 +1403,9 @@ Hé Hé Hé!""", page.asText().strip())
 
     self.tic()
 
-    response = self.publish(new_location, basic='ERP5TypeTestCase:',)
+    response = self.publish(
+        new_location,
+        basic='%s:%s' % (self.manager_username, self.manager_password),)
     self.assertEqual(HTTP_OK, response.getStatus())
     self.assertEqual('text/html; charset=utf-8',
                       response.getHeader('content-type'))
@@ -1450,7 +1443,7 @@ Hé Hé Hé!""", page.asText().strip())
     response = self.publish('/%s/%s/%s/Base_editAndEditAsWeb' % \
                     (self.portal.getId(), website.getRelativeUrl(),
                      language),
-                     basic='ERP5TypeTestCase:',
+                     basic='%s:%s' % (self.manager_username, self.manager_password),
                      request_method='POST',
                      stdin=StringIO(urlencode({
                        'form_id': 'WebSite_view',
@@ -1468,7 +1461,9 @@ Hé Hé Hé!""", page.asText().strip())
 
     self.tic()
 
-    response = self.publish(new_location, basic='ERP5TypeTestCase:',)
+    response = self.publish(
+        new_location,
+        basic='%s:%s' % (self.manager_username, self.manager_password),)
     self.assertEqual(HTTP_OK, response.getStatus())
     self.assertEqual('text/html; charset=utf-8',
                       response.getHeader('content-type'))
