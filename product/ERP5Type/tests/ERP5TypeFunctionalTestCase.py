@@ -123,12 +123,11 @@ class FunctionalTestRunner:
   # There is no test that can take more than 6 hours
   timeout = 6.0 * 3600
 
-  def __init__(self, host, port, portal, run_only=''):
+  def __init__(self, host, port, portal, user, password, run_only=''):
     self.instance_home = os.environ['INSTANCE_HOME']
 
-    # Such information should be automatically loaded
-    self.user = 'ERP5TypeTestCase'
-    self.password = ''
+    self.user = user
+    self.password = password
     self.run_only = run_only
     profile_dir = os.path.join(self.instance_home, 'profile')
     self.portal = portal
@@ -260,8 +259,13 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.portal.portal_tests.TestTool_cleanUpTestResults(self.run_only or None)
     self.tic()
     host, port = self.startZServer()
-    self.runner = FunctionalTestRunner(host, port,
-                                self.portal, self.run_only)
+    self.runner = FunctionalTestRunner(
+        host,
+        port,
+        self.portal,
+        self.manager_username,
+        self.manager_password,
+        self.run_only)
 
   def setSystemPreference(self):
     self.portal.Zuite_setPreference(
