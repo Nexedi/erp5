@@ -30,7 +30,6 @@ import random, unittest
 from unittest import expectedFailure
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
@@ -69,12 +68,6 @@ class TestResource(ERP5TypeTestCase):
 
   def getTitle(self):
     return "Resource"
-
-  def login(self, *args, **kw):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('rc', '', ['Manager'], [])
-    user = uf.getUserById('rc').__of__(uf)
-    newSecurityManager(None, user)
 
   def setUpPreferences(self):
     #create apparel variation preferences

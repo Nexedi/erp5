@@ -32,7 +32,6 @@
 from __future__ import print_function
 import unittest
 
-from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DocumentTemplate.html_quote import html_quote
@@ -48,17 +47,9 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     Please refer to the ERP5 developer howto for more explanation
       http://www.erp5.org/HowToDisplayOrEditHTML
   """
-  manager_username = 'zope'
-  manager_password = 'zope'
 
   def getTitle(self):
     return "EditorField"
-
-  def login(self, *args, **kw):
-    uf = self.getPortal().acl_users
-    uf._doAddUser(self.manager_username, self.manager_password, ['Manager', ], [])
-    user = uf.getUserById(self.manager_username).__of__(uf)
-    newSecurityManager(None, user)
 
   def getBusinessTemplateList(self):
     """
