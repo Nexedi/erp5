@@ -107,7 +107,7 @@ class TaskDistributionTool(BaseTool):
                                    node_title))
           node.start()
     def createTestResultLineList(test_result, test_name_list):
-      duration_list = []
+      test_priority_list = []
       previous_test_result_list = portal.test_result_module.searchFolder(
              title=SimpleQuery(comparison_operator='=', title=test_result.getTitle()),
              sort_on=[('creation_date','descending')],
@@ -117,11 +117,18 @@ class TaskDistributionTool(BaseTool):
         previous_test_result = previous_test_result_list[0].getObject()
         for line in previous_test_result.objectValues():
           if line.getSimulationState() in ('stopped', 'public_stopped'):
-            duration_list.append((line.getTitle(),line.getProperty('duration')))
-      duration_list.sort(key=lambda x: -x[1])
-      sorted_test_list = [x[0] for x in duration_list]
-      # Sort tests by name to have consistent numbering of test result line on
-      # a test suite.
+            # Execute first the tests that failed on previous run (so that we
+            # can see quickly if a fix was effective) and the slowest tests (to
+            # make sure slow tests are executed in parrallel and prevent
+            # situations where at the end all test nodes are waiting for the
+            # latest to finish).
+            test_priority_list.append(
+                (line.getStringIndex() == 'PASSED',
+                 -line.getProperty('duration'),
+                 line.getTitle()))
+      sorted_test_list = [x[2] for x in sorted(test_priority_list)]
+      # Sort tests by name to have consistent ids for test result line on a
+      # test suite.
       for test_name in sorted(test_name_list):
         index = 0
         if sorted_test_list:
