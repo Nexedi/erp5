@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>ERP5 Router test</title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="handlebars.js" type="text/javascript"></script>
+    <!-- custom script -->
+    <script src="gadget_erp5_page_router_test.js" type="text/javascript"></script>
+
+    <script id="result-list-template" type="text/x-handlebars-template">
+      <p class="result-{{i}}">
+        Test {{i}} : <a href="{{link}}">Link {{i}}</a>
+      </p>
+    </script>
+
+  </head>
+  <body>
+    <h2>Test router commands. Each line is the result of a test</h2>
+    <div class='result-block'>
+      <p>
+        Test 1 : <a href="#">Link 1</a>
+      </p>
+    </div>
+  </body>
+</html>
