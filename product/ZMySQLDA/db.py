@@ -158,39 +158,9 @@ def _mysql_timestamp_converter(s):
                           s[8:10],s[10:12],s[12:14]))
         return DateTime("%04d-%02d-%02d %02d:%02d:%02d" % tuple(parts))
 
-# DateTime(str) is slow. As the date format is part of the specifications,
-# parse it ourselves to save time.
-def DATETIME_to_DateTime_or_None(s):
-    try:
-        date, time = s.split(' ')
-        year, month, day = date.split('-')
-        hour, minte, second = time.split(':')
-        return DateTime(
-            int(year),
-            int(month),
-            int(day),
-            int(hour),
-            int(minute),
-            float(second),
-            'UTC',
-        )
-    except Exception:
-        return None
-
-def DATE_to_DateTime_or_None(s):
-    try:
-        year, month, day = s.split('-')
-        return DateTime(
-            int(year),
-            int(month),
-            int(day),
-            0,
-            0,
-            0,
-            'UTC',
-        )
-    except Exception:
-        return None
+def DateTime_or_None(s):
+    try: return DateTime('%s UTC' % s)
+    except Exception: return None
 
 def ord_or_None(s):
     if s is not None:
@@ -201,8 +171,8 @@ class DB(TM):
 
     conv=conversions.copy()
     conv[FIELD_TYPE.LONG] = int
-    conv[FIELD_TYPE.DATETIME] = DATETIME_to_DateTime_or_None
-    conv[FIELD_TYPE.DATE] = DATE_to_DateTime_or_None
+    conv[FIELD_TYPE.DATETIME] = DateTime_or_None
+    conv[FIELD_TYPE.DATE] = DateTime_or_None
     conv[FIELD_TYPE.DECIMAL] = float
     conv[FIELD_TYPE.BIT] = ord_or_None
     del conv[FIELD_TYPE.TIME]
