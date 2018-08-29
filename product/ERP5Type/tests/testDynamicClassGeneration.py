@@ -2059,8 +2059,10 @@ def foobar(self, a, b="portal_type"):
 
     external_method.manage_setGuard({'guard_roles': 'Member'})
     self.assertEqual(self.portal.TestPythonScript(a='portal_ids'), 'Id Tool')
-    self.assertEqual(self.publish(base + '/portal_types/TestExternalMethod?'
-      'a=Types Tool&b=type_class', 'ERP5TypeTestCase:').getBody(), 'TypesTool')
+    self.assertEqual(self.publish(
+      base + '/portal_types/TestExternalMethod?a=Types Tool&b=type_class',
+      '%s:%s' % (self.manager_username, self.manager_password)
+    ).getBody(), 'TypesTool')
 
     sm = getSecurityManager()
     try:

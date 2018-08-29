@@ -2012,7 +2012,7 @@ return result
                                         'disable_cookie_login__': 1,
                                         }), headers={
        'Authorization': 'Basic %s' %
-         base64.b64encode('ERP5TypeTestCase:')
+         base64.b64encode('%s:%s' % (self.manager_username, self.manager_password))
       })
     # disable_cookie_login__ is required to force zope to raise Unauthorized (401)
     # then HTTPDigestAuthHandler can perform HTTP Authentication

@@ -48,6 +48,7 @@
 import unittest
 import time
 import StringIO
+import base64
 from subprocess import Popen, PIPE
 from cgi import FieldStorage
 from unittest import expectedFailure
@@ -226,8 +227,8 @@ class TestDocument(TestDocumentMixin):
     return (width, height)
 
   def getURLSizeList(self, uri, **kw):
-    # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
-    url = '%s?%s&__ac=%s' %(uri, make_query(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
+    kw['__ac'] = base64.b64encode('%s:%s' % (self.manager_username, self.manager_password))
+    url = '%s?%s' % (uri, make_query(kw))
     format=kw.get('format', 'jpeg')
     infile = urllib.urlopen(url)
     # save as file with proper incl. format filename (for some reasons PIL uses this info)
@@ -1944,8 +1945,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
                                              response.getHeader('content-type')
           assert response.getStatus() == httplib.OK
 
-    # assume there is no password
-    credential = '%s:' % (getSecurityManager().getUser().getId(),)
+    credential = '%s:%s' % (self.manager_username, self.manager_password)
     tested_list = []
     frame_list = range(pages_number)
     # assume that ZServer is configured with 4 Threads
@@ -2106,7 +2106,7 @@ return 1
     self.tic()
     self.assertEqual('converted', document.getExternalProcessingState())
     for object_url in ('img1.html', 'img2.html', 'text1.html', 'text2.html'):
-      for credential in ['ERP5TypeTestCase:', 'zope_user:']:
+      for credential in ['%s:%s' % (self.manager_username, self.manager_password), 'zope_user:']:
         response = self.publish('%s/%s' %(document.getPath(), object_url),
                                 basic=credential)
         self.assertTrue('Status: 200 OK' in response.getOutput())
@@ -2309,8 +2309,8 @@ return 1
       Return original content on traversal.
     """
     def getURL(uri, **kw):
-      # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
-      url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
+      kw['__ac'] = base64.b64encode('%s:%s' % (self.manager_username, self.manager_password))
+      url = '%s?%s' % (uri, make_query(kw))
       return urllib.urlopen(url)
 
     ooo_document = self.portal.document_module.newContent(portal_type='Presentation')

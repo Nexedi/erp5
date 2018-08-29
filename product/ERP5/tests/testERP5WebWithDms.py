@@ -541,7 +541,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                     reference=image_reference)
     image.publish()
     self.tic()
-    credential = 'ERP5TypeTestCase:'
+    credential = '%s:%s' % (self.manager_username, self.manager_password)
     # testing TextDocument
     response = self.publish(website.absolute_url_path() + '/' +\
                             web_page_reference, credential)
@@ -704,7 +704,10 @@ return True
                                           reference=document_reference,
                                           file=upload_file)
     self.tic()
-    credential_list = ['ERP5TypeTestCase:', 'zope_user:']
+    credential_list = [
+        '%s:%s' % (self.manager_username, self.manager_password),
+        'zope_user:'
+    ]
 
     for credential in credential_list:
       # first, preview the draft in its physical location (in document module)
@@ -799,7 +802,7 @@ return True
                                     reference=image_reference)
     image.publish()
     self.tic()
-    credential = 'ERP5TypeTestCase:'
+    credential = '%s:%s' % (self.manager_username, self.manager_password)
 
     # testing Image conversions, raw
 

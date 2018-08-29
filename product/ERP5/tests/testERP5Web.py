@@ -1346,7 +1346,7 @@ Hé Hé Hé!""", page.asText().strip())
     response = self.publish('/%s/%s/%s/%s/Base_editAndEditAsWeb' % \
                     (self.portal.getId(), website.getRelativeUrl(),
                      language, websection.getId()),
-                     basic='ERP5TypeTestCase:',
+                     basic='%s:%s' % (self.manager_username, self.manager_password),
                      request_method='POST',
                      stdin=StringIO(urlencode({
                        'form_id': 'WebSection_view',
@@ -1364,7 +1364,9 @@ Hé Hé Hé!""", page.asText().strip())
 
     self.tic()
 
-    response = self.publish(new_location, basic='ERP5TypeTestCase:',)
+    response = self.publish(
+        new_location,
+        basic='%s:%s' % (self.manager_username, self.manager_password),)
     self.assertEqual(HTTP_OK, response.getStatus())
     self.assertEqual('text/html; charset=utf-8',
                       response.getHeader('content-type'))
@@ -1402,7 +1404,7 @@ Hé Hé Hé!""", page.asText().strip())
     response = self.publish('/%s/%s/%s/Base_editAndEditAsWeb' % \
                     (self.portal.getId(), website.getRelativeUrl(),
                      language),
-                     basic='ERP5TypeTestCase:',
+                     basic='%s:%s' % (self.manager_username, self.manager_password),
                      request_method='POST',
                      stdin=StringIO(urlencode({
                        'form_id': 'WebSite_view',
@@ -1420,7 +1422,9 @@ Hé Hé Hé!""", page.asText().strip())
 
     self.tic()
 
-    response = self.publish(new_location, basic='ERP5TypeTestCase:',)
+    response = self.publish(
+        new_location,
+        basic='%s:%s' % (self.manager_username, self.manager_password),)
     self.assertEqual(HTTP_OK, response.getStatus())
     self.assertEqual('text/html; charset=utf-8',
                       response.getHeader('content-type'))

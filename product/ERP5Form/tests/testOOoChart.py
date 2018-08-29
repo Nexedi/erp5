@@ -62,7 +62,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
               'erp5_ods_style')
 
     def afterSetUp(self):
-      self.auth = 'ERP5TypeTestCase:'
+      self.auth = '%s:%s' % (self.manager_username, self.manager_password)
       portal = self.getPortal()
       container = portal.portal_skins.custom
       if self.form_id not in container.objectIds():
