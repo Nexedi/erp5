@@ -164,7 +164,7 @@ def DATETIME_to_DateTime_or_None(s):
     try:
         date, time = s.split(' ')
         year, month, day = date.split('-')
-        hour, minte, second = time.split(':')
+        hour, minute, second = time.split(':')
         return DateTime(
             int(year),
             int(month),
