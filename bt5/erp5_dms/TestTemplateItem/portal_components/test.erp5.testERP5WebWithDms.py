@@ -117,18 +117,10 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
   """
   run_all_test = 1
   quiet = 0
-  manager_username = 'zope'
-  manager_password = 'zope'
   website_id = 'test'
 
   def getTitle(self):
     return "ERP5WebWithDms"
-
-  def login(self, quiet=0, run=run_all_test):
-    uf = self.getPortal().acl_users
-    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
-    user = uf.getUserById(self.manager_username).__of__(uf)
-    newSecurityManager(None, user)
 
   def getBusinessTemplateList(self):
     """
@@ -551,7 +543,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                     reference=image_reference)
     image.publish()
     self.tic()
-    credential = 'ERP5TypeTestCase:'
+    credential = '%s:%s' % (self.manager_username, self.manager_password)
     # testing TextDocument
     response = self.publish(website.absolute_url_path() + '/' +\
                             web_page_reference, credential)
@@ -705,8 +697,15 @@ return True
 
     request = portal.REQUEST
     request['PARENTS'] = [self.app]
-    self.getPortalObject().aq_parent.acl_users._doAddUser(
-      'zope_user', '', ['Manager',], [])
+    root_user_folder = self.app.acl_users
+    assert not root_user_folder.getUserById('zope_user')
+    zope_user_password = self.newPassword()
+    root_user_folder._doAddUser('zope_user', zope_user_password, ['Manager',], [])
+    def remove_user():
+      root_user_folder._doDelUsers(('zope_user', ))
+      self.tic()
+    self.addCleanUp(remove_user)
+
     website = self.setupWebSite()
     web_section_portal_type = 'Web Section'
     website.newContent(portal_type=web_section_portal_type)
@@ -718,7 +717,10 @@ return True
                                           reference=document_reference,
                                           file=upload_file)
     self.tic()
-    credential_list = ['ERP5TypeTestCase:', 'zope_user:']
+    credential_list = [
+        '%s:%s' % (self.manager_username, self.manager_password),
+        'zope_user:%s' % zope_user_password
+    ]
 
     for credential in credential_list:
       # first, preview the draft in its physical location (in document module)
@@ -813,7 +815,7 @@ return True
                                     reference=image_reference)
     image.publish()
     self.tic()
-    credential = 'ERP5TypeTestCase:'
+    credential = '%s:%s' % (self.manager_username, self.manager_password)
 
     # testing Image conversions, raw
 

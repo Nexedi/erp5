@@ -70,12 +70,6 @@ class TestResource(ERP5TypeTestCase):
   def getTitle(self):
     return "Resource"
 
-  def login(self, *args, **kw):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('rc', '', ['Manager'], [])
-    user = uf.getUserById('rc').__of__(uf)
-    newSecurityManager(None, user)
-
   def setUpPreferences(self):
     #create apparel variation preferences
     portal_preferences = self.getPreferenceTool()

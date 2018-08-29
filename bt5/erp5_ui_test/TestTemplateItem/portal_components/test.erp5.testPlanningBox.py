@@ -57,15 +57,6 @@ class TestPlanningBox(ERP5TypeTestCase):
   def getTitle(self):
     return "PlanningBox"
 
-  def afterSetUp(self):
-    self.login()
-
-  def login(self, *args, **kw):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
-    newSecurityManager(None, user)
-
   def stepCreateObjects(self, sequence = None, sequence_list = None, **kw):
     # Make sure that the status is clean.
     portal = self.getPortal()

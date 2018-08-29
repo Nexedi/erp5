@@ -1603,7 +1603,7 @@ class TestOwnerRole(UserManagementTestCase):
       role_list = ['Member', 'Assignee', 'Assignor', 'Author', 'Auditor',
           'Associate']
     uf = self.portal.acl_users
-    uf._doAddUser(login, '', role_list, [])
+    uf._doAddUser(login, self.newPassword(), role_list, [])
 
   def test_owner_local_role_on_clone(self):
     # check that tested stuff is ok
