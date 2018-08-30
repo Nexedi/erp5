@@ -2,7 +2,6 @@ from Products.ERP5Type.Document import newTempBase
 from ZODB.POSException import ConflictError
 from zExceptions import Unauthorized
 Base_translateString = context.Base_translateString
-from Products.ERP5Type.Log import log
 
 portal =  context.getPortalObject()
 portal_diff = portal.portal_diff
@@ -29,6 +28,9 @@ result = []
 # to directly find out the beautified diff and send it to the listbox
 
 diff = portal_diff.diffPortalObject(old, new).asBeautifiedJSONDiff()
+
+# Better would have been to get the diff of the properties and the one from
+# the dicts together
 
 tempbase_list = []
 uid = 900
