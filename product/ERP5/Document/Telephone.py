@@ -356,6 +356,11 @@ class Telephone(Coordinate):
     """Returns a text representation of the Url if defined
     or None else.
     """
+    if not self.isDetailed():
+      coordinate_text = self.getCoordinateText()
+      if coordinate_text:
+        return 'tel:%s' % coordinate_text.replace(' ', '')
+
     telephone_country = self.getTelephoneCountry()
     if telephone_country is not None:
       url_string = '+%s' % telephone_country

@@ -333,8 +333,19 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     tel.setTelephoneNumber(123456789)
     self.assertEqual('tel:+33123456789', tel.asURL())
 
-    tel.setTelephoneCountry(None)
+    tel = pers.newContent(portal_type='Telephone')
     tel.setTelephoneNumber(123456789)
+    self.assertEqual('tel:0123456789', tel.asURL())
+
+    tel = pers.newContent(portal_type='Telephone')
+    tel.setCoordinateText('+33123456789')
+    self.assertEqual('tel:+33123456789', tel.asURL())
+
+    # from rfc3966
+    # """ "tel" URIs MUST NOT use spaces in visual separators to avoid
+    # excessive escaping."""
+    tel = pers.newContent(portal_type='Telephone')
+    tel.setCoordinateText('01 23 45 67 89')
     self.assertEqual('tel:0123456789', tel.asURL())
 
   def test_EmptyTelephoneAsText(self):
