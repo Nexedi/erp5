@@ -1410,6 +1410,7 @@ class _TestZodbComponent(SecurityTestCase):
     """
     uf = self.portal.acl_users
     if not uf.getUserById('ERP5TypeTestCase_NonDeveloper'):
+      # XXX jerome password
       uf._doAddUser('ERP5TypeTestCase_NonDeveloper',
                     '', ['Manager', 'Member', 'Assignee',
                          'Assignor', 'Author', 'Auditor', 'Associate'], [])

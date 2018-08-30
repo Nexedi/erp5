@@ -503,7 +503,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     def createSimpleUser(self, title, reference, function):
       """
         Helper function to create a Simple ERP5 User.
-        User password is the reference.
+        User password is randomly generated.
       """
       user = self.createUser(reference, person_kw=dict(title=title))
       assignment = self.createUserAssignement(user, assignment_kw=dict(function=function))
@@ -512,11 +512,11 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     def createUser(self, reference, password=None, person_kw=None):
       """
         Create an ERP5 User.
-        Default password is the reference.
+        Default password is randomly generated.
         person_kw is passed as additional arguments when creating the person
       """
       if password is None:
-        password = reference
+        password = self.newPassword()
       if person_kw is None:
         person_kw = {}
 

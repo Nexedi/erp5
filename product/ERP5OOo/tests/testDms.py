@@ -1121,7 +1121,7 @@ class TestDocument(TestDocumentMixin):
     self.tic()
 
     # login as another user
-    super(TestDocument, self).loginByUserName('user1')
+    self.loginByUserName('user1')
     document_4 = portal.document_module.newContent(
                    portal_type = 'Presentation',
                    description = 'owner different user contributing document',
@@ -1204,7 +1204,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
 
     # only my docs
-    super(TestDocument, self).loginByUserName('user1')
+    self.loginByUserName('user1')
     kw = {'searchabletext_any': 'owner'}
     # should return all documents matching a word no matter if we're owner or not
     self.assertSameSet([web_page_1, document_4], getAdvancedSearchStringResultList(**kw))
@@ -1676,7 +1676,7 @@ class TestDocument(TestDocumentMixin):
     self.tic()
 
     # login as first one
-    super(TestDocument, self).loginByUserName('contributor1')
+    self.loginByUserName('contributor1')
     doc = document_module.newContent(portal_type='File',
                                      title='Test1')
     self.tic()
@@ -1685,7 +1685,7 @@ class TestDocument(TestDocumentMixin):
                        doc.getContributorValueList())
 
     # login as second one
-    super(TestDocument, self).loginByUserName('contributor2')
+    self.loginByUserName('contributor2')
     doc.edit(title='Test2')
     self.tic()
     self.login()
@@ -2846,15 +2846,15 @@ return 1
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 
-  username = 'yusei'
-
   def getTitle(self):
     return "DMS with security"
 
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser(self.username, '', ['Auditor', 'Author'], [])
-    user = uf.getUserById(self.username).__of__(uf)
+  def afterSetUp(self):
+    super(TestDocumentWithSecurity, self).afterSetUp()
+    # login as a user with only Auditor / Author roles
+    uf = self.portal.acl_users
+    uf._doAddUser(self.id(), self.newPassword(), ['Auditor', 'Author'], [])
+    user = uf.getUserById(self.id()).__of__(uf)
     newSecurityManager(None, user)
 
   def test_ShowPreviewAfterSubmitted(self):
@@ -2913,7 +2913,6 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     those properties are taken into account when the user
     views an image
     """
-    super(TestDocumentWithSecurity, self).login('yusei')
     preference_tool = self.portal.portal_preferences
     #get the thumbnail sizes defined by default on default site preference
     default_thumbnail_image_height = \

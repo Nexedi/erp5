@@ -691,8 +691,9 @@ return True
 
     request = portal.REQUEST
     request['PARENTS'] = [self.app]
+    zope_password = self.newPassword()
     self.getPortalObject().aq_parent.acl_users._doAddUser(
-      'zope_user', '', ['Manager',], [])
+      'zope_user', zope_password, ['Manager',], [])
     website = self.setupWebSite()
     web_section_portal_type = 'Web Section'
     website.newContent(portal_type=web_section_portal_type)
@@ -706,7 +707,7 @@ return True
     self.tic()
     credential_list = [
         '%s:%s' % (self.manager_username, self.manager_password),
-        'zope_user:'
+        'zope_user:%s' % zope_password,
     ]
 
     for credential in credential_list:
