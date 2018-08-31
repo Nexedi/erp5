@@ -3,7 +3,7 @@ if REQUEST is not None:
   raise Unauthorized
 
 result = None
-accept = context.Base_getRequestHeader('Accept', default='')
+accept = context.Base_getRequestHeader('Accept', default='*/*')
 for accepted_type in accepted_type_list:
   if accepted_type in accept:
     # XXX Really simple and stupid matching.
