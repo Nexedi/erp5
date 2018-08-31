@@ -2,9 +2,16 @@ Benchmark Result Line | edit_workflow
 Benchmark Result Line | test_result_workflow
 Benchmark Result | edit_workflow
 Benchmark Result | test_result_workflow
+Cloud Performance Unit Test Distributor | edit_workflow
+Cloud Performance Unit Test Distributor | validation_workflow
+ERP5 Project Unit Test Distributor | edit_workflow
+ERP5 Project Unit Test Distributor | validation_workflow
+ERP5 Scalability Distributor | edit_workflow
+ERP5 Scalability Distributor | validation_workflow
 Scalability Test Suite | edit_workflow
 Scalability Test Suite | test_suite_workflow
 SlapOS Agent Distributor | edit_workflow
+SlapOS Agent Distributor | validation_workflow
 SlapOS Agent Test Suite | edit_workflow
 SlapOS Agent Test Suite | test_suite_workflow
 Test Node | edit_workflow
