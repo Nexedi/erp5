@@ -35,7 +35,6 @@ import imp
 import collections
 
 from Products.ERP5.ERP5Site import getSite
-from Products.ERP5Type.Globals import get_request
 from . import aq_method_lock
 from types import ModuleType
 from zLOG import LOG, BLATHER, WARNING
@@ -304,22 +303,8 @@ class ComponentDynamicPackage(ModuleType):
       if module_fullname_alias:
         setattr(self, name, module)
 
-      # When the reference counter of a module reaches 0, its globals are all
-      # reset to None. So, if a thread performs a reset while another one
-      # executes codes using globals (such as modules imported at module level),
-      # the latter one must keep a reference around to avoid reaching a
-      # reference count to 0. Thus, add it to Request object.
-      #
-      # OTOH, this means that ZODB Components module *must* be imported at the
-      # top level, otherwise a module being relied upon may have a different API
-      # after rset, thus it may fail...
-      request_obj = get_request()
-      module_cache_set = getattr(request_obj, '_module_cache_set', None)
-      if module_cache_set is None:
-        module_cache_set = set()
-        request_obj._module_cache_set = module_cache_set
-
-      module_cache_set.add(module)
+      import erp5.component
+      erp5.component.request_cache_add_module(module)
 
       return module
     finally:

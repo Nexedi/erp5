@@ -83,21 +83,12 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       if self.portal is not None:
         return self.portal
 
-      # _module_cache_set is used to keep a reference to the code of modules
-      # before they get reloaded. As we will use another request we need to
-      # make sure that we still have a reference to _module_cache_set so that
-      # it does not get garbage collected.
-      module_cache_set = getattr(get_request(), '_module_cache_set', None)
-
       from Products.ERP5.ERP5Site import getSite
       site = getSite()
       # reconstruct the acquistion chain with an independant request.
       #   RequestContainer -> Application -> Site
       from Testing.ZopeTestCase.utils import makerequest
       portal = getattr(makerequest(site.aq_parent), site.getId())
-
-      if module_cache_set:
-        portal.REQUEST._module_cache_set = module_cache_set
 
       # Make the various get_request patches return this request.
       # This is for ERP5TypeTestCase patch
