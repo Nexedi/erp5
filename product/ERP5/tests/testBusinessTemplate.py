@@ -7485,7 +7485,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
   def stepSimulateToCreateNewRequest(self, sequence=None, **kw):
     """
-     Remove the caches in _module_cache_set to simulate to create new REQUEST
+     Clear the Request ZODB Component module caches to simulate a new REQUEST.
 
      Why we need this is because:
      - ZODB Components relies on this cache to prevend gc of the component,
@@ -7494,11 +7494,8 @@ class TestBusinessTemplate(BusinessTemplateMixin):
        even if the request (transaction) is finished.
      This removal imitates the behavior in a real ZOPE environment
     """
-    from Products.ERP5Type.Globals import get_request
-    request_obj = get_request()
-    module_cache_set = getattr(request_obj, '_module_cache_set', None)
-    # delete the reference (decrement the reference count)
-    module_cache_set.clear()
+    import erp5.component
+    erp5.component.request_cache_clear()
 
   def stepAddExtensionComponentToBusinessTemplate(self, sequence=None, **kw):
     sequence['current_bt'].setProperty('template_extension_id_list',
