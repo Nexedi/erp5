@@ -21,6 +21,7 @@
 ##############################################################################
 
 # Load all monkey patches
+from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import AccessControl_patch
 from Products.ERP5Type.patches import Restricted
 from Products.ERP5Type.patches import m2crypto
