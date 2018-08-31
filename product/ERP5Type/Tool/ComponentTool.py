@@ -151,6 +151,7 @@ class ComponentTool(BaseTool):
         if isinstance(package, ComponentDynamicPackage):
           package.reset()
 
+      erp5.component.request_cache_clean()
     if reset_portal_type_at_transaction_boundary:
       portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
     else:
