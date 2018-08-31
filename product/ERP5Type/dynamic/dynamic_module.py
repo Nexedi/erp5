@@ -39,6 +39,91 @@ class PackageType(ModuleType):
   """
   __path__ = []
 
+class RefManager(dict):
+  """
+  self[ComponentTool.last_sync] = (HTTP_REQUEST_WEAKSET,
+                                   COMPONENT_MODULE_SET)
+  """
+  def add_request(self, request_obj):
+    from Products.ERP5Type.Tool.ComponentTool import last_sync
+    from weakref import WeakSet
+    # dict.setdefault() atomic from 2.7.3
+    self.setdefault(last_sync, (WeakSet(), set()))[0].add(request_obj)
+
+  def add_module(self, module_obj):
+    # Zope Ready to handle requests
+    #
+    # * R1:
+    # -> last_sync=-1: HTTPRequest.__init__:
+    #    request_module_dict: {-1: ([R1], [])}
+    # ERP5Type.Tool.ComponentTool Resetting Components
+    # -> last_sync=12: ComponentTool.reset:
+    #    request_module_dict: {-1: ([R1], [])}
+    # -> last_sync=12: C1.__load_module:
+    #    request_module_dict: {-1: ([R1], [C1])}
+    # => R1 finished and can be gc'ed.
+    #
+    # * R2 using C1:
+    # -> last_sync=12:
+    #    request_module_dict: {-1: ([], [C1])}
+    #
+    # => While R2 is running, a reset is performed and clear '-1'
+    #    => C1 is gc'ed.
+    from Products.ERP5Type.Globals import get_request
+    self.add_request(get_request())
+
+    for (_, module_obj_set) in self.itervalues():
+      module_obj_set.add(module_obj)
+
+  def gc(self):
+    """
+    Remove cache items with no Request Left.
+    """
+    for (current_last_sync,
+         (request_obj_weakset, _)) in self.items():
+      if not request_obj_weakset:
+        del self[current_last_sync]
+
+  def clear(self):
+    """
+    Completely clear the cache. Should never be called except to
+    simulate new Requests in Unit Tests for example.
+    """
+    super(RefManager, self).clear()
+  
+class ComponentPackageType(PackageType):
+  """
+  Package for ZODB Component keeping reference to ZODB Component module.
+
+  When the reference counter of a module reaches 0, its globals are
+  all reset to None. So, if a thread performs a reset while another
+  one executes codes using globals (such as modules imported at module
+  level), the latter one must keep a reference around to avoid
+  reaching a reference count to 0.
+
+  Initially, this reference was kept in the Request object itself, but
+  this does not work with the following use case:
+
+    1. R1 loads M1 and keep a reference in R1.
+    2. R2 imports M1.
+       => Hit sys.modules and not going through Import Hooks.
+          => No way to know that this module is being used by R2.
+    3. R1 finishes and is destroyed.
+       => M1 reference counter reaches 0 => globals set to None.
+    4. R2 uses a global in M1.
+
+  Thus create a cache per 'last_sync' and keep a module reference for
+  *all* last_sync in case a module is imported by another earlier
+  last_sync Request.
+
+  OTOH, this means that ZODB Components module *must* be imported at
+  the top level, otherwise a module being relied upon may have a
+  different API after reset, thus it may fail...
+  """
+  def __init__(self, *args, **kwargs):
+    super(ComponentPackageType, self).__init__(*args, **kwargs)
+    self.ref_manager = RefManager()
+
 class DynamicModule(ModuleType):
   """This module may generate new objects at runtime."""
   # it's useful to have such a generic utility
@@ -130,7 +215,7 @@ def initializeDynamicModules():
                                                 loadTempPortalTypeClass)
 
   # ZODB Components
-  erp5.component = PackageType("erp5.component")
+  erp5.component = ComponentPackageType("erp5.component")
 
   from component_package import ComponentDynamicPackage
 
