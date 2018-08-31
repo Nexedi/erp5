@@ -131,8 +131,8 @@ pyodide.asm.wasm\n
 pyodide.asm.data\n
 cycler.data\n
 cycler.js\n
-dateutil.data\n
-dateutil.js\n
+python-dateutil.data\n
+python-dateutil.js\n
 kiwisolver.data\n
 kiwisolver.js\n
 matplotlib.data\n
@@ -396,7 +396,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>969.50674.1572.7867</string> </value>
+                <value> <string>969.57706.26709.14899</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -414,7 +414,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1533713860.15</float>
+                        <float>1535724479.57</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
