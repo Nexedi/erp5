@@ -103,7 +103,6 @@ class SQLExpression(object):
     self.order_by_list = list(order_by_list)
     self.group_by_list = list(group_by_list)
     self.order_by_dict = defaultDict(order_by_dict)
-    self.can_merge_select_dict = can_merge_select_dict
     # Only one of (where_expression, where_expression_operator) must be given (never both)
     assert None in (where_expression, where_expression_operator)
     # Exactly one of (where_expression, where_expression_operator) must be given, except if sql_expression_list is given and contains exactly one entry
@@ -117,9 +116,9 @@ class SQLExpression(object):
     # Exactly one of (where_expression, sql_expression_list) must be given (XXX: duplicate of previous conditions ?)
     assert where_expression is not None or sql_expression_list is not None
     if isinstance(sql_expression_list, (list, tuple)):
-      sql_expression_list = [x for x in sql_expression_list if x is not None]
-    self.sql_expression_list = list(sql_expression_list)
-    self.select_dict = defaultDict(select_dict)
+      self.sql_expression_list = [x for x in sql_expression_list if x is not None]
+    else:
+      self.sql_expression_list = list(sql_expression_list)
     if limit is None:
       self.limit = ()
     elif isinstance(limit, (list, tuple)):
@@ -133,8 +132,38 @@ class SQLExpression(object):
       warnings.warn("Providing a 'from_expression' is deprecated.",
                     DeprecationWarning)
     self.from_expression = from_expression
-    self._select_dict = self._getSelectDict()[0]
-    self._reversed_select_dict = {y: x for x, y in self._select_dict.iteritems()}
+
+    select_dict = defaultDict(select_dict)
+    mergeable_set = set()
+    if can_merge_select_dict:
+      mergeable_set.update(select_dict)
+    for sql_expression in self.sql_expression_list:
+      can_merge_sql_expression = sql_expression.can_merge_select_dict
+      mergeable_set.update(sql_expression._mergeable_set)
+      for alias, column in sql_expression._select_dict.iteritems():
+        existing_value = select_dict.get(alias)
+        if existing_value not in (None, column):
+          if can_merge_sql_expression and alias in mergeable_set:
+            # Custom conflict resolution
+            column = '%s + %s' % (existing_value, column)
+          elif alias.endswith('__score__'):
+            # We only support the first full text score in select dict.
+            pass
+          else:
+            message = '%r is a known alias for column %r, can\'t alias it now to column %r' % (alias, existing_value, column)
+            if DEBUG:
+              message = message + '. I was created by %r, and I am working on %r (%r) out of [%s]' % (
+                self.query,
+                sql_expression,
+                sql_expression.query,
+                ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
+            raise ValueError(message)
+        select_dict[alias] = column
+        if can_merge_sql_expression:
+          mergeable_set.add(alias)
+    self._select_dict = select_dict
+    self._mergeable_set = mergeable_set
+    self._reversed_select_dict = {y: x for x, y in select_dict.iteritems()}
 
   def getTableAliasDict(self):
     """
@@ -317,42 +346,6 @@ class SQLExpression(object):
       Returns a rendered "group by" expression. See getGroupBySet.
     """
     return SQL_LIST_SEPARATOR.join(self.getGroupByset())
-
-  def canMergeSelectDict(self):
-    return self.can_merge_select_dict
-
-  def _getSelectDict(self):
-    result = self.select_dict.copy()
-    mergeable_set = set()
-    if self.canMergeSelectDict():
-      mergeable_set.update(result)
-    for sql_expression in self.sql_expression_list:
-      can_merge_sql_expression = sql_expression.canMergeSelectDict()
-      sql_expression_select_dict, sql_expression_mergeable_set = \
-        sql_expression._getSelectDict()
-      mergeable_set.update(sql_expression_mergeable_set)
-      for alias, column in sql_expression_select_dict.iteritems():
-        existing_value = result.get(alias)
-        if existing_value not in (None, column):
-          if can_merge_sql_expression and alias in mergeable_set:
-            # Custom conflict resolution
-            column = '%s + %s' % (existing_value, column)
-          elif alias.endswith('__score__'):
-            # We only support the first full text score in select dict.
-            pass
-          else:
-            message = '%r is a known alias for column %r, can\'t alias it now to column %r' % (alias, existing_value, column)
-            if DEBUG:
-              message = message + '. I was created by %r, and I am working on %r (%r) out of [%s]' % (
-                self.query,
-                sql_expression,
-                sql_expression.query,
-                ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
-            raise ValueError, message
-        result[alias] = column
-        if can_merge_sql_expression:
-          mergeable_set.add(alias)
-    return result, mergeable_set
 
   def getSelectDict(self):
     """
