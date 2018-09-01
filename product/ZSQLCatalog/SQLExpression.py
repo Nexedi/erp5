@@ -327,7 +327,7 @@ class SQLExpression(object):
     """
     return SQL_LIST_SEPARATOR.join(str(x) for x in self.getLimit())
 
-  def getGroupByset(self):
+  def getGroupBySet(self):
     """
       Returns a set of strings.
 
@@ -336,7 +336,7 @@ class SQLExpression(object):
     """
     result = {self._reversed_select_dict.get(x, x) for x in self.group_by_list}
     for sql_expression in self.sql_expression_list:
-      result.update(sql_expression.getGroupByset())
+      result.update(sql_expression.getGroupBySet())
     return result
 
   def getGroupByExpression(self):
@@ -345,7 +345,7 @@ class SQLExpression(object):
 
       Returns a rendered "group by" expression. See getGroupBySet.
     """
-    return SQL_LIST_SEPARATOR.join(self.getGroupByset())
+    return SQL_LIST_SEPARATOR.join(self.getGroupBySet())
 
   def getSelectDict(self):
     """
