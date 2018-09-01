@@ -40,6 +40,7 @@ from ZODB.POSException import ConflictError
 from Products.CMFCore import permissions
 from Products.PythonScripts.Utility import allow_class
 
+from functools import wraps
 import time
 import urllib
 import string
@@ -89,38 +90,38 @@ except ImportError:
   LOG('SQLCatalog', WARNING, 'Count not import getTransactionalVariable, expect slowness.')
   def getTransactionalVariable():
     return {}
-
-def getInstanceID(instance):
-  # XXX: getPhysicalPath is overkill for a unique cache identifier.
-  # What I would like to use instead of it is:
-  #   (self._p_jar.db().database_name, self._p_oid)
-  # but database_name is not unique in at least ZODB 3.4 (Zope 2.8.8).
-  try:
-    instance_id = instance._v_physical_path
-  except AttributeError:
-    instance._v_physical_path = instance_id = instance.getPhysicalPath()
-  return instance_id
-
-class transactional_cache_decorator:
-  """
+  def transactional_cache_decorator(method):
+    return method
+else:
+  def transactional_cache_decorator(method):
+    """
     Implements singleton-style caching.
     Wrapped method must have no parameters (besides "self").
-  """
-  def __init__(self, cache_id):
-    self.cache_id = cache_id
-
-  def __call__(self, method):
-    def wrapper(wrapped_self):
-      transactional_cache = getTransactionalVariable()
-      cache_id = str((self.cache_id,
-        wrapped_self.getCacheSequenceNumber(),
-        getInstanceID(wrapped_self),
-      ))
+    """
+    cache_id = id(method)
+    @wraps(method)
+    def wrapper(self):
+      # XXX: getPhysicalPath is overkill for a unique cache identifier.
+      # What I would like to use instead of it is:
+      #   (self._p_jar.db().database_name, self._p_oid)
+      # but database_name is not unique in at least ZODB 3.4 (Zope 2.8.8).
       try:
-        result = transactional_cache[cache_id]
+        instance_id = self._v_physical_path
+      except AttributeError:
+        self._v_physical_path = instance_id = self.getPhysicalPath()
+      try:
+        return getTransactionalVariable()[(
+          cache_id,
+          self._cache_sequence_number,
+          instance_id,
+        )]
       except KeyError:
-        result = transactional_cache[cache_id] = method(wrapped_self)
-      return result
+        getTransactionalVariable()[(
+          cache_id,
+          self._cache_sequence_number,
+          instance_id,
+        )] = result = method(self)
+        return result
     return wrapper
 
 list_type_list = list, tuple, set, frozenset
@@ -944,7 +945,7 @@ class Catalog(Folder,
   def getSqlCatalogSchema(self):
     return self.sql_catalog_schema
 
-  @transactional_cache_decorator('SQLCatalog._getCatalogSchema')
+  @transactional_cache_decorator
   def _getCatalogSchema(self):
     method = getattr(self, self.sql_catalog_multi_schema, None)
     result = {}
@@ -985,7 +986,7 @@ class Catalog(Folder,
     return self._getCatalogSchema()[table]
 
   security.declarePublic('getColumnIds')
-  @transactional_cache_decorator('SQLCatalog.getColumnIds')
+  @transactional_cache_decorator
   def getColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
@@ -1007,7 +1008,7 @@ class Catalog(Folder,
     return sorted(keys)
 
   security.declarePrivate('getColumnMap')
-  @transactional_cache_decorator('SQLCatalog.getColumnMap')
+  @transactional_cache_decorator
   def getColumnMap(self):
     """
     Calls the show column method and returns dictionnary of
@@ -1022,7 +1023,7 @@ class Catalog(Folder,
     return result
 
   security.declarePublic('getResultColumnIds')
-  @transactional_cache_decorator('SQLCatalog.getResultColumnIds')
+  @transactional_cache_decorator
   def getResultColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
@@ -1036,7 +1037,7 @@ class Catalog(Folder,
     return sorted(keys)
 
   security.declarePublic('getSortColumnIds')
-  @transactional_cache_decorator('SQLCatalog.getSortColumnIds')
+  @transactional_cache_decorator
   def getSortColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
@@ -1713,7 +1714,7 @@ class Catalog(Folder,
     """
     return self.getCatalogMethodIds(valid_method_meta_type_list=('Script (Python)', ))
 
-  @transactional_cache_decorator('SQLCatalog._getSQLCatalogRelatedKeyList')
+  @transactional_cache_decorator
   def _getSQLCatalogRelatedKeySet(self):
     column_map = self.getColumnMap()
     column_set = set(column_map)
@@ -1758,7 +1759,7 @@ class Catalog(Folder,
     """
     return self.sql_catalog_scriptable_keys
 
-  @transactional_cache_decorator('SQLCatalog.getTableIndex')
+  @transactional_cache_decorator
   def _getTableIndex(self, table):
     table_index = {}
     method = getattr(self, self.sql_catalog_index, '')
@@ -1830,7 +1831,7 @@ class Catalog(Folder,
   def getSqlCatalogScriptableKeysList(self):
     return self.sql_catalog_scriptable_keys
 
-  @transactional_cache_decorator('SQLCatalog._getgetScriptableKeyDict')
+  @transactional_cache_decorator
   def _getgetScriptableKeyDict(self):
     result = {}
     for scriptable_key_definition in self.getSqlCatalogScriptableKeysList():
@@ -2321,7 +2322,7 @@ class Catalog(Folder,
   def getSqlCatalogSearchKeysList(self):
     return self.sql_catalog_search_keys
 
-  @transactional_cache_decorator('SQLCatalog._getSearchKeyDict')
+  @transactional_cache_decorator
   def _getSearchKeyDict(self):
     result = {}
     search_key_column_dict = {
@@ -2588,7 +2589,7 @@ class Catalog(Folder,
     return ''
 
   security.declarePublic('getOptimizerSwitchKeyList')
-  @transactional_cache_decorator('SQLCatalog.getOptimizerSwitchKeyList')
+  @transactional_cache_decorator
   def getOptimizerSwitchKeyList(self):
     return [
       pair.split('=', 1)[0]
