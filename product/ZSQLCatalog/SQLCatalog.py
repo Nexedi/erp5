@@ -22,8 +22,11 @@ from App.special_dtml import DTMLFile
 from thread import allocate_lock, get_ident
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import access_contents_information, \
-    import_export_objects, manage_zcatalog_entries
+from AccessControl.Permissions import (
+  access_contents_information,
+  import_export_objects,
+  manage_zcatalog_entries,
+)
 from AccessControl.SimpleObjectPolicies import ContainerAssertions
 from BTrees.OIBTree import OIBTree
 from App.config import getConfiguration
@@ -38,7 +41,6 @@ from Products.CMFCore import permissions
 from Products.PythonScripts.Utility import allow_class
 
 import time
-import sys
 import urllib
 import string
 import pprint
@@ -76,8 +78,7 @@ except ImportError:
 def noReadOnlyTransactionCache():
   yield
 try:
-  from Products.ERP5Type.Cache import \
-    readOnlyTransactionCache
+  from Products.ERP5Type.Cache import readOnlyTransactionCache
 except ImportError:
   LOG('SQLCatalog', WARNING, 'Count not import readOnlyTransactionCache, expect slowness.')
   readOnlyTransactionCache = noReadOnlyTransactionCache
@@ -546,8 +547,7 @@ class Catalog(Folder,
       'mode': 'w' },
     { 'id': 'sql_catalog_local_role_keys',
       'title': 'Local Role keys',
-      'description': 'Columns which should be used to map' \
-                      'a monovalued local role',
+      'description': 'Columns which should be used to map a monovalued local role',
       'type': 'lines',
       'mode': 'w' },
     { 'id': 'sql_catalog_security_uid_columns',
@@ -732,15 +732,12 @@ class Catalog(Folder,
     for key in wrapped_object.getLocalRolesGroupIdDict().iteritems():
       local_roles_group_id, allowed_roles_and_users = key
       if key in self.security_uid_dict:
-        local_roles_group_id_to_security_uid_mapping[local_roles_group_id] \
-                = self.security_uid_dict[key]
-      elif allowed_roles_and_users in self.security_uid_dict \
-           and not local_roles_group_id:
+        local_roles_group_id_to_security_uid_mapping[local_roles_group_id] = self.security_uid_dict[key]
+      elif allowed_roles_and_users in self.security_uid_dict and not local_roles_group_id:
         # This key is present in security_uid_dict without
         # local_roles_group_id, it has been inserted before
         # local_roles_group_id were introduced.
-        local_roles_group_id_to_security_uid_mapping[local_roles_group_id] = \
-          self.security_uid_dict[allowed_roles_and_users]
+        local_roles_group_id_to_security_uid_mapping[local_roles_group_id] = self.security_uid_dict[allowed_roles_and_users]
       else:
         if not security_uid:
           getTransactionalVariable().pop('getSecurityUidDictAndRoleColumnDict',
@@ -761,8 +758,7 @@ class Catalog(Folder,
         )
 
         self.security_uid_dict[key] = security_uid
-        local_roles_group_id_to_security_uid_mapping[local_roles_group_id]\
-            = security_uid
+        local_roles_group_id_to_security_uid_mapping[local_roles_group_id] = security_uid
 
         # If some optimised_roles_and_users are returned by this method it
         # means that new entries will have to be added to roles_and_users table.
@@ -847,7 +843,7 @@ class Catalog(Folder,
         raise
       except:
         LOG('SQLCatalog', WARNING,
-            'could not clear catalog with %s' % method_name, error=sys.exc_info())
+            'could not clear catalog with %s' % method_name, error=True)
         raise
     # Reserved uids have been removed.
     self._clearReserved()
@@ -866,9 +862,12 @@ class Catalog(Folder,
     except ConflictError:
       raise
     except:
-      LOG('SQLCatalog', WARNING,
-          'could not clear reserved catalog with %s' % \
-              method_id, error=sys.exc_info())
+      LOG(
+        'SQLCatalog',
+        WARNING,
+        'could not clear reserved catalog with %s' % method_id,
+        error=True,
+      )
       raise
     self._last_clear_reserved_time += 1
 
@@ -966,8 +965,12 @@ class Catalog(Folder,
         except (ConflictError, DatabaseError):
           raise
         except Exception:
-          LOG('SQLCatalog', WARNING, '_getCatalogSchema failed with the method %s'
-            % method_name, error=sys.exc_info())
+          LOG(
+            'SQLCatalog',
+            WARNING,
+            '_getCatalogSchema failed with the method %s' % method_name,
+            error=True,
+          )
       return result
     for row in method():
       result.setdefault(row.TABLE_NAME, []).append(row.COLUMN_NAME)
@@ -1224,8 +1227,9 @@ class Catalog(Folder,
     self._clear()
 
     if RESPONSE and URL1:
-      RESPONSE.redirect('%s/manage_catalogAdvanced?' \
-                        'manage_tabs_message=Catalog%%20Cleared' % URL1)
+      RESPONSE.redirect(
+        '%s/manage_catalogAdvanced?manage_tabs_message=Catalog%%20Cleared' % URL1,
+      )
 
   security.declareProtected(manage_zcatalog_entries, 'manage_catalogClearReserved')
   def manage_catalogClearReserved(self, REQUEST=None, RESPONSE=None, URL1=None):
@@ -1233,8 +1237,9 @@ class Catalog(Folder,
     self._clearReserved()
 
     if RESPONSE and URL1:
-      RESPONSE.redirect('%s/manage_catalogAdvanced?' \
-                        'manage_tabs_message=Catalog%%20Cleared' % URL1)
+      RESPONSE.redirect(
+        '%s/manage_catalogAdvanced?manage_tabs_message=Catalog%%20Cleared' % URL1,
+      )
 
   security.declareProtected(manage_zcatalog_entries, 'manage_catalogFoundItems')
   def manage_catalogFoundItems(self, REQUEST, RESPONSE, URL2, URL1,
@@ -1477,7 +1482,7 @@ class Catalog(Folder,
               object_list,
               method_name,
             ),
-            error=sys.exc_info(),
+            error=True,
           )
           raise
 
@@ -1513,8 +1518,7 @@ class Catalog(Folder,
       return None
     if method_name in (None,''):
       # This should exist only if the site is not up to date.
-      LOG('ZSQLCatalog.beforeUncatalogObject',0,'The sql_catalog_delete_uid'\
-                                                + ' method is not defined')
+      LOG('ZSQLCatalog.beforeUncatalogObject', INFO, 'The sql_catalog_delete_uid method is not defined')
       return self.uncatalogObject(path=path,uid=uid)
     method = self._getOb(method_name)
     method(uid = uid)
@@ -1575,7 +1579,7 @@ class Catalog(Folder,
     except ConflictError:
       raise
     except:
-      LOG('SQLCatalog', WARNING, 'could not delete translations', error=sys.exc_info())
+      LOG('SQLCatalog', WARNING, 'could not delete translations', error=True)
 
   def getSqlUniqueValues(self):
     return self.sql_unique_values
@@ -1719,8 +1723,7 @@ class Catalog(Folder,
         LOG('SQLCatalog', WARNING, 'Malformed related key definition: %r. Ignored.' % (related_key, ))
         continue
       related_key_id = split_entire_definition[0].strip()
-      if related_key_id in column_set and \
-         related_key_id not in related_key_warned_column_set:
+      if related_key_id in column_set and related_key_id not in related_key_warned_column_set:
         related_key_warned_column_set.add(related_key_id)
         if related_key_id in column_map:
           LOG('SQLCatalog', WARNING, 'Related key %r has the same name as an existing column on tables %r' % (related_key_id, column_map[related_key_id]))
@@ -1838,8 +1841,7 @@ class Catalog(Folder,
       key, script_id = [x.strip() for x in split_scriptable_key_definition]
       script = getattr(self, script_id, None)
       if script is None:
-        LOG('SQLCatalog', WARNING, 'Scriptable key %r script %r is missing.' \
-            ' Skipped.' % (key, script_id))
+        LOG('SQLCatalog', WARNING, 'Scriptable key %r script %r is missing. Skipped.' % (key, script_id))
       else:
         result[key] = script
     return result
@@ -2028,8 +2030,7 @@ class Catalog(Folder,
   def parseSearchText(self, search_text, column=None, search_key=None,
                       is_valid=None):
     if column is None and search_key is None:
-      raise ValueError, 'One of column and search_key must be different '\
-                        'from None'
+      raise ValueError('One of column and search_key must be different from None')
     return self._parseSearchText(self.getSearchKey(
       column, search_key=search_key), search_text, is_valid=is_valid)
 
@@ -2415,8 +2416,9 @@ class Catalog(Folder,
     """ Returns a list of brains from a set of constraints on variables """
     if 'only_group_columns' in kw:
       # searchResults must be consistent in API with countResults
-      raise ValueError('only_group_columns does not belong to this API '
-        'level, use queryResults directly')
+      raise ValueError(
+        'only_group_columns does not belong to this API level, use queryResults directly',
+      )
     return self.queryResults(
       self.getSearchResultsMethod(),
       REQUEST=REQUEST,
@@ -2489,53 +2491,54 @@ class Catalog(Folder,
     If 'deferred' is True, then returns the deferred connection
     """
     for method in self.objectValues():
-      if method.meta_type in ('Z SQL Method', 'ERP5 SQL Method',):
-        if ('deferred' in method.connection_id) == deferred:
-          return method.connection_id
+      if method.meta_type in ('Z SQL Method', 'ERP5 SQL Method') and ('deferred' in method.connection_id) == deferred:
+        return method.connection_id
 
   def getSqlCatalogObjectList(self):
     try:
-      method_id_list = self.sql_catalog_object
+      return self.sql_catalog_object
     except AttributeError:
-      method_id_list = ()
-    return method_id_list
+      return ()
 
   def getSqlUncatalogObjectList(self):
     try:
-      method_id_list = self.sql_uncatalog_object
+      return self.sql_uncatalog_object
     except AttributeError:
-      method_id_list = ()
-    return method_id_list
+      return ()
 
   def getSqlUpdateObjectList(self):
     try:
-      method_id_list = self.sql_update_object
+      return self.sql_update_object
     except AttributeError:
-      method_id_list = ()
-    return method_id_list
+      return ()
 
   def getSqlCatalogObjectListList(self):
     try:
-      method_id_list = self.sql_catalog_object_list
+      return self.sql_catalog_object_list
     except AttributeError:
-      method_id_list = ()
-    return method_id_list
+      return ()
 
   security.declarePrivate('getFilterableMethodList')
   def getFilterableMethodList(self):
     """
     Returns only zsql methods wich catalog or uncatalog objets
     """
-    method_dict = {}
+    method_id_set = set()
     if withCMF:
-      method_id_list =  self.getSqlCatalogObjectList() +\
-                        self.getSqlUncatalogObjectList() +\
-                        self.getSqlUpdateObjectList() +\
-                        self.getSqlCatalogObjectListList()
-      for method_id in method_id_list:
-        method_dict[method_id] = 1
-    method_list = map(lambda method_id: getattr(self, method_id, None), method_dict.keys())
-    return filter(lambda method: method is not None, method_list)
+      self.update(
+        self.getSqlCatalogObjectList() +
+        self.getSqlUncatalogObjectList() +
+        self.getSqlUpdateObjectList() +
+        self.getSqlCatalogObjectListList()
+      )
+    return [
+      method
+      for method in (
+        getattr(self, method_id, None)
+        for method_id in method_id_set
+      )
+      if method is not None
+    ]
 
   security.declarePrivate('getExpressionContext')
   def getExpressionContext(self, ob):
@@ -2576,16 +2579,21 @@ class Catalog(Folder,
         raise
       except Exception:
         pass
-
-    LOG('SQLCatalog', WARNING, 'getTableIds failed with the method %s'
-        % method_name, error=sys.exc_info())
+    LOG(
+      'SQLCatalog',
+      WARNING,
+      'getTableIds failed with the method %s' % method_name,
+      error=True,
+    )
     return ''
 
   security.declarePublic('getOptimizerSwitchKeyList')
   @transactional_cache_decorator('SQLCatalog.getOptimizerSwitchKeyList')
   def getOptimizerSwitchKeyList(self):
-    return [pair.split('=', 1)[0] for pair in \
-              self._getOptimizerSwitch().split(',')]
+    return [
+      pair.split('=', 1)[0]
+      for pair in self._getOptimizerSwitch().split(',')
+    ]
 
 InitializeClass(Catalog)
 
@@ -2648,14 +2656,17 @@ class SearchKeyWrapperForScriptableKey(SearchKey.SearchKey.SearchKey):
     # XXX: It would be better to extend ScriptableKey API to support other
     # parameters.
     if group is not None:
-      raise ValueError, 'ScriptableKey cannot be used inside a group ' \
-        '(%r given).' % (group, )
+      raise ValueError(
+        'ScriptableKey cannot be used inside a group (%r given).' % (group, ),
+      )
     if logical_operator is not None:
-      raise ValueError, 'ScriptableKey ignores logical operators ' \
-        '(%r given).' % (logical_operator, )
+      raise ValueError(
+        'ScriptableKey ignores logical operators (%r given).' % (logical_operator, ),
+      )
     if comparison_operator != '':
-      raise ValueError, 'ScriptableKey ignores comparison operators ' \
-        '(%r given).' % (comparison_operator, )
+      raise ValueError(
+        'ScriptableKey ignores comparison operators (%r given).' % (comparison_operator, ),
+      )
     return self.script(search_value)
 
 from Operator import operator_dict
