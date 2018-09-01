@@ -100,10 +100,6 @@ def getInstanceID(instance):
     instance._v_physical_path = instance_id = instance.getPhysicalPath()
   return instance_id
 
-def generateCatalogCacheId(method_id, self, *args, **kwd):
-  return str((method_id, self.getCacheSequenceNumber(), getInstanceID(self),
-    args, kwd))
-
 class transactional_cache_decorator:
   """
     Implements singleton-style caching.
