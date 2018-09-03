@@ -135,6 +135,7 @@ class SQLExpression(object):
 
     select_dict = defaultDict(select_dict)
     mergeable_set = set()
+    self.can_merge_select_dict = can_merge_select_dict
     if can_merge_select_dict:
       mergeable_set.update(select_dict)
     for sql_expression in self.sql_expression_list:
