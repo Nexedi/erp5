@@ -2526,7 +2526,7 @@ class Catalog(Folder,
     """
     method_id_set = set()
     if withCMF:
-      self.update(
+      method_id_set.update(
         self.getSqlCatalogObjectList() +
         self.getSqlUncatalogObjectList() +
         self.getSqlUpdateObjectList() +
