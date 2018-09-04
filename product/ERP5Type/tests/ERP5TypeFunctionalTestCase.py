@@ -205,10 +205,20 @@ class FunctionalTestRunner:
       if firefox_bin:
         geckodriver = os.path.join(os.path.dirname(firefox_bin), 'geckodriver')
         kw.update(firefox_binary=firefox_bin, executable_path=geckodriver)
-      #browser = webdriver.Firefox(**kw)
+
+
+      from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
+      dc = DesiredCapabilities.SAFARI.copy()
+      dc = DesiredCapabilities.FIREFOX.copy()
+      dc = DesiredCapabilities.CHROME.copy()
+
       browser = webdriver.Remote(
-                 command_executor='http://10.0.30.235:4444/wd/hub',
-                    desired_capabilities=DesiredCapabilities.FIREFOX)
+      #command_executor='http://192.168.2.1:4444/wd/hub',
+      command_executor='http://10.0.30.235:4444/wd/hub',
+      desired_capabilities=dc
+    )
+
       start_time = time.time()
       browser.get(self._getTestURL())
 
@@ -217,6 +227,7 @@ class FunctionalTestRunner:
       )))
       # XXX No idea how to wait for the iframe content to be loaded
       time.sleep(5)
+      import pdb; pdb.set_trace()
       # Count number of test to be executed
       test_count = browser.execute_script(
         "return document.getElementById('testSuiteFrame').contentDocument.querySelector('tbody').children.length"
