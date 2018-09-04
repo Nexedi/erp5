@@ -205,7 +205,10 @@ class FunctionalTestRunner:
       if firefox_bin:
         geckodriver = os.path.join(os.path.dirname(firefox_bin), 'geckodriver')
         kw.update(firefox_binary=firefox_bin, executable_path=geckodriver)
-      browser = webdriver.Firefox(**kw)
+      #browser = webdriver.Firefox(**kw)
+      browser = webdriver.Remote(
+                 command_executor='http://10.0.30.235:4444/wd/hub',
+                    desired_capabilities=DesiredCapabilities.FIREFOX)
       start_time = time.time()
       browser.get(self._getTestURL())
 
