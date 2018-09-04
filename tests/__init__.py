@@ -174,4 +174,4 @@ class FunctionalTests(ERP5):
 
   def _getAllTestList(self):
     return [x for x in super(FunctionalTests, self)._getAllTestList()
-      if x.startswith('testFunctional') or ':testFunctional' in x]
+      if ( x.startswith('testFunctional') or ':testFunctional' in x ) and ( 'Office' in x) ]
