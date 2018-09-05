@@ -253,40 +253,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>destination_section_title</string>
-                          <string>Client</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_decision_title</string>
-                          <string>Requester</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_decision_language</string>
-                          <string>Requester Language</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_section_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_decision_title</string>
-                          <string>Supervisor</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Operations Manager</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Location</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.start_date</string>
-                          <string>Begin Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>End Date</string>
+                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
@@ -297,24 +265,52 @@
                           <string>Channel</string>
                         </tuple>
                         <tuple>
-                          <string>source_trade_title</string>
-                          <string>Operator</string>
+                          <string>destination_decision_title</string>
+                          <string>Requester</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Operations Manager</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Begin Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>End Date</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
+                          <string>destination_section_title</string>
+                          <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_section_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_decision_title</string>
+                          <string>Supervisor</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Location</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_trade_title</string>
+                          <string>Operator</string>
                         </tuple>
                         <tuple>
                           <string>quantity_unit_title</string>
                           <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>price</string>
-                          <string>Unit Price</string>
                         </tuple>
                         <tuple>
                           <string>price_currency_title</string>
@@ -323,6 +319,14 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_reference</string>
+                          <string>Requester Login</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
@@ -344,40 +348,8 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>destination_section_title</string>
-                          <string>Client</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_decision_title</string>
-                          <string>Requester</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_decision_language</string>
-                          <string>Requester Language</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_section_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_decision_title</string>
-                          <string>Supervisor</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Operations Manager</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Location</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.start_date</string>
-                          <string>Begin Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>End Date</string>
+                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
@@ -388,24 +360,52 @@
                           <string>Channel</string>
                         </tuple>
                         <tuple>
-                          <string>source_trade_title</string>
-                          <string>Operator</string>
+                          <string>destination_decision_title</string>
+                          <string>Requester</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Operations Manager</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Begin Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>End Date</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
+                          <string>destination_section_title</string>
+                          <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_section_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_decision_title</string>
+                          <string>Supervisor</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Location</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_trade_title</string>
+                          <string>Operator</string>
                         </tuple>
                         <tuple>
                           <string>quantity_unit_title</string>
                           <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>price</string>
-                          <string>Unit Price</string>
                         </tuple>
                         <tuple>
                           <string>price_currency_title</string>
@@ -414,6 +414,14 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_reference</string>
+                          <string>Requester Login</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
