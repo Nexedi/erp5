@@ -112,7 +112,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell.hasDestinationDecision() and cell.getDestinationDecisionValue().getLanguage()</string> </value>
+            <value> <string>python: cell.hasDestinationDecision() and cell.getDestinationDecisionValue().getLanguage() or None</string> </value>
         </item>
       </dictionary>
     </pickle>
