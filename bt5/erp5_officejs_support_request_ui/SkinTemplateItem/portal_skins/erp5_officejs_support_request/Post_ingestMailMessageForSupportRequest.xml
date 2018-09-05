@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>follow_up, predecessor, data, file, source_reference</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PostModule_createHTMLPostForSupportRequest</string> </value>
+            <value> <string>Post_ingestMailMessageForSupportRequest</string> </value>
         </item>
       </dictionary>
     </pickle>

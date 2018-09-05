@@ -1,12 +1,20 @@
+from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.ImmediateReindexContextManager import ImmediateReindexContextManager
-follow_up_value = context.getPortalObject().restrictedTraverse(follow_up)
+portal = context.getPortalObject()
+follow_up_value = portal.restrictedTraverse(follow_up)
 assert follow_up_value.getPortalType() == "Support Request"
-follow_up_value.edit()  # update modification date
+
+# update modification date
+portal.portal_workflow.doActionFor(
+  follow_up_value,
+  'edit_action',
+  comment=translateString('New message posted.'))
 
 with ImmediateReindexContextManager() as immediate_reindex_context_manager:
   post = context.PostModule_createHTMLPostFromText(
     follow_up=follow_up,
     data=data,
+    source_reference=source_reference,
     immediate_reindex_context_manager=immediate_reindex_context_manager,
   )
 
@@ -23,4 +31,5 @@ with ImmediateReindexContextManager() as immediate_reindex_context_manager:
     # XXX depending on security model this should be changed accordingly
     document.publish()
 
-  post.publish()
+  post.publish() # XXX
+  post.activate().Post_ingestMailMessageForSupportRequest() # XXX This API is not agreed
