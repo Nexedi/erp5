@@ -88,37 +88,12 @@
             <value> <string>template_web_page_release</string> </value>
         </item>
         <item>
-            <key> <string>isIndexable</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global id="1.1" name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>__name__</string> </key>
-                        <value> <string>isIndexable</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>_id</string> </key>
-                        <value> <string>isIndexable</string> </value>
-                    </item>
-                    <item>
-                        <key> <string>value</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>isTemplate</string> </key>
             <value>
               <object>
-                <klass> <reference id="1.1"/> </klass>
+                <klass>
+                  <global name="PropertyGetter" module="Products.ERP5Type.Accessor.Constant"/>
+                </klass>
                 <tuple/>
                 <state>
                   <dictionary>
