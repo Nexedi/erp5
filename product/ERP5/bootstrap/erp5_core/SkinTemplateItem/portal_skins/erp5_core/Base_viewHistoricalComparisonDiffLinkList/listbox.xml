@@ -132,7 +132,7 @@
                         </tuple>
                         <tuple>
                           <string>current_value</string>
-                          <string></string>
+                          <string>Base_getCurrentValueUrl</string>
                         </tuple>
                       </list>
                     </value>

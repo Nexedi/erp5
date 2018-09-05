@@ -33,7 +33,7 @@ def getActorName(actor):
 # Get history
 # XXX Compatibility
 for history_name in ['history', 'building_history', 'installation_history']:
-  workflow_item_list = portal_workflow.getInfoFor(ob=context, 
+  workflow_item_list = portal_workflow.getInfoFor(ob=context,
                                           name='history', wf_id=workflow_id)
   if workflow_item_list != []:
     break
@@ -56,7 +56,7 @@ for workflow_item in workflow_item_list:
       if key.startswith(compatibility_name):
         # Display the workflow state in the state columns
         key = key[len(compatibility_name):]
-    if key == wf_state_var: 
+    if key == wf_state_var:
       # Store locally the id of state, usefull for merging action and transition
       state_id = wf_states.get(value, marker) and wf_states[value].id
       o.setProperty('state_id', state_id)
@@ -78,7 +78,7 @@ for workflow_item in workflow_item_list:
           value = wf_transitions.get(value, marker) and (wf_transitions[value].id or wf_transitions[value].actbox_name) or value
     if display:
       if key == 'error_message' and same_type(value, ''):
-        value = context.Localizer.erp5_ui.gettext(value)    
+        value = context.Localizer.erp5_ui.gettext(value)
       elif key == 'error_message' and same_type(value, []):
         value = '. '.join(['%s' % x for x in value])
       elif key == 'error_message':
@@ -92,7 +92,7 @@ for workflow_item in workflow_item_list:
     if value is marker:
       value = 'Does not exist'
     o.setProperty(key, value)
- 
+
   # record current serial as "next serial" for the previous revision
   if next_serial is not None and can_view_history:
     previous_obj.setProperty('next_serial', o.serial)
