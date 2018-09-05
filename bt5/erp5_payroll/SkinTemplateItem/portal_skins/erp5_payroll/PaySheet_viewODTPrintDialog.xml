@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>PaySheet_printAsODT</string> </value>
+            <value> <string>PaySheetTransaction_printPayslipReport</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -122,6 +122,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
