@@ -243,9 +243,9 @@ class FunctionalTestRunner:
       ).encode('UTF-8'),
         html_parser
       )
-      browser.quit()
     finally:
       xvfb.quit()
+      browser.quit()
     return iframe
 
   def processResult(self, iframe):
