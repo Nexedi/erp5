@@ -145,6 +145,14 @@
                           <string>Requester Reference</string>
                         </tuple>
                         <tuple>
+                          <string>destination_project_title</string>
+                          <string>Requested Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_project_title</string>
+                          <string>Handled Project</string>
+                        </tuple>
+                        <tuple>
                           <string>owner_title</string>
                           <string>Owner</string>
                         </tuple>
@@ -325,6 +333,14 @@
                           <string>Requester Reference</string>
                         </tuple>
                         <tuple>
+                          <string>destination_project_title</string>
+                          <string>Requested Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_project_title</string>
+                          <string>Handled Project</string>
+                        </tuple>
+                        <tuple>
                           <string>owner_title</string>
                           <string>Owner</string>
                         </tuple>
@@ -418,6 +434,14 @@
                         <tuple>
                           <string>destination_decision_reference</string>
                           <string>Requester Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_project_title</string>
+                          <string>Requested Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_project_title</string>
+                          <string>Handled Project</string>
                         </tuple>
                         <tuple>
                           <string>owner_title</string>
