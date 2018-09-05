@@ -27,10 +27,23 @@
       });
     })
     .onStateChange(function (modified_dict) {
-      var notebookTitle = getiodideSettingsFromJsmd(this.state.value).title;
-      if (!notebookTitle) {
-        var jsmdTitleTemplate = '%% meta\n{\n"title": ""\n}';
-        notebookTitle = 'notebook-' + modified_dict.timestamp;
+      if (!this.state.value.includes('%%')) {
+        this.state.value = '';
+      }
+      var iodideSettings = getiodideSettingsFromJsmd(this.state.value);
+      if (iodideSettings && !iodideSettings.title) {
+        iodideSettings.title = 'notebook-' + modified_dict.timestamp;
+        var regex = /%% meta\r\n([\S\s]*?)\n%%/m;
+        try {
+          var capturedGroup = this.state.value.match(regex)[1];
+          this.state.value = this.state.value.replace(capturedGroup, JSON.stringify(iodideSettings));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      if (!iodideSettings) {
+        var jsmdTitleTemplate = '%% meta\n{\n"title": ""\n}\n';
+        var notebookTitle = 'notebook-' + modified_dict.timestamp;
         var positionToInsertTitle = 20;
         var jsmdNotebookTitle = [jsmdTitleTemplate.slice(0, positionToInsertTitle), notebookTitle, jsmdTitleTemplate.slice(positionToInsertTitle)].join('');
         this.state.value = jsmdNotebookTitle + this.state.value;
@@ -108,8 +121,7 @@
 
   function getiodideSettingsFromJsmd(jsmdString) {
     // returns iodideSettings of last found chunk and exits
-    var notebookTitle = jsmdString;
-    var chunkObjects = notebookTitle.split('\n%%')
+    var chunkObjects = jsmdString.split('\n%%')
       .map((str, chunkNum) => {
         // if this is the first chunk, and it starts with "%%", drop those chars
         let sstr
@@ -123,7 +135,6 @@
       .map(str => str.trim())
       .filter(str => str !== '');
 
-    //for (var i = chunkObjects.length; i > 0; i--){
     for (var i = (chunkObjects.length-1); i >= 0 ; i--){
       var chunk = parseJsmdChunk(chunkObjects[i]);
       if (chunk && chunk.iodideSettings) {
