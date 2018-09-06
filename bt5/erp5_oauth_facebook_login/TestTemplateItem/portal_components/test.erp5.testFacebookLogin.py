@@ -164,7 +164,8 @@ return credential_request
     response = self.portal.ERP5Site_callbackFacebookLogin(code=CODE)
     facebook_hash = self.portal.REQUEST.RESPONSE.cookies.get("__ac_facebook_hash")["value"]
     self.assertEqual("8cec04e21e927f1023f4f4980ec11a77", facebook_hash)
-    self.assertEqual(self.portal.absolute_url(), response)
+    # The # is because we workaround facebook adding #_=_ in return URL
+    self.assertEqual(self.portal.absolute_url() + '#', response)
     cache_dict = self.portal.Base_getBearerToken(facebook_hash, "facebook_server_auth_token_cache_factory")
     self.assertEqual(ACCESS_TOKEN, cache_dict["access_token"])
     self.assertEqual({'reference': getUserId(None)},
