@@ -40,6 +40,11 @@ elif code is not None:
     if method is not None:
       method(user_reference, user_dict)
 
+    # We intentionnally add this # to the URL because otherwise Facebook adds
+    # #_=_ and it breaks renderjs hash based URL routing.
+    # https://developers.facebook.com/support/bugs/318390728250352/?disable_redirect=0
+    # https://stackoverflow.com/questions/7131909/facebook-callback-appends-to-return-url/33257076#33257076
+    # https://lab.nexedi.com/nexedi/erp5/merge_requests/417#note_64365
     came_from = context.REQUEST.get("came_from",  portal.absolute_url() + "#")
     return context.REQUEST.RESPONSE.redirect(came_from)
 
