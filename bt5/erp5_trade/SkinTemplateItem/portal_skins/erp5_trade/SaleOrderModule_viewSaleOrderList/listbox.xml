@@ -109,7 +109,7 @@
                           <string>Modification Date</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_title</string>
+                          <string>specialise_trade_condition_title</string>
                           <string>Sale Trade Condition</string>
                         </tuple>
                       </list>
@@ -280,7 +280,7 @@
                           <string>Modification Date</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_title</string>
+                          <string>specialise_trade_condition_title</string>
                           <string>Sale Trade Condition</string>
                         </tuple>
                       </list>
@@ -351,7 +351,7 @@
                           <string>Modification Date</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_title</string>
+                          <string>specialise_trade_condition_title</string>
                           <string>Sale Trade Condition</string>
                         </tuple>
                       </list>

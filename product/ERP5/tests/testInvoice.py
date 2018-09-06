@@ -2488,6 +2488,36 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self._testSubContentReindexing(invoice, [invoice_line, transaction_line,
       invoice_cell])
 
+  def test_AccountingTransactionModuleListboxSaleTradeConditionColumn(self):
+    """Check listbox Sale Trade Condition column does not return whatever specialise title
+    """
+    # test init
+    accounting_module = self.portal.accounting_module
+    whatever_object = accounting_module.newContent(
+      portal_type=self.invoice_portal_type,
+    )
+    sale_trade_condition_title = "Sale Trade Condition from test_AccountingTransactionModuleListboxSaleTradeConditionColumn"
+    sale_trade_condition = self.portal.sale_trade_condition_module.newContent(
+      portal_type="Sale Trade Condition",
+      title=sale_trade_condition_title,
+    )
+    sale_invoice = accounting_module.newContent(
+      portal_type=self.invoice_portal_type,
+    )
+
+    # actual test
+    # Check listbox Sale Trade Condition column does not return whatever specialise title
+    accounting_listbox = accounting_module.AccountingTransactionModule_viewAccountingTransactionList.listbox
+    self.assertIn(("specialise_trade_condition_title", "Sale Trade Condition"), accounting_listbox.get_value("columns") + accounting_listbox.get_value("all_columns"))
+    sale_invoice.setSpecialiseValueList([whatever_object])
+    self.tic()
+    sale_invoice_brain, = self.portal.portal_catalog(uid=sale_invoice.getUid(), select_list=["specialise_trade_condition_title"], limit=1)
+    self.assertEqual(sale_invoice_brain.specialise_trade_condition_title, None)
+    sale_invoice.setSpecialiseValueList([whatever_object, sale_trade_condition])
+    self.tic()
+    sale_invoice_brain, = self.portal.portal_catalog(uid=sale_invoice.getUid(), select_list=["specialise_trade_condition_title"], limit=1)
+    self.assertEqual(sale_invoice_brain.specialise_trade_condition_title, sale_trade_condition_title)
+
 class TestSaleInvoiceMixin(TestInvoiceMixin,
                            ERP5TypeTestCase):
   """Test sale invoice are created from orders then packing lists.
