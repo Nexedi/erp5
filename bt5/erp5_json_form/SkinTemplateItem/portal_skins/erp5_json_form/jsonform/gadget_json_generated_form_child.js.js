@@ -199,12 +199,15 @@
     return input;
   }
 
-  function render_const(schema, json_document) {
+  function render_const(g, schema, json_document) {
     var input = document.createElement("input"),
       ser_doc = JSON.stringify(json_document),
       ser_const = JSON.stringify(schema.const);
     input.setAttribute('readonly', true);
     if (json_document === undefined || deepEqual(json_document, schema.const)) {
+      if (json_document === undefined) {
+        g.props.changed = true;
+      }
       input.setAttribute('data-origin-value', ser_const);
       input.value = ser_const;
     } else {
@@ -636,6 +639,13 @@
       }
     }
 
+    if (json_document === undefined) {
+      if (schema.hasOwnProperty('default')) {
+        json_document = schema.default;
+        gadget.props.changed = true;
+      }
+    }
+
     // XXX add failback rendering if json_document not array
     // input = render_textarea(schema, default_value, "array");
     return RSVP.Queue()
@@ -880,7 +890,7 @@
     div_input.setAttribute("class", "input");
 
     if (json_field.const !== undefined) {
-      input = render_const(json_field, default_value);
+      input = render_const(gadget, json_field, default_value);
     } else if (json_field.enum !== undefined) {
       input = render_enum(gadget, json_field, default_value);
       // XXX take in account existing type with enum
@@ -888,7 +898,7 @@
     }
 
     if (!input && type === "null") {
-      input = render_const({const: null}, default_value);
+      input = render_const(gadget, {const: null}, default_value);
     }
 
     if (!input && type === "boolean") {
@@ -1208,7 +1218,12 @@
     }
 
     if (default_dict === undefined) {
-      default_dict = {};
+      if (json_field.hasOwnProperty('default')) {
+        default_dict = json_field.default;
+        g.props.changed = true;
+      } else {
+        default_dict = {};
+      }
     }
 
     return expandProperties(g, json_field.properties, schema_path + '/properties/', required)
@@ -1222,6 +1237,7 @@
           if (properties.hasOwnProperty(key)) {
             schema_arr = properties[key];
             s_o = schemaArrFilteredByDocument(schema_arr, default_dict[key]);
+            // XXX need schema merge with patternProperties passed key
             if (checkSchemaArrOneChoise(schema_arr)) {
               if (required.indexOf(key) >= 0) {
                 used_properties[key] = false;
@@ -1312,30 +1328,44 @@
       })
       .push(function () {
         var queue = RSVP.Queue(),
+          key,
           additionalProperties;
 
+        // XXX for pattern properties needs schemas merge for
+        // all passed patterns
         if (json_field.patternProperties !== undefined) {
-          // XXX need loop on any pattern properties
-          if (json_field.patternProperties['.*'] !== undefined) {
-            queue
-              .push(render_object_additionalProperty.bind(g,
+          for (key in json_field.patternProperties) {
+            if (json_field.patternProperties.hasOwnProperty(key)) {
+              if (key === ".*" ||
+                  key === "^.*$" ||
+                  key === ".*$" ||
+                  key === "^.*"
+                  ) {
+                // additionalProperties nether used in this case
+                additionalProperties = false;
+              }
+              queue
+                .push(render_object_additionalProperty.bind(g,
                   g,
-                  ".* property",
+                  key + " property",
                   default_dict,
                   path,
-                  json_field.patternProperties['.*'],
-                  schema_path + '/patternProperties/.*',
+                  json_field.patternProperties[key],
+                  schema_path + '/patternProperties/' + key,
                   used_properties,
                   element_append
                 ))
-              .push(root_append);
+                .push(root_append);
+            }
           }
         }
 
-        if (json_field.additionalProperties === undefined) {
-          additionalProperties = true;
-        } else {
-          additionalProperties = json_field.additionalProperties;
+        if (additionalProperties === undefined) {
+          if (json_field.additionalProperties === undefined) {
+            additionalProperties = true;
+          } else {
+            additionalProperties = json_field.additionalProperties;
+          }
         }
         if (additionalProperties !== false) {
           queue

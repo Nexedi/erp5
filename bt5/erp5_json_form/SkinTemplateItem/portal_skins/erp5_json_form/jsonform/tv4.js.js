@@ -6,7 +6,11 @@ This code is released into the "public domain" by its author(s).  Anybody may us
 
 If you find a bug or make an improvement, it would be courteous to let the author know, but it is not compulsory.
 */
+/*global module, define*/
+/*jslint indent: 2, white: true*/
+/*jshint -W014: true, -W089: true, -W084: true, -W069: true*/
 (function (global, factory) {
+  "use strict";
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define([], factory);
@@ -18,6 +22,7 @@ If you find a bug or make an improvement, it would be courteous to let the autho
     global.tv4 = factory();
   }
 }(this, function () {
+"use strict";
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys?redirectlocale=en-US&redirectslug=JavaScript%2FReference%2FGlobal_Objects%2FObject%2Fkeys
 if (!Object.keys) {
@@ -82,6 +87,7 @@ if(!Array.isArray) {
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf?redirectlocale=en-US&redirectslug=JavaScript%2FReference%2FGlobal_Objects%2FArray%2FindexOf
 if (!Array.prototype.indexOf) {
 	Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
+		/*jslint bitwise: true */
 		if (this === null) {
 			throw new TypeError();
 		}
@@ -262,7 +268,7 @@ function uriTemplateSubstitution(spec) {
 						result += "=";
 					}
 				}
-				if (varSpec.truncate != null) {
+				if (varSpec.truncate !== null) {
 					value = value.substring(0, varSpec.truncate);
 				}
 				result += shouldEscape ? encodeURIComponent(value).replace(/!/g, "%21"): notReallyPercentEncode(value);
@@ -533,9 +539,22 @@ ValidatorContext.prototype.reset = function () {
 	this.errors = [];
 };
 
+ValidatorContext.prototype.validateAllValidators = function validateAllValidators(data, schema, dataPointerPath) {
+	return this.validateBasic(data, schema, dataPointerPath)
+				 || this.validateNumeric(data, schema, dataPointerPath)
+				 || this.validateString(data, schema, dataPointerPath)
+				 || this.validateArray(data, schema, dataPointerPath)
+				 || this.validateObject(data, schema, dataPointerPath)
+				 || this.validateCombinations(data, schema, dataPointerPath)
+				 || this.validateHypermedia(data, schema, dataPointerPath)
+				 || this.validateFormat(data, schema, dataPointerPath)
+				 || this.validateDefinedKeywords(data, schema, dataPointerPath)
+				 || null;
+};
+
 ValidatorContext.prototype.validateAll = function (data, schema, dataPathParts, schemaPathParts, dataPointerPath) {
 	var topLevel;
-	if (!schema) {
+	if (schema === undefined || schema === true) {
 		return null;
 	} else if (schema instanceof ValidationError) {
 		this.errors.push(schema);
@@ -597,16 +616,7 @@ ValidatorContext.prototype.validateAll = function (data, schema, dataPathParts, 
 	}
 
 	var errorCount = this.errors.length;
-	var error = this.validateBasic(data, schema, dataPointerPath)
-		|| this.validateNumeric(data, schema, dataPointerPath)
-		|| this.validateString(data, schema, dataPointerPath)
-		|| this.validateArray(data, schema, dataPointerPath)
-		|| this.validateObject(data, schema, dataPointerPath)
-		|| this.validateCombinations(data, schema, dataPointerPath)
-		|| this.validateHypermedia(data, schema, dataPointerPath)
-		|| this.validateFormat(data, schema, dataPointerPath)
-		|| this.validateDefinedKeywords(data, schema, dataPointerPath)
-		|| null;
+	var error = this.validateAllValidators(data, schema, dataPointerPath);
 
 	if (topLevel) {
 		while (this.scanned.length) {
@@ -718,9 +728,15 @@ function recursiveCompare(A, B) {
 }
 
 ValidatorContext.prototype.validateBasic = function validateBasic(data, schema, dataPointerPath) {
+	if (schema === false && data !== undefined) {
+		return this.createError(ErrorCodes.BOOLEAN_SCHEMA_FALSE, {}, '', '', null, data, schema);
+	}
 	var error;
 	if (error = this.validateType(data, schema, dataPointerPath)) {
 		return error.prefixWith(null, "type");
+	}
+	if (error = this.validateConst(data, schema, dataPointerPath)) {
+		return error.prefixWith(null, "const");
 	}
 	if (error = this.validateEnum(data, schema, dataPointerPath)) {
 		return error.prefixWith(null, "type");
@@ -750,6 +766,14 @@ ValidatorContext.prototype.validateType = function validateType(data, schema) {
 		}
 	}
 	return this.createError(ErrorCodes.INVALID_TYPE, {type: dataType, expected: allowedTypes.join("/")}, '', '', null, data, schema);
+};
+
+ValidatorContext.prototype.validateConst = function validateConst(data, schema) {
+	if (schema.const === undefined ||
+			recursiveCompare(data, schema.const)) {
+		return null;
+	}
+	return this.createError(ErrorCodes.CONST_NOT_EQUAL, {}, '', '', null, data, schema);
 };
 
 ValidatorContext.prototype.validateEnum = function validateEnum(data, schema) {
@@ -796,17 +820,23 @@ ValidatorContext.prototype.validateMinMax = function validateMinMax(data, schema
 		if (data < schema.minimum) {
 			return this.createError(ErrorCodes.NUMBER_MINIMUM, {value: data, minimum: schema.minimum}, '', '/minimum', null, data, schema);
 		}
-		if (schema.exclusiveMinimum && data === schema.minimum) {
+		if (schema.exclusiveMinimum === true && data === schema.minimum) {
 			return this.createError(ErrorCodes.NUMBER_MINIMUM_EXCLUSIVE, {value: data, minimum: schema.minimum}, '', '/exclusiveMinimum', null, data, schema);
 		}
+	}
+	if ((typeof schema.exclusiveMinimum === "number") && data <= schema.exclusiveMinimum) {
+		return this.createError(ErrorCodes.NUMBER_MINIMUM_EXCLUSIVE, {value: data, minimum: schema.exclusiveMinimum}, '', '/exclusiveMinimum', null, data, schema);
 	}
 	if (schema.maximum !== undefined) {
 		if (data > schema.maximum) {
 			return this.createError(ErrorCodes.NUMBER_MAXIMUM, {value: data, maximum: schema.maximum}, '', '/maximum', null, data, schema);
 		}
-		if (schema.exclusiveMaximum && data === schema.maximum) {
+		if (schema.exclusiveMaximum === true && data === schema.maximum) {
 			return this.createError(ErrorCodes.NUMBER_MAXIMUM_EXCLUSIVE, {value: data, maximum: schema.maximum}, '', '/exclusiveMaximum', null, data, schema);
 		}
+	}
+	if ((typeof schema.exclusiveMaximum === "number") && data >= schema.exclusiveMaximum) {
+		return this.createError(ErrorCodes.NUMBER_MAXIMUM_EXCLUSIVE, {value: data, maximum: schema.exclusiveMaximum}, '', '/exclusiveMaximum', null, data, schema);
 	}
 	return null;
 };
@@ -878,6 +908,7 @@ ValidatorContext.prototype.validateArray = function validateArray(data, schema, 
 	}
 	return this.validateArrayLength(data, schema, dataPointerPath)
 		|| this.validateArrayUniqueItems(data, schema, dataPointerPath)
+		|| this.validateArrayContains(data, schema, dataPointerPath)
 		|| this.validateArrayItems(data, schema, dataPointerPath)
 		|| null;
 };
@@ -899,6 +930,28 @@ ValidatorContext.prototype.validateArrayLength = function validateArrayLength(da
 				return error;
 			}
 		}
+	}
+	return null;
+};
+
+ValidatorContext.prototype.validateArrayContains = function validateArrayContains(data, schema, dataPointerPath) {
+	if ((schema.contains === true && data.length > 0) || schema.contains === undefined) {
+		return null;
+	}
+	var error;
+	if (data.length === 0 || schema.contains === false) {
+		error = true;
+	} else {
+		for (var i = 0; i < data.length; i++) {
+			error = this.validateAllValidators(data[i], schema.contains, dataPointerPath + "/" + i);
+			if (!error) {
+				return null;
+			}
+		}
+		error = true;
+	}
+	if (error) {
+		return this.createError(ErrorCodes.ARRAY_CONTAINS, {}, '', '/contains', null, data, schema);
 	}
 	return null;
 };
@@ -1006,6 +1059,11 @@ ValidatorContext.prototype.validateObjectProperties = function validateObjectPro
 	for (var key in data) {
 		var keyPointerPath = dataPointerPath + "/" + key.replace(/~/g, '~0').replace(/\//g, '~1');
 		var foundMatch = false;
+		if (schema.propertyNames !== undefined && schema.propertyNames !== true) {
+			if (error = this.validateAllValidators(key, schema.propertyNames, keyPointerPath)) {
+				return this.createError(ErrorCodes.OBJECT_PROPERTY_NAMES, {key: key, error: error.message}, '', '/propertyNames', null, data, schema).prefixWith(key, null);
+			}
+		}
 		if (schema.properties !== undefined && schema.properties[key] !== undefined) {
 			foundMatch = true;
 			if (error = this.validateAll(data[key], schema.properties[key], [key], ["properties", key], keyPointerPath)) {
@@ -1375,6 +1433,8 @@ var ErrorCodes = {
 	ONE_OF_MISSING: 11,
 	ONE_OF_MULTIPLE: 12,
 	NOT_PASSED: 13,
+	BOOLEAN_SCHEMA_FALSE: 14,
+	CONST_NOT_EQUAL: 15,
 	// Numeric errors
 	NUMBER_MULTIPLE_OF: 100,
 	NUMBER_MINIMUM: 101,
@@ -1392,11 +1452,13 @@ var ErrorCodes = {
 	OBJECT_REQUIRED: 302,
 	OBJECT_ADDITIONAL_PROPERTIES: 303,
 	OBJECT_DEPENDENCY_KEY: 304,
+	OBJECT_PROPERTY_NAMES: 305,
 	// Array errors
 	ARRAY_LENGTH_SHORT: 400,
 	ARRAY_LENGTH_LONG: 401,
 	ARRAY_UNIQUE: 402,
 	ARRAY_ADDITIONAL_ITEMS: 403,
+	ARRAY_CONTAINS: 404,
 	// Custom/user-defined errors
 	FORMAT_CUSTOM: 500,
 	KEYWORD_CUSTOM: 501,
@@ -1416,6 +1478,8 @@ var ErrorMessagesDefault = {
 	ONE_OF_MISSING: "Data does not match any schemas from \"oneOf\"",
 	ONE_OF_MULTIPLE: "Data is valid against more than one schema from \"oneOf\": indices {index1} and {index2}",
 	NOT_PASSED: "Data matches schema from \"not\"",
+	BOOLEAN_SCHEMA_FALSE: "Schema does not allow any data",
+	CONST_NOT_EQUAL: "Data does not match schema.const",
 	// Numeric errors
 	NUMBER_MULTIPLE_OF: "Value {value} is not a multiple of {multipleOf}",
 	NUMBER_MINIMUM: "Value {value} is less than minimum {minimum}",
@@ -1433,11 +1497,13 @@ var ErrorMessagesDefault = {
 	OBJECT_REQUIRED: "Missing required property: {key}",
 	OBJECT_ADDITIONAL_PROPERTIES: "Additional properties not allowed",
 	OBJECT_DEPENDENCY_KEY: "Dependency failed - key must exist: {missing} (due to key: {key})",
+	OBJECT_PROPERTY_NAMES: "Property name \"{key}\" does not match schema with error: {error}",
 	// Array errors
 	ARRAY_LENGTH_SHORT: "Array is too short ({length}), minimum {minimum}",
 	ARRAY_LENGTH_LONG: "Array is too long ({length}), maximum {maximum}",
 	ARRAY_UNIQUE: "Array items are not unique (indices {match1} and {match2})",
 	ARRAY_ADDITIONAL_ITEMS: "Additional items not allowed",
+	ARRAY_CONTAINS: "Array are not contain item matching schema.contains",
 	// Format errors
 	FORMAT_CUSTOM: "Format validation failed ({message})",
 	KEYWORD_CUSTOM: "Keyword failed: {key} ({message})",
@@ -1462,6 +1528,7 @@ function ValidationError(code, params, dataPath, schemaPath, subErrors) {
 	var err = new Error(this.message);
 	this.stack = err.stack || err.stacktrace;
 	if (!this.stack) {
+		/*jshint -W002: true*/
 		try {
 			throw err;
 		}

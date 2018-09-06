@@ -5,6 +5,12 @@
   "use strict";
   var expandSchema;
 
+  function arrayIntersect(x, y) {
+    return x.filter(function (value) {
+      return y.indexOf(value) >= 0;
+    });
+  }
+
   function URLwithJio(url, base_url) {
     var urn_prefix,
       pathname,
@@ -65,19 +71,40 @@
     return target;
   }
 
-  function checkCircular(g, path, url) {
-    var required_stack,
+  function checkCircular(urls, path, url) {
+    var stack,
       idx,
-      prev_field_path = getMaxPathInDict(g.props.schema_required_urls, path);
-    required_stack = g.props.schema_required_urls[prev_field_path] || [];
-    idx = required_stack.indexOf(url);
+      prev_field_path = getMaxPathInDict(urls, path);
+    stack = urls[prev_field_path] || [];
+    idx = stack.indexOf(url);
     if (idx >= 0) {
       if (path === prev_field_path && idx === 0) {
         return;
       }
-      throw new Error("Circular reference detected");
+      return true;
     }
-    g.props.schema_required_urls[path] = [url].concat(required_stack);
+    // copy and add url as first element
+    urls[path] = [url].concat(stack);
+  }
+
+  function checkHardCircular(g, path, url) {
+    return checkCircular(g.props.schema_required_urls, path, url);
+  }
+
+  function checkAndMarkSoftCircular(g, schema_arr, path, url) {
+    var ret = true;
+    // if schema_arr.length > 1 selection rendered in any case
+    // so we not need checkCircular and have small optimisation
+    if (schema_arr.length === 1) {
+      ret = checkCircular(g.props.schema_urls, path, url);
+      schema_arr[0].circular = ret;
+    }
+    if (ret) {
+      // if schema_arr.length > 1 selection rendered and loop break
+      // if circular found selection rendered and loop break
+      // so we can begin from start
+      g.props.schema_urls[path] = [];
+    }
   }
 
   function convertToRealWorldSchemaPath(g, path) {
@@ -255,7 +282,9 @@
       }
       queue
         .push(function (json) {
-          checkCircular(g, path, url);
+          if (checkHardCircular(g, path, url)) {
+            throw new Error("Circular reference detected");
+          }
           return resolveLocalReference(json, hash);
         });
     }
@@ -299,17 +328,146 @@
         return expandSchema(g, schema_part, path, $ref);
       })
       .push(function (schema_arr) {
-        // if length array > 1 form rendered on demand already
-        // so not needed circular detection
-        if (schema_arr.length === 1) {
-          // XXX need smart circular detection in this place
-          schema_arr[0].circular = true;
-        }
+        checkAndMarkSoftCircular(g, schema_arr, path, url);
         return schema_arr;
       });
   }
 
-  function allOf(g, schema_array, schema_path) {
+  function mergeSchemas(x, y, doesntcopy) {
+    if (x === true && y === true) {
+      return true;
+    }
+    if (x === false || y === false) {
+      return false;
+    }
+    var key,
+      p;
+    if (x === true) {
+      x = {};
+    } else if (!doesntcopy) {
+      x = JSON.parse(JSON.stringify(x));
+    }
+    if (y === true) {
+      y = {};
+    }
+    for (key in y) {
+      if (y.hasOwnProperty(key)) {
+        if (x.hasOwnProperty(key)) {
+          switch (key) {
+          case "maxProperties":
+          case "maxLength":
+          case "maxItems":
+          case "maximum":
+          case "exclusiveMaximum":
+            if (y[key] < x[key]) {
+              x[key] = y[key];
+            }
+            break;
+          case "minProperties":
+          case "minItems":
+          case "minLength":
+          case "minimum":
+          case "exclusiveMinimum":
+            if (x[key] < y[key]) {
+              x[key] = y[key];
+            }
+            break;
+          case "additionalProperties":
+          case "additionalItems":
+          case "contains":
+          case "propertyNames":
+            mergeSchemas(x[key], y[key], true);
+            break;
+          case "items":
+            // XXX items can be array
+            mergeSchemas(x[key], y[key], true);
+            break;
+          case "contentEncoding":
+          case "contentMediaType":
+            if (x[key] !== y[key]) {
+              return false;
+            }
+            break;
+          case "multipleOf":
+            x[key] = x[key] * y[key];
+            break;
+          case "type":
+            if (typeof x.type === "string") {
+              if (typeof y.type === "string") {
+                if (x.type !== y.type) {
+                  return false;
+                }
+              } else if (y.type.indexOf(x.type) === -1) {
+                return false;
+              }
+            } else {
+              if (typeof y.type === "string") {
+                if (x.type.indexOf(y.type) === -1) {
+                  return false;
+                }
+              } else {
+                x.type = arrayIntersect(x.type, y.type);
+                if (x.type.length === 0) {
+                  return false;
+                }
+              }
+            }
+            break;
+          case "properties":
+          case "patternProperties":
+            for (p in y[key]) {
+              if (y[key].hasOwnProperty(p)) {
+                if (x[key].hasOwnProperty(p)) {
+                  mergeSchemas(x[key][p], y[key][p], true);
+                } else {
+                  x[key][p] = y[key][p];
+                }
+              }
+            }
+            break;
+          case "pattern":
+            // XXX regex string merge
+          case "dependencies":
+            // XXX find solution how merge
+            x[key] = y[key];
+            break;
+          case "required":
+            for (p = 0; p < y.required.length; p += 1) {
+              if (x.required.indexOf(y.required[p]) < 0) {
+                x.required.push(y.required[p]);
+              }
+            }
+            break;
+          case "uniqueItems":
+            x[key] = y[key];
+            break;
+          case "allOf":
+          case "anyOf":
+          case "$ref":
+          case "id":
+          case "$id":
+            // XXX
+            break;
+          default:
+            // XXX
+            x[key] = y[key];
+          }
+        } else {
+          switch (key) {
+          case "allOf":
+          case "anyOf":
+          case "$ref":
+            break;
+          default:
+            x[key] = y[key];
+          }
+        }
+      }
+    }
+    return x;
+  }
+
+  function allOf(g, schema_array, schema_path, base_schema) {
     return RSVP.Queue()
       .push(function () {
         var i,
@@ -323,10 +481,8 @@
         var i,
           x,
           y,
-          key,
           next_schema,
           schema,
-          schema_item,
           summ_arr;
         for (i = 0; i < arr.length - 1; i += 1) {
           summ_arr = [];
@@ -334,56 +490,31 @@
             for (y = 0; y < arr[i + 1].length; y += 1) {
               schema = arr[i][x].schema;
               next_schema = arr[i + 1][y].schema;
-              if (schema === true && next_schema === true) {
-                schema_item = {
-                  schema: true,
-                  schema_path: arr[i][x].schema_path
-                };
-              } else if (schema === false || next_schema === false) {
-                schema_item = {
-                  schema: false,
-                  schema_path: arr[i][x].schema_path
-                };
-              } else {
-                if (schema === true) {
-                  schema = {};
-                }
-                if (next_schema === true) {
-                  next_schema = {};
-                }
-                // copy before change
-                schema = JSON.parse(JSON.stringify(schema));
-                for (key in next_schema) {
-                  if (next_schema.hasOwnProperty(key)) {
-                    if (schema.hasOwnProperty(key)) {
-                      // XXX need use many many rules for merging
-                      schema[key] = next_schema[key];
-                    } else {
-                      schema[key] = next_schema[key];
-                    }
-                  }
-                }
-                schema_item = {
-                  schema: schema,
-                  schema_path: arr[i][x].schema_path
-                };
-              }
-              summ_arr.push(schema_item);
+              schema = mergeSchemas(schema, next_schema);
+              summ_arr.push({
+                schema: schema,
+                // XXX we loss path arr[i + 1][y].schema_path
+                schema_path: arr[i][x].schema_path
+              });
             }
           }
           arr[i + 1] = summ_arr;
         }
-        return arr[arr.length - 1];
+        for (x = 0; x < summ_arr.length; x += 1) {
+          summ_arr[x].schema = mergeSchemas(summ_arr[x].schema, base_schema);
+        }
+        return summ_arr;
       });
   }
 
-  function anyOf(g, schema_array, schema_path) {
+  function anyOf(g, schema, schema_path) {
+    var schema_array = schema.anyOf;
     return RSVP.Queue()
       .push(function () {
         var i,
           arr = [];
         for (i = 0; i < schema_array.length; i += 1) {
-          arr.push(expandSchema(g, schema_array[i], schema_path + '/anyOf/' + i.toString()));
+          arr.push(expandSchema(g, mergeSchemas(schema_array[i], schema), schema_path + '/anyOf/' + i.toString()));
         }
         return RSVP.all(arr);
       })
@@ -413,10 +544,10 @@
       schema = true;
     }
     if (schema.anyOf !== undefined) {
-      return anyOf(g, schema.anyOf, schema_path);
+      return anyOf(g, schema, schema_path);
     }
     if (schema.allOf !== undefined) {
-      return allOf(g, schema.allOf, schema_path);
+      return allOf(g, schema.allOf, schema_path, schema);
     }
     if (schema.$ref) {
       return loadJSONSchema(g, schema.$ref, schema_path);
@@ -627,11 +758,19 @@
         "http://json-schema.org/draft-07/schema": "json-schema/schema7.json",
         "http://json-schema.org/schema": "json-schema/schema7.json"
       };
+      // schema_urls[path] = [
+      // stack urls
+      // "url1",
+      // "url2"
+      // ]
+      // used for break soft circular relation of schemas
+      g.props.schema_urls = {};
       // schema_required_urls[path] = [
       // stack required urls, on every unrequired field stack begining from []
       // "url1",
       // "url2"
       // ]
+      // used for break hard circular relation of schemas
       g.props.schema_required_urls = {};
       // schema_resolve_errors[schema_url] = {
       //   schemaPath: local_schema_path,
