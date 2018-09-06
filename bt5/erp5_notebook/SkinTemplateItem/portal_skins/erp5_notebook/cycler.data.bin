@@ -1,0 +1,927 @@
+"""
+Cycler
+======
+
+Cycling through combinations of values, producing dictionaries.
+
+You can add cyclers::
+
+    from cycler import cycler
+    cc = (cycler(color=list('rgb')) +
+          cycler(linestyle=['-', '--', '-.']))
+    for d in cc:
+        print(d)
+
+Results in::
+
+    {'color': 'r', 'linestyle': '-'}
+    {'color': 'g', 'linestyle': '--'}
+    {'color': 'b', 'linestyle': '-.'}
+
+
+You can multiply cyclers::
+
+    from cycler import cycler
+    cc = (cycler(color=list('rgb')) *
+          cycler(linestyle=['-', '--', '-.']))
+    for d in cc:
+        print(d)
+
+Results in::
+
+    {'color': 'r', 'linestyle': '-'}
+    {'color': 'r', 'linestyle': '--'}
+    {'color': 'r', 'linestyle': '-.'}
+    {'color': 'g', 'linestyle': '-'}
+    {'color': 'g', 'linestyle': '--'}
+    {'color': 'g', 'linestyle': '-.'}
+    {'color': 'b', 'linestyle': '-'}
+    {'color': 'b', 'linestyle': '--'}
+    {'color': 'b', 'linestyle': '-.'}
+"""
+
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
+import six
+from itertools import product, cycle
+from six.moves import zip, reduce
+from operator import mul, add
+import copy
+
+__version__ = '0.10.0'
+
+
+def _process_keys(left, right):
+    """
+    Helper function to compose cycler keys
+
+    Parameters
+    ----------
+    left, right : iterable of dictionaries or None
+        The cyclers to be composed
+    Returns
+    -------
+    keys : set
+        The keys in the composition of the two cyclers
+    """
+    l_peek = next(iter(left)) if left is not None else {}
+    r_peek = next(iter(right)) if right is not None else {}
+    l_key = set(l_peek.keys())
+    r_key = set(r_peek.keys())
+    if l_key & r_key:
+        raise ValueError("Can not compose overlapping cycles")
+    return l_key | r_key
+
+
+class Cycler(object):
+    """
+    Composable cycles
+
+    This class has compositions methods:
+
+    ``+``
+      for 'inner' products (zip)
+
+    ``+=``
+      in-place ``+``
+
+    ``*``
+      for outer products (itertools.product) and integer multiplication
+
+    ``*=``
+      in-place ``*``
+
+    and supports basic slicing via ``[]``
+
+    Parameters
+    ----------
+    left : Cycler or None
+        The 'left' cycler
+
+    right : Cycler or None
+        The 'right' cycler
+
+    op : func or None
+        Function which composes the 'left' and 'right' cyclers.
+
+    """
+    def __call__(self):
+        return cycle(self)
+
+    def __init__(self, left, right=None, op=None):
+        """Semi-private init
+
+        Do not use this directly, use `cycler` function instead.
+        """
+        if isinstance(left, Cycler):
+            self._left = Cycler(left._left, left._right, left._op)
+        elif left is not None:
+            # Need to copy the dictionary or else that will be a residual
+            # mutable that could lead to strange errors
+            self._left = [copy.copy(v) for v in left]
+        else:
+            self._left = None
+
+        if isinstance(right, Cycler):
+            self._right = Cycler(right._left, right._right, right._op)
+        elif right is not None:
+            # Need to copy the dictionary or else that will be a residual
+            # mutable that could lead to strange errors
+            self._right = [copy.copy(v) for v in right]
+        else:
+            self._right = None
+
+        self._keys = _process_keys(self._left, self._right)
+        self._op = op
+
+    @property
+    def keys(self):
+        """
+        The keys this Cycler knows about
+        """
+        return set(self._keys)
+
+    def change_key(self, old, new):
+        """
+        Change a key in this cycler to a new name.
+        Modification is performed in-place.
+
+        Does nothing if the old key is the same as the new key.
+        Raises a ValueError if the new key is already a key.
+        Raises a KeyError if the old key isn't a key.
+
+        """
+        if old == new:
+            return
+        if new in self._keys:
+            raise ValueError("Can't replace %s with %s, %s is already a key" %
+                             (old, new, new))
+        if old not in self._keys:
+            raise KeyError("Can't replace %s with %s, %s is not a key" %
+                           (old, new, old))
+
+        self._keys.remove(old)
+        self._keys.add(new)
+
+        if self._right is not None and old in self._right.keys:
+            self._right.change_key(old, new)
+
+        # self._left should always be non-None
+        # if self._keys is non-empty.
+        elif isinstance(self._left, Cycler):
+            self._left.change_key(old, new)
+        else:
+            # It should be completely safe at this point to
+            # assume that the old key can be found in each
+            # iteration.
+            self._left = [{new: entry[old]} for entry in self._left]
+
+    def _compose(self):
+        """
+        Compose the 'left' and 'right' components of this cycle
+        with the proper operation (zip or product as of now)
+        """
+        for a, b in self._op(self._left, self._right):
+            out = dict()
+            out.update(a)
+            out.update(b)
+            yield out
+
+    @classmethod
+    def _from_iter(cls, label, itr):
+        """
+        Class method to create 'base' Cycler objects
+        that do not have a 'right' or 'op' and for which
+        the 'left' object is not another Cycler.
+
+        Parameters
+        ----------
+        label : str
+            The property key.
+
+        itr : iterable
+            Finite length iterable of the property values.
+
+        Returns
+        -------
+        cycler : Cycler
+            New 'base' `Cycler`
+        """
+        ret = cls(None)
+        ret._left = list({label: v} for v in itr)
+        ret._keys = set([label])
+        return ret
+
+    def __getitem__(self, key):
+        # TODO : maybe add numpy style fancy slicing
+        if isinstance(key, slice):
+            trans = self.by_key()
+            return reduce(add, (_cycler(k, v[key])
+                                for k, v in six.iteritems(trans)))
+        else:
+            raise ValueError("Can only use slices with Cycler.__getitem__")
+
+    def __iter__(self):
+        if self._right is None:
+            return iter(dict(l) for l in self._left)
+
+        return self._compose()
+
+    def __add__(self, other):
+        """
+        Pair-wise combine two equal length cycles (zip)
+
+        Parameters
+        ----------
+        other : Cycler
+           The second Cycler
+        """
+        if len(self) != len(other):
+            raise ValueError("Can only add equal length cycles, "
+                             "not {0} and {1}".format(len(self), len(other)))
+        return Cycler(self, other, zip)
+
+    def __mul__(self, other):
+        """
+        Outer product of two cycles (`itertools.product`) or integer
+        multiplication.
+
+        Parameters
+        ----------
+        other : Cycler or int
+           The second Cycler or integer
+        """
+        if isinstance(other, Cycler):
+            return Cycler(self, other, product)
+        elif isinstance(other, int):
+            trans = self.by_key()
+            return reduce(add, (_cycler(k, v*other)
+                                for k, v in six.iteritems(trans)))
+        else:
+            return NotImplemented
+
+    def __rmul__(self, other):
+        return self * other
+
+    def __len__(self):
+        op_dict = {zip: min, product: mul}
+        if self._right is None:
+            return len(self._left)
+        l_len = len(self._left)
+        r_len = len(self._right)
+        return op_dict[self._op](l_len, r_len)
+
+    def __iadd__(self, other):
+        """
+        In-place pair-wise combine two equal length cycles (zip)
+
+        Parameters
+        ----------
+        other : Cycler
+           The second Cycler
+        """
+        if not isinstance(other, Cycler):
+            raise TypeError("Cannot += with a non-Cycler object")
+        # True shallow copy of self is fine since this is in-place
+        old_self = copy.copy(self)
+        self._keys = _process_keys(old_self, other)
+        self._left = old_self
+        self._op = zip
+        self._right = Cycler(other._left, other._right, other._op)
+        return self
+
+    def __imul__(self, other):
+        """
+        In-place outer product of two cycles (`itertools.product`)
+
+        Parameters
+        ----------
+        other : Cycler
+           The second Cycler
+        """
+        if not isinstance(other, Cycler):
+            raise TypeError("Cannot *= with a non-Cycler object")
+        # True shallow copy of self is fine since this is in-place
+        old_self = copy.copy(self)
+        self._keys = _process_keys(old_self, other)
+        self._left = old_self
+        self._op = product
+        self._right = Cycler(other._left, other._right, other._op)
+        return self
+
+    def __eq__(self, other):
+        """
+        Check equality
+        """
+        if len(self) != len(other):
+            return False
+        if self.keys ^ other.keys:
+            return False
+
+        return all(a == b for a, b in zip(self, other))
+
+    def __repr__(self):
+        op_map = {zip: '+', product: '*'}
+        if self._right is None:
+            lab = self.keys.pop()
+            itr = list(v[lab] for v in self)
+            return "cycler({lab!r}, {itr!r})".format(lab=lab, itr=itr)
+        else:
+            op = op_map.get(self._op, '?')
+            msg = "({left!r} {op} {right!r})"
+            return msg.format(left=self._left, op=op, right=self._right)
+
+    def _repr_html_(self):
+        # an table showing the value of each key through a full cycle
+        output = "<table>"
+        sorted_keys = sorted(self.keys, key=repr)
+        for key in sorted_keys:
+            output += "<th>{key!r}</th>".format(key=key)
+        for d in iter(self):
+            output += "<tr>"
+            for k in sorted_keys:
+                output += "<td>{val!r}</td>".format(val=d[k])
+            output += "</tr>"
+        output += "</table>"
+        return output
+
+    def by_key(self):
+        """Values by key
+
+        This returns the transposed values of the cycler.  Iterating
+        over a `Cycler` yields dicts with a single value for each key,
+        this method returns a `dict` of `list` which are the values
+        for the given key.
+
+        The returned value can be used to create an equivalent `Cycler`
+        using only `+`.
+
+        Returns
+        -------
+        transpose : dict
+            dict of lists of the values for each key.
+        """
+
+        # TODO : sort out if this is a bottle neck, if there is a better way
+        # and if we care.
+
+        keys = self.keys
+        # change this to dict comprehension when drop 2.6
+        out = dict((k,  list()) for k in keys)
+
+        for d in self:
+            for k in keys:
+                out[k].append(d[k])
+        return out
+
+    # for back compatibility
+    _transpose = by_key
+
+    def simplify(self):
+        """Simplify the Cycler
+
+        Returned as a composition using only sums (no multiplications)
+
+        Returns
+        -------
+        simple : Cycler
+            An equivalent cycler using only summation"""
+        # TODO: sort out if it is worth the effort to make sure this is
+        # balanced.  Currently it is is
+        # (((a + b) + c) + d) vs
+        # ((a + b) + (c + d))
+        # I would believe that there is some performance implications
+
+        trans = self.by_key()
+        return reduce(add, (_cycler(k, v) for k, v in six.iteritems(trans)))
+
+    def concat(self, other):
+        """Concatenate this cycler and an other.
+
+        The keys must match exactly.
+
+        This returns a single Cycler which is equivalent to
+        `itertools.chain(self, other)`
+
+        Examples
+        --------
+
+        >>> num = cycler('a', range(3))
+        >>> let = cycler('a', 'abc')
+        >>> num.concat(let)
+        cycler('a', [0, 1, 2, 'a', 'b', 'c'])
+
+        Parameters
+        ----------
+        other : `Cycler`
+            The `Cycler` to concatenate to this one.
+
+        Returns
+        -------
+        ret : `Cycler`
+            The concatenated `Cycler`
+        """
+        return concat(self, other)
+
+
+def concat(left, right):
+    """Concatenate two cyclers.
+
+    The keys must match exactly.
+
+    This returns a single Cycler which is equivalent to
+    `itertools.chain(left, right)`
+
+    Examples
+    --------
+
+    >>> num = cycler('a', range(3))
+    >>> let = cycler('a', 'abc')
+    >>> num.concat(let)
+    cycler('a', [0, 1, 2, 'a', 'b', 'c'])
+
+    Parameters
+    ----------
+    left, right : `Cycler`
+        The two `Cycler` instances to concatenate
+
+    Returns
+    -------
+    ret : `Cycler`
+        The concatenated `Cycler`
+    """
+    if left.keys != right.keys:
+        msg = '\n\t'.join(["Keys do not match:",
+                           "Intersection: {both!r}",
+                           "Disjoint: {just_one!r}"]).format(
+                               both=left.keys & right.keys,
+                               just_one=left.keys ^ right.keys)
+
+        raise ValueError(msg)
+
+    _l = left.by_key()
+    _r = right.by_key()
+    return reduce(add, (_cycler(k, _l[k] + _r[k]) for k in left.keys))
+
+
+def cycler(*args, **kwargs):
+    """
+    Create a new `Cycler` object from a single positional argument,
+    a pair of positional arguments, or the combination of keyword arguments.
+
+    cycler(arg)
+    cycler(label1=itr1[, label2=iter2[, ...]])
+    cycler(label, itr)
+
+    Form 1 simply copies a given `Cycler` object.
+
+    Form 2 composes a `Cycler` as an inner product of the
+    pairs of keyword arguments. In other words, all of the
+    iterables are cycled simultaneously, as if through zip().
+
+    Form 3 creates a `Cycler` from a label and an iterable.
+    This is useful for when the label cannot be a keyword argument
+    (e.g., an integer or a name that has a space in it).
+
+    Parameters
+    ----------
+    arg : Cycler
+        Copy constructor for Cycler (does a shallow copy of iterables).
+
+    label : name
+        The property key. In the 2-arg form of the function,
+        the label can be any hashable object. In the keyword argument
+        form of the function, it must be a valid python identifier.
+
+    itr : iterable
+        Finite length iterable of the property values.
+        Can be a single-property `Cycler` that would
+        be like a key change, but as a shallow copy.
+
+    Returns
+    -------
+    cycler : Cycler
+        New `Cycler` for the given property
+
+    """
+    if args and kwargs:
+        raise TypeError("cyl() can only accept positional OR keyword "
+                        "arguments -- not both.")
+
+    if len(args) == 1:
+        if not isinstance(args[0], Cycler):
+            raise TypeError("If only one positional argument given, it must "
+                            " be a Cycler instance.")
+        return Cycler(args[0])
+    elif len(args) == 2:
+        return _cycler(*args)
+    elif len(args) > 2:
+        raise TypeError("Only a single Cycler can be accepted as the lone "
+                        "positional argument. Use keyword arguments instead.")
+
+    if kwargs:
+        return reduce(add, (_cycler(k, v) for k, v in six.iteritems(kwargs)))
+
+    raise TypeError("Must have at least a positional OR keyword arguments")
+
+
+def _cycler(label, itr):
+    """
+    Create a new `Cycler` object from a property name and
+    iterable of values.
+
+    Parameters
+    ----------
+    label : hashable
+        The property key.
+
+    itr : iterable
+        Finite length iterable of the property values.
+
+    Returns
+    -------
+    cycler : Cycler
+        New `Cycler` for the given property
+    """
+    if isinstance(itr, Cycler):
+        keys = itr.keys
+        if len(keys) != 1:
+            msg = "Can not create Cycler from a multi-property Cycler"
+            raise ValueError(msg)
+
+        lab = keys.pop()
+        # Doesn't need to be a new list because
+        # _from_iter() will be creating that new list anyway.
+        itr = (v[lab] for v in itr)
+
+    return Cycler._from_iter(label, itr)
+3
+
+¨¬VW>  „               @   sî   d Z ddlmZmZmZmZ ddlZddlmZm	Z	 ddl
+mZmZ ddlmZmZ ddlZdZdd	Ñ ZG d
+dÑ deÉZddÑ ZddÑ ZddÑ ZdS )aí  
+Cycler
+======
+
+Cycling through combinations of values, producing dictionaries.
+
+You can add cyclers::
+
+    from cycler import cycler
+    cc = (cycler(color=list('rgb')) +
+          cycler(linestyle=['-', '--', '-.']))
+    for d in cc:
+        print(d)
+
+Results in::
+
+    {'color': 'r', 'linestyle': '-'}
+    {'color': 'g', 'linestyle': '--'}
+    {'color': 'b', 'linestyle': '-.'}
+
+
+You can multiply cyclers::
+
+    from cycler import cycler
+    cc = (cycler(color=list('rgb')) *
+          cycler(linestyle=['-', '--', '-.']))
+    for d in cc:
+        print(d)
+
+Results in::
+
+    {'color': 'r', 'linestyle': '-'}
+    {'color': 'r', 'linestyle': '--'}
+    {'color': 'r', 'linestyle': '-.'}
+    {'color': 'g', 'linestyle': '-'}
+    {'color': 'g', 'linestyle': '--'}
+    {'color': 'g', 'linestyle': '-.'}
+    {'color': 'b', 'linestyle': '-'}
+    {'color': 'b', 'linestyle': '--'}
+    {'color': 'b', 'linestyle': '-.'}
+È    )⁄absolute_import⁄division⁄print_function⁄unicode_literalsN)⁄product⁄cycle)⁄zip⁄reduce)⁄mul⁄addz0.10.0c             C   s`   | dk	rt t| ÉÉni }|dk	r,t t|ÉÉni }t|jÉ É}t|jÉ É}||@ rXtdÉÇ||B S )a  
+    Helper function to compose cycler keys
+
+    Parameters
+    ----------
+    left, right : iterable of dictionaries or None
+        The cyclers to be composed
+    Returns
+    -------
+    keys : set
+        The keys in the composition of the two cyclers
+    Nz"Can not compose overlapping cycles)⁄next⁄iter⁄set⁄keys⁄
+ValueError)⁄left⁄rightZl_peekZr_peekZl_keyZr_key© r   ˙-install/lib/python3.6/site-packages/cycler.py⁄_process_keys7   s    r   c               @   sæ   e Zd ZdZddÑ Zd+ddÑZeddÑ ÉZd	d
+Ñ ZddÑ Z	e
+ddÑ ÉZddÑ ZddÑ ZddÑ ZddÑ ZddÑ ZddÑ ZddÑ ZddÑ Zdd Ñ Zd!d"Ñ Zd#d$Ñ Zd%d&Ñ ZeZd'd(Ñ Zd)d*Ñ ZdS ),⁄Cyclera  
+    Composable cycles
+
+    This class has compositions methods:
+
+    ``+``
+      for 'inner' products (zip)
+
+    ``+=``
+      in-place ``+``
+
+    ``*``
+      for outer products (itertools.product) and integer multiplication
+
+    ``*=``
+      in-place ``*``
+
+    and supports basic slicing via ``[]``
+
+    Parameters
+    ----------
+    left : Cycler or None
+        The 'left' cycler
+
+    right : Cycler or None
+        The 'right' cycler
+
+    op : func or None
+        Function which composes the 'left' and 'right' cyclers.
+
+    c             C   s   t | ÉS )N)r   )⁄selfr   r   r   ⁄__call__m   s    zCycler.__call__Nc             C   sö   t |tÉr t|j|j|jÉ| _n |dk	r:ddÑ |D É| _nd| _t |tÉr`t|j|j|jÉ| _n |dk	rzddÑ |D É| _nd| _t| j| jÉ| _|| _dS )z\Semi-private init
+
+        Do not use this directly, use `cycler` function instead.
+        Nc             S   s   g | ]}t j |ÉëqS r   )⁄copy)⁄.0⁄vr   r   r   ˙
+<listcomp>z   s    z#Cycler.__init__.<locals>.<listcomp>c             S   s   g | ]}t j |ÉëqS r   )r   )r   r   r   r   r   r   É   s    )⁄
+isinstancer   ⁄_left⁄_right⁄_opr   ⁄_keys)r   r   r   ⁄opr   r   r   ⁄__init__p   s    
+
+zCycler.__init__c             C   s
+   t | jÉS )z2
+        The keys this Cycler knows about
+        )r   r!   )r   r   r   r   r   ä   s    zCycler.keysc                s∫   àà krdS à | j kr(tdàà à f ÉÇà| j krDtdàà àf ÉÇ| j jàÉ | j jà É | jdk	rÇà| jjkrÇ| jjàà É n4t| j	t
+Érû| j	jàà É ná áfddÑ| j	D É| _	dS )a  
+        Change a key in this cycler to a new name.
+        Modification is performed in-place.
+
+        Does nothing if the old key is the same as the new key.
+        Raises a ValueError if the new key is already a key.
+        Raises a KeyError if the old key isn't a key.
+
+        Nz-Can't replace %s with %s, %s is already a keyz)Can't replace %s with %s, %s is not a keyc                s   g | ]}à |à iëqS r   r   )r   ⁄entry)⁄new⁄oldr   r   r   ≤   s    z%Cycler.change_key.<locals>.<listcomp>)r!   r   ⁄KeyError⁄remover   r   r   ⁄
+change_keyr   r   r   )r   r&   r%   r   )r%   r&   r   r)   ë   s    
+
+
+zCycler.change_keyc             c   sB   x<| j | j| jÉD ](\}}tÉ }|j|É |j|É |V  qW dS )zÜ
+        Compose the 'left' and 'right' components of this cycle
+        with the proper operation (zip or product as of now)
+        N)r    r   r   ⁄dict⁄update)r   ⁄a⁄b⁄outr   r   r   ⁄_compose¥   s
+    
+
+zCycler._composec                s0   | dÉ}t á fddÑ|D ÉÉ|_tà gÉ|_|S )a≠  
+        Class method to create 'base' Cycler objects
+        that do not have a 'right' or 'op' and for which
+        the 'left' object is not another Cycler.
+
+        Parameters
+        ----------
+        label : str
+            The property key.
+
+        itr : iterable
+            Finite length iterable of the property values.
+
+        Returns
+        -------
+        cycler : Cycler
+            New 'base' `Cycler`
+        Nc             3   s   | ]}à |iV  qd S )Nr   )r   r   )⁄labelr   r   ˙	<genexpr>‘   s    z$Cycler._from_iter.<locals>.<genexpr>)⁄listr   r   r!   )⁄clsr0   ⁄itr⁄retr   )r0   r   ⁄
+_from_iterø   s    zCycler._from_iterc                s<   t à tÉr0| jÉ }ttá fddÑtj|ÉD ÉÉS tdÉÇd S )Nc             3   s    | ]\}}t ||à  ÉV  qd S )N)⁄_cycler)r   ⁄kr   )⁄keyr   r   r1   ‹   s   z%Cycler.__getitem__.<locals>.<genexpr>z+Can only use slices with Cycler.__getitem__)r   ⁄slice⁄by_keyr	   r   ⁄six⁄	iteritemsr   )r   r9   ⁄transr   )r9   r   ⁄__getitem__ÿ   s
+    
+zCycler.__getitem__c             C   s&   | j d krtddÑ | jD ÉÉS | jÉ S )Nc             s   s   | ]}t |ÉV  qd S )N)r*   )r   ⁄lr   r   r   r1   „   s    z"Cycler.__iter__.<locals>.<genexpr>)r   r   r   r/   )r   r   r   r   ⁄__iter__·   s    
+zCycler.__iter__c             C   s4   t | Ét |Ékr(tdjt | Ét |ÉÉÉÇt| |tÉS )zú
+        Pair-wise combine two equal length cycles (zip)
+
+        Parameters
+        ----------
+        other : Cycler
+           The second Cycler
+        z1Can only add equal length cycles, not {0} and {1})⁄lenr   ⁄formatr   r   )r   ⁄otherr   r   r   ⁄__add__Á   s    	zCycler.__add__c                sN   t à tÉrt| à tÉS t à tÉrF| jÉ }ttá fddÑtj|ÉD ÉÉS t	S dS )z”
+        Outer product of two cycles (`itertools.product`) or integer
+        multiplication.
+
+        Parameters
+        ----------
+        other : Cycler or int
+           The second Cycler or integer
+        c             3   s    | ]\}}t ||à  ÉV  qd S )N)r7   )r   r8   r   )rD   r   r   r1     s   z!Cycler.__mul__.<locals>.<genexpr>N)
+r   r   r   ⁄intr;   r	   r   r<   r=   ⁄NotImplemented)r   rD   r>   r   )rD   r   ⁄__mul__ı   s    
+
+
+zCycler.__mul__c             C   s   | | S )Nr   )r   rD   r   r   r   ⁄__rmul__  s    zCycler.__rmul__c             C   sD   t ttti}| jd kr t| jÉS t| jÉ}t| jÉ}|| j ||ÉS )N)r   ⁄minr   r
+   r   rB   r   r    )r   Zop_dictZl_lenZr_lenr   r   r   ⁄__len__  s    
+
+
+
+zCycler.__len__c             C   sL   t |tÉstdÉÇtj| É}t||É| _|| _t| _t|j|j	|jÉ| _	| S )z•
+        In-place pair-wise combine two equal length cycles (zip)
+
+        Parameters
+        ----------
+        other : Cycler
+           The second Cycler
+        z"Cannot += with a non-Cycler object)
+r   r   ⁄	TypeErrorr   r   r!   r   r   r    r   )r   rD   ⁄old_selfr   r   r   ⁄__iadd__  s    	
+
+zCycler.__iadd__c             C   sL   t |tÉstdÉÇtj| É}t||É| _|| _t| _t|j|j	|jÉ| _	| S )zß
+        In-place outer product of two cycles (`itertools.product`)
+
+        Parameters
+        ----------
+        other : Cycler
+           The second Cycler
+        z"Cannot *= with a non-Cycler object)
+r   r   rL   r   r   r!   r   r   r    r   )r   rD   rM   r   r   r   ⁄__imul__&  s    	
+
+zCycler.__imul__c             C   s<   t | Ét |ÉkrdS | j|jA r$dS tddÑ t| |ÉD ÉÉS )z 
+        Check equality
+        Fc             s   s   | ]\}}||kV  qd S )Nr   )r   r,   r-   r   r   r   r1   B  s    z Cycler.__eq__.<locals>.<genexpr>)rB   r   ⁄allr   )r   rD   r   r   r   ⁄__eq__9  s
+    zCycler.__eq__c                sn   t dtdi}| jd krD| jjÉ â tá fddÑ| D ÉÉ}djà |dçS |j| jdÉ}d}|j| j	|| jd	çS d S )
+N˙+⁄*c             3   s   | ]}|à  V  qd S )Nr   )r   r   )⁄labr   r   r1   H  s    z"Cycler.__repr__.<locals>.<genexpr>zcycler({lab!r}, {itr!r}))rT   r4   ˙?z({left!r} {op} {right!r}))r   r"   r   )
+r   r   r   r   ⁄popr2   rC   ⁄getr    r   )r   Zop_mapr4   r"   ⁄msgr   )rT   r   ⁄__repr__D  s    
+
+zCycler.__repr__c             C   sÄ   d}t | jtdç}x|D ]}|dj|dç7 }qW xBt| ÉD ]6}|d7 }x |D ]}|dj|| dç7 }qLW |d7 }q:W |d7 }|S )	Nz<table>)r9   z<th>{key!r}</th>z<tr>z<td>{val!r}</td>)⁄valz</tr>z</table>)⁄sortedr   ⁄reprrC   r   )r   ⁄outputZsorted_keysr9   ⁄dr8   r   r   r   ⁄_repr_html_O  s    
+
+zCycler._repr_html_c             C   sJ   | j }tddÑ |D ÉÉ}x,| D ]$}x|D ]}|| j|| É q(W qW |S )a”  Values by key
+
+        This returns the transposed values of the cycler.  Iterating
+        over a `Cycler` yields dicts with a single value for each key,
+        this method returns a `dict` of `list` which are the values
+        for the given key.
+
+        The returned value can be used to create an equivalent `Cycler`
+        using only `+`.
+
+        Returns
+        -------
+        transpose : dict
+            dict of lists of the values for each key.
+        c             s   s   | ]}|t É fV  qd S )N)r2   )r   r8   r   r   r   r1   s  s    z Cycler.by_key.<locals>.<genexpr>)r   r*   ⁄append)r   r   r.   r^   r8   r   r   r   r;   ]  s    
+
+zCycler.by_keyc             C   s"   | j É }ttddÑ tj|ÉD ÉÉS )z Simplify the Cycler
+
+        Returned as a composition using only sums (no multiplications)
+
+        Returns
+        -------
+        simple : Cycler
+            An equivalent cycler using only summationc             s   s   | ]\}}t ||ÉV  qd S )N)r7   )r   r8   r   r   r   r   r1   ç  s    z"Cycler.simplify.<locals>.<genexpr>)r;   r	   r   r<   r=   )r   r>   r   r   r   ⁄simplify}  s    zCycler.simplifyc             C   s
+   t | |ÉS )aF  Concatenate this cycler and an other.
+
+        The keys must match exactly.
+
+        This returns a single Cycler which is equivalent to
+        `itertools.chain(self, other)`
+
+        Examples
+        --------
+
+        >>> num = cycler('a', range(3))
+        >>> let = cycler('a', 'abc')
+        >>> num.concat(let)
+        cycler('a', [0, 1, 2, 'a', 'b', 'c'])
+
+        Parameters
+        ----------
+        other : `Cycler`
+            The `Cycler` to concatenate to this one.
+
+        Returns
+        -------
+        ret : `Cycler`
+            The concatenated `Cycler`
+        )⁄concat)r   rD   r   r   r   rb   è  s    zCycler.concat)NN)⁄__name__⁄
+__module__⁄__qualname__⁄__doc__r   r#   ⁄propertyr   r)   r/   ⁄classmethodr6   r?   rA   rE   rH   rI   rK   rN   rO   rQ   rY   r_   r;   Z
+_transposera   rb   r   r   r   r   r   M   s,   
+#	r   c                sj   | j |j kr>djdddgÉj| j |j @ | j |j A dç}t|ÉÇ| jÉ â |jÉ âttá áfddÑ| j D ÉÉS )a¯  Concatenate two cyclers.
+
+    The keys must match exactly.
+
+    This returns a single Cycler which is equivalent to
+    `itertools.chain(left, right)`
+
+    Examples
+    --------
+
+    >>> num = cycler('a', range(3))
+    >>> let = cycler('a', 'abc')
+    >>> num.concat(let)
+    cycler('a', [0, 1, 2, 'a', 'b', 'c'])
+
+    Parameters
+    ----------
+    left, right : `Cycler`
+        The two `Cycler` instances to concatenate
+
+    Returns
+    -------
+    ret : `Cycler`
+        The concatenated `Cycler`
+    z
+	zKeys do not match:zIntersection: {both!r}zDisjoint: {just_one!r})ZbothZjust_onec             3   s$   | ]}t |à | à|  ÉV  qd S )N)r7   )r   r8   )⁄_l⁄_rr   r   r1   —  s    zconcat.<locals>.<genexpr>)r   ⁄joinrC   r   r;   r	   r   )r   r   rX   r   )ri   rj   r   rb   ¨  s    
+rb   c              O   sê   | r|rt dÉÇt| Édkr>t| d tÉs2t dÉÇt| d ÉS t| ÉdkrRt| é S t| Édkrft dÉÇ|rÑttddÑ tj|ÉD ÉÉS t d	ÉÇd
+S )aÌ  
+    Create a new `Cycler` object from a single positional argument,
+    a pair of positional arguments, or the combination of keyword arguments.
+
+    cycler(arg)
+    cycler(label1=itr1[, label2=iter2[, ...]])
+    cycler(label, itr)
+
+    Form 1 simply copies a given `Cycler` object.
+
+    Form 2 composes a `Cycler` as an inner product of the
+    pairs of keyword arguments. In other words, all of the
+    iterables are cycled simultaneously, as if through zip().
+
+    Form 3 creates a `Cycler` from a label and an iterable.
+    This is useful for when the label cannot be a keyword argument
+    (e.g., an integer or a name that has a space in it).
+
+    Parameters
+    ----------
+    arg : Cycler
+        Copy constructor for Cycler (does a shallow copy of iterables).
+
+    label : name
+        The property key. In the 2-arg form of the function,
+        the label can be any hashable object. In the keyword argument
+        form of the function, it must be a valid python identifier.
+
+    itr : iterable
+        Finite length iterable of the property values.
+        Can be a single-property `Cycler` that would
+        be like a key change, but as a shallow copy.
+
+    Returns
+    -------
+    cycler : Cycler
+        New `Cycler` for the given property
+
+    zBcyl() can only accept positional OR keyword arguments -- not both.È   r   zEIf only one positional argument given, it must  be a Cycler instance.È   zdOnly a single Cycler can be accepted as the lone positional argument. Use keyword arguments instead.c             s   s   | ]\}}t ||ÉV  qd S )N)r7   )r   r8   r   r   r   r   r1     s    zcycler.<locals>.<genexpr>z4Must have at least a positional OR keyword argumentsN)	rL   rB   r   r   r7   r	   r   r<   r=   )⁄args⁄kwargsr   r   r   ⁄cycler‘  s    (rp   c                sN   t |tÉrB|j}t|Édkr(d}t|ÉÇ|jÉ â á fddÑ|D É}tj| |ÉS )aI  
+    Create a new `Cycler` object from a property name and
+    iterable of values.
+
+    Parameters
+    ----------
+    label : hashable
+        The property key.
+
+    itr : iterable
+        Finite length iterable of the property values.
+
+    Returns
+    -------
+    cycler : Cycler
+        New `Cycler` for the given property
+    rl   z2Can not create Cycler from a multi-property Cyclerc             3   s   | ]}|à  V  qd S )Nr   )r   r   )rT   r   r   r1   ,  s    z_cycler.<locals>.<genexpr>)r   r   r   rB   r   rV   r6   )r0   r4   r   rX   r   )rT   r   r7     s    
+r7   )rf   ⁄
+__future__r   r   r   r   r<   ⁄	itertoolsr   r   Z	six.movesr   r	   ⁄operatorr
+   r   r   ⁄__version__r   ⁄objectr   rb   rp   r7   r   r   r   r   ⁄<module>)   s     a(=cycler
+
+Metadata-Version: 1.1
+Name: cycler
+Version: 0.10.0
+Summary: Composable style cycles
+Home-page: http://github.com/matplotlib/cycler
+Author: Thomas A Caswell
+Author-email: matplotlib-users@python.org
+License: BSD
+Description: UNKNOWN
+Keywords: cycle kwargs
+Platform: Cross platform (Linux
+Platform: Mac OSX
+Platform: Windows)
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+LICENSE
+MANIFEST.in
+README.rst
+cycler.py
+run_tests.py
+setup.cfg
+setup.py
+conda-recipe/bld.bat
+conda-recipe/build.sh
+conda-recipe/meta.yaml
+cycler.egg-info/PKG-INFO
+cycler.egg-info/SOURCES.txt
+cycler.egg-info/dependency_links.txt
+cycler.egg-info/requires.txt
+cycler.egg-info/top_level.txt
+doc/Makefile
+doc/make.bat
+doc/_templates/autosummary/class.rst
+doc/source/conf.py
+doc/source/index.rstsix
