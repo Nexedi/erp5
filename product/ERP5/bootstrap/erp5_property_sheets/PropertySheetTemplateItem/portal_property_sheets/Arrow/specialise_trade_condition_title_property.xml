@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Acquired Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>acquisition_accessor_id</string> </key>
+            <value> <string>getTitle</string> </value>
+        </item>
+        <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>specialise</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_object_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_portal_type</string> </key>
+            <value> <string>python: \'Sale Trade Condition\'</string> </value>
+        </item>
+        <item>
+            <key> <string>alt_accessor_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/string</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_acquired_property_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_translation_acquired_property_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The title of the specialise trade condition</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>specialise_trade_condition_title_property</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Acquired Property</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
