@@ -366,7 +366,7 @@
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_translation.html</string> </value>
+            <value> <string>gadget_supportrequest_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
