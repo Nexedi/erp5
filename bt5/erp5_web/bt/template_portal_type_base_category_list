@@ -1,5 +1,7 @@
 Static Web Section | aggregate
 Static Web Section | caching_policy
+Static Web Site | aggregate
+Static Web Site | caching_policy
 Web Page Module | business_application
 Web Page | predecessor
 Web Page | publication_section
