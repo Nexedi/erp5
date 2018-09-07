@@ -367,6 +367,22 @@ def int2letter(i):
 def getMessageIdWithContext(msg_id, context, context_id):
   return '%s [%s in %s]' % (msg_id, context, context_id)
 
+def getTranslatedWorkflowStateWithPortalType(localizer, workflow_id, lang,
+                                             portal_type, state_title):
+  for msg_id, default in [
+    (getMessageIdWithContext(state_title, 'state', portal_type), ''),
+    (getMessageIdWithContext(state_title, 'state', workflow_id), ''),
+    (state_title.decode('utf-8'), None),
+  ]:
+    translated_message = localizer.erp5_ui.gettext(
+      msg_id,
+      default=default,
+      lang=lang
+    ).encode('utf-8')
+    if translated_message:
+      return translated_message, msg_id
+
+
 #Get translation of msg id
 def getTranslationStringWithContext(self, msg_id, context, context_id):
    portal = self.getPortalObject()

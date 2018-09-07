@@ -28,6 +28,7 @@
 
 from Acquisition import aq_base
 from Products.ERP5Type.PsycoWrapper import psyco
+from Products.ERP5Type.Utils import getTranslatedWorkflowStateWithPortalType
 from Base import Getter as BaseGetter, Setter as BaseSetter
 from warnings import warn
 
@@ -111,14 +112,13 @@ class TranslatedTitleGetter(TitleGetter):
       wf = portal.portal_workflow.getWorkflowById(wf_id)
       selected_language = localizer.get_selected_language()
       state_title = wf._getWorkflowStateOf(instance).title
-      msg_id = '%s [state in %s]' % (state_title, wf_id)
-      result = localizer.erp5_ui.gettext(msg_id,
-                                         lang=selected_language,
-                                         default='')
-      if result == '':
-        result = localizer.erp5_ui.gettext(state_title,
-                                           lang=selected_language)
-      return result.encode('utf8')
+      return getTranslatedWorkflowStateWithPortalType(
+        localizer,
+        self._key,
+        selected_language,
+        instance.getPortalType(),
+        state_title
+      )[0]
 
     psyco.bind(__call__)
 

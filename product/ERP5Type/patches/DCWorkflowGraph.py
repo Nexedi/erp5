@@ -30,6 +30,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Utils import getTranslatedWorkflowStateWithPortalType
 from Products.ERP5Type import Permissions
 
 # Products.DCWorkflowGraph.config does not check the return value of
@@ -107,15 +108,9 @@ def getObjectTitle(obj, REQUEST=None):
       localizer = obj.Localizer
       original_title = title
       for lang in localizer.get_supported_languages():
-        msg_id = '%s [state in %s]' % (title, wf_id)
-        translated_title = localizer.erp5_ui.gettext(
-          msg_id,
-          lang=lang,
-          # Fallback on non-workflow state translation
-          default=localizer.erp5_ui.gettext(original_title,
-                                            lang=lang,
-                                            default=None))
-
+        translated_message, msg_id = getTranslatedWorkflowStateWithPortalType(
+          localizer, wf_id, lang, obj.getPortalType(), title
+        )
         if (translated_title is not None and
             translated_title != original_title):
 

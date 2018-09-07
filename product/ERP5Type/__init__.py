@@ -165,6 +165,7 @@ ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
     'sortValueList', 'convertToUpperCase', 'UpperCase',
     'convertToMixedCase', 'cartesianProduct', 'sleep', 'getCommonTimeZoneList',
     'int2letter', 'getMessageIdWithContext', 'getTranslationStringWithContext',
+    'getTranslatedWorkflowStateWithPortalType',
     'Email_parseAddressHeader', 'guessEncodingFromText',
     'isValidTALESExpression')
 

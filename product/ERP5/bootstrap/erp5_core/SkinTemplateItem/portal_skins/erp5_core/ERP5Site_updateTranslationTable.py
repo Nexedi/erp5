@@ -1,4 +1,4 @@
-from Products.ERP5Type.Utils import getMessageIdWithContext
+from Products.ERP5Type.Utils import getTranslatedWorkflowStateWithPortalType
 
 supported_languages = context.Localizer.get_supported_languages()
 translated_keys = {} # This dict prevents entering the same key twice
@@ -38,11 +38,7 @@ for wf_id, portal_type_list in portal_workflow.getChainDict().items():
           # translate state title as well
           if state.title != '' :
             state_var_title = '%s_title' % state_var
-            msg_id = getMessageIdWithContext(state.title, 'state', wf.id)
-            translated_message = context.Localizer.erp5_ui.gettext(msg_id, default='', lang=lang).encode('utf-8')
-            if translated_message == '':
-              msg_id = state.title
-              translated_message = context.Localizer.erp5_ui.gettext(state.title.decode('utf-8'), lang=lang).encode('utf-8')
+            translated_message, msg_id = getTranslatedWorkflowStateWithPortalType(context.Localizer, wf.id, lang, portal_type, state.title)
             key = (lang, portal_type, state_var_title, state_id, msg_id)
             if not translated_keys.has_key(key):
               translated_keys[key] = None # mark as translated
