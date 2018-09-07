@@ -2449,6 +2449,9 @@ msgstr "Changer le mot de passe"
 msgid "Change State"
 msgstr "Changer d'état"
 
+msgid "Channel"
+msgstr "Canal"
+
 msgid "Chat Address"
 msgstr "Adresse de Messagerie Instantanée"
 
@@ -2805,6 +2808,12 @@ msgstr "Colonne"
 
 msgid "Comment"
 msgstr "Commentaire"
+
+msgid "Comment Author"
+msgstr "Auteur du commentaire"
+
+msgid "Comment Date"
+msgstr "Date du commentaire"
 
 msgid "Comment Message"
 msgstr "Message"
@@ -8167,6 +8176,9 @@ msgstr "Ouvert"
 msgid "Open the account and helps input transactions on it"
 msgstr "Permet d'ouvrir un compte et d'y ajouter des transactions."
 
+msgid "Opened [state in ticket_workflow]"
+msgstr "Ouvert"
+
 msgid "Opening Balance"
 msgstr "Soldes Initiaux"
 
@@ -10099,6 +10111,9 @@ msgstr "Commande Reçue le"
 msgid "Recent Changes"
 msgstr "Changements récents"
 
+msgid "Recent Updates"
+msgstr "Modifications récentes"
+
 msgid "Recipient"
 msgstr "Destinataire"
 
@@ -10596,6 +10611,12 @@ msgstr "Demandeur"
 
 msgid "Requester"
 msgstr "Demandé par"
+
+msgid "Requester Language"
+msgstr "Langue du demandeur"
+
+msgid "Requester Reference"
+msgstr "Référence du demandeur"
 
 msgid "Required Material"
 msgstr "Matériel requis"
@@ -12338,7 +12359,7 @@ msgid "Support Request Detailed Report"
 msgstr "Rapport détaillé"
 
 msgid "Support Request Module"
-msgstr "Module de demande d'assistance"
+msgstr "Module des demandes d'assistance"
 
 msgid "Support Request Status"
 msgstr "État"
@@ -12351,6 +12372,15 @@ msgstr "Types des demandes d'assistance"
 
 msgid "Support Requests"
 msgstr "Demandes d'assistance"
+
+msgid "Support Requests to Close"
+msgstr "Demandes d'assistances à fermer"
+
+msgid "Support Requests to Open"
+msgstr "Demandes d'assistances à ouvrir"
+
+msgid "Support Requests to Submit"
+msgstr "Demandes d'assistances à soumettre"
 
 msgid "Surcharge Ratio"
 msgstr "Ratio de surcharge"
@@ -12370,13 +12400,22 @@ msgstr "Prénom"
 msgid "Suspend Project"
 msgstr "Suspendre le projet"
 
+msgid "Suspend Ticket"
+msgstr "Suspendre le ticket"
+
 msgid "Suspended"
 msgstr "Suspendu"
+
+msgid "Suspended Support Requests"
+msgstr "Demande d'assistance suspendues"
 
 msgid "Suspended [state in open_order_workflow]"
 msgstr "Suspendu"
 
 msgid "Suspended [state in project_workflow]"
+msgstr "Suspendu"
+
+msgid "Suspended [state in ticket_workflow]"
 msgstr "Suspendu"
 
 msgid "Symbol"
