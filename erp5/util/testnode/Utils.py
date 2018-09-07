@@ -10,7 +10,18 @@ def rmtree(path):
   def chmod_retry(func, path, _):
     """Make sure the file is writeable / the directory is executable.
     """
+    if not os.path.exists(path):
+      # because we are calling again rmtree on listdir errors, this path might
+      # have been already deleted by the recursive call to rmtree.
+      return
+
     os.chmod(path, 0o777)
+    if func is os.listdir:
+      # corner case to handle errors in listing directories.
+      # https://bugs.python.org/issue8523
+      # This might raises MaxRecursionError when the directory cannot be listed
+      # for other reasons than "user does not have read permssion"
+      return shutil.rmtree(path, onerror=chmod_retry)
     func(path)
   shutil.rmtree(path, onerror=chmod_retry)
 

@@ -489,6 +489,22 @@ shared = true
     test_node.purgeOldTestSuite(test_suite_data)
     self.assertEquals(['foo'], os.listdir(self.working_directory))
 
+  def test_purgeOldTestSuiteChmod(self):
+    """Old test suites can be deleted even when some files/directories have
+    been chmod'd to make read only.  """
+    test_node = self.getTestNode()
+    test_suite_data = self.getTestSuiteData(add_third_repository=True)
+    os.mkdir(os.path.join(self.working_directory, 'bar'))
+    non_writable_file = open(os.path.join(self.working_directory, 'bar', 'non-writable-file'), 'w')
+    non_writable_file.close()
+    # make this file and directory non writeable
+    os.chmod(os.path.join(self.working_directory, 'bar', 'non-writable-file'), 0o000)
+    os.chmod(os.path.join(self.working_directory, 'bar'), 0o000)
+
+    test_node.purgeOldTestSuite(test_suite_data) # should not fail
+    self.assertEqual([], os.listdir(self.working_directory))
+
+
   def test_09_runTestSuite(self, my_test_type='UnitTest'):
     """
     Check parameters passed to runTestSuite
@@ -913,16 +929,24 @@ shared = true
            "%r not contained by %r" % (file_list, directory_dir))
     check([])
     os.mkdir(os.path.join(temp_directory, 'buildoutA'))
-    os.mkdir(os.path.join(temp_directory, 'something'))
+    os.mkdir(os.path.join(temp_directory, 'something')) # this will be kept, as it's not a buildout tempfile
     os.mkdir(os.path.join(temp_directory, 'tmpC'))
-    check(set(['buildoutA', 'something', 'tmpC']))
+    os.mkdir(os.path.join(temp_directory, 'tmp-cannot-delete'), 0o000)
+
+    check(set(['buildoutA', 'something', 'tmpC', 'tmp-cannot-delete']))
     # default log file time is 15 days, so nothing is going to be deleted
     test_node._cleanupTemporaryFiles()
-    check(set(['buildoutA', 'something', 'tmpC']))
+    check(set(['buildoutA', 'something', 'tmpC', 'tmp-cannot-delete']))
     # then we set keep time to 0, folder will be deleted
     test_node.max_temp_time = 0
     test_node._cleanupTemporaryFiles()
+    # "something" is kept, as it is not a buildout related tmpfile
     check(set(['something']))
+    # other buildout related files are all deleted now.
+    self.assertEqual(
+        set([]) ,
+        set(['buildoutA', 'tmpC', 'tmp-cannot-delete']).intersection(
+            set(os.listdir(temp_directory))))
 
   def test_18_resetSoftwareAfterManyBuildFailures(self, my_test_type='UnitTest'):
     """
