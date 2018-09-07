@@ -24,13 +24,13 @@ else:
 
 # set headers depending on type of script
 if (portal_type == "Web Script"):
-  response.setHeader('Content-Type', 'application/javascript')
+  response.setHeader('Content-Type', 'application/javascript; charset=utf-8')
 
 elif (portal_type == "Web Style"):
-  response.setHeader('Content-Type', 'text/css')
+  response.setHeader('Content-Type', 'text/css; charset=utf-8')
 
 elif (portal_type == "Web Manifest"):
-  response.setHeader('Content-Type', 'text/cache-manifest')
+  response.setHeader('Content-Type', 'text/cache-manifest; charset=utf-8')
 
 elif (portal_type == "Web Page"):
   if (mapping_dict is not None):
