@@ -22,3 +22,4 @@ test.erp5.testFunctionalRJSMatrixbox
 test.erp5.testFunctionalRJSEditorGadget
 test.erp5.testFunctionalRJSRecoverPassword
 test.erp5.testFunctionalRJSDms
+test.erp5.testRJSPortalType
