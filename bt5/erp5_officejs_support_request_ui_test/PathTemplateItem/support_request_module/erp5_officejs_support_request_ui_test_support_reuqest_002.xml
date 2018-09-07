@@ -21,6 +21,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -30,6 +31,7 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -246,11 +248,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>submit</string> </value>
+                <value> <string>suspend</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>jc</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -258,7 +260,7 @@
             </item>
             <item>
                 <key> <string>simulation_state</string> </key>
-                <value> <string>submitted</string> </value>
+                <value> <string>suspended</string> </value>
             </item>
             <item>
                 <key> <string>time</string> </key>
@@ -272,7 +274,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1503318144.34</float>
+                        <float>1536287646.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
