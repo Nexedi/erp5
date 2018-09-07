@@ -1,0 +1,12 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<tal:block metal:define-macro="cleanup_module">
+  <tr><td>openAndWait</td>
+      <td>${base_url}/ERP5Site_cleanupSupportRequestUITestDataSet</td><td></td></tr>
+  <tr><td>assertTextPresent</td>
+      <td>Done.</td><td></td></tr>
+</tal:block>
+</tal:block>
+
+</tal:block>
