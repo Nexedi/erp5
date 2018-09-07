@@ -1,0 +1,21 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<tal:block metal:define-macro="cleanup_module">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+  <tr><td>openAndWait</td>
+      <td>${base_url}/ERP5Site_cleanupSupportRequestUITestDataSet</td><td></td></tr>
+  <tr><td>assertTextPresent</td>
+      <td>Done.</td><td></td></tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+</tal:block>
+
+<tal:block metal:define-macro="create_data">
+  <tr><td>openAndWait</td>
+      <td>${base_url}/ERP5Site_createSupportRequestUITestDataSet</td><td></td></tr>
+  <tr><td>assertTextPresent</td>
+      <td>Done.</td><td></td></tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+</tal:block>
+
+</tal:block>
