@@ -22,13 +22,13 @@ web_content = web_page.getTextContent()
 
 # set headers depending on type of script
 if (portal_type == "Web Script"):
-  response.setHeader('Content-Type', 'application/javascript')
+  response.setHeader('Content-Type', 'application/javascript; charset=utf-8')
 
 elif (portal_type == "Web Style"):
-  response.setHeader('Content-Type', 'text/css')
+  response.setHeader('Content-Type', 'text/css; charset=utf-8')
 
 elif (portal_type == "Web Manifest"):
-  response.setHeader('Content-Type', 'text/cache-manifest')
+  response.setHeader('Content-Type', 'text/cache-manifest; charset=utf-8')
 
 else:
   if (mapping_dict is not None):
