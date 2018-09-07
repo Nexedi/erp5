@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, rJS, RSVP, Handlebars, URI */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, rJS, RSVP, Handlebars, URI) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -20,7 +20,6 @@
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
 
     /////////////////////////////////////////////////////////////////
@@ -34,43 +33,58 @@
         page_icon: 'clipboard'
       })
         .push(function () {
-          return gadget.getSetting("hateoas_url");
-        })
-        .push(function (hateoas_url) {
           return gadget.jio_getAttachment(
-            'support_request_module',
-            hateoas_url + 'support_request_module'
-              + "/SupportRequestModule_getWorklistAsJson"
+            'portal_workflow',
+            'links'
           );
         })
         .push(function (result) {
+          return gadget.jio_getAttachment(
+            // result.data.rows[0].id,
+            'portal_workflow',
+            result._links.action_worklist.href
+          );
+        })
+        .push(function (links) {
           /*jslint continue:true*/
-          var promise_list = [],
+          var action_list = links.worklist,
+            query_string,
+            promise_list = [],
             display_options,
             i;
-
-          for (i = 0; i < result.length; i += 1) {
-            if (result[i].action_count === 0) {
+          for (i = 0; i < action_list.length; i += 1) {
+            query_string = new URI(action_list[i].href).query(true).query;
+            if (query_string.indexOf('portal_type:"Support Request"') === -1) {
               continue;
             }
-            display_options = {
-              jio_key: "support_request_module",
-              extended_search: result[i].query_string,
-              page: 'form',
-              view: 'view'
-            };
+            display_options = {extended_search: query_string};
 
+            if (action_list[i].hasOwnProperty('module')) {
+              display_options = {
+                jio_key: new URI(action_list[i].module).segment(2),
+                extended_search: query_string,
+                page: 'form',
+                view: 'view'
+              };
+            } else {
+              display_options = {
+                extended_search: query_string,
+                page: 'search'
+              };
+            }
             promise_list.push(RSVP.all([
               gadget.getUrlFor({command: 'display', options: display_options}),
               // Remove the counter from the title
-              result[i].action_name,
-              result[i].action_count
+              action_list[i].name,
+              action_list[i].count
             ]));
+
           }
           return RSVP.all(promise_list);
         })
         .push(function (result_list) {
-          var line_list = [], i;
+          var line_list = [],
+            i;
           for (i = 0; i < result_list.length; i += 1) {
             line_list.push({
               link: result_list[i][0],
@@ -83,4 +97,5 @@
           });
         });
     });
-}(window, rJS, RSVP, Handlebars));
+
+}(window, rJS, RSVP, Handlebars, URI));
