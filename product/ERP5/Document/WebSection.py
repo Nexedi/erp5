@@ -180,7 +180,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         acquiring it from the current section or its parents.
       """
       section = aq_inner(self)
-      while section.getPortalType() in ('Web Section', 'Web Site', 'Static Web Section'):
+      while section.getPortalType() in ('Web Section', 'Web Site', 'Static Web Section', 'Static Web Site'):
         result = section.getProperty(key, MARKER)
         if result not in (MARKER, None):
           return result

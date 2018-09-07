@@ -31,4 +31,4 @@ if len(parameters):
 if abort_transaction:
   from zExceptions import Redirect
   raise Redirect(redirect_url)
-return request.RESPONSE.redirect(redirect_url)
+return request.RESPONSE.redirect(redirect_url, status=status_code)
