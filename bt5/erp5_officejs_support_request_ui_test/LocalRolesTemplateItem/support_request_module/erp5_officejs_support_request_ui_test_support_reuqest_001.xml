@@ -1,0 +1,8 @@
+<local_roles_item>
+ <local_roles>
+  <role id='ERP5TypeTestCase'>
+   <item>Assignee</item>
+   <item>Assignor</item>
+  </role>
+ </local_roles>
+</local_roles_item>
