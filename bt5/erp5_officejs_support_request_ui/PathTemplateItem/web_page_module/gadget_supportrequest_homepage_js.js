@@ -48,6 +48,7 @@
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("updateConfiguration", "updateConfiguration")
@@ -86,6 +87,7 @@
           begin_date = new Date(1970, 1, 1);
           end_date = days_30;
         }
+        // XXX do not translate here !
         search_criteria = '( translated_simulation_state_title: "' + seriesName + '" AND delivery.start_date: >= ' + begin_date.toISOString().slice(0, 10) + ' AND delivery.start_date: < ' + end_date.toISOString().slice(0, 10) + ' )';
       } else {
         // Situation 2: Search Support Request without date.
@@ -122,8 +124,7 @@
 
       return gadget.changeState({
         render: true
-      })
-        .push(function () {
+      }).push(function () {
           return gadget.getDeclaredGadget("last")
             .push(function (listbox) {
               return listbox.render({
@@ -145,8 +146,8 @@
         .push(function (hateoas_url) {
           return RSVP.all([gadget.jio_getAttachment(
             'support_request_module',
-            hateoas_url + 'support_request_module'
-              + "/SupportRequest_getSupportRequestStatisticsAsJson"
+            hateoas_url + 'support_request_module' +
+              '/SupportRequest_getSupportRequestStatisticsAsJson'
           ),
             gadget.declareGadget(
               option_dict.graph_gadget,
@@ -283,9 +284,9 @@
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
-          var generate_rss_input = gadget.element.querySelectorAll("input")[1],
+          var generate_rss_input = gadget.element.querySelectorAll("input")[1], /* XXX class based selectors ! */
             restore_filter_input = gadget.element.querySelectorAll("input")[2],
-            one = new RSVP.Queue().push(function () {
+            one = new RSVP.Queue().push(function (){
               return promiseEventListener(generate_rss_input, "click", false);
             }).push(function () {
               generate_rss_input.disabled = true;
@@ -299,10 +300,12 @@
                   );
                 })
                 .push(function (result) {
-                  generate_rss_input.parentNode.href = result.restricted_access_url;
-                  generate_rss_input.value = "RSS Link";
-                  generate_rss_input.disabled = false;
-                  generate_rss_input.classList.remove("ui-disabled");
+                  return gadget.translate("RSS Link").push(function(translated_rss_link_message) {
+                    generate_rss_input.parentNode.href = result.restricted_access_url;
+                    generate_rss_input.value = translated_rss_link_message, // "RSS Link";
+                    generate_rss_input.disabled = false;
+                    generate_rss_input.classList.remove("ui-disabled");
+                  });
                 });
             }),
             two = loopEventListener(restore_filter_input, "click", false, function () {
