@@ -1044,7 +1044,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           'href': '%s' % view_action['url'],
           'name': view_action['id'],
           'icon': view_action['icon'],
-          'title': Base_translateString(view_action['title'])
+          'title': Base_translateString(view_action['title']) \
+            if erp5_action_key != "workflow" else view_action['title'],
         })
         # Try to embed the form in the result
         if (view == view_action['id']):

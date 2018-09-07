@@ -382,6 +382,20 @@ def getTranslatedWorkflowStateWithPortalType(localizer, workflow_id, lang,
     if translated_message:
       return translated_message, msg_id
 
+def getWorkflowTransitionTranslatedTitle(localizer, workflow_id, lang,
+                                         portal_type, transition_title):
+  for msg_id, default in [
+    (getMessageIdWithContext(transition_title, 'transition', portal_type), ''),
+    (getMessageIdWithContext(transition_title, 'transition', workflow_id), ''),
+    (transition_title.decode('utf-8'), None),
+  ]:
+    translated_message = localizer.erp5_ui.gettext(
+      msg_id,
+      default=default,
+      lang=lang
+    ).encode('utf-8')
+    if translated_message:
+      return translated_message, msg_id
 
 #Get translation of msg id
 def getTranslationStringWithContext(self, msg_id, context, context_id):

@@ -32,7 +32,7 @@ from Products.CMFCore.utils import  _getAuthenticatedUser
 from DocumentTemplate.DT_Util import TemplateDict
 from DateTime import DateTime
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.Utils import convertToMixedCase
+from Products.ERP5Type.Utils import convertToMixedCase, getWorkflowTransitionTranslatedTitle
 import sys
 from Acquisition import aq_base
 from copy import deepcopy
@@ -239,9 +239,17 @@ def DCWorkflowDefinition_listObjectActions(self, info):
                 fmt_data = TemplateDict()
                 fmt_data._push(info)
             fmt_data._push({'transition_id': tid})
+
+            localizer = ob.getPortalObject().Localizer
+            selected_language = localizer.get_selected_language()
+
+            transition_title = getWorkflowTransitionTranslatedTitle(
+              localizer, self.id, selected_language, ob.getPortalType(),
+              tdef.actbox_name % fmt_data,
+            )[0]
             res.append((tid, {
                 'id': tid,
-                'name': tdef.actbox_name % fmt_data,
+                'name': transition_title,
                 'url': tdef.actbox_url % fmt_data,
                 'icon': tdef.actbox_icon % fmt_data,
                 'permissions': (),  # Predetermined.
