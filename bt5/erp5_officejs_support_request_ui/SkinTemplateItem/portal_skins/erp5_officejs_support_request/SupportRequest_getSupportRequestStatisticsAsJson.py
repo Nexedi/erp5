@@ -1,21 +1,18 @@
+from datetime import timedelta
 from json import dumps
 
 portal = context.getPortalObject()
 
 # Get the split date
-now_date = DateTime()
-date_2 = now_date - 2
-date_7 = now_date - 7
-date_30 = now_date - 30
-# we can not use str.join...
-date_2_midnight = DateTime(str(date_2.year()) + "-" + str(date_2.month()) + "-" + str(date_2.day()))
-date_7_midnight = DateTime(str(date_7.year()) + "-" + str(date_7.month()) + "-" + str(date_7.day()))
-date_30_midnight = DateTime(str(date_30.year()) + "-" + str(date_30.month()) + "-" + str(date_30.day()))
+now_date = DateTime().asdatetime()
+date_2_midnight = DateTime(now_date - timedelta(days=2)).earliestTime()
+date_7_midnight = DateTime(now_date - timedelta(days=7)).earliestTime()
+date_30_midnight = DateTime(now_date - timedelta(days=30)).earliestTime()
 
 support_request_list = portal.portal_catalog(
   portal_type="Support Request",
   select_list=['simulation_state', 'start_date'],
-  **{"delivery.start_date": {"query": now_date, "range": "ngt"}}
+  **{"delivery.start_date": {"query": DateTime(now_date), "range": "ngt"}}
 )
 
 count_by_state = {}
