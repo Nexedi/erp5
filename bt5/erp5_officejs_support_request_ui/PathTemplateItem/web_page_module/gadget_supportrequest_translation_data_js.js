@@ -17,8 +17,7 @@
 
       "Support Request Pipe": "Demande d'assistance en cours",
       "Last Month Activity": "Activité du mois",
-      // English ?
-      "Restore Filter": "Réinitaliser le filtre",
+      "Reset Filter": "Réinitaliser le filtre",
       // Count ?
       "Number": "Nombre",
       "Day": "Jour",
