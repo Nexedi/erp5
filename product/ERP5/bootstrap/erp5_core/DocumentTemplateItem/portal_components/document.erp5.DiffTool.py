@@ -247,7 +247,7 @@ class PortalPatch:
                      '__ac_local_roles__', '__ac_local_roles_group_id_dict__',
                      'workflow_history', 'subject_set_uid_dict', 'security_uid_dict',
                      'filter_dict', '_max_uid', 'isIndexable', 'id', 'modification_date',
-                     'data'}
+                     'data', 'base_data'}
 
     # Update the list of properties which were explicitly given in parameters
     if property_list:
