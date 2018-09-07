@@ -14,13 +14,13 @@ web_content = web_page.getTextContent()
 
 # set headers depending on type of script
 if (portal_type == "Web Script"):
-  response.setHeader('Content-Type', 'application/javascript')
+  response.setHeader('Content-Type', 'application/javascript; charset=utf-8')
 
 elif (portal_type == "Web Style"):
-  response.setHeader('Content-Type', 'text/css')
+  response.setHeader('Content-Type', 'text/css; charset=utf-8')
 
 elif (portal_type == "Web Manifest"):
-  response.setHeader('Content-Type', 'text/cache-manifest')
+  response.setHeader('Content-Type', 'text/cache-manifest; charset=utf-8')
 
 else:
   if (mapping_dict is not None):
@@ -32,6 +32,6 @@ else:
   # Only fetch code (html, js, css, image) and data from this ERP5, to prevent any data leak as the web site do not control the gadget's code
   response.setHeader("Content-Security-Policy", "default-src 'none'; img-src 'self' data:; media-src 'self'; connect-src 'self'; script-src 'self' 'unsafe-eval'; font-src netdna.bootstrapcdn.com fonts.googleapis.com fonts.gstatic.com; style-src 'self' netdna.bootstrapcdn.com fonts.googleapis.com fonts.gstatic.com 'unsafe-inline' data:; frame-src 'self' https://jsbin.com data:;")
 
-  response.setHeader('Content-Type', 'text/html')
+  response.setHeader('Content-Type', 'text/html; charset=utf-8')
 
 return web_content
