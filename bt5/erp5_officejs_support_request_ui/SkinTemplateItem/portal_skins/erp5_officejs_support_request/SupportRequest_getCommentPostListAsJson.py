@@ -1,4 +1,4 @@
-# XXX rename, this returns the Web Message.
+# XXX rename, this returns now just returns events Web Message.
 
 from json import dumps
 portal = context.getPortalObject()
@@ -19,14 +19,26 @@ def formatDate(date):
   ))
 
 event_list = portal.portal_simulation.getMovementHistoryList(
-    portal_type='Web Message',
+    portal_type=portal.getPortalEventTypeList(),
     strict_follow_up_uid=context.getUid(),
-    project_uid=context.getProjectUid(),
+    project_uid=context.getSourceProjectUid(),
     simulation_state=('started', 'stopped', 'delivered', ),
     only_accountable=True,
-    sort_on=(('date', ),)
+    sort_on=(('date', 'asc'), ('uid', 'asc',),)
 )
 
+context.log('SRC',
+            portal.portal_simulation.getMovementHistoryList(
+portal_type=portal.getPortalEventTypeList(),
+  src__=1,
+  strict_follow_up_uid=context.getUid(),
+  project_uid=context.getSourceProjectUid(),
+  simulation_state=('started', 'stopped', 'delivered', ),
+  only_accountable=True,
+  sort_on=(('date', 'asc'), ('uid', 'asc',),)))
+
+
+context.log(event_list.dictionaries())
 
 post_list = portal.portal_catalog(
   portal_type="HTML Post",
@@ -44,6 +56,15 @@ for post in post_list:
   if successor_list:
     successor_link, successor_name = successor_list[0].getRelativeUrl(), successor_list[0].getFilename()
   comment_list.append((owner, time_stamp, content, successor_link, successor_name))
+
+for event in event_list:
+  event = event.getObject()
+  comment_list.append((
+      "This is event from %s" % event.getSourceTitle(),
+                       event.getStartDate(),
+                       event.asStrippedHTML(),
+                       None,
+                       None))
 
 return dumps(comment_list)
 
