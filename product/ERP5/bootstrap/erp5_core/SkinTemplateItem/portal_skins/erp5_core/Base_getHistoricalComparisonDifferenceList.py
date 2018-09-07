@@ -64,12 +64,13 @@ diff = portal_diff.diffPortalObject(
 
 tempbase_list = []
 uid = 900
+
 for x in diff:
   property_type = context.getPropertyType(x['path'])
   # Check if the property type is in the list of property-types
   # for the property_set sent via parameter
   if property_type in PROPERTY_TYPE_LIST.get(property_set, ()):
-    temp_obj = newTempBase(portal,
+    temp_obj = newTempBase(context,
                           x['path'],
                           **x)
     temp_obj.setProperty(
