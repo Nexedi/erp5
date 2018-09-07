@@ -3,6 +3,20 @@
 (function (window, rJS, RSVP, calculatePageTitle) {
   "use strict";
 
+  // UUID generator for post message ID. XXX Jio does not provide this already ?
+  // https://stackoverflow.com/a/8809472
+  function generateUUID() { // Public Domain/MIT
+    var d = new Date().getTime();
+    if (typeof window.performance !== 'undefined' && typeof window.performance.now === 'function') {
+      d += window.performance.now(); //use high-precision timer if available
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d / 16);
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -61,7 +75,8 @@
             editable: options.editable,
             erp5_document: options.erp5_document,
             form_definition: options.form_definition,
-            erp5_form: options.erp5_form || {}
+            erp5_form: options.erp5_form || {},
+            post_uuid: generateUUID()
           };
           return gadget.changeState(state_dict);
         });
@@ -204,10 +219,12 @@
             file_blob = choose_file_html_element.files[0],
             url = gadget.hateoas_url + "post_module/PostModule_createHTMLPostForSupportRequest",
             data = new FormData();
+
           data.append("follow_up", gadget.options.jio_key);
           data.append("predecessor", '');
           data.append("data", editor.value);
           data.append("file", file_blob);
+          data.append("source_reference", gadget.state.post_uuid);
           // XXX: Hack, call jIO.util.ajax directly to pass the file blob
           // Because the jio_putAttachment will call readBlobAsText, which
           // will broke the binary file. Call the jIO.util.ajax directly
