@@ -70,19 +70,7 @@ class ReportBoxWidget(Widget.Widget):
       if callable(report_method):
         return report_method()
 
-  def get_javascript_list(self, field, REQUEST=None):
-     """
-     Returns list of javascript needed by the widget
-     """
-     js_list = ['rsvp.js', 'renderjs.js', 'erp5_gadgetfield.js']
-     result = []
-     try:
-       for js_file in js_list:
-         result.append(field.restrictedTraverse(js_file).absolute_url())
-     except KeyError:
-       LOG('keyError:', ERROR, 'Error Value: %s' % js_file)
-       return []
-     return result
+
 
 class ReportBoxValidator(Validator.Validator):
 

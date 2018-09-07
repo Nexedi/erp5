@@ -90,6 +90,7 @@
                     <value>
                       <list>
                         <string>your_reportbox</string>
+                        <string>my_hidden_gadget</string>
                       </list>
                     </value>
                 </item>
