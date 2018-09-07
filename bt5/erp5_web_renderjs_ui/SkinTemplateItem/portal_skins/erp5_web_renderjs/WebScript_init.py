@@ -1,1 +1,1 @@
-context.setContentType('text/javascript')
+context.setContentType('application/javascript')
