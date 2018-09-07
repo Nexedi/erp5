@@ -112,7 +112,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>historical_comparison_selection</string> </value>
+                    <value> <string>historical_comparison_diff_link_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

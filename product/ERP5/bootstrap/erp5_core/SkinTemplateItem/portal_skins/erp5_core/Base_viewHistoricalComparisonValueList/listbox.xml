@@ -556,7 +556,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>historical_comparison_selection</string> </value>
+                    <value> <string>historical_comparison_value_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
