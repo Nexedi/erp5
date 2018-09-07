@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.53 (2018-09-07)
+-------------------
+
+ * erp5.util
+
+   - testnode: give project title to runTestSuite [Sebastien Robin]
+   - testnode: support chmod'ed files during directories cleanups [Jerome Perrin]
+
 0.4.52 (2018-08-21)
 -------------------
 
