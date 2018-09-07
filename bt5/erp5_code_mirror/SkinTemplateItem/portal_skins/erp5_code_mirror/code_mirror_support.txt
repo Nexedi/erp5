@@ -124,7 +124,8 @@
  .CodeMirror-lint-marker-warning,
  .CodeMirror-gutters,
  .CodeMirror-gutter-elt,
- .CodeMirror-sizer {
+ .CodeMirror-sizer,
+ .CodeMirror-line {
    background-color: transparent !important;
  }
 </style>
