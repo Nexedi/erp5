@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Monaco Editor</title>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+
+
+    <script>
+      /*
+       This is understood by our build of monaco-editor
+       https://lab.nexedi.com/jerome/monaco-editor-erp5/blob/master/public-path.js
+      */
+      window.monacoEditorWebPackResourceBaseUrl = "monaco-editor/";
+    </script>
+
+    <script src="monaco-editor/app.bundle.min.js"></script>
+    <script src="monaco-editor.gadget.js"></script>
+
+  </head>
+  <body>
+    <div class="monaco-container" style="width:100%;height:800px;border:1px solid grey;"></div>
+  </body>
+</html>
