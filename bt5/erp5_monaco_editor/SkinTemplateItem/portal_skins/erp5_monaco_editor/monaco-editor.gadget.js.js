@@ -65,6 +65,7 @@
     })
 
     .onStateChange(function (modification_dict) {
+      var queue = new RSVP.Queue();
       if (modification_dict.hasOwnProperty('value')) {
         // Do not notify the UI when initializing the value
         this.state.ignoredChangeDuringInitialization = true;
@@ -72,7 +73,25 @@
         this.state.ignoredChangeDuringInitialization = false;
       }
       if (modification_dict.hasOwnProperty('model_language')) {
-        monaco.editor.setModelLanguage(this.editor.getModel(), this.state.model_language);
+        monaco.editor.setModelLanguage(
+          this.editor.getModel(),
+          this.state.model_language);
+
+        if (this.state.model_language == 'javascript') {
+          function addExtraLibrary(script_name) {
+            return fetch(script_name)
+              .then(function (resp) { return resp.text(); })
+              .then(function (script_code) {
+                monaco.languages.typescript.javascriptDefaults.addExtraLib(
+                  script_code, script_name);
+              });
+          }
+          queue
+            .push(addExtraLibrary("./monaco-renderjs.ts"))
+            .push(addExtraLibrary("./monaco-rsvp.ts"));
+        }
+        return queue;
+
       }
     })
 
