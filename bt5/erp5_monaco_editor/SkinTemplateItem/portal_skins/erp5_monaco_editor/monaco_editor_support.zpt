@@ -115,6 +115,25 @@ $script.onload = function() {
     monaco.languages.html.htmlDefaults.options.format.insertSpaces = true;
   }
 
+  // Type mapping for Nexedi libraries
+  function addExtraLibrary(script_name, lib_name) {
+    return fetch(script_name)
+      .then(function(resp) {
+        return resp.text();
+      })
+      .then(function(script_code) {
+        monaco.languages.typescript.javascriptDefaults.addExtraLib(
+          script_code,
+          lib_name
+        );
+      });
+  }
+  Promise.all([
+      addExtraLibrary('../monaco-rsvp.d.ts', 'rsvp'),
+      addExtraLibrary('../monaco-renderjs.d.ts', 'renderjs'),
+      addExtraLibrary('../monaco-jio.d.ts', 'jio')]);
+
+
   var timeout = null;
 
   // minimal pollyfil for AbortController
