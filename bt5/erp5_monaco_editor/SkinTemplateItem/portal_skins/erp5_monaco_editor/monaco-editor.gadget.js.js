@@ -70,6 +70,7 @@
     })
 
     .onStateChange(function(modification_dict) {
+      var queue = new RSVP.Queue();
       if (modification_dict.hasOwnProperty('value')) {
         // Do not notify the UI when initializing the value
         this.state.ignoredChangeDuringInitialization = true;
@@ -87,7 +88,28 @@
           monaco.languages.html.htmlDefaults.options.format.tabSize = 2;
           monaco.languages.html.htmlDefaults.options.format.insertSpaces = true;
         }
+
+        if (this.state.model_language === 'javascript') {
+          // Type mapping for Nexedi libraries
+          function addExtraLibrary(script_name, lib_name) {
+            return fetch(script_name)
+              .then(function(resp) {
+                return resp.text();
+              })
+              .then(function(script_code) {
+                monaco.languages.typescript.javascriptDefaults.addExtraLib(
+                  script_code,
+                  lib_name
+                );
+              });
+          }
+          queue
+            .push(addExtraLibrary('./monaco-rsvp.d.ts', 'rsvp'))
+            .push(addExtraLibrary('./monaco-renderjs.d.ts', 'renderjs'))
+            .push(addExtraLibrary('./monaco-jio.d.ts', 'jio'));
+        }
       }
+      return queue;
     })
 
     .declareMethod('getContent', function() {
