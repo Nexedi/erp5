@@ -7,6 +7,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
 
   var editor_dict = {
     "codemirror": {"url": "codemirror.gadget.html"},
+    "monaco": {"url": "monaco-editor.gadget.html"},
     "onlyoffice": {"url": "onlyoffice.gadget.html"},
     "fck_editor": {"url": "ckeditor.gadget.html"},
     "svg_editor" : {"url": "method-draw/method-draw.gadget.html"},
