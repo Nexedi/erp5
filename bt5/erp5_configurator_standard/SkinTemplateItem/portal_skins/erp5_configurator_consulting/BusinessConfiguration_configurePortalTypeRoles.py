@@ -7,9 +7,5 @@ configuration_save.setIntIndex(1000)
 configuration_save.addConfigurationItem("Portal Type Roles Spreadsheet Configurator Item",
                                         configuration_spreadsheet_file=portal_type_roles_spreadsheet)
 
-# Define standard module security. also.
-configuration_save.addConfigurationItem("Permission Configurator Item",
-                                        filename="standard_module_permission_access.ods")
-
 # Create ERP5Site_getSecurityCategoryMapping
 configuration_save.addConfigurationItem("Security Category Mapping Configurator Item")

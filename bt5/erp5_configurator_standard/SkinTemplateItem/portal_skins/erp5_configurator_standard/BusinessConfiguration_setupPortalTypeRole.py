@@ -6,11 +6,5 @@ context.setGlobalConfigurationAttr(
 configuration_save.addConfigurationItem("Portal Type Roles Spreadsheet Configurator Item",
                    configuration_spreadsheet_data = getattr(context, "standard_portal_types_roles.ods").data)
 
-
-# Define standard module security. also.
-configuration_save.addConfigurationItem("Permission Configurator Item",
-                                        filename="standard_module_permission_access.ods")
-
-
 # Create ERP5Site_getSecurityCategoryMapping
 configuration_save.addConfigurationItem("Security Category Mapping Configurator Item")
