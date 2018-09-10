@@ -77,8 +77,7 @@
     {name: 'document',
      items: ['Source', '-', 'Save', 'Print', '-', 'Templates']},
     {name: 'clipboard', items: ['Undo', 'Redo']},
-    {name: 'editing', items: ['Find', 'Replace', '-', 'SelectAll',
-                              '-', 'Scayt']},
+    {name: 'editing', items: ['Find', 'Replace', '-', 'SelectAll']},
     '/',
     {name: 'basicstyles',
      items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript',
@@ -100,6 +99,8 @@
     MOBILE_CONFIGURATION = {
       toolbar: TOOLBAR_MOBILE,
       disableNativeSpellChecker: false,
+      // Remove the WebSpellChecker and SpellCheckAsYouType (SCAYT) plugins.
+      removePlugins: 'scayt,wsc',
       // Disable ACF to not destroy HTML on mobile
       allowedContent: true,
       keystrokes: [
@@ -109,6 +110,8 @@
     DESKTOP_CONFIGURATION = {
       toolbar: TOOLBAR_DESKTOP,
       disableNativeSpellChecker: false,
+      // Remove the WebSpellChecker and SpellCheckAsYouType (SCAYT) plugins.
+      removePlugins: 'scayt,wsc',
       // Disable ACF to not destroy HTML on mobile
       allowedContent: true,
       keystrokes: [
@@ -119,7 +122,8 @@
       toolbar: [],
       allowedContent: true,
       readOnly: true,
-      removePlugins: 'elementspath',
+      // Remove the WebSpellChecker and SpellCheckAsYouType (SCAYT) plugins.
+      removePlugins: 'elementspath,scayt,wsc',
       startupShowBorders: false,
       startupOutlineBlocks: false,
       contentsCss: ''
