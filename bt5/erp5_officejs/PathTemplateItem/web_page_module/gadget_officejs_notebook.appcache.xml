@@ -129,8 +129,29 @@ pyodide.asm.data.js\n
 pyodide.asm.js\n
 pyodide.asm.wasm\n
 pyodide.asm.data\n
+cycler.data\n
+cycler.js\n
+kiwisolver.data\n
+kiwisolver.js\n
+matplotlib.data\n
+matplotlib.js\n
+numpy.data\n
+numpy.js\n
 packages.json\n
+pandas.data\n
+pandas.js\n
+pyodide.asm.html\n
+pyodide.py\n
+pyparsing.data\n
+pyparsing.js\n
+python-dateutil.data\n
+python-dateutil.js\n
+python.html\n
+pytz.data\n
+pytz.js\n
 renderedhtml.css\n
+xlrd.data\n
+xlrd.js\n
 \n
 font-awesome/font-awesome.css\n
 font-awesome/font-awesome-webfont.eot\n
@@ -373,7 +394,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>969.50674.1572.7867</string> </value>
+                <value> <string>969.57706.26709.14899</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -391,7 +412,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1535021998.08</float>
+                        <float>1533713860.15</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
