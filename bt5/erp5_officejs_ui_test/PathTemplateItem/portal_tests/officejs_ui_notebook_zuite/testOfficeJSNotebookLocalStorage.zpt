@@ -88,7 +88,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@title='Title']</td>
+  <td>identifier=notebook-container</td>
   <td></td>
 </tr>
 <tr>
@@ -115,6 +115,47 @@
   <td>type</td>
   <td>//textarea[@title='Description']</td>
   <td>${description}</td>
+</tr>
+<tal:block tal:define="notebook_content python: 'content {}'.format(DateTime())">
+
+<tr>
+  <td>store</td>
+  <td tal:content="python: notebook_content">Notebook content</td>
+  <td>notebook_content</td>
+</tr>
+
+<tr>
+  <td>storeEval</td>
+  <td tal:content="python: 'document.querySelector(\'#selenium_myiframe\').contentWindow.document.body.querySelector(\'iframe\').contentWindow.document.querySelector(\'.CodeMirror\').CodeMirror.setValue(\'%s\')' % notebook_content"></td>
+  <td></td>
+</tr>
+
+</tal:block>
+<!-- Laurent : for some reason, if you just change the cell content, it will not be saved. You need to send a keyboard input at some point.
+For that I'm using this undocumented triggerOnKeyDown() method -->
+<!-- Laurent : for some reason, if you just change the cell content, it will not be saved. You need to send a keyboard input at some point.
+For that I'm using this undocumented triggerOnKeyDown() method -->
+<tr>
+  <td>storeEval</td>
+  <td tal:content="python: 'document.querySelector(\'#selenium_myiframe\').contentWindow.document.body.querySelector(\'iframe\').contentWindow.document.querySelector(\'.CodeMirror\').
+                   CodeMirror.triggerOnKeyDown({type: \'keydown\', keyCode: 13})'"></td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeEval</td>
+  <td>localStorage.clear();</td>
+  <td></td>
+</tr>
+  <!-- Laurent : in case the UI of iodide notebooks ever changes, you need to select the "run cell" button here -->
+<tr>
+  <td>click</td>
+  <td>//*[@class="editor-mode-controls"]/button[5]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeEval</td>
+  <td>Object.keys(localStorage)[0];</td>
+  <td>localStorageKey</td>
 </tr>
 <tr>
   <td>click</td>
@@ -132,6 +173,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>storeEval</td>
+  <td>localStorage.clear();</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
   <td>link=Add</td>
   <td></td>
@@ -146,36 +192,6 @@
   <td>link=${title}</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//textarea[@title='Description']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//input[@title='Title']</td>
-  <td>${title}</td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//input[@title='Reference']</td>
-  <td>${reference}</td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//input[@title='Version']</td>
-  <td>${version}</td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//input[@title='Language']</td>
-  <td>${language}</td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//textarea[@title='Description']</td>
-  <td>${description}</td>
-</tr>
 <!-- This part (actually loading the notebook) requires a recent version
 of firefox. Right now (may 2018) the test nodes are running with firefox 51.
 This has been successfully tested with 59. -->
@@ -183,6 +199,17 @@ This has been successfully tested with 59. -->
   <td>waitForElementPresent</td>
   <td>identifier=notebook-container</td>
   <td></td>
+</tr>
+<!-- Laurent : in case the UI of iodide notebooks ever changes, you need to select the "run cell" button here -->
+<tr>
+  <td>click</td>
+  <td>//*[@class="editor-mode-controls"]/button[5]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyEval</td>
+  <td>Object.keys(localStorage)[0];</td>
+  <td>${localStorageKey}</td>
 </tr>
 </tbody></table>
 </body>
