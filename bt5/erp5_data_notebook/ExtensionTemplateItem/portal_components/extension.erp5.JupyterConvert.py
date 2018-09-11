@@ -8,9 +8,9 @@ from xmlrpclib import ServerProxy
 from urllib import urlencode
 from urllib2 import urlopen
 
-import os
-os.environ['JUPYTER_CONFIG_DIR'] = "/srv/slapgrid/slappart5/srv/runner/instance/slappart10/ipython"
-os.environ['IPYTHONDIR'] = "/srv/slapgrid/slappart5/srv/runner/instance/slappart10/ipython"
+#import os
+#os.environ['JUPYTER_CONFIG_DIR'] = "/srv/slapgrid/slappart5/srv/runner/instance/slappart10/ipython"
+#os.environ['IPYTHONDIR'] = "/srv/slapgrid/slappart5/srv/runner/instance/slappart10/ipython"
 
 class PyMarkdownPreprocessor(Preprocessor):
   """
