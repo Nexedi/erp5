@@ -46,6 +46,40 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+# selenium workaround for localhost / 127.0.0.1 resolution
+# ------
+# Selenium connects starts a service on localhost, but when ERP5
+# is running under userhosts wrapper, because we don't have entry for
+# localhost in our pseudo /etc/hosts file, localhost resolution is delegated
+# to local DNS, which might not resolve localhost - for example 8.8.8.8
+# does not.
+# We work around this by monkey-patching the places in selenium where
+# localhost resolution is required and returning 127.0.0.1 directly.
+# This is not really correct, it would be better to use SlapOS partition IP,
+# but we need a quick fix to have test results again.
+
+# Service.start polls utils.is_connectable(port) - without host argument, assuming the default
+# localhost.
+# https://github.com/SeleniumHQ/selenium/blob/selenium-3.14.0/py/selenium/webdriver/common/service.py#L99
+import selenium.webdriver.common.utils
+original_is_connectable = selenium.webdriver.common.utils.is_connectable
+def is_connectable(port, host="localhost"):
+  if host == "localhost":
+    host = "127.0.0.1"
+  return original_is_connectable(port, host)
+selenium.webdriver.common.utils.is_connectable = is_connectable
+
+# Service.get_service_url hardcodes 127.0.0.1
+# https://github.com/SeleniumHQ/selenium/blob/selenium-3.14.0/py/selenium/webdriver/common/service.py#L56
+original_join_host_port  = selenium.webdriver.common.utils.join_host_port
+def join_host_port(host, port):
+  if host == "localhost":
+    host = "127.0.0.1"
+  return original_join_host_port(host, port)
+selenium.webdriver.common.utils.join_host_port = join_host_port
+# /selenium workaround
+
+
 ZELENIUM_BASE_URL = "%s/portal_tests/%s/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=../postResults&__ac_name=%s&__ac_password=%s"
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
