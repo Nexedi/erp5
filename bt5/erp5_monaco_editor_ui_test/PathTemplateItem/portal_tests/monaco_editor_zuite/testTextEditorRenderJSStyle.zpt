@@ -1,0 +1,99 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Web Page Editor Gadget RenderJS Style</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Web Page Editor Gadget RenderJS Style</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr><td>open</td>
+    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Reset Successfully.</td><td></td></tr>
+
+<tr><td colspan="3"><b>Set prefered text editor</b></td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/portal_preferences/erp5_ui_test_preference/Preference_viewHtmlStyle</td><td></td></tr>
+<tr><td>click</td>
+    <td>//input[@name="field_my_preferred_text_editor" and @value="monaco"]</td><td></td></tr>
+<tr><td>clickAndWait</td>
+    <td>//button[@name='Base_edit:method']</td><td></td></tr>
+
+<tr><td colspan="3"><b>Switch to renderjs UI and edit a web page</b></td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/web_site_module/renderjs_runner/#/web_page_module/?editable=true</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n='Add']</td><td></td></tr>
+<tr><td>click</td>
+    <td>link=Add</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//select[@name='field_your_portal_type']</td><td></td></tr>
+<tr><td>select</td>
+    <td>//select[@name='field_your_portal_type']</td>
+    <td>Web Page</td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Document created.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+     <td>//a[@data-i18n="Edit"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Edit"]</td><td></td></tr>
+
+<tr><td colspan="3"><b>Wait for editor to be loaded</b></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="editor"]//iframe</td><td></td></tr>
+<tr><td>selectFrame</td>
+    <td>//div[@data-gadget-scope="editor"]//iframe</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>css=div.monaco-editor.vs</td><td></td></tr>
+<tr><td>storeEval</td>
+    <td>selenium.browserbot.getCurrentWindow().document.querySelector('div.monaco-editor.vs').getAttribute('data-uri')</td>
+    <td>model-data-uri</td></tr>
+<tr><td>assertEval</td>
+    <td>selenium.browserbot.getCurrentWindow().monaco.editor.getModel(storedVars['model-data-uri']).setValue("Hello")</td>
+    <td>null</td></tr>
+<tr><td>selectFrame</td>
+    <td>relative=top</td><td></td></tr>
+
+<tr><td>click</td>
+    <td>//button[@data-i18n="Save"]</td><td></td></tr>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data updated.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<tr><td colspan="3"><b>Check that our edition is reflected on preview.</b></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="View"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="View"]</td><td></td></tr>
+<tr><td>waitForText</td>
+    <td>//div[@data-gadget-scope="field_my_text_content"]//pre</td>
+    <td>Hello</td></tr>
+
+</tbody></table>
+</body>
+</html>
