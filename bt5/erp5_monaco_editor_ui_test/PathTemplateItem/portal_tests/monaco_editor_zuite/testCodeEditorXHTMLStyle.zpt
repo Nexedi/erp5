@@ -1,0 +1,77 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Code Editor Gadget XHTML Style</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Code Editor Gadget XHTML Style</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr><td>open</td>
+  <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+  <td>Reset Successfully.</td><td></td></tr>
+
+<tr><td colspan="3"><b>Set prefered code editor</b></td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/portal_preferences/erp5_ui_test_preference/Preference_viewHtmlStyle</td><td></td></tr>
+<tr><td>click</td>
+    <td>//input[@name="field_my_preferred_source_code_editor" and @value="monaco"]</td><td></td></tr>
+<tr><td>clickAndWait</td>
+    <td>//button[@name='Base_edit:method']</td><td></td></tr>
+
+<tr><td colspan="3"><b>Add python test</b></td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/portal_components/</td><td></td></tr>
+<tr><td>selectAndWait</td>
+    <td>select_action</td><td>Add Test Component</td></tr>
+
+<tr><td colspan="3"><b>Wait for editor to be loaded</b></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>css=div.monaco-editor.vs</td><td></td></tr>
+
+<tr><td colspan="3"><b>
+Edit python code content and check code is analysed
+</b></td></tr>
+
+<tr><td>storeEval</td>
+    <td>selenium.browserbot.getCurrentWindow().document.querySelector('div.monaco-editor.vs').getAttribute('data-uri')</td>
+    <td>model-data-uri</td></tr>
+
+<tr><td>assertEval</td><!-- listen for decorations changes when code is edited -->
+    <td>(function (){
+      selenium.browserbot.getCurrentWindow().monaco.editor.getModel(
+        storedVars['model-data-uri']).onDidChangeDecorations(function (){
+          storedVars["monaco-decorations"] = "changed";
+      })
+    })()</td>
+    <td>null</td></tr>
+<tr><td>assertEval</td>
+    <td>(function() {
+      var space = String.fromCharCode('32');
+      return selenium.browserbot.getCurrentWindow().monaco.editor.getModel(storedVars['model-data-uri']).setValue(
+      "class Error(object):\n" +
+      space + space + "def hello(self):\n" +
+      space + space + space + space + "return error")})()</td>
+    <td>null</td></tr>
+
+<tr><td>waitForEval</td><!-- because the code has an error for undefined variable `error`, decorations have changed -->
+    <td>storedVars['monaco-decorations']</td>
+    <td>changed</td></tr>
+
+<tr><td>clickAndWait</td>
+    <td>//button[@name='Base_edit:method']</td><td></td></tr>
+
+<tr><td>assertText</td>
+    <td>css=.field.error .error</td>
+    <td>E:  3,  11: Undefined variable 'error' (undefined-variable)</td></tr>
+
+</tbody></table>
+</body>
+</html>
