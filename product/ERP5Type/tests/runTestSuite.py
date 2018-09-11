@@ -76,12 +76,12 @@ def main():
       '--zserver_address_list',
       help='A list of comma seperated host:port for ZServer.\n'
       'Also taken from zserver_address_list environment variable.',
-      default=os.getenv('zserver_address_list'))
+      default=os.getenv('zserver_address_list', ''))
   slapos_wrapper_group.add_argument(
       '--zserver_frontend_url_list',
       help='A list of comma seperated frontend URLs, one for each of zserver_address_list,'
       'in the same order.\nAlso taken from zserver_frontend_url_list environment variable',
-      default=os.getenv('zserver_frontend_url_list'))
+      default=os.getenv('zserver_frontend_url_list', ''))
 
   # Parameters passed by test node
   testnode_group = parser.add_argument_group(
