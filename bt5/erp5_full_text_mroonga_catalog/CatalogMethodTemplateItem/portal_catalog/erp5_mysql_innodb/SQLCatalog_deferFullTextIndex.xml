@@ -50,7 +50,13 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>getPath</string> </value>
+            <value> <string>getObject, getRootDocumentPath</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

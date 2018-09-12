@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>path_list</string> </value>
+            <value> <string>object_list</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -58,6 +58,12 @@
               <tuple>
                 <string>Manager</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
