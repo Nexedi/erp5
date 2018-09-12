@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>getObject, getRootDocumentPath</string> </value>
+            <value> <string>getPath, getRootDocumentPath</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
