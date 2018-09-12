@@ -38,8 +38,8 @@ def makeSuite(
   suite = suite_class(revision=revision,
                       max_instance_count=node_quantity,
                       mysql_db_list=db_list.split(','),
-                      zserver_address_list=zserver_address_list.split(','),
-                      zserver_frontend_url_list=zserver_frontend_url_list.split(','),
+                      zserver_address_list=zserver_address_list,
+                      zserver_frontend_url_list=zserver_frontend_url_list,
                       **kwargs)
   return suite
 
@@ -111,13 +111,18 @@ def main():
   test_suite_title = args.test_suite_title or args.test_suite
   revision = args.revision
 
-  if args.zserver_address_list and len(args.zserver_address_list.split(",")) < args.node_quantity:
+  args.zserver_address_list = (
+      args.zserver_address_list.split(',') if args.zserver_address_list else ())
+  args.zserver_frontend_url_list = (
+      args.zserver_frontend_url_list.split(',') if args.zserver_frontend_url_list else ())
+
+  if args.zserver_address_list and len(args.zserver_address_list) < args.node_quantity:
     print >> sys.stderr, 'Not enough zserver address/frontends for node quantity %s (%r)' % (
         args.node_quantity, args.zserver_address_list)
     sys.exit(1)
 
   # sanity check
-  assert len(args.zserver_address_list.split(",")) == len(args.zserver_frontend_url_list.split(","))
+  assert len(args.zserver_address_list) == len(args.zserver_frontend_url_list)
 
   suite = makeSuite(test_suite=args.test_suite,
                     node_quantity=args.node_quantity,
