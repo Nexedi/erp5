@@ -111,7 +111,7 @@ def main():
   test_suite_title = args.test_suite_title or args.test_suite
   revision = args.revision
 
-  if len(args.zserver_address_list.split(",")) < args.node_quantity:
+  if args.zserver_address_list and len(args.zserver_address_list.split(",")) < args.node_quantity:
     print >> sys.stderr, 'Not enough zserver address/frontends for node quantity %s (%r)' % (
         args.node_quantity, args.zserver_address_list)
     sys.exit(1)

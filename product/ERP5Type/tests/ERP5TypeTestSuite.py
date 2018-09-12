@@ -24,10 +24,11 @@ class ERP5TypeTestSuite(TestSuite):
     if self.__dict__.has_key("bt5_path"):
       args = ("--bt5_path=%s" % self.bt5_path,) + args
     instance_number = self.instance or 1
-    args = (
-        '--zserver=%s' % self.zserver_address_list[instance_number-1],
-        '--zserver_frontend_url=%s' % self.zserver_frontend_url_list[instance_number-1],
-       ) + args
+    if self.zserver_address_list:
+      args = (
+          '--zserver=%s' % self.zserver_address_list[instance_number-1],
+          '--zserver_frontend_url=%s' % self.zserver_frontend_url_list[instance_number-1],
+          ) + args
     mysql_db_list = self.mysql_db_list[
              (instance_number-1) * self.mysql_db_count:
              (instance_number) * self.mysql_db_count]
