@@ -1128,21 +1128,46 @@
     <tr>
       <td colspan="3"><b>Verify CKEditor Text Content</b></td>
     </tr>
-    <!-- Wait for ckeditor to be loaded :/ How to inspect inside another iframe? -->
+    <!-- Wait for ckeditor to be loaded -->
     <tr>
-      <td>pause</td>
-      <td>2000</td>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-scope="editor"]//iframe</td>
+      <td></td>
+    </tr>
+    <tr><!-- gadget iframe -->
+      <td>selectFrame</td>
+      <td>//div[@data-gadget-scope="editor"]//iframe</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//iframe</td>
+      <td></td>
+    </tr>
+    <tr><!-- CKEditor iframe -->
+      <td>selectFrame</td>
+      <td>//iframe</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//body</td>
       <td></td>
     </tr>
     <tr>
       <td>storeEval</td>
-      <td>document.querySelector('#selenium_myiframe').contentWindow.document.querySelector('iframe').contentWindow.document.querySelector('iframe').contentWindow.document.body.innerHTML</td>
+      <td>selenium.browserbot.getCurrentWindow().document.body.innerHTML</td>
       <td>_macro_verify_ckeditor_text_content_temporary_var</td>
     </tr>
     <tr>
       <td>verifyEval</td>
       <td>storedVars['_macro_verify_ckeditor_text_content_temporary_var']</td>
       <td tal:content="python: text_content"></td>
+    </tr>
+    <tr>
+      <td>selectFrame</td>
+      <td>relative=top</td>
+      <td></td>
     </tr>
     <tr>
       <td colspan="3"><p></p></td>
@@ -1157,16 +1182,41 @@
     <tr>
       <td colspan="3"><b>Type CKEditor Text Content</b></td>
     </tr>
-    <!-- Wait for ckeditor to be loaded :/ How to inspect inside another iframe? -->
+    <!-- Wait for ckeditor to be loaded -->
     <tr>
-      <td>pause</td>
-      <td>20000</td>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-scope="editor"]//iframe</td>
+      <td></td>
+    </tr>
+    <tr><!-- gadget iframe -->
+      <td>selectFrame</td>
+      <td>//div[@data-gadget-scope="editor"]//iframe</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//iframe</td>
+      <td></td>
+    </tr>
+    <tr><!-- CKEditor iframe -->
+      <td>selectFrame</td>
+      <td>//iframe</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//body</td>
       <td></td>
     </tr>
     <tr>
       <td>storeEval</td>
-      <td tal:content="python: 'document.querySelector(\'#selenium_myiframe\').contentWindow.document.querySelector(\'iframe\').contentWindow.document.querySelector(\'iframe\').contentWindow.document.body.innerHTML = \'{}\''.format(text_content.replace('\n', '\\n').replace('\'', '\\\''))"></td>
+      <td tal:content="python: 'selenium.browserbot.getCurrentWindow().document.body.innerHTML = \'{}\''.format(text_content.replace('\n', '\\n').replace('\'', '\\\''))"></td>
       <td>_macro_type_ckeditor_text_content_temporary_var</td>
+    </tr>
+    <tr>
+      <td>selectFrame</td>
+      <td>relative=top</td>
+      <td></td>
     </tr>
     <tr>
       <td colspan="3"><p></p></td>
