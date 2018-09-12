@@ -6,6 +6,7 @@
 context.setContainerLayout('erp5_web_layout')
 context.setContentLayout('erp5_web_content_layout')
 context.setLayoutConfigurationFormId('WebSection_viewDefaultThemeConfiguration')
-# At least one available language is required
-context.setAvailableLanguageSet([context.Localizer.get_selected_language()])
+localizer = context.getPortalObject().Localizer
+context.setAvailableLanguageSet(localizer.get_supported_languages())
+context.setDefaultAvailableLanguage(localizer.get_selected_language())
 context.setStaticLanguageSelection(1)
