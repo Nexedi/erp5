@@ -2,12 +2,14 @@ from Products.CMFActivity.ActiveResult import ActiveResult
 portal = context.getPortalObject()
 
 tracking_list = list(reversed(portal.portal_simulation.getCurrentTrackingList(aggregate_uid=context.getUid())))
-
+delivery_dict = {
+    x.uid: x
+    for x in portal.portal_catalog(
+        uid=[x.delivery_uid for x in tracking_list],
+    )
+}
 for previous_brain, next_brain in zip(tracking_list, tracking_list[1:]):
-  previous_delivery = portal.portal_catalog.getObject(previous_brain.delivery_uid)
-  next_delivery = portal.portal_catalog.getObject(next_brain.delivery_uid)
-  
-  if previous_delivery.getDestination() != next_delivery.getSource():
+  if delivery_dict[previous_brain.delivery_uid].getDestination() != delivery_dict[next_brain.delivery_uid].getSource():
     portal.restrictedTraverse(active_process).postResult(
      ActiveResult(summary=script.getId(),
          detail='%s has tracking error' % context.getRelativeUrl(),
