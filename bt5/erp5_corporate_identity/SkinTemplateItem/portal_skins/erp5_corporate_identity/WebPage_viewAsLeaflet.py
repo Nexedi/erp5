@@ -75,7 +75,7 @@ if leaflet_reference is None:
 leaflet_full_reference = '-'.join([leaflet_reference, leaflet_version, leaflet_language])
 
 # ---------------------------- Theme Parameters --------------------------------
-leaflet_theme = leaflet.Base_getThemeDict(doc_format=leaflet_format, css_path="template_css/leaflet")
+leaflet_theme = leaflet.Base_getThemeDict(doc_format=leaflet_format, css_path="template_css/leaflet", skin="Leaflet")
 
 if override_leaflet_header_title and override_leaflet_header_title != blank:
   leaflet_theme["theme_logo_description"] = html_quote(override_leaflet_header_title)
@@ -267,7 +267,6 @@ if leaflet_format == "pdf":
       footer_spacing=3
     )
   )
-
   return leaflet.WebPage_finishPdfCreation(
     doc_download=leaflet_download,
     doc_save=leaflet_save,
