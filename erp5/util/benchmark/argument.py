@@ -57,7 +57,7 @@ class ArgumentType(object):
 
     try:
       module = __import__(module_name, globals(), locals(), [object_name], -1)
-    except Exception, e:
+    except Exception as e:
       raise argparse.ArgumentTypeError("Cannot import '%s.%s': %s" % \
                                          (module_name, object_name, str(e)))
 

@@ -35,6 +35,7 @@ import imp
 import gzip
 import getopt
 from time import time
+import six
 
 PROFILING_ENABLED = False
 if PROFILING_ENABLED:
@@ -150,7 +151,7 @@ def parseFile(filename, measure_dict):
   if line_number > 0:
     duration = time() - begin
     print("Matched %i lines (%.2f%%), %i skipped (%.2f%%), %i unmatched (%.2f%%) in %.2fs (%i lines per second)." % \
-      (match_count, (match_count / line_number) * 100, skip_count, (skip_count / line_number) * 100, (line_number - match_count - skip_count), (1 - (match_count + skip_count) / line_number)) * 100, duration, line_number // duration),
+      (match_count, (match_count / line_number) * 100, skip_count, (skip_count / line_number) * 100, (line_number - match_count - skip_count), (1 - (match_count + skip_count) / line_number) * 100, duration, line_number // duration),
       file=sys.stderr)
 
 debug = False
@@ -209,9 +210,9 @@ if len(load_file_name_list):
     with open(load_file_name) as load_file:
       temp_measure_dict = eval(load_file.read(), {})
     assert isinstance(measure_dict, dict)
-    for filter_id, result_dict in temp_measure_dict.iteritems():
-      for result, date_dict in result_dict.iteritems():
-        for date, duration_list in date_dict.iteritems():
+    for filter_id, result_dict in six.iteritems(temp_measure_dict):
+      for result, date_dict in six.iteritems(result_dict):
+        for date, duration_list in six.iteritems(date_dict):
           measure_dict.setdefault(filter_id, {}).setdefault(result, {}).setdefault(date, []).extend(duration_list)
     print('Previous processing result restored from %r' % (load_file_name, ), file=sys.stderr)
 
@@ -231,18 +232,17 @@ if outfile_prefix is not None:
   append = measure_id_list.append
   sheet_dict = {}
   line_dict = {}
-  for match_id, match_dict in measure_dict.iteritems():
-    for result_id, result_dict in match_dict.iteritems():
+  for match_id, match_dict in six.iteritems(measure_dict):
+    for result_id, result_dict in six.iteritems(match_dict):
       measure_id = (match_id, result_id)
       sheet_dict.setdefault(match_id, []).append((result_id, measure_id))
       append(measure_id)
-      for date, measure_list in result_dict.iteritems():
+      for date, measure_list in six.iteritems(result_dict):
         first_level_dict = line_dict.setdefault(date, {})
         assert measure_id not in first_level_dict
         first_level_dict[measure_id] = measure_list
 
-  date_list = line_dict.keys()
-  date_list.sort(key=date_key)
+  date_list = sorted(line_dict, key=date_key)
 
   def render_cell(value_list, format):
     if isinstance(value_list, (list, tuple)):
@@ -251,7 +251,7 @@ if outfile_prefix is not None:
       return value_list
 
   def renderOutput(data_format, filename_suffix):
-    for sheet_id, sheet_column_list in sheet_dict.iteritems():
+    for sheet_id, sheet_column_list in six.iteritems(sheet_dict):
       outfile_name = '%s_%s_%s.csv' % (outfile_prefix, sheet_id, filename_suffix)
       print('Writing to %r...' % (outfile_name, ), file=sys.stderr)
       with open(outfile_name, 'w') as outfile:
@@ -259,7 +259,7 @@ if outfile_prefix is not None:
         decimate_dict = {}
         decimate = 0
         for date in date_list:
-          for key, value in line_dict[date].iteritems():
+          for key, value in six.iteritems(line_dict[date]):
             decimate_dict.setdefault(key, []).extend(value)
           decimate += 1
           if decimate == decimate_count:

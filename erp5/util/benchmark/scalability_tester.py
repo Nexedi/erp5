@@ -51,16 +51,16 @@ class ScalabilityTester(PerformanceTester):
   def postRun(self, error_message_set):
     from logging import Formatter
     import sys
-    import urllib
-    import urllib2
+    from six.moves.urllib.request import urlencode
+    from six.moves.urllib.parse import urlopen
 
     try:
-      urllib2.urlopen("http://[%s]:%d/report" % \
+      urlopen("http://[%s]:%d/report" % \
                         (self._argument_namespace.manager_address,
                          self._argument_namespace.manager_port),
-                      urllib.urlencode({'error_message_set': '|'.join(error_message_set)})).close()
+                      urlencode({'error_message_set': '|'.join(error_message_set)})).close()
 
-    except:
+    except Exception:
       print("ERROR: %s" % Formatter().formatException(sys.exc_info()), file=sys.stderr)
 
   def getResultClass(self):

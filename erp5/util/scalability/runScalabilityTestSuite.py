@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import division
+
 import argparse
 import os
 import shutil
@@ -253,7 +255,7 @@ class ScalabilityLauncher(object):
       log_file_name_prefix = "%s_%s_suite_%s" %(LOG_FILE_PREFIX, current_test.title, test_suite)
       command_list.append([tester_path,
                            instance_url,
-                           str(user_quantity/len(test_suite_list)),
+                           str(user_quantity//len(test_suite_list)),
                            test_suite,
                            '--benchmark-path-list', benchmarks_path,
                            '--users-file-path', user_file_path,
@@ -264,7 +266,7 @@ class ScalabilityLauncher(object):
                            '--user-index', str(user_index),
                            "--duration", "%d"%test_duration,
                          ])
-      user_index += user_quantity/len(test_suite_list)
+      user_index += user_quantity//len(test_suite_list)
     # Launch commands
     exec_env = os.environ.copy()
     exec_env.update({'raise_error_if_fail': False})
@@ -298,7 +300,7 @@ class ScalabilityLauncher(object):
                     "tests=%s\n"\
                     "duration=%d\n"\
                     %(
-                      (user_quantity/len(test_suite_list))*len(test_suite_list),
+                      (user_quantity//len(test_suite_list))*len(test_suite_list),
                       len(test_suite_list),
                       '_'.join(test_suite_list),
                       test_duration

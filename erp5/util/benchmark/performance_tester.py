@@ -264,7 +264,7 @@ class PerformanceTester(object):
       try:
         error_message = exit_msg_queue.get()
 
-      except KeyboardInterrupt, e:
+      except KeyboardInterrupt as e:
         print("\nInterrupted by user, stopping gracefully...", file=sys.stderr)
         exit_status = 2
 
@@ -272,7 +272,7 @@ class PerformanceTester(object):
       # blocking system call above and the system call should not be restarted
       # (using siginterrupt), otherwise the  process will stall forever as its
       # child has already exited
-      except IOError, e:
+      except IOError as e:
         if e.errno == errno.EINTR:
           continue
 

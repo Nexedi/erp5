@@ -34,6 +34,7 @@
 from __future__ import print_function
 import argparse
 import re
+import six
 
 def parseArguments():
   parser = argparse.ArgumentParser(
@@ -156,8 +157,8 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
             report_dict['results'].setdefault(stat.full_label, []).append(stat)
 
     if row_list != label_list:
-      raise AssertionError, "ERROR: Result labels: %s != %s" % \
-          (label_list, row_list)
+      raise AssertionError("ERROR: Result labels: %s != %s" %
+          (label_list, row_list))
 
     iteration_index = 0
     for row_list in reader:
@@ -587,8 +588,8 @@ def generateReport():
         (nb_users_list[0],
          nb_users_list[-1])
 
-    for suite_name, report_dict in range_user_report_dict.iteritems():
-      for label, stat_list in report_dict['results'].iteritems():
+    for suite_name, report_dict in six.iteritems(range_user_report_dict):
+      for label, stat_list in six.iteritems(report_dict['results']):
         drawConcurrentUsersPlot(
           pdf,
           title_fmt % label,
