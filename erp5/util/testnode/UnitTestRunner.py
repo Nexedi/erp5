@@ -151,7 +151,7 @@ class UnitTestRunner(object):
           for base in software_list))
         return path
     for option, value in (
-        ('--firefox_bin', lambda: path('firefox', 'firefox/firefox-slapos')),
+        ('--firefox_bin', lambda: path('firefox', 'firefox/firefox')),
         ('--frontend_url', lambda: config['frontend_url']),
         ('--node_quantity', lambda: config['node_quantity']),
         ('--xvfb_bin', lambda: path('xvfb', 'xserver/bin/Xvfb')),
