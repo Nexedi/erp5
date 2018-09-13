@@ -5,23 +5,15 @@ import os
 import shutil
 import time
 import sys
-import multiprocessing
-import signal
-import errno
 import json
 import logging
 import logging.handlers
 import glob
-import urlparse
-import httplib
-import base64
 import threading
-from erp5.util.benchmark.argument import ArgumentType
-from erp5.util.benchmark.performance_tester import PerformanceTester
 from erp5.util.benchmark.thread import TestThread, TestMetricThread
 from erp5.util import taskdistribution
 from erp5.util.testnode import Utils
-from erp5.util.testnode.ProcessManager import SubprocessError, ProcessManager, CancellationError
+from erp5.util.testnode.ProcessManager import ProcessManager
 import datetime
 
 MAX_INSTALLATION_TIME = 60*50
@@ -179,8 +171,8 @@ class ScalabilityLauncher(object):
     """
     data_array = self.__argumentNamespace.current_test_data.split(',')
     data = json.dumps({"count": data_array[0], "title": data_array[1], "relative_path": data_array[2]})
-    decoded_data = Utils.deunicodeData(json.loads(data))
-    return ScalabilityTest(decoded_data, self.test_result)
+    encoded_data = Utils.deunicodeData(json.loads(data))
+    return ScalabilityTest(encoded_data, self.test_result)
 
   def clearUsersFile(self, user_file_path):
     self.log("Clearing users file: %s" % user_file_path)
