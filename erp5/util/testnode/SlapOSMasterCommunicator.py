@@ -449,7 +449,7 @@ class SlapOSTester(SlapOSMasterCommunicator):
     def getInstanceGuid():
       try:
         return self.instance.getInstanceGuid()
-      except:
+      except Exception:
         return None
     frontend_master_ipv6 = None
     instance_guid = None

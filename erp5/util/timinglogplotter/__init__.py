@@ -103,7 +103,7 @@ def computeExpr(expr):
   if expr:
     assert expr[0] == '='
     num, denom = expr[1:].split('/')
-    result = int(num) / int(denom)
+    result = int(num) // int(denom)
   else:
     result = None
   return result

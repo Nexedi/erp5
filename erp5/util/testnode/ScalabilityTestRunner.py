@@ -104,7 +104,7 @@ class ScalabilityTestRunner():
       self.slapos_url = self.testnode.taskdistribution.getSlaposUrl()
       if not self.slapos_url:
         self.slapos_url = self.testnode.config['server_url']
-    except:
+    except Exception:
       self.slapos_url = self.testnode.config['server_url']
     
     # Get Slapos Master url used for api rest (using hateoas)
@@ -458,7 +458,7 @@ Require valid-user
         suite_class = getattr(module, test_suite)
         suite = suite_class(**kwargs)
         repo_location = "%s/%s/" % (location, SCALABILITY_TEST)
-      except:
+      except Exception:
         pass
     return suite, repo_location
 
