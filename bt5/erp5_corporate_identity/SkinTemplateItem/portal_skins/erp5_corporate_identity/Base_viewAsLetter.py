@@ -90,7 +90,7 @@ if letter_reference is None:
 letter_full_reference = '-'.join([letter_reference, letter_version, letter_language])
 
 # --------------------------- Layout Parameters --------------------------------
-letter_theme = letter.Base_getThemeDict(doc_format=letter_format, css_path="template_css/letter")
+letter_theme = letter.Base_getThemeDict(doc_format=letter_format, css_path="template_css/letter", skin="Letter")
 
 # --------------------------- Source/Destination -------------------------------
 letter_source = letter.Base_getSourceDict(
