@@ -219,7 +219,7 @@ if doc_reference is None:
 doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])
 
 # --------------------------- Layout Parameters --------------------------------
-doc_theme = doc.Base_getThemeDict(doc_format=doc_format, css_path="template_css/slide")
+doc_theme = doc.Base_getThemeDict(doc_format=doc_format, css_path="template_css/slide", skin="Slide")
 doc_css = ''.join(['.ci-slideshow-intro.present:not(.slide-background):before {',
   'content: "%s";' % (doc_theme.get("theme_logo_description")),
   'background: #FFF url("%s") center no-repeat;' % (doc.Base_setUrl(path=doc_theme.get("theme_logo_url"), display="medium")),

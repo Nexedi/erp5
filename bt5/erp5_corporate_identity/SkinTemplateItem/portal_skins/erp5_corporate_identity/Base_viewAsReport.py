@@ -129,7 +129,7 @@ doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])
 doc_short_date = doc_modification_date.strftime('%Y-%m-%d')
 
 # ------------------------------- Theme ----------------------------------------
-doc_theme = doc.Base_getThemeDict(doc_format=doc_format, css_path="template_css/book")
+doc_theme = doc.Base_getThemeDict(doc_format=doc_format, css_path="template_css/book", skin="Book")
 
 # --------------------------- Source/Destination -------------------------------
 doc_source = doc.Base_getSourceDict(

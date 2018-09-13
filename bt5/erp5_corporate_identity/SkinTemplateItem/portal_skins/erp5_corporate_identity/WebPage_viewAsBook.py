@@ -106,7 +106,7 @@ if book_reference is None:
 book_full_reference = '-'.join([book_reference, book_version, book_language])
 
 # ------------------------------- Theme ----------------------------------------
-book_theme = book.Base_getThemeDict(doc_format=book_format, css_path="template_css/book")
+book_theme = book.Base_getThemeDict(doc_format=book_format, css_path="template_css/book", skin="Book")
 
 # --------------------------- Source/Destination -------------------------------
 book_source = book.Base_getSourceDict(
