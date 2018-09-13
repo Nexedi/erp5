@@ -42,6 +42,12 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -68,37 +74,38 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_property_name</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>your_reportbox</string>
+                        <string>listbox_change</string>
+                        <string>listbox_datetime</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_zodb_history</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>your_property_history</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -106,7 +113,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewHistory</string> </value>
+            <value> <string>Base_viewPropertyHistoryList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -114,7 +121,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_viewHistory</string> </value>
+            <value> <string>Base_viewZODBHistory</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -138,6 +145,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

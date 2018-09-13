@@ -140,6 +140,34 @@ def getChangeHistoryList(document, size=50, attribute_name=None):
 
   return history
 
+def getChangeHistoryListForProperty(document,
+                                    property_name,
+                                    size=50,
+                                    attribute_name=None
+                                   ):
+  """
+    Returns the list of change per property for the document.
+
+    Parameters:
+    size -- How long history do you need
+    property_name -- Name of the property which we need the change list
+  """
+  history_list = getChangeHistoryList(document, size)
+  property_change_list = []
+  for change_dict in history_list:
+    if property_name.endswith('list'):
+      property_name = property_name[:-5]
+    if property_name in change_dict['changes']:
+      property_dict = {
+        'action': change_dict['action'],
+        'datetime': change_dict['datetime'],
+        'user': change_dict['user'],
+        'change': change_dict['changes'][property_name]
+      }
+      property_change_list.append(property_dict)
+
+  return property_change_list
+
 def getHistoricalRevisionsDateList(document, size=50):
   """
   Returns the list dates in float format for the last
