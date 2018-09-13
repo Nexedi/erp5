@@ -170,7 +170,7 @@ class TestResultLineProxy(RPCRetry):
         try:
           return bool(self._retryRPC('isTestCaseAlive',
                                      (self._test_result_line_path,)))
-        except:
+        except Exception:
           raise ValueError('isTestCaseAlive Failed.')
 
     def stop(self, test_count=None, error_count=None, failure_count=None,
