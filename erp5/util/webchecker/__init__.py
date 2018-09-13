@@ -26,6 +26,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from __future__ import print_function
+
 import os
 import shutil
 import sys
@@ -543,7 +545,7 @@ class HTTPCacheCheckerTestSuite(object):
 
 
 from optparse import OptionParser
-import ConfigParser
+from six.moves import configparser
 
 def _formatConfiguration(configuration):
   """ format the configuration"""
@@ -559,11 +561,11 @@ def web_checker_utility():
 
   (options, args) = parser.parse_args()
   if len(args) != 1 :
-    print parser.print_help()
+    print(parser.print_help())
     parser.error('incorrect number of arguments')
   config_path = args[0]
 
-  config = ConfigParser.RawConfigParser()
+  config = configparser.RawConfigParser()
   config.read(config_path)
   working_directory = config.get('web_checker', 'working_directory')
   url = config.get('web_checker', 'url')
@@ -619,6 +621,6 @@ def web_checker_utility():
     file_object.write(result)
     file_object.close()
   else:
-    print result
+    print(result)
 
 

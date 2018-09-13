@@ -39,7 +39,7 @@ from .ScalabilityTestRunner import ScalabilityTestRunner
 from .UnitTestRunner import UnitTestRunner
 from .Utils import deunicodeData
 from .Utils import rmtree
-from .. import taskdistribution
+from erp5.util import taskdistribution
 
 MAX_LOG_TIME = 15 # time in days we should keep logs that we can see through
                   # httd

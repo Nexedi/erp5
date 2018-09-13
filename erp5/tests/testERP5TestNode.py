@@ -23,7 +23,6 @@ import sys
 import tempfile
 import json
 import time
-import types
 import re
 
 @contextmanager
@@ -144,7 +143,8 @@ class ERP5TestNode(TestCase):
         self.__dict__.update(**kw)
 
       def __call__(self, command):
-        return subprocess.check_output(command, **self.__dict__)
+        return subprocess.check_output(command, universal_newlines=True,
+                                       **self.__dict__)
     return Caller(**kw)
 
   def generateTestRepositoryList(self, add_third_repository=False):
@@ -338,7 +338,7 @@ shared = true
     vcs_repository_info['branch'] = 'master'
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     output = call("git branch".split()).strip()
-    print output
+    print(output)
     self.assertTrue("* master" in output.split('\n'))
     # Add a third branch on remote, make sure we could switch to it
     remote_call = self.getCaller(cwd=self.remote_repository2)
@@ -489,35 +489,21 @@ shared = true
     test_node.purgeOldTestSuite(test_suite_data)
     self.assertEquals(['foo'], os.listdir(self.working_directory))
 
-  def test_purgeOldTestSuiteChmodNonWriteable(self):
+  def test_purgeOldTestSuiteChmod(self):
     """Old test suites can be deleted even when some files/directories have
-    been chmod'd to make non-writeable  """
+    been chmod'd to make read only.  """
     test_node = self.getTestNode()
     test_suite_data = self.getTestSuiteData(add_third_repository=True)
     os.mkdir(os.path.join(self.working_directory, 'bar'))
     non_writable_file = open(os.path.join(self.working_directory, 'bar', 'non-writable-file'), 'w')
     non_writable_file.close()
-
-    os.chmod(os.path.join(self.working_directory, 'bar', 'non-writable-file'), 0o400) # -r--------
-    os.chmod(os.path.join(self.working_directory, 'bar'), 0o500) # dr-x------
-
-    test_node.purgeOldTestSuite(test_suite_data) # should not fail
-    self.assertEqual([], os.listdir(self.working_directory))
-
-  def test_purgeOldTestSuiteChmodNonWriteableNonReadable(self):
-    """Old test suites can be deleted even when some files/directories have
-    been chmod'd to make them non readable and non writeable. """
-    test_node = self.getTestNode()
-    test_suite_data = self.getTestSuiteData(add_third_repository=True)
-    os.mkdir(os.path.join(self.working_directory, 'bar'))
-    non_writable_file = open(os.path.join(self.working_directory, 'bar', 'non-writable-file'), 'w')
-    non_writable_file.close()
-
-    os.chmod(os.path.join(self.working_directory, 'bar', 'non-writable-file'), 0o000) # ----------
-    os.chmod(os.path.join(self.working_directory, 'bar'), 0o000) # d---------
+    # make this file and directory non writeable
+    os.chmod(os.path.join(self.working_directory, 'bar', 'non-writable-file'), 0o000)
+    os.chmod(os.path.join(self.working_directory, 'bar'), 0o000)
 
     test_node.purgeOldTestSuite(test_suite_data) # should not fail
     self.assertEqual([], os.listdir(self.working_directory))
+
 
   def test_09_runTestSuite(self, my_test_type='UnitTest'):
     """
@@ -986,7 +972,7 @@ shared = true
       self.assertRaises(SubprocessError, callPrepareSlapOS)
 
     self.assertEquals(node_test_suite.retry_software_count, 0)
-    for x in xrange(0,11):
+    for x in range(11):
       callRaisingPrepareSlapos()
     self.assertEquals(len(init_call_kw_list), 11)
     self.assertEquals(init_call_kw_list[-1]['reset_software'], False)

@@ -35,12 +35,15 @@ import posixpath
 import tarfile
 import os
 import sys
-import cgi
+try:
+  from html import escape
+except ImportError:
+  from cgi import escape
 from base64 import b64encode
-from cStringIO import StringIO
+from six import BytesIO
 from hashlib import sha1
-from urllib import unquote
-
+from six.moves.urllib.parse import unquote
+import six
 
 # Order is important for installation
 # We want to have:
@@ -107,11 +110,11 @@ item_name_list = tuple('_%s_item' % x for x in item_name_list)
 class BusinessTemplateRevision(list):
 
   def hash(self, path, text):
-    self.append((path, sha1(text).digest()))
+    self.append((path.encode('utf-8'), sha1(text).digest()))
 
   def digest(self):
     self.sort()
-    return b64encode(sha1('\0'.join(h + p for (h, p) in self)).digest())
+    return b64encode(sha1(b'\0'.join(h + p for (h, p) in self)).digest())
 
 
 class BusinessTemplate(dict):
@@ -149,7 +152,7 @@ force_install
 
   def __iter__(self):
     self['revision'] = self.revision.digest()
-    return iter(sorted(self.iteritems()))
+    return iter(sorted(six.iteritems(self)))
 
   @classmethod
   def fromTar(cls, tar):
@@ -177,8 +180,8 @@ force_install
     return iter(self)
 
 def generateInformation(dir, info=id, err=None):
-  xml = StringIO()
-  xml.write('<?xml version="1.0"?>\n<repository>\n')
+  xml = BytesIO()
+  xml.write(b'<?xml version="1.0"?>\n<repository>\n')
   for name in sorted(os.listdir(dir)):
     path = os.path.join(dir, name)
     if name.endswith('.bt5'):
@@ -199,13 +202,14 @@ def generateInformation(dir, info=id, err=None):
       property_list = BusinessTemplate.fromDir(path)
     else:
       continue
-    xml.write('  <template id="%s">\n' % name)
+    xml.write(b'  <template id="%s">\n' % name.encode('utf-8'))
     for k, v in property_list:
-      for v in (v,) if type(v) is str else v:
-        xml.write('    <%s>%s</%s>\n' % (k, cgi.escape(v), k))
-    xml.write('  </template>\n')
+      k = k.encode('utf-8')
+      for v in (v,) if type(v) is bytes else v:
+        xml.write(b'    <%s>%s</%s>\n' % (k, escape(v.decode('utf-8')).encode('utf-8'), k))
+    xml.write(b'  </template>\n')
     info('done\n')
-  xml.write('</repository>\n')
+  xml.write(b'</repository>\n')
   return xml
 
 def main(dir_list=None, **kw):

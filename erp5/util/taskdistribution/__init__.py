@@ -40,11 +40,15 @@ Example use:
       test_line.stop()
 """
 from __future__ import print_function
-import httplib
+import six
+from six.moves import (
+  map,
+  http_client as httplib,
+  xmlrpc_client as xmlrpclib,
+)
 import socket
 import threading
 import time
-import xmlrpclib
 
 __all__ = ['TaskDistributor', 'TestResultProxy', 'TestResultLineProxy', 'patchRPCParser']
 
@@ -89,10 +93,16 @@ def patchRPCParser(error_handler):
     def verbose_feed(self, data):
         try:
             return original_feed(self, data)
-        except Exception, exc:
+        except Exception as exc:
             if not error_handler(data, exc):
                 raise
     parser_klass.feed = verbose_feed
+
+try: # PY3
+  basestring
+except NameError:
+  basestring = bytes, str
+  unicode = str
 
 def binarize_args(arg):
   # Converts recursively basestring arg into xmlrpclib.Binary, as they can
@@ -102,9 +112,9 @@ def binarize_args(arg):
       arg = arg.encode('utf-8')
     return xmlrpclib.Binary(arg)
   if isinstance(arg, (list, tuple, set)):
-    return map(binarize_args, arg)
+    return list(map(binarize_args, arg))
   if isinstance(arg, dict):
-    return {k: binarize_args(v) for k, v in arg.iteritems()}
+    return {k: binarize_args(v) for k, v in six.iteritems(arg)}
   return arg
 
 class RPCRetry(object):
@@ -349,7 +359,7 @@ class TestResultProxy(RPCRetry):
             caption_list = []
             append = caption_list.append
             for name, (stream, max_history_bytes) in \
-                    self._watcher_dict.iteritems():
+                    six.iteritems(self._watcher_dict):
                 append('==> %s <==' % (name, ))
                 start = stream.tell()
                 stream.seek(0, 2)
