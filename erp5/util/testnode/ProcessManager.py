@@ -33,6 +33,7 @@ import signal
 import sys
 import time
 from . import logger
+from slapos.util import bytes2str
 
 MAX_TIMEOUT = 3600 * 4
 
@@ -79,7 +80,7 @@ def subprocess_capture(p, log_prefix, get_output=True):
         break
       if get_output:
         buffer.append(data)
-      log(log_prefix + data.rstrip('\n'))
+      log(log_prefix + bytes2str(data).rstrip('\n'))
   if p.stdout:
     stdout = []
     stdout_thread = threading.Thread(target=readerthread,
@@ -97,8 +98,8 @@ def subprocess_capture(p, log_prefix, get_output=True):
     stdout_thread.join()
   if p.stderr:
     stderr_thread.join()
-  return (p.stdout and ''.join(stdout),
-          p.stderr and ''.join(stderr))
+  return (p.stdout and b''.join(stdout),
+          p.stderr and b''.join(stderr))
 
 def killCommand(pid):
   """
@@ -109,7 +110,7 @@ def killCommand(pid):
   try:
     process = psutil.Process(pid)
     process.suspend()
-  except psutil.Error, e:
+  except psutil.Error as e:
     return
   process_list = [process]
   new_list = process.children(recursive=True)
@@ -118,19 +119,19 @@ def killCommand(pid):
     for child in new_list:
       try:
         child.suspend()
-      except psutil.Error, e:
+      except psutil.Error as e:
         logger.debug("killCommand/suspend: %s", e)
     time.sleep(1)
     new_list = set(process.children(recursive=True)).difference(process_list)
   for process in process_list:
     try:
       process.kill()
-    except psutil.Error, e:
+    except psutil.Error as e:
       logger.debug("killCommand/kill: %s", e)
 
 class ProcessManager(object):
 
-  stdin = file(os.devnull)
+  stdin = open(os.devnull)
 
   def __init__(self, max_timeout=MAX_TIMEOUT):
     self.process_pid_set = set()

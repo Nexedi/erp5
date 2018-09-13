@@ -27,6 +27,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from __future__ import print_function
+
 from datetime import date
 from os import path
 import rpy2.robjects as robjects
@@ -121,7 +123,7 @@ def main():
 
   current_dir = os.getcwd()
   for file_name in file_name_list:
-    print 'Loading %s...' % (file_name, )
+    print('Loading %s...' % (file_name, ))
     file = CSVFile(file_name)
 
     date_string_list = file.getColumn(0)
@@ -183,13 +185,13 @@ def main():
           y_data.append(value)
         i += 1
       if len(x_data) == 0:
-        print 'Nothing to plot for %s...' % (out_file_name, )
+        print('Nothing to plot for %s...' % (out_file_name, ))
         continue
       if options.minimal_non_empty_ratio is not None:
         column_len = len(column)
         if column_len:
           if float(len(x_data))/column_len < options.minimal_non_empty_ratio:
-            print 'Not enough values to plot for %s...' % (out_file_name, )
+            print('Not enough values to plot for %s...' % (out_file_name, ))
             continue
       r_y_data = robjects.FloatVector(y_data)
       r_x_data = robjects.FloatVector(x_data)
@@ -220,7 +222,7 @@ def main():
       # stop changing the out-type file
       r("""dev.off()""")
 
-      print 'Saving %s...' % (out_file_name, )
+      print('Saving %s...' % (out_file_name, ))
 
 if __name__ == '__main__':
   main()

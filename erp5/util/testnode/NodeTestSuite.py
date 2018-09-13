@@ -32,6 +32,8 @@ import string
 import random
 from .Utils import createFolder
 
+from six.moves import range
+
 class SlapOSInstance(object):
   """
   Base of an software instance,
@@ -68,14 +70,14 @@ class NodeTestSuite(SlapOSInstance):
 
   def createSuiteLog(self):
     # /srv/slapgrid/slappartXX/srv/var/log/testnode/az-D27KqX7FxJ/suite.log
-    alphabets = string.digits + string.letters
+    alphabets = string.digits + string.ascii_letters
     while 1:
       log_folder_name = '%s-%s' % (self.reference,
-        ''.join(random.choice(alphabets) for i in xrange(10)))
+        ''.join(random.choice(alphabets) for i in range(10)))
       log_folder_path = os.path.join(self.log_directory, log_folder_name)
       try:
         os.makedirs(log_folder_path)
-      except OSError, e:
+      except OSError as e:
         if e.errno != errno.EEXIST:
           raise
       else:

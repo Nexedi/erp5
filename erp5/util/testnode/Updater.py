@@ -30,6 +30,7 @@ import re
 from . import logger
 from .ProcessManager import SubprocessError
 from .Utils import rmtree
+from slapos.util import bytes2str, str2bytes
 
 SVN_UP_REV = re.compile(r'^(?:At|Updated to) revision (\d+).$')
 SVN_CHANGED_REV = re.compile(r'^Last Changed Rev.*:\s*(\d+)', re.MULTILINE)
@@ -82,7 +83,7 @@ class Updater(object):
           # allow several processes clean the same folder at the same time
           try:
             os.remove(os.path.join(path, file))
-          except OSError, e:
+          except OSError as e:
             if e.errno != errno.ENOENT:
               raise
 
@@ -96,7 +97,7 @@ class Updater(object):
                                       **kw)
 
   def _git(self, *args, **kw):
-    return self.spawn(self.git_binary, *args, **kw)['stdout'].strip()
+    return bytes2str(self.spawn(self.git_binary, *args, **kw)['stdout'].strip())
 
   def git_update_server_info(self):
     return self._git('update-server-info', '-f')
@@ -219,7 +220,7 @@ class Updater(object):
         self.deletePycFiles(path)
         try:
           status_dict = self.spawn(*args)
-        except SubprocessError, e:
+        except SubprocessError as e:
           if 'cleanup' not in e.stderr:
             raise
           self.spawn('svn', 'cleanup', path)

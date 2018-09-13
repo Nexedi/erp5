@@ -35,6 +35,8 @@ from slapos import client
 from . import logger
 from .Utils import createFolder
 
+from six.moves import range
+
 MAX_PARTITIONS = 10
 MAX_SR_RETRIES = 3
 
@@ -245,7 +247,7 @@ class SlapOSControler(object):
         computer = slap.registerComputer(config['computer_id'])
         # Call a method to ensure connection to master can be established
         computer.getComputerPartitionList()
-      except slapos.slap.ConnectionError, e:
+      except slapos.slap.ConnectionError as e:
         retries += 1
         if retries >= 60:
           raise
@@ -272,7 +274,7 @@ class SlapOSControler(object):
     # MySQL DB content) from previous runs. To support changes of partition
     # naming scheme (which already happened), do this at instance_root level.
     createFolder(instance_root, True)
-    for i in xrange(MAX_PARTITIONS):
+    for i in range(MAX_PARTITIONS):
       # create partition and configure computer
       # XXX: at the moment all partitions do share same virtual interface address
       # this is not a problem as usually all services are on different ports
@@ -280,7 +282,7 @@ class SlapOSControler(object):
       partition_path = os.path.join(instance_root, partition_reference)
       if not(os.path.exists(partition_path)):
         os.mkdir(partition_path)
-      os.chmod(partition_path, 0750)
+      os.chmod(partition_path, 0o750)
       computer.updateConfiguration(xml_marshaller.xml_marshaller.dumps({
            'address': config['ipv4_address'],
            'instance_root': instance_root,
@@ -320,7 +322,7 @@ class SlapOSControler(object):
     os.environ['PATH'] = environment['PATH']
     # a SR may fail for number of reasons (incl. network failures)
     # so be tolerant and run it a few times before giving up
-    for _ in xrange(MAX_SR_RETRIES):
+    for _ in range(MAX_SR_RETRIES):
       status_dict = self.spawn(config['slapos_binary'],
                  'node', 'software', '--all', 
                  '--pidfile', os.path.join(self.software_root, 'slapos-node.pid'),
@@ -348,7 +350,7 @@ class SlapOSControler(object):
     # try to run for all partitions as one partition may in theory request another one 
     # this not always is required but curently no way to know how "tree" of partitions
     # may "expand"
-    for _ in xrange(max_quantity):
+    for _ in range(max_quantity):
       status_dict = self.spawn(config['slapos_binary'], 'node', 'instance', 
                  '--pidfile', os.path.join(self.instance_root, 'slapos-node.pid'),
                  '--cfg', self.slapos_config, raise_error_if_fail=False,
