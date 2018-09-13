@@ -7,27 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -35,10 +14,6 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
@@ -68,7 +43,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -81,24 +58,21 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>your_reportbox</string>
+                        <string>listbox_name</string>
+                        <string>listbox_current_value</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_zodb_history</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>your_property_history</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -106,7 +80,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewHistory</string> </value>
+            <value> <string>Base_viewPropertyList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -114,11 +88,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_viewHistory</string> </value>
-        </item>
-        <item>
-            <key> <string>pt</string> </key>
-            <value> <string>report_view</string> </value>
+            <value> <string>Base_viewPropertyList</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -130,15 +100,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>History</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
