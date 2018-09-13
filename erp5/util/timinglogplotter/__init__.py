@@ -84,9 +84,9 @@ class CSVFile(object):
             if cell > value_max.get(key, 0):
               value_max[key] = cell
         column_dict[key].append(cell)
-    line_num = line_num / 100
+    line_num /= 100
     for key in ratio_dict:
-      ratio_dict[key] //= line_num
+      ratio_dict[key] /= line_num
 
   def getColumn(self, column_id):
     return self.column_dict[self.column_list[column_id]]
@@ -136,7 +136,7 @@ def main():
     # date_list will be like ['2009/07/01', '2009/07/05', '2009/07/10', ...]
     factor = 1
     if len(date_string_list) > 20:
-      factor = int(len(date_string_list) // 20)
+      factor = len(date_string_list) // 20
     i = 0
     for date_string in date_string_list:
       if i % factor == 0:
