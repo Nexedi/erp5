@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from __future__ import print_function
+
 import os
 import sys
 import imp
@@ -126,7 +128,7 @@ def parseFile(filename, measure_dict):
       sys.stderr.flush()
     match_list = LINE_PATTERN.findall(line)
     if len(match_list) != 1:
-      print >>sys.stderr, 'Unparseable line: %s:%i %r' % (filename, line_number, line)
+      print('Unparseable line: %s:%i %r' % (filename, line_number, line), file=sys.stderr)
     else:
       result, filter_id, date, duration = processLine(match_list[0], filename, line_number)
       # Possible result values & meaning:
@@ -135,20 +137,21 @@ def parseFile(filename, measure_dict):
       #  (string): use & skip to next line
       if result is False:
         if debug:
-          print >>sys.stderr, '? %s:%i %r' % (filename, line_number, match_list[0])
+          print('? %s:%i %r' % (filename, line_number, match_list[0]), file=sys.stderr)
       elif result is True:
         if debug:
-          print >>sys.stderr, '- %s:%i %r' % (filename, line_number, match_list[0])
+          print('- %s:%i %r' % (filename, line_number, match_list[0]), file=sys.stderr)
         skip_count += 1
       else:
         measure_dict.setdefault(filter_id, {}).setdefault(result, {}).setdefault(date, []).append(int(duration))
         match_count += 1
     line = logfile.readline()
-  print >>sys.stderr, '%i' % (line_number, )
+  print('%i' % (line_number, ), file=sys.stderr)
   if line_number > 0:
     duration = time() - begin
-    print >>sys.stderr, "Matched %i lines (%.2f%%), %i skipped (%.2f%%), %i unmatched (%.2f%%) in %.2fs (%i lines per second)." % \
-      (match_count, (float(match_count) / line_number) * 100, skip_count, (float(skip_count) / line_number) * 100, (line_number - match_count - skip_count), (1 - (float(match_count + skip_count) / line_number)) * 100, duration, line_number / duration)
+    print("Matched %i lines (%.2f%%), %i skipped (%.2f%%), %i unmatched (%.2f%%) in %.2fs (%i lines per second)." % \
+      (match_count, (float(match_count) / line_number) * 100, skip_count, (float(skip_count) / line_number) * 100, (line_number - match_count - skip_count), (1 - (float(match_count + skip_count) / line_number)) * 100, duration, line_number / duration),
+      file=sys.stderr)
 
 debug = False
 outfile_prefix = None
@@ -161,9 +164,9 @@ decimate_count = 1
 
 try:
   opts, file_list = getopt.getopt(sys.argv[1:], '', ['debug', 'config=', 'prefix=', 'no-average', 'sum', 'load=', 'save=', 'decimate='])
-except Exception, reason:
-  print >>sys.stderr, reason
-  print >>sys.stderr, usage
+except Exception as reason:
+  print(reason, file=sys.stderr)
+  print(usage, file=sys.stderr)
   sys.exit(1)
 
 for name, value in opts:
@@ -185,7 +188,7 @@ for name, value in opts:
     decimate_count = int(value)
 
 if configuration is None:
-  raise ValueError, '--config is mandatory'
+  raise ValueError('--config is mandatory')
 
 config_file = os.path.splitext(os.path.basename(configuration))[0]
 config_path = [os.path.dirname(os.path.abspath(configuration))] + sys.path
@@ -211,18 +214,18 @@ if len(load_file_name_list):
       for result, date_dict in result_dict.iteritems():
         for date, duration_list in date_dict.iteritems():
           measure_dict.setdefault(filter_id, {}).setdefault(result, {}).setdefault(date, []).extend(duration_list)
-    print >>sys.stderr, 'Previous processing result restored from %r' % (load_file_name, )
+    print('Previous processing result restored from %r' % (load_file_name, ), file=sys.stderr)
 
 for filename in file_list:
   file_number += 1
-  print >>sys.stderr, 'Processing %s [%i/%i]...' % (filename, file_number, file_count)
+  print('Processing %s [%i/%i]...' % (filename, file_number, file_count), file=sys.stderr)
   parseFile(filename, measure_dict)
 
 if save_file_name is not None:
   save_file = open(save_file_name, 'w')
   save_file.write(repr(measure_dict))
   save_file.close()
-  print >>sys.stderr, 'Processing result saved to %r' % (save_file_name, )
+  print('Processing result saved to %r' % (save_file_name, ), file=sys.stderr)
 
 if outfile_prefix is not None:
   ## Generate a list of all measures and a 2-levels dictionnary with date as key and measure dictionnary as value
@@ -252,9 +255,9 @@ if outfile_prefix is not None:
   def renderOutput(data_format, filename_suffix):
     for sheet_id, sheet_column_list in sheet_dict.iteritems():
       outfile_name = '%s_%s_%s.csv' % (outfile_prefix, sheet_id, filename_suffix)
-      print >>sys.stderr, 'Writing to %r...' % (outfile_name, )
+      print('Writing to %r...' % (outfile_name, ), file=sys.stderr)
       outfile = open(outfile_name, 'w')
-      print >>outfile, '"date",%s' % (','.join(['"%s"' % (x[0], ) for x in sheet_column_list]), )
+      print('"date",%s' % (','.join(['"%s"' % (x[0], ) for x in sheet_column_list]), ), file=outfile)
       decimate_dict = {}
       decimate = 0
       for date in date_list:
@@ -262,11 +265,11 @@ if outfile_prefix is not None:
           decimate_dict.setdefault(key, []).extend(value)
         decimate += 1
         if decimate == decimate_count:
-          print >>outfile, '"%s",%s' % (date, ','.join([render_cell(decimate_dict.get(x[1], ''), data_format) for x in sheet_column_list]))
+          print('"%s",%s' % (date, ','.join([render_cell(decimate_dict.get(x[1], ''), data_format) for x in sheet_column_list])), file=outfile)
           decimate_dict = {}
           decimate = 0
       if len(decimate_dict):
-        print >>outfile, '"%s",%s' % (date, ','.join([render_cell(decimate_dict.get(x[1], ''), data_format) for x in sheet_column_list]))
+        print('"%s",%s' % (date, ','.join([render_cell(decimate_dict.get(x[1], ''), data_format) for x in sheet_column_list])), file=outfile)
 
   if do_average:
     renderOutput('=%(sum)i/%(count)i', 'avg')

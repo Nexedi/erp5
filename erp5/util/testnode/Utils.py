@@ -3,6 +3,9 @@ import stat
 import shutil
 import errno
 
+import six
+from six.moves import map
+
 def rmtree(path):
   """Delete a path recursively.
 
@@ -11,14 +14,22 @@ def rmtree(path):
   def chmod_retry(func, failed_path, exc_info):
     """Make sure the directories are executable and writable.
     """
+    # Depending on the Python version, the following items differ.
+    if six.PY3:
+      expected_error_type = PermissionError
+      expected_func = os.lstat
+    else:
+      expected_error_type = OSError
+      expected_func = os.listdir
+
     e = exc_info[1]
-    if isinstance(e, OSError):
+    if isinstance(e, expected_error_type):
       if e.errno == errno.ENOENT:
         # because we are calling again rmtree on listdir errors, this path might
         # have been already deleted by the recursive call to rmtree.
         return
       if e.errno == errno.EACCES:
-        if func is os.listdir:
+        if func is expected_func:
           os.chmod(failed_path, 0o700)
           # corner case to handle errors in listing directories.
           # https://bugs.python.org/issue8523
@@ -39,12 +50,16 @@ def createFolder(folder, clean=False):
     rmtree(folder)
   os.mkdir(folder)
 
-def deunicodeData(data):
-  if isinstance(data, list):
-    return map(deunicodeData, data)
-  if isinstance(data, unicode):
-    return data.encode('utf8')
-  if isinstance(data, dict):
-    return {deunicodeData(key): deunicodeData(value)
-            for key, value in data.iteritems()}
-  return data
+if six.PY3:
+  def deunicodeData(data):
+    return data
+else:
+  def deunicodeData(data):
+    if isinstance(data, list):
+      return list(map(deunicodeData, data))
+    if isinstance(data, unicode):
+      return data.encode('utf8')
+    if isinstance(data, dict):
+      return {deunicodeData(key): deunicodeData(value)
+              for key, value in six.iteritems(data)}
+    return data
