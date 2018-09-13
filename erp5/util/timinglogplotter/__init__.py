@@ -27,6 +27,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+from __future__ import division, print_function
+
 from datetime import date
 from os import path
 import rpy2.robjects as robjects
@@ -82,9 +84,9 @@ class CSVFile(object):
             if cell > value_max.get(key, 0):
               value_max[key] = cell
         column_dict[key].append(cell)
-    line_num = float(line_num) / 100
+    line_num = line_num / 100
     for key in ratio_dict:
-      ratio_dict[key] /= line_num
+      ratio_dict[key] //= line_num
 
   def getColumn(self, column_id):
     return self.column_dict[self.column_list[column_id]]
@@ -101,7 +103,7 @@ def computeExpr(expr):
   if expr:
     assert expr[0] == '='
     num, denom = expr[1:].split('/')
-    result = float(int(num)) / int(denom)
+    result = int(num) / int(denom)
   else:
     result = None
   return result
@@ -121,7 +123,7 @@ def main():
 
   current_dir = os.getcwd()
   for file_name in file_name_list:
-    print 'Loading %s...' % (file_name, )
+    print('Loading %s...' % (file_name, ))
     file = CSVFile(file_name)
 
     date_string_list = file.getColumn(0)
@@ -134,7 +136,7 @@ def main():
     # date_list will be like ['2009/07/01', '2009/07/05', '2009/07/10', ...]
     factor = 1
     if len(date_string_list) > 20:
-      factor = int(len(date_string_list) / 20)
+      factor = int(len(date_string_list) // 20)
     i = 0
     for date_string in date_string_list:
       if i % factor == 0:
@@ -183,13 +185,13 @@ def main():
           y_data.append(value)
         i += 1
       if len(x_data) == 0:
-        print 'Nothing to plot for %s...' % (out_file_name, )
+        print('Nothing to plot for %s...' % (out_file_name, ))
         continue
       if options.minimal_non_empty_ratio is not None:
         column_len = len(column)
         if column_len:
-          if float(len(x_data))/column_len < options.minimal_non_empty_ratio:
-            print 'Not enough values to plot for %s...' % (out_file_name, )
+          if len(x_data) / column_len < options.minimal_non_empty_ratio:
+            print('Not enough values to plot for %s...' % (out_file_name, ))
             continue
       r_y_data = robjects.FloatVector(y_data)
       r_x_data = robjects.FloatVector(x_data)
@@ -220,7 +222,7 @@ def main():
       # stop changing the out-type file
       r("""dev.off()""")
 
-      print 'Saving %s...' % (out_file_name, )
+      print('Saving %s...' % (out_file_name, ))
 
 if __name__ == '__main__':
   main()

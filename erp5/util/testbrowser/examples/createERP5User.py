@@ -8,6 +8,7 @@
 #
 # TODO: There must be a better way than the code below to do that though...
 
+from __future__ import print_function
 import sys
 
 from erp5.util.testbrowser.browser import Browser
@@ -19,11 +20,8 @@ try:
   user_nbr = int(user_nbr)
 
 except ValueError:
-  print >>sys.stderr, "ERROR: Missing arguments: %s URL USERNAME " \
-      "PASSWORD NUMBER_OF_USERS NEW_USERNAME_PREFIX NEW_USERS_PASSWORD" % \
-      sys.argv[0]
-
-  sys.exit(1)
+  sys.exit("ERROR: Missing arguments: %s URL USERNAME PASSWORD NUMBER_OF_USERS "
+           "NEW_USERNAME_PREFIX NEW_USERS_PASSWORD" % sys.argv[0])
 
 # Create a browser instance
 browser = Browser(url, username, password)
