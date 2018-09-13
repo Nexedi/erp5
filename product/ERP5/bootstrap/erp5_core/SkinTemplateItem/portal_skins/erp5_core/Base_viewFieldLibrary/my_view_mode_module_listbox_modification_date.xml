@@ -82,7 +82,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_date</string> </value>
+                    <value> <string>my_date_time_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
