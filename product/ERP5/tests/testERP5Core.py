@@ -110,7 +110,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_core_proxy_field_legacy', 'erp5_base', )
+    return ('erp5_base', )
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
