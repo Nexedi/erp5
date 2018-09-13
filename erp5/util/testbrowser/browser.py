@@ -32,9 +32,10 @@
 
 import logging
 import sys
-import urllib
-import Cookie
+from six.moves.urllib.parse import urlencode
+from six.moves import http_cookies as Cookie
 import re
+import six
 
 from zope.testbrowser._compat import urlparse
 from z3c.etestbrowser.browser import ExtendedTestBrowser
@@ -205,7 +206,7 @@ class Browser(ExtendedTestBrowser):
       url_or_path = urlparse.urljoin(self._erp5_base_url, url_or_path)
 
     if isinstance(data, dict):
-      data = urllib.urlencode(data)
+      data = urlencode(data)
 
     self._logger.debug("Opening: " + url_or_path)
     super(Browser, self).open(url_or_path, data)
@@ -274,7 +275,7 @@ class Browser(ExtendedTestBrowser):
           location_without_query_string, query_string = location.split('?')
           location = (
             location_without_query_string +
-            '?' + urllib.urlencode(urlparse.parse_qs(query_string,
+            '?' + urlencode(urlparse.parse_qs(query_string,
                                                      strict_parsing=True),
                                    doseq=True))
         # END: Bugfix
@@ -318,7 +319,7 @@ class Browser(ExtendedTestBrowser):
       url_or_path = urlparse.urljoin(self._erp5_base_url, url_or_path)
 
     if isinstance(data, dict):
-      data = urllib.urlencode(data)
+      data = urlencode(data)
 
     url = self._absoluteUrl(url_or_path)
     self._logger.debug("Opening: " + url)
@@ -365,7 +366,7 @@ class Browser(ExtendedTestBrowser):
     @return: Cookie value
     @rtype: str
     """
-    for cookie_name, cookie_value in self.cookies.iteritems():
+    for cookie_name, cookie_value in six.iteritems(self.cookies):
       if name == cookie_name:
         return cookie_value
 
