@@ -334,7 +334,7 @@ class CSVBenchmarkResult(BenchmarkResult):
 
 from cStringIO import StringIO
 
-import xmlrpclib
+from six.moves import xmlrpc_client as xmlrpclib
 import datetime
 
 class ERP5BenchmarkResult(BenchmarkResult):

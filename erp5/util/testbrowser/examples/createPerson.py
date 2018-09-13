@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division, print_function
+import six
 from erp5.util.testbrowser.browser import Browser
 
 ITERATION = 20
@@ -89,5 +90,5 @@ if __name__ == '__main__':
     benchmarkAddPerson(counter, result_dict)
     counter += 1
 
-  for title, time_list in result_dict.iteritems():
+  for title, time_list in six.iteritems(result_dict):
     print("%s: %.4fs" % (title, sum(time_list) / ITERATION))
