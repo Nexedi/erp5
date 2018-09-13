@@ -77,7 +77,7 @@ if release_reference is None:
 release_full_reference = '-'.join([release_reference, release_version, release_language])
 
 # ---------------------------- Theme Parameters --------------------------------
-release_theme = release.Base_getThemeDict(doc_format=release_format, css_path="template_css/release")
+release_theme = release.Base_getThemeDict(doc_format=release_format, css_path="template_css/release", skin="Release")
 release_css = ''.join([
   'html .ci-press-release .ci-press-release-logo:before {',
     'background: url("%s") center no-repeat;' % (release_theme.get("theme_logo_url")),

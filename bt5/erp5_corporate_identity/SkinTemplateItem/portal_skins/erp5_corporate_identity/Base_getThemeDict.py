@@ -18,6 +18,11 @@ css = "default_theme_css_url"
 font = "default_theme_font_css_url_list"
 param = "?format=png"
 
+# theme content might not be visible on the default View
+lookup_skin = blank
+if skin:
+  lookup_skin = "?portal_skin=" + skin
+
 theme_logo_list = []
 theme_logo_dict = {}
 theme_reference = None
@@ -49,5 +54,9 @@ theme_dict["theme_css_font_list"] = []
 theme_font_list = context.Base_getTemplateParameter(font) or []
 for font in theme_font_list:
   theme_dict["theme_css_font_list"].append(font + pdf)
-theme_dict["theme_css_url"] = context.Base_getTemplateParameter(css) or context.Base_getTemplateParameter(css) or blank
+theme_css_url = context.Base_getTemplateParameter(css)
+if theme_css_url:
+  theme_dict["theme_css_url"] = context.Base_getTemplateParameter(css) + lookup_skin
+else:
+  theme_dict["theme_css_url"] = blank
 return theme_dict
