@@ -34,6 +34,7 @@
 from __future__ import print_function
 import argparse
 import re
+import six
 
 def parseArguments():
   parser = argparse.ArgumentParser(
@@ -98,13 +99,15 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
   merged_label_dict = {}
 
   for filename in filename_list:
-    reader = csv.reader(open(filename, 'rb'), delimiter=',',
+    reader = csv.reader(open(filename, 'r'), delimiter=',',
                         quoting=csv.QUOTE_MINIMAL)
-
     reader_list.append(reader)
 
     # Get headers
-    row_list = [ unicode(row, 'utf-8') for row in reader.next() ]
+    if str is bytes:
+      row_list = [row.decode('utf-8', 'replace') for row in next(reader)]
+    else:
+      row_list = [list(next(reader))]
     if not label_list:
       label_list = row_list
       label_merged_index = 0
@@ -156,8 +159,8 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
             report_dict['results'].setdefault(stat.full_label, []).append(stat)
 
     if row_list != label_list:
-      raise AssertionError, "ERROR: Result labels: %s != %s" % \
-          (label_list, row_list)
+      raise AssertionError("ERROR: Result labels: %s != %s" %
+          (label_list, row_list))
 
     iteration_index = 0
     for row_list in reader:
@@ -169,7 +172,7 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
         use_case_suite = row_use_case_mapping_dict.get(idx, None)
         if use_case_suite:
           current_count = int(row)
-          current_duration = float(row_iter.next()[1]) / 3600.0
+          current_duration = float(next(row_iter)[1]) / 3600
           if not current_count:
             continue
 
@@ -587,8 +590,8 @@ def generateReport():
         (nb_users_list[0],
          nb_users_list[-1])
 
-    for suite_name, report_dict in range_user_report_dict.iteritems():
-      for label, stat_list in report_dict['results'].iteritems():
+    for suite_name, report_dict in six.iteritems(range_user_report_dict):
+      for label, stat_list in six.iteritems(report_dict['results']):
         drawConcurrentUsersPlot(
           pdf,
           title_fmt % label,

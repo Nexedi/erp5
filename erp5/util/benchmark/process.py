@@ -88,13 +88,13 @@ class BenchmarkProcess(multiprocessing.Process):
         target(result, self._browser)
       except StopIteration:
         raise
-      except Exception, e:
+      except Exception as e:
         self._logger.info("Exception while running target suite for user %s: %s" % (self._browser._username, str(e)))
         msg = "%s: %s" % (target, traceback.format_exc())
         try:
           msg += "Last response headers:\n%s\nLast response contents:\n%s" % \
               (self._browser.headers, self._browser.contents)
-        except:
+        except Exception:
           pass
 
         self._error_counter += 1
@@ -123,7 +123,7 @@ class BenchmarkProcess(multiprocessing.Process):
 
       try:
         self._logger.info(str(result.getCurrentSuiteUseCaseStat()))
-      except:
+      except Exception:
         pass
 
     result.iterationFinished()
@@ -183,14 +183,14 @@ class BenchmarkProcess(multiprocessing.Process):
             runIteration(result)
             self._current_repeat += 1
 
-    except StopIteration, e:
+    except StopIteration as e:
       self._logger.error(e)
 
-    except RuntimeError, e:
+    except RuntimeError as e:
       exit_msg = str(e)
       exit_status = 1
 
-    except BaseException, e:
+    except BaseException as e:
       exit_msg = traceback.format_exc()
       self._logger.error(exit_msg)
       exit_status = 2

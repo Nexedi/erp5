@@ -39,6 +39,7 @@ import tempfile
 from datetime import datetime
 import threading
 import signal
+import six
 
 _MARKER = []
 
@@ -517,7 +518,7 @@ class HTTPCacheCheckerTestSuite(object):
     logging.info('End of second pass\n')
     if self.report_dict:
       report_message_list = ['*Errors*:']
-      for url, message_list in self.report_dict.iteritems():
+      for url, message_list in six.iteritems(self.report_dict):
         unique_message_list = []
         for message in message_list:
           if message not in unique_message_list:
