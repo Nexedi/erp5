@@ -522,8 +522,8 @@ class FolderMixIn(ExtensionClass.Base):
         raise
       activate_kw['group_method_id'] = kw['group_id'] = '' # no grouping
       activate_kw['activity'] = 'SQLQueue'
-      activate(self, **activate_kw)._recurseCallMethod(
-        method_id, method_args, method_kw, restricted=restricted, **kw)
+      self.getPortalObject().portal_activities.activateObject(self, **activate_kw
+        )._recurseCallMethod(method_id, method_args, method_kw, restricted=restricted, **kw)
 
   security.declarePublic('recurseCallMethod')
   def recurseCallMethod(self, method_id, *args, **kw):
