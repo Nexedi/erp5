@@ -48,6 +48,10 @@ class IndexableDocument(ObjectManager):
   __allow_access_to_unprotected_subobjects__ = 1
   isRADContent = 0
 
+  def __init__(self, path):
+    super(IndexableDocument, self).__init__()
+    self._path = path
+
   def getUid(self):
     uid = getattr(self, 'uid', None)
     if uid is None:
@@ -62,9 +66,15 @@ class IndexableDocument(ObjectManager):
     raise AttributeError, name
 
   def getPath(self):
-    return '' # Whatever
+    return self._path
 
   def getRelativeUrl(self):
+    return '' # Whatever
+
+  def getRootDocumentPath(self):
+    return '' # Whatever
+
+  def SearchableText(self):
     return '' # Whatever
 
 class FooDocument(IndexableDocument):
@@ -3315,8 +3325,8 @@ VALUES
 
     # Create some dummy documents
     portal = self.getPortalObject()
-    portal.foo = FooDocument()
-    portal.bar = BarDocument()
+    portal.foo = FooDocument(portal.getPath() + '/foo')
+    portal.bar = BarDocument(portal.getPath() + '/bar')
 
     # Get instances, wrapping them in acquisition context implicitely.
     foo = portal.foo
