@@ -34,6 +34,7 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from Products.PluggableAuthService.interfaces.plugins import IUserEnumerationPlugin
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from DateTime import DateTime
 from Products import ERP5Security
 from AccessControl import SpecialUsers
@@ -278,6 +279,32 @@ class ERP5LoginUserManager(BasePlugin):
       }
       for user in user_list if user['user_id']
     ]
+    
+    tv = getTransactionalVariable()
+    person = tv.get("transactional_user", None) 
+    if person is not None:
+      erp5_login = person.objectValues("ERP5 Login")[0]
+      if (login is not None and erp5_login.getReference() == None) or \
+           (id is not None and person.getUserId() == id[0]):
+        result.append({
+          'id': person.getUserId(),
+          # Note: PAS forbids us from returning more than one entry per given id,
+          # so take any available login.
+          'login': erp5_login.getReference(), 
+          'pluginid': plugin_id,
+
+          # Extra properties, specific to ERP5
+          'path': person.getPath(),
+          'uid': person.getUid(),
+          'login_list': [
+            {
+              'reference': erp5_login.getReference(),
+              'path': erp5_login.getRelativeUrl(),
+              'uid': erp5_login.getPath(),
+            }
+          ],
+        })
+
     for special_user_name in special_user_name_set:
       # Note: special users are a bastard design in Zope: they are expected to
       # have a user name (aka, a login), but no id (aka, they do not exist as
