@@ -19,7 +19,8 @@ for group_object in object_list:
   except ConflictError:
     raise
   except Unauthorized: # should happen in tricky testERP5Catalog tests only
-    continue
+    # Fake activity success: if indexation cannot View document, ignore it.
+    group_object.result = None
   except Exception, e:
     group_object.raised()
   else:
