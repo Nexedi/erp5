@@ -443,8 +443,8 @@ class ERP5TypeInformation(XMLObject,
       if kw:
         ob._edit(force_update=1, **kw)
 
-      if not temp_object:
-        # As we juste created ob, we assume the whole subtree is of a
+      if not temp_object and immediate_reindex is not None:
+        # As we just created ob, we assume the whole subtree is of a
         # reasonable size and hence can be walked in current transaction.
         # Subtree may come from:
         # - acquired setter (ex: address on a Person which actually exists on
