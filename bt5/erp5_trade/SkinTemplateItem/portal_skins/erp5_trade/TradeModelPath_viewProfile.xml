@@ -97,6 +97,7 @@
                         <string>my_destination_project_title</string>
                         <string>my_destination_reference</string>
                         <string>my_destination_carrier_title</string>
+                        <string>my_use_dynamic_category_first</string>
                       </list>
                     </value>
                 </item>

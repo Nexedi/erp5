@@ -304,6 +304,7 @@
                         <string>my_view_mode_preferred_tax_use_list</string>
                         <string>my_report_mode_node_category</string>
                         <string>my_view_mode_ledger</string>
+                        <string>my_view_mode_use_dynamic_category_first</string>
                       </list>
                     </value>
                 </item>

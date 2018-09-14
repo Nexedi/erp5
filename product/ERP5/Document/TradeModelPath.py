@@ -174,9 +174,11 @@ class TradeModelPath(Path):
             self.getDestinationArrowBaseCategoryList():
       category_url_list = self._getAcquiredCategoryMembershipList(
         base_category, **kw)
-      if len(category_url_list) == 0 and len(dynamic_category_list) > 0:
+      if len(dynamic_category_list) > 0 and (self.getUseDynamicCategoryFirst()\
+          or len(category_url_list) == 0):
         category_url_list = self._filterCategoryList(dynamic_category_list,
-                                                     base_category, **kw)
+                                                     base_category, **kw) \
+                            or category_url_list
       if len(category_url_list) > 0:
         result[base_category] = category_url_list
     return result
