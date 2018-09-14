@@ -31,8 +31,7 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod('render', function (options) {
       var state_dict = {
-        extended_search: options.extended_search || "",
-        focus: options.focus
+        extended_search: options.extended_search || ""
       };
       return this.changeState(state_dict);
     })
