@@ -6,10 +6,7 @@
   function appendCheckboxField(gadget, item) {
     var input_gadget,
       label_gadget;
-    return new RSVP.Queue()
-      .push(function () {
-        return gadget.declareGadget('gadget_html5_input.html', {scope: item[1]});
-      })
+    return gadget.declareGadget('gadget_html5_input.html', {scope: item[1]})
       .push(function (result) {
         input_gadget = result;
         var state_dict = {
@@ -51,6 +48,7 @@
         state_dict = {
           value: field_json.value || field_json.default,
           select_first_item: field_json.select_first_item,
+          required: field_json.required,
           editable: field_json.editable,
           name: field_json.key,
           title: field_json.title,
@@ -163,5 +161,16 @@
           });
       }
       return final_result;
-    }, {mutex: 'changestate'});
+    }, {mutex: 'changestate'})
+
+    .declareMethod('checkValidity', function () {
+      var name = this.state.name;
+      if (this.state.editable && this.state.required) {
+        return this.getContent()
+          .push(function (result) {
+            return !result[name];
+          });
+      }
+      return true;
+    });
 }(window, rJS, RSVP));
