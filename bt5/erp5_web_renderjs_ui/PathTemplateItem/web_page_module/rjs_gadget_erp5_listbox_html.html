@@ -27,7 +27,7 @@
 
     <script id="listbox-thead-template" type="text/x-handlebars-template">
       <table>
-       <thead class="ui-bar-inherit head">
+       <thead>
          <tr>
            {{#if show_anchor}}
              <th data-i18n="Jump">Jump</th>
@@ -53,12 +53,12 @@
 
     <script id="listbox-tbody-template" type="text/x-handlebars-template">
        <table>
-       <tbody class="tbody">
+       <tbody>
         {{#each row_list}}
            <tr>
              {{#if ../show_anchor}}
                 <th>
-                  <a class="ui-link ui-btn ui-corner-all ui-icon-carat-r ui-btn-icon-notext" href="{{jump}}"> </a>
+                  <a class="ui-icon-carat-r ui-btn-icon-notext" href="{{jump}}"> </a>
                 </th>
              {{/if}}
            {{#each cell_list}}
@@ -80,7 +80,7 @@
                       <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
                     {{else}}
                       {{#if href}}
-                        <a href="{{href}}" class="ui-link">
+                        <a href="{{href}}">
                           <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
                         </a>
                       {{else}}
@@ -89,7 +89,7 @@
                     {{/if}}
                   {{else}}
                     {{#if href}}
-                      <a href="{{href}}" class="ui-link">{{default}}</a>
+                      <a href="{{href}}">{{default}}</a>
                     {{else}}
                       <p>{{default}}</p>
                     {{/if}}
@@ -100,7 +100,7 @@
            {{/each}}
            {{#if line_icon}}
              <th>
-               <a href ="{{jump}}" class="ui-body-inherit ui-btn-icon-right ui-link ui-btn ui-corner-all ui-icon-sign-in"></a>
+               <a href ="{{jump}}" class="ui-btn-icon-right ui-icon-sign-in"></a>
              </th>
             {{/if}}
          </tr>
@@ -111,7 +111,7 @@
 
     <script id="listbox-tfoot-template" type="text/x-handlebars-template">
       <table>
-       <tfoot class="ui-bar-inherit tfoot">
+       <tfoot>
        {{#each row_list}}
          <tr>
            {{#if ../show_anchor}}
@@ -143,26 +143,26 @@
     <script id="listbox-nav-template" type="text/x-handlebars-template">
       <a class="{{previous_classname}}" data-i18n="Previous" href="{{previous_url}}">Previous</a>
       <a class="{{next_classname}}" data-i18n="Next" href="{{next_url}}">Next</a>
-      <span class="ui-disabled ui-right">{{record}}</span>
+      <span class="ui-disabled">{{record}}</span>
     </script>
 
     <script id="listbox-template" type="text/x-handlebars-template">
-      <div class="ui-table-header ui-header ui-bar-c ui-corner-all">
-        <h1 data-i18n="{{title}}" class="ui-title ui-override-theme">{{title}}<span> <span class="listboxloader ui-icon-spinner ui-btn-icon-left"></span></span></h1>
+      <div class="ui-table-header ui-header">
+        <h1 data-i18n="{{title}}">{{title}}<span> <span class="listboxloader ui-icon-spinner ui-btn-icon-left"></span></span></h1>
           {{#if show_line_selector}}
-            <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="submit responsive ui-last-child ui-btn ui-icon-eye ui-btn-icon-left {{hide_class}}">Include</button>
-            <button data-rel="hide" data-i18n="Exclude" name="ExcludeRows" type="button" class="submit responsive ui-last-child ui-btn ui-icon-low-vision ui-btn-icon-left {{hide_class}}">Exclude</button>
+            <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}">Include</button>
+            <button data-rel="hide" data-i18n="Exclude" name="ExcludeRows" type="button" class="ui-icon-low-vision ui-btn-icon-left {{hide_class}}">Exclude</button>
           {{else}}
-            <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="submit responsive ui-last-child ui-btn ui-icon-check-square-o ui-btn-icon-left {{hide_class}}">Select</button>
-            <button {{disabled}} data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="submit responsive ui-last-child ui-btn ui-icon-wrench ui-btn-icon-left {{configure_class}}">Configure</button>
-            <button {{disabled}} data-rel="Sort" data-i18n="Sort" name="Sort" type="button" class="submit responsive ui-last-child ui-btn ui-icon-sort-amount-desc ui-btn-icon-left {{sort_class}}">Sort</button>
+            <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}">Select</button>
+            <button {{disabled}} data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="ui-icon-wrench ui-btn-icon-left {{configure_class}}">Configure</button>
+            <button {{disabled}} data-rel="Sort" data-i18n="Sort" name="Sort" type="button" class="ui-icon-sort-amount-desc ui-btn-icon-left {{sort_class}}">Sort</button>
           {{/if}}
 
       </div>
-      <table class="ui-responsive ui-body-c ui-table-inset">
-        <thead class="ui-bar-inherit thead"></thead>
+      <table>
+        <thead class="thead"></thead>
         <tbody></tbody>
-        <tfoot class="ui-bar-inherit tfoot"></tfoot>
+        <tfoot></tfoot>
       </table>
       <nav></nav>
     </div>
@@ -170,8 +170,8 @@
 
 
   <script id="error-message-template" type="text/x-handlebars-template">
-    <div class="ui-listbox-error">
-		   <a class="ui-btn ui-corner-all ui-btn-inline" href="{{reset_url}}">
+    <div>
+		   <a href="{{reset_url}}">
 		     <span class='ui-info-error' data-i18n="Invalid Search Criteria">Invalid Search Criteria</span>
 		     <span>-</span>
          <span data-i18n="Reset">Reset</span>
