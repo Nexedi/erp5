@@ -18,9 +18,9 @@
 
     <!-- XXX must set theme here! -->
     <script id="table-template" type="text/x-handlebars-template">
-      <ul data-role="listview" data-theme="c" class="document-listview ui-listview-inset ui-corner-all">
+      <ul class="document-listview">
         {{#each document_list}}
-          <li><a class="ui-body-inherit" href="{{link}}">{{title}}</a></li>
+          <li><a href="{{link}}">{{title}}</a></li>
         {{/each}}
       </ul>
     </script>
