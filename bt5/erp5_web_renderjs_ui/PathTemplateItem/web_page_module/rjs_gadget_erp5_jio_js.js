@@ -275,6 +275,18 @@
     })
     .declareMethod('post', function (doc) {
       return wrapJioCall(this, 'post', [doc]);
+    })
+    .declareMethod('repair', function () {
+      return wrapJioCall(this, 'repair', []);
+    })
+    .declareMethod('remove', function (key) {
+      return wrapJioCall(this, 'remove', [key]);
+    })
+    .declareMethod('allAttachments', function (key) {
+      return wrapJioCall(this, 'allAttachments', [key]);
+    })
+    .declareMethod('removeAttachment', function (key, name) {
+      return wrapJioCall(this, 'removeAttachment', [key, name]);
     });
 
 }(window, rJS, RSVP, UriTemplate, URI, SimpleQuery, ComplexQuery, jIO));
