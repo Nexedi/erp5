@@ -204,6 +204,11 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         return result;
       }
       return {};
+    })
+
+    .declareMethod('checkValidity', function () {
+      // XXX How to implement this for editors?
+      return true;
     });
 
 }(window, rJS, RSVP, document, FileReader, Blob,

@@ -17,12 +17,21 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function () {
       var gadget = this;
       return this.getDeclaredGadget('image')
         .push(function (input) {
           return input.render(gadget.state);
         });
+    })
+
+    .declareMethod('getContent', function () {
+      // An Image field never modifies a document
+      return {};
+    })
+
+    .declareMethod('checkValidity', function () {
+      return true;
     });
 
 }(window, rJS));

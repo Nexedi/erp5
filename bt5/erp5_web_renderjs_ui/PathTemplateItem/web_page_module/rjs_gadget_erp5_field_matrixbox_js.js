@@ -266,6 +266,10 @@
 
     .allowPublicAcquisition("notifyValid", function () {
       return;
+    })
+
+    .declareMethod("checkValidity", function () {
+      return true;
     });
 
 }(window, document, rJS, RSVP, Handlebars, JSON));

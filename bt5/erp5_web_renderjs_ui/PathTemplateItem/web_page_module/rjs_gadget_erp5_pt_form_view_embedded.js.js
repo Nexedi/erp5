@@ -56,6 +56,10 @@
 
           return erp5_form.render(form_options);
         });
+    })
+
+    .declareMethod('triggerSubmit', function getContent() {
+      return;
     });
 
 }(window, rJS));

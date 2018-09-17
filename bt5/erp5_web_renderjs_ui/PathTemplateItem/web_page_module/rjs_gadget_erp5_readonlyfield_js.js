@@ -24,6 +24,15 @@
         .push(function (input) {
           return input.render(gadget.state);
         });
+    })
+
+    .declareMethod('getContent', function () {
+      // A readonly field never modifies a document
+      return {};
+    })
+
+    .declareMethod('checkValidity', function () {
+      return true;
     });
 
 }(window, rJS));

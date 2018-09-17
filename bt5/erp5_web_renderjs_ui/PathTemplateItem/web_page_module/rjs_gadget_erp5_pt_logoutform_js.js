@@ -72,5 +72,8 @@
             }
           });
         });
+    })
+    .declareMethod("triggerSubmit", function () {
+      return;
     });
 }(window, rJS, UriTemplate, Handlebars));

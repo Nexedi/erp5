@@ -98,6 +98,9 @@
             page_title: last_result_list[1]
           });
         });
+    })
+    .declareMethod("triggerSubmit", function () {
+      return;
     });
 
 }(window, rJS, RSVP, Handlebars, URI, calculatePageTitle));

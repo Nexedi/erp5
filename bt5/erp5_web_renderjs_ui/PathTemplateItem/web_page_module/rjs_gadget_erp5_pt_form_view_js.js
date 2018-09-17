@@ -37,17 +37,14 @@
     // Proxy methods to the child gadget
     /////////////////////////////////////////////////////////////////
     .declareMethod('checkValidity', function checkValidity() {
-      return this.getDeclaredGadget("erp5_form")
-        .push(function (declared_gadget) {
-          return declared_gadget.checkValidity();
-        });
-    }, {mutex: 'changestate'})
+      return true;
+    })
     .declareMethod('getContent', function getContent() {
-      return this.getDeclaredGadget("erp5_form")
-        .push(function (declared_gadget) {
-          return declared_gadget.getContent();
-        });
-    }, {mutex: 'changestate'})
+      return {};
+    })
+    .declareMethod('triggerSubmit', function getContent() {
+      return;
+    })
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////

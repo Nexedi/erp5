@@ -168,6 +168,9 @@
           };
           return gadget.updateHeader(dict);
         });
+    })
+    .declareMethod("triggerSubmit", function () {
+      return;
     });
 
 }(window, rJS, RSVP, Handlebars, URI, calculatePageTitle, ensureArray));

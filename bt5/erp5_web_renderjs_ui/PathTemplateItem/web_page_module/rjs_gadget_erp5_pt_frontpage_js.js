@@ -18,6 +18,9 @@
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
+    .declareMethod('triggerSubmit', function () {
+      return;
+    })
     .declareMethod('render', function renderHeader() {
       var gadget = this,
         select_list = ['translated_title',

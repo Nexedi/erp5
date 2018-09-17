@@ -106,6 +106,9 @@
             language_url: url_list[1]
           });
         });
+    })
+    .declareMethod("triggerSubmit", function () {
+      return;
     });
 
 }(window, rJS, RSVP, Handlebars, URI));

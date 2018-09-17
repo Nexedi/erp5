@@ -22,5 +22,8 @@
           return gadget.redirect({command: 'display',
                                   options: {jio_key: jio_key}});
         });
+    })
+    .declareMethod("triggerSubmit", function () {
+      return;
     });
 }(window, rJS, URI));

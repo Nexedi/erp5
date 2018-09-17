@@ -132,6 +132,16 @@
           section_element.appendChild(section_container_element);
         });
 
+    })
+
+    .declareMethod('checkValidity', function checkValidity() {
+      return true;
+    })
+    .declareMethod('getContent', function getContent() {
+      return {};
+    })
+    .declareMethod('triggerSubmit', function getContent() {
+      return;
     });
 
 }(window, document, rJS, RSVP, URI));

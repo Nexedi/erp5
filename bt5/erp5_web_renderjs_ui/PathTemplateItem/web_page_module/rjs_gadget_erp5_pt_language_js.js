@@ -146,5 +146,8 @@
           }
           return gadget.notifySubmitted();
         });
+    })
+    .declareMethod("triggerSubmit", function () {
+      return;
     });
 }(window, rJS, RSVP, Handlebars));

@@ -104,6 +104,9 @@
             back_url: result_list[1]
           });
         });
+    })
+    .declareMethod("triggerSubmit", function () {
+      return;
     });
 
 }(window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray));

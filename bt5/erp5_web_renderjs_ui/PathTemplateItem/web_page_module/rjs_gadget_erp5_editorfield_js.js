@@ -61,6 +61,16 @@
           });
       }
       return {};
-    });
+    }, {mutex: 'changestate'})
+
+    .declareMethod('checkValidity', function () {
+      if (this.state.editable) {
+        return this.getDeclaredGadget('sub')
+          .push(function (gadget) {
+            return gadget.checkValidity();
+          });
+      }
+      return true;
+    }, {mutex: 'changestate'});
 
 }(window, rJS));

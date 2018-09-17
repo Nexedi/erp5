@@ -95,6 +95,9 @@
         data[this.state.name] = "";
       }
       return data;
+    })
+    .declareMethod("checkValidity", function checkValidity() {
+      return true;
     });
 
 }(window, document, rJS, getFirstNonEmpty, isEmpty));

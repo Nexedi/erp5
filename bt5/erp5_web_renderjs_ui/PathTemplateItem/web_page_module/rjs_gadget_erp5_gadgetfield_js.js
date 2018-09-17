@@ -82,6 +82,20 @@
         .push(function (result) {
           return result.getContent();
         });
+    }, {mutex: 'changestate'})
+
+    .declareMethod("checkValidity", function () {
+      var gadget = this;
+      if (gadget.state.editable) {
+        return gadget.getDeclaredGadget(gadget.state.key)
+          .push(function (result) {
+            if (result.checkValidity !== undefined) {
+              return result.checkValidity();
+            }
+            return true;
+          });
+      }
+      return true;
     }, {mutex: 'changestate'});
 
 }(window, rJS, document));
