@@ -17,60 +17,25 @@
   <td></td>
 </tr>
 
-<!-- Wait for gadget to be loaded -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Title 1</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<!-- Header has a save button -->
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_foo_relation_field_view" />
 <tr>
   <td>type</td>
-  <td>field_my_foo_category_title</td>
-  <td>QWERTY</td>
+  <td>field_my_title</td>
+  <td>Foo Title 123</td>
 </tr>
-<tr>
-  <td>fireEvent</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
-  <td>input</td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
 
-
-<!--tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit' and contains(@class, 'ui-icon-spinner')]</td>
-  <td></td>
-</tr-->
 <tr>
   <td>waitForTextPresent</td>
-  <td>No such document was found</td>
+  <td>Input is required but no input given.</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyValue</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
-  <td>QWERTY</td>
+  <td>//input[@name='field_my_title']</td>
+  <td>Foo Title 123</td>
 </tr>
 
 <tal:block tal:define="notification_configuration python: {'class': 'error',

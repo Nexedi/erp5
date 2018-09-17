@@ -21,27 +21,24 @@
     <td>renderjs_url</td></tr>
 <tr><td>open</td>
     <td>${renderjs_url}/#/foo_module/1?editable=true</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
+<tr><td>verifyElementNotPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_foo_relation_field_view" />
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
 <tr><td>verifyElementNotPresent</td>
     <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
 
 <!-- Unsuccessful save does not mingle with editability -->
-<tr><td>waitForElementPresent</td>
-    <td>//input[@name='field_my_foo_category_title']</td><td></td></tr>
-<tr><td>type</td>
-    <td>//input[@name='field_my_foo_category_title']</td>
-    <td>QWERTY</td></tr>
-<tr><td>fireEvent</td>
-    <td>//input[@name='field_my_foo_category_title']</td>
-    <td>input</td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td><td></td></tr>
-<tr><td>click</td>
-    <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td><td></td></tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tr><td>waitForTextPresent</td>
-    <td>Input data has errors.</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'Input data has errors.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
@@ -54,22 +51,23 @@
 <tr><td>fireEvent</td>
     <td>//input[@name='field_my_foo_category_title']</td>
     <td>focus</td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-scope='field_my_foo_category_title']//li</td><td></td></tr>
 <tr><td>type</td>
     <td>//input[@name='field_my_foo_category_title']</td>
-    <td></td></tr>
+    <td>object_exchange</td></tr>
 <tr><td>fireEvent</td>
     <td>//input[@name='field_my_foo_category_title']</td>
     <td>input</td></tr>
-<tr><td>fireEvent</td>
-    <td>//input[@name='field_my_foo_category_title']</td>
-    <td>blur</td></tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save'][contains(@class, 'ui-icon-warning')]</td>
+  <td>//li[@data-relative-url='portal_categories/action_type/object_exchange']</td>
   <td></td>
 </tr>
+<tr>
+  <td>click</td>
+  <td>//li[@data-relative-url='portal_categories/action_type/object_exchange']</td>
+  <td></td>
+</tr>
+
 <tr><td>waitForElementPresent</td>
     <td>//input[@name='field_my_title']</td><td></td></tr>
 <tr><td>type</td>
@@ -98,8 +96,8 @@
 <tr><td>type</td>
     <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_dialog.html']//textarea</td>
     <td>QWERTY</td></tr>
-<tr><td>click</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_dialog.html']//input[@type='submit']</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Status changed.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />

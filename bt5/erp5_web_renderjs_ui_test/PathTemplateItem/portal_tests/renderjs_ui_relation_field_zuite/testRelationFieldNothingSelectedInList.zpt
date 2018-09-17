@@ -29,8 +29,10 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//a[@data-i18n='Add']</td>
   <td></td>
 </tr>
@@ -47,25 +49,7 @@
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Save</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Quantity</td>
-  <td></td>
-</tr>
-
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_foo_relation_field_view" />
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_successor_title']</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>type</td>
@@ -108,19 +92,15 @@
   <td>A new foo</td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
 
-<tr>
- <td>click</td>
- <td>//button[@data-i18n='Save']</td>
- <td></td>
-</tr>
-<tal:block tal:define="notification_configuration python: {'class': 'error',
+<!--tal:block tal:define="notification_configuration python: {'class': 'error',
                                                            'text': 'Input data has errors.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
-</tal:block>
+</tal:block-->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_successor_title']//span[text()='No such document was found.']</td>
+  <td>//div[@data-gadget-scope='field_my_successor_title']//span[text()='No such document was found']</td>
   <td></td>
 </tr>
 

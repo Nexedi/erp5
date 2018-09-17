@@ -85,6 +85,13 @@
           }
           return result;
         });
+    }, {mutex: 'changestate'})
+
+    .declareMethod('checkValidity', function () {
+      return this.getDeclaredGadget("relation_input")
+        .push(function (input_gadget) {
+          return input_gadget.checkValidity();
+        });
     }, {mutex: 'changestate'});
 
 }(window, rJS));

@@ -58,7 +58,7 @@
           url: field_json.url,
           allow_creation: field_json.allow_creation,
           portal_types: field_json.portal_types,
-	  translated_portal_types: field_json.translated_portal_types,
+          translated_portal_types: field_json.translated_portal_types,
           relation_field_id: field_json.relation_field_id,
           hidden: field_json.hidden,
           // Force calling subfield render
@@ -234,7 +234,8 @@
               }
             }
             //user remove all data
-            if (options.format === "erp5" && result[gadget.state.key].length === 0) {
+            if (options.format === "erp5" &&
+                result[gadget.state.key].length === 0) {
               result[gadget.state.key] = "";
             }
             return result;
@@ -242,6 +243,47 @@
           });
       }
       return final_result;
+    }, {mutex: 'changestate'})
+
+    .declareMethod('checkValidity', function () {
+      var context = this;
+
+      function checkSubContentValidity(node) {
+        var scope = node.getAttribute('data-gadget-scope');
+        if (scope !== null) {
+          return context.getDeclaredGadget(
+            node.getAttribute('data-gadget-scope')
+          )
+            .push(function (result) {
+              return result.checkValidity();
+            });
+        }
+      }
+
+      if (this.state.editable) {
+        return new RSVP.Queue()
+          .push(function () {
+            var promise_list = [],
+              i;
+            for (i = 0; i < context.element.childNodes.length; i += 1) {
+              promise_list.push(
+                checkSubContentValidity(context.element.childNodes[i])
+              );
+            }
+            return RSVP.all(promise_list);
+          })
+          .push(function (validity_list) {
+            var i;
+            for (i = 0; i < validity_list.length; i += 1) {
+              if (!validity_list[i]) {
+                return false;
+              }
+            }
+            return true;
+          });
+      }
+      return true;
+
     }, {mutex: 'changestate'});
 
 }(window, rJS, RSVP, document));
