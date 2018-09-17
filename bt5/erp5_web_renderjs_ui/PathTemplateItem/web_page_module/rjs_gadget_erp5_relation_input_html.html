@@ -24,10 +24,10 @@
     </script>
 
     <script id="relation-input-template" type="text/x-handlebars-template">
-      <div class="relation-input ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset ui-input-has-clear ui-input-has-icon">
+      <div class="relation-input ui-input-text">
         <div>
-          <input type='search' title="{{title}}" name="{{name}}" id="{{name}}" autocomplete="off" data-enhanced="true" value="{{value}}" >
-          <ul class="ui-listview ui-corner-all search_ul"></ul>
+          <input type='search' title="{{title}}" name="{{name}}" id="{{name}}" autocomplete="off" value="{{value}}" >
+          <ul class="search_ul"></ul>
         </div>
       </div>
     </script>
@@ -35,14 +35,14 @@
     <script id="relation-listview-template" type="text/x-handlebars-template">
       {{#if list.length}}
         {{#each list}}
-          <li class="ui-li-static ui-body-inherit ui-icon-sign-in ui-btn-icon-right" data-relative-url="{{id}}" data-uid="{{uid}}">{{value}}</li>
+          <li class="ui-icon-sign-in ui-btn-icon-right" data-relative-url="{{id}}" data-uid="{{uid}}">{{value}}</li>
         {{/each}}
       {{/if}}
       {{#each type}}
-       <li class="ui-li-static ui-body-inherit ui-bar-inherit ui-icon-plus ui-btn-icon-right" data-i18n="Create New" data-create-object="{{value}}" name="{{name}}">Create New
+       <li class="ui-icon-plus ui-btn-icon-right" data-i18n="Create New" data-create-object="{{value}}" name="{{name}}">Create New
          <span> {{name}}: {{../value}}</span></li>
       {{/each}}
-      <li class="ui-li-static ui-body-inherit ui-last-child ui-bar-inherit ui-icon-search ui-btn-icon-right" data-explore=true data-i18n="Explore the Search Result List" >Explore the Search Result List</li>
+      <li class="ui-icon-search ui-btn-icon-right" data-explore=true data-i18n="Explore the Search Result List" >Explore the Search Result List</li>
     </script>
 
   </head>
