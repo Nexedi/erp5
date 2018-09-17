@@ -41,14 +41,14 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class='column_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
+  <td>//div[@class='column_item_container']/div[1]//select[1]</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>verifySelectOptions</td>
-  <td>//div[@class='column_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
+  <td>//div[@class='column_item_container']/div[1]//select[1]</td>
   <td>ID,biaoti,Quantity,chuangjianshijian,xiugaishijian,shuoyouzhe</td>
 </tr>
 

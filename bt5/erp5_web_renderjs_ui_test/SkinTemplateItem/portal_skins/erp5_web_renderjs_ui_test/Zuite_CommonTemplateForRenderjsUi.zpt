@@ -6,27 +6,32 @@
     </tr>
     <tr>
      <td>waitForElementPresent</td>
-     <td>//button[@data-i18n='Save']</td>
-     <td></td>
-    </tr>
-    <tr>
-     <td>waitForElementNotPresent</td>
-     <td>//button[@data-i18n='Save'][contains(@class, "ui-disabled")]</td>
-     <td></td>
-    </tr>
-    <tr>
-     <td>assertElementNotPresent</td>
-     <td>//button[@data-i18n='Save'][contains(@class, "ui-disabled")]</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[@data-i18n='Save']</td>
      <td></td>
     </tr>
     <tr>
      <td>assertElementPresent</td>
-     <td>//button[@data-i18n='Save']</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[@data-i18n='Save']</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>waitForElementNotPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[@data-i18n='Save'][contains(@class, "ui-disabled")]</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>assertElementNotPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[@data-i18n='Save'][contains(@class, "ui-disabled")]</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>assertElementPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[@data-i18n='Save']</td>
      <td></td>
     </tr>
     <tr>
      <td>click</td>
-     <td>//button[@data-i18n='Save']</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[@data-i18n='Save']</td>
      <td></td>
     </tr>
   </tal:block>
@@ -38,7 +43,12 @@
     <!-- First loader while calling Base_edit -->
     <tr>
       <td>waitForElementPresent</td>
-      <td>//h1[@class="ui-title"]//a[contains(@class, "ui-icon-spinner")]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
       <td></td>
     </tr>
     <!-- Save Button is disabled  -->
@@ -84,7 +94,7 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
@@ -262,9 +272,19 @@
       <td>//div[@class="ui-icon-spinner ui-btn-icon-notext first-loader"]</td>
       <td></td>
     </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[@class="ui-icon-spinner ui-btn-icon-notext first-loader"]</td>
+      <td></td>
+    </tr>
 
     <tr>
       <td>waitForElementNotPresent</td>
+      <td>//div[@class="ui-icon-spinner ui-btn-icon-notext first-loader"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
       <td>//div[@class="ui-icon-spinner ui-btn-icon-notext first-loader"]</td>
       <td></td>
     </tr>
@@ -279,13 +299,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1[@class="ui-title"]//*[contains(@class, "ui-icon-spinner")]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
       <td></td>
     </tr>
-
     <tr>
       <td>waitForElementNotPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1[@class="ui-title"]//*[contains(@class, "ui-icon-spinner")]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
       <td></td>
     </tr>
     <tr>
@@ -300,7 +319,12 @@
 
     <tr>
       <td>waitForElementPresent</td>
-      <td>//form[@class="dialog_form"]//div[@class="dialog_button_container"]//input[@name="action_confirm"]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//form//div[@class="dialog_button_container"]//input[@name="action_confirm"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//form//div[@class="dialog_button_container"]//input[@name="action_confirm"]</td>
       <td></td>
     </tr>
 
@@ -325,12 +349,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//nav//span[@class=\'ui-disabled ui-right\' and text()=\'%(footer)s\']' % pagination_configuration"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//nav//span[@class=\'ui-disabled\' and text()=\'%(footer)s\']' % pagination_configuration"></td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//nav//span[@class=\'ui-disabled ui-right\' and text()=\'%(footer)s\']' % pagination_configuration"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//nav//span[@class=\'ui-disabled\' and text()=\'%(footer)s\']' % pagination_configuration"></td>
       <td></td>
     </tr>
     <tr>
@@ -363,12 +387,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//h1[@class="ui-title"]//span[contains(@class, "ui-icon-spinner")]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//span[contains(@class, "ui-icon-spinner")]</td>
       <td></td>
     </tr>
     <tr>
       <td>waitForElementNotPresent</td>
-      <td>//h1[@class="ui-title"]//span[contains(@class, "ui-icon-spinner")]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//span[contains(@class, "ui-icon-spinner")]</td>
       <td></td>
     </tr>
     <tr>
@@ -734,12 +758,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
       <td>click</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
@@ -763,7 +787,7 @@
     </tr>
     <tr>
       <td>assertElementNotPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_sort_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_sort_editor.html')]//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
@@ -773,12 +797,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_sort_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_sort_editor.html')]//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_sort_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_sort_editor.html')]//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
@@ -816,7 +840,7 @@
     </tr>
     <tr>
       <td>click</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//button[@class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check"]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//button[@class="ui-btn-icon-left ui-icon-check"]</td>
       <td></td>
     </tr>
     <tr>
@@ -945,7 +969,7 @@
     </tr>
     <tr>
       <td>assertElementNotPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
@@ -955,12 +979,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
@@ -974,7 +998,7 @@
     </tr>
     <tr>
       <td>click</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check"]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class="submit ui-btn-icon-left ui-icon-check"]</td>
       <td></td>
     </tr>
     <tr>
@@ -1002,12 +1026,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_editor_panel.html\')]//button[@class=\'trash ui-btn-c ui-override-theme ui-btn ui-icon-trash-o ui-btn-icon-left ui-corner-all\']'"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_editor_panel.html\')]//button[@class=\'trash ui-icon-trash-o ui-btn-icon-left\']'"></td>
       <td></td>
     </tr>
     <tr>
       <td>click</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_editor_panel.html\')]//button[@class=\'trash ui-btn-c ui-override-theme ui-btn ui-icon-trash-o ui-btn-icon-left ui-corner-all\']'"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_editor_panel.html\')]//button[@class=\'trash ui-icon-trash-o ui-btn-icon-left\']'"></td>
       <td></td>
     </tr>
     <tr>
@@ -1021,22 +1045,22 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]' % (configure_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container\']/div[%i]' % (configure_section_configuration['index'] + 1)"></td>
       <td></td>
     </tr>
     <tr>
       <td>focus</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]//button' % (configure_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container\']/div[%i]//button' % (configure_section_configuration['index'] + 1)"></td>
       <td></td>
     </tr>
     <tr>
       <td>click</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]//button' % (configure_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container\']/div[%i]//button' % (configure_section_configuration['index'] + 1)"></td>
       <td></td>
     </tr>
     <tr>
       <td>waitForElementNotPresent</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]' % (configure_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container\']/div[%i]' % (configure_section_configuration['index'] + 1)"></td>
       <td></td>
     </tr>
     <tr>
@@ -1050,12 +1074,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
       <td>click</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_configure_editor.html')]//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
@@ -1069,12 +1093,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]//select' % (configure_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container\']/div[%i]//select' % (configure_section_configuration['index'] + 1)"></td>
       <td></td>
     </tr>
     <tr>
       <td>select</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]//select' % (configure_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container\']/div[%i]//select' % (configure_section_configuration['index'] + 1)"></td>
       <td tal:content="python: 'value=%s' % configure_section_configuration['key']"></td>
     </tr>
     <tr>
@@ -1088,7 +1112,7 @@
     </tr>
     <tr>
       <td>verifyValue</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container ui-controlgroup ui-corner_all\']/div[%i]//select' % (configure_section_configuration['index'] + 1)"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_configure_editor.html\')]//div[@class=\'column_item_container\']/div[%i]//select' % (configure_section_configuration['index'] + 1)"></td>
       <td tal:content="python: configure_section_configuration['key']"></td>
     </tr>
     <tr>

@@ -50,27 +50,27 @@
 
 <tr>
   <td>click</td>
-  <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+  <td>//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]</td>
+  <td>//div[@class='sort_item_container']/div[1]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>click</td>
-  <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+  <td>//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[2]</td>
+  <td>//div[@class='sort_item_container']/div[2]</td>
   <td></td>
 </tr>
 
@@ -78,13 +78,13 @@
 
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]</td>
+  <td>//div[@class='sort_item_container']/div[1]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[2]</td>
+  <td>//div[@class='sort_item_container']/div[2]</td>
   <td></td>
 </tr>
 

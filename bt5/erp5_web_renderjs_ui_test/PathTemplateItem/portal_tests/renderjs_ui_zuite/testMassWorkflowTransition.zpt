@@ -51,9 +51,9 @@
 <tr><td>click</td>
     <td>//div[@data-role="header"]//a[@data-i18n="Actions"]</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>//ul[@data-role="listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
+    <td>//ul[@class="document-listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
 <tr><td>click</td>
-    <td>//ul[@data-role="listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
+    <td>//ul[@class="document-listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
 
 <tr><th colspan="3">All actions are always visible</th></tr>
 <tr><td>waitForElementPresent</td>
@@ -77,9 +77,9 @@
 <tr><td>click</td>
     <td>//div[@data-role="header"]//a[@data-i18n="Actions"]</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>//ul[@data-role="listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
+    <td>//ul[@class="document-listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
 <tr><td>click</td>
-    <td>//ul[@data-role="listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
+    <td>//ul[@class="document-listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
 
 <tr><td>waitForElementPresent</td>
     <td>//select[@name="field_your_mass_workflow_action"]/option[@value="validate_action"]</td><td></td></tr>
@@ -156,9 +156,9 @@
 <tr><td>click</td>
     <td>//div[@data-role="header"]//a[@data-i18n="Actions"]</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
-    <td>//ul[@data-role="listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
+    <td>//ul[@class="document-listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
 <tr><td>click</td>
-    <td>//ul[@data-role="listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
+    <td>//ul[@class="document-listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
 
 <tr><td>waitForElementPresent</td>
     <td>//select[@name="field_your_mass_workflow_action"]/option[@value="invalidate_action"]</td><td></td></tr>

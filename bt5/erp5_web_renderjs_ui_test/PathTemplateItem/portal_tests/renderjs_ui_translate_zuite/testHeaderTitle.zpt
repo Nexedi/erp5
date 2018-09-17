@@ -38,7 +38,7 @@
 
 <tr>
   <td>verifyText</td>
-  <td>//h1[@class="ui-title"]//a</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//a</td>
   <td>foo_mokuai</td>
 </tr>
 
@@ -58,7 +58,7 @@
 
 <tr>
   <td>verifyText</td>
-  <td>//h1[@class="ui-title"]//a</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//a</td>
   <td>Foo_zhongwen: Title 1</td>
 </tr>
 
