@@ -162,28 +162,28 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//ul[@class='ui-listview ui-corner-all search_ul']//li</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//ul[@class='search_ul']//li</td>
   <td></td>
 </tr>
 
 <!-- test sort  -->
 <tr>
   <td>verifyAttribute</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//ul[@class='ui-listview ui-corner-all search_ul']/li[1]@data-relative-url</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//ul[@class='search_ul']/li[1]@data-relative-url</td>
   <td>foo_module/4</td>
 </tr>
 
 
 <tr>
   <td>verifyAttribute</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//ul[@class='ui-listview ui-corner-all search_ul']/li[2]@data-relative-url</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//ul[@class='search_ul']/li[2]@data-relative-url</td>
   <td>foo_module/3</td>
 </tr>
 
 <!-- test parameter list  -->
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//ul[@class='ui-listview ui-corner-all search_ul']//li[@data-relative-url='foo_module/5']</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//ul[@class='search_ul']//li[@data-relative-url='foo_module/5']</td>
   <td></td>
 </tr>
 

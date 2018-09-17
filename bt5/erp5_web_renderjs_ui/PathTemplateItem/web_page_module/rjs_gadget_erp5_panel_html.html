@@ -16,30 +16,29 @@
     <script src="gadget_global.js" type="text/javascript"></script>
 
     <script id="panel-template-header" type="text/x-handlebars-template">
-      <div data-role="header" class="ui-bar-inherit">
-        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">
+      <div data-role="header">
+        <div class="ui-btn-left">
           <div class="ui-controlgroup-controls">
-            <button data-i18n="Close" class="ui-btn ui-btn-icon-notext ui-icon-delete">Close</button>
+            <button data-i18n="Close" class="ui-btn-icon-notext ui-icon-delete">Close</button>
           </div>
         </div>
         <div class="panel_img">
-        <img class="ui-title" alt="ERP5" src="gadget_erp5_panel.png?format=png"/>
+        <img alt="ERP5" src="gadget_erp5_panel.png?format=png"/>
         </div>
       </div>
     </script>
 
     <script id="panel-template-body" type="text/x-handlebars-template">
-      <div class="ui-content">
+      <div>
 
-        <form class="dialog_form">
-          <button type="submit" class="ui-btn ui-btn-b ui-btn-inline
-                                       ui-icon-action ui-btn-icon-right ui-screen-hidden">Submit</button>
+        <form>
+          <button type="submit" class="ui-icon-action ui-btn-icon-right ui-screen-hidden">Submit</button>
           <div data-gadget-url="gadget_erp5_searchfield.html"
                data-gadget-scope="erp5_searchfield"
                data-gadget-sandbox="public"></div>
         </form>
 
-        <ul data-role="listview" class="ui-listview" data-enhanced="true"></ul>
+        <ul></ul>
         <div data-gadget-url="gadget_erp5_field_checkbox.html"
              data-gadget-scope="erp5_checkbox"
              data-gadget-sandbox="public"></div>
@@ -48,32 +47,32 @@
     </script>
 
     <script id="panel-template-body-list" type="text/x-handlebars-template">
-          <li class="ui-first-child"><a href="{{front_href}}" class="ui-btn ui-btn-icon-left ui-icon-home" data-i18n="Home">Home</a></li>
-          <li><a href="{{module_href}}" class="ui-btn ui-btn-icon-left ui-icon-puzzle-piece" data-i18n="Modules" accesskey="m">Modules</a></li>
-          <li><a href="{{worklist_href}}" class="ui-btn ui-btn-icon-left ui-icon-tasks" data-i18n="Worklists" accesskey="w">Worklists</a></li>
-          <li><a href="{{history_href}}" class="ui-btn ui-btn-icon-left ui-icon-history" data-i18n="History" accesskey="h">History</a></li>
-          <li><a href="{{search_href}}" class="ui-btn ui-btn-icon-left ui-icon-search" data-i18n="Search" accesskey="s">Search</a></li>
-          <li><a href="{{preference_href}}" class="ui-btn ui-btn-icon-left ui-icon-sliders" data-i18n="Preferences">Preferences</a></li>
-          <li class="ui-last-child"><a href="{{logout_href}}" class="ui-btn ui-btn-icon-left ui-icon-power-off" data-i18n="Logout" accesskey="o">Logout</a></li>
+          <li><a href="{{front_href}}" class="ui-btn-icon-left ui-icon-home" data-i18n="Home">Home</a></li>
+          <li><a href="{{module_href}}" class="ui-btn-icon-left ui-icon-puzzle-piece" data-i18n="Modules" accesskey="m">Modules</a></li>
+          <li><a href="{{worklist_href}}" class="ui-btn-icon-left ui-icon-tasks" data-i18n="Worklists" accesskey="w">Worklists</a></li>
+          <li><a href="{{history_href}}" class="ui-btn-icon-left ui-icon-history" data-i18n="History" accesskey="h">History</a></li>
+          <li><a href="{{search_href}}" class="ui-btn-icon-left ui-icon-search" data-i18n="Search" accesskey="s">Search</a></li>
+          <li><a href="{{preference_href}}" class="ui-btn-icon-left ui-icon-sliders" data-i18n="Preferences">Preferences</a></li>
+          <li><a href="{{logout_href}}" class="ui-btn-icon-left ui-icon-power-off" data-i18n="Logout" accesskey="o">Logout</a></li>
     </script>
 
     <script id="panel-template-body-desktop" type="text/x-handlebars-template">
-        <dt class="ui-content-title ui-body-c ui-btn ui-btn-icon-left ui-icon-eye" data-i18n="Views">Views</dt>
+        <dt class="ui-btn-icon-left ui-icon-eye" data-i18n="Views">Views</dt>
         {{#each view_list}}
-        <dd data-role="listview" data-theme="c" data-inset="true" class="document-listview">
-          <a class="ui-body-inherit {{class_name}}" href="{{href}}">{{title}}</a>
+        <dd class="document-listview">
+          <a class="{{class_name}}" href="{{href}}">{{title}}</a>
         </dd>
         {{/each}}
-        <dt class="ui-content-title ui-body-c  ui-btn ui-btn-icon-left ui-icon-random" data-i18n="Workflows">Workflows</dt>
+        <dt class="ui-btn-icon-left ui-icon-random" data-i18n="Workflows">Workflows</dt>
         {{#each workflow_list}}
-        <dd data-role="listview" data-theme="c" data-inset="true" class="document-listview">
-          <a class="ui-body-inherit {{class_name}}" href="{{href}}">{{title}}</a>
+        <dd class="document-listview">
+          <a class="{{class_name}}" href="{{href}}">{{title}}</a>
         </dd>
         {{/each}}
-        <dt class="ui-content-title ui-body-c  ui-btn ui-btn-icon-left ui-icon-cogs" data-i18n="Actions">Actions</dt>
+        <dt class="ui-btn-icon-left ui-icon-cogs" data-i18n="Actions">Actions</dt>
         {{#each action_list}}
-        <dd data-role="listview" data-theme="c" data-inset="true" class="document-listview">
-          <a class="ui-body-inherit {{class_name}}" href="{{href}}">{{title}}</a>
+        <dd class="document-listview">
+          <a class="{{class_name}}" href="{{href}}">{{title}}</a>
         </dd>
         {{/each}}
     </script>
@@ -85,6 +84,6 @@
   </head>
   <body>
 
-  <div class="jqm-navmenu-panel"></div>
+  <div></div>
   </body>
 </html>
