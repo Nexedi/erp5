@@ -202,7 +202,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@class="responsive ui-btn ui-icon-warning ui-btn-icon-left ui-first-child ui-last-child "]</td>
+  <td>//button[@class="ui-icon-warning ui-btn-icon-left "]</td>
   <td></td>
 </tr>
 

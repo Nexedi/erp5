@@ -46,10 +46,6 @@
   <td></td>
 </tr>
 
-<tr>
-  <td><p><p/>
-</tr>
-
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Document created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
@@ -75,28 +71,8 @@
 <tr>
   <td colspan="3"><b>Trying to save disabled option</b></td>
 </tr>
-<tr>
- <td>waitForElementPresent</td>
- <td>//button[@data-i18n='Save']</td>
- <td></td>
-</tr>
-<tr>
- <td>click</td>
- <td>//button[@data-i18n='Save']</td>
- <td></td>
-</tr>
-<!-- First loader while calling Base_edit -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//h1[@class="ui-title"]//a[contains(@class, "ui-icon-spinner")]</td>
-  <td></td>
-</tr>
-<!-- Save Button is disabled  -->
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//button[@data-i18n="Save"][contains(@class, "ui-disabled")]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
+
 <tal:block tal:define="notification_configuration python: {'class': 'error',
                                                            'text': 'Input data has errors.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />

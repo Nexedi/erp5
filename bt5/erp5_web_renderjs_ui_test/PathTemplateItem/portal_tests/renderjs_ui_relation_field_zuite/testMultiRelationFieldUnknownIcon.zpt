@@ -140,7 +140,7 @@
 
 <tr>
   <td>click</td>
-  <td>//h1[@class="ui-title"]//a</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//a</td>
   <td></td>
 </tr>
 

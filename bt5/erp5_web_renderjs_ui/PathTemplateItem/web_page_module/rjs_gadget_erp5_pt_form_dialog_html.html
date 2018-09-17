@@ -17,7 +17,7 @@
       {{#if show_update_button}}
         <button disabled name="action_update" type="submit" data-i18n="Update">Update</button>
       {{/if}}
-      <input disabled name="action_confirm" class="dialogconfirm" data-theme="b" data-inline="true" type="submit" data-i18n="[value]Proceed" value="Proceed" data-icon="check" />
+      <input disabled name="action_confirm" class="dialogconfirm" type="submit" data-i18n="[value]Proceed" value="Proceed" />
       <a class="dialogcancel" data-i18n="Cancel">Cancel</a>
     </script>
 
@@ -29,11 +29,11 @@
   <body>
 
     <section class="ui-content-header-plain">
-      <h3 class="ui-content-title ui-body-c"></h3>
+      <h3></h3>
     </section>
 
     <!-- XXX action, method, fieldset -->
-    <form class="dialog_form">
+    <form>
       <div data-gadget-url="gadget_erp5_form.html"
               data-gadget-scope="erp5_form"
               data-gadget-sandbox="public">

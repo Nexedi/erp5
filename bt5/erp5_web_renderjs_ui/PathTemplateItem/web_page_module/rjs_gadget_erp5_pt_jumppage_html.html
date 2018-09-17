@@ -21,15 +21,15 @@
     <!-- XXX need theme here currently -->
     <script id="table-template" type="text/x-handlebars-template">
       <section class="ui-content-header-plain">
-        <h3 class="ui-content-title ui-body-c" data-i18n="[last]{{definition_i18n}}">
-          <span class="ui-icon ui-icon-custom ui-icon-plane">&nbsp;</span>
+        <h3 data-i18n="[last]{{definition_i18n}}">
+          <span class="ui-icon ui-icon-plane">&nbsp;</span>
           {{definition_title}}
         </h3>
       </section>
 
-      <ul data-role="listview" data-theme="c" data-inset="true" class="document-listview">
+      <ul class="document-listview">
         {{#each documentlist}}
-          <li><a data-i18n="{{i18n}}" class="ui-body-inherit" href="{{link}}">{{title}}</a></li>
+          <li><a data-i18n="{{i18n}}" href="{{link}}">{{title}}</a></li>
         {{/each}}
       </ul>
     </script>
