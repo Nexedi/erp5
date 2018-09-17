@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Header Interface</title>
+  </head>
+  <body>
+    <h1>Header Interface</h1>
+    <h3>Gadget used to manage the application header</h3>
+    <dl>
+
+      <dt>notifyLoading</dt>
+      <dd>Start the loading spinner</dd>
+      <dl>
+      </dl>
+
+      <dt>notifyLoaded</dt>
+      <dd>Stop the loading spinner</dd>
+      <dl>
+      </dl>
+
+      <dt>notifyChange</dt>
+      <dd>Show the 'not saved content' warning</dd>
+      <dl>
+      </dl>
+
+      <dt>notifySubmitting</dt>
+      <dd>Start the submit spinner</dd>
+      <dl>
+      </dl>
+
+      <dt>notifySubmitted</dt>
+      <dd>Remove the 'not saved content' warning</dd>
+      <dl>
+      </dl>
+
+      <dt>notifyError</dt>
+      <dd>Activate all warning!</dd>
+      <dl>
+      </dl>
+
+      <dt>setButtonTitle</dt>
+      <dd>Activate a main button on the panel (to reduce maximize state for example)</dd>
+      <dl>
+        <dt>option_dict</dt>
+        <dd>
+          <ul>
+            <li>icon: button icon</li>
+            <li>action: button name. Used to know which kind of action to do when clicking it</li>
+          </ul>
+        </dd>
+      </dl>
+
+      <dt>render</dt>
+      <dd>Render the header</dd>
+      <dl>
+        <dt>option_dict</dt>
+        <dd>
+          <ul>
+            <li>page_title: main title</li>
+            <li>page_icon: surcharge the default icon if needed</li>
+            <li>XXX_url: activate a link with this URL on the header if present (front_url, selection_url, ...)</li>
+            <li>panel_action: activate the panel menu button</li>
+            <li>extra_class: a dictionnary to extend the button/link rendering</li>
+          </ul>
+        </dd>
+      </dl>
+
+    </dl>
+  </body>
+</html>

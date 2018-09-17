@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ERP5 Page Template Interface</title>
+  </head>
+  <body>
+    <h1>ERP5 Page Template Interface</h1>
+    <h3>A gadget which render a specific ERP5 page template (form_list, form_view,...)</h3>
+    <dl>
+
+      <dt>render</dt>
+      <dd>Display the page template with its expected value</dd>
+      <dl>
+        <dt>option_dict</dt>
+        <dd>
+          <ul>
+            <li>erp5_document: HAL representation of the ERP5 Document context</li>
+            <li>form_definition: HAL representation of the ERP5 Form</li>
+            <li>erp5_form: HAL representation of the rendered ERP5 Form in the document context</li>
+            <li>jio_key: jio key of the ERP5 document</li>
+            <li>view: URL of the rendered form</li>
+            <li>editable: editable state of the form. Impact all fields</li>
+            <li>title: title of the rendered form</li>
+          </ul>
+        </dd>
+      </dl>
+
+      <dt>triggerSubmit</dt>
+      <dd>Submit the main page template action (Base_edit, Base_callDialogMethod, ...) if any</dd>
+      <dl>
+      </dl>
+
+    </dl>
+  </body>
+</html>

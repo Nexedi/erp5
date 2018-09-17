@@ -21,4 +21,5 @@ test.erp5.testFunctionalRJSNotification
 test.erp5.testFunctionalRJSMatrixbox
 test.erp5.testFunctionalRJSEditorGadget
 test.erp5.testFunctionalRJSRecoverPassword
+test.erp5.testFunctionalRJSInterfaceValidator
 test.erp5.testFunctionalRJSDms

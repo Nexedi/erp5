@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Router Interface</title>
+  </head>
+  <body>
+    <h1>Router Interface</h1>
+    <h3>Gadget used to manager the application URL state</h3>
+    <dl>
+
+      <dt>getCommandUrlFor</dt>
+      <dd>Calculate an URL</dd>
+      <dl>
+        <dt>option_dict</dt>
+        <dd>
+          <ul>
+            <li>command: action to trigger when URL is loaded (display, change, ...)</li>
+            <li>absolute_url: XXX is it needed?</li>
+            <li>options: expected URL parameters</li>
+          </ul>
+        </dd>
+      </dl>
+
+      <dt>getCommandUrlForList</dt>
+      <dd>Calculate a list of url</dd>
+      <dl>
+        <dt>option_dict_list</dt>
+        <dd>List of option_dict parameter to pass to all getCommandUrlFor call</dd>
+      </dl>
+
+      <dt>redirect</dt>
+      <dd>Change the URL</dd>
+      <dl>
+        <dt>option_dict</dt>
+        <dd>See getCommandUrlFor</dd>
+      </dl>
+
+      <dt>getUrlParameter</dt>
+      <dd>return a URL parameter</dd>
+      <dl>
+        <dt>key</dt>
+        <dd>Name of the parameter</dd>
+      </dl>
+
+      <dt>route</dt>
+      <dd>XXX</dd>
+      <dl>
+      </dl>
+
+      <dt>start</dt>
+      <dd>Trigger listening to the URL hash change</dd>
+      <dl>
+      </dl>
+
+      <dt>notify</dt>
+      <dd>XXX</dd>
+      <dl>
+      </dl>
+
+    </dl>
+  </body>
+</html>
