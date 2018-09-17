@@ -146,5 +146,17 @@
           });
       }
       return final_result;
-    }, {mutex: 'changestate'});
+    }, {mutex: 'changestate'})
+
+    .declareMethod('checkValidity', function () {
+      var name = this.state.name;
+      if (this.state.editable && this.state.required) {
+        return this.getContent()
+          .push(function (result) {
+            return result[name].length !== 0;
+          });
+      }
+      return true;
+    });
+
 }(window, rJS, RSVP, document));
