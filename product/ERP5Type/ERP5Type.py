@@ -455,10 +455,12 @@ class ERP5TypeInformation(XMLObject,
         # - if ImmediateReindexContextManager is used, anything until
         #   context manager exits.
         method = ob._reindexOnCreation
+        if activate_kw is not None:
+          if reindex_kw is None:
+            reindex_kw = {}
+          reindex_kw.setdefault('activate_kw', {}).update(activate_kw)
         if reindex_kw is not None:
           method = partial(method, **reindex_kw)
-        elif activate_kw is not None:
-          method = partial(method, **activate_kw)
         if isinstance(immediate_reindex, ImmediateReindexContextManager):
           immediate_reindex.append(method)
         elif immediate_reindex:
