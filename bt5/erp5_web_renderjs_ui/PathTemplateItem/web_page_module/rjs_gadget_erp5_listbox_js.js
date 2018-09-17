@@ -826,6 +826,33 @@
         });
     }, {mutex: 'changestate'})
 
+    .declareMethod("checkValidity", function checkValidity(options) {
+      var form_gadget = this,
+        k,
+        field_gadget,
+        count = form_gadget.props.cell_gadget_list.length,
+        result = true,
+        queue = new RSVP.Queue();
+
+      function extendData(is_valid) {
+        result = result && is_valid;
+      }
+
+      for (k = 0; k < count; k += 1) {
+        field_gadget = form_gadget.props.cell_gadget_list[k];
+        // XXX Hack until better defined
+        if (field_gadget.checkValidity !== undefined) {
+          queue
+            .push(field_gadget.checkValidity.bind(field_gadget, options))
+            .push(extendData);
+        }
+      }
+      return queue
+        .push(function () {
+          return result;
+        });
+    }, {mutex: 'changestate'})
+
     .onEvent('click', function click(evt) {
       // For some reason, Zelenium can click even if button has the disabled
       // attribute. So, it is needed for now to manually checks
