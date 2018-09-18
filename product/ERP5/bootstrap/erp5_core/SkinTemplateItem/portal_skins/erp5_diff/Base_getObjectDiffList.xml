@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>first_date=None, second_date=None, first_path=None, second_path=None, **kw</string> </value>
+            <value> <string>first_date=None, second_date=None, first_path=None, second_path=None, first_serial=None, second_serial=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
