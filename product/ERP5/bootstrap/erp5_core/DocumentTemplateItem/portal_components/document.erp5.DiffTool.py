@@ -232,11 +232,14 @@ class PortalPatch:
     """
     if isinstance(obj, dict):
       obj_dict = obj.copy()
-      export = False
+      # Try to get the classname and module name from the dict
+      class_name = obj.get('portal_type', '')
+      module_name = obj.get('__module__', '')
     else:
       obj._p_activate()
       klass = obj.__class__
-      classname = klass.__name__
+      class_name = klass.__name__
+      module_name = klass.__module__
       obj_dict = obj.showDict().copy()
 
     attribute_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
@@ -244,7 +247,7 @@ class PortalPatch:
                      '__ac_local_roles__', '__ac_local_roles_group_id_dict__',
                      'workflow_history', 'subject_set_uid_dict', 'security_uid_dict',
                      'filter_dict', '_max_uid', 'isIndexable', 'id', 'modification_date',
-                     'data'}
+                     'data', 'base_data'}
 
     # Update the list of properties which were explicitly given in parameters
     if property_list:
@@ -264,13 +267,13 @@ class PortalPatch:
         attribute_set.update(('func_code', 'func_defaults', '_code',
                          '_lazy_compilation', 'Python_magic', 'errors',
                          'warnings', '_proxy_roles'))
-      elif classname in ('File', 'Image'):
+      elif class_name in ('File', 'Image'):
         attribute_set.update(('_EtagSupport__etag', 'size'))
-      elif classname == 'SQL' and klass.__module__ == 'Products.ZSQLMethods.SQL':
+      elif class_name == 'SQL' and module_name == 'Products.ZSQLMethods.SQL':
         attribute_set.update(('_arg', 'template'))
       elif interfaces.IIdGenerator.providedBy(obj):
         attribute_set.update(('last_max_id_dict', 'last_id_dict'))
-      elif classname == 'Types Tool' and klass.__module__ == 'erp5.portal_type':
+      elif class_name == 'Types Tool' and module_name == 'erp5.portal_type':
         attribute_set.add('type_provider_list')
 
     for attribute in list(obj_dict.keys()):
