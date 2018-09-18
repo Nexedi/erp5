@@ -237,6 +237,9 @@ del alias, real
 orig_guarded_import = safe_builtins['__import__']
 def guarded_import(mname, globals=None, locals=None, fromlist=None,
     level=-1):
+  # needed for np.dtype(dict)
+  if mname == "numpy.core._internal" and fromlist == ["__doc__"]:
+    return __import__(mname, globals, locals, fromlist, level)
   for fromname in fromlist or ():
     if fromname[:1] == '_':
       raise Unauthorized(fromname)
