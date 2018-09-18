@@ -9,7 +9,6 @@
 <thead>
 <tr><td rowspan="1" colspan="3">Test History and edit_workflow</td></tr>
 </thead><tbody>
-
 <tr>
   <td>store</td>
   <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
@@ -35,7 +34,6 @@
   <td>Done.</td>
   <td></td>
 </tr>
-
 <tr>
   <td>open</td>
   <td>${base_url}/bar_module/FooModule_createObjects?portal_type=Bar&amp;num:int=1</td>
@@ -46,7 +44,6 @@
   <td>${base_url}/bar_module/0</td>
   <td></td>
 </tr>
-
 <tr>
   <td>type</td>
   <td>field_my_title</td>
@@ -87,7 +84,6 @@
   <td>//span[@class="listbox-current-page-total-number x0_listbox-current-page-total-number"]</td>
   <td>4 records</td> <!-- Creation + edited 3 times -->
 </tr>
-
 <!-- First modification -->
 <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
 <tr>
@@ -146,7 +142,6 @@
 </tr>
 </tal:block>
 <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
-
 </tal:block>
 <!-- Second modification -->
 <tr>
@@ -206,7 +201,6 @@
 </tr>
 </tal:block>
 <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
-
 </tal:block>
 <!-- Jump to old revision -->
 <tr>
@@ -225,7 +219,6 @@
   <td>Version 1</td>
 </tr>
 <!-- (subobjects are still the current version) -->
-
 <!-- Third modification -->
 <tr>
   <td>clickAndWait</td>
@@ -284,9 +277,7 @@
 </tr>
 </tal:block>
 <tal:block tal:condition="python: context.TestTool_getSkinName()=='Mobile'">
-
 </tal:block>
 </tbody></table>
 </body>
 </html>
-
