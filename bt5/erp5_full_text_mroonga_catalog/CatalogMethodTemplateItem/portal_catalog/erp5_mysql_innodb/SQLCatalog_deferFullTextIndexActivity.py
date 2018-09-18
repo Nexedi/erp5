@@ -6,9 +6,9 @@ method = context.z_catalog_fulltext_list
 property_list = method.arguments_src.split()
 parameter_dict = {x: [] for x in property_list}
 for group_object in object_list:
-  obj = group_object.object
   tmp_dict = {}
   try:
+    obj = group_object.object
     for property in property_list:
       getter = getattr(obj, property, None)
       if callable(getter):
