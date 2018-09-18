@@ -53,7 +53,7 @@ if next_serial:
   else:
     if not second_obj:
       second_obj = context
-    secon_obj = context.HistoricalRevisions[next_serial]
+    second_obj = context.HistoricalRevisions[next_serial]
 
 # Here if the datetime and the paths exist in params, we always give priority
 # to get the objects via these params.
