@@ -2846,30 +2846,31 @@ class Base( CopyContainer,
       self.activate(**activate_kw).immediateReindexObject(**kw)
 
   def _getReindexAndActivateParameterDict(self, kw, activate_kw):
-    if activate_kw is None:
-      activate_kw = ()
+    # Lowest activate_kw priority: default activate parameter dict
+    full_activate_kw = self.getDefaultActivateParameterDict()
     reindex_kw = self.getDefaultReindexParameterDict()
     if reindex_kw is not None:
       reindex_kw = reindex_kw.copy()
-      reindex_activate_kw = reindex_kw.pop('activate_kw', None) or {}
-      reindex_activate_kw.update(activate_kw)
+      # Next activate_kw priority: default reindex parameter dict's
+      # "activate_kw" entry, if any.
+      full_activate_kw.update(reindex_kw.pop('activate_kw', None) or ())
+      # kw is not expected to contain an "activate_kw" entry.
       reindex_kw.update(kw)
       kw = reindex_kw
-      activate_kw = reindex_activate_kw
-    else:
-      activate_kw = dict(activate_kw)
+    # And top activate_kw priority: the direct parameter.
+    full_activate_kw.update(activate_kw or ())
     group_id_list  = []
     if kw.get("group_id") not in ('', None):
       group_id_list.append(kw["group_id"])
     if kw.get("sql_catalog_id") not in ('', None):
       group_id_list.append(kw["sql_catalog_id"])
-    if activate_kw.get('group_id') not in ('', None):
-      group_id_list.append(activate_kw['group_id'])
-    activate_kw['group_id'] = ' '.join(group_id_list)
-    activate_kw['group_method_id'] = 'portal_catalog/catalogObjectList'
-    activate_kw['alternate_method_id'] = 'alternateReindexObject'
-    activate_kw['activity'] = 'SQLDict'
-    return kw, activate_kw
+    if full_activate_kw.get('group_id') not in ('', None):
+      group_id_list.append(full_activate_kw['group_id'])
+    full_activate_kw['group_id'] = ' '.join(group_id_list)
+    full_activate_kw['group_method_id'] = 'portal_catalog/catalogObjectList'
+    full_activate_kw['alternate_method_id'] = 'alternateReindexObject'
+    full_activate_kw['activity'] = 'SQLDict'
+    return kw, full_activate_kw
 
   security.declarePublic('recursiveReindexObject')
   recursiveReindexObject = reindexObject
