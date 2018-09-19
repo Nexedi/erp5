@@ -330,12 +330,12 @@
 
     <tr>
       <td>waitForElementPresent</td>
-      <td>//form[@class="dialog_form"]//div[@class="dialog_button_container"]//input[@name="action_confirm"]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//form//div[@class="dialog_button_container"]//input[@name="action_confirm"]</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//form[@class="dialog_form"]//div[@class="dialog_button_container"]//input[@name="action_confirm"]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//form//div[@class="dialog_button_container"]//input[@name="action_confirm"]</td>
       <td></td>
     </tr>
 
