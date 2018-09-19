@@ -94,7 +94,7 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
@@ -798,7 +798,7 @@
     </tr>
     <tr>
       <td>assertElementNotPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_sort_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_sort_editor.html')]//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
@@ -808,12 +808,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_sort_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_sort_editor.html')]//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_sort_editor.html')]//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_sort_editor.html')]//button[@class='plus ui-icon-plus ui-btn-icon-left']</td>
       <td></td>
     </tr>
     <tr>
@@ -851,7 +851,7 @@
     </tr>
     <tr>
       <td>click</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//button[@class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check"]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//button[@class="ui-btn-icon-left ui-icon-check"]</td>
       <td></td>
     </tr>
     <tr>
@@ -1037,12 +1037,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_editor_panel.html\')]//button[@class=\'trash ui-btn-c ui-override-theme ui-btn ui-icon-trash-o ui-btn-icon-left ui-corner-all\']'"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_editor_panel.html\')]//button[@class=\'trash ui-icon-trash-o ui-btn-icon-left\']'"></td>
       <td></td>
     </tr>
     <tr>
       <td>click</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_editor_panel.html\')]//button[@class=\'trash ui-btn-c ui-override-theme ui-btn ui-icon-trash-o ui-btn-icon-left ui-corner-all\']'"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_editor_panel.html\')]//button[@class=\'trash ui-icon-trash-o ui-btn-icon-left\']'"></td>
       <td></td>
     </tr>
     <tr>
