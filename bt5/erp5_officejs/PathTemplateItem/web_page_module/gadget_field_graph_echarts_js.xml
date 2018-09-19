@@ -228,7 +228,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -242,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.52409.12026.48179</string> </value>
+                <value> <string>970.25488.14039.8704</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,8 +260,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1504517195.47</float>
-                        <string>UTC</string>
+                        <float>1537442999.65</float>
+                        <string>GMT+9</string>
                       </tuple>
                     </state>
                   </object>
