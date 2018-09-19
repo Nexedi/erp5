@@ -111,7 +111,7 @@
 <!-- Only one item is displayed -->
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@class='filter_item_container ui-controlgroup ui-corner_all']/div[2]</td>
+  <td>//div[@class='filter_item_container']/div[2]</td>
   <td></td>
 </tr>
 
