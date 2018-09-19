@@ -78,17 +78,17 @@
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[2]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[1]</td>
   <td>title</td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[3]/div[@data-gadget-sandbox="public"]</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[2]/div[@data-gadget-sandbox="public"]</td>
   <td></td>
 </tr>
 <tr>
   <td>storeEval</td>
-  <td>document.querySelector('#selenium_myiframe').contentWindow.document.evaluate("//tr[@class='listbox-data-line-1 DataB']/td[3]/div[@data-gadget-sandbox='public']", document.querySelector('#selenium_myiframe').contentWindow.document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-gadget-value');</td>
+  <td>document.querySelector('#selenium_myiframe').contentWindow.document.evaluate("//tr[@class='listbox-data-line-1 DataB']/td[2]/div[@data-gadget-sandbox='public']", document.querySelector('#selenium_myiframe').contentWindow.document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-gadget-value');</td>
   <td>_data_gadget_value</td>
 </tr>
 <tr>
