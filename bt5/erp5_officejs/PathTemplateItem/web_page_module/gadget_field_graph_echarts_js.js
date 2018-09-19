@@ -191,6 +191,9 @@
         return gadget.chartItemClick([params.name, params.seriesName])
           .push(undefined, defer.reject);
       });
+      gadget.element
+        .querySelector(".graph-content")
+        .removeAttribute("disabled");
       return defer.promise;
     });
 }(window, rJS, RSVP, echarts, loopEventListener));
