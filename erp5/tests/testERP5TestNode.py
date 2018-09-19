@@ -1,4 +1,5 @@
 import unittest
+import mock
 from unittest import TestCase
 from contextlib import contextmanager
 
@@ -1138,3 +1139,36 @@ shared = true
     RunnerClass.updateDictionaryFile = original_updateDictionaryFile
     RunnerClass._createInstance = original__createInstance
     RunnerClass._waitInstanceCreation = original__waitInstanceCreation
+
+  def test_cleanup_supervisord_from_previous_run(self):
+    test_node = self.getTestNode()
+    runner = test_type_registry['UnitTest'](test_node)
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    # XXX this have to be cleaned up
+    host, port = '127.0.0.1', 1234 # XXX
+    test_node.config['ipv4_address'] = host
+    test_node.config['ipv6_address'] = '::1' # TODO
+    test_node.config['proxy_host'] = host
+    test_node.config['proxy_port'] = port
+    test_node.config['master_url'] = "http://{proxy_host}:{proxy_port}".format(**test_node.config)
+    test_node.config['slapos_binary'] = '/usr/bin/slapos' # XXX must be in path (and not be the slaprunner wrapper !)
+    test_node.config['partition_reference'] = self.id()
+    test_node.config['environment'] = os.environ
+    test_node.config["software_list"] = []
+    
+    self.addCleanup(test_node.process_manager.killPreviousRun)
+
+    with mock.patch(
+          'erp5.util.testnode.UnitTestRunner.SlapOSControler.runSoftwareRelease',
+          return_value={'status_code': 0}):
+
+      # start slapos node's supervisord
+      runner.prepareSlapOSForTestSuite(node_test_suite)
+
+      # Here we are in a state where supervisor is started, maybe by human
+      # logged in on test node, maybe an unexpected error in previous run.
+
+      # preparing slapos again should report this as an error and refuse starting.
+      # XXX or maybe just terminate the previous supervisor and start ?
+      with self.assertRaisesRegexp(RuntimeError, 'Supervisord is already running'):
+        runner.prepareSlapOSForTestSuite(node_test_suite)

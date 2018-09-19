@@ -81,6 +81,7 @@ setup(name=name,
       test_suite='erp5.tests',
       tests_require=[
         'slapos.core',
+        'mock',
         'xml_marshaller',
         'psutil >= 0.5.0',
       ],

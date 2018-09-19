@@ -1,6 +1,8 @@
 import os
 import stat
 import shutil
+import psutil
+import logging
 
 def rmtree(path):
   """Delete a path recursively.
@@ -30,6 +32,19 @@ def createFolder(folder, clean=False):
   if os.path.exists(folder):
     if not clean:
       return
+    # before removing, check that we don't have a supervisord left here,
+    # and refuse to erase this directory in that case.
+    supervisord_pid_file = os.path.join(folder, 'var/run/supervisord.pid')
+    if os.path.exists(supervisord_pid_file):
+      with open(supervisord_pid_file, 'r') as f:
+        pid = int(f.read().strip())
+        supervisord = psutil.Process(pid)
+        if supervisord.cmdline()[-1].endswith("supervisor.supervisord.main()"):
+          logger = logging.getLogger()
+          logger.error("Supervisord is already running in this directory ( pid: %s )", pid)
+          # XXX terminate ?
+          # supervisord.terminate()
+          raise RuntimeError("Supervisord is already running")
     rmtree(folder)
   os.mkdir(folder)
 
