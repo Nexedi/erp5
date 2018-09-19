@@ -112,7 +112,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# v1.1.0\n
+# v1.1.1\n
 CACHE:\n
 gadget_field_graph_echarts.html/echarts-all.js\n
 gadget_field_graph_echarts.html/gadget_global.js\n
@@ -279,8 +279,8 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1506590312.39</float>
-                        <string>UTC</string>
+                        <float>1538646068.83</float>
+                        <string>GMT+9</string>
                       </tuple>
                     </state>
                   </object>

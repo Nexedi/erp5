@@ -31,12 +31,12 @@
       title = layout.title;
 
       // title
-      // The position of the title in plotly was fixed, like the "x:center" in echarts. 
+      // The position of the title in plotly was fixed, like the "x:center" in echarts.
       // For now, every graph have to provide a title.
       if (title === undefined) {
         throw new Error("No title provided", data);
       }
-      graph_data_and_parameter.title = {text: title, x: "center"};
+      graph_data_and_parameter.title = { text: title, x: "center" };
 
       // tooltip
       // ECharts have to enable the tooltip manually.
@@ -56,10 +56,13 @@
 
       for (i = 0; i < data.length; i = i + 1) {
         trace = data[i];
-        trace_type = trace.type || 'bar';
+        trace_type = trace.type || "bar";
         type_list.push(trace_type);
         trace_value_dict = trace.value_dict || {};
-        if (trace_value_dict[0] === undefined || trace_value_dict[1] === undefined) {
+        if (
+          trace_value_dict[0] === undefined ||
+            trace_value_dict[1] === undefined
+        ) {
           throw new Error("Unexpected data for ECharts", data);
         }
 
@@ -69,16 +72,16 @@
 
         // If the graph type is pie, set the pie radius
         // plotly doesn't have this option.
-        if (trace_type === 'pie') {
-          dataset.radius = '55%';
-          dataset.center = ['50%', '60%'];
+        if (trace_type === "pie") {
+          dataset.radius = "55%";
+          dataset.center = ["50%", "60%"];
         }
 
         // For pie graph, the legend labels come from each item's title(aka trace.title)
         // For graph which contains the axis, the legend labels come from the item's value_dict[0].
         // See the trace_value_dict in below. But the duplicated value_dict[0] seems for 2D graph
         // seems is redandunt.
-        if (trace.type !== 'pie') {
+        if (trace.type !== "pie") {
           graph_data_and_parameter.legend.data.push(dataset.name);
         }
 
@@ -91,21 +94,21 @@
 
         // Value
         for (j = 0; j < trace_value_dict[1].length; j = j + 1) {
-          dataset.data.push(
-            {
-              value: trace_value_dict[1][j],
-              name: label_list[j],
-              itemStyle: null
-            }
-          );
+          dataset.data.push({
+            value: trace_value_dict[1][j],
+            name: label_list[j],
+            itemStyle: null
+          });
           // Handle the colors in different ways. Maybe enhanced latter
           if (trace.colors) {
             // In the pie graph, set the color each individual "data" item.
-            if (trace.type === 'pie') {
-              dataset.data[j].itemStyle = {normal: {color: trace.colors[j]}};
+            if (trace.type === "pie") {
+              dataset.data[j].itemStyle = {
+                normal: { color: trace.colors[j] }
+              };
             } else {
               // In other types of graph, set the color for each group.
-              dataset.itemStyle = {normal: {color: trace.colors[0]}};
+              dataset.itemStyle = { normal: { color: trace.colors[0] } };
             }
           }
         }
@@ -113,15 +116,21 @@
       }
 
       // For the pie graph, the legend label is the value_dict[0]
-      if (trace.type === 'pie') {
+      if (trace.type === "pie") {
         graph_data_and_parameter.legend.data = label_list;
       }
 
       // Axis
-      if (trace.type !== 'pie') {
-        // if not value type provided, set it as "value". 
-        graph_data_and_parameter.yAxis.push({type: 'value', name: layout.axis_dict[1].title});
-        graph_data_and_parameter.xAxis.push({data: label_list,  name: layout.axis_dict[0].title});
+      if (trace.type !== "pie") {
+        // if not value type provided, set it as "value".
+        graph_data_and_parameter.yAxis.push({
+          type: "value",
+          name: layout.axis_dict[1].title
+        });
+        graph_data_and_parameter.xAxis.push({
+          data: label_list,
+          name: layout.axis_dict[0].title
+        });
       } else {
         graph_data_and_parameter.xAxis = null;
         graph_data_and_parameter.yAxis = null;
@@ -140,9 +149,6 @@
     /////////////////////////////////////////////////////////////////
     // ready
     /////////////////////////////////////////////////////////////////
-    .ready(function (gadget) {
-      gadget.property_dict = {};
-    })
 
     /////////////////////////////////////////////////////////////////
     // published methods
@@ -155,42 +161,69 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('render', function (option_dict) {
+    .declareMethod("render", function (option_dict) {
       var gadget = this;
       //delegate rendering to onStateChange to avoid redrawing the graph
       //every time render is called (a form might call render every time
       //some other fields needs update)
-      gadget.changeState({value: option_dict.value});
+      gadget.changeState({ value: option_dict.value });
     })
     .onStateChange(function (modification_dict) {
       var gadget = this,
-        container,
         graph_data_and_parameter,
         chart;
+      // the gadget is ready when both the graph is rendered and the click handler is attached.
+      if (
+        modification_dict.hasOwnProperty("clickHandlerReady") ||
+          modification_dict.hasOwnProperty("chartRendered")
+      ) {
+        if (gadget.state.clickHandlerReady && gadget.state.chartRendered) {
+          gadget.element.querySelector(".graph-content").removeAttribute("disabled");
+        } else {
+          gadget.element.querySelector(".graph-content").setAttribute("disabled");
+        }
+      }
+      if (modification_dict.hasOwnProperty("value")) {
+        chart = echarts.getInstanceByDom(
+          gadget.element.querySelector(".graph-content")
+        );
+        graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(
+          modification_dict.value
+        );
+        chart.on("finished", function onFinished() {
+          gadget.changeState({ chartRendered: true });
+          chart.off("finish", onFinished);
+        });
+        chart.setOption(graph_data_and_parameter);
+        gadget.changeState({ chartRendered: false });
 
-      container = gadget.element.querySelector(".graph-content");
-      chart = echarts.init(container);
-      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(modification_dict.value);
-      chart.setOption(graph_data_and_parameter);
-
-      this.listenToClickEventOnTheChart(chart);
-
-      gadget.property_dict.chart = chart;
+        this.listenToClickEventOnTheChart(chart);
+      }
     })
     .declareService(function () {
-      var gadget = this;
-      return loopEventListener(window, "resize", {passive: true}, function () {
-        gadget.property_dict.chart.resize();
-      }, false);
+      var gadget = this,
+        chart = echarts.init(gadget.element.querySelector(".graph-content"));
+      return loopEventListener(
+        window,
+        "resize",
+        { passive: true },
+        function () {
+          chart.resize();
+        },
+        false
+      );
     })
-    .declareJob('listenToClickEventOnTheChart', function (chart) {
+
+    .declareJob("listenToClickEventOnTheChart", function (chart) {
       var gadget = this,
         defer = RSVP.defer();
       // XXX https://lab.nexedi.com/nexedi/renderjs/blob/master/renderjs.js#L25
-      chart.on('click', function (params) {
-        return gadget.chartItemClick([params.name, params.seriesName])
+      chart.on("click", function (params) {
+        return gadget
+          .chartItemClick([params.name, params.seriesName])
           .push(undefined, defer.reject);
       });
+      gadget.changeState({ clickHandlerReady: true });
       return defer.promise;
     });
 }(window, rJS, RSVP, echarts, loopEventListener));
