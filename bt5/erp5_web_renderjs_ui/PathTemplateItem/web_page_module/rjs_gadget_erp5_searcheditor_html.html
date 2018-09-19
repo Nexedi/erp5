@@ -30,7 +30,7 @@
     <script id="filter-item-template" type="text/x-handlebars-template">
       <button class="ui-icon ui-icon-minus"></button>
       <div class="filter_item" >
-        <select>
+        <select class="column">
           {{#each option}}
             <option {{#if selected}}selected="selected"{{/if}} data-i18n="{{text}}" value="{{value}}">{{text}}</option>
           {{/each}}
