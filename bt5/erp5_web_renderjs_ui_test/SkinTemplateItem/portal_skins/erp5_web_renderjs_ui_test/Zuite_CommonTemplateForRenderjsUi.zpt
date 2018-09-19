@@ -360,12 +360,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//nav//span[@class=\'ui-disabled ui-right\' and text()=\'%(footer)s\']' % pagination_configuration"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//nav//span[@class=\'ui-disabled\' and text()=\'%(footer)s\']' % pagination_configuration"></td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//nav//span[@class=\'ui-disabled ui-right\' and text()=\'%(footer)s\']' % pagination_configuration"></td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//nav//span[@class=\'ui-disabled\' and text()=\'%(footer)s\']' % pagination_configuration"></td>
       <td></td>
     </tr>
     <tr>
