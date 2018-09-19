@@ -81,7 +81,7 @@ def getGoogleUserEntry(token):
         ('last_name', 'family_name'),
         ('email', 'email'),
         ('reference', 'email'),):
-      value = google_entry[k[1]].encode('utf-8')
+      value = google_entry.get(k[1], '').encode('utf-8')
       user_entry[k[0]] = value
   return user_entry
 
