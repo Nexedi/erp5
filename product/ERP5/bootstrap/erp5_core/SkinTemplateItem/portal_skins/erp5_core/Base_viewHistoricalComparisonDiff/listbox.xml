@@ -10,7 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
+                <string>selection_name</string>
               </list>
             </value>
         </item>
@@ -72,8 +72,8 @@
                     <value> <string>ERP5Site_viewDiffTwoObjectDialog</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Differences</string> </value>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
                 </item>
               </dictionary>
             </value>

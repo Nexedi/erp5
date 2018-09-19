@@ -68,7 +68,7 @@ if (first_obj is not None and (first_obj == second_obj)):
     first_obj = first_obj.Base_getRevisionFromDate(first_obj, revision_date_list[1])
     second_obj = second_obj.Base_getRevisionFromDate(second_obj, revision_date_list[0])
 
-# Case II: Get object revision from the date of the revisions.
+# Get object revision from the date of the revisions.
 # The default dates for revision are the 1st and 2nd
 # revision dates.
 if first_date not in (None, ''):
@@ -76,14 +76,14 @@ if first_date not in (None, ''):
 if second_date not in (None, ''):
   second_obj = context.Base_getRevisionFromDate(second_obj, second_date)
 
-# Case I: When we try to access the dialog directly from `portal_diff` or from
+# When we try to access the dialog directly from `portal_diff` or from
 # selections in a module. If the paths are None, then return an empty list
 # or try to get the paths from selection and then return the diff.
 if ((first_path is None and second_path is None) and
     (first_obj is None and second_obj is None)):
-  # XXX: Make sure to always check if the first_obj and second_obj is empty, because this script
-  # is more generic(except this case), so there maybe cases where some other
-  # list selection might be present for it
+  # Make sure to always check if the first_obj and second_obj is empty, because this script
+  # is used outside of Diff Tool also, where we might have list_selection_name which will
+  # end up getting useless selection.
   list_selection_name = request.get('list_selection_name', None)
   # In case the list_selection_name is there, it can be the case of selection
   # from the module, hence we get the paths from the selection and use them to
@@ -98,7 +98,6 @@ if ((first_path is None and second_path is None) and
 # These 2 objects can be revisions of same object, 2 different revisions of
 # different objects or 2 current ERP5 object.
 if first_obj and second_obj:
-  # Using this last 2 Historical revision dicts, create a Diff
   diff_list = portal_diff.diffPortalObject(first_obj, second_obj).asBeautifiedJSONDiff()
   # Return a list of TempBase objects which can be displayed in a listbox
   uid = 1
