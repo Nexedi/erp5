@@ -61,17 +61,17 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']//select</td>
+  <td>//div[@class='sort_item_container']//select</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyValue</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
+  <td>//div[@class='sort_item_container']/div[1]//select[1]</td>
   <td>modification_date</td>
 </tr>
 <tr>
   <td>verifyValue</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
+  <td>//div[@class='sort_item_container']/div[1]//select[2]</td>
   <td>descending</td>
 </tr>
 
