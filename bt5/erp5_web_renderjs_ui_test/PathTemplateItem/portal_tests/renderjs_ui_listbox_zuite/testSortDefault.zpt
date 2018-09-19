@@ -49,7 +49,7 @@ Frontend should not suppose default sorting
 <!-- Make sure broken definitions don't appear in sort editor -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_sort_editor.html']//button[@class="plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all"]</td><td></td></tr>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_sort_editor.html']//button[@class="plus ui-icon-plus ui-btn-icon-left"]</td><td></td></tr>
 <tr><td>verifyElementNotPresent</td>
     <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_sort_editor.html']//select</td><td></td></tr>
 
@@ -70,12 +70,12 @@ Frontend should not suppose default sorting
 <!-- Verify that the default sort is visible in Sort Editor -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr><td>waitForElementPresent</td>
-    <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]</td><td></td></tr>
+    <td>//div[@class='sort_item_container']/div[1]</td><td></td></tr>
 <tr><td>verifyValue</td>
-    <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
+    <td>//div[@class='sort_item_container']/div[1]//select[1]</td>
     <td>id</td></tr>
 <tr><td>verifyValue</td>
-    <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
+    <td>//div[@class='sort_item_container']/div[1]//select[2]</td>
     <td>ascending</td></tr>
 
 <!-- Let's set up the default sort correctly: title | DESC -->
@@ -98,20 +98,20 @@ Frontend should not suppose default sorting
 <!-- Verify that the default sort is visible in Sort Editor -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr><td>waitForElementPresent</td>
-    <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]</td><td></td></tr>
+    <td>//div[@class='sort_item_container']/div[1]</td><td></td></tr>
 <tr><td>verifyValue</td>
-    <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
+    <td>//div[@class='sort_item_container']/div[1]//select[1]</td>
     <td>title</td></tr>
 <tr><td>verifyValue</td>
-    <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
+    <td>//div[@class='sort_item_container']/div[1]//select[2]</td>
     <td>descending</td></tr>
 
 <!-- Change sort using the Sort Editor  -->
 <tr><td>select</td>
-    <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
+    <td>//div[@class='sort_item_container']/div[1]//select[1]</td>
     <td>index=0</td><!-- select ID --></tr>
 <tr><td>click</td>
-    <td>//button[@class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check"]</td><td></td></tr>
+    <td>//button[@class="ui-btn-icon-left ui-icon-check"]</td><td></td></tr>
 
 <!-- Wait for the Filters to be applied -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
