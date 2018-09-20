@@ -66,9 +66,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>classification/collaborative/team</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -111,7 +109,7 @@
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value> <string>4.1.0</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -224,7 +222,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -238,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.1917.49098.19712</string> </value>
+                <value> <string>970.25572.29237.55057</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,8 +254,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1504260717.22</float>
-                        <string>UTC</string>
+                        <float>1537448123.64</float>
+                        <string>GMT+9</string>
                       </tuple>
                     </state>
                   </object>
