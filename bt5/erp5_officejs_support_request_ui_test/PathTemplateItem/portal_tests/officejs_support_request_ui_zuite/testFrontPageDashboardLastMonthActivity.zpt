@@ -1,0 +1,162 @@
+<html>
+  <head>
+    <title tal:content="template/title"></title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  </head>
+  <body>
+  <table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td colspan="3" tal:content="template/title"></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/cleanup_module" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/create_data" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr><td>open</td>
+    <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td><td></td></tr>
+
+<!-- reset filter is disabled -->
+<tr><td>waitForElementPresent</td>
+    <td>//input[@data-i18n="[value]Reset Filter" and @disabled]</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>css=#wrap2 iframe</td><td></td></tr>
+<tr><td>selectFrame</td>
+    <td>css=#wrap2 iframe</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//canvas</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>xpath=/html/body[not(@disabled)]</td><td></td></tr>
+
+<tr><td>storeEval</td>
+    <td>selenium.browserbot.getCurrentWindow().echarts.getInstanceByDom(
+        selenium.browserbot.findElement("css=.graph-content"))</td>
+    <td>graph_instance</td></tr>
+
+<tr><td>assertEval</td>
+    <td>(function(){
+    var series = storedVars['graph_instance'].getOption()['series'],
+        title = storedVars['graph_instance'].getOption()['title'][0].text;
+
+    function assertEqual(a, b) {
+      if (!(a == b)) {
+        throw new Error(`${a} != ${b}`)
+      }
+    }
+    assertEqual(title, "Last Month Activity")
+    assertEqual(series.length, 1);
+    assertEqual(series[0]["type"], "pie");
+
+    assertEqual(series[0]["name"], "Support Request");
+    assertEqual(
+      JSON.stringify(series[0]["data"].map(e => {return {name: e.name, value: e.value}; })),
+      JSON.stringify([
+       {name: "Opened", value: 3},
+       {name: "Submitted", value: 2},
+       {name: "Suspended", value: 0},
+       {name: "Closed", value: 0}]))
+
+    return "ok";
+    })()</td>
+  <td>ok</td></tr>
+
+
+<tr><td colspan="3"><b>Clicking on a serie filter the listbox of recent updates</b></td></tr>
+
+<!--
+
+In the last month, we have 4 Opened and 3 Submitted. The pie shows submitted on the right
+and opened on the left.
+
+    0                  x                    100%
+  0 --------------------------------------- ... >
+   |            Last Month Activity
+   |      [  ] Opened [ ] Submitted ....
+   |
+   |                   _____
+   |      Submitted .-'  |  '-.
+   |          \   .'     |     '.
+ y |           \ /       |       \
+   |            ;\    X  |        ;
+   |            |  \     /     ---|---- Opened
+   |            ;       /         ;
+   |             \    /          /
+   |              './          .'
+   |                '-._____.-'
+   .
+   .
+   V 100%
+
+We click in the `Submitted` zone, where's there's a X in this ascii art.
+
+debugging tips:
+
+selenium.browserbot.findElement('//canvas').addEventListener(
+    'click',
+    function(e) {
+        canvasSize = {
+            x: selenium.browserbot.findElement('//canvas').clientWidth,
+            y: selenium.browserbot.findElement('//canvas').clientHeight }
+        console.log(
+            `${e.clientX} x ${e.clientY}\n${(e.clientX /  canvasSize.x * 100).toFixed(2)}% ${(e.clientY / canvasSize.y * 100).toFixed(2)}%`
+        )
+    })
+
+or use conditional breakpoint on "clientToLocal" from echarts-all.js :
+
+(e.type == "click" || e.type == "mousedown") && console.log(e.type +" at", e.clientX, e.clientY, (e.clientX / document.querySelector('canvas').clientWidth * 100).toFixed(2), (e.clientY / document.querySelector('canvas').clientHeight * 100).toFixed(2))
+and compare real click with simulated clicks.
+-->
+<tr><td>storeEval</td>
+    <!-- 49% of the horizontal axis -->
+    <td>Math.floor(selenium.browserbot.findElement('//canvas').clientWidth * 0.49)</td>
+    <td>x</td></tr>
+<tr><td>storeEval</td>
+    <!-- 40% of of vertical axis -->
+    <td>Math.floor(selenium.browserbot.findElement('//canvas').clientHeight * 0.4)</td>
+    <td>y</td></tr>
+<tr><td>assertEval</td>
+    <!-- echarts ignore the click without a mousedown on the element before -->
+    <td>selenium.browserbot.findElement("//canvas/..").dispatchEvent(
+        new MouseEvent("mousedown", {
+            clientX: storedVars.x,
+            clientY: storedVars.y,
+        }))</td>
+    <td>true</td></tr>
+<tr><td>assertEval</td>
+    <td>selenium.browserbot.findElement("//canvas/..").dispatchEvent(
+        new MouseEvent("click", {
+            clientX: storedVars.x,
+            clientY: storedVars.y,
+        }))</td>
+    <td>true</td></tr>
+<!-- XXX shouldn't selenium "clickAt" do this ?
+<tr><td>clickAt</td>
+    <td>//canvas/..</td>
+    <td>${x},${y}</td></tr> -->
+
+<tr><td colspan="3"><b>Recent updates listbox is updated with the clicked series.</b></td>
+
+<tr><td>selectFrame</td>
+    <td>relative=top</td><td></td></tr>
+<tr><td>waitForText</td>
+    <td>//h1[@data-i18n="Recent Updates"]</td>
+    <td>Recent Updates (3)</td></tr> <!-- FIXME: this should be 2 here. 123dsfa	is not "last month" -->
+<tr><td>waitForText</td>
+    <td>//h1[@data-i18n="Recent Updates"]/../..//td[1]/a</td>
+    <td>Two Weeks ago - PlaneMaking - Submitted</td></tr>
+
+<!-- reset filter is now enabled -->
+<tr><td>waitForElementPresent</td>
+    <td>//input[@data-i18n="[value]Reset Filter" and not(@disabled)]</td><td></td></tr>
+
+<tr><td>click</td>
+    <td>//input[@data-i18n="[value]Reset Filter"]</td><td></td></tr>
+<tr><td>waitForText</td>
+    <td>//h1[@data-i18n="Recent Updates"]</td>
+    <td>glob:Recent Updates (1 - 5 / *)</td></tr>
+
+</tbody></table>
+  </body>
+</html>

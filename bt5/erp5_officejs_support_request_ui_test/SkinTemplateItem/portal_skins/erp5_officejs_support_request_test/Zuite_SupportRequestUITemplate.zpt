@@ -7,6 +7,12 @@
   <tr><td>assertTextPresent</td>
       <td>Done.</td><td></td></tr>
 </tal:block>
+
+<tal:block metal:define-macro="create_data">
+  <tr><td>openAndWait</td>
+      <td>${base_url}/ERP5Site_createSupportRequestUITestDataSet</td><td></td></tr>
+  <tr><td>assertTextPresent</td>
+      <td>Done.</td><td></td></tr>
 </tal:block>
 
 </tal:block>
