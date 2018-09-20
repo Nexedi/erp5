@@ -48,6 +48,11 @@ class OOoEscaper:
       line_break = SubElement(self.parent_node, '{%s}%s' % (TEXT_URI, 'tab'))
       line_break.tail = match_object.group(2)
 
+def convertToString(value):
+  if not isinstance(value, (str, unicode)):
+    return str(value)
+  return value
+
 class Widget:
   """A field widget that knows how to display itself as HTML.
   """
@@ -702,7 +707,7 @@ class LinesTextAreaWidget(TextAreaWidget):
     """
     if isinstance(value, (str, unicode)):
       value = [value]
-    value = string.join(value, "\n")
+    value = string.join(map(convertToString, value), "\n")
     return TextAreaWidget.render(self, field, key, value, REQUEST)
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
@@ -712,7 +717,7 @@ class LinesTextAreaWidget(TextAreaWidget):
       value = value.split('\n')
     line_separator = field.get_value('view_separator')
 
-    value_list = [escape(part).replace('\n', line_separator) for part in value]
+    value_list = [escape(convertToString(part)).replace('\n', line_separator) for part in value]
     value = line_separator.join(value_list)
     return render_element("div",
                           css_class=field.get_value('css_class'),
@@ -726,7 +731,7 @@ class LinesTextAreaWidget(TextAreaWidget):
       value = ['']
     elif isinstance(value, (str, unicode)):
       value = [value]
-    value = '\n'.join(value)
+    value = '\n'.join(map(convertToString, value))
     return TextAreaWidget.render_odt_view(self, field, value, as_string,
                                      ooo_builder, REQUEST, render_prefix,
                                      attr_dict, local_name)
