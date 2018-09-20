@@ -71,6 +71,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>group/template_test_group</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>corporate_name</string> </key>
             <value> <string>Test Organisation</string> </value>
         </item>
