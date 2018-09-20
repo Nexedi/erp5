@@ -8,21 +8,19 @@
   var MAIN_SCOPE = "m";
 
   function renderMainGadget(gadget, url, options) {
+    var page_gadget;
     return gadget.declareGadget(url, {
       scope: MAIN_SCOPE
     })
-      .push(function (page_gadget) {
+      .push(function (result) {
+        page_gadget = result;
         gadget.props.m_options_string = JSON.stringify(options);
-        if (page_gadget.render === undefined) {
-          return [page_gadget];
+        if (page_gadget.render !== undefined) {
+          return page_gadget.render(options);
         }
-        return RSVP.all([
-          page_gadget,
-          page_gadget.render(options)
-        ]);
       })
-      .push(function (all_result) {
-        return all_result[0];
+      .push(function () {
+        return page_gadget;
       });
   }
 
@@ -67,42 +65,34 @@
   }
 
   function increaseLoadingCounter(gadget) {
-    return new RSVP.Queue()
-      .push(function () {
-        gadget.props.loading_counter += 1;
-        if (gadget.props.loading_counter === 1) {
-          return gadget.getDeclaredGadget("header")
-            .push(function (header_gadget) {
-              return header_gadget.notifyLoading();
-            });
-        }
-      });
+    gadget.props.loading_counter += 1;
+    if (gadget.props.loading_counter === 1) {
+      return gadget.getDeclaredGadget("header")
+        .push(function (header_gadget) {
+          return header_gadget.notifyLoading();
+        });
+    }
+    return new RSVP.Queue();
   }
 
   function decreaseLoadingCounter(gadget) {
-    return new RSVP.Queue()
-      .push(function () {
-        gadget.props.loading_counter -= 1;
-        if (gadget.props.loading_counter < 0) {
-          gadget.props.loading_counter = 0;
-          // throw new Error("Unexpected negative loading counter");
-        }
-        if (gadget.props.loading_counter === 0) {
-          return gadget.getDeclaredGadget("header")
-            .push(function (header_gadget) {
-              return header_gadget.notifyLoaded();
-            });
-        }
-      });
+    gadget.props.loading_counter -= 1;
+    if (gadget.props.loading_counter < 0) {
+      gadget.props.loading_counter = 0;
+      // throw new Error("Unexpected negative loading counter");
+    }
+    if (gadget.props.loading_counter === 0) {
+      return gadget.getDeclaredGadget("header")
+        .push(function (header_gadget) {
+          return header_gadget.notifyLoaded();
+        });
+    }
+    return new RSVP.Queue();
   }
 
   function callJioGadget(gadget, method, param_list) {
-    var called = false;
-    return new RSVP.Queue()
-      .push(function () {
-        called = true;
-        return increaseLoadingCounter(gadget);
-      })
+    var called = true;
+    return increaseLoadingCounter(gadget)
       .push(function () {
         return gadget.getDeclaredGadget("jio_gadget");
       })
@@ -577,14 +567,11 @@
       }
 
       if (modification_dict.hasOwnProperty('url')) {
-        return new RSVP.Queue()
-          .push(function () {
-            return renderMainGadget(
-              gadget,
-              route_result.url,
-              route_result.options
-            );
-          })
+        return renderMainGadget(
+          gadget,
+          route_result.url,
+          route_result.options
+        )
           .push(function (main_gadget) {
             // Append loaded gadget in the page
             if (main_gadget !== undefined) {
@@ -637,10 +624,7 @@
       // (ERP5 title by default + sidebar)
       initHeaderOptions(gadget);
       initPanelOptions(gadget);
-      return new RSVP.Queue()
-        .push(function () {
-          return increaseLoadingCounter(gadget);
-        })
+      return increaseLoadingCounter(gadget)
         .push(function () {
           var promise_list = [
             route(gadget, 'panel', 'close'),
