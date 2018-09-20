@@ -87,6 +87,7 @@ from Products.ERP5Type.patches import ZopePageTemplate
 from Products.ERP5Type.patches import ZSQLMethod
 from Products.ERP5Type.patches import MimetypesRegistry
 from Products.ERP5Type.patches import users
+from Products.ERP5Type.patches import VirtualHostMonster
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
