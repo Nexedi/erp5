@@ -50,7 +50,7 @@ if validation_freebie is None:
 
   # flag broken link until further notice
   if img_obj is None:
-    raise NotFound('The following image could not be found in erp5: %s' % (img_src.split("?")[0]))
+    raise NotFound('The following image could not be found in erp5 OR is not following guidelines for links (eg no ./ prefix): %s' % (img_src.split("?")[0]))
 
   img_type = img_obj.getContentType()
 

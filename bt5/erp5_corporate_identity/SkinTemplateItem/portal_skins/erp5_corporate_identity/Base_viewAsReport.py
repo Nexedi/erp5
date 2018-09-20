@@ -80,7 +80,7 @@ doc_embed = doc_format == 'html' and (doc_display_embedded or doc_display_sandbo
 
 # -------------------------- Document Parameters  ------------------------------
 doc_localiser = doc.getPortalObject().Localizer
-doc_rendering_fix = doc.Base_getTemplateParameter('wkhtmltopdf_rendering_fix') or blank
+doc_rendering_fix = doc.WebPage_getPdfOutputRenderingFix() or blank
 doc_report = getattr(doc, doc_report_name)
 doc_aggregate_list = []
 doc_revision = "1"

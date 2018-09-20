@@ -28,8 +28,7 @@ theme_logo_dict = {}
 theme_reference = None
 theme = (
   context.Base_getTemplateProxyParameter(parameter="theme", source_data=None) or
-  context.Base_getTemplateParameter("theme") or
-  context.Base_getTemplateParameter("default_company_title")
+  context.Base_getTemplateParameter("default_theme")
 )
 if theme is not None:
   theme = theme.lower()
@@ -39,8 +38,6 @@ if theme is not None:
     theme_logo_list = context.Base_getTemplateProxyParameter(parameter="logo", source_data=theme_reference) or []
     if len(theme_logo_list) > 0:
       theme_logo_dict = theme_logo_list[0]
-if theme is None:
-  theme = "default"
 
 theme_dict = {}
 theme_dict["theme"] = theme
