@@ -571,8 +571,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     causality_dict = {}
     current = self.getParentValue().getParentValue()
     while current.getPortalType() == "Simulation Movement":
-      causality_dict[current.getCausality(portal_type='Business Link')] = \
-        current
+      for causality in current.getCausalityList(portal_type='Business Link'):
+        causality_dict[causality] = current
       current = current.getParentValue().getParentValue()
 
     remaining_path_set = set()
