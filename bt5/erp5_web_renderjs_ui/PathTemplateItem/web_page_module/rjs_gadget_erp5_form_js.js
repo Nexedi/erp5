@@ -21,7 +21,8 @@
   function addField(field, rendered_document, form_definition, form_gadget, group_name, modification_dict) {
     var field_name = field[0],
       field_element,
-      suboptions;
+      suboptions,
+      queue;
 
     if (!rendered_document.hasOwnProperty(field_name)) {
       return;
@@ -45,18 +46,17 @@
     }
 
     field_element = document.createElement("div");
-    return new RSVP.Queue()
-      .push(function () {
-        var rendered_field_name = rendered_document[field_name].key;
-        if (modification_dict.hasOwnProperty('hash')) {
-          return form_gadget.declareGadget('gadget_erp5_label_field.html', {
-            scope: rendered_field_name, // ugly! Should be just `field_name` but too many tests depend on it
-            element: field_element,
-            sandbox: "public"
-          });
-        }
-        return form_gadget.getDeclaredGadget(rendered_field_name);
-      })
+
+    if (modification_dict.hasOwnProperty('hash')) {
+      queue = form_gadget.declareGadget('gadget_erp5_label_field.html', {
+        scope: rendered_document[field_name].key, // ugly! Should be just `field_name` but too many tests depend on it
+        element: field_element,
+        sandbox: "public"
+      });
+    } else {
+      queue = form_gadget.getDeclaredGadget(rendered_document[field_name].key);
+    }
+    return queue
       .push(function (label_gadget) {
         if (modification_dict.hasOwnProperty('hash')) {
 
