@@ -259,6 +259,36 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_default_view_action_reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_default_jio_document_page_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_frontpage_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -273,41 +303,53 @@
             <value>
               <tuple>
                 <string>caching_policy/must-revalidate</string>
-                <string>aggregate/web_page_module/gadget_officejs_codemirror_html</string>
+                <string>aggregate/web_page_module/rjs_gadget_erp5_launcher_html</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>configuration_application_title</string> </key>
-            <value> <string>Office JS SVG Editor</string> </value>
+            <value> <string>OfficeJS Code Mirror Editor</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
             <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
+            <key> <string>configuration_default_jio_document_page_gadget_url</string> </key>
+            <value> <string>ojs_controller</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_default_view_action_reference</string> </key>
+            <value> <string>jio_view</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_frontpage_gadget_url</string> </key>
+            <value> <string>ojs_document_list</string> </value>
+        </item>
+        <item>
             <key> <string>configuration_hateoas_url</string> </key>
-            <value> <string>hateoas/</string> </value>
+            <value> <string>../hateoas/</string> </value>
         </item>
         <item>
             <key> <string>configuration_header_gadget_url</string> </key>
-            <value> <string>gadget_officejs_header.html</string> </value>
+            <value> <string>gadget_erp5_header.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
-            <value> <string>gadget_officejs_jio.html</string> </value>
+            <value> <string>gadget_ojs_jio.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs.appcache</string> </value>
+            <value> <string>gadget_officejs_codemirror.appcache</string> </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
-            <value> <string>gadget_officejs_application_panel.html</string> </value>
+            <value> <string>gadget_erp5_ojs_panel.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
-            <value> <string>gadget_officejs_svg_editor_router.html</string> </value>
+            <value> <string>gadget_officejs_codemirror_router.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -550,7 +592,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.16277.24517.44253</string> </value>
+                <value> <string>970.22873.38688.50397</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -568,7 +610,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1504539776.32</float>
+                        <float>1537286038.01</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

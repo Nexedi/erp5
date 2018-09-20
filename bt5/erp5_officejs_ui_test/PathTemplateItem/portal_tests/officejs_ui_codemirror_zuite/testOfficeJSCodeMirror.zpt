@@ -1,0 +1,181 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS CodeMirror UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS CodeMirror UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<tal:block tal:define="web_site_name python: 'officejs_codemirror'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/install_offline_and_redirect" />
+</tal:block>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Titre %s' % DateTime()">Titre</td>
+  <td>title</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Reference %s' % DateTime()">Reference</td>
+  <td>reference</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Language %s' % DateTime()">Language</td>
+  <td>language</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Version %s' % DateTime()">Version</td>
+  <td>version</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Description %s' % DateTime()">Description</td>
+  <td>description</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@title='Title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Title']</td>
+  <td>${title}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Reference']</td>
+  <td>${reference}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Version']</td>
+  <td>${version}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Language']</td>
+  <td>${language}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//textarea[@title='Description']</td>
+  <td>${description}</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Document']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@title='Description']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Title']</td>
+  <td>${title}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Reference']</td>
+  <td>${reference}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Version']</td>
+  <td>${version}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Language']</td>
+  <td>${language}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//textarea[@title='Description']</td>
+  <td>${description}</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>css=div.CodeMirror</td>
+  <td></td>
+</tr>
