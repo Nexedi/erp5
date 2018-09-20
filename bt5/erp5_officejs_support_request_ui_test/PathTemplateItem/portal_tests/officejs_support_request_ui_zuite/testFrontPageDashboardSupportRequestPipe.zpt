@@ -1,0 +1,164 @@
+<html>
+  <head>
+    <title tal:content="template/title"></title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  </head>
+  <body>
+  <table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td colspan="3" tal:content="template/title"></td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/cleanup_module" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/create_data" />
+
+<tr><td>open</td>
+    <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td><td></td></tr>
+
+<!-- reset filter is disabled -->
+<tr><td>waitForElementPresent</td>
+    <td>//input[@data-i18n="[value]Reset Filter" and @disabled]</td><td></td></tr>
+
+
+<tr><td>waitForElementPresent</td>
+    <td>css=#wrap1 iframe</td><td></td></tr>
+<tr><td>selectFrame</td>
+    <td>css=#wrap1 iframe</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//canvas</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@class="graph-content" and not(@disabled)]</td><td></td></tr>
+
+<tr><td>storeEval</td>
+    <td>selenium.browserbot.getCurrentWindow().echarts.getInstanceByDom(
+        selenium.browserbot.findElement("css=.graph-content"))</td>
+    <td>graph_instance</td></tr>
+
+<tr><td>assertEval</td>
+    <td>(function(){
+    var series = storedVars['graph_instance'].getOption()['series'],
+        title = storedVars['graph_instance'].getOption()['title'][0].text;
+
+    Assert.equals("Support Request Pipe", title);
+    Assert.equals(3, series.length);
+    Assert.equals("bar", series[0]["type"]);
+
+    Assert.equals("Opened", series[0]["name"]);
+    Assert.equals(
+      JSON.stringify([
+       {name: "< 2", value: 1},
+       {name: "2-7", value: 2},
+       {name: "7-30", value: 0},
+       {name: "> 30", value: 1}]),
+      JSON.stringify(series[0]["data"].map(e => {return {name: e.name, value: e.value}; })));
+
+    Assert.equals("Submitted", series[1]["name"]);
+    Assert.equals(
+      JSON.stringify([
+       {name: "< 2", value: 1},
+       {name: "2-7", value: 0},
+       {name: "7-30", value: 1},
+       {name: "> 30", value: 1}]),
+      JSON.stringify(series[1]["data"].map(e => {return {name: e.name, value: e.value}; })));
+
+    Assert.equals("Suspended", series[2]["name"]);
+    Assert.equals(
+      JSON.stringify([
+       {name: "< 2", value: 0},
+       {name: "2-7", value: 0},
+       {name: "7-30", value: 0},
+       {name: "> 30", value: 1}]),
+      JSON.stringify(series[2]["data"].map(e => {return {name: e.name, value: e.value}; })));
+    return "ok";
+    })()</td>
+  <td>ok</td></tr>
+
+<tr><td colspan="3"><b>Verify the rendering of the graph matches our reference snapshot</b></td></tr>
+<tr><td>assertImageMatchSnapshot</td>
+    <td>//canvas</td>
+    <td></td></tr>
+
+
+<tr><td colspan="3"><b>Clicking on a serie filter the listbox of recent updates</b></td></tr>
+
+<!--
+Click on the first series (Open < 2), which should be the easiest to hit,
+    0                  x                                   100%
+  0 ----------------------------------------------------- ... >
+   |                         Support Request Pipe
+   |               [  ] Opened [ ] Submitted ....
+   |
+   |
+   | <-XXX ->
+   |                            __
+   |                           |//|
+   |        we click           |//|
+y  |       on this X           |//|
+   |         V                 |//|
+   |        __    __           |//|
+   |       |  |  |//|          |//|
+   |       | X|  |//|          |//|
+   |       |  |  |//|          |//|
+   |       |  |  |//|          |//|
+   |       |  |  |//|          |//|
+   .----------------------|---------------  ....
+   .      < 2              2-7
+   .
+   V 100%
+
+The width of the XXX area depends on the total available width, so it's really hard to
+estimate where to click.
+On a 409x285 canvas (959x703 outer window), 20% is OK.
+On a 639x285 canvas (1666x703 outer window), 30% is OK.
+
+The approximated formula (by trial and error, so it migth be just wrong) is:
+( 15% + (height/with ratio) * 10% ) of height
+-->
+<tr><td>storeEval</td>
+    <td>Math.floor(
+       ( selenium.browserbot.findElement('//canvas').clientHeight/
+         selenium.browserbot.findElement('//canvas').clientWidth) * 0.1 +
+         selenium.browserbot.findElement('//canvas').clientWidth  * 0.15)</td>
+    <td>x</td></tr>
+<tr><td>storeEval</td>
+    <!-- 70% of of vertical axis -->
+    <td>Math.floor(selenium.browserbot.findElement('//canvas').clientHeight * 0.7)</td>
+    <td>y</td></tr>
+<tr><td>assertEval</td>
+    <!-- echarts ignore the click without a mousedown on the element before -->
+    <td>var e = new MouseEvent("mousedown", {});
+        e.zrX = storedVars.x;
+        e.zrY = storedVars.y;
+        selenium.browserbot.findElement("//canvas/..").dispatchEvent(e)</td>
+    <td>true</td></tr>
+<tr><td>assertEval</td>
+    <td>var e = new MouseEvent("click", {});
+        e.zrX = storedVars.x;
+        e.zrY = storedVars.y;
+        selenium.browserbot.findElement("//canvas/..").dispatchEvent(e)</td>
+    <td>true</td></tr>
+
+<tr><td colspan="3"><b>Recent updates listbox is updated with the clicked series.</b></td>
+
+<tr><td>selectFrame</td>
+    <td>relative=top</td><td></td></tr>
+<tr><td>waitForText</td>
+    <td>//h1[@data-i18n="Recent Updates"]</td>
+    <td>Recent Updates (1)</td></tr>
+<tr><td>waitForText</td>
+    <td>//h1[@data-i18n="Recent Updates"]/../..//td[1]/a</td>
+    <td>Yesterday - PlaneMaking - Open</td></tr>
+
+<!-- reset filter is now enabled -->
+<tr><td>waitForElementPresent</td>
+    <td>//input[@data-i18n="[value]Reset Filter" and not(@disabled)]</td><td></td></tr>
+
+<tr><td>click</td>
+    <td>//input[@data-i18n="[value]Reset Filter"]</td><td></td></tr>
+<tr><td>waitForText</td>
+    <td>//h1[@data-i18n="Recent Updates"]</td>
+    <td>glob:Recent Updates (1 - 5 / *)</td></tr>
+
+</tbody></table>
+  </body>
+</html>
