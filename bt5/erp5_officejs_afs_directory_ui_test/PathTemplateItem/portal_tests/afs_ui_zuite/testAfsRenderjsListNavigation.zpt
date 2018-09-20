@@ -73,7 +73,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[@class='search_button ui-shadow-inset ui-btn ui-btn-inline ui-corner-all ui-btn-icon-notext ui-icon-search ui-override-theme ui-input-btn']</td>
+  <td>//button[@class='search_button ui-btn-icon-notext ui-icon-search']</td>
   <td></td>
 </tr>
 <tr>
@@ -133,7 +133,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[@class='search_button ui-shadow-inset ui-btn ui-btn-inline ui-corner-all ui-btn-icon-notext ui-icon-search ui-override-theme ui-input-btn']</td>
+  <td>//button[@class='search_button ui-btn-icon-notext ui-icon-search']</td>
   <td></td>
 </tr>
 <tr>
@@ -188,7 +188,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[@class='search_button ui-shadow-inset ui-btn ui-btn-inline ui-corner-all ui-btn-icon-notext ui-icon-search ui-override-theme ui-input-btn']</td>
+  <td>//button[@class='search_button ui-btn-icon-notext ui-icon-search']</td>
   <td></td>
 </tr>
 <tr>
@@ -243,7 +243,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[@class='search_button ui-shadow-inset ui-btn ui-btn-inline ui-corner-all ui-btn-icon-notext ui-icon-search ui-override-theme ui-input-btn']</td>
+  <td>//button[@class='search_button ui-btn-icon-notext ui-icon-search']</td>
   <td></td>
 </tr>
 <tr>
