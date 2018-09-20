@@ -5,6 +5,7 @@ Data Array Module | business_application
 Data Configuration Module | business_application
 Data Descriptor Module | business_application
 Data Event Module | business_application
+Data Array View Line | predecessor
 Data Event | aggregate
 Data Event | destination
 Data Event | resource

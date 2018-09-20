@@ -17,6 +17,9 @@
  <portal_type id="Data Descriptor Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Data Array View Line">
+  <item>predecessor</item>
+ </portal_type>
  <portal_type id="Data Event">
   <item>aggregate</item>
   <item>destination</item>

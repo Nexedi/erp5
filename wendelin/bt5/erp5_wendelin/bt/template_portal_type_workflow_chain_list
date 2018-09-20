@@ -7,6 +7,9 @@ Data Analysis | data_refresh_workflow
 Data Analysis | data_simulation_workflow
 Data Analysis | edit_workflow
 Data Array Line | edit_workflow
+Data Array View Line | edit_workflow
+Data Array View | edit_workflow
+Data Array View | validation_workflow
 Data Array | edit_workflow
 Data Array | validation_workflow
 Data Bucket Stream | data_stream_interaction_workflow

@@ -28,6 +28,14 @@
   <workflow>data_stream_interaction_workflow, edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Data Array View</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Data Array View Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Data Event</type>
   <workflow>edit_workflow</workflow>
  </chain>
