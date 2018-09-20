@@ -49,6 +49,14 @@ class DataStream(BigFile):
                     , PropertySheet.SortIndex
                     )
 
+  def iterate(self, start_offset, end_offset):
+    """
+      Read chunks of data from a Data Stream and yield them.
+    """
+    data = self._baseGetData()
+    for chunk in data.iterate(start_offset, end_offset - start_offset):
+      yield chunk
+
   def readChunkList(self, start_offset, end_offset):
     """
       Read chunks of data from a Data Stream and return them.

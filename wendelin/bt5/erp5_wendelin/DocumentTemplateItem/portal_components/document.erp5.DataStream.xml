@@ -45,7 +45,9 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W: 71,  2: Arguments number differs from overridden \'appendData\' method (arguments-differ)</string>
+              </tuple>
             </value>
         </item>
         <item>
