@@ -19,6 +19,10 @@
   <item>TextDocument</item>
   <item>Url</item>
  </portal_type>
+ <portal_type id="Data Array View Line">
+  <item>DataArrayLine</item>
+  <item>Document</item>
+ </portal_type>
  <portal_type id="Data Event">
   <item>DataEvent</item>
  </portal_type>

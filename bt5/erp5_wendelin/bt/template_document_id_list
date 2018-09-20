@@ -2,6 +2,8 @@ document.erp5.IngestionPolicyTool
 document.erp5.IngestionPolicy
 document.erp5.DataArray
 document.erp5.DataArrayLine
+document.erp5.DataArrayView
+document.erp5.DataArrayViewLine
 document.erp5.DataArrayLineExistenceConstraint
 document.erp5.DataBucketStream
 document.erp5.DataStream

@@ -16,6 +16,10 @@
  </portal_type>
  <portal_type id="Data Array Module">
   <item>Data Array</item>
+  <item>Data Array View</item>
+ </portal_type>
+ <portal_type id="Data Array View">
+  <item>Data Array View Line</item>
  </portal_type>
  <portal_type id="Data Descriptor Type">
   <item>Action Information</item>
