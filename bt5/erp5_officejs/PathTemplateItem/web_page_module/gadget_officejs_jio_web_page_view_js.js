@@ -10,6 +10,7 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod("updateDocument", "updateDocument")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
@@ -48,8 +49,16 @@
 
     .onStateChange(function () {
       var gadget = this;
-      return gadget.getDeclaredGadget('form_view')
-        .push(function (form_gadget) {
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.getSetting('editor'),
+            gadget.getDeclaredGadget('form_view')
+          ]);
+        })
+        .push(function (result) {
+          var editor = result[0],
+            form_gadget = result[1];
           return form_gadget.render({
             erp5_document: {
               "_embedded": {"_view": {
@@ -115,7 +124,8 @@
                   "editable": 1,
                   "key": "text_content",
                   "hidden": 0,
-                  "renderjs_extra": '{"editor": "fck_editor",' +
+                  "renderjs_extra": '{' +
+                    '"editor": "' + editor + '",' +
                     '"maximize": true}',
                   "type": "GadgetField",
                   "url": "gadget_editor.html",
