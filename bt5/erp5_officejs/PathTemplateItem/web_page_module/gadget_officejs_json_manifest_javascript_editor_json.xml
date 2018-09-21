@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -56,7 +55,14 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/team</string>
               </tuple>
             </value>
         </item>
@@ -67,12 +73,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_export.html</string> </value>
+            <value> <string>gadget_officejs_json_manifest_javascript_editor.json</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -82,7 +84,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_export_html</string> </value>
+            <value> <string>gadget_officejs_json_manifest_javascript_editor_json</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -90,7 +92,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -100,7 +102,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget OfficeJS jIO Export Page</string> </value>
+            <value> <string>Gadget Officejs Json Manifest Javascript Editor</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -186,7 +188,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491395389.96</float>
+                        <float>1537774788.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -231,7 +233,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.27017.22588.52565</string> </value>
+                <value> <string>970.31165.21614.4215</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -249,7 +251,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1537537669.28</float>
+                        <float>1537886109.34</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -306,7 +308,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491395255.14</float>
+                        <float>1537774669.47</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
