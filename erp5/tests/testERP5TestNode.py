@@ -1126,29 +1126,31 @@ shared = true
     RunnerClass.getDictionaryFromFile = patch_getDictionaryFromFile
     RunnerClass._createInstance = doNothing
     RunnerClass._waitInstanceCreation = doNothing
-    # Run
-    test_node = self.getTestNode()
-    test_node.run()
-    # Restore methods
-    TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
-    TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
-    TaskDistributor.getSlaposUrl = original_getSlaposUrl
-    TaskDistributor.getSlaposHateoasUrl = original_getSlaposHateoasUrl
-    TaskDistributor.generateConfiguration = original_generateConfiguration
-    TaskDistributor.isMasterTestnode = original_isMasterTestnode
-    TaskDistributor.startTestSuite = original_startTestSuite
-    TaskDistributor.createTestResult = original_createTestResult
-    TaskDistributor.subscribeNode = original_subscribeNode
-    TaskDistributor.getTestType = original_getTestType
-    RunnerClass._prepareSlapOS = original_prepareSlapOS
-    RunnerClass.runTestSuite = original_runTestSuite
-    SlapOSControler.supply = original_supply
-    SlapOSControler.request = original_request
-    SlapOSControler.updateInstanceXML = original_updateInstanceXML
-    SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
-    time.sleep =original_sleep
-    RunnerClass.generateProfilePasswordAccess = original_generateProfilePasswordAccess
-    RunnerClass.getDictionaryFromFile = original_getDictionaryFromFile
-    RunnerClass.updateDictionaryFile = original_updateDictionaryFile
-    RunnerClass._createInstance = original__createInstance
-    RunnerClass._waitInstanceCreation = original__waitInstanceCreation
+    try:
+      # Run
+      test_node = self.getTestNode()
+      test_node.run()
+    finally:
+      # Restore methods
+      TaskDistributor.getSlaposAccountKey = original_getSlaposAccountKey
+      TaskDistributor.getSlaposAccountCertificate = original_getSlaposAccountCertificate
+      TaskDistributor.getSlaposUrl = original_getSlaposUrl
+      TaskDistributor.getSlaposHateoasUrl = original_getSlaposHateoasUrl
+      TaskDistributor.generateConfiguration = original_generateConfiguration
+      TaskDistributor.isMasterTestnode = original_isMasterTestnode
+      TaskDistributor.startTestSuite = original_startTestSuite
+      TaskDistributor.createTestResult = original_createTestResult
+      TaskDistributor.subscribeNode = original_subscribeNode
+      TaskDistributor.getTestType = original_getTestType
+      RunnerClass._prepareSlapOS = original_prepareSlapOS
+      RunnerClass.runTestSuite = original_runTestSuite
+      SlapOSControler.supply = original_supply
+      SlapOSControler.request = original_request
+      SlapOSControler.updateInstanceXML = original_updateInstanceXML
+      SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
+      time.sleep =original_sleep
+      RunnerClass.generateProfilePasswordAccess = original_generateProfilePasswordAccess
+      RunnerClass.getDictionaryFromFile = original_getDictionaryFromFile
+      RunnerClass.updateDictionaryFile = original_updateDictionaryFile
+      RunnerClass._createInstance = original__createInstance
+      RunnerClass._waitInstanceCreation = original__waitInstanceCreation
