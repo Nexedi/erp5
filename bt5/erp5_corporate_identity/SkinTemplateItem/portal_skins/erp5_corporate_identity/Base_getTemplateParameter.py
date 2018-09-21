@@ -7,7 +7,7 @@ Return template parameters from portal-preferences (all calls go through here)
 # ------------------------------------------------------------------------------
 # parameter                          Parameter to lookup
 
-pref = context.getPortalObject().portal_preferences.getActivePreference()
+pref = context.getPortalObject().portal_preferences
 
 if parameter == "default_company_relative_url":
   return pref.getPreferredCorporateIdentityTemplateDefaultOrganisationRelativeUrl()
