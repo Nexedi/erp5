@@ -102,10 +102,6 @@
             <key> <string>portal_type</string> </key>
             <value> <string>Person</string> </value>
         </item>
-        <item>
-            <key> <string>user_id</string> </key>
-            <value> <string>P1</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
