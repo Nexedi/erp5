@@ -105,6 +105,10 @@
         "url": "officejs_hr/",
         "cache": "gadget_officejs_hr.appcache",
         "no_installer": true
+      },
+      "Javascript editor (CodeMirror)": {
+        "url": "officejs_codemirror/",
+        "cache": "gadget_officejs_codemirror.appcache"
       }
     };
 
