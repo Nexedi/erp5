@@ -250,9 +250,13 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         # previous optimisations are obsolete
         elif round(inventory_item.inventory, 5) > min_stock:
           delta = inventory_item.inventory - min_stock
+          node_uid = inventory_item.node_uid
+          # if node_uid is provided, we have to look at all provided nodes
+          if kw.has_key('node_uid'):
+            node_uid = kw['node_uid']
           optimized_inventory_list = portal.portal_simulation.getInventoryList(
                                resource_uid=inventory_item.resource_uid,
-                               node_uid=inventory_item.node_uid,
+                               node_uid=node_uid,
                                variation_text=inventory_item.variation_text,
                                simulation_state="auto_planned",
                                sort_on=[("date", "descending")],

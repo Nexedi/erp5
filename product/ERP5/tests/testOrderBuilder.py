@@ -537,3 +537,43 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     """
     self.checkGenerateMovementListForStockOptimisationWithInventories(
       variation_category_list = ['colour/green', 'size/big'])
+
+  def test_06_checkUpdateOfAutoPlannedMovement(self):
+    """
+    So we use order builder to create auto planned movements. generateMovementListForStockOptimisation
+    should be able to allows us to reduce quantities of auto planned movements when needed
+    """
+    # changing type_list here is somehow dirty, decision would need to be taken if this is acceptable
+    # for everyone to have auto_planned as part of future inventory
+    self.portal.portal_workflow.order_workflow.states['auto_planned'].type_list = ('planned_order', 'future_inventory')
+    self.portal.portal_caches.clearAllCache()
+    self.assertTrue('auto_planned' in self.portal.getPortalFutureInventoryStateList())
+    # end of patch
+    resource = self.resource
+    self.createOrderBuilder()
+    self.fillOrderBuilder()
+    fixed_date = DateTime('2018/09/21')
+    self.pinDateTime(fixed_date)
+    resource_url = self.resource.getRelativeUrl()
+    node_uid_list = [self.node_1.getUid(), self.node_2.getUid()]
+    def checkStockOptimisationForTwoNodes(expected_result):
+      self.checkOrderBuilderStockOptimisationResult(expected_result, node_uid=node_uid_list,
+                                                    group_by_node=0)
+    checkStockOptimisationForTwoNodes([])
+    self._makeMovement(quantity=-5, destination_value=self.node_1, simulation_state='confirmed',
+                       start_date=DateTime('2018/09/21'))
+    checkStockOptimisationForTwoNodes([(resource_url, '', 5.0, '2018/09/21', '2018/09/21')])
+    auto_planned_one = self._makeMovement(quantity=3, destination_value=self.node_2, simulation_state='auto_planned',
+                       start_date=DateTime('2018/09/18'))
+    checkStockOptimisationForTwoNodes([(resource_url, '', 2.0, '2018/09/21', '2018/09/21')])
+    auto_planned_two = self._makeMovement(quantity=2, destination_value=self.node_1, simulation_state='auto_planned',
+                       start_date=DateTime('2018/09/19'))
+    checkStockOptimisationForTwoNodes([])
+    # But if we more stock than expected, auto planned movements should be reduced
+    self._makeMovement(quantity=1, destination_value=self.node_1, simulation_state='confirmed',
+                       start_date=DateTime('2018/09/29'))
+    checkStockOptimisationForTwoNodes([(resource_url, '', -1.0, '2018/09/19', '2018/09/19')])
+    self._makeMovement(quantity=4, destination_value=self.node_2, simulation_state='confirmed',
+                       start_date=DateTime('2018/09/29'))
+    checkStockOptimisationForTwoNodes([(resource_url, '', -3.0, '2018/09/18', '2018/09/18'),
+                                       (resource_url, '', -2.0, '2018/09/19', '2018/09/19')])
