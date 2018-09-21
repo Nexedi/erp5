@@ -19,7 +19,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n="[value]Support Requests WorkList"]</td>
+  <td>//h1[@data-i18n="[value]Support Request WorkLists"]</td>
   <td></td>
 </tr>
 
