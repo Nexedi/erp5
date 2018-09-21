@@ -68,6 +68,7 @@
             <value>
               <tuple>
                 <string>classification/collaborative/team</string>
+                <string>publication_section/documentation</string>
               </tuple>
             </value>
         </item>
@@ -242,7 +243,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.43991.49148.31863</string> </value>
+                <value> <string>970.26836.13574.12373</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,8 +261,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1449742685.81</float>
-                        <string>GMT</string>
+                        <float>1537524104.39</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
