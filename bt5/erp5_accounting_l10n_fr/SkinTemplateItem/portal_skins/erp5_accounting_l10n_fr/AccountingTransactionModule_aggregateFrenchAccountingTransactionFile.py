@@ -6,7 +6,8 @@ portal = context.getPortalObject()
 active_process = portal.restrictedTraverse(active_process)
 
 # XXX we need proxy role for this
-result_list = active_process.getResultList()
+result_list = [ result.detail.decode('zlib') for result in active_process.getResultList() ]
+result_list.sort()
 
 fec_file = context.AccountingTransactionModule_viewComptabiliteAsFECXML(
       at_date=at_date,
