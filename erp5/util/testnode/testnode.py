@@ -249,10 +249,23 @@ shared = true
     self._cleanupLog()
     self._cleanupTemporaryFiles()
 
+  def setUp(self):
+    test_node_slapos = SlapOSInstance(self.config['slapos_directory'])
+
+    self.taskdistribution = taskdistribution.TaskDistributor(
+        self.config['test_suite_master_url'],
+        logger=logger)
+
+    for runner_type, runner_class in test_type_registry.items():
+      logger.info("Preparing SlapOS for test node for runner type %s", runner_type)
+      runner = runner_class(self)
+      runner.prepareSlapOSForTestNode(test_node_slapos)
+
+
   def run(self):
+    self.setUp()
     config = self.config
     portal_url = config['test_suite_master_url']
-    test_node_slapos = SlapOSInstance(config['slapos_directory'])
     try:
       while True:
         test_result = None
@@ -260,9 +273,7 @@ shared = true
           node_test_suite = None
           self.cleanUp()
           begin = time.time()
-          taskdistributor = taskdistribution.TaskDistributor(
-              portal_url, logger=logger)
-          self.taskdistribution = taskdistributor
+          taskdistributor = self.taskdistribution
           node_configuration = taskdistributor.subscribeNode(
             node_title=config['test_node_title'],
             computer_guid=config['computer_id'])
@@ -300,8 +311,6 @@ shared = true
             raise NotImplementedError
           runner = runner_class(self)
           logger.info("Type of current test is %s", my_test_type)
-          # master testnode gets test_suites, slaves get nothing
-          runner.prepareSlapOSForTestNode(test_node_slapos)
           # Clean-up test suites
           self.purgeOldTestSuite(test_suite_data)
           for test_suite in test_suite_data:

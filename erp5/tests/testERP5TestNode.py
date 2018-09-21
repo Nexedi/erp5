@@ -1103,6 +1103,8 @@ shared = true
     original_updateDictionaryFile = RunnerClass.updateDictionaryFile
     original__createInstance = RunnerClass._createInstance
     original__waitInstanceCreation = RunnerClass._waitInstanceCreation
+    # for TestNode.setUp setting up all test types
+    original_UnitTest_prepareSlapOSForTestNode = test_type_registry['UnitTest'].prepareSlapOSForTestNode
 
     time.sleep = doNothing
     TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
@@ -1126,6 +1128,8 @@ shared = true
     RunnerClass.getDictionaryFromFile = patch_getDictionaryFromFile
     RunnerClass._createInstance = doNothing
     RunnerClass._waitInstanceCreation = doNothing
+    test_type_registry['UnitTest'].prepareSlapOSForTestNode = doNothing
+
     try:
       # Run
       test_node = self.getTestNode()
@@ -1154,3 +1158,4 @@ shared = true
       RunnerClass.updateDictionaryFile = original_updateDictionaryFile
       RunnerClass._createInstance = original__createInstance
       RunnerClass._waitInstanceCreation = original__waitInstanceCreation
+      test_type_registry['UnitTest'].prepareSlapOSForTestNode = original_UnitTest_prepareSlapOSForTestNode

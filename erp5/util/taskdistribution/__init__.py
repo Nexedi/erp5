@@ -547,3 +547,14 @@ class DummyTaskDistributor(object):
     def isTaskAlive(self, *args):
         return int(bool(self.test_name_list))
 
+    def getSlaposAccountKey(self):
+        return ''
+
+    def getSlaposAccountCertificate(self):
+        return ''
+
+    def getSlaposHateoasUrl(self):
+        return ''
+
+    def isMasterTestnode(self, test_node_title):
+        return False
