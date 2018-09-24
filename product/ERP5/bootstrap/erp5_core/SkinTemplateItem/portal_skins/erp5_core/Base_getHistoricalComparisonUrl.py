@@ -32,12 +32,14 @@ if serial != '0.0.0.0':
               'extra_param_json': {
                 'serial': serial,
                 'next_serial': next_serial,
-                'time': brain.time
+                'time': brain.time,
+                'action': brain.action,
+                'actor': brain.actor,
               }
             }
            }
-  return 'Base_viewHistoricalComparison?serial=%s&amp;next_serial=%s&amp;time=%s'\
-      % ( serial, next_serial, brain.time )
+  return 'Base_viewHistoricalComparison?serial=%s&amp;next_serial=%s&amp;time=%s&amp;action=%s&amp;actor=%s'\
+      % ( serial, next_serial, brain.time, brain.action, brain.actor )
 
 elif url_dict:
   return {}
