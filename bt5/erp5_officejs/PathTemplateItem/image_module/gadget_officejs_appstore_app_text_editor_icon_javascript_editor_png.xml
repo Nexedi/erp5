@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>6a4d72b6cb6c21eaf97ced8110f32aa2</string> </value>
+            <value> <string>ec0212c1f781ca523888ca2228d303e8</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>codemirror_icon.png</string> </value>
+            <value> <string>codemirror_logo.png</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -278,7 +278,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.27221.7912.33126</string> </value>
+                <value> <string>970.31528.45792.33211</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -296,7 +296,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1537776078.17</float>
+                        <float>1537805334.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
