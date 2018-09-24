@@ -1,6 +1,7 @@
 from Products.PythonScripts.standard import Object
 from ZODB.POSException import ConflictError
 from zExceptions import Unauthorized
+from Products.ERP5Type.Document import newTempBase
 Base_translateString = context.Base_translateString
 
 try:
@@ -57,9 +58,18 @@ for prop_dict in context.getPropertyMap():
         unicode(str(current_value), 'utf-8')
       except UnicodeDecodeError:
         current_value = binary_data_explanation
-
-    result.append( Object( property_name=prop,
-                           new_value=new_value,
-                           old_value=old_value,
-                           current_value=current_value))
+    x = {'property_name': prop,
+         'new_value': new_value,
+         'old_value': old_value,
+         'current_value': current_value,
+    }
+    tmp_obj = newTempBase(context,
+                          '',
+                          **x)
+    tmp_obj.setProperty('serial', serial)
+    tmp_obj.setProperty('next_serial', next_serial)
+    tmp_obj.setProperty('action', action)
+    tmp_obj.setProperty('actor', actor)
+    tmp_obj.setProperty('time', time)
+    result.append(tmp_obj)
 return result
