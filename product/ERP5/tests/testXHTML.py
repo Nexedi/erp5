@@ -50,6 +50,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
 
   # some forms have intentionally empty listbox selections like RSS generators
   FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS',
+                                            'erp5_core/Base_viewHistoricalComparisonDiff',
                                             'erp5_diff/ERP5Site_viewDiffTwoObjectDialog',]
   JSL_IGNORE_FILE_LIST = (
         'diff2html.js',

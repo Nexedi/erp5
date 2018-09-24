@@ -1,23 +1,22 @@
 """
-This URL script is used for Historical comparison list.
-There are two cases handled here. If it is the first
-row of the list(having serial as 0.0.0.0), then we don't
-want to have any URL as there is no comparison needed,
-thus we return empty dictionary in case of renderJS UI and
-nothing for XHTMl UI.
-"""
+This URL script is used for Historical comparison list
+to show the diff between the new value and current value.
 
+In case there new value is the current value, there is no
+need to show the diff link.
+"""
 request = context.REQUEST
 
-serial = getattr(brain, 'serial', '0.0.0.0')
-next_serial = getattr(brain, 'next_serial', '0.0.0.0')
+# In this case, the second serial should be the current value, i.e, 0.0.0.0
+first_serial = getattr(brain, 'next_serial', '0.0.0.0')
+second_serial = '0.0.0.0'
 time = getattr(brain, 'time', '')
 action = getattr(brain, 'action', '')
 actor = getattr(brain, 'actor', '')
 
 # There is no need to compare revisions in case its the
 # first version.
-if serial != '0.0.0.0':
+if first_serial != second_serial:
   if url_dict:
     return {'command': 'index',
             'options': {
@@ -30,19 +29,20 @@ if serial != '0.0.0.0':
               'jio_key': request.get('relative_url'),
             },
             'view_kw': {
-              'view': 'view_historical_comparison',
+              'view': 'view_historical_diff',
               'jio_key': request.get('relative_url'),
               'extra_param_json': {
-                'serial': serial,
-                'next_serial': next_serial,
+                'first_serial': first_serial,
+                'second_serial': second_serial,
                 'time': time,
                 'action': action,
                 'actor': actor,
               }
             }
            }
-  return 'Base_viewHistoricalComparison?serial=%s&amp;next_serial=%s&amp;time=%s&amp;action=%s&amp;actor=%s'\
-      % ( serial, next_serial, time, action, actor )
+
+  return 'Base_viewHistoricalComparisonDiff?first_serial=%s&amp;second_serial=%s&amp;time=%s&amp;action=%s&amp;actor=%s'\
+      % ( first_serial, second_serial, time, action, actor )
 
 elif url_dict:
   return {}
