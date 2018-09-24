@@ -2,3 +2,4 @@ item_resource_uid | item/resource_uid/z_related_item
 item_device_relative_url | category,category,catalog/relative_url/z_related_item_aggregate
 item_project_relative_url | category,category,catalog,catalog/relative_url/z_related_item_destination_project
 item_source_relative_url | category,category,catalog,catalog/relative_url/z_related_item_source
+item_variation_text | item/variation_text/z_related_item
