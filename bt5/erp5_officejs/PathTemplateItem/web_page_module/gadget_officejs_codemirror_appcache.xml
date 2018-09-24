@@ -209,6 +209,9 @@ gadget_officejs_setting.js\n
 gadget_officejs_setting.html\n
 \n
 #code mirror\n
+officejs_javascript_editor_icon.png\n
+gadget_officejs_json_manifest_javascript_editor_install.json\n
+gadget_officejs_json_manifest_javascript_editor.json\n
 gadget_officejs_codemirror_router.html\n
 gadget_officejs_jio_web_script_view.html\n
 gadget_officejs_jio_web_script_view.js\n
@@ -396,7 +399,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.25271.42440.56234</string> </value>
+                <value> <string>970.31022.36004.22801</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -414,7 +417,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1537448284.38</float>
+                        <float>1537776214.0</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
