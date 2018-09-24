@@ -1,0 +1,177 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test History Available from edit_workflow</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Historical Diff For Links</td></tr>
+</thead><tbody>
+<tr>
+  <td>store</td>
+  <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>
+  <td>base_url</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/FooModule_createObjects?portal_type=Bar&amp;num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_title</td>
+  <td>Version 1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_title</td>
+  <td>Version 2</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_title</td>
+  <td>Version 3</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=History</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number x0_listbox-current-page-total-number"]</td>
+  <td>4 records</td> <!-- Creation + edited 3 times -->
+</tr>
+<!-- First modification -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr[@class='x0_listbox-data-line-3 DataB']/td[4]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTitle</td>
+  <td>Historical Comparison - Version 3*</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td> <!-- Only one property changed. -->
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[1]</td>
+  <td>title</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]</td>
+  <td>Version 2</td> <!-- before -->
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]</td>
+  <td>Version 3</td> <!-- after -->
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]</td>
+  <td>Version 3</td> <!-- now -->
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[3]//a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[1]</td>
+  <td>title</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/div[@data-gadget-sandbox="public"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeEval</td>
+  <td>document.querySelector('#selenium_myiframe').contentWindow.document.evaluate("//tr[@class='listbox-data-line-0 DataA']/td[2]/div[@data-gadget-sandbox='public']", document.querySelector('#selenium_myiframe').contentWindow.document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-gadget-value');</td>
+  <td>_data_gadget_value</td>
+</tr>
+<tr>
+  <td>verifyEval</td>
+  <td>storedVars['_data_gadget_value'].replace(/(\r\n\t|\n|\r\t)/gm,"").replace(/\s+/g, '')</td>
+  <td>---+++@@-1+1@@-Version2+Version3</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=History</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number x0_listbox-current-page-total-number"]</td>
+  <td>4 records</td> <!-- Creation + edited 3 times -->
+</tr>
+<!-- First modification -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr[@class='x0_listbox-data-line-3 DataB']/td[4]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTitle</td>
+  <td>Historical Comparison - Version 3*</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[4]//a</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
