@@ -3,4 +3,5 @@
  <key>item_project_relative_url | category,category,catalog,catalog/relative_url/z_related_item_destination_project</key>
  <key>item_resource_uid | item/resource_uid/z_related_item</key>
  <key>item_source_relative_url | category,category,catalog,catalog/relative_url/z_related_item_source</key>
+ <key>item_variation_text | item/variation_text/z_related_item</key>
 </key_list>
