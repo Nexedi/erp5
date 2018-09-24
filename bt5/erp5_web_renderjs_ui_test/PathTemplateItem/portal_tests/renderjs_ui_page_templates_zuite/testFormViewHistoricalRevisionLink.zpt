@@ -130,30 +130,17 @@
 <tr>
   <td>verifyText</td>
   <td>//div[@data-gadget-scope='field_listbox']//table/thead/tr[1]/th[2]</td>
-  <td>Diff Viewer</td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[2]//iframe</td>
-  <td></td>
+  <td>Old Value</td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<!-- Check for the value of diff in Iframe -->
-<tr>
-  <td>storeEval</td>
-  <td>document.querySelector('#selenium_myiframe').contentWindow.document.evaluate("//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[2]//iframe", document.querySelector('#selenium_myiframe').contentWindow.document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.contentWindow.document.body.textContent</td>
-  <td>diff_content</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/thead/tr[1]/th[3]</td>
+  <td>New Value</td>
 </tr>
 <tr>
-  <td>verifyEval</td>
-  <!-- Verify the value after removing the spaces and line breaks -->
-  <td>storedVars['diff_content'].replace(/(\r\n\t|\n|\r\t)/gm,"").replace(/\s+/g, '')</td>
-  <td>1-1+Anewfoo</td>
+  <td>verifyText</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/thead/tr[1]/th[4]</td>
+  <td>Current Value</td>
 </tr>
 
 </tbody></table>
