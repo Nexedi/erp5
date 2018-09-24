@@ -359,6 +359,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_webapp_manifest_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -478,6 +488,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>configuration_webapp_manifest_url</string> </key>
+            <value> <string>gadget_officejs_json_manifest_javascript_editor_install.json</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -718,7 +732,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.25484.60987.38638</string> </value>
+                <value> <string>970.22725.26429.65484</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -736,7 +750,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502093918.8</float>
+                        <float>1537779309.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
