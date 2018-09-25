@@ -3,16 +3,9 @@
   <tal:block metal:define-macro="init" tal:define="base_url python: '/' + here.getPortalObject().getId()">
 
     <!-- Check inventory total records -->
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//nav//span[@class='ui-disabled ui-right']</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>verifyText</td>
-      <td>//nav//span[@class='ui-disabled ui-right']</td>
-      <td>2 Records</td>
-    </tr>
+    <tal:block tal:define="pagination_configuration python: {'header': '(1 - 2)', 'footer': '2 Records'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+    </tal:block>
 
     <!--  Check the correct title -->
     <tr>
