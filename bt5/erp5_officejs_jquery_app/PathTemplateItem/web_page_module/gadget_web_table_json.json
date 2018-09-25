@@ -1,0 +1,12 @@
+{
+      "short_name": "Web Table",
+      "name": "OfficeJS Web Table",
+      "description": "Web Table Advanced edition",
+      "icons": [{
+        "src": "web_table_app_logo.svg",
+        "sizes": "any",
+        "type": "image/svg"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}

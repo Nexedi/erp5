@@ -218,6 +218,9 @@ gadget_officejs_setting.html\n
 gadget_officejs_text_editor_router.html\n
 gadget_officejs_jio_web_page_view.html\n
 gadget_officejs_jio_web_page_view.js\n
+gadget_officejs_text_editor_install.json\n
+gadget_officejs_text_editor.json\n
+officejs_logo_text_editor.png\n
 \n
 #Ckeditor\n
 ckeditor.gadget.html\n
@@ -685,7 +688,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>vincent</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -699,7 +702,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.48519.41997.58350</string> </value>
+                <value> <string>970.33970.12470.34935</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -717,7 +720,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1515675473.77</float>
+                        <float>1537952923.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

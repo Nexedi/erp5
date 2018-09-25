@@ -1,0 +1,12 @@
+{
+      "short_name": "Office Text",
+      "name": "OnlyOffice Text Editor",
+      "description": "Edition of odt, doc, docx and alike",
+      "icons": [{
+        "src": "500px-Gnome-x-office-document.svg.png",
+        "sizes": "any",
+        "type": "image/png"
+      }],
+      "start_url": "../",
+      "display": "standalone"
+}

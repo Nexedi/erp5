@@ -1,0 +1,12 @@
+{
+      "short_name": "Image Editor",
+      "name": "OfficeJS Image Editor",
+      "description": "Edit Images in your browser",
+      "icons": [{
+        "src": "image_editor_app_logo.svg",
+        "sizes": "any",
+        "type": "image/svg"
+      }],
+      "start_url": "../",
+      "display": "standalone"
+}

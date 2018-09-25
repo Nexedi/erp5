@@ -1,0 +1,12 @@
+{
+      "short_name": "Office Presentation",
+      "name": "OnlyOffice Presentation Editor",
+      "description": "Edition of odp, ppt, pttx and alike",
+      "icons": [{
+        "src": "500px-Gnome-x-office-presentation.svg.png",
+        "sizes": "any",
+        "type": "image/png"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}

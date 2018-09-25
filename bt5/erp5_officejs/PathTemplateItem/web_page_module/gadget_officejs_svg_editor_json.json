@@ -1,0 +1,12 @@
+{
+      "short_name": "Illustration Editor",
+      "name": "OfficeJS Illustration Editor",
+      "description": "Simple SVG Web Editor",
+      "icons": [{
+        "src": "taskman-svg.png",
+        "sizes": "any",
+        "type": "image/png"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}

@@ -1,6 +1,7 @@
 {
-      "short_name": "OfficeJS Smart Assistant",
+      "short_name": "Smart Assistant",
       "name": "OfficeJS Smart Assistant",
+      "description": "Assist you with using an ERP",
       "icons": [{
         "src": "officejs_smart_assistant_icon.png",
         "sizes": "any",

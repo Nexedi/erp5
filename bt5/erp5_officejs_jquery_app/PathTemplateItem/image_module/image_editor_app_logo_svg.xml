@@ -80,39 +80,63 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>21dadab33e846c9f316864fc2cdb32fd</string> </value>
+            <value> <string>6b7d4ff4c4e26fbf536bc4ad7ba1242f</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>image/png</string> </value>
+            <value> <string>image/svg+xml</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>app/500px-Gnome-x-office-presentation.svg.png</string> </value>
+            <value> <string>image_editor_app_logo.svg</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>filename</string> </key>
+            <value> <string>OSP-12-Web.Bookmark.Editor.Logo?format=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>500</int> </value>
+            <value> <int>-1</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_appstore_app_500px-Gnome-x-office-presentation_svg_png</string> </value>
+            <value> <string>image_editor_app_logo_svg</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Image</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>500px-Gnome-x-office-presentation.svg.png</string> </value>
+            <value> <string>Image Editor Application Logo</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>500</int> </value>
+            <value> <int>-1</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -210,7 +234,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497861288.33</float>
+                        <float>1497881279.21</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -245,7 +269,9 @@
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string></string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -253,7 +279,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
+                <value> <string>970.34421.44525.27426</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -271,7 +297,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497861288.32</float>
+                        <float>1537978910.94</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
