@@ -29,6 +29,7 @@ from base64 import b64encode
 
 blank = ''
 details_separator = '</section><section class="ci-notes-continue"><section><h1>cont.</h1></section>'
+pref = context.getPortalObject().portal_preferences
 
 # ------------------ HTML cleanup/converter methods ----------------------------
 def getSlideList(my_content):
@@ -148,7 +149,7 @@ def sortContent(my_page_list):
 
 # -------------------------- Setup ---------------------------------------------
 doc = context
-doc_prefix = "Slideshow."
+doc_prefix = pref.getPreferredCorporateIdentityTemplateSlideDocumentPrefix() or "Slideshow."
 doc_converted_content = None
 doc_format = kw.get('format') or 'html'
 doc_display_notes = int(kw.get('display_note') or 0)

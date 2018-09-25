@@ -290,11 +290,19 @@ if pass_parameter is not None and pass_source_data is not None:
     return populateBankDict([context.restrictedTraverse(pass_source_data)])
 
   # ------------------ Theme Logo (Prefix + Theme) -----------------------------
-  # returns [{logo_dict}] used in themes
+  # returns [{logo_dict}] used in themes, needs to be language-agnostic, but not
+  # all contexts (eg sale-order) have language
+  # XXX improve
   if pass_parameter == "logo":
+
+    try:
+      use_language = context.getLanguage() or "en"
+    except AttributeError:
+      use_language = "en"
+
     return populateImageDict(portal_object.portal_catalog(
       portal_type="Image",
-      language=context.getLanguage() or 'en',
+      language=use_language,
       validation_state=validation_state,
       reference=pass_source_data
     ))

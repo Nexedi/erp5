@@ -10,7 +10,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/string</string>
+                <string>elementary_type/lines</string>
               </tuple>
             </value>
         </item>
@@ -36,9 +36,7 @@
         </item>
         <item>
             <key> <string>property_default</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>python: []</string> </value>
         </item>
       </dictionary>
     </pickle>

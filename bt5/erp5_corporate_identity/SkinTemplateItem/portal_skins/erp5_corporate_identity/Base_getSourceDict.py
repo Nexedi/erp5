@@ -16,11 +16,12 @@ from Products.PythonScripts.standard import html_quote
 
 # -------------------------------  Set Source ----------------------------------
 source_logo_url = None
-default_bank_account_relative_url=context.Base_getTemplateParameter("default_bank_account_relative_url")
 source_organisation = None
+pref = context.getPortalObject().portal_preferences
+default_bank_account_relative_url=pref.getPreferredCorporateIdentityTemplateDefaultBankAccountRelativeUrl()
 
 if source is None:
-  default_company_relative_url=context.Base_getTemplateParameter("default_company_relative_url")
+  default_company_relative_url=pref.getPreferredCorporateIdentityTemplateDefaultOrganisationRelativeUrl()
   contributor_title_string = blank
   source_person = None
   source_person_list = []
@@ -80,21 +81,23 @@ if default_bank_account_relative_url is not None:
     source["bic"] = override_bank_account.get("bic")
     source["iban"] = override_bank_account.get("iban")
 
-# social media
+# social media, used for website (WIP)
 if source_organisation is not None:
-  source["social_media_handle_facebook"] = context.Base_getTemplateParameter('social_media_handle_facebook')
-  source["social_media_handle_twitter"] = context.Base_getTemplateParameter('social_media_handle_twitter')
-  source["social_media_handle_google"] = context.Base_getTemplateParameter('social_media_handle_google')
+  source["social_media_handle_facebook"] = pref.getPreferredCorporateIdentityTemplateSocialMediaHandleFacebook()
+  source["social_media_handle_twitter"] = pref.getPreferredCorporateIdentityTemplateSocialMediaHandleTwitter()
+  source["social_media_handle_google"] = pref.getPreferredCorporateIdentityTemplateSocialMediaHandleGoogle()
+  source["site_registration_url"] = pref.getPreferredCorporateIdentityTemplateSiteRegistrationUrl()
+  source["site_registration_id"] = pref.getPreferredCorporateIdentityTemplateSiteRegistrationId()
 
 # social capital currency and registered court fallbacks
 if source.get("social_capital_currency") is blank:
   currency_short_title = None
-  currency_relative_url = context.Base_getTemplateParameter("default_source_company_capital_currency_relative_url")
+  currency_relative_url = pref.getPreferredCorporateIdentityTemplateDefaultCurrencyRelativeUrl()
   if currency_relative_url:
     currency_short_title = context.restrictedTraverse(currency_relative_url).getShortTitle()
   source["social_capital_currency"] = currency_short_title or ""
 if source.get("corporate_registration_code") is blank:
-  source["corporate_registration_code"] = context.Base_getTemplateParameter("default_source_registered_court")
+  source["corporate_registration_code"] = pref.getPreferredCorporateIdentityTemplateDefaultOrganisationRegisteredCourt()
 
 # XXX images stored on organisation (as do images in skin folders)
 if override_logo_reference:

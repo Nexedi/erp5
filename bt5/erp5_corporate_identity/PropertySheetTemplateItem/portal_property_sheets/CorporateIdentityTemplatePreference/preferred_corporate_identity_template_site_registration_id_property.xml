@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>preferred_corporate_identity_template_site_registration_miibeian_id_property</string> </value>
+            <value> <string>preferred_corporate_identity_template_site_registration_id_property</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
