@@ -3,11 +3,6 @@
   <tal:block metal:define-macro="init">
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
-      <td>setTimeout</td>
-      <td>600000</td>
-      <td></td>
-    </tr>
-    <tr>
       <td>open</td>
       <td>${base_url}/PdmZuite_deleteData</td>
       <td></td>
