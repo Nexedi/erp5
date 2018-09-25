@@ -80,7 +80,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>e795fe15de38e1348d657ae30e7bbdbe</string> </value>
+            <value> <string>981190d150ef6943d53fbc5de44e51f0</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -88,23 +88,41 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>app/text_editor/icon_text_editor.png</string> </value>
+            <value> <string>500px-Gnome-x-office-document.svg.png</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>128</int> </value>
+            <value> <int>500</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_appstore_app_text_editor_icon_text_editor_png</string> </value>
+            <value> <string>ooo_logo_text_app_png</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Image</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>icon_text_editor.png</string> </value>
+            <value> <string>500px-Gnome-x-office-document.svg.png</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -112,7 +130,7 @@
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>128</int> </value>
+            <value> <int>500</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -210,7 +228,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497861288.53</float>
+                        <float>1497861288.3</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -245,7 +263,9 @@
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string></string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -253,7 +273,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
+                <value> <string>970.34025.39077.61132</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -271,7 +291,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497861288.52</float>
+                        <float>1537968005.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

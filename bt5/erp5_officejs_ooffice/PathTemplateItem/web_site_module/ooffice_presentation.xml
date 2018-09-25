@@ -359,6 +359,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_webapp_manifest_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -478,6 +488,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>configuration_webapp_manifest_url</string> </key>
+            <value> <string>gadget_ooffice_presentation_install.json</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -718,7 +732,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.16277.24517.44253</string> </value>
+                <value> <string>970.26748.61427.10154</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -736,7 +750,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502106598.52</float>
+                        <float>1537967721.38</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

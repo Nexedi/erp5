@@ -88,7 +88,13 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>app/contact_manager/icon_text_editor.png</string> </value>
+            <value> <string>officejs_logo_text_editor.png</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -99,8 +105,20 @@
             <value> <string>gadget_officejs_appstore_app_contact_manager_icon_text_editor_png</string> </value>
         </item>
         <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Image</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -245,7 +263,9 @@
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string></string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -253,7 +273,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
+                <value> <string>970.26734.14597.65382</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -271,7 +291,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497861288.4</float>
+                        <float>1537952908.81</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

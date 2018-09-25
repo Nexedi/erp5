@@ -213,6 +213,9 @@ gadget_officejs_setting.html\n
 gadget_officejs_image_editor_router.html\n
 gadget_officejs_jio_image_view.html\n
 gadget_officejs_jio_image_view.js\n
+gadget_officejs_image_editor_install.json\n
+gadget_officejs_image_editor.json\n
+image_editor_app_logo.svg\n
 \n
 #image editor\n
 minipaint.gadget.html\n
@@ -399,7 +402,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>vincent</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -413,7 +416,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.54546.48173.5239</string> </value>
+                <value> <string>970.34418.34130.40209</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -431,7 +434,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1516026568.75</float>
+                        <float>1537978728.52</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

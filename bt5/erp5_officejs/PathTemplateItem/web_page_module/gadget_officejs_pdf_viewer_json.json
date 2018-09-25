@@ -1,0 +1,12 @@
+{
+      "short_name": "PDF Reader",
+      "name": "OfficeJS PDF Reader",
+      "description": "Web Based PDF Reader",
+      "icons": [{
+        "src": "pdf_viewer_app_logo.svg",
+        "sizes": "any",
+        "type": "image/svg"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}

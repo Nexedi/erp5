@@ -232,6 +232,9 @@ gadget_erp5_page_ojs_download_convert.js\n
 gadget_ooffice_presentation_router.html\n
 gadget_officejs_jio_presentation_view.html\n
 gadget_officejs_jio_presentation_view.js\n
+gadget_ooffice_presentation_install.json\n
+gadget_ooffice_presentation.json\n
+500px-Gnome-x-office-presentation.svg.png\n
 \n
 #onlyoffice editor\n
 jio.js\n
@@ -1376,7 +1379,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>P0</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -1390,7 +1393,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>969.27633.19787.19507</string> </value>
+                <value> <string>970.34237.3471.7765</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1408,7 +1411,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1533639880.53</float>
+                        <float>1537967894.48</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
