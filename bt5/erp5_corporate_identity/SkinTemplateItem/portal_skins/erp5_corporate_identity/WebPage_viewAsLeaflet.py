@@ -27,6 +27,7 @@ from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
 
 blank = ''
+pref = context.getPortalObject().portal_preferences
 
 # ------------------ HTML cleanup/converter methods ----------------------------
 def removeLegalesePlaceholders(content):
@@ -36,7 +37,7 @@ def removeLegalesePlaceholders(content):
 
 # -------------------------- Setup ---------------------------------------------
 leaflet = context
-leaflet_prefix = "Leaflet."
+leaflet_prefix = pref.getPreferredCorporateIdentityTemplateLeafletDocumentPrefix() or "Leaflet."
 leaflet_format = kw.get('format') or 'html'
 leaflet_display_svg = kw.get('display_svg') or "png"
 leaflet_download = int(kw.get('document_download') or 0)

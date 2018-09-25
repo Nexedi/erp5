@@ -38,6 +38,7 @@ from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
 
 blank = ''
+pref = context.getPortalObject().portal_preferences
 
 # ------------------ HTML cleanup/converter methods ----------------------------
 def translateText(snip):
@@ -69,7 +70,7 @@ override_batch_mode = kw.get('batch_mode')
 # -------------------------- Document Parameters  ------------------------------
 book_localiser = book.getPortalObject().Localizer
 book_relative_url = book.getRelativeUrl()
-book_prefix = "Book."
+book_prefix = pref.getPreferredCorporateIdentityTemplateBookDocumentPrefix() or "Book."
 book_rendering_fix = book.WebPage_getPdfOutputRenderingFix() or blank
 book_content = book.getTextContent()
 book_aggregate_list = []
@@ -143,8 +144,8 @@ if book_include_linked_content:
 
 # embed reports
 if book_include_report_content:
-  book_report_css_list = book.Base_getTemplateParameter("report_css_list") or []
-  book_report_js_list = book.Base_getTemplateParameter("report_js_list") or []
+  book_report_css_list = pref.getPreferredCorporateIdentityTemplateReportCssList() or []
+  book_report_js_list = pref.getPreferredCorporateIdentityTemplateReportJsList() or []
   book_content = book.WebPage_embedReportDocumentList(doc_content=book_content, doc_language=book_language, doc_format=book_format)
 
 # table of links
