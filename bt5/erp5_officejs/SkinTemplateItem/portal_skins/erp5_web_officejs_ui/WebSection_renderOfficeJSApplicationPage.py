@@ -18,6 +18,6 @@ configuration_webapp_manifest_url = web_section.getLayoutProperty("configuration
 if configuration_webapp_manifest_url is None:
   mapping_dict["webapp_manifest_full_link_tag"] = ''
 else:
-  mapping_dict["webapp_manifest_full_link_tag"] = '<link rel="manifest" href="' + configuration_webapp_manifest_url + '">'
+  mapping_dict["webapp_manifest_full_link_tag"] = '<link rel="manifest" href="' + mapping_dict['latest_version'] + '/' + configuration_webapp_manifest_url + '">'
 
 return default_web_page.WebPage_viewAsWeb(mapping_dict=mapping_dict)
