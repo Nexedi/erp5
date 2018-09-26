@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 
+
 class FTPConnector(XMLObject):
   # CMF Type Definition
   meta_type = 'FTP Connector'
