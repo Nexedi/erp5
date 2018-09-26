@@ -445,15 +445,8 @@ class FolderMixIn(ExtensionClass.Base):
     """
     hook_raised = ExceptionRaised()
     my_getattr = guarded_getattr if restricted else getattr
-    activate_kw = self.getDefaultActivateParameterDict.im_func(None)
-    activate_kw.update(kw.get('activate_kw', ()))
-    activate_kw.setdefault('active_process', None)
-    activate_kw.setdefault('activity', 'SQLQueue')
     activate = self.getPortalObject().portal_activities.activateObject
     validate = restricted and getSecurityManager().validate
-    cost = activate_kw.setdefault('group_method_cost', .034) # 30 objects
-    if cost != 1:
-      activate_kw.setdefault('group_method_id', None) # dummy group method
     activity_count = kw.get('activity_count', 1000)
     if activity_count is None:
       check_limit = lambda: None
@@ -464,6 +457,18 @@ class FolderMixIn(ExtensionClass.Base):
     except KeyError:
       recurse_stack = [deque(id_list) if id_list else min_id or '']
       kw['_recurse_stack'] = recurse_stack
+      # We are called by user (and not in a subsequent activity).
+      # Complete activate_kw, without mutating received value.
+      activate_kw = self.getDefaultActivateParameterDict.im_func(None)
+      activate_kw.update(kw.get('activate_kw', ()))
+      activate_kw.setdefault('active_process', None)
+      activate_kw.setdefault('activity', 'SQLQueue')
+      cost = activate_kw.setdefault('group_method_cost', .034) # 30 objects
+      if cost != 1:
+        activate_kw.setdefault('group_method_id', None) # dummy group method
+      kw['activate_kw'] = activate_kw
+    else:
+      activate_kw = kw['activate_kw']
     min_depth = kw.get('min_depth', 0)
     max_depth = kw.get('max_depth', 0)
     get_activate_kw_method_id = kw.get('get_activate_kw_method_id')
@@ -521,9 +526,10 @@ class FolderMixIn(ExtensionClass.Base):
     except StopIteration:
       if hook_raised:
         raise
-      activate_kw['group_method_id'] = kw['group_id'] = '' # no grouping
-      activate_kw['activity'] = 'SQLQueue'
-      activate(self, **activate_kw)._recurseCallMethod(
+      reactivate_kw = activate_kw.copy()
+      reactivate_kw['group_method_id'] = kw['group_id'] = '' # no grouping
+      reactivate_kw['activity'] = 'SQLQueue'
+      activate(self, **reactivate_kw)._recurseCallMethod(
         method_id, method_args, method_kw, restricted=restricted, **kw)
 
   security.declarePublic('recurseCallMethod')
