@@ -171,6 +171,16 @@ class SFTPConnection:
       raise SFTPError('%s while trying to rename "%s" to "%s" on %s.' % \
                      (str(msg), old_path, new_path, self.url))
 
+  def createDirectory(self, path, mode=0777):
+    """Create a directory `path` with mode `mode`.
+    """
+    return self.conn.mkdir(path, mode)
+
+  def removeDirectory(self, path):
+    """Remove directory `path`.
+    """
+    return self.conn.rmdir(path)
+
   def logout(self):
     """Logout of the SFTP Server"""
     self.conn.close()

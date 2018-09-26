@@ -92,6 +92,12 @@ class TestSFTPConnection(ERP5TypeTestCase):
           self.connection.listFiles(".", sort_on="st_size")
       )
 
+    def test_create_remove_directory(self):
+      self.connection.createDirectory("foo")
+      self.assertItemsEqual(["foo"], self.connection.listFiles("."))
+      self.connection.removeDirectory("foo")
+      self.assertItemsEqual([], self.connection.listFiles("."))
+
   else:
     def test_no_SFTP_URL_in_environ(self):
       raise unittest.SkipTest(
