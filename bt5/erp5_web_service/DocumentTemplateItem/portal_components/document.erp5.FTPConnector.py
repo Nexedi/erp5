@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 
+
 class FTPConnector(XMLObject):
   # CMF Type Definition
   meta_type = 'FTP Connector'
@@ -109,5 +110,27 @@ class FTPConnector(XMLObject):
                                                       '%s/%s' % (remotepath, filename))
       else:
         conn.writeFile(remotepath, '%s' % filename, data, confirm=confirm)
+    finally:
+      conn.logout()
+
+  def createDirectory(self, path, mode=0777):
+    """Create a directory `path`, with file mode `mode`.
+
+    The directory is created immediatly, even if transaction is aborted.
+    """
+    conn = self.getConnection()
+    try:
+      conn.createDirectory(path, mode)
+    finally:
+      conn.logout()
+
+  def removeDirectory(self, path):
+    """Create a directory `path`, with file mode `mode`.
+
+    The directory is removed immediatly, even if transaction is aborted.
+    """
+    conn = self.getConnection()
+    try:
+      conn.removeDirectory(path)
     finally:
       conn.logout()
