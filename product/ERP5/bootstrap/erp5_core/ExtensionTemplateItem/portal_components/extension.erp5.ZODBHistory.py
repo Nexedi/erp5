@@ -28,6 +28,8 @@
 #
 ##############################################################################
 from DateTime import DateTime
+from OFS.History import historicalRevision
+from Products.ERP5Type.Log import log
 
 def _parseCategory(category):
   if category is None or category.find('/') < 0:
@@ -110,7 +112,8 @@ def getChangeHistoryList(document, size=50, attribute_name=None):
     current_state = connection.oldstate(document, d_['tid'])
     changes = {}
     current_datetime = toDateTime(d_['time'])
-    record = {'datetime':current_datetime,
+    record = {'serial': d_['tid'],
+              'datetime':current_datetime,
               'user':d_['user_name'],
               'action':d_['description'],
               'changes':changes
@@ -137,6 +140,49 @@ def getChangeHistoryList(document, size=50, attribute_name=None):
   history.extend(_getRecordedPropertyHistory(document, size))
   history.extend(_getAttributeHistory(document, size, attribute_name))
   history.sort(key=lambda x:x['datetime'])
+
+  return history
+
+def getChangeHistoryListDiffFormat(document, size=50, attribute_name=None):
+  """
+    Returns ZODB History in the format which can be used to create diff,
+    i.e, just follow the basic key value pair format of a python dictionary.
+  """
+  connection = document._p_jar
+  result = document._p_jar.db().history(document._p_oid, size=size)
+  if result is None:
+    return []
+  result = list(reversed(result))
+
+  history = []
+  previous_state = None
+  for d_ in result:
+    current_state = connection.oldstate(document, d_['tid'])
+    changes = {}
+    current_datetime = toDateTime(d_['time'])
+    record = {'serial': d_['tid'],
+              'datetime':current_datetime,
+              'user':d_['user_name'],
+              'action':d_['description'],
+              'changes':changes
+              }
+    log(record)
+    if previous_state is None:
+      previous_state = {}
+    for key in current_state:
+      if key.startswith('_') or key == 'workflow_history':
+        continue
+      if previous_state.get(key) != current_state[key]:
+        changes[key] = current_state[key]
+      if key == 'categories':
+        for cat in current_state.get('categories', ()):
+          ck, cv = _parseCategory(cat)
+          if ck in changes:
+            changes[ck].append(cv)
+          else:
+            changes[ck] = [cv]
+    history.append(record)
+    previous_state = current_state
 
   return history
 
@@ -167,6 +213,9 @@ def getChangeHistoryListForProperty(document,
       property_change_list.append(property_dict)
 
   return property_change_list
+
+def getHistoricalRevisionFromSerial(document, serial):
+  return historicalRevision(document, serial).showDict()
 
 def getHistoricalRevisionsDateList(document, size=50):
   """
