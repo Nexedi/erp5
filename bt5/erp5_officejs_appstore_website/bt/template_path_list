@@ -1,3 +1,6 @@
+document_module/store_officejs_*
+image_module/store_officejs_*
 web_page_module/officejs_old_landing_v1_html
-web_site_module/officejsoldv1
-web_site_module/officejsoldv1/**
+web_page_module/store_officejs_*
+web_site_module/application-list/store
+web_site_module/application-list/store/**

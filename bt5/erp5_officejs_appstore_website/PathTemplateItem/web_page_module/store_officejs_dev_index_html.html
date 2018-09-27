@@ -1,0 +1,174 @@
+&lt;!DOCTYPE html&gt;
+&lt;!--[if lt IE 7]&gt;      &lt;html class=&quot;no-js lt-ie9 lt-ie8 lt-ie7&quot;&gt; &lt;![endif]--&gt;
+&lt;!--[if IE 7]&gt;         &lt;html class=&quot;no-js lt-ie9 lt-ie8&quot;&gt; &lt;![endif]--&gt;
+&lt;!--[if IE 8]&gt;         &lt;html class=&quot;no-js lt-ie9&quot;&gt; &lt;![endif]--&gt;
+&lt;!--[if gt IE 8]&gt;&lt;!--&gt;
+&lt;html class=&quot;no-js&quot;&gt;&lt;!--&lt;![endif]--&gt;&lt;head&gt;
+&lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+        &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge,chrome=1&quot;&gt;
+        &lt;title&gt;OfficeJS 初步说明&lt;/title&gt;
+        &lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+
+        &lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+
+        &lt;link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800&amp;subset=latin,cyrillic-ext' rel='stylesheet' type='text/css'&gt;
+
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;css/normalize.min.css&quot;&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;css/main.css&quot;&gt;
+
+        &lt;script src=&quot;js/vendor/modernizr-2.6.2-respond-1.1.0.min.js&quot;&gt;&lt;/script&gt;
+
+        &lt;!--&lt;link href=&quot;dev_files/css.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;&gt;
+
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;dev_files/normalize.css&quot;&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;dev_files/main.css&quot;&gt;
+
+        &lt;script src=&quot;dev_files/modernizr-2.html&quot;&gt;&lt;/script&gt;--&gt;
+    &lt;/head&gt;
+
+&lt;body&gt;
+
+        &lt;!--[if lt IE 7]&gt;
+            &lt;p class=&quot;chromeframe&quot;&gt;You are using an &lt;strong&gt;outdated&lt;/strong&gt; browser. Please &lt;a href=&quot;http://browsehappy.com/&quot;&gt;upgrade your browser&lt;/a&gt; or &lt;a href=&quot;http://www.google.com/chromeframe/?redirect=true&quot;&gt;activate Google Chrome Frame&lt;/a&gt; to improve your experience.&lt;/p&gt;
+        &lt;![endif]--&gt;
+
+        &lt;div class=&quot;main-container&quot;&gt;
+            &lt;div class=&quot;main wrapper clearfix&quot;&gt;
+
+
+
+
+                &lt;article&gt;
+
+&lt;h1 class=&quot;page_title&quot;&gt;OfficeJS 初步说明 &lt;/h1&gt;
+
+&lt;p&gt;Version: 001 - 2013-11-19&lt;/p&gt;
+
+&lt;p&gt;这篇文章详述了OfficeJS离线HTML5应用的初步说明。
+&lt;/p&gt;
+
+&lt;h2&gt;耦合性&lt;/h2&gt;
+
+&lt;p&gt;OfficeJS 应用依赖于以下的库：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://jquerymobile.com/&quot;&gt;jQuery 移动&lt;/a&gt;: 独立平台用户界面控件(&lt;a href=&quot;http://jquerymobile.com/gbs/&quot;&gt; 被至少30种网络浏览器支持&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://j-io.org/&quot;&gt;J-IO&lt;/a&gt;: 独立后端的持久数据管理(离线, 在线, 复制，ryption等)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://renderjs.org/&quot;&gt;RenderJS&lt;/a&gt;: 可重复使用的组件系统 (可选的)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;提交给OfficeJS HTML5应用商店的应用必须依照以下规则为这些库提供支持:&lt;/p&gt;
+
+&lt;p&gt;
+&lt;/p&gt;&lt;table align=&quot;center&quot; border=&quot;1&quot;&gt;
+ &lt;tbody&gt;&lt;tr&gt;
+    &lt;th&gt;&lt;/th&gt;
+    &lt;th&gt;jQuery Mobile&lt;/th&gt;
+    &lt;th&gt;JIO&lt;/th&gt;
+    &lt;th&gt;RenderJS&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+    &lt;td&gt;无可持续性数据的应用&lt;/td&gt;
+    &lt;td&gt;推荐&lt;/td&gt;
+    &lt;td&gt;可选&lt;/td&gt;
+    &lt;td&gt;可选&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+    &lt;td&gt;有可持续性数据的应用&lt;/td&gt;
+    &lt;td&gt;推荐&lt;/td&gt;
+    &lt;td&gt;必选&lt;/td&gt;
+    &lt;td&gt;可选&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+    &lt;td&gt;应用数据可被嵌入另一应用程序中&lt;/td&gt;
+    &lt;td&gt;推荐&lt;/td&gt;
+    &lt;td&gt;必选&lt;/td&gt;
+    &lt;td&gt;必选&lt;/td&gt;
+ &lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;&lt;/p&gt;
+
+
+&lt;h2&gt;结构&lt;/h2&gt;
+
+&lt;p&gt;一个OfficeJS应用程序就是一个定义了元数据和耦合性（CSS，JS）的HTML5文档。你可以从使用以下的OfficeJS 
+应用程序模板开始。&lt;/p&gt;
+
+&lt;code&gt;&lt;/code&gt;&lt;pre style=&quot;font-size:80%&quot;&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;
+&amp;lt;html manifest=&quot;manifest.appcache&quot;&amp;gt;
+  &amp;lt;head&amp;gt;
+    &amp;lt;meta http-equiv=&quot;Content-type&quot; content=&quot;text/html; charset=utf-8&quot;&amp;gt;
+    &amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot; /&amp;gt;
+
+    &amp;lt;!-- required meta tags/information --&amp;gt;
+    &amp;lt;title&amp;gt;Application Title&amp;lt;/title&amp;gt;
+    &amp;lt;meta name=&quot;description&quot; content=&quot;Application Description&quot;/&amp;gt;
+    &amp;lt;meta name=&quot;keywords&quot; content=&quot;Category_1, Category_2&quot;&amp;gt;
+    &amp;lt;meta name=&quot;author&quot; content=&quot;John Doe|johndoe@internetl.com&quot;/&amp;gt;
+
+    &amp;lt;!-- CSS --&amp;gt;
+    &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;http://code.jquery.com/mobile/git/jquery.mobile-git.css&quot;&amp;gt;
+
+    &amp;lt;!-- Custom Stylesheets --&amp;gt;
+    &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;path/to/stylesheet_a&quot;&amp;gt;
+    
+    &amp;lt;!-- JQUERY/JQUERY MOBILE --&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;http://code.jquery.com/jquery-1.10.1.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;http://code.jquery.com/mobile/git/jquery.mobile-git.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+
+    &amp;lt;!-- JIO --&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;path/to/sha256.amd.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;path/to/rsvp-custom.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;path/to/jio.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;path/to/complex_queries.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;!-- JIO storages, for example --&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;path/to/localstorage.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+
+    &amp;lt;!-- RenderJS --&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;path/to/renderjs.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+
+    &amp;lt;!-- 3rd Party Plugins/Custom Scripts --&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;path/to/plugin_a.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;script type=&quot;text/javascript&quot; src=&quot;path/to/plugin_b.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+  
+  &amp;lt;/head&amp;gt;
+  &amp;lt;body&amp;gt;
+    &amp;lt;!-- Content of application --&amp;gt;
+  &amp;lt;/body&amp;gt;
+
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;
+&lt;b&gt;请注意:&lt;/b&gt;
+&lt;/p&gt;&lt;ul&gt;
+  &lt;li&gt;应用程序都应该有一个manifest资源配置文件明确指出被贮藏的文件。&lt;/li&gt;
+  &lt;li&gt;自定义脚本和添加的插件可以被容易的添加到HTML5文档内容的后面。容易融入的插件例子包括有：
+    &lt;ul&gt;
+      &lt;li&gt;表单验证 - &lt;a href=&quot;http://validval.frebsite.nl/&quot;&gt;Validval&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;i18n 支持 - &lt;a href=&quot;http://jamuhl.github.io/i18next/&quot;&gt;i18next&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;在开发HTML5应用程序时注意 &lt;a href=&quot;http://view.jquerymobile.com/master/demos/navigation/&quot;&gt;jQuery Mobile Ajax 基础
+  导航&lt;/a&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2&gt;应用案例&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.officejs.com/app/task_manager/&quot;&gt;任务管理&lt;/a&gt; 提供了一个基于JIO技术的简明的关于持续应用的 JQuery Mobile 案例。&lt;/li&gt;&lt;/ul&gt;
+
+&lt;br&gt;
+&lt;h2&gt;提交你的应用程序&lt;/h2&gt;
+&lt;p&gt;你可以在此提交你的应用: &amp;nbsp; &lt;a href=&quot;http://officejs.com/#apps&quot;&gt;到 officejs.com上提交应用&lt;/a&gt;&lt;/p&gt;&lt;a href=&quot;http://officejs.com/#apps&quot;&gt;
+
+                &lt;/a&gt;&lt;/article&gt;&lt;a href=&quot;http://officejs.com/#apps&quot;&gt;
+
+            &lt;/a&gt;&lt;/div&gt;&lt;a href=&quot;http://officejs.com/#apps&quot;&gt; &lt;!-- #main --&gt;
+  &lt;/a&gt;&lt;/div&gt;&lt;a href=&quot;http://officejs.com/#apps&quot;&gt;
+
+&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;

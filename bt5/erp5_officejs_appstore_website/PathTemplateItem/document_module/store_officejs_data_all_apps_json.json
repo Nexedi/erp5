@@ -1,0 +1,70 @@
+{
+  "portal_type_source": "Applications",
+  "portal_type_title": "application",
+  "portal_type_fields": "application_fieldlist",
+  "initial_query": {"sort": ["int_index", "descending"], "include_documents": true, "limit":[0,32]},
+  "form": null,
+  "id":"all_apps",
+  "property_dict": {},
+  "children": [{
+    "generate": "widget",
+    "type": "controlbar",
+    "class_list": "responsive",
+    "children": [{
+      "type": "input",
+      "direct": {"id":"search_all_apps", "className": "translate"},
+      "attributes": {"data-enhanced":"true", "data-i18n": "[placeholder]pages.all.search","placeholder":"Search All Apps", "data-icon":"search", "data-action-btn":"true", "data-type":"search", "type":"search"},
+      "logic":{"clear":"true", "action":"search"}
+    },{
+      "type": "div",
+      "direct": {"className":"info"},
+      "attributes": {"data-info":"records"}
+    }]
+  }, {
+    "type": "p",
+    "direct": {"className": "translate ui-content-element responsive"},
+    "attributes": {"data-i18n":"pages.home.info_officejs"},
+    "logic": {"text": "OfficeJS is the only appstore compatible with Windows, MacOS, Android, Firefox OS, Linux, XiaomiOS, Bada, Tizen etc. Start browsing and using available applications. No login required."}
+  }, {
+    "generate":"widget",
+    "type": "listview",
+    "class_list": "responsive",
+    "theme": "slapos-white",
+    "property_dict": {
+      "inset":"true",
+      "filter": "true",
+      "input": "#search_all_apps"
+    },
+    "children": []
+  }, {
+    "generate":"widget",
+    "type": "controlbar",
+    "class_list": "responsive",
+    "children": [{
+      "generate": "widget",
+      "type": "controlgroup",
+      "class_list": "pagination",
+      "property_dict": {
+        "direction": "horizontal"
+      },
+      "children": [
+        {"type": "a", "direct":{"className":"action", "href":""}, "attributes":{"data-i18n":"global.pagination.first", "data-action":"first", "data-icon":"step-backward", "data-iconpos":"notext"}, "logic": {"text":"First"}},
+        {"type": "a", "direct":{"className":"action", "href":""}, "attributes":{"data-i18n":"global.pagination.previous", "data-action":"prev", "data-icon":"backward", "data-iconpos":"notext"}, "logic": {"text":"Step Backward"}},
+        {"type":"select", "direct":{"id":"paginate_reports_apps", "className":"action"},"attributes": {"data-icon":"reorder", "data-action":"limit", "data-iconpos":"notext"},"logic": {"options":[{"value": "16", "text": "16", "text_i18n":"global.pagination.16"},{"value": "32", "text": "32", "text_i18n":"global.pagination.32"},{"value": "64", "text": "64", "text_i18n":"global.pagination.64"}, {"value": "128", "text": "128", "text_i18n":"global.pagination.128"}]}},
+        {"type": "a", "direct":{"className":"action", "href":""}, "attributes":{"data-i18n":"global.pagination.next", "data-action":"next", "data-icon":"forward", "data-iconpos":"notext"}, "logic": {"text":"Step Forward"}},
+        {"type": "a", "direct":{"className":"action", "href":""}, "attributes":{"data-i18n":"global.pagination.last", "data-action":"last", "data-icon":"step-forward", "data-iconpos":"notext"}, "logic": {"text": "Last"}}
+      ]
+    }]
+  },
+  {
+    "generate":"widget",
+    "type": "controlbar",
+    "class_list": "responsive",
+    "children": [{
+        "type": "a",
+        "attributes": {"href":"http://www.miitbeian.gov.cn", "style": "padding-top: 1em;" },
+        "logic": {"text": "沪ICP备14008524号"}
+    }]
+   }]
+}
+
