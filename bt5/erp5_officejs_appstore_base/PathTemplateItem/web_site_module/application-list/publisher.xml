@@ -2,28 +2,10 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Site" module="erp5.portal_type"/>
+      <global name="Web Section" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>_Access_contents_information_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Anonymous</string>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Authenticated</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Member</string>
-                <string>Owner</string>
-                <string>Reviewer</string>
-              </tuple>
-            </value>
-        </item>
         <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
@@ -67,24 +49,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_View_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Anonymous</string>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Authenticated</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Member</string>
                 <string>Owner</string>
-                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -133,7 +98,7 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Web Site/officejs_runner</string>
+                        <string>ERP5 Web Section/publisher</string>
                       </tuple>
                     </key>
                     <value>
@@ -162,17 +127,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_hateoas_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_application_title</string> </value>
+                      <value> <string>configuration_x_frame_options</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -192,27 +147,17 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
+                      <value> <string>configuration_application_title</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
                       <value> <string>configuration_default_view_action_reference</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_translation_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_jio_gadget_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -232,7 +177,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_header_gadget_url</string> </value>
+                      <value> <string>configuration_jio_gadget_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -252,6 +197,26 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
+                      <value> <string>configuration_default_jio_document_page_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_translation_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
                       <value> <string>configuration_frontpage_gadget_url</string> </value>
                   </item>
                   <item>
@@ -262,7 +227,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_x_frame_options</string> </value>
+                      <value> <string>configuration_hateoas_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -273,16 +238,6 @@
                   <item>
                       <key> <string>id</string> </key>
                       <value> <string>configuration_manifest_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_default_jio_document_page_gadget_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -311,29 +266,16 @@
             </value>
         </item>
         <item>
-            <key> <string>authorization_forced</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>available_language</string> </key>
-            <value>
-              <tuple>
-                <string>en</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>caching_policy/must-revalidate</string>
                 <string>aggregate/web_page_module/rjs_gadget_erp5_launcher_html</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>configuration_application_title</string> </key>
-            <value> <string>OfficeJS</string> </value>
+            <value> <string>OfficeJS Publisher</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
@@ -354,12 +296,6 @@
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
             <value> <string>hateoas/</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_header_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
@@ -399,19 +335,35 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>RenderJS Gadget ERP5</string> </value>
+            <value> <string>Publisher Web Site</string> </value>
+        </item>
+        <item>
+            <key> <string>empty_criterion_valid</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>officejs_runner</string> </value>
+            <value> <string>publisher</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
             <value> <string>WebSection_viewRenderJSPreference</string> </value>
         </item>
         <item>
+            <key> <string>membership_criterion_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Site</string> </value>
+            <value> <string>Web Section</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -424,12 +376,20 @@
             <value> <string>RJS</string> </value>
         </item>
         <item>
-            <key> <string>static_language_selection</string> </key>
-            <value> <int>1</int> </value>
+            <key> <string>string_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Runner</string> </value>
+            <value> <string>Publisher Web Site</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -446,7 +406,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
+      <global name="WebSectionTraversalHook" module="Products.ERP5.Document.WebSection"/>
     </pickle>
     <pickle>
       <dictionary/>
@@ -543,11 +503,13 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -569,7 +531,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1535361092.7</float>
+                        <float>1538038198.52</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -578,7 +540,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>embedded</string> </value>
             </item>
           </dictionary>
         </list>
@@ -600,7 +562,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -614,7 +576,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>969.60600.10704.12117</string> </value>
+                <value> <string>970.35412.44054.13056</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -632,7 +594,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1535619003.32</float>
+                        <float>1538038386.61</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
