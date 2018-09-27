@@ -54,6 +54,13 @@ if base:
   base += "/"
 base_length = len(base)
 
+def extractWebManifest(file):
+  html = context.Base_parseHtml(file)
+  for tag in html:
+    if tag[0] == 'starttag' and tag[1] == 'link' and ('rel', 'manifest') in tag[2]:
+      for attribute in tag[2]:
+        if attribute[0] == 'href':
+          return attribute[1]
 
 software_release_url = software_release.getRelativeUrl()
 
@@ -87,9 +94,10 @@ for name in zip_reader.namelist():
     document.getCategoryList() + ["contributor/" + software_publication.getSource()])
   if url in ("index.html", "index.htm"):
     default_page = document.getRelativeUrl()
+    web_manifest_url = extractWebManifest(document.getData())
   document.activate(tag=tag).publish()
 
-software_release.SoftwareRelease_fixRelatedWebSection(default_page=default_page)
+software_release.SoftwareRelease_fixRelatedWebSection(default_page=default_page, web_manifest = web_manifest_url)
 
 if portal.portal_workflow.isTransitionPossible(zip_file, 'publish'):
   zip_file.publish()

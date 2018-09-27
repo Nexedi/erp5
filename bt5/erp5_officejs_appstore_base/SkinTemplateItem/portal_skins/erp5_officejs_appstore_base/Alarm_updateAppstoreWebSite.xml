@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>default_page="", web_manifest=None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SoftwareRelease_fixRelatedWebSection</string> </value>
+            <value> <string>Alarm_updateAppstoreWebSite</string> </value>
         </item>
       </dictionary>
     </pickle>
