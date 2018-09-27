@@ -16,6 +16,5 @@ if not web_site:
 # This is dangerous
 if not web_site.getId() == context.getReference().lower():
   web_site.setId(context.getReference().lower())
-
 if batch_mode:
   return web_site
