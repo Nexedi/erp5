@@ -99,7 +99,7 @@
                         </tuple>
                         <tuple>
                           <string>current_value</string>
-                          <string>Blame</string>
+                          <string>Annotate</string>
                         </tuple>
                       </list>
                     </value>
