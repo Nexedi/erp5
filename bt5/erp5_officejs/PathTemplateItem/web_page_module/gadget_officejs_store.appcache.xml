@@ -110,6 +110,7 @@
 # images/ajax-loader.gif\n
 CACHE:\n
 appstore/officejs_smart_assistant_icon.png\n
+appstore/officejs_javascript_editor_icon.png\n
 appstore/app/500px-Gnome-x-office-document.svg.png\n
 appstore/app/500px-Gnome-x-office-presentation.svg.png\n
 appstore/app/500px-Gnome-x-office-spreadsheet.svg.png\n
@@ -370,7 +371,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>969.56500.38539.51370</string> </value>
+                <value> <string>970.22725.26429.65484</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -388,7 +389,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1535371498.01</float>
+                        <float>1538062839.11</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
