@@ -31,6 +31,7 @@
 """
 
 # Update ERP5 Globals
+from AccessControl import ModuleSecurityInfo
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 import sys, Permissions
 this_module = sys.modules[ __name__ ]
@@ -55,3 +56,4 @@ def initialize( context ):
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)
+ModuleSecurityInfo('Products.ERP5Catalog.UserId').declarePublic('UserId')

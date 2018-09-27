@@ -46,6 +46,7 @@ ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 from TranslationProviderBase import TranslationProviderBase
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Accessor.Translation import TRANSLATION_DOMAIN_CONTENT_TRANSLATION
+from Products.ERP5Catalog.UserId import UserId
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
@@ -76,7 +77,7 @@ class LocalRoleAssignorMixIn(object):
           else:
             user_name = getSecurityManager().getUser().getId()
 
-      group_id_role_dict = {user_name: {'Owner'}}
+      group_id_role_dict = {UserId(user_name): {'Owner'}}
       local_roles_group_id_group_id = {}
       # Merge results from applicable roles
       for role_generator in self.getFilteredRoleListFor(ob):

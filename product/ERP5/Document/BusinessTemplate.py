@@ -67,6 +67,7 @@ from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Catalog.UserId import UserId
 from Products.ERP5.Document.File import File
 from OFS.Traversable import NotFound
 from OFS import SimpleItem, XMLExportImport
@@ -1443,7 +1444,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               for key, value in local_role_dict.items():
                 if 'Owner' in value:
                   value.remove('Owner')
-                if len(value) == 0:
+                if isinstance(key, UserId) or len(value) == 0:
                   removable_role_key_list.append(key)
               # there is no need to keep emptied keys after cloning, it makes
               # unstable local roles -- if object is cloned it can be different when
@@ -1451,7 +1452,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               for key in removable_role_key_list:
                 local_role_dict.pop(key)
               #add new owner
-              l=local_role_dict.setdefault(userid, [])
+              l=local_role_dict.setdefault(UserId(userid), [])
               l.append('Owner')
         # END:part of ERP5Type.CopySupport.manage_afterClone
         del obj.isIndexable
@@ -4841,6 +4842,10 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     # local roles
     xml_data += '\n <local_roles>'
     for user_id, role_list in sorted(local_roles_dict.items()):
+      if isinstance(user_id, UserId):
+        # User ids are not consistent accross instances, so do not grant roles
+        # to random users on instance installing such business template.
+        continue
       if 'Owner' in role_list:
         # We don't export Owner role as it set automatically when installing business template.
         role_list.remove('Owner')
@@ -4921,13 +4926,13 @@ class LocalRolesTemplateItem(BaseTemplateItem):
         # We ignore the owner defined in local_roles_dict and set it to the user installing that business template.
         local_roles_dict = deepcopy(local_roles_dict)
         for user_id, group_list in list(local_roles_dict.items()):
-          if group_list == ["Owner"]:
+          if group_list == ["Owner"] or isinstance(user_id, UserId):
             del local_roles_dict[user_id]
         current_user = getSecurityManager().getUser()
         if current_user is not None:
           current_user_id = current_user.getId()
           if current_user_id is not None:
-            local_roles_dict.setdefault(current_user_id, []).append('Owner')
+            local_roles_dict.setdefault(UserId(current_user_id), []).append('Owner')
 
         obj.__ac_local_roles__ = local_roles_dict
         if local_roles_group_id_dict:
@@ -4953,7 +4958,7 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       # there is no needs to fail
       obj = p.unrestrictedTraverse(path, None)
       if obj is not None:
-        setattr(obj, '__ac_local_roles__', {})
+        obj.__ac_local_roles__ = {}
         if getattr(aq_base(obj), '__ac_local_roles_group_id_dict__',
                     None) is not None:
           delattr(obj, '__ac_local_roles_group_id_dict__')

@@ -33,23 +33,19 @@ ERP5Type_asSecurityGroupId can also return a list of users whenever a category p
 to a Person instance. This is useful to implement user based local role assignments
 instead of abstract security based local roles.
 """
+from Products.ERP5Catalog.UserId import UserId
 portal = context.getPortalObject()
+portal_types = portal.portal_types
 getCategoryValue = portal.portal_categories.getCategoryValue
-
-# sort the category list lexicographically
-# this prevents us to choose the exact order we want,
-# but also prevents some human mistake to break everything by creating site_function instead of function_site
-if category_order not in (None, ''):
-  category_order = list(category_order)
-  category_order.sort()
-else:
-  category_order = []
 
 # Prepare a cartesian product
 from Products.ERP5Type.Utils import cartesianProduct
 list_of_list = []
 user_list = []
-for base_category in category_order:
+# sort the category list lexicographically
+# this prevents us to choose the exact order we want,
+# but also prevents some human mistake to break everything by creating site_function instead of function_site
+for base_category in sorted(category_order or []):
   # It is acceptable for a category not to be defined
   try:
     category_list = kw[base_category]
@@ -69,12 +65,21 @@ for base_category in category_order:
     category_object = getCategoryValue(category_path)
     if category_object is None:
       raise RuntimeError("Security definition error (category %r not found)" % (category_path,))
+    # Assume few documents of the same type are candidates for current role.
+    # Otherwise, some (local ?) caching would be better, but make the code
+    # more complex and slower for the simple cases.
     portal_type = category_object.getPortalType()
+    # BBB: remove Person special casing once ERP5UserManager has been phased
+    # out, as it will mean all Persons have their user_id property set when
+    # they are users, so ERP5User property sheet presence will be enough.
     if portal_type == 'Person':
-      # We define a person here
       user_name = category_object.Person_getUserId()
       if user_name is not None:
-        user_list.append(user_name)
+        user_list.append(UserId(user_name))
+    elif 'ERP5User' in portal_types[portal_type].getTypePropertySheetList():
+      user_name = category_object.getUserId()
+      if user_name is not None:
+        user_list.append(UserId(user_name))
     else:
       category_code = (category_object.getProperty('codification') or
                         category_object.getProperty('reference') or

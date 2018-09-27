@@ -42,17 +42,14 @@ from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.CMFActivity.ActivityTool import GroupedMessage
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-
 from AccessControl.PermissionRole import rolesForPermissionOn
-
 from MethodObject import Method
-
 from Products.ERP5Security import mergedLocalRoles
 from Products import ERP5Security
 from Products.ZSQLCatalog.Utils import sqlquote
-
 import warnings
 from zLOG import LOG, PROBLEM, WARNING, INFO
+from .UserId import UserId
 
 ACQUIRE_PERMISSION_VALUE = []
 DYNAMIC_METHOD_NAME = 'z_related_'
@@ -85,64 +82,90 @@ class IndexableObjectWrapper(object):
     __security_parameter_cache = None
     __local_role_cache = None
 
-    def __init__(self, ob, user_set, catalog_role_set):
-        self.__ob = ob
-        self.__user_set = user_set
-        self.__catalog_role_set = catalog_role_set
+    def __init__(self, ob, user_set, security_group_set, catalog_role_set):
+      self.__ob = ob
+      self.__user_set = user_set
+      self.__security_group_set = security_group_set
+      self.__unsure_set = unsure_set = set()
+      self.__catalog_role_set = catalog_role_set
+
+      has_UserId = False
+      # For each group or user, we have a list of roles, this list
+      # give in this order : [roles on object, roles acquired on the parent,
+      # roles acquired on the parent of the parent....]
+      # So if we have ['-Author','Author'] we should remove the role 'Author'
+      # but if we have ['Author','-Author'] we have to keep the role 'Author'
+      local_role_dict = {}
+      skip_role_set = set()
+      skip_role = skip_role_set.add
+      clear_skip_role = skip_role_set.clear
+      for group_id, role_list in mergedLocalRoles(ob).iteritems():
+        if group_id not in user_set and group_id not in security_group_set:
+          if isinstance(group_id, UserId):
+            if not has_UserId:
+              # We have at least one UserId instance (which we just found), so
+              # all unsure values in this run are actually groups.
+              security_group_set.update(unsure_set)
+              unsure_set.clear()
+              has_UserId = True
+            user_set.add(group_id)
+          elif has_UserId:
+            # We have at least one UserId instance, so strings are groups.
+            security_group_set.add(group_id)
+          else:
+            # All-strings roles, we can only guess here for Owner role as it
+            # can only be granted to users.
+            if 'Owner' in role_list:
+              user_set.add(group_id)
+            else:
+              # If group is not a known user nor a known group, then it's unsure.
+              unsure_set.add(group_id)
+        new_role_list = []
+        new_role = new_role_list.append
+        clear_skip_role()
+        for role in role_list:
+          if role[:1] == '-':
+            skip_role(role[1:])
+          elif role not in skip_role_set:
+            new_role(role)
+        if new_role_list:
+          local_role_dict[group_id] = new_role_list
+      self.__local_role_cache = local_role_dict
 
     def __getattr__(self, name):
-        return getattr(self.__ob, name)
+      return getattr(self.__ob, name)
 
     # We need to update the uid during the cataloging process
     uid = property(lambda self: self.__ob.getUid(),
                    lambda self, value: setattr(self.__ob, 'uid', value))
-
-    def __getLocalRoleDict(self):
-      local_role_dict = self.__local_role_cache
-      if local_role_dict is None:
-        ob = self.__ob
-        # For each group or user, we have a list of roles, this list
-        # give in this order : [roles on object, roles acquired on the parent,
-        # roles acquired on the parent of the parent....]
-        # So if we have ['-Author','Author'] we should remove the role 'Author'
-        # but if we have ['Author','-Author'] we have to keep the role 'Author'
-        local_role_dict = {}
-        skip_role_set = set()
-        skip_role = skip_role_set.add
-        clear_skip_role = skip_role_set.clear
-        for group_id, role_list in mergedLocalRoles(ob).iteritems():
-          new_role_list = []
-          new_role = new_role_list.append
-          clear_skip_role()
-          for role in role_list:
-            if role[:1] == '-':
-              skip_role(role[1:])
-            elif role not in skip_role_set:
-              if role == 'Owner':
-                # Owner role may only be granted to users, not to groups so we
-                # can immediately know this security group id is a user.
-                self.__user_set.add(group_id)
-              new_role(role)
-          if new_role_list:
-            local_role_dict[group_id] = new_role_list
-        self.__local_role_cache = local_role_dict
-      return local_role_dict
 
     def _getSecurityGroupIdGenerator(self):
       """
       Return the list of security group identifiers this document is
       interested in knowing whether they are users or groups: this only matters
       for security group ids which are granted at least one role mapping to a
-      role column.
-      They may be user identifiers or group identifiers.
+      role column and which are not already known to be either a user or a group.
       Supposed to be accessed by CatalogTool.
       """
-      return (
-        group_id
-        for group_id, role_list in self.__getLocalRoleDict().iteritems()
-        if group_id not in self.__user_set and
-          any(role in self.__catalog_role_set for role in role_list)
+      # Note: self.__user_set and self.__security_group_set are mutable and
+      # shared between IndexableObjectWrapper instances, so while each
+      # instance is careful to keep them consistent they cannot update
+      # each other's self.__unsure_set . So recheck that no other
+      # document could help us deduce users or groups from this set.
+      unsure_set = self.__unsure_set.difference(
+        self.__user_set,
+      ).difference(
+        self.__security_group_set,
       )
+      if unsure_set:
+        local_role_dict = self.__local_role_cache
+        catalog_role_set = self.__catalog_role_set
+        return (
+          group_id
+          for group_id in self.__unsure_set
+          if any(role in catalog_role_set for role in local_role_dict[group_id])
+        )
+      return ()
 
     def _getSecurityParameterList(self):
       result = self.__security_parameter_cache
@@ -208,7 +231,7 @@ class IndexableObjectWrapper(object):
         user_view_permission_role_dict = {}
         catalog_role_set = self.__catalog_role_set
         user_set = self.__user_set
-        for group_id, role_list in self.__getLocalRoleDict().iteritems():
+        for group_id, role_list in self.__local_role_cache.iteritems():
           # Warning: only valid when group_id is candidate for indexation in a
           # catalog_role column !
           group_id_is_user = group_id in user_set
@@ -857,18 +880,18 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         Return a list of wrapped objects for reindexing.
       """
       user_set = set()
+      security_group_set = set()
       catalog_role_set = {x for x, _ in catalog_value.getSQLCatalogRoleKeysList()}
       catalog_security_uid_groups_columns_dict = catalog_value.getSQLCatalogSecurityUidGroupsColumnsDict()
       default_security_uid_column = catalog_security_uid_groups_columns_dict['']
       getPredicatePropertyDict = catalog_value.getPredicatePropertyDict
-      group_id_set = set()
       wrapper_list = []
+      unique_wrapper_list = []
       for object_value in object_value_list:
         document_object = aq_inner(object_value)
-        w = IndexableObjectWrapper(document_object, user_set, catalog_role_set)
+        w = IndexableObjectWrapper(document_object, user_set, security_group_set, catalog_role_set)
         w.predicate_property_dict = getPredicatePropertyDict(object_value) or {}
-        group_id_set.update(w._getSecurityGroupIdGenerator())
-
+        unique_wrapper_list.append(w)
         # Find the parent definition for security
         is_acquired = 0
         while getattr(document_object, 'isRADContent', 0):
@@ -882,13 +905,18 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           else:
             break
         if is_acquired:
-          document_w = IndexableObjectWrapper(document_object, user_set, catalog_role_set)
-          group_id_set.update(document_w._getSecurityGroupIdGenerator())
+          document_w = IndexableObjectWrapper(document_object, user_set, security_group_set, catalog_role_set)
+          unique_wrapper_list.append(document_w)
         else:
           document_w = w
         wrapper_list.append((document_object, w, document_w))
-
-      group_id_set.difference_update(user_set)
+      group_id_set = set()
+      for wrapper in unique_wrapper_list:
+        # Only call _getSecurityGroupIdGenerator after all wrappers are built,
+        # so we have as many entries as possible in user_set and
+        # security_group_set, so _getSecurityGroupIdGenerator can skip as many
+        # entries as possible, to minimise calls to ERP5Site_filterUserIdSet.
+        group_id_set.update(wrapper._getSecurityGroupIdGenerator())
       if group_id_set:
         # Note: we mutate the set, so all related wrappers get (purposedly)
         # affected by this, which must happen before _getSecurityParameterList
