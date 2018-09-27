@@ -2847,7 +2847,11 @@ class Base( CopyContainer,
 
   def _getReindexAndActivateParameterDict(self, kw, activate_kw):
     # Lowest activate_kw priority: default activate parameter dict
-    full_activate_kw = self.getDefaultActivateParameterDict()
+    full_activate_kw = self.getDefaultActivateParameterDict(
+      # It is the responsibility of activity spawning to pull placeless
+      # activate parameters. Skip them here.
+      inherit_placeless=False,
+    )
     reindex_kw = self.getDefaultReindexParameterDict()
     if reindex_kw is not None:
       reindex_kw = reindex_kw.copy()
