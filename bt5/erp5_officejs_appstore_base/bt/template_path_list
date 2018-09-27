@@ -5,9 +5,9 @@ portal_categories/publication_section/application
 portal_categories/publication_section/application/**
 web_page_module/gadget_ojs_appstore_*
 web_site_module/application-list
+web_site_module/application-list/publisher
+web_site_module/application-list/publisher/**
 web_site_module/application-list/template
 web_site_module/application-list/template/**
 web_site_module/application-list/template_static
 web_site_module/application-list/template_static/**
-web_site_module/officejs_runner
-web_site_module/officejs_runner/**

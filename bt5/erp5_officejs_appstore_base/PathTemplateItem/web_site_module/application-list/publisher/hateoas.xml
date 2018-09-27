@@ -381,7 +381,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -403,7 +403,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1535011051.76</float>
+                        <float>1538038527.12</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -434,12 +434,12 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P1</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
                 <value>
-                  <none/>
+                  <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
                 </value>
             </item>
             <item>
@@ -448,7 +448,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>969.50493.34732.36812</string> </value>
+                <value> <string>0.0.0.0</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -466,7 +466,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1535011085.73</float>
+                        <float>1538038527.13</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -476,6 +476,38 @@
           </dictionary>
         </list>
       </tuple>
+    </pickle>
+  </record>
+  <record id="11" aka="AAAAAAAAAAs=">
+    <pickle>
+      <global name="Message" module="Products.ERP5Type.Message"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+        <item>
+            <key> <string>domain</string> </key>
+            <value> <string>erp5_ui</string> </value>
+        </item>
+        <item>
+            <key> <string>mapping</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>source_item</string> </key>
+                    <value> <string>/erp5/web_site_module/officejs_runner/hateoas</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>message</string> </key>
+            <value> <string>Object copied from ${source_item}</string> </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
 </ZopeData>
