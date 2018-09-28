@@ -239,7 +239,7 @@ class SlapOSControler(object):
     # Wait for proxy to accept connections
     retries = 0
     while True:
-      time.sleep(.5)
+      time.sleep(1)
       try:
         slap.initializeConnection(config['master_url'])
         computer = slap.registerComputer(config['computer_id'])
@@ -247,7 +247,7 @@ class SlapOSControler(object):
         computer.getComputerPartitionList()
       except slapos.slap.ConnectionError, e:
         retries += 1
-        if retries >= 20:
+        if retries >= 60:
           raise
         logger.debug("Proxy still not started %s, retrying", e)
       else:
