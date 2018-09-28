@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.56 (2018-09-28)
+-------------------
+
+ * erp5.util
+
+   - testnode: give more time for the slapos proxy to start
+
 0.4.55 (2018-09-28)
 -------------------
 
