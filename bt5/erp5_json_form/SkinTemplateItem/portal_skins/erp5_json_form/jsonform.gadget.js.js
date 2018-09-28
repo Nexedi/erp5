@@ -346,6 +346,15 @@
       x = {};
     } else if (!doesntcopy) {
       x = JSON.parse(JSON.stringify(x));
+      if (x.anyOf) {
+        delete x.anyOf;
+      }
+      if (x.oneOf) {
+        delete x.oneOf;
+      }
+      if (x.allOf) {
+        delete x.allOf;
+      }
     }
     if (y === true) {
       y = {};
@@ -443,6 +452,7 @@
             break;
           case "allOf":
           case "anyOf":
+          case "oneOf":
           case "$ref":
           case "id":
           case "$id":
@@ -456,6 +466,7 @@
           switch (key) {
           case "allOf":
           case "anyOf":
+          case "oneOf":
           case "$ref":
             break;
           default:
@@ -473,7 +484,7 @@
         var i,
           arr = [];
         for (i = 0; i < schema_array.length; i += 1) {
-          arr.push(expandSchema(g, schema_array[i], schema_path + '/allOf/' + i.toString()));
+          arr.push(expandSchema(g, schema_array[i], schema_path + '/' + i.toString()));
         }
         return RSVP.all(arr);
       })
@@ -507,14 +518,13 @@
       });
   }
 
-  function anyOf(g, schema, schema_path) {
-    var schema_array = schema.anyOf;
+  function anyOf(g, schema_array, schema_path, base_schema) {
     return RSVP.Queue()
       .push(function () {
         var i,
           arr = [];
         for (i = 0; i < schema_array.length; i += 1) {
-          arr.push(expandSchema(g, mergeSchemas(schema_array[i], schema), schema_path + '/anyOf/' + i.toString()));
+          arr.push(expandSchema(g, schema_array[i], schema_path + '/' + i.toString()));
         }
         return RSVP.all(arr);
       })
@@ -528,6 +538,13 @@
               // or(any, restricted, restricted, .. ) simplify to any
               return [arr[i][z]];
             }
+            if (base_schema.title) {
+              arr[i][z].title = base_schema.title;
+            }
+            if (base_schema.description) {
+              arr[i][z].description = base_schema.description;
+            }
+            arr[i][z].schema = mergeSchemas(base_schema, arr[i][z].schema);
             schema_arr.push(arr[i][z]);
           }
         }
@@ -544,10 +561,13 @@
       schema = true;
     }
     if (schema.anyOf !== undefined) {
-      return anyOf(g, schema, schema_path);
+      return anyOf(g, schema.anyOf, schema_path + '/anyOf', schema);
+    }
+    if (schema.oneOf !== undefined) {
+      return anyOf(g, schema.oneOf, schema_path + '/oneOf', schema);
     }
     if (schema.allOf !== undefined) {
-      return allOf(g, schema.allOf, schema_path, schema);
+      return allOf(g, schema.allOf, schema_path + '/allOf', schema);
     }
     if (schema.$ref) {
       return loadJSONSchema(g, schema.$ref, schema_path);
@@ -573,12 +593,28 @@
     return RSVP.Queue()
       .push(function () {
         return [{
-          title: ref || schema.title,
+          title: schema.title,
+          ref: ref,
           schema: schema,
           schema_path: schema_path
         }];
       });
   };
+
+  function schema_arr_marker(schema_arr) {
+    var i;
+    // XXX need cleanup false schema before
+    for (i = 0; i < schema_arr.length; i += 1) {
+      if (!schema_arr[i].schema.hasOwnProperty('const')) {
+        schema_arr[0].is_arr_of_const = false;
+        break;
+      }
+      if (i === schema_arr.length - 1) {
+        schema_arr[0].is_arr_of_const = true;
+      }
+    }
+    return schema_arr;
+  }
 
   function expandSchemaForField(g, schema, schema_path, for_required) {
     var required_stack,
@@ -590,7 +626,8 @@
       required_stack = [];
     }
     g.props.schema_required_urls[schema_path] = required_stack;
-    return expandSchema(g, schema, schema_path);
+    return expandSchema(g, schema, schema_path)
+      .push(schema_arr_marker);
   }
 
   rJS(window)
@@ -624,6 +661,7 @@
           return json_document;
         })
         .push(function (json_d) {
+          gadget.state.value = JSON.stringify(json_d);
           return tv4.validateMultiple(json_d, gadget.props.schema[""]);
         })
         .push(function (validation) {
@@ -727,14 +765,17 @@
     })
 
     .declareMethod('render', function (options) {
-      return this.changeState({
+      var z = {
         key: options.key,
-        value: JSON.stringify(options.value),
         schema: JSON.stringify(options.schema),
         saveOrigValue: options.saveOrigValue,
         schema_url: options.schema_url,
         editable: options.editable === undefined ? true : options.editable
-      });
+      };
+      if (options.value !== undefined) {
+        z.value = JSON.stringify(options.value);
+      }
+      return this.changeState(z);
     })
     .onStateChange(function () {
       var g = this,
@@ -804,22 +845,21 @@
             schema_url = g.state.schema_url ||
                          (json_document && json_document.$schema);
             if (schema_url) {
-              queue = loadJSONSchema(g, schema_url);
+              queue = loadJSONSchema(g, schema_url)
+                .push(schema_arr_marker);
             }
           }
           if (queue) {
-            return queue
-              .push(function (schema_arr) {
-                // XXX for root of form use first schema selection
-                return schema_arr[0].schema;
-              });
+            return queue;
           }
-          return {};
+          return [{
+            schema: true,
+            schema_path: ""
+          }];
         })
-        .push(function (schema) {
+        .push(function (schema_arr) {
           return g.props.form_gadget.renderForm({
-            schema: schema,
-            schema_path: "",
+            schema_arr: schema_arr,
             document: json_document,
             saveOrigValue: g.state.saveOrigValue,
             required: true,
@@ -836,6 +876,9 @@
         })
         .push(function () {
           return g;
+        })
+        .push(undefined, function (err) {
+          console.log(err);
         });
     })
     .allowPublicAcquisition("expandSchema", function (arr) {
