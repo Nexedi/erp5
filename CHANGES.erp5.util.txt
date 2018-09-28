@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.55 (2018-09-28)
+-------------------
+
+ * erp5.util
+
+   - testnode: properly support deletion of chmod'ed files [Jerome Perrin]
+
 0.4.54 (2018-09-13)
 -------------------
 
