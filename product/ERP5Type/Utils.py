@@ -44,6 +44,7 @@ from Acquisition import aq_base
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from Acquisition import aq_self
+import ZPublisher
 
 from AccessControl import ModuleSecurityInfo
 from AccessControl.SecurityInfo import allow_class
@@ -423,6 +424,8 @@ def fill_args_from_request(*optional_args):
 _pylint_message_re = re.compile(
   '^(?P<type>[CRWEF]):\s*(?P<row>\d+),\s*(?P<column>\d+):\s*(?P<message>.*)$')
 
+_pylint_lock = threading.Lock()
+
 def checkPythonSourceCode(source_code_str):
   """
   Check source code with pylint or compile() builtin if not available.
@@ -464,9 +467,21 @@ def checkPythonSourceCode(source_code_str):
   message_list = []
   output_file = cStringIO.StringIO()
 
+  if _pylint_lock.locked():
+    # because this pylint integration temporarily replaces stdout
+    # with StringIO, we don't want this to run in parrallel.
+    # Also, rather than having the clients waiting in queue and accumulating
+    # several checks for what would probably be just an old version of the
+    # source code being edited, we prefer to raise an error.
+    # XXX - problem is when we save a component, there's an synchronous pylint
+    # happening and in this case (unlike the cases where we are "live checking"
+    # the code in an ajax request), we don't want user to get this error.
+    raise ZPublisher.Retry(RuntimeError("Pylint already running"))
+
   # pylint prints directly on stderr/stdout (only reporter content matters)
   stderr = sys.stderr
   stdout = sys.stdout
+  _pylint_lock.acquire()
   try:
     sys.stderr = cStringIO.StringIO()
     sys.stdout = cStringIO.StringIO()
@@ -531,6 +546,7 @@ def checkPythonSourceCode(source_code_str):
     output_file.close()
     sys.stderr = stderr
     sys.stdout = stdout
+    _pylint_lock.release()
 
   #LOG('Utils', INFO, 'Checking time (pylint): %.2f' % (time.time() - started))
   return message_list
