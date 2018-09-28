@@ -178,6 +178,65 @@
     return input;
   }
 
+  function render_enum_with_title(g, schema_arr, json_document, selected_schema) {
+    var input = document.createElement("select"),
+      option,
+      i,
+      ser_value,
+      selected = false;
+    input.size = 1;
+    if (json_document === undefined && selected_schema !== undefined) {
+      json_document = selected_schema.schema.const;
+    }
+    if (schema_arr[0].schema.default) {
+      if (json_document === undefined) {
+        json_document = schema_arr[0].schema.default;
+        g.props.changed = true;
+      }
+    } else {
+      option = document.createElement("option");
+      option.value = "";
+      if (json_document === undefined) {
+        option.selected = true;
+      }
+      input.appendChild(option);
+    }
+    for (i = 0; i < schema_arr.length; i += 1) {
+      option = document.createElement("option");
+      // XXX use number id for speedup
+      ser_value = JSON.stringify(schema_arr[i].schema.const);
+      option.value = ser_value;
+      if (schema_arr[i].schema.title) {
+        option.textContent = schema_arr[i].schema.title;
+      } else if (typeof schema_arr[i].schema.const === "string") {
+        option.textContent = schema_arr[i].schema.const;
+      } else {
+        option.textContent = ser_value;
+      }
+      if (deepEqual(schema_arr[i].schema.const, json_document)) {
+        option.selected = true;
+        selected = true;
+      }
+      input.appendChild(option);
+    }
+    if (json_document !== undefined && !selected) {
+      // save original json_document even if it
+      // not support with schema
+      // XXX element should be removed on first user interact
+      option = document.createElement("option");
+      ser_value = JSON.stringify(json_document);
+      option.value = ser_value;
+      if (typeof json_document === "string") {
+        option.textContent = json_document;
+      } else {
+        option.textContent = ser_value;
+      }
+      option.selected = true;
+      input.appendChild(option);
+    }
+    return input;
+  }
+
   function render_boolean(g, schema, json_document) {
     var input,
       schema_for_selection = {
@@ -209,7 +268,11 @@
         g.props.changed = true;
       }
       input.setAttribute('data-origin-value', ser_const);
-      input.value = ser_const;
+      if (schema.title) {
+        input.value = schema.title;
+      } else {
+        input.value = ser_const;
+      }
     } else {
       input.value = ser_doc + ' ≠ ' + ser_const;
       input.setAttribute('data-origin-value', ser_doc);
@@ -273,9 +336,9 @@
           type: options.type,
           required: options.required,
           delete_button: options.delete_button,
-          schema: options.schema_part,
-          schema_path: options.schema_path,
-          document: options.default_dict,
+          selected_schema: options.selected_schema,
+          schema_arr: options.schema_arr,
+          document: options.json_document,
           display_label: options.parent_type !== "array",
           saveOrigValue: g.props.saveOrigValue,
           scope: scope
@@ -338,7 +401,9 @@
     if (schema_arr.length === 1) {
       if (schema_arr[0].schema === true ||
           !(schema_arr[0].schema.hasOwnProperty('type') ||
-          schema_arr[0].schema.hasOwnProperty('enum'))) {
+          schema_arr[0].schema.hasOwnProperty('enum') ||
+          schema_arr[0].schema.hasOwnProperty('const')
+          )) {
         return false;
       }
       if (schema_arr[0].schema.type instanceof Array) {
@@ -346,17 +411,24 @@
       }
       return true;
     }
+    if (schema_arr[0].is_arr_of_const) {
+      return true;
+    }
     return false;
   }
 
-  function checkSchemaSimpleType(schema) {
-    return [
-      'string',
-      'integer',
-      'number',
-      'boolean',
-      'null'
-    ].indexOf(schema.type) >= 0;
+  function checkSchemaSimpleType(schema_arr) {
+    // return true if rendering are not recursive
+    var schema = schema_arr[0].schema;
+    return schema_arr[0].is_arr_of_const ||
+           schema.hasOwnProperty('const') ||
+       [
+        'string',
+        'integer',
+        'number',
+        'boolean',
+        'null'
+      ].indexOf(schema.type) >= 0;
   }
 
   function convertExpandedProperties2array(properties) {
@@ -371,6 +443,8 @@
           // add propertyName to title
           if (schema_array[i].title && schema_array.length > 1) {
             schema_array[i].title = property_name + ' /' + schema_array[i].title;
+          } else if (schema_array[i].ref && schema_array.length > 1) {
+            schema_array[i].title = property_name + ' /' + schema_array[i].ref;
           } else {
             schema_array[i].title = property_name;
           }
@@ -386,10 +460,12 @@
   function schemaArrFilteredByDocument(schema_arr, json_document) {
     var i,
       flag,
+      circular = schema_arr[0].circular,
       ret_arr = [],
       schema;
-    if (schema_arr.length === 1) {
-      return schema_arr[0];
+    if (schema_arr.length === 1 ||
+        schema_arr[0].is_arr_of_const) {
+      return schema_arr;
     }
     if (json_document !== undefined) {
       for (i = 0; i < schema_arr.length; i += 1) {
@@ -407,11 +483,12 @@
       }
       if (ret_arr.length === 0) {
         // XXX find schema more compatible with document
-        return schema_arr[0];
+        return schema_arr;
       }
+      ret_arr[0].circular = circular;
+      return ret_arr;
     }
-    // XXX if (ret_arr.length > 1) notify user
-    return ret_arr[0];
+    return schema_arr;
   }
 
   function render_schema_selector(gadget, title, schema_arr, event, rerender) {
@@ -455,7 +532,8 @@
           description = schema_item.title;
           if (schema_item.schema === true ||
               !(schema_item.schema.hasOwnProperty('type') ||
-              schema_item.schema.hasOwnProperty('enum'))) {
+              schema_item.schema.hasOwnProperty('enum') ||
+              schema_item.schema.hasOwnProperty('const'))) {
             generateItemsForAny(schema_item.property_name, schema_item.schema_path);
           } else if (getDocumentType(schema_item.schema.type) === "array") {
             description = description || schema_item.schema.description;
@@ -658,7 +736,6 @@
       .push(function (arr) {
         var queue = RSVP.Queue(),
           i,
-          schema_path_item = schema_path + '/items',
           schema_arr_arr = arr[0],
           additionalItems = arr[1],
           schema_arr = schema_arr_arr,
@@ -669,10 +746,8 @@
             if (is_items_arr) {
               if (i < schema_arr_arr.length) {
                 schema_arr = schema_arr_arr[i];
-                schema_path_item = schema_path + '/items/' + i;
               } else {
                 schema_arr = additionalItems;
-                schema_path_item = schema_path + '/additionalItems';
               }
             }
             queue
@@ -680,9 +755,8 @@
                 addSubForm.bind(gadget, {
                   gadget: gadget,
                   parent_type: 'array',
-                  schema_path: schema_path_item,
-                  schema_part: schema_arr,
-                  default_dict: json_document[i],
+                  schema_arr: schema_arr,
+                  json_document: json_document[i],
                   required: i < minItems
                 })
               )
@@ -707,8 +781,7 @@
                   addSubForm.bind(gadget, {
                     gadget: gadget,
                     parent_type: 'array',
-                    schema_path: schema_arr[0].schema_path,
-                    schema_part: schema_arr[0].schema,
+                    schema_arr: schema_arr,
                     required: true
                   })
                 )
@@ -728,8 +801,8 @@
                 gadget: gadget,
                 parent_type: 'array',
                 type: value.type,
-                schema_path: value.schema_path,
-                schema_part: value.schema
+                selected_schema: value,
+                schema_arr: schema_arr
               })
                 .push(element_append);
             }));
@@ -741,8 +814,7 @@
                   addSubForm.bind(gadget, {
                     gadget: gadget,
                     parent_type: 'array',
-                    schema_path: schema_arr[0].schema_path,
-                    schema_part: schema_arr[0].schema,
+                    schema_arr: schema_arr,
                     required: true
                   })
                 )
@@ -757,8 +829,8 @@
                 gadget: gadget,
                 parent_type: 'array',
                 type: value.type,
-                schema_path: value.schema_path,
-                schema_part: value.schema
+                selected_schema: value,
+                schema_arr: schema_arr
               })
                 .push(element_append);
             }));
@@ -775,7 +847,7 @@
       });
   }
 
-  function render_field(gadget, key, path, json_field, default_value, root, schema_path, options) {
+  function render_field(gadget, property_name, path, schema_arr, json_document, root, options) {
     var type,
       div,
       delete_button,
@@ -785,64 +857,76 @@
       span_info,
       error_message,
       input,
+      schema,
+      schema_path,
+      schema_ob,
       first_path,
       type_changed,
       queue = RSVP.Queue();
 
-    if (json_field instanceof Array) {
-      json_field = schemaArrFilteredByDocument(json_field, default_value);
-      schema_path = json_field.schema_path;
-      json_field = json_field.schema;
+    if (options.selected_schema) {
+      schema_ob = options.selected_schema;
+    } else {
+      // XXX if (ret_arr.length > 1) notify user
+      schema_ob = schemaArrFilteredByDocument(schema_arr, json_document)[0];
+    }
+    schema = schema_ob.schema;
+    schema_path = schema_ob.schema_path;
+
+    if (schema_path === '/') {
+      schema_path = '';
     }
 
     options = options || {};
     type = options.type;
 
-    if (path && key) {
-      first_path = path + encodeJsonPointer(key);
+    if (path && property_name) {
+      first_path = path + encodeJsonPointer(property_name);
     } else {
       first_path = "";
     }
 
-    if (json_field === undefined) {
-      json_field = getDocumentSchema(default_value);
+    if (schema === undefined) {
+      schema = getDocumentSchema(json_document);
     }
 
-    if (getDocumentType(json_field.type) === "string") {
-      type = json_field.type;
+    if (getDocumentType(schema.type) === "string") {
+      type = schema.type;
     } else if (type === undefined &&
-               default_value === undefined &&
-               getDocumentType(json_field.type) === "array") {
-      type = json_field.type[0];
+               json_document === undefined &&
+               getDocumentType(schema.type) === "array") {
+      type = schema.type[0];
     }
     if (["object", "array"].indexOf(type) >= 0 &&
-        !(path !== "" && default_value === undefined) &&
-        getDocumentType(default_value) !== type) {
+        !(path !== "" && json_document === undefined) &&
+        getDocumentType(json_document) !== type) {
       if (gadget.props.saveOrigValue) {
         // XXX is not useful for user
         // only for tests
-        json_field = {
-          const: default_value
+        schema = {
+          const: json_document
         };
       } else {
         gadget.props.changed = true;
       }
     }
-    if (type === undefined && default_value !== undefined) {
-      type = getDocumentType(default_value);
+    if (type === undefined && json_document !== undefined) {
+      type = getDocumentType(json_document);
     }
 
     if (typeof type === "string") {
       // it's only for simple types so we not use
       // complex type detection
-      type_changed = default_value !== undefined &&
-                     typeof default_value !== type;
+      type_changed = json_document !== undefined &&
+                     typeof json_document !== type;
     }
 
     div = document.createElement("div");
     div.setAttribute("class", "jsonformfield ui-field-contain");
-    div.title = json_field.description;
-    // if (key && !first_path) {
+    if (schema.description) {
+      div.title = schema.description;
+    }
+    // if (property_name && !first_path) {
     if (options.delete_button === true) {
       delete_button = createElement("span",
           {"class": "ui-btn-icon-top ui-icon-trash-o"}
@@ -861,77 +945,78 @@
         div.appendChild(delete_button);
       }
     }
-    if (false) {
-      // XXX;
-      label = document.createElement("input");
-      label.value = key;
-      gadget.props.property_name_edit = label;
-    } else {
-      label_text = [key, json_field.title]
-          .filter(function (v) { return v; })
-          .join(" ")
-          // use non-breaking hyphen
-          .replace(/-/g, "‑");
-      if (label_text) {
-        if (options.top) {
-          label = document.createElement("span");
-          label.textContent = label_text;
-          root.appendChild(label);
-        } else {
-          label = document.createElement("label");
-          label.textContent = label_text;
-          div.appendChild(label);
-        }
 
+    label_text = [property_name, schema_ob.title]
+        .filter(function (v) { return v; })
+        .join(" ")
+        // use non-breaking hyphen
+        .replace(/-/g, "‑");
+    if (property_name || options.top) {
+      if (options.top) {
+        label = document.createElement("span");
+        label.textContent = label_text;
+        root.appendChild(label);
+      } else {
+        label = document.createElement("label");
+        label.textContent = label_text;
+        div.appendChild(label);
       }
+
     }
+
     div_input = document.createElement("div");
     div_input.setAttribute("id", gadget.element.getAttribute("data-gadget-scope") + first_path + '/');
     div_input.setAttribute("class", "input");
 
-    if (json_field.const !== undefined) {
-      input = render_const(gadget, json_field, default_value);
-    } else if (json_field.enum !== undefined) {
-      input = render_enum(gadget, json_field, default_value);
+    // render input begin
+
+    if (!input && schema_arr[0].is_arr_of_const) {
+      input = render_enum_with_title(gadget, schema_arr, json_document, options.selected_schema);
+    }
+    if (!input && schema.const !== undefined) {
+      input = render_const(gadget, schema, json_document);
+    }
+    if (!input && schema.enum !== undefined) {
+      input = render_enum(gadget, schema, json_document);
       // XXX take in account existing type with enum
       type_changed = false;
     }
 
     if (!input && type === "null") {
-      input = render_const(gadget, {const: null}, default_value);
+      input = render_const(gadget, {const: null}, json_document);
     }
 
     if (!input && type === "boolean") {
-      input = render_boolean(gadget, json_field, default_value);
+      input = render_boolean(gadget, schema, json_document);
     }
 
     if (!input && ["string", "integer", "number", "null"].indexOf(type) >= 0) {
-      if (json_field.contentMediaType === "text/plain") {
-        input = render_textarea(default_value, "string");
+      if (schema.contentMediaType === "text/plain") {
+        input = render_textarea(json_document, "string");
       } else {
         input = document.createElement("input");
-        if (default_value !== undefined) {
-          if (typeof default_value === "object") {
-            input.value = JSON.stringify(default_value);
+        if (json_document !== undefined) {
+          if (typeof json_document === "object") {
+            input.value = JSON.stringify(json_document);
           } else {
-            input.value = default_value;
+            input.value = json_document;
           }
         }
 
         if (type === "integer" || type === "number") {
-          if (default_value === undefined && typeof json_field.default === "number") {
-            input.value = json_field.default;
+          if (json_document === undefined && typeof schema.default === "number") {
+            input.value = schema.default;
             gadget.props.changed = true;
           }
           input.setAttribute("data-json-type", type);
-          if (default_value === undefined || default_value === null ||
-              typeof default_value === "number") {
+          if (json_document === undefined || json_document === null ||
+              typeof json_document === "number") {
             input.type = "number";
           }
           if (type === "integer") {
             input.setAttribute("step", "1");
-            if (typeof default_value === "number" &&
-                parseInt(default_value, 10) !== default_value) {
+            if (typeof json_document === "number" &&
+                parseInt(json_document, 10) !== json_document) {
               // original json_document contain float schema
               // limit integer we can save original document
               type_changed = true;
@@ -940,16 +1025,36 @@
           if (type === "number") {
             input.setAttribute("step", "any");
           }
+          if (schema.multipleOf && schema.multipleOf >= 0) {
+            input.step = schema.multipleOf;
+          }
+          if (schema.minimum &&
+              // step work from min value so we can't
+              // use min if min not multipleOf step
+              !(schema.multipleOf &&
+              (schema.minimum % schema.multipleOf) !== 0)) {
+            input.min = schema.minimum;
+          }
+          if (schema.maximum) {
+            input.max = schema.maximum;
+          }
         } else {
-          if (default_value === undefined && typeof json_field.default === "string") {
-            input.value = json_field.default;
+          if (json_document === undefined && typeof schema.default === "string") {
+            input.value = schema.default;
             gadget.props.changed = true;
           }
           input.type = "text";
-          if (json_field.pattern) {
-            input.pattern = json_field.pattern;
+          if (schema.pattern) {
+            input.pattern = schema.pattern;
+          } else if (schema.minLength) {
+            // minLength absent in html5 so
+            // use pattern for this task
+            input.pattern = ".{" + schema.minLength + ",}";
           }
-          if (json_field.format === 'uri') {
+          if (schema.maxLength) {
+            input.maxLength = schema.maxLength;
+          }
+          if (schema.format === 'uri') {
             input.type = "url";
             input.spellcheck = false;
           }
@@ -960,8 +1065,8 @@
     if (!input && type === "array") {
       queue = render_array(
         gadget,
-        json_field,
-        default_value,
+        schema,
+        json_document,
         div_input,
         first_path + '/',
         schema_path
@@ -973,8 +1078,8 @@
         .push(function () {
           return render_object(
             gadget,
-            json_field,
-            default_value,
+            schema,
+            json_document,
             div_input,
             first_path + '/',
             schema_path
@@ -989,7 +1094,7 @@
       input.name = first_path;
       input.required = options.required;
       if (type_changed) {
-        input.setAttribute('data-origin-value', JSON.stringify(default_value));
+        input.setAttribute('data-origin-value', JSON.stringify(json_document));
       }
       // XXX for gui
       //input.setAttribute("class", "slapos-parameter");
@@ -999,9 +1104,11 @@
       div.setAttribute("data-json-type", type);
     }
 
-    if (json_field.info !== undefined) {
+    // render input end
+
+    if (schema.info !== undefined) {
       span_info = document.createElement("span");
-      span_info.textContent = json_field.info;
+      span_info.textContent = schema.info;
       div_input.appendChild(span_info);
     }
     error_message = document.createElement("span");
@@ -1024,7 +1131,7 @@
 
     div = document.createElement("div");
     div.setAttribute("class", "jsonformfield");
-    // div.title = json_field.description;
+    // div.title = schema.description;
 
     div_input = document.createElement("div");
     div_input.setAttribute("class", "input");
@@ -1047,9 +1154,8 @@
                   gadget: g,
                   property_name: property_name,
                   path: path,
-                  schema_path: schema_path,
-                  schema_part: schema_arr,
-                  default_dict: json_document[property_name]
+                  schema_arr: schema_arr,
+                  json_document: json_document[property_name]
                 })
               )
               .push(element_append);
@@ -1062,8 +1168,7 @@
               element: input,
               path: path,
               type: value.type,
-              schema_path: value.schema_path,
-              schema_part: value.schema
+              schema_arr: [value]
             })
               .push(element_append);
           });
@@ -1197,9 +1302,9 @@
     return true;
   }
 
-  render_object = function (g, json_field, default_dict, root, path, schema_path) {
-    var required = json_field.required || [],
-      schema_editor = checkSchemaIsMetaSchema(json_field),
+  render_object = function (g, schema, json_document, root, path, schema_path) {
+    var required = schema.required || [],
+      schema_editor = checkSchemaIsMetaSchema(schema),
       used_properties = {},
       properties,
       selector = {};
@@ -1217,57 +1322,56 @@
       root.appendChild(child);
     }
 
-    if (default_dict === undefined) {
-      if (json_field.hasOwnProperty('default')) {
-        default_dict = json_field.default;
+    if (json_document === undefined) {
+      if (schema.hasOwnProperty('default')) {
+        json_document = schema.default;
         g.props.changed = true;
       } else {
-        default_dict = {};
+        json_document = {};
       }
     }
 
-    return expandProperties(g, json_field.properties, schema_path + '/properties/', required)
+    return expandProperties(g, schema.properties, schema_path + '/properties/', required)
       .push(function (ret) {
         var schema_arr,
           q = RSVP.Queue(),
-          s_o,
+          filtered_schema_arr,
           key;
         properties = ret;
         for (key in properties) {
           if (properties.hasOwnProperty(key)) {
             schema_arr = properties[key];
-            s_o = schemaArrFilteredByDocument(schema_arr, default_dict[key]);
+            filtered_schema_arr = schemaArrFilteredByDocument(schema_arr, json_document[key]);
             // XXX need schema merge with patternProperties passed key
             if (checkSchemaArrOneChoise(schema_arr)) {
               if (required.indexOf(key) >= 0) {
                 used_properties[key] = false;
                 q.push(render_field.bind(g, g, key, path,
-                    s_o.schema, default_dict[key], root, s_o.schema_path, {required: true})
+                    filtered_schema_arr, json_document[key], root, {required: true})
                   );
               }
               if (!used_properties.hasOwnProperty(key) &&
                   !schema_editor &&
-                  (checkSchemaSimpleType(s_o.schema) || !s_o.circular)
+                  (checkSchemaSimpleType(filtered_schema_arr) || !filtered_schema_arr[0].circular)
                   ) {
                 used_properties[key] = false;
                 q.push(render_field.bind(g, g, key, path,
-                  s_o.schema, default_dict[key], root, s_o.schema_path, {
+                  filtered_schema_arr, json_document[key], root, {
                     required: false,
                     delete_button: false
                   }));
               }
             }
             if (!used_properties.hasOwnProperty(key) &&
-                default_dict.hasOwnProperty(key)) {
+                json_document.hasOwnProperty(key)) {
               used_properties[key] = "";
               q.push(
                 addSubForm.bind(g, {
                   gadget: g,
                   property_name: key,
                   path: path,
-                  schema_path: s_o.schema_path,
-                  schema_part: s_o.schema,
-                  default_dict: default_dict[key]
+                  schema_arr: filtered_schema_arr,
+                  json_document: json_document[key]
                 })
               )
                 .push(root_append);
@@ -1285,8 +1389,7 @@
             property_name: value.property_name,
             path: path,
             type: value.type,
-            schema_path: value.schema_path,
-            schema_part: value.schema
+            schema_arr: [value]
           })
             .push(function (element) {
               var s_e = selector.element;
@@ -1333,9 +1436,9 @@
 
         // XXX for pattern properties needs schemas merge for
         // all passed patterns
-        if (json_field.patternProperties !== undefined) {
-          for (key in json_field.patternProperties) {
-            if (json_field.patternProperties.hasOwnProperty(key)) {
+        if (schema.patternProperties !== undefined) {
+          for (key in schema.patternProperties) {
+            if (schema.patternProperties.hasOwnProperty(key)) {
               if (key === ".*" ||
                   key === "^.*$" ||
                   key === ".*$" ||
@@ -1348,23 +1451,23 @@
                 .push(render_object_additionalProperty.bind(g,
                   g,
                   key + " property",
-                  default_dict,
+                  json_document,
                   path,
-                  json_field.patternProperties[key],
+                  schema.patternProperties[key],
                   schema_path + '/patternProperties/' + key,
                   used_properties,
                   element_append
-                ))
+                  ))
                 .push(root_append);
             }
           }
         }
 
         if (additionalProperties === undefined) {
-          if (json_field.additionalProperties === undefined) {
+          if (schema.additionalProperties === undefined) {
             additionalProperties = true;
           } else {
-            additionalProperties = json_field.additionalProperties;
+            additionalProperties = schema.additionalProperties;
           }
         }
         if (additionalProperties !== false) {
@@ -1372,7 +1475,7 @@
             .push(render_object_additionalProperty.bind(g,
               g,
               "additional property",
-              default_dict,
+              json_document,
               path,
               additionalProperties,
               schema_path + '/additionalProperties',
@@ -1387,8 +1490,8 @@
       .push(function () {
         var key,
           queue = RSVP.Queue();
-        for (key in default_dict) {
-          if (default_dict.hasOwnProperty(key)) {
+        for (key in json_document) {
+          if (json_document.hasOwnProperty(key)) {
             if (!used_properties.hasOwnProperty(key)) {
               queue
                 .push(
@@ -1396,9 +1499,11 @@
                     gadget: g,
                     property_name: key,
                     path: path,
-                    schema_path: "",
-                    schema_part: undefined,
-                    default_dict: default_dict[key]
+                    schema_arr: [{
+                      schema: undefined,
+                      schema_path: ""
+                    }],
+                    json_document: json_document[key]
                   })
                 )
                 .push(root_append);
@@ -1583,42 +1688,6 @@
       g.options = {};
     })
     .declareAcquiredMethod("rootNotifyChange", "rootNotifyChange")
-    .declareAcquiredMethod("renameChildrenParent", "renameChildren")
-    .allowPublicAcquisition("renameChildren", function (opt_arr, scope) {
-      var property_name,
-        objects = this.props.objects,
-        new_name = opt_arr[0],
-        element = getSubGadgetElement(this, scope),
-        parent = element.getAttribute('data-json-parent');
-      if (objects.hasOwnProperty(parent)) {
-        parent = objects[parent];
-        if (parent.hasOwnProperty(new_name)) {
-          throw new Error("property already exist");
-        }
-        // XXX validate property if property pattern
-        for (property_name in parent) {
-          if (parent.hasOwnProperty(property_name) && parent[property_name] === scope) {
-            delete parent[property_name];
-            parent[new_name] = scope;
-            return new_name;
-          }
-        }
-        throw new Error("gadget not found for renaming");
-      }
-    })
-    .declareMethod("rename", function (new_name, event) {
-      var g = this,
-        name = g.element.getAttribute('data-json-property-name');
-      return this.renameChildrenParent(new_name)
-        .push(function () {
-          return g.element.setAttribute('data-json-property-name', new_name);
-        })
-        .push(undefined, function () {
-          // XXX notify user
-          event.srcElement.value = name;
-          event.srcElement.focus();
-        });
-    })
     .declareAcquiredMethod("selfRemove", "deleteChildren")
     .allowPublicAcquisition("deleteChildren", function (arr, scope) {
       var g = this,
@@ -1750,7 +1819,7 @@
     .declareMethod('renderForm', function (options) {
       var g = this,
         property_name = g.element.getAttribute('data-json-property-name'),
-        schema = options.schema,
+        schema = options.schema_arr !== undefined && options.schema_arr[0].schema,
         root;
       g.props.changed = false;
       g.props.saveOrigValue = options.saveOrigValue;
@@ -1787,10 +1856,11 @@
         g.props.updatePropertySelectors = true;
         g.props.current_document = options.document;
       }
-      return render_field(g, property_name, "", schema,
-        options.document, root, options.schema_path,
+      return render_field(g, property_name, "", options.schema_arr,
+        options.document, root,
         {
           type: options.type,
+          selected_schema: options.selected_schema,
           required: options.required,
           delete_button: options.delete_button,
           top: options.top
@@ -1840,10 +1910,6 @@
     })
 
     .onEvent('input', function (evt) {
-      if (evt.target === this.props.property_name_edit) {
-        return this.rename(this.props.property_name_edit.value, evt);
-      }
-
       var gadget = this,
         field_list = this.props.inputs,
         i,
