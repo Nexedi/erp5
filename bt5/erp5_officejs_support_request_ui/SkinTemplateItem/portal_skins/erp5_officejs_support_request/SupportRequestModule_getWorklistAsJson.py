@@ -1,31 +1,21 @@
+# return worklists from ticket workflow in JSON format
+from Products.ERP5Type.Message import translateString
 import json
-
 portal = context.getPortalObject()
 
-count_list = []
-state_dict = {
-  "submitted": "Support Request to Open",
-  "draft": "Support Request to Submit",
-  "validated": "Support Request to Close",
-  "suspended": "Suspended Support Requests"
-}
 
-# XXX hardcoded, these lines below reflect portal_workflow/ticket_workflow worklists
-count_list.append({
-  'query_string': 'portal_type:"Support Request" AND simulation_state:"draft" AND local_roles:"Owner"',
-  'action_name': state_dict["draft"],
-  'action_count': portal.support_request_module.countFolder(portal_type="Support Request", simulation_state="draft", local_roles="Owner")[0][0]})
-count_list.append({
-  'query_string': 'portal_type:"Support Request" AND simulation_state:"submitted" AND local_roles:"Assignor"',
-  'action_name': state_dict["submitted"],
-  'action_count': portal.support_request_module.countFolder(portal_type="Support Request", simulation_state="submitted", local_roles="Assignor")[0][0]})
-count_list.append({
-  'query_string': 'portal_type:"Support Request" AND simulation_state:"validated" AND local_roles:("Assignee" OR "Assignor")',
-  'action_name': state_dict["validated"],
-  'action_count': portal.support_request_module.countFolder(portal_type="Support Request", simulation_state="validated", local_roles=("Assignee", "Assignor"))[0][0]})
-count_list.append({
-  'query_string': 'portal_type:"Support Request" AND simulation_state:"suspended" AND local_roles:("Assignee" OR "Assignor")',
-  'action_name': state_dict["suspended"],
-  'action_count': portal.support_request_module.countFolder(portal_type="Support Request", simulation_state="suspended", local_roles=("Assignee", "Assignor"))[0][0]})
+worklist_query_dict = portal.ERP5Site_getTicketWorkflowWorklistInfoDict()
 
-return json.dumps(count_list)
+# Query portal actions to get the worklist count and
+# extend this information with the query from our helper script.
+worklist_action_list = [
+  {
+    'action_name': unicode(translateString(action['name'].rsplit(' (', 1)[0])), # Action name include the count, but we display it separatly.
+    'action_count': action['count'],
+    'query': worklist_query_dict[action['worklist_id']],
+  }
+  for action in portal.portal_actions.listFilteredActionsFor(context)['global']
+  if action['category'] == 'global' and action.get('workflow_id') == 'ticket_workflow'
+]
+
+return json.dumps(worklist_action_list)

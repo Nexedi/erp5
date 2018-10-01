@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title tal:content="template/title">Worklists on support request front page</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  </head>
+  <body>
+  <table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Worklists on support request front page</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/cleanup_module" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/create_data" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[@data-i18n="[value]Support Request WorkLists"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//section[@class="document_list"]//li[1]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//section[@class="document_list"]//li/a[contains(text(), "Support Requests to Open")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td> <!-- document count -->
+  <td>//section[@class="document_list"]//li/a[contains(text(), "Support Requests to Open")]/span[text() = "1"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//section[@class="document_list"]//li/a[contains(text(), "Support Requests to Close")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//section[@class="document_list"]//li/a[contains(text(), "Support Requests to Close")]/span[text() = "1"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//section[@class="document_list"]//li/a[contains(text(), "Suspended Support Requests")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//section[@class="document_list"]//li/a[contains(text(), "Suspended Support Requests")]/span[text() = "1"]</td>
+  <td></td>
+</tr>
+
+<!-- clicking on one worklist open the module -->
+<tr>
+  <td>click</td>
+  <td>//section[@class="document_list"]//li/a[contains(text(), "Suspended Support Requests")]/span[text() = "1"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1/a[@data-i18n="Support Request Module"]</td>
+  <td></td>
+</tr>
+
+<!-- The module is filtered according to worklist definition, so it shows one document -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[@data-i18n="Support Requests"]//span[text() = "(1)"]</td>
+  <td></td>
+</tr>
+
+<!-- Query editor buttons are also present -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>div.search_parsed_value > button:nth-of-type(3)</td>
+</tr>
+
+</tbody></table>
+  </body>
+</html>

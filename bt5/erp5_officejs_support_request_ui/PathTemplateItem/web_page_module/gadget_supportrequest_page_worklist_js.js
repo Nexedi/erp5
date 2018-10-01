@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, rJS, RSVP, Handlebars, Query */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, rJS, RSVP, Handlebars, Query) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -39,8 +39,8 @@
         .push(function (hateoas_url) {
           return gadget.jio_getAttachment(
             'support_request_module',
-            hateoas_url + 'support_request_module'
-              + "/SupportRequestModule_getWorklistAsJson"
+            hateoas_url + 'support_request_module' +
+               '/SupportRequestModule_getWorklistAsJson'
           );
         })
         .push(function (result) {
@@ -55,7 +55,7 @@
             }
             display_options = {
               jio_key: "support_request_module",
-              extended_search: result[i].query_string,
+              extended_search: Query.objectToSearchText(result[i].query),
               page: 'form',
               view: 'view'
             };
@@ -83,4 +83,4 @@
           });
         });
     });
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS, RSVP, Handlebars, Query));
