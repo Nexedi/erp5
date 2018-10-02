@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -24,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -42,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -56,8 +58,13 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -67,8 +74,20 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>creators</string> </key>
+            <value>
+              <tuple>
+                <string>cedric.le.ninivin</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_ojs_panel.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_notebook_list.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -78,15 +97,36 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_erp5_ojs_panel_js</string> </value>
+            <value> <string>gadget_officejs_erp5_page_notebook_list_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>modification_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1455284352.14</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -96,7 +136,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Officejs Panel JS</string> </value>
+            <value> <string>Gadget Notebook List</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -156,7 +202,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -182,7 +228,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501082253.91</float>
+                        <float>1538474491.34</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -191,7 +237,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -227,7 +273,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.37259.50413.8226</string> </value>
+                <value> <string>970.44121.34244.41489</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -245,7 +291,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1538643425.79</float>
+                        <float>1538577690.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -302,7 +348,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501082232.23</float>
+                        <float>1538474367.6</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
