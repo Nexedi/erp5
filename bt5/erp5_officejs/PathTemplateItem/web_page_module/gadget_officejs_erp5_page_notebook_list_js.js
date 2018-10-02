@@ -125,7 +125,7 @@
           return RSVP.all([
             gadget.getUrlFor({command: "change", options: {"page": "ojs_add_document"}}),
             gadget.getSetting('document_title_plural'),
-            gadget.getUrlFor({command: "change", options: {"page": "ojs_upload_convert"}}),
+            gadget.getUrlFor({command: "change", options: {"page": "ojs_upload"}}),
             gadget.getSetting('upload_dict', false)
           ]);
         })
