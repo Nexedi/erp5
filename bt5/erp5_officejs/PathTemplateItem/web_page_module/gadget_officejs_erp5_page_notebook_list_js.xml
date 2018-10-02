@@ -7,11 +7,64 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>categories</string> </key>
+            <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>classification/collaborative/team</string>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -21,8 +74,16 @@
             </value>
         </item>
         <item>
+            <key> <string>creators</string> </key>
+            <value>
+              <tuple>
+                <string>cedric.le.ninivin</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_notebook_view.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_notebook_list.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -32,12 +93,31 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_notebook_view.js</string> </value>
+            <value> <string>gadget_officejs_erp5_page_notebook_list_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>modification_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1455284352.18</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
             </value>
         </item>
         <item>
@@ -52,7 +132,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Jio Notebook View JS</string> </value>
+            <value> <string>Gadget Notebook List JS</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -144,7 +224,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1524555869.05</float>
+                        <float>1538474501.97</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -189,7 +269,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.42986.60138.7065</string> </value>
+                <value> <string>970.44121.45853.56746</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -207,7 +287,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1538406432.04</float>
+                        <float>1538474511.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -264,7 +344,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1524555842.41</float>
+                        <float>1538474368.85</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

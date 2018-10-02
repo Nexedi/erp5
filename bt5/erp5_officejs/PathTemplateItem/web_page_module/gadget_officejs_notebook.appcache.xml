@@ -121,6 +121,9 @@ gadget_officejs_notebook_router.html\n
 gadget_officejs_jio_notebook_view.html\n
 gadget_officejs_jio_notebook_view.js\n
 gadget_officejs_jio_notebook.js\n
+gadget_erp5_page_ojs_upload.js\n
+gadget_erp5_page_ojs_download.js\n
+gadget_erp5_page_ojs_notebook_list.js\n
 gadget_notebook.html\n
 iodide_master.js\n
 iodide_master.css\n
@@ -394,7 +397,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>969.57706.26709.14899</string> </value>
+                <value> <string>970.45843.19608.7219</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -412,7 +415,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1533713860.15</float>
+                        <float>1538577845.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
