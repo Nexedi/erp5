@@ -4,16 +4,15 @@
   "use strict";
 
   var content_type = {
-    Spreadsheet: 'application/x-asc-spreadsheet',
-    Presentation: 'application/x-asc-presentation',
-    Text: 'application/x-asc-text'
-  };
-
-  var file_ext = {
-    Spreadsheet: 'xlsy',
-    Presentation: 'ppty',
-    Text: 'docy'
-  };
+      Spreadsheet: 'application/x-asc-spreadsheet',
+      Presentation: 'application/x-asc-presentation',
+      Text: 'application/x-asc-text'
+    },
+    file_ext = {
+      Spreadsheet: 'xlsy',
+      Presentation: 'ppty',
+      Text: 'docy'
+    };
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
