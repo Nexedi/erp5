@@ -1,7 +1,7 @@
-/*global window, rJS, RSVP, jIO, URL,
+/*global window, rJS, RSVP, jIO, URL, Query,
   promiseEventListener, document*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, jIO, rJS, RSVP) {
+(function (window, jIO, rJS, RSVP, Query) {
   "use strict";
 
   rJS(window)
@@ -88,11 +88,25 @@
         url = arr[0],
         reference,
         args;
-      //   return g.jio_getAttachment(id, "data", {format: "json"});
       if (url.startsWith("urn:jio:reference?")) {
         reference = decodeURIComponent(url.replace("urn:jio:reference?", ""));
         args = {
-          query: '(portal_type: "JSON Schema") AND ((reference: "' + reference + '"))',
+          query: Query.objectToSearchText({
+            type: "complex",
+            operator: "AND",
+            query_list: [
+              {
+                key: "portal_type",
+                type: "simple",
+                value: "JSON Schema"
+              },
+              {
+                key: "reference",
+                type: "simple",
+                value: reference
+              }
+            ]
+          }),
           limit: [0, 1],
           select_list: [],
           sort_on: [["modification_date", "descending"]]
@@ -199,4 +213,4 @@
           });
         });
     });
-}(window, jIO, rJS, RSVP));
+}(window, jIO, rJS, RSVP, Query));
