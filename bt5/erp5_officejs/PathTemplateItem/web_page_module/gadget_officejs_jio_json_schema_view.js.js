@@ -43,10 +43,11 @@
         .push(function (content) {
           var list = [],
             blob;
-          if (content.data_file_upload) {
-            blob = jIO.util.dataURItoBlob(content.data_file_upload.url);
-            content.title = content.data_file_upload.file_name;
-            delete content.data_file_upload;
+          if (content.file) {
+            blob = jIO.util.dataURItoBlob(content.file.url);
+            content.title = content.title || content.file.file_name;
+            content.reference = content.reference || content.file.file_name;
+            delete content.file;
             list = [
               gadget.updateDocument(content),
               gadget.jio_putAttachment(gadget.state.jio_key, 'data', blob)
@@ -124,7 +125,7 @@
                     "css_class": "",
                     "required": 0,
                     "editable": 1,
-                    "key": "data_file_upload",
+                    "key": "file",
                     "hidden": 0,
                     "accept": "application/json",
                     "type": "FileField"
