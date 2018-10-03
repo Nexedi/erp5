@@ -125,7 +125,10 @@
         .push(function () {
           return RSVP.all([
             gadget.getDeclaredGadget('form_view'),
-            gadget.jio_getAttachment(gadget.state.jio_key, 'data', {format: "json"}),
+            gadget.jio_getAttachment(gadget.state.jio_key, 'data', {format: "json"})
+              .push(undefined, function () {
+                return;
+              }),
             gadget.jio_get(gadget.state.doc.schema)
           ]);
         })

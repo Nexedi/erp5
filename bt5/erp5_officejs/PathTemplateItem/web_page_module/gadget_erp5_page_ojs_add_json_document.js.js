@@ -1,6 +1,6 @@
 /*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Blob) {
+(function (window, rJS, RSVP) {
   "use strict";
 
   var content_type = {
@@ -47,16 +47,13 @@
           return gadget.jio_post(ret);
         })
         .push(function (id) {
-          return gadget.jio_putAttachment(id, 'data', new Blob(['""']))
-            .push(function () {
-              return gadget.redirect({
-                command: 'display',
-                options: {
-                  jio_key: id,
-                  editable: true
-                }
-              });
-            });
+          return gadget.redirect({
+            command: 'display',
+            options: {
+              jio_key: id,
+              editable: true
+            }
+          });
         });
     });
-}(window, rJS, RSVP, Blob));
+}(window, rJS, RSVP));
