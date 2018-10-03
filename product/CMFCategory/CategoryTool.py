@@ -932,7 +932,7 @@ class CategoryTool(BaseTool):
                             spec=spec, filter=filter, **kw ) # Not acquired because this is the first try
                                                              # to get a local defined category
 
-      base_category_value = self.getCategoryValue(base_category)
+      base_category_value = self.get(base_category)
       #LOG("result", 0, str(result))
       if base_category_value is not None:
         # If we do not mask or append, return now if not empty
