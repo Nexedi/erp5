@@ -119,7 +119,6 @@ echarts-all.js\n
 erp5_launcher_nojqm.js\n
 erp5_officejs_support_request_ui/\n
 favicon.ico\n
-gadget_ckeditor.js\n
 gadget_erp5_editor_panel.html\n
 gadget_erp5_editor_panel.js\n
 gadget_erp5_field_datetime.html\n
@@ -343,7 +342,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>966.44322.37377.38894</string> </value>
+                <value> <string>970.3540.592.61969</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -361,8 +360,8 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1523022776.2</float>
-                        <string>GMT+2</string>
+                        <float>1536561147.11</float>
+                        <string>GMT+9</string>
                       </tuple>
                     </state>
                   </object>
