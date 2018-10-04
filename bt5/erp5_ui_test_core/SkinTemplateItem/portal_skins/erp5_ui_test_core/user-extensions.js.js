@@ -82,3 +82,75 @@ Selenium.prototype.assertElementPositionRangeTop = function(locator, range){
       Assert.fail(positionTop + " is not between " + minimumPositionTop + " and " + maximumPositionTop);
     }
 };
+
+
+/**
+ * assert that canvas located at `locator` matches the `referenceImageURL`
+ *
+ * Images are compared pixel by pixel and if they differed, this step
+ * is considered failed.
+ *
+ * Arguments:
+ *   locator - an element locator
+ *   referenceImageURL - URL of the reference image, can be relative.
+ */
+Selenium.prototype.doAssertCanvasImage = function(locator, referenceImageURL) {
+  // XXX this is a do* method and not a assert* method because only do* methods are
+  // asynchronous.
+  // The asynchronicity of do* method is as follow Selenium.prototype.doXXX
+  // returns a function and this function will be called again and again until:
+  //   * function returns true, which means step is successfull
+  //   * function returns false, which means step is not finished
+  //   * an execption is raised, in that case the step is failed
+  //   * global timeout is reached.
+  // we implement the state management with similar approach as what's discussed
+  // https://stackoverflow.com/questions/30564053/how-can-i-synchronously-determine-a-javascript-promises-state
+  var promiseState, rejectionValue;
+  return function assertCanvasImage() {
+    if (promiseState === "pending") {
+      return false;
+    }
+    if (promiseState === "resolved") {
+      return true;
+    }
+    if (promiseState === "rejected") {
+        Assert.fail(rejectionValue);
+    }
+
+    promiseState = "pending";
+    var actual = selenium.browserbot.findElement(locator).toDataURL();
+    fetch(referenceImageURL)
+      .then(r => r.blob())
+      .then(blob => {
+        return new Promise((resolve, reject) => {
+          var fr = new FileReader();
+          fr.onload = d => resolve(fr.result);
+          fr.onerror = reject;
+          fr.readAsDataURL(blob);
+        });
+      })
+      .then(expected => {
+        var diff = resemble(actual)
+          .outputSettings({ useCrossOrigin: false })
+          .compareTo(expected);
+        return new Promise(resolve => diff.onComplete(resolve));
+      })
+      .then(diff => {
+        var img;
+        if (diff.misMatchPercentage == 0) {
+          promiseState = "resolved";
+        } else {
+          promiseState = "rejected";
+          rejectionValue =
+            "Images are different ![image difference](" +
+            diff.getImageDataUrl() +
+            ")";
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        promiseState = "rejected";
+        rejectionValue = "Error computing image differences " + error;
+      });
+  };
+};
