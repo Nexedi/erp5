@@ -83,7 +83,7 @@
       return this.element.querySelector('button[type="submit"]').click();
     })
 
-    .allowPublicAcquisition("downloadJSON", function (arr) {
+    .allowPublicAcquisition("resolveExternalReference", function (arr) {
       var g = this,
         url = arr[0],
         reference,
