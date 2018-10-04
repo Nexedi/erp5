@@ -193,12 +193,27 @@
       });
   }
 
-  function createNotification(title, body) {
+  function createNotification(gadget, message) {
     if (window.Notification !== undefined) {
       return window.Notification.requestPermission()
         .then(function (result) {
           if (result === 'granted') {
-            return new window.Notification(title, {body: body});
+            var notification = new window.Notification(message[0], {body: message[2]});
+            notification.onclick = function () {
+              window.focus();
+              return gadget.getUrlParameter('jio_key')
+                .push(function (key) {
+                  if (key !== message[0]) {
+                    return gadget.redirect({
+                      'command': 'change',
+                      'options': {
+                        'jio_key': message[0],
+                        'page': 'jabberclient_dialog'
+                      }
+                    });
+                  }
+                });
+            };
           }
         });
     }
@@ -280,7 +295,7 @@
           // It simplifies a lot notification status
           document.querySelector("link[rel='shortcut icon']").setAttribute("href", "gadget_jabberclient_notification_warning.ico");
 
-          createNotification(argument_list[0], argument_list[0][2]);
+          createNotification(this, argument_list);
         }
 
         var gadget = this;
@@ -394,6 +409,7 @@
     .declareAcquiredMethod('redirect', 'redirect')
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
     .declareAcquiredMethod('refresh', 'refresh')
+    .declareAcquiredMethod('getUrlParameter', 'getUrlParameter')
 
     .declareMethod('createJio', function () {
       return this.state_parameter_dict.persistent_jio.createJio({
