@@ -272,7 +272,7 @@
       if (download_url.startsWith("urn:jio:")) {
         queue = RSVP.Queue()
           .push(function () {
-            return g.downloadJSON(download_url);
+            return g.resolveExternalReference(download_url);
           });
       } else {
         queue = RSVP.Queue()
@@ -636,7 +636,7 @@
       g.props = {};
       g.options = {};
     })
-    .declareAcquiredMethod("downloadJSON", "downloadJSON")
+    .declareAcquiredMethod("resolveExternalReference", "resolveExternalReference")
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .allowPublicAcquisition("rootNotifyChange", function () {
       this.props.changed = true;
