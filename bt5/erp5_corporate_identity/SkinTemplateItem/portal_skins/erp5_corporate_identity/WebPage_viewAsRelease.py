@@ -24,6 +24,7 @@ import re
 from base64 import b64encode
 
 blank = ''
+pref = context.getPortalObject().portal_preferences
 re_tag = re.compile(r'<[^>]+>')
 
 # ------------------ HTML cleanup/converter methods ----------------------------
@@ -38,7 +39,7 @@ def removeHardcodedAbout(my_content):
 
 # -------------------------- Setup ---------------------------------------------
 release = context
-release_prefix = "Release."
+release_prefix = pref.getPreferredCorporateIdentityTemplateReleaseDocumentPrefix() or "Release."
 release_format = kw.get('format') or 'html'
 release_display_about = int(kw.get('display_about') or 0)
 release_display_svg = kw.get('display_svg') or "png"

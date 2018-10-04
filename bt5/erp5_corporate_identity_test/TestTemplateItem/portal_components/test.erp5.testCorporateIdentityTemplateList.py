@@ -213,8 +213,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       expected_page.edit(text_content=html)
       self.tic()
     self.assertEqual(
-        html.encode('UTF-8').splitlines(),
-        expected_page.getData().splitlines())
+        html.encode('UTF-8'),#.splitlines(),
+        expected_page.getData())#.splitlines())
 
   def runPdfTestPattern(self, id1, id2, id3, **kw):
     """

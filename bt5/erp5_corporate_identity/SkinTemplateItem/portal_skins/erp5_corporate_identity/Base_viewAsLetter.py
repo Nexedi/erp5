@@ -30,6 +30,7 @@ import re
 from base64 import b64encode
 
 blank = ''
+pref = context.getPortalObject().portal_preferences
 
 # -------------------------- Setup ---------------------------------------------
 letter = context
@@ -50,7 +51,7 @@ override_batch_mode = kw.get('batch_mode', None)
 # -------------------------- Document Parameters  ------------------------------
 letter_portal_type = letter.getPortalType()
 letter_relative_url = letter.getRelativeUrl()
-letter_prefix = "Letter."
+letter_prefix = pref.getPreferredCorporateIdentityTemplateLetterDocumentPrefix() or "Letter."
 
 # letter can be Web Page or Event created in Ticket module
 if letter_portal_type == "Web Page":

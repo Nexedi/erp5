@@ -228,7 +228,8 @@ if pass_parameter is not None and pass_source_data is not None:
       return populatePersonDict(context.getContributorValueList(*args, **kw))
     return []
 
-  # ------------- Override Sender/Recipient Organisation -----------------------
+  # --------- Override Sender/Recipient Organisation (TITLE) ---------------------
+  # XXX remove, too much ambiguity if multiple results
   # returns [{organisation_dict}]
   if pass_parameter == "override_organisation":
     return populateOrganisationDict(portal_object.portal_catalog(
@@ -237,13 +238,10 @@ if pass_parameter is not None and pass_source_data is not None:
       title=pass_source_data
     ))
 
-  # ----------------------- Sender (Override) ----------------------------------
+  # ------------ Override Sender/Recipient Organisation (URL) --------------------
   # returns [{organisation_dict}]
-  if pass_parameter == "sender":
-    return populateOrganisationDict(portal_object.portal_catalog(
-      portal_type="Organisation",
-      uid=pass_source_data
-    ))
+  if pass_parameter == "override_organisation_relative_url":
+    return populateOrganisationDict([context.restrictedTraverse(pass_source_data)])
 
   # -------------- Source/Destination (Person => Organisation) -----------------
   # returns [{organisation_dict}]
@@ -289,16 +287,22 @@ if pass_parameter is not None and pass_source_data is not None:
   # --------------------- Bank (Default Bank Account) --------------------------
   # returns [{bank_account_dict}] used in letter
   if pass_parameter == "bank":
-    return populateBankDict(portal_object.portal_catalog(
-      portal_type="Bank Account",
-      uid=pass_source_data
-    ))
+    return populateBankDict([context.restrictedTraverse(pass_source_data)])
 
   # ------------------ Theme Logo (Prefix + Theme) -----------------------------
-  # returns [{logo_dict}] used in themes
+  # returns [{logo_dict}] used in themes, needs to be language-agnostic, but not
+  # all contexts (eg sale-order) have language
+  # XXX improve
   if pass_parameter == "logo":
+
+    try:
+      use_language = context.getLanguage() or "en"
+    except AttributeError:
+      use_language = "en"
+
     return populateImageDict(portal_object.portal_catalog(
       portal_type="Image",
+      language=use_language,
       validation_state=validation_state,
       reference=pass_source_data
     ))

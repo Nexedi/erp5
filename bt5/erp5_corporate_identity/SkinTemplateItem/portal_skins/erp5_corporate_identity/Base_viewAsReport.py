@@ -39,12 +39,15 @@ from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
 
 blank = ''
+pref = context.getPortalObject().portal_preferences
+
 # ------------------ HTML cleanup/converter methods ----------------------------
 def translateText(snip):
   return doc_localiser.erp5_ui.gettext(snip, lang=doc_language).encode('utf-8').strip()
 
 # -------------------------- Setup ---------------------------------------------
 doc = context
+doc_prefix = pref.getPreferredCorporateIdentityTemplateReportDocumentPrefix() or "Report."
 doc_download = None #XXX not yet implemented
 doc_save = int(kw.get('document_save') or 0)
 doc_display_header = int(kw.get('display_header') or 0)
@@ -80,7 +83,7 @@ doc_embed = doc_format == 'html' and (doc_display_embedded or doc_display_sandbo
 
 # -------------------------- Document Parameters  ------------------------------
 doc_localiser = doc.getPortalObject().Localizer
-doc_rendering_fix = doc.Base_getTemplateParameter('wkhtmltopdf_rendering_fix') or blank
+doc_rendering_fix = doc.WebPage_getPdfOutputRenderingFix() or blank
 doc_report = getattr(doc, doc_report_name)
 doc_aggregate_list = []
 doc_revision = "1"
@@ -124,7 +127,7 @@ if doc_language is not None:
 if doc_language is None:
   doc_language = blank
 if doc_reference == blank:
-  doc_reference = "Report." + doc_title.replace(" ", ".")
+  doc_reference = doc_prefix + doc_title.replace(" ", ".")
 doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])
 doc_short_date = doc_modification_date.strftime('%Y-%m-%d')
 
@@ -154,8 +157,8 @@ if doc_format == "html":
     book_template_css_url=doc_theme.get("template_css_url"),
     book_logo_url=doc.Base_setUrl(path=doc_source.get("enhanced_logo_url"), display=None),
     book_logo_title=doc_source.get("theme_logo_description"),
-    book_report_css_list=doc.Base_getTemplateParameter("report_css_list") or [],
-    book_report_js_list=doc.Base_getTemplateParameter("report_js_list") or [],
+    book_report_css_list=pref.getPreferredCorporateIdentityTemplateReportCssList() or [],
+    book_report_js_list=pref.getPreferredCorporateIdentityTemplateReportJsList() or [],
     book_short_title=doc_short_title,
     book_reference=doc_reference,
     book_revision=doc_revision,
@@ -190,8 +193,8 @@ if doc_format == "pdf":
     book_theme_css_font_list=doc_theme.get("theme_css_font_list"),
     book_theme_css_url=doc_theme.get("theme_css_url"),
     book_template_css_url=doc_theme.get("template_css_url"),
-    book_report_css_list=doc.Base_getTemplateParameter("report_css_list") or [],
-    book_report_js_list=doc.Base_getTemplateParameter("report_js_list") or [],
+    book_report_css_list=pref.getPreferredCorporateIdentityTemplateReportCssList() or [],
+    book_report_js_list=pref.getPreferredCorporateIdentityTemplateReportJsList() or [],
     book_content=doc_content,
   )
 

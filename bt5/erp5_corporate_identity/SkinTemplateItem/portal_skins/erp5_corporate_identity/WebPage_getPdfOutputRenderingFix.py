@@ -1,19 +1,16 @@
 """
 ================================================================================
-Return custom hardcoded parameters
+Scripts correcting wrong behaviors in WkHTMLtoPDF rendering
 ================================================================================
 """
 # parameters:
 # ------------------------------------------------------------------------------
 # parameter                          Parameter to lookup
 
-if parameter == "fallback_image":
-  return "template_images/fallback.png"
-if parameter == "default_theme_css_url":
-  return "template_themes/themes.css"
-if parameter == "wkhtmltopdf_rendering_fix":
+# included:
+# - prevent resizing of document and font-size based on width of widest element
 
-  return """
+return """
   <script>
   (function () {
     var table_list = document.body.querySelectorAll("table"),

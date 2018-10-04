@@ -3,6 +3,7 @@ image_module/template_test_*
 image_module/template_test_image*
 organisation_module/template_test*
 organisation_module/template_test*/default**
+bank_account_module/template_test_*
 person_module/template_test*
 person_module/template_test*/default**
 web_page_module/template_test_*

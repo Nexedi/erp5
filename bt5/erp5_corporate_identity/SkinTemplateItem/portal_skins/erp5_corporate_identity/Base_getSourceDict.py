@@ -16,16 +16,16 @@ from Products.PythonScripts.standard import html_quote
 
 # -------------------------------  Set Source ----------------------------------
 source_logo_url = None
-default_bank_account_uid=context.Base_getTemplateParameter("default_bank_account_uid")
 source_organisation = None
+pref = context.getPortalObject().portal_preferences
+default_bank_account_relative_url=pref.getPreferredCorporateIdentityTemplateDefaultBankAccountRelativeUrl()
 
 if source is None:
-  default_company_title=context.Base_getTemplateParameter("default_company_title")
+  default_company_relative_url=pref.getPreferredCorporateIdentityTemplateDefaultOrganisationRelativeUrl()
   contributor_title_string = blank
   source_person = None
   source_person_list = []
   source_organisation_list = []
-  source_organisation_uid = None
   source_set = None
 
   # source person => override => contributor => source_decision
@@ -42,17 +42,13 @@ if source is None:
     contributor_title_string = ', '.join(x.get("name", blank) for x in source_person_list)
 
   # source organisation
-  # order: override => follow-up => default_organisation_uid => default_company_title => source_person career subordinate => source decision
+  # order: override => follow-up => default_organisation_uid => default_company_relative_url => source_person career subordinate => source decision
   if override_source_organisation_title is not None or override_source_organisation_title == blank:
     source_organisation_list = context.Base_getTemplateProxyParameter(parameter="override_organisation", source_data=override_source_organisation_title)
   if len(source_organisation_list) == 0:
     source_organisation_list = context.Base_getTemplateProxyParameter(parameter="organisation", source_data=None) or []
-  if len(source_organisation_list) == 0:
-    source_organisation_uid = context.Base_getTemplateParameter("default_source_organisation_uid")
-  if source_organisation_uid:
-    source_organisation_list = context.Base_getTemplateProxyParameter(parameter="sender", source_data=source_organisation_uid) or []
-  if len(source_organisation_list) == 0 and default_company_title:
-    source_organisation_list = context.Base_getTemplateProxyParameter(parameter="override_organisation", source_data=default_company_title) or []
+  if len(source_organisation_list) == 0 and default_company_relative_url:
+    source_organisation_list = context.Base_getTemplateProxyParameter(parameter="override_organisation_relative_url", source_data=default_company_relative_url) or []
   if len(source_organisation_list) == 0 and source_person is not None:
     for organisation_candidate in source_person_list:
       organisation_candidate_list = context.Base_getTemplateProxyParameter(parameter="source", source_data=organisation_candidate.get("uid")) or []
@@ -77,25 +73,31 @@ else:
   source = context.Base_getTemplateProxyParameter(parameter="source", source_data=source_uid)[0]
 
 # override specific bank account (no default to pick correct one if multiple exist)
-if default_bank_account_uid is not None:
-  override_bank_account_list = context.Base_getTemplateProxyParameter(parameter="bank", source_data=default_bank_account_uid) or []
+if default_bank_account_relative_url is not None:
+  override_bank_account_list = context.Base_getTemplateProxyParameter(parameter="bank", source_data=default_bank_account_relative_url) or []
   if len(override_bank_account_list) > 0:
     override_bank_account = override_bank_account_list[0]
     source["bank"] = override_bank_account.get("bank")
     source["bic"] = override_bank_account.get("bic")
     source["iban"] = override_bank_account.get("iban")
 
-# social media
+# social media, used for website (WIP)
 if source_organisation is not None:
-  source["social_media_handle_facebook"] = context.Base_getTemplateParameter('social_media_handle_facebook')
-  source["social_media_handle_twitter"] = context.Base_getTemplateParameter('social_media_handle_twitter')
-  source["social_media_handle_google"] = context.Base_getTemplateParameter('social_media_handle_google')
+  source["social_media_handle_facebook"] = pref.getPreferredCorporateIdentityTemplateSocialMediaHandleFacebook()
+  source["social_media_handle_twitter"] = pref.getPreferredCorporateIdentityTemplateSocialMediaHandleTwitter()
+  source["social_media_handle_google"] = pref.getPreferredCorporateIdentityTemplateSocialMediaHandleGoogle()
+  source["site_registration_url"] = pref.getPreferredCorporateIdentityTemplateSiteRegistrationUrl()
+  source["site_registration_id"] = pref.getPreferredCorporateIdentityTemplateSiteRegistrationId()
 
 # social capital currency and registered court fallbacks
 if source.get("social_capital_currency") is blank:
-  source["social_capital_currency"] = context.Base_getTemplateParameter("default_source_company_capital_currency")
+  currency_short_title = None
+  currency_relative_url = pref.getPreferredCorporateIdentityTemplateDefaultCurrencyRelativeUrl()
+  if currency_relative_url:
+    currency_short_title = context.restrictedTraverse(currency_relative_url).getShortTitle()
+  source["social_capital_currency"] = currency_short_title or ""
 if source.get("corporate_registration_code") is blank:
-  source["corporate_registration_code"] = context.Base_getTemplateParameter("default_source_registered_court")
+  source["corporate_registration_code"] = pref.getPreferredCorporateIdentityTemplateDefaultOrganisationRegisteredCourt()
 
 # XXX images stored on organisation (as do images in skin folders)
 if override_logo_reference:
