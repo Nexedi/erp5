@@ -303,13 +303,9 @@ function xmlDecode(text) {
     return text;
 }
 
-// Sets the text in this element
+// Sets the text in this element. text can be in markdown format
 function setText(element, text) {
-    if (element.textContent != null) {
-        element.textContent = text;
-    } else if (element.innerText != null) {
-        element.innerText = text;
-    }
+    element.innerHTML = marked(text.toString(), {sanitize: true});
 }
 
 // Get the value of an <input> element
