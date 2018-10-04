@@ -1,0 +1,110 @@
+<tal:comment replace="nothing">XXX Try to fetch aggregate dynamic? make default_web_page_template, call this so renderer can be changed</tal:comment>
+<tal:block metal:define-macro="master">  
+  <tal:block tal:define="request                python: context.REQUEST;
+                         portal_status_message  python: request.get('portal_status_message', None);
+                         layout_form_id         python: request.get('layout_form_id', here.getApplicableLayout() or None);
+                         content_form_id        python: request.get('content_form_id', None);
+                         layout_form            python: layout_form_id and getattr(here, layout_form_id, None) or None;
+                         content_form           python: content_form_id and getattr(here, content_form_id, None) or None;
+                         has_no_layout          python: layout_form is None;
+                         has_no_content_form    python: content_form is None;
+                         aggregate              python: has_no_layout or layout_form.Form_getGroupList(['site_header', 'site_footer', 'header_title', 'breadcrumb', 'document_summary', 'special_header']);
+                         aggregate              python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};
+                         mode                   python: request.get('list_mode', request.get('dialog_mode', None), '');
+                         mode_class             python: '%s-mode-content' % (mode);
+                         content_class          python: '%s-content' % (here.getPortalType().replace(' ', '-'));
+                         site_header_area       python: aggregate.get('site_header', []);
+                         site_footer_area       python: aggregate.get('site_footer', []);
+                         header_title_area      python: aggregate.get('header_title', []);
+                         breadcrumb_area        python: aggregate.get('breadcrumb', []);
+                         document_summary_area  python: aggregate.get('document_summary', []);
+                         special_header_area    python: aggregate.get('special_header', []);
+                         website                python: context.getWebSiteValue();
+                         root_url               python: website.absolute_url();
+                         current_url            python: context.absolute_url();
+                         default_document       python: website.getDefaultDocumentValue();
+                         default_url            python: (''.join([root_url, '/', default_document.getReference()]) if default_document else root_url);
+                         is_front_page          python: root_url == current_url or current_url == default_url;">
+
+    <tal:comment replace="nothing">Actual Page Template</tal:comment>
+    <tal:block metal:use-macro="here/template_erp5_ci_web_style/macros/master">
+      
+      <tal:block metal:fill-slot="seo">
+        <tal:block metal:use-macro="here/theme_macros_library/macros/multilanguage"/>
+        <tal:block metal:use-macro="here/theme_macros_library/macros/schemadotorg" />
+        <tal:block metal:use-macro="here/theme_macros_library/macros/opengraph" />
+        <tal:block metal:use-macro="here/theme_macros_library/macros/site_verification" />
+      </tal:block>
+
+      <tal:block metal:fill-slot="layout">
+        <tal:block metal:use-macro="here/theme_macros_library/macros/populate_request" />
+
+        <div class="header-container ci-web-page-header">
+            <tal:block tal:condition="python: layout_form is not None">
+              <tal:block tal:repeat="aggregate python: [('site_header', site_header_area)]">
+                <tal:block metal:use-macro="here/theme_macros_library/macros/aggregate_render"/>
+              </tal:block>
+            </tal:block>
+        </div>
+
+        <div tal:attributes="id string:${mode_class}_id; class string:main-container ${content_class}">
+          <div class="main clearfix">
+            <div class="headteaser index">
+              <div class="teaserin">
+                <div class="wrappin ci-web-page-banner">
+                  <tal:block tal:condition="python: not is_front_page">
+                    <tal:block tal:repeat="aggregate python: [('header_title', header_title_area)]">
+                      <tal:block metal:use-macro="here/theme_macros_library/macros/aggregate_render"/>
+                    </tal:block>
+
+                    <tal:block tal:repeat="aggregate python: [('breadcrumb', breadcrumb_area)]">
+                      <tal:block metal:use-macro="here/theme_macros_library/macros/aggregate_render"/>
+                    </tal:block>
+
+                    <tal:block tal:repeat="aggregate python: [('document_summary', document_summary_area)]">
+                      <tal:block metal:use-macro="here/theme_macros_library/macros/aggregate_render"/>
+                    </tal:block>
+                  </tal:block>
+
+                  <span class="portal_status_message" tal:content="portal_status_message" 
+                        tal:condition="portal_status_message"/>
+
+                  <tal:comment replace="nothing">Landing Page Highlight (Slider, or similar)</tal:comment>
+                  <tal:block tal:condition="is_front_page">
+                    <tal:block tal:repeat="aggregate python: [('special_header', special_header_area)]">
+                      <tal:block metal:use-macro="here/theme_macros_library/macros/aggregate_render"/>
+                    </tal:block>
+                  </tal:block>
+                </div><!-- end ci-web-pagebanner -->
+              </div><!-- end teaserin -->
+            </div><!-- end headteaser -->
+            
+            <div tal:attributes="class string:content wrappin ci-web-page-content ${mode_class} ${content_class}">
+              
+              <tal:comment replace="nothing">Standard Page Form Content ("simplicity: Form is rendered here")</tal:comment>
+              <tal:block tal:condition="python: not is_front_page">
+                <tal:block metal:use-macro="here/theme_macros_library/macros/default_content" />
+              </tal:block>
+              <tal:comment replace="nothing">Special Page Content (Front page, showing all documents related to default document)</tal:comment>
+              <tal:block tal:condition="python: layout_form is not None">
+               <tal:block metal:use-macro="here/theme_macros_library/macros/special_content" />
+              </tal:block>
+
+              <div class="clear"></div>
+            </div><!-- end content wrappin -->
+            
+          </div><!-- end main -->
+        </div> <!-- main-container -->
+
+        <div class="footer-container ci-web-page-footer">
+          <tal:block tal:condition="python: layout_form is not None">
+            <tal:block tal:repeat="aggregate python: [('site_footer', site_footer_area)]">
+              <tal:block metal:use-macro="here/theme_macros_library/macros/aggregate_render"/>
+            </tal:block>
+          </tal:block>
+        </div>
+
+      </tal:block>
+    </tal:block> 
+  </tal:block>
+</tal:block>

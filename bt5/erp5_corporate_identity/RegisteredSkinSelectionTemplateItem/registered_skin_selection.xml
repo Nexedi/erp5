@@ -20,7 +20,11 @@
   <skin_selection>Slide</skin_selection>
  </skin_folder_selection>
  <skin_folder_selection>
+  <skin_folder>erp5_corporate_identity_web</skin_folder>
+  <skin_selection>CI_web</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
   <skin_folder>erp5_xhtml_style</skin_folder>
-  <skin_selection>Book,Leaflet,Letter,Release,Report,Slide</skin_selection>
+  <skin_selection>Book,CI_web,Leaflet,Letter,Release,Report,Slide</skin_selection>
  </skin_folder_selection>
 </registered_skin_selection>

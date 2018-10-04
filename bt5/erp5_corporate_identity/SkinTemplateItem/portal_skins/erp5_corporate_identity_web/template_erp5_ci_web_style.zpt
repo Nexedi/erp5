@@ -1,0 +1,84 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:comment replace="nothing">PAGE CONTAINER FOR ALL PAGES</tal:comment>
+  <tal:block metal:define-macro="master">
+    <tal:block tal:define="web_site                   python: context.getWebSiteValue();
+                           web_site_title             python: web_site.getProperty('title');
+                           web_site_description       python: web_site.getProperty('description');
+                           web_site_keyword_list      python: web_site.getProperty('subject_list');
+                           url                        python: context.getAbsoluteUrl();
+                           page_theme_dict            python: context.Base_getThemeDict(doc_format='html', css_path='template_css/web');
+                           page_source_dict           python: context.Base_getSourceDict(theme_logo_url=page_theme_dict.get('theme_logo_url'));
+                           theme                      python: page_theme_dict.get('theme');
+                           theme_css_url              python: page_theme_dict.get('theme_css_url');
+                           author                     python: page_source_dict.get('organisation_title') or '';
+                           meta_description           python: context.getProperty('description') or web_site_description or '';
+                           meta_title                 python: context.getProperty('title') or web_site_title or context.getPortalObject().title_or_id();
+                           meta_keyword_list          python: context.getProperty('subject_list') or web_site_keyword_list or [];
+                           meta_generator             python: '%s - Copyright (C) 2001 - %s. All rights reserved.' % (author, DateTime().year());
+                           logo_url                   python: web_site.getLayoutProperty('layout_logo_reference') or None;
+                           js_list                    python: context.WebSite_getJavaScriptRelativeUrlList(scope='global');
+                           css_list                   python: web_site.WebSite_getCssRelativeUrlList(scope='global');
+                           request                    python: context.REQUEST;">
+      <!DOCTYPE html>
+        <html tal:attributes="class python: 'ci-%s' % (theme)" prefix="og: http://ogp.me/ns#">
+          <head>
+            <meta charset="utf-8">
+            <meta http-equiv="x-ua-compatible" content="ie=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <title tal:content="python: meta_title" />
+            <meta name="description" content="" tal:attributes="content python: meta_description" />
+            <meta name="generator" content="" tal:attributes="content python: meta_generator" />
+            <meta name="keywords" content="" tal:attributes="content python:', '.join(meta_keyword_list)" />
+            <meta name="robots" content="index, follow" />
+            <tal:block tal:condition="python: logo_url is not None">
+              <link rel="shortcut icon" type="image/png" tal:attributes="href python: ''.join([logo_url, '?format=png&amp;resolution=16x16'])" />
+              <link rel="icon" type="image/png" sizes="192x192" tal:attributes="href python: ''.join([logo_url, '?format=png&amp;resolution=192x192'])" />
+              <link rel="apple-touch-icon" sizes="180x180" tal:attributes="href python: ''.join([logo_url, '?format=png&amp;resolution=180x180'])">
+            </tal:block>
+            <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+            <tal:block metal:define-slot="seo" />
+            <tal:block tal:condition="python: theme_css_url is not None">
+              <link tal:attributes="href theme_css_url" type="text/css" rel="stylesheet" />
+            </tal:block>
+            <tal:block tal:repeat="css css_list">
+              <link tal:attributes="href css" type="text/css" rel="stylesheet" />
+            </tal:block>
+            <tal:block tal:condition="python: form is not None">
+              <tal:block tal:repeat="group python: [x for x in form.get_groups(include_empty=0) if x != 'hidden']">
+                <tal:block tal:repeat="field python: form.get_fields_in_group(group)">
+                  <tal:block tal:define="css python: field.render_css(REQUEST=request)">
+                    <style tal:condition="python: css is not None" tal:content="css" tal:attributes="type python:'text/css'"></style>
+                  </tal:block>
+                  <tal:block tal:define="dummy python: js_list.extend(field.get_javascript_list(REQUEST=request))" />
+                </tal:block>
+              </tal:block>
+            </tal:block>
+          </head>
+          <body class="ci-web">
+            <!--[if lte IE 9]>
+              <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+            <![endif]-->
+            <form id="main_form" class="main_form ci-web-form"
+                  onsubmit="changed=false; return true"
+                  tal:attributes="enctype enctype | form/Form_getEnctype | nothing;
+                  action url;
+                  method python:str(path('form/method | string:post')).lower()">
+              <fieldset id="hidden_fieldset" class="hidden_fieldset">
+                <input tal:condition="form_action | nothing"
+                       id="hidden_button" class="hidden_button" type="submit" value="dummy"
+                       tal:attributes="name string:${form_action}:method" />
+                <tal:block metal:use-macro="here/theme_macros_library/macros/http_definitions" />
+              </fieldset>
+              <tal:comment replace="nothing">PAGE CONTENT</tal:comment>
+              <tal:block metal:define-slot="layout" />
+            </form>
+            <tal:block tal:repeat="js js_list">
+              <script tal:attributes="src js" type="text/javascript"></script>
+            </tal:block>
+          </body>
+        </html>
+    </tal:block>
+  </tal:block>
+</tal:block>

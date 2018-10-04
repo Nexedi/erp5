@@ -4,7 +4,9 @@ erp5_corporate_identity_leaflet | Leaflet
 erp5_corporate_identity_letter | Letter
 erp5_corporate_identity_release | Release
 erp5_corporate_identity_slide | Slide
+erp5_corporate_identity_web | CI_web
 erp5_xhtml_style | Book
+erp5_xhtml_style | CI_web
 erp5_xhtml_style | Leaflet
 erp5_xhtml_style | Letter
 erp5_xhtml_style | Release

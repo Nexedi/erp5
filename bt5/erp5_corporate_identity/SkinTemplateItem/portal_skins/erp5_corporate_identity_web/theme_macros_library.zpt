@@ -1,0 +1,587 @@
+<tal:comment replace="nothing">from portal_skins/erp5_web/aggregate_render.xml</tal:comment>
+<tal:comment replace="nothing">from portal_skins/erp5_xhtml_style/global_definitions.xml</tal:comment>
+<tal:block metal:define-macro="populate_request">
+  <tal:block tal:define="request                                                python: context.REQUEST;
+                         global portal                                          python: here.getPortalObject();
+                         global portal_path                                     portal_path | python: here.getAbsoluteUrl();
+                         action_context                                         python: portal.restrictedTraverse(request.get('object_path', '?'), here);
+                         global actions                                         python: here.Base_filterDuplicateActions(portal.portal_actions.listFilteredActionsFor(action_context));
+                         local_parameter_list                                   local_parameter_list | python: {};
+                         global http_parameter_list                             python: portal.ERP5Site_filterParameterList(request.form);
+                         dummy                                                  python: http_parameter_list.update(local_parameter_list);
+                         global http_parameters                                 python: portal.ERP5Site_renderHTTPParameterList(http_parameter_list);
+                         global form                                            nocall:form | nothing;
+                         portal_preferences                                     python: portal.portal_preferences;
+                         global preferred_html_style_developper_mode            python: portal_preferences.getPreferredHtmlStyleDevelopperMode();
+                         global preferred_html_style_translator_mode            python: portal_preferences.getPreferredHtmlStyleTranslatorMode();
+                         global preferred_html_style_contextual_help            python: portal_preferences.getPreferredHtmlStyleContextualHelp();
+                         global preferred_html_style_acknowledgeable_message    python: portal_preferences.getPreferredHtmlStyleAcknowledgeableMessage();
+                         global developper_shortcut_render                      python: (preferred_html_style_developper_mode or preferred_html_style_translator_mode) and portal.developper_shortcut_render;
+                         global selected_language                               portal/Localizer/get_selected_language;
+
+                         dialog_mode          dialog_mode | nothing;
+                         list_mode            list_mode | nothing;
+                         website              python: context.getWebSiteValue();
+                         website_url          python: website.getAbsoluteUrl();
+                         websection           python: context.getWebSectionValue();
+                         websection_url       python: websection.getAbsoluteUrl();
+                         document             python: context.getDocumentValue();
+                         dummy                python: request.set('dialog_mode', dialog_mode);
+                         dummy                python: request.set('list_mode', list_mode);
+                         dummy                python: request.set('http_parameters', http_parameters);
+                         dummy                python: request.set('actions', actions);
+                         dummy                python: request.set('current_web_site', website);
+                         dummy                python: request.set('current_web_site_url', website_url);
+                         dummy                python: request.set('current_web_section', websection);
+                         dummy                python: request.set('current_web_section_url', websection_url);
+                         dummy                python: request.set('current_web_document', document);
+                         dummy                python: request.set('is_web_section_default_document', request.get('is_web_section_default_document', 0));">
+  </tal:block>
+</tal:block>
+
+<tal:comment replace="nothing">
+  - from portal_skins/erp5_web/aggregate_render.xml, modified to call macros dynamically
+  - no widget_renderer, also removed in content/container layout field defaults
+</tal:comment>
+<tal:block metal:define-macro="aggregate_render">
+  <!-- aggregate block -->
+  <div tal:define="aggregate_name   python: aggregate[0];
+                   group_list       python: aggregate[1];"
+        tal:condition="python: len(group_list)"
+        tal:attributes="class wrapper_class | python: 'wrapper';
+                        id    wrapper_id | python: 'wrapper_%s' % aggregate_name;">
+
+    <tal:block tal:repeat="group group_list">
+      <tal:block tal:define="gid     group/gid;
+                             gtitle  group/gtitle;
+                             goid    group/goid;
+                             field_list python: layout_form.get_fields_in_group(goid);">
+
+        <div tal:attributes="class python: gid.lstrip(aggregate_name);" tal:condition="python:len(field_list)">                 
+          <fieldset class="widget">
+            <legend i18n:translate="" i18n:domain="ui" tal:content="python: gtitle" class="group_title" />
+            <tal:block tal:repeat="field field_list">
+              <tal:block tal:define="field_title    string:  ${field/title};
+                                     strip_title    python:  field_title.strip();
+                                     good_render    nocall:  context/field_render/macros/field_render;
+                                     fake_render    python:  context.theme_macros_library.macros.get(strip_title);
+                                     field_render   python:  good_render if fake_render is None else fake_render;">
+                  <tal:block tal:replace="structure python:  context.field_renderer(macro=field_render)" />
+              </tal:block>
+            </tal:block>
+          </fieldset>
+        </div>
+
+      </tal:block>
+    </tal:block>
+  </div>
+</tal:block>
+
+<tal:comment replace="nothing">from portal_skins/erp5_xhtml_style/global_definitions.xml</tal:comment>
+<tal:block metal:define-macro="http_definitions">
+  <tal:block tal:define="request              python: context.REQUEST;
+                         portal               python: here.getPortalObject();
+                         local_parameter_list local_parameter_list | python: {};
+                         http_parameter_list  python: portal.ERP5Site_filterParameterList(request.form);
+                         dummy                python: http_parameter_list.update(local_parameter_list);">
+    <tal:block tal:replace="structure python: modules['ZTUtils'].make_hidden_input(**http_parameter_list)" />
+  </tal:blocK>
+</tal:block>
+
+
+<tal:block metal:define-macro="multilanguage">
+  <tal:block tal:replace="structure python: here.WebSite_setAlternativeLanguageList()" />
+</tal:block>
+
+<tal:block metal:define-macro="opengraph">
+  <tal:block tal:replace="structure python: here.WebSite_setOpenGraphMeta()" />
+</tal:block>
+
+<tal:block metal:define-macro="schemadotorg">
+  <tal:block tal:replace="structure python: here.WebSite_setSchemaDotOrg()" />
+</tal:block>
+
+<tal:block metal:define-macro="site_verification">
+  <!--google <meta name="google-site-verification" content="" /> -->
+  <!--taobao <meta property="wb:webmaster" content="" /> -->
+</tal:block>
+
+<tal:comment replace="nothing">HEADER (first level: sections/login/language, second level: logo/call-to-action, third level: search)</tal:comment>
+<tal:block metal:define-macro="site_header" 
+             tal:define="web_site                 python: here.getWebSiteValue();
+                         web_site_url             python: web_site.getAbsoluteUrl();
+                         language_list            python: web_site.Localizer.get_languages_map();
+                         dummy                    python: language_list.sort(key=lambda x: x['selected'], reverse=True);
+                         available_language_list  python: web_site.getAvailableLanguageList();
+                         is_multi_language        python: len(available_language_list) > 1;
+                         is_authorization_forced  python: web_site.getProperty('authorization_forced');
+                         is_authenticated_user    python: web_site.portal_membership.isAnonymousUser() is not 0;
+                         is_searchable_section    python: context is web_site or context is context.getWebSectionValue();
+                         has_browse_section       python: getattr(web_site, 'browse', None) is not None;
+                         has_contact_section      python: getattr(web_site, 'contact', None) is not None;
+                         web_site_title           python: web_site.getTitle() or '';
+                         web_site_short_title     python: web_site.getShortTitle() or '';
+                         web_site_logo_reference  python: web_site.getLayoutProperty('layout_logo_reference');">
+  <div class="ci-web-header">
+
+    <tal:comment replace="nothing">left: LOGO + 5 WEB SECTION MENU (if visible), right: LOGIN/LANGUAGE (if enabled)</tal:comment>
+    <div class="ci-web-header-bar-navigation">
+      <div class="ci-web-header-bar-navigation-left">
+        <tal:block tal:condition="web_site_logo_reference">
+          <a tal:attributes="href web_site_url">
+            <img tal:attributes="src              python: ''.join([web_site_logo_reference, '?format=png']);
+                                 alt              python: ''.join([web_site_short_title, ' Home'])"
+                                 i18n:translate="" i18n:domain="ui" i18n:attributes="alt" />
+          </a>
+        </tal:block>
+        <span class="ci-web-page-header-bar-navigation-title" tal:content="python: web_site_short_title or 'Home'" i18n:translate="" i18n:domain="ui"></span>  
+        <tal:block tal:replace="structure python: here.WebSite_generateWebSectionNavigation(max_depth=1,max_items=5)"></tal:block>
+      </div>
+      <div class="ci-web-header-bar-navigation-center"></div>
+      <div class="ci-web-header-bar-navigation-right">
+        <tal:block tal:condition="is_multi_language">
+          <ul class="ci-web-header-menu-lang">
+            <tal:block tal:repeat="language language_list">
+              <li tal:define="language_id language/id;
+                              pretty_language_id python:test(language_id=='pt-BR', 'PT', language_id);
+                              class_id python:test(language_id=='pt-BR', 'pt', language_id);"
+                tal:attributes="class class_id"
+                tal:condition="python:language_id in available_language_list">
+                <a tal:attributes="href python:'Base_doLanguage?select_language=%s' %language_id;
+                                   class python:int(language['selected']) * 'selected' or 'not_selected';"
+                   tal:content="pretty_language_id" i18n:translate="" i18n:domain="ui" />
+              </li>
+            </tal:block>
+          </ul>
+        </tal:block>
+        <tal:block tal:condition="is_authorization_forced">
+          <ul class="ci-web-header-menu-auth">
+            <li tal:condition="is_authenticated_user"><a class="toolbar-menu" tal:attributes="href python: portal_path + '/WebSite_logout'" i18n:translate="" i18n:domain="ui">Logout</a></li>
+            <li tal:condition="not:is_authenticated_user"><a class="toolbar-menu toolbar-menu-contrast" tal:attributes="href python: portal_path + '/login_form'" i18n:translate="" i18n:domain="ui">Login</a></li>
+          </ul>
+        </tal:block>
+        <tal:block tal:condition="is_authenticated_user">
+          <ul class="ci-web-header-menu-user"></ul>
+        </tal:block>
+      </div>
+    </div>
+
+    <tal:comment replace="nothing">left: LOGO, right: CONTACT/call-to-action (if enabled)</tal:comment>
+    <div class="ci-web-header-bar-logo">
+      <div class="ci-web-header-bar-logo-left">
+        <tal:block tal:condition="web_site_logo_reference">
+          <a tal:attributes="href web_site_url">
+            <img tal:attributes="src              python: ''.join([web_site_logo_reference, '?format=png']);
+                                 alt              python: ''.join([web_site_short_title, ' Home'])"
+                                 i18n:translate="" i18n:domain="ui" i18n:attributes="alt" />
+          </a>
+          <span class="ci-web-page-header-bar-logo-title" tal:content="python: web_site_title or ''" i18n:translate="" i18n:domain="ui"></span>
+        </tal:block>
+      </div>
+      <div class="ci-web-header-bar-logo-center"></div>
+      <div class="ci-web-header-bar-logo-right">
+        <tal:block tal:condition="has_contact_section">
+          <a tal:attributes="href string: ${web_site_url}/contact" title="Contact us for more information." i18n:attributes="title" i18n:translate="" i18n:domain="ui">Contact</a>
+        </tal:block>
+      </div>
+    </div>
+
+    <tal:comment replace="nothing">SITE SEARCH (if enabled)</tal:comment>
+    <tal:comment replace="nothing">XXX load this from a custom template?</tal:comment>
+    <div class="ci-web-header-bar-search">
+      <div class="ci-web-header-bar-search-left"></div>
+      <div class="ci-web-header-bar-search-center">
+        <tal:block tal:condition="has_browse_section">
+          <tal:block tal:condition="is_searchable_section">
+            <div class="custom-menu-search" tal:condition="is_searchable_section">
+              <input class="custom-menu-search-input" type="text"
+                onkeypress="submitFormOnEnter(event, this.form, 'WebSite_viewQuickSearchResultList');"
+                placeholder="Documentation, Install..." i18n:attributes="placeholder" i18n:domain="ui"
+                name="field_your_search_text" size="40" accesskey="4"/>
+              <input class="quick_search_button" type="submit" i18n:attributes="value" i18n:domain="ui" value="Search" name="WebSite_viewQuickSearchResultList:method" />
+            </div>
+          </tal:block>
+        </tal:block>
+      </div>
+      <div class="ci-web-header-bar-search-right"></div>
+    </div>
+  </div>
+</tal:block>
+
+<tal:comment replace="nothing">main footer for all pages</tal:comment>
+<tal:block metal:define-macro="site_footer">
+  <tal:block tal:define="web_site                 python: here.getWebSiteValue();
+                         footer_reference         python: web_site.getLayoutProperty('layout_footer_reference');
+                         has_footer               python: footer_reference is not None;
+                         copyright                python: 'Copyright (C) 2001 - %s. All rights reserved.' % (DateTime().year());">
+    <div class="ci-web-sitemap">
+      <tal:block tal:replace="structure python: here.WebSite_generateWebSectionNavigation(max_depth=2)"></tal:block>
+    </div>
+    <tal:block tal:condition="has_footer">
+      <div class="ci-web-footer">
+        <div tal:replace="structure python: web_site.restrictedTraverse(footer_reference).getTextContent()" />
+      </div>
+    </tal:block>
+    <div class="ci-web-copyright">
+      <span><a href="https://www.nexedi.com/">Nexedi SA</a></span> -
+      <span tal:content="copyright" /> -
+      <span><a href="http://www.miibeian.gov.cn/">&#27818;ICP&#22791;14008524&#21495;</a></span><tal:comment tal:replace="nothing"><!-- XXX
+        Should this span be moved on another div ? (with class="ci-web-icp" ?)
+        div.ci-web-icp a {
+          color: inherit ?
+          text-decoration: inherit ? none ?
+        }
+        --- Tristan
+      --></tal:comment>
+    </div>
+  </tal:block>
+</tal:block>
+
+<tal:comment replace="nothing">Default Page</tal:comment>
+<tal:block metal:define-macro="special_content"
+           tal:define="web_site                             python: context.getWebSiteValue();
+                       web_section                          python: context.getWebSectionValue();
+                       request                              python: context.REQUEST;
+                       request_path_url                     python: request['PATH_INFO'];
+                       is_not_login                         python: request_path_url.find('login_form') == -1;
+                       is_not_credential_request            python: request_path_url.find('ERP5Site_viewCredentialRecoveryLoginDialog') == -1;
+                       root_url                             python: web_site.absolute_url();
+                       current_url                          python: context.absolute_url();
+                       default_document                     python: web_site.getDefaultDocumentValue();
+                       has_default_document                 python: default_document is not None;
+                       is_default_document_displayed        python: web_section.getDefaultPageDisplayed();
+                       is_front_page                        python: root_url == current_url or current_url == default_url;
+                       current_web_section_renderer_id      python: web_site.getProperty('custom_render_method_id', None);
+                       custom_content_reference             python: web_site.getProperty('layout_news_reference');
+                       has_custom_content                   python: custom_content_reference is not None;
+                       predicate_value_list                 python: getattr(context, 'criterionPropertyList', []);">
+
+  <tal:block tal:condition="python: is_front_page and is_not_login and is_not_credential_request">
+    <tal:comment replace="nothing">Default Page (with renderer/without renderer)</tal:comment>
+    <tal:block tal:condition="python: has_no_content_form is not True">
+      <tal:block tal:content="structure                     python: content_form()"></tal:block>
+    </tal:block>
+    <tal:block tal:condition="python: has_no_content_form">
+      <tal:block tal:condition="python: has_default_document">
+                <!-- has default -->
+
+        <tal:block tal:condition="python: is_default_document_displayed">
+          <tal:block tal:replace="structure                   python: default_document.asEntireHTML()"></tal:block>
+        </tal:block>
+      </tal:block>
+    </tal:block>
+    <tal:comment replace="nothing">Front Page custom content (layout configuration web page "news")</tal:comment>
+    <tal:block tal:condition="python: has_custom_content">
+      <tal:block tal:replace="structure                     python: context.WebSection_viewInlinePageRenderer(custom_content_reference)"></tal:block>
+    </tal:block>
+    <tal:comment replace="nothing">Front Page additional content (latest documents, etc)</tal:comment>
+    <tal:block tal:condition="python: len(predicate_value_list) > 0">
+     <tal:block metal:use-macro="here/theme_macros_library/macros/press_releases" />
+      <tal:block metal:use-macro="here/theme_macros_library/macros/latest_documents" />
+      <tal:block metal:use-macro="here/theme_macros_library/macros/discussions" />
+    </tal:block>
+  </tal:block>
+</tal:block>
+
+<tal:comment replace="nothing">Normal pages</tal:comment>
+<tal:block metal:define-macro="default_content">
+  <tal:block tal:define="content_context                    python: context;
+                         content_context_portal_type        python: content_context.getPortalType();
+                         web_site                           python: content_context.getWebSiteValue();
+                         web_section                        python: content_context.getWebSectionValue();
+                         default_document                   python: web_section.getDefaultDocumentValue();
+                         has_default_document               python: default_document is not None;
+                         is_default_document_displayed      python: web_section.getDefaultPageDisplayed();
+                         current_web_section_renderer_id    python: web_section.getProperty('custom_render_method_id', None);">
+    
+    <tal:block tal:condition="python: has_no_content_form is not True">
+      <tal:block tal:content="structure                     python: content_form()"></tal:block>
+    </tal:block>
+    <tal:block tal:condition="python: has_no_content_form is True">
+      <tal:block tal:condition="python: has_default_document">
+        <tal:block tal:condition="python: is_default_document_displayed">
+          <tal:block tal:replace="structure                   python: default_document.asEntireHTML()"></tal:block>
+        </tal:block>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>
+
+<tal:comment replace="nothing">landing page header images/animation static content</tal:comment>
+<tal:block metal:define-macro="special_header" 
+             tal:define="web_site                           python: here.getWebSiteValue();
+                         request                            python: context.REQUEST;
+                         request_path_url                   python: request['PATH_INFO'];
+                         is_not_login                       python: request_path_url.find('login_form') == -1;
+                         is_not_credential_request          python: request_path_url.find('ERP5Site_viewCredentialRecoveryLoginDialog') == -1;
+                         highlight_reference                python: web_site.getProperty('layout_highlight_reference');
+                         has_highlight                      python: highlight_reference is not None;">
+
+  <tal:block tal:condition="python: has_highlight and is_not_login and is_not_credential_request">
+    <div tal:replace="structure python: web_site.restrictedTraverse(highlight_reference).getTextContent()" />
+  </tal:block>
+</tal:block>
+
+<tal:comment replace="nothing">Make generic, same for discussions and latest documents</tal:comment>
+<tal:block metal:define-macro="press_releases">
+  <tal:block tal:define="item_list python: [x for x in here.WebSection_getLastestDocumentList(publication_section_list=['news', 'blog'])]">
+    
+    <div class="ci-web-collection-list" tal:condition="python: len(item_list)">
+      <h2><a href="/news" i18n:attributes="title" i18n:translate="" i18n:domain="ui" title="Show more">Latest News</a></h2>
+      <a href="/news/WebSection_viewContentListAsRSS" class="icon icon-rss" i18n:attributes="alt" i18n:translate="" i18n:domain="ui" alt="Subscribe via RSS">RSS Feed</a>
+      <div class="ci-web-collection-row" tal:repeat="item item_list">
+        <tal:block tal:define="item_url                 python: here.getWebSiteValue().getPermanentURL(item);
+                               item_date                python: item.getCreationDate().strftime('%y-%m-%d');
+                               item_type                python: item.getPortalType().lower().replace(' ', '-');
+                               item_image_reference     python: web_site.WebPage_getOpenGraphImage(item) or web_site.getLayoutProperty('layout_logo_reference');
+                               item_image_alt           python: web_site.restrictedTraverse(item_image_reference).getDescription();">
+          
+          <div class="ci-web-collection-content">
+            <div class="ci-web-collection-image" tal:condition="item_image_reference">
+              <a tal:attributes="href item_url;
+                                 title   python: item.getTitle();" i18n:attributes="title" i18n:domain="ui">
+                <img tal:attributes="src python: ''.join([item_image_reference, '?format=png&amp;display=medium']);
+                                     alt python: item_image_alt;" i18n:attributes="alt" i18n:domain="ui" />                 
+              </a>
+            </div>
+            <div class="ci-web-collection-item">
+              <span tal:content="item_date"></span>
+              <h3><a i18n:attributes="title" i18n:domain="ui" title="Show Post" tal:attributes="href item_url;" tal:content="python: item.getTitle()" /></h3>
+              <p tal:replace="python: item.getDescription()"/>
+            </div>
+            <div class="ci-web-collection-icon">
+              <a class="icon icon-document" title="Show Post" i18n:attributes="title" i18n:domain="ui" tal:attributes="href python: item_url"/>
+            </div>
+          </div>
+        </tal:block>
+      </div>
+    </div>
+
+  </tal:block>
+</tal:block>
+
+<tal:block metal:define-macro="latest_documents">
+  <tal:block tal:define="item_list python: [x for x in here.WebSection_getLatestDocumentListFromUserPreferences(limit=[0,5], sort_on=[('modification_date', 'descending')])]">
+    
+    <div class="ci-web-collection-list" tal:condition="python: len(item_list)">
+      <h2><a href="/news" i18n:attributes="title" i18n:translate="" i18n:domain="ui" title="Show more">Latest Documents</a></h2>
+      <a href="/news/WebSection_viewContentListAsRSS" class="icon icon-rss" i18n:attributes="alt" i18n:translate="" i18n:domain="ui" alt="Latest Documents via RSS">RSS Feed</a>
+      <div class="ci-web-collection-row" tal:repeat="item item_list">
+        <tal:block tal:define="item_url             python: here.getWebSiteValue().getPermanentURL(item);
+                               item_date            python: item.getCreationDate().strftime('%y-%m-%d');
+                               item_type            python: item.getPortalType().lower().replace(' ', '-');
+                               item_image_reference python: web_site.WebPage_getOpenGraphImage(item) or web_site.getLayoutProperty('layout_logo_reference');
+                               item_image_alt       python: web_site.restrictedTraverse(item_image_reference).getDescription();">
+          
+          <div class="ci-web-collection-content">
+            <div class="ci-web-collection-image" tal:condition="item_image_reference">
+              <a tal:attributes="href item_url;
+                                 title   python: item.getTitle();" i18n:attributes="title" i18n:domain="ui">
+                <img tal:attributes="src python: ''.join([item_image_reference, '?format=png&amp;display=medium']);
+                                     alt python: item_image_alt;" i18n:attributes="alt" i18n:domain="ui" />                 
+              </a>
+            </div>
+            <div class="ci-web-collection-item">
+              <span tal:content="item_date"></span>
+              <h3><a i18n:attributes="title" i18n:domain="ui" title="Show Post" tal:attributes="href item_url;" tal:content="python: item.getTitle()" /></h3>
+              <p tal:replace="python: item.getDescription()"/>
+            </div>
+            <div class="ci-web-collection-icon">
+              <a class="icon icon-document" title="Show Post" i18n:attributes="title" i18n:domain="ui" tal:attributes="href python: item_url"/>
+            </div>
+          </div>
+        </tal:block>
+      </div>
+    </div>
+  </tal:block>
+</tal:block>
+
+<tal:block metal:define-macro="header_title"><p>BAM-Header-Title</p></tal:block>
+
+<tal:block metal:define-macro="discussions"><p>BAM-Discussions</p></tal:block>
+
+<tal:block metal:define-macro="breadcrumb"><p>BAM-Breadcrumb</p></tal:block>
+
+<tal:block metal:define-macro="document_profile"><p>BAM-Document-Profile</p></tal:block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<tal:block metal:define-macro="xxxheader_title">
+  <h1 tal:content="here/getTitle"></h1>
+</tal:block>
+
+<tal:block metal:define-macro="xxxbreadcrumb">
+  <div class="breadcrumb" 
+       tal:define="current_web_section              python:request.get('current_web_section', here);
+                   current_web_document             python:request.get('current_web_document', here);
+                   portal_path                      python:request.get('current_web_section_url', current_web_section.absolute_url());
+                   is_web_section_default_document  python:request.get('is_web_section_default_document',False);
+                   breadcrumb_list python:          current_web_section.getBreadcrumbItemList(current_web_document);">
+    <ul>
+      <li tal:repeat="breadcrumb python: breadcrumb_list[:(is_web_section_default_document and -1 or None)]">
+        <tal:block tal:define="is_last repeat/breadcrumb/end;
+                               is_first repeat/breadcrumb/start;">
+            <a href="#" tal:attributes="href  python: current_web_section.getPermanentURL(breadcrumb[1]);
+                                        title python: breadcrumb[2];
+                                        class python: test(is_last, 'last-breadcrumb', 'breadcrumb')"
+                        tal:content="python: test(is_first, breadcrumb[0], breadcrumb[1].getShortTitle() or breadcrumb[0])">Title</a>
+        </tal:block>
+      </li>
+    </ul>
+  </div>
+</tal:block>
+
+<tal:block metal:define-macro="xxxprofile_document">
+  <span tal:replace="here/getDescription"/>
+  <div class="teaserInfo">
+    <ul>
+      <li><strong>Last Update:</strong><span tal:replace="python: context.getModificationDate().strftime('%Y-%m-%d')"/></li>
+      <li><strong>Version:</strong><span tal:replace="python: getattr(context, 'getVersion', str)()"/></li>
+      <li><strong>Language:</strong><span tal:replace="python: getattr(context, 'getLanguage', str)()"/></li>
+      <li>Social Media Map</li>
+    </ul>
+  </div>
+</tal:block>
+
+
+
+
+
+
+
+<tal:block metal:define-macro="example_custom_property_content"
+           tal:define="website here/getWebSiteValue;
+                       request python: context.REQUEST;
+                       dynamic_path_url python: request['PATH_INFO'];
+                       is_not_login python: dynamic_path_url.find('login_form') == -1;
+                       is_not_credential_request python: dynamic_path_url.find('ERP5Site_viewCredentialRecoveryLoginDialog') == -1;
+                       custom_property_content_reference python: website.getProperty('custom_property_content_reference');
+                       custom_property_content_web_page python: here.WebSection_getCachedDocumentValue(custom_property_content_reference)">
+
+  <span tal:condition="python: custom_property_content_web_page is not None and is_not_login and is_not_credential_request"
+        tal:replace="structure custom_property_content_web_page/asEntireHTML"/>
+
+</tal:block>
+
+
+<!-- === CLEANUP === 
+
+
+
+<tal:block metal:define-macro="xxxlatest_documents">
+  <tal:block tal:define="latest_document_list python: [x for x in here.WebSection_getLatestRelevantDocumentList()]">
+    <div class="bottomPosts latestDocuments" tal:condition="python: len(latest_document_list)">
+      <h2 style="display:inline-block;"><a href="/latest">Latest Documents</a></h2>
+      <a style="margin-left:2em;top:-2px;" href="/latest/WebSection_viewContentListAsRSS" alt="Latest Documents as RSS" class="share-button rss-feed">
+        <img src="img/rss.png" alt="RSS Feed">
+      </a>
+      <div class="row" tal:repeat="latest_document latest_document_list">
+        <tal:block tal:define="latest_document_url python: here.getWebSiteValue().getPermanentURL(latest_document);">
+          <div class="date">
+            <span tal:replace="python: latest_document.getModificationDate().strftime('%d-%m')"/>
+            <span tal:content="python: latest_document.getModificationDate().strftime('%Y')"/>
+          </div>
+  
+          <div class="text">
+            <h3><a title="Show press release" 
+                   tal:attributes="href latest_document_url"
+                   tal:content="latest_document/getTitle"/></h3>
+            <span tal:replace="latest_document/getDescription"/>
+          </div>
+          <a class="icon" 
+             title="Show post"
+             tal:attributes="href latest_document_url"><img src="img/posticon-doc.png" alt="" /></a>
+       </tal:block>
+      </div>
+    </div>
+  </tal:block>
+</tal:block>
+
+<tal:block metal:define-macro="related_documents">
+  <tal:block tal:condition="python: context.getPortalType() in context.getPortalDocumentTypeList()">
+    <tal:block tal:define="related_document_list python: context.Document_getRelatedDocumentList(relation_id='related_predecessor') +
+                                                         context.Document_getRelatedDocumentList(relation_id='related_similar') +
+                                                         context.Document_getRelatedDocumentList(relation_id='related_successor')">
+      <div class="bottomPosts relatedDocs" tal:condition="python: len(related_document_list)">
+        <h2>
+          <a href="Document_viewRelatedDocumentList" 
+             title="Show more">Related Documents</a>
+                 <a href="#" class="txtButn" title="Show more">Suggest</a>
+        </h2>
+    
+        <div class="row" tal:repeat="related_document python: related_document_list[:2]">
+          <tal:block tal:define="related_document_url python: here.getWebSiteValue().getPermanentURL(related_document);">
+            <div class="date">
+              <span tal:replace="python: related_document.getModificationDate().strftime('%d-%m')"/>
+              <span tal:content="python: related_document.getModificationDate().strftime('%Y')"/>
+            </div>
+    
+            <div class="text">
+              <h3><a title="Show document" 
+                     tal:attributes="href related_document_url"
+                     tal:content="related_document/getTitle"/></h3>
+              <span tal:replace="related_document/getDescription"/>
+            </div>
+            <a class="icon" 
+               title="Show post"
+               tal:attributes="href related_document_url"><img src="img/posticon-doc.png" alt="" /></a>
+         </tal:block>
+       </div>
+       <a class="txtButn" title="Show more" href="Document_viewRelatedDocumentList">More</a>
+      </div>
+    </tal:block>
+  </tal:block>
+</tal:block>
+
+<tal:block metal:define-macro="xxxdiscussions">
+  <div class="bottomPosts Discussions"
+       tal:define="web_site here/getWebSiteValue;
+                   absolute_url here/getAbsoluteUrl;
+                   relative_url here/getRelativeUrl;
+                   forum_web_section here/WebSite_getDefaultForumWebSectionValue;
+                   discussion_thread_list python:here.WebSection_getLatestDiscussionThreadList(forum_web_section)[:2]">
+    <h2>
+    <a title="Show more"
+         tal:attributes="href python: forum_web_section.absolute_url()">Discussions</a>
+      
+       
+      <a class="txtButn" title="Show more"
+         tal:attributes="href string:${forum_web_section/absolute_url}/WebSection_viewCreateNewDiscussionThreadDialog?cancel_url=${absolute_url}&amp;predecessor_url=${relative_url}">New</a>
+      
+    </h2>
+
+    <div class="row" tal:repeat="discussion_thread discussion_thread_list">
+      <tal:block tal:define="discussion_post discussion_thread/DiscussionThread_getLastPost;
+                             author_dict discussion_post/DiscussionPost_getAuthorDict;
+                             is_author_link_available python:author_dict['author_url'] is not None;
+                             base_url python: '%s/%s/%s' %(web_site.absolute_url(), forum_web_section.getId(), discussion_thread.getReference())">
+        <div class="date">
+          <span tal:replace="python: discussion_post.getModificationDate().strftime('%d-%m')"/>
+          <span tal:content="python: discussion_post.getModificationDate().strftime('%Y')"/>
+        </div>
+        <div class="text">
+          <h3>
+            <a title="Show post"
+              tal:attributes="href python: '%s/view?list_start=%s&amp;reset=1#%s' %(base_url, discussion_post.getId(), discussion_post.getUid())"
+              tal:content="discussion_post/getTitle"/> 
+            <em>by <spam tal:replace="author_dict/author_title"/></em>
+          </h3>
+          <span tal:replace="structure python: here.Base_asStrippedHTML(discussion_post.getTextContent(''))"/>
+        </div>
+      </tal:block>
+    </div>
+    <a class="txtButn" title="Show more" tal:attributes="href string:${forum_web_section/absolute_url}">More</a>
+    <div class="clear"></div>
+  </div>
+</tal:block>
+-->
