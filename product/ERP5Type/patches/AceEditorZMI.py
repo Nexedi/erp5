@@ -40,12 +40,16 @@ def manage_page_footer(self):
   if document.meta_type in ('DTML Document', 'DTML Method'):
     if document.getId().endswith('.js'):
       mode = 'javascript'
+    elif document.getId().endswith('.ts'):
+      mode = 'typescript'
     elif document.getId().endswith('.css'):
       mode = 'css'
     textarea_selector = 'textarea[name="data:text"]'
   elif document.meta_type in ('File', ):
     if 'javascript' in document.getContentType():
       mode = 'javascript'
+    elif 'typescript' in document.getContentType():
+      mode = 'typescript'
     elif 'css' in document.getContentType():
       mode = 'css'
     elif 'html' in document.getContentType():
