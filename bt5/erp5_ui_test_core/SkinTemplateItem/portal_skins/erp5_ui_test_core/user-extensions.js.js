@@ -141,7 +141,7 @@ Selenium.prototype.doAssertImageMatchSnapshot = (
 
     promiseState = 'pending';
     element = selenium.browserbot.findElement(locator);
-    if (element instanceof HTMLCanvasElement) {
+    if (element.nodeName == 'CANVAS' /* instanceof HTMLCanvasElement XXX ? */) {
       canvasPromise = Promise.resolve(element);
     } else {
       canvasPromise = html2canvas(element);
