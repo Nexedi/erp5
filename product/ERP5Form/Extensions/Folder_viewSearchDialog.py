@@ -30,10 +30,12 @@ from Products.ERP5Type.Globals import get_request
 from Products.Formulator.TALESField import TALESMethod
 from Products.CMFCore.utils import getToolByName
 
-from Products.ERP5Type.Message import translateString
+from Products.ERP5Type.Message import translateString as translateStringAsMessage
 from Products.ERP5Form.Form import ERP5Form
 from Products.ERP5Form.ListBox import ListBoxListRenderer
 
+def translateString(*args, **kw):
+  return str(translateStringAsMessage(*args, **kw))
 
 def getSearchDialog(self, REQUEST=None):
   """Generate a dynamic search dialog from a listbox.
