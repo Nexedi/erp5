@@ -28,7 +28,7 @@
         .push(function (name) {
           if (name === storage_name) {
             return RSVP.all([
-              gadget.getUrlFor({command: "display", options: {page: "ojs_document_list"}}),
+              gadget.getUrlFor({command: "display"}),
               gadget.getUrlFor(
                 {command: "display", options: {page: "ojs_sync", auto_repair: true}}
               ),
