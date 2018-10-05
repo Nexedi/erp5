@@ -83,18 +83,36 @@ Selenium.prototype.assertElementPositionRangeTop = function(locator, range){
     }
 };
 
+// a memo test pathname => image counter
+imageMatchReference = new Map();
+
+function getReferenceImageCounter(testPathName) {
+  var counter = imageMatchReference.get(testPathName);
+  if (counter !== undefined) {
+    return counter;
+  }
+  counter = imageMatchReference.size + 1;
+  imageMatchReference.set(testPathName, counter);
+  return counter;
+}
+
+function getReferenceImageURL(testPathName) {
+  var imageCounter = getReferenceImageCounter(testPathName);
+  return testPathName + '-reference-snapshot-' + imageCounter + '.png';
+}
 
 /**
- * assert that canvas located at `locator` matches the `referenceImageURL`
- *
- * Images are compared pixel by pixel and if they differed, this step
- * is considered failed.
+ * assert that the rendering of the element `locator` matches the previously saved reference.
  *
  * Arguments:
  *   locator - an element locator
- *   referenceImageURL - URL of the reference image, can be relative.
+ *   misMatchTolerance - the percentage of mismatch allowed. If this is 0, the
+ *      images must be exactly same. If more than 0, image will also be resized.
  */
-Selenium.prototype.doAssertCanvasImage = function(locator, referenceImageURL) {
+Selenium.prototype.doAssertImageMatchSnapshot = (
+  locator,
+  misMatchTolerance
+) => {
   // XXX this is a do* method and not a assert* method because only do* methods are
   // asynchronous.
   // The asynchronicity of do* method is as follow Selenium.prototype.doXXX
@@ -105,52 +123,102 @@ Selenium.prototype.doAssertCanvasImage = function(locator, referenceImageURL) {
   //   * global timeout is reached.
   // we implement the state management with similar approach as what's discussed
   // https://stackoverflow.com/questions/30564053/how-can-i-synchronously-determine-a-javascript-promises-state
-  var promiseState, rejectionValue;
+  var promiseState, rejectionValue, canvasPromise;
   return function assertCanvasImage() {
-    if (promiseState === "pending") {
+    if (promiseState === 'pending') {
       return false;
     }
-    if (promiseState === "resolved") {
+    if (promiseState === 'resolved') {
       return true;
     }
-    if (promiseState === "rejected") {
-        Assert.fail(rejectionValue);
+    if (promiseState === 'rejected') {
+      Assert.fail(rejectionValue);
     }
 
-    promiseState = "pending";
-    var actual = selenium.browserbot.findElement(locator).toDataURL();
-    fetch(referenceImageURL)
-      .then(r => r.blob())
-      .then(blob => {
-        return new Promise((resolve, reject) => {
-          var fr = new FileReader();
-          fr.onload = d => resolve(fr.result);
-          fr.onerror = reject;
-          fr.readAsDataURL(blob);
-        });
+    if (misMatchTolerance === undefined) {
+      misMatchTolerance = 0;
+    }
+
+    promiseState = 'pending';
+    element = selenium.browserbot.findElement(locator);
+    if (element instanceof HTMLCanvasElement) {
+      canvasPromise = Promise.resolve(element);
+    } else {
+      canvasPromise = html2canvas(element);
+    }
+
+    canvasPromise
+      .then(canvas => {
+        return canvas.toDataURL();
       })
-      .then(expected => {
-        var diff = resemble(actual)
-          .outputSettings({ useCrossOrigin: false })
-          .compareTo(expected);
-        return new Promise(resolve => diff.onComplete(resolve));
-      })
-      .then(diff => {
-        var img;
-        if (diff.misMatchPercentage == 0) {
-          promiseState = "resolved";
-        } else {
-          promiseState = "rejected";
-          rejectionValue =
-            "Images are different ![image difference](" +
-            diff.getImageDataUrl() +
-            ")";
-        }
+      .then(actual => {
+        var referenceImageURL = getReferenceImageURL(
+          testFrame.getCurrentTestCase().pathname
+        );
+        return fetch(referenceImageURL)
+          .then(response => {
+            if (response.status === 200) {
+              return response.blob();
+            }
+            throw new Error('Feching reference failed ' + response.statusText);
+          })
+          .then(
+            blob => {
+              return new Promise((resolve, reject) => {
+                var fr = new FileReader();
+                fr.onload = d => resolve(fr.result);
+                fr.onerror = reject;
+                fr.readAsDataURL(blob);
+              });
+            },
+            e => {
+              // fetching reference was not found, return empty image instead, it will be different
+              return document.createElement('canvas').toDataURL();
+            }
+          )
+          .then(expected => {
+            var diff = resemble(actual)
+              .outputSettings({ useCrossOrigin: false })
+              .compareTo(expected);
+            return new Promise(resolve => diff.onComplete(resolve));
+          })
+          .then(diff => {
+            var updateLink = new URL(
+              'Zuite_viewUpdateReferenceImageDialog',
+              document.baseURI
+            );
+            updateLink.searchParams.set('image_data', actual);
+            // XXX this cause Request-URI Too Long
+            // make a data-url: html form ?
+            //updateLink.searchParams.set('image_path', referenceImageURL);
+            updateLink.searchParams.set('image_path', 'XXX too big');
+
+            if (parseFloat(diff.misMatchPercentage) <=  misMatchTolerance) {
+              promiseState = 'resolved';
+            } else {
+              promiseState = 'rejected';
+              rejectionValue = [
+                '## Images are ' + diff.misMatchPercentage + '% different ',
+                '',
+                'Difference: ![image difference](' +
+                  diff.getImageDataUrl() +
+                  ')',
+                '',
+                'Expected image: ![expected](' + referenceImageURL + ')',
+                '',
+                'Actual image: ![actual](' + actual + ')',
+                '',
+                'Click [here](' +
+                  updateLink.toString() +
+                  ') to update reference with actual.'
+              ].join('\n');
+            }
+          });
       })
       .catch(error => {
         console.error(error);
-        promiseState = "rejected";
-        rejectionValue = "Error computing image differences " + error;
+        promiseState = 'rejected';
+        rejectionValue = 'Error computing image differences ' + error;
       });
   };
 };
