@@ -19,6 +19,7 @@
 <tr><td>waitForElementPresent</td>
     <td>//input[@data-i18n="[value]Reset Filter" and @disabled]</td><td></td></tr>
 
+
 <tr><td>waitForElementPresent</td>
     <td>css=#wrap1 iframe</td><td></td></tr>
 <tr><td>selectFrame</td>
@@ -73,9 +74,9 @@
   <td>ok</td></tr>
 
 <tr><td colspan="3"><b>Verify the rendering of the graph matches our reference snapshot</b></td></tr>
-<tr><td>assertCanvasImage</td>
+<tr><td>assertImageMatchSnapshot</td>
     <td>//canvas</td>
-    <td>./testFrontPageDashboardSupportRequestPipe.reference-screenshot-1.png</td></tr>
+    <td></td></tr>
 
 
 <tr><td colspan="3"><b>Clicking on a serie filter the listbox of recent updates</b></td></tr>
