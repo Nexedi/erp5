@@ -38,23 +38,18 @@
     var series = storedVars['graph_instance'].getOption()['series'],
         title = storedVars['graph_instance'].getOption()['title'][0].text;
 
-    function assertEqual(a, b) {
-      if (!(a == b)) {
-        throw new Error(`${a} != ${b}`);
-      }
-    }
-    assertEqual(title, "Last Month Activity");
-    assertEqual(series.length, 1);
-    assertEqual(series[0]["type"], "pie");
+    Assert.equals("Last Month Activity", title);
+    Assert.equals(1, series.length);
+    Assert.equals("pie", series[0]["type"]);
 
-    assertEqual(series[0]["name"], "Support Request");
-    assertEqual(
-      JSON.stringify(series[0]["data"].map(e => {return {name: e.name, value: e.value}; })),
+    Assert.equals("Support Request", series[0]["name"]);
+    Assert.equals(
       JSON.stringify([
        {name: "Opened", value: 3},
        {name: "Submitted", value: 2},
        {name: "Suspended", value: 0},
-       {name: "Closed", value: 0}]));
+       {name: "Closed", value: 0}]),
+      JSON.stringify(series[0]["data"].map(e => {return {name: e.name, value: e.value}; })));
 
     return "ok";
     })()</td>

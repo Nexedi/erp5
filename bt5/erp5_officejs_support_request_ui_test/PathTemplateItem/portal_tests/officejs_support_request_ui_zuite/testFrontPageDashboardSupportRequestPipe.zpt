@@ -38,41 +38,36 @@
     var series = storedVars['graph_instance'].getOption()['series'],
         title = storedVars['graph_instance'].getOption()['title'][0].text;
 
-    function assertEqual(a, b) {
-      if (!(a == b)) {
-        throw new Error(`${a} != ${b}`);
-      }
-    }
-    assertEqual(title, "Support Request Pipe");
-    assertEqual(series.length, 3);
-    assertEqual(series[0]["type"], "bar");
+    Assert.equals("Support Request Pipe", title);
+    Assert.equals(3, series.length);
+    Assert.equals("bar", series[0]["type"]);
 
-    assertEqual(series[0]["name"], "Opened");
-    assertEqual(
-      JSON.stringify(series[0]["data"].map(e => {return {name: e.name, value: e.value}; })),
+    Assert.equals("Opened", series[0]["name"]);
+    Assert.equals(
       JSON.stringify([
        {name: "< 2", value: 1},
        {name: "2-7", value: 2},
        {name: "7-30", value: 0},
-       {name: "> 30", value: 1}]));
+       {name: "> 30", value: 1}]),
+      JSON.stringify(series[0]["data"].map(e => {return {name: e.name, value: e.value}; })));
 
-    assertEqual(series[1]["name"], "Submitted");
-    assertEqual(
-      JSON.stringify(series[1]["data"].map(e => {return {name: e.name, value: e.value}; })),
+    Assert.equals("Submitted", series[1]["name"]);
+    Assert.equals(
       JSON.stringify([
        {name: "< 2", value: 1},
        {name: "2-7", value: 0},
        {name: "7-30", value: 1},
-       {name: "> 30", value: 1}]));
+       {name: "> 30", value: 1}]),
+      JSON.stringify(series[1]["data"].map(e => {return {name: e.name, value: e.value}; })));
 
-    assertEqual(series[2]["name"], "Suspended");
-    assertEqual(
-      JSON.stringify(series[2]["data"].map(e => {return {name: e.name, value: e.value}; })),
+    Assert.equals("Suspended", series[2]["name"]);
+    Assert.equals(
       JSON.stringify([
        {name: "< 2", value: 0},
        {name: "2-7", value: 0},
        {name: "7-30", value: 0},
-       {name: "> 30", value: 1}]));
+       {name: "> 30", value: 1}]),
+      JSON.stringify(series[2]["data"].map(e => {return {name: e.name, value: e.value}; })));
     return "ok";
     })()</td>
   <td>ok</td></tr>
