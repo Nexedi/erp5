@@ -8171,10 +8171,9 @@ return new Parser;
 
   function readBlobAsText(blob, encoding) {
     var fr = new FileReader();
-    return new RSVP.Promise(function (resolve, reject, notify) {
+    return new RSVP.Promise(function (resolve, reject) {
       fr.addEventListener("load", resolve);
       fr.addEventListener("error", reject);
-      fr.addEventListener("progress", notify);
       fr.readAsText(blob, encoding);
     }, function () {
       fr.abort();
@@ -8184,10 +8183,9 @@ return new Parser;
 
   function readBlobAsArrayBuffer(blob) {
     var fr = new FileReader();
-    return new RSVP.Promise(function (resolve, reject, notify) {
+    return new RSVP.Promise(function (resolve, reject) {
       fr.addEventListener("load", resolve);
       fr.addEventListener("error", reject);
-      fr.addEventListener("progress", notify);
       fr.readAsArrayBuffer(blob);
     }, function () {
       fr.abort();
@@ -8197,10 +8195,9 @@ return new Parser;
 
   function readBlobAsDataURL(blob) {
     var fr = new FileReader();
-    return new RSVP.Promise(function (resolve, reject, notify) {
+    return new RSVP.Promise(function (resolve, reject) {
       fr.addEventListener("load", resolve);
       fr.addEventListener("error", reject);
-      fr.addEventListener("progress", notify);
       fr.readAsDataURL(blob);
     }, function () {
       fr.abort();
@@ -8852,7 +8849,7 @@ return new Parser;
         var ceilHeapSize = function (v) {
             // The asm.js spec says:
             // The heap object's byteLength must be either
-            // 2^n for n in [12, 24) or 2^24 * n for n ≥ 1.
+            // 2^n for n in [12, 24) or 2^24 * n for n â‰¥ 1.
             // Also, byteLengths smaller than 2^16 are deprecated.
             var p;
             // If v is smaller than 2^16, the smallest possible solution
@@ -9074,7 +9071,148 @@ return new Parser;
     CONFLICT_THROW = 0,
     CONFLICT_KEEP_LOCAL = 1,
     CONFLICT_KEEP_REMOTE = 2,
-    CONFLICT_CONTINUE = 3;
+    CONFLICT_CONTINUE = 3,
+    // 0 - 99 error
+    LOG_UNEXPECTED_ERROR = 0,
+    LOG_UNRESOLVED_CONFLICT = 1,
+    LOG_UNEXPECTED_LOCAL_ATTACHMENT = 2,
+    LOG_UNEXPECTED_REMOTE_ATTACHMENT = 3,
+    LOG_UNRESOLVED_ATTACHMENT_CONFLICT = 11,
+    // 100 - 199 solving conflict
+    LOG_FORCE_PUT_REMOTE = 100,
+    LOG_FORCE_POST_REMOTE = 101,
+    LOG_FORCE_DELETE_REMOTE = 103,
+    LOG_FORCE_PUT_REMOTE_ATTACHMENT = 110,
+    LOG_FORCE_DELETE_REMOTE_ATTACHMENT = 113,
+    LOG_FORCE_PUT_LOCAL = 150,
+    LOG_FORCE_POST_LOCAL = 151,
+    LOG_FORCE_DELETE_LOCAL = 153,
+    LOG_FORCE_PUT_LOCAL_ATTACHMENT = 160,
+    LOG_FORCE_DELETE_LOCAL_ATTACHMENT = 163,
+    // 200 - 299 pushing change
+    LOG_PUT_REMOTE = 200,
+    LOG_POST_REMOTE = 201,
+    LOG_DELETE_REMOTE = 203,
+    LOG_PUT_REMOTE_ATTACHMENT = 210,
+    LOG_DELETE_REMOTE_ATTACHMENT = 213,
+    LOG_PUT_LOCAL = 250,
+    LOG_POST_LOCAL = 251,
+    LOG_DELETE_LOCAL = 253,
+    LOG_PUT_LOCAL_ATTACHMENT = 260,
+    LOG_DELETE_LOCAL_ATTACHMENT = 263,
+    LOG_FALSE_CONFLICT = 298,
+    LOG_FALSE_CONFLICT_ATTACHMENT = 299,
+    // 300 - 399 nothing to do
+    LOG_SKIP_LOCAL_CREATION = 300,
+    LOG_SKIP_LOCAL_MODIFICATION = 301,
+    LOG_SKIP_LOCAL_DELETION = 303,
+    LOG_SKIP_REMOTE_CREATION = 350,
+    LOG_SKIP_REMOTE_MODIFICATION = 351,
+    LOG_SKIP_REMOTE_DELETION = 353,
+    LOG_SKIP_LOCAL_ATTACHMENT_CREATION = 310,
+    LOG_SKIP_LOCAL_ATTACHMENT_MODIFICATION = 311,
+    LOG_SKIP_LOCAL_ATTACHMENT_DELETION = 313,
+    LOG_SKIP_REMOTE_ATTACHMENT_CREATION = 360,
+    LOG_SKIP_REMOTE_ATTACHMENT_MODIFICATION = 361,
+    LOG_SKIP_REMOTE_ATTACHMENT_DELETION = 363,
+    LOG_SKIP_CONFLICT = 396,
+    LOG_SKIP_CONFLICT_ATTACHMENT = 397,
+    LOG_NO_CHANGE = 398,
+    LOG_NO_CHANGE_ATTACHMENT = 399;
+
+  function ReplicateReport() {
+    this._list = [];
+    this.name = 'ReplicateReport';
+    this.message = this.name;
+    this.has_error = false;
+  }
+
+  ReplicateReport.prototype = {
+    constructor: ReplicateReport,
+
+    LOG_UNEXPECTED_ERROR: LOG_UNEXPECTED_ERROR,
+    LOG_UNRESOLVED_CONFLICT: LOG_UNRESOLVED_CONFLICT,
+    LOG_UNEXPECTED_LOCAL_ATTACHMENT: LOG_UNEXPECTED_LOCAL_ATTACHMENT,
+    LOG_UNEXPECTED_REMOTE_ATTACHMENT: LOG_UNEXPECTED_REMOTE_ATTACHMENT,
+    LOG_UNRESOLVED_ATTACHMENT_CONFLICT: LOG_UNRESOLVED_ATTACHMENT_CONFLICT,
+    LOG_FORCE_PUT_REMOTE: LOG_FORCE_PUT_REMOTE,
+    LOG_FORCE_POST_REMOTE: LOG_FORCE_POST_REMOTE,
+    LOG_FORCE_DELETE_REMOTE: LOG_FORCE_DELETE_REMOTE,
+    LOG_FORCE_PUT_LOCAL: LOG_FORCE_PUT_LOCAL,
+    LOG_FORCE_POST_LOCAL: LOG_FORCE_POST_LOCAL,
+    LOG_FORCE_DELETE_LOCAL: LOG_FORCE_DELETE_LOCAL,
+    LOG_FORCE_PUT_REMOTE_ATTACHMENT: LOG_FORCE_PUT_REMOTE_ATTACHMENT,
+    LOG_FORCE_DELETE_REMOTE_ATTACHMENT: LOG_FORCE_DELETE_REMOTE_ATTACHMENT,
+    LOG_FORCE_PUT_LOCAL_ATTACHMENT: LOG_FORCE_PUT_LOCAL_ATTACHMENT,
+    LOG_FORCE_DELETE_LOCAL_ATTACHMENT: LOG_FORCE_DELETE_LOCAL_ATTACHMENT,
+    LOG_PUT_REMOTE: LOG_PUT_REMOTE,
+    LOG_POST_REMOTE: LOG_POST_REMOTE,
+    LOG_DELETE_REMOTE: LOG_DELETE_REMOTE,
+    LOG_PUT_REMOTE_ATTACHMENT: LOG_PUT_REMOTE_ATTACHMENT,
+    LOG_DELETE_REMOTE_ATTACHMENT: LOG_DELETE_REMOTE_ATTACHMENT,
+    LOG_PUT_LOCAL: LOG_PUT_LOCAL,
+    LOG_DELETE_LOCAL: LOG_DELETE_LOCAL,
+    LOG_PUT_LOCAL_ATTACHMENT: LOG_PUT_LOCAL_ATTACHMENT,
+    LOG_DELETE_LOCAL_ATTACHMENT: LOG_DELETE_LOCAL_ATTACHMENT,
+    LOG_FALSE_CONFLICT: LOG_FALSE_CONFLICT,
+    LOG_FALSE_CONFLICT_ATTACHMENT: LOG_FALSE_CONFLICT_ATTACHMENT,
+    LOG_SKIP_LOCAL_CREATION: LOG_SKIP_LOCAL_CREATION,
+    LOG_SKIP_LOCAL_MODIFICATION: LOG_SKIP_LOCAL_MODIFICATION,
+    LOG_SKIP_LOCAL_DELETION: LOG_SKIP_LOCAL_DELETION,
+    LOG_SKIP_REMOTE_CREATION: LOG_SKIP_REMOTE_CREATION,
+    LOG_SKIP_REMOTE_MODIFICATION: LOG_SKIP_REMOTE_MODIFICATION,
+    LOG_SKIP_REMOTE_DELETION: LOG_SKIP_REMOTE_DELETION,
+    LOG_SKIP_LOCAL_ATTACHMENT_CREATION: LOG_SKIP_LOCAL_ATTACHMENT_CREATION,
+    LOG_SKIP_LOCAL_ATTACHMENT_MODIFICATION:
+      LOG_SKIP_LOCAL_ATTACHMENT_MODIFICATION,
+    LOG_SKIP_LOCAL_ATTACHMENT_DELETION: LOG_SKIP_LOCAL_ATTACHMENT_DELETION,
+    LOG_SKIP_REMOTE_ATTACHMENT_CREATION: LOG_SKIP_REMOTE_ATTACHMENT_CREATION,
+    LOG_SKIP_REMOTE_ATTACHMENT_MODIFICATION:
+      LOG_SKIP_REMOTE_ATTACHMENT_MODIFICATION,
+    LOG_SKIP_REMOTE_ATTACHMENT_DELETION: LOG_SKIP_REMOTE_ATTACHMENT_DELETION,
+    LOG_SKIP_CONFLICT: LOG_SKIP_CONFLICT,
+    LOG_SKIP_CONFLICT_ATTACHMENT: LOG_SKIP_CONFLICT_ATTACHMENT,
+    LOG_NO_CHANGE: LOG_NO_CHANGE,
+    LOG_NO_CHANGE_ATTACHMENT: LOG_NO_CHANGE_ATTACHMENT,
+
+    log: function (id, type, extra) {
+      if (type === undefined) {
+        if (extra === undefined) {
+          extra = 'Unknown type: ' + type;
+        }
+        type = LOG_UNEXPECTED_ERROR;
+      }
+      if (extra === undefined) {
+        this._list.push([type, id]);
+      } else {
+        this._list.push([type, id, extra]);
+      }
+      if (type < 100) {
+        this.has_error = true;
+      }
+    },
+
+    logAttachment: function (id, name, type, extra) {
+      if (type === undefined) {
+        if (extra === undefined) {
+          extra = 'Unknown type: ' + type;
+        }
+        type = LOG_UNEXPECTED_ERROR;
+      }
+      if (extra === undefined) {
+        this._list.push([type, id, name]);
+      } else {
+        this._list.push([type, id, name, extra]);
+      }
+      if (type < 100) {
+        this.has_error = true;
+      }
+    },
+
+    toString: function () {
+      return this._list.toString();
+    }
+  };
 
   function SkipError(message) {
     if ((message !== undefined) && (typeof message !== "string")) {
@@ -9320,30 +9458,42 @@ return new Parser;
       });
   }
 
-  function propagateAttachmentDeletion(context, skip_attachment_dict,
+  function propagateAttachmentDeletion(context,
                                        destination,
-                                       id, name) {
+                                       id, name,
+                                       conflict, from_local, report) {
+    if (conflict) {
+      report.logAttachment(id, name, from_local ?
+                                     LOG_FORCE_DELETE_REMOTE_ATTACHMENT :
+                                     LOG_FORCE_DELETE_LOCAL_ATTACHMENT);
+    } else {
+      report.logAttachment(id, name, from_local ? LOG_DELETE_REMOTE_ATTACHMENT :
+                                                  LOG_DELETE_LOCAL_ATTACHMENT);
+    }
     return destination.removeAttachment(id, name)
       .push(function () {
         return context._signature_sub_storage.removeAttachment(id, name);
-      })
-      .push(function () {
-        skip_attachment_dict[name] = null;
       });
   }
 
-  function propagateAttachmentModification(context, skip_attachment_dict,
+  function propagateAttachmentModification(context,
                                            destination,
-                                           blob, hash, id, name) {
+                                           blob, hash, id, name,
+                                           from_local, is_conflict, report) {
+    if (is_conflict) {
+      report.logAttachment(id, name, from_local ?
+                                     LOG_FORCE_PUT_REMOTE_ATTACHMENT :
+                                     LOG_FORCE_PUT_LOCAL_ATTACHMENT);
+    } else {
+      report.logAttachment(id, name, from_local ? LOG_PUT_REMOTE_ATTACHMENT :
+                                                  LOG_PUT_LOCAL_ATTACHMENT);
+    }
     return destination.putAttachment(id, name, blob)
       .push(function () {
         return context._signature_sub_storage.putAttachment(id, name,
                                                             JSON.stringify({
             hash: hash
           }));
-      })
-      .push(function () {
-        skip_attachment_dict[name] = null;
       });
   }
 
@@ -9352,7 +9502,9 @@ return new Parser;
                                        status_hash, local_hash, blob,
                                        source, destination, id, name,
                                        conflict_force, conflict_revert,
-                                       conflict_ignore) {
+                                       conflict_ignore, from_local, report) {
+    // No need to check twice
+    skip_attachment_dict[name] = null;
     var remote_blob;
     return destination.getAttachment(id, name)
       .push(function (result) {
@@ -9374,39 +9526,39 @@ return new Parser;
       .push(function (remote_hash) {
         if (local_hash === remote_hash) {
           // Same modifications on both side
+          report.logAttachment(id, name, LOG_FALSE_CONFLICT_ATTACHMENT);
           if (local_hash === null) {
             // Deleted on both side, drop signature
-            return context._signature_sub_storage.removeAttachment(id, name)
-              .push(function () {
-                skip_attachment_dict[name] = null;
-              });
+            return context._signature_sub_storage.removeAttachment(id, name);
           }
 
           return context._signature_sub_storage.putAttachment(id, name,
             JSON.stringify({
               hash: local_hash
-            }))
-            .push(function () {
-              skip_attachment_dict[name] = null;
-            });
+            }));
         }
 
         if ((remote_hash === status_hash) || (conflict_force === true)) {
           // Modified only locally. No conflict or force
           if (local_hash === null) {
             // Deleted locally
-            return propagateAttachmentDeletion(context, skip_attachment_dict,
+            return propagateAttachmentDeletion(context,
                                                destination,
-                                               id, name);
+                                               id, name,
+                                               (remote_hash !== status_hash),
+                                               from_local, report);
           }
           return propagateAttachmentModification(context,
-                                       skip_attachment_dict,
                                        destination, blob,
-                                       local_hash, id, name);
+                                       local_hash, id, name,
+                                       from_local,
+                                       (remote_hash !== status_hash),
+                                       report);
         }
 
         // Conflict cases
         if (conflict_ignore === true) {
+          report.logAttachment(id, name, LOG_SKIP_CONFLICT_ATTACHMENT);
           return;
         }
 
@@ -9414,17 +9566,21 @@ return new Parser;
           // Automatically resolve conflict or force revert
           if (remote_hash === null) {
             // Deleted remotely
-            return propagateAttachmentDeletion(context, skip_attachment_dict,
-                                               source, id, name);
+            return propagateAttachmentDeletion(context,
+                                               source, id, name,
+                                               (local_hash !== status_hash),
+                                               !from_local, report);
           }
           return propagateAttachmentModification(
             context,
-            skip_attachment_dict,
             source,
             remote_blob,
             remote_hash,
             id,
-            name
+            name,
+            !from_local,
+            (local_hash !== status_hash),
+            report
           );
         }
 
@@ -9432,14 +9588,15 @@ return new Parser;
         if (remote_hash === null) {
           // Copy remote modification remotely
           return propagateAttachmentModification(context,
-                                       skip_attachment_dict,
                                        destination, blob,
-                                       local_hash, id, name);
+                                       local_hash, id, name, from_local,
+                                       false,
+                                       report);
         }
-        throw new jIO.util.jIOError("Conflict on '" + id +
-                                    "' with attachment '" +
-                                    name + "'",
-                                    409);
+        report.logAttachment(id, name, LOG_UNRESOLVED_ATTACHMENT_CONFLICT);
+      })
+      .push(undefined, function (error) {
+        report.logAttachment(id, name, LOG_UNEXPECTED_ERROR, error);
       });
   }
 
@@ -9450,7 +9607,9 @@ return new Parser;
                                               conflict_force,
                                               conflict_revert,
                                               conflict_ignore,
-                                              is_creation, is_modification) {
+                                              is_creation, is_modification,
+                                              from_local,
+                                              report) {
     var blob,
       status_hash;
     queue
@@ -9485,14 +9644,20 @@ return new Parser;
         var array_buffer = evt.target.result,
           local_hash = generateHashFromArrayBuffer(array_buffer);
 
-        if (local_hash !== status_hash) {
-          return checkAndPropagateAttachment(context,
-                                             skip_attachment_dict,
-                                             status_hash, local_hash, blob,
-                                             source, destination, id, name,
-                                             conflict_force, conflict_revert,
-                                             conflict_ignore);
+        if (local_hash === status_hash) {
+          if (!from_local) {
+            report.logAttachment(id, name, LOG_NO_CHANGE_ATTACHMENT);
+          }
+          return;
         }
+        return checkAndPropagateAttachment(context,
+                                           skip_attachment_dict,
+                                           status_hash, local_hash, blob,
+                                           source, destination, id, name,
+                                           conflict_force, conflict_revert,
+                                           conflict_ignore,
+                                           from_local,
+                                           report);
       });
   }
 
@@ -9500,7 +9665,7 @@ return new Parser;
                               skip_attachment_dict,
                               destination, id, name, source,
                               conflict_force, conflict_revert,
-                              conflict_ignore) {
+                              conflict_ignore, from_local, report) {
     var status_hash;
     queue
       .push(function () {
@@ -9514,16 +9679,17 @@ return new Parser;
                                  status_hash, null, null,
                                  source, destination, id, name,
                                  conflict_force, conflict_revert,
-                                 conflict_ignore);
+                                 conflict_ignore, from_local, report);
       });
   }
 
   function pushDocumentAttachment(context,
                                   skip_attachment_dict, id, source,
                                   destination, signature_allAttachments,
-                                  options) {
+                                  report, options) {
     var local_dict = {},
-      signature_dict = {};
+      signature_dict = {},
+      from_local = options.from_local;
     return source.allAttachments(id)
       .push(undefined, function (error) {
         if ((error instanceof jIO.util.jIOError) &&
@@ -9568,7 +9734,19 @@ return new Parser;
                                   options.conflict_revert,
                                   options.conflict_ignore,
                                   is_creation,
-                                  is_modification]);
+                                  is_modification,
+                                  from_local,
+                                  report]);
+            } else {
+              if (signature_dict.hasOwnProperty(key)) {
+                report.logAttachment(id, key, from_local ?
+                                     LOG_SKIP_LOCAL_ATTACHMENT_MODIFICATION :
+                                     LOG_SKIP_REMOTE_ATTACHMENT_MODIFICATION);
+              } else {
+                report.logAttachment(id, key, from_local ?
+                                     LOG_SKIP_LOCAL_ATTACHMENT_CREATION :
+                                     LOG_SKIP_REMOTE_ATTACHMENT_CREATION);
+              }
             }
           }
         }
@@ -9581,10 +9759,10 @@ return new Parser;
       })
       .push(function () {
         var key, argument_list = [];
-        if (options.check_deletion === true) {
-          for (key in signature_dict) {
-            if (signature_dict.hasOwnProperty(key)) {
-              if (!local_dict.hasOwnProperty(key)) {
+        for (key in signature_dict) {
+          if (signature_dict.hasOwnProperty(key)) {
+            if (!local_dict.hasOwnProperty(key)) {
+              if (options.check_deletion === true) {
                 argument_list.push([undefined,
                                              context,
                                              skip_attachment_dict,
@@ -9592,29 +9770,51 @@ return new Parser;
                                              source,
                                              options.conflict_force,
                                              options.conflict_revert,
-                                             options.conflict_ignore]);
+                                             options.conflict_ignore,
+                                             from_local,
+                                             report]);
+              } else {
+                report.logAttachment(id, key, from_local ?
+                                     LOG_SKIP_LOCAL_ATTACHMENT_DELETION :
+                                     LOG_SKIP_REMOTE_ATTACHMENT_DELETION);
               }
             }
           }
-          return dispatchQueue(
-            context,
-            checkAttachmentLocalDeletion,
-            argument_list,
-            context._parallel_operation_attachment_amount
-          );
         }
+        return dispatchQueue(
+          context,
+          checkAttachmentLocalDeletion,
+          argument_list,
+          context._parallel_operation_attachment_amount
+        );
       });
   }
 
-  function propagateFastAttachmentDeletion(queue, id, name, storage) {
+  function propagateFastAttachmentDeletion(queue, id, name, storage, signature,
+                                           from_local, report) {
+    report.logAttachment(id, name, from_local ? LOG_DELETE_REMOTE_ATTACHMENT :
+                                                LOG_DELETE_LOCAL_ATTACHMENT);
     return queue
       .push(function () {
         return storage.removeAttachment(id, name);
+      })
+      .push(function () {
+        return signature.removeAttachment(id, name);
+      });
+  }
+
+  function propagateFastSignatureDeletion(queue, id, name, signature,
+                                          report) {
+    report.logAttachment(id, name, LOG_FALSE_CONFLICT_ATTACHMENT);
+    return queue
+      .push(function () {
+        return signature.removeAttachment(id, name);
       });
   }
 
   function propagateFastAttachmentModification(queue, id, key, source,
-                                               destination, signature, hash) {
+                                               destination, signature, hash,
+                                               from_local, report) {
     return queue
       .push(function () {
         return signature.getAttachment(id, key, {format: 'json'})
@@ -9627,6 +9827,9 @@ return new Parser;
           })
           .push(function (result) {
             if (result.hash !== hash) {
+              report.logAttachment(id, key, from_local ?
+                                            LOG_PUT_REMOTE_ATTACHMENT :
+                                            LOG_PUT_LOCAL_ATTACHMENT);
               return source.getAttachment(id, key)
                 .push(function (blob) {
                   return destination.putAttachment(id, key, blob);
@@ -9645,7 +9848,8 @@ return new Parser;
   function repairFastDocumentAttachment(context, id,
                                         signature_hash,
                                         signature_attachment_hash,
-                                        signature_from_local) {
+                                        signature_from_local,
+                                        report) {
     if (signature_hash === signature_attachment_hash) {
       // No replication to do
       return;
@@ -9666,6 +9870,7 @@ return new Parser;
           destination,
           push_argument_list = [],
           delete_argument_list = [],
+          delete_signature_argument_list = [],
           signature_attachment_dict = result_list[0],
           local_attachment_dict = result_list[1],
           remote_attachment_list = result_list[2],
@@ -9676,13 +9881,15 @@ return new Parser;
           check_remote_modification =
             context._check_remote_attachment_modification,
           check_remote_creation = context._check_remote_attachment_creation,
-          check_remote_deletion = context._check_remote_attachment_deletion;
+          check_remote_deletion = context._check_remote_attachment_deletion,
+          from_local;
 
         if (signature_from_local) {
           source_attachment_dict = local_attachment_dict;
           destination_attachment_dict = remote_attachment_list;
           source = context._local_sub_storage;
           destination = context._remote_sub_storage;
+          from_local = true;
         } else {
           source_attachment_dict = remote_attachment_list;
           destination_attachment_dict = local_attachment_dict;
@@ -9693,6 +9900,7 @@ return new Parser;
           check_local_deletion = check_remote_deletion;
           check_remote_creation = check_local_creation;
           check_remote_deletion = check_local_deletion;
+          from_local = false;
         }
 
         // Push all source attachments
@@ -9710,8 +9918,20 @@ return new Parser;
                 source,
                 destination,
                 context._signature_sub_storage,
-                signature_hash
+                signature_hash,
+                from_local,
+                report
               ]);
+            } else {
+              if (signature_attachment_dict.hasOwnProperty(key)) {
+                report.logAttachment(id, key, from_local ?
+                                     LOG_SKIP_LOCAL_ATTACHMENT_MODIFICATION :
+                                     LOG_SKIP_REMOTE_ATTACHMENT_MODIFICATION);
+              } else {
+                report.logAttachment(id, key, from_local ?
+                                     LOG_SKIP_LOCAL_ATTACHMENT_CREATION :
+                                     LOG_SKIP_REMOTE_ATTACHMENT_CREATION);
+              }
             }
           }
         }
@@ -9720,16 +9940,19 @@ return new Parser;
         for (key in signature_attachment_dict) {
           if (signature_attachment_dict.hasOwnProperty(key)) {
             if (check_local_deletion &&
-                !source_attachment_dict.hasOwnProperty(key)) {
-              delete_argument_list.push([
+                !source_attachment_dict.hasOwnProperty(key) &&
+                !destination_attachment_dict.hasOwnProperty(key)) {
+              delete_signature_argument_list.push([
                 undefined,
                 id,
                 key,
-                context._signature_sub_storage
+                context._signature_sub_storage,
+                report
               ]);
             }
           }
         }
+
         for (key in destination_attachment_dict) {
           if (destination_attachment_dict.hasOwnProperty(key)) {
             if (!source_attachment_dict.hasOwnProperty(key)) {
@@ -9741,8 +9964,21 @@ return new Parser;
                   undefined,
                   id,
                   key,
-                  destination
+                  destination,
+                  context._signature_sub_storage,
+                  from_local,
+                  report
                 ]);
+              } else {
+                if (signature_attachment_dict.hasOwnProperty(key)) {
+                  report.logAttachment(id, key, from_local ?
+                       LOG_SKIP_LOCAL_ATTACHMENT_DELETION :
+                       LOG_SKIP_REMOTE_ATTACHMENT_DELETION);
+                } else {
+                  report.logAttachment(id, key, from_local ?
+                       LOG_SKIP_LOCAL_ATTACHMENT_CREATION :
+                       LOG_SKIP_REMOTE_ATTACHMENT_CREATION);
+                }
               }
             }
           }
@@ -9760,6 +9996,12 @@ return new Parser;
             propagateFastAttachmentDeletion,
             delete_argument_list,
             context._parallel_operation_attachment_amount
+          ),
+          dispatchQueue(
+            context,
+            propagateFastSignatureDeletion,
+            delete_signature_argument_list,
+            context._parallel_operation_attachment_amount
           )
         ]);
       })
@@ -9773,7 +10015,7 @@ return new Parser;
       });
   }
 
-  function repairDocumentAttachment(context, id, signature_hash_key,
+  function repairDocumentAttachment(context, id, report, signature_hash_key,
                                     signature_hash,
                                     signature_attachment_hash,
                                     signature_from_local) {
@@ -9781,7 +10023,7 @@ return new Parser;
       return repairFastDocumentAttachment(context, id,
                                     signature_hash,
                                     signature_attachment_hash,
-                                    signature_from_local);
+                                    signature_from_local, report);
     }
 
     var skip_attachment_dict = {};
@@ -9815,6 +10057,7 @@ return new Parser;
             context._local_sub_storage,
             context._remote_sub_storage,
             signature_allAttachments,
+            report,
             {
               conflict_force: (context._conflict_handling ===
                                CONFLICT_KEEP_LOCAL),
@@ -9825,7 +10068,8 @@ return new Parser;
               check_modification:
                 context._check_local_attachment_modification,
               check_creation: context._check_local_attachment_creation,
-              check_deletion: context._check_local_attachment_deletion
+              check_deletion: context._check_local_attachment_deletion,
+              from_local: true
             }
           )
             .push(function () {
@@ -9845,6 +10089,7 @@ return new Parser;
             context._remote_sub_storage,
             context._local_sub_storage,
             signature_allAttachments,
+            report,
             {
               use_revert_post: context._use_remote_post,
               conflict_force: (context._conflict_handling ===
@@ -9856,7 +10101,8 @@ return new Parser;
               check_modification:
                 context._check_remote_attachment_modification,
               check_creation: context._check_remote_attachment_creation,
-              check_deletion: context._check_remote_attachment_deletion
+              check_deletion: context._check_remote_attachment_deletion,
+              from_local: false
             }
           );
         }
@@ -9866,15 +10112,17 @@ return new Parser;
   function propagateModification(context, source, destination, doc, hash, id,
                                  skip_document_dict,
                                  skip_deleted_document_dict,
+                                 report,
                                  options) {
     var result = new RSVP.Queue(),
       post_id,
-      to_skip = true,
-      from_local;
+      from_local,
+      conflict;
     if (options === undefined) {
       options = {};
     }
     from_local = options.from_local;
+    conflict = options.conflict || false;
 
     if (doc === null) {
       result
@@ -9894,10 +10142,10 @@ return new Parser;
     if (options.use_post) {
       result
         .push(function () {
+          report.log(id, from_local ? LOG_POST_REMOTE : LOG_POST_LOCAL);
           return destination.post(doc);
         })
         .push(function (new_id) {
-          to_skip = false;
           post_id = new_id;
           return source.put(post_id, doc);
         })
@@ -9935,7 +10183,6 @@ return new Parser;
           return context._signature_sub_storage.remove(id);
         })
         .push(function () {
-          to_skip = true;
           return context._signature_sub_storage.put(post_id, {
             hash: hash,
             from_local: from_local
@@ -9947,6 +10194,12 @@ return new Parser;
     } else {
       result
         .push(function () {
+          if (conflict) {
+            report.log(id, from_local ? LOG_FORCE_PUT_REMOTE :
+                                        LOG_FORCE_PUT_LOCAL);
+          } else {
+            report.log(id, from_local ? LOG_PUT_REMOTE : LOG_PUT_LOCAL);
+          }
           // Drop signature if the destination document was empty
           // but a signature exists
           if (options.create_new_document === true) {
@@ -9965,11 +10218,6 @@ return new Parser;
         });
     }
     return result
-      .push(function () {
-        if (to_skip) {
-          skip_document_dict[id] = null;
-        }
-      })
       .push(undefined, function (error) {
         if (error instanceof SkipError) {
           return;
@@ -9978,30 +10226,46 @@ return new Parser;
       });
   }
 
-  function propagateDeletion(context, destination, id, skip_document_dict,
-                             skip_deleted_document_dict) {
+  function propagateDeletion(context, destination, id,
+                             skip_deleted_document_dict, report, options) {
     // Do not delete a document if it has an attachment
     // ie, replication should prevent losing user data
     // Synchronize attachments before, to ensure
     // all of them will be deleted too
     var result;
     if (context._signature_hash_key !== undefined) {
+      if (options.conflict) {
+        report.log(id, options.from_local ? LOG_FORCE_DELETE_REMOTE :
+                                            LOG_FORCE_DELETE_LOCAL);
+      } else {
+        report.log(id, options.from_local ? LOG_DELETE_REMOTE :
+                                            LOG_DELETE_LOCAL);
+      }
       result = destination.remove(id)
         .push(function () {
           return context._signature_sub_storage.remove(id);
         });
     } else {
-      result = repairDocumentAttachment(context, id)
+      result = repairDocumentAttachment(context, id, report)
         .push(function () {
           return destination.allAttachments(id);
         })
         .push(function (attachment_dict) {
           if (JSON.stringify(attachment_dict) === "{}") {
+            if (options.conflict) {
+              report.log(id, options.from_local ? LOG_FORCE_DELETE_REMOTE :
+                                                  LOG_FORCE_DELETE_LOCAL);
+            } else {
+              report.log(id, options.from_local ? LOG_DELETE_REMOTE :
+                                                  LOG_DELETE_LOCAL);
+            }
             return destination.remove(id)
               .push(function () {
                 return context._signature_sub_storage.remove(id);
               });
           }
+          report.log(id, options.from_local ? LOG_UNEXPECTED_REMOTE_ATTACHMENT :
+                                              LOG_UNEXPECTED_LOCAL_ATTACHMENT);
         }, function (error) {
           if ((error instanceof jIO.util.jIOError) &&
               (error.status_code === 404)) {
@@ -10012,7 +10276,6 @@ return new Parser;
     }
     return result
       .push(function () {
-        skip_document_dict[id] = null;
         // No need to sync attachment twice on this document
         skip_deleted_document_dict[id] = null;
       });
@@ -10025,7 +10288,10 @@ return new Parser;
                              source, destination, id,
                              conflict_force, conflict_revert,
                              conflict_ignore,
+                             report,
                              options) {
+    // No need to check twice
+    skip_document_dict[id] = null;
     var from_local = options.from_local;
     return new RSVP.Queue()
       .push(function () {
@@ -10056,21 +10322,16 @@ return new Parser;
           remote_hash = remote_list[1];
         if (local_hash === remote_hash) {
           // Same modifications on both side
+          report.log(id, LOG_FALSE_CONFLICT);
           if (local_hash === null) {
             // Deleted on both side, drop signature
-            return context._signature_sub_storage.remove(id)
-              .push(function () {
-                skip_document_dict[id] = null;
-              });
+            return context._signature_sub_storage.remove(id);
           }
 
           return context._signature_sub_storage.put(id, {
             hash: local_hash,
             from_local: from_local
-          })
-            .push(function () {
-              skip_document_dict[id] = null;
-            });
+          });
         }
 
         if ((remote_hash === status_hash) || (conflict_force === true)) {
@@ -10078,14 +10339,19 @@ return new Parser;
           if (local_hash === null) {
             // Deleted locally
             return propagateDeletion(context, destination, id,
-                                     skip_document_dict,
-                                     skip_deleted_document_dict);
+                                     skip_deleted_document_dict,
+                                     report,
+                                     {from_local: from_local,
+                                      conflict: (remote_hash !== status_hash)
+                                      });
           }
           return propagateModification(context, source, destination, doc,
                                        local_hash, id, skip_document_dict,
                                        skip_deleted_document_dict,
+                                       report,
                                        {use_post: ((options.use_post) &&
                                                    (remote_hash === null)),
+                                        conflict: (remote_hash !== status_hash),
                                         from_local: from_local,
                                         create_new_document:
                                           ((remote_hash === null) &&
@@ -10095,6 +10361,7 @@ return new Parser;
 
         // Conflict cases
         if (conflict_ignore === true) {
+          report.log(id, LOG_SKIP_CONFLICT);
           return;
         }
 
@@ -10102,8 +10369,11 @@ return new Parser;
           // Automatically resolve conflict or force revert
           if (remote_hash === null) {
             // Deleted remotely
-            return propagateDeletion(context, source, id, skip_document_dict,
-                                     skip_deleted_document_dict);
+            return propagateDeletion(context, source, id,
+                                     skip_deleted_document_dict, report,
+                                     {from_local: !from_local,
+                                      conflict: (local_hash !== null)
+                                     });
           }
           return propagateModification(
             context,
@@ -10114,9 +10384,11 @@ return new Parser;
             id,
             skip_document_dict,
             skip_deleted_document_dict,
+            report,
             {use_post: ((options.use_revert_post) &&
                         (local_hash === null)),
               from_local: !from_local,
+              conflict: true,
               create_new_document: ((local_hash === null) &&
                                     (status_hash !== null))}
           );
@@ -10128,17 +10400,17 @@ return new Parser;
           return propagateModification(context, source, destination, doc,
                                        local_hash, id, skip_document_dict,
                                        skip_deleted_document_dict,
+                                       report,
                                        {use_post: options.use_post,
+                                        conflict: true,
                                         from_local: from_local,
                                         create_new_document:
                                           (status_hash !== null)});
         }
-        doc = doc || local_hash;
-        remote_doc = remote_doc || remote_hash;
-        throw new jIO.util.jIOError("Conflict on '" + id + "': " +
-                                    stringify(doc) + " !== " +
-                                    stringify(remote_doc),
-                                    409);
+        report.log(id, LOG_UNRESOLVED_CONFLICT);
+      })
+      .push(undefined, function (error) {
+        report.log(id, LOG_UNEXPECTED_ERROR, error);
       });
   }
 
@@ -10147,7 +10419,7 @@ return new Parser;
                               cache, destination_key,
                               destination, id, source,
                               conflict_force, conflict_revert,
-                              conflict_ignore, options) {
+                              conflict_ignore, report, options) {
     var status_hash;
     queue
       .push(function () {
@@ -10161,7 +10433,7 @@ return new Parser;
                                  status_hash, null, null,
                                  source, destination, id,
                                  conflict_force, conflict_revert,
-                                 conflict_ignore,
+                                 conflict_ignore, report,
                                  options);
       });
   }
@@ -10172,7 +10444,7 @@ return new Parser;
                                     source, destination, id,
                                     conflict_force, conflict_revert,
                                     conflict_ignore,
-                                    local_hash, status_hash,
+                                    local_hash, status_hash, report,
                                     options) {
     queue
       .push(function () {
@@ -10196,7 +10468,11 @@ return new Parser;
                                    source, destination, id,
                                    conflict_force, conflict_revert,
                                    conflict_ignore,
+                                   report,
                                    options);
+        }
+        if (!options.from_local) {
+          report.log(id, LOG_NO_CHANGE);
         }
       });
   }
@@ -10204,7 +10480,8 @@ return new Parser;
   function pushStorage(context, skip_document_dict,
                        skip_deleted_document_dict,
                        cache, source_key, destination_key,
-                       source, destination, signature_allDocs, options) {
+                       source, destination, signature_allDocs,
+                       report, options) {
     var argument_list = [],
       argument_list_deletion = [];
     if (!options.hasOwnProperty("use_post")) {
@@ -10285,7 +10562,19 @@ return new Parser;
                                   options.conflict_revert,
                                   options.conflict_ignore,
                                   local_hash, status_hash,
+                                  report,
                                   options]);
+            } else if (local_hash === status_hash) {
+              report.log(key, LOG_NO_CHANGE);
+            } else {
+              if (signature_dict.hasOwnProperty(key)) {
+                report.log(key, options.from_local ?
+                           LOG_SKIP_LOCAL_MODIFICATION :
+                           LOG_SKIP_REMOTE_MODIFICATION);
+              } else {
+                report.log(key, options.from_local ? LOG_SKIP_LOCAL_CREATION :
+                                                     LOG_SKIP_REMOTE_CREATION);
+              }
             }
           }
         }
@@ -10312,8 +10601,11 @@ return new Parser;
                                              options.conflict_force,
                                              options.conflict_revert,
                                              options.conflict_ignore,
+                                             report,
                                              options]);
               } else {
+                report.log(key, options.from_local ? LOG_SKIP_LOCAL_DELETION :
+                                                     LOG_SKIP_REMOTE_DELETION);
                 skip_deleted_document_dict[key] = null;
               }
             }
@@ -10333,11 +10625,11 @@ return new Parser;
       });
   }
 
-  function repairDocument(queue, context, id, signature_hash_key,
+  function repairDocument(queue, context, id, report, signature_hash_key,
                           signature_hash, signature_attachment_hash,
                           signature_from_local) {
     queue.push(function () {
-      return repairDocumentAttachment(context, id, signature_hash_key,
+      return repairDocumentAttachment(context, id, report, signature_hash_key,
                                       signature_hash,
                                       signature_attachment_hash,
                                       signature_from_local);
@@ -10349,7 +10641,8 @@ return new Parser;
       argument_list = arguments,
       skip_document_dict = {},
       skip_deleted_document_dict = {},
-      cache = {};
+      cache = {},
+      report = new ReplicateReport();
 
     return new RSVP.Queue()
       .push(function () {
@@ -10416,7 +10709,7 @@ return new Parser;
                              cache, 'local', 'remote',
                              context._local_sub_storage,
                              context._remote_sub_storage,
-                             signature_allDocs,
+                             signature_allDocs, report,
                              {
               use_post: context._use_remote_post,
               conflict_force: (context._conflict_handling ===
@@ -10447,7 +10740,8 @@ return new Parser;
                              cache, 'remote', 'local',
                              context._remote_sub_storage,
                              context._local_sub_storage,
-                             signature_allDocs, {
+                             signature_allDocs,
+                             report, {
               use_revert_post: context._use_remote_post,
               conflict_force: (context._conflict_handling ===
                                CONFLICT_KEEP_REMOTE),
@@ -10488,9 +10782,10 @@ return new Parser;
                 // is deleted but not pushed to the other storage
                 if (!skip_deleted_document_dict.hasOwnProperty(row.id)) {
                   local_argument_list.push(
-                    [undefined, context, row.id, context._signature_hash_key,
+                    [undefined, context, row.id, report,
+                      context._signature_hash_key,
                       row.value.hash, row.value.attachment_hash,
-                      row.value.from_local]
+                      row.value.from_local, report]
                   );
                 }
               }
@@ -10502,6 +10797,12 @@ return new Parser;
               );
             });
         }
+      })
+      .push(function () {
+        if (report.has_error) {
+          throw report;
+        }
+        return report;
       });
   };
 
@@ -14201,8 +14502,7 @@ return new Parser;
     store.createIndex("_id", "_id", {unique: false});
   }
 
-  function openIndexedDB(jio_storage) {
-    var db_name = jio_storage._database_name;
+  function waitForOpenIndexedDB(db_name, callback) {
     function resolver(resolve, reject) {
       // Open DB //
       var request = indexedDB.open(db_name);
@@ -14244,57 +14544,98 @@ return new Parser;
       };
 
       request.onsuccess = function () {
-        resolve(request.result);
+        return new RSVP.Queue()
+          .push(function () {
+            return callback(request.result);
+          })
+          .push(function (result) {
+            request.result.close();
+            resolve(result);
+          }, function (error) {
+            request.result.close();
+            reject(error);
+          });
       };
     }
-    // XXX Canceller???
-    return new RSVP.Queue()
-      .push(function () {
-        return new RSVP.Promise(resolver);
-      });
+
+    return new RSVP.Promise(resolver);
   }
 
-  function openTransaction(db, stores, flag, autoclosedb) {
+  function waitForTransaction(db, stores, flag, callback) {
     var tx = db.transaction(stores, flag);
-    if (autoclosedb !== false) {
-      tx.oncomplete = function () {
-        db.close();
-      };
+    function canceller() {
+      try {
+        tx.abort();
+      } catch (unused) {
+        // Transaction already finished
+        return;
+      }
     }
-    tx.onabort = function () {
-      db.close();
-    };
-    return tx;
+    function resolver(resolve, reject) {
+      var result;
+      try {
+        result = callback(tx);
+      } catch (error) {
+        reject(error);
+      }
+      tx.oncomplete = function () {
+        return new RSVP.Queue()
+          .push(function () {
+            // db.close();
+            return result;
+          })
+          .push(resolve, function (error) {
+            canceller();
+            reject(error);
+          });
+      };
+      tx.onabort = function (evt) {
+        // evt.preventDefault();
+        // evt.stopPropagation();
+        reject(evt.target);
+      };
+      return tx;
+    }
+    return new RSVP.Promise(resolver, canceller);
   }
 
-  function handleCursor(request, callback, resolve, reject) {
-    request.onerror = function (error) {
-      if (request.transaction) {
-        request.transaction.abort();
-      }
-      reject(error);
-    };
+  function waitForIDBRequest(request) {
+    return new RSVP.Promise(function (resolve, reject) {
+      request.onerror = reject;
+      request.onsuccess = resolve;
+    });
+  }
 
-    request.onsuccess = function (evt) {
-      var cursor = evt.target.result;
-      if (cursor) {
-        // XXX Wait for result
-        try {
-          callback(cursor);
-        } catch (error) {
-          reject(error);
+  function waitForAllSynchronousCursor(request, callback) {
+    var force_cancellation = false;
+
+    function canceller() {
+      force_cancellation = true;
+    }
+
+    function resolver(resolve, reject) {
+      request.onerror = reject;
+      request.onsuccess = function (evt) {
+        var cursor = evt.target.result;
+        if (cursor && !force_cancellation) {
+          try {
+            callback(cursor);
+          } catch (error) {
+            reject(error);
+          }
+          // continue to next iteration
+          cursor["continue"]();
+        } else {
+          resolve();
         }
-
-        // continue to next iteration
-        cursor["continue"]();
-      } else {
-        resolve();
-      }
-    };
+      };
+    }
+    return new RSVP.Promise(resolver, canceller);
   }
 
   IndexedDBStorage.prototype.buildQuery = function (options) {
-    var result_list = [];
+    var result_list = [],
+      context = this;
 
     function pushIncludedMetadata(cursor) {
       result_list.push({
@@ -14310,17 +14651,23 @@ return new Parser;
         "value": {}
       });
     }
-    return openIndexedDB(this)
-      .push(function (db) {
-        return new RSVP.Promise(function (resolve, reject) {
-          var tx = openTransaction(db, ["metadata"], "readonly");
-          if (options.include_docs === true) {
-            handleCursor(tx.objectStore("metadata").index("_id").openCursor(),
-              pushIncludedMetadata, resolve, reject);
-          } else {
-            handleCursor(tx.objectStore("metadata").index("_id")
-                            .openKeyCursor(), pushMetadata, resolve, reject);
-          }
+
+    return new RSVP.Queue()
+      .push(function () {
+        return waitForOpenIndexedDB(context._database_name, function (db) {
+          return waitForTransaction(db, ["metadata"], "readonly",
+                                    function (tx) {
+              if (options.include_docs === true) {
+                return waitForAllSynchronousCursor(
+                  tx.objectStore("metadata").index("_id").openCursor(),
+                  pushIncludedMetadata
+                );
+              }
+              return waitForAllSynchronousCursor(
+                tx.objectStore("metadata").index("_id").openKeyCursor(),
+                pushMetadata
+              );
+            });
         });
       })
       .push(function () {
@@ -14328,218 +14675,183 @@ return new Parser;
       });
   };
 
-  function handleGet(store, id, resolve, reject) {
-    var request = store.get(id);
-    request.onerror = reject;
-    request.onsuccess = function () {
-      if (request.result) {
-        resolve(request.result);
-      } else {
-        reject(new jIO.util.jIOError(
-          "IndexedDB: cannot find object '" + id + "' in the '" +
-            store.name + "' store",
-          404
-        ));
-      }
-    };
-  }
-
   IndexedDBStorage.prototype.get = function (id) {
-    return openIndexedDB(this)
-      .push(function (db) {
-        return new RSVP.Promise(function (resolve, reject) {
-          var transaction = openTransaction(db, ["metadata"], "readonly");
-          handleGet(
-            transaction.objectStore("metadata"),
-            id,
-            resolve,
-            reject
-          );
+    var context = this;
+    return new RSVP.Queue()
+      .push(function () {
+        return waitForOpenIndexedDB(context._database_name, function (db) {
+          return waitForTransaction(db, ["metadata"], "readonly",
+                                    function (tx) {
+              return waitForIDBRequest(tx.objectStore("metadata").get(id));
+            });
         });
       })
-      .push(function (result) {
-        return result.doc;
+      .push(function (evt) {
+        if (evt.target.result) {
+          return evt.target.result.doc;
+        }
+        throw new jIO.util.jIOError(
+          "IndexedDB: cannot find object '" + id + "' in the 'metadata' store",
+          404
+        );
       });
   };
 
   IndexedDBStorage.prototype.allAttachments = function (id) {
-    var attachment_dict = {};
+    var attachment_dict = {},
+      context = this;
 
     function addEntry(cursor) {
       attachment_dict[cursor.value._attachment] = {};
     }
 
-    return openIndexedDB(this)
-      .push(function (db) {
-        return new RSVP.Promise(function (resolve, reject) {
-          var transaction = openTransaction(db, ["metadata", "attachment"],
-            "readonly");
-          function getAttachments() {
-            handleCursor(
-              transaction.objectStore("attachment").index("_id")
-                .openCursor(IDBKeyRange.only(id)),
-              addEntry,
-              resolve,
-              reject
-            );
-          }
-          handleGet(
-            transaction.objectStore("metadata"),
-            id,
-            getAttachments,
-            reject
-          );
+    return new RSVP.Queue()
+      .push(function () {
+        return waitForOpenIndexedDB(context._database_name, function (db) {
+          return waitForTransaction(db, ["metadata", "attachment"], "readonly",
+                                    function (tx) {
+              return RSVP.all([
+                waitForIDBRequest(tx.objectStore("metadata").get(id)),
+                waitForAllSynchronousCursor(
+                  tx.objectStore("attachment").index("_id")
+                    .openCursor(IDBKeyRange.only(id)),
+                  addEntry
+                )
+              ]);
+            });
         });
       })
-      .push(function () {
+      .push(function (result_list) {
+        var evt = result_list[0];
+        if (!evt.target.result) {
+          throw new jIO.util.jIOError(
+            "IndexedDB: cannot find object '" + id +
+              "' in the 'metadata' store",
+            404
+          );
+        }
+
         return attachment_dict;
       });
   };
 
-  function handleRequest(request, resolve, reject) {
-    request.onerror = reject;
-    request.onsuccess = function () {
-      resolve(request.result);
-    };
-  }
-
   IndexedDBStorage.prototype.put = function (id, metadata) {
-    return openIndexedDB(this)
-      .push(function (db) {
-        return new RSVP.Promise(function (resolve, reject) {
-          var transaction = openTransaction(db, ["metadata"], "readwrite");
-          handleRequest(
-            transaction.objectStore("metadata").put({
-              "_id": id,
-              "doc": metadata
-            }),
-            resolve,
-            reject
-          );
+    return waitForOpenIndexedDB(this._database_name, function (db) {
+      return waitForTransaction(db, ["metadata"], "readwrite",
+                                function (tx) {
+          return waitForIDBRequest(tx.objectStore("metadata").put({
+            "_id": id,
+            "doc": metadata
+          }));
         });
-      });
+    });
   };
 
-  function deleteEntry(cursor) {
-    cursor["delete"]();
-  }
-
   IndexedDBStorage.prototype.remove = function (id) {
-    var resolved_amount = 0;
-    return openIndexedDB(this)
-      .push(function (db) {
-        return new RSVP.Promise(function (resolve, reject) {
-          function resolver() {
-            if (resolved_amount < 2) {
-              resolved_amount += 1;
-            } else {
-              resolve();
-            }
+    return waitForOpenIndexedDB(this._database_name, function (db) {
+      return waitForTransaction(db, ["metadata", "attachment", "blob"],
+                                "readwrite", function (tx) {
+
+          var promise_list = [];
+
+          function deleteEntry(cursor) {
+            promise_list.push(
+              waitForIDBRequest(cursor.delete())
+            );
           }
-          var transaction = openTransaction(db, ["metadata", "attachment",
-                                            "blob"], "readwrite");
-          handleRequest(
-            transaction.objectStore("metadata")["delete"](id),
-            resolver,
-            reject
-          );
-          // XXX Why not possible to delete with KeyCursor?
-          handleCursor(transaction.objectStore("attachment").index("_id")
-              .openCursor(IDBKeyRange.only(id)),
-            deleteEntry,
-            resolver,
-            reject
-            );
-          handleCursor(transaction.objectStore("blob").index("_id")
-              .openCursor(IDBKeyRange.only(id)),
-            deleteEntry,
-            resolver,
-            reject
-            );
+          return RSVP.all([
+            waitForIDBRequest(tx.objectStore("metadata").delete(id)),
+            // XXX Why not possible to delete with KeyCursor?
+            waitForAllSynchronousCursor(
+              tx.objectStore("attachment").index("_id")
+                .openCursor(IDBKeyRange.only(id)),
+              deleteEntry
+            ),
+            waitForAllSynchronousCursor(
+              tx.objectStore("blob").index("_id")
+                .openCursor(IDBKeyRange.only(id)),
+              deleteEntry
+            ),
+          ])
+            .then(function () {
+              return RSVP.all(promise_list);
+            });
         });
-      });
+    });
   };
 
   IndexedDBStorage.prototype.getAttachment = function (id, name, options) {
-    var transaction,
-      type,
-      start,
-      end;
     if (options === undefined) {
       options = {};
     }
-    return openIndexedDB(this)
-      .push(function (db) {
-        return new RSVP.Promise(function (resolve, reject) {
-          transaction = openTransaction(
-            db,
-            ["attachment", "blob"],
-            "readonly"
-          );
-          function getBlob(attachment) {
-            var total_length = attachment.info.length,
-              result_list = [],
-              store = transaction.objectStore("blob"),
-              start_index,
-              end_index;
-            type = attachment.info.content_type;
-            start = options.start || 0;
-            end = options.end || total_length;
-            if (end > total_length) {
-              end = total_length;
-            }
-            if (start < 0 || end < 0) {
-              throw new jIO.util.jIOError(
-                "_start and _end must be positive",
-                400
-              );
-            }
-            if (start > end) {
-              throw new jIO.util.jIOError("_start is greater than _end",
-                                          400);
-            }
-            start_index = Math.floor(start / UNITE);
-            end_index =  Math.floor(end / UNITE) - 1;
-            if (end % UNITE === 0) {
-              end_index -= 1;
-            }
-            function resolver(result) {
-              if (result.blob !== undefined) {
-                result_list.push(result);
-              }
-              resolve(result_list);
-            }
-            function getPart(i) {
-              return function (result) {
-                if (result) {
-                  result_list.push(result);
-                }
-                i += 1;
-                handleGet(store,
-                  buildKeyPath([id, name, i]),
-                  (i <= end_index) ? getPart(i) : resolver,
-                  reject
-                  );
-              };
-            }
-            getPart(start_index - 1)();
-          }
-        // XXX Should raise if key is not good
-          handleGet(transaction.objectStore("attachment"),
-            buildKeyPath([id, name]),
-            getBlob,
-            reject
-            );
+    var db_name = this._database_name,
+      type,
+      start,
+      end;
+    return new RSVP.Queue()
+      .push(function () {
+        return waitForOpenIndexedDB(db_name, function (db) {
+          return waitForTransaction(db, ["attachment", "blob"], "readonly",
+                                    function (tx) {
+              // XXX Should raise if key is not good
+              return waitForIDBRequest(tx.objectStore("attachment").get(
+                buildKeyPath([id, name])
+              ))
+                .then(function (evt) {
+                  if (!evt.target.result) {
+                    throw new jIO.util.jIOError(
+                      "IndexedDB: cannot find object nunut",
+                      404
+                    );
+                  }
+                  var attachment = evt.target.result,
+                    total_length = attachment.info.length,
+                    promise_list = [],
+                    store = tx.objectStore("blob"),
+                    start_index,
+                    end_index,
+                    i;
+                  type = attachment.info.content_type;
+                  start = options.start || 0;
+                  end = options.end || total_length;
+                  if (end > total_length) {
+                    end = total_length;
+                  }
+                  if (start < 0 || end < 0) {
+                    throw new jIO.util.jIOError(
+                      "_start and _end must be positive",
+                      400
+                    );
+                  }
+                  if (start > end) {
+                    throw new jIO.util.jIOError("_start is greater than _end",
+                                                400);
+                  }
+                  start_index = Math.floor(start / UNITE);
+                  end_index =  Math.floor(end / UNITE);
+                  if (end % UNITE === 0) {
+                    end_index -= 1;
+                  }
+
+                  for (i = start_index; i <= end_index; i += 1) {
+                    promise_list.push(
+                      waitForIDBRequest(store.get(buildKeyPath([id, name, i])))
+                    );
+                  }
+                  return RSVP.all(promise_list);
+                });
+            });
         });
       })
       .push(function (result_list) {
+        // No need to keep the IDB open
         var array_buffer_list = [],
           blob,
           i,
           index,
           len = result_list.length;
         for (i = 0; i < len; i += 1) {
-          array_buffer_list.push(result_list[i].blob);
+          array_buffer_list.push(result_list[i].target.result.blob);
         }
         if ((options.start === undefined) && (options.end === undefined)) {
           return new Blob(array_buffer_list, {type: type});
@@ -14549,42 +14861,43 @@ return new Parser;
         return blob.slice(start - index, end - index,
                           "application/octet-stream");
       });
+
   };
 
-  function removeAttachment(transaction, id, name, resolve, reject) {
-      // XXX How to get the right attachment
-    function deleteContent() {
-      handleCursor(
-        transaction.objectStore("blob").index("_id_attachment")
-          .openCursor(IDBKeyRange.only([id, name])),
-        deleteEntry,
-        resolve,
-        reject
+  function removeAttachment(tx, id, name) {
+    var promise_list = [];
+
+    function deleteEntry(cursor) {
+      promise_list.push(
+        waitForIDBRequest(cursor.delete())
       );
     }
-    handleRequest(
-      transaction.objectStore("attachment")["delete"](
-        buildKeyPath([id, name])
+
+    return RSVP.all([
+      waitForIDBRequest(
+        tx.objectStore("attachment").delete(buildKeyPath([id, name]))
       ),
-      deleteContent,
-      reject
-    );
+      waitForAllSynchronousCursor(
+        tx.objectStore("blob").index("_id_attachment")
+          .openCursor(IDBKeyRange.only([id, name])),
+        deleteEntry
+      )
+    ])
+      .then(function () {
+        return RSVP.all(promise_list);
+      });
   }
 
   IndexedDBStorage.prototype.putAttachment = function (id, name, blob) {
-    var blob_part = [],
-      transaction,
-      db;
-
-    return openIndexedDB(this)
-      .push(function (database) {
-        db = database;
-
+    var db_name = this._database_name;
+    return new RSVP.Queue()
+      .push(function () {
         // Split the blob first
         return jIO.util.readBlobAsArrayBuffer(blob);
       })
       .push(function (event) {
         var array_buffer = event.target.result,
+          blob_part = [],
           total_size = blob.size,
           handled_size = 0;
 
@@ -14594,57 +14907,54 @@ return new Parser;
           handled_size += UNITE;
         }
 
-        // Remove previous attachment
-        transaction = openTransaction(db, ["attachment", "blob"], "readwrite");
-        return new RSVP.Promise(function (resolve, reject) {
-          function write() {
-            var len = blob_part.length - 1,
-              attachment_store = transaction.objectStore("attachment"),
-              blob_store = transaction.objectStore("blob");
-            function putBlobPart(i) {
-              return function () {
-                i += 1;
-                handleRequest(
-                  blob_store.put({
-                    "_key_path": buildKeyPath([id, name, i]),
-                    "_id" : id,
-                    "_attachment" : name,
-                    "_part" : i,
-                    "blob": blob_part[i]
-                  }),
-                  (i < len) ? putBlobPart(i) : resolve,
-                  reject
-                );
-              };
-            }
-            handleRequest(
-              attachment_store.put({
-                "_key_path": buildKeyPath([id, name]),
-                "_id": id,
-                "_attachment": name,
-                "info": {
-                  "content_type": blob.type,
-                  "length": blob.size
-                }
-              }),
-              putBlobPart(-1),
-              reject
-            );
-          }
-          removeAttachment(transaction, id, name, write, reject);
+        return waitForOpenIndexedDB(db_name, function (db) {
+          return waitForTransaction(db, ["attachment", "blob"], "readwrite",
+                                    function (tx) {
+              // First remove the previous attachment
+              return removeAttachment(tx, id, name)
+                .then(function () {
+                  var blob_store,
+                    promise_list,
+                    i;
+                  // Then write the attachment info
+                  promise_list = [
+                    waitForIDBRequest(tx.objectStore("attachment").put({
+                      "_key_path": buildKeyPath([id, name]),
+                      "_id": id,
+                      "_attachment": name,
+                      "info": {
+                        "content_type": blob.type,
+                        "length": blob.size
+                      }
+                    }))
+                  ];
+                  // Finally, write all blob parts
+                  blob_store = tx.objectStore("blob");
+                  for (i = 0; i < blob_part.length; i += 1) {
+                    promise_list.push(
+                      waitForIDBRequest(blob_store.put({
+                        "_key_path": buildKeyPath([id, name, i]),
+                        "_id" : id,
+                        "_attachment" : name,
+                        "_part" : i,
+                        "blob": blob_part[i]
+                      }))
+                    );
+                  }
+                  return RSVP.all(promise_list);
+                });
+            });
         });
       });
   };
 
   IndexedDBStorage.prototype.removeAttachment = function (id, name) {
-    return openIndexedDB(this)
-      .push(function (db) {
-        var transaction = openTransaction(db, ["attachment", "blob"],
-                                          "readwrite");
-        return new RSVP.Promise(function (resolve, reject) {
-          removeAttachment(transaction, id, name, resolve, reject);
+    return waitForOpenIndexedDB(this._database_name, function (db) {
+      return waitForTransaction(db, ["attachment", "blob"], "readwrite",
+                                function (tx) {
+          return removeAttachment(tx, id, name);
         });
-      });
+    });
   };
 
   jIO.addStorage("indexeddb", IndexedDBStorage);
