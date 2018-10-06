@@ -112,6 +112,20 @@
             }
           );
 
+          // Annotations for javascript
+          monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+            noSemanticValidation: false,
+            noSyntaxValidation: false
+          });
+
+          monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+            target: monaco.languages.typescript.ScriptTarget.ES6,
+            allowNonTsExtensions: true,
+            checkJs: true,
+            allowJs: true,
+            module: monaco.languages.typescript.ModuleKind.UMD
+          });
+
           // Type mapping for Nexedi libraries
           function addExtraLibrary(script_name, lib_name) {
             return fetch(script_name)
