@@ -171,6 +171,13 @@
             .push(addExtraLibrary('./monaco-renderjs.d.ts', 'renderjs'))
             .push(addExtraLibrary('./monaco-jio.d.ts', 'jio'));
         }
+        if (this.state.model_language === 'python') {
+          monaco.languages.setLanguageConfiguration('python', {
+            indentationRules: {
+              increaseIndentPattern: /^.*:$/
+            }
+          });
+        }
       }
       return queue;
     })
