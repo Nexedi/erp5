@@ -73,6 +73,12 @@
     })()</td>
   <td>ok</td></tr>
 
+<tr><td colspan="3"><b>Verify the rendering of the graph matches our reference snapshot</b></td></tr>
+<tr><td>assertImageMatchSnapshot</td>
+    <td>//canvas</td>
+    <td></td></tr>
+
+
 <tr><td colspan="3"><b>Clicking on a serie filter the listbox of recent updates</b></td></tr>
 
 <!--
