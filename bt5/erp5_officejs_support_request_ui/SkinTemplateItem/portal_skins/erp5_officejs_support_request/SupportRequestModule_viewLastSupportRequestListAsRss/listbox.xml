@@ -12,6 +12,7 @@
               <list>
                 <string>all_columns</string>
                 <string>columns</string>
+                <string>count_method</string>
                 <string>default_params</string>
                 <string>domain_root_list</string>
                 <string>domain_tree</string>
@@ -151,76 +152,7 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>destination_section_title</string>
-                          <string>Client</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_section_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_decision_title</string>
-                          <string>Supervisor</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Location</string>
-                        </tuple>
-                        <tuple>
-                          <string>post_user</string>
-                          <string>author</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_trade_title</string>
-                          <string>Operator</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit_title</string>
-                          <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>post_start_date_hidden</string>
-                          <string>Comment Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>Ticket_getCausalitySourcePersonDefaultEmailText</string>
-                          <string>Requester Email</string>
-                        </tuple>
-                        <tuple>
-                          <string>Ticket_getCausalityAsText</string>
-                          <string>Message Text</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_decision_reference</string>
-                          <string>Requester Login</string>
-                        </tuple>
-                        <tuple>
-                          <string>owner_title</string>
-                          <string>Owner</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>End Date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -232,27 +164,39 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>category</string>
                           <string>category</string>
                         </tuple>
                         <tuple>
-                          <string>destination_decision_title</string>
+                          <string>author</string>
                           <string>author</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.start_date</string>
-                          <string>pubdate</string>
+                          <string>pubDate</string>
+                          <string>pubDate</string>
                         </tuple>
                         <tuple>
-                          <string>post_content</string>
+                          <string>description</string>
                           <string>description</string>
                         </tuple>
                         <tuple>
-                          <string>support_link</string>
                           <string>link</string>
+                          <string>link</string>
+                        </tuple>
+                        <tuple>
+                          <string>guid</string>
+                          <string>guid</string>
+                        </tuple>
+                        <tuple>
+                          <string>thumbnail</string>
+                          <string>thumbnail</string>
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default_params</string> </key>
@@ -263,16 +207,7 @@
                 <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>ticket_use_domain</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>causality_event_portal_type_domain</string>
-                          <string>Channel</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -286,16 +221,7 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>post_start_date</string>
-                          <string>Comment Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>post_user</string>
-                          <string>Comment Author</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -327,87 +253,13 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Support Request</string>
-                          <string>Support Request</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_section_title</string>
-                          <string>Client</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_decision_title</string>
-                          <string>Requester</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_decision_language</string>
-                          <string>Requester Language</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_section_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_decision_title</string>
-                          <string>Supervisor</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Operations Manager</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Location</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Begin Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>post_user</string>
-                          <string>author</string>
-                        </tuple>
-                        <tuple>
-                          <string>causality_translated_portal_type</string>
-                          <string>Channel</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_trade_title</string>
-                          <string>Operator</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit_title</string>
-                          <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -457,7 +309,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Folder_searchFolderSortByReferenceDescending</string> </value>
+            <value> <string>SupportRequestModule_getEventList</string> </value>
         </item>
       </dictionary>
     </pickle>
