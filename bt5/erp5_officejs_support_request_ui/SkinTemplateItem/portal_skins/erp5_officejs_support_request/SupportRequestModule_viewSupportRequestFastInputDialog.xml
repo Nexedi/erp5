@@ -75,7 +75,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>my_description</string>
+                        <string>your_description</string>
                         <string>your_file</string>
                       </list>
                     </value>
