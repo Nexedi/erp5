@@ -532,6 +532,20 @@ def parseActionUrl(url):
     'url': url
   }
 
+def redirectToLoginForm():
+  login_relative_url = site_root.getLayoutProperty("configuration_login", default="")
+  if (login_relative_url):
+    response.setHeader(
+      'WWW-Authenticate',
+      'X-Delegate uri="%s"' % (url_template_dict["login_template"] % {
+        "root_url": site_root.absolute_url(),
+        "login": login_relative_url
+      })
+    )
+  response.setStatus(401)
+  return ""
+
+
 def getFormRelativeUrl(form):
   return portal.portal_catalog(
     portal_type=("ERP5 Form", "ERP5 Report"),
@@ -1324,17 +1338,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     }
 
   if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
-    login_relative_url = site_root.getLayoutProperty("configuration_login", default="")
-    if (login_relative_url):
-      response.setHeader(
-        'WWW-Authenticate',
-        'X-Delegate uri="%s"' % (url_template_dict["login_template"] % {
-          "root_url": site_root.absolute_url(),
-          "login": login_relative_url
-        })
-      )
-    response.setStatus(401)
-    return ""
+    return redirectToLoginForm()
 
   elif mime_type != traversed_document.Base_handleAcceptHeader([mime_type]):
     response.setStatus(406)
@@ -2186,6 +2190,10 @@ else:
   view_action_type = "object_view"
 
 context.Base_prepareCorsResponse(RESPONSE=response)
+
+# Check if restricted prior traversing any documents
+if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
+  return redirectToLoginForm()
 
 # Check if traversed_document is the site_root
 if relative_url:
