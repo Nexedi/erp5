@@ -67,16 +67,24 @@
         });
     })
     .onStateChange(function () {
+      /** @type {GadgetInstance} */
       var gadget = this;
 
       // render the erp5 form
       return this.getDeclaredGadget("erp5_form")
-        .push(function (erp5_form) {
+        .push(function(erp5_form) {
+        return gadget.getDeclaredGadget("editor")
+          .push(function(editor) {
+          return [editor, erp5_form];
+        })
+      })
+        .push(function (gadgets) {
           var form_options = gadget.state.erp5_form,
             rendered_form = gadget.state.erp5_document._embedded._view,
             rendered_field,
-            key;
-
+            key,
+            editor=gadgets[0],
+            erp5_form=gadgets[1];
           // Remove all empty fields, and mark all others as non editable
           for (key in rendered_form) {
             if (rendered_form.hasOwnProperty(key) && (key[0] !== "_")) {
@@ -94,12 +102,32 @@
           form_options.form_definition = gadget.state.form_definition;
           form_options.view = gadget.state.view;
 
-          return erp5_form.render(form_options);
-        })
+
+          return gadget.jio_getAttachment(
+            'post_module',
+            gadget.hateoas_url + gadget.options.jio_key + "/Base_getEditorFieldPreferredTextEditor",
+            {format: "text"}
+          ).push(function(preferred_editor) {
+            return Promise.all([
+              erp5_form.render(form_options),
+              editor.render({
+                value: "",
+                key: "comment",
+                portal_type: "HTML Post",
+                editable: true,
+                editor: preferred_editor
+              })]).then(function (){
+                // make our submit button editable
+                var element = /** @type {HTMLInputElement} */(gadget.element.querySelector('input[type="submit"]'));
+                element.removeAttribute('disabled');
+                element.classList.remove('ui-disabled');
+              });
+            })
+          })
 
         // render the header
         .push(function () {
-          return RSVP.all([
+          return Promise.all([
             gadget.getUrlFor({command: 'change', options: {editable: true}}),
             gadget.getUrlFor({command: 'change', options: {page: "action"}}),
             gadget.getUrlFor({command: 'history_previous'}),
@@ -131,10 +159,9 @@
           );
         })
         .push(function (post_list) {
-          var i,  // XXX abbreviation
-            queue_list = [];
+          var queue_list = [];
           if (post_list.length) {
-            for (i = 0; i < post_list.length; i += 1) {
+            for (var i = 0; i < post_list.length; i += 1) {
               if (post_list[i][3] !== null && post_list[i][3].indexOf("image_module") !== -1) {
                 queue_list.push(gadget.getImageUrl(post_list[i][3]));
               } else if (post_list[i][3] !== null && post_list[i][3].indexOf("document_module") !== -1) {
@@ -187,9 +214,13 @@
       var gadget = this,
         submitButton = null,
         queue = null,
-        editor = gadget.element.querySelector('#comment');
-
-      if (editor.value === '') {
+         editor = null;
+      return gadget.getDeclaredGadget("editor")
+        .then(function(e) {
+          editor = e;
+          return e.getContent(); })
+        .then(function (content) {
+      if (content.comment === '') {
         return gadget.notifySubmitted({message: "Post content can not be empty!"});
       }
 
@@ -206,7 +237,7 @@
             data = new FormData();
           data.append("follow_up", gadget.options.jio_key);
           data.append("predecessor", '');
-          data.append("data", editor.value);
+          data.append("data", content.comment);
           data.append("file", file_blob);
           // XXX: Hack, call jIO.util.ajax directly to pass the file blob
           // Because the jio_putAttachment will call readBlobAsText, which
@@ -225,12 +256,16 @@
           return gadget.notifySubmitted({message: "Comment added", status: "success"});
         })
         .push(function () {
-          editor.value = '';
-          return gadget.redirect({command: 'reload'});
+          editor.changeState({value: ''})
+          .push(function (){
+            return gadget.redirect({command: 'reload'});
+          })
         });
       queue.then(enableSubmitButton, enableSubmitButton);
       return queue;
     })
+    }
+    )
     .onEvent('submit', function () {
       this.submitPostComment();
     });

@@ -28,11 +28,15 @@
         <p style="background-color:#0E81C2;color:white;margin:1em 0;padding:0.5em">Comments:</p>
         <ol id="post_list"></ol>
         <h3 class="ui-content-title ui-body-c ui-icon ui-icon-custom ui-icon-random" id="comment-title" name="comment-title">&nbsp;Post a comment</h3>
-        <textarea id="comment" name="comment" placeholder="Enter your comment here..."></textarea>
+        <div data-gadget-url="gadget_editor.html"
+             data-gadget-scope="editor"
+             data-gadget-sandbox="">
+        </div>
+
         <div id="file_upload_div">
           <input value="" name="attachment" id="attachment" type="file" title="Upload">
         </div>
-        <input data-theme="b" data-inline="true" type="submit" data-i18n="[value]Post Comment" value="Post Comment" data-icon="check" />
+        <input data-theme="b" data-inline="true" type="submit" data-i18n="[value]Post Comment" value="Post Comment" data-icon="check" disabled class="ui-disabled"/>
       </form>
     </div>
   </body>
