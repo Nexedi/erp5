@@ -26,7 +26,10 @@
 ##############################################################################
 import json
 from StringIO import StringIO
+import urlparse
+import httplib
 
+import feedparser
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
@@ -70,10 +73,12 @@ class SupportRequestTestCase(ERP5TypeTestCase, object):
     self.user.newContent(
         portal_type='Assignment'
     ).open()
+    self.user_password = self.newPassword()
     self.user.newContent(
+        id='erp5_login',
         portal_type='ERP5 Login',
         reference=self.user.getUserId(), # XXX workaround until https://lab.nexedi.com/nexedi/erp5/merge_requests/478
-        password=self.newPassword()
+        password=self.user_password
     ).validate()
     self.user.validate()
     self.tic()
@@ -349,3 +354,77 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
         attachment_link=None,
         attachment_name=None,)],
       ignoreKeys(json.loads(support_request.SupportRequest_getCommentPostListAsJson()), 'message_id'))
+
+
+class TestSupportRequestRSS(SupportRequestTestCase):
+  # XXX token PAS plugin is not set up automatically when installing erp5_access_token
+  # so we set it up the same way test.erp5.testERP5AccessTokenSkins is setting it up
+  def _setupAccessTokenExtraction(self):
+    pas = self.portal.acl_users
+    access_extraction_list = [q for q in pas.objectValues() \
+        if q.meta_type == 'ERP5 Access Token Extraction Plugin']
+    if len(access_extraction_list) == 0:
+      dispacher = pas.manage_addProduct['ERP5Security']
+      dispacher.addERP5AccessTokenExtractionPlugin('token_login')
+      pas.token_login.manage_activateInterfaces(('IExtractionPlugin',))
+    elif len(access_extraction_list) > 1:
+      raise ValueError("Too many token extraction plugins")
+    self.tic()
+
+  def afterSetUp(self):
+    self._setupAccessTokenExtraction()
+    SupportRequestTestCase.afterSetUp(self)
+    self.attached_document = self.portal.document_module.newContent(
+        portal_type='Text',
+        filename='tmp.txt'
+    )
+    self.attached_document.publish()
+
+    self.support_request = self.portal.support_request_module.erp5_officejs_support_request_ui_test_support_reuqest_001
+
+    self.event = self.portal.event_module.newContent(
+        portal_type='Web Message',
+        source_value=self.user,
+        follow_up_value=self.support_request,
+        resource_value=self.portal.service_module.erp5_officejs_support_request_ui_test_service_001,
+        text_content="<p>This is <b>Content</b></p>",
+        start_date=DateTime(2001, 1, 1),
+        aggregate_value_list=(self.attached_document, )
+    )
+    self.event.start()
+    self.event.stop()
+    self.tic()
+
+  def _checkRSS(self, response):
+    self.assertEqual(httplib.OK, response.getStatus())
+    rss = feedparser.parse(response.getBody())
+    self.assertEqual(rss['feed']['title'], "Support Requests")
+    item, = rss.entries
+    self.assertEqual(item['author'], self.user.getTitle())
+    self.assertIn(self.support_request.getRelativeUrl(), item['link'])
+    self.assertEqual(item['published'], DateTime(2001, 1, 1).rfc822())
+    self.assertEqual(item['summary'], '<p>This is <b>Content</b></p>')
+    enclosure, = [link for link in item['links'] if link['rel'] == 'enclosure']
+    self.assertIn(
+        self.attached_document.getRelativeUrl(),
+        enclosure['href'])
+    # https://pythonhosted.org/feedparser/bozo.html#advanced-bozo
+    self.assertFalse(rss.bozo)
+
+  def test_RSS(self):
+    response = self.publish(
+        "%s/support_request_module/SupportRequestModule_viewLastSupportRequestListAsRss" % self.getWebSite().getPath(),
+        basic='%s:%s' % (self.user.erp5_login.getReference(), self.user_password))
+    self._checkRSS(response)
+
+  def test_RSS_with_token(self):
+    response = self.publish(
+        "%s/support_request_module/SupportRequestModule_generateRSSLinkAsJson" % self.getWebSite().getPath(),
+        basic='%s:%s' % (self.user.erp5_login.getReference(), self.user_password))
+    restricted_access_url = json.loads(response.getBody())['restricted_access_url']
+    # make it relative url
+    parsed_url = urlparse.urlparse(restricted_access_url)
+    restricted_access_url = restricted_access_url.replace(
+        '%s://%s' % (parsed_url.scheme, parsed_url.netloc), '', 1)
+    # and check it (this time the request is not basic-authenticated)
+    self._checkRSS(self.publish(restricted_access_url))
