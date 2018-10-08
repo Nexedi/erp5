@@ -9080,12 +9080,10 @@ return new Parser;
     LOG_UNRESOLVED_ATTACHMENT_CONFLICT = 11,
     // 100 - 199 solving conflict
     LOG_FORCE_PUT_REMOTE = 100,
-    LOG_FORCE_POST_REMOTE = 101,
     LOG_FORCE_DELETE_REMOTE = 103,
     LOG_FORCE_PUT_REMOTE_ATTACHMENT = 110,
     LOG_FORCE_DELETE_REMOTE_ATTACHMENT = 113,
     LOG_FORCE_PUT_LOCAL = 150,
-    LOG_FORCE_POST_LOCAL = 151,
     LOG_FORCE_DELETE_LOCAL = 153,
     LOG_FORCE_PUT_LOCAL_ATTACHMENT = 160,
     LOG_FORCE_DELETE_LOCAL_ATTACHMENT = 163,
@@ -9136,10 +9134,8 @@ return new Parser;
     LOG_UNEXPECTED_REMOTE_ATTACHMENT: LOG_UNEXPECTED_REMOTE_ATTACHMENT,
     LOG_UNRESOLVED_ATTACHMENT_CONFLICT: LOG_UNRESOLVED_ATTACHMENT_CONFLICT,
     LOG_FORCE_PUT_REMOTE: LOG_FORCE_PUT_REMOTE,
-    LOG_FORCE_POST_REMOTE: LOG_FORCE_POST_REMOTE,
     LOG_FORCE_DELETE_REMOTE: LOG_FORCE_DELETE_REMOTE,
     LOG_FORCE_PUT_LOCAL: LOG_FORCE_PUT_LOCAL,
-    LOG_FORCE_POST_LOCAL: LOG_FORCE_POST_LOCAL,
     LOG_FORCE_DELETE_LOCAL: LOG_FORCE_DELETE_LOCAL,
     LOG_FORCE_PUT_REMOTE_ATTACHMENT: LOG_FORCE_PUT_REMOTE_ATTACHMENT,
     LOG_FORCE_DELETE_REMOTE_ATTACHMENT: LOG_FORCE_DELETE_REMOTE_ATTACHMENT,
@@ -14752,25 +14748,32 @@ return new Parser;
       return waitForTransaction(db, ["metadata", "attachment", "blob"],
                                 "readwrite", function (tx) {
 
-          var promise_list = [];
+          var promise_list = [],
+            attachment_store = tx.objectStore("attachment"),
+            blob_store = tx.objectStore("blob");
 
-          function deleteEntry(cursor) {
+          function deleteAttachment(cursor) {
             promise_list.push(
-              waitForIDBRequest(cursor.delete())
+              waitForIDBRequest(attachment_store.delete(cursor.primaryKey))
             );
           }
+          function deleteBlob(cursor) {
+            promise_list.push(
+              waitForIDBRequest(blob_store.delete(cursor.primaryKey))
+            );
+          }
+
           return RSVP.all([
             waitForIDBRequest(tx.objectStore("metadata").delete(id)),
-            // XXX Why not possible to delete with KeyCursor?
             waitForAllSynchronousCursor(
-              tx.objectStore("attachment").index("_id")
-                .openCursor(IDBKeyRange.only(id)),
-              deleteEntry
+              attachment_store.index("_id")
+                              .openKeyCursor(IDBKeyRange.only(id)),
+              deleteAttachment
             ),
             waitForAllSynchronousCursor(
-              tx.objectStore("blob").index("_id")
-                .openCursor(IDBKeyRange.only(id)),
-              deleteEntry
+              blob_store.index("_id")
+                        .openKeyCursor(IDBKeyRange.only(id)),
+              deleteBlob
             ),
           ])
             .then(function () {
@@ -14785,35 +14788,74 @@ return new Parser;
       options = {};
     }
     var db_name = this._database_name,
-      type,
       start,
       end;
+
+    start = options.start || 0;
+    end = options.end;
+
     return new RSVP.Queue()
       .push(function () {
         return waitForOpenIndexedDB(db_name, function (db) {
           return waitForTransaction(db, ["attachment", "blob"], "readonly",
                                     function (tx) {
-              // XXX Should raise if key is not good
-              return waitForIDBRequest(tx.objectStore("attachment").get(
-                buildKeyPath([id, name])
-              ))
+              var promise_list,
+                key_path = buildKeyPath([id, name]),
+                blob_store;
+
+              /*
+                start_index,
+                end_index,
+                i;
+*/
+
+              promise_list = [
+                // Get the attachment info (mime type)
+                waitForIDBRequest(tx.objectStore("attachment").get(
+                  key_path
+                ))
+              ];
+
+              blob_store = tx.objectStore("blob");
+
+              function getBlob(cursor) {
+                var index = parseInt(
+                  cursor.primaryKey.slice(key_path.length + 1),
+                  10
+                ),
+                  i = index;
+                // Extend array size
+                while (i > promise_list.length - 1) {
+                  promise_list.push(null);
+                  i -= 1;
+                }
+                // Sort the blob by their index
+                promise_list.splice(
+                  index + 1,
+                  0,
+                  waitForIDBRequest(blob_store.get(cursor.primaryKey))
+                );
+              }
+
+              // Get all needed blobs
+              return waitForAllSynchronousCursor(
+                blob_store.index("_id_attachment")
+                  .openKeyCursor(IDBKeyRange.only([id, name])),
+                getBlob
+              )
+                .then(function () {
+                  return RSVP.all(promise_list);
+                });
+            });
+        });
+
+/*
+
+              
+
                 .then(function (evt) {
-                  if (!evt.target.result) {
-                    throw new jIO.util.jIOError(
-                      "IndexedDB: cannot find object nunut",
-                      404
-                    );
-                  }
-                  var attachment = evt.target.result,
-                    total_length = attachment.info.length,
-                    promise_list = [],
-                    store = tx.objectStore("blob"),
-                    start_index,
-                    end_index,
-                    i;
-                  type = attachment.info.content_type;
-                  start = options.start || 0;
-                  end = options.end || total_length;
+
+
                   if (end > total_length) {
                     end = total_length;
                   }
@@ -14838,23 +14880,36 @@ return new Parser;
                       waitForIDBRequest(store.get(buildKeyPath([id, name, i])))
                     );
                   }
-                  return RSVP.all(promise_list);
                 });
-            });
-        });
+
+*/
       })
       .push(function (result_list) {
         // No need to keep the IDB open
-        var array_buffer_list = [],
-          blob,
-          i,
+        var blob,
           index,
-          len = result_list.length;
-        for (i = 0; i < len; i += 1) {
+          attachment = result_list[0].target.result,
+          array_buffer_list = [],
+          i;
+          // total_length;
+
+        // Should raise if key is not good
+        if (!attachment) {
+          throw new jIO.util.jIOError(
+            "IndexedDB: cannot find object '" +
+                buildKeyPath([id, name]) +
+                "' in the 'attachment' store",
+            404
+          );
+        }
+
+        for (i = 1; i < result_list.length; i += 1) {
           array_buffer_list.push(result_list[i].target.result.blob);
         }
+        // total_length = attachment.info.length;
         if ((options.start === undefined) && (options.end === undefined)) {
-          return new Blob(array_buffer_list, {type: type});
+          return new Blob(array_buffer_list,
+                          {type: attachment.info.content_type});
         }
         index = Math.floor(start / UNITE) * UNITE;
         blob = new Blob(array_buffer_list, {type: "application/octet-stream"});
@@ -14865,11 +14920,12 @@ return new Parser;
   };
 
   function removeAttachment(tx, id, name) {
-    var promise_list = [];
+    var promise_list = [],
+      blob_store = tx.objectStore("blob");
 
     function deleteEntry(cursor) {
       promise_list.push(
-        waitForIDBRequest(cursor.delete())
+        waitForIDBRequest(blob_store.delete(cursor.primaryKey))
       );
     }
 
@@ -14878,8 +14934,8 @@ return new Parser;
         tx.objectStore("attachment").delete(buildKeyPath([id, name]))
       ),
       waitForAllSynchronousCursor(
-        tx.objectStore("blob").index("_id_attachment")
-          .openCursor(IDBKeyRange.only([id, name])),
+        blob_store.index("_id_attachment")
+                  .openKeyCursor(IDBKeyRange.only([id, name])),
         deleteEntry
       )
     ])
@@ -14911,39 +14967,68 @@ return new Parser;
           return waitForTransaction(db, ["attachment", "blob"], "readwrite",
                                     function (tx) {
               // First remove the previous attachment
-              return removeAttachment(tx, id, name)
-                .then(function () {
-                  var blob_store,
-                    promise_list,
-                    i;
-                  // Then write the attachment info
-                  promise_list = [
-                    waitForIDBRequest(tx.objectStore("attachment").put({
-                      "_key_path": buildKeyPath([id, name]),
-                      "_id": id,
-                      "_attachment": name,
-                      "info": {
-                        "content_type": blob.type,
-                        "length": blob.size
-                      }
-                    }))
-                  ];
-                  // Finally, write all blob parts
-                  blob_store = tx.objectStore("blob");
-                  for (i = 0; i < blob_part.length; i += 1) {
-                    promise_list.push(
-                      waitForIDBRequest(blob_store.put({
-                        "_key_path": buildKeyPath([id, name, i]),
-                        "_id" : id,
-                        "_attachment" : name,
-                        "_part" : i,
-                        "blob": blob_part[i]
-                      }))
-                    );
+              // return removeAttachment(tx, id, name)
+                // .then(function () {
+              var blob_store,
+                promise_list,
+                delete_promise_list = [],
+                key_path = buildKeyPath([id, name]),
+                i;
+              // First write the attachment info on top of previous
+              promise_list = [
+                waitForIDBRequest(tx.objectStore("attachment").put({
+                  "_key_path": key_path,
+                  "_id": id,
+                  "_attachment": name,
+                  "info": {
+                    "content_type": blob.type,
+                    "length": blob.size
                   }
-                  return RSVP.all(promise_list);
+                }))
+              ];
+              // Then, write all blob parts on top of previous
+              blob_store = tx.objectStore("blob");
+              for (i = 0; i < blob_part.length; i += 1) {
+                promise_list.push(
+                  waitForIDBRequest(blob_store.put({
+                    "_key_path": buildKeyPath([id, name, i]),
+                    "_id" : id,
+                    "_attachment" : name,
+                    "_part" : i,
+                    "blob": blob_part[i]
+                  }))
+                );
+              }
+
+              function deleteEntry(cursor) {
+                var index = parseInt(
+                  cursor.primaryKey.slice(key_path.length + 1),
+                  10
+                );
+                if (index > blob_part.length + 1) {
+                  delete_promise_list.push(
+                    waitForIDBRequest(blob_store.delete(cursor.primaryKey))
+                  );
+                }
+              }
+
+              // Finally, remove all remaining blobs
+              promise_list.push(
+                waitForAllSynchronousCursor(
+                  blob_store.index("_id_attachment")
+                            .openKeyCursor(IDBKeyRange.only([id, name])),
+                  deleteEntry
+                )
+              );
+
+              return RSVP.all(promise_list)
+                .then(function () {
+                  if (delete_promise_list.length) {
+                    return RSVP.all(delete_promise_list);
+                  }
                 });
             });
+            // });
         });
       });
   };
