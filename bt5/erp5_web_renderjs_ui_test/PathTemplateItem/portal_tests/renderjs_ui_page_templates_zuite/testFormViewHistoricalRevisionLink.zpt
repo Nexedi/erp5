@@ -215,7 +215,7 @@ Bar
   <td>verifyEval</td>
   <!-- Verify the value after removing the spaces and line breaks -->
   <td>storedVars['diff_content'].replace(/(\r\n\t|\n|\r\t)/gm,"").replace(/\s+/g, '')</td>
-  <td>1-1+('Foo','Bar')</td>
+  <td>1-1+('FooBar',)</td>
 </tr>
 
 </tbody></table>
