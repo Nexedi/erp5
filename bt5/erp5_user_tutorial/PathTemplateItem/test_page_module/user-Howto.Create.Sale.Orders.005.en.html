@@ -50,7 +50,7 @@
           <li>How to generate a Sale Packing List</li>
         </ul>
         <details open="open">
-          <p>This tutorial aims at explaining how to create a sale order. Whether dealing with products or services, this is one of the key operations that is frequently performed in all businesses.</p><p>This is a several steps procedure :</p><p>First, you need to create the sale order so that it exists in ERP5, then edit the details of your sale order and lastly, confirm the sale order. The result of these steps is the generation of a “sale packing list”, linked to this sale order.</p><p>Note that the concept of "Sale Packing List" which is used to manage the stock, container and delivery of products can be also applied to services, and it is also indispensable. In this tutorial we will use a physical product to help you understand how to manage sale order, but the procedure goes the same for a service: confirming the sale order will generate a sale packing list, then a corresponding invoice.</p><p>Products/Services : sales order =&gt; sales packing list ==&gt; invoice ==&gt; payment</p>
+          <p>This tutorial aims at explaining how to create a sale order. Whether dealing with products or services, this is one of the key operations that is frequently performed in all businesses.</p><p>This is a several step procedure :</p><p>First, you need to create the sale order so that it exists in ERP5, then edit the details of your sale order and lastly, confirm the sale order. The result of these steps is the generation of a “sale packing list”, linked to this sale order.</p><p>Note that the concept of "Sale Packing List" which is used to manage the stock, container and delivery of products can be also applied to services, and it is also indispensable. In this tutorial we will use a physical product to help you understand how to manage sale order, but the procedure goes the same for a service: confirming the sale order will generate a sale packing list, then a corresponding invoice.</p><p>Products/Services : sales order =&gt; sales packing list ==&gt; invoice ==&gt; payment</p>
         </details>
         <test>
           <table style="display: none;" class="test">
@@ -62,7 +62,7 @@
         <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Example?format=png" title="Scenario" alt="Scenario">
         <details open="open">
           <p>We are going to explain the procedure using a new example. We have previously created persons, organisations and products, which we will use throughout this tutorial :</p><p>
-            Your company (Hongzhao) is an electronic component supplier, and has many clients worldwide. One of this clients is Z Company, which is an electricity supplier. Z Company has just ordered <strong>100 000 Red Led</strong>
+            Your company (Hongzhao) is an electronic component supplier, and has many clients worldwide. One of these clients is Z Company, which is an electricity supplier. Z Company has just ordered <strong>100 000 Red Leds</strong>
             from your company under the following terms :
           </p><p>
             <strong>Title</strong>
@@ -267,7 +267,7 @@
             After you saved your work in the View tab, <strong>open the Action list and choose "Apply Sale Trade Condition"</strong>
             .
           </p><p>
-           The chosen General Sale Trade Condition created by the ERP5 system has some basic information as the sale trade conditions you learned to created by yourself.  When you apply it, some information in the View tab and other tabs will be updated according to it automatically (see the previous tutorial <a href="user-Howto.Create.Trade.Conditions/view">"How to create Trade Conditions"</a>).
+           The chosen General Sale Trade Condition created by the ERP5 system has some basic information as the sale trade conditions you learned to create by yourself.  When you apply it, some information in the View tab and other tabs will be updated according to it automatically (see the previous tutorial <a href="user-Howto.Create.Trade.Conditions/view">"How to create Trade Conditions"</a>).
           </p>
         </details>
       </section><!--<section class="screenshot">
@@ -342,7 +342,7 @@
             When saving the “View” tab, information has been gathered about the sender, the recipient etc., since you have chosen the Sale Trade Condition. As you can see by browsing the “Profile” tab, you do not have to enter these information again, ERP5 <strong>displays it automatically</strong>
             . Then, the only information you have to
             <strong>edit is about the invoice</strong>
-            : who sends it, who should receive it and who pays it? Please see next page.
+            : who sends it, who should receive it and who pays it? Please see the next page.
           </p>
         </details>
         <test>
@@ -427,7 +427,7 @@
             After you have <strong>named your Sale Order Line properly</strong>
             , you can
             <strong>link a product</strong>
-            to it. To do so, just click on the wheel next to “Product or Service”, and set relation as described in the previous tutorial
+            to it. To do so, just click on the wheel next to “Product or Service”, and set a relation as described in the previous tutorial
             <a href="user-Howto.Link.Persons.and.Organisations/view">"Linking Persons and Organisations"</a>.
           </p><p>
             After you have saved the change in the Product and Service field, you will find out that <strong>the Price of your product and the Base contribution are updated automatically</strong>
@@ -509,7 +509,7 @@
         <h1>Save and go back to Sale Order</h1>
         <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Save.Sale.Order.Line.And.Go.Back.To.Sale.Order?format=png" title="Save and Return" alt="Save and Return">
         <details open="open">
-          <p>Now that we have filled the details of the Sale Order Line, which means that we have added a product to the Sale Order, we can now go back to the Sale Order document to finish its editing.</p><p>Do not forget to save your work by clicking on the disk on the right of the screen.</p><p>
+          <p>Now that we have filled the details of the Sale Order Line, which means that we have added a product to the Sale Order, we can now go back to the Sale Order document to finish its editing.</p><p>Do not forget to save your work by clicking on the disk on the right side of the screen.</p><p>
             When saving is complete, take a look at the bread crumb:<br>
             If you remember correctly, the bread crumb displays a location, and has a folder path. For example, the one here displays:
             <br>
@@ -562,13 +562,13 @@
         <img src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Confirm?format=png" title="Confirming the Sale Order" alt="Confirming the Sale Order">
         <details open="open">
           <p>
-            After reviewed the Sale Order Lines in the View tab of the Sale Order, and you are sure everything else is fine, you can change the state of the Sale Order. The first step is to browse the “Action” menu, and <strong>click on “Confirm”</strong>
+            After reviewing the Sale Order Lines in the View tab of the Sale Order, and you are sure everything else is fine, you can change the state of the Sale Order. The first step is to browse the “Action” menu, and <strong>click on “Confirm”</strong>
             . A new page will appear in which you can add comments and validate that you want to
             <strong>“Confirm"  the Sale Order</strong>
             .
           </p><p>
             This step is really important, because when you <strong>"Confirm" a Sale Order</strong>
-            , you tell ERP5 that you have agreed with the buyer and confirm the Sale Order, so you can start to preparing the products for the shipment. Then you will be ready to fill the details of the shipment, which is done using the Sale Packing List that has been generated while
+            , you tell ERP5 that you have agreed with the buyer and confirm the Sale Order, so you can start preparing the products for shipment. Then, you will be ready to fill the details of the shipment, which is done using the Sale Packing List that has been generated while
             <strong>confirming the Sale Order</strong>
             .
           </p>
@@ -671,7 +671,7 @@
         <h1>Generated Sale Packing List</h1>
         <img alt="Generated Sale Packing List" title="Generated Sale Packing List" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Create.Sale.Orders.Generated.Sale.Packing.List?format=png">
         <details open="open">
-          <p>Using "Jump..." menu, you can quickly access to the newly generated "Sale Packing List related to Sale Order: Red LED". Then if you need to go back to the initial Sale Order, you can either use the "Jump..." list again, or by browsing the Sale Orders in the "Modules" list.</p><p>Now you can have a look at the fresh new Packing List document. In next tutorial, you will learn how to manage Sale Packing Lists.</p>
+          <p>Using "Jump..." menu, you can quickly access the newly generated "Sale Packing List related to Sale Order: Red LED". Then if you need to go back to the initial Sale Order, you can either use the "Jump..." list again, or by browsing the Sale Orders in the "Modules" list.</p><p>Now you can have a look at the fresh new Packing List document. In next tutorial, you will learn how to manage Sale Packing Lists.</p>
         </details>
       </section>
     
