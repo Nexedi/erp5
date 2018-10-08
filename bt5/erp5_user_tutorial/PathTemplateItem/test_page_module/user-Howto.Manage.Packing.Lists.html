@@ -6,10 +6,10 @@
         </footer>
         <details open="open">
           <p>
-            When you validate a Sale Order, as seen in the previous tutorial <a href="user-Howto.Create.Sale.Orders/view">"How to create Sale Orders"</a>, ERP5 creates automatically the related <strong>“Sale Packing List”</strong>
+            When you validate a Sale Order, as seen in the previous tutorial <a href="user-Howto.Create.Sale.Orders/view">"How to create Sale Orders"</a>, ERP5 automatically creates the related <strong>“Sale Packing List”</strong>
             . Thanks to it, you will be able to track the shipment of the goods related to the order.
           </p><p>The goal of this tutorial is to explain how to manage Sale Packing Lists, in order to have the goods shipped and delivered.</p><p>
-            This is a two steps procedure: first, the order needs to be shipped and, when it reached the client warehouse, the status must be turned into <strong>“Delivered”</strong>
+            This is a two step procedure: first, the order needs to be shipped and, when it reaches the clients warehouse, the status must be turned into <strong>“Delivered”</strong>
             .
           </p>
         </details>
@@ -88,7 +88,7 @@
         <h1>Managing a Packing List</h1>
         <img type="image/png" src="http://img.erp5.cn/user-Howto.Manage.Sale.Packing.Lists.Model?format=png" title="Delivery Flow" alt="Delivery Flow">
         <details open="open">
-          <p>As you can see on the drawing, the different steps of managing a Packing List can be linked with real people in the company.</p><p>The principle of workflow based application makes sense in this case. Indeed, once the Sale Order has been registered and confirmed by the sales manager, the employee from the warehouse will prepare the automatically generated Sale Packing List related to the order. Thanks to the workflow, the sales manager will be aware that the order is ready to be sent and will give the order to “Ship” the goods. Once the client receives the goods, checks them and gives feedback, the sales manager will then change the status to “Delivered”.</p><p>In this way, it is possible to track the whole shipment process, thanks to ERP5.</p>
+          <p>As you can see in the drawing, the different steps of managing a Packing List can be linked with real people in the company.</p><p>The principle of workflow based application makes sense in this case. Indeed, once the Sale Order has been registered and confirmed by the sales manager, the employee from the warehouse will prepare the automatically generated Sale Packing List related to the order. Thanks to the workflow, the sales manager will be aware that the order is ready to be sent and will give the order to “Ship” the goods. Once the client receives the goods, checks them and gives feedback, the sales manager will then change the status to “Delivered”.</p><p>In this way, it is possible to track the whole shipment process, thanks to ERP5.</p>
         </details>
         <test>
           <table style="display: none;" class="test">
@@ -106,7 +106,7 @@
             where it is not filled automatically.
           </p><p>
             Note: <strong>Most data in the View tab and the other tabs (Details, Payment, Profile) should have been updated automatically from the Sale Order</strong>
-            , so you will not have much to do now. If some fields have not been updated, it means that those fields have not been filled out correctly in the related Sale Order. This is why we recommend to fill out properly the Sale Orders before generating Packing Lists.
+            , so you will not have much to do now. If some fields have not been updated, it means that those fields have not been filled out correctly in the related Sale Order. This is why we recommend to properly fill out the Sale Orders before generating Packing Lists.
           </p>
         </details>
         <test>
@@ -202,8 +202,8 @@
         <h1>Ship</h1>
         <img type="image/png" src="http://img.erp5.cn/user-Howto.Manage.Sale.Packing.Lists.Ship?format=png" title="Selecting Ship on Action Menu" alt="Selecting Ship on Action Menu">
         <details open="open">
-          <p>After the sales manager confirms the Sale Order, the employees in warehouse will prepare the shipment and ship it. If the shipment corresponds with the information in the Sale Packing List, you have to tell ERP5 that your order has been shipped.</p><p>
-            To do so, browse the “Action” menu on top of the screen, and click on <strong>“Ship Packing List”</strong>
+          <p>After the sales manager confirms the Sale Order, the employees in the warehouse will prepare the shipment and ship it. If the shipment corresponds with the information in the Sale Packing List, you have to tell ERP5 that your order has been shipped.</p><p>
+            To do so, browse the “Action” menu at the top of the screen, and click on <strong>“Ship Packing List”</strong>
             .
           </p><p>
             This will change the status of the Sale Packing List from "Confirmed" to <strong>"Shipped"</strong>
@@ -261,7 +261,7 @@
             .
           </p><p>
             This will change the status of the Sale Packing List from <strong>"Shipped" to “Delivered”</strong>
-            , and this also will
+            , and this will also
             <strong>generate the related invoice</strong>
             , as you can see on the following two pages.
           </p>
@@ -300,7 +300,7 @@
         <img alt="Jump to &quot;Related Sale Transaction Invoice&quot;" title="Jump to &quot;Related Sale Transaction Invoice&quot;" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Manage.Sale.Packing.Lists.Jump.To.Related.Invoice?format=png">
         <details open="open">
           <p>
-            After the Packing List is in "Delivered" state, you can access to related invoice by <strong>clicking the "Related Sale Invoice Transaction" in the "Jump..." menu</strong>
+            After the Packing List is in the "Delivered" state, you can access the related invoice by <strong>clicking the "Related Sale Invoice Transaction" in the "Jump..." menu</strong>
             .
           </p>
         </details>
@@ -308,7 +308,7 @@
         <h1>Generated Sale Invoice Transaction</h1>
         <img alt="Generated Sale Transaction Invoice" title="Generated Sale Transaction Invoice" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Manage.Sale.Packing.Lists.Related.Invoice?format=png">
         <details open="open">
-          <p>Now you can have a look at the Sale Invoice Transaction generated from the Sale Packing List. If you need to go back to the initial Sale Order or Sale Packing List, you can either use the "Jump..." list again, or by browsing the Sale Orders or Sale Packing Lists in the "Modules" list.</p><p>In next tutorial, you will learn how to manage invoices.</p>
+          <p>Now you can have a look at the Sale Invoice Transaction generated from the Sale Packing List. If you need to go back to the initial Sale Order or Sale Packing List, you can either use the "Jump..." list again, or by browsing the Sale Orders or Sale Packing Lists in the "Modules" list.</p><p>In the next tutorial, you will learn how to manage invoices.</p>
         </details>
       </section><section class="illustration">
         <h1>Diverged Packing List</h1>
@@ -316,7 +316,7 @@
         <details open="open">
           <p>
             Sale Packing Lists can <strong>generate an invoice</strong>
-            for the related transaction by a simply action:
+            for the related transaction with a simple action:
             <strong>Ship Packing List</strong>
             , if the number of items shipped (in the Sale Packing List) matches the number of items ordered (in the Sale Order). This means that you do not have to bother clicking on anything, the invoice will be automatically generated after you ship the Packing List.
             <br>
@@ -331,7 +331,7 @@
             <strong>"Ship" and "Deliver" the second Packing List</strong>
             . In this way, the diverged Packing List can be solved.
           </p><p>
-            Note that <strong>once you Ship Packing List, the action generates invoice for the related Packing List automatically, with the updated quantity shipped</strong>
+            Note that <strong>once you Ship the Packing List, the action generates an invoice for the related Packing List automatically, with the updated quantity shipped</strong>
             . So finally, you will have two sale invoices, corresponding to each diverged Sale Packing List.
           </p>
         </details>
