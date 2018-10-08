@@ -200,7 +200,16 @@ This has been successfully tested with 59. -->
   <td>link=Upload</td>
   <td></td>
 </tr>
-
+<tr>
+  <td>click</td>
+  <td>link=Upload</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='Upload']</td>
+  <td></td>
+</tr>
 </tbody></table>
 </body>
 </html>

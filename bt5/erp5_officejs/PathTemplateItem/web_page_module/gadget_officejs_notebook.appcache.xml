@@ -219,6 +219,8 @@ gadget_erp5_searchfield.html\n
 gadget_erp5_searchfield.js\n
 gadget_erp5_pt_form_list.html\n
 gadget_erp5_pt_form_list.js\n
+gadget_erp5_pt_form_dialog.html\n
+gadget_erp5_pt_form_dialog.js\n
 gadget_erp5_form.html\n
 gadget_erp5_form.js\n
 gadget_erp5_label_field.html\n
@@ -227,6 +229,8 @@ gadget_erp5_field_listbox.html\n
 gadget_erp5_field_listbox.js\n
 gadget_erp5_field_datetime.html\n
 gadget_erp5_field_datetime.js\n
+gadget_erp5_field_file.html\n
+gadget_erp5_field_file.js\n
 gadget_html5_element.html\n
 gadget_html5_element.js\n
 gadget_erp5_notification.html\n
@@ -400,7 +404,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.45844.6229.15906</string> </value>
+                <value> <string>970.53070.40.17527</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -418,7 +422,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1538640809.38</float>
+                        <float>1539011803.35</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
