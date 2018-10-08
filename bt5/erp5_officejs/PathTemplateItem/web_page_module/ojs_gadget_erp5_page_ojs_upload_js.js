@@ -53,7 +53,6 @@
                     title: filename,
                     portal_type: result[1],
                     content_type: result[2],
-                    filename: filename,
                     parent_relative_url: result[4],
                     text_content: data_content
                   });
