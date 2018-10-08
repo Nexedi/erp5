@@ -7,7 +7,7 @@
     var element = gadget.element,
       a = window.document.createElement("a"),
       url = window.URL.createObjectURL(new Blob([text_content], {type: 'text/plain'})),
-      name_list = [title, ""];
+      name_list = [title, "txt"];
     element.appendChild(a);
     a.style = "display: none";
     a.href = url;

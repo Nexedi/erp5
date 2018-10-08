@@ -30,7 +30,7 @@
             form_gadget.getContent(),
             gadget.getSetting('portal_type'),
             gadget.getSetting('content_type'),
-            gadget.getSetting('file_extension'),
+            gadget.getSetting('upload_dict'),
             gadget.getSetting('parent_relative_url')
           ]);
         })
@@ -38,7 +38,7 @@
           var file_name_list, data, filename, queue;
           if (result[0].file !== undefined) {
             file_name_list = result[0].file.file_name.split('.');
-            if (file_name_list[1] === result[3]) {
+            if (file_name_list[file_name_list.length - 1] in window.JSON.parse(result[3])) {
               filename = file_name_list[0];
               data = jIO.util.dataURItoBlob(result[0].file.url);
               queue = new RSVP.Queue()
