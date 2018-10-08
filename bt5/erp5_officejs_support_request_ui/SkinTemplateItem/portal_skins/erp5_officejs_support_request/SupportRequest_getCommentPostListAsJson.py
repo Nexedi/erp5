@@ -23,7 +23,7 @@ for event in event_list:
 
   comment_list.append((
       event.getSourceTitle(),
-      event.getStartDate().rfc822(),
+      event.getStartDate().ISO8601(),
       event.asStrippedHTML(),
       attachment_link,
       attachment_name,
