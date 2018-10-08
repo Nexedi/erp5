@@ -50,7 +50,7 @@
         <details open="open">
           <p>In this tutorial, you will learn how to create a payment using ERP5.</p><p>
             The appropriate way to <strong>create a payment</strong>
-            is to first locate in the
+            is to first locate the
             <strong>invoice</strong>
             which you want to create the payment transaction from, and then
             <strong>create the related payment</strong>
@@ -75,7 +75,7 @@
             You should understand that <strong>ERP5 will not let you create a payment if it is not related to a bank account</strong>
             , which means that
             <strong>the first step of this tutorial will be to learn how to create a bank account for your company</strong>
-            in order to be able to create treasury transactions such as payment, which are directly linked to your bank account.
+            in order to be able to create treasury transactions such as payments, which are directly linked to your bank account.
           </p>
         </details>
         <test>
@@ -147,9 +147,9 @@
             From the previous tutorial <a href="user-Howto.Create.Bank.Account/view">"How to create Bank Accounts"</a> and the example "Invoice Sender and Payee-Bank Account" in the tutorial <a href="user-Howto.Create.Trade.Conditions/view">"How to create Trade Conditions"</a>, you have learned how to create a bank account for your company.
           </p><p>
             In our example, please follow these tutorials and <strong>create a bank account "LCL Paris sud" for your company Hongzhao</strong>
-            . Then please
+            . Do not forget to replace "Hongzhao" with the company you created. Then please
             <strong>click on the Financial Information tab of the organisation document</strong>
-            . This tab provides you with financial information about your company, such as Bank Accounts, Accounting Periods, etc. As you can see on the screenshot, the bank account you created appears in this tab, which means that the creation and validation were successful. If you want to see the details of this account, simply click on the line. This will lead you to the detail sheet of the bank account.
+            . This tab provides you with financial information about your company, such as Bank Accounts, Accounting Periods, etc. As you can see from the screenshot, the bank account you created appears in this tab, which means that the creation and validation were successful. If you want to see the details of this account, simply click on the line. This will lead you to the detail sheet of the bank account.
           </p><p>Now we can create transactions linked to this bank account.</p>
         </details>
         <test>
@@ -201,7 +201,7 @@
         <img alt="Reach the Invoice" title="Reach the Invoice" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Create.A.Payment.Related.Sale.Invoice?format=png">
         <details open="open">
           <p>Now we have to create the Payment from the Sale Invoice.</p><p>
-            To reach the invoice we need, as you have learned in <a href="user-Howto.Manage.Invoices/view">"How to manage Invoices"</a>, after you are located in the Sale Packing List "Red LED", click on "Related Sale Invoice Transaction" in "Jump..." menu. This will lead you to the related invoice, from which you will be able to create the related payment.
+            To reach the invoice we need, as you have learned in <a href="user-Howto.Manage.Invoices/view">"How to manage Invoices"</a>, to located the Sale Packing List "Red LED" and click on "Related Sale Invoice Transaction" in the "Jump..." menu. This will lead you to the related invoice, from which you will be able to create the related payment.
           </p>
         </details>
         <test>
@@ -306,15 +306,15 @@
         <img alt="Choose basic payment information" title="Choose basic payment information" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Create.A.Payment.Choose.Payment.Information?format=png">
         <details open="open">
           <p>
-            Before creating the payment, ERP5 will ask you to <strong>fill up some basic payment information which are indispensable for the payment creation</strong>
-            . As shown in the screenshot, choose the Account for Bank Line, Payment Mode, Bank Account to which you want the payment to be related (in our case, the bank account of our company Hongzhao), and also the Accounting Operation Date.
-          </p><p>After you finished, click on "Create Related Payment".</p>
+            Before creating the payment, ERP5 will ask you to <strong>fill out some basic payment information which is indispensable for the payment creation</strong>
+            . As shown in the screenshot, choose the Account for Bank Line, Payment Mode and Bank Account to which you want the payment to be related (in our case, the bank account of our company Hongzhao), and also the Accounting Operation Date.
+          </p><p>After you have finished, click on "Create Related Payment".</p>
         </details>
       </section><section class="screenshot">
         <h1>Edit Payment document</h1>
         <img alt="Edit Payment document" title="Edit Payment document" type="image/svg+xml" src="http://img.erp5.cn/user-Howto.Create.A.Payment.Edit.Payment.Document?format=png">
         <details open="open">
-          <p>Now the new payment is created and you are led to its related document, and it is time to edit it.</p><p>As you can see in the screenshot, there is not much information missing. The main information needed (circled in blue) have been updated automatically according to the related invoice where the payment is created from, and the basic payment information you filled up in the previous step. The only think you need to edit is the Title. But you can still modify the details is you need.</p><p>Fill in the missing details, and when you are done, save your data by clicking on the save button, and jump to next page.</p>
+          <p>Now the new payment is created and you are led to its related document, and it is time to edit it.</p><p>As you can see in the screenshot, there is not much information missing. The main information needed (circled in blue) has been updated automatically according to the related invoice where the payment is created from, and the basic payment information you filled out in the previous step. The only thing you need to edit is the Title. But you can still modify the details if you need.</p><p>Fill in the missing details, and when you are done, save your data by clicking on the save button, and jump to the next page.</p>
         </details>
       </section><section class="screenshot">
         <h1>Confirm Transaction</h1>
@@ -327,9 +327,9 @@
             Please browse the Action item list and choose <strong>Confirm Transaction</strong>
             .
           </p><p>This action means that you have received the payment, for example, a payment related to an invoice you had sent to a customer some weeks ago. You know this because you can check the operations on your bank account on the internet, for example.</p><p>
-            But <strong>confirming the payment doesn't make automatically the related accounting transaction operation</strong>
+            But <strong>confirming the payment doesn't automatically create the related accounting transaction operation</strong>
             . As you have learned from the previous tutorial
-            <a href="user-Howto.Manage.Invoices/view">"How to manage Invoices"</a>, the accounting transaction operation includes "Journalise Transaction", "Post Transaction To General Ledger" and "Definitively Close Accounting Transaction". For more information, please see next page.
+            <a href="user-Howto.Manage.Invoices/view">"How to manage Invoices"</a>, the accounting transaction operation includes "Journalise Transaction", "Post Transaction To General Ledger" and "Definitively Close Accounting Transaction". For more information, please see the next page.
           </p>
         </details>
         <test>
