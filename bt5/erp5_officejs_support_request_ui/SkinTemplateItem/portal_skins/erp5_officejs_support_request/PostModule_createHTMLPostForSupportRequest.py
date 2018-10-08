@@ -53,7 +53,7 @@ if successor_list:
 portal.portal_sessions[
     '%s.latest_comment' % follow_up_value.getRelativeUrl()]['comment_post_list'] = (
     post.Base_getOwnerTitle(),
-    post.getStartDate().rfc822(),
+    post.getStartDate().ISO8601(),
     post.asStrippedHTML(),
     successor_link,
     successor_name,

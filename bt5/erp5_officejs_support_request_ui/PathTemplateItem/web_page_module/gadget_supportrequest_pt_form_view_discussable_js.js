@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, calculatePageTitle, FormData, URI, jIO*/
+/*global window, rJS, RSVP, calculatePageTitle, FormData, URI, jIO, moment */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle) {
+(function (window, rJS, RSVP, calculatePageTitle, moment) {
   "use strict";
 
   rJS(window)
@@ -153,6 +153,16 @@
           });
         })
         .push(function () {
+          // set locale for momentjs
+          return gadget.jio_getAttachment(
+            'post_module',
+            gadget.hateoas_url + "/Localizer/get_selected_language",
+            {format:'text'}
+          ).push(function(lang){
+            moment.locale(lang);
+          })
+        })
+        .push(function () {
           return gadget.jio_getAttachment(
             'post_module',
             gadget.hateoas_url + gadget.options.jio_key + "/SupportRequest_getCommentPostListAsJson"
@@ -181,7 +191,7 @@
             for (i = 0; i < post_list.length; i += 1) {
               s += '<li>' +
                 'By <strong>' + post_list[i][0] + '</strong>' +
-                ' - <time>' + post_list[i][1] + '</time><br/>';
+                ' - <time datetime="' + post_list[i][1] + '" title="' + moment(post_list[i][1]).format('LLLL') + '">' + moment(post_list[i][1]).fromNow() + '</time><br/>';
               if (post_list[i][3] !== null && result_list[i] !== null) {
                 post_list[i][3] = result_list[i];
               }
@@ -269,4 +279,4 @@
     .onEvent('submit', function () {
       this.submitPostComment();
     });
-}(window, rJS, RSVP, calculatePageTitle));
+}(window, rJS, RSVP, calculatePageTitle, moment));
