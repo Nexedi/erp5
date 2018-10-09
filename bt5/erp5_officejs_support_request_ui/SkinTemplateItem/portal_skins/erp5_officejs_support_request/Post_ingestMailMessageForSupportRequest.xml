@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>description, file, resource, title, project, source_reference=None, **kwargs</string> </value>
+            <value> <string>web_site_relative_url</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SupportRequestModule_createSupportRequest</string> </value>
+            <value> <string>Post_ingestMailMessageForSupportRequest</string> </value>
         </item>
       </dictionary>
     </pickle>

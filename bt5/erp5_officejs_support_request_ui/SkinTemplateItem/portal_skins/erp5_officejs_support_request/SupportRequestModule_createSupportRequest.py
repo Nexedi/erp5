@@ -25,6 +25,8 @@ if description is not None or file is not None:
     predecessor=None,
     data="" if description is None else description,
     file=file,
+    web_site_relative_url=context.getWebSiteValue().getRelativeUrl(),
+    source_reference=source_reference,
   )
 
 return support_request.Base_redirect('officejs_support_request_view',
