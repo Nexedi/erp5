@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>follow_up, data, source_reference, predecessor=None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PostModule_createHTMLPostFromText</string> </value>
+            <value> <string>ERP5Site_setupSupportRequestPreference</string> </value>
         </item>
       </dictionary>
     </pickle>

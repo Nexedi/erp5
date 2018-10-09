@@ -1,14 +1,19 @@
-/*global window, rJS, RSVP, calculatePageTitle, FormData, URI, jIO*/
+/*global window, rJS, RSVP, calculatePageTitle, FormData, URI, jIO, moment, Handlebars */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle) {
+(function (window, rJS, RSVP, calculatePageTitle, moment, Handlebars) {
   "use strict";
+  var gadget_klass = rJS(window),
+    comment_list_template = Handlebars.compile(
+      gadget_klass.__template_element.getElementById("template-document-list").innerHTML
+    );
 
-  rJS(window)
+  gadget_klass
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
@@ -68,15 +73,22 @@
     })
     .onStateChange(function () {
       var gadget = this;
-
       // render the erp5 form
-      return this.getDeclaredGadget("erp5_form")
+      return gadget.getDeclaredGadget("erp5_form")
         .push(function (erp5_form) {
+          return gadget.getDeclaredGadget("editor")
+            .push(function (editor) {
+              return [editor, erp5_form];
+            });
+        })
+        .push(function (gadgets) {
           var form_options = gadget.state.erp5_form,
             rendered_form = gadget.state.erp5_document._embedded._view,
+            preferred_editor = rendered_form.your_preferred_editor.default,
             rendered_field,
-            key;
-
+            key,
+            editor = gadgets[0],
+            erp5_form = gadgets[1];
           // Remove all empty fields, and mark all others as non editable
           for (key in rendered_form) {
             if (rendered_form.hasOwnProperty(key) && (key[0] !== "_")) {
@@ -93,8 +105,25 @@
           form_options.erp5_document = gadget.state.erp5_document;
           form_options.form_definition = gadget.state.form_definition;
           form_options.view = gadget.state.view;
-
-          return erp5_form.render(form_options);
+          return new RSVP.Queue()
+            .push(
+              function () {
+                return RSVP.all([
+                  erp5_form.render(form_options),
+                  editor.render({
+                    value: "",
+                    key: "comment",
+                    portal_type: "HTML Post",
+                    editable: true,
+                    editor: preferred_editor
+                  })]);
+              }
+            ).push(function () {
+              // make our submit button editable
+              var element = gadget.element.querySelector('input[type="submit"]');
+              element.removeAttribute('disabled');
+              element.classList.remove('ui-disabled');
+            });
         })
 
         // render the header
@@ -125,113 +154,110 @@
           });
         })
         .push(function () {
+          // set locale for momentjs
+          return gadget.getSettingList(["selected_language",
+            "default_selected_language"]
+            ).push(function (lang_list) {
+            moment.locale(lang_list[0] || lang_list[1]);
+          });
+        })
+        .push(function () {
           return gadget.jio_getAttachment(
             'post_module',
             gadget.hateoas_url + gadget.options.jio_key + "/SupportRequest_getCommentPostListAsJson"
           );
         })
         .push(function (post_list) {
-          var i,  // XXX abbreviation
-            queue_list = [];
-          if (post_list.length) {
-            for (i = 0; i < post_list.length; i += 1) {
-              if (post_list[i][3] !== null && post_list[i][3].indexOf("image_module") !== -1) {
-                queue_list.push(gadget.getImageUrl(post_list[i][3]));
-              } else if (post_list[i][3] !== null && post_list[i][3].indexOf("document_module") !== -1) {
-                queue_list.push(gadget.getDocumentUrl(post_list[i][3]));
-              } else {
-                queue_list.push(null);
-              }
+          function getPostWithLinkAndLocalDate(post) {
+            post.date_formatted = moment(post.date).format('LLLL');
+            post.date_relative = moment(post.date).fromNow();
+            if (post.attachment_link === null) {
+              return post;
             }
+            if (post.attachment_link.indexOf("image_module") !== -1) {
+              return gadget.getImageUrl(post.attachment_link).push(
+                function (attachment_link) {
+                  post.attachment_link = attachment_link;
+                  return post;
+                }
+              );
+            }
+            return gadget.getDocumentUrl(post.attachment_link).push(
+              function (attachment_link) {
+                post.attachment_link = attachment_link;
+                return post;
+              }
+            );
           }
-          queue_list.push(post_list);
+          // build links with attachments and localized dates
+          var queue_list = [], i = 0;
+          for (i = 0; i < post_list.length; i += 1) {
+            queue_list.push(getPostWithLinkAndLocalDate(post_list[i]));
+          }
           return RSVP.all(queue_list);
         })
-        .push(function (result_list) {
-          var s = '', i, comments = gadget.element.querySelector("#post_list"),
-            plain_content, post_list = result_list.pop();
-          if (post_list.length) {
-            for (i = 0; i < post_list.length; i += 1) {
-              s += '<li>' +
-                'By <strong>' + post_list[i][0] + '</strong>' +
-                ' - <time>' + post_list[i][1] + '</time><br/>';
-              if (post_list[i][3] !== null && result_list[i] !== null) {
-                post_list[i][3] = result_list[i];
-              }
-              if (post_list[i][2]) {
-                plain_content = post_list[i][2];
-                if (post_list[i][3]) {
-                  s += plain_content + '<strong>Attachment: </strong>' +
-                    '<a href=\"' +
-                    post_list[i][3] + '\">' + post_list[i][4] +
-                    '</a>';
-                } else {
-                  s += plain_content;
-                }
-              } else {
-                if (post_list[i][3]) {
-                  s += '<strong>Attachment: </strong>' + '<a href=\"' +
-                    post_list[i][3] + '\">' + post_list[i][4] +
-                    '</a>';
-                }
-              }
-              s += '<hr id=post_item>';  // XXX XSS attack!
-            }
-            comments.innerHTML = s;
-          } else {
-            comments.innerHTML = "<p><em>No comment yet.</em></p><hr id=post_item>";
-          }
+        .push(function (comment_list) {
+          var comments = gadget.element.querySelector("#post_list");
+          comments.innerHTML = comment_list_template({comments: comment_list});
         });
     })
     .declareJob('submitPostComment', function () {
       var gadget = this,
         submitButton = null,
         queue = null,
-        editor = gadget.element.querySelector('#comment');
-
-      if (editor.value === '') {
-        return gadget.notifySubmitted({message: "Post content can not be empty!"});
-      }
-
-      submitButton = gadget.element.querySelector("input[type=submit]");
-      submitButton.disabled = true;
-      function enableSubmitButton() {
-        submitButton.disabled = false;
-      }
-      queue = gadget.notifySubmitted({message: "Posting comment"})
-        .push(function () {
-          var choose_file_html_element = gadget.element.querySelector('#attachment'),
-            file_blob = choose_file_html_element.files[0],
-            url = gadget.hateoas_url + "post_module/PostModule_createHTMLPostForSupportRequest",
-            data = new FormData();
-          data.append("follow_up", gadget.options.jio_key);
-          data.append("predecessor", '');
-          data.append("data", editor.value);
-          data.append("file", file_blob);
-          // XXX: Hack, call jIO.util.ajax directly to pass the file blob
-          // Because the jio_putAttachment will call readBlobAsText, which
-          // will broke the binary file. Call the jIO.util.ajax directly
-          // will not touch the blob
-          return jIO.util.ajax({
-            "type": "POST",
-            "url": url,
-            "data": data,
-            "xhrFields": {
-              withCredentials: true
-            }
-          });
+        editor = null;
+      return gadget.getDeclaredGadget("editor")
+        .push(function (e) {
+          editor = e;
+          return e.getContent();
         })
-        .push(function () {
-          return gadget.notifySubmitted({message: "Comment added", status: "success"});
-        })
-        .push(function () {
-          editor.value = '';
-          return gadget.redirect({command: 'reload'});
+        .push(function (content) {
+          if (content.comment === '') {
+            return gadget.notifySubmitted({message: "Post content can not be empty!"});
+          }
+
+          submitButton = gadget.element.querySelector("input[type=submit]");
+          submitButton.disabled = true;
+          function enableSubmitButton() {
+            submitButton.disabled = false;
+          }
+          queue = gadget.notifySubmitted({message: "Posting comment"})
+            .push(function () {
+              var choose_file_html_element = gadget.element.querySelector('#attachment'),
+                file_blob = choose_file_html_element.files[0],
+                url = gadget.hateoas_url + "post_module/PostModule_createHTMLPostForSupportRequest",
+                data = new FormData();
+              data.append("follow_up", gadget.options.jio_key);
+              data.append("predecessor", '');
+              data.append("data", content.comment);
+              data.append("file", file_blob);
+              // XXX: Hack, call jIO.util.ajax directly to pass the file blob
+              // Because the jio_putAttachment will call readBlobAsText, which
+              // will broke the binary file. Call the jIO.util.ajax directly
+              // will not touch the blob
+              return jIO.util.ajax({
+                "type": "POST",
+                "url": url,
+                "data": data,
+                "xhrFields": {
+                  withCredentials: true
+                }
+              });
+            })
+            .push(function () {
+              return gadget.notifySubmitted({message: "Comment added", status: "success"});
+            })
+            .push(function () {
+              editor.changeState({value: ''})
+                .push(function () {
+                  return gadget.redirect({command: 'reload'});
+                });
+            });
+          queue.push(enableSubmitButton, enableSubmitButton);
+          return queue;
         });
-      queue.then(enableSubmitButton, enableSubmitButton);
-      return queue;
     })
     .onEvent('submit', function () {
       this.submitPostComment();
     });
-}(window, rJS, RSVP, calculatePageTitle));
+}(window, rJS, RSVP, calculatePageTitle, moment, Handlebars));

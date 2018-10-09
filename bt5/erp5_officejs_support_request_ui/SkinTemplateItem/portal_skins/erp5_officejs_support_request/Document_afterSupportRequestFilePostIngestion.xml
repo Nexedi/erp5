@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>follow_up, data, source_reference, predecessor=None</string> </value>
+            <value> <string>post_relative_url</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PostModule_createHTMLPostFromText</string> </value>
+            <value> <string>Document_afterSupportRequestFilePostIngestion</string> </value>
         </item>
       </dictionary>
     </pickle>

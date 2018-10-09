@@ -8,7 +8,7 @@
 <thead>
 <tr><td rowspan="1" colspan="3">Support Request Zuite</td></tr>
 </thead><tbody>
-<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
 <tr>
   <td>open</td>
   <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
@@ -24,16 +24,9 @@
   <td>//input[@data-i18n='[value]Submit New Support Request']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//textarea[@id='field_my_description']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>//textarea[@id='field_my_description']</td>
-  <td>Post test</td>
-</tr>
+<tal:block tal:define="text_content string:Post test">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
 <tr>
   <td>type</td>
   <td>//input[@name='field_your_title']</td>
