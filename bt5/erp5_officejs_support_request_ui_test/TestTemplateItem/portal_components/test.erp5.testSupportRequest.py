@@ -146,6 +146,8 @@ class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
         portal_type='HTML Post'
     )
     self.assertEqual('<b>Help !!!</b>', str(post.getData()))
+    # post have been archived once ingested
+    self.assertEqual('archived', post.getValidationState())
 
     # the API to get comments works even after ingested
     self.assertEqual(
