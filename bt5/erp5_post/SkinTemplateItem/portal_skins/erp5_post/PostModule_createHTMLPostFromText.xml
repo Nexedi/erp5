@@ -50,16 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>follow_up, data, predecessor=None, immediate_reindex_context_manager=None</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>follow_up, data, source_reference, predecessor=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
