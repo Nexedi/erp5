@@ -14698,7 +14698,7 @@ return new Parser;
       context = this;
 
     function addEntry(cursor) {
-      attachment_dict[cursor.value._attachment] = {};
+      attachment_dict[cursor.primaryKey.slice(cursor.key.length + 1)] = {};
     }
 
     return new RSVP.Queue()
@@ -14710,7 +14710,7 @@ return new Parser;
                 waitForIDBRequest(tx.objectStore("metadata").get(id)),
                 waitForAllSynchronousCursor(
                   tx.objectStore("attachment").index("_id")
-                    .openCursor(IDBKeyRange.only(id)),
+                    .openKeyCursor(IDBKeyRange.only(id)),
                   addEntry
                 )
               ]);
@@ -14749,6 +14749,7 @@ return new Parser;
                                 "readwrite", function (tx) {
 
           var promise_list = [],
+            metadata_store = tx.objectStore("metadata"),
             attachment_store = tx.objectStore("attachment"),
             blob_store = tx.objectStore("blob");
 
@@ -14764,7 +14765,7 @@ return new Parser;
           }
 
           return RSVP.all([
-            waitForIDBRequest(tx.objectStore("metadata").delete(id)),
+            waitForIDBRequest(metadata_store.delete(id)),
             waitForAllSynchronousCursor(
               attachment_store.index("_id")
                               .openKeyCursor(IDBKeyRange.only(id)),
@@ -14919,31 +14920,6 @@ return new Parser;
 
   };
 
-  function removeAttachment(tx, id, name) {
-    var promise_list = [],
-      blob_store = tx.objectStore("blob");
-
-    function deleteEntry(cursor) {
-      promise_list.push(
-        waitForIDBRequest(blob_store.delete(cursor.primaryKey))
-      );
-    }
-
-    return RSVP.all([
-      waitForIDBRequest(
-        tx.objectStore("attachment").delete(buildKeyPath([id, name]))
-      ),
-      waitForAllSynchronousCursor(
-        blob_store.index("_id_attachment")
-                  .openKeyCursor(IDBKeyRange.only([id, name])),
-        deleteEntry
-      )
-    ])
-      .then(function () {
-        return RSVP.all(promise_list);
-      });
-  }
-
   IndexedDBStorage.prototype.putAttachment = function (id, name, blob) {
     var db_name = this._database_name;
     return new RSVP.Queue()
@@ -14966,9 +14942,6 @@ return new Parser;
         return waitForOpenIndexedDB(db_name, function (db) {
           return waitForTransaction(db, ["attachment", "blob"], "readwrite",
                                     function (tx) {
-              // First remove the previous attachment
-              // return removeAttachment(tx, id, name)
-                // .then(function () {
               var blob_store,
                 promise_list,
                 delete_promise_list = [],
@@ -15005,7 +14978,7 @@ return new Parser;
                   cursor.primaryKey.slice(key_path.length + 1),
                   10
                 );
-                if (index > blob_part.length + 1) {
+                if (index >= blob_part.length) {
                   delete_promise_list.push(
                     waitForIDBRequest(blob_store.delete(cursor.primaryKey))
                   );
@@ -15037,7 +15010,30 @@ return new Parser;
     return waitForOpenIndexedDB(this._database_name, function (db) {
       return waitForTransaction(db, ["attachment", "blob"], "readwrite",
                                 function (tx) {
-          return removeAttachment(tx, id, name);
+          var promise_list = [],
+            attachment_store = tx.objectStore("attachment"),
+            blob_store = tx.objectStore("blob");
+
+          function deleteEntry(cursor) {
+            promise_list.push(
+              waitForIDBRequest(blob_store.delete(cursor.primaryKey))
+            );
+          }
+
+          return RSVP.all([
+            waitForIDBRequest(
+              attachment_store.delete(buildKeyPath([id, name]))
+            ),
+            waitForAllSynchronousCursor(
+              blob_store.index("_id_attachment")
+                        .openKeyCursor(IDBKeyRange.only([id, name])),
+              deleteEntry
+            )
+          ])
+            .then(function () {
+              return RSVP.all(promise_list);
+            });
+
         });
     });
   };
