@@ -25,23 +25,9 @@
 #
 ##############################################################################
 
-import unittest
-
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
 
 class TestSupportRequestUI(ERP5TypeFunctionalTestCase):
-  foreground = 0
   run_only = "officejs_support_request_ui_zuite"
-    
-  def getBusinessTemplateList(self):
-    return (
-      'erp5_web_renderjs_ui',
-      'erp5_web_renderjs_ui_test',
-      'erp5_ui_test_core',
-      'erp5_officejs_support_request_ui'
-    )
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestSupportRequestUI))
-  return suite
+del ERP5TypeFunctionalTestCase

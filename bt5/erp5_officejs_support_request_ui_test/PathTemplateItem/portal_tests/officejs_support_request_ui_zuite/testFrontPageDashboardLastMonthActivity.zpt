@@ -8,7 +8,7 @@
 <thead>
 <tr><td colspan="3" tal:content="template/title"></td></tr>
 </thead><tbody>
-<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
 <tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/cleanup_module" />
 <tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/create_data" />
 

@@ -1,6 +1,14 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
 
+<tal:block metal:define-macro="init">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+  <tr><td>openAndWait</td>
+      <td>${base_url}/ERP5Site_setupSupportRequestPreference</td><td></td></tr>
+  <tr><td>assertTextPresent</td>
+      <td>Done.</td><td></td></tr>
+</tal:block>
+
 <tal:block metal:define-macro="cleanup_module">
   <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
   <tr><td>openAndWait</td>
