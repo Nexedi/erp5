@@ -172,10 +172,10 @@
           var queue_list = [];
           if (post_list.length) {
             for (var i = 0; i < post_list.length; i += 1) {
-              if (post_list[i][3] !== null && post_list[i][3].indexOf("image_module") !== -1) {
-                queue_list.push(gadget.getImageUrl(post_list[i][3]));
-              } else if (post_list[i][3] !== null && post_list[i][3].indexOf("document_module") !== -1) {
-                queue_list.push(gadget.getDocumentUrl(post_list[i][3]));
+              if (post_list[i].attachment_link !== null && post_list[i].attachment_link.indexOf("image_module") !== -1) {
+                queue_list.push(gadget.getImageUrl(post_list[i].attachment_link));
+              } else if (post_list[i].attachment_link !== null && post_list[i].attachment_link.indexOf("document_module") !== -1) {
+                queue_list.push(gadget.getDocumentUrl(post_list[i].attachment_link));
               } else {
                 queue_list.push(null);
               }
@@ -190,25 +190,25 @@
           if (post_list.length) {
             for (i = 0; i < post_list.length; i += 1) {
               s += '<li>' +
-                'By <strong>' + post_list[i][0] + '</strong>' +
-                ' - <time datetime="' + post_list[i][1] + '" title="' + moment(post_list[i][1]).format('LLLL') + '">' + moment(post_list[i][1]).fromNow() + '</time><br/>';
-              if (post_list[i][3] !== null && result_list[i] !== null) {
-                post_list[i][3] = result_list[i];
+                'By <strong>' + post_list[i].user + '</strong>' +
+                ' - <time datetime="' + post_list[i].date + '" title="' + moment(post_list[i].date).format('LLLL') + '">' + moment(post_list[i].date).fromNow() + '</time><br/>';
+              if (post_list[i].attachment_link !== null && result_list[i] !== null) {
+                post_list[i].attachment_link = result_list[i];
               }
-              if (post_list[i][2]) {
-                plain_content = post_list[i][2];
-                if (post_list[i][3]) {
+              if (post_list[i].text) {
+                plain_content = post_list[i].text;
+                if (post_list[i].attachment_link) {
                   s += plain_content + '<strong>Attachment: </strong>' +
                     '<a href=\"' +
-                    post_list[i][3] + '\">' + post_list[i][4] +
+                    post_list[i].attachment_link + '\">' + post_list[i].attachment_name +
                     '</a>';
                 } else {
                   s += plain_content;
                 }
               } else {
-                if (post_list[i][3]) {
+                if (post_list[i].attachment_link) {
                   s += '<strong>Attachment: </strong>' + '<a href=\"' +
-                    post_list[i][3] + '\">' + post_list[i][4] +
+                    post_list[i].attachment_link + '\">' + post_list[i].attachment_name +
                     '</a>';
                 }
               }

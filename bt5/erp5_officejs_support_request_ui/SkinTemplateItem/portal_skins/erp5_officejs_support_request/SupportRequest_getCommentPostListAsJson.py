@@ -21,22 +21,21 @@ for event in event_list:
   if attachment is not None:
     attachment_link, attachment_name = attachment.getRelativeUrl(), attachment.getFilename()
 
-  comment_list.append((
-      event.getSourceTitle(),
-      event.getStartDate().ISO8601(),
-      event.asStrippedHTML(),
-      attachment_link,
-      attachment_name,
-      event.getSourceReference(),
-  ))
+  comment_list.append((dict(
+      user=event.getSourceTitle(),
+      date=event.getStartDate().ISO8601(),
+      text=event.asStrippedHTML(),
+      attachment_link=attachment_link,
+      attachment_name=attachment_name,
+      message_id=event.getSourceReference(),
+  )))
 
 just_posted_comment = portal.portal_sessions[
     '%s.latest_comment' % context.getRelativeUrl()].pop(
     'comment_post_list', None)
 if just_posted_comment is not None:
   # make sure not to display twice if it was already ingested in the meantime.
-  if just_posted_comment[-1] not in [comment[-1] for comment in comment_list]:
+  if just_posted_comment['message_id'] not in [comment['message_id'] for comment in comment_list]:
     comment_list.append(just_posted_comment)
-
 
 return dumps(comment_list)
