@@ -14577,7 +14577,6 @@ return new Parser;
       tx.oncomplete = function () {
         return new RSVP.Queue()
           .push(function () {
-            // db.close();
             return result;
           })
           .push(resolve, function (error) {
@@ -14585,9 +14584,11 @@ return new Parser;
             reject(error);
           });
       };
+      tx.onerror = function (error) {
+        canceller();
+        reject(error);
+      };
       tx.onabort = function (evt) {
-        // evt.preventDefault();
-        // evt.stopPropagation();
         reject(evt.target);
       };
       return tx;
@@ -14790,7 +14791,8 @@ return new Parser;
     }
     var db_name = this._database_name,
       start,
-      end;
+      end,
+      array_buffer_list = [];
 
     start = options.start || 0;
     end = options.end;
@@ -14800,24 +14802,14 @@ return new Parser;
         return waitForOpenIndexedDB(db_name, function (db) {
           return waitForTransaction(db, ["attachment", "blob"], "readonly",
                                     function (tx) {
-              var promise_list,
-                key_path = buildKeyPath([id, name]),
-                blob_store;
-
+              var key_path = buildKeyPath([id, name]),
+                attachment_store = tx.objectStore("attachment"),
+                blob_store = tx.objectStore("blob");
               /*
                 start_index,
                 end_index,
                 i;
 */
-
-              promise_list = [
-                // Get the attachment info (mime type)
-                waitForIDBRequest(tx.objectStore("attachment").get(
-                  key_path
-                ))
-              ];
-
-              blob_store = tx.objectStore("blob");
 
               function getBlob(cursor) {
                 var index = parseInt(
@@ -14826,27 +14818,30 @@ return new Parser;
                 ),
                   i = index;
                 // Extend array size
-                while (i > promise_list.length - 1) {
-                  promise_list.push(null);
+                while (i > array_buffer_list.length) {
+                  array_buffer_list.push(null);
                   i -= 1;
                 }
                 // Sort the blob by their index
-                promise_list.splice(
-                  index + 1,
+                array_buffer_list.splice(
+                  index,
                   0,
-                  waitForIDBRequest(blob_store.get(cursor.primaryKey))
+                  cursor.value.blob
                 );
               }
 
-              // Get all needed blobs
-              return waitForAllSynchronousCursor(
-                blob_store.index("_id_attachment")
-                  .openKeyCursor(IDBKeyRange.only([id, name])),
-                getBlob
-              )
-                .then(function () {
-                  return RSVP.all(promise_list);
-                });
+              return RSVP.all([
+                // Get the attachment info (mime type)
+                waitForIDBRequest(attachment_store.get(
+                  key_path
+                )),
+                // Get all needed blobs
+                waitForAllSynchronousCursor(
+                  blob_store.index("_id_attachment")
+                    .openCursor(IDBKeyRange.only([id, name])),
+                  getBlob
+                )
+              ]);
             });
         });
 
@@ -14889,10 +14884,7 @@ return new Parser;
         // No need to keep the IDB open
         var blob,
           index,
-          attachment = result_list[0].target.result,
-          array_buffer_list = [],
-          i;
-          // total_length;
+          attachment = result_list[0].target.result;
 
         // Should raise if key is not good
         if (!attachment) {
@@ -14904,13 +14896,18 @@ return new Parser;
           );
         }
 
-        for (i = 1; i < result_list.length; i += 1) {
-          array_buffer_list.push(result_list[i].target.result.blob);
-        }
-        // total_length = attachment.info.length;
         if ((options.start === undefined) && (options.end === undefined)) {
-          return new Blob(array_buffer_list,
+          blob = new Blob(array_buffer_list,
                           {type: attachment.info.content_type});
+          if (blob.length !== attachment.info.total_length) {
+            throw new jIO.util.jIOError(
+              "IndexedDB: attachment '" +
+                  buildKeyPath([id, name]) +
+                  "' in the 'attachment' store is broken",
+              500
+            );
+          }
+          return blob;
         }
         index = Math.floor(start / UNITE) * UNITE;
         blob = new Blob(array_buffer_list, {type: "application/octet-stream"});
@@ -15001,7 +14998,6 @@ return new Parser;
                   }
                 });
             });
-            // });
         });
       });
   };
