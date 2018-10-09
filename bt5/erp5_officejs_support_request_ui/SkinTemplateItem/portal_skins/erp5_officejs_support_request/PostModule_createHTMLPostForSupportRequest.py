@@ -51,10 +51,10 @@ successor_name = successor_link = None
 if successor_list:
   successor_link, successor_name = successor_list[0].getRelativeUrl(), successor_list[0].getFilename()
 portal.portal_sessions[
-    '%s.latest_comment' % follow_up_value.getRelativeUrl()]['comment_post_list'] = (
-    post.Base_getOwnerTitle(),
-    post.getStartDate().ISO8601(),
-    post.asStrippedHTML(),
-    successor_link,
-    successor_name,
-    post.getSourceReference(),
+    '%s.latest_comment' % follow_up_value.getRelativeUrl()]['comment_post_list'] = dict(
+    user=post.Base_getOwnerTitle(),
+    date=post.getStartDate().ISO8601(),
+    text=post.asStrippedHTML(),
+    attachment_link=successor_link,
+    attachment_name=successor_name,
+    message_id=post.getSourceReference(),)
