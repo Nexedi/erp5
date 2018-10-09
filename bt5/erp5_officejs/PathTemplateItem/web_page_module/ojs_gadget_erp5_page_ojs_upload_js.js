@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, jIO */
+/*global window, rJS, RSVP, jIO, DOMParser */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, jIO) {
+(function (window, rJS, RSVP, jIO, DOMParser) {
   "use strict";
 
   rJS(window)
@@ -35,9 +35,10 @@
           ]);
         })
         .push(function (result) {
-          var file_name_list, data, filename, queue;
+          var file_name_list, data, filename, queue, filetype;
           if (result[0].file !== undefined) {
             file_name_list = result[0].file.file_name.split('.');
+            filetype = file_name_list[file_name_list.length - 1];
             if (file_name_list[file_name_list.length - 1] in window.JSON.parse(result[3])) {
               filename = file_name_list[0];
               data = jIO.util.dataURItoBlob(result[0].file.url);
@@ -49,6 +50,15 @@
                   return evt.target.result;
                 })
                 .push(function (data_content) {
+                  if (filetype === 'html') {
+                    // In case the filetype is html, try looking for an elemnt
+                    // with id `jsmd`, because iodide notebook saves the jsmd
+                    // data in it.
+                    var parser, htmlDoc;
+                    parser = new DOMParser();
+                    htmlDoc = parser.parseFromString(data_content, "text/html");
+                    data_content = htmlDoc.getElementById('jsmd').textContent;
+                  }
                   return gadget.jio_post({
                     title: filename,
                     portal_type: result[1],
@@ -154,4 +164,4 @@
           });
         });
     });
-}(window, rJS, RSVP, jIO));
+}(window, rJS, RSVP, jIO, DOMParser));
