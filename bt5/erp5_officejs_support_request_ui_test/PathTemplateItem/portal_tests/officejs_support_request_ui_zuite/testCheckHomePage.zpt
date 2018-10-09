@@ -8,7 +8,7 @@
 <thead>
 <tr><td rowspan="1" colspan="3">Support Request Zuite</td></tr>
 </thead><tbody>
-<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
 <tr>
   <td>open</td>
   <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>

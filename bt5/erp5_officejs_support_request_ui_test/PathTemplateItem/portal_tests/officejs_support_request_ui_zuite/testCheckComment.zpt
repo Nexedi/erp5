@@ -8,7 +8,7 @@
 <thead>
 <tr><td rowspan="1" colspan="3">Support Request Zuite</td></tr>
 </thead><tbody>
-<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
 <tr>
   <td>open</td>
   <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
@@ -49,16 +49,9 @@
   <td>field_your_resource</td>
   <td>FeatureRequire</td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//textarea[@id='field_my_description']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>//textarea[@id='field_my_description']</td>
-  <td>Post test 1</td>
-</tr>
+<tal:block tal:define="text_content string:Post test 1">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
 <tr>
   <td>waitForElementPresent</td>
   <td>//input[@data-i18n='[value]Proceed']</td>
@@ -75,25 +68,109 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//textarea[@id='comment']</td>
-  <td></td>
+  <td>waitForText</td>
+  <td>//ol[@id="post_list"]//li[1]/p</td>
+  <td>Post test 1</td>
+</tr>
+<!-- The "just posted" message is available because it is retrieved from memcached,
+eventhough it's not ingested yet. But this works only for one message, so to first message
+posted when opening the SR and the second one posted as a comment, we need to flush
+activities in between.
+Not really good on one hand, because if activities are congested, there will be a problem
+here, but on the other hand it allows us to see that once ingested messages are also properly
+displayed
+-->
+<tr>
+  <td>store</td>
+  <td>javascript{selenium.browserbot.getCurrentWindow().location.href}</td>
+  <td>current_location</td>
 </tr>
 <tr>
-  <td>type</td>
-  <td>//textarea[@id='comment']</td>
-  <td>Post test 2</td>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/Zuite_waitForActivities"/>
+  <td/>
 </tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Done.</td>
+  <td/>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${current_location}</td>
+  <td></td>
+</tr>
+
+
+<tal:block tal:define="text_content string:Post test 2">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
 <tr>
   <td>click</td>
   <td>//input[@data-i18n='[value]Post Comment']</td>
   <td></td>
 </tr>
 <tr>
+  <td>waitForText</td>
+  <td>//ol[@id="post_list"]//li[2]/p</td>
+  <td>Post test 2</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//ol[@id="post_list"]//li[1]/p</td>
+  <td>Post test 1</td>
+</tr>
+
+<!-- flush activities and post one more message, to exercice ingesting post
+posted from support request comment, which uses a different code path than
+post ingested when submitting a new support request.
+-->
+<tr>
+  <td>store</td>
+  <td>javascript{selenium.browserbot.getCurrentWindow().location.href}</td>
+  <td>current_location</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/Zuite_waitForActivities"/>
+  <td/>
+</tr>
+<tr>
   <td>waitForTextPresent</td>
-  <td>By</td>
+  <td>Done.</td>
+  <td/>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${current_location}</td>
   <td></td>
 </tr>
+
+
+<tal:block tal:define="text_content string:Post test 3">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForText</td>
+  <td>//ol[@id="post_list"]//li[3]/p</td>
+  <td>Post test 3</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//ol[@id="post_list"]//li[1]/p</td>
+  <td>Post test 1</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//ol[@id="post_list"]//li[2]/p</td>
+  <td>Post test 2</td>
+</tr>
+
 </tbody></table>
   </body>
 </html>
