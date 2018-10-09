@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>When the post have been fully ingested, we archive it.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>published</string> </value>
+            <value> <string>archived</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -22,17 +22,12 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Published</string> </value>
+            <value> <string>Archived</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>archive</string>
-                <string>archive_action</string>
-                <string>hide</string>
-                <string>hide_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -60,6 +55,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
                       </tuple>
@@ -79,6 +75,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
                       </tuple>

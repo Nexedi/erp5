@@ -1,3 +1,4 @@
+from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 support_request = context.getFollowUpValue()
 web_site_value = portal.restrictedTraverse(web_site_relative_url)
@@ -41,5 +42,9 @@ web_message = portal.event_module.newContent(
     source_value=source_value,
     start_date=context.getCreationDate(),
     source_reference=context.getSourceReference())
+
+context.archive(
+  comment=translateString('Ingested as ${web_message_reference}',
+    mapping={'web_message_reference': web_message.getReference()}))
 
 web_message.stop()
