@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>follow_up, predecessor, data, file</string> </value>
+            <value> <string>follow_up, predecessor, data, file, source_reference=None, web_site_relative_url=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
