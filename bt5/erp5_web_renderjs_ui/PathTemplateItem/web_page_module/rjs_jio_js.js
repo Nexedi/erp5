@@ -14797,6 +14797,105 @@ return new Parser;
     start = options.start || 0;
     end = options.end;
 
+    // Stream the blob content
+    if ((start !== 0) || (end !== undefined)) {
+
+      if (start < 0 || ((end !== undefined) && (end < 0))) {
+        throw new jIO.util.jIOError(
+          "_start and _end must be positive",
+          400
+        );
+      }
+      if ((end !== undefined) && (start > end)) {
+        throw new jIO.util.jIOError("_start is greater than _end",
+                                    400);
+      }
+
+      return new RSVP.Queue()
+        .push(function () {
+          return waitForOpenIndexedDB(db_name, function (db) {
+            return waitForTransaction(db, ["blob"], "readonly",
+                                      function (tx) {
+                var key_path = buildKeyPath([id, name]),
+                  blob_store = tx.objectStore("blob"),
+                  start_index,
+                  end_index,
+                  promise_list = [];
+
+
+                start_index = Math.floor(start / UNITE);
+                if (end !== undefined) {
+                  end_index =  Math.floor(end / UNITE);
+                  if (end % UNITE === 0) {
+                    end_index -= 1;
+                  }
+                }
+
+                function getBlobKey(cursor) {
+                  var index = parseInt(
+                    cursor.primaryKey.slice(key_path.length + 1),
+                    10
+                  ),
+                    i;
+
+                  if ((start !== 0) && (index < start_index)) {
+                    // No need to fetch blobs at the start
+                    return;
+                  }
+                  if ((end !== undefined) && (index > end_index)) {
+                    // No need to fetch blobs at the end
+                    return;
+                  }
+
+                  i = index - start_index;
+                  // Extend array size
+                  while (i > promise_list.length) {
+                    promise_list.push(null);
+                    i -= 1;
+                  }
+                  // Sort the blob by their index
+                  promise_list.splice(
+                    index - start_index,
+                    0,
+                    waitForIDBRequest(blob_store.get(cursor.primaryKey))
+                  );
+                }
+
+                // Get all blob keys to check if they must be fetched
+                return waitForAllSynchronousCursor(
+                  blob_store.index("_id_attachment")
+                    .openKeyCursor(IDBKeyRange.only([id, name])),
+                  getBlobKey
+                )
+                  .then(function () {
+                    return RSVP.all(promise_list);
+                  });
+              });
+          });
+        })
+        .push(function (result_list) {
+          // No need to keep the IDB open
+          var blob,
+            index,
+            i;
+
+          for (i = 0; i < result_list.length; i += 1) {
+            array_buffer_list.push(result_list[i].target.result.blob);
+          }
+          blob = new Blob(array_buffer_list,
+                          {type: "application/octet-stream"});
+          index = Math.floor(start / UNITE) * UNITE;
+          if (end === undefined) {
+            end = blob.length;
+          } else {
+            end = end - index;
+          }
+          return blob.slice(start - index, end,
+                            "application/octet-stream");
+        });
+    }
+
+    // Request the full blob
     return new RSVP.Queue()
       .push(function () {
         return waitForOpenIndexedDB(db_name, function (db) {
@@ -14805,11 +14904,6 @@ return new Parser;
               var key_path = buildKeyPath([id, name]),
                 attachment_store = tx.objectStore("attachment"),
                 blob_store = tx.objectStore("blob");
-              /*
-                start_index,
-                end_index,
-                i;
-*/
 
               function getBlob(cursor) {
                 var index = parseInt(
@@ -14845,45 +14939,10 @@ return new Parser;
             });
         });
 
-/*
-
-              
-
-                .then(function (evt) {
-
-
-                  if (end > total_length) {
-                    end = total_length;
-                  }
-                  if (start < 0 || end < 0) {
-                    throw new jIO.util.jIOError(
-                      "_start and _end must be positive",
-                      400
-                    );
-                  }
-                  if (start > end) {
-                    throw new jIO.util.jIOError("_start is greater than _end",
-                                                400);
-                  }
-                  start_index = Math.floor(start / UNITE);
-                  end_index =  Math.floor(end / UNITE);
-                  if (end % UNITE === 0) {
-                    end_index -= 1;
-                  }
-
-                  for (i = start_index; i <= end_index; i += 1) {
-                    promise_list.push(
-                      waitForIDBRequest(store.get(buildKeyPath([id, name, i])))
-                    );
-                  }
-                });
-
-*/
       })
       .push(function (result_list) {
         // No need to keep the IDB open
         var blob,
-          index,
           attachment = result_list[0].target.result;
 
         // Should raise if key is not good
@@ -14896,25 +14955,18 @@ return new Parser;
           );
         }
 
-        if ((options.start === undefined) && (options.end === undefined)) {
-          blob = new Blob(array_buffer_list,
-                          {type: attachment.info.content_type});
-          if (blob.length !== attachment.info.total_length) {
-            throw new jIO.util.jIOError(
-              "IndexedDB: attachment '" +
-                  buildKeyPath([id, name]) +
-                  "' in the 'attachment' store is broken",
-              500
-            );
-          }
-          return blob;
+        blob = new Blob(array_buffer_list,
+                        {type: attachment.info.content_type});
+        if (blob.length !== attachment.info.total_length) {
+          throw new jIO.util.jIOError(
+            "IndexedDB: attachment '" +
+                buildKeyPath([id, name]) +
+                "' in the 'attachment' store is broken",
+            500
+          );
         }
-        index = Math.floor(start / UNITE) * UNITE;
-        blob = new Blob(array_buffer_list, {type: "application/octet-stream"});
-        return blob.slice(start - index, end - index,
-                          "application/octet-stream");
+        return blob;
       });
-
   };
 
   IndexedDBStorage.prototype.putAttachment = function (id, name, blob) {
