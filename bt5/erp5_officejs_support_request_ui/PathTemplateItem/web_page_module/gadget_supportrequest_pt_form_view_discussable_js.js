@@ -82,6 +82,7 @@
         .push(function (gadgets) {
           var form_options = gadget.state.erp5_form,
             rendered_form = gadget.state.erp5_document._embedded._view,
+            preferred_editor = rendered_form.your_preferred_editor.default,
             rendered_field,
             key,
             editor = gadgets[0],
@@ -102,32 +103,25 @@
           form_options.erp5_document = gadget.state.erp5_document;
           form_options.form_definition = gadget.state.form_definition;
           form_options.view = gadget.state.view;
-
-          return gadget.jio_getAttachment(
-            'post_module',
-            gadget.hateoas_url + gadget.options.jio_key + "/Base_getEditorFieldPreferredTextEditor",
-            {format: "text"}
-          ).push(function (preferred_editor) {
-            return new RSVP.Queue()
-              .push(
-                function () {
-                  return RSVP.all([
-                    erp5_form.render(form_options),
-                    editor.render({
-                      value: "",
-                      key: "comment",
-                      portal_type: "HTML Post",
-                      editable: true,
-                      editor: preferred_editor
-                    })]);
-                }
-              ).push(function () {
-                // make our submit button editable
-                var element = gadget.element.querySelector('input[type="submit"]');
-                element.removeAttribute('disabled');
-                element.classList.remove('ui-disabled');
-              });
-          });
+          return new RSVP.Queue()
+            .push(
+              function () {
+                return RSVP.all([
+                  erp5_form.render(form_options),
+                  editor.render({
+                    value: "",
+                    key: "comment",
+                    portal_type: "HTML Post",
+                    editable: true,
+                    editor: preferred_editor
+                  })]);
+              }
+            ).push(function () {
+              // make our submit button editable
+              var element = gadget.element.querySelector('input[type="submit"]');
+              element.removeAttribute('disabled');
+              element.classList.remove('ui-disabled');
+            });
         })
 
         // render the header
