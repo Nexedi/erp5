@@ -1,9 +1,13 @@
-/*global window, rJS, RSVP, calculatePageTitle, FormData, URI, jIO, moment */
+/*global window, rJS, RSVP, calculatePageTitle, FormData, URI, jIO, moment, Handlebars */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle, moment) {
+(function (window, rJS, RSVP, calculatePageTitle, moment, Handlebars) {
   "use strict";
+  var gadget_klass = rJS(window),
+    comment_list_template = Handlebars.compile(
+      gadget_klass.__template_element.getElementById("template-document-list").innerHTML
+    );
 
-  rJS(window)
+  gadget_klass
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
@@ -166,55 +170,41 @@
           );
         })
         .push(function (post_list) {
-          var queue_list = [], i = 0;
-          if (post_list.length) {
-            for (i = 0; i < post_list.length; i += 1) {
-              if (post_list[i].attachment_link !== null && post_list[i].attachment_link.indexOf("image_module") !== -1) {
-                queue_list.push(gadget.getImageUrl(post_list[i].attachment_link));
-              } else if (post_list[i].attachment_link !== null && post_list[i].attachment_link.indexOf("document_module") !== -1) {
-                queue_list.push(gadget.getDocumentUrl(post_list[i].attachment_link));
-              } else {
-                queue_list.push(null);
-              }
+          function getPostWithLink(post) {
+            if (post.attachment_link !== null && post.attachment_link.indexOf("image_module") !== -1) {
+              return gadget.getImageUrl(post.attachment_link).push(
+                function (attachment_link) {
+                  post.attachment_link = attachment_link;
+                  return post;
+                }
+              );
             }
+            if (post.attachment_link !== null && post.attachment_link.indexOf("document_module") !== -1) {
+              return gadget.getDocumentUrl(post.attachment_link).push(
+                function (attachment_link) {
+                  post.attachment_link = attachment_link;
+                  return post;
+                }
+              );
+            }
+            return post;
           }
-          queue_list.push(post_list);
+          // build links with attachments
+          var queue_list = [], i = 0;
+          for (i = 0; i < post_list.length; i += 1) {
+            queue_list.push(getPostWithLink(post_list[i]));
+          }
           return RSVP.all(queue_list);
         })
         .push(function (result_list) {
-          var s = '', i, comments = gadget.element.querySelector("#post_list"),
-            plain_content, post_list = result_list.pop();
-          if (post_list.length) {
-            for (i = 0; i < post_list.length; i += 1) {
-              s += '<li>' +
-                'By <strong>' + post_list[i].user + '</strong>' +
-                ' - <time datetime="' + post_list[i].date + '" title="' + moment(post_list[i].date).format('LLLL') + '">' + moment(post_list[i].date).fromNow() + '</time><br/>';
-              if (post_list[i].attachment_link !== null && result_list[i] !== null) {
-                post_list[i].attachment_link = result_list[i];
-              }
-              if (post_list[i].text) {
-                plain_content = post_list[i].text;
-                if (post_list[i].attachment_link) {
-                  s += plain_content + '<strong>Attachment: </strong>' +
-                    '<a href=\"' +
-                    post_list[i].attachment_link + '\">' + post_list[i].attachment_name +
-                    '</a>';
-                } else {
-                  s += plain_content;
-                }
-              } else {
-                if (post_list[i].attachment_link) {
-                  s += '<strong>Attachment: </strong>' + '<a href=\"' +
-                    post_list[i].attachment_link + '\">' + post_list[i].attachment_name +
-                    '</a>';
-                }
-              }
-              s += '<hr id=post_item>';  // XXX XSS attack!
-            }
-            comments.innerHTML = s;
-          } else {
-            comments.innerHTML = "<p><em>No comment yet.</em></p><hr id=post_item>";
-          }
+          var comments = gadget.element.querySelector("#post_list");
+          comments.innerHTML = comment_list_template({
+            comments: result_list.map(function (post) {
+              post.date_formatted = moment(post.date).format('LLLL');
+              post.date_relative = moment(post.date).fromNow();
+              return post;
+            })
+          });
         });
     })
     .declareJob('submitPostComment', function () {
@@ -276,4 +266,4 @@
     .onEvent('submit', function () {
       this.submitPostComment();
     });
-}(window, rJS, RSVP, calculatePageTitle, moment));
+}(window, rJS, RSVP, calculatePageTitle, moment, Handlebars));
