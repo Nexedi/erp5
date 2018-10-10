@@ -10,10 +10,32 @@
     <script src="renderjs.js" type="text/javascript"></script>
 
     <!-- custom script -->
+    <script src="handlebars.js" type="text/javascript"></script>
     <script src="gadget_erp5_global.js" type="text/javascript"></script>
     <script src="gadget_erp5_pt_form_view_discussable.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="gadget_erp5_pt_form_view_discussable.css">
     
+    <!-- templates -->
+    <script id="template-document-list" type="text/x-handlebars-template">
+      {{#if comments }}
+        {{#each comments }}
+          <li>By <strong>{{ user }}</strong> -
+            <time datetime="{{ date }}" title="{{ date_formatted }}">{{ date_relative }}</time>
+            <br/>
+            {{{ text }}}
+            {{#if attachment_link }}
+              <br/>
+              <strong>Attachment: </strong>
+              <a href="{{attachment_link}}">{{ attachment_name }}</a>
+            {{/if}}
+            <hr id="post_item">
+          </li>
+        {{/each }}
+      {{else }}
+        <p><em>No comment yet.</em></p><hr id="post_item">
+      {{/if }}
+    </script>
+
   </head>
   <body>
     <!-- XXX this is a form replacement -->
