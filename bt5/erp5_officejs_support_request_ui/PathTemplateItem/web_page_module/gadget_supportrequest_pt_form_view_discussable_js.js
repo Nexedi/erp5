@@ -9,6 +9,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
@@ -158,12 +159,10 @@
         })
         .push(function () {
           // set locale for momentjs
-          return gadget.jio_getAttachment(
-            'post_module',
-            gadget.hateoas_url + "/Localizer/get_selected_language",
-            {format: 'text'}
-          ).push(function (lang) {
-            moment.locale(lang);
+          return gadget.getSettingList(["selected_language",
+            "default_selected_language"]
+            ).push(function (lang_list) {
+            moment.locale(lang_list[0] || lang_list[1]);
           });
         })
         .push(function () {
