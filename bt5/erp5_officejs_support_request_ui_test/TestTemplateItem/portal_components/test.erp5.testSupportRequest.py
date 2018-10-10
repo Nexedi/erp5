@@ -297,6 +297,12 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
     )
     self.assertEqual('attached_file.txt', file_document.getFilename())
     self.assertEqual('the text content', str(file_document.getData()))
+    self.assertEqual('shared', file_document.getValidationState())
+    # this document is also attached to the context of the support request
+    # and is visible from the document tab.
+    self.assertIn(
+        file_document,
+        [doc.getObject() for doc in support_request.Base_getRelatedDocumentList()])
 
     # the API to get comments also works once ingested
     self.assertEqual(
