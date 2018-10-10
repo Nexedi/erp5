@@ -3,11 +3,6 @@ portal = context.getPortalObject()
 follow_up_value = portal.restrictedTraverse(follow_up)
 assert follow_up_value.getPortalType() == "Support Request"
 
-# update modification date
-portal.portal_workflow.doActionFor(
-  follow_up_value,
-  'edit_action',
-  comment=translateString('New message posted.'))
 
 post = context.PostModule_createHTMLPostFromText(
   follow_up=follow_up,
