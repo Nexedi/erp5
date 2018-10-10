@@ -72,6 +72,22 @@
   <td>//ol[@id="post_list"]//li[1]/p</td>
   <td>Post test 1</td>
 </tr>
+<tr>
+  <td>waitForText</td>
+  <td>//ol[@id="post_list"]//li[1]/p</td>
+  <td>Post test 1</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//ol[@id="post_list"]//li[1]/strong</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//ol[@id="post_list"]//li[1]/time</td>
+  <td>a few seconds ago</td>
+</tr>
+
 <!-- The "just posted" message is available because it is retrieved from memcached,
 eventhough it's not ingested yet. But this works only for one message, so to first message
 posted when opening the SR and the second one posted as a comment, we need to flush
@@ -120,6 +136,17 @@ displayed
   <td>//ol[@id="post_list"]//li[1]/p</td>
   <td>Post test 1</td>
 </tr>
+<tr>
+  <td>assertText</td>
+  <td>//ol[@id="post_list"]//li[1]/strong</td>
+  <td>A1 Corporation</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//ol[@id="post_list"]//li[1]/time</td>
+  <td>a few seconds ago</td>
+</tr>
+
 
 <!-- flush activities and post one more message, to exercice ingesting post
 posted from support request comment, which uses a different code path than
