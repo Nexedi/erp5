@@ -2,6 +2,9 @@ from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 follow_up_value = portal.restrictedTraverse(follow_up)
 assert follow_up_value.getPortalType() == "Support Request"
+if not web_site_relative_url:
+  web_site_relative_url = context.getWebSiteValue().getRelativeUrl()
+web_site = portal.restrictedTraverse(web_site_relative_url)
 
 # update modification date
 portal.portal_workflow.doActionFor(
@@ -16,19 +19,29 @@ post = context.PostModule_createHTMLPostFromText(
 )
 
 if file not in ("undefined", None):  # XXX "undefined" ? should also be fixed in javascript side
-  document_kw = {'batch_mode': True,
-                  'redirect_to_document': False,
-                  'file': file}
+  follow_up_list = []
+  project = follow_up_value.getSourceProjectValue()
+  if project is not None:
+    follow_up_list.append(project.getRelativeUrl())
+  group = None
+  section = follow_up_value.getSourceSectionValue()
+  if section is not None:
+    group = section.getGroup()
+  document_kw = {
+    'batch_mode': True,
+    'redirect_to_document': False,
+    'follow_up_list': follow_up_list,
+    'group': group,
+    'classification': web_site.getLayoutProperty(
+      'preferred_attached_document_classification') or portal.portal_preferences.getPreferredDocumentClassification(),
+    'file': file}
   # XXX this Base_contribute might update in place another document with same reference
   # and leave the post with a "dead link" for successor value.
   document = context.Base_contribute(**document_kw)
   # set relation between post and document
-  # XXX successor is used as a way to put a relation between the attachment and the post,
-  #     the actual way should be to use a proper container like an Event that will have
-  #     one or several posts and one or several attachments.
   post.setSuccessorValueList([document])
-  # XXX depending on security model this should be changed accordingly
-  document.publish() # XXX isn't it share a better default ?
+
+  document.share()
 
 
 # XXX the UI of support request app should be responsible for generating a unique
@@ -36,10 +49,7 @@ if file not in ("undefined", None):  # XXX "undefined" ? should also be fixed in
 if not post.getSourceReference():
   post.setSourceReference(post.getId())
 
-if not web_site_relative_url:
-  web_site_relative_url = context.getWebSiteValue().getRelativeUrl()
-
-post.publish() # XXX
+post.publish()
 post.activate().Post_ingestMailMessageForSupportRequest(# XXX This API is not agreed
     web_site_relative_url=web_site_relative_url
 )
