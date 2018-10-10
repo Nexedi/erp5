@@ -45,7 +45,8 @@ if img_src.startswith("http"):
 
 if validation_freebie is None:
 #END user ignoring guidelines
-
+  if img_src[0] == '/':
+    img_src = img_src[1:]
   img_obj = context.restrictedTraverse(img_src.split("?")[0], None)
 
   # flag broken link until further notice
