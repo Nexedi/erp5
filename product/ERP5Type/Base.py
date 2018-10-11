@@ -482,6 +482,7 @@ def getClassPropertyList(klass):
         if p not in ps_list])
   return ps_list
 
+from Products.ERP5Type.Accessor.WorkflowHistory import Getter as WorkflowHistoryGetter
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
   and also make sure simulation state is defined."""
@@ -519,6 +520,15 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
 
       storage = dc_workflow_dict
       transitions = wf.transitions
+
+      for transition in transitions.objectValues():
+        transition_id = transition.getId()
+        method_id = 'get%sTransitionDate' % UpperCase(transition_id)
+        if not hasattr(ptype_klass, method_id):
+          method = WorkflowHistoryGetter(method_id, wf_id, transition_id, 'time')
+          ptype_klass.registerAccessor(method,
+                                       Permissions.AccessContentsInformation)
+
     elif wf_type == "InteractionWorkflowDefinition":
       storage = interaction_workflow_dict
       transitions = wf.interactions
