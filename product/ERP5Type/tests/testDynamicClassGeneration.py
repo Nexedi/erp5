@@ -323,6 +323,57 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     self.assertTrue(not erp5.portal_type.Person.__isghost__)
     self.assertTrue('_categories' in erp5.portal_type.Person.__dict__)
 
+  def testWorkflowHistoryAccessor(self):
+    person = self.portal.person_module.newContent(portal_type='Person')
+
+    from Products.ERP5Type.Utils import UpperCase
+    for transition_id in ('delete',
+                          'delete_action',
+                          'invalidate',
+                          'invalidate_action',
+                          'validate',
+                          'validate_action'):
+      method_id = 'get%sTransitionDate' % UpperCase(transition_id)
+      self.assertNotEquals(getattr(person, method_id, None), None)
+      self.assertEquals(getattr(person, method_id)('hoge'), 'hoge')
+
+      list_method_id = 'get%sTransitionDateList' % UpperCase(transition_id)
+      self.assertNotEquals(getattr(person, list_method_id, None), None)
+      self.assertEquals(getattr(person, list_method_id)('hoge'), 'hoge')
+
+    person.validate()
+    self.assertEquals(len(person.getInvalidateTransitionDateList()), 0)
+    validate_date_list = person.getValidateTransitionDateList()
+    self.assertEquals(len(validate_date_list), 1)
+    self.assertEquals(
+      sorted([ workflow_history_dict['time']
+               for workflow_history_dict in person.workflow_history['validation_workflow']
+               if workflow_history_dict['action'] == 'validate' ]),
+      validate_date_list)
+    self.assertEquals(person.getValidateTransitionDate(), validate_date_list[0])
+
+    person.invalidate()
+    invalidate_date_list = person.getInvalidateTransitionDateList()
+    self.assertEquals(len(invalidate_date_list), 1)
+    self.assertEquals(
+      sorted([ workflow_history_dict['time']
+               for workflow_history_dict in person.workflow_history['validation_workflow']
+               if workflow_history_dict['action'] == 'invalidate' ]),
+      invalidate_date_list)
+    self.assertEquals(person.getInvalidateTransitionDate(), invalidate_date_list[0])
+    self.assertEquals(person.getValidateTransitionDateList(), validate_date_list)
+
+    person.validate()
+    self.assertEquals(person.getInvalidateTransitionDateList(), invalidate_date_list)
+    validate_date_list = person.getValidateTransitionDateList()
+    self.assertEquals(len(validate_date_list), 2)
+    self.assertEquals(
+      sorted([ workflow_history_dict['time']
+               for workflow_history_dict in person.workflow_history['validation_workflow']
+               if workflow_history_dict['action'] == 'validate' ]),
+      validate_date_list)
+    self.assertEquals(person.getValidateTransitionDate(), validate_date_list[-1])
+
 class TestZodbPropertySheet(ERP5TypeTestCase):
   """
   XXX: WORK IN PROGRESS
