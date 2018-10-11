@@ -129,7 +129,7 @@ class TradeModelPath(Path):
             'source_funding',
             'source_payment',
             'source_project',
-            #'source_referral',
+            'source_referral',
             'source_section',
             'source_trade',
             #'source_transport'
@@ -153,7 +153,7 @@ class TradeModelPath(Path):
             'destination_funding',
             'destination_payment',
             'destination_project',
-            #'destination_referral',
+            'destination_referral',
             'destination_section',
             'destination_trade',
             #'destination_transport'
