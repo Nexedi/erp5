@@ -28,6 +28,7 @@ context.activate().AccountingTransactionModule_viewFrenchAccountingTransactionFi
   user_name=user_name,
   tag=tag,
   aggregate_tag=aggregate_tag,
+  date_column=date_column,
   search_kw=search_kw)
 
 return context.Base_redirect(form_id, keep_items=dict(

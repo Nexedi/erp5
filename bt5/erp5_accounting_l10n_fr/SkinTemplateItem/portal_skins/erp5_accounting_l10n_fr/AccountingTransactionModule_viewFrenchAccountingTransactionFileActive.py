@@ -4,6 +4,9 @@ at_date = at_date.latestTime()
 section_uid_list = portal.Base_getSectionUidListForSectionCategory(
   section_category, section_category_strict)
 
+if date_column is None:
+  date_column = 'operation_date'
+
 if from_date is None:
   from_date = portal.Base_getAccountingPeriodStartDateForSectionCategory(
     section_category, at_date)
@@ -26,7 +29,7 @@ def _groupedJournalTupleDict():
 
   search_kw['simulation_state'] = simulation_state
   search_kw['accounting_transaction.section_uid'] = section_uid_list
-  search_kw['operation_date'] = {'query': (from_date, at_date), 'range': 'minngt' }
+  search_kw[date_column] = {'query': (from_date, at_date), 'range': 'minngt' }
 
   journal_tuple_list = []
   if group_by == 'ledger':
