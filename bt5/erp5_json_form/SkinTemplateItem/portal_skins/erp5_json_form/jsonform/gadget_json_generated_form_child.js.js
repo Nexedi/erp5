@@ -921,56 +921,8 @@
                      typeof json_document !== type;
     }
 
-    div = document.createElement("div");
-    div.setAttribute("class", "jsonformfield ui-field-contain");
-    if (schema.description) {
-      div.title = schema.description;
-    }
-    // if (property_name && !first_path) {
-    if (options.delete_button === true) {
-      delete_button = createElement("span",
-          {"class": "ui-btn-icon-top ui-icon-trash-o"}
-          );
-      gadget.props.delete_button = delete_button;
-      div.appendChild(delete_button);
-    } else if (options.top !== true) {
-      if (options.required) {
-        delete_button = createElement("span",
-            {"class": "ui-btn-icon-top ui-icon-circle"}
-            );
-        div.appendChild(delete_button);
-      } else {
-        delete_button = createElement("span");
-        delete_button.innerHTML = "&emsp;";
-        div.appendChild(delete_button);
-      }
-    }
-
-    label_text = [property_name, schema_ob.title]
-        .filter(function (v) { return v; })
-        .join(" ")
-        // use non-breaking hyphen
-        .replace(/-/g, "‑");
-    if (property_name || options.top) {
-      if (options.top) {
-        label = document.createElement("span");
-        label.textContent = label_text;
-        root.appendChild(label);
-      } else {
-        label = document.createElement("label");
-        label.textContent = label_text;
-        div.appendChild(label);
-      }
-
-    }
-
-    div_input = document.createElement("div");
-    div_input.setAttribute("id", gadget.element.getAttribute("data-gadget-scope") + first_path + '/');
-    div_input.setAttribute("class", "input");
-
     // render input begin
-
-    if (!input && schema_arr[0].is_arr_of_const) {
+    if (!input && schema_arr[0].is_arr_of_const && schema_arr.length > 1) {
       input = render_enum_with_title(gadget, schema_arr, json_document, options.selected_schema);
     }
     if (!input && schema.const !== undefined) {
@@ -1060,7 +1012,59 @@
           }
         }
       }
+      if (schema.default !== undefined) {
+        input.setAttribute('data-default-value', JSON.stringify(schema.default));
+        input.placeholder = schema.default;
+      }
     }
+    // render input end
+
+    // html layout render begin
+    div = document.createElement("div");
+    div.setAttribute("class", "jsonformfield ui-field-contain");
+    if (schema.description) {
+      div.title = schema.description;
+    }
+    // if (property_name && !first_path) {
+    if (options.delete_button === true) {
+      delete_button = createElement("span",
+        {"class": "ui-btn-icon-top ui-icon-trash-o"}
+        );
+      gadget.props.delete_button = delete_button;
+      div.appendChild(delete_button);
+    } else if (options.top !== true) {
+      if (options.required) {
+        delete_button = createElement("span",
+          {"class": "ui-btn-icon-top ui-icon-circle"}
+          );
+        div.appendChild(delete_button);
+      } else {
+        delete_button = createElement("span");
+        delete_button.innerHTML = "&emsp;";
+        div.appendChild(delete_button);
+      }
+    }
+
+    label_text = [property_name, schema_ob.title]
+      .filter(function (v) { return v; })
+      .join(" ")
+      // use non-breaking hyphen
+      .replace(/-/g, "‑");
+    if (property_name || options.top) {
+      if (options.top) {
+        label = document.createElement("span");
+        label.textContent = label_text;
+        root.appendChild(label);
+      } else {
+        label = document.createElement("label");
+        label.textContent = label_text;
+        div.appendChild(label);
+      }
+    }
+
+    div_input = document.createElement("div");
+    div_input.setAttribute("id", gadget.element.getAttribute("data-gadget-scope") + first_path + '/');
+    div_input.setAttribute("class", "input");
 
     if (!input && type === "array") {
       queue = render_array(
@@ -1100,11 +1104,10 @@
       //input.setAttribute("class", "slapos-parameter");
       div_input.appendChild(input);
     } else {
+      div.setAttribute("data-parent-scope", gadget.element.getAttribute("data-gadget-scope"));
       div.setAttribute("data-json-path", first_path + '/');
       div.setAttribute("data-json-type", type);
     }
-
-    // render input end
 
     if (schema.info !== undefined) {
       span_info = document.createElement("span");
@@ -1116,6 +1119,7 @@
     error_message.hidden = true;
     div_input.appendChild(error_message);
     div.appendChild(div_input);
+    // html layout render end
 
     return queue
       .push(function () {
@@ -1320,6 +1324,11 @@
 
     function root_append(child) {
       root.appendChild(child);
+    }
+
+    if (JSON.stringify(schema.default) === '{}') {
+      // save default value as attribute only for empty values
+      root.parentElement.setAttribute("data-default-value", '{}');
     }
 
     if (json_document === undefined) {
@@ -1585,6 +1594,18 @@
         });
     }
 
+
+    // set empty object if default value require this
+    array = g.element
+      .querySelectorAll("div[data-parent-scope='" +
+                        g.element.getAttribute("data-gadget-scope") + "']");
+    for (i = 0; i < array.length; i += 1) {
+      path = array[i].getAttribute("data-json-path").slice(0, -1);
+      if (array[i].getAttribute("data-default-value") === "{}") {
+        convertOnMultiLevel(multi_level_dict, path, {});
+      }
+    }
+
     for (path in options.arrays) {
       if (options.arrays.hasOwnProperty(path)) {
         array = options.arrays[path]
@@ -1649,6 +1670,8 @@
               } else {
                 json_dict[input.name] = input.value;
               }
+            } else if (input.hasAttribute('data-default-value')) {
+              json_dict[input.name] = JSON.parse(input.getAttribute('data-default-value'));
             }
           }
         });

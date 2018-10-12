@@ -342,10 +342,27 @@
     }
     var key,
       p;
+    if (x.hasOwnProperty("$ref") ||
+        y.hasOwnProperty("$ref")) {
+      if (doesntcopy) {
+        // we need reference resolve before merging
+        // so allOf schema returned and array item or object field
+        // run merging on next iteration.
+        return {
+          allOf: [
+            x,
+            y
+          ]
+        };
+      } else {
+        throw new Error("all reference must be resolved before merge run on first recursion level");
+      }
+    }
     if (x === true) {
       x = {};
     } else if (!doesntcopy) {
       x = JSON.parse(JSON.stringify(x));
+      // cleanup already walked schema variations
       if (x.anyOf) {
         delete x.anyOf;
       }
@@ -385,11 +402,11 @@
           case "additionalItems":
           case "contains":
           case "propertyNames":
-            mergeSchemas(x[key], y[key], true);
+            x[key] = mergeSchemas(x[key], y[key], true);
             break;
           case "items":
             // XXX items can be array
-            mergeSchemas(x[key], y[key], true);
+            x[key] = mergeSchemas(x[key], y[key], true);
             break;
           case "contentEncoding":
           case "contentMediaType":
@@ -427,7 +444,7 @@
             for (p in y[key]) {
               if (y[key].hasOwnProperty(p)) {
                 if (x[key].hasOwnProperty(p)) {
-                  mergeSchemas(x[key][p], y[key][p], true);
+                  x[key][p] = mergeSchemas(x[key][p], y[key][p], true);
                 } else {
                   x[key][p] = y[key][p];
                 }
