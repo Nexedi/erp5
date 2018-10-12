@@ -427,3 +427,135 @@ pre {
 .ci-web .ci-web-page-content pre code {
   white-space: pre;
 }
+
+#hidden_fieldset{
+  display: none;
+}
+
+.headteaser {
+	background: rgb(228,235,241);
+	text-align: left;
+	color: #404040;
+	/* ===== EDIT SVEN ==== */
+	color: rgb(131,151,166);
+	/* ===== EDIT SVEN ==== */
+	font-size: 15px;
+	line-height: 26px;
+}
+
+.headteaser h1, .content h2 {
+	font-weight: normal;
+	font-size: 25px;
+	line-height: 33px;
+}
+
+
+.breadcrumb {
+	padding: 0;
+}
+
+.breadcrumb ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	padding: 0;
+}
+
+.breadcrumb ul li {
+	margin: 0;
+	padding: 0;
+	font-size: 13px;
+	color: rgb(113,134,149);
+}
+
+.breadcrumb ul li a {
+	margin: 0;
+	padding: 0;
+	float: left;
+	padding-right: 14px;
+	margin-right: 7px;
+	text-decoration: none;
+	color: rgb(28,118,187);
+	background: url(../img/breadmarker.png) no-repeat right 10px;
+	transition: all 300ms ease-in-out;
+		-moz-transition: all 300ms ease-in-out;
+			-webkit-transition: all 300ms ease-in-out;
+				-o-transition: all 300ms ease-in-out;
+}
+
+.breadcrumb ul li a:hover {
+	color: rgb(2,87,136);
+	transition: all 200ms ease-in-out;
+		-moz-transition: all 200ms ease-in-out;
+			-webkit-transition: all 200ms ease-in-out;
+				-o-transition: all 200ms ease-in-out;
+}
+
+.last-breadcrumb {
+    background:none!important;
+}
+
+.headteaser .teaserText {
+	padding: 43px 0 0 0;
+}
+
+.headteaser .teaserInfo {
+	margin: 43px 0 0 0;
+	padding: 10px 0 14px 0;
+	border-top: 1px solid rgb(180,199,213);
+	border-bottom: 1px solid rgb(180,199,213);
+	float: left;
+	width: 100%;
+}
+
+.teaserInfo ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	font-size: 13px;
+	line-height: 20px;
+}
+
+.teaserInfo ul li {
+	display: block;
+	float: none;
+}
+
+.teaserInfo ul strong {
+	display: inline-block;
+	width: 110px;
+	font-weight: 600;
+}
+
+.wrapper:not(#wrapper_site_header) {
+  width: 80%;
+  max-width: 64em;
+  margin: 0 auto;
+}
+
+
+
+@media only screen and (min-width: 700px) {
+ .teaserInfo ul li {
+		display: inline-block;
+		float: left;
+		padding: 0 16px 0 16px;
+		border-right: 1px solid rgb(180,199,213);
+	}
+
+	.teaserInfo ul li:nth-of-type(1) {
+		padding-left: 4px;
+	}
+
+	.teaserInfo ul strong {
+		width: auto;
+		display: block;
+	}
+}
+
+@media(max-width: 64em) {
+  .wrapper:not(#wrapper_site_header) {
+    width: auto;
+    padding: 0 1em;
+  }
+}

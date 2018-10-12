@@ -63,10 +63,13 @@
             <tal:block tal:repeat="field field_list">
               <tal:block tal:define="field_title    string:  ${field/title};
                                      strip_title    python:  field_title.strip();
-                                     good_render    nocall:  context/field_render/macros/field_render;
-                                     fake_render    python:  context.theme_macros_library.macros.get(strip_title);
-                                     field_render   python:  good_render if fake_render is None else fake_render;">
-                  <tal:block tal:replace="structure python:  context.field_renderer(macro=field_render)" />
+                                     fake_render    python:  context.theme_macros_library.macros.get(strip_title);">
+                  <tal:block tal:condition="fake_render">
+                    <tal:block tal:replace="structure python: context.field_renderer(macro=fake_render)" />
+                  </tal:block>
+                   <tal:block tal:condition="not:fake_render">
+                      <tal:block metal:use-macro="here/field_render/macros/field_render"/>
+                  </tal:block>
               </tal:block>
             </tal:block>
           </fieldset>
@@ -396,59 +399,44 @@
   </tal:block>
 </tal:block>
 
-<tal:block metal:define-macro="header_title"><p>BAM-Header-Title</p></tal:block>
 
 <tal:block metal:define-macro="discussions"><p>BAM-Discussions</p></tal:block>
 
-<tal:block metal:define-macro="breadcrumb"><p>BAM-Breadcrumb</p></tal:block>
 
-<tal:block metal:define-macro="document_profile"><p>BAM-Document-Profile</p></tal:block>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<tal:block metal:define-macro="xxxheader_title">
+<tal:block metal:define-macro="header_title">
   <h1 tal:content="here/getTitle"></h1>
 </tal:block>
 
-<tal:block metal:define-macro="xxxbreadcrumb">
+<tal:block metal:define-macro="breadcrumb">
   <div class="breadcrumb" 
-       tal:define="current_web_section              python:request.get('current_web_section', here);
-                   current_web_document             python:request.get('current_web_document', here);
-                   portal_path                      python:request.get('current_web_section_url', current_web_section.absolute_url());
-                   is_web_section_default_document  python:request.get('is_web_section_default_document',False);
-                   breadcrumb_list python:          current_web_section.getBreadcrumbItemList(current_web_document);">
+       tal:define="current_web_section python:request.get('current_web_section', here);
+                       current_web_document python:here;
+                       portal_path python:request.get('current_web_section_url', current_web_section.absolute_url());
+                       is_web_section_default_document python:request.get('is_web_section_default_document',False);
+                       breadcrumb_list python: current_web_section.getBreadcrumbItemList(current_web_document);">
     <ul>
-      <li tal:repeat="breadcrumb python: breadcrumb_list[:(is_web_section_default_document and -1 or None)]">
+      <li tal:repeat="breadcrumb python:breadcrumb_list[:(is_web_section_default_document and -1 or None)]">
         <tal:block tal:define="is_last repeat/breadcrumb/end;
                                is_first repeat/breadcrumb/start;">
-            <a href="#" tal:attributes="href  python: current_web_section.getPermanentURL(breadcrumb[1]);
-                                        title python: breadcrumb[2];
-                                        class python: test(is_last, 'last-breadcrumb', 'breadcrumb')"
-                        tal:content="python: test(is_first, breadcrumb[0], breadcrumb[1].getShortTitle() or breadcrumb[0])">Title</a>
+          <a href="#"
+            tal:attributes="href python:current_web_section.getPermanentURL(breadcrumb[1]);
+                            title python: breadcrumb[2];
+                            class python: test(is_last, 'last-breadcrumb', 'breadcrumb')"
+            tal:content="python: test(is_first, breadcrumb[0], breadcrumb[1].getShortTitle() or breadcrumb[0])">Title</a>
         </tal:block>
       </li>
+
     </ul>
   </div>
 </tal:block>
 
-<tal:block metal:define-macro="xxxprofile_document">
+<tal:block metal:define-macro="profile_document">
   <span tal:replace="here/getDescription"/>
   <div class="teaserInfo">
     <ul>
       <li><strong>Last Update:</strong><span tal:replace="python: context.getModificationDate().strftime('%Y-%m-%d')"/></li>
       <li><strong>Version:</strong><span tal:replace="python: getattr(context, 'getVersion', str)()"/></li>
       <li><strong>Language:</strong><span tal:replace="python: getattr(context, 'getLanguage', str)()"/></li>
-      <li>Social Media Map</li>
     </ul>
   </div>
 </tal:block>

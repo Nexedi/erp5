@@ -8,7 +8,7 @@
                          content_form           python: content_form_id and getattr(here, content_form_id, None) or None;
                          has_no_layout          python: layout_form is None;
                          has_no_content_form    python: content_form is None;
-                         aggregate              python: has_no_layout or layout_form.Form_getGroupList(['site_header', 'site_footer', 'header_title', 'breadcrumb', 'document_summary', 'special_header']);
+                         aggregate              python: has_no_layout or layout_form.Form_getGroupList(['site_header', 'site_footer', 'header_title', 'breadcrumb', 'profile_document', 'special_header']);
                          aggregate              python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};
                          mode                   python: request.get('list_mode', request.get('dialog_mode', None), '');
                          mode_class             python: '%s-mode-content' % (mode);
@@ -17,7 +17,7 @@
                          site_footer_area       python: aggregate.get('site_footer', []);
                          header_title_area      python: aggregate.get('header_title', []);
                          breadcrumb_area        python: aggregate.get('breadcrumb', []);
-                         document_summary_area  python: aggregate.get('document_summary', []);
+                         profile_document_area  python: aggregate.get('profile_document', []);
                          special_header_area    python: aggregate.get('special_header', []);
                          website                python: context.getWebSiteValue();
                          root_url               python: website.absolute_url();
@@ -61,9 +61,10 @@
                       <tal:block metal:use-macro="here/theme_macros_library/macros/aggregate_render"/>
                     </tal:block>
 
-                    <tal:block tal:repeat="aggregate python: [('document_summary', document_summary_area)]">
+                    <tal:block tal:repeat="aggregate python: [('profile_document', profile_document_area)]">
                       <tal:block metal:use-macro="here/theme_macros_library/macros/aggregate_render"/>
                     </tal:block>
+                    
                   </tal:block>
 
                   <span class="portal_status_message" tal:content="portal_status_message" 
@@ -83,7 +84,7 @@
               
               <tal:comment replace="nothing">Standard Page Form Content ("simplicity: Form is rendered here")</tal:comment>
               <tal:block tal:condition="python: not is_front_page">
-                <tal:block metal:use-macro="here/theme_macros_library/macros/default_content" />
+                <tal:block tal:replace="structure                   python: here.asEntireHTML()"></tal:block>
               </tal:block>
               <tal:comment replace="nothing">Special Page Content (Front page, showing all documents related to default document)</tal:comment>
               <tal:block tal:condition="python: layout_form is not None">

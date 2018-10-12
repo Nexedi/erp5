@@ -203,7 +203,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>container_layout</string> </value>
+            <value> <string>erp5_ci_web_container_layout</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>

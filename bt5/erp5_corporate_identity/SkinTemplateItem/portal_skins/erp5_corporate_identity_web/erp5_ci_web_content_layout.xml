@@ -129,7 +129,7 @@
                     <key> <string>profile_document</string> </key>
                     <value>
                       <list>
-                        <string>document_summary</string>
+                        <string>profile_document</string>
                       </list>
                     </value>
                 </item>
