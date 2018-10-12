@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Contributions, impôts et taxes recouvrés pour le compte de l'Etat</string> </value>
+            <value> <string>Contributions, impôts et taxes recouvrés pour le compte de l\'Etat</string> </value>
         </item>
       </dictionary>
     </pickle>
