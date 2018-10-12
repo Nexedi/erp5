@@ -108,6 +108,9 @@ def sqltest_dict():
   _('retry')
   _('to_date', column="date", op="<=")
   _('uid')
+  _('from_date', column="date", op=">=")
+  _('from_priority', column="priority", op=">=")
+  _('above_uid', column="uid", op=">")
   return sqltest_dict
 sqltest_dict = sqltest_dict()
 
@@ -192,19 +195,18 @@ class SQLBase(Queue):
     assert len(result[0]) == 1
     return result[0][0]
 
-  def _getMessageList(self, activity_tool, offset=0, count=1000, src__=0, **kw):
+  def _getMessageList(self, activity_tool, count=1000, src__=0, **kw):
     # XXX: Because most columns have NOT NULL constraint, conditions with None
     #      value should be ignored, instead of trying to render them
     #      (with comparisons with NULL).
     sql_connection = activity_tool.getPortalObject().cmf_activity_sql_connection
     q = sql_connection.sql_quote__
-    if offset:
-      limit = '\nLIMIT %d,%d' % (offset, sys.maxint if count is None else count)
-    else:
-      limit = '' if count is None else '\nLIMIT %d' % count
     sql = '\n  AND '.join(sqltest_dict[k](v, q) for k, v in kw.iteritems())
     sql = "SELECT * FROM %s%s\nORDER BY priority, date, uid%s" % (
-      self.sql_table, sql and '\nWHERE ' + sql, limit)
+      self.sql_table,
+      sql and '\nWHERE ' + sql,
+      '' if count is None else '\nLIMIT %d' % count,
+    )
     return sql if src__ else Results(sql_connection().query(sql, max_rows=0))
 
   def getMessageList(self, *args, **kw):
@@ -349,17 +351,15 @@ class SQLBase(Queue):
     assignMessage = getattr(activity_tool, 'SQLBase_assignMessage', None)
     if assignMessage is None:
       return
-    offset = 0
     now_date = self.getNow(activity_tool)
+    where_kw = {
+      'processing_node': -1,
+      'to_date': now_date,
+      'count': READ_MESSAGE_LIMIT,
+    }
     validated_count = 0
     while 1:
-      result = self._getMessageList(
-        activity_tool,
-        processing_node=-1,
-        to_date=now_date,
-        offset=offset,
-        count=READ_MESSAGE_LIMIT,
-      )
+      result = self._getMessageList(activity_tool, **where_kw)
       if not result:
         return
       transaction.commit()
@@ -399,7 +399,9 @@ class SQLBase(Queue):
           validated_count += distributable_count
           if validated_count >= MAX_VALIDATED_LIMIT:
             return
-      offset += READ_MESSAGE_LIMIT
+      where_kw['from_priority'] = line.priority
+      where_kw['from_date'] = line.date
+      where_kw['above_uid'] = line.uid
 
   def getReservedMessageList(self, activity_tool, date, processing_node,
                              limit=None, group_method_id=None):
