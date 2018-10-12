@@ -19,5 +19,5 @@ class PatchClass(tuple):
         _, ((cls,),), d = args
         for k, v in d.iteritems():
             k == "__module__" or setattr(cls, k, v.im_func
-                if getattr(v, "im_class", None) is cls and v.im_self is None
+                if getattr(v, "im_class", None) is cls and v.__self__ is None
                 else v)
