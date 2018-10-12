@@ -106,23 +106,23 @@ class Setter(Method):
     class __roles__:
       @staticmethod
       def rolesForPermissionOn(ob):
-        im_self = ob.im_self
+        self = ob.__self__
         name = '%s__roles__' % ob.__name__
         # Lookup on the class, as getRoles gives priority to ob.__roles__
         # over class.ob__roles__, this way we have an opportunity to define
         # security on the class for generated methods.
         # We explictly call _aq_dynamic to prevent acquiering the attribute
         # from container
-        roles = getattr(im_self.__class__, name, im_self)
-        if roles is im_self:
-          roles = im_self._aq_dynamic(name)
+        roles = getattr(self.__class__, name, self)
+        if roles is self:
+          roles = self._aq_dynamic(name)
           if roles is None:
-            return rolesForPermissionOn(None, im_self, ('Manager',),
+            return rolesForPermissionOn(None, self, ('Manager',),
                                         '_Modify_portal_content_Permission')
         # if roles has an __of__ method, call it explicitly, as the Method
         # already has an __of__ method that has been already called at this
         # point.
-        return getattr(roles, '__of__', lambda aq_parent: roles)(im_self)
+        return getattr(roles, '__of__', lambda aq_parent: roles)(self)
 
 
 from Products.CMFCore.Expression import Expression
@@ -189,17 +189,17 @@ class Getter(Method):
     class __roles__:
       @staticmethod
       def rolesForPermissionOn(ob):
-        im_self = ob.im_self
+        self = ob.__self__
         name = '%s__roles__' % ob.__name__
         # we explictly call _aq_dynamic to prevent acquiering the attribute
         # from container
-        roles = getattr(im_self.__class__, name, im_self)
-        if roles is im_self:
-          roles = im_self._aq_dynamic(name)
+        roles = getattr(self.__class__, name, self)
+        if roles is self:
+          roles = self._aq_dynamic(name)
           if roles is None:
-            return rolesForPermissionOn(None, im_self, ('Manager',),
+            return rolesForPermissionOn(None, self, ('Manager',),
                                         '_Access_contents_information_Permission')
-        return getattr(roles, '__of__', lambda aq_parent: roles)(im_self)
+        return getattr(roles, '__of__', lambda aq_parent: roles)(self)
 
 
 class Tester(Method):

@@ -16,7 +16,9 @@
 """
 
 from copy import deepcopy
+from collections import defaultdict
 
+from Acquisition import aq_inner, aq_parent
 from AccessControl.Permissions import manage_users as ManageUsers
 from Products.PluggableAuthService.PluggableAuthService import registerMultiPlugin
 from Products.PluggableAuthService.permissions import ManageGroups
@@ -28,28 +30,27 @@ def mergedLocalRoles(object):
   """Returns a merging of object and its ancestors'
   __ac_local_roles__."""
   # Modified to take into account _getAcquireLocalRoles
-  merged = {}
-  object = getattr(object, 'aq_inner', object)
+  merged = defaultdict(list)
+  object = aq_inner(object)
   while 1:
-    if getattr(object, '__ac_local_roles__', None) is not None:
-      roles = object.__ac_local_roles__ or {}
-      if callable(roles): roles = roles()
-      for k, v in roles.iteritems():
-        merged.setdefault(k, []).extend(v)
+    local_role_dict = getattr(object, '__ac_local_roles__', None)
+    if local_role_dict:
+      if callable(local_role_dict):
+        local_role_dict = local_role_dict() or {}
+      for k, v in local_role_dict.iteritems():
+        merged[k] += v
     # block acquisition
-    if getattr(object, '_getAcquireLocalRoles', None) is not None:
-      if not object._getAcquireLocalRoles():
-        break
-    if getattr(object, 'aq_parent', None) is not None:
-      object = object.aq_parent
-      object = getattr(object, 'aq_inner', object)
+    if not getattr(object, '_getAcquireLocalRoles', lambda: True)():
+      break
+    parent = aq_parent(object)
+    if parent is not None:
+      object = aq_inner(parent)
       continue
-    if getattr(object, 'im_self', None) is not None:
-      object = object.im_self
-      object = getattr(object, 'aq_inner', object)
+    self = getattr(object, '__self__', None)
+    if self is not None:
+      object = aq_inner(self)
       continue
     break
-
   return deepcopy(merged)
 
 def initialize(context):

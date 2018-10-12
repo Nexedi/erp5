@@ -12,9 +12,38 @@
 #
 ##############################################################################
 from __future__ import absolute_import
+import AccessControl.users
 import AccessControl.owner
 from AccessControl import SpecialUsers as SU
+from Acquisition import aq_inContextOf, aq_base
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+
+# Patch description:
+# Original _check_context checks whether given "object" is a method by
+# accessing im_self on it. If there is none, it will suddenly be trying to
+# acquire one (and failing to, which is good). That acquisition costs a lot
+# of time compared to this method simplicity.
+# Instead, backport part of
+#  https://github.com/zopefoundation/AccessControl/commit/14db9b87483471b15e442c10bab1400c88b079a5
+# which switched to __self__ attribute (and apply further simplifications).
+# As this attribute starts with an underscore, acquisition will ignore it,
+# avoiding this waste of time.
+def _check_context(self, object):
+    # Check that 'object' exists in the acquisition context of
+    # the parent of the acl_users object containing this user,
+    # to prevent "stealing" access through acquisition tricks.
+    # Return true if in context, false if not or if context
+    # cannot be determined (object is not wrapped).
+    context = getattr(
+        getattr(self, '__parent__', None),
+        '__parent__',
+        None,
+    )
+    if context is None or object is None:
+        return 1
+    return aq_inContextOf(getattr(object, '__self__', object), context, 1)
+
+AccessControl.users.BasicUser._check_context = _check_context
 
 # Patch description:
 # Original method is called very often: multiple times per restricted python
