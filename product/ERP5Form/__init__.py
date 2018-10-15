@@ -166,6 +166,10 @@ def initialize( context ):
     import GadgetField
     FieldRegistry.registerField(GadgetField.GadgetField,
                                 'www/StringField.gif')
+    import HoneypotField
+    FieldRegistry.registerField(HoneypotField.HoneypotField,
+                                'www/StringField.gif')
+
 
     # register help for the product
     context.registerHelp()
