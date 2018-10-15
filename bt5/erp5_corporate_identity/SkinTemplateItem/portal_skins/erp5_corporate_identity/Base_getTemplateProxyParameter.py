@@ -326,6 +326,12 @@ if pass_parameter is not None and pass_source_data is not None:
   # XXX custom?
   if pass_parameter == "theme":
     theme = None
+    tmp = context
+    #check if web page is inside web site or web section
+    while portal_type == 'Web Page':
+      tmp = tmp.aq_parent
+      portal_type = tmp.getPortalType()
+      
     if portal_type == "Web Site" or portal_type == "Web Section":
       pass_flag_site = True
     product_candidate_list = callSelf("product", pass_source_data, pass_flag_site)
