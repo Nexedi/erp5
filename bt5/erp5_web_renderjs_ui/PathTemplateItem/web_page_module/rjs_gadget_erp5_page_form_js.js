@@ -7,6 +7,34 @@ and handling data send&receive.
 (function (window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean) {
   "use strict";
 
+  var warmup_gadget_done = false,
+    warmup_list = ['gadget_erp5_label_field.html',
+                   'gadget_erp5_pt_form_list.html',
+                   'gadget_erp5_pt_form_dialog.html',
+                   'gadget_erp5_pt_form_view_editable.html',
+                   'gadget_erp5_pt_form_view.html',
+                   'gadget_erp5_pt_embedded_form_render.html',
+                   'gadget_html5_input.html',
+                   'gadget_html5_textarea.html',
+                   'gadget_html5_input.html',
+                   'gadget_html5_select.html',
+                   'gadget_html5_element.html',
+                   'gadget_erp5_field_datetime.html',
+                   'gadget_erp5_field_float.html',
+                   'gadget_erp5_field_integer.html',
+                   'gadget_erp5_field_list.html',
+                   'gadget_erp5_field_email.html',
+                   'gadget_erp5_field_formbox.html',
+                   'gadget_erp5_field_listbox.html',
+                   'gadget_erp5_field_multilist.html',
+                   'gadget_erp5_field_relationstring.html',
+                   'gadget_erp5_field_multirelationstring.html',
+                   'gadget_erp5_relation_input.html',
+                   'gadget_erp5_field_string.html',
+                   'gadget_erp5_field_textarea.html',
+                   'gadget_erp5_form.html'
+                  ];
+
   /** Return local modifications to editable form fields after leaving the form
   for a while - for example selecting a related object.
 
@@ -132,7 +160,20 @@ and handling data send&receive.
       } else {
         promise_queue
           .push(function () {
-            return gadget.jio_getAttachment(options.jio_key, options.view);
+            var result = gadget.jio_getAttachment(options.jio_key,
+                                                  options.view),
+              i;
+            if (!warmup_gadget_done) {
+              RSVP.delay(10)
+                .then(function () {
+                  for (i = 0; i < warmup_list.length; i += 1) {
+                    // console.log('warm up 2', warmup_list[i]);
+                    rJS.declareGadgetKlass(renderJS.getAbsoluteURL(warmup_list[i], gadget.__path));
+                  }
+                });
+              warmup_gadget_done = true;
+            }
+            return result;
           })
           .push(function (result) {
             new_state.erp5_document = result;
