@@ -72,7 +72,7 @@ fieldset {
 
 /* === site header === */
 .ci-web .ci-web-page-header {
-  margin-bottom: 1em;
+  /*margin-bottom: 1em; */
   padding-bottom: 5em;
   -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,0.24);
   -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,0.24);
@@ -141,6 +141,16 @@ fieldset {
   box-shadow: 0 2px 5px 0 rgba(0,0,0,0.24);
 }
 
+/* ==== site-banner === */
+.ci-web-page-banner {
+  -webkit-box-shadow: inset 0 10px 10px -10px rgba(0,0,0,0.4);
+  -moz-box-shadow: inset 0 10px 10px -10px rgba(0,0,0,0.4);
+  box-shadow: inset 0 10px 10px -10px rgba(0,0,0,0.4);
+  padding: 0 0 2em 0;
+}
+.ci-web-page-banner .wrapper:not(#wrapper_site_header) {
+  max-width: 68em;
+}
 /*
 ci-web-page-header
 ci-web-page-footer
@@ -472,15 +482,20 @@ pre {
 	margin: 0;
 	padding: 0;
 	float: left;
-	padding-right: 14px;
 	margin-right: 7px;
 	text-decoration: none;
 	color: rgb(28,118,187);
-	background: url(../img/breadmarker.png) no-repeat right 10px;
 	transition: all 300ms ease-in-out;
 		-moz-transition: all 300ms ease-in-out;
 			-webkit-transition: all 300ms ease-in-out;
 				-o-transition: all 300ms ease-in-out;
+}
+
+.breadcrumb ul li a:hover:after,
+.breadcrumb ul li a::after {
+  content: ">";
+  color:#58AFF2;
+  padding-left: 10px;
 }
 
 .breadcrumb ul li a:hover {
@@ -491,8 +506,8 @@ pre {
 				-o-transition: all 200ms ease-in-out;
 }
 
-.last-breadcrumb {
-    background:none!important;
+.last-breadcrumb::after {
+    display: none;
 }
 
 .headteaser .teaserText {
