@@ -22,4 +22,8 @@ if list_selection_name is not None:
     # Keep the `list_selection_name` in keep_items as we will be needing it
     # while displaying the paths of the selected objects.
     return context.Base_redirect('ERP5Site_viewDiffTwoObjectDialog',
-                                  keep_items={'list_selection_name': list_selection_name})
+                                  keep_items={
+                                    'list_selection_name': list_selection_name,
+                                    'your_first_path': selected_obj_list[0].getRelativeUrl(),
+                                    'your_second_path': selected_obj_list[1].getRelativeUrl()
+                                             })
