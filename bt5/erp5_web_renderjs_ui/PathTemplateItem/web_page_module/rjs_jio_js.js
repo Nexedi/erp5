@@ -9072,57 +9072,60 @@ return new Parser;
     CONFLICT_KEEP_LOCAL = 1,
     CONFLICT_KEEP_REMOTE = 2,
     CONFLICT_CONTINUE = 3,
+
     // 0 - 99 error
     LOG_UNEXPECTED_ERROR = 0,
-    LOG_UNRESOLVED_CONFLICT = 1,
-    LOG_UNEXPECTED_LOCAL_ATTACHMENT = 2,
-    LOG_UNEXPECTED_REMOTE_ATTACHMENT = 3,
-    LOG_UNRESOLVED_ATTACHMENT_CONFLICT = 11,
+    LOG_UNRESOLVED_CONFLICT = 74,
+    LOG_UNEXPECTED_LOCAL_ATTACHMENT = 49,
+    LOG_UNEXPECTED_REMOTE_ATTACHMENT = 47,
+    LOG_UNRESOLVED_ATTACHMENT_CONFLICT = 75,
     // 100 - 199 solving conflict
-    LOG_FORCE_PUT_REMOTE = 100,
-    LOG_FORCE_DELETE_REMOTE = 103,
-    LOG_FORCE_PUT_REMOTE_ATTACHMENT = 110,
-    LOG_FORCE_DELETE_REMOTE_ATTACHMENT = 113,
-    LOG_FORCE_PUT_LOCAL = 150,
-    LOG_FORCE_DELETE_LOCAL = 153,
-    LOG_FORCE_PUT_LOCAL_ATTACHMENT = 160,
-    LOG_FORCE_DELETE_LOCAL_ATTACHMENT = 163,
+    LOG_FORCE_PUT_REMOTE = 116,
+    LOG_FORCE_DELETE_REMOTE = 136,
+    LOG_FORCE_PUT_REMOTE_ATTACHMENT = 117,
+    LOG_FORCE_DELETE_REMOTE_ATTACHMENT = 137,
+    LOG_FORCE_PUT_LOCAL = 118,
+    LOG_FORCE_DELETE_LOCAL = 138,
+    LOG_FORCE_PUT_LOCAL_ATTACHMENT = 119,
+    LOG_FORCE_DELETE_LOCAL_ATTACHMENT = 139,
     // 200 - 299 pushing change
-    LOG_PUT_REMOTE = 200,
-    LOG_POST_REMOTE = 201,
-    LOG_DELETE_REMOTE = 203,
-    LOG_PUT_REMOTE_ATTACHMENT = 210,
-    LOG_DELETE_REMOTE_ATTACHMENT = 213,
-    LOG_PUT_LOCAL = 250,
-    LOG_POST_LOCAL = 251,
-    LOG_DELETE_LOCAL = 253,
-    LOG_PUT_LOCAL_ATTACHMENT = 260,
-    LOG_DELETE_LOCAL_ATTACHMENT = 263,
-    LOG_FALSE_CONFLICT = 298,
-    LOG_FALSE_CONFLICT_ATTACHMENT = 299,
+    LOG_PUT_REMOTE = 216,
+    LOG_POST_REMOTE = 226,
+    LOG_DELETE_REMOTE = 236,
+    LOG_PUT_REMOTE_ATTACHMENT = 217,
+    LOG_DELETE_REMOTE_ATTACHMENT = 237,
+    LOG_PUT_LOCAL = 218,
+    LOG_POST_LOCAL = 228,
+    LOG_DELETE_LOCAL = 238,
+    LOG_PUT_LOCAL_ATTACHMENT = 219,
+    LOG_DELETE_LOCAL_ATTACHMENT = 239,
+    LOG_FALSE_CONFLICT = 284,
+    LOG_FALSE_CONFLICT_ATTACHMENT = 285,
     // 300 - 399 nothing to do
-    LOG_SKIP_LOCAL_CREATION = 300,
-    LOG_SKIP_LOCAL_MODIFICATION = 301,
-    LOG_SKIP_LOCAL_DELETION = 303,
-    LOG_SKIP_REMOTE_CREATION = 350,
-    LOG_SKIP_REMOTE_MODIFICATION = 351,
-    LOG_SKIP_REMOTE_DELETION = 353,
-    LOG_SKIP_LOCAL_ATTACHMENT_CREATION = 310,
-    LOG_SKIP_LOCAL_ATTACHMENT_MODIFICATION = 311,
-    LOG_SKIP_LOCAL_ATTACHMENT_DELETION = 313,
-    LOG_SKIP_REMOTE_ATTACHMENT_CREATION = 360,
-    LOG_SKIP_REMOTE_ATTACHMENT_MODIFICATION = 361,
-    LOG_SKIP_REMOTE_ATTACHMENT_DELETION = 363,
-    LOG_SKIP_CONFLICT = 396,
-    LOG_SKIP_CONFLICT_ATTACHMENT = 397,
-    LOG_NO_CHANGE = 398,
-    LOG_NO_CHANGE_ATTACHMENT = 399;
+    LOG_SKIP_LOCAL_CREATION = 348,
+    LOG_SKIP_LOCAL_MODIFICATION = 358,
+    LOG_SKIP_LOCAL_DELETION = 368,
+    LOG_SKIP_REMOTE_CREATION = 346,
+    LOG_SKIP_REMOTE_MODIFICATION = 356,
+    LOG_SKIP_REMOTE_DELETION = 366,
+    LOG_SKIP_LOCAL_ATTACHMENT_CREATION = 349,
+    LOG_SKIP_LOCAL_ATTACHMENT_MODIFICATION = 359,
+    LOG_SKIP_LOCAL_ATTACHMENT_DELETION = 369,
+    LOG_SKIP_REMOTE_ATTACHMENT_CREATION = 347,
+    LOG_SKIP_REMOTE_ATTACHMENT_MODIFICATION = 357,
+    LOG_SKIP_REMOTE_ATTACHMENT_DELETION = 367,
+    LOG_SKIP_CONFLICT = 374,
+    LOG_SKIP_CONFLICT_ATTACHMENT = 375,
+    LOG_NO_CHANGE = 384,
+    LOG_NO_CHANGE_ATTACHMENT = 385;
 
-  function ReplicateReport() {
+  function ReplicateReport(log_level, log_console) {
     this._list = [];
     this.name = 'ReplicateReport';
     this.message = this.name;
     this.has_error = false;
+    this._log_level = log_level;
+    this._log_console = log_console;
   }
 
   ReplicateReport.prototype = {
@@ -9171,6 +9174,69 @@ return new Parser;
     LOG_NO_CHANGE: LOG_NO_CHANGE,
     LOG_NO_CHANGE_ATTACHMENT: LOG_NO_CHANGE_ATTACHMENT,
 
+    logConsole: function (code, a, b, c) {
+      if (!this._log_console) {
+        return;
+      }
+      var txt = code,
+        parsed_code = code,
+        log;
+
+      // Check severity level
+      if (parsed_code >= 300) {
+        txt += ' SKIP ';
+        log = console.info;
+      } else if (parsed_code >= 200) {
+        txt += ' SOLVE ';
+        log = console.log;
+      } else if (parsed_code >= 100) {
+        txt += ' FORCE ';
+        log = console.warn;
+      } else {
+        txt += ' ERROR ';
+        log = console.error;
+      }
+
+      // Check operation
+      parsed_code = code % 100;
+      if (parsed_code >= 80) {
+        txt += 'idem ';
+      } else if (parsed_code >= 70) {
+        txt += 'conflict ';
+      } else if (parsed_code >= 60) {
+        txt += 'deleted ';
+      } else if (parsed_code >= 50) {
+        txt += 'modified ';
+      } else if (parsed_code >= 40) {
+        txt += 'created ';
+      } else if (parsed_code >= 30) {
+        txt += 'delete ';
+      } else if (parsed_code >= 20) {
+        txt += 'post ';
+      } else if (parsed_code >= 10) {
+        txt += 'put ';
+      }
+
+      // Check document
+      parsed_code = code % 10;
+      if (parsed_code >= 8) {
+        txt += 'local ';
+      } else if (parsed_code >= 6) {
+        txt += 'remote ';
+      }
+      if (parsed_code !== 0) {
+        txt += (parsed_code % 2 === 0) ? 'document' : 'attachment';
+      }
+      txt += ' ' + a;
+      if (b !== undefined) {
+        txt += ' ' + b;
+        if (c !== undefined) {
+          txt += ' ' + c;
+        }
+      }
+      log(txt);
+    },
+
     log: function (id, type, extra) {
       if (type === undefined) {
         if (extra === undefined) {
@@ -9178,13 +9244,17 @@ return new Parser;
         }
         type = LOG_UNEXPECTED_ERROR;
       }
-      if (extra === undefined) {
-        this._list.push([type, id]);
-      } else {
-        this._list.push([type, id, extra]);
-      }
-      if (type < 100) {
-        this.has_error = true;
+      if (type < this._log_level) {
+        if (extra === undefined) {
+          this.logConsole(type, id);
+          this._list.push([type, id]);
+        } else {
+          this.logConsole(type, id, extra);
+          this._list.push([type, id, extra]);
+        }
+        if (type < 100) {
+          this.has_error = true;
+        }
       }
     },
 
@@ -9195,13 +9265,17 @@ return new Parser;
         }
         type = LOG_UNEXPECTED_ERROR;
       }
-      if (extra === undefined) {
-        this._list.push([type, id, name]);
-      } else {
-        this._list.push([type, id, name, extra]);
-      }
-      if (type < 100) {
-        this.has_error = true;
+      if (type < this._log_level) {
+        if (extra === undefined) {
+          this.logConsole(type, id, name);
+          this._list.push([type, id, name]);
+        } else {
+          this.logConsole(type, id, name, extra);
+          this._list.push([type, id, name, extra]);
+        }
+        if (type < 100) {
+          this.has_error = true;
+        }
       }
     },
 
@@ -9237,6 +9311,8 @@ return new Parser;
 
   function ReplicateStorage(spec) {
     this._query_options = spec.query || {};
+    this._log_level = spec.report_level || 100;
+    this._log_console = spec.debug || false;
     if (spec.signature_hash_key !== undefined) {
       this._query_options.select_list = [spec.signature_hash_key];
     }
@@ -10638,7 +10714,7 @@ return new Parser;
       skip_document_dict = {},
       skip_deleted_document_dict = {},
       cache = {},
-      report = new ReplicateReport();
+      report = new ReplicateReport(this._log_level, this._log_console);
 
     return new RSVP.Queue()
       .push(function () {
