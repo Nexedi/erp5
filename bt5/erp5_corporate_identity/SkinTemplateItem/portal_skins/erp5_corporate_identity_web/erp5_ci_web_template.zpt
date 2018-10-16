@@ -84,7 +84,7 @@
               
               <tal:comment replace="nothing">Standard Page Form Content ("simplicity: Form is rendered here")</tal:comment>
               <tal:block tal:condition="python: not is_front_page">
-                <tal:block tal:replace="structure                   python: here.asEntireHTML()"></tal:block>
+                <tal:block tal:replace="structure                   python: here.WebPage_downgradeHeaders(here.asEntireHTML(), 1)"></tal:block>
               </tal:block>
               <tal:comment replace="nothing">Special Page Content (Front page, showing all documents related to default document)</tal:comment>
               <tal:block tal:condition="python: layout_form is not None">
