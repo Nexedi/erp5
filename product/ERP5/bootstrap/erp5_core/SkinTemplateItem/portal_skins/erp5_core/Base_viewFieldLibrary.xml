@@ -163,6 +163,7 @@
                         <string>my_dialog_mode_text_content</string>
                         <string>my_core_mode_required_text_content_validator</string>
                         <string>my_view_mode_id</string>
+                        <string>my_honeypot</string>
                       </list>
                     </value>
                 </item>
