@@ -32,7 +32,7 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>ProductionOrder_init</string> </value>
+            <value> <string>ManufacturingOrder_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
