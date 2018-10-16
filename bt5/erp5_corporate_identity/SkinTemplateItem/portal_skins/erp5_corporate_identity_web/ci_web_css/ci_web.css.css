@@ -14,7 +14,14 @@ fieldset {
 }
 .ci-web .ci-web-page-content h1,
 .ci-web .ci-web-page-content h2,
-.ci-web .ci-web-page-content h3 {
+.ci-web .ci-web-page-content h3,
+.ci-web .ci-web-page-banner h1,
+.ci-web .ci-web-page-banner h2, 
+.ci-web .ci-web-page-banner h3,
+.ci-web details, 
+.ci-web menu,
+.ci-web .ci-web-page-banner .breadcrumb a,
+.ci-web .ci-web-page-banner .widget {
   font-family: "Roboto", Arial, sans-serif;
 }
 .ci-web .ci-web-page-content table th,
@@ -147,6 +154,11 @@ fieldset {
   -moz-box-shadow: inset 0 10px 10px -10px rgba(0,0,0,0.4);
   box-shadow: inset 0 10px 10px -10px rgba(0,0,0,0.4);
   padding: 0 0 2em 0;
+}
+.ci-web .ci-web-page-banner h1 {
+  font-size: 2.5em;
+  padding-top: .25em;
+  letter-spacing: -1px;
 }
 .ci-web-page-banner .wrapper:not(#wrapper_site_header) {
   max-width: 68em;
