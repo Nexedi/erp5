@@ -164,11 +164,17 @@ and handling data send&receive.
                                                   options.view),
               i;
             if (!warmup_gadget_done) {
+              // In order to speed up initial form rendering,
+              // preload most used gadgets while waiting for ERP5 form
+              // calculation
+              // Wait a big for the ajax query to be triggered
               RSVP.delay(10)
                 .then(function () {
                   for (i = 0; i < warmup_list.length; i += 1) {
-                    // console.log('warm up 2', warmup_list[i]);
-                    rJS.declareGadgetKlass(renderJS.getAbsoluteURL(warmup_list[i], gadget.__path));
+                    // No need to check the result, as it will fail later
+                    // when rJS will try to instanciate one of this gadget
+                    rJS.declareGadgetKlass(rJS.getAbsoluteURL(warmup_list[i],
+                                                              gadget.__path));
                   }
                 });
               warmup_gadget_done = true;
