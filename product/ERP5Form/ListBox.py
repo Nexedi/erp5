@@ -1966,6 +1966,7 @@ class ListBoxRenderer:
 
     # Calculuate the start and the end offsets, and set the page numbers.
     param_dict['list_lines'] = max_lines = self.getMaxLineNumber()
+    param_dict['total_size'] = self.total_size
     if max_lines:
       start = end and end - 1
       self.total_pages = 1 + start // max_lines
@@ -1977,7 +1978,7 @@ class ListBoxRenderer:
       self.total_pages = 1
       self.current_page = start = 0
     param_dict['list_start'] = start
-    self.getSelection().edit(params = param_dict)
+    self.getSelection().edit(params=param_dict)
 
     # Make a list of lines.
     line_class = self.getLineClass()
