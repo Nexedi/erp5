@@ -30,7 +30,6 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
@@ -70,7 +69,7 @@
             listbox = field.listbox,
             listbox_key = Object.keys(field.listbox);
 
-          if (field.proxy_listbox_ids_len) {
+          if (listbox_key.length > 1) {
             if (select_template === "") {
               select_template = listbox_key[0];
             }
