@@ -704,7 +704,6 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       "query": make_query({"query": sql_catalog.buildQuery(relation_query_kw).asSearchTextExpression(sql_catalog)})
     }
     title = field.get_value("title")
-
     column_list = field.get_value("columns")
     proxy_listbox_ids = field.get_value("proxy_listbox_ids")
 
