@@ -121,7 +121,7 @@
     return schema;
   }
 
-  function render_enum(g, schema, json_document) {
+  function render_enum(schema, json_document) {
     var input = document.createElement("select"),
       option,
       i,
@@ -129,19 +129,12 @@
       selected = false,
       enum_arr = schema['enum'];
     input.size = 1;
-    if (schema.default) {
-      if (json_document === undefined) {
-        json_document = schema.default;
-        g.props.changed = true;
-      }
-    } else {
-      option = document.createElement("option");
-      option.value = "";
-      if (json_document === undefined) {
-        option.selected = true;
-      }
-      input.appendChild(option);
+    option = document.createElement("option");
+    option.value = "";
+    if (json_document === undefined) {
+      option.selected = true;
     }
+    input.appendChild(option);
     for (i = 0; i < enum_arr.length; i += 1) {
       if (enum_arr.hasOwnProperty(i)) {
         option = document.createElement("option");
@@ -178,7 +171,7 @@
     return input;
   }
 
-  function render_enum_with_title(g, schema_arr, json_document, selected_schema) {
+  function render_enum_with_title(schema_arr, json_document, selected_schema) {
     var input = document.createElement("select"),
       option,
       i,
@@ -188,19 +181,12 @@
     if (json_document === undefined && selected_schema !== undefined) {
       json_document = selected_schema.schema.const;
     }
-    if (schema_arr[0].schema.default) {
-      if (json_document === undefined) {
-        json_document = schema_arr[0].schema.default;
-        g.props.changed = true;
-      }
-    } else {
-      option = document.createElement("option");
-      option.value = "";
-      if (json_document === undefined) {
-        option.selected = true;
-      }
-      input.appendChild(option);
+    option = document.createElement("option");
+    option.value = "";
+    if (json_document === undefined) {
+      option.selected = true;
     }
+    input.appendChild(option);
     for (i = 0; i < schema_arr.length; i += 1) {
       option = document.createElement("option");
       // XXX use number id for speedup
@@ -237,7 +223,7 @@
     return input;
   }
 
-  function render_boolean(g, schema, json_document) {
+  function render_boolean(json_document) {
     var input,
       schema_for_selection = {
         type: "boolean",
@@ -250,10 +236,7 @@
     if (json_document === "false") {
       json_document = false;
     }
-    if (getDocumentType(schema.default) === "boolean") {
-      schema_for_selection.default = schema.default;
-    }
-    input = render_enum(g, schema_for_selection, json_document);
+    input = render_enum(schema_for_selection, json_document);
     input.setAttribute('data-json-type', "boolean");
     return input;
   }
@@ -599,9 +582,6 @@
                           return event(schema_alternatives[value[scope]].value);
                         })
                         .push(function () {
-                          return gadget.rootNotifyChange();
-                        })
-                        .push(function () {
                           if (rerender) {
                             return rerender(g, schema_alternatives);
                           }
@@ -609,6 +589,9 @@
                         })
                         .push(function (render_options) {
                           return g.render(render_options);
+                        })
+                        .push(function () {
+                          return gadget.rootNotifyChange();
                         });
                     },
                     rerender: function () {
@@ -698,29 +681,22 @@
     var input,
       is_items_arr = schema.items instanceof Array,
       minItems = schema.minItems || 0;
-    if (schema.default === undefined &&
-        json_document === undefined) {
-      div_input.setAttribute("data-undefined", "true");
+    if (json_document instanceof Array &&
+        json_document.length === 0) {
+      div_input.setAttribute("data-json-empty-array", "true");
     }
 
     function element_append(child) {
       if (child) {
         input.parentNode.insertBefore(child, input);
-        div_input.removeAttribute("data-undefined");
+        div_input.removeAttribute("data-json-empty-array");
       }
     }
 
     function div_append(child) {
       if (child) {
         div_input.appendChild(child);
-        div_input.removeAttribute("data-undefined");
-      }
-    }
-
-    if (json_document === undefined) {
-      if (schema.hasOwnProperty('default')) {
-        json_document = schema.default;
-        gadget.props.changed = true;
+        div_input.removeAttribute("data-json-empty-array");
       }
     }
 
@@ -923,13 +899,13 @@
 
     // render input begin
     if (!input && schema_arr[0].is_arr_of_const && schema_arr.length > 1) {
-      input = render_enum_with_title(gadget, schema_arr, json_document, options.selected_schema);
+      input = render_enum_with_title(schema_arr, json_document, options.selected_schema);
     }
     if (!input && schema.const !== undefined) {
       input = render_const(gadget, schema, json_document);
     }
     if (!input && schema.enum !== undefined) {
-      input = render_enum(gadget, schema, json_document);
+      input = render_enum(schema, json_document);
       // XXX take in account existing type with enum
       type_changed = false;
     }
@@ -939,7 +915,7 @@
     }
 
     if (!input && type === "boolean") {
-      input = render_boolean(gadget, schema, json_document);
+      input = render_boolean(json_document);
     }
 
     if (!input && ["string", "integer", "number", "null"].indexOf(type) >= 0) {
@@ -956,10 +932,6 @@
         }
 
         if (type === "integer" || type === "number") {
-          if (json_document === undefined && typeof schema.default === "number") {
-            input.value = schema.default;
-            gadget.props.changed = true;
-          }
           input.setAttribute("data-json-type", type);
           if (json_document === undefined || json_document === null ||
               typeof json_document === "number") {
@@ -991,10 +963,6 @@
             input.max = schema.maximum;
           }
         } else {
-          if (json_document === undefined && typeof schema.default === "string") {
-            input.value = schema.default;
-            gadget.props.changed = true;
-          }
           input.type = "text";
           if (schema.pattern) {
             input.pattern = schema.pattern;
@@ -1011,10 +979,6 @@
             input.spellcheck = false;
           }
         }
-      }
-      if (schema.default !== undefined) {
-        input.setAttribute('data-default-value', JSON.stringify(schema.default));
-        input.placeholder = schema.default;
       }
     }
     // render input end
@@ -1107,6 +1071,9 @@
       div.setAttribute("data-parent-scope", gadget.element.getAttribute("data-gadget-scope"));
       div.setAttribute("data-json-path", first_path + '/');
       div.setAttribute("data-json-type", type);
+      if (options.required) {
+        div.setAttribute("data-json-required", "true");
+      }
     }
 
     if (schema.info !== undefined) {
@@ -1326,18 +1293,8 @@
       root.appendChild(child);
     }
 
-    if (JSON.stringify(schema.default) === '{}') {
-      // save default value as attribute only for empty values
-      root.parentElement.setAttribute("data-default-value", '{}');
-    }
-
     if (json_document === undefined) {
-      if (schema.hasOwnProperty('default')) {
-        json_document = schema.default;
-        g.props.changed = true;
-      } else {
-        json_document = {};
-      }
+      json_document = {};
     }
 
     return expandProperties(g, schema.properties, schema_path + '/properties/', required)
@@ -1525,7 +1482,7 @@
 
   function getFormValuesAsJSONDict(g) {
     var multi_level_dict = {"": {}},
-      count_of_values = 0,
+      is_empty = true,
       scope,
       options = g.props,
       array,
@@ -1533,6 +1490,7 @@
       key,
       i,
       len,
+      json_dict = {},
       queue = RSVP.Queue();
 
     function convertOnMultiLevel(d, key, value) {
@@ -1544,17 +1502,27 @@
         if (ii === key_list.length - 1) {
           if (value !== undefined) {
             d[kk] = value;
-            count_of_values += 1;
+            is_empty = false;
           } else {
             return d[kk];
           }
         } else {
           if (!d.hasOwnProperty(kk)) {
-            d[kk] = {};
+            if (value !== undefined) {
+              d[kk] = {};
+            } else {
+              return;
+            }
           }
           d = d[kk];
         }
       }
+    }
+
+    function check_parent_path_not_empty(path) {
+      var key_list = path.split("/"),
+        parent_path = key_list.slice(0, key_list.length - 1).join("/");
+      return convertOnMultiLevel(multi_level_dict, parent_path) !== undefined;
     }
 
     function recursiveGetContent(scope, path) {
@@ -1594,17 +1562,43 @@
         });
     }
 
-
-    // set empty object if default value require this
-    array = g.element
-      .querySelectorAll("div[data-parent-scope='" +
-                        g.element.getAttribute("data-gadget-scope") + "']");
-    for (i = 0; i < array.length; i += 1) {
-      path = array[i].getAttribute("data-json-path").slice(0, -1);
-      if (array[i].getAttribute("data-default-value") === "{}") {
-        convertOnMultiLevel(multi_level_dict, path, {});
+    g.props.inputs.forEach(function (input) {
+      if (input.hasAttribute('data-origin-value')) {
+        json_dict[input.name] = JSON.parse(input.getAttribute('data-origin-value'));
+      } else {
+        if (input.value !== "") {
+          var type = input.getAttribute('data-json-type');
+          if (input.tagName === "SELECT" && input.value) {
+            // selection used for enums
+            json_dict[input.name] = JSON.parse(input.value);
+          } else if (type === 'number') {
+            json_dict[input.name] = parseFloat(input.value);
+          } else if (type === "integer") {
+            json_dict[input.name] = parseInt(input.value, 10);
+          } else if (type === "boolean") {
+            if (input.value === "true") {
+              json_dict[input.name] = true;
+            } else if (input.value === "false") {
+              json_dict[input.name] = false;
+            }
+          } else if (input.tagName === "TEXTAREA") {
+            if (input["data-format"] === "string") {
+              json_dict[input.name] = input.value;
+            } else {
+              json_dict[input.name] = input.value.split('\n');
+            }
+          } else {
+            json_dict[input.name] = input.value;
+          }
+        }
+      }
+    });
+    for (path in json_dict) {
+      if (json_dict.hasOwnProperty(path)) {
+        convertOnMultiLevel(multi_level_dict, path, json_dict[path]);
       }
     }
+
 
     for (path in options.arrays) {
       if (options.arrays.hasOwnProperty(path)) {
@@ -1612,7 +1606,7 @@
           .querySelectorAll("div[data-gadget-parent-scope='" + g.element.getAttribute("data-gadget-scope") + "']");
         len = array.length;
         if (len === 0 &&
-            !options.arrays[path].hasAttribute('data-undefined')) {
+            options.arrays[path].hasAttribute('data-json-empty-array')) {
           convertOnMultiLevel(multi_level_dict, path.slice(0, -1), []);
         }
         for (i = 0; i < len; i = i + 1) {
@@ -1640,47 +1634,26 @@
 
     return queue
       .push(function () {
-        var json_dict = {},
-          k;
-        g.props.inputs.forEach(function (input) {
-          if (input.hasAttribute('data-origin-value')) {
-            json_dict[input.name] = JSON.parse(input.getAttribute('data-origin-value'));
-          } else {
-            if (input.value !== "") {
-              var type = input.getAttribute('data-json-type');
-              if (input.tagName === "SELECT" && input.value) {
-                // selection used for enums
-                json_dict[input.name] = JSON.parse(input.value);
-              } else if (type === 'number') {
-                json_dict[input.name] = parseFloat(input.value);
-              } else if (type === "integer") {
-                json_dict[input.name] = parseInt(input.value, 10);
-              } else if (type === "boolean") {
-                if (input.value === "true") {
-                  json_dict[input.name] = true;
-                } else if (input.value === "false") {
-                  json_dict[input.name] = false;
-                }
-              } else if (input.tagName === "TEXTAREA") {
-                if (input["data-format"] === "string") {
-                  json_dict[input.name] = input.value;
-                } else {
-                  json_dict[input.name] = input.value.split('\n');
-                }
+        // set empty object/array for required properties/items
+        // if parent object/array existed
+        array = g.element
+          .querySelectorAll("div[data-parent-scope='" +
+                            g.element.getAttribute("data-gadget-scope") + "']");
+        for (i = 0; i < array.length; i += 1) {
+          path = array[i].getAttribute("data-json-path").slice(0, -1);
+          if (check_parent_path_not_empty(path) &&
+              convertOnMultiLevel(multi_level_dict, path) === undefined) {
+            if (array[i].hasAttribute("data-json-required")) {
+              if (array[i].getAttribute("data-json-type") === "object") {
+                convertOnMultiLevel(multi_level_dict, path, {});
               } else {
-                json_dict[input.name] = input.value;
+                convertOnMultiLevel(multi_level_dict, path, []);
               }
-            } else if (input.hasAttribute('data-default-value')) {
-              json_dict[input.name] = JSON.parse(input.getAttribute('data-default-value'));
             }
           }
-        });
-        for (k in json_dict) {
-          if (json_dict.hasOwnProperty(k)) {
-            convertOnMultiLevel(multi_level_dict, k, json_dict[k]);
-          }
         }
-        if (count_of_values === 0) {
+
+        if (is_empty) {
           switch (g.props.type) {
           case "string":
             return "";
