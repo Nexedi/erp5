@@ -785,6 +785,117 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertFalse(result_dict['_embedded']['_view'].has_key('_actions'))
 
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoasDocument_form_id(self):
+    document = self._makeDocument()
+
+    parent = document.getParentValue()
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="Base_viewMetadata")
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    self.assertEqual(result_dict['_links']['parent'],
+                    {"href": "urn:jio:get:%s" % parent.getRelativeUrl(), "name": parent.getTitle()})
+
+    self.assertEqual(result_dict['_links']['view'][0]['href'],
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
+                       self.portal.absolute_url(),
+                       urllib.quote_plus(document.getRelativeUrl())))
+    self.assertEqual(result_dict['_links']['view'][0]['title'], "View")
+    self.assertEqual(result_dict['_links']['view'][0]['name'], "view")
+
+    self.assertEqual(result_dict['_links']['action_object_view'][0]['href'],
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=view" % (
+                       self.portal.absolute_url(),
+                       urllib.quote_plus(document.getRelativeUrl())))
+    self.assertEqual(result_dict['_links']['action_object_view'][0]['title'], "View")
+    self.assertEqual(result_dict['_links']['action_object_view'][0]['name'], "view")
+
+    self.assertEqual(result_dict['_links']['action_workflow'][0]['href'],
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=custom_action_no_dialog&extra_param_json=eyJmb3JtX2lkIjogIkJhc2Vfdmlld01ldGFkYXRhIn0=" % (
+                       self.portal.absolute_url(),
+                       urllib.quote_plus(document.getRelativeUrl())))
+    self.assertEqual(result_dict['_links']['action_workflow'][0]['title'], "Custom Action No Dialog")
+    self.assertEqual(result_dict['_links']['action_workflow'][0]['name'], "custom_action_no_dialog")
+
+    self.assertEqual(result_dict['_links']['action_object_jump']['href'],
+                     "urn:jio:allDocs?query=portal_type%%3A%%22Query%%22%%20AND%%20default_agent_uid%%3A%sL" %
+                       document.getUid())
+    self.assertEqual(result_dict['_links']['action_object_jump']['title'], "Queries")
+    self.assertEqual(result_dict['_links']['action_object_jump']['name'], "jump_query")
+
+    self.assertEqual(result_dict['_links']['portal']['href'], 'urn:jio:get:%s' % document.getPortalObject().getId())
+    self.assertEqual(result_dict['_links']['portal']['name'], document.getPortalObject().getTitle())
+
+    self.assertEqual(result_dict['_links']['site_root']['href'], 'urn:jio:get:web_site_module/hateoas')
+    self.assertEqual(result_dict['_links']['site_root']['name'], self.portal.web_site_module.hateoas.getTitle())
+
+    self.assertEqual(result_dict['_links']['action_object_new_content_action']['href'],
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=%s&view=create_a_document&extra_param_json=eyJmb3JtX2lkIjogIkJhc2Vfdmlld01ldGFkYXRhIn0=" % (
+                       self.portal.absolute_url(),
+                       urllib.quote_plus(document.getRelativeUrl())))
+    self.assertEqual(result_dict['_links']['action_object_new_content_action']['title'], "Create a Document")
+    self.assertEqual(result_dict['_links']['action_object_new_content_action']['name'], "create_a_document")
+
+    self.assertEqual(result_dict['_links']['type']['href'], 'urn:jio:get:portal_types/%s' % document.getPortalType())
+    self.assertEqual(result_dict['_links']['type']['name'], document.getPortalType())
+
+    self.assertEqual(result_dict['title'].encode("UTF-8"), document.getTitle())
+    self.assertEqual(result_dict['_debug'], "traverse")
+
+    # Check embedded form rendering
+    self.assertEqual(result_dict['_embedded']['_view']['form_id']['default'], 'Base_viewMetadata')
+    self.assertEqual(result_dict['_embedded']['_view']['form_id']['editable'], 0)
+    self.assertEqual(result_dict['_embedded']['_view']['form_id']['hidden'], 1)
+    self.assertEqual(result_dict['_embedded']['_view']['form_id']['key'], 'form_id')
+    self.assertEqual(result_dict['_embedded']['_view']['form_id']['required'], 1)
+    self.assertEqual(result_dict['_embedded']['_view']['form_id']['type'], 'StringField')
+
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['default'], document.getId())
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['editable'], 1)
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['hidden'], 0)
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['key'], 'field_my_id')
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['required'], 1)
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['type'], 'StringField')
+    self.assertEqual(result_dict['_embedded']['_view']['my_id']['title'], 'ID')
+
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['href'], 'urn:jio:get:%s' % document.getRelativeUrl())
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['name'], document.getRelativeUrl())
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['title'], document.getTitle().decode("UTF-8"))
+
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['self']['href'], "%s/Base_viewMetadata" %
+                                                                                    document.getRelativeUrl())
+
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['form_definition']['href'], 'urn:jio:get:portal_skins/erp5_core/Base_viewMetadata')
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['form_definition']['name'], 'Base_viewMetadata')
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['group_list'][0][0],
+      'left'
+    )
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['group_list'][0][1][0],
+      ['my_id', {'meta_type': 'ProxyField'}]
+    )
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['pt'],
+      'form_view'
+    )
+
+    self.assertEqual(result_dict['_embedded']['_view']['_actions']['put']['href'], '%s/web_site_module/hateoas/%s/Base_edit' % (
+                                                                                     self.portal.absolute_url(),
+                                                                                     document.getRelativeUrl()))
+    self.assertEqual(result_dict['_embedded']['_view']['_actions']['put']['method'], 'POST')
+
+
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
   @createIndexedDocument()
