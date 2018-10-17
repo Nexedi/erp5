@@ -65,7 +65,7 @@
             field = result_list[0]._embedded._view[
               options.back_field.slice("field_".length)
             ],
-            html,
+            html = '',
             listbox = field.listbox,
             listbox_key = Object.keys(field.listbox);
 
@@ -78,34 +78,32 @@
               options: listbox_key,
               select_template: select_template
             });
-            gadget.element.querySelector(".left").innerHTML = html;
           } else {
             listbox_render = listbox[listbox_key[0]];
           }
           listbox_render.command = "history_previous";
           listbox_render.line_icon = true;
-          return form_gadget.render({
-            erp5_document: {"_embedded": {"_view": {
-              "listbox": listbox_render
-            }},
-              "title": result_list[0].title,
-              "_links": result_list[0]._links
-              },
-            form_definition: {
-              group_list: [[
-                "bottom",
-                [["listbox"]]
-              ]]
-            }
-          });
+
+          return RSVP.all([
+            form_gadget.render({
+              erp5_document: {"_embedded": {"_view": {
+                "listbox": listbox_render
+              }},
+                "title": result_list[0].title,
+                "_links": result_list[0]._links
+                },
+              form_definition: {
+                group_list: [[
+                  "bottom",
+                  [["listbox"]]
+                ]]
+              }
+            }),
+            gadget.translateHtml(html)
+          ]);
         })
-        .push(function () {
-          return gadget.translateHtml(
-            gadget.element.querySelector(".left").innerHTML
-          );
-        })
-        .push(function (html) {
-          gadget.element.querySelector(".left").innerHTML = html;
+        .push(function (result_list) {
+          gadget.element.querySelector(".left").innerHTML = result_list[1];
         });
     })
     .declareMethod("triggerSubmit", function () {
