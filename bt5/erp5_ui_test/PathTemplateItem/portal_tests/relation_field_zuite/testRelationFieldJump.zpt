@@ -138,7 +138,7 @@ will be shown
 </tr>
 <tr>
   <td>assertAbsoluteLocation</td>
-  <td tal:content="string:regexp:${here/portal_url}/foo_module/1(\?|$$)"/>
+  <td tal:content="string:glob:${here/portal_url}/foo_module/*"/>
   <td></td>
   <td></td>
 </tr>
