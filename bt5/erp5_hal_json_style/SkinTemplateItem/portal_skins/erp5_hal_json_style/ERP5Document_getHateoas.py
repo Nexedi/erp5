@@ -705,7 +705,6 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     }
     title = field.get_value("title")
 
-    #"""
     column_list = field.get_value("columns")
     proxy_listbox_ids = field.get_value("proxy_listbox_ids")
 
@@ -730,7 +729,6 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       del REQUEST.other['proxy_listbox_id']
 
       listbox[Base_translateString(listbox_name)] = subfield
-    #"""
 
     result.update({
       "url": relative_url,
