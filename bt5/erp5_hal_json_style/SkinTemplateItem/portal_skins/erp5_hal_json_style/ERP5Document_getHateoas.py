@@ -704,6 +704,8 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       "query": make_query({"query": sql_catalog.buildQuery(relation_query_kw).asSearchTextExpression(sql_catalog)})
     }
     title = field.get_value("title")
+
+    """
     column_list = field.get_value("columns")
     proxy_listbox_ids = field.get_value("proxy_listbox_ids")
 
@@ -728,6 +730,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       del REQUEST.other['proxy_listbox_id']
 
       listbox[Base_translateString(listbox_name)] = subfield
+    """
 
     result.update({
       "url": relative_url,
@@ -738,8 +741,8 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       "catalog_index": field.get_value('catalog_index'),
       "allow_jump": field.get_value('allow_jump'),
       "allow_creation": field.get_value('allow_creation'),
-      "proxy_listbox_ids_len": len(proxy_listbox_ids),
-      "listbox": listbox,
+      # "proxy_listbox_ids_len": len(proxy_listbox_ids),
+      # "listbox": listbox,
     })
 
     if not isinstance(result["default"], list):
