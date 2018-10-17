@@ -703,31 +703,6 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     query = url_template_dict["jio_search_template"] % {
       "query": make_query({"query": sql_catalog.buildQuery(relation_query_kw).asSearchTextExpression(sql_catalog)})
     }
-    title = field.get_value("title")
-    column_list = field.get_value("columns")
-    proxy_listbox_ids = field.get_value("proxy_listbox_ids")
-
-    if len(proxy_listbox_ids):
-      listbox_ids = proxy_listbox_ids
-    else:
-      listbox_ids = [('Base_viewRelatedObjectListBase/listbox','default')]
-    listbox = {}
-
-    rel_form = getattr(traversed_document, 'Base_viewRelatedObjectList')
-    listbox_form_field = rel_form.get_field('listbox')
-    for (listbox_path, listbox_name) in listbox_ids:
-      REQUEST.set('proxy_listbox_id', listbox_path)
-      # Set only relation_form_id but do NOT change form_id to the relation_form neither field_id to the listbox
-      # field_id must point to a relation field
-      REQUEST.set('relation_form_id', rel_form.id)
-
-      # Render sub-field of listbox but not as a full-field with its field_id in the REQUEST
-      # because Relation stuff expects the original RelationField to be the one "being rendered"
-      subfield = renderField(traversed_document, listbox_form_field, rel_form, request_field=False)
-      del REQUEST.other['relation_form_id']
-      del REQUEST.other['proxy_listbox_id']
-
-      listbox[Base_translateString(listbox_name)] = subfield
 
     result.update({
       "url": relative_url,
@@ -738,8 +713,17 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       "catalog_index": field.get_value('catalog_index'),
       "allow_jump": field.get_value('allow_jump'),
       "allow_creation": field.get_value('allow_creation'),
-      "proxy_listbox_ids_len": len(proxy_listbox_ids),
-      "listbox": listbox,
+      "search_view": url_template_dict['traverse_generator_action'] % {
+        "root_url": site_root.absolute_url(),
+        "script_id": script.id,
+        "relative_url": relative_url.replace("/", "%2F"),
+        "view": "Base_viewRelatedObjectList",
+        "extra_param_json": urlsafe_b64encode(
+          json.dumps(ensureSerializable({
+            'original_form_id': form.id,
+            'field_id': field.id
+        })))
+      }
     })
 
     if not isinstance(result["default"], list):
@@ -1077,6 +1061,32 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     )
   }
 
+  use_relation_form_page_template = (form.pt == "relation_form")
+  if use_relation_form_page_template:
+    # Provide the list of possible listboxes
+    proxy_form_id_list = context.Base_getRelatedObjectParameter('proxy_listbox_ids')
+    if not len(proxy_form_id_list):
+      proxy_form_id_list = [('Base_viewRelatedObjectListBase/listbox', 'default')]
+
+    # Allow to correctly render the listbox
+    if REQUEST.get('proxy_listbox_id', None) is None:
+      REQUEST.set('proxy_listbox_id', proxy_form_id_list[0][0])
+
+    # Create the possible choices
+    root_url = site_root.absolute_url()
+    response_dict['proxy_form_id_list'] = [(url_template_dict['traverse_generator_action'] % {
+      "root_url": site_root.absolute_url(),
+      "script_id": script.id,
+      "relative_url": relative_url.replace("/", "%2F"),
+      "view": "Base_viewRelatedObjectList",
+      "extra_param_json": urlsafe_b64encode(
+        json.dumps(ensureSerializable({
+          'proxy_listbox_id': x,
+          'original_form_id': extra_param_json['original_form_id'],
+          'field_id': extra_param_json['field_id']
+        })))
+    }, Base_translateString(y)) for x, y in proxy_form_id_list]
+
   # Go through all groups ("left", "bottom", "hidden" etc.) and add fields from
   # them into form.
   for group in form.Form_getGroupTitleAndId():
@@ -1087,7 +1097,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       if not field.get_value("enabled"):
         continue
       try:
-        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params)
+        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params, request_field=not use_relation_form_page_template)
         if field_errors.has_key(field.id):
           response_dict[field.id]["error_text"] = field_errors[field.id].error_text
       except AttributeError as error:
@@ -1407,6 +1417,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # Try to embed the form in the result
         if (view == view_action['id']):
           current_action = parseActionUrl('%s' % view_action['url'])  # current action/view being rendered
+
+    if view and (view != 'view') and (current_action.get('view_id', None) is None):
+      # XXX Allow to directly render a form
+      current_action['view_id'] = view
+      current_action['url'] = 'couscous'
+      current_action['params'] = {}
+
     # If we have current action definition we are able to render embedded view
     # which should be a "ERP5 Form" but in reality can be anything
     if current_action.get('view_id', ''):
