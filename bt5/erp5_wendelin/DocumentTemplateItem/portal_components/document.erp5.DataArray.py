@@ -64,12 +64,6 @@ class DataArray(BigFile):
     self._setArray(array)
     return array
 
-  def reindexRows(self, start_index, stop_index, method_id_list):
-    self.portal_catalog.catalogObjectList(
-      [self.asContext(start_index=start_index, stop_index=stop_index)],
-      method_id_list=method_id_list
-    )
-
   def getArray(self, default=None):
     """
     Get numpy array value.
