@@ -1,0 +1,105 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Domain Tree</title>
+</head>
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+  <thead>
+    <tr><td rowspan="1" colspan="3">Test Previous/Next/First/Last page for custom list method</td></tr>
+    </thead><tbody>
+    <!-- Domain tree are not avalaible in mobile skin 
+         So this part is skipped -->
+    <tal:block tal:condition="python: context.TestTool_getSkinName()!='Mobile'">
+    
+    <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>open</td>
+      <td>${base_url}/ListBoxZuite_resetReportSelections</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Done.</td>
+      <td></td>
+    </tr>
+    <!-- Land at first page -->
+    <tr>
+      <td>open</td>
+      <td>${base_url}/portal_skins/erp5_ui_test/Foo_viewDummyReturningOnlyWhatShownListBox</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//a[.="A0"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//a[.="A1"]</td>
+      <td></td>
+    </tr>
+    <!-- Go to next page -->
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="listbox_next_page"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//a[.="A2"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//a[.="A3"]</td>
+      <td></td>
+    </tr>
+    <!-- Go to last page -->
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="listbox_last_page"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//a[.="A6"]</td>
+      <td></td>
+    </tr>
+    <!-- Go to last page -->
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="listbox_previous_page"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//a[.="A4"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//a[.="A5"]</td>
+      <td></td>
+    </tr>
+    <!-- Go to first page -->
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@class="listbox_first_page"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//a[.="A0"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//a[.="A1"]</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  </tbody></table>
+</body>
+</html>
