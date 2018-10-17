@@ -60,34 +60,28 @@
           ]);
         })
         .push(function (result_list) {
-          var form_gadget = result_list[1],
-            listbox_render,
-            field = result_list[0]._embedded._view[
-              options.back_field.slice("field_".length)
-            ],
-            html = '',
+          var field = result_list[0]._embedded._view[
+            options.back_field.slice("field_".length)
+          ],
             listbox = field.listbox,
-            listbox_key = Object.keys(field.listbox);
+            listbox_key_list = Object.keys(field.listbox);
 
-          if (listbox_key.length > 1) {
+          if (listbox_key_list.length > 1) {
             if (select_template === "") {
-              select_template = listbox_key[0];
+              select_template = listbox_key_list[0];
             }
-            listbox_render = listbox[select_template];
-            html = search_template({
-              options: listbox_key,
-              select_template: select_template
-            });
           } else {
-            listbox_render = listbox[listbox_key[0]];
+            select_template = listbox_key_list[0];
           }
-          listbox_render.command = "history_previous";
-          listbox_render.line_icon = true;
+          listbox[select_template].command = "history_previous";
+          listbox[select_template].line_icon = true;
 
           return RSVP.all([
-            form_gadget.render({
+            gadget.changeState({options: JSON.stringify(listbox_key_list),
+                                select_template: select_template}),
+            result_list[1].render({
               erp5_document: {"_embedded": {"_view": {
-                "listbox": listbox_render
+                "listbox": listbox[select_template]
               }},
                 "title": result_list[0].title,
                 "_links": result_list[0]._links
@@ -98,12 +92,24 @@
                   [["listbox"]]
                 ]]
               }
-            }),
-            gadget.translateHtml(html)
+            })
           ]);
-        })
-        .push(function (result_list) {
-          gadget.element.querySelector(".left").innerHTML = result_list[1];
+        });
+
+    })
+    .onStateChange(function () {
+      var gadget = this,
+        option_list = JSON.parse(gadget.state.options);
+      if (option_list.length <= 1) {
+        gadget.element.querySelector(".left").innerHTML = '';
+        return;
+      }
+      return gadget.translateHtml(search_template({
+        options: option_list,
+        select_template: gadget.state.select_template
+      }))
+        .push(function (html) {
+          gadget.element.querySelector(".left").innerHTML = html;
         });
     })
     .declareMethod("triggerSubmit", function () {
@@ -118,6 +124,7 @@
         value;
       if (target.nodeName === 'SELECT') {
         value = target.options[target.selectedIndex].value;
+        this.state.select_template = value;
         return this.redirect({
           command: 'change',
           options: {
