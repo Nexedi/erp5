@@ -1,4 +1,4 @@
-/*jslint nomen: true, indent: 2, maxerr: 3 */
+/*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
 /*global window, rJS, RSVP, Handlebars*/
 (function (window, rJS, RSVP, Handlebars) {
   "use strict";
@@ -27,22 +27,6 @@
 
   gadget_klass
     /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
-    /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
@@ -56,45 +40,48 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .allowPublicAcquisition('updateHeader', function (param_list) {
-      return this.updateHeader({
-        page_title: param_list[0].page_title,
-        back_url: this.props.back_url,
-        filter_action: true
-      });
+      var gadget = this;
+      return gadget.getUrlFor({command: 'history_previous'})
+        .push(function (back_url) {
+          return gadget.updateHeader({
+            page_title: param_list[0].page_title,
+            back_url: back_url,
+            filter_action: true
+          });
+        });
     })
     .declareMethod("render", function (options) {
       var gadget = this,
         select_template = options.select_template || "";
-      return gadget.getUrlFor({command: 'history_previous'})
-        .push(function (back_url) {
-          gadget.props.back_url = back_url;
+      return new RSVP.Queue()
+        .push(function () {
           return RSVP.all([
             gadget.jio_getAttachment(options.url, options.view),
             gadget.getDeclaredGadget('form_list')
           ]);
         })
-        .push(function (results) {
-          var form_gadget = results[1],
+        .push(function (result_list) {
+          var form_gadget = result_list[1],
             listbox_render,
-            field = results[0]._embedded._view[options.back_field.slice("field_".length)],
-            html;
-
-          gadget.props.listbox = field.listbox;
-          gadget.props.listbox_key = Object.keys(field.listbox);
-          gadget.props.field_title = field.title;
+            field = result_list[0]._embedded._view[
+              options.back_field.slice("field_".length)
+            ],
+            html,
+            listbox = field.listbox,
+            listbox_key = Object.keys(field.listbox);
 
           if (field.proxy_listbox_ids_len) {
             if (select_template === "") {
-              select_template = gadget.props.listbox_key[0];
+              select_template = listbox_key[0];
             }
-            listbox_render = gadget.props.listbox[select_template];
+            listbox_render = listbox[select_template];
             html = search_template({
-              options: gadget.props.listbox_key,
+              options: listbox_key,
               select_template: select_template
             });
-            gadget.props.element.querySelector(".left").innerHTML = html;
+            gadget.element.querySelector(".left").innerHTML = html;
           } else {
-            listbox_render = gadget.props.listbox[gadget.props.listbox_key[0]];
+            listbox_render = listbox[listbox_key[0]];
           }
           listbox_render.command = "history_previous";
           listbox_render.line_icon = true;
@@ -102,8 +89,8 @@
             erp5_document: {"_embedded": {"_view": {
               "listbox": listbox_render
             }},
-              "title": results[0].title,
-              "_links": results[0]._links
+              "title": result_list[0].title,
+              "_links": result_list[0]._links
               },
             form_definition: {
               group_list: [[
@@ -114,10 +101,12 @@
           });
         })
         .push(function () {
-          return gadget.translateHtml(gadget.props.element.querySelector(".left").innerHTML);
+          return gadget.translateHtml(
+            gadget.element.querySelector(".left").innerHTML
+          );
         })
         .push(function (html) {
-          gadget.props.element.querySelector(".left").innerHTML = html;
+          gadget.element.querySelector(".left").innerHTML = html;
         });
     })
     .declareMethod("triggerSubmit", function () {
