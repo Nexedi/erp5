@@ -743,9 +743,6 @@ class SelectionTool( BaseTool, SimpleItem ):
     def firstPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
       """
         Access the first page of a list
-        XXX: As its complementary (lastPage) is broken, this method is
-        probably not used either. If so, it should be removed along with
-        lastPage.
       """
       if uids is None: uids = []
       selection = self.getSelectionFor(list_selection_name, REQUEST)
@@ -760,9 +757,6 @@ class SelectionTool( BaseTool, SimpleItem ):
     def lastPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
       """
         Access the last page of a list
-        XXX: This method is broken, since "total_size" field is not
-        present in the listbox rendering any longer. It should be
-        removed.
       """
       if uids is None: uids = []
       selection = self.getSelectionFor(list_selection_name, REQUEST)
@@ -773,10 +767,17 @@ class SelectionTool( BaseTool, SimpleItem ):
         #       impossible. If you are in this case, send me a mail ! -- Kev
         BIG_INT = 10000000
         last_page_start = BIG_INT
-        total_lines = REQUEST.form.get('total_size', BIG_INT)
+        total_lines = int(params.get('total_size', BIG_INT))
         if total_lines != BIG_INT:
-          lines_per_page  = params.get('list_lines', 1)
-          last_page_start = int(total_lines) - (int(total_lines) % int(lines_per_page))
+          lines_per_page  = int(params.get('list_lines', 1))
+          if total_lines % lines_per_page:
+            # Example: if we have 105 documents and display 40 per line,
+            # it is 105 // 40 * 40 = 80
+            last_page_start = total_lines // lines_per_page * lines_per_page
+          else:
+            # Example; if we have 120 documents and display 40 per line,
+            # it is 120 // (40 - 1) * 40 = 80
+            last_page_start = (total_lines // lines_per_page - 1) * lines_per_page
         params['list_start'] = last_page_start
         selection.edit(params=params)
       self.uncheckAll(list_selection_name, listbox_uid)

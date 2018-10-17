@@ -1931,6 +1931,11 @@ class ListBoxRenderer:
           report_section_list.append(ReportSection(is_summary = False,
                                                    object_list_len = object_list_len - len(object_list) - start))
         else:
+          if 'list_lines' not in param_dict:
+            # Let the list method know how many lines are to be shown,
+            # in case the selection is ran for first time
+            param_dict['list_lines'] = self.field.get_value('lines')
+            selection.edit(params=param_dict)
           object_list = selection(method=domain_list_method, context=domain_context, REQUEST=self.request)
           object_list_len = len(object_list)
           report_section_list.append(ReportSection(is_summary = False,
@@ -1966,6 +1971,7 @@ class ListBoxRenderer:
 
     # Calculuate the start and the end offsets, and set the page numbers.
     param_dict['list_lines'] = max_lines = self.getMaxLineNumber()
+    param_dict['total_size'] = self.total_size
     if max_lines:
       start = end and end - 1
       self.total_pages = 1 + start // max_lines
@@ -1977,7 +1983,7 @@ class ListBoxRenderer:
       self.total_pages = 1
       self.current_page = start = 0
     param_dict['list_start'] = start
-    self.getSelection().edit(params = param_dict)
+    self.getSelection().edit(params=param_dict)
 
     # Make a list of lines.
     line_class = self.getLineClass()
