@@ -36,7 +36,7 @@ if doc_save:
     document.setContentType("application/pdf")
 
     # setting aggregate in case context is an event
-    if context.portal_type != 'Web Page':
+    if context.portal_type != 'Web Page' and not context.isModuleType():
       context.setAggregate(document.getRelativeUrl())
 
     # try setting predecessor/related document to later distinguish this

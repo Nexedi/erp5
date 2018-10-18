@@ -32,7 +32,8 @@ if doc_save:
     web_page.edit(
       text_content=doc_html_file
     )
-    context.setAggregate(web_page.getRelativeUrl())
+    if not context.isModuleType():
+      context.setAggregate(web_page.getRelativeUrl())
     message = context.Base_translateString(
       '%(portal_type)s created successfully as Web Page.' % {
         'portal_type': context.getTranslatedPortalType()
