@@ -50,8 +50,7 @@
         });
     })
     .declareMethod("render", function (options) {
-      var gadget = this,
-        select_template = options.select_template || "";
+      var gadget = this;
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
@@ -60,28 +59,21 @@
           ]);
         })
         .push(function (result_list) {
-          var field = result_list[0]._embedded._view[
-            options.back_field.slice("field_".length)
-          ],
-            listbox = field.listbox,
-            listbox_key_list = Object.keys(field.listbox);
-
-          if (listbox_key_list.length > 1) {
-            if (select_template === "") {
-              select_template = listbox_key_list[0];
-            }
-          } else {
-            select_template = listbox_key_list[0];
-          }
-          listbox[select_template].command = "history_previous";
-          listbox[select_template].line_icon = true;
+          // return result_list[1].render(result_list[0]);
+          var listbox = result_list[0]._embedded._view.listbox;
+          listbox.command = "history_previous";
+          listbox.line_icon = true;
 
           return RSVP.all([
-            gadget.changeState({options: JSON.stringify(listbox_key_list),
-                                select_template: select_template}),
+            gadget.changeState({
+              proxy_form_id_list: JSON.stringify(
+                result_list[0]._embedded._view.proxy_form_id_list
+              ),
+              view: options.view
+            }),
             result_list[1].render({
               erp5_document: {"_embedded": {"_view": {
-                "listbox": listbox[select_template]
+                "listbox": listbox
               }},
                 "title": result_list[0].title,
                 "_links": result_list[0]._links
@@ -99,14 +91,14 @@
     })
     .onStateChange(function () {
       var gadget = this,
-        option_list = JSON.parse(gadget.state.options);
-      if (option_list.length <= 1) {
+        proxy_form_id_list = JSON.parse(gadget.state.proxy_form_id_list);
+      if (proxy_form_id_list.length <= 1) {
         gadget.element.querySelector(".left").innerHTML = '';
         return;
       }
       return gadget.translateHtml(search_template({
-        options: option_list,
-        select_template: gadget.state.select_template
+        option_list: proxy_form_id_list,
+        value: gadget.state.view
       }))
         .push(function (html) {
           gadget.element.querySelector(".left").innerHTML = html;
@@ -124,11 +116,11 @@
         value;
       if (target.nodeName === 'SELECT') {
         value = target.options[target.selectedIndex].value;
-        this.state.select_template = value;
+        this.state.view = value;
         return this.redirect({
           command: 'change',
           options: {
-            select_template: value
+            view: value
           }
         });
       }
