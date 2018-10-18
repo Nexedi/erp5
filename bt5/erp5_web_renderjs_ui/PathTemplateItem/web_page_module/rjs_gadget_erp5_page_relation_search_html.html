@@ -8,35 +8,20 @@
     <!-- renderjs -->
     <script src="rsvp.js" type="text/javascript"></script>
     <script src="renderjs.js" type="text/javascript"></script>
-    <script src="handlebars.js" type="text/javascript"></script>
-    <script src="jiodev.js" type="text/javascript"></script>
 
     <link rel="http://www.renderjs.org/rel/interface" href="interface_page.html">
 
     <!-- custom script -->
     <script src="gadget_erp5_page_relation_search.js" type="text/javascript"></script>
 
-
-     <script id="search-template" type="text/x-handlebars-template">
-        <div class="ui-field-contain">
-          <label data-i18n="Select Template">Select Template<span></span></label>
-             <select>
-              {{#each options}}
-                {{#equal this ../select_template}}
-                  <option selected="selected" data-i18n="{{this}}" value="{{this}}">{{this}}</option>
-                {{else}}
-                  <option data-i18n="{{this}}" value="{{this}}">{{this}}</option>
-                {{/equal}}
-              {{/each}}
-             </select>
-        </div>
-
-    </script>
-
   </head>
 
   <body>
       <div class="left">
+        <div data-gadget-url="gadget_erp5_label_field.html"
+                data-gadget-scope="field_list"
+                data-gadget-sandbox="public">
+        </div>
       </div>
       <div data-gadget-url="gadget_erp5_pt_form_list.html"
               data-gadget-scope="form_list"
