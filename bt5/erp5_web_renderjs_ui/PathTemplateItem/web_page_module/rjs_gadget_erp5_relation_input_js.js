@@ -98,8 +98,8 @@
           options: {
             page: "relation_search",
             url: gadget.state.url,
+            view: gadget.state.search_view,
             extended_search: extended_search,
-            view: gadget.state.view,
             back_field: gadget.state.key,
             relation_index: gadget.state.relation_index
           },
@@ -134,6 +134,7 @@
         title: options.title,
         key: options.key,
         view: options.view,
+        search_view: options.search_view,
         url: options.url,
         allow_creation: options.allow_creation,
         portal_types: JSON.stringify(options.portal_types),
