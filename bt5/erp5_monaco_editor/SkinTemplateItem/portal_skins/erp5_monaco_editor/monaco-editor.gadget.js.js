@@ -88,8 +88,30 @@
           monaco.languages.html.htmlDefaults.options.format.tabSize = 2;
           monaco.languages.html.htmlDefaults.options.format.insertSpaces = true;
         }
-
         if (this.state.model_language === 'javascript') {
+          // prettier as a formatting provider
+          monaco.languages.registerDocumentFormattingEditProvider(
+            'javascript',
+            {
+              provideDocumentFormattingEdits(model, options, token) {
+                const text = prettier.format(model.getValue(), {
+                  parser: 'babylon',
+                  plugins: [prettierPlugins.babylon],
+                  // see http://json.schemastore.org/prettierrc for supported options.
+                  singleQuote: true,
+                  tabWidth: 2
+                });
+
+                return [
+                  {
+                    range: model.getFullModelRange(),
+                    text
+                  }
+                ];
+              }
+            }
+          );
+
           // Type mapping for Nexedi libraries
           function addExtraLibrary(script_name, lib_name) {
             return fetch(script_name)

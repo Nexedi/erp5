@@ -46,6 +46,9 @@
 
 <script tal:content='python: "window.monacoEditorWebPackResourceBaseUrl = " + modules["json"].dumps(options["portal_url"]) + " + \"/monaco-editor/\""'></script>
 
+<script tal:attributes="src string:${options/portal_url}/monaco-editor/prettier@1.14.0/standalone.js"></script>
+<script tal:attributes="src string:${options/portal_url}/monaco-editor/prettier@1.14.0/parser-babylon.js"></script>
+
 <script>
 /* we need to defer import for the monacoEditorWebPackResourceBaseUrl trick to work as expected in ZMI */
 var $script = document.createElement("script");
@@ -105,6 +108,24 @@ $script.onload = function() {
       }
     });
   }
+  monaco.languages.registerDocumentFormattingEditProvider('javascript', {
+    provideDocumentFormattingEdits(model, options, token) {
+      const text = prettier.format(model.getValue(), {
+        parser: 'babylon',
+        plugins: [prettierPlugins.babylon],
+        // see http://json.schemastore.org/prettierrc for supported options.
+        singleQuote: true,
+        tabWidth: 2
+      });
+
+      return [
+        {
+          range: model.getFullModelRange(),
+          text,
+        },
+      ];
+    },
+  });
 
   var timeout = null;
 
