@@ -34,8 +34,8 @@ if doc_save:
     )
     context.setAggregate(web_page.getRelativeUrl())
     message = context.Base_translateString(
-      '%(portal_type)s created successfully as PDF Document.' % {
-        'portal_type': web_page.getTranslatedPortalType()
+      '%(portal_type)s created successfully as Web Page.' % {
+        'portal_type': context.getTranslatedPortalType()
       }
     )
     return web_page.Base_redirect(
