@@ -52,8 +52,11 @@
   tal:content='python: "window.monacoEditorWebPackResourceBaseUrl = " + modules["json"].dumps(options["portal_url"]) + " + \"/monaco-editor/\""'>
 </script>
 
+<script tal:attributes="src string:${options/portal_url}/monaco-editor/prettier@1.14.0/standalone.js"></script>
+<script tal:attributes="src string:${options/portal_url}/monaco-editor/prettier@1.14.0/parser-babylon.js"></script>
+
 <script charset="utf-8">
-  /* we need to defer import for the monacoEditorWebPackResourceBaseUrl trick to work as expected in ZMI */
+/* we need to defer import for the monacoEditorWebPackResourceBaseUrl trick to work as expected in ZMI */
 var $script = document.createElement("script");
 $script.src =
   window.monacoEditorWebPackResourceBaseUrl + "/monaco-editor/app.bundle.min.js";
@@ -114,6 +117,24 @@ $script.onload = function() {
     monaco.languages.html.htmlDefaults.options.format.tabSize = 2;
     monaco.languages.html.htmlDefaults.options.format.insertSpaces = true;
   }
+  monaco.languages.registerDocumentFormattingEditProvider('javascript', {
+    provideDocumentFormattingEdits(model, options, token) {
+      const text = prettier.format(model.getValue(), {
+        parser: 'babylon',
+        plugins: [prettierPlugins.babylon],
+        // see http://json.schemastore.org/prettierrc for supported options.
+        singleQuote: true,
+        tabWidth: 2
+      });
+
+      return [
+        {
+          range: model.getFullModelRange(),
+          text,
+        },
+      ];
+    },
+  });
 
   // Type mapping for Nexedi libraries
   function addExtraLibrary(script_name, lib_name) {
