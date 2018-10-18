@@ -21,11 +21,11 @@
         <div class="ui-field-contain">
           <label data-i18n="Select Template">Select Template<span></span></label>
              <select>
-              {{#each options}}
-                {{#equal this ../select_template}}
-                  <option selected="selected" data-i18n="{{this}}" value="{{this}}">{{this}}</option>
+              {{#each option_list}}
+                {{#equal this.[0] ../value}}
+                  <option selected="selected" data-i18n="{{this.[1]}}" value="{{this.[0]}}">{{this.[1]}}</option>
                 {{else}}
-                  <option data-i18n="{{this}}" value="{{this}}">{{this}}</option>
+                  <option data-i18n="{{this.[1]}}" value="{{this.[0]}}">{{this.[1]}}</option>
                 {{/equal}}
               {{/each}}
              </select>
