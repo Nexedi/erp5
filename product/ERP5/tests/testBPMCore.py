@@ -475,6 +475,67 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
                       business_process.getRemainingTradePhaseList(
                        business_process.invoice))
 
+  def test_BusinessState_getPreviousTradePhaseDict(self):
+    """
+    Test for getPreviousTradePhaseDict() and use case for Business
+    Links with multiple children (in this test, deliver BL has 2
+    children: invoice and tax BL having deliver BL as predecessor).
+    """
+    category_tool = self.getCategoryTool()
+    business_process = self.createBusinessProcess()
+    business_link_order = self.createBusinessLink(business_process,
+                                 title='order', id='order',
+                                 trade_phase='default/order')
+    business_link_deliver = self.createBusinessLink(business_process,
+                                 title='deliver', id='deliver',
+                                 trade_phase='default/delivery')
+    business_link_invoice = self.createBusinessLink(business_process,
+                                 title='invoice', id='invoice',
+                                 trade_phase='default/invoicing')
+    business_link_tax = self.createBusinessLink(business_process,
+                                 title='tax', id='tax',
+                                 trade_phase='default/tax')
+    business_link_account = self.createBusinessLink(business_process,
+                                 title='accounting', id='account',
+                                 trade_phase='default/accounting')
+
+    trade_state = category_tool.trade_state
+    business_link_order.setSuccessorValue(trade_state.ordered)
+    business_link_deliver.setPredecessorValue(trade_state.ordered)
+    business_link_deliver.setSuccessorValue(trade_state.delivered)
+    business_link_invoice.setPredecessorValue(trade_state.delivered)
+    business_link_invoice.setSuccessorValue(trade_state.invoiced)
+    business_link_tax.setPredecessorValue(trade_state.delivered)
+    business_link_tax.setSuccessorValue(trade_state.invoiced)
+    business_link_account.setPredecessorValue(trade_state.invoiced)
+    business_link_account.setSuccessorValue(trade_state.accounted)
+
+    trade_phase = category_tool.trade_phase.default
+    def _u(trade_phase):
+      return trade_phase.getCategoryRelativeUrl()
+
+    self.assertEqual(
+      {_u(trade_phase.order): set(),
+       _u(trade_phase.delivery): {_u(trade_phase.order)},
+       _u(trade_phase.invoicing): {_u(trade_phase.delivery)},
+       _u(trade_phase.tax): {_u(trade_phase.delivery)},
+       _u(trade_phase.accounting): {_u(trade_phase.invoicing), _u(trade_phase.tax)}},
+      business_process.getPreviousTradePhaseDict())
+
+    self.assertEqual(
+      {_u(trade_phase.order): set(),
+       _u(trade_phase.invoicing): {_u(trade_phase.order)},
+       _u(trade_phase.accounting): {_u(trade_phase.invoicing), _u(trade_phase.order)}},
+      business_process.getPreviousTradePhaseDict(
+        trade_phase_list=[_u(trade_phase.order),
+                          _u(trade_phase.invoicing),
+                          _u(trade_phase.accounting)]))
+
+    self.assertEqual(
+      {_u(trade_phase.accounting): set()},
+      business_process.getPreviousTradePhaseDict(
+        trade_phase_list=[_u(trade_phase.accounting)]))
+
   def test_BusinessProcess_getExpectedTradeModelPathStartAndStopDate(self):
     """
     This test case is described for what start/stop date is expected on
