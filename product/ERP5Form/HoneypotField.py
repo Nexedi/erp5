@@ -7,25 +7,13 @@ class HoneypotWidget(Widget.Widget):
   """Honeypot widget
   """
   property_names = Widget.Widget.property_names +\
-                    ['input_type', 'extra']
-
+                    ['extra']
   default = Widget.TextWidget.default
-
-  input_type = fields.StringField('input_type',
-                                  title='Input type',
-                                  description=(
-      "The type of the input field like 'color', 'date', 'email' etc."
-      "Note input types, not supported by old web browsers, will behave "
-      "as input type text."),
-                                  default="text",
-                                  required=0)
-
   def render(self, field, key, value, REQUEST, render_prefix=None):
     """Honey pot input field.
     """
-    input_type = field.get_value('input_type') or 'text'
     return Widget.render_element("input",
-                          type=input_type,
+                          type='text',
                           name=key,
                           css_class=field.get_value('css_class'),
                           value=value,
@@ -45,8 +33,7 @@ class HoneypotValidator(Validator.Validator):
     no_validator = 'A bot may try to submit.'
 
     def validate(self, field, key, REQUEST):
-      # We had to add this patch for hidden fields of type "list"
-      value = REQUEST.get(key, REQUEST.get('default_%s' % (key, )))
+      value = REQUEST.get(key, None)
       default_value = field.get_value('default')
       if value is None or value != default_value:
         #this field is not sent or sent with value added by bot
