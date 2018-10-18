@@ -18,7 +18,8 @@ if parameter is not None:
   if result in [ [], (), None, '']:
     if parameter == 'proxy_listbox_ids':
       return context.REQUEST.get('proxy_listbox_ids', [])
-    result = getattr(context, dialog_id, None).get_field( 'listbox' ).get_orig_value(parameter)
+    if parameter != 'parameter_list':
+      result = getattr(context, dialog_id, None).get_field( 'listbox' ).get_orig_value(parameter)
 
   if parameter == 'portal_type':
     portal_type = listbox.get_value('portal_type')
