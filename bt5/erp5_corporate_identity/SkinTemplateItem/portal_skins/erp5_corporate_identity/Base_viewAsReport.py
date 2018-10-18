@@ -111,12 +111,18 @@ doc_content, report_override_doc_title, report_override_doc_subtitle = doc_repor
   report_title=doc_translated_title,
   override_batch_mode=override_batch_mode
 )
-
-doc_reference = html_quote(override_document_reference) if override_document_reference else doc.getReference() or blank
-doc_short_title = translateText(report_override_doc_subtitle if report_override_doc_subtitle else html_quote(doc_report_title) if doc_report_title else doc.getShortTitle() or blank)
-doc_version = html_quote(override_document_version) if override_document_version else getattr(doc, "version", None) or "001"
-doc_title = translateText(html_quote(override_document_title) if override_document_title else report_override_doc_title if report_override_doc_title else doc.getTitle() or blank)
-doc_language = html_quote(override_document_language) if override_document_language else doc_language
+if doc.isModuleType():
+  doc_reference = html_quote(override_document_reference) if override_document_reference else blank
+  doc_short_title = translateText(report_override_doc_subtitle if report_override_doc_subtitle else html_quote(doc_report_title) if doc_report_title else blank)
+  doc_version = html_quote(override_document_version) if override_document_version else getattr(doc, "version", None) or "001"
+  doc_title = translateText(html_quote(override_document_title) if override_document_title else report_override_doc_title if report_override_doc_title else blank)
+  doc_language = html_quote(override_document_language) if override_document_language else doc_language
+else:
+  doc_reference = html_quote(override_document_reference) if override_document_reference else doc.getReference() or blank
+  doc_short_title = translateText(report_override_doc_subtitle if report_override_doc_subtitle else html_quote(doc_report_title) if doc_report_title else doc.getShortTitle() or blank)
+  doc_version = html_quote(override_document_version) if override_document_version else getattr(doc, "version", None) or "001"
+  doc_title = translateText(html_quote(override_document_title) if override_document_title else report_override_doc_title if report_override_doc_title else doc.getTitle() or blank)
+  doc_language = html_quote(override_document_language) if override_document_language else doc_language
 
 # test overrides
 if override_batch_mode:
