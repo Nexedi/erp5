@@ -77,7 +77,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_ticket_start_date</string> </value>
+                    <value> <string>my_support_request_start_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
