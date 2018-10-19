@@ -31,10 +31,6 @@
     };
   }
 
-  function initPanelOptions(gadget) {
-    gadget.props.panel_argument_list = {};
-  }
-
   function route(my_root_gadget, my_scope, my_method, argument_list) {
     return my_root_gadget.getDeclaredGadget(my_scope)
       .push(function (my_gadget) {
@@ -45,7 +41,7 @@
       });
   }
 
-  function updateHeader(gadget) {
+  function lUpdateHeader(gadget) {
     var header_gadget;
     return gadget.getDeclaredGadget("header")
       .push(function (result) {
@@ -57,10 +53,10 @@
       });
   }
 
-  function updatePanel(gadget) {
+  function lUpdatePanel(gadget, panel_state) {
     return gadget.getDeclaredGadget("panel")
       .push(function (panel_gadget) {
-        return panel_gadget.render(gadget.props.panel_argument_list);
+        return panel_gadget.render(panel_state || {});
       });
   }
 
@@ -472,11 +468,8 @@
         });
     })
 
-    .allowPublicAcquisition("updatePanel", function (param_list) {
-      var gadget = this;
-      initPanelOptions(gadget);
-      gadget.props.panel_argument_list = param_list[0];
-      return updatePanel(gadget);
+    .allowPublicAcquisition("updatePanel", function updatePanel(param_list) {
+      return lUpdatePanel(this, param_list[0]);
     })
 
     .allowPublicAcquisition('hidePanel', function hidePanel(param_list) {
@@ -594,8 +587,8 @@
               element.appendChild(content_container);
 
               return RSVP.all([
-                updateHeader(gadget),
-                updatePanel(gadget)
+                lUpdateHeader(gadget),
+                lUpdatePanel(gadget)
               ]);
               // XXX Drop notification
               // return header_gadget.notifyLoaded();
@@ -610,8 +603,8 @@
         })
         .push(function () {
           return RSVP.all([
-            updateHeader(gadget),
-            updatePanel(gadget)
+            lUpdateHeader(gadget),
+            lUpdatePanel(gadget)
           ]);
         });
     })
@@ -624,7 +617,6 @@
       // By default, init the header options to be empty
       // (ERP5 title by default + sidebar)
       initHeaderOptions(gadget);
-      initPanelOptions(gadget);
       return increaseLoadingCounter(gadget)
         .push(function () {
           var promise_list = [
