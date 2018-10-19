@@ -273,9 +273,10 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           portal = self.app[self.app.test_portal_name]
         except (AttributeError, KeyError):
           continue
-        try:
-          portal.portal_activities.process_timer(None, None)
-        except Exception:
-          LOG('Invoking Activity Tool', ERROR, '', error=sys.exc_info())
+        if portal.portal_activities.isSubscribed():
+          try:
+            portal.portal_activities.process_timer(None, None)
+          except Exception:
+            LOG('Invoking Activity Tool', ERROR, '', error=sys.exc_info())
     except KeyboardInterrupt:
       pass
