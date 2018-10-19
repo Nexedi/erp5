@@ -1,0 +1,157 @@
+<html>
+  <head>
+    <title tal:content="template/title_or_id">The title</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  </head>
+  <body>
+  <table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Support Request Zuite</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n="[value]Proceed"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_your_title']</td>
+  <td>test</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_your_project</td>
+  <td>RobotMaking</td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>FeatureRequire</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_your_resource</td>
+  <td>FeatureRequire</td>
+</tr>
+<tal:block tal:define="text_content string:First Post Content">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Proceed']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Proceed']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForText</td>
+  <td>//ol[@id="post_list"]//li[1]/p</td>
+  <td>First Post Content</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n="[value]Post Comment"]</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="text_content string:Second Post Content">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Post Comment' and @disabled and contains(@class, "ui-disabled")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment']</td>
+  <td></td>
+</tr>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                            'text': 'Comment added'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Post Comment']</td>
+  <td></td>
+</tr>
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                            'text': 'Post content can not be empty!'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<tr>
+  <td>store</td>
+  <td>javascript{selenium.browserbot.getCurrentWindow().location.href}</td>
+  <td>current_location</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string:${here/portal_url}/Zuite_waitForActivities"/>
+  <td/>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Done.</td>
+  <td/>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${current_location}</td>
+  <td></td>
+</tr>
+
+<!-- The second post was submitted only once. -->
+<tr>
+  <td>waitForText</td>
+  <td>//ol[@id="post_list"]//li[1]/p</td>
+  <td>First Post Content</td>
+</tr>
+<tr>
+  <td>waitForText</td>
+  <td>//ol[@id="post_list"]//li[2]/p</td>
+  <td>Second Post Content</td>
+</tr>
+
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//ol[@id="post_list"]//li[3]/p</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+  </body>
+</html>
