@@ -257,6 +257,14 @@
           return queue;
         });
     })
+    .onLoop(function () {
+      // update relative time
+      this.element.querySelectorAll("li>time").forEach(
+        function (element) {
+          element.textContent = moment(element.getAttribute('datetime')).fromNow();
+        }
+      );
+    }, 5000)
     .onEvent('submit', function () {
       this.submitPostComment();
     });
