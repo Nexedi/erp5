@@ -23,6 +23,9 @@
     <script data-renderjs-configuration="default_selected_language" type="text/x-renderjs-configuration">${default_selected_language}</script>
     <script data-renderjs-configuration="website_url_set" type="text/x-renderjs-configuration">${website_url_set}</script>
     <script data-renderjs-configuration="service_worker_url" type="text/x-renderjs-configuration">${service_worker_url}</script>
+    <script data-renderjs-configuration="translation_gadget_url" type="text/x-renderjs-configuration">${translation_gadget}</script>
+    <script data-renderjs-configuration="header_gadget_url" type="text/x-renderjs-configuration">${header_gadget}</script>
+    <script data-renderjs-configuration="panel_gadget_url" type="text/x-renderjs-configuration">${panel_gadget}</script>
 
     <script src="rsvp.js"></script>
     <script src="renderjs.js"></script>
@@ -41,30 +44,35 @@
           data-gadget-scope="router"
           data-gadget-sandbox="public"></div>
 
-      <div data-gadget-url="gadget_erp5_notification.html"
+      <div id="gadget_notification"></div>
+      <div id="gadget_translation_gadget"></div>
+      <div id="gadget_header"></div>
+
+      <!--div data-gadget-url="gadget_erp5_notification.html"
           data-gadget-scope="notification"
-          data-gadget-sandbox="public"></div>
+          data-gadget-sandbox="public"></div-->
 
-      <div data-gadget-url="${translation_gadget}"
+      <!--div data-gadget-url="${translation_gadget}"
           data-gadget-scope="translation_gadget"
-          data-gadget-sandbox="public"></div>
+          data-gadget-sandbox="public"></div-->
 
-      <div data-gadget-url="${header_gadget}"
+      <!--div data-gadget-url="${header_gadget}"
           data-gadget-scope="header"
-          data-gadget-sandbox="public"></div>
+          data-gadget-sandbox="public"></div-->
 
       <div data-gadget-url="${jio_gadget}"
           data-gadget-scope="jio_gadget"
           data-gadget-sandbox="public"></div>
 
-
-      <div data-gadget-url="gadget_erp5_editor_panel.html"
+      <div id="gadget_erp5_editor_panel"></div>
+      <div id="gadget_panel"></div>
+      <!--div data-gadget-url="gadget_erp5_editor_panel.html"
           data-gadget-scope="editor_panel"
-          data-gadget-sandbox="public"></div>
+          data-gadget-sandbox="public"></div-->
 
-      <div data-gadget-url="${panel_gadget}"
+      <!--div data-gadget-url="${panel_gadget}"
           data-gadget-scope="panel"
-          data-gadget-sandbox="public"></div>
+          data-gadget-sandbox="public"></div-->
 
       <div role="main" class="ui-content gadget-content">
         <div class="ui-icon-spinner ui-btn-icon-notext first-loader"></div>
