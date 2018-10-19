@@ -8,12 +8,13 @@ project_object = portal.project_module[project]
 support_request = portal.support_request_module.newContent(
   portal_type='Support Request',
   title=title,
-  resource="service_module/" + resource,
+  resource=resource,
   destination_decision_value=logged_in_user_value,
   source_decision_value = project_object.getSourceDecisionValue(),
   source_section_value = project_object.getSourceSectionValue(),
   source_project_value = project_object,
   destination_value = project_object.getDestinationValue(),
+  destination_section_value = project_object.getDestinationSectionValue(),
   start_date=now,
 )
 

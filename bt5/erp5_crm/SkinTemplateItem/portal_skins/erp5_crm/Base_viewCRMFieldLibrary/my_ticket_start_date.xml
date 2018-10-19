@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>description</string>
                 <string>title</string>
               </list>
             </value>
@@ -73,7 +74,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The date at which the ticket was created.</string> </value>
+                    <value> <string>The Date when processing of this ticket started.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

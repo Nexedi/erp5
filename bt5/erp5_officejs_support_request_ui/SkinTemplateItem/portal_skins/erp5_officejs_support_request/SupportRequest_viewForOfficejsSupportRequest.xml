@@ -98,6 +98,7 @@
                         <string>my_destination_decision_title</string>
                         <string>my_source_section_title</string>
                         <string>my_source_decision_title</string>
+                        <string>my_source_title</string>
                         <string>my_source_project_title</string>
                         <string>my_destination_title</string>
                         <string>your_preferred_editor</string>
@@ -109,6 +110,7 @@
                     <value>
                       <list>
                         <string>my_start_date</string>
+                        <string>my_stop_date</string>
                         <string>my_resource</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>

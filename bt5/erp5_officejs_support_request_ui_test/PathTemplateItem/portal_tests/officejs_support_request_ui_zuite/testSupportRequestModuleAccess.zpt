@@ -33,6 +33,11 @@
   <td>test</td>
 </tr>
 <tr>
+  <td>select</td>
+  <td>field_your_resource</td>
+  <td>FeatureRequire</td>
+</tr>
+<tr>
   <td>click</td>
   <td>//input[@data-i18n='[value]Proceed']</td>
   <td></td>

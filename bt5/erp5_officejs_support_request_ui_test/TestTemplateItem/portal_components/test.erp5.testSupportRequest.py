@@ -98,9 +98,7 @@ class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
     self.getWebSite().SupportRequestModule_createSupportRequest(
         description='<b>Help !!!</b>',
         file=None,
-        # FIXME: resource passed by the UI should be full relative URL
-        resource='erp5_officejs_support_request_ui_test_service_001',
-        # resource=self.portal.service_module.erp5_officejs_support_request_ui_test_service_001.getRelativeUrl(),
+        resource=self.portal.service_module.erp5_officejs_support_request_ui_test_service_001.getRelativeUrl(),
         title=self.id(),
         project='erp5_officejs_support_request_ui_test_project_001',
         # FIXME: project passed by the UI should be full relative URL
@@ -169,9 +167,7 @@ class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
     self.getWebSite().SupportRequestModule_createSupportRequest(
         description='<b>Look at this file !</b>',
         file=FileUpload("the text content"),
-        # FIXME: resource passed by the UI should be full relative URL
-        resource='erp5_officejs_support_request_ui_test_service_001',
-        # resource=self.portal.service_module.erp5_officejs_support_request_ui_test_service_001.getRelativeUrl(),
+        resource=self.portal.service_module.erp5_officejs_support_request_ui_test_service_001.getRelativeUrl(),
         title=self.id(),
         project='erp5_officejs_support_request_ui_test_project_001',
         # FIXME: project passed by the UI should be full relative URL

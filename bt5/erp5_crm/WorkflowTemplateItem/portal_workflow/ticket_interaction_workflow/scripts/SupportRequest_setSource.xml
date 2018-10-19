@@ -50,19 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>sci</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Ticket_updateRelatedEventLocalRole</string> </value>
+            <value> <string>SupportRequest_setSource</string> </value>
         </item>
       </dictionary>
     </pickle>

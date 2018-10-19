@@ -204,11 +204,10 @@
     .declareJob('submitPostComment', function () {
       var gadget = this,
         submitButton = null,
-        queue = null,
-        editor = null;
+        queue = null;
+
       return gadget.getDeclaredGadget("editor")
         .push(function (e) {
-          editor = e;
           return e.getContent();
         })
         .push(function (content) {
@@ -218,8 +217,11 @@
 
           submitButton = gadget.element.querySelector("input[type=submit]");
           submitButton.disabled = true;
+          submitButton.classList.add("ui-disabled");
+
           function enableSubmitButton() {
             submitButton.disabled = false;
+            submitButton.classList.remove("ui-disabled");
           }
           queue = gadget.notifySubmitted({message: "Posting comment"})
             .push(function () {
@@ -231,6 +233,10 @@
               data.append("predecessor", '');
               data.append("data", content.comment);
               data.append("file", file_blob);
+
+              // reset the file upload, otherwise next comment would upload same file again
+              choose_file_html_element.value = "";
+
               // XXX: Hack, call jIO.util.ajax directly to pass the file blob
               // Because the jio_putAttachment will call readBlobAsText, which
               // will broke the binary file. Call the jIO.util.ajax directly
@@ -245,19 +251,27 @@
               });
             })
             .push(function () {
-              return gadget.notifySubmitted({message: "Comment added", status: "success"});
-            })
-            .push(function () {
-              editor.changeState({value: ''})
-                .push(function () {
-                  return gadget.redirect({command: 'reload'});
-                });
+              return new RSVP.Queue().push(function () {
+                gadget.notifySubmitted({message: "Comment added", status: "success"});
+              }).push(function () {
+                return gadget.redirect({command: 'reload'});
+              });
+            }, function (e) {
+              enableSubmitButton();
+              return gadget.notifySubmitted({message: "Error:" + e, status: "error"});
             });
-          queue.push(enableSubmitButton, enableSubmitButton);
           return queue;
         });
     })
+    .onLoop(function () {
+      // update relative time
+      this.element.querySelectorAll("li>time").forEach(
+        function (element) {
+          element.textContent = moment(element.getAttribute('datetime')).fromNow();
+        }
+      );
+    }, 5000)
     .onEvent('submit', function () {
-      this.submitPostComment();
+      return this.submitPostComment();
     });
 }(window, rJS, RSVP, calculatePageTitle, moment, Handlebars));
