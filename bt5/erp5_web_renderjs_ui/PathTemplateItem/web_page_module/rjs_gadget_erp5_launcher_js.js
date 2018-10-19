@@ -32,7 +32,7 @@
   }
 
   function initPanelOptions(gadget) {
-    gadget.props.panel_argument_list = {};
+    gadget.props.panel_argument_list = {visible: false};
   }
 
   function route(my_root_gadget, my_scope, my_method, argument_list) {
@@ -46,6 +46,7 @@
   }
 
   function updateHeader(gadget) {
+    return;
     var header_gadget;
     return gadget.getDeclaredGadget("header")
       .push(function (result) {
@@ -58,60 +59,50 @@
   }
 
   function updatePanel(gadget) {
-    return gadget.getDeclaredGadget("panel")
-      .push(function (panel_gadget) {
-        return panel_gadget.render(gadget.props.panel_argument_list);
-      });
+    return route(gadget, "panel", "render", [gadget.props.panel_argument_list]);
   }
 
   function increaseLoadingCounter(gadget) {
     gadget.props.loading_counter += 1;
+    /*
     if (gadget.props.loading_counter === 1) {
-      return gadget.getDeclaredGadget("header")
-        .push(function (header_gadget) {
-          return header_gadget.notifyLoading();
-        });
-    }
+      return route(gadget, "header", "notifyLoading");
+    }*/
     return new RSVP.Queue();
   }
 
   function decreaseLoadingCounter(gadget) {
     gadget.props.loading_counter -= 1;
+    /*
     if (gadget.props.loading_counter < 0) {
       gadget.props.loading_counter = 0;
       // throw new Error("Unexpected negative loading counter");
     }
     if (gadget.props.loading_counter === 0) {
-      return gadget.getDeclaredGadget("header")
-        .push(function (header_gadget) {
-          return header_gadget.notifyLoaded();
-        });
+      return route(gadget, "header", "notifyLoaded");
     }
+    */
     return new RSVP.Queue();
   }
 
   function callJioGadget(gadget, method, param_list) {
-    var called = true;
-    return increaseLoadingCounter(gadget)
+    return new RSVP.Queue()
       .push(function () {
-        return gadget.getDeclaredGadget("jio_gadget");
+        return RSVP.all([
+          increaseLoadingCounter(gadget),
+          route(gadget, "jio_gadget", method, param_list)
+        ]);
       })
-      .push(function (jio_gadget) {
-        return jio_gadget[method].apply(jio_gadget, param_list);
-      })
-      .push(function (result) {
+      .push(function (result_list) {
         return decreaseLoadingCounter(gadget)
           .push(function () {
-            return result;
+            return result_list[1];
           });
       }, function (error) {
-        if (called) {
-          return decreaseLoadingCounter(gadget)
-            .push(function () {
-              throw error;
-            });
-        }
-        throw error;
+        return decreaseLoadingCounter(gadget)
+          .push(function () {
+            throw error;
+          });
       });
   }
 
@@ -266,27 +257,15 @@
             }
           }
 
-          return setting_gadget.put(gadget.props.setting_id, setting);
+          return RSVP.all([
+            setting_gadget.put(gadget.props.setting_id, setting),
+            // Configure jIO storage
+            route(gadget, "jio_gadget", "createJio",
+                  [setting.jio_storage_description])
+          ]);
         })
         .push(function () {
-          // Configure jIO storage
-          return gadget.getDeclaredGadget("jio_gadget");
-        })
-
-        .push(function (jio_gadget) {
-          return jio_gadget.createJio(setting.jio_storage_description);
-        })
-        .push(function () {
-          return gadget.getDeclaredGadget('panel');
-        })
-        .push(function (panel_gadget) {
-          return panel_gadget.render({});
-        })
-        .push(function () {
-          return gadget.getDeclaredGadget('router');
-        })
-        .push(function (router_gadget) {
-          return router_gadget.start();
+          return route(gadget, 'router', 'start');
         });
     })
 
@@ -349,6 +328,7 @@
     .allowPublicAcquisition("translateHtml", function translateHtml(
       argument_list
     ) {
+      return argument_list[0];
       return route(this, 'translation_gadget', 'translateHtml', argument_list);
     })
 
@@ -358,16 +338,16 @@
       argument_list
     ) {
       return RSVP.all([
-        route(this, "header", 'notifySubmitting'),
-        route(this, "notification", 'notify', argument_list)
+        // route(this, "header", 'notifySubmitting'),
+        // route(this, "notification", 'notify', argument_list)
       ]);
     })
     .allowPublicAcquisition('notifySubmitted', function notifySubmitted(
       argument_list
     ) {
       return RSVP.all([
-        route(this, "header", 'notifySubmitted'),
-        route(this, "notification", 'notify', argument_list),
+        // route(this, "header", 'notifySubmitted'),
+        // route(this, "notification", 'notify', argument_list),
         route(this, "router", 'notify', argument_list)
       ]);
     })
@@ -375,8 +355,8 @@
       argument_list
     ) {
       return RSVP.all([
-        route(this, "header", 'notifyChange'),
-        route(this, "notification", 'notify', argument_list),
+        // route(this, "header", 'notifyChange'),
+        // route(this, "notification", 'notify', argument_list),
         route(this, "router", 'notify', argument_list)
       ]);
     })
@@ -398,10 +378,12 @@
     })
 
     .allowPublicAcquisition("translate", function translate(argument_list) {
+      return argument_list[0];
       return route(this, 'translation_gadget', 'translate', argument_list);
     })
     .allowPublicAcquisition("getTranslationList",
                             function getTranslationList(argument_list) {
+        return argument_list[0];
         return route(this, 'translation_gadget', 'getTranslationList',
                      argument_list);
       })
@@ -427,6 +409,8 @@
     })
 
     .allowPublicAcquisition("updateHeader", function updateHeader(param_list) {
+      return;
+      // XXX do not translate now
       var gadget = this;
       initHeaderOptions(gadget);
       return this.getDeclaredGadget("translation_gadget")
@@ -525,10 +509,7 @@
     .allowPublicAcquisition("triggerSubmit", function triggerSubmit(
       param_list
     ) {
-      return this.getDeclaredGadget(MAIN_SCOPE)
-        .push(function (main_gadget) {
-          return main_gadget.triggerSubmit.apply(main_gadget, param_list);
-        });
+      return route(this, MAIN_SCOPE, triggerSubmit, param_list);
     })
     .allowPublicAcquisition("triggerMaximize", function maximize(
       param_list
@@ -593,8 +574,8 @@
               element.appendChild(content_container);
 
               return RSVP.all([
-                updateHeader(gadget),
-                updatePanel(gadget)
+                // updateHeader(gadget),
+                // updatePanel(gadget)
               ]);
               // XXX Drop notification
               // return header_gadget.notifyLoaded();
@@ -603,10 +584,7 @@
       }
 
       // Same subgadget
-      return gadget.getDeclaredGadget(MAIN_SCOPE)
-        .push(function (page_gadget) {
-          return page_gadget.render(gadget.state.options);
-        })
+      return route(gadget, MAIN_SCOPE, "render", [gadget.state.options])
         .push(function () {
           return RSVP.all([
             updateHeader(gadget),
@@ -624,21 +602,22 @@
       // (ERP5 title by default + sidebar)
       initHeaderOptions(gadget);
       initPanelOptions(gadget);
-      return increaseLoadingCounter(gadget)
+      return new RSVP.Queue()
         .push(function () {
           var promise_list = [
-            route(gadget, 'panel', 'close'),
-            route(gadget, 'editor_panel', 'close'),
-            route(gadget, 'router', 'notify', [{modified : false}])
+            increaseLoadingCounter(gadget),
+            // route(gadget, 'panel', 'close'),
+            // route(gadget, 'editor_panel', 'close'),
+            route(gadget, 'router', 'notify', [{modified : false}]),
+            gadget.changeState({url: route_result.url,
+                                options: route_result.options})
           ];
+          /*
           if (keep_message !== true) {
             promise_list.push(route(gadget, 'notification', 'close'));
           }
+          */
           return RSVP.all(promise_list);
-        })
-        .push(function () {
-          return gadget.changeState({url: route_result.url,
-                                     options: route_result.options});
         })
         .push(function () {
           return decreaseLoadingCounter(gadget);
