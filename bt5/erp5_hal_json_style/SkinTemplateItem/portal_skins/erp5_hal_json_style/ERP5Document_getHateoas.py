@@ -1282,7 +1282,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
   if relative_url:
     try:
       traversed_document = site_root.restrictedTraverse(str(relative_url))
-      view = str(view)
+      if (view is not None):
+        view = str(view)
       is_site_root = False
     except:
       raise NotImplementedError(relative_url)
