@@ -136,7 +136,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.SupportRequest_getSupportTypeList(request.get("field_your_project", None)) or [(\'\', \'\')]</string> </value>
+            <value> <string>python: context.SupportRequest_getSupportTypeList(request.get("your_project", None))</string> </value>
         </item>
       </dictionary>
     </pickle>
