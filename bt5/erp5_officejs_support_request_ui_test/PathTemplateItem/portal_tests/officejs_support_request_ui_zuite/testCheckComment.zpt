@@ -198,6 +198,37 @@ post ingested when submitting a new support request.
   <td>Post test 2</td>
 </tr>
 
+<!-- The post show a relative time -->
+<tr>
+  <td>assertText</td>
+  <td>//ol[@id="post_list"]//li[3]/time</td>
+  <td>a few seconds ago</td>
+</tr>
+
+<!-- This relative time will be updated periodically.
+
+To prove this, we break the text, wait 6 seconds - because this is refreshed every 5 seconds
+and check that the relative time was updated.
+ -->
+<tr>
+  <td>assertEval</td>
+  <td>(function(){
+    selenium.browserbot.findElement('//ol[@id="post_list"]//li[3]/time').textContent = "this will be updated";
+    return "ok";
+  })()</td>
+  <td>ok</td>
+</tr>
+<tr>
+  <td>pause</td> <!-- we are waiting for the next onLoop tic -->
+  <td>6000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//ol[@id="post_list"]//li[3]/time</td>
+  <td>a few seconds ago</td>
+</tr>
+
 </tbody></table>
   </body>
 </html>
