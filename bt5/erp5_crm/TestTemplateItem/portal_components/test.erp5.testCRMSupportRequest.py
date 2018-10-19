@@ -43,3 +43,20 @@ class TestSupportRequestnterractions(ERP5TypeTestCase):
         'validate_action')
 
     self.assertEqual(person, support_request.getSourceValue())
+
+  def test_SupportRequest_setStopDate_on_close(self):
+    """The stop date is set to now() when closing a support request
+    """
+    support_request = self.portal.support_request_module.newContent(
+        portal_type='Support Request',
+        title=self.id())
+    support_request.validate()
+    self.tic()
+
+    self.assertIsNone(support_request.getStopDate())
+
+    self.portal.portal_workflow.doActionFor(
+        support_request,
+        'invalidate_action')
+
+    self.asserIsNotNone(support_request.getStopDate())
