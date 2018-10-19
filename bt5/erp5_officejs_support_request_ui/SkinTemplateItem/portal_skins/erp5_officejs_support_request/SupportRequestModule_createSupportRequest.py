@@ -14,6 +14,7 @@ support_request = portal.support_request_module.newContent(
   source_section_value = project_object.getSourceSectionValue(),
   source_project_value = project_object,
   destination_value = project_object.getDestinationValue(),
+  destination_section_value = project_object.getDestinationSectionValue(),
   start_date=now,
 )
 
