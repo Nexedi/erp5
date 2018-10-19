@@ -158,6 +158,8 @@
                         <string>your_dialog_ticket_simulation_state</string>
                         <string>my_file_field</string>
                         <string>my_ticket_stop_date</string>
+                        <string>my_support_request_start_date</string>
+                        <string>my_support_request_stop_date</string>
                       </list>
                     </value>
                 </item>

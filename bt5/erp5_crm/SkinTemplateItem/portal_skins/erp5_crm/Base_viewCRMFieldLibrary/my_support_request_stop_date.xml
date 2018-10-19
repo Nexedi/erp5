@@ -9,12 +9,14 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>date_only</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_stop_date</string> </value>
+            <value> <string>my_support_request_stop_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -70,8 +72,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>date_only</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_support_request_stop_date</string> </value>
+                    <value> <string>my_ticket_stop_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
