@@ -218,8 +218,11 @@
 
           submitButton = gadget.element.querySelector("input[type=submit]");
           submitButton.disabled = true;
+          submitButton.classList.add("ui-disabled");
+
           function enableSubmitButton() {
             submitButton.disabled = false;
+            submitButton.classList.remove("ui-disabled");
           }
           queue = gadget.notifySubmitted({message: "Posting comment"})
             .push(function () {
@@ -231,6 +234,10 @@
               data.append("predecessor", '');
               data.append("data", content.comment);
               data.append("file", file_blob);
+
+              // reset the file upload, otherwise next comment would upload same file again
+              choose_file_html_element.value = "";
+
               // XXX: Hack, call jIO.util.ajax directly to pass the file blob
               // Because the jio_putAttachment will call readBlobAsText, which
               // will broke the binary file. Call the jIO.util.ajax directly
@@ -248,12 +255,17 @@
               return gadget.notifySubmitted({message: "Comment added", status: "success"});
             })
             .push(function () {
-              editor.changeState({value: ''})
-                .push(function () {
-                  return gadget.redirect({command: 'reload'});
-                });
-            });
-          queue.push(enableSubmitButton, enableSubmitButton);
+              // XXX workaround ... because previous state before user start typing was ""
+              // we first set to "something" to be able to reset to nothing later.
+              return editor.changeState({value: ' '});
+            })
+            .push(function () {
+              return editor.changeState({value: ''});
+            })
+            .push(function () {
+              return gadget.redirect({command: 'reload'});
+            })
+            .push(enableSubmitButton, enableSubmitButton);
           return queue;
         });
     })
