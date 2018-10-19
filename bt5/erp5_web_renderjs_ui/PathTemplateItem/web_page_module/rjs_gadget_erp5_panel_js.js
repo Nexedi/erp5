@@ -52,12 +52,16 @@
     .declareMethod('render', function render(options) {
       var erp5_document = options.erp5_document,
         view = options.view,
+        visible = options.visible,
         context = this,
         workflow_list,
         view_list,
         action_list,
         i;
 
+      if (visible === undefined) {
+        visible = context.state.visible;
+      }
       if (erp5_document !== undefined) {
         workflow_list = ensureArray(erp5_document._links.action_workflow);
         view_list = ensureArray(erp5_document._links.action_object_view);
@@ -89,6 +93,7 @@
       return context.getUrlParameter('editable')
         .push(function (editable) {
           return context.changeState({
+            visible: visible,
             workflow_list: workflow_list,
             view_list: view_list,
             action_list: action_list,
