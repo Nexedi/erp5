@@ -77,7 +77,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_stop_date</string> </value>
+                    <value> <string>my_ticket_stop_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
