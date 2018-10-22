@@ -151,8 +151,8 @@ class ERP5Catalog(Folder, Catalog):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Explicitly add tabs for manage_options
-  manage_options = ({'label': 'View', 'action': 'view'},
-                    {'label': 'Contents', 'action': 'manage_main'},
+  manage_options = ({'label': 'Contents', 'action': 'manage_main'},
+                    {'label': 'View', 'action': 'view'},
                     {'label': 'Security', 'action': 'manage_access'},
                     {'label': 'Undo', 'action': 'manage_UndoForm'},
                     {'label': 'Ownership', 'action': 'manage_owner'},
