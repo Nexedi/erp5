@@ -77,6 +77,7 @@ class SQLMethod(XMLObject, ZSQL, ExpressionMixin):
 
   # Override manage and manage_main with ZSQL manage and manage_main respectively
   manage = manage_main = ZSQL.manage
+  manage_main._setName('manage_main')
 
   # View content list, Force /view, Standard option in SQLMethod
   manage_options = ({'icon':'', 'label':'View','action':'view'},) \
