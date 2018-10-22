@@ -15,6 +15,12 @@ if pref.getPreferenceState() == 'disabled':
 # use fck editor, we test with this
 pref.setPreferredTextEditor('fck_editor')
 
+
+if portal.portal_preferences.getPreferredSupportRequestUse() != 'crm/support_request':
+  system_preference = portal.portal_preferences.default_system_preference
+  system_preference.setPreferredSupportRequestUse('crm/support_request')
+
+
 # set a preferred event resource, so that the web message we create
 # gets indexed properly in stock table.
 # XXX This ressource does not make much sense though, using something like
