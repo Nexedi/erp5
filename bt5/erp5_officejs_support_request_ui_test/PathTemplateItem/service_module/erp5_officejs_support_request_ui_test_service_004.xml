@@ -53,6 +53,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>use/crm/support_request</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>comment</string> </key>
             <value>
               <none/>
@@ -134,7 +142,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -148,7 +156,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.51044.44143.58299</string> </value>
+                <value> <string>970.45649.9094.60364</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -166,8 +174,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1498204434.87</float>
-                        <string>UTC</string>
+                        <float>1538917270.12</float>
+                        <string>GMT+9</string>
                       </tuple>
                     </state>
                   </object>

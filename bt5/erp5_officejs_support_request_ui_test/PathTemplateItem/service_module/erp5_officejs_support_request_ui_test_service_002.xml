@@ -53,6 +53,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>use/crm/support_request</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>comment</string> </key>
             <value>
               <none/>
