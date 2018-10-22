@@ -43,6 +43,8 @@ class HoneypotValidator(Validator.Validator):
 HoneypotValidatorInstance = HoneypotValidator()
 
 class HoneypotField(ZMIField):
+  #Field to stop auto bot submit
+  #https://nedbatchelder.com/text/stopbots.html
   meta_type = "HoneypotField"
 
   widget = HoneypotWidgetInstance
