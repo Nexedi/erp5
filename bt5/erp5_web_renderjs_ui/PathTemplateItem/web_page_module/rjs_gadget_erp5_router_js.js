@@ -624,7 +624,6 @@
         return redirectToParent(gadget, jio_key, previous_options);
       }
     }
-    // XXX XXX XXX
     if (previous_options.back_field) {
       queue
         .push(function () {
@@ -1076,8 +1075,7 @@
             gadget.getSetting("selected_language"),
             gadget.getSetting("default_selected_language"),
             gadget.getSetting("language_map"),
-            "This page contains unsaved changes, do you really want to leave the page ?"
-            // gadget.translate()
+            gadget.translate("This page contains unsaved changes, do you really want to leave the page ?")
           ]);
         })
         .push(function (results) {
