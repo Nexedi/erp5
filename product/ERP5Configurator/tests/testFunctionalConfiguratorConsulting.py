@@ -43,7 +43,6 @@ class TestZeleniumConfiguratorConsulting(TestZeleniumConfiguratorStandard, ERP5T
        if x.getId() == "user-Howto.Configure.ERP5.for.SMB.With.Consultant.Configurator":
          url_list.append("test_page_module/"+x.getId())
      self.remote_code_url_list = url_list
-     self.setupAutomaticBusinessTemplateRepository()
      ERP5TypeFunctionalTestCase.afterSetUp(self)
 
 
