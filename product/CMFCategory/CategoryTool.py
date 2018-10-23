@@ -943,10 +943,7 @@ class CategoryTool(BaseTool):
           return self._filterCategoryListByPermission(base_category, base, result, checked_permission)
         # First we look at local ids
         for object_id in base_category_value.getAcquisitionObjectIdList():
-          try:
-            my_acquisition_object = context[object_id]
-          except (KeyError, AttributeError):
-            my_acquisition_object = None
+          my_acquisition_object = context.get(object_id)
           if my_acquisition_object is not None:
             #my_acquisition_object_path = my_acquisition_object.getPhysicalPath()
             #if my_acquisition_object_path in acquired_object_dict:
