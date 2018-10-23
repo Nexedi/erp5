@@ -1,31 +1,9 @@
-/*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
-/*global window, rJS, RSVP, Handlebars*/
-(function (window, rJS, RSVP, Handlebars) {
+/*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80, unparam: true */
+/*global window, rJS, RSVP*/
+(function (window, rJS, RSVP) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    search_source = gadget_klass.__template_element
-                         .getElementById("search-template")
-                         .innerHTML,
-    search_template = Handlebars.compile(search_source);
-
-  Handlebars.registerHelper('equal', function (left_value,
-    right_value, options) {
-    if (arguments.length < 3) {
-      throw new Error("Handlebars Helper equal needs 2 parameters");
-    }
-    if (left_value !== right_value) {
-      return options.inverse(this);
-    }
-    return options.fn(this);
-  });
-
-
-  gadget_klass
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
@@ -33,7 +11,6 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -55,21 +32,25 @@
         .push(function () {
           return RSVP.all([
             gadget.jio_getAttachment(options.url, options.view),
-            gadget.getDeclaredGadget('form_list')
+            gadget.getDeclaredGadget('form_list'),
+            gadget.getDeclaredGadget('field_list')
           ]);
         })
         .push(function (result_list) {
-          // return result_list[1].render(result_list[0]);
-          var listbox = result_list[0]._embedded._view.listbox;
+          var listbox = result_list[0]._embedded._view.listbox,
+            proxy_form_id = result_list[0]._embedded._view.proxy_form_id_list;
           listbox.command = "history_previous";
           listbox.line_icon = true;
+          listbox.editable = 0;
+
+          proxy_form_id.editable = 1;
+          proxy_form_id.hidden = (proxy_form_id.items.length < 2);
 
           return RSVP.all([
-            gadget.changeState({
-              proxy_form_id_list: JSON.stringify(
-                result_list[0]._embedded._view.proxy_form_id_list
-              ),
-              view: options.view
+            result_list[2].render({
+              field_json: proxy_form_id,
+              field_type: proxy_form_id.type,
+              label: true
             }),
             result_list[1].render({
               erp5_document: {"_embedded": {"_view": {
@@ -89,21 +70,7 @@
         });
 
     })
-    .onStateChange(function () {
-      var gadget = this,
-        proxy_form_id_list = JSON.parse(gadget.state.proxy_form_id_list);
-      if (proxy_form_id_list.length <= 1) {
-        gadget.element.querySelector(".left").innerHTML = '';
-        return;
-      }
-      return gadget.translateHtml(search_template({
-        option_list: proxy_form_id_list,
-        value: gadget.state.view
-      }))
-        .push(function (html) {
-          gadget.element.querySelector(".left").innerHTML = html;
-        });
-    })
+
     .declareMethod("triggerSubmit", function () {
       var argument_list = arguments;
       return this.getDeclaredGadget('form_list')
@@ -111,19 +78,23 @@
           return gadget.triggerSubmit.apply(gadget, argument_list);
         });
     })
-    .onEvent('change', function (evt) {
-      var target = evt.target,
-        value;
-      if (target.nodeName === 'SELECT') {
-        value = target.options[target.selectedIndex].value;
-        this.state.view = value;
-        return this.redirect({
-          command: 'change',
-          options: {
-            view: value
-          }
-        });
+
+    .allowPublicAcquisition('notifyChange', function (ignore, scope) {
+      var gadget = this;
+      if (scope === 'field_list') {
+        return gadget.getDeclaredGadget(scope)
+          .push(function (result) {
+            return result.getContent();
+          })
+          .push(function (result) {
+            return gadget.redirect({
+              command: 'change',
+              options: {
+                view: result.proxy_form_id_list
+              }
+            });
+          });
       }
     });
 
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS, RSVP));
