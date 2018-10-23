@@ -705,7 +705,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
     }
 
     result.update({
-      "url": relative_url,
+      "url": traversed_document.getRelativeUrl(),
       "translated_portal_types": translated_portal_type,
       "portal_types": portal_type_list,
       "query": query,
@@ -716,7 +716,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       "search_view": url_template_dict['traverse_generator_action'] % {
         "root_url": site_root.absolute_url(),
         "script_id": script.id,
-        "relative_url": relative_url.replace("/", "%2F"),
+        "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
         "view": "Base_viewRelatedObjectList",
         "extra_param_json": urlsafe_b64encode(
           json.dumps(ensureSerializable({
@@ -1077,7 +1077,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     response_dict['proxy_form_id_list'] = [(url_template_dict['traverse_generator_action'] % {
       "root_url": site_root.absolute_url(),
       "script_id": script.id,
-      "relative_url": relative_url.replace("/", "%2F"),
+      "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
       "view": "Base_viewRelatedObjectList",
       "extra_param_json": urlsafe_b64encode(
         json.dumps(ensureSerializable({
