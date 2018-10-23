@@ -1068,24 +1068,45 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     if not len(proxy_form_id_list):
       proxy_form_id_list = [('Base_viewRelatedObjectListBase/listbox', 'default')]
 
+    # Create the possible choices
+    root_url = site_root.absolute_url()
+    renderHiddenField(response_dict, "proxy_form_id_list", '')
+    response_dict["proxy_form_id_list"].update({
+      "items": [(Base_translateString(y), url_template_dict['traverse_generator_action'] % {
+        "root_url": site_root.absolute_url(),
+        "script_id": script.id,
+        "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
+        "view": "Base_viewRelatedObjectList",
+        "extra_param_json": urlsafe_b64encode(
+          json.dumps(ensureSerializable({
+            'proxy_listbox_id': x,
+            'original_form_id': extra_param_json['original_form_id'],
+            'field_id': extra_param_json['field_id']
+          })))
+      }) for x, y in proxy_form_id_list],
+      "first_item": 1,
+      "required": 0,
+      "type": "ListField",
+      "title": Base_translateString("Select Template")
+    })
+
     # Allow to correctly render the listbox
     if REQUEST.get('proxy_listbox_id', None) is None:
       REQUEST.set('proxy_listbox_id', proxy_form_id_list[0][0])
-
-    # Create the possible choices
-    root_url = site_root.absolute_url()
-    response_dict['proxy_form_id_list'] = [(url_template_dict['traverse_generator_action'] % {
-      "root_url": site_root.absolute_url(),
-      "script_id": script.id,
-      "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
-      "view": "Base_viewRelatedObjectList",
-      "extra_param_json": urlsafe_b64encode(
-        json.dumps(ensureSerializable({
-          'proxy_listbox_id': x,
-          'original_form_id': extra_param_json['original_form_id'],
-          'field_id': extra_param_json['field_id']
-        })))
-    }, Base_translateString(y)) for x, y in proxy_form_id_list]
+    else:
+      # Correctly set the listfield default value
+      response_dict["proxy_form_id_list"]["default"] = url_template_dict['traverse_generator_action'] % {
+        "root_url": site_root.absolute_url(),
+        "script_id": script.id,
+        "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
+        "view": "Base_viewRelatedObjectList",
+        "extra_param_json": urlsafe_b64encode(
+          json.dumps(ensureSerializable({
+            'proxy_listbox_id': REQUEST.get('proxy_listbox_id', None),
+            'original_form_id': extra_param_json['original_form_id'],
+            'field_id': extra_param_json['field_id']
+          })))
+      }
 
   # Go through all groups ("left", "bottom", "hidden" etc.) and add fields from
   # them into form.
