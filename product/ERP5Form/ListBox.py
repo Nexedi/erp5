@@ -1713,6 +1713,7 @@ class ListBoxRenderer:
     max_lines = self.getMaxLineNumber()
     report_section_list = []
 
+
     if self.isReportTreeMode():
       # In report tree mode, there are three types of lines:
       #
@@ -1931,6 +1932,11 @@ class ListBoxRenderer:
           report_section_list.append(ReportSection(is_summary = False,
                                                    object_list_len = object_list_len - len(object_list) - start))
         else:
+          if 'list_lines' not in param_dict:
+            # Let the list method know how many lines are to be shown,
+            # in case the selection is ran for first time
+            param_dict['list_lines'] = self.field.get_value('lines')
+            selection.edit(params=param_dict)
           object_list = selection(method=domain_list_method, context=domain_context, REQUEST=self.request)
           object_list_len = len(object_list)
           report_section_list.append(ReportSection(is_summary = False,
@@ -1951,6 +1957,7 @@ class ListBoxRenderer:
     """Get report sections and construct a list of lines. Note that this method has a side
     effect in the selection, and the renderer object itself.
     """
+
     if self.isHideRowsOnNoSearchCriterion():
       report_section_list = []
     else:
