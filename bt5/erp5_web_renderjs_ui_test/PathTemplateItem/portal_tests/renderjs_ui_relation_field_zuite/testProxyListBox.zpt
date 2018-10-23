@@ -309,7 +309,7 @@
 <tr>
   <td>select</td>
   <td>//select</td>
-  <td>index=1</td>
+  <td>index=2</td>
 </tr>
 
 <tr>
@@ -357,7 +357,7 @@
 <tr>
   <td>select</td>
   <td>//select</td>
-  <td>index=2</td>
+  <td>index=1</td>
 </tr>
 
 <tr>
