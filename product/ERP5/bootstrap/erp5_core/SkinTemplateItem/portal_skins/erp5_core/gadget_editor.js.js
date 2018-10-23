@@ -184,6 +184,10 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
           })
           .push(function (editor_gadget) {
             return editor_gadget.getContent.apply(editor_gadget, argument_list);
+          }).push(function (content) {
+            // change state in place, like embedded editor does.
+             gadget.state.value = content[gadget.state.key];
+            return content;
           })
           .push(unlockGadgetInQueue(gadget), unlockGadgetInFailedQueue(gadget));
           /*
@@ -200,7 +204,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
       } else if (this.state.editable &&
           (this.state.editor === 'text_area')) {
         result = {};
-        result[this.state.key] = this.element.querySelector('textarea').value;
+        result[this.state.key] = this.state.value = this.element.querySelector('textarea').value;
         return result;
       }
       return {};
