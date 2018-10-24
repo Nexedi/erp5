@@ -1407,6 +1407,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # Try to embed the form in the result
         if (view == view_action['id']):
           current_action = parseActionUrl('%s' % view_action['url'])  # current action/view being rendered
+
+    if view and (view != 'view') and (current_action.get('view_id', None) is None):
+      # XXX Allow to directly render a form
+      current_action['view_id'] = view
+      current_action['url'] = '%s/%s' % (traversed_document.getRelativeUrl(), view)
+      current_action['params'] = {}
+
     # If we have current action definition we are able to render embedded view
     # which should be a "ERP5 Form" but in reality can be anything
     if current_action.get('view_id', ''):
