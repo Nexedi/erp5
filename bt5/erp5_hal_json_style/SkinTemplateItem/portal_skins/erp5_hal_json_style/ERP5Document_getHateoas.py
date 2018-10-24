@@ -1442,7 +1442,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if view and (view != 'view') and (current_action.get('view_id', None) is None):
       # XXX Allow to directly render a form
       current_action['view_id'] = view
-      current_action['url'] = 'couscous'
+      current_action['url'] = '%s/%s' % (traversed_document.getRelativeUrl(), view)
       current_action['params'] = {}
 
     # If we have current action definition we are able to render embedded view
