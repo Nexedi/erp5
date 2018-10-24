@@ -23,6 +23,8 @@ and handling data send&receive.
                    'gadget_erp5_field_float.html',
                    'gadget_erp5_field_integer.html',
                    'gadget_erp5_field_list.html',
+                   'gadget_erp5_field_lines.html',
+                   'gadget_erp5_field_gadget.html',
                    'gadget_erp5_field_email.html',
                    'gadget_erp5_field_formbox.html',
                    'gadget_erp5_field_listbox.html',
@@ -32,6 +34,7 @@ and handling data send&receive.
                    'gadget_erp5_relation_input.html',
                    'gadget_erp5_field_string.html',
                    'gadget_erp5_field_textarea.html',
+                   'gadget_editor.html',
                    'gadget_erp5_form.html'
                   ];
 
