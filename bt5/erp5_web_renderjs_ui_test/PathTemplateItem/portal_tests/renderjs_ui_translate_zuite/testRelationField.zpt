@@ -152,9 +152,9 @@
 
 
 <tr>
-  <td>verifyElementPresent</td>
-  <td>//option[@value = 'moren']</td>
-  <td></td>
+  <td>assertSelected</td>
+  <td>//select</td>
+  <td>moren</td>
 </tr>
 
 </tbody></table>
