@@ -569,84 +569,6 @@ class NuValidator(object):
     return self._parse_validation_results(validator_url, response)
 
 
-class W3Validator(object):
-
-  def __init__(self, validator_path, show_warnings):
-    self.validator_path = validator_path
-    self.show_warnings = show_warnings
-    self.name = 'w3c'
-
-  def _parse_validation_results(self, result):
-    """
-    parses the validation results, returns a list of tuples:
-    line_number, col_number, error description
-    """
-    # Output is a set of headers then the XML content.
-    header_txt, body_txt = result.split('\n\n', 1)
-    # First, search the X-W3C headers
-    validator_status = 'Unknown'
-    error_count = -1
-    warning_count = -1
-
-    for header_line in header_txt.split('\n'):
-      if header_line.startswith('X-W3C-Validator-Status: '):
-        validator_status = header_line[len('X-W3C-Validator-Status: '):]
-      elif header_line.startswith('X-W3C-Validator-Errors: '):
-        error_count = int(header_line[len('X-W3C-Validator-Errors: '):])
-      elif header_line.startswith('X-W3C-Validator-Warnings: '):
-        warning_count = int(header_line[len('X-W3C-Validator-Warnings: '):])
-
-    if validator_status == 'Valid':
-      return [[], []]
-    if validator_status != 'Invalid':
-      return [[(None, None, 'Wrong validator status: %s' % validator_status)], []]
-
-    # Parsing is invalid
-    result_list_list = []
-    try:
-      xml_doc = minidom.parseString(result)
-    except:
-      import sys
-      print >> sys.stderr, "Could not parse result:\n%s" % result
-      raise
-    for severity in 'm:error', 'm:warning':
-      result_list = []
-      for error in xml_doc.getElementsByTagName(severity):
-        result = []
-
-        # Ignore warning about using direct input mode (W28)
-        messageid_list = error.getElementsByTagName('m:messageid')
-        if messageid_list and messageid_list[0].firstChild.nodeValue == 'W28':
-          continue
-
-        for name in 'm:line', 'm:col', 'm:message':
-          element_list = error.getElementsByTagName(name)
-          if element_list:
-            result.append(element_list[0].firstChild.nodeValue)
-          else:
-            result.append(None)
-        result_list.append(tuple(result))
-      result_list_list.append(result_list)
-    if (len(result_list_list[0]) != error_count) or (len(result_list_list[1]) != warning_count):
-      result_list_list[0].append((None, None, 'Could not parse all errors/warnings'))
-    return result_list_list
-
-  def getErrorAndWarningList(self, page_source):
-    '''
-      retrun two list : a list of errors and an other for warnings
-    '''
-    source = 'fragment=%s&output=soap12' % urllib.quote_plus(
-      page_source.encode('utf-8'))
-    stdout, stderr = Popen(self.validator_path,
-            stdin=PIPE, stdout=PIPE, stderr=PIPE,
-            close_fds=True,
-            env={"CONTENT_LENGTH": str(len(source)),
-                 "REQUEST_METHOD": "POST"}).communicate(source)
-    # Output is a set of headers then the XML content.
-    return self._parse_validation_results(
-      stdout.split('\n\n', 1)[1])
-
-
 class TidyValidator(object):
 
   def __init__(self, validator_path, show_warnings):
@@ -855,27 +777,16 @@ def addTestMethodDynamically(test_class, validator, target_business_templates):
                        tested_portal_type_list=tested_portal_type_list)
 
 
-# Three validators are available : nu, tidy and the w3c validator
+# Two validators are available : nu and tidy validator
 # It's hightly recommanded to use the nu validator which validates html5
 validator_to_use = 'nu'
 show_warnings = True
 
 validator = None
 
-# tidy or w3c may not be installed in livecd. Then we will skip xhtml validation tests.
+# tidy may not be installed in livecd. Then we will skip xhtml validation tests.
 # create the validator object
-if validator_to_use == 'w3c':
-  validator_path_list = os.environ.get('CGI_PATH',
-    '/usr/lib/cgi-bin:/usr/lib/cgi-bin/w3c-markup-validator').split(os.pathsep)
-  for path in validator_path_list:
-    validator_path = os.path.join(path, 'check')
-    if os.path.exists(validator_path):
-      validator = W3Validator(validator_path, show_warnings)
-      break
-  else:
-    print 'No w3c validator found at', validator_path_list
-
-elif validator_to_use == 'tidy':
+if validator_to_use == 'tidy':
   error = False
   warning = False
   validator_path = '/usr/bin/tidy'
