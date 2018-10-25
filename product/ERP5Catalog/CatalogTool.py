@@ -783,8 +783,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         kw.setdefault('limit', self.default_result_limit)
         return ZCatalog.searchResults(self, sql_catalog_id=catalog_id, **kw)
 
-    __call__ = searchResults
-
     security.declarePrivate('unrestrictedSearchResults')
     def unrestrictedSearchResults(self, **kw):
         """Calls ZSQLCatalog.searchResults directly without restrictions.
