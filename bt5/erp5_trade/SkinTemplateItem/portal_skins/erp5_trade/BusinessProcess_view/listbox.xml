@@ -88,11 +88,11 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>predecessor_title</string>
+                          <string>predecessor</string>
                           <string>Predecessor</string>
                         </tuple>
                         <tuple>
-                          <string>successor_title</string>
+                          <string>successor</string>
                           <string>Successor</string>
                         </tuple>
                         <tuple>
@@ -104,7 +104,7 @@
                           <string>Delivery Builders</string>
                         </tuple>
                         <tuple>
-                          <string>trade_phase_title</string>
+                          <string>trade_phase</string>
                           <string>Trade Phase</string>
                         </tuple>
                       </list>
@@ -117,6 +117,18 @@
                         <tuple>
                           <string>int_index</string>
                           <string>int_index</string>
+                        </tuple>
+                        <tuple>
+                          <string>predecessor</string>
+                          <string>Predecessor</string>
+                        </tuple>
+                        <tuple>
+                          <string>successor</string>
+                          <string>Successor</string>
+                        </tuple>
+                        <tuple>
+                          <string>trade_phase</string>
+                          <string>Trade Phase</string>
                         </tuple>
                       </list>
                     </value>

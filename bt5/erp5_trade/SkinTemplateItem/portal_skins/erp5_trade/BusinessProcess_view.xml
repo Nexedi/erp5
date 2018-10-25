@@ -94,6 +94,9 @@
                         <string>listbox_int_index</string>
                         <string>listbox_order_builder_title_list</string>
                         <string>listbox_delivery_builder_title_list</string>
+                        <string>listbox_predecessor</string>
+                        <string>listbox_successor</string>
+                        <string>listbox_trade_phase</string>
                       </list>
                     </value>
                 </item>
