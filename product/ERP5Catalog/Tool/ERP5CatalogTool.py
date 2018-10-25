@@ -184,6 +184,13 @@ class ERP5CatalogTool(BaseTool, CMFCore_CatalogTool):
           **kw
         )
 
+    security.declareProtected(Permissions.View, 'index_html')
+    def index_html(self):
+      """
+      Override index_html to display the view for Catalog Tool
+      """
+      return self.view()
+
     security.declarePrivate('getCatalogUrl')
     def getCatalogUrl(self, object):
       return self.__url(object)
