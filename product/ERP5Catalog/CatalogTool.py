@@ -871,7 +871,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         document_object = aq_inner(object_value)
         w = IndexableObjectWrapper(document_object, user_set, catalog_role_set)
         w.predicate_property_dict = getPredicatePropertyDict(object_value) or {}
-        group_and_user_id_set += w._getSecurityGroupIdGenerator()
+        group_and_user_id_set.update(w._getSecurityGroupIdGenerator())
 
         # Find the parent definition for security
         is_acquired = 0
@@ -887,7 +887,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             break
         if is_acquired:
           document_w = IndexableObjectWrapper(document_object, user_set, catalog_role_set)
-          group_and_user_id_set += document_w._getSecurityGroupIdGenerator()
+          group_and_user_id_set.update(document_w._getSecurityGroupIdGenerator())
         else:
           document_w = w
         wrapper_list.append((document_object, w, document_w))
