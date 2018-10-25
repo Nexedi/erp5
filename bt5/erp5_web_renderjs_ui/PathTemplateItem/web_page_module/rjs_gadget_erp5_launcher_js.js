@@ -37,6 +37,24 @@
 
   function route(my_root_gadget, my_scope, my_method, argument_list) {
     return my_root_gadget.getDeclaredGadget(my_scope)
+      .push(undefined, function (error) {
+        if (error instanceof rJS.ScopeError) {
+          var element = my_root_gadget
+                          .element
+                          .querySelector("[data-gadget-scope='" +
+                                         my_scope + "']");
+          if (element !== null) {
+            return my_root_gadget.declareGadget(
+              element.getAttribute('data-gadget-async-url'),
+              {
+                scope: my_scope,
+                element: element
+              }
+            );
+          }
+        }
+        throw error;
+      })
       .push(function (my_gadget) {
         if (argument_list) {
           return my_gadget[my_method].apply(my_gadget, argument_list);
@@ -58,19 +76,13 @@
   }
 
   function updatePanel(gadget) {
-    return gadget.getDeclaredGadget("panel")
-      .push(function (panel_gadget) {
-        return panel_gadget.render(gadget.props.panel_argument_list);
-      });
+    return route(gadget, 'panel', 'render', [gadget.props.panel_argument_list]);
   }
 
   function increaseLoadingCounter(gadget) {
     gadget.props.loading_counter += 1;
     if (gadget.props.loading_counter === 1) {
-      return gadget.getDeclaredGadget("header")
-        .push(function (header_gadget) {
-          return header_gadget.notifyLoading();
-        });
+      return route(gadget, 'header', 'notifyLoading');
     }
     return new RSVP.Queue();
   }
@@ -82,10 +94,7 @@
       // throw new Error("Unexpected negative loading counter");
     }
     if (gadget.props.loading_counter === 0) {
-      return gadget.getDeclaredGadget("header")
-        .push(function (header_gadget) {
-          return header_gadget.notifyLoaded();
-        });
+      return route(gadget, 'header', 'notifyLoaded');
     }
     return new RSVP.Queue();
   }
@@ -278,16 +287,10 @@
           return jio_gadget.createJio(setting.jio_storage_description);
         })
         .push(function () {
-          return gadget.getDeclaredGadget('panel');
-        })
-        .push(function (panel_gadget) {
-          return panel_gadget.render({});
+          return route(gadget, 'panel', 'render', [{}]);
         })
         .push(function () {
-          return gadget.getDeclaredGadget('router');
-        })
-        .push(function (router_gadget) {
-          return router_gadget.start();
+          return route(gadget, 'router', 'start');
         });
     })
 
@@ -428,28 +431,22 @@
     })
 
     .allowPublicAcquisition("updateHeader", function updateHeader(param_list) {
-      var gadget = this;
-      initHeaderOptions(gadget);
-      return this.getDeclaredGadget("translation_gadget")
-        .push(function (translation_gadget) {
-          var promise_list = [],
-            key;
-          for (key in param_list[0]) {
-            if (param_list[0].hasOwnProperty(key)) {
-              gadget.props.header_argument_list[key] = param_list[0][key];
-            }
-          }
+      initHeaderOptions(this);
+      var text_list = [],
+        key,
+        gadget = this;
+      for (key in param_list[0]) {
+        if (param_list[0].hasOwnProperty(key)) {
+          gadget.props.header_argument_list[key] = param_list[0][key];
+        }
+      }
 
-          promise_list.push(translation_gadget.translate(
-            gadget.props.header_argument_list.title
-          ));
-          if (gadget.props.header_argument_list.hasOwnProperty('right_title')) {
-            promise_list.push(translation_gadget.translate(
-              gadget.props.header_argument_list.right_title
-            ));
-          }
-          return RSVP.all(promise_list);
-        })
+      text_list.push(gadget.props.header_argument_list.title);
+      if (gadget.props.header_argument_list.hasOwnProperty('right_title')) {
+        text_list.push(gadget.props.header_argument_list.right_title);
+      }
+      return route(gadget, 'translation_gadget', 'getTranslationList',
+                   text_list)
         .push(function (result_list) {
           gadget.props.header_argument_list.title = result_list[0];
           if (result_list.length === 2) {
