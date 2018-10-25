@@ -438,21 +438,6 @@
           if (result_list.length === 2) {
             gadget.props.header_argument_list.right_title = result_list[1];
           }
-
-          // XXX Sven hack: number of _url determine padding for
-          // subheader on ui-content
-          var key,
-            count = 0;
-          for (key in gadget.props.header_argument_list) {
-            if (gadget.props.header_argument_list.hasOwnProperty(key)) {
-              if (key.indexOf('_url') > -1) {
-                count += 1;
-              }
-            }
-          }
-          if (count > 2) {
-            gadget.props.sub_header_class = "ui-has-subheader";
-          }
         });
     })
 
@@ -558,10 +543,6 @@
             if (main_gadget !== undefined) {
               var element = gadget.props.content_element,
                 content_container = document.createDocumentFragment();
-              // content_container.className = "ui-content " +
-              //   (gadget.props.sub_header_class || "");
-              // reset subheader indicator
-              delete gadget.props.sub_header_class;
 
               // go to the top of the page
               window.scrollTo(0, 0);
