@@ -200,18 +200,19 @@
   // Page rendering
   //////////////////////////////////////////
   rJS(window)
+    .setState({
+      setting_id: "setting/" + document.head.querySelector(
+        'script[data-renderjs-configuration="application_title"]'
+      ).textContent
+    })
     .ready(function () {
       var gadget = this,
         setting_gadget,
         setting;
       this.props = {
         loading_counter: 0,
-        content_element: this.element.querySelector('.gadget-content'),
-        setting_id: "setting/" + document.head.querySelector(
-          'script[data-renderjs-configuration="application_title"]'
-        ).textContent
+        content_element: this.element.querySelector('.gadget-content')
       };
-
       // Configure setting storage
       return gadget.getDeclaredGadget("setting_gadget")
         .push(function (result) {
@@ -223,7 +224,7 @@
         })
         .push(function () {
 
-          return setting_gadget.get(gadget.props.setting_id)
+          return setting_gadget.get(gadget.state.setting_id)
             .push(undefined, function (error) {
               if (error.status_code === 404) {
                 return {};
@@ -266,7 +267,7 @@
             }
           }
 
-          return setting_gadget.put(gadget.props.setting_id, setting);
+          return setting_gadget.put(gadget.state.setting_id, setting);
         })
         .push(function () {
           // Configure jIO storage
@@ -296,7 +297,7 @@
     .allowPublicAcquisition("getSettingList",
                             function getSettingList(argument_list) {
         var key_list = argument_list[0];
-        return route(this, 'setting_gadget', 'get', [this.props.setting_id])
+        return route(this, 'setting_gadget', 'get', [this.state.setting_id])
           .push(function (doc) {
             var i,
               result_list = [];
@@ -315,7 +316,7 @@
       var gadget = this,
         key = argument_list[0],
         default_value = argument_list[1];
-      return route(gadget, 'setting_gadget', 'get', [gadget.props.setting_id])
+      return route(gadget, 'setting_gadget', 'get', [gadget.state.setting_id])
         .push(function (doc) {
           return doc[key] || default_value;
         }, function (error) {
@@ -333,7 +334,7 @@
       return gadget.getDeclaredGadget("setting_gadget")
         .push(function (result) {
           jio_gadget = result;
-          return jio_gadget.get(gadget.props.setting_id);
+          return jio_gadget.get(gadget.state.setting_id);
         })
         .push(undefined, function (error) {
           if (error.status_code === 404) {
@@ -343,7 +344,7 @@
         })
         .push(function (doc) {
           doc[key] = value;
-          return jio_gadget.put(gadget.props.setting_id, doc);
+          return jio_gadget.put(gadget.state.setting_id, doc);
         });
     })
     .allowPublicAcquisition("translateHtml", function translateHtml(
