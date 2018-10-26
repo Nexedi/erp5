@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,8 +58,13 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -75,7 +79,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_list.html</string> </value>
+            <value> <string>gadget_supportrequest_header.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_supportrequest_pt_listpage_html</string> </value>
+            <value> <string>gadget_supportrequest_header_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -103,7 +107,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Support Request List HTML</string> </value>
+            <value> <string>Gadget Support Request Header HTML</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -167,7 +171,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -189,8 +193,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497910732.61</float>
-                        <string>UTC</string>
+                        <float>1540867849.08</float>
+                        <string>GMT+9</string>
                       </tuple>
                     </state>
                   </object>
@@ -220,7 +224,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -234,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.303.21710.19063</string> </value>
+                <value> <string>971.18479.8827.61354</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,8 +256,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1504275408.49</float>
-                        <string>UTC</string>
+                        <float>1540870432.58</float>
+                        <string>GMT+9</string>
                       </tuple>
                     </state>
                   </object>
@@ -279,7 +283,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -309,8 +313,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497909778.2</float>
-                        <string>UTC</string>
+                        <float>1540867644.05</float>
+                        <string>GMT+9</string>
                       </tuple>
                     </state>
                   </object>

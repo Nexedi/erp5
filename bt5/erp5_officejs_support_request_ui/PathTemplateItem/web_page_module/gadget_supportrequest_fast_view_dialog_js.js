@@ -10,22 +10,9 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("notifyChange", "notifyChange")
 
-    .allowPublicAcquisition("redirect", function (param_list) {
-      var gadget = this;
-      return gadget.redirect({command: 'change', options: {
-        view: gadget.hateoas_url +
-          "ERP5Document_getHateoas?mode=traverse&relative_url=" +
-          encodeURIComponent(param_list[0].options.jio_key) +
-          "&view=officejs_support_request_view",
-        page: 'list',
-        jio_key: param_list[0].options.jio_key
-      }
-        });
-    })
     .allowPublicAcquisition("notifyChange", function (param_list) {
       if (param_list[0]) {
         return this.notifyChange("Please provide a description for this support request.");
