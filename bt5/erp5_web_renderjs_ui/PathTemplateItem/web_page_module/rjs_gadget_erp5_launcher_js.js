@@ -360,7 +360,11 @@
     ) {
       return RSVP.all([
         route(this, "header", 'notifySubmitting'),
-        route(this, "notification", 'notify', argument_list)
+        this.deferChangeState({
+          // Force calling notify
+          notification_timestamp: new Date().getTime(),
+          notification_options: argument_list[0]
+        })
       ]);
     })
     .allowPublicAcquisition('notifySubmitted', function notifySubmitted(
@@ -368,7 +372,11 @@
     ) {
       return RSVP.all([
         route(this, "header", 'notifySubmitted'),
-        route(this, "notification", 'notify', argument_list),
+        this.deferChangeState({
+          // Force calling notify
+          notification_timestamp: new Date().getTime(),
+          notification_options: argument_list[0]
+        }),
         route(this, "router", 'notify', argument_list)
       ]);
     })
@@ -377,7 +385,11 @@
     ) {
       return RSVP.all([
         route(this, "header", 'notifyChange'),
-        route(this, "notification", 'notify', argument_list),
+        this.deferChangeState({
+          // Force calling notify
+          notification_timestamp: new Date().getTime(),
+          notification_options: argument_list[0]
+        }),
         route(this, "router", 'notify', argument_list)
       ]);
     })
@@ -613,6 +625,21 @@
         );
       }
 
+      // Update the notification
+      if (modification_dict.hasOwnProperty('notification_options') ||
+          modification_dict.hasOwnProperty('notification_timestamp')) {
+        if (gadget.state.notification_options === undefined) {
+          promise_list.push(
+            route(gadget, "notification", 'close')
+          );
+        } else {
+          promise_list.push(
+            route(this, "notification", 'notify',
+                  [gadget.state.notification_options])
+          );
+        }
+      }
+
       return RSVP.all(promise_list);
     })
     // Render the page
@@ -631,9 +658,6 @@
             route(gadget, 'panel', 'close'),
             route(gadget, 'router', 'notify', [{modified : false}])
           ];
-          if (keep_message !== true) {
-            promise_list.push(route(gadget, 'notification', 'close'));
-          }
           return RSVP.all(promise_list);
         })
         .push(function () {
@@ -641,6 +665,8 @@
             url: route_result.url,
             options: route_result.options,
             editor_panel_url: undefined,
+            notification_options: (keep_message === true) ?
+                                  gadget.state.notification_options : undefined,
             // Force calling main gadget render
             render_timestamp: new Date().getTime()
           });
