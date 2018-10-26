@@ -1,7 +1,9 @@
 /*global window, rJS, RSVP, Handlebars */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, Rusha) {
   "use strict";
+
+  var rusha = new Rusha();
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -208,17 +210,16 @@
         .push(function () {
           return new RSVP.Queue()
             .push(function () {
+              var hosting_key = rusha.digestFromString(gadget.state.opml_key);
               return RSVP.all([
                 gadget.getUrlFor({command: 'history_previous'}),
                 gadget.getUrlFor({command: 'selection_previous'}),
                 gadget.getUrlFor({command: 'selection_next'}),
                 gadget.getUrlFor({command: 'push_history', options: {
                   page: "ojsm_jump",
-                  jio_key: gadget.state.opml_key,
+                  jio_key: hosting_key,
                   title: gadget.state.opml_title,
-                  jump_page: "ojsm_hosting_subscription_view",
-                  view_title: "Related Hosting Subscription",
-                  opml_key: gadget.state.opml_key
+                  view_title: "Related Hosting Subscription"
                 }}),
                 gadget.getUrlFor({command: 'change', options: {
                   page: 'ojsm_opml_delete',
@@ -240,4 +241,4 @@
             });
         });
     });
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, Rusha));

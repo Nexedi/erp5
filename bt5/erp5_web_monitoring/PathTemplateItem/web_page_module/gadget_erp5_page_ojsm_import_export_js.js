@@ -264,9 +264,9 @@
     if (uri_param.has('url') && uri_param.has('password') &&
         uri_param.has('username') && uri_param.get('url').startsWith('http')) {
       return {
-        opml_url: uri_param.get('url'),
-        username: uri_param.get('username'),
-        password: uri_param.get('password')
+        opml_url: uri_param.get('url').trim(),
+        username: uri_param.get('username').trim(),
+        password: uri_param.get('password').trim()
       };
     }
   }
@@ -277,9 +277,9 @@
         connection_dict["monitor-user"] &&
         connection_dict["monitor-password"]) {
       return {
-        opml_url: connection_dict["monitor-url"],
-        username: connection_dict["monitor-user"],
-        password: connection_dict["monitor-password"]
+        opml_url: connection_dict["monitor-url"].trim(),
+        username: connection_dict["monitor-user"].trim(),
+        password: connection_dict["monitor-password"].trim()
       };
     }
   }
