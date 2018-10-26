@@ -108,7 +108,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 20 May 2018 17:47:45 +0000\n
+# generated on Fri, 16 Jul 2018 17:48:21 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -205,7 +205,7 @@ gadget_erp5_page_ojsm_hosting_subscription_list.html\n
 gadget_officejs_monitoring_parameter_view.html\n
 gadget_erp5_page_settings_configurator.html\n
 gadget_erp5_page_ojsm_processes_view.html\n
-gadget_erp5_page_ojsm_hosting_subscription_view.html\n
+gadget_officejs_jio_hosting_subscription_view.html\n
 gadget_officejs_monitoring_sync.html\n
 gadget_officejs_jio_software_instance_view.html\n
 gadget_erp5_page_ojsm_software_instance_list.html\n
@@ -233,7 +233,7 @@ gadget_officejs_monitoring_parameter_view.js\n
 gadget_erp5_page_settings_configurator.js\n
 gadget_erp5_page_ojsm_processes_view.js\n
 gadget_officejs_monitoring_custom.css\n
-gadget_erp5_page_ojsm_hosting_subscription_view.js\n
+gadget_officejs_jio_hosting_subscription_view.js\n
 gadget_erp5_global.js\n
 gadget_officejs_monitoring_sync.js\n
 gadget_erp5_page_ojsm_software_instance_list.js\n
@@ -387,7 +387,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>966.64659.26947.45004</string> </value>
+                <value> <string>971.13516.48622.23296</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -405,7 +405,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1527847381.11</float>
+                        <float>1540570672.89</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
