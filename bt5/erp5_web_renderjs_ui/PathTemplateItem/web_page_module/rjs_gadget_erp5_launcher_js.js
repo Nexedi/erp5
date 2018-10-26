@@ -466,7 +466,7 @@
     })
     .allowPublicAcquisition('renderEditorPanel',
                             function renderEditorPanel(param_list) {
-        return this.changeState({
+        return this.deferChangeState({
           // Force calling editor panel render
           editor_panel_render_timestamp: new Date().getTime(),
           editor_panel_url: param_list[0],
@@ -527,6 +527,10 @@
       param_list
     ) {
       return this.render.apply(this, param_list);
+    })
+
+    .declareJob('deferChangeState', function deferChangeState(state) {
+      return this.changeState(state);
     })
     .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
