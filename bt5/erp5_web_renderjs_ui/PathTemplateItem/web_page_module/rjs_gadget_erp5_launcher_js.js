@@ -287,9 +287,6 @@
           return jio_gadget.createJio(setting.jio_storage_description);
         })
         .push(function () {
-          return route(gadget, 'panel', 'render', [{}]);
-        })
-        .push(function () {
           return route(gadget, 'router', 'start');
         });
     })
