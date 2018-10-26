@@ -466,7 +466,12 @@
     })
     .allowPublicAcquisition('renderEditorPanel',
                             function renderEditorPanel(param_list) {
-        return route(this, "editor_panel", 'render', param_list);
+        return this.changeState({
+          // Force calling editor panel render
+          editor_panel_render_timestamp: new Date().getTime(),
+          editor_panel_url: param_list[0],
+          editor_panel_options: param_list[1]
+        });
       })
     .allowPublicAcquisition("jio_allDocs", function jio_allDocs(param_list) {
       return callJioGadget(this, "allDocs", param_list);
@@ -525,7 +530,8 @@
     })
     .onStateChange(function onStateChange(modification_dict) {
       var gadget = this,
-        route_result = gadget.state;
+        route_result = gadget.state,
+        promise_list;
 
       if (modification_dict.hasOwnProperty('error_text')) {
         return gadget.dropGadget(MAIN_SCOPE)
@@ -546,8 +552,11 @@
           });
       }
 
+      promise_list = [];
+
+      // Update the main gadget
       if (modification_dict.hasOwnProperty('url')) {
-        return renderMainGadget(
+        promise_list.push(renderMainGadget(
           gadget,
           route_result.url,
           route_result.options
@@ -575,20 +584,32 @@
               // XXX Drop notification
               // return header_gadget.notifyLoaded();
             }
-          });
+          }));
+      } else if (modification_dict.hasOwnProperty('render_timestamp')) {
+        // Same subgadget
+        promise_list.push(gadget.getDeclaredGadget(MAIN_SCOPE)
+          .push(function (page_gadget) {
+            return page_gadget.render(gadget.state.options);
+          })
+          .push(function () {
+            return RSVP.all([
+              updateHeader(gadget),
+              updatePanel(gadget)
+            ]);
+          }));
       }
 
-      // Same subgadget
-      return gadget.getDeclaredGadget(MAIN_SCOPE)
-        .push(function (page_gadget) {
-          return page_gadget.render(gadget.state.options);
-        })
-        .push(function () {
-          return RSVP.all([
-            updateHeader(gadget),
-            updatePanel(gadget)
-          ]);
-        });
+      // Update the editor panel
+      if (modification_dict.hasOwnProperty('editor_panel_url') ||
+          modification_dict.hasOwnProperty('editor_panel_render_timestamp')) {
+        promise_list.push(
+          route(gadget, 'editor_panel', 'render',
+                [gadget.state.editor_panel_url,
+                 gadget.state.editor_panel_options])
+        );
+      }
+
+      return RSVP.all(promise_list);
     })
     // Render the page
     .declareMethod('render', function render(route_result, keep_message) {
@@ -604,7 +625,6 @@
         .push(function () {
           var promise_list = [
             route(gadget, 'panel', 'close'),
-            route(gadget, 'editor_panel', 'close'),
             route(gadget, 'router', 'notify', [{modified : false}])
           ];
           if (keep_message !== true) {
@@ -613,8 +633,13 @@
           return RSVP.all(promise_list);
         })
         .push(function () {
-          return gadget.changeState({url: route_result.url,
-                                     options: route_result.options});
+          return gadget.changeState({
+            url: route_result.url,
+            options: route_result.options,
+            editor_panel_url: undefined,
+            // Force calling main gadget render
+            render_timestamp: new Date().getTime()
+          });
         })
         .push(function () {
           return decreaseLoadingCounter(gadget);
