@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojsm_hosting_subscription_view.html</string> </value>
+            <value> <string>gadget_officejs_jio_hosting_subscription_view.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_page_ojsm_hosting_subscription_view_html</string> </value>
+            <value> <string>gadget_officejs_jio_hosting_subscription_view_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -246,7 +246,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.46060.41528.54152</string> </value>
+                <value> <string>971.13402.51340.4454</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -264,7 +264,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1507901514.08</float>
+                        <float>1540563538.46</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

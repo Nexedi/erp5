@@ -1,19 +1,14 @@
-/*global window, rJS, document, RSVP, Rusha, escape */
+/*global window, rJS, document, RSVP, escape */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, document, RSVP, Rusha, escape) {
+(function (window, rJS, document, RSVP, escape) {
   "use strict";
 
-  var gadget_klass = rJS(window),
-    rusha = new Rusha();
-
-  function generateHash(str) {
-    return rusha.digestFromString(str);
-  }
+  var gadget_klass = rJS(window);
 
   gadget_klass
     .setState({
       ouline_list: "",
-      opml: ""
+      hosting_subscription: ""
     })
     .ready(function (g) {
       g.props = {};
@@ -95,15 +90,21 @@
         title: 'Hosting Subscriptions View'
       })
         .push(function () {
-          return gadget.jio_get(options.opml_key);
+          return gadget.jio_get(options.jio_key);
+        })
+        .push(function (hosting_doc) {
+          return gadget.changeState({hosting_subscription: hosting_doc});
+        })
+        .push(function () {
+          return gadget.jio_get(gadget.state.hosting_subscription.opml_url);
         })
         .push(function (opml_doc) {
           return gadget.changeState({opml: opml_doc});
         })
         .push(function () {
           return gadget.jio_allDocs({
-            query: '(portal_type:"opml-outline") AND (parent_id:"' +
-              generateHash(options.opml_key) + '")'
+            query: '(portal_type:"Opml Outline") AND (parent_id:"' +
+              options.jio_key + '")'
           });
         })
         .push(function (ouline_list) {
@@ -280,27 +281,27 @@
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'store_and_change', options: {
               page: "ojsm_jump",
-              jio_key: gadget.state.opml.url,
-              title: gadget.state.opml.title,
+              jio_key: gadget.state.hosting_subscription.opml_url,
+              title: gadget.state.hosting_subscription.title,
               view_title: "Related OPML",
               search_page: "ojsm_status_list"
             }})
           ]);
         })
         .push(function (url_list) {
-          if (gadget.state.ouline_list.length === 0) {
+          if (gadget.state.hosting_subscription.instance_amount === 0) {
             gadget.element.querySelector('.hosting-title').textContent =
-              gadget.state.opml.title + " -  Not synchronized!";
+              gadget.state.hosting_subscription.title + " -  Not synchronized!";
             return gadget.updateHeader({
-              page_title: "Hosting Subscription: " + gadget.state.opml.title,
+              page_title: "Hosting Subscription: " + gadget.state.hosting_subscription.title,
               selection_url: url_list[0],
               jump_url: url_list[1]
             });
           }
           gadget.element.querySelector('.hosting-title').textContent =
-            gadget.state.opml.title;
+            gadget.state.hosting_subscription.title;
           return gadget.updateHeader({
-            page_title: "Hosting Subscription: " + gadget.state.opml.title,
+            page_title: "Hosting Subscription: " + gadget.state.hosting_subscription.title,
             selection_url: url_list[0],
             jump_url: url_list[1],
             save_action: true
@@ -308,4 +309,4 @@
         });
     });
 
-}(window, rJS, document, RSVP, Rusha, escape));
+}(window, rJS, document, RSVP, escape));

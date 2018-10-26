@@ -5,103 +5,6 @@
 
   var gadget_klass = rJS(window);
 
-  function getHostingData(gadget, filter, status_sort) {
-    // optimized way to fetch hosting subscription list
-    var hosting_dict = {},
-      instance_dict = {},
-      compare_function,
-      total_rows = 0;
-    return gadget.jio_allDocs(filter)
-      .push(function (result) {
-        var i;
-        total_rows = result.data.total_rows;
-        for (i = 0; i < result.data.total_rows; i += 1) {
-          hosting_dict[result.data.rows[i].id] = {
-            id: result.data.rows[i].id,
-            value: {
-              url: result.data.rows[i].value.url,
-              status: "WARNING",
-              date: 'Not Synchronized',
-              title: result.data.rows[i].value.title,
-              amount: 0
-            }
-          };
-        }
-        return gadget.jio_allDocs({
-          query: '(portal_type:"opml-outline") OR (portal_type:"Software Instance")',
-          select_list: [
-            "parent_url",
-            "status",
-            "parent_id",
-            "date",
-            "portal_type"
-          ]
-        });
-      })
-      .push(function (result) {
-        var i,
-          key,
-          item,
-          row_list = [];
-        for (i = 0; i < result.data.total_rows; i += 1) {
-          if (result.data.rows[i].value.portal_type === 'opml-outline') {
-            if (hosting_dict.hasOwnProperty(result.data.rows[i].value.parent_url)) {
-              instance_dict[result.data.rows[i].id] = {
-                parent_id: result.data.rows[i].value.parent_url
-              };
-            }
-          }
-        }
-        for (i = 0; i < result.data.total_rows; i += 1) {
-          if (result.data.rows[i].value.portal_type === 'Software Instance') {
-            if (instance_dict.hasOwnProperty(result.data.rows[i].value.parent_id)) {
-              instance_dict[result.data.rows[i].value.parent_id].date =
-                result.data.rows[i].value.date;
-              instance_dict[result.data.rows[i].value.parent_id].status =
-                result.data.rows[i].value.status;
-            }
-          }
-        }
-        //calculate hosting subscription status
-        for (key in instance_dict) {
-          if (instance_dict.hasOwnProperty(key)) {
-            item = hosting_dict[instance_dict[key].parent_id].value;
-            item.amount += 1;
-            if (item.status !== "ERROR") {
-              item.status = instance_dict[key].status || "WARNING";
-            }
-            item.date = instance_dict[key].date || 'Not Synchronized';
-            item.synced = item.status !== "WARNING" ? "YES" : "NO";
-          }
-        }
-        for (key in hosting_dict) {
-          if (hosting_dict.hasOwnProperty(key)) {
-            row_list.push(hosting_dict[key]);
-          }
-        }
-        if (status_sort !== undefined) {
-          compare_function = function (first, second) {
-            first = first.toUpperCase();
-            second = second.toUpperCase();
-            if (first > second) {
-              return 1;
-            }
-            if (first < second) {
-              return -1;
-            }
-            return 0;
-          };
-          row_list.sort(function (a, b) {
-            if (status_sort === "ascending") {
-              return compare_function(b.value.status, a.value.status);
-            }
-            return compare_function(a.value.status, b.value.status);
-          });
-        }
-        return {data: {total_rows: total_rows, rows: row_list}};
-      });
-  }
-
   gadget_klass
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("redirect", "redirect")
@@ -111,31 +14,16 @@
     .declareAcquiredMethod("renderApplication", "renderApplication")
     .declareAcquiredMethod('jio_allDocs', 'jio_allDocs')
 
-    .allowPublicAcquisition("getUrlFor", function (param_list) {
-      if (param_list[0].options.jio_key !== undefined &&
-          param_list[0].options.query.indexOf('portal_type:"opml"') !== -1) {
-        param_list[0].options.page = "ojsm_hosting_subscription_view";
-        param_list[0].options.opml_key = param_list[0].options.jio_key;
-      }
-      return this.getUrlFor(param_list[0]);
-    })
-
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
-      var gadget = this,
-        status_sort,
-        j;
-      for (j = 0; j < param_list[0].sort_on.length; j += 1) {
-        if (param_list[0].sort_on[j][0] === 'status') {
-          status_sort = param_list[0].sort_on[j][1];
-        }
-      }
-      return getHostingData(gadget, param_list[0], status_sort)
+      var gadget = this;
+
+      return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
           var i,
             len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {
-            if (result.data.rows[i].value.hasOwnProperty("date")) {
-              result.data.rows[i].value.date = {
+            if (result.data.rows[i].value.hasOwnProperty("status_date")) {
+              result.data.rows[i].value.status_date = {
                 allow_empty_time: 0,
                 ampm_time_style: 0,
                 css_class: "date_field",
@@ -144,7 +32,7 @@
                 editable: 0,
                 hidden: 0,
                 hidden_day_is_last_day: 0,
-                "default": new Date(result.data.rows[i].value.date).toUTCString(),
+                "default": new Date(result.data.rows[i].value.status_date).toUTCString(),
                 key: "date",
                 required: 0,
                 timezone_style: 0,
@@ -209,9 +97,8 @@
           var column_list = [
             ['status', 'Status'],
             ['title', 'Hosting Subscription'],
-            ['amount', 'Instance Amount'],
-            ['date', 'Status Date'],
-            ['synced', 'Synced?']
+            ['instance_amount', 'Instance Amount'],
+            ['status_date', 'Status Date']
           ];
           return form_list.render({
             erp5_document: {
@@ -226,13 +113,11 @@
                   "lines": lines_limit,
                   "list_method": "portal_catalog",
                   "query": "urn:jio:allDocs?query=%28portal_type%3A%22" +
-                    "opml" + "%22%29AND%28active%3A%22" +
-                    "true" + "%22%29AND%28url%3A%22" +
-                    "https://%25%22%29",
+                    "Hosting Subscription" + "%22%29",
                   "portal_type": [],
                   "search_column_list": [['status', 'Status'], ['title', 'Hosting Subscription']],
-                  "sort_column_list": [['title', 'Hosting Subscription']],
-                  "sort": [['title', 'ascending']],
+                  "sort_column_list": [['status', 'Status'], ['title', 'Hosting Subscription'], ['instance_amount', 'Instance Amount']],
+                  "sort": [['status', 'ascending'], ['title', 'ascending']],
                   "title": "Hosting Subscriptions",
                   "command": "index",
                   "type": "ListBox"
