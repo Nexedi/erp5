@@ -897,9 +897,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         # Note: we mutate the set, so all related wrappers get (purposedly)
         # affected by this, which must happen before _getSecurityParameterList
         # is called (which happens when calling getSecurityUidDict below).
-        user_set += portal.ERP5Site_filterUserIdSet(
+        user_set.update(portal.ERP5Site_filterUserIdSet(
           group_and_user_id_set=group_and_user_id_set,
-        )
+        ))
 
       getSecurityUidDict = catalog_value.getSecurityUidDict
       getSubjectSetUid = catalog_value.getSubjectSetUid
