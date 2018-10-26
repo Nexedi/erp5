@@ -8,39 +8,26 @@
     // acquired method
     //////////////////////////////////////////////
     .allowPublicAcquisition('trigger', function trigger() {
-      return this.toggle();
+      return this.close();
     })
 
     .declareMethod('toggle', function toggle() {
-      if (this.state.visible) {
-        return this.close();
-      }
       return this.changeState({
-        visible: !this.state.visible
+        url: undefined
       });
     })
 
     .declareMethod('close', function close() {
       return this.changeState({
-        visible: false,
-        url: undefined,
-        options: undefined
+        url: undefined
       });
     })
 
     .declareMethod('render', function render(url, options) {
-      // XXX Hack to close the panel if the sort/filter button
-      // is clicked twice
-      if (url === this.state.url) {
-        return this.changeState({
-          visible: false,
-          url: undefined,
-          options: undefined
-        });
-      }
       return this.changeState({
-        visible: true,
-        url: url,
+        // Hack to close the panel if the sort/filter button
+        // is clicked twice
+        url: (url === this.state.url) ? undefined : url,
         options: options
       });
     })
@@ -48,22 +35,19 @@
     .onStateChange(function onStateChange(modification_dict) {
       var queue,
         gadget = this;
-      if (this.state.visible) {
-        if (!this.element.classList.contains('visible')) {
-          this.element.classList.toggle('visible');
-        }
-      } else {
-        if (this.element.classList.contains('visible')) {
-          this.element.classList.remove('visible');
-        }
-      }
 
       if (modification_dict.hasOwnProperty('url')) {
         if (this.state.url === undefined) {
+          if (this.element.classList.contains('visible')) {
+            this.element.classList.remove('visible');
+          }
           while (this.element.firstChild) {
             this.element.removeChild(this.element.firstChild);
           }
         } else {
+          if (!this.element.classList.contains('visible')) {
+            this.element.classList.toggle('visible');
+          }
           queue = this.declareGadget(this.state.url,
                                      {scope: "declared_gadget"});
         }
