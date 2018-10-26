@@ -134,14 +134,13 @@
         })
         .push(function (outline_doc) {
           // get opml
-          return gadget.jio_get(outline_doc.parent_url);
+          return RSVP.all([outline_doc.parent_id,
+                           gadget.jio_get(outline_doc.parent_url)]);
         })
-        .push(function (opml_document) {
-          opml_doc = opml_document;
+        .push(function (document_list) {
+          opml_doc = document_list[1];
           return gadget.getUrlFor({command: 'push_history', options: {
-            jio_key: options.doc.reference,
-            page: 'ojsm_hosting_subscription_view',
-            opml_key: opml_document.url
+            jio_key: document_list[0]
           }});
         })
         .push(function (hosting_url) {
