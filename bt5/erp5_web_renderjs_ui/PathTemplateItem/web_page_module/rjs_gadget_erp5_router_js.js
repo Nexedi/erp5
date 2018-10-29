@@ -1058,6 +1058,7 @@
         })
         .push(function (route_result) {
           if ((route_result !== undefined) && (route_result.url !== undefined)) {
+            gadget.props.modified = false;
             return gadget.renderApplication(route_result, gadget.props.keep_message)
               .push(function (result) {
                 gadget.props.keep_message = false;
