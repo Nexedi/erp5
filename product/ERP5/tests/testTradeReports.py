@@ -72,12 +72,16 @@ class TestTradeReports(ERP5ReportTestCase):
     self.portal_categories = self.portal.portal_categories
 
     # Create site category
-    for site_id in ('demo_site_A', 'demo_site_B',):
+    for site_id, codification in (
+      ('demo_site_A', 'DEMO-SITE-A'),
+      ('demo_site_B', 'DEMO-SITE-B'),
+    ):
       if not self.portal_categories['site'].has_key(site_id):
         self.portal_categories.site.newContent(
                                   portal_type='Category',
                                   title=site_id,
                                   reference=site_id,
+                                  codification=codification,
                                   id=site_id)
     # Colour categories
     for colour_id in ('colour1', 'colour2',):
