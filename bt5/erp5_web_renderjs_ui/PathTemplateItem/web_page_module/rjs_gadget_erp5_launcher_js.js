@@ -210,6 +210,7 @@
   //////////////////////////////////////////
   rJS(window)
     .setState({
+      panel_visible: false,
       setting_id: "setting/" + document.head.querySelector(
         'script[data-renderjs-configuration="application_title"]'
       ).textContent
@@ -474,7 +475,10 @@
       return hideDesktopPanel(this, param_list[0]);
     })
     .allowPublicAcquisition('triggerPanel', function triggerPanel() {
-      return route(this, "panel", "toggle");
+      // Force calling panel toggle
+      return this.deferChangeState({
+        panel_visible: new Date().getTime()
+      });
     })
     .allowPublicAcquisition('renderEditorPanel',
                             function renderEditorPanel(param_list) {
@@ -615,6 +619,14 @@
           }));
       }
 
+      // Update the panel state
+      if (modification_dict.hasOwnProperty('panel_visible')) {
+        if (gadget.state.panel_visible !== false) {
+          promise_list.push(route(this, 'panel', "toggle"));
+        } else {
+          promise_list.push(route(this, 'panel', "close"));
+        }
+      }
       // Update the editor panel
       if (modification_dict.hasOwnProperty('editor_panel_url') ||
           modification_dict.hasOwnProperty('editor_panel_render_timestamp')) {
@@ -654,16 +666,13 @@
       initPanelOptions(gadget);
       return increaseLoadingCounter(gadget)
         .push(function () {
-          var promise_list = [
-            route(gadget, 'panel', 'close'),
-            route(gadget, 'router', 'notify', [{modified : false}])
-          ];
-          return RSVP.all(promise_list);
+          return route(gadget, 'router', 'notify', [{modified : false}]);
         })
         .push(function () {
           return gadget.changeState({
             url: route_result.url,
             options: route_result.options,
+            panel_visible: false,
             editor_panel_url: undefined,
             notification_options: (keep_message === true) ?
                                   gadget.state.notification_options : undefined,
