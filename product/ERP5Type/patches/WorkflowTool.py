@@ -457,162 +457,157 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
   """
   if object is not None or info is None:
     info = self._getOAI(object)
-  chain = self.getChainFor(info.object)
-  did = {}
   actions = []
-  worklist_dict = {}
-
-  for wf_id in chain:
-    did[wf_id] = None
+  for wf_id in self.getChainFor(info.object):
     wf = self.getWorkflowById(wf_id)
     if wf is not None:
       a = wf.listObjectActions(info)
       if a is not None:
         actions.extend(a)
-      a = wf.getWorklistVariableMatchDict(info)
-      if a is not None:
-        worklist_dict[wf_id] = a
 
-  wf_ids = self.getWorkflowIds()
-  for wf_id in wf_ids:
-    if not did.has_key(wf_id):
+  portal = self.getPortalObject()
+  portal_url = portal.portal_url()
+  def _getWorklistActionList():
+    worklist_dict = {}
+    for wf_id in self.getWorkflowIds():
       wf = self.getWorkflowById(wf_id)
       if wf is not None:
         a = wf.getWorklistVariableMatchDict(info)
         if a is not None:
           worklist_dict[wf_id] = a
-
-  if worklist_dict:
-    portal = self.getPortalObject()
-    portal_url = portal.portal_url()
-    def _getWorklistActionList():
-      is_anonymous = portal.portal_membership.isAnonymousUser()
-      portal_catalog = portal.portal_catalog
-      sql_catalog = portal_catalog.getSQLCatalog()
-      catalog_security_uid_groups_columns_dict = \
-        sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict()
-      getSecurityUidDictAndRoleColumnDict = \
-        portal_catalog.getSecurityUidDictAndRoleColumnDict
-      search_result_ = getattr(self, "Base_getCountFromWorklistTable", None)
-      use_cache = search_result_ is not None
-      if use_cache:
-        ignored_security_column_id_set = self._getWorklistIgnoredSecurityColumnSet()
-        ignored_security_uid_parameter_set = {x
-          for x, y in catalog_security_uid_groups_columns_dict.iteritems()
-          if y in ignored_security_column_id_set
-        }
-        _getSecurityUidDictAndRoleColumnDict = getSecurityUidDictAndRoleColumnDict
-        def getSecurityUidDictAndRoleColumnDict(**kw):
-          security_uid_dict, role_column_dict, local_role_column_dict = \
-            _getSecurityUidDictAndRoleColumnDict(**kw)
-          for ignored_security_column_id in ignored_security_column_id_set:
-            role_column_dict.pop(ignored_security_column_id, None)
-            local_role_column_dict.pop(ignored_security_column_id, None)
-          for ignored_security_uid_parameter in \
-              ignored_security_uid_parameter_set:
-            security_uid_dict.pop(ignored_security_uid_parameter)
-          return security_uid_dict, role_column_dict, local_role_column_dict
-        count_column_expression = 'sum(`%s`)' % (COUNT_COLUMN_TITLE, )
-        # Prevent catalog from trying to join
-        getQuery = SimpleQuery
-        # BBB
-        def search_result(select_dict, group_by, query, limit, src__):
-          select_item_list = []
-          for alias, expression in select_dict.iteritems():
-            if expression is None:
-              expression = alias
-            select_item_list.append('%s AS %s' % (expression, alias))
-          return search_result_(
-            select_expression=','.join(select_item_list),
-            group_by_expression=','.join(group_by),
-            query=query,
-            limit=limit,
-            src__=src__,
-          )
-      else:
-        search_result = portal_catalog.unrestrictedSearchResults
-        count_column_expression = 'count(*)'
-        # Let catalog join as needed
-        getQuery = lambda comparison_operator=None, **kw: AutoQuery(
-          operator=comparison_operator,
-          **kw
+    if not worklist_dict:
+      return ()
+    is_anonymous = portal.portal_membership.isAnonymousUser()
+    portal_catalog = portal.portal_catalog
+    sql_catalog = portal_catalog.getSQLCatalog()
+    catalog_security_uid_groups_columns_dict = \
+      sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict()
+    getSecurityUidDictAndRoleColumnDict = \
+      portal_catalog.getSecurityUidDictAndRoleColumnDict
+    search_result_ = getattr(self, "Base_getCountFromWorklistTable", None)
+    use_cache = search_result_ is not None
+    if use_cache:
+      ignored_security_column_id_set = self._getWorklistIgnoredSecurityColumnSet()
+      ignored_security_uid_parameter_set = {x
+        for x, y in catalog_security_uid_groups_columns_dict.iteritems()
+        if y in ignored_security_column_id_set
+      }
+      _getSecurityUidDictAndRoleColumnDict = getSecurityUidDictAndRoleColumnDict
+      def getSecurityUidDictAndRoleColumnDict(**kw):
+        security_uid_dict, role_column_dict, local_role_column_dict = \
+          _getSecurityUidDictAndRoleColumnDict(**kw)
+        for ignored_security_column_id in ignored_security_column_id_set:
+          role_column_dict.pop(ignored_security_column_id, None)
+          local_role_column_dict.pop(ignored_security_column_id, None)
+        for ignored_security_uid_parameter in \
+            ignored_security_uid_parameter_set:
+          security_uid_dict.pop(ignored_security_uid_parameter)
+        return security_uid_dict, role_column_dict, local_role_column_dict
+      count_column_expression = 'sum(`%s`)' % (COUNT_COLUMN_TITLE, )
+      # Prevent catalog from trying to join
+      getQuery = SimpleQuery
+      # BBB
+      def search_result(select_dict, group_by, query, limit, src__):
+        select_item_list = []
+        for alias, expression in select_dict.iteritems():
+          if expression is None:
+            expression = alias
+          select_item_list.append('%s AS %s' % (expression, alias))
+        return search_result_(
+          select_expression=','.join(select_item_list),
+          group_by_expression=','.join(group_by),
+          query=query,
+          limit=limit,
+          src__=src__,
         )
-      worklist_result_dict = {}
-      # Get a list of dict of WorklistVariableMatchDict grouped by compatible
-      # conditions
-      (worklist_list_grouped_by_condition, worklist_metadata) = \
-        groupWorklistListByCondition(
-          worklist_dict=worklist_dict,
-          sql_catalog=sql_catalog,
-          getSecurityUidDictAndRoleColumnDict=\
-            getSecurityUidDictAndRoleColumnDict,
-          catalog_security_uid_groups_columns_dict=\
-            catalog_security_uid_groups_columns_dict,
-        )
-      if src__:
-        action_list = []
-      for grouped_worklist_dict in worklist_list_grouped_by_condition:
-        # Generate the query for this worklist_list
-        (total_criterion_id_list, query) = \
-          getWorklistListQuery(
-            getQuery=getQuery,
-            grouped_worklist_dict=grouped_worklist_dict,
-          )
-        group_by = total_criterion_id_list
-        assert COUNT_COLUMN_TITLE not in total_criterion_id_list
-        select_dict = dict.fromkeys(total_criterion_id_list)
-        select_dict[COUNT_COLUMN_TITLE] = count_column_expression
-        catalog_brain_result = []
-        try:
-          catalog_brain_result = search_result(
-                                      select_dict=select_dict,
-                                      group_by=group_by,
-                                      query=query,
-                                      limit=None,
-                                      src__=src__)
-        except Unauthorized:
-          if not is_anonymous:
-            raise
-          LOG('WorkflowTool.listActions', WARNING,
-              'Exception while computing worklists: %s'
-              % grouped_worklist_dict.keys(),
-              error=sys.exc_info())
-          continue
-        except ProgrammingError, error_value:
-          # 1146 = table does not exist
-          if not use_cache or error_value[0] != 1146:
-            raise
-          try:
-            self.Base_zCreateWorklistTable()
-          except ProgrammingError, error_value:
-            # 1050 = table exists (alarm run just a bit too late)
-            if error_value[0] != 1050:
-              raise
-        if src__:
-          action_list.append(catalog_brain_result)
-        else:
-          grouped_worklist_result = sumCatalogResultByWorklist(
-            grouped_worklist_dict=grouped_worklist_dict,
-            catalog_result=catalog_brain_result)
-          for key, value in grouped_worklist_result.iteritems():
-            worklist_result_dict[key] = value + worklist_result_dict.get(key, 0)
-      if not src__:
-        action_list = sorted(
-          generateActionList(
-            worklist_metadata=worklist_metadata,
-            worklist_result=worklist_result_dict,
-            portal_url=portal_url),
-          key=lambda x: '/'.join((x['workflow_id'], x['worklist_id'])),
-        )
-      return action_list
-    user = _getAuthenticatedUser(self).getIdOrUserName()
-    if src__:
-      actions = _getWorklistActionList()
     else:
-      _getWorklistActionList = CachingMethod(_getWorklistActionList,
-        id=('_getWorklistActionList', user, portal_url),
-        cache_factory = 'erp5_ui_short')
-      actions.extend(_getWorklistActionList())
+      search_result = portal_catalog.unrestrictedSearchResults
+      count_column_expression = 'count(*)'
+      # Let catalog join as needed
+      getQuery = lambda comparison_operator=None, **kw: AutoQuery(
+        operator=comparison_operator,
+        **kw
+      )
+    worklist_result_dict = {}
+    # Get a list of dict of WorklistVariableMatchDict grouped by compatible
+    # conditions
+    (worklist_list_grouped_by_condition, worklist_metadata) = \
+      groupWorklistListByCondition(
+        worklist_dict=worklist_dict,
+        sql_catalog=sql_catalog,
+        getSecurityUidDictAndRoleColumnDict=\
+          getSecurityUidDictAndRoleColumnDict,
+        catalog_security_uid_groups_columns_dict=\
+          catalog_security_uid_groups_columns_dict,
+      )
+    if src__:
+      action_list = []
+    for grouped_worklist_dict in worklist_list_grouped_by_condition:
+      # Generate the query for this worklist_list
+      (total_criterion_id_list, query) = \
+        getWorklistListQuery(
+          getQuery=getQuery,
+          grouped_worklist_dict=grouped_worklist_dict,
+        )
+      group_by = total_criterion_id_list
+      assert COUNT_COLUMN_TITLE not in total_criterion_id_list
+      select_dict = dict.fromkeys(total_criterion_id_list)
+      select_dict[COUNT_COLUMN_TITLE] = count_column_expression
+      catalog_brain_result = []
+      try:
+        catalog_brain_result = search_result(
+                                    select_dict=select_dict,
+                                    group_by=group_by,
+                                    query=query,
+                                    limit=None,
+                                    src__=src__)
+      except Unauthorized:
+        if not is_anonymous:
+          raise
+        LOG('WorkflowTool.listActions', WARNING,
+            'Exception while computing worklists: %s'
+            % grouped_worklist_dict.keys(),
+            error=sys.exc_info())
+        continue
+      except ProgrammingError, error_value:
+        # 1146 = table does not exist
+        if not use_cache or error_value[0] != 1146:
+          raise
+        try:
+          self.Base_zCreateWorklistTable()
+        except ProgrammingError, error_value:
+          # 1050 = table exists (alarm run just a bit too late)
+          if error_value[0] != 1050:
+            raise
+      if src__:
+        action_list.append(catalog_brain_result)
+      else:
+        grouped_worklist_result = sumCatalogResultByWorklist(
+          grouped_worklist_dict=grouped_worklist_dict,
+          catalog_result=catalog_brain_result)
+        for key, value in grouped_worklist_result.iteritems():
+          worklist_result_dict[key] = value + worklist_result_dict.get(key, 0)
+    if not src__:
+      action_list = sorted(
+        generateActionList(
+          worklist_metadata=worklist_metadata,
+          worklist_result=worklist_result_dict,
+          portal_url=portal_url),
+        key=lambda x: '/'.join((x['workflow_id'], x['worklist_id'])),
+      )
+    return action_list
+  if src__:
+    actions = _getWorklistActionList()
+  else:
+    actions.extend(CachingMethod(
+      _getWorklistActionList,
+      id=(
+        '_getWorklistActionList',
+        _getAuthenticatedUser(self).getIdOrUserName(),
+        portal_url,
+      ),
+      cache_factory = 'erp5_ui_short',
+    )())
   return actions
 
 WorkflowTool.listActions = WorkflowTool_listActions

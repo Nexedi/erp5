@@ -15,6 +15,7 @@
 
 # Optimized rendering of global actions (cache)
 
+from collections import  defaultdict
 from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type import Permissions, _dtmldir
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo, createExprContext
@@ -74,7 +75,6 @@ def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
        because we only want this specific behaviour for worklists (Guards are
        also used in transitions).
     """
-    u_roles = None
     if wf_def.manager_bypass:
         # Possibly bypass.
         u_roles = sm.getUser().getRolesInContext(ob)
@@ -103,11 +103,11 @@ def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
             return 0
     expr = self.expr
     if expr is not None:
-        econtext = createExprContext(
-            StateChangeInfo(ob, wf_def, kwargs=kw))
-        res = expr(econtext)
-        if not res:
-            return 0
+        return expr(createExprContext(StateChangeInfo(
+            ob,
+            wf_def,
+            kwargs=kw,
+        )))
     return 1
 
 DCWorkflowDefinition.security = ClassSecurityInfo()
@@ -262,81 +262,82 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
     (worklist id as key) and which value is a dict composed of
     variable matches.
   """
-  if not self.worklists:
+  worklist_items = self.worklists.items()
+  if not worklist_items:
     return None
-
   portal = self.getPortalObject()
-  def getPortalTypeListForWorkflow(workflow_id):
-      workflow_tool = portal.portal_workflow
-      result = []
-      append = result.append
-      for type_info in workflow_tool._listTypeInfo():
-        portal_type = type_info.id
-        if workflow_id in workflow_tool.getChainFor(portal_type):
-          append(portal_type)
-      return result
-
-  _getPortalTypeListForWorkflow = CachingMethod(getPortalTypeListForWorkflow,
-                            id='_getPortalTypeListForWorkflow', cache_factory = 'erp5_ui_long')
-  portal_type_list = _getPortalTypeListForWorkflow(self.id)
+  def getPortalTypeListByWorkflowIdDict():
+    workflow_tool = portal.portal_workflow
+    result = defaultdict(list)
+    for type_info in workflow_tool._listTypeInfo():
+      portal_type = type_info.id
+      for workflow_id in workflow_tool.getChainFor(portal_type):
+        result[workflow_id].append(portal_type)
+    return result
+  portal_type_list = CachingMethod(
+    getPortalTypeListByWorkflowIdDict,
+    id='_getPortalTypeListByWorkflowIdDict',
+    cache_factory='erp5_ui_long',
+  )()[self.id]
   if not portal_type_list:
     return None
+  portal_type_set = set(portal_type_list)
   variable_match_dict = {}
   security_manager = getSecurityManager()
   workflow_id = self.id
   workflow_title = self.title
-  for worklist_id, worklist_definition in self.worklists.items():
+  for worklist_id, worklist_definition in worklist_items:
     action_box_name = worklist_definition.actbox_name
-    guard = worklist_definition.guard
     if action_box_name:
       variable_match = {}
-      for key in worklist_definition.getVarMatchKeys():
-        var = worklist_definition.getVarMatch(key)
+      for key, var in (worklist_definition.var_matches or {}).iteritems():
         if isinstance(var, Expression):
           evaluated_value = var(createExprContext(StateChangeInfo(portal,
                                 self, kwargs=info.__dict__.copy())))
           if isinstance(evaluated_value, (str, int, long)):
             evaluated_value = [str(evaluated_value)]
         else:
+          if not isinstance(var, tuple):
+            var = (var, )
           evaluated_value = [x % info for x in var]
         variable_match[key] = evaluated_value
-      if 'portal_type' in variable_match and len(variable_match['portal_type']):
-        portal_type_intersection = set(variable_match['portal_type'])\
-            .intersection(portal_type_list)
+      portal_type_match = variable_match.get('portal_type')
+      if portal_type_match:
         # in case the current workflow is not associated with portal_types
         # defined on the worklist, don't display the worklist for this
         # portal_type.
-        variable_match['portal_type'] = list(portal_type_intersection)
-      variable_match.setdefault('portal_type', portal_type_list)
-
-      if len(variable_match.get('portal_type', [])) == 0:
+        variable_match['portal_type'] = list(
+          portal_type_set.intersection(portal_type_match)
+        )
+      if not variable_match.setdefault('portal_type', portal_type_list):
         continue
-      is_permitted_worklist = 0
-      if guard is None:
-        is_permitted_worklist = 1
-      elif (not check_guard) or \
-          Guard_checkWithoutRoles(guard, security_manager, self, portal):
-        is_permitted_worklist = 1
-        variable_match[SECURITY_PARAMETER_ID] = guard.roles
-
-      if is_permitted_worklist:
+      guard = worklist_definition.guard
+      if (
+        guard is None or
+        not check_guard or
+        Guard_checkWithoutRoles(guard, security_manager, self, portal)
+      ):
         format_data = TemplateDict()
         format_data._push(info)
-        variable_match.setdefault(SECURITY_PARAMETER_ID, ())
-        format_data._push({k: ('&%s:list=' % k).join(v)
-                           for k, v in variable_match.iteritems()})
-        variable_match[WORKLIST_METADATA_KEY] = {'format_data': format_data,
-                                                 'worklist_title': action_box_name,
-                                                 'worklist_id': worklist_id,
-                                                 'workflow_title': workflow_title,
-                                                 'workflow_id': workflow_id,
-                                                 'action_box_url': worklist_definition.actbox_url,
-                                                 'action_box_category': worklist_definition.actbox_category}
+        variable_match.setdefault(SECURITY_PARAMETER_ID, getattr(guard, 'roles', ()))
+        format_data._push({
+            k: ('&%s:list=' % k).join(v)
+            for k, v in variable_match.iteritems()
+        })
+        variable_match[WORKLIST_METADATA_KEY] = {
+            'format_data': format_data,
+            'worklist_title': action_box_name,
+            'worklist_id': worklist_id,
+            'workflow_title': workflow_title,
+            'workflow_id': workflow_id,
+            'action_box_url': worklist_definition.actbox_url,
+            'action_box_category': worklist_definition.actbox_category,
+        }
         variable_match_dict[worklist_id] = variable_match
 
-  if len(variable_match_dict) == 0:
-    return None
-  return variable_match_dict
+  if variable_match_dict:
+    return variable_match_dict
+  return None
 
 DCWorkflowDefinition.security.declarePrivate('getWorklistVariableMatchDict')
 DCWorkflowDefinition.getWorklistVariableMatchDict = DCWorkflowDefinition_getWorklistVariableMatchDict
