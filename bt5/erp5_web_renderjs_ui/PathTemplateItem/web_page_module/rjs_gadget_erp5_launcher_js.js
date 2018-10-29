@@ -64,14 +64,13 @@
   }
 
   function updateHeader(gadget) {
-    var header_gadget;
-    return gadget.getDeclaredGadget("header")
-      .push(function (result) {
-        header_gadget = result;
-        return header_gadget.notifySubmitted();
+    return route(gadget, "header", 'notifySubmitted')
+      .push(function () {
+        return route(gadget, 'header', 'notifyLoaded');
       })
       .push(function () {
-        return header_gadget.render(gadget.props.header_argument_list);
+        return route(gadget, "header", 'render',
+                     [gadget.props.header_argument_list]);
       });
   }
 
@@ -79,49 +78,8 @@
     return route(gadget, 'panel', 'render', [gadget.props.panel_argument_list]);
   }
 
-  function increaseLoadingCounter(gadget) {
-    gadget.props.loading_counter += 1;
-    if (gadget.props.loading_counter === 1) {
-      return route(gadget, 'header', 'notifyLoading');
-    }
-    return new RSVP.Queue();
-  }
-
-  function decreaseLoadingCounter(gadget) {
-    gadget.props.loading_counter -= 1;
-    if (gadget.props.loading_counter < 0) {
-      gadget.props.loading_counter = 0;
-      // throw new Error("Unexpected negative loading counter");
-    }
-    if (gadget.props.loading_counter === 0) {
-      return route(gadget, 'header', 'notifyLoaded');
-    }
-    return new RSVP.Queue();
-  }
-
   function callJioGadget(gadget, method, param_list) {
-    var called = true;
-    return increaseLoadingCounter(gadget)
-      .push(function () {
-        return gadget.getDeclaredGadget("jio_gadget");
-      })
-      .push(function (jio_gadget) {
-        return jio_gadget[method].apply(jio_gadget, param_list);
-      })
-      .push(function (result) {
-        return decreaseLoadingCounter(gadget)
-          .push(function () {
-            return result;
-          });
-      }, function (error) {
-        if (called) {
-          return decreaseLoadingCounter(gadget)
-            .push(function () {
-              throw error;
-            });
-        }
-        throw error;
-      });
+    return route(gadget, 'jio_gadget', method, param_list);
   }
 
   function displayErrorContent(gadget, error) {
@@ -220,7 +178,6 @@
         setting_gadget,
         setting;
       this.props = {
-        loading_counter: 0,
         content_element: this.element.querySelector('.gadget-content')
       };
       // Configure setting storage
@@ -575,6 +532,15 @@
       promise_list = [];
 
       // Update the main gadget
+      if (modification_dict.hasOwnProperty('render_timestamp')) {
+        // By default, init the header options to be empty
+        // (ERP5 title by default + sidebar)
+        initHeaderOptions(gadget);
+        initPanelOptions(gadget);
+        if (!modification_dict.hasOwnProperty('first_bootstrap')) {
+          promise_list.push(route(gadget, 'header', 'notifyLoading'));
+        }
+      }
       if (modification_dict.hasOwnProperty('url')) {
         promise_list.push(renderMainGadget(
           gadget,
@@ -657,33 +623,19 @@
     // Render the page
     .declareMethod('render', function render(route_result, keep_message) {
       var gadget = this;
-
-      // Reinitialize the loading counter
-      gadget.props.loading_counter = 0;
-      // By default, init the header options to be empty
-      // (ERP5 title by default + sidebar)
-      initHeaderOptions(gadget);
-      initPanelOptions(gadget);
-      return increaseLoadingCounter(gadget)
-        .push(function () {
-          return gadget.changeState({
-            url: route_result.url,
-            options: route_result.options,
-            panel_visible: false,
-            editor_panel_url: undefined,
-            notification_options: (keep_message === true) ?
-                                  gadget.state.notification_options : undefined,
-            // Force calling main gadget render
-            render_timestamp: new Date().getTime()
-          });
-        })
-        .push(function () {
-          return decreaseLoadingCounter(gadget);
-        }, function (error) {
-          return decreaseLoadingCounter(gadget)
-            .push(function () {
-              return displayError(gadget, error);
-            });
+      return gadget.changeState({
+        first_bootstrap: true,
+        url: route_result.url,
+        options: route_result.options,
+        panel_visible: false,
+        editor_panel_url: undefined,
+        notification_options: (keep_message === true) ?
+                              gadget.state.notification_options : undefined,
+        // Force calling main gadget render
+        render_timestamp: new Date().getTime()
+      })
+        .push(undefined, function (error) {
+          return displayError(gadget, error);
         });
     })
 
