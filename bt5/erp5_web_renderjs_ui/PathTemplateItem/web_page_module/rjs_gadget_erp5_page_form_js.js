@@ -21,6 +21,8 @@ and handling data send&receive.
                    'gadget_html5_element.html',
                    'gadget_erp5_field_datetime.html',
                    'gadget_erp5_field_float.html',
+                   'gadget_erp5_field_checkbox.html',
+                   'gadget_erp5_field_multicheckbox.html',
                    'gadget_erp5_field_integer.html',
                    'gadget_erp5_field_list.html',
                    'gadget_erp5_field_lines.html',
@@ -35,7 +37,8 @@ and handling data send&receive.
                    'gadget_erp5_field_string.html',
                    'gadget_erp5_field_textarea.html',
                    'gadget_editor.html',
-                   'gadget_erp5_form.html'
+                   'gadget_erp5_form.html',
+                   'gadget_erp5_searchfield.html'
                   ];
 
   /** Return local modifications to editable form fields after leaving the form
