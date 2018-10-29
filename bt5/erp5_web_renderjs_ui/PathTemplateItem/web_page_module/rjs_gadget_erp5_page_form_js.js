@@ -7,36 +7,50 @@ and handling data send&receive.
 (function (window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean) {
   "use strict";
 
+  /*jslint regexp: true*/
   var warmup_gadget_done = false,
-    warmup_list = ['gadget_erp5_label_field.html',
-                   'gadget_erp5_pt_form_list.html',
-                   'gadget_erp5_pt_form_dialog.html',
-                   'gadget_erp5_pt_form_view_editable.html',
-                   'gadget_erp5_pt_form_view.html',
-                   'gadget_erp5_pt_embedded_form_render.html',
-                   'gadget_html5_input.html',
-                   'gadget_html5_textarea.html',
-                   'gadget_html5_input.html',
-                   'gadget_html5_select.html',
-                   'gadget_html5_element.html',
-                   'gadget_erp5_field_datetime.html',
-                   'gadget_erp5_field_float.html',
-                   'gadget_erp5_field_integer.html',
-                   'gadget_erp5_field_list.html',
-                   'gadget_erp5_field_lines.html',
-                   'gadget_erp5_field_gadget.html',
-                   'gadget_erp5_field_email.html',
-                   'gadget_erp5_field_formbox.html',
-                   'gadget_erp5_field_listbox.html',
-                   'gadget_erp5_field_multilist.html',
-                   'gadget_erp5_field_relationstring.html',
-                   'gadget_erp5_field_multirelationstring.html',
-                   'gadget_erp5_relation_input.html',
-                   'gadget_erp5_field_string.html',
-                   'gadget_erp5_field_textarea.html',
-                   'gadget_editor.html',
-                   'gadget_erp5_form.html'
-                  ];
+    warmup_list = [
+      'gadget_erp5_label_field.html',
+      'gadget_html5_element.html',
+      'gadget_erp5_field_datetime.html',
+      'gadget_erp5_field_string.html',
+      'gadget_erp5_form.html',
+      'gadget_erp5_field_float.html',
+      'gadget_erp5_field_listbox.html',
+      // Used in panel
+      'gadget_translation.html',
+      'gadget_erp5_panel.html',
+      'gadget_erp5_header.html',
+      'gadget_erp5_searchfield.html',
+      'gadget_erp5_field_multicheckbox.html',
+      'gadget_html5_input.html'
+    ],
+    field_warmup_list = [
+      'gadget_erp5_pt_embedded_form_render.html',
+      'gadget_erp5_field_integer.html',
+      'gadget_erp5_field_list.html',
+      'gadget_erp5_field_email.html',
+      'gadget_erp5_field_formbox.html',
+      'gadget_erp5_field_multilist.html',
+      'gadget_erp5_field_relationstring.html',
+      'gadget_erp5_field_multirelationstring.html',
+      'gadget_erp5_relation_input.html',
+      'gadget_erp5_field_textarea.html'
+    ],
+    form_list_warmup_list = [
+      'gadget_erp5_pt_form_list.html'
+    ],
+    form_view_warmup_list = [
+      'gadget_erp5_pt_form_view.html'
+    ],
+    form_view_editable_warmup_list = [
+      'gadget_erp5_pt_form_view_editable.html',
+      'gadget_html5_input.html',
+      'gadget_html5_textarea.html',
+      'gadget_html5_select.html'
+    ],
+    erp5_module_document_regexp = /^[^\/]+_module\/.+$/;
+  /*jslint regexp: false*/
 
   /** Return local modifications to editable form fields after leaving the form
   for a while - for example selecting a related object.
@@ -73,6 +87,16 @@ and handling data send&receive.
           }
         }
       }
+    }
+  }
+
+  function warmupGadgetList(gadget, url_list) {
+    var i;
+    for (i = 0; i < url_list.length; i += 1) {
+      // No need to check the result, as it will fail later
+      // when rJS will try to instanciate one of this gadget
+      rJS.declareGadgetKlass(rJS.getAbsoluteURL(url_list[i],
+                                                gadget.__path));
     }
   }
 
@@ -154,6 +178,13 @@ and handling data send&receive.
           embedded: asBoolean(options.embedded)
         };
 
+      // options.editable differs when it comes from the erp5_launcher of FormBox - try to unify it here
+      if (asBoolean(options.editable)) {
+        options.editable = 1;
+      } else {
+        options.editable = 0;
+      }
+
       if (options.hasOwnProperty('erp5_document')) {
         // if we get erp5 document during rendering then no need to fetch it
         new_state.erp5_document = options.erp5_document;
@@ -164,20 +195,25 @@ and handling data send&receive.
         promise_queue
           .push(function () {
             var result = gadget.jio_getAttachment(options.jio_key,
-                                                  options.view),
-              i;
+                                                  options.view);
             if (!warmup_gadget_done) {
               // In order to speed up initial form rendering,
               // preload most used gadgets while waiting for ERP5 form
               // calculation
-              // Wait a big for the ajax query to be triggered
+              // Wait a bit for the ajax query to be triggered
               RSVP.delay(10)
                 .then(function () {
-                  for (i = 0; i < warmup_list.length; i += 1) {
-                    // No need to check the result, as it will fail later
-                    // when rJS will try to instanciate one of this gadget
-                    rJS.declareGadgetKlass(rJS.getAbsoluteURL(warmup_list[i],
-                                                              gadget.__path));
+                  warmupGadgetList(gadget, warmup_list);
+                  if (erp5_module_document_regexp.test(options.jio_key)) {
+                    // Form view is used
+                    if (options.editable) {
+                      warmupGadgetList(gadget, form_view_editable_warmup_list);
+                    } else {
+                      warmupGadgetList(gadget, form_view_warmup_list);
+                    }
+                    warmupGadgetList(gadget, field_warmup_list);
+                  } else {
+                    warmupGadgetList(gadget, form_list_warmup_list);
                   }
                 });
               warmup_gadget_done = true;
@@ -197,13 +233,6 @@ and handling data send&receive.
                 });
             }
           });
-      }
-
-      // options.editable differs when it comes from the erp5_launcher of FormBox - try to unify it here
-      if (asBoolean(options.editable)) {
-        options.editable = 1;
-      } else {
-        options.editable = 0;
       }
 
       return promise_queue
@@ -280,7 +309,7 @@ and handling data send&receive.
         .push(function () {
           var jio_key = gadget.state.options.jio_key;
           /*jslint regexp: true*/
-          if ((/^[^\/]+_module\/.+$/.test(jio_key)) || (/^portal_.*\/.+$/.test(jio_key))) {
+          if ((erp5_module_document_regexp.test(jio_key)) || (/^portal_.*\/.+$/.test(jio_key))) {
             /*jslint regexp: false*/
             return gadget.updatePanel({
               erp5_document: erp5_document,
