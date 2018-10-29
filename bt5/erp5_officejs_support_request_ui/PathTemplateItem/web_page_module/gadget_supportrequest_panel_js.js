@@ -96,7 +96,7 @@
               preference_href: context.getUrlFor({command: 'display', options: {page: "supportrequest_preference"}}),
               logout_href: context.getUrlFor({command: 'display', options: {page: "logout"}}),
               search_href: context.getUrlFor({command: 'display', options: {page: "search"}}),
-              supportrequest_href: context.getUrlFor({command: 'display', options: {jio_key: "support_request_module", page: "list"}})
+              supportrequest_href: context.getUrlFor({command: 'display', options: {jio_key: "support_request_module"}})
             });
           })
           .push(function (panel_options) {
