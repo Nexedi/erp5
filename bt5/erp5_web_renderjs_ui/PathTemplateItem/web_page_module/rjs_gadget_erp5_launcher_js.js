@@ -666,9 +666,6 @@
       initPanelOptions(gadget);
       return increaseLoadingCounter(gadget)
         .push(function () {
-          return route(gadget, 'router', 'notify', [{modified : false}]);
-        })
-        .push(function () {
           return gadget.changeState({
             url: route_result.url,
             options: route_result.options,
