@@ -92,23 +92,18 @@
       if (modification_dict.hasOwnProperty("global")) {
         queue
           .push(function () {
-            return RSVP.all([
-              context.getUrlFor({command: 'display', options: {page: "supportrequest_preference"}}),
-              context.getUrlFor({command: 'display', options: {page: "logout"}}),
-              context.getUrlFor({command: 'display', options: {page: "search"}}),
-              context.getUrlFor({command: 'display', options: {jio_key: "support_request_module", page: "list"}})
-            ]);
+            return RSVP.hash({
+              preference_href: context.getUrlFor({command: 'display', options: {page: "supportrequest_preference"}}),
+              logout_href: context.getUrlFor({command: 'display', options: {page: "logout"}}),
+              search_href: context.getUrlFor({command: 'display', options: {page: "search"}}),
+              supportrequest_href: context.getUrlFor({command: 'display', options: {jio_key: "support_request_module", page: "list"}})
+            });
           })
-          .push(function (result_list) {
+          .push(function (panel_options) {
             // XXX: Customize panel header!
             return context.translateHtml(
               panel_template_header() +
-                panel_template_body({
-                  "preference_href": result_list[0],
-                  "logout_href": result_list[1],
-                  "search_href": result_list[2],
-                  "supportrequest_href": result_list[3]
-                })
+                panel_template_body(panel_options)
             );
           })
           .push(function (my_translated_or_plain_html) {
