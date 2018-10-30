@@ -35,28 +35,10 @@
     <!-- renderjs -->
     <script src="rsvp.js" type="text/javascript"></script>
     <script src="renderjs.js" type="text/javascript"></script>
-    <script src="handlebars.js" type="text/javascript"></script>
     <script src="gadget_global.js" type="text/javascript"></script>
 
     <!-- custom script -->
     <script src="gadget_erp5_header.js" type="text/javascript"></script>
-
-    <script id="header-title-link-template" type="text/x-handlebars-template"><a data-i18n="{{title}}" class="ui-btn-icon-left ui-icon-{{icon}}" href="{{url}}"  accesskey="u">{{title}}</a></script>
-    <script id="header-title-template" type="text/x-handlebars-template"><span data-i18n="{{title}}" class="ui-btn-icon-left ui-icon-{{icon}}" >{{title}}</span></script>
-
-    <script id="header-link-template" type="text/x-handlebars-template">
-       <a data-i18n="{{title}}" href="{{url}}" class="ui-icon-{{icon}} ui-btn-icon-left {{class}}">{{title}}</a>
-    </script>
-
-    <script id="header-button-template" type="text/x-handlebars-template">
-       <form><button name='{{name}}' data-i18n="{{title}}" type='submit' class='ui-icon-{{icon}} ui-btn-icon-left {{class}}'>{{title}}</button></form>
-    </script>
-
-    <script id="sub-header-template" type="text/x-handlebars-template">
-        {{#each sub_header_list}}
-          <li><a href="{{url}}" data-i18n="{{title}}" class="ui-btn-icon-top ui-icon-{{icon}} {{class}}">{{title}}</a></li>
-        {{/each}}
-    </script>
 
   </head>
   <body>
