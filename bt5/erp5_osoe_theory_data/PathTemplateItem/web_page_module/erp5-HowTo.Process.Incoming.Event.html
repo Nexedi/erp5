@@ -1,0 +1,40 @@
+<!-- this should have been a presentation? -->
+<p>(presentation?) showing how to process incoming events within campaigns or ERP5 CRM in general.</p>
+
+<p>${table_of_content}</p>
+
+<h1>How to Process Incoming Events</h1>
+
+<p><img alt="Event workflow in ERP5" src="http://img.erp5.cn/user-Events.Event.Workflow?format=" title="Event workflow in ERP5" type="image/svg+xml" /></p>
+
+<p>by <a href="http://www.osoe-project.org/contact">OSOE Project</a>.</p>
+
+<p>As introduced in the previous tutorial &quot;Events&quot;, incoming Events are created either from <strong>external or internal</strong> of your company. When your company receives an email, a fax or a phone call from <strong>external</strong> , you can create a new incoming Event by <strong>declaring the incoming message as received</strong> . When it is necessary to exchange between departments of your company an outgoing Event created by <strong>internal</strong> of your company which has been sent, eg, to assign it to a Support Request Ticket, you can also <strong>declare the outgoing message as received</strong> , then follow the Incoming Event Workflow to handle it.</p>
+
+<p>In this tutorial, we will explain in detail the effects of the <strong>Declare as Received</strong> , <strong>Define the Event&#39;s Recipient</strong> , <strong>Create a Follow Up Ticket</strong> and <strong>Deliver</strong> actions.</p>
+
+<p>In next tutorial, we will use the Support Requests-a kind of Ticket created from incoming Events, as an example to explain precisely to you how to apply this standard process to ERP5 CRM.</p>
+
+<h1>Agenda</h1>
+
+<ul>
+	<li>Standard process of incoming Events</li>
+</ul>
+
+<h1>The Event workflow in ERP5</h1>
+
+<p><img alt="The outgoing and incoming Event workflow" src="http://img.erp5.cn/user-Events.Event.Workflow?format=" title="The outgoing and incoming Event workflow" type="image/svg+xml" /></p>
+
+<p>Here is the standard Event workflow of ERP5. As introduced in the previous tutorial &quot;Events&quot;, the incoming Events (second part of this illustration) can either be created<strong>manually</strong> (eg, you can <strong>input</strong> an email which is a support request or a reply from a customer to ERP5 team as a new incoming Event), or <strong>automatically</strong> (eg, between 2 departments who use the same ERP5 system, an Event can be exchanged by calling the Action <strong>&quot;Declare as Received&quot;</strong> . If an Event is initially outgoing for department A-the sender, it becomes incoming for department B-the recipient, once A has sent the Event and declared it as received).</p>
+
+<p>The standard process of how to process incoming Event:<br />
+<strong>1.</strong> Firstly, we will <strong>Declare as Received</strong> an incoming Event from external of our company, or an outgoing Event sent by our company but needs to be exchanged between different departments of our company.<br />
+<strong>2.</strong> Secondly, we have to <strong>Define the Recipient</strong> in order to indicate who in our team will be responsible to handle the Event.<br />
+<strong>3.</strong> Thirdly, if the Event needs to be handled in a serious way, eg, an mail message from a client concerning a product problem, we will need to <strong>Create Follow Up Ticket</strong> in order to record all the interactions related to the original Event which will happen afterwards between the Event operators in our team and the Event sender. We also have to <strong>Define the Ticket&#39;s Operation Manager, the Supervisor and the Operators</strong> to indicate who will be responsible for this Ticket.<br />
+<strong>4.</strong> Finally, the person who is defined as the &quot;Recipient&quot; of the Event will see it in his worklist, and <strong>Deliver</strong> the Event to acknowledge that he is responsible for this incoming Event and he will handle it later.</p>
+
+<p>So the final state of incoming Events is &quot;Delivered&quot;, which means they are acknowledged by somebody in our team to be taken care of. Then according to the complexity of the incoming Events, they will handle them either by <strong>Create Response directly</strong> from the <strong>Delivered Event</strong> (if the Event can be handled in a simple way), or by <strong>Process the Follow Up Ticket</strong> .</p>
+
+<p>Note that during the process, we can <strong>Change the Recipient</strong> of this Event to assign another team member to handle it.</p>
+
+<p>${related_subject_list}</p>
