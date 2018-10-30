@@ -1,32 +1,9 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, Handlebars, document, RSVP */
-(function (window, rJS, Handlebars, document, RSVP) {
+/*global window, rJS, document, RSVP */
+(function (window, rJS, document, RSVP) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    template_element = gadget_klass.__template_element,
-
-    header_title_template = Handlebars.compile(template_element
-                                                 .getElementById("header-title-template")
-                                                 .innerHTML),
-    header_title_link_template = Handlebars.compile(template_element
-                                                      .getElementById("header-title-link-template")
-                                                      .innerHTML),
-    sub_header_template = Handlebars.compile(template_element
-                                               .getElementById("sub-header-template")
-                                               .innerHTML),
-    header_button_template = Handlebars.compile(template_element
-                                                  .getElementById("header-button-template")
-                                                  .innerHTML),
-    header_link_template = Handlebars.compile(template_element
-                                                .getElementById("header-link-template")
-                                                .innerHTML),
-
-    possible_left_button_list = [
+  var possible_left_button_list = [
       ['panel_action', 'Menu', 'bars', 'panel']
     ],
     possible_main_link_list = [
@@ -61,9 +38,40 @@
       ['next_url', 'Next', 'carat-r'],
       ['upload_url', 'Upload', 'upload'],
       ['download_url', 'Download', 'download']
-    ];
+    ],
+    header_button_template = function (data) {
+      // <form><button name='{{name}}' data-i18n="{{title}}" type='submit' class='ui-icon-{{icon}} ui-btn-icon-left {{class}}'>{{title}}</button></form>
+      var form_element = document.createElement('form'),
+        button_element = document.createElement('button');
 
-  gadget_klass
+      button_element.setAttribute('name', data.name);
+      button_element.setAttribute('data-i18n', data.title);
+      button_element.setAttribute('type', 'submit');
+      button_element.setAttribute('class', 'ui-icon-' + data.icon + ' ui-btn-icon-left ' + data.class);
+      form_element.appendChild(button_element);
+      return form_element.outerHTML;
+    },
+    sub_header_template = function (data) {
+      // {{#each sub_header_list}}
+      // <li><a href="{{url}}" data-i18n="{{title}}" class="ui-btn-icon-top ui-icon-{{icon}} {{class}}">{{title}}</a></li>
+      // {{/each}}
+      var fragment = document.createElement('div'),
+        li_element,
+        a_element,
+        i;
+      for (i = 0; i < data.sub_header_list.length; i += 1) {
+        li_element = document.createElement('li');
+        a_element = document.createElement('a');
+        a_element.setAttribute('href', data.sub_header_list[i].url);
+        a_element.setAttribute('data-i18n', data.sub_header_list[i].title);
+        a_element.setAttribute('class', 'ui-btn-icon-top ui-icon-' + data.sub_header_list[i].icon + ' ' + data.sub_header_list[i].class);
+        li_element.appendChild(a_element);
+        fragment.appendChild(li_element);
+      }
+      return fragment.innerHTML;
+    };
+
+  rJS(window)
     .setState({
       loaded: false,
       modified: false,
@@ -243,7 +251,8 @@
         default_right_icon = "",
         title_link,
         title_button,
-        promise_list = [];
+        promise_list = [],
+        tmp_element;
       // Main title
       if (modification_dict.hasOwnProperty('error') ||
           modification_dict.hasOwnProperty('loaded') ||
@@ -277,9 +286,19 @@
           };
           promise_list.push(gadget.translateHtml(header_button_template(title_button)));
         } else if (title_link.url === undefined) {
-          promise_list.push(gadget.translateHtml(header_title_template(title_link)));
+          // <span data-i18n="{{title}}" class="ui-btn-icon-left ui-icon-{{icon}}" >{{title}}</span>
+          tmp_element = document.createElement('span');
+          tmp_element.setAttribute('data-i18n', title_link.title);
+          tmp_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + title_link.icon);
+          promise_list.push(gadget.translateHtml(tmp_element.outerHTML));
         } else {
-          promise_list.push(gadget.translateHtml(header_title_link_template(title_link)));
+          // <a data-i18n="{{title}}" class="ui-btn-icon-left ui-icon-{{icon}}" href="{{url}}"  accesskey="u">{{title}}</a>
+          tmp_element = document.createElement('a');
+          tmp_element.setAttribute('data-i18n', title_link.title);
+          tmp_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + title_link.icon);
+          tmp_element.setAttribute('href', title_link.url);
+          tmp_element.setAttribute('accesskey', 'u');
+          promise_list.push(gadget.translateHtml(tmp_element.outerHTML));
         }
       } else {
         promise_list.push(null);
@@ -337,7 +356,12 @@
         if (right_button !== undefined) {
           promise_list.push(gadget.translateHtml(header_button_template(right_button)));
         } else if (right_link !== undefined) {
-          promise_list.push(gadget.translateHtml(header_link_template(right_link)));
+          // <a data-i18n="{{title}}" href="{{url}}" class="ui-icon-{{icon}} ui-btn-icon-left {{class}}">{{title}}</a>
+          tmp_element = document.createElement('a');
+          tmp_element.setAttribute('data-i18n', right_link.title);
+          tmp_element.setAttribute('class', 'ui-icon-' + right_link.icon + ' ui-btn-icon-left ' + right_link.class);
+          tmp_element.setAttribute('href', right_link.url);
+          promise_list.push(gadget.translateHtml(tmp_element.outerHTML));
         } else {
           promise_list.push("");
         }
@@ -385,4 +409,4 @@
       throw new Error("Unsupported button " + name);
     });
 
-}(window, rJS, Handlebars, document, RSVP));
+}(window, rJS, document, RSVP));
