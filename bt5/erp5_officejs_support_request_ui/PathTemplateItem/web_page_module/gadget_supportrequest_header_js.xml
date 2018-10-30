@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -75,7 +73,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_list.js</string> </value>
+            <value> <string>gadget_supportrequest_header.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_supportrequest_pt_listpage_js</string> </value>
+            <value> <string>gadget_supportrequest_header_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -103,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Support Request List JS</string> </value>
+            <value> <string>Gadget Support Request Header JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -167,7 +165,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -189,8 +187,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497910839.57</float>
-                        <string>UTC</string>
+                        <float>1540867895.46</float>
+                        <string>GMT+9</string>
                       </tuple>
                     </state>
                   </object>
@@ -220,7 +218,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -234,7 +232,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.303.21710.19063</string> </value>
+                <value> <string>971.18510.51356.54101</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,8 +250,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1504275382.57</float>
-                        <string>UTC</string>
+                        <float>1540870427.65</float>
+                        <string>GMT+9</string>
                       </tuple>
                     </state>
                   </object>
@@ -279,7 +277,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -309,8 +307,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497909777.39</float>
-                        <string>UTC</string>
+                        <float>1540867824.38</float>
+                        <string>GMT+9</string>
                       </tuple>
                     </state>
                   </object>

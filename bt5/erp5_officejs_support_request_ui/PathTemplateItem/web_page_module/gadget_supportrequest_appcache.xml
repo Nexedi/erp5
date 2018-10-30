@@ -152,8 +152,8 @@ gadget_erp5_page_form.js\n
 gadget_erp5_page_homepage.css\n
 gadget_erp5_page_homepage.html\n
 gadget_erp5_page_homepage.js\n
-gadget_erp5_page_list.html\n
-gadget_erp5_page_list.js\n
+gadget_supportrequest_header.html\n
+gadget_supportrequest_header.js\n
 gadget_erp5_page_supportrequest_preference.html\n
 gadget_erp5_page_supportrequest_preference.js\n
 gadget_erp5_page_support_request_fast_view_dialog.html\n
@@ -360,7 +360,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1536561148.11</float>
+                        <float>1540870337.1</float>
                         <string>GMT+9</string>
                       </tuple>
                     </state>
