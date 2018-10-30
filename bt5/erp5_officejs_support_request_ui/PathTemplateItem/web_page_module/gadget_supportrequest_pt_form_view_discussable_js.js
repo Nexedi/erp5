@@ -125,23 +125,33 @@
               element.classList.remove('ui-disabled');
             });
         })
+
         // render the header
         .push(function () {
-          return RSVP.hash({
-            edit_url: gadget.getUrlFor({command: 'change', options: {editable: true}}),
-            actions_url: gadget.getUrlFor({command: 'change', options: {page: "action"}}),
-            selection_url: gadget.getUrlFor({command: 'history_previous'}),
-            previous_url: gadget.getUrlFor({command: 'selection_previous'}),
-            next_url: gadget.getUrlFor({command: 'selection_next'}),
-            tab_url: gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
-            export_url: gadget.state.erp5_document._links.action_object_report_jio ?
+          return RSVP.all([
+            gadget.getUrlFor({command: 'change', options: {editable: true}}),
+            gadget.getUrlFor({command: 'change', options: {page: "action"}}),
+            gadget.getUrlFor({command: 'history_previous'}),
+            gadget.getUrlFor({command: 'selection_previous'}),
+            gadget.getUrlFor({command: 'selection_next'}),
+            gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
+            gadget.state.erp5_document._links.action_object_report_jio ?
                 gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
                 "",
-            page_title: calculatePageTitle(gadget, gadget.state.erp5_document)
-          });
+            calculatePageTitle(gadget, gadget.state.erp5_document)
+          ]);
         })
-        .push(function (header_options) {
-          return gadget.updateHeader(header_options);
+        .push(function (all_result) {
+          return gadget.updateHeader({
+            edit_url: all_result[0],
+            actions_url: all_result[1],
+            selection_url: all_result[2],
+            previous_url: all_result[3],
+            next_url: all_result[4],
+            tab_url: all_result[5],
+            export_url: all_result[6],
+            page_title: all_result[7]
+          });
         })
         .push(function () {
           // set locale for momentjs
