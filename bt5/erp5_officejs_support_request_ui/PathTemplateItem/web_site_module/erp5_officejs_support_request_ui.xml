@@ -348,9 +348,7 @@
         </item>
         <item>
             <key> <string>configuration_header_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>gadget_supportrequest_header.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
@@ -625,8 +623,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1506518906.34</float>
-                        <string>UTC</string>
+                        <float>1540870022.36</float>
+                        <string>GMT+9</string>
                       </tuple>
                     </state>
                   </object>
