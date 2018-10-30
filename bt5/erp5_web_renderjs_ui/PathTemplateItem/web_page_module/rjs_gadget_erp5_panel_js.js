@@ -29,7 +29,7 @@
     //////////////////////////////////////////////
     // acquired method
     //////////////////////////////////////////////
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("redirect", "redirect")
@@ -162,14 +162,14 @@
         queue
           // Update the global links
           .push(function () {
-            return RSVP.all([
-              context.getUrlFor({command: 'display', options: {page: "front"}}),
-              context.getUrlFor({command: 'display', options: {page: "history"}}),
-              context.getUrlFor({command: 'display', options: {page: "preference"}}),
-              context.getUrlFor({command: 'display', options: {page: "logout"}}),
-              context.getUrlFor({command: 'display_stored_state', options: {page: "search"}}),
-              context.getUrlFor({command: 'display', options: {page: "worklist"}}),
-              context.getUrlFor({command: 'display'})
+            return context.getUrlForList([
+              {command: 'display', options: {page: "front"}},
+              {command: 'display', options: {page: "history"}},
+              {command: 'display', options: {page: "preference"}},
+              {command: 'display', options: {page: "logout"}},
+              {command: 'display_stored_state', options: {page: "search"}},
+              {command: 'display', options: {page: "worklist"}},
+              {command: 'display'}
             ]);
           })
           .push(function (result_list) {
@@ -227,45 +227,39 @@
           queue
             .push(function () {
               var i = 0,
-                promise_list = [],
+                parameter_list = [],
                 workflow_list = JSON.parse(gadget.state.workflow_list),
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list);
 
               for (i = 0; i < workflow_list.length; i += 1) {
-                promise_list.push(
-                  gadget.getUrlFor({
-                    command: 'change',
-                    options: {
-                      view: workflow_list[i].href,
-                      page: undefined
-                    }
-                  })
-                );
+                parameter_list.push({
+                  command: 'change',
+                  options: {
+                    view: workflow_list[i].href,
+                    page: undefined
+                  }
+                });
               }
               for (i = 0; i < view_list.length; i += 1) {
-                promise_list.push(
-                  gadget.getUrlFor({
-                    command: 'change',
-                    options: {
-                      view: view_list[i].href,
-                      page: undefined
-                    }
-                  })
-                );
+                parameter_list.push({
+                  command: 'change',
+                  options: {
+                    view: view_list[i].href,
+                    page: undefined
+                  }
+                });
               }
               for (i = 0; i < action_list.length; i += 1) {
-                promise_list.push(
-                  gadget.getUrlFor({
-                    command: 'change',
-                    options: {
-                      view: action_list[i].href,
-                      page: undefined
-                    }
-                  })
-                );
+                parameter_list.push({
+                  command: 'change',
+                  options: {
+                    view: action_list[i].href,
+                    page: undefined
+                  }
+                });
               }
-              return RSVP.all(promise_list);
+              return gadget.getUrlForList(parameter_list);
             })
             .push(function (result_list) {
               var i,
