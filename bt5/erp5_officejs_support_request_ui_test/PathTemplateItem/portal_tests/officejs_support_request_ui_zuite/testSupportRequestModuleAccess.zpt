@@ -21,34 +21,6 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
-  <td></td>
-</tr>
-<tal:block tal:define="text_content string:Post test">
-  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
-</tal:block>
-<tr>
-  <td>type</td>
-  <td>//input[@name='field_your_title']</td>
-  <td>test</td>
-</tr>
-<tr>
-  <td>select</td>
-  <td>field_your_resource</td>
-  <td>FeatureRequire</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//input[@data-i18n='[value]Proceed']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@data-i18n='[value]Post Comment']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
   <td>//a[@data-i18n='Support Requests']</td>
   <td></td>
 </tr>
@@ -62,6 +34,19 @@
   <td>Title</td>
   <td></td>
 </tr>
+
+<!-- The only way to add support requests is to use the "Submit new support request"
+from the home page.
+We intentionally disable the +Add button on the list view of support request module,
+to prevent users from adding support requests this way, because we need to use the
+fast input to set project, support request type and other required properties.
+-->
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//a[@data-i18n='Add']</td>
+  <td></td>
+</tr>
+
 </tbody></table>
   </body>
 </html>
