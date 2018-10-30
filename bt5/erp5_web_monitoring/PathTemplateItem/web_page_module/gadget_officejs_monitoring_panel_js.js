@@ -144,7 +144,7 @@
               context.getUrlFor({command: 'display', options: {page: "ojsm_hosting_subscription_list"}}),
               context.getUrlFor({command: 'display', options: {page: "settings_configurator"}}),
               context.getUrlFor({command: 'display', options: {page: "ojsm_import_export"}}),
-              context.getUrlFor({command: 'display', options: {page: "ojsm_synchronize"}})
+              context.getUrlFor({command: 'display', options: {page: "ojsm_synchronize", reset: 1}})
             ]);
           })
           .push(function (result_list) {
