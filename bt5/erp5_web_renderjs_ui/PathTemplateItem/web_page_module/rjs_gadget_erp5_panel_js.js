@@ -1,28 +1,36 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
-/*global window, document, rJS, Handlebars, RSVP, Node, URL, loopEventListener, asBoolean , ensureArray*/
-(function (window, document, rJS, Handlebars, RSVP, Node, URL, loopEventListener, asBoolean, ensureArray) {
+/*global window, document, rJS, RSVP, Node, asBoolean , ensureArray*/
+(function (window, document, rJS, RSVP, Node, asBoolean, ensureArray) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // temlates
-  /////////////////////////////////////////////////////////////////
-  // Precompile templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    template_element = gadget_klass.__template_element,
-    panel_template_header = Handlebars.compile(template_element
-                         .getElementById("panel-template-header")
-                         .innerHTML),
-    panel_template_body = Handlebars.compile(template_element
-                         .getElementById("panel-template-body")
-                         .innerHTML),
-    panel_template_body_list = Handlebars.compile(template_element
-                         .getElementById("panel-template-body-list")
-                         .innerHTML),
-    panel_template_body_desktop = Handlebars.compile(template_element
-                                  .getElementById("panel-template-body-desktop")
-                                  .innerHTML);
+  function appendDt(fragment, dt_title, dt_icon,
+                    action_list, href_list, index) {
+// <dt class="ui-btn-icon-left ui-icon-eye">Views</dt>
+// {{#each view_list}}
+// <dd class="document-listview">
+//   <a class="{{class_name}}" href="{{href}}">{{title}}</a>
+// </dd>
+// {{/each}}
+    var dt_element = document.createElement('dt'),
+      dd_element,
+      a_element,
+      i;
+    dt_element.textContent = dt_title;
+    dt_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + dt_icon);
+    fragment.appendChild(dt_element);
+    for (i = 0; i < action_list.length; i += 1) {
+      dd_element = document.createElement('dd');
+      dd_element.setAttribute('class', 'document-listview');
+      a_element = document.createElement('a');
+      a_element.setAttribute('class', action_list[i].class_name);
+      a_element.href = href_list[index + i];
+      a_element.textContent = action_list[i].title;
+      dd_element.appendChild(a_element);
+      fragment.appendChild(dd_element);
+    }
+  }
 
-  gadget_klass
+  rJS(window)
     .setState({
       visible: false
     })
@@ -30,8 +38,7 @@
     // acquired method
     //////////////////////////////////////////////
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
 
@@ -106,8 +113,7 @@
     .onStateChange(function onStateChange(modification_dict) {
       var context = this,
         gadget = this,
-        queue = new RSVP.Queue(),
-        tmp_element;
+        queue = new RSVP.Queue();
 
       if (modification_dict.hasOwnProperty("visible")) {
         if (this.state.visible) {
@@ -124,37 +130,13 @@
       if (modification_dict.hasOwnProperty("global")) {
         queue
           .push(function () {
-            // XXX: Customize panel header!
-            return context.translateHtml(
-              panel_template_header() +
-                panel_template_body()
-            );
-          })
-          .push(function (my_translated_or_plain_html) {
-            tmp_element = document.createElement('div');
-            tmp_element.innerHTML = my_translated_or_plain_html;
-
-            return context.declareGadget('gadget_erp5_searchfield.html', {
-              scope: "erp5_searchfield",
-              element: tmp_element.querySelector('[data-gadget-scope="erp5_searchfield"]')
-            });
+            return context.getDeclaredGadget('erp5_searchfield');
           })
           .push(function (search_gadget) {
             return search_gadget.render({
               focus: false,
               extended_search: ''
             });
-          })
-
-          .push(function () {
-            return context.declareGadget('gadget_erp5_field_multicheckbox.html', {
-              scope: "erp5_checkbox",
-              element: tmp_element.querySelector('[data-gadget-scope="erp5_checkbox"]')
-            });
-          })
-
-          .push(function () {
-            context.element.querySelector("div").appendChild(tmp_element);
           });
       }
 
@@ -162,53 +144,76 @@
         queue
           // Update the global links
           .push(function () {
-            return context.getUrlForList([
-              {command: 'display', options: {page: "front"}},
-              {command: 'display', options: {page: "history"}},
-              {command: 'display', options: {page: "preference"}},
-              {command: 'display', options: {page: "logout"}},
-              {command: 'display_stored_state', options: {page: "search"}},
-              {command: 'display', options: {page: "worklist"}},
-              {command: 'display'}
+            return RSVP.all([
+              context.getUrlForList([
+                {command: 'display'},
+                {command: 'display', options: {page: "front"}},
+                {command: 'display', options: {page: "worklist"}},
+                {command: 'display', options: {page: "history"}},
+                {command: 'display_stored_state', options: {page: "search"}},
+                {command: 'display', options: {page: "preference"}},
+                {command: 'display', options: {page: "logout"}}
+              ]),
+              context.getTranslationList([
+                'Editable',
+                'Home',
+                'Modules',
+                'Worklists',
+                'History',
+                'Search',
+                'Preferences',
+                'Logout'
+              ]),
+              context.getDeclaredGadget("erp5_checkbox")
             ]);
           })
           .push(function (result_list) {
-            return context.translateHtml(
-              panel_template_body_list({
-                "module_href": result_list[0],
-                "history_href": result_list[1],
-                "preference_href": result_list[2],
-                "logout_href": result_list[3],
-                "search_href": result_list[4],
-                "worklist_href": result_list[5],
-                "front_href": result_list[6]
-              })
-            );
-          })
+            var editable_value = [],
+              i,
+              ul_fragment = document.createDocumentFragment(),
+              a_element,
+              li_element,
+              icon_and_key_list = [
+                'home', null,
+                'puzzle-piece', 'm',
+                'tasks', 'w',
+                'history', 'h',
+                'search', 's',
+                'sliders', null,
+                'power-off', 'o'
+              ],
+              ul_element = context.element.querySelector("ul");
 
-          .push(function (result) {
-            context.element.querySelector("ul").innerHTML = result;
+            for (i = 0; i < result_list[0].length; i += 1) {
+              // <li><a href="URL" class="ui-btn-icon-left ui-icon-ICON" data-i18n="TITLE" accesskey="KEY"></a></li>
+              a_element = document.createElement('a');
+              li_element = document.createElement('li');
+              a_element.href = result_list[0][i];
+              a_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + icon_and_key_list[2 * i]);
+              if (icon_and_key_list[2 * i + 1] !== null) {
+                a_element.setAttribute('accesskey', icon_and_key_list[2 * i + 1]);
+              }
+              a_element.textContent = result_list[1][i + 1];
+              li_element.appendChild(a_element);
+              ul_fragment.appendChild(li_element);
+            }
+
+            while (ul_element.firstChild) {
+              ul_element.removeChild(ul_element.firstChild);
+            }
+            ul_element.appendChild(ul_fragment);
 
             // Update the checkbox field value
-            return RSVP.all([
-              context.getDeclaredGadget("erp5_checkbox"),
-              context.translate("Editable")
-            ]);
-          })
-          .push(function (result_list) {
-            var value = [],
-              search_gadget = result_list[0],
-              title = result_list[1];
             if (context.state.editable) {
-              value = ['editable'];
+              editable_value = ['editable'];
             }
-            return search_gadget.render({field_json: {
+            return result_list[2].render({field_json: {
               editable: true,
               name: 'editable',
               key: 'editable',
               hidden: false,
-              items: [[title, 'editable']],
-              default: value
+              items: [[result_list[1][0], 'editable']],
+              'default': editable_value
             }});
           });
       }
@@ -219,10 +224,7 @@
           modification_dict.hasOwnProperty("action_list") ||
           modification_dict.hasOwnProperty("view_list"))) {
         if (this.state.view_list === undefined) {
-          queue
-            .push(function () {
-              gadget.element.querySelector("dl").textContent = '';
-            });
+          gadget.element.querySelector("dl").textContent = '';
         } else {
           queue
             .push(function () {
@@ -232,20 +234,20 @@
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list);
 
-              for (i = 0; i < workflow_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'change',
-                  options: {
-                    view: workflow_list[i].href,
-                    page: undefined
-                  }
-                });
-              }
               for (i = 0; i < view_list.length; i += 1) {
                 parameter_list.push({
                   command: 'change',
                   options: {
                     view: view_list[i].href,
+                    page: undefined
+                  }
+                });
+              }
+              for (i = 0; i < workflow_list.length; i += 1) {
+                parameter_list.push({
+                  command: 'change',
+                  options: {
+                    view: workflow_list[i].href,
                     page: undefined
                   }
                 });
@@ -259,46 +261,31 @@
                   }
                 });
               }
-              return gadget.getUrlForList(parameter_list);
+              return RSVP.all([
+                gadget.getUrlForList(parameter_list),
+                gadget.getTranslationList(['Views', 'Workflows', 'Actions'])
+              ]);
             })
             .push(function (result_list) {
-              var i,
-                result_workflow_list = [],
-                result_view_list = [],
-                result_action_list = [],
+              var dl_element,
+                dl_fragment = document.createDocumentFragment(),
                 workflow_list = JSON.parse(gadget.state.workflow_list),
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list);
 
-              for (i = 0; i < workflow_list.length; i += 1) {
-                result_workflow_list.push({
-                  title: workflow_list[i].title,
-                  class_name: workflow_list[i].class_name,
-                  href: result_list[i]
-                });
+              appendDt(dl_fragment, result_list[1][0], 'eye',
+                       view_list, result_list[0], 0);
+              appendDt(dl_fragment, result_list[1][1], 'random',
+                       workflow_list, result_list[0], view_list.length);
+              appendDt(dl_fragment, result_list[1][2], 'cogs',
+                       action_list, result_list[0],
+                       view_list.length + workflow_list.length);
+
+              dl_element = gadget.element.querySelector("dl");
+              while (dl_element.firstChild) {
+                dl_element.removeChild(dl_element.firstChild);
               }
-              for (i = 0; i < view_list.length; i += 1) {
-                result_view_list.push({
-                  title: view_list[i].title,
-                  class_name: view_list[i].class_name,
-                  href: result_list[i + workflow_list.length]
-                });
-              }
-              for (i = 0; i < action_list.length; i += 1) {
-                result_action_list.push({
-                  title: action_list[i].title,
-                  class_name: action_list[i].class_name,
-                  href: result_list[i + workflow_list.length + view_list.length]
-                });
-              }
-              return gadget.translateHtml(panel_template_body_desktop({
-                workflow_list: result_workflow_list,
-                view_list: result_view_list,
-                action_list: result_action_list
-              }));
-            })
-            .push(function (translated_html) {
-              gadget.element.querySelector("dl").innerHTML = translated_html;
+              dl_element.appendChild(dl_fragment);
             });
         }
       }
@@ -342,7 +329,7 @@
       return;
     })
 
-    .onEvent('submit', function submit(event) {
+    .onEvent('submit', function submit() {
       var gadget = this,
         search_gadget,
         redirect_options = {
@@ -381,4 +368,4 @@
 
     }, /*useCapture=*/false, /*preventDefault=*/true);
 
-}(window, document, rJS, Handlebars, RSVP, Node, URL, loopEventListener, asBoolean, ensureArray));
+}(window, document, rJS, RSVP, Node, asBoolean, ensureArray));
