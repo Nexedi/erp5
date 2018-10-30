@@ -7,7 +7,7 @@
         <details open="open">
           <p>
             From the previous tutorial <a href="user-Howto.Create.Campaigns/view">"How to create Campaigns"</a>, you have learned how to create a campaign with ERP5 CRM Ticket module. Then in this tutorial, you will see how to create new events from this campaign.
-          </p><p>As introduced in the previous tutorial "Events", an event can be a phone call, an email, a fax message, etc. It can be either an incoming or outgoing event. The idea here is to learn how to prepare a campaign, which means create its detail events that will be sent later, as you will learn in the next tutorial.</p>
+          </p><p>As introduced in the previous tutorial "Events", an event can be a phone call, an email, a fax message, etc. It can be either an incoming or outgoing event. The idea here is to learn how to prepare a campaign, which means to create detail events that will be sent later, as you will learn in the next tutorial.</p>
         </details>
       </section><section>
         <h1>Agenda</h1>
@@ -26,7 +26,7 @@
         <h1>Example: Create the Event Mail message (SlapOS Recruits Beta Developers) from the Ticket (Beta Developer Program)</h1>
         <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Example.Beta.Developer.Program.Ticket.Mail.Message.Event?format=png" alt="Example: Create the Event - Mail message from the Ticke - Beta Developer Program" title="Example: Create the Event - Mail message from the Ticke - Beta Developer Program">
         <details open="open">
-          <p>In last tutorial, we have created a Ticket - the marketing campaign Beta Developer Program (the right side screenshot), which aims to increasing the awareness of SlapOS (The new open source Cloud developed by VIFIB) by announcing the campaign and hiring software developers.</p><p>Now that the campaign Ticket has been opened, we are going to create Events for it, send these Outgoing Events to the customers of the marketing campaign, and then handle those Incoming Events from our clients. In our VIFIB example, after the marketing campaign has been opened, as described in the introductory of Events, Cédric de Saint Martin, the community manager of VIFIB will create a mail message - an Event, and then send to his contacts who might be interested in the program and become developers of SlapOS in the future. After these contacts have received the email, they will reply to the VIFIB manager by mail message, which will be well stored in the CRM system for future reference.</p><p>In this tutorial, we will describe in detail how to create the mail message Event from the marketing campaign Ticket</p><p>
+          <p>In last tutorial, we have created a Ticket - the marketing campaign Beta Developer Program (the right side screenshot), which aims at increasing the awareness of SlapOS (The new open source Cloud developed by VIFIB) by announcing the campaign and hiring software developers.</p><p>Now that the campaign Ticket has been opened, we are going to create Events for it, send these Outgoing Events to the customers of the marketing campaign, and then handle those Incoming Events from our clients. In our VIFIB example, after the marketing campaign has been opened, as described in the introduction of Events, Cédric de Saint Martin, the community manager of VIFIB will create a mail message - an Event, and then send to his contacts who might be interested in the program and become developers of SlapOS in the future. After these contacts have received the email, they will reply to the VIFIB manager by mail message, which will be well stored in the CRM system for future reference.</p><p>In this tutorial, we will describe in detail how to create the mail message Event from the marketing campaign Ticket</p><p>
             <strong>Description:</strong>
             the
             <strong>Event Title</strong>
@@ -38,7 +38,7 @@
             <strong>Sender</strong>
             is Cédric de Saint Martin (SlapOS Community Manager from VIFIB), the
             <strong>Recipients</strong>
-            are 14 contacts including software developers, company managers, college professors, etc., the
+            are 4 contacts including software developers, company managers, college professors, etc., the
             <strong>Event Content</strong>
             is about announcing the developer hiring campaign and describing the progression of SlapOS Project.
           </p>
@@ -209,7 +209,7 @@
           <p>Now that the Event has been created, you can see on the screenshot that some fields of this event have already been filled.</p><p>
             For example, we will now explain the <strong>“Follow Up”</strong>
             field. You remember that in order to keep tracks of interactions, the ERP5 CRM uses "Event Origin" and "Follow Up". The field “Follow Up” creates a link between an Event and a Ticket ( A Ticket is either a Campaign, a Support Request, a Meeting, a Sale Opportunity, etc...), from where the Event is created. The field "Event Origin" creates a link between related Events ( eg, an original mail message and the replies from its recipients).
-          </p><p>In our example, as we have created the Event (the Mail message "SlapOS Recruits Beta Developers") from a Campaign Ticket (the Beta Developer Program), so the "Follow Up" field has been automatically set as being this very Campaign. As a result, this Event will be displayed in the Events list of the Follow Up Ticket, in our example, in the page of Beta Developer Program from where we have created this Event.</p>
+          </p><p>In our example, as we have created the Event (the Mail message "SlapOS Recruits Beta Developers") from a Campaign Ticket (the Beta Developer Program), the "Follow Up" field has been automatically set as being this very Campaign. As a result, this Event will be displayed in the Events list of the Follow Up Ticket, in our example, in the page of Beta Developer Program from where we have created this Event.</p>
         </details>
         <test>
           <table class="test" style="display: none;">
@@ -237,12 +237,12 @@
         <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Edit.Event.Document.Description.Senders.And.Recipients?format=png" title="Edit the Event document" alt="Edit the Event document">
         <details open="open">
           <p>
-            Because in the previous step "Set Event title, type, direction and edit the message", we have write the content of the email, so now you only have to fill up the  <strong>"Description"</strong>
-            field (if you need to note something to your team member to see), and you will have to fill up the
+            Because in the previous step "Set Event title, type, direction and edit the message", we have written the content of the email already, you now only have to fill out the  <strong>"Description"</strong>
+            field (if you need to note something to your team member to see), and you will have to fill out the
             <strong>Sender/Caller</strong>
             which means the person that will be in charge of sending the Event, and the
             <strong>Recipients</strong>
-            field which must contain a person or an organisation from the Person or Organisation Modules of your ERP5 instance. If you are not sure of a name, you can click on the little wheels next to those fields and set the relation between a person/organisation and this Event, following the procedure you have learned in the previous tutorials. When you are done editing the Event dicument,
+            field which must contain a person or an organisation from the Person or Organisation Modules of your ERP5 instance. If you are not sure of a name, you can click on the little wheels next to those fields and set the relation between a person/organisation and this Event, following the procedure you have learned in the previous tutorials. When you are done editing the Event document,
             <strong>Save</strong>
             your work by clicking the “Save" button.
           </p>
@@ -276,7 +276,7 @@
         <details open="open">
           <p>
             If you want to see what your email looks like, you can <strong>click on the “Preview” tab</strong>
-            , as circled in red on the picture.
+            , as circled in red in the picture.
           </p>
         </details>
         <test>
@@ -323,7 +323,7 @@
         <h1>Go back to the Ticket from Event</h1>
         <img src="http://img.erp5.cn/user-Howto.Prepare.Outgoing.Events.Go.Back.To.Ticket.From.Event?format=png" title="Go back to the Campaign Ticket" alt="Go back to the Campaign Ticket">
         <details open="open">
-          <p>We will now go back to the campaign in order to check that this event has been added to the Campaign Ticket.</p><p>
+          <p>We will now go back to the campaign in order to check whether this event has been added to the Campaign Ticket.</p><p>
             In order to reach the associated Campaign Ticket, you can <strong>go back to the view tab</strong>
             of your event by clicking on the “View” tab, circled in red on the picture. Then
             <strong>click on the plane icon</strong>
@@ -374,7 +374,7 @@
         <details open="open">
           <p>
             Now you will be redirected to the Follow Up Ticket of the Event, which is the Campaign from where we created the event. In the red area on the bottom of this campaign Ticket, you can now see that the Event you just created and edited is <strong>displayed as a Planned message</strong>
-            , which means it is successfully created and waiting to be confirmed.
+            , which means has been created successfully and is waiting to be confirmed.
           </p><p>The next step will be to understand how to process this outgoing Event. We will learn how to do this in the next tutorial “How to Send Outgoing Events”.</p>
         </details>
         <test>
