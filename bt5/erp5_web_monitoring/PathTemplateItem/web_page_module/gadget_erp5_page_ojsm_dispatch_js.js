@@ -37,12 +37,8 @@
         if (result.data.total_rows === 1) {
           // one item found, redirect to it
           redirect_options = {
-            "jio_key": result.data.rows[0].id
+            jio_key: result.data.rows[0].id
           };
-          if (result.data.rows[0].value.portal_type === "opml") {
-            redirect_options.page = "ojsm_hosting_subscription_view";
-            redirect_options.opml_key = result.data.rows[0].id;
-          }
           return gadget.redirect({"command": "index", options: redirect_options});
         }
         redirect_options = {
@@ -52,7 +48,7 @@
           // take the first one
           gadget.state.portal_type = result.data.rows[0].value.portal_type;
         }
-        if (gadget.state.portal_type === "opml") {
+        if (gadget.state.portal_type === "Hosting Subscription") {
           redirect_options.page = "ojsm_hosting_subscription_list";
         } else if (gadget.state.portal_type === "Software Instance") {
           redirect_options.page = "ojsm_software_instance_list";
@@ -113,12 +109,7 @@
       pt_result = regex.exec(options.query);
       if (pt_result !== null) {
         page_title = "Searching " + pt_result[1] + "(s)";
-        if (pt_result[1] === "Hosting Subscription") {
-          portal_type = "opml";
-          options.query = options.query.replace(pt_result[1], 'opml');
-        } else {
-          portal_type = pt_result[1];
-        }
+        portal_type = pt_result[1];
       }
 
       return gadget.getUrlFor({command: 'display', options: {page: 'ojsm_status_list'}})
