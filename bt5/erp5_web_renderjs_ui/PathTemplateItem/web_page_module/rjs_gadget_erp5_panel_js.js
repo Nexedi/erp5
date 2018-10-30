@@ -9,12 +9,6 @@
   // Precompile templates while loading the first gadget instance
   var gadget_klass = rJS(window),
     template_element = gadget_klass.__template_element,
-    panel_template_header = Handlebars.compile(template_element
-                         .getElementById("panel-template-header")
-                         .innerHTML),
-    panel_template_body = Handlebars.compile(template_element
-                         .getElementById("panel-template-body")
-                         .innerHTML),
     panel_template_body_list = Handlebars.compile(template_element
                          .getElementById("panel-template-body-list")
                          .innerHTML),
@@ -106,8 +100,7 @@
     .onStateChange(function onStateChange(modification_dict) {
       var context = this,
         gadget = this,
-        queue = new RSVP.Queue(),
-        tmp_element;
+        queue = new RSVP.Queue();
 
       if (modification_dict.hasOwnProperty("visible")) {
         if (this.state.visible) {
@@ -123,38 +116,14 @@
 
       if (modification_dict.hasOwnProperty("global")) {
         queue
-          .push(function () {
-            // XXX: Customize panel header!
-            return context.translateHtml(
-              panel_template_header() +
-                panel_template_body()
-            );
-          })
           .push(function (my_translated_or_plain_html) {
-            tmp_element = document.createElement('div');
-            tmp_element.innerHTML = my_translated_or_plain_html;
-
-            return context.declareGadget('gadget_erp5_searchfield.html', {
-              scope: "erp5_searchfield",
-              element: tmp_element.querySelector('[data-gadget-scope="erp5_searchfield"]')
-            });
+            return context.getDeclaredGadget('erp5_searchfield');
           })
           .push(function (search_gadget) {
             return search_gadget.render({
               focus: false,
               extended_search: ''
             });
-          })
-
-          .push(function () {
-            return context.declareGadget('gadget_erp5_field_multicheckbox.html', {
-              scope: "erp5_checkbox",
-              element: tmp_element.querySelector('[data-gadget-scope="erp5_checkbox"]')
-            });
-          })
-
-          .push(function () {
-            context.element.querySelector("div").appendChild(tmp_element);
           });
       }
 
