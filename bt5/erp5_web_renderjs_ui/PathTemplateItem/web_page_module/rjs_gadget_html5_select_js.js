@@ -1,30 +1,12 @@
-/*global window, rJS, RSVP, Handlebars, getFirstNonEmpty */
+/*global document, window, rJS, RSVP, getFirstNonEmpty */
 /*jslint indent: 2, maxerr: 3, maxlen: 80, nomen: true */
-(function (window, rJS, RSVP, Handlebars, getFirstNonEmpty) {
+(function (document, window, rJS, RSVP, getFirstNonEmpty) {
   "use strict";
 
   // How to change html selected option using JavaScript?
   // http://stackoverflow.com/a/20662180
 
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    option_source = gadget_klass.__template_element
-                      .getElementById("option-template")
-                      .innerHTML,
-    option_template = Handlebars.compile(option_source),
-    selected_option_source = gadget_klass.__template_element
-                               .getElementById("selected-option-template")
-                               .innerHTML,
-    selected_option_template = Handlebars.compile(selected_option_source),
-    disabled_option_source = gadget_klass.__template_element
-                               .getElementById("disabled-option-template")
-                               .innerHTML,
-    disabled_option_template = Handlebars.compile(disabled_option_source);
-
-  gadget_klass
+  rJS(window)
     .setState({
       editable: false,
       value: undefined,
@@ -51,10 +33,10 @@
     .onStateChange(function onStateChange(modification_dict) {
       var i,
         found = false,
-        template,
         select = this.element.querySelector('select'),
         item_list = JSON.parse(this.state.item_list),
-        tmp = "";
+        option,
+        fragment;
 
       select.id = this.state.id || this.state.name;
       select.setAttribute('name', this.state.name);
@@ -83,28 +65,35 @@
 
       if (modification_dict.hasOwnProperty('value') ||
           modification_dict.hasOwnProperty('item_list')) {
+        fragment = document.createDocumentFragment();
+
         for (i = 0; i < item_list.length; i += 1) {
+          option = document.createElement('option');
+          option.textContent = item_list[i][0];
           if (item_list[i][1] === null) {
-            template = disabled_option_template;
-          } else if (item_list[i][1] === this.state.value) {
-            template = selected_option_template;
-            found = true;
+            option.setAttribute('disabled', 'disabled');
           } else {
-            template = option_template;
+            option.setAttribute('value', item_list[i][1]);
+            if (item_list[i][1] === this.state.value) {
+              option.setAttribute('selected', 'selected');
+              found = true;
+            }
           }
-          tmp += template({
-            value: item_list[i][1],
-            text: item_list[i][0]
-          });
+          fragment.appendChild(option);
         }
 
         if (!found) {
-          tmp += selected_option_template({
-            value: this.state.value,
-            text: '??? (' + this.state.value + ')'
-          });
+          option = document.createElement('option');
+          option.textContent = '??? (' + this.state.value + ')';
+          option.setAttribute('value', this.state.value);
+          option.setAttribute('selected', 'selected');
+          fragment.appendChild(option);
         }
-        select.innerHTML = tmp;
+
+        while (select.firstChild) {
+          select.removeChild(select.firstChild);
+        }
+        select.appendChild(fragment);
       }
     })
 
@@ -155,4 +144,4 @@
       return this.notifyInvalid(evt.target.validationMessage);
     }, true, false);
 
-}(window, rJS, RSVP, Handlebars, getFirstNonEmpty));
+}(document, window, rJS, RSVP, getFirstNonEmpty));
