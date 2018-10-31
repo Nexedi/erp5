@@ -8,11 +8,6 @@
 
   var gadget_klass = rJS(window),
 
-    relation_link_source = gadget_klass.__template_element
-                         .getElementById("relation-link-template")
-                         .innerHTML,
-    relation_link_template = Handlebars.compile(relation_link_source),
-
     relation_input_source = gadget_klass.__template_element
                          .getElementById("relation-input-template")
                          .innerHTML,
@@ -32,11 +27,20 @@
       }
     })
       .push(function (href) {
+// <div>
+//   <a href={{href}}>{{value}}</a>
+// </div>
         // XXX Use html5 element gadget
-        gadget.element.innerHTML = relation_link_template({
-          value: gadget.state.value_text,
-          href: href
-        });
+        var div_element = document.createElement('div'),
+          a_element = document.createElement('a');
+        a_element.textContent = gadget.state.value_text;
+        a_element.href = href;
+
+        while (gadget.element.firstChild) {
+          gadget.element.removeChild(gadget.element.firstChild);
+        }
+        div_element.appendChild(a_element);
+        gadget.element.appendChild(a_element);
       });
   }
 
