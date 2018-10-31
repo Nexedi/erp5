@@ -9,9 +9,6 @@
   // Precompile templates while loading the first gadget instance
   var gadget_klass = rJS(window),
     template_element = gadget_klass.__template_element,
-    panel_template_body_list = Handlebars.compile(template_element
-                         .getElementById("panel-template-body-list")
-                         .innerHTML),
     panel_template_body_desktop = Handlebars.compile(template_element
                                   .getElementById("panel-template-body-desktop")
                                   .innerHTML);
@@ -25,7 +22,7 @@
     //////////////////////////////////////////////
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
 
@@ -131,53 +128,76 @@
         queue
           // Update the global links
           .push(function () {
-            return context.getUrlForList([
-              {command: 'display', options: {page: "front"}},
-              {command: 'display', options: {page: "history"}},
-              {command: 'display', options: {page: "preference"}},
-              {command: 'display', options: {page: "logout"}},
-              {command: 'display_stored_state', options: {page: "search"}},
-              {command: 'display', options: {page: "worklist"}},
-              {command: 'display'}
+            return RSVP.all([
+              context.getUrlForList([
+                {command: 'display'},
+                {command: 'display', options: {page: "front"}},
+                {command: 'display', options: {page: "worklist"}},
+                {command: 'display', options: {page: "history"}},
+                {command: 'display_stored_state', options: {page: "search"}},
+                {command: 'display', options: {page: "preference"}},
+                {command: 'display', options: {page: "logout"}}
+              ]),
+              context.getTranslationList([
+                'Editable',
+                'Home',
+                'Modules',
+                'Worklists',
+                'History',
+                'Search',
+                'Preferences',
+                'Logout'
+              ]),
+              context.getDeclaredGadget("erp5_checkbox")
             ]);
           })
           .push(function (result_list) {
-            return context.translateHtml(
-              panel_template_body_list({
-                "module_href": result_list[0],
-                "history_href": result_list[1],
-                "preference_href": result_list[2],
-                "logout_href": result_list[3],
-                "search_href": result_list[4],
-                "worklist_href": result_list[5],
-                "front_href": result_list[6]
-              })
-            );
-          })
+            var editable_value = [],
+              i,
+              ul_fragment = document.createDocumentFragment(),
+              a_element,
+              li_element,
+              icon_and_key_list = [
+                'home', null,
+                'puzzle-piece', 'm',
+                'tasks', 'w',
+                'history', 'h',
+                'search', 's',
+                'sliders', null,
+                'power-off', 'o'
+              ],
+              ul_element = context.element.querySelector("ul");
 
-          .push(function (result) {
-            context.element.querySelector("ul").innerHTML = result;
+            for (i = 0; i < result_list[0].length; i += 1) {
+              // <li><a href="URL" class="ui-btn-icon-left ui-icon-ICON" data-i18n="TITLE" accesskey="KEY"></a></li>
+              a_element = document.createElement('a');
+              li_element = document.createElement('li');
+              a_element.href = result_list[0][i];
+              a_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + icon_and_key_list[2 * i]);
+              if (icon_and_key_list[2 * i + 1] !== null) {
+                a_element.setAttribute('access_key', icon_and_key_list[2 * i + 1]);
+              }
+              a_element.textContent = result_list[1][i + 1];
+              li_element.appendChild(a_element);
+              ul_fragment.appendChild(li_element);
+            }
+
+            while (ul_element.firstChild) {
+              ul_element.removeChild(ul_element.firstChild);
+            }
+            ul_element.appendChild(ul_fragment);
 
             // Update the checkbox field value
-            return RSVP.all([
-              context.getDeclaredGadget("erp5_checkbox"),
-              context.translate("Editable")
-            ]);
-          })
-          .push(function (result_list) {
-            var value = [],
-              search_gadget = result_list[0],
-              title = result_list[1];
             if (context.state.editable) {
-              value = ['editable'];
+              editable_value = ['editable'];
             }
-            return search_gadget.render({field_json: {
+            return result_list[2].render({field_json: {
               editable: true,
               name: 'editable',
               key: 'editable',
               hidden: false,
-              items: [[title, 'editable']],
-              default: value
+              items: [[result_list[1][0], 'editable']],
+              'default': editable_value
             }});
           });
       }
