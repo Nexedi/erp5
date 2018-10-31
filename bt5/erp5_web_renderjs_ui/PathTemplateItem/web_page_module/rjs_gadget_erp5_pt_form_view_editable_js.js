@@ -8,7 +8,6 @@
     .declareAcquiredMethod("submitContent", "submitContent")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
