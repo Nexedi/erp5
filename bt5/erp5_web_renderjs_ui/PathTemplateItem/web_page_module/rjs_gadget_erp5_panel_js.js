@@ -192,7 +192,7 @@
               a_element.href = result_list[0][i];
               a_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + icon_and_key_list[2 * i]);
               if (icon_and_key_list[2 * i + 1] !== null) {
-                a_element.setAttribute('access_key', icon_and_key_list[2 * i + 1]);
+                a_element.setAttribute('accesskey', icon_and_key_list[2 * i + 1]);
               }
               a_element.textContent = result_list[1][i + 1];
               li_element.appendChild(a_element);
