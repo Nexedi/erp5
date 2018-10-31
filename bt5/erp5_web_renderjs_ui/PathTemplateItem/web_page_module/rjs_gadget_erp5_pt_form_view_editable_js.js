@@ -6,7 +6,7 @@
   rJS(window)
 
     .declareAcquiredMethod("submitContent", "submitContent")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("notifyChange", "notifyChange")
@@ -79,33 +79,58 @@
 
         // render the header
         .push(function () {
+          var url_for_parameter_list = [
+            {command: 'change', options: {page: "tab"}},
+            {command: 'change', options: {page: "action"}},
+            {command: 'history_previous'},
+            {command: 'selection_previous'},
+            {command: 'selection_next'},
+            {command: 'change', options: {page: "export"}}
+          ];
+          if (gadget.state.erp5_document._links.action_object_new_content_action) {
+            url_for_parameter_list.push({command: 'change', options: {
+              view: gadget.state.erp5_document._links.action_object_new_content_action.href,
+              editable: true
+            }});
+          }
           return RSVP.all([
-            gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
-            gadget.getUrlFor({command: 'change', options: {page: "action"}}),
-            gadget.state.erp5_document._links.action_object_new_content_action ?
-                gadget.getUrlFor({command: 'change', options: {
-                  view: gadget.state.erp5_document._links.action_object_new_content_action.href,
-                  editable: true
-                }}) :
-                "",
-            gadget.getUrlFor({command: 'history_previous'}),
-            gadget.getUrlFor({command: 'selection_previous'}),
-            gadget.getUrlFor({command: 'selection_next'}),
             calculatePageTitle(gadget, gadget.state.erp5_document),
             gadget.isDesktopMedia(),
-            (gadget.state.erp5_document._links.action_object_jio_report ||
-             gadget.state.erp5_document._links.action_object_jio_exchange ||
-             gadget.state.erp5_document._links.action_object_jio_print) ?
-                gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
-                "",
-            gadget.getUrlParameter('selection_index')
+            gadget.getUrlParameter('selection_index'),
+            gadget.getUrlForList(url_for_parameter_list)
           ]);
         })
+        .push(function (result_list) {
+          var url_list = result_list[3],
+            header_dict = {
+              tab_url: url_list[0],
+              actions_url: url_list[1],
+              add_url: url_list[6] || '',
+              selection_url: url_list[2],
+              // Only display previous/next links if url has a selection_index,
+              // ie, if we can paginate the result list of the search
+              previous_url: result_list[2] ? url_list[3] : '',
+              next_url: result_list[2] ? url_list[4] : '',
+              page_title: result_list[0]
+            };
+          if (gadget.state.save_action === true) {
+            header_dict.save_action = true;
+          }
+          if (result_list[1]) {
+            header_dict.export_url = (
+              gadget.state.erp5_document._links.action_object_jio_report ||
+              gadget.state.erp5_document._links.action_object_jio_exchange ||
+              gadget.state.erp5_document._links.action_object_jio_print
+            ) ? url_list[5] : '';
+          }
+          return gadget.updateHeader(header_dict);
+        });
+    /*
         .push(function (all_result) {
           var header_dict = {
             tab_url: all_result[0],
             actions_url: all_result[1],
-            add_url: all_result[2],
+            add_url: all_result[2] || '',
             selection_url: all_result[3],
             // Only display previous/next links if url has a selection_index,
             // ie, if we can paginate the result list of the search
@@ -118,10 +143,13 @@
             header_dict.save_action = true;
           }
           if (is_desktop) {
-            header_dict.export_url = all_result[8];
+            header_dict.export_url = (gadget.state.erp5_document._links.action_object_jio_report ||
+               gadget.state.erp5_document._links.action_object_jio_exchange ||
+               gadget.state.erp5_document._links.action_object_jio_print) ? all_result[8] : ''
           }
           return gadget.updateHeader(header_dict);
         });
+        */
     })
 
     .onEvent('submit', function submit() {
