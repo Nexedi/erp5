@@ -66,6 +66,9 @@
   function updateHeader(gadget) {
     return route(gadget, "header", 'notifySubmitted')
       .push(function () {
+        return route(gadget, 'header', 'notifyLoaded');
+      })
+      .push(function () {
         return route(gadget, "header", 'render',
                      [gadget.props.header_argument_list]);
       });
@@ -561,7 +564,6 @@
               element.appendChild(content_container);
 
               return RSVP.all([
-                route(gadget, 'header', 'notifyLoaded'),
                 updateHeader(gadget),
                 updatePanel(gadget)
               ]);
@@ -577,7 +579,6 @@
           })
           .push(function () {
             return RSVP.all([
-              route(gadget, 'header', 'notifyLoaded'),
               updateHeader(gadget),
               updatePanel(gadget)
             ]);
