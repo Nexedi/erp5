@@ -17,12 +17,6 @@
     <script src="gadget_global.js" type="text/javascript"></script>
     <script src="gadget_erp5_relation_input.js" type="text/javascript"></script>
 
-    <script id="relation-link-template" type="text/x-handlebars-template">
-      <div>
-        <a href={{href}} class="{{class_name}}" >{{value}}</a>
-      </div>
-    </script>
-
     <script id="relation-input-template" type="text/x-handlebars-template">
       <div class="relation-input ui-input-text">
         <div>
@@ -42,7 +36,7 @@
        <li class="ui-icon-plus ui-btn-icon-right" data-i18n="Create New" data-create-object="{{value}}" name="{{name}}">Create New
          <span> {{name}}: {{../value}}</span></li>
       {{/each}}
-      <li class="ui-icon-search ui-btn-icon-right" data-explore=true data-i18n="Explore the Search Result List" >Explore the Search Result List</li>
+      <li class="ui-icon-search ui-btn-icon-right" data-explore=true data-i18n="Explore the Search Result List" ></li>
     </script>
 
   </head>
