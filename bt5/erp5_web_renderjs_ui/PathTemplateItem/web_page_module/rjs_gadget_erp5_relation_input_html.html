@@ -17,15 +17,6 @@
     <script src="gadget_global.js" type="text/javascript"></script>
     <script src="gadget_erp5_relation_input.js" type="text/javascript"></script>
 
-    <script id="relation-input-template" type="text/x-handlebars-template">
-      <div class="relation-input ui-input-text">
-        <div>
-          <input type='search' title="{{title}}" name="{{name}}" id="{{name}}" autocomplete="off" value="{{value}}" >
-          <ul class="search_ul"></ul>
-        </div>
-      </div>
-    </script>
-
     <script id="relation-listview-template" type="text/x-handlebars-template">
       {{#if list.length}}
         {{#each list}}
