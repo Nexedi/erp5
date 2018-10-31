@@ -125,31 +125,6 @@
           }
           return gadget.updateHeader(header_dict);
         });
-    /*
-        .push(function (all_result) {
-          var header_dict = {
-            tab_url: all_result[0],
-            actions_url: all_result[1],
-            add_url: all_result[2] || '',
-            selection_url: all_result[3],
-            // Only display previous/next links if url has a selection_index,
-            // ie, if we can paginate the result list of the search
-            previous_url: all_result[9] ? all_result[4] : '',
-            next_url: all_result[9] ? all_result[5] : '',
-            page_title: all_result[6]
-          },
-            is_desktop = all_result[7];
-          if (gadget.state.save_action === true) {
-            header_dict.save_action = true;
-          }
-          if (is_desktop) {
-            header_dict.export_url = (gadget.state.erp5_document._links.action_object_jio_report ||
-               gadget.state.erp5_document._links.action_object_jio_exchange ||
-               gadget.state.erp5_document._links.action_object_jio_print) ? all_result[8] : ''
-          }
-          return gadget.updateHeader(header_dict);
-        });
-        */
     })
 
     .onEvent('submit', function submit() {
