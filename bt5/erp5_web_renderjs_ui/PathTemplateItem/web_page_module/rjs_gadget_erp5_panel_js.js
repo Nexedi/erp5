@@ -208,10 +208,7 @@
           modification_dict.hasOwnProperty("action_list") ||
           modification_dict.hasOwnProperty("view_list"))) {
         if (this.state.view_list === undefined) {
-          queue
-            .push(function () {
-              gadget.element.querySelector("dl").textContent = '';
-            });
+          gadget.element.querySelector("dl").textContent = '';
         } else {
           queue
             .push(function () {
