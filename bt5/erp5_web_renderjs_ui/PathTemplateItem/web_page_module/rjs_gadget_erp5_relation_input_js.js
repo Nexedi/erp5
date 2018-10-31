@@ -8,11 +8,6 @@
 
   var gadget_klass = rJS(window),
 
-    relation_input_source = gadget_klass.__template_element
-                         .getElementById("relation-input-template")
-                         .innerHTML,
-    relation_input_template = Handlebars.compile(relation_input_source),
-
     relation_listview_source = gadget_klass.__template_element
                          .getElementById("relation-listview-template")
                          .innerHTML,
@@ -49,11 +44,33 @@
   }
 
   function buildEditableInputHTML(gadget) {
-    gadget.element.innerHTML = relation_input_template({
-      value: gadget.state.value_text,
-      title: gadget.state.title,
-      name: gadget.state.key
-    });
+// <div class="relation-input ui-input-text">
+//   <div>
+//     <input type='search' title="{{title}}" name="{{name}}"
+//            id="{{name}}" autocomplete="off" value="{{value}}" >
+//     <ul class="search_ul"></ul>
+//   </div>
+// </div>
+    var div_element = document.createElement('div'),
+      sub_div_element = document.createElement('div'),
+      input_element = document.createElement('input'),
+      ul_element = document.createElement('ul');
+    div_element.setAttribute('class', 'relation-input ui-input-text');
+    input_element.setAttribute('type', 'search');
+    input_element.setAttribute('title', gadget.state.title);
+    input_element.setAttribute('name', gadget.state.key);
+    input_element.setAttribute('id', gadget.state.key);
+    input_element.setAttribute('autocomplete', 'off');
+    input_element.setAttribute('value', gadget.state.value_text);
+    ul_element.setAttribute('class', 'search_ul');
+
+    while (gadget.element.firstChild) {
+      gadget.element.removeChild(gadget.element.firstChild);
+    }
+    div_element.appendChild(sub_div_element);
+    sub_div_element.appendChild(input_element);
+    sub_div_element.appendChild(ul_element);
+    gadget.element.appendChild(div_element);
   }
 
   function createEditableLink(gadget, class_name) {
