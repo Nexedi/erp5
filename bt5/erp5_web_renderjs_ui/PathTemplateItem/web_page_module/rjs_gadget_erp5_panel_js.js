@@ -1,19 +1,36 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
-/*global window, document, rJS, Handlebars, RSVP, Node, URL, loopEventListener, asBoolean , ensureArray*/
-(function (window, document, rJS, Handlebars, RSVP, Node, URL, loopEventListener, asBoolean, ensureArray) {
+/*global window, document, rJS, RSVP, Node, URL, loopEventListener, asBoolean , ensureArray*/
+(function (window, document, rJS, RSVP, Node, URL, loopEventListener, asBoolean, ensureArray) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // temlates
-  /////////////////////////////////////////////////////////////////
-  // Precompile templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    template_element = gadget_klass.__template_element,
-    panel_template_body_desktop = Handlebars.compile(template_element
-                                  .getElementById("panel-template-body-desktop")
-                                  .innerHTML);
+  function appendDt(fragment, dt_title, dt_icon,
+                    action_list, href_list, index) {
+// <dt class="ui-btn-icon-left ui-icon-eye">Views</dt>
+// {{#each view_list}}
+// <dd class="document-listview">
+//   <a class="{{class_name}}" href="{{href}}">{{title}}</a>
+// </dd>
+// {{/each}}
+    var dt_element = document.createElement('dt'),
+      dd_element,
+      a_element,
+      i;
+    dt_element.textContent = dt_title;
+    dt_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + dt_icon);
+    fragment.appendChild(dt_element);
+    for (i = 0; i < action_list.length; i += 1) {
+      dd_element = document.createElement('dd');
+      dd_element.setAttribute('class', 'document-listview');
+      a_element = document.createElement('a');
+      a_element.setAttribute('class', action_list[i].class_name);
+      a_element.href = href_list[index + i];
+      a_element.textContent = action_list[i].title;
+      dd_element.appendChild(a_element);
+      fragment.appendChild(dd_element);
+    }
+  }
 
-  gadget_klass
+  rJS(window)
     .setState({
       visible: false
     })
@@ -218,20 +235,20 @@
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list);
 
-              for (i = 0; i < workflow_list.length; i += 1) {
-                parameter_list.push({
-                  command: 'change',
-                  options: {
-                    view: workflow_list[i].href,
-                    page: undefined
-                  }
-                });
-              }
               for (i = 0; i < view_list.length; i += 1) {
                 parameter_list.push({
                   command: 'change',
                   options: {
                     view: view_list[i].href,
+                    page: undefined
+                  }
+                });
+              }
+              for (i = 0; i < workflow_list.length; i += 1) {
+                parameter_list.push({
+                  command: 'change',
+                  options: {
+                    view: workflow_list[i].href,
                     page: undefined
                   }
                 });
@@ -245,46 +262,31 @@
                   }
                 });
               }
-              return gadget.getUrlForList(parameter_list);
+              return RSVP.all([
+                gadget.getUrlForList(parameter_list),
+                gadget.getTranslationList(['Views', 'Workflows', 'Actions'])
+              ]);
             })
             .push(function (result_list) {
-              var i,
-                result_workflow_list = [],
-                result_view_list = [],
-                result_action_list = [],
+              var dl_element,
+                dl_fragment = document.createDocumentFragment(),
                 workflow_list = JSON.parse(gadget.state.workflow_list),
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list);
 
-              for (i = 0; i < workflow_list.length; i += 1) {
-                result_workflow_list.push({
-                  title: workflow_list[i].title,
-                  class_name: workflow_list[i].class_name,
-                  href: result_list[i]
-                });
+              appendDt(dl_fragment, result_list[1][0], 'eye',
+                       view_list, result_list[0], 0);
+              appendDt(dl_fragment, result_list[1][1], 'random',
+                       workflow_list, result_list[0], view_list.length);
+              appendDt(dl_fragment, result_list[1][2], 'cogs',
+                       action_list, result_list[0],
+                       view_list.length + workflow_list.length);
+
+              dl_element = gadget.element.querySelector("dl");
+              while (dl_element.firstChild) {
+                dl_element.removeChild(dl_element.firstChild);
               }
-              for (i = 0; i < view_list.length; i += 1) {
-                result_view_list.push({
-                  title: view_list[i].title,
-                  class_name: view_list[i].class_name,
-                  href: result_list[i + workflow_list.length]
-                });
-              }
-              for (i = 0; i < action_list.length; i += 1) {
-                result_action_list.push({
-                  title: action_list[i].title,
-                  class_name: action_list[i].class_name,
-                  href: result_list[i + workflow_list.length + view_list.length]
-                });
-              }
-              return gadget.translateHtml(panel_template_body_desktop({
-                workflow_list: result_workflow_list,
-                view_list: result_view_list,
-                action_list: result_action_list
-              }));
-            })
-            .push(function (translated_html) {
-              gadget.element.querySelector("dl").innerHTML = translated_html;
+              dl_element.appendChild(dl_fragment);
             });
         }
       }
@@ -367,4 +369,4 @@
 
     }, /*useCapture=*/false, /*preventDefault=*/true);
 
-}(window, document, rJS, Handlebars, RSVP, Node, URL, loopEventListener, asBoolean, ensureArray));
+}(window, document, rJS, RSVP, Node, URL, loopEventListener, asBoolean, ensureArray));
