@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
-/*global window, document, rJS, RSVP, Node, URL, loopEventListener, asBoolean , ensureArray*/
-(function (window, document, rJS, RSVP, Node, URL, loopEventListener, asBoolean, ensureArray) {
+/*global window, document, rJS, RSVP, Node, asBoolean , ensureArray*/
+(function (window, document, rJS, RSVP, Node, asBoolean, ensureArray) {
   "use strict";
 
   function appendDt(fragment, dt_title, dt_icon,
@@ -130,7 +130,7 @@
 
       if (modification_dict.hasOwnProperty("global")) {
         queue
-          .push(function (my_translated_or_plain_html) {
+          .push(function () {
             return context.getDeclaredGadget('erp5_searchfield');
           })
           .push(function (search_gadget) {
@@ -330,7 +330,7 @@
       return;
     })
 
-    .onEvent('submit', function submit(event) {
+    .onEvent('submit', function submit() {
       var gadget = this,
         search_gadget,
         redirect_options = {
@@ -369,4 +369,4 @@
 
     }, /*useCapture=*/false, /*preventDefault=*/true);
 
-}(window, document, rJS, RSVP, Node, URL, loopEventListener, asBoolean, ensureArray));
+}(window, document, rJS, RSVP, Node, asBoolean, ensureArray));
