@@ -8,7 +8,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
@@ -89,36 +89,40 @@
 
         // render the header
         .push(function () {
-          var new_content_action = form_gadget.state.erp5_document._links.action_object_new_content_action;
+          var new_content_action = form_gadget.state.erp5_document._links.action_object_new_content_action,
+            url_for_parameter_list = [
+              {command: 'change', options: {page: "action"}},
+              {command: 'display', options: {}},
+              {command: 'change', options: {page: "export"}}
+            ];
 
           if (new_content_action !== undefined) {
-            new_content_action = form_gadget.getUrlFor({command: 'change', options: {view: new_content_action.href, editable: true}});
-          } else {
-            new_content_action = "";
+            url_for_parameter_list.push({command: 'change', options: {
+              view: new_content_action.href,
+              editable: true
+            }});
           }
 
           return RSVP.all([
-            new_content_action,
-            form_gadget.getUrlFor({command: 'change', options: {page: "action"}}),
-            form_gadget.getUrlFor({command: 'display', options: {}}),
-            (form_gadget.state.erp5_document._links.action_object_jio_report ||
-             form_gadget.state.erp5_document._links.action_object_jio_print ||
-             form_gadget.state.erp5_document._links.action_object_jio_exchange) ?
-                  form_gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
-                  "",
-            calculatePageTitle(form_gadget, form_gadget.state.erp5_document)
+            calculatePageTitle(form_gadget, form_gadget.state.erp5_document),
+            form_gadget.getUrlForList(url_for_parameter_list)
           ]);
         })
-        .push(function (all_gadget) {
+        .push(function (result_list) {
+          var url_list = result_list[1];
           return form_gadget.updateHeader({
             panel_action: true,
             jump_url: "",
             fast_input_url: "",
-            add_url: all_gadget[0],
-            actions_url: all_gadget[1],
-            export_url: all_gadget[3],
-            page_title: all_gadget[4],
-            front_url: all_gadget[2],
+            add_url: url_list[3] || '',
+            actions_url: url_list[0],
+            export_url: (
+              form_gadget.state.erp5_document._links.action_object_jio_report ||
+              form_gadget.state.erp5_document._links.action_object_jio_print ||
+              form_gadget.state.erp5_document._links.action_object_jio_exchange
+            ) ? url_list[2] : '',
+            page_title: result_list[0],
+            front_url: url_list[1],
             filter_action: true
           });
         });
