@@ -29,7 +29,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
     .declareAcquiredMethod('getUrlParameter', 'getUrlParameter')
 
@@ -98,49 +98,53 @@
           return embedded_form_gadget.render(form_options);
         })
 
+
         // render the header
         .push(function () {
+          var url_for_parameter_list = [
+            {command: 'change', options: {page: "tab"}},
+            {command: 'change', options: {page: "action"}},
+            {command: 'history_previous'},
+            {command: 'selection_previous'},
+            {command: 'selection_next'},
+            {command: 'change', options: {page: "export"}},
+            {command: 'change', options: {editable: true}}
+          ];
+          if (gadget.state.erp5_document._links.action_object_new_content_action) {
+            url_for_parameter_list.push({command: 'change', options: {
+              view: gadget.state.erp5_document._links.action_object_new_content_action.href,
+              editable: true
+            }});
+          }
           return RSVP.all([
-            gadget.getUrlFor({command: 'change', options: {editable: true}}),
-            gadget.getUrlFor({command: 'change', options: {page: "action"}}),
-            gadget.getUrlFor({command: 'history_previous'}),
-            gadget.getUrlFor({command: 'selection_previous'}),
-            gadget.getUrlFor({command: 'selection_next'}),
-            gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
-            (gadget.state.erp5_document._links.action_object_jio_report ||
-             gadget.state.erp5_document._links.action_object_jio_exchange ||
-             gadget.state.erp5_document._links.action_object_jio_print) ?
-                gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
-                "",
             calculatePageTitle(gadget, gadget.state.erp5_document),
             gadget.isDesktopMedia(),
-            gadget.state.erp5_document._links.action_object_new_content_action ?
-                gadget.getUrlFor({command: 'change', options: {
-                  view: gadget.state.erp5_document._links.action_object_new_content_action.href,
-                  editable: true
-                }}) :
-                "",
-            gadget.getUrlParameter('selection_index')
+            gadget.getUrlParameter('selection_index'),
+            gadget.getUrlForList(url_for_parameter_list)
           ]);
         })
-        .push(function (all_result) {
-          var options = {
-            edit_url: all_result[0],
-            actions_url: all_result[1],
-            selection_url: all_result[2],
-            // Only display previous/next links if url has a selection_index,
-            // ie, if we can paginate the result list of the search
-            previous_url: all_result[10] ? all_result[3] : '',
-            next_url: all_result[10] ? all_result[4] : '',
-            tab_url: all_result[5],
-            export_url: all_result[6],
-            page_title: all_result[7]
-          },
-            is_desktop = all_result[8];
-          if (is_desktop) {
-            options.add_url = all_result[9];
+        .push(function (result_list) {
+          var url_list = result_list[3],
+            header_dict = {
+              edit_url: url_list[6],
+              tab_url: url_list[0],
+              actions_url: url_list[1],
+              add_url: url_list[7] || '',
+              selection_url: url_list[2],
+              // Only display previous/next links if url has a selection_index,
+              // ie, if we can paginate the result list of the search
+              previous_url: result_list[2] ? url_list[3] : '',
+              next_url: result_list[2] ? url_list[4] : '',
+              page_title: result_list[0]
+            };
+          if (result_list[1]) {
+            header_dict.export_url = (
+              gadget.state.erp5_document._links.action_object_jio_report ||
+              gadget.state.erp5_document._links.action_object_jio_exchange ||
+              gadget.state.erp5_document._links.action_object_jio_print
+            ) ? url_list[5] : '';
           }
-          return gadget.updateHeader(options);
+          return gadget.updateHeader(header_dict);
         });
     });
 
