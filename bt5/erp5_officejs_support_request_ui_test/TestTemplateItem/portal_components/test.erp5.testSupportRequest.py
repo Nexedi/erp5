@@ -357,6 +357,27 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
         attachment_name=None,)],
       ignoreKeys(json.loads(support_request.SupportRequest_getCommentPostListAsJson()), 'message_id'))
 
+  def test_support_request_comment_only_include_visible_events(self):
+    """It should be possible to have a Support Request user can view but
+    with some events user cannot view. In this case, they should be filtered
+    out.
+    """
+    support_request = self.portal.support_request_module.erp5_officejs_support_request_ui_test_support_reuqest_001
+    non_visible_event = self.portal.event_module.newContent(
+        portal_type='Web Message',
+        source_value=self.user,
+        follow_up_value=support_request,
+        resource_value=self.portal.service_module.erp5_officejs_support_request_ui_test_service_001,
+        text_content="<b>Secret</b> message",
+        start_date=DateTime(2001, 1, 1),
+    )
+    non_visible_event.start()
+    non_visible_event.stop()
+    non_visible_event.manage_permission('View', ['Manager'], 0)
+
+    self.tic()
+    self.assertEqual([], json.loads(support_request.SupportRequest_getCommentPostListAsJson()))
+
 
 class TestSupportRequestRSS(SupportRequestTestCase):
   # XXX token PAS plugin is not set up automatically when installing erp5_access_token
@@ -419,6 +440,25 @@ class TestSupportRequestRSS(SupportRequestTestCase):
         basic='%s:%s' % (self.user.erp5_login.getReference(), self.user_password))
     self._checkRSS(response)
 
+  def test_RSS_with_non_accessible_events(self):
+    non_visible_event = self.portal.event_module.newContent(
+        portal_type='Web Message',
+        source_value=self.user,
+        follow_up_value=self.support_request,
+        resource_value=self.portal.service_module.erp5_officejs_support_request_ui_test_service_001,
+        text_content="<p>This is a <em>secret event you cannot see</b></p>",
+        start_date=DateTime(2001, 1, 1),
+    )
+    non_visible_event.start()
+    non_visible_event.stop()
+    non_visible_event.manage_permission('View', ['Manager'], 0)
+    self.tic()
+
+    response = self.publish(
+        "%s/support_request_module/SupportRequestModule_viewLastSupportRequestListAsRss" % self.getWebSite().getPath(),
+        basic='%s:%s' % (self.user.erp5_login.getReference(), self.user_password))
+    self._checkRSS(response)
+
   def test_RSS_with_token(self):
     response = self.publish(
         "%s/support_request_module/SupportRequestModule_generateRSSLinkAsJson" % self.getWebSite().getPath(),
@@ -430,3 +470,31 @@ class TestSupportRequestRSS(SupportRequestTestCase):
         '%s://%s' % (parsed_url.scheme, parsed_url.netloc), '', 1)
     # and check it (this time the request is not basic-authenticated)
     self._checkRSS(self.publish(restricted_access_url))
+
+
+class TestIngestPostAsWebMessage(SupportRequestTestCase):
+  """Tests ingesting HTML Post into web messages.
+  """
+  def test_Post_ingestMailMessageForSupportRequest_as_other_user(self):
+    """Post_ingestMailMessageForSupportRequest should be able to ingest an HTML
+    Post created by another user, so that we can run int in an alarm for example.
+    """
+    support_request = self.portal.support_request_module.erp5_officejs_support_request_ui_test_support_reuqest_001
+    # the owner of this post is self.user
+    post = self.portal.post_module.newContent(
+        portal_type='HTML Post',
+        follow_up_value=support_request,
+        data="Hello"
+    )
+    post.publish()
+    self.tic()
+
+    manager_user_id = 'ERP5TypeTestCase'
+    self.login(manager_user_id)
+    post.Post_ingestMailMessageForSupportRequest(
+      web_site_relative_url=self.getWebSite().getRelativeUrl())
+
+    self.tic()
+    web_message, = post.getAggregateRelatedValueList()
+    self.assertEqual(self.user, web_message.getSourceValue())
+    self.assertEqual(manager_user_id, web_message.getOwnerInfo()['id'])

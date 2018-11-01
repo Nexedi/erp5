@@ -3,6 +3,7 @@ portal = context.getPortalObject()
 document_type_list = portal.getPortalDocumentTypeList()
 
 event_list = portal.portal_simulation.getMovementHistoryList(
+    security_query=portal.portal_catalog.getSecurityQuery(),
     portal_type=portal.getPortalEventTypeList(),
     strict_follow_up_uid=context.getUid(),
     simulation_state=('started', 'stopped', 'delivered', ),
