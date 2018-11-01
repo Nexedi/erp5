@@ -24,6 +24,7 @@ def getSupportRequestInfo(event):
 
 data_list = []
 for brain in portal.portal_simulation.getMovementHistoryList(
+    security_query=portal.portal_catalog.getSecurityQuery(),
     portal_type=portal.getPortalEventTypeList(),
     only_accountable=False,
     follow_up_portal_type='Support Request',

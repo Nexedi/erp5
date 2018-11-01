@@ -419,6 +419,25 @@ class TestSupportRequestRSS(SupportRequestTestCase):
         basic='%s:%s' % (self.user.erp5_login.getReference(), self.user_password))
     self._checkRSS(response)
 
+  def test_RSS_with_non_accessible_events(self):
+    non_visible_event = self.portal.event_module.newContent(
+        portal_type='Web Message',
+        source_value=self.user,
+        follow_up_value=self.support_request,
+        resource_value=self.portal.service_module.erp5_officejs_support_request_ui_test_service_001,
+        text_content="<p>This is a <em>secret event you cannot see</b></p>",
+        start_date=DateTime(2001, 1, 1),
+    )
+    non_visible_event.start()
+    non_visible_event.stop()
+    non_visible_event.manage_permission('View', ['Manager'], 0)
+    self.tic()
+
+    response = self.publish(
+        "%s/support_request_module/SupportRequestModule_viewLastSupportRequestListAsRss" % self.getWebSite().getPath(),
+        basic='%s:%s' % (self.user.erp5_login.getReference(), self.user_password))
+    self._checkRSS(response)
+
   def test_RSS_with_token(self):
     response = self.publish(
         "%s/support_request_module/SupportRequestModule_generateRSSLinkAsJson" % self.getWebSite().getPath(),
