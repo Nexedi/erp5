@@ -183,6 +183,7 @@ class TestSessionTool(ERP5TypeTestCase):
                                    sequence_list=None, **kw):
     session = self.portal.portal_sessions[self.session_id]
     session.clear()
+    # get / set
     session['foo'] = 'Bar'
     self.assertTrue('foo' in session)
     self.assertEqual('Bar', session['foo'])
@@ -190,6 +191,26 @@ class TestSessionTool(ERP5TypeTestCase):
     self.assertFalse('bar' in session)
     self.assertEqual('Default', session.get('bar', 'Default'))
     self.assertRaises(KeyError, session.__getitem__, 'bar')
+
+    # pop
+    session['pop'] = 'Bar'
+    self.assertEqual('Bar', session.pop('pop'))
+    self.assertRaises(KeyError, session.__getitem__, 'pop')
+    self.assertEqual('Default', session.pop('pop', 'Default'))
+
+    # setdefault
+    self.assertEqual('Default', session.setdefault('setdefault', 'Default'))
+    self.assertEqual('Default', session.setdefault('setdefault', 'Default was set'))
+
+    # clear / items
+    session.clear()
+    self.assertEqual([], list(session.items()))
+
+    # popitem
+    session['popitem'] = 'Bar'
+    self.assertEqual(('popitem', 'Bar'), session.popitem())
+    self.assertRaises(KeyError, session.popitem)
+
 
   def stepTestSessionGetattr(self, sequence=None, \
                              sequence_list=None, **kw):

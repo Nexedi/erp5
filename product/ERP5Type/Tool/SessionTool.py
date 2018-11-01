@@ -135,16 +135,19 @@ class DistributedSession(Session):
     self._updateStorage()
 
   def setdefault(self, key, failobj=None):
-    Session.setdefault(self, key, failobj)
+    r = Session.setdefault(self, key, failobj)
     self._updateStorage()
+    return r
 
-  def  pop(self, key, *args):
-    Session.pop(self, key, *args)
+  def pop(self, key, *args):
+    r = Session.pop(self, key, *args)
     self._updateStorage()
+    return r
 
   def popitem(self):
-    Session.popitem(self)
+    r = Session.popitem(self)
     self._updateStorage()
+    return r
 
 
 class SessionTool(BaseTool):
