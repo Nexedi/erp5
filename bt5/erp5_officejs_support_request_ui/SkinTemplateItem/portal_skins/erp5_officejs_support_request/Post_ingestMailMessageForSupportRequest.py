@@ -25,7 +25,7 @@ if not resource:
   resource = portal.portal_preferences.getPreferredEventResource()
 assert resource, "No resource configured for event"
 
-source_value = portal.portal_membership.getAuthenticatedMember().getUserValue()
+source_value = portal.Base_getUserValueByUserId(context.getOwnerInfo()['id'])
 if source_value is None:
   # try harder to get a source for non-person users.
   source_value = support_request.getSourceSectionValue()
