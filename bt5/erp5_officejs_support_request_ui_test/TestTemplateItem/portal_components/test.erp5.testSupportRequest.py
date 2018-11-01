@@ -357,6 +357,27 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
         attachment_name=None,)],
       ignoreKeys(json.loads(support_request.SupportRequest_getCommentPostListAsJson()), 'message_id'))
 
+  def test_support_request_comment_only_include_visible_events(self):
+    """It should be possible to have a Support Request user can view but
+    with some events user cannot view. In this case, they should be filtered
+    out.
+    """
+    support_request = self.portal.support_request_module.erp5_officejs_support_request_ui_test_support_reuqest_001
+    non_visible_event = self.portal.event_module.newContent(
+        portal_type='Web Message',
+        source_value=self.user,
+        follow_up_value=support_request,
+        resource_value=self.portal.service_module.erp5_officejs_support_request_ui_test_service_001,
+        text_content="<b>Secret</b> message",
+        start_date=DateTime(2001, 1, 1),
+    )
+    non_visible_event.start()
+    non_visible_event.stop()
+    non_visible_event.manage_permission('View', ['Manager'], 0)
+
+    self.tic()
+    self.assertEqual([], json.loads(support_request.SupportRequest_getCommentPostListAsJson()))
+
 
 class TestSupportRequestRSS(SupportRequestTestCase):
   # XXX token PAS plugin is not set up automatically when installing erp5_access_token
