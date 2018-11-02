@@ -1,18 +1,9 @@
 /*jslint indent: 2, maxerr: 3, nomen: true, maxlen: 80 */
-/*global window, rJS, RSVP, URI, Handlebars,
+/*global window, rJS, RSVP, URI,
  SimpleQuery, ComplexQuery, Query, QueryFactory, document*/
 (function (window, rJS, RSVP, URI, document,
-  SimpleQuery, ComplexQuery, Query, QueryFactory, Handlebars) {
+  SimpleQuery, ComplexQuery, Query, QueryFactory) {
   "use strict";
-
-
-  var gadget_klass = rJS(window),
-
-    relation_listview_source = gadget_klass.__template_element
-                         .getElementById("relation-listview-template")
-                         .innerHTML,
-    relation_listview_template = Handlebars.compile(relation_listview_source);
-
 
   function displayNonEditableLink(gadget) {
     return gadget.getUrlFor({
@@ -129,7 +120,7 @@
       });
   }
 
-  gadget_klass
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // acquired methods
     /////////////////////////////////////////////////////////////////
@@ -139,7 +130,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getFormContent", "getFormContent")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     // .declareAcquiredMethod("addRelationInput", "addRelationInput")
 
     /////////////////////////////////////////////////////////////////
@@ -316,57 +307,92 @@
               return RSVP.delay(200);
             })
             .push(function () {
-              return gadget.jio_allDocs({
-                query: Query.objectToSearchText(new ComplexQuery({
-                  operator: "AND",
-                  query_list: [
-                    QueryFactory.create(
-                      new URI(gadget.state.query).query(true).query
-                    ),
-                    new SimpleQuery({
-                      key: gadget.state.catalog_index,
-                      value: value_text
-                    })
-                  ]
-                })),
-                limit: [0, 10],
-                select_list: [gadget.state.catalog_index, "uid"],
-                sort_on: JSON.parse(gadget.state.sort_list_json)
-              });
+              return RSVP.all([
+                gadget.jio_allDocs({
+                  query: Query.objectToSearchText(new ComplexQuery({
+                    operator: "AND",
+                    query_list: [
+                      QueryFactory.create(
+                        new URI(gadget.state.query).query(true).query
+                      ),
+                      new SimpleQuery({
+                        key: gadget.state.catalog_index,
+                        value: value_text
+                      })
+                    ]
+                  })),
+                  limit: [0, 10],
+                  select_list: [gadget.state.catalog_index, "uid"],
+                  sort_on: JSON.parse(gadget.state.sort_list_json)
+                }),
+                gadget.getTranslationList([
+                  'Create New',
+                  'Explore the Search Result List'
+                ])
+              ]);
             })
-            .push(function (result) {
-              var list = [],
-                i,
-                type = [],
-                portal_types,
-                translated_portal_types;
+            .push(function (result_list) {
+              var i,
+                row,
+                portal_type_list,
+                translated_portal_type_list,
+                fragment_element = document.createDocumentFragment(),
+                li_element;
+
+              plane.className = JUMP_UNKNOWN_CLASS_STR;
+
+              // Documents
+// <li class="ui-icon-sign-in ui-btn-icon-right" data-relative-url="{{id}}"
+//     data-uid="{{uid}}">{{value}}</li>
+              for (i = 0; i < result_list[0].data.rows.length; i += 1) {
+                row = result_list[0].data.rows[i];
+                li_element = document.createElement('li');
+                li_element.setAttribute('class',
+                                        'ui-icon-sign-in ui-btn-icon-right');
+                li_element.setAttribute('data-relative-url', row.id);
+                li_element.setAttribute('data-uid', row.value.uid);
+                li_element.textContent = row.value[gadget.state.catalog_index];
+                fragment_element.appendChild(li_element);
+              }
+
+              // New documents
+//  <li class="ui-icon-plus ui-btn-icon-right" data-i18n="Create New"
+//      data-create-object="{{value}}" name="{{name}}">Create New
+//    <span> {{name}}: {{../value}}</span></li>
               if (gadget.state.allow_creation) {
-                portal_types = JSON.parse(gadget.state.portal_types);
-                translated_portal_types =
+                portal_type_list = JSON.parse(gadget.state.portal_types);
+                translated_portal_type_list =
                   JSON.parse(gadget.state.translated_portal_types);
-                for (i = 0; i < portal_types.length; i += 1) {
-                  type.push({
-                    name: translated_portal_types[i],
-                    value: portal_types[i]
-                  });
+                for (i = 0; i < portal_type_list.length; i += 1) {
+                  li_element = document.createElement('li');
+                  li_element.setAttribute('class',
+                                          'ui-icon-plus ui-btn-icon-right');
+                  li_element.setAttribute('data-create-object',
+                                          portal_type_list[i]);
+                  li_element.setAttribute('name',
+                                          translated_portal_type_list[i]);
+                  li_element.textContent =
+                    result_list[1][0] + ' ' + translated_portal_type_list[i] +
+                    ': ' + value_text;
+                  fragment_element.appendChild(li_element);
                 }
               }
-              for (i = 0; i < result.data.rows.length; i += 1) {
-                list.push({
-                  id: result.data.rows[i].id,
-                  value: result.data.rows[i].value[gadget.state.catalog_index],
-                  uid: result.data.rows[i].value.uid
-                });
+
+              // Explore
+// <li class="ui-icon-search ui-btn-icon-right" data-explore=true
+//     data-i18n="Explore the Search Result List" ></li>
+              li_element = document.createElement('li');
+              li_element.setAttribute('class',
+                                      'ui-icon-search ui-btn-icon-right');
+              li_element.setAttribute('data-explore',
+                                      true);
+              li_element.textContent = result_list[1][1];
+              fragment_element.appendChild(li_element);
+
+              while (ul.firstChild) {
+                ul.removeChild(ul.firstChild);
               }
-              plane.className = JUMP_UNKNOWN_CLASS_STR;
-              return gadget.translateHtml(relation_listview_template({
-                list: list,
-                type: type,
-                value: value_text
-              }));
-            })
-            .push(function (html) {
-              ul.innerHTML = html;
+              ul.appendChild(fragment_element);
             });
         });
 
@@ -510,4 +536,4 @@
     }, true, false);
 
 }(window, rJS, RSVP, URI, document,
-  SimpleQuery, ComplexQuery, Query, QueryFactory, Handlebars));
+  SimpleQuery, ComplexQuery, Query, QueryFactory));
