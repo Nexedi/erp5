@@ -1,23 +1,6 @@
 from Products.PythonScripts.standard import Object
 line_list = []
-request = context.REQUEST
 portal = context.getPortalObject()
-
-# XXX use a larger limit
-saved_selection_params = context.getPortalObject().portal_selections.getSelectionParamsFor(module_selection_name)
-selection_params = saved_selection_params.copy()
-selection_params['limit'] = 10000
-context.getPortalObject().portal_selections.setSelectionParamsFor(module_selection_name, selection_params)
-
-try:
-  checked_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(module_selection_name)
-  if checked_uid_list:
-    getObject = portal.portal_catalog.getObject
-    delivery_list = [getObject(uid) for uid in checked_uid_list]
-  else:
-    delivery_list = portal.portal_selections.callSelectionFor(module_selection_name, context=context)
-finally:
-  context.getPortalObject().portal_selections.setSelectionParamsFor(module_selection_name, saved_selection_params)
 
 account_title_cache = {}
 def getAccountTitle(relative_url):
@@ -33,7 +16,7 @@ def getAccountTitle(relative_url):
     return title
 
 
-for delivery in delivery_list:
+for delivery in portal.portal_catalog(uid=uid_list or -1):
   delivery = delivery.getObject()
   for movement in delivery.getMovementList(portal_type=portal_type):
     line_list.append(Object(
