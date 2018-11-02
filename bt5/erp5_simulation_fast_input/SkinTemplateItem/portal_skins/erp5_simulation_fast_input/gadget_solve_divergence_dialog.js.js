@@ -103,7 +103,7 @@ function loopEventListener(target, type, useCapture, callback) {
             return jIO.util.ajax(
               {
                 "type": "POST",
-                "url":  basedir + 'Delivery_getSolveDivergenceDialogParameterFormBox?solver=' + event.target.value + "&solver_decision_uid=" + solver_decision_uid,
+                "url":  basedir + 'Delivery_getSolveDivergenceDialogParameterFormBox?solver=' + event.target.value + "&solver_decision_uid=" + solver_decision_uid + "&render_by_gadget=1",
                 "xhrFields": {
                   withCredentials: true
                 }

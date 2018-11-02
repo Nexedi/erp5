@@ -94,6 +94,7 @@
                         <string>listbox_comment</string>
                         <string>listbox_divergence</string>
                         <string>listbox_solver_configuration</string>
+                        <string>your_dummy_validator_field_for_gadget</string>
                       </list>
                     </value>
                 </item>
@@ -102,6 +103,7 @@
                     <value>
                       <list>
                         <string>your_workflow_action</string>
+                        <string>your_dummy_html</string>
                       </list>
                     </value>
                 </item>

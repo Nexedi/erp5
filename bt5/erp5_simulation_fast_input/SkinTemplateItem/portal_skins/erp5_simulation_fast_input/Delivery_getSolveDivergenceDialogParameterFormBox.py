@@ -17,6 +17,6 @@ if solver:
   solver_decision.setSolverValue(solver_value)
 else:
   solver_decision.setSolverList([])
+  return ''
 
-#return solver_decision.Delivery_viewSolveDivergenceDialog.listbox_solver_configuration.widget.render(
-return solver_decision.SolverDecision_renderSolverConfiguration(context)
+return solver_decision.SolverDecision_render(context)
