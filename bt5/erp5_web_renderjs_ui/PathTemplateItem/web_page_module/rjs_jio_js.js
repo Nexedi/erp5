@@ -7346,21 +7346,8 @@ return new Parser;
    * #crossLink "Query/toString:method"
    */
   ComplexQuery.prototype.toString = function () {
-    var str_list = [], this_operator = this.operator;
-    if (this.operator === "NOT") {
-      str_list.push("NOT (");
-      str_list.push(this.query_list[0].toString());
-      str_list.push(")");
-      return str_list.join(" ");
-    }
-    this.query_list.forEach(function (query) {
-      str_list.push("(");
-      str_list.push(query.toString());
-      str_list.push(")");
-      str_list.push(this_operator);
-    });
-    str_list.length -= 1;
-    return str_list.join(" ");
+    /*global objectToSearchText */
+    return objectToSearchText(this.toJSON());
   };
 
   /**
@@ -7459,20 +7446,58 @@ return new Parser;
   };
 
   function objectToSearchText(query) {
-    var str_list = [];
-    if (query.type === "complex") {
-      str_list.push("(");
-      (query.query_list || []).forEach(function (sub_query) {
-        str_list.push(objectToSearchText(sub_query));
-        str_list.push(query.operator);
-      });
-      str_list.length -= 1;
-      str_list.push(")");
-      return str_list.join(" ");
-    }
+    var i = 0,
+      query_list = null,
+      string_list = null,
+      operator = "",
+      common_key = "";
     if (query.type === "simple") {
       return (query.key ? query.key + ": " : "") +
         (query.operator || "") + ' "' + query.value + '"';
+    }
+    if (query.type === "complex") {
+      query_list = query.query_list;
+      if (!query_list || query_list.length === 0) {
+        return "";
+      }
+      operator = query.operator || "";
+      if (operator === "NOT") {
+        // fallback to AND operator if several queries are given
+        // i.e. `NOT ( a AND b )`
+        return "NOT ( " + objectToSearchText(
+          {type: "complex", operator: "AND", query_list: query_list}
+        ) + " )";
+      }
+      if (query_list.length === 1) {
+        return objectToSearchText(query_list[0]);
+      }
+      common_key = query_list[i].key;
+      for (i = 1; i < query_list.length; i += 1) {
+        if (query_list[i].type !== "simple" ||
+            query_list[i].key !== common_key) {
+          break;
+        }
+      }
+      string_list = [];
+      if (i === query_list.length) {
+        for (i = 0; i < query_list.length; i += 1) {
+          string_list.push(
+            (query_list[i].operator || "") +
+              ' "' + query_list[i].value + '"'
+          );
+        }
+      } else {
+        common_key = "";
+        for (i = 0; i < query_list.length; i += 1) {
+          string_list.push(objectToSearchText(query_list[i]));
+        }
+      }
+      if (string_list.length > 1) {
+        return (common_key ? common_key + ": " : "") +
+          "( " + string_list.join(" " + operator + " ") + " )";
+      }
+      return (common_key ? common_key + ": " : "") +
+        string_list[0];
     }
     throw new TypeError("This object is not a query");
   }
@@ -7641,8 +7666,7 @@ return new Parser;
    * #crossLink "Query/toString:method"
    */
   SimpleQuery.prototype.toString = function () {
-    return (this.key ? this.key + ":" : "") +
-      (this.operator ? " " + this.operator : "") + ' "' + this.value + '"';
+    return objectToSearchText(this.toJSON());
   };
 
   /**
