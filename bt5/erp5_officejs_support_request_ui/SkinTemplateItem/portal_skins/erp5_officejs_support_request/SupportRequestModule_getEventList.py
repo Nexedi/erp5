@@ -4,16 +4,24 @@ from Products.PythonScripts.standard import Object
 portal = context.getPortalObject()
 document_type_list = portal.getPortalDocumentTypeList()
 
+# XXX jerome: check this apparently this is 1000 for my user jerome
+limit = min(limit, 30)
+
 def makeLine(kw):
   return Object(**kw)
 
 getSupportRequest_memo = {}
 def getSupportRequestInfo(event):
   follow_up = event.getFollowUp()
+  __traceback_info__ = (event, follow_up)
+  # XXX jerome: what if user cannot access the ticket ?
+  # is it really supposed to happen ?
   try:
     return getSupportRequest_memo[follow_up]
   except KeyError:
-    support_request = portal.restrictedTraverse(follow_up)
+    support_request = portal.restrictedTraverse(follow_up, None)
+    if support_request is None:
+      return '', '', '' # XXX
     getSupportRequest_memo[follow_up] = (
       support_request.getTitle(),
       support_request.getResourceTranslatedTitle() or '',
@@ -51,7 +59,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(
         'thumbnail': ( # XXX this is not really a thumbnail, but it's what RSS style uses for <enclosure/>
                        # Also, with this `thumbnail` it will look good for image, and most of the time
                        # users attach a screenshot of their problem.
-            event.getDefaultAggregate(portal_type=document_type_list)
+            event.getDefaultAggregate(portal_type=document_type_list, checked_permission="View")
             and event.getDefaultAggregateValue(portal_type=document_type_list).File_getDownloadUrl()
             or None)
         }
