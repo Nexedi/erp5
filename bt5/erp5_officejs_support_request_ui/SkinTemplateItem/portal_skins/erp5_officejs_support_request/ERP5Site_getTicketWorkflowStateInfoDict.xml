@@ -50,11 +50,19 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>list_lines=30, **kw</string> </value>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SupportRequestModule_getEventList</string> </value>
+            <value> <string>ERP5Site_getTicketWorkflowStateInfoDict</string> </value>
         </item>
       </dictionary>
     </pickle>
