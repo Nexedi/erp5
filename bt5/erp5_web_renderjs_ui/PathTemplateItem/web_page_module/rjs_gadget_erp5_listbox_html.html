@@ -5,9 +5,16 @@
      data-i18n=No records
      data-i18n=Records
      data-i18n=Select
+     data-i18n=Configure
+     data-i18n=Sort
      data-i18n=Include
      data-i18n=Exclude
      data-i18n=sample of
+     data-i18n=Jump
+     data-i18n=Invalid Search Criteria
+     data-i18n=Reset
+     data-i18n=Previous
+     data-i18n=Next
    -->
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -20,164 +27,9 @@
     <script src="rsvp.js" type="text/javascript"></script>
     <script src="renderjs.js" type="text/javascript"></script>
     <script src="jiodev.js" type="text/javascript"></script>
-    <script src="handlebars.js" type="text/javascript"></script>
 
     <!-- custom script -->
     <script src="gadget_erp5_field_listbox.js" type="text/javascript"></script>
-
-    <script id="listbox-thead-template" type="text/x-handlebars-template">
-      <table>
-       <thead>
-         <tr>
-           {{#if show_anchor}}
-             <th data-i18n="Jump">Jump</th>
-           {{/if}}
-           {{#each head_value}}
-              {{#if ../show_line_selector}}
-                <th class="{{class_value}}">{{text}}</th>
-              {{else}}
-                {{#if sort_link}}
-                <th class="{{class_value}}"><a href="{{sort_link}}">{{text}}</a></th>
-                {{else}}
-                <th class="{{class_value}}">{{text}}</th>
-                {{/if}}
-              {{/if}}
-           {{/each}}
-           {{#if line_icon}}
-             <th></th>
-           {{/if}}
-         </tr>
-       </thead>
-      </table>
-    </script>
-
-    <script id="listbox-tbody-template" type="text/x-handlebars-template">
-       <table>
-       <tbody>
-        {{#each row_list}}
-           <tr>
-             {{#if ../show_anchor}}
-                <th>
-                  <a class="ui-icon-carat-r ui-btn-icon-notext" href="{{jump}}"> </a>
-                </th>
-             {{/if}}
-           {{#each cell_list}}
-              <td>
-                {{#if ../../show_line_selector}}
-                  {{#if @first}}
-                    <input data-uid="{{../uid}}" type="checkbox" class="hide_element" id="listbox_line_{{../uid}}">
-                  {{/if}}
-                  {{#if type}}
-                    <label for="listbox_line_{{../uid}}" class="editable_div" data-column="{{column}}" data-line="{{line}}"></label>
-                  {{else}}
-                    <label for="listbox_line_{{../uid}}">{{default}}</label>
-                  {{/if}}
-
-                {{else}}
-
-                  {{#if type}}
-                    {{#if editable}}
-                      <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
-                    {{else}}
-                      {{#if href}}
-                        <a href="{{href}}">
-                          <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
-                        </a>
-                      {{else}}
-                        <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
-                      {{/if}}
-                    {{/if}}
-                  {{else}}
-                    {{#if href}}
-                      <a href="{{href}}">{{default}}</a>
-                    {{else}}
-                      <p>{{default}}</p>
-                    {{/if}}
-                  {{/if}}
-
-                {{/if}}
-              </td>
-           {{/each}}
-           {{#if line_icon}}
-             <th>
-               <a href ="{{jump}}" class="ui-btn-icon-right ui-icon-sign-in"></a>
-             </th>
-            {{/if}}
-         </tr>
-        {{/each}}
-       </tbody>
-      </table>
-    </script>
-
-    <script id="listbox-tfoot-template" type="text/x-handlebars-template">
-      <table>
-       <tfoot>
-       {{#each row_list}}
-         <tr>
-           {{#if ../show_anchor}}
-             <td>Total</td>
-           {{/if}}
-           {{#each cell_list}}
-           <td>
-             {{#if type}}
-               <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
-             {{else}}
-               {{#if default}}
-                 {{default}}
-               {{else}}
-                 {{#unless ../../show_anchor }}
-                   {{#if @first}}
-                     Total
-                   {{/if}}
-                 {{/unless}}
-               {{/if}}
-             {{/if}}
-           </td>
-           {{/each}}
-         </tr>
-       {{/each}}
-       </tfoot>
-      </table>
-    </script>
-
-    <script id="listbox-nav-template" type="text/x-handlebars-template">
-      <a class="{{previous_classname}}" data-i18n="Previous" href="{{previous_url}}">Previous</a>
-      <a class="{{next_classname}}" data-i18n="Next" href="{{next_url}}">Next</a>
-      <span class="ui-disabled">{{record}}</span>
-    </script>
-
-    <script id="listbox-template" type="text/x-handlebars-template">
-      <div class="ui-table-header ui-header">
-        <h1 data-i18n="{{title}}">{{title}}<span> <span class="listboxloader ui-icon-spinner ui-btn-icon-left"></span></span></h1>
-          {{#if show_line_selector}}
-            <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}">Include</button>
-            <button data-rel="hide" data-i18n="Exclude" name="ExcludeRows" type="button" class="ui-icon-low-vision ui-btn-icon-left {{hide_class}}">Exclude</button>
-          {{else}}
-            <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}">Select</button>
-            <button {{disabled}} data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="ui-icon-wrench ui-btn-icon-left {{configure_class}}">Configure</button>
-            <button {{disabled}} data-rel="Sort" data-i18n="Sort" name="Sort" type="button" class="ui-icon-sort-amount-desc ui-btn-icon-left {{sort_class}}">Sort</button>
-          {{/if}}
-
-      </div>
-      <table>
-        <thead class="thead"></thead>
-        <tbody></tbody>
-        <tfoot></tfoot>
-      </table>
-      <nav></nav>
-    </div>
-  </script>
-
-
-  <script id="error-message-template" type="text/x-handlebars-template">
-    <div>
-		   <a href="{{reset_url}}">
-		     <span class='ui-info-error' data-i18n="Invalid Search Criteria">Invalid Search Criteria</span>
-		     <span>-</span>
-         <span data-i18n="Reset">Reset</span>
-       </a>
-    </div>
-  </script>
 
   </head>
   <body>
