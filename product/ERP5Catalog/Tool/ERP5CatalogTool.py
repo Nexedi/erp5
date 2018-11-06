@@ -184,15 +184,16 @@ class ERP5CatalogTool(BaseTool, CMFCore_CatalogTool):
           **kw
         )
 
+    """
     def __call__(self, REQUEST=None, **kw):
-      """
       Override function to display the default view if REQUEST is present,
       otherwise make query using searchResults.
-      """
+
       if REQUEST is not None:
         return self.view()
 
       return self.searchResults(**kw)
+    """
 
     def index_html(self):
       """
