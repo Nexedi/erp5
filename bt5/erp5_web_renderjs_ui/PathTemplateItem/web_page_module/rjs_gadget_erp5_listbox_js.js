@@ -21,10 +21,6 @@
                          .innerHTML,
     listbox_nav_template = Handlebars.compile(listbox_nav_source),
 
-    error_message_source = gadget_klass.__template_element
-                         .getElementById("error-message-template")
-                         .innerHTML,
-    error_message_template = Handlebars.compile(error_message_source),
     variable = {},
     loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
     disabled_class = 'ui-disabled';
@@ -320,18 +316,48 @@
           .push(function () {
             var options = {extended_search: undefined};
             options[sort_key] = undefined;
-            return gadget.getUrlFor({
-              command: 'store_and_change',
-              options: options
-            });
+            return RSVP.all([
+              gadget.getUrlFor({
+                command: 'store_and_change',
+                options: options
+              }),
+              gadget.getTranslationList(['Invalid Search Criteria', 'Reset'])
+            ]);
           })
-          .push(function (url) {
-            return gadget.translateHtml(error_message_template({
-              reset_url: url
-            }));
-          })
-          .push(function (html) {
-            gadget.element.querySelector(".document_table").innerHTML = html;
+          .push(function (result_list) {
+/*
+<div>
+   <a href="{{reset_url}}">
+     <span class='ui-info-error' data-i18n="Invalid Search Criteria">Invalid Search Criteria</span>
+     <span>-</span>
+     <span data-i18n="Reset">Reset</span>
+   </a>
+</div>
+*/
+            var container = gadget.element.querySelector(".document_table"),
+              div_element = document.createElement('div'),
+              a_element = document.createElement('a'),
+              span_element;
+            a_element.href = result_list[0];
+
+            span_element = document.createElement('span');
+            span_element.setAttribute('class', 'ui-info-error');
+            span_element.textContent = result_list[1][0];
+            a_element.appendChild(span_element);
+
+            span_element = document.createElement('span');
+            span_element.textContent = '-';
+            a_element.appendChild(span_element);
+
+            span_element = document.createElement('span');
+            span_element.textContent = result_list[1][1];
+            a_element.appendChild(span_element);
+
+            div_element.appendChild(a_element);
+            while (container.firstChild) {
+              container.removeChild(container.firstChild);
+            }
+            container.appendChild(div_element);
           });
       }
 
