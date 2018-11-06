@@ -188,14 +188,11 @@
       if (!variable.translated_records) {
         queue
           .push(function () {
-            return RSVP.all([
-              gadget.translate('Records'),
-              gadget.translate('No records')
-            ]);
+            return gadget.getTranslationList('Records', 'No records');
           })
-          .push(function (results) {
-            variable.translated_records = results[0];
-            variable.translated_no_record = results[1];
+          .push(function (result_list) {
+            variable.translated_records = result_list[0];
+            variable.translated_no_record = result_list[1];
           });
       }
       queue
