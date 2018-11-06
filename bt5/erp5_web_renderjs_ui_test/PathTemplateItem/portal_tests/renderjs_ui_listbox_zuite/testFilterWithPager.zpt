@@ -87,7 +87,7 @@
   <td></td>
 </tr>
 
-<tal:block tal:define="parsed_query python: '( id:&nbsp; &#34;0&#34; OR id:&nbsp; &#34;1&#34; OR id:&nbsp; &#34;2&#34; OR id:&nbsp; &#34;3&#34; )';
+<tal:block tal:define="parsed_query python: 'id: (&nbsp; &#34;0&#34; OR&nbsp; &#34;1&#34; OR&nbsp; &#34;2&#34; OR&nbsp; &#34;3&#34; )';
                        search_query python: ''">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
 </tal:block>
