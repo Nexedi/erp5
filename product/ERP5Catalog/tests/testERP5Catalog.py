@@ -3811,6 +3811,18 @@ VALUES
       finally:
         catalog.setSqlCatalogObjectListList(catalog_method_list)
 
+  def test_publish_catalog(self):
+    """When catalog is published by zope, it does not issue a catalog search but
+    renders the default view.
+    """
+    ret = self.publish(
+        self.portal.portal_catalog.getPath(),
+        basic='ERP5TypeTestCase:')
+    self.assertEqual(httplib.OK, ret.getStatus())
+    # check if we did not just publish the result of `str(portal_catalog.__call__())`,
+    # but a proper page
+    self.assertIn('<title>Catalog Tool - portal_catalog', ret.getBody())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
