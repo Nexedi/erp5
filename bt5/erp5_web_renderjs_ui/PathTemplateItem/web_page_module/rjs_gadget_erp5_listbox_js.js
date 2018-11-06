@@ -5,10 +5,6 @@
   SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory) {
   "use strict";
   var gadget_klass = rJS(window),
-    listbox_thead_source = gadget_klass.__template_element
-                         .getElementById("listbox-thead-template")
-                         .innerHTML,
-    listbox_thead_template = Handlebars.compile(listbox_thead_source),
 
     listbox_tbody_source = gadget_klass.__template_element
                          .getElementById("listbox-tbody-template")
@@ -24,11 +20,6 @@
                          .getElementById("listbox-nav-template")
                          .innerHTML,
     listbox_nav_template = Handlebars.compile(listbox_nav_source),
-
-    listbox_source = gadget_klass.__template_element
-                         .getElementById("listbox-template")
-                         .innerHTML,
-    listbox_template = Handlebars.compile(listbox_source),
 
     error_message_source = gadget_klass.__template_element
                          .getElementById("error-message-template")
@@ -145,6 +136,7 @@
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
 
     //////////////////////////////////////////////
     // initialize the gadget content
@@ -307,7 +299,7 @@
         sort_key = gadget.state.key + "_sort_list:json",
         sort_list,
         column_list,
-        sort_column_list,
+        sortable_column_list,
         i,
         j,
         result_queue = new RSVP.Queue(),
@@ -370,81 +362,183 @@
         // display sorting arrow inside correct columns
         sort_list = JSON.parse(gadget.state.sort_list_json);  // current sort
         column_list = JSON.parse(gadget.state.column_list_json);  // shown columns
-        sort_column_list = JSON.parse(gadget.state.sort_column_list_json); // sortable columns
+        sortable_column_list = JSON.parse(gadget.state.sort_column_list_json); // sortable columns
 
         result_queue
           .push(function () {
-            // construct array of links for sortable columns, undefined otherwise
-            return RSVP.all(column_list.map(function (column) {
+            var k,
+              column,
+              is_sortable,
+              current_sort,
+              options,
+              url_for_option_list = [],
+              is_sortable_list = [];
 
-              var is_sortable = sort_column_list.find(hasSameFirstItem(column)) !== undefined,
-                current_sort = sort_list.find(hasSameFirstItem(column)),
-                options = {};
+            for (k = 0; k < column_list.length; k += 1) {
+              column = column_list[k];
+              is_sortable = sortable_column_list.find(hasSameFirstItem(column)) !== undefined;
+              current_sort = sort_list.find(hasSameFirstItem(column));
 
+              is_sortable_list.push(is_sortable);
               if (is_sortable) {
+                options = {};
                 options[sort_key] = [[column[0], 'descending']];  // make it the only new sort (replace array instead of push)
                 if (current_sort !== undefined && current_sort[1] === 'descending') {
                   options[sort_key] = [[column[0], 'ascending']];
                 }
-                return gadget.getUrlFor({"command": 'store_and_change', "options": options});
+                url_for_option_list.push({"command": 'store_and_change', "options": options});
               }
-              return undefined;
-            }));
-          })
-          .push(function (column_sort_link_list) {
-            // here we obtain links for sorting by columns
-            // so we can construct array of header objects to be rendered in the header template
-            var hide_button_text,
-              hide_button_name,
-              head_value_list = column_list.map(function (column, index) {
-                var current_sort = sort_list.find(hasSameFirstItem(column)),
-                  class_value = "";
-
-                if (current_sort !== undefined) {
-                  if (current_sort[1] === 'ascending') {
-                    class_value = "ui-icon ui-icon-sort-amount-asc";
-                  }
-                  if (current_sort[1] === 'descending') {
-                    class_value = "ui-icon ui-icon-sort-amount-desc";
-                  }
-                }
-
-                return {
-                  "class_value": class_value,
-                  "sort_link": column_sort_link_list[index],
-                  "text": column[1]
-                };
-              });
-
-            if (gadget.state.show_line_selector) {
-              hide_button_text = 'Submit';
-              hide_button_name = 'SelectRows';
-            } else {
-              hide_button_text = 'Select';
-              hide_button_name = 'Hide';
             }
+
             return RSVP.all([
-              gadget.translateHtml(listbox_template({
-                hide_class: gadget.state.hide_class,
-                sort_class: gadget.state.sort_class,
-                configure_class: gadget.state.configure_class,
-                title: gadget.state.title,
-                hide_button_text: hide_button_text,
-                hide_button_name: hide_button_name,
-                disabled: gadget.state.disabled ? 'disabled' : '',
-                show_line_selector: gadget.state.show_line_selector
-              })),
-              gadget.translateHtml(listbox_thead_template({
-                head_value: head_value_list,
-                show_anchor: gadget.state.show_anchor,
-                line_icon: gadget.state.line_icon,
-                show_line_selector: gadget.state.show_line_selector
-              }))
+              gadget.getUrlForList(url_for_option_list),
+              is_sortable_list,
+              gadget.getTranslationList(['Jump', 'Include', 'Exclude',
+                                         'Select', 'Configure', 'Sort'])
             ]);
           })
           .push(function (result_list) {
-            gadget.element.querySelector(".document_table").innerHTML = result_list[0];
-            gadget.element.querySelector(".thead").innerHTML = result_list[1];
+            var container = gadget.element.querySelector(".document_table"),
+              url_for_list = result_list[0],
+              translation_list = result_list[2],
+              is_sortable_list = result_list[1],
+              k,
+              url_for_index = 0,
+              column,
+              current_sort,
+              fragment = document.createDocumentFragment(),
+              div_element = document.createElement('div'),
+              table_element = document.createElement('table'),
+              button_element,
+              h1_element = document.createElement('h1'),
+              span_element = document.createElement('span'),
+              tr_element,
+              th_element,
+              a_element;
+
+            div_element.setAttribute('class', 'ui-table-header ui-header');
+            // For an unknown reason, the title used to be translated previously,
+            // which is unexpected, as the value can't be hardcoded in the gadget
+            // <h1>{{title}} <span class="listboxloader ui-icon-spinner ui-btn-icon-left"></span></h1>
+            h1_element.textContent = gadget.state.title + ' ';
+            span_element.setAttribute('class', 'listboxloader ui-icon-spinner ui-btn-icon-left');
+            h1_element.appendChild(span_element);
+            div_element.appendChild(h1_element);
+
+            if (gadget.state.show_line_selector) {
+
+              // Add include button
+              // <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}"></button>
+              button_element = document.createElement('button');
+              button_element.setAttribute('data-rel', 'hide');
+              button_element.setAttribute('name', 'IncludeRows');
+              button_element.type = 'button';
+              button_element.setAttribute('class', 'ui-icon-eye ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.textContent = translation_list[1];
+              div_element.appendChild(button_element);
+
+              // Add exclude button
+              // <button data-rel="hide" data-i18n="Exclude" name="ExcludeRows" type="button" class="ui-icon-low-vision ui-btn-icon-left {{hide_class}}"></button>
+              button_element = document.createElement('button');
+              button_element.setAttribute('data-rel', 'hide');
+              button_element.setAttribute('name', 'ExcludeRows');
+              button_element.type = 'button';
+              button_element.setAttribute('class', 'ui-icon-low-vision ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.textContent = translation_list[2];
+              div_element.appendChild(button_element);
+            } else {
+
+              // Add Select button
+              // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
+              button_element = document.createElement('button');
+              button_element.disabled = gadget.state.disabled;
+              button_element.setAttribute('data-rel', 'hide');
+              button_element.setAttribute('name', 'Hide');
+              button_element.type = 'button';
+              button_element.setAttribute('class', 'ui-icon-check-square-o ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.textContent = translation_list[3];
+              div_element.appendChild(button_element);
+
+              // Add Configure button
+              // <button {{disabled}} data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="ui-icon-wrench ui-btn-icon-left {{configure_class}}"></button>
+              button_element = document.createElement('button');
+              button_element.disabled = gadget.state.disabled;
+              button_element.setAttribute('data-rel', 'configure_columns');
+              button_element.setAttribute('name', 'Configure');
+              button_element.type = 'button';
+              button_element.setAttribute('class', 'ui-icon-wrench ui-btn-icon-left ' + gadget.state.configure_class);
+              button_element.textContent = translation_list[4];
+              div_element.appendChild(button_element);
+
+              // Add Sort button
+              // <button {{disabled}} data-rel="Sort" data-i18n="Sort" name="Sort" type="button" class="ui-icon-sort-amount-desc ui-btn-icon-left {{sort_class}}"></button>
+              button_element = document.createElement('button');
+              button_element.disabled = gadget.state.disabled;
+              button_element.setAttribute('data-rel', 'Sort');
+              button_element.setAttribute('name', 'Sort');
+              button_element.type = 'button';
+              button_element.setAttribute('class', 'ui-icon-sort-amount-desc ui-btn-icon-left ' + gadget.state.sort_class);
+              button_element.textContent = translation_list[5];
+              div_element.appendChild(button_element);
+            }
+            fragment.appendChild(div_element);
+
+            table_element.innerHTML = '<thead class="thead"><tr></tr></thead><tbody></tbody><tfoot></tfoot>';
+            tr_element = table_element.querySelector('tr');
+
+            if (gadget.state.show_anchor) {
+              th_element = document.createElement('th');
+              th_element.textContent = translation_list[0];
+              tr_element.appendChild(th_element);
+            }
+
+            for (k = 0; k < column_list.length; k += 1) {
+              column = column_list[k];
+              th_element = document.createElement('th');
+
+              current_sort = sort_list.find(hasSameFirstItem(column));
+              if (current_sort !== undefined) {
+                if (current_sort[1] === 'ascending') {
+                  th_element.setAttribute('class', "ui-icon ui-icon-sort-amount-asc");
+                } else if (current_sort[1] === 'descending') {
+                  th_element.setAttribute('class', "ui-icon ui-icon-sort-amount-desc");
+                }
+              }
+
+              if (gadget.state.show_line_selector) {
+                // <th class="{{class_value}}">{{text}}</th>
+                th_element.textContent = column[1];
+              } else {
+
+                if (is_sortable_list[k]) {
+                  // <th class="{{class_value}}"><a href="{{sort_link}}">{{text}}</a></th>
+                  a_element = document.createElement('a');
+                  a_element.textContent = column[1];
+                  a_element.href = url_for_list[url_for_index];
+                  th_element.appendChild(a_element);
+                  url_for_index += 1;
+                } else {
+                  // <th class="{{class_value}}">{{text}}</th>
+                  th_element.textContent = column[1];
+                }
+              }
+
+              tr_element.appendChild(th_element);
+            }
+
+            if (gadget.state.line_icon) {
+              th_element = document.createElement('th');
+              tr_element.appendChild(th_element);
+            }
+
+            fragment.appendChild(table_element);
+
+            fragment.appendChild(document.createElement('nav'));
+
+            while (container.firstChild) {
+              container.removeChild(container.firstChild);
+            }
+            container.appendChild(fragment);
           });
       }
 
