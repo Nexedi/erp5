@@ -1,19 +1,162 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
 /*global window, document, rJS, URI, RSVP,
-  SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory*/
+  SimpleQuery, ComplexQuery, Query, console, QueryFactory*/
 (function (window, document, rJS, URI, RSVP,
-  SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory) {
+  SimpleQuery, ComplexQuery, Query, console, QueryFactory) {
   "use strict";
-  var gadget_klass = rJS(window),
 
-    listbox_tbody_source = gadget_klass.__template_element
-                         .getElementById("listbox-tbody-template")
-                         .innerHTML,
-    listbox_tbody_template = Handlebars.compile(listbox_tbody_source),
-
-    variable = {},
+  var variable = {},
     loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
     disabled_class = 'ui-disabled';
+
+  function listbox_tbody_template(options) {
+/*
+       <tbody>
+        {{#each row_list}}
+           <tr>
+             {{#if ../show_anchor}}
+                <th>
+                  <a class="ui-icon-carat-r ui-btn-icon-notext" href="{{jump}}"> </a>
+                </th>
+             {{/if}}
+           {{#each cell_list}}
+              <td>
+                {{#if ../../show_line_selector}}
+                  {{#if @first}}
+                    <input data-uid="{{../uid}}" type="checkbox" class="hide_element" id="listbox_line_{{../uid}}">
+                  {{/if}}
+                  {{#if type}}
+                    <label for="listbox_line_{{../uid}}" class="editable_div" data-column="{{column}}" data-line="{{line}}"></label>
+                  {{else}}
+                    <label for="listbox_line_{{../uid}}">{{default}}</label>
+                  {{/if}}
+
+                {{else}}
+
+                  {{#if type}}
+                    {{#if editable}}
+                      <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
+                    {{else}}
+                      {{#if href}}
+                        <a href="{{href}}">
+                          <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
+                        </a>
+                      {{else}}
+                        <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
+                      {{/if}}
+                    {{/if}}
+                  {{else}}
+                    {{#if href}}
+                      <a href="{{href}}">{{default}}</a>
+                    {{else}}
+                      <p>{{default}}</p>
+                    {{/if}}
+                  {{/if}}
+
+                {{/if}}
+              </td>
+           {{/each}}
+           {{#if line_icon}}
+             <th>
+               <a href ="{{jump}}" class="ui-btn-icon-right ui-icon-sign-in"></a>
+             </th>
+            {{/if}}
+         </tr>
+        {{/each}}
+       </tbody>
+*/
+    var tbody_element = document.createElement('tbody'),
+      i,
+      j,
+      row,
+      cell,
+      tr_element,
+      td_element,
+      sub_element,
+      a_element;
+
+    for (i = 0; i < options.row_list.length; i += 1) {
+      tr_element = document.createElement('tr');
+      row = options.row_list[i];
+      if (options.show_anchor) {
+        td_element = document.createElement('td');
+        sub_element = document.createElement('a');
+        sub_element.setAttribute('class', 'ui-icon-carat-r ui-btn-icon-notext');
+        sub_element.href = row.jump;
+        sub_element.textContent = ' ';
+        tr_element.appendChild(td_element);
+      }
+
+      for (j = 0; j < row.cell_list.length; j += 1) {
+        cell = row.cell_list[j];
+        td_element = document.createElement('td');
+
+        if (options.show_line_selector) {
+          if (j === 0) {
+            // If first cell, show a checkbox to select the line
+            sub_element = document.createElement('input');
+            sub_element.setAttribute('data-uid', row.uid);
+            sub_element.setAttribute('type', 'checkbox');
+            sub_element.setAttribute('class', 'hide_element');
+            sub_element.setAttribute('id', 'listbox_line_' + row.uid);
+            td_element.appendChild(sub_element);
+          }
+
+          // Create a label, to update the checkbox when clicking the text
+          sub_element = document.createElement('label');
+          sub_element.setAttribute('for', 'listbox_line_' + row.uid);
+          if (cell.type) {
+            sub_element.setAttribute('class', 'editable_div');
+            sub_element.setAttribute('data-column', cell.column);
+            sub_element.setAttribute('data-line', cell.line);
+          } else {
+            sub_element.textContent = cell.default;
+          }
+          td_element.appendChild(sub_element);
+
+        } else {
+
+          if (cell.type) {
+            sub_element = document.createElement('div');
+            sub_element.setAttribute('class', 'editable_div');
+            sub_element.setAttribute('data-column', cell.column);
+            sub_element.setAttribute('data-line', cell.line);
+            if (cell.editable || !cell.href) {
+              td_element.appendChild(sub_element);
+            } else {
+              a_element = document.createElement('a');
+              a_element.href = cell.href;
+              a_element.appendChild(sub_element);
+              td_element.appendChild(a_element);
+            }
+
+          } else {
+            if (cell.href) {
+              sub_element = document.createElement('a');
+              sub_element.href = cell.href;
+            } else {
+              sub_element = document.createElement('p');
+            }
+            sub_element.textContent = cell.default;
+            td_element.appendChild(sub_element);
+          }
+        }
+
+        tr_element.appendChild(td_element);
+      }
+
+      if (options.line_icon) {
+        td_element = document.createElement('td');
+        sub_element = document.createElement('a');
+        sub_element.setAttribute('class', 'ui-btn-icon-right ui-icon-sign-in');
+        sub_element.href = row.jump;
+        tr_element.appendChild(td_element);
+      }
+
+      tbody_element.appendChild(tr_element);
+    }
+    return tbody_element.outerHTML;
+  }
 
   function listbox_tfoot_template(options) {
 /*
@@ -1181,4 +1324,4 @@
     });
 
 }(window, document, rJS, URI, RSVP,
-  SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory));
+  SimpleQuery, ComplexQuery, Query, console, QueryFactory));
