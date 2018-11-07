@@ -184,7 +184,7 @@
       if (!variable.translated_records) {
         queue
           .push(function () {
-            return gadget.getTranslationList('Records', 'No records');
+            return gadget.getTranslationList(['Records', 'No records']);
           })
           .push(function (result_list) {
             variable.translated_records = result_list[0];
