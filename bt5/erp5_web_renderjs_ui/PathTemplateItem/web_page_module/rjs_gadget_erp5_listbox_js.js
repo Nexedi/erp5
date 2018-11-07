@@ -16,11 +16,6 @@
                          .innerHTML,
     listbox_tfoot_template = Handlebars.compile(listbox_tfoot_source),
 
-    listbox_nav_source = gadget_klass.__template_element
-                         .getElementById("listbox-nav-template")
-                         .innerHTML,
-    listbox_nav_template = Handlebars.compile(listbox_nav_source),
-
     variable = {},
     loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
     disabled_class = 'ui-disabled';
@@ -125,13 +120,11 @@
     // acquired method
     //////////////////////////////////////////////
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
     .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
 
     //////////////////////////////////////////////
@@ -722,7 +715,7 @@
                   setNext();
                 }
                 return RSVP.all([
-                  gadget.translate('sample of'),
+                  gadget.getTranslationList(['sample of', 'Previous', 'Next']),
                   gadget.getUrlForList([
                     {command: 'change', options: prev_param},
                     {command: 'change', options: next_param}
@@ -730,13 +723,16 @@
                 ]);
               })
               .push(function (result_list) {
-                var sample_string = result_list[0],
+                var sample_string = result_list[0][0],
                   url_list = result_list[1],
                   record,
                   previous_url = url_list[0],
                   next_url = url_list[1],
                   previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child",
-                  next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";
+                  next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child",
+                  fragment = document.createDocumentFragment(),
+                  sub_element,
+                  nav_element = gadget.element.querySelector('nav');
 
                 if ((gadget.state.begin_from === 0) && (counter === 0)) {
                   record = variable.translated_no_record;
@@ -762,19 +758,33 @@
                 if (allDocs_result.data.rows.length <= lines) {
                   next_classname += " ui-disabled";
                 }
-                return gadget.translateHtml(
-                  listbox_nav_template({
-                    "previous_classname": previous_classname,
-                    "previous_url": previous_url,
-                    "record": record,
-                    "next_classname": next_classname,
-                    "next_url": next_url
-                  })
-                );
-              })
-              .push(function (listbox_nav_html) {
-                gadget.element.querySelector('nav').innerHTML = listbox_nav_html;
 
+// <a class="{{previous_classname}}" data-i18n="Previous" href="{{previous_url}}">Previous</a>
+// <a class="{{next_classname}}" data-i18n="Next" href="{{next_url}}">Next</a>
+// <span class="ui-disabled">{{record}}</span>
+                sub_element = document.createElement('a');
+                sub_element.setAttribute('class', previous_classname);
+                sub_element.href = previous_url;
+                sub_element.textContent = result_list[0][1];
+                fragment.appendChild(sub_element);
+
+                sub_element = document.createElement('a');
+                sub_element.setAttribute('class', next_classname);
+                sub_element.href = next_url;
+                sub_element.textContent = result_list[0][2];
+                fragment.appendChild(sub_element);
+
+                sub_element = document.createElement('span');
+                sub_element.setAttribute('class', 'ui-disabled');
+                sub_element.textContent = record;
+                fragment.appendChild(sub_element);
+
+                while (nav_element.firstChild) {
+                  nav_element.removeChild(nav_element.firstChild);
+                }
+                nav_element.appendChild(fragment);
+              })
+              .push(function () {
                 var result_sum = (gadget.state.allDocs_result.sum || {}).rows || [], // render summary footer if available
                   summary = result_sum.map(function (row, row_index) {
                     var row_editability = row['listbox_uid:list'] !== undefined;
