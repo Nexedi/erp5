@@ -90,37 +90,6 @@
       </table>
     </script>
 
-    <script id="listbox-tfoot-template" type="text/x-handlebars-template">
-      <table>
-       <tfoot>
-       {{#each row_list}}
-         <tr>
-           {{#if ../show_anchor}}
-             <td>Total</td>
-           {{/if}}
-           {{#each cell_list}}
-           <td>
-             {{#if type}}
-               <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
-             {{else}}
-               {{#if default}}
-                 {{default}}
-               {{else}}
-                 {{#unless ../../show_anchor }}
-                   {{#if @first}}
-                     Total
-                   {{/if}}
-                 {{/unless}}
-               {{/if}}
-             {{/if}}
-           </td>
-           {{/each}}
-         </tr>
-       {{/each}}
-       </tfoot>
-      </table>
-    </script>
-
   </head>
   <body>
     <div class="document_table">
