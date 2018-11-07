@@ -11,14 +11,77 @@
                          .innerHTML,
     listbox_tbody_template = Handlebars.compile(listbox_tbody_source),
 
-    listbox_tfoot_source = gadget_klass.__template_element
-                         .getElementById("listbox-tfoot-template")
-                         .innerHTML,
-    listbox_tfoot_template = Handlebars.compile(listbox_tfoot_source),
-
     variable = {},
     loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
     disabled_class = 'ui-disabled';
+
+  function listbox_tfoot_template(options) {
+/*
+       <tfoot>
+       {{#each row_list}}
+         <tr>
+           {{#if ../show_anchor}}
+             <td>Total</td>
+           {{/if}}
+           {{#each cell_list}}
+           <td>
+             {{#if type}}
+               <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
+             {{else}}
+               {{#if default}}
+                 {{default}}
+               {{else}}
+                 {{#unless ../../show_anchor }}
+                   {{#if @first}}
+                     Total
+                   {{/if}}
+                 {{/unless}}
+               {{/if}}
+             {{/if}}
+           </td>
+           {{/each}}
+         </tr>
+       {{/each}}
+       </tfoot>
+*/
+    var tfoot_element = document.createElement('tfoot'),
+      i,
+      j,
+      row,
+      cell,
+      tr_element,
+      td_element,
+      div_element;
+    for (i = 0; i < options.row_list.length; i += 1) {
+      tr_element = document.createElement('tr');
+      if (options.show_anchor) {
+        td_element = document.createElement('td');
+        td_element.textContent = 'Total';
+        tr_element.appendChild(td_element);
+      }
+      row = options.row_list[i];
+      for (j = 0; j < row.cell_list.length; j += 1) {
+        cell = row.cell_list[j];
+        td_element = document.createElement('td');
+        if (cell.type) {
+          div_element = document.createElement('div');
+          div_element.setAttribute('class', 'editable_div');
+          div_element.setAttribute('data-column', cell.column);
+          div_element.setAttribute('data-line', cell.line);
+          td_element.appendChild(div_element);
+        } else {
+          if (cell.default) {
+            td_element.textContent = cell.default;
+          } else if ((!options.show_anchor) && (j === 0)) {
+            td_element.textContent = 'Total';
+          }
+        }
+        tr_element.appendChild(td_element);
+      }
+      tfoot_element.appendChild(tr_element);
+    }
+    return tfoot_element.outerHTML;
+  }
 
   function renderSubField(gadget, element, sub_field_json) {
     sub_field_json.editable = sub_field_json.editable && gadget.state.editable;
