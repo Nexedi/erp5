@@ -155,7 +155,7 @@
 
       tbody_element.appendChild(tr_element);
     }
-    return tbody_element.outerHTML;
+    return tbody_element;
   }
 
   function listbox_tfoot_template(options) {
@@ -223,7 +223,7 @@
       }
       tfoot_element.appendChild(tr_element);
     }
-    return tfoot_element.outerHTML;
+    return tfoot_element;
   }
 
   function renderSubField(gadget, element, sub_field_json) {
@@ -276,8 +276,7 @@
     var container,
       column_list = JSON.parse(gadget.state.column_list_json);
 
-    container = document.createElement(container_name);
-    container.innerHTML = template({
+    container = template({
       "row_list": row_list,
       "show_anchor": gadget.state.show_anchor,
       "column_list": column_list,
