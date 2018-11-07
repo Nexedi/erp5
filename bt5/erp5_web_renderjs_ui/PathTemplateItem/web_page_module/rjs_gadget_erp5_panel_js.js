@@ -38,7 +38,6 @@
     // acquired method
     //////////////////////////////////////////////
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
