@@ -295,6 +295,67 @@ class TestAccounts(AccountingTestCase):
     account.setCreditAccount(False)
     self.assertFalse(account.isCreditAccount())
 
+  def test_ERP5Site_getAccountItemList_cache(self):
+    # added accounts are directly availble
+    account = self.portal.account_module.newContent(
+        portal_type='Account',
+        gap='my_country/my_accounting_standards/1',
+    )
+    account.validate()
+    self.tic()
+    self.assertIn(
+        account.getRelativeUrl(),
+        [x[1] for x in self.portal.ERP5Site_getAccountItemList(
+            section_category='',
+            section_category_strict=False,
+            at_date=None)])
+
+    # changes to validated accounts are also reflected
+    account.setTitle('test account')
+    self.tic()
+    self.assertIn(
+        account.Account_getFormattedTitle(),
+        [x[0] for x in self.portal.ERP5Site_getAccountItemList(
+            section_category='',
+            section_category_strict=False,
+            at_date=None)])
+
+    # invalidated accounts are removed
+    account.invalidate()
+    self.tic()
+    self.assertNotIn(
+        account.getRelativeUrl(),
+        [x[1] for x in self.portal.ERP5Site_getAccountItemList(
+            section_category='',
+            section_category_strict=False,
+            at_date=None)])
+
+  def test_AccountingTransactionLine_getNodeItemList_cache(self):
+    accounting_line = self._makeOne(lines=(dict(id='test_line'),)).test_line
+    # added accounts are directly availble
+    account = self.portal.account_module.newContent(
+        portal_type='Account',
+    )
+    account.validate()
+    self.tic()
+    self.assertIn(
+        account.getRelativeUrl(),
+        [x[1] for x in accounting_line.AccountingTransactionLine_getNodeItemList()])
+
+    # changes to validated accounts are also reflected
+    account.setTitle('test account')
+    self.tic()
+    self.assertIn(
+        account.Account_getFormattedTitle(),
+        [x[0] for x in accounting_line.AccountingTransactionLine_getNodeItemList()])
+
+    # invalidated accounts are removed
+    account.invalidate()
+    self.tic()
+    self.assertNotIn(
+        account.getRelativeUrl(),
+        [x[1] for x in accounting_line.AccountingTransactionLine_getNodeItemList()])
+
 
 class TestTransactionValidation(AccountingTestCase):
   """Test validations of accounting transactions.

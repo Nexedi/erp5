@@ -75,9 +75,11 @@ def getItemList(category=None, portal_path=None, mirror=0, omit_filter=0,
                               filter=filter_dict)
   return item_list
 
-# wrap the previous method in a cache
+# wrap the previous method in a cache, including the cache cookie that
+# we reset everytime and account is validated or invalidated.
+cache_cookie = portal.account_module.getCacheCookie('account_list')
 getItemList = CachingMethod(getItemList,
-                            id='AccountingTransactionLine_getNodeItemList',
+                            id='AccountingTransactionLine_getNodeItemList-%s' % cache_cookie,
                             cache_factory='erp5_content_long')
 
 # the cache vary with the simulation state of the current transaction,

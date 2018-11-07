@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
   <type>Account</type>
-  <workflow>account_workflow, edit_workflow</workflow>
+  <workflow>account_cache_interaction_workflow, account_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Accounting Period</type>
