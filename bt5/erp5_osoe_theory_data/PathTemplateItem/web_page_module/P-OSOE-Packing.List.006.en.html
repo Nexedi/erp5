@@ -22,14 +22,14 @@ or an educational license. For more information, contact info@nexedi.com
       </section><section class="">
         <h1>Agenda</h1>
         <ul>
-          <li>What is a Packing list</li>
-          <li>Why do we use "Divergence"</li>
-          <li>What is the delivery process</li>
-          <li>What is a "Container"</li>
+          <li>What is a Packing list?</li>
+          <li>Why do we use "Divergence"?</li>
+          <li>What is the delivery process?</li>
+          <li>What is a "Container"?</li>
         </ul>
         <div style="float: left; width: 300px;"></div>
         <details open="open">
-          <p>Following last session "Sale Orders", in this session, we will learn how to manage the Sale Packing List created from a Sale Order. We will also learn to generate related Sale Invoice from a "Delivered" Sale Packing List.</p><p>
+          <p>Following the last session "Sale Orders", in this session, we will learn how to manage the Sale Packing List created from a Sale Order. We will also learn to generate a related Sale Invoice from a "Delivered" Sale Packing List.</p><p>
             <strong>Note: in this session "Sale Packing Lists", we will still use the company Hongzhao. So when you are practicing, please replace Hongzhao with the company you created when you configured your ERP5 instance.</strong>
           </p>
         </details>
@@ -45,7 +45,7 @@ or an educational license. For more information, contact info@nexedi.com
         <h1>Packing Lists - why?</h1>
         <img alt="Packing Lists - why?" title="Packing Lists - why?" src="http://img.erp5.cn/user-Howto.Manage.Sale.Packing.Lists.Manage.Shipped.Quantity.Difference.Acknowledge?format=png" type="image/png">
         <details open="open">
-          <p>Why is a Packing List useful in an ERP system?</p><p>We could think that we have everything integrated in the Sale/Purchase Order, we already know which quantity of which product has been sold, so that we can know what will be the movement of goods related to this Order.</p><p>But in fact this is not true. It is not because an Order has been made for a specific quantity of a specific product so that it means we are going to deliver exactly what has been ordered.</p><p>For many different reasons, we might decide to deliver another product, or to deliver more or less products than what has been ordered.</p><p>
+          <p>Why is a Packing List useful in an ERP system?</p><p>We could think that we have everything integrated in the Sale/Purchase Order, we already know which quantity of which product has been sold, so that we can know what the movement of goods related to this Order will be.</p><p>But in fact this is not true. It is not because an Order has been made for a specific quantity of a specific product so that it means we are going to deliver exactly what has been ordered.</p><p>For many different reasons, we might decide to deliver another product, or to deliver more or less products than what has been ordered.</p><p>
             For example, the customer ordered three different kinds of products, if we are missing one in stock, we may decide to send the two that we have, and to send the last one when it will be available. This is why we need to <strong>use Packing List to manage the divergence between the ordered products/services and the delivered products/services</strong>
             , and so on we can manage the related invoices and payments for each shipments in a more efficient way.
           </p><p>We will now see the different uses which can be made of the Packing List.</p>
@@ -55,39 +55,39 @@ or an educational license. For more information, contact info@nexedi.com
         <img alt="Packing Lists - Managing the stock" title="Packing Lists - Managing the stock" src="http://img.erp5.cn/user-Packing.List.Manage.Stock?format=png" type="image/png">
         <details open="open">
           <p>
-            The most important aspect of the Packing List for the system is that it let us <strong>manage our stock of products or services</strong>
-            . As we have seen previously, we can't base the stock management on Sale or Purchase Order. In the company's business life, there will be many reasons why we won't deliver or receive goods or services which have been ordered. We couldn't neither base the stock management on the Invoice module. Once again, there will be many cases when we will deliver or receive goods or services which won't be invoiced.
+            The most important aspect of the Packing List for the system is that it lets us <strong>manage our stock of products or services</strong>
+            . As we have seen previously, we can't base the stock management on Sale or Purchase Order. In the company's business life, there will be many reasons why we won't deliver or receive goods or services which have been ordered. We can't base the stock management on the Invoice module either. Once again, there will be many cases when we will deliver or receive goods or services which won't be invoiced.
           </p><p>The only way to keep track of the stock is then to use the Packing Lists.</p><p>
             Packing Lists are used when we prepare the goods to be sent to the customer, or when we receive the goods from a supplier. We have the Order document, so we know what should be sent/received. As we have seen previously in the tutorial <a href="user-Howto.Create.Sale.Orders/view">"How to create Sale Orders"</a>, in ERP5, <strong>the confirmed Order will automatically generate a Packing List</strong>
             for the following trade process.
           </p><p>Then we will prepare the goods and validate the Packing List. If we follow what was planned in the automatically generated Packing List, everything is fine. But if we don't send the correct quantity, we can still change it on the Packing List.</p><p>
-            Same when we receive goods, we have entered in our system a Purchase Order which has generated an "expected" Packing List. When we receive the goods, we can <strong>compare it with the Packing List of the supplier</strong>
-            , to see if on the paper the goods is what was expected. Then when we verify the goods, we will correct the received Packing List if required.
+            Similarly when we receive goods after sending a Purchase Order, an "expected" Packing List is generated. When we receive the goods, we can <strong>compare it with the Packing List of the supplier</strong>
+            , to see if the goods we received are the same as on the paper. Then once we verify the goods, we can correct the received Packing List if required.
           </p><p>In one word, by using Packing Lists, we will have a better stock management.</p>
         </details>
       </section><section class="illustration">
         <h1>Packing lists - Managing the containers</h1>
         <img alt="Packing lists - Managing the containers" title="Packing lists - Managing the containers" src="http://img.erp5.cn/user-Packing.List.Manage.Containers?format=png" type="image/png">
         <details open="open">
-          <p>Packing Lists also manage the containers. Containers are everything which let you pack and organize the delivery of the goods. Any boxes or bags can be used as a container.</p><p>It is important to manage the containers for two reasons. The first is that you might want to manage the stock of containers you have in your company. For instance, if you use boxes to send the goods, you will need to know when you have to buy new boxes.</p><p>The other reason why it is important to manage containers, is that you might want to detail which product is placed in which container. The management of containers will be very helpful once you lose a few containers during the transportation. If you have detailed the Packing List, you will know exactly which goods have been lost.</p>
+          <p>Packing Lists also manage the containers. Containers are everything which let you pack and organize the delivery of the goods. Any boxes or bags can be used as a container.</p><p>It is important to manage the containers for two reasons. The first is that you might want to manage the stock of containers you have in your company. For instance, if you use boxes to send the goods, you will need to know when you have to buy new boxes.</p><p>The other reason why it is important to manage containers, is that you might want to detail which product is placed in which container. The management of containers will be very helpful in case you lose a few containers during the transportation. If you have detailed the Packing List, you will know exactly which goods have been lost.</p>
         </details>
       </section><section class="illustration">
         <h1>Packing lists - Customer's point of view</h1>
         <img alt="Packing lists - Customer's point of view" title="Packing lists - Customer's point of view" src="http://img.erp5.cn/P-OSOE-Seller.Goods.and.Services?format=png" type="image/png">
         <details open="open">
-          <p>As we just said, we should be as much detailed as we can on the Packing List. Depending of whom you are working with, they will require general or very specific informations.</p><p>For instance, if you are exporting goods, you need to present a very detailed Packing List to the customers. They need to know which specific product is in which specific container. Moreover they will need even more detailed information such as the weight and the size of every package.</p>
+          <p>As we just said, we should be as detailed as we can on the Packing List. Depending on who you are working with, they might require general or very specific informations.</p><p>For instance, if you are exporting goods, you need to present a very detailed Packing List to the customers. They need to know which specific product is in which specific container. Moreover, they will need even more detailed information such as the weight and the size of every package.</p>
         </details>
       </section><section class="illustration">
         <h1>Packing Lists Workflow</h1>
         <img alt="Packing Lists Workflow" title="Packing Lists Workflow" src="http://img.erp5.cn/P-OSOE-Packing.Lists.Workflow?format=png" type="image/png">
         <details open="open">
-          <p>In order to manage the Packing List document, we have to understand first its work-flow.</p><p>
-            <strong>Once the Order is confirmed, the Packing List is automatically created. It means that the Packing List must be prepared</strong>
+          <p>In order to manage the Packing List document, we have to firts understand its work-flow.</p><p>
+            <strong>Once the Order is confirmed, the Packing List is automatically created. This means that the Packing List must be prepared</strong>
             .
-          </p><p>Employees in charge of preparing the goods are then able to prepare the goods, and to enter which containers have been used, etc.</p><p>They can also decide not to send exactly what has been ordered. For example, they don't have all products which have been ordered.</p><p>
+          </p><p>Employees in charge of preparing the goods are then able to prepare the goods, and to enter which containers have been used, etc.</p><p>They can also decide not to send exactly what has been ordered. For example if they don't have all products which have been ordered.</p><p>
             Once the Packing List has been prepared, they can mark the packing list as "Ready" to be shipped. We will then wait for the carrier to pick up the prepared packing list. <strong>Once they pick it up, we will mark the packing list as "Shipped". This will create the related invoice</strong>
             .
-          </p><p>When the carrier tell us the the customer has received the goods, we can then mark the packing list as "Received".</p><p>When the customer receive the goods, he will check what has been delivered to him. So he or she will compare the packing list we provided to him with what he received. And an error is still possible. Either that we made a mistake while preparing, or maybe some packages have been damaged etc. So we need to wait until the customer accepts the delivery before marking the packing list as "Delivered".</p>
+          </p><p>When the carrier informs us that the customer has received the goods, we can then mark the packing list as "Received".</p><p>When the customer receives the goods, they will check what has been delivered to them. So he or she will compare the packing list we provided to them with what they received. And an error is still possible. Either that we made a mistake while preparing, or maybe that some packages have been damaged etc. So we need to wait until the customer accepts the delivery before marking the packing list as "Delivered".</p>
         </details>
         <details open="open">
           <p>
@@ -98,7 +98,7 @@ or an educational license. For more information, contact info@nexedi.com
         <h1>Packing Lists Worklists</h1>
         <img alt="Packing Lists Worklists" title="Packing Lists Worklists" src="http://img.erp5.cn/user-Packing.Lists.Sale.Packing.Lists.Module.List.With.Worklist?format=png" type="image/png">
         <details open="open">
-          <p>The same as Sale Orders, the Packing Lists can be managed through work-lists, which you can access by opening "My Favourites" menu. These work-lists are here to summarize the information that you can find in the Sale Packing Lists module itself.</p>
+          <p>Just like Sale Orders, Packing Lists can be managed through work-lists, which you can access by opening "My Favourites" menu. These work-lists are there to summarize the information that you can find in the Sale Packing Lists module itself.</p>
         </details>
       </section>
     
