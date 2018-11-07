@@ -21,8 +21,11 @@ def getAccountItemList(section_category,
 
   return account_list
 
+# wrap the previous method in a cache, including the cache cookie that
+# we reset everytime and account is validated or invalidated.
+cache_cookie = portal.account_module.getCacheCookie('account_list')
 getAccountItemList = CachingMethod(getAccountItemList,
-                                   id=script.getId(),
+                                   id='%s-%s' % (script.getId(), cache_cookie),
                                    cache_factory='erp5_content_long')
 
 return getAccountItemList(section_category,
