@@ -777,12 +777,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Sort']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Sort']</td>
       <td></td>
     </tr>
     <tr>
       <td>waitForElementNotPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Sort' and @disabled]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Sort' and @disabled]</td>
       <td></td>
     </tr>
     <tr>
@@ -792,7 +792,7 @@
     </tr>
     <tr>
       <td>click</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Sort']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Sort']</td>
       <td></td>
     </tr>
     <tr>
@@ -959,12 +959,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Configure']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Configure']</td>
       <td></td>
     </tr>
     <tr>
       <td>waitForElementNotPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Configure' and @disabled]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Configure' and @disabled]</td>
       <td></td>
     </tr>
     <tr>
@@ -974,7 +974,7 @@
     </tr>
     <tr>
       <td>click</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Configure']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Configure']</td>
       <td></td>
     </tr>
     <tr>
@@ -1259,32 +1259,32 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Select']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Hide']</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Select']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Hide']</td>
       <td></td>
     </tr>
     <tr>
       <td>waitForElementNotPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Select' and @disabled]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Hide' and @disabled]</td>
       <td></td>
     </tr>
     <tr>
       <td>click</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Select']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Hide']</td>
       <td></td>
     </tr>
     <tr>
       <td>waitForElementNotPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Select']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Hide']</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementNotPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Select']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Hide']</td>
       <td></td>
     </tr>
     <tr>
@@ -1414,7 +1414,7 @@
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Select']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Hide']</td>
       <td></td>
     </tr>
 
