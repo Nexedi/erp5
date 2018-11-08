@@ -959,12 +959,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Configure']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Configure']</td>
       <td></td>
     </tr>
     <tr>
       <td>waitForElementNotPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Configure' and @disabled]</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Configure' and @disabled]</td>
       <td></td>
     </tr>
     <tr>
@@ -974,7 +974,7 @@
     </tr>
     <tr>
       <td>click</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@data-i18n='Configure']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Configure']</td>
       <td></td>
     </tr>
     <tr>
