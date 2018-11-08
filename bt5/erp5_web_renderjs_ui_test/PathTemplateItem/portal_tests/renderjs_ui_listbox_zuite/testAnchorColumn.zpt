@@ -78,7 +78,7 @@
 
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n="Select"]</td>
+  <td>//button[text()="Select"]</td>
   <td></td>
 </tr>
 
