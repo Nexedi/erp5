@@ -107,17 +107,7 @@
   <td>Title 2</td>
 </tr>
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Next</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>link=Next</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/paginate_next" />
 
 <tr>
   <td>waitForElementNotPresent</td>
@@ -151,17 +141,8 @@
 </tr>
 
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Next</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/paginate_next" />
 
-<tr>
-  <td>click</td>
-  <td>link=Next</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>waitForElementNotPresent</td>
@@ -194,19 +175,7 @@
   <td>Title 8</td>
 </tr>
 
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Previous</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>link=Previous</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/paginate_previous" />
 
 <tr>
   <td>waitForElementNotPresent</td>
