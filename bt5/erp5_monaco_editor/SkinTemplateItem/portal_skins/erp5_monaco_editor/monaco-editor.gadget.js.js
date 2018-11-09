@@ -1,5 +1,5 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, monaco*/
+/*global window, rJS, monaco, JSLINT */
 (function(window, rJS, monaco) {
   'use strict';
 
@@ -49,6 +49,29 @@
       editor.getModel().onDidChangeContent(deferNotifyChange);
     })
 
+    .declareJob('runJsLint', function () {
+      var context = this;
+      return new RSVP.Queue()
+        .push(function () { return RSVP.delay(500); })
+        .push(function () {
+          if (context.state.model_language === 'javascript') {
+            JSLINT(context.editor.getValue(), {});
+            monaco.editor.setModelMarkers(
+              context.editor.getModel(),
+              'jslint',
+              JSLINT.data()
+                .errors.filter(Boolean)
+                .map(err => ({
+                  startLineNumber: err.line,
+                  startColumn: err.character,
+                  message: err.reason,
+                  severity: monaco.Severity.Error,
+                  source: 'jslint'
+                }))
+            );
+          }
+        });
+    })
     .declareMethod('render', function(options) {
       var model_language,
         state_dict = {
@@ -112,7 +135,11 @@
             }
           );
 
-          // Annotations for javascript
+          // lint with jslint
+          this.editor.getModel().onDidChangeContent(this.runJsLint.bind(this));
+          this.runJsLint();
+
+          // lint with typescript compiler
           monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
             noSemanticValidation: false,
             noSyntaxValidation: false
