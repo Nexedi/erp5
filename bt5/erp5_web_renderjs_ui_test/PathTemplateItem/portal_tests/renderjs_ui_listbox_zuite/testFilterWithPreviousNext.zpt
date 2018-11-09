@@ -90,6 +90,7 @@
   <td>//a[@data-i18n='Next']</td>
   <td></td>
 </tr>
+
 <tr>
   <td>waitForElementNotPresent</td>
   <td>//a[@data-i18n = "Title 0"]</td>
