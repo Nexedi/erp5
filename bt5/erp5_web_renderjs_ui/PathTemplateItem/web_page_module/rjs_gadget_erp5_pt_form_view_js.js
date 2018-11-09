@@ -129,7 +129,11 @@
               edit_url: url_list[6],
               tab_url: url_list[0],
               actions_url: url_list[1],
-              add_url: url_list[7] || '',
+              export_url: (
+                gadget.state.erp5_document._links.action_object_jio_report ||
+                gadget.state.erp5_document._links.action_object_jio_exchange ||
+                gadget.state.erp5_document._links.action_object_jio_print
+              ) ? url_list[5] : '',
               selection_url: url_list[2],
               // Only display previous/next links if url has a selection_index,
               // ie, if we can paginate the result list of the search
@@ -138,11 +142,7 @@
               page_title: result_list[0]
             };
           if (result_list[1]) {
-            header_dict.export_url = (
-              gadget.state.erp5_document._links.action_object_jio_report ||
-              gadget.state.erp5_document._links.action_object_jio_exchange ||
-              gadget.state.erp5_document._links.action_object_jio_print
-            ) ? url_list[5] : '';
+            header_dict.add_url = url_list[7] || '';
           }
           return gadget.updateHeader(header_dict);
         });
