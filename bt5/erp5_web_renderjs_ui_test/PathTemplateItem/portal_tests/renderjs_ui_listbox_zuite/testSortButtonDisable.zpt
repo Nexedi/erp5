@@ -58,22 +58,12 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Previous']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <!-- check sort button is disable -->
 <tr>
- 	<td>waitForElementPresent</td>
- 	<td>//button[@data-i18n='Sort' and contains(@class, 'ui-disabled')]</td>
-  <td></td>
-</tr>
-
-<tr>
- 	<td>verifyElementPresent</td>
- 	<td>//button[@data-i18n='Sort' and contains(@class, 'ui-disabled')]</td>
+ 	<td>assertElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Sort' and contains(@class, 'ui-disabled')]</td>
   <td></td>
 </tr>
 
