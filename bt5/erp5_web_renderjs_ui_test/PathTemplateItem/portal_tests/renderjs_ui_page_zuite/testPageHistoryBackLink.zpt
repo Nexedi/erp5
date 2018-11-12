@@ -18,8 +18,9 @@
 </tr>
 
 <!-- Wait for gadget to be loaded -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_history.html']</td>
   <td></td>
 </tr>
