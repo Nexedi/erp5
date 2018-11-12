@@ -75,13 +75,28 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_short_title</string>
+                        <string>my_reference</string>
+                        <string>my_contributor_title_list</string>
+                        <string>my_description</string>
+                        <string>my_effective_date</string>
+                        <string>my_revision</string>
+                        <string>my_translated_portal_type</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_follow_up_title_list</string>
+                        <string>my_function_list</string>
+                        <string>my_group_list</string>
+                        <string>my_publication_section_list</string>
+                        <string>my_site_list</string>
+                        <string>my_subject_list</string>
+                        <string>my_translated_validation_state_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
