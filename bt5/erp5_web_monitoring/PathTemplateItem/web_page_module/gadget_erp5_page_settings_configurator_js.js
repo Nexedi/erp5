@@ -35,14 +35,16 @@
           for (i = 0; i < len; i += 1) {
             if (result.data.rows[i].value.hasOwnProperty("active")) {
               result.data.rows[i].value.active = {
-                css_class: "",
-                description: "Is Enabled",
-                hidden: 0,
-                "default": result.data.rows[i].value.active.toString(),
-                key: "active",
-                url: "gadget_erp5_field_status.html",
-                title: "Enabled",
-                type: "GadgetField"
+                field_gadget_param: {
+                  css_class: "",
+                  description: "Is Enabled",
+                  hidden: 0,
+                  "default": result.data.rows[i].value.active.toString(),
+                  key: "active",
+                  url: "gadget_erp5_field_status.html",
+                  title: "Enabled",
+                  type: "GadgetField"
+                }
               };
               result.data.rows[i].value["listbox_uid:list"] = {
                 key: "listbox_uid:list",
@@ -165,7 +167,7 @@
         .push(function (form_doc) {
           doc = form_doc;
           return gadget.setSetting('sync_check_offline',
-            doc.check_online_access === 1 ? 'true' : 'false');
+            doc.check_online_access === "on" ? 'true' : 'false');
         })
         .push(function () {
           return gadget.setSetting('sync_data_interval',
@@ -226,9 +228,9 @@
         .push(function (sync_check_offline) {
           if (sync_check_offline === "true" || sync_check_offline === true ||
               sync_check_offline === undefined) {
-            check_online_access = "true";
+            check_online_access = "on";
           } else {
-            check_online_access = "false";
+            check_online_access = "";
           }
           return RSVP.all([
             gadget.getDeclaredGadget('form_view'),

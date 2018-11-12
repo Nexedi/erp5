@@ -70,6 +70,9 @@
         view_list = JSON.stringify(view_list);
       }
       return context.getUrlParameter('editable')
+        .push(function () {
+          return context.registerSync();
+        })
         .push(function (editable) {
           return context.changeState({
             workflow_list: workflow_list,
@@ -270,7 +273,7 @@
       window.dispatchEvent(event);
       return result;
     })
-    .declareService(function () {
+    .declareJob('registerSync', function () {
       return this.getDeclaredGadget("sync_gadget")
         .push(function (sync_gadget) {
           return sync_gadget.register();

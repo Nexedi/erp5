@@ -40,6 +40,8 @@
             doc.confirm_new_password = doc.new_password;
             doc.password = gadget.state.password;
             doc.verify_password = 1;
+          } else {
+            doc.verify_password = (doc.verify_password === "on") ? 1 : 0;
           }
           return opml_gadget.checkOPMLForm(doc);
         })
@@ -49,7 +51,7 @@
               .push(function () {
                 var verify_opml = doc.title === "" || doc.title === undefined ||
                     doc.verify_password === 1;
-                if (gadget.state.active === false && doc.active === 1) {
+                if (gadget.state.active === false && doc.active === "on") {
                   verify_opml = true;
                 }
                 doc.title = gadget.state.opml_title;

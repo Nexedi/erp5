@@ -210,6 +210,9 @@
           gadget.state.promise.source + ".history"
         )
           .push(undefined, function (error) {
+            if (error.name === "cancel") {
+              return undefined;
+            }
             return gadget.notifySubmitted({
               status: "error",
               message: "Failed to get promise history content! \n" +
@@ -238,60 +241,66 @@
               //  lines = len - start;
               //}
               for (i = start; i >= 0; i -= 1) {
-                message = status_history.data[i].message.slice(0, 60);
-                if (message.length >= 60) {
+                message = status_history.data[i].message.slice(0, 80);
+                if (message.length >= 80) {
                   message += "...";
                 }
                 result.data.total_rows += 1;
                 result.data.rows.push({
                   value: {
                     status: {
-                      css_class: "",
-                      description: "The Status",
-                      hidden: 0,
-                      "default": status_history.data[i].status,
-                      key: "status",
-                      url: "gadget_erp5_field_status.html",
-                      title: "Status",
-                      type: "GadgetField"
+                      field_gadget_param: {
+                        css_class: "",
+                        description: "The Status",
+                        hidden: 0,
+                        "default": status_history.data[i].status,
+                        key: "status",
+                        url: "gadget_erp5_field_status.html",
+                        title: "Status",
+                        type: "GadgetField"
+                      }
                     },
                     start_date: {
-                      allow_empty_time: 0,
-                      ampm_time_style: 0,
-                      css_class: "date_field",
-                      date_only: 0,
-                      description: "The Date",
-                      editable: 0,
-                      hidden: 0,
-                      hidden_day_is_last_day: 0,
-                      "default": new Date(
-                        status_history.data[i].date ||
-                          status_history.data[i]['start-date']
-                      ).toUTCString(),
-                      key: "start_date",
-                      required: 0,
-                      timezone_style: 0,
-                      title: "Date",
-                      type: "DateTimeField"
+                      field_gadget_param: {
+                        allow_empty_time: 0,
+                        ampm_time_style: 0,
+                        css_class: "date_field",
+                        date_only: 0,
+                        description: "The Date",
+                        editable: 0,
+                        hidden: 0,
+                        hidden_day_is_last_day: 0,
+                        "default": new Date(
+                          status_history.data[i].date ||
+                            status_history.data[i]['start-date']
+                        ).toUTCString(),
+                        key: "start_date",
+                        required: 0,
+                        timezone_style: 0,
+                        title: "Date",
+                        type: "DateTimeField"
+                      }
                     },
                     change_date:  {
-                      allow_empty_time: 0,
-                      ampm_time_style: 0,
-                      css_class: "date_field",
-                      date_only: 0,
-                      description: "The Date",
-                      editable: 0,
-                      hidden: 0,
-                      hidden_day_is_last_day: 0,
-                      "default": new Date(
-                        status_history.data[i]['change-date'] ||
-                          status_history.data[i]['change-time'] * 1000
-                      ).toUTCString(),
-                      key: "change_date",
-                      required: 0,
-                      timezone_style: 0,
-                      title: "Status Date",
-                      type: "DateTimeField"
+                      field_gadget_param: {
+                        allow_empty_time: 0,
+                        ampm_time_style: 0,
+                        css_class: "date_field",
+                        date_only: 0,
+                        description: "The Date",
+                        editable: 0,
+                        hidden: 0,
+                        hidden_day_is_last_day: 0,
+                        "default": new Date(
+                          status_history.data[i]['change-date'] ||
+                            status_history.data[i]['change-time'] * 1000
+                        ).toUTCString(),
+                        key: "change_date",
+                        required: 0,
+                        timezone_style: 0,
+                        title: "Status Date",
+                        type: "DateTimeField"
+                      }
                     },
                     message: message,
                     "listbox_uid:list": {
@@ -318,10 +327,10 @@
         })
         .push(function (form_gadget) {
           var column_list = [
+              ['status', 'Status'],
               ['start_date', 'Report Date'],
-              ['change_date', 'Last Change'],
-              ['message', 'Promise Output'],
-              ['status', 'Status']
+              ['change_date', 'Status Date'],
+              ['message', 'Promise Output']
             ];
           return form_gadget.render({
             erp5_document: {
@@ -451,7 +460,7 @@
                   "title": "Software Instance",
                   "default": [gadget.state.instance_title],
                   "query": "urn:jio:allDocs?query=%28portal_type%3A%22" +
-                    "opml-outline" + "%22%29AND%28reference%3A%22" +
+                    "Opml Outline" + "%22%29AND%28reference%3A%22" +
                     gadget.state.instance_reference + "%22%29",
                   "css_class": "",
                   "required": 0,
@@ -461,6 +470,7 @@
                   "view": "view",
                   "allow_jump": true,
                   "allow_creation": false,
+                  "sort": [],
                   "relation_item_relative_url": [gadget.state.instance_reference],
                   "type": "RelationStringField"
                 },

@@ -146,9 +146,9 @@
         basic_login: btoa(doc.username + ':' + doc.password),
         username: doc.username,
         password: doc.password,
-        active: (doc.active === 1) ? true : false,
+        active: (doc.active === "on") ? true : false,
         has_monitor: true,
-        state: doc.state || (doc.active ? "Started" : "Stopped")
+        state: doc.state || (doc.active === "on" ? "Started" : "Stopped")
       },
       update_password_list = [];
     gadget.state.message.textContent = "";
