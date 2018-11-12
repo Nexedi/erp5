@@ -112,7 +112,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# v1.0.5\n
+# v1.0.6\n
 CACHE:\n
 font-awesome/font-awesome-webfont.woff2\n
 echarts-all.js\n
@@ -360,7 +360,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1540870337.1</float>
+                        <float>1542010989.1</float>
                         <string>GMT+9</string>
                       </tuple>
                     </state>

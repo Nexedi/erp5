@@ -177,7 +177,10 @@
           return result;
         })
         .push(function (result_list) {
-          var sp_data = result_list[0], graph_gadget_1 = result_list[1], graph_gadget_2 = result_list[2];
+          var sp_data = result_list[0],
+            graph_gadget_1 = result_list[1],
+            graph_gadget_2 = result_list[2],
+            count_by_state_and_date_range = sp_data.count_by_state_and_date_range;
           gadget.property_dict.graph_widget = graph_gadget_1;
           return RSVP.all([graph_gadget_1.render(
             {
@@ -185,45 +188,30 @@
                 data: [
                   {
                     value_dict: {
-                      0: ["< 2", "2-7", "7-30", "> 30"],
-                      1: [
-                        sp_data.le2.validated,
-                        sp_data['2to7'].validated,
-                        sp_data['7to30'].validated,
-                        sp_data.gt30.validated
-                      ]
+                      0: count_by_state_and_date_range.validated.date_range_list,
+                      1: count_by_state_and_date_range.validated.count_list
                     },
                     colors: ['#d48265'],
                     type: "bar",
-                    title: "Opened"
+                    title: sp_data.state_title_by_state_id.validated
                   },
                   {
                     value_dict: {
-                      0: ["< 2", "2-7", "7-30", "> 30"],
-                      1: [
-                        sp_data.le2.submitted,
-                        sp_data['2to7'].submitted,
-                        sp_data['7to30'].submitted,
-                        sp_data.gt30.submitted
-                      ]
+                      0: count_by_state_and_date_range.submitted.date_range_list,
+                      1: count_by_state_and_date_range.submitted.count_list
                     },
                     colors: ['#61a0a8'],
                     type: "bar",
-                    title: "Submitted"
+                    title: sp_data.state_title_by_state_id.submitted
                   },
                   {
                     value_dict: {
-                      0: ["< 2", "2-7", "7-30", "> 30"],
-                      1: [
-                        sp_data.le2.suspended,
-                        sp_data['2to7'].suspended,
-                        sp_data['7to30'].suspended,
-                        sp_data.gt30.suspended
-                      ]
+                      0: count_by_state_and_date_range.suspended.date_range_list,
+                      1: count_by_state_and_date_range.suspended.count_list
                     },
                     colors: ['#c23531'],
                     type: "bar",
-                    title: "Suspended"
+                    title: sp_data.state_title_by_state_id.suspended
                   }
                 ],
                 layout: {
@@ -249,8 +237,18 @@
                 data: [
                   {
                     value_dict: {
-                      0: ["Opened", "Submitted", "Suspended", "Closed"],
-                      1: [sp_data.validated, sp_data.submitted, sp_data.suspended, sp_data.invalidated]
+                      0: [
+                        sp_data.state_title_by_state_id.validated,
+                        sp_data.state_title_by_state_id.submitted,
+                        sp_data.state_title_by_state_id.suspended,
+                        sp_data.state_title_by_state_id.invalidated
+                      ],
+                      1: [
+                        sp_data.count_by_state.validated || 0,
+                        sp_data.count_by_state.submitted || 0,
+                        sp_data.count_by_state.suspended || 0,
+                        sp_data.count_by_state.invalidated || 0
+                      ],
                     },
                     colors: ['#d48265', '#61a0a8', '#c23531', '#2f4554'],
                     type: "pie",
