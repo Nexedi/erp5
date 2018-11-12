@@ -28,7 +28,7 @@
 </tr>
 <tr>
  <td>click</td>
- <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//a[@data-i18n='Modules' and contains(@href, '#!display') and contains(@href, 'n.page=front')]</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//a[text()='Modules' and contains(@href, '#!display') and contains(@href, 'n.page=front')]</td>
  <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
