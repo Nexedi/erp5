@@ -290,6 +290,26 @@
       <td></td>
     </tr>
     <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-scope='header']//a</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[@data-gadget-scope='header']//a</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-scope='panel']//a</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[@data-gadget-scope='panel']//a</td>
+      <td></td>
+    </tr>
+    <tr>
       <td colspan="3"><p></p></td>
     </tr>
   </tal:block>
