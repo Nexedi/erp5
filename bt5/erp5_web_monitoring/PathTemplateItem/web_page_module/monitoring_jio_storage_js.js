@@ -131,13 +131,17 @@
           var remove_id_list = [],
             remove_signature_id_list = [];
 
+          // remove related hosting subscription
+          remove_id_list.push(generateHash(id));
+          // removed saved opml content
           remove_signature_id_list.push({
             id: url,
             name: url
           });
+          // remove all related documents
           return storage.allDocs({
             select_list: ["xmlUrl", "url"],
-            query: '(portal_type:"opml-outline") AND (parent_url:"' + url + '")'
+            query: '(portal_type:"Opml Outline") AND (parent_url:"' + url + '")'
           })
             .push(function (document_result) {
               var i,
@@ -370,7 +374,24 @@
       });
   }
 
-  function getOpmlTree(context, opml_url, opml_spec, basic_login) {
+  function updateHostingSubscriptionState(hosting, element) {
+    var status = element.status.toUpperCase();
+
+    if (hosting.instance_amount === 0) {
+      hosting.status_date = element.date;
+    }
+    if (hosting.status === "ERROR") {
+      return;
+    } else if (status === "ERROR") {
+      hosting.status = status;
+    } else if (status === "WARNING") {
+      hosting.status = status;
+    } if (status === "OK" && hosting.status !== status) {
+      hosting.status = status;
+    }
+  }
+
+  function getOpmlTree(context, opml_url, opml_spec, basic_login, opml_title) {
     var opml_storage,
       opml_document_list = [],
       delete_key_list = [],
@@ -378,10 +399,21 @@
       opml_result_list,
       current_signature_dict = {},
       fetch_remote_opml = false,
+      hosting_subscription,
       id;
 
     id = generateHash(opml_url);
     opml_storage = createStorage(context, opml_spec, id);
+
+    // Hosting Subscription is build from OPML and it has status
+    hosting_subscription = {
+      title: opml_title || "",
+      portal_type: "Hosting Subscription",
+      opml_url: opml_url,
+      status: "WARNING",
+      instance_amount: 0,
+      status_date: new Date()
+    };
     return getDocumentAsAttachment(context, opml_url, OPML_ATTACHMENT_NAME)
       .push(function (opml_doc) {
         var current_time = new Date().getTime();
@@ -437,12 +469,18 @@
           result_list = [],
           header_dict = {};
 
-        if (opml_result_list.data.total_rows > 0 && fetch_remote_opml) {
-          header_dict = {
-            dateCreated: opml_result_list.data.rows[0].doc.dateCreated,
-            dateModified: opml_result_list.data.rows[0].doc.dateModified,
-            opml_title: opml_result_list.data.rows[0].doc.title
-          };
+        if (opml_result_list.data.total_rows > 0) {
+          if (opml_result_list.data.rows[0].doc.title) {
+            hosting_subscription.title = opml_result_list.data.rows[0]
+              .doc.title;
+          }
+          if (fetch_remote_opml) {
+            header_dict = {
+              dateCreated: opml_result_list.data.rows[0].doc.dateCreated,
+              dateModified: opml_result_list.data.rows[0].doc.dateModified,
+              opml_title: opml_result_list.data.rows[0].doc.title
+            };
+          }
         }
 
         for (i = 1; i < opml_result_list.data.total_rows; i += 1) {
@@ -493,7 +531,7 @@
                 delete current_signature_dict[id_hash];
               }
               Object.assign(item.doc, {
-                portal_type: "opml-outline",
+                portal_type: "Opml Outline",
                 parent_id: id,
                 parent_url: opml_url,
                 reference: id_hash,
@@ -534,10 +572,13 @@
             item_id = item.guid || item.id,
             status = (element.status || element.category);
 
-          if (element.type === 'global' &&
-              element.aggregate_reference === undefined) {
-            // XXX - document need to be updated to keep compatibility
-            element = fixGlobalInstanceDocument(element);
+          if (element.type === 'global') {
+            updateHostingSubscriptionState(hosting_subscription, element);
+            hosting_subscription.instance_amount += 1;
+            if (element.aggregate_reference === undefined) {
+              // XXX - document need to be updated to keep compatibility
+              element = fixGlobalInstanceDocument(element);
+            }
           }
 
           id_hash = generateHash(item_result.parent_id +
@@ -619,6 +660,10 @@
             });
           }
         }
+        opml_document_list.push({
+          id: id,
+          doc: hosting_subscription
+        });
         return [opml_document_list, delete_key_list, attachment_document_list];
       });
   }
@@ -696,7 +741,7 @@
   function syncOpmlStorage(context) {
     return context._local_sub_storage.allDocs({
       query: '(portal_type:"opml") AND (active:true) AND (url:"https://%")',
-      select_list: ["url", "basic_login"]
+      select_list: ["title", "url", "basic_login"]
     })
       .push(function (storage_result) {
         var i,
@@ -718,7 +763,8 @@
                     timeout: context._request_timeout
                   }
                 },
-                storage_spec.basic_login
+                storage_spec.basic_login,
+                storage_spec.title
               );
             })
             .push(function (result_list) {
@@ -731,11 +777,7 @@
             });
         }
         for (i = 0; i < storage_result.data.total_rows; i += 1) {
-          syncFullOpml({
-            type: storage_result.data.rows[i].value.type,
-            url: storage_result.data.rows[i].value.url,
-            basic_login: storage_result.data.rows[i].value.basic_login
-          });
+          syncFullOpml(storage_result.data.rows[i].value);
         }
         return opml_queue;
       });
