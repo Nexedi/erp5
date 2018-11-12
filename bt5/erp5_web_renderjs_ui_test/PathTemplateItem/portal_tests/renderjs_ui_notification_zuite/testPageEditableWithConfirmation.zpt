@@ -64,7 +64,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='panel']//a[@data-i18n='Preferences']</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Preferences']</td>
   <td></td>
 </tr>
 
@@ -77,7 +77,7 @@
 
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='panel']//a[@data-i18n='Preferences']</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Preferences']</td>
   <td></td>
 </tr>
 
