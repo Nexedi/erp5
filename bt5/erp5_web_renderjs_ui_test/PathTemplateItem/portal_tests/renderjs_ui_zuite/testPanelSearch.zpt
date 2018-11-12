@@ -81,7 +81,7 @@
 </tr>
 <tr>
  <td>click</td>
- <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//a[@data-i18n='Preferences']</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//a[text()='Preferences']</td>
  <td></td>
 </tr>
 <tr>
@@ -96,7 +96,7 @@
 </tr>
 <tr>
  <td>click</td>
- <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//a[@data-i18n='Search' and contains(@href, '#!display_stored_state') and contains(@href, 'n.page=search')]</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//a[text()='Search' and contains(@href, '#!display_stored_state') and contains(@href, 'n.page=search')]</td>
  <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
