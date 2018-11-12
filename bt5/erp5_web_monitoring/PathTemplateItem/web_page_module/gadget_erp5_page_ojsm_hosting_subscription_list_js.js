@@ -24,20 +24,22 @@
           for (i = 0; i < len; i += 1) {
             if (result.data.rows[i].value.hasOwnProperty("status_date")) {
               result.data.rows[i].value.status_date = {
-                allow_empty_time: 0,
-                ampm_time_style: 0,
-                css_class: "date_field",
-                date_only: 0,
-                description: "The Date",
-                editable: 0,
-                hidden: 0,
-                hidden_day_is_last_day: 0,
-                "default": new Date(result.data.rows[i].value.status_date).toUTCString(),
-                key: "date",
-                required: 0,
-                timezone_style: 0,
-                title: "Status Date",
-                type: "DateTimeField"
+                field_gadget_param: {
+                  allow_empty_time: 0,
+                  ampm_time_style: 0,
+                  css_class: "date_field",
+                  date_only: 0,
+                  description: "The Date",
+                  editable: 0,
+                  hidden: 0,
+                  hidden_day_is_last_day: 0,
+                  "default": new Date(result.data.rows[i].value.status_date).toUTCString(),
+                  key: "date",
+                  required: 0,
+                  timezone_style: 0,
+                  title: "Status Date",
+                  type: "DateTimeField"
+                }
               };
               result.data.rows[i].value["listbox_uid:list"] = {
                 key: "listbox_uid:list",
@@ -46,14 +48,16 @@
             }
             if (result.data.rows[i].value.hasOwnProperty("status")) {
               result.data.rows[i].value.status = {
-                css_class: "",
-                description: "The Status",
-                hidden: 0,
-                "default": result.data.rows[i].value.status,
-                key: "status",
-                url: "gadget_erp5_field_status.html",
-                title: "Status",
-                type: "GadgetField"
+                field_gadget_param: {
+                  css_class: "",
+                  description: "The Status",
+                  hidden: 0,
+                  "default": result.data.rows[i].value.status,
+                  key: "status",
+                  url: "gadget_erp5_field_status.html",
+                  title: "Status",
+                  type: "GadgetField"
+                }
               };
               result.data.rows[i].value["listbox_uid:list"] = {
                 key: "listbox_uid:list",
@@ -116,7 +120,8 @@
                     "Hosting Subscription" + "%22%29",
                   "portal_type": [],
                   "search_column_list": [['status', 'Status'], ['title', 'Hosting Subscription']],
-                  "sort_column_list": [['status', 'Status'], ['title', 'Hosting Subscription'], ['instance_amount', 'Instance Amount']],
+                  "sort_column_list": [['status', 'Status'], ['title', 'Hosting Subscription'],
+                                       ['instance_amount', 'Instance Amount'], ['status_date', 'Status Date']],
                   "sort": [['status', 'ascending'], ['title', 'ascending']],
                   "title": "Hosting Subscriptions",
                   "command": "index",
