@@ -1819,7 +1819,6 @@ if (typeof document.contains !== 'function') {
         scope_increment += 1;
       }
     }
-    parent_gadget.__sub_gadget_dict[scope] = gadget_instance;
     gadget_instance.element.setAttribute("data-gadget-scope",
                                          scope);
 
@@ -1836,6 +1835,7 @@ if (typeof document.contains !== 'function') {
     }
 
     function ready_wrapper() {
+      parent_gadget.__sub_gadget_dict[scope] = gadget_instance;
       if (document.contains(gadget_instance.element)) {
         startService(gadget_instance);
       }
