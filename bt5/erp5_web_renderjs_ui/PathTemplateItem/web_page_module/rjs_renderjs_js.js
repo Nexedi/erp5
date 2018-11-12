@@ -1,4 +1,3 @@
-
 /*
  * js_channel is a very lightweight abstraction on top of
  * postMessage which defines message formats and semantics
@@ -1819,7 +1818,6 @@ if (typeof document.contains !== 'function') {
         scope_increment += 1;
       }
     }
-    parent_gadget.__sub_gadget_dict[scope] = gadget_instance;
     gadget_instance.element.setAttribute("data-gadget-scope",
                                          scope);
 
@@ -1839,6 +1837,10 @@ if (typeof document.contains !== 'function') {
       if (document.contains(gadget_instance.element)) {
         startService(gadget_instance);
       }
+      // Always set the parent reference when all ready are finished
+      // in case the gadget declaration is cancelled
+      // (and ready are not finished)
+      parent_gadget.__sub_gadget_dict[scope] = gadget_instance;
       // Always return the gadget instance after ready function
       return gadget_instance;
     }
