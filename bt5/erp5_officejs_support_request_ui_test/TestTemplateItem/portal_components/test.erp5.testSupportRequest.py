@@ -525,6 +525,29 @@ class TestSupportRequestRSSSMultipleEvents(SupportRequestRSSTestCase, DefaultTes
     self.assertFalse(rss.bozo)
 
 
+class TestSupportRequestRSSSNonVisibleSupportRequest(SupportRequestRSSTestCase, DefaultTestRSSMixin):
+  """Edge case test for support request RSS for an event (visible by user) on a support request not visible by user.
+  """
+  def afterSetUp(self):
+    super(TestSupportRequestRSSSNonVisibleSupportRequest, self).afterSetUp()
+    support_request = self.support_request.Base_createCloneDocument(batch_mode=True)
+    support_request.manage_permission('View', ['Manager'], 0)
+    self.event.setFollowUpValue(support_request)
+    self.tic()
+
+  def _checkRSS(self, response):
+    self.assertEqual(httplib.OK, response.getStatus())
+    rss = feedparser.parse(response.getBody())
+    item, = rss.entries
+    self.assertEqual(item['author'], self.user.getTitle())
+    # there's no link to support request, as user cannot see it.
+    self.assertNotIn(self.support_request.getRelativeUrl(), item['link'])
+    self.assertEqual(item['published'], DateTime(2001, 1, 1).rfc822())
+    self.assertEqual(item['summary'], '<p>This is <b>Content</b></p>')
+    # https://pythonhosted.org/feedparser/bozo.html#advanced-bozo
+    self.assertFalse(rss.bozo)
+
+
 class TestIngestPostAsWebMessage(SupportRequestTestCase):
   """Tests ingesting HTML Post into web messages.
   """

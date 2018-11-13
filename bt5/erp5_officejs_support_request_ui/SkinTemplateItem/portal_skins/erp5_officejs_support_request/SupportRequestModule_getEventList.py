@@ -16,7 +16,11 @@ def getSupportRequestInfo(event):
   try:
     return getSupportRequest_memo[follow_up]
   except KeyError:
-    support_request = portal.restrictedTraverse(follow_up)
+    support_request = portal.restrictedTraverse(follow_up, None)
+    if support_request is None:
+      # For corner cases where user has an event for which he cannot access the ticket,
+      # we don't raise error so that others events are visible.
+      return event.getTitle(), '', ''
     getSupportRequest_memo[follow_up] = (
       support_request.getTitle(),
       support_request.getResourceTranslatedTitle() or '',
