@@ -22,7 +22,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Modules"]</td>
+  <td>//a[text()="mokuai"]</td>
   <td></td>
 </tr>
  
@@ -30,7 +30,7 @@
 
  <tr>
    <td>click</td>
-   <td>//a[@data-i18n="Modules"]</td>
+   <td>//a[text()="mokuai"]</td>
    <td></td>
  </tr>
  
