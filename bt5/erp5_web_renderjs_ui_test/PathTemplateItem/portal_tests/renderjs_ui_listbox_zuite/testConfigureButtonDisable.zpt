@@ -50,13 +50,13 @@
 <!-- check configure button is disable -->
 <tr>
  	<td>waitForElementPresent</td>
- 	<td>//button[@data-i18n='Configure' and contains(@class, 'ui-disabled')]</td>
+ 	<td>//button[text()='Configure' and contains(@class, 'ui-disabled')]</td>
   <td></td>
 </tr>
 
 <tr>
  	<td>verifyElementPresent</td>
- 	<td>//button[@data-i18n='Configure' and contains(@class, 'ui-disabled')]</td>
+ 	<td>//button[text()='Configure' and contains(@class, 'ui-disabled')]</td>
   <td></td>
 </tr>
 
