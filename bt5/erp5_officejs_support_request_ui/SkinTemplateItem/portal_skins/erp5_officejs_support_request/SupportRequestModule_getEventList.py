@@ -58,7 +58,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(
         'thumbnail': ( # XXX this is not really a thumbnail, but it's what RSS style uses for <enclosure/>
                        # Also, with this `thumbnail` it will look good for image, and most of the time
                        # users attach a screenshot of their problem.
-            event.getDefaultAggregate(portal_type=document_type_list)
+            event.getDefaultAggregate(portal_type=document_type_list, checked_permission="View")
             and event.getDefaultAggregateValue(portal_type=document_type_list).File_getDownloadUrl()
             or None)
         }

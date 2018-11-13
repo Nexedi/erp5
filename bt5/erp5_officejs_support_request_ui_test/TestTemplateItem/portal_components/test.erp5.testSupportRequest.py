@@ -548,6 +548,25 @@ class TestSupportRequestRSSSNonVisibleSupportRequest(SupportRequestRSSTestCase, 
     self.assertFalse(rss.bozo)
 
 
+class TestSupportRequestRSSSNonVisibleAttachment(SupportRequestRSSTestCase, DefaultTestRSSMixin):
+  """Edge case test for support request RSS for an event (visible by user) with attachment not visible by user.
+  """
+  def afterSetUp(self):
+    super(TestSupportRequestRSSSNonVisibleAttachment, self).afterSetUp()
+    self.attached_document.manage_permission('View', ['Manager'], 0)
+    self.attached_document.reindexObject()
+    self.tic()
+
+  def _checkRSS(self, response):
+    self.assertEqual(httplib.OK, response.getStatus())
+    rss = feedparser.parse(response.getBody())
+    item, = rss.entries
+    # no enclosure
+    self.assertEqual([], [link for link in item['links'] if link['rel'] == 'enclosure'])
+    # https://pythonhosted.org/feedparser/bozo.html#advanced-bozo
+    self.assertFalse(rss.bozo)
+
+
 class TestIngestPostAsWebMessage(SupportRequestTestCase):
   """Tests ingesting HTML Post into web messages.
   """
