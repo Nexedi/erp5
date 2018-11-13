@@ -43,6 +43,7 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tr>
  	<td>waitForElementPresent</td>
@@ -56,8 +57,9 @@
  <td></td>
 </tr>
 
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Document created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
@@ -75,11 +77,12 @@
   <td>//a[@data-i18n="Add"]</td>
   <td></td>
 </tr>
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <!-- create 2 Foo lines, one has same id as parent  -->
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Document created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
@@ -121,8 +124,11 @@
   <td>//a[@data-i18n="Add"]</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Document created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
@@ -167,6 +173,8 @@
  	<td>//a[text()='Foo Line: 2']</td>
  	<td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
@@ -183,6 +191,8 @@
  	<td>//a[@data-i18n='Actions']</td>
  	<td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
  	<td>//a[@data-i18n='Delete Document']</td>
@@ -193,8 +203,11 @@
  	<td>//a[@data-i18n='Delete Document']</td>
  	<td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Document deleted'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
@@ -206,6 +219,7 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <!-- We should see only one Foo Document -->
 <tr>
@@ -219,6 +233,8 @@
  	<td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope="field_listbox"]//tbody//a</td>
  	<td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tr>
  	<td>waitForElementPresent</td>
@@ -232,6 +248,7 @@
  	<td></td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
  	<td>waitForElementNotPresent</td>
    <td>//div[@data-gadget-scope="field_listbox"]</td>
@@ -251,6 +268,8 @@
  	<td>//a[@data-i18n='Actions']</td>
  	<td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
  	<td>//a[@data-i18n='Delete Document']</td>
@@ -261,8 +280,10 @@
  	<td>//a[@data-i18n='Delete Document']</td>
  	<td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Document deleted'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
@@ -272,6 +293,7 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tr>
  	<td>waitForElementPresent</td>
@@ -284,6 +306,7 @@
  	<td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_view.html')]//div[@data-gadget-scope="field_listbox"]//tbody//a</td>
  	<td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
  	<td>waitForElementNotPresent</td>
@@ -292,6 +315,7 @@
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <!-- Wait for the action page and click on the delete link -->
 <tr>
@@ -304,6 +328,7 @@
  	<td>//a[@data-i18n='Actions']</td>
  	<td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
  	<td>//a[@data-i18n='Delete Document']</td>
@@ -314,8 +339,10 @@
  	<td>//a[@data-i18n='Delete Document']</td>
  	<td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Document deleted'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
@@ -342,6 +369,7 @@
  	<td>//a[@data-i18n='Actions']</td>
  	<td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
  	<td>waitForTextPresent</td>
  	<td>Delete</td>
