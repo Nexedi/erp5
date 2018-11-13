@@ -45,7 +45,7 @@
 
 <tr><td>open</td>
     <td>${renderjs_url}/#/foo_module</td><td></td></tr>
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-role="header"]//a[@data-i18n="Actions"]</td><td></td></tr>
 <tr><td>click</td>
@@ -55,6 +55,7 @@
 <tr><td>click</td>
     <td>//ul[@class="document-listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr><th colspan="3">All actions are always visible</th></tr>
 <tr><td>waitForElementPresent</td>
     <td>//select[@name="field_your_mass_workflow_action"]/option</td><td></td></tr>
@@ -71,6 +72,8 @@
 <tal:block tal:define='search_query string:( title: "Title 1%" OR title: "Title 3%" )'>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
 </tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-role="header"]//a[@data-i18n="Actions"]</td><td></td></tr>
@@ -80,6 +83,7 @@
     <td>//ul[@class="document-listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
 <tr><td>click</td>
     <td>//ul[@class="document-listview"]//a[@data-i18n="Change State"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr><td>waitForElementPresent</td>
     <td>//select[@name="field_your_mass_workflow_action"]/option[@value="validate_action"]</td><td></td></tr>
@@ -87,6 +91,7 @@
     <td>//select[@name="field_your_mass_workflow_action"]</td>
     <td>value=validate_action</td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Form updated.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
@@ -101,6 +106,7 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block tal:define="notification_configuration python: {'class': 'success', 'text': 'Workflow modification in progress.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
@@ -113,6 +119,7 @@
 
 <tr><td>open</td>
     <td>${renderjs_url}/#/foo_module</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tr><th colspan="3">Check statuses </th></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
