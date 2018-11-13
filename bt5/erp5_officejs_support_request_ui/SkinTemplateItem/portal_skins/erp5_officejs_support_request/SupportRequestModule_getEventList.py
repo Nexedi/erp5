@@ -4,6 +4,9 @@ from Products.PythonScripts.standard import Object
 portal = context.getPortalObject()
 document_type_list = portal.getPortalDocumentTypeList()
 
+# for safety, we limit at 100 lines
+list_lines = min(list_lines, 100)
+
 def makeLine(kw):
   return Object(**kw)
 
@@ -31,7 +34,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(
     omit_input=True,
     # XXX we still don't have getCurrentMovementHistoryList
     simulation_state=('started', 'stopped', 'delivered'),
-    limit=limit,
+    limit=list_lines,
     sort_on=(('stock.date', 'desc'),
              ('uid', 'desc')),):
   event = brain.getObject()

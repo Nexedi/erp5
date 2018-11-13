@@ -379,7 +379,7 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
     self.assertEqual([], json.loads(support_request.SupportRequest_getCommentPostListAsJson()))
 
 
-class TestSupportRequestRSS(SupportRequestTestCase):
+class SupportRequestRSSTestCase(SupportRequestTestCase):
   # XXX token PAS plugin is not set up automatically when installing erp5_access_token
   # so we set it up the same way test.erp5.testERP5AccessTokenSkins is setting it up
   def _setupAccessTokenExtraction(self):
@@ -418,6 +418,21 @@ class TestSupportRequestRSS(SupportRequestTestCase):
     self.event.stop()
     self.tic()
 
+
+class DefaultTestRSSMixin(object):
+  """Mixin to request RSS and check the content with `_checkRSS`, that
+  should be provided by another class.
+  """
+  def test_RSS(self):
+    response = self.publish(
+        "%s/support_request_module/SupportRequestModule_viewLastSupportRequestListAsRss" % self.getWebSite().getPath(),
+        basic='%s:%s' % (self.user.erp5_login.getReference(), self.user_password))
+    self._checkRSS(response)
+
+
+class TestSupportRequestRSSSOneEvent(SupportRequestRSSTestCase, DefaultTestRSSMixin):
+  """Tests for simple cases of RSS with only one event.
+  """
   def _checkRSS(self, response):
     self.assertEqual(httplib.OK, response.getStatus())
     rss = feedparser.parse(response.getBody())
@@ -433,12 +448,6 @@ class TestSupportRequestRSS(SupportRequestTestCase):
         enclosure['href'])
     # https://pythonhosted.org/feedparser/bozo.html#advanced-bozo
     self.assertFalse(rss.bozo)
-
-  def test_RSS(self):
-    response = self.publish(
-        "%s/support_request_module/SupportRequestModule_viewLastSupportRequestListAsRss" % self.getWebSite().getPath(),
-        basic='%s:%s' % (self.user.erp5_login.getReference(), self.user_password))
-    self._checkRSS(response)
 
   def test_RSS_with_non_accessible_events(self):
     non_visible_event = self.portal.event_module.newContent(
@@ -470,6 +479,50 @@ class TestSupportRequestRSS(SupportRequestTestCase):
         '%s://%s' % (parsed_url.scheme, parsed_url.netloc), '', 1)
     # and check it (this time the request is not basic-authenticated)
     self._checkRSS(self.publish(restricted_access_url))
+
+
+class TestSupportRequestRSSSMultipleEvents(SupportRequestRSSTestCase, DefaultTestRSSMixin):
+  """Test that support request RSS only applies a limit and sort entries by date.
+
+  When Preferred Listbox List Mode Line Count is set to 3 and
+  there are 4 events, only the first 3 are displayed.
+  """
+  def afterSetUp(self):
+    super(TestSupportRequestRSSSMultipleEvents, self).afterSetUp()
+    preference = self.portal.portal_preferences.getActivePreference()
+    self._preferred_listbox_list_mode_line_count = \
+        preference.getPreferredListboxListModeLineCount()
+    preference.setPreferredListboxListModeLineCount(3)
+
+    for i in range(1, 5):
+      self.portal.event_module.newContent(
+          portal_type='Web Message',
+          source_value=self.user,
+          follow_up_value=self.support_request,
+          resource_value=self.portal.service_module.erp5_officejs_support_request_ui_test_service_001,
+          text_content="<p>This is <b>Content %s</b></p>" % i,
+          start_date=DateTime(2001, 1, i)).stop()
+    self.tic()
+
+  def beforeTearDown(self):
+    super(TestSupportRequestRSSSMultipleEvents, self).beforeTearDown()
+    preference = self.portal.portal_preferences.getActivePreference()
+    preference.setPreferredListboxListModeLineCount(
+        self._preferred_listbox_list_mode_line_count)
+    self.tic()
+
+  def _checkRSS(self, response):
+    self.assertEqual(httplib.OK, response.getStatus())
+    rss = feedparser.parse(response.getBody())
+    self.assertEqual(rss['feed']['title'], "Support Requests")
+    self.assertEqual(len(rss.entries), 3)
+    self.assertEqual(
+      [item['published'] for item in rss.entries],
+      [DateTime(2001, 1, 4).rfc822(),
+       DateTime(2001, 1, 3).rfc822(),
+       DateTime(2001, 1, 2).rfc822()])
+    # https://pythonhosted.org/feedparser/bozo.html#advanced-bozo
+    self.assertFalse(rss.bozo)
 
 
 class TestIngestPostAsWebMessage(SupportRequestTestCase):
