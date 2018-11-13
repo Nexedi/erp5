@@ -1386,6 +1386,16 @@ div[data-gadget-scope='header'] .ui-header {
       }
     }
   }
+  // In form_dialog, we don't want editors to be too big, because there
+  // is a dialog_button_container below, which we want to be in viewport
+  .form_dialog {
+    .bottom {
+      iframe {
+        height: 20em;
+      }
+    }
+  }
+
 
 /*
   @media @smartphone {
@@ -2002,7 +2012,9 @@ div[data-gadget-scope='maximize'] button {
   width: 100vw;
   height: ~"calc(100vh - "@headerheight~")";
   iframe {
-    height: 100%;
+    // this is !important because we want it to have priority over
+    // the rule for form_dialog bottom iframe rule
+    height: 100% !important;
   }
 }
 
