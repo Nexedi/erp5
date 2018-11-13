@@ -315,12 +315,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[@data-gadget-scope='panel']//a</td>
+      <td>//div[@data-gadget-scope='panel']//div</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[@data-gadget-scope='panel']//a</td>
+      <td>//div[@data-gadget-scope='panel']//div</td>
       <td></td>
     </tr>
     <tr>
