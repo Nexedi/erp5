@@ -176,19 +176,14 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_filter" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tal:block tal:define="parsed_query python: '';
                        search_query python: ''">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
 </tal:block>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Previous"]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//tbody/tr[1]</td>
   <td></td>
 </tr>
@@ -198,13 +193,8 @@
   <td>//tbody/tr[1]//a</td>
   <td></td>
 </tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@class="ui-icon-warning ui-btn-icon-left "]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 
 <tr>
