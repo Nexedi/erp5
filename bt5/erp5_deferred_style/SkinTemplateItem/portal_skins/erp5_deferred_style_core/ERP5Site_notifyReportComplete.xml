@@ -50,7 +50,15 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>user_name, subject, message, attachment_list</string> </value>
+            <value> <string>user_name, subject, message, attachment_list, format=""</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
