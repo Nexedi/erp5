@@ -291,12 +291,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[@data-gadget-scope='header']//a</td>
+      <td>//div[@data-gadget-scope='header']//div</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[@data-gadget-scope='header']//a</td>
+      <td>//div[@data-gadget-scope='header']//div</td>
       <td></td>
     </tr>
     <tr>
