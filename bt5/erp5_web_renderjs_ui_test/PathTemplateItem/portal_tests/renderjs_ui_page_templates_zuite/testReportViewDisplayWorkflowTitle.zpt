@@ -53,14 +53,14 @@
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//h1[text()='Edit Workflow']</td>
+  <td>//h1[contains(text(), 'Edit Workflow')]</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//h1[text()='Foo Workflow']</td>
+  <td>//h1[contains(text(), 'Foo Workflow')]</td>
   <td></td>
 </tr>
 
@@ -93,7 +93,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h1[text()='External Processing Workflow']</td>
+  <td>//h1[contains(text(), 'External Processing Workflow')]</td>
   <td></td>
 </tr>
 
@@ -101,14 +101,14 @@
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//h1[text()='Document Publication Workflow']</td>
+  <td>//h1[contains(text(), 'Document Publication Workflow')]</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//h1[text()='Edit Workflow']</td>
+  <td>//h1[contains(text(), 'Edit Workflow')]</td>
   <td></td>
 </tr>
 
