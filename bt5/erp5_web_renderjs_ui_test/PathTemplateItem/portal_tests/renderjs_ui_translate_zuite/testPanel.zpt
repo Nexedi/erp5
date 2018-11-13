@@ -37,14 +37,14 @@
  
   <tr>
    <td>verifyText</td>
-   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="Worklists"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@class="ui-btn-icon-left ui-icon-tasks"]</td>
    <td>gongzhuoliebiao</td>
  </tr>
  
  
   <tr>
    <td>verifyText</td>
-   <td>//div[@data-gadget-scope='panel']//a[@class="ui-btn-icon-left ui-icon-tasks"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@class="ui-btn-icon-left ui-icon-history"]</td>
    <td>lishi</td>
  </tr>
  
@@ -101,12 +101,12 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='panel']//dt[@data-i18n="Views"]</td>
+  <td>//div[@data-gadget-scope='panel']//dt[@class="ui-btn-icon-left ui-icon-eye"]</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyText</td>
-  <td>//div[@data-gadget-scope='panel']//dt[@data-i18n="Views"]</td>
+  <td>//div[@data-gadget-scope='panel']//dt[@class="ui-btn-icon-left ui-icon-eye"]</td>
   <td>shitu</td>
 </tr>
 <tr>

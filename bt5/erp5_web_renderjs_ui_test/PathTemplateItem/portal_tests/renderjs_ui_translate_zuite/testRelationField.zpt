@@ -104,13 +104,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//li[text()='tianjia']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//span[text()=' Foo_zhongwen: A new foo']</td>
+  <td>//li[text()='tianjia Foo_zhongwen: A new foo']</td>
   <td></td>
 </tr>
 
