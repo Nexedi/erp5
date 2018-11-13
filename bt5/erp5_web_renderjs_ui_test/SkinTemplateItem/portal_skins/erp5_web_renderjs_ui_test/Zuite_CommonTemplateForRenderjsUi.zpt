@@ -441,6 +441,11 @@
       <td></td>
     </tr>
     <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//nav//span[contains(text(), "ecord")]</td>
+      <td></td>
+    </tr>
+    <tr>
       <td colspan="3"><p></p></td>
     </tr>
   </tal:block>
