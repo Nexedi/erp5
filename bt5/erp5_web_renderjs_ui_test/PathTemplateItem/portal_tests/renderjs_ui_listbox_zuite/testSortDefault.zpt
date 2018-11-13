@@ -45,7 +45,7 @@ Frontend should not suppose default sorting
     <td>//a[text()='ID']</td><td></td></tr>
 <!-- No default sort must be shown because the definition is broken "id | id" -->
 <tr><td>assertElementPresent</td>
-    <td>//th[@class='']/a[text()='ID']</td><td></td></tr>
+    <td>//th[not(@class)]/a[text()='ID']</td><td></td></tr>
 <!-- Make sure broken definitions don't appear in sort editor -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr><td>waitForElementPresent</td>
@@ -94,7 +94,7 @@ Frontend should not suppose default sorting
     <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Title']</td><td></td></tr>
 <!-- No other sort must be shown -->
 <tr><td>assertElementPresent</td>
-    <td>//th[@class='']/a[text()='ID']</td><td></td></tr>
+    <td>//th[not(@class)]/a[text()='ID']</td><td></td></tr>
 <!-- Verify that the default sort is visible in Sort Editor -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 <tr><td>waitForElementPresent</td>
@@ -119,7 +119,7 @@ Frontend should not suppose default sorting
 
 <!-- Verify that default sort arrow disappeared -->
 <tr><td>assertElementPresent</td>
-    <td>//th[@class='']/a[text()='Title']</td><td></td></tr>
+    <td>//th[not(@class)]/a[text()='Title']</td><td></td></tr>
 <tr><td>assertElementPresent</td>
     <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='ID']</td><td></td></tr>
 
