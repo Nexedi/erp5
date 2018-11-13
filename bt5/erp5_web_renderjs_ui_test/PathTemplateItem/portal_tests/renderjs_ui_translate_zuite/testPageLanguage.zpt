@@ -35,14 +35,14 @@
 <!-- default has two language -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//option[@data-i18n='Wolof']</td>
+  <td>//option[text()='Wolof']</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//option[@data-i18n='English']</td>
+  <td>//option[text()='English']</td>
   <td></td>
 </tr>
 
@@ -95,48 +95,48 @@
 
  <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="Home"]</td>
+   <td>//a[@class="ui-btn-icon-left ui-icon-home"]</td>
    <td>Home</td>
  </tr>
 
 
  <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="Modules"]</td>
+   <td>//a[@class="ui-btn-icon-left ui-icon-puzzle-piece"]</td>
    <td>Modules</td>
  </tr>
  
   <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="Worklists"]</td>
+   <td>//a[@class="ui-btn-icon-left ui-icon-tasks"]</td>
    <td>Worklists</td>
  </tr>
  
  
   <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="History"]</td>
+   <td>//a[@class="ui-btn-icon-left ui-icon-history"]</td>
    <td>History</td>
  </tr>
  
  
   <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="Search"]</td>
+   <td>//a[@class="ui-btn-icon-left ui-icon-search"]</td>
    <td>Search</td>
  </tr>
  
  
   <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="Preferences"]</td>
+   <td>//a[@class="ui-btn-icon-left ui-icon-sliders"]</td>
    <td>Preferences</td>
  </tr>
  
  
   <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="Logout"]</td>
+   <td>//a[@class="ui-btn-icon-left ui-icon-power-off"]</td>
    <td>Logout</td>
  </tr>
 
