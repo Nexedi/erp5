@@ -54,6 +54,10 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
             'erp5_base',
             'erp5_ods_style',
             'erp5_odt_style',
+            'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_ingestion',
+            'erp5_web',
+            'erp5_dms',
             'erp5_deferred_style',
             'erp5_l10n_fr',)
 
@@ -76,6 +80,12 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
         password=self.password,
       )
       login.validate()
+    system_preference = self.portal.portal_preference._getOb('syspref', None)
+    if system_preference is None:
+      system_preference = self.portal.portal_preferences.newContent(portal_type="System Preference")
+      system_preference.enable()
+    # Fallback to former behaviour
+    system_preference.edit(preferred_deferred_report_stored_as_document=False)
     self.tic()
 
   def loginAsUser(self, username):
