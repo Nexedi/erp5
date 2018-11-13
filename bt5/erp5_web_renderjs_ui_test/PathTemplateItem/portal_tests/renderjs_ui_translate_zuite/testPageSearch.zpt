@@ -20,6 +20,7 @@
   <td></td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tal:block tal:define="search_query python: 'translated_portal_type:  &#x22;Web Script&#x22;'">
