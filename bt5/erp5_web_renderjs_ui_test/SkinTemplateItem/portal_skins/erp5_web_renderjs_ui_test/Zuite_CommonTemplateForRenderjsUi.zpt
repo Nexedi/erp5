@@ -291,12 +291,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[@data-gadget-scope='header']//a</td>
+      <td>//div[@data-gadget-scope='header']//div</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[@data-gadget-scope='header']//a</td>
+      <td>//div[@data-gadget-scope='header']//div</td>
       <td></td>
     </tr>
     <tr>
@@ -437,6 +437,11 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//nav//span[contains(text(), "ecord")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
       <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//nav//span[contains(text(), "ecord")]</td>
       <td></td>
     </tr>
