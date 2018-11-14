@@ -56,11 +56,7 @@
   <td>//span[@data-i18n='Publisher List']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Next']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
   <td>assertElementPresent</td>
   <td>//input[@id='search']</td>
@@ -116,11 +112,7 @@
   <td>//span[@data-i18n='Statistics']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Next']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
   <td>assertElementPresent</td>
   <td>//input[@id='search']</td>
@@ -171,11 +163,7 @@
   <td>//span[@data-i18n='Software List']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Next']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
   <td>assertElementPresent</td>
   <td>//input[@id='search']</td>
@@ -226,11 +214,7 @@
   <td>//span[@data-i18n='Success Story List']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Next']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
   <td>assertElementPresent</td>
   <td>//input[@id='search']</td>
