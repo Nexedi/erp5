@@ -17,14 +17,16 @@
   <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//h1[@data-i18n="[value]Support Request WorkLists"]</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//section[@class="document_list"]//li[1]</td>
   <td></td>
 </tr>
@@ -66,24 +68,24 @@
   <td>//section[@class="document_list"]//li/a[contains(text(), "Suspended Support Requests")]/span[text() = "1"]</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//h1/a[@data-i18n="Support Request Module"]</td>
   <td></td>
 </tr>
 
 <!-- The module is filtered according to worklist definition, so it shows one document -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n="Support Requests"]//span[text() = "(1)"]</td>
-  <td></td>
-</tr>
+<tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
 
 <!-- Query editor buttons are also present -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>div.search_parsed_value > button:nth-of-type(3)</td>
-</tr>
+<tal:block tal:define="search_query python: '( ( local_roles:  &#34;Assignor&#34; OR local_roles:  &#34;Assignee&#34; ) AND portal_type:  &#34;Support Request&#34; AND translated_simulation_state_title:  &#34;Suspended&#34; )'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
+</tal:block>
 
 </tbody></table>
   </body>
