@@ -183,6 +183,50 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     else:
       self.fail('Attachment not found in email\n%s' % message_text)
 
+  def test_pdf_report_stored_as_document(self):
+    publication_section = "reporting"
+    classification = "collaborative"
+    system_preference = self.portal.portal_preferences._getOb('syspref', None)
+    system_preference.edit(preferred_deferred_report_stored_as_document=True,
+                           preferred_deferred_report_classification=classification,
+                           preferred_deferred_report_publication_section=publication_section,
+                           preferred_deferred_report_notification_message_reference=None)
+    self.loginAsUser('bob')
+    self.portal.changeSkin('Deferred')
+    response = self.publish(
+        '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s&format=pdf'
+        % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
+    self.tic()
+    # A document has been created
+    document_list = self.portal.document_module.objectValues()
+    self.assertEquals(len(document_list), 1)
+    document = document_list[0].getObject()
+    expected_file_name = 'History%s' % self.attachment_file_extension
+    self.assertEqual(expected_file_name, document.getFilename())
+    self.assertEqual('History', document.getTitle())
+    self.assertEqual(None, document.getReference())
+    self.assertEqual("shared", document.getValidationState())
+    self.assertEqual(publication_section, document.getPublicationSection())
+    self.assertEqual(classification, document.getClassification())
+    self.assertEqual(self.portal_type, document.getPortalType())
+
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, message_text = last_message
+    self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
+    mail_message = email.message_from_string(message_text)
+    for part in mail_message.walk():
+      content_type = part.get_content_type()
+      if content_type == "text/html":
+        # "History" is the title of Base_viewHistory form
+        content = part.get_payload()
+        self.assertTrue("History.pdf" in content)
+        self.assertTrue("erp5/document_module" in content)
+        self.assertTrue("format=3Dpdf" in content)
+        break
+    else:
+      self.fail('Attachment not found in email\n%s' % message_text)
+
   def test_normal_form(self):
     self.loginAsUser('bob')
     # simulate a big request, for which Base_callDialogMethod will not issue a
