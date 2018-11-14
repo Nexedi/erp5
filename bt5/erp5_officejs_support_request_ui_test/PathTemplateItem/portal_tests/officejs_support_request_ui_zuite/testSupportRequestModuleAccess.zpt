@@ -14,23 +14,21 @@
   <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Support Requests']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//a[@data-i18n='Support Request Module']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>Title</td>
   <td></td>
 </tr>
