@@ -141,10 +141,10 @@ and compare real click with simulated clicks.
 <tr><td>selectFrame</td>
     <td>relative=top</td><td></td></tr>
 <tr><td>waitForText</td>
-    <td>//h1[@data-i18n="Recent Updates"]</td>
+    <td>//h1[contains(text(), "Recent Updates")]</td>
     <td>Recent Updates (3)</td></tr> <!-- FIXME: this should be 2 here. 123dsfa	is not "last month" -->
 <tr><td>waitForText</td>
-    <td>//h1[@data-i18n="Recent Updates"]/../..//td[1]/a</td>
+    <td>//h1[contains(text(), "Recent Updates")]/../..//td[1]/a</td>
     <td>Yesterday - RobotMaking - Submitted</td></tr>
 
 <!-- reset filter is now enabled -->
@@ -154,7 +154,7 @@ and compare real click with simulated clicks.
 <tr><td>click</td>
     <td>//input[@data-i18n="[value]Reset Filter"]</td><td></td></tr>
 <tr><td>waitForText</td>
-    <td>//h1[@data-i18n="Recent Updates"]</td>
+    <td>//h1[contains(text(), "Recent Updates")]</td>
     <td>glob:Recent Updates (1 - 5 / *)</td></tr>
 
 </tbody></table>
