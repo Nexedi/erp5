@@ -28,6 +28,7 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5OOo.tests.utils import Validator
@@ -148,6 +149,64 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
                            preferred_deferred_report_classification=classification,
                            preferred_deferred_report_publication_section=publication_section,
                            preferred_deferred_report_notification_message_reference=None)
+    self.loginAsUser('bob')
+    self.portal.changeSkin('Deferred')
+    response = self.publish(
+        '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
+        % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
+    self.tic()
+    # A document has been created
+    document_list = self.portal.document_module.objectValues()
+    self.assertEquals(len(document_list), 1)
+    document = document_list[0].getObject()
+    expected_file_name = 'History%s' % self.attachment_file_extension
+    self.assertEqual(expected_file_name, document.getFilename())
+    self.assertEqual('History', document.getTitle())
+    self.assertEqual(None, document.getReference())
+    self.assertEqual("shared", document.getValidationState())
+    self.assertEqual(publication_section, document.getPublicationSection())
+    self.assertEqual(classification, document.getClassification())
+    self.assertEqual(self.portal_type, document.getPortalType())
+
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, message_text = last_message
+    self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
+    mail_message = email.message_from_string(message_text)
+    for part in mail_message.walk():
+      content_type = part.get_content_type()
+      if content_type == "text/html":
+        # "History" is the title of Base_viewHistory form
+        content = part.get_payload()
+        self.assertTrue("History%s" % self.attachment_file_extension in content)
+        self.assertTrue("erp5/document_module" in content)
+        break
+    else:
+      self.fail('Attachment not found in email\n%s' % message_text)
+
+  def test_report_stored_as_document_with_notification_message(self):
+    publication_section = "reporting"
+    classification = "collaborative"
+    createZODBPythonScript(self.portal,
+                           'NotificationMessage_getSubstitutionMappingDictFromArgument',
+                           'mapping_dict',
+                           '''return mapping_dict''')
+    notification_message = self.portal.notification_message_module.newContent(
+      reference="notification-deferred.report",
+      content_type="text/html",
+      text_content='Hi,\n\nHere is the link(s) to your report(s) : ${report_link_list}.\n\n',
+      text_content_substitution_mapping_method_id='NotificationMessage_getSubstitutionMappingDictFromArgument',
+    )
+    notification_message.newContent(portal_type="Role Definition",
+                                    role_name="Auditor",
+                                    agent="person_module/pers")
+    notification_message.validate()
+    self.tic()
+    system_preference = self.portal.portal_preferences._getOb('syspref', None)
+    system_preference.edit(preferred_deferred_report_stored_as_document=True,
+                           preferred_deferred_report_classification=classification,
+                           preferred_deferred_report_publication_section=publication_section,
+                           preferred_deferred_report_notification_message_reference="notification-deferred.report")
     self.loginAsUser('bob')
     self.portal.changeSkin('Deferred')
     response = self.publish(
