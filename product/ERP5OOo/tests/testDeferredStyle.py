@@ -80,12 +80,25 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
         password=self.password,
       )
       login.validate()
-    system_preference = self.portal.portal_preference._getOb('syspref', None)
+    system_preference = self.portal.portal_preferences._getOb('syspref', None)
     if system_preference is None:
-      system_preference = self.portal.portal_preferences.newContent(portal_type="System Preference")
+      system_preference = self.portal.portal_preferences.newContent(
+              id="syspref",
+              portal_type="System Preference")
       system_preference.enable()
     # Fallback to former behaviour
     system_preference.edit(preferred_deferred_report_stored_as_document=False)
+    # add categories
+    if not getattr(self.portal.portal_categories.classification, 'collaborative', None):
+      self.portal.portal_categories.classification.newContent(id="collaborative")
+    if not getattr(self.portal.portal_categories.publication_section, 'reporting', None):
+      self.portal.portal_categories.publication_section.newContent(id="reporting")
+    self.tic()
+
+  def beforeTearDown(self):
+    document_ids = list(self.portal.document_module.objectIds())
+    if len(document_ids):
+      self.portal.document_module.manage_delObjects(ids=document_ids)
     self.tic()
 
   def loginAsUser(self, username):
@@ -123,6 +136,49 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
         error_list = Validator().validate(data)
         if error_list:
           self.fail(''.join(error_list))
+        break
+    else:
+      self.fail('Attachment not found in email\n%s' % message_text)
+
+  def test_report_stored_as_document(self):
+    publication_section = "reporting"
+    classification = "collaborative"
+    system_preference = self.portal.portal_preferences._getOb('syspref', None)
+    system_preference.edit(preferred_deferred_report_stored_as_document=True,
+                           preferred_deferred_report_classification=classification,
+                           preferred_deferred_report_publication_section=publication_section,
+                           preferred_deferred_report_notification_message_reference=None)
+    self.loginAsUser('bob')
+    self.portal.changeSkin('Deferred')
+    response = self.publish(
+        '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
+        % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
+    self.tic()
+    # A document has been created
+    document_list = self.portal.document_module.objectValues()
+    self.assertEquals(len(document_list), 1)
+    document = document_list[0].getObject()
+    expected_file_name = 'History%s' % self.attachment_file_extension
+    self.assertEqual(expected_file_name, document.getFilename())
+    self.assertEqual(expected_file_name, document.getTitle())
+    self.assertEqual(None, document.getReference())
+    self.assertEqual("shared", document.getValidationState())
+    self.assertEqual(publication_section, document.getPublicationSection())
+    self.assertEqual(classification, document.getClassification())
+    self.assertEqual(self.portal_type, document.getPortalType())
+
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, message_text = last_message
+    self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
+    mail_message = email.message_from_string(message_text)
+    for part in mail_message.walk():
+      content_type = part.get_content_type()
+      if content_type == "text/html":
+        # "History" is the title of Base_viewHistory form
+        content = part.get_payload()
+        self.assertTrue("History%s" % self.attachment_file_extension in content)
+        self.assertTrue("erp5/document_module" in content)
         break
     else:
       self.fail('Attachment not found in email\n%s' % message_text)
@@ -223,6 +279,7 @@ class TestODSDeferredStyle(TestDeferredStyle):
   skin = 'ODS'
   content_type = 'application/vnd.oasis.opendocument.spreadsheet'
   attachment_file_extension = '.ods'
+  portal_type="Spreadsheet"
 
   def test_report_view_sheet_per_report_section(self):
     """Test the sheet_per_report_section feature of erp5_ods_style.
@@ -261,11 +318,10 @@ class TestODTDeferredStyle(TestDeferredStyle):
   skin = 'ODT'
   content_type = 'application/vnd.oasis.opendocument.text'
   attachment_file_extension = '.odt'
-
+  portal_type = "Text"
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestODSDeferredStyle))
   suite.addTest(unittest.makeSuite(TestODTDeferredStyle))
   return suite
-
