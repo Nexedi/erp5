@@ -26,7 +26,6 @@
 
   <body>
     <div data-gadget-url="gadget_officejs_monitoring_jio.html" data-gadget-scope="jio_gadget" data-gadget-sandbox="public"></div>
-    <h2 class="header-notice"><i class="ui-icon ui-icon-custom ui-icon-info"></i> Graph content will be reloaded automatically every minutes.</h2>
     <!--<ul class="ui-grid-column ui-grid-column-5 graph_cpu">
       <li class="ui-grid-span-5 custom-grid-wrap graph-cell">
         <div data-gadget-url="gadget_erp5_graph.html" data-gadget-scope="graph_cpu" class="graph graph-h-medium" data-gadget-sandbox="public"></div>
@@ -36,13 +35,22 @@
       </li>
     </ul>-->
     <div class="ui-grid-a ui-responsive">
+      <form class="save_form ui-body-c" novalidate style="padding-left: 30px">
+        <div data-gadget-url="gadget_erp5_form.html"
+                data-gadget-scope="form_cpu_graph"
+                data-gadget-sandbox="public">
+        </div>
+      </form>
       <div data-gadget-url="gadget_field_graph_dygraph.html" data-gadget-scope="graph_cpu" class="graph graph-h-medium" data-gadget-sandbox="public"></div>
-    </div>
-    <div class="ui-grid-b ui-responsive">
-      <div data-gadget-url="gadget_field_graph_dygraph.html" data-gadget-scope="graph_io" class="graph graph-h-medium" data-gadget-sandbox="public"></div>
     </div>
     <div class="ui-grid-a ui-responsive">
       <div data-gadget-url="gadget_field_graph_dygraph.html" data-gadget-scope="graph_memory_used" class="graph graph-h-medium" data-gadget-sandbox="public"></div>
+    </div>
+    <div class="ui-grid-a ui-responsive">
+      <div data-gadget-url="gadget_field_graph_dygraph.html" data-gadget-scope="graph_io_read" class="graph graph-h-medium" data-gadget-sandbox="public"></div>
+    </div>
+    <div class="ui-grid-a ui-responsive">
+      <div data-gadget-url="gadget_field_graph_dygraph.html" data-gadget-scope="graph_io_write" class="graph graph-h-medium" data-gadget-sandbox="public"></div>
     </div>
   </body>
 </html>
