@@ -23,9 +23,12 @@ with portal.Localizer.translationContext(localizer_language):
       return data.decode('bz2')
     except IOError:
       return data.decode('zlib')
-
+  if portal.portal_preferences.getPreferredDeferredReportStoredAsDocument():
+    pt_render_format = None
+  else:
+    pt_render_format = format
   report_data = context.restrictedTraverse(form_path).report_view.pt_render(
-      extra_context=dict(options={'format': format},
+      extra_context=dict(options={'format': pt_render_format},
                          rendered_report_item_list=(decodeReportSection(r[1]) for r in report_section_list),
                          report_method=dummyReportMethod,
                          form=portal.restrictedTraverse(form_path)))
@@ -52,4 +55,5 @@ portal.ERP5Site_notifyReportComplete(
   user_name=user_name,
   subject=title,
   message='',
-  attachment_list=attachment_list)
+  attachment_list=attachment_list,
+  format=format)

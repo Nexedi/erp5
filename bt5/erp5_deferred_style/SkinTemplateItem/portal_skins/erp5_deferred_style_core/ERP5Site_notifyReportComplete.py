@@ -11,15 +11,16 @@ if prefs.getPreferredDeferredReportStoredAsDocument():
           publication_section=prefs.getPreferredDeferredReportPublicationSection(),
           classification=prefs.getPreferredDeferredReportClassification(),
           filename=attachment['name'],
-          title=attachment['name'],)
+          #title=attachment['name'],
+    )
     document.share()
     report_item_list.append(
-      (attachment.get('title', attachment['name']),
+      (attachment.get('title', document.getStandardFilename(format=format)), #attachment['name']),
         document.getRelativeUrl()))
 
   url_base = portal.ERP5Site_getAbsoluteUrl()
   report_url_text = '<br/>'.join([
-    '''<a href="%s/%s">%s</a>''' % (url_base , report_url, report_name ) for (report_name, report_url) in report_item_list ])
+    '''<a href="%s/%s?format=%s">%s</a>''' % (url_base , report_url, format, report_name ) for (report_name, report_url) in report_item_list ])
   message = '%s<br/>%s' % ( newline_to_br(html_quote(message)), report_url_text )
   message_text_format = "text/html"
   attachment_list = []
