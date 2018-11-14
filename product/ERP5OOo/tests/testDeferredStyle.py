@@ -160,7 +160,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     document = document_list[0].getObject()
     expected_file_name = 'History%s' % self.attachment_file_extension
     self.assertEqual(expected_file_name, document.getFilename())
-    self.assertEqual(expected_file_name, document.getTitle())
+    self.assertEqual('History', document.getTitle())
     self.assertEqual(None, document.getReference())
     self.assertEqual("shared", document.getValidationState())
     self.assertEqual(publication_section, document.getPublicationSection())
