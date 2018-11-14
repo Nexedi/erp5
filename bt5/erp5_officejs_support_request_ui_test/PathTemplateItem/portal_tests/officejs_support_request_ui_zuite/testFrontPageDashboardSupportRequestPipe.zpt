@@ -143,10 +143,10 @@ The approximated formula (by trial and error, so it migth be just wrong) is:
 <tr><td>selectFrame</td>
     <td>relative=top</td><td></td></tr>
 <tr><td>waitForText</td>
-    <td>//h1[@data-i18n="Recent Updates"]</td>
+    <td>//h1[contains(text(), "Recent Updates")]</td>
     <td>Recent Updates (1)</td></tr>
 <tr><td>waitForText</td>
-    <td>//h1[@data-i18n="Recent Updates"]/../..//td[1]/a</td>
+    <td>//h1[contains(text(), "Recent Updates")]/../..//td[1]/a</td>
     <td>Yesterday - PlaneMaking - Open</td></tr>
 
 <!-- reset filter is now enabled -->
@@ -156,7 +156,7 @@ The approximated formula (by trial and error, so it migth be just wrong) is:
 <tr><td>click</td>
     <td>//input[@data-i18n="[value]Reset Filter"]</td><td></td></tr>
 <tr><td>waitForText</td>
-    <td>//h1[@data-i18n="Recent Updates"]</td>
+    <td>//h1[contains(text(), "Recent Updates")]</td>
     <td>glob:Recent Updates (1 - 5 / *)</td></tr>
 
 </tbody></table>
