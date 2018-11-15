@@ -127,7 +127,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'editor\', context.Base_getEditorFieldPreferredTextEditor()), (\'portal_type\', \'HTML Post\'), (\'maximize\', False)]</string> </value>
+            <value> <string>python: [(\'editor\', context.Base_getEditorFieldPreferredTextEditor()), (\'portal_type\', \'HTML Post\'), (\'maximize\', True)]</string> </value>
         </item>
       </dictionary>
     </pickle>
