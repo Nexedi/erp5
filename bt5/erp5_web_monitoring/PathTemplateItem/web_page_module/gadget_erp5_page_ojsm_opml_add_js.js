@@ -5,6 +5,7 @@
 
   rJS(window)
 
+    .setState({auto_sync: false})
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
@@ -56,6 +57,19 @@
               })
               .push(function (result_list) {
                 if (result_list[1]) {
+                  if (gadget.state.auto_sync) {
+                    return gadget.getDeclaredGadget('sync_gadget')
+                      .push(function (sync_gadget) {
+                        // start synchronization now
+                        return sync_gadget.register({now: true});
+                      })
+                      .push(function () {
+                        return gadget.redirect({
+                          "command": "display",
+                          "options": {"page": "ojsm_status_list"}
+                        });
+                      });
+                  }
                   return gadget.redirect({
                     "command": "display",
                     "options": {"page": "settings_configurator"}
@@ -179,6 +193,9 @@
           });
         })
         .push(function () {
+          return gadget.changeState({auto_sync: options.sync === "yes"});
+        })
+        .push(function () {
           var new_options;
 
           if (options.chg_passwd === 'true') {
@@ -194,6 +211,14 @@
             save_action: true,
             change_password: chg_pwd_url
           });
+        })
+        .push(function () {
+          return gadget.checkSynchronize();
         });
+    })
+    .declareJob("checkSynchronize", function () {
+      if (this.state.auto_sync) {
+        return this.element.querySelector('button[type="submit"]').click();
+      }
     });
 }(window, rJS, RSVP));
