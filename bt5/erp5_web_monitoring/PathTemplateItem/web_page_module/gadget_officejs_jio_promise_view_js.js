@@ -225,9 +225,7 @@
           .push(function (status_history) {
             var i,
               len,
-              start,
-              //lines,
-              message;
+              start;
 
             if (status_history && status_history.hasOwnProperty('data')) {
               // the status history list is reversed ([old, ...., newest])
@@ -241,10 +239,6 @@
               //  lines = len - start;
               //}
               for (i = start; i >= 0; i -= 1) {
-                message = status_history.data[i].message.slice(0, 80);
-                if (message.length >= 80) {
-                  message += "...";
-                }
                 result.data.total_rows += 1;
                 result.data.rows.push({
                   value: {
@@ -302,7 +296,7 @@
                         type: "DateTimeField"
                       }
                     },
-                    message: message,
+                    message: status_history.data[i].message,
                     "listbox_uid:list": {
                       key: "listbox_uid:list",
                       value: 2713
@@ -524,7 +518,7 @@
                   "sort": [],
                   "hide_sort": true,
                   "command": "reload",
-                  "title": "Promise Status History",
+                  "title": "Promise Status list (On live)",
                   "type": "ListBox"
                 }
               }},
