@@ -1187,9 +1187,6 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content .bottom div[data-gadget-url$="gadget_erp5_field_listbox.html"] iframe {
   height: 30vh;
 }
-.gadget-content .form_dialog .bottom iframe {
-  height: 20em;
-}
 .gadget-content form .ui-field-contain {
   position: relative;
 }
@@ -1764,7 +1761,7 @@ div[data-gadget-scope='maximize'] button:active {
   height: calc(100vh -  30pt );
 }
 .editor-maximize div[data-gadget-scope='editor'] iframe {
-  height: 100% !important;
+  height: 100%;
 }
 /**********************************************
 * Front page
