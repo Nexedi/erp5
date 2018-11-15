@@ -177,10 +177,12 @@
         })
         .push(undefined, function (error) {
           var message_text,
-            code;
+            code = 0;
           if (error instanceof jIO.util.jIOError) {
             message_text = error.message;
             code = error.status_code;
+          } else if (error instanceof TypeError || error.message) {
+            message_text = error.message;
           } else {
             code = error.target.status;
             message_text = error.target.responseType === "text" ?
