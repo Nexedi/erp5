@@ -47,6 +47,8 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   # address. Zope 2.12 only surrounds names with quotes if they really need
   # quoting.
   first_name = 'Bob<Par'
+  publication_section = "reporting"
+  classification = "collaborative"
 
   def getTitle(self):
     return 'Test Deferred Style'
@@ -142,21 +144,18 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     else:
       self.fail('Attachment not found in email\n%s' % message_text)
 
-  def test_report_stored_as_document(self):
-    publication_section = "reporting"
-    classification = "collaborative"
-    system_preference = self.portal.portal_preferences._getOb('syspref', None)
-    system_preference.edit(preferred_deferred_report_stored_as_document=True,
-                           preferred_deferred_report_classification=classification,
-                           preferred_deferred_report_publication_section=publication_section,
-                           preferred_deferred_report_notification_message_reference=None)
-    self.loginAsUser('bob')
-    self.portal.changeSkin('Deferred')
-    response = self.publish(
-        '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
-        % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
-    self.tic()
-    # A document has been created
+
+  def _checkEmailLink(self, part, extension=None, content_type=None):
+    content = part.get_payload(decode=True)
+    self.assertTrue("History%s" % extension or self.attachment_file_extension in content)
+    tree = html.fromstring(content)
+    link, = [href for href in tree.xpath('//a/@href') if href]
+    relative_url =urlparse.urlparse(link)
+    report = self.publish(relative_url.path+"?"+relative_url.query, '%s:%s' % (self.username, self.password))
+    self.assertEqual(httplib.OK, report.getStatus())
+    self.assertEqual(report.getHeader('content-type'), content_type or self.content_type)
+
+  def _checkDocument(self):
     document_list = self.portal.document_module.objectValues()
     self.assertEquals(len(document_list), 1)
     document = document_list[0].getObject()
@@ -165,9 +164,27 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual('History', document.getTitle())
     self.assertEqual(None, document.getReference())
     self.assertEqual("shared", document.getValidationState())
-    self.assertEqual(publication_section, document.getPublicationSection())
-    self.assertEqual(classification, document.getClassification())
+    self.assertEqual(self.publication_section, document.getPublicationSection())
+    self.assertEqual(self.classification, document.getClassification())
     self.assertEqual(self.portal_type, document.getPortalType())
+
+  def _defineSystemPreference(self, notification_message_reference=None):
+    system_preference = self.portal.portal_preferences._getOb('syspref', None)
+    system_preference.edit(
+      preferred_deferred_report_stored_as_document=True,
+      preferred_deferred_report_classification=self.classification,
+      preferred_deferred_report_publication_section=self.publication_section,
+      preferred_deferred_report_notification_message_reference=notification_message_reference)
+
+  def test_report_stored_as_document(self):
+    self._defineSystemPreference()
+    self.loginAsUser('bob')
+    self.portal.changeSkin('Deferred')
+    response = self.publish(
+        '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
+        % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
+    self.tic()
+    self._checkDocument()
 
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
@@ -177,17 +194,12 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     for part in mail_message.walk():
       content_type = part.get_content_type()
       if content_type == "text/html":
-        # "History" is the title of Base_viewHistory form
-        content = part.get_payload()
-        self.assertTrue("History%s" % self.attachment_file_extension in content)
-        self.assertTrue("erp5/document_module" in content)
+        self._checkEmailLink(part)
         break
     else:
-      self.fail('Attachment not found in email\n%s' % message_text)
+      self.fail('Link not found in email\n%s' % message_text)
 
   def test_report_stored_as_document_with_notification_message(self):
-    publication_section = "reporting"
-    classification = "collaborative"
     createZODBPythonScript(self.portal,
                            'NotificationMessage_getSubstitutionMappingDictFromArgument',
                            'mapping_dict',
@@ -203,29 +215,14 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
                                     agent="person_module/pers")
     notification_message.validate()
     self.tic()
-    system_preference = self.portal.portal_preferences._getOb('syspref', None)
-    system_preference.edit(preferred_deferred_report_stored_as_document=True,
-                           preferred_deferred_report_classification=classification,
-                           preferred_deferred_report_publication_section=publication_section,
-                           preferred_deferred_report_notification_message_reference="notification-deferred.report")
+    self._defineSystemPreference("notification-deferred.report")
     self.loginAsUser('bob')
     self.portal.changeSkin('Deferred')
     response = self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
         % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
     self.tic()
-    # A document has been created
-    document_list = self.portal.document_module.objectValues()
-    self.assertEquals(len(document_list), 1)
-    document = document_list[0].getObject()
-    expected_file_name = 'History%s' % self.attachment_file_extension
-    self.assertEqual(expected_file_name, document.getFilename())
-    self.assertEqual('History', document.getTitle())
-    self.assertEqual(None, document.getReference())
-    self.assertEqual("shared", document.getValidationState())
-    self.assertEqual(publication_section, document.getPublicationSection())
-    self.assertEqual(classification, document.getClassification())
-    self.assertEqual(self.portal_type, document.getPortalType())
+    self._checkDocument()
 
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
@@ -235,27 +232,13 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     for part in mail_message.walk():
       content_type = part.get_content_type()
       if content_type == "text/html":
-        # "History" is the title of Base_viewHistory form
-        content = part.get_payload(decode=True)
-        self.assertTrue("History%s" % self.attachment_file_extension in content)
-        tree = html.fromstring(content)
-        link, = [href for href in tree.xpath('//a/@href') if href]
-        relative_url =urlparse.urlparse(link)
-        report = self.publish(relative_url.path+"?"+relative_url.query, '%s:%s' % (self.username, self.password))
-        self.assertEqual(httplib.OK, report.getStatus())
-        self.assertEqual(report.getHeader('content-type'), self.content_type)
+        self._checkEmailLink(part)
         break
     else:
-      self.fail('Attachment not found in email\n%s' % message_text)
+      self.fail('Link not found in email\n%s' % message_text)
 
   def test_pdf_report_stored_as_document(self):
-    publication_section = "reporting"
-    classification = "collaborative"
-    system_preference = self.portal.portal_preferences._getOb('syspref', None)
-    system_preference.edit(preferred_deferred_report_stored_as_document=True,
-                           preferred_deferred_report_classification=classification,
-                           preferred_deferred_report_publication_section=publication_section,
-                           preferred_deferred_report_notification_message_reference=None)
+    self._defineSystemPreference()
     self.loginAsUser('bob')
     self.portal.changeSkin('Deferred')
     response = self.publish(
@@ -263,17 +246,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
         % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
     self.tic()
     # A document has been created
-    document_list = self.portal.document_module.objectValues()
-    self.assertEquals(len(document_list), 1)
-    document = document_list[0].getObject()
-    expected_file_name = 'History%s' % self.attachment_file_extension
-    self.assertEqual(expected_file_name, document.getFilename())
-    self.assertEqual('History', document.getTitle())
-    self.assertEqual(None, document.getReference())
-    self.assertEqual("shared", document.getValidationState())
-    self.assertEqual(publication_section, document.getPublicationSection())
-    self.assertEqual(classification, document.getClassification())
-    self.assertEqual(self.portal_type, document.getPortalType())
+    self._checkDocument()
 
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
@@ -283,14 +256,10 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     for part in mail_message.walk():
       content_type = part.get_content_type()
       if content_type == "text/html":
-        # "History" is the title of Base_viewHistory form
-        content = part.get_payload()
-        self.assertTrue("History.pdf" in content)
-        self.assertTrue("erp5/document_module" in content)
-        self.assertTrue("format=3Dpdf" in content)
+        self._checkEmailLink(part, ".pdf", "application/pdf")
         break
     else:
-      self.fail('Attachment not found in email\n%s' % message_text)
+      self.fail('Link not found in email\n%s' % message_text)
 
   def test_normal_form(self):
     self.loginAsUser('bob')
