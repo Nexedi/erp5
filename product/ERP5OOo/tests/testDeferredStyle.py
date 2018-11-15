@@ -32,7 +32,8 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5OOo.tests.utils import Validator
-import email
+from lxml import html
+import email, urlparse, httplib
 
 
 class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
@@ -235,9 +236,14 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       content_type = part.get_content_type()
       if content_type == "text/html":
         # "History" is the title of Base_viewHistory form
-        content = part.get_payload()
+        content = part.get_payload(decode=True)
         self.assertTrue("History%s" % self.attachment_file_extension in content)
-        self.assertTrue("erp5/document_module" in content)
+        tree = html.fromstring(content)
+        link, = [href for href in tree.xpath('//a/@href') if href]
+        relative_url =urlparse.urlparse(link)
+        report = self.publish(relative_url.path+"?"+relative_url.query, '%s:%s' % (self.username, self.password))
+        self.assertEqual(httplib.OK, report.getStatus())
+        self.assertEqual(report.getHeader('content-type'), self.content_type)
         break
     else:
       self.fail('Attachment not found in email\n%s' % message_text)
