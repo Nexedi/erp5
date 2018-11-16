@@ -21,3 +21,8 @@ hr#post_item {
   list-style: initial;
   padding-left: 2em;
 }
+
+#post_list li p {
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+}
