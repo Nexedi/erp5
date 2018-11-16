@@ -441,18 +441,22 @@
   }
 
   function schemaArrFilteredByDocument(schema_arr, json_document) {
-    var i,
+    var x,
+      i,
+      errors,
+      error,
       flag,
       circular = schema_arr[0].circular,
       ret_arr = [],
+      validation,
       schema;
     if (schema_arr.length === 1 ||
         schema_arr[0].is_arr_of_const) {
       return schema_arr;
     }
     if (json_document !== undefined) {
-      for (i = 0; i < schema_arr.length; i += 1) {
-        schema = schema_arr[i].schema;
+      for (x = 0; x < schema_arr.length; x += 1) {
+        schema = schema_arr[x].schema;
         if (schema === true) {
           flag = true;
         } else if (schema === false) {
@@ -461,11 +465,49 @@
           flag = tv4.validate(json_document, schema);
         }
         if (flag) {
-          ret_arr.push(schema_arr[i]);
+          ret_arr.push(schema_arr[x]);
         }
       }
       if (ret_arr.length === 0) {
-        // XXX find schema more compatible with document
+        // currently try to find
+        // more compatible schema for current document
+        // XXX it may be need be more smart in future
+        // (every error has weigh, weigh depend from level...),
+        // may be not.
+        for (x = 0; x < schema_arr.length; x += 1) {
+          schema = schema_arr[x].schema;
+          if (schema !== false) {
+            validation = tv4.validateMultiple(json_document, schema);
+            errors = validation.errors;
+            flag = true;
+            for (i = 0; i < errors.length; i += 1) {
+              error = errors[i];
+              if (error.code === 0 || // INVALID_TYPE
+                  error.code === 13 || // NOT_PASSED
+                  error.code === 14 // BOOLEAN_SCHEMA_FALSE
+                  ) {
+                if (error.dataPath.split('/').length === 1) {
+                  flag = false;
+                  break;
+                }
+              }
+              if (error.code === 15 // CONST_NOT_EQUAL
+                  ) {
+                // take in account errors only on fist level
+                if (error.dataPath.split('/').length <= 2) {
+                  flag = false;
+                  break;
+                }
+              }
+            }
+            if (flag) {
+              ret_arr = [schema_arr[x]];
+              break;
+            }
+          }
+        }
+      }
+      if (ret_arr.length === 0) {
         return schema_arr;
       }
       ret_arr[0].circular = circular;

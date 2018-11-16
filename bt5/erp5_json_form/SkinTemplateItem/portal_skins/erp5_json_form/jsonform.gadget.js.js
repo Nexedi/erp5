@@ -901,29 +901,6 @@
     .allowPublicAcquisition("expandSchema", function (arr) {
       return expandSchemaForField(this, arr[0], arr[1], arr[2]);
     })
-    .onEvent('click', function (evt) {
-      if (evt.target === this.props.delete_button) {
-        return this.selfRemove(evt);
-      }
-
-      var link = evt.target.getAttribute("data-error-link"),
-        button_list = this.props.add_buttons,
-        i;
-      if (link) {
-        location.href = link;
-        return;
-      }
-
-      for (i = 0; i < button_list.length; i = i + 1) {
-        if (evt.target === button_list[i].element) {
-          return button_list[i].event(evt);
-        }
-      }
-    })
-    .declareJob('listenEvents', function () {
-      // XXX Disable
-      return;
-    })
     .onLoop(function () {
       var gadget = this;
       if (this.props.changed) {
