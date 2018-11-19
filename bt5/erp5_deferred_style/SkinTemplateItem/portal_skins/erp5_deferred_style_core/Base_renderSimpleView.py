@@ -2,6 +2,10 @@
 from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 request = portal.REQUEST
+report_format = request_form['format']
+if portal.portal_preferences.getPreferredDeferredReportStoredAsDocument():
+  request_form['format'] = None
+
 request.form.update(request_form)
 
 if skin_name and skin_name != 'None': # make_query serializes None as 'None'
@@ -31,4 +35,5 @@ with portal.Localizer.translationContext(localizer_language):
     user_name=user_name,
     subject=str(translateString(attachment_name.rsplit('.', 1)[0])),
     message='',
-    attachment_list=attachment_list)
+    attachment_list=attachment_list,
+    format=report_format)

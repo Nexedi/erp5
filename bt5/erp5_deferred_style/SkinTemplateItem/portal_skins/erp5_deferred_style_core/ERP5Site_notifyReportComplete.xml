@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>user_name, subject, message, attachment_list, format=None</string> </value>
+            <value> <string>user_name, subject, message, attachment_list, format=""</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
