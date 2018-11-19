@@ -30,13 +30,7 @@ if prefs.getPreferredDeferredReportStoredAsDocument():
     notification_mapping_dict = {
         'report_link_list': report_url_text,
     }
-    if notification_message.getContentType() == "text/html":
-      message = notification_message.asEntireHTML(
-        safe_substitute=False,
-        substitution_method_parameter_dict={'mapping_dict': notification_mapping_dict})
-    else:
-      message_text_format = "text/plain"
-      message = notification_message.asText(
+    message = notification_message.asEntireHTML(
         safe_substitute=False,
         substitution_method_parameter_dict={'mapping_dict': notification_mapping_dict})
 
