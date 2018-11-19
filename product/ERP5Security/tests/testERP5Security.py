@@ -48,14 +48,13 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
 AUTO_LOGIN = object()
 
-class TestUserManagement(ERP5TypeTestCase):
-  """Tests User Management in ERP5Security.
+
+class UserManagementTestCase(ERP5TypeTestCase):
+  """TestCase for user manement, with utilities to create users and helpers
+  assertion methods.
   """
   _login_generator = itertools.count().next
 
-  def getTitle(self):
-    """Title of the test."""
-    return "ERP5Security: User Management"
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
@@ -68,36 +67,9 @@ class TestUserManagement(ERP5TypeTestCase):
                              self.getPersonModule().objectIds()])
     self.tic()
 
-  def login(self):
-    uf = self.getUserFolder()
-    uf._doAddUser('alex', '', ['Manager', 'Assignee', 'Assignor',
-                               'Associate', 'Auditor', 'Author'], [])
-    user = uf.getUserById('alex').__of__(uf)
-    newSecurityManager(None, user)
-
   def getUserFolder(self):
     """Returns the acl_users. """
     return self.getPortal().acl_users
-
-  def test_GroupManagerInterfaces(self):
-    """Tests group manager plugin respects interfaces."""
-    # XXX move to GroupManager test class
-    from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
-    from Products.ERP5Security.ERP5GroupManager import ERP5GroupManager
-    verifyClass(IGroupsPlugin, ERP5GroupManager)
-
-  def test_UserManagerInterfaces(self):
-    """Tests user manager plugin respects interfaces."""
-    from Products.PluggableAuthService.interfaces.plugins import\
-                IAuthenticationPlugin, IUserEnumerationPlugin
-    from Products.ERP5Security.ERP5UserManager import ERP5UserManager
-    verifyClass(IAuthenticationPlugin, ERP5UserManager)
-    verifyClass(IUserEnumerationPlugin, ERP5UserManager)
-
-  def test_UserFolder(self):
-    """Tests user folder has correct meta type."""
-    self.assertTrue(isinstance(self.getUserFolder(),
-        PluggableAuthService.PluggableAuthService))
 
   def loginAsUser(self, username):
     uf = self.portal.acl_users
@@ -203,6 +175,62 @@ class TestUserManagement(ERP5TypeTestCase):
     self.tic()
     return dummy_document
 
+
+class RoleManagementTestCase(UserManagementTestCase):
+  """Test case with required configuration to test role definitions.
+  """
+  def afterSetUp(self):
+    """Initialize requirements of security configuration.
+    """
+    super(RoleManagementTestCase, self).afterSetUp()
+    # create a security configuration script
+    skin_folder = self.portal.portal_skins.custom
+    if 'ERP5Type_getSecurityCategoryMapping' not in skin_folder.objectIds():
+      createZODBPythonScript(
+        skin_folder, 'ERP5Type_getSecurityCategoryMapping', '',
+        """return ((
+          'ERP5Type_getSecurityCategoryFromAssignment',
+          context.getPortalObject().getPortalAssignmentBaseCategoryList()
+          ),)
+        """)
+    # configure group, site, function categories
+    category_tool = self.getCategoryTool()
+    for bc in ['group', 'site', 'function']:
+      base_cat = category_tool[bc]
+      code = bc[0].upper()
+      if base_cat.get('subcat', None) is not None:
+        continue
+      base_cat.newContent(portal_type='Category',
+                          id='subcat',
+                          codification="%s1" % code)
+      base_cat.newContent(portal_type='Category',
+                          id='another_subcat',
+                          codification="%s2" % code)
+    self.defined_category = "group/subcat\n"\
+                            "site/subcat\n"\
+                            "function/subcat"
+
+  def beforeTearDown(self):
+    """Clean up after test.
+    """
+    # clear base categories
+    for bc in ['group', 'site', 'function']:
+      base_cat = self.getCategoryTool()[bc]
+      base_cat.manage_delObjects(list(base_cat.objectIds()))
+    # clear role definitions
+    for ti in self.getTypesTool().objectValues():
+      ti.manage_delObjects([x.id for x in ti.getRoleInformationList()])
+    # clear modules
+    for module in self.portal.objectValues():
+      if module.getId().endswith('_module'):
+        module.manage_delObjects(list(module.objectIds()))
+    # commit this
+    self.tic()
+
+
+class TestUserManagement(UserManagementTestCase):
+  """Tests User Management in ERP5Security.
+  """
   def test_PersonWithLoginPasswordAreUsers(self):
     """Tests a person with a login & password is a valid user."""
     _, login, password = self._makePerson()
@@ -311,51 +339,53 @@ class TestUserManagement(ERP5TypeTestCase):
     """Tests one cannot use the "system user" special login."""
     self._testUserNameExistsButCannotLoginAndCannotCreate(SpecialUsers.system.getUserName())
 
-  def test_searchUserId(self):
-    substring = 'person_id'
-    user_id_set = {substring + '1', '1' + substring}
-    for user_id in user_id_set:
-      self._makePerson(user_id=user_id)
-    self.assertEqual(
-      user_id_set,
-      {x['userid'] for x in self.portal.acl_users.searchUsers(id=substring, exact_match=False)},
-    )
+  def test_DeletedPersonIsNotUser(self):
+    user_id, login, password = self._makePerson()
+    self._assertUserExists(login, password)
+    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
+    self.portal.restrictedTraverse(acl_user['path']).delete()
+    self.commit()
+    self._assertUserDoesNotExists(login, password)
 
-  def test_searchLogin(self):
-    substring = 'person_login'
-    login_set = {substring + '1', '1' + substring}
-    for login in login_set:
-      self._makePerson(login=login)
-    self.assertEqual(
-      login_set,
-      {x['login'] for x in self.portal.acl_users.searchUsers(login=substring, exact_match=False)},
-    )
+  def test_ReallyDeletedPersonIsNotUser(self):
+    user_id, login, password = self._makePerson()
+    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
+    p = self.portal.restrictedTraverse(acl_user['path'])
+    self._assertUserExists(login, password)
+    p.getParentValue().deleteContent(p.getId())
+    self.commit()
+    self._assertUserDoesNotExists(login, password)
 
-  def test_searchUsersIdExactMatch(self):
-    substring = 'person2_id'
-    self._makePerson(user_id=substring)
-    self._makePerson(user_id=substring + '1')
-    self._makePerson(user_id='1' + substring)
-    self.assertEqual(
-      [substring],
-      [x['userid'] for x in self.portal.acl_users.searchUsers(id=substring, exact_match=True)],
-    )
+  def test_InvalidatedPersonIsUser(self):
+    user_id, login, password = self._makePerson()
+    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
+    p = self.portal.restrictedTraverse(acl_user['path'])
+    self._assertUserExists(login, password)
+    p.validate()
+    p.invalidate()
+    self.commit()
+    self._assertUserExists(login, password)
 
-  def test_searchUsersLoginExactMatch(self):
-    substring = 'person2_login'
-    self._makePerson(login=substring)
-    self._makePerson(login=substring + '1')
-    self._makePerson(login='1' + substring)
-    self.assertEqual(
-      [substring],
-      [x['login'] for x in self.portal.acl_users.searchUsers(login=substring, exact_match=True)],
-    )
+  def test_UserIdIsPossibleToUnset(self):
+    """Make sure that it is possible to remove user id"""
+    user_id, login, password = self._makePerson()
+    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
+    person = self.portal.restrictedTraverse(acl_user['path'])
+    person.setUserId(None)
+    self.tic()
+    self.assertEqual(None, person.Person_getUserId())
 
+
+class DuplicatePrevention(UserManagementTestCase):
   def test_MultipleUsers(self):
     """Tests that it's refused to create two Persons with same user id."""
     user_id, login, _ = self._makePerson()
     self.assertRaises(ValidationFailed, self._makePerson, user_id=user_id)
     self.assertRaises(ValidationFailed, self._makePerson, login=login)
+
+  def test_duplicatePersonUserId(self):
+    user_id, _, _ = self._makePerson()
+    self.assertRaises(ValidationFailed, self._makePerson, user_id=user_id)
 
   def test_MultiplePersonReferenceWithoutCommit(self):
     """
@@ -422,6 +452,50 @@ class TestUserManagement(ERP5TypeTestCase):
       user_id,
     )
 
+  def test_duplicateLoginReference(self):
+    _, login1, _ = self._makePerson()
+    _, login2, _ = self._makePerson()
+    pas_user2, = self.portal.acl_users.searchUsers(login=login2, exact_match=True)
+    pas_login2, = pas_user2['login_list']
+    login2_value = self.portal.restrictedTraverse(pas_login2['path'])
+    login2_value.invalidate()
+    login2_value.setReference(login1)
+    self.commit()
+    self.assertRaises(ValidationFailed, login2_value.validate)
+    self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, login2_value, 'validate_action')
+
+  def _duplicateLoginReference(self, commit):
+    _, login1, _ = self._makePerson(tic=False)
+    user_id2, login2, _ = self._makePerson(tic=False)
+    if commit:
+      self.commit()
+    # Note: cannot rely on catalog, on purpose.
+    person_value, = [
+      x for x in self.portal.person_module.objectValues()
+      if x.Person_getUserId() == user_id2
+    ]
+    login_value, = [
+      x for x in person_value.objectValues(portal_type='ERP5 Login')
+      if x.getReference() == login2
+    ]
+    login_value.invalidate()
+    login_value.setReference(login1)
+    self.portal.portal_workflow.doActionFor(login_value, 'validate_action')
+    result = [x for x in self.portal.portal_catalog(portal_type='ERP5 Login') if x.checkConsistency()]
+    self.assertEqual(result, [])
+    self.tic()
+    result = [x for x in self.portal.portal_catalog(portal_type='ERP5 Login') if x.checkConsistency()]
+    self.assertEqual(len(result), 2)
+
+  def test_duplicateLoginReferenceInSameTransaction(self):
+    self._duplicateLoginReference(False)
+
+  def test_duplicateLoginReferenceInAnotherTransaction(self):
+    self._duplicateLoginReference(True)
+
+
+class TestPreferences(UserManagementTestCase):
+
   def test_Preference_created_for_new_user_on_getActiveUserPreference(self):
     # Creating a user will create a preference on the first time `getActiveUserPreference`
     # is called
@@ -482,86 +556,8 @@ class TestUserManagement(ERP5TypeTestCase):
     # password is not stored in plain text
     self.assertNotEquals(new_password, self.portal.restrictedTraverse(pas_user['path']).getPassword())
 
-  def test_OpenningAssignmentClearCache(self):
-    """Openning an assignment for a person clear the cache automatically."""
-    user_id, login, password = self._makePerson(open_assignment=0)
-    self._assertUserDoesNotExists(login, password)
-    user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
-    pers = self.portal.restrictedTraverse(user['path'])
-    assi = pers.newContent(portal_type='Assignment')
-    assi.open()
-    self.commit()
-    self._assertUserExists(login, password)
-    assi.close()
-    self.commit()
-    self._assertUserDoesNotExists(login, password)
 
-  def test_PersonNotIndexedNotCached(self):
-    user_id, login, password = self._makePerson(tic=False)
-    # not indexed yet
-    self._assertUserDoesNotExists(login, password)
-    self.tic()
-    self._assertUserExists(login, password)
-
-  def test_PersonNotValidNotCached(self):
-    user_id, login, password = self._makePerson()
-    password += '2'
-    pas_user, = self.portal.acl_users.searchUsers(login=login, exact_match=True)
-    pas_login, = pas_user['login_list']
-    self._assertUserDoesNotExists(login, password)
-    self.portal.restrictedTraverse(pas_login['path']).setPassword(password)
-    self._assertUserExists(login, password)
-
-  def test_PersonLoginMigration(self):
-    if 'erp5_users' not in self.portal.acl_users:
-      self.portal.acl_users.manage_addProduct['ERP5Security'].addERP5UserManager('erp5_users')
-    self.portal.acl_users.erp5_users.manage_activateInterfaces([
-      'IAuthenticationPlugin',
-      'IUserEnumerationPlugin',
-    ])
-    pers = self.portal.person_module.newContent(
-      portal_type='Person',
-      reference='the_user',
-      user_id=None,
-    )
-    pers.newContent(
-      portal_type='Assignment',
-    ).open()
-    pers.setPassword('secret')
-    self.assertEqual(len(pers.objectValues(portal_type='ERP5 Login')), 0)
-    self.tic()
-    self._assertUserExists('the_user', 'secret')
-    self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
-    self.portal.portal_caches.clearAllCache()
-    self.tic()
-    self._assertUserExists('the_user', 'secret')
-    self.assertEqual(pers.getPassword(), None)
-    self.assertEqual(pers.Person_getUserId(), 'the_user')
-    login = pers.objectValues(portal_type='ERP5 Login')[0]
-    login.setPassword('secret2')
-    self.portal.portal_caches.clearAllCache()
-    self.tic()
-    self._assertUserDoesNotExists('the_user', 'secret')
-    self._assertUserExists('the_user', 'secret2')
-    self.assertFalse('erp5_users' in \
-                     [x[0] for x in self.portal.acl_users.plugins.listPlugins(IAuthenticationPlugin)])
-    self.assertFalse('erp5_users' in \
-                     [x[0] for x in self.portal.acl_users.plugins.listPlugins(IUserEnumerationPlugin)])
-
-  def test_ERP5LoginUserManagerMigration(self):
-    acl_users= self.portal.acl_users
-    acl_users.manage_delObjects(ids=['erp5_login_users'])
-    portal_templates = self.portal.portal_templates
-    self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
-    # call checkConsistency again to check if FIX does not happen by checkConsistency().
-    self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
-    portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
-    self.assertEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
-    self.assertTrue('erp5_login_users' in \
-                     [x[0] for x in self.portal.acl_users.plugins.listPlugins(IAuthenticationPlugin)])
-    self.assertTrue('erp5_login_users' in \
-                     [x[0] for x in self.portal.acl_users.plugins.listPlugins(IUserEnumerationPlugin)])
-
+class TestAssignmentAndRoles(UserManagementTestCase):
   def test_AssignmentWithDate(self):
     """Tests a person with an assignment with correct date is a valid user."""
     date = DateTime()
@@ -640,86 +636,158 @@ class TestUserManagement(ERP5TypeTestCase):
         getRolesInContext(self._createDummyDocument())
     )
 
-  def test_DeletedPersonIsNotUser(self):
-    user_id, login, password = self._makePerson()
+
+class TestPermissionCache(UserManagementTestCase):
+  def test_OpenningAssignmentClearCache(self):
+    """Openning an assignment for a person clear the cache automatically.
+
+    XXX this works only on a single zope and not on a ZEO cluster.
+    """
+    user_id, login, password = self._makePerson(open_assignment=0)
+    self._assertUserDoesNotExists(login, password)
+    user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
+    pers = self.portal.restrictedTraverse(user['path'])
+    assi = pers.newContent(portal_type='Assignment')
+    assi.open()
+    self.commit()
     self._assertUserExists(login, password)
-    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
-    self.portal.restrictedTraverse(acl_user['path']).delete()
+    assi.close()
     self.commit()
     self._assertUserDoesNotExists(login, password)
 
-  def test_ReallyDeletedPersonIsNotUser(self):
-    user_id, login, password = self._makePerson()
-    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
-    p = self.portal.restrictedTraverse(acl_user['path'])
-    self._assertUserExists(login, password)
-    p.getParentValue().deleteContent(p.getId())
-    self.commit()
+  def test_PersonNotIndexedNotCached(self):
+    user_id, login, password = self._makePerson(tic=False)
+    # not indexed yet
     self._assertUserDoesNotExists(login, password)
-
-  def test_InvalidatedPersonIsUser(self):
-    user_id, login, password = self._makePerson()
-    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
-    p = self.portal.restrictedTraverse(acl_user['path'])
-    self._assertUserExists(login, password)
-    p.validate()
-    p.invalidate()
-    self.commit()
+    self.tic()
     self._assertUserExists(login, password)
 
-  def test_UserIdIsPossibleToUnset(self):
-    """Make sure that it is possible to remove user id"""
+  def test_PersonNotValidNotCached(self):
     user_id, login, password = self._makePerson()
-    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
-    person = self.portal.restrictedTraverse(acl_user['path'])
-    person.setUserId(None)
+    password += '2'
+    pas_user, = self.portal.acl_users.searchUsers(login=login, exact_match=True)
+    pas_login, = pas_user['login_list']
+    self._assertUserDoesNotExists(login, password)
+    self.portal.restrictedTraverse(pas_login['path']).setPassword(password)
+    self._assertUserExists(login, password)
+
+
+class TestPASAPI(UserManagementTestCase):
+  """Test low level PAS API works as expected.
+  """
+  def test_GroupManagerInterfaces(self):
+    """Tests group manager plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
+    from Products.ERP5Security.ERP5GroupManager import ERP5GroupManager
+    verifyClass(IGroupsPlugin, ERP5GroupManager)
+
+  def test_UserManagerInterfaces(self):
+    """Tests user manager plugin respects interfaces."""
+    from Products.PluggableAuthService.interfaces.plugins import\
+                IAuthenticationPlugin, IUserEnumerationPlugin
+    from Products.ERP5Security.ERP5UserManager import ERP5UserManager
+    verifyClass(IAuthenticationPlugin, ERP5UserManager)
+    verifyClass(IUserEnumerationPlugin, ERP5UserManager)
+
+  def test_UserFolder(self):
+    """Tests user folder has correct meta type."""
+    self.assertTrue(isinstance(self.getUserFolder(),
+        PluggableAuthService.PluggableAuthService))
+
+  def test_searchUserId(self):
+    substring = 'person_id'
+    user_id_set = {substring + '1', '1' + substring}
+    for user_id in user_id_set:
+      self._makePerson(user_id=user_id)
+    self.assertEqual(
+      user_id_set,
+      {x['userid'] for x in self.portal.acl_users.searchUsers(id=substring, exact_match=False)},
+    )
+
+  def test_searchLogin(self):
+    substring = 'person_login'
+    login_set = {substring + '1', '1' + substring}
+    for login in login_set:
+      self._makePerson(login=login)
+    self.assertEqual(
+      login_set,
+      {x['login'] for x in self.portal.acl_users.searchUsers(login=substring, exact_match=False)},
+    )
+
+  def test_searchUsersIdExactMatch(self):
+    substring = 'person2_id'
+    self._makePerson(user_id=substring)
+    self._makePerson(user_id=substring + '1')
+    self._makePerson(user_id='1' + substring)
+    self.assertEqual(
+      [substring],
+      [x['userid'] for x in self.portal.acl_users.searchUsers(id=substring, exact_match=True)],
+    )
+
+  def test_searchUsersLoginExactMatch(self):
+    substring = 'person2_login'
+    self._makePerson(login=substring)
+    self._makePerson(login=substring + '1')
+    self._makePerson(login='1' + substring)
+    self.assertEqual(
+      [substring],
+      [x['login'] for x in self.portal.acl_users.searchUsers(login=substring, exact_match=True)],
+    )
+
+
+class TestMigration(UserManagementTestCase):
+  """Tests migration to from login on the person to ERP5 Login documents.
+  """
+  def test_PersonLoginMigration(self):
+    if 'erp5_users' not in self.portal.acl_users:
+      self.portal.acl_users.manage_addProduct['ERP5Security'].addERP5UserManager('erp5_users')
+    self.portal.acl_users.erp5_users.manage_activateInterfaces([
+      'IAuthenticationPlugin',
+      'IUserEnumerationPlugin',
+    ])
+    pers = self.portal.person_module.newContent(
+      portal_type='Person',
+      reference='the_user',
+      user_id=None,
+    )
+    pers.newContent(
+      portal_type='Assignment',
+    ).open()
+    pers.setPassword('secret')
+    self.assertEqual(len(pers.objectValues(portal_type='ERP5 Login')), 0)
     self.tic()
-    self.assertEqual(None, person.Person_getUserId())
-
-  def test_duplicatePersonUserId(self):
-    user_id, _, _ = self._makePerson()
-    self.assertRaises(ValidationFailed, self._makePerson, user_id=user_id)
-
-  def test_duplicateLoginReference(self):
-    _, login1, _ = self._makePerson()
-    _, login2, _ = self._makePerson()
-    pas_user2, = self.portal.acl_users.searchUsers(login=login2, exact_match=True)
-    pas_login2, = pas_user2['login_list']
-    login2_value = self.portal.restrictedTraverse(pas_login2['path'])
-    login2_value.invalidate()
-    login2_value.setReference(login1)
-    self.commit()
-    self.assertRaises(ValidationFailed, login2_value.validate)
-    self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, login2_value, 'validate_action')
-
-  def _duplicateLoginReference(self, commit):
-    _, login1, _ = self._makePerson(tic=False)
-    user_id2, login2, _ = self._makePerson(tic=False)
-    if commit:
-      self.commit()
-    # Note: cannot rely on catalog, on purpose.
-    person_value, = [
-      x for x in self.portal.person_module.objectValues()
-      if x.Person_getUserId() == user_id2
-    ]
-    login_value, = [
-      x for x in person_value.objectValues(portal_type='ERP5 Login')
-      if x.getReference() == login2
-    ]
-    login_value.invalidate()
-    login_value.setReference(login1)
-    self.portal.portal_workflow.doActionFor(login_value, 'validate_action')
-    result = [x for x in self.portal.portal_catalog(portal_type='ERP5 Login') if x.checkConsistency()]
-    self.assertEqual(result, [])
+    self._assertUserExists('the_user', 'secret')
+    self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+    self.portal.portal_caches.clearAllCache()
     self.tic()
-    result = [x for x in self.portal.portal_catalog(portal_type='ERP5 Login') if x.checkConsistency()]
-    self.assertEqual(len(result), 2)
+    self._assertUserExists('the_user', 'secret')
+    self.assertEqual(pers.getPassword(), None)
+    self.assertEqual(pers.Person_getUserId(), 'the_user')
+    login = pers.objectValues(portal_type='ERP5 Login')[0]
+    login.setPassword('secret2')
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    self._assertUserDoesNotExists('the_user', 'secret')
+    self._assertUserExists('the_user', 'secret2')
+    self.assertFalse('erp5_users' in \
+                     [x[0] for x in self.portal.acl_users.plugins.listPlugins(IAuthenticationPlugin)])
+    self.assertFalse('erp5_users' in \
+                     [x[0] for x in self.portal.acl_users.plugins.listPlugins(IUserEnumerationPlugin)])
 
-  def test_duplicateLoginReferenceInSameTransaction(self):
-    self._duplicateLoginReference(False)
+  def test_ERP5LoginUserManagerMigration(self):
+    acl_users= self.portal.acl_users
+    acl_users.manage_delObjects(ids=['erp5_login_users'])
+    portal_templates = self.portal.portal_templates
+    self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
+    # call checkConsistency again to check if FIX does not happen by checkConsistency().
+    self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
+    portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+    self.assertEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
+    self.assertTrue('erp5_login_users' in \
+                     [x[0] for x in self.portal.acl_users.plugins.listPlugins(IAuthenticationPlugin)])
+    self.assertTrue('erp5_login_users' in \
+                     [x[0] for x in self.portal.acl_users.plugins.listPlugins(IUserEnumerationPlugin)])
 
-  def test_duplicateLoginReferenceInAnotherTransaction(self):
-    self._duplicateLoginReference(True)
 
 class TestUserManagementExternalAuthentication(TestUserManagement):
   def getTitle(self):
@@ -767,10 +835,9 @@ class TestUserManagementExternalAuthentication(TestUserManagement):
     self.assertTrue(reference in response.getBody())
 
 
-class TestLocalRoleManagement(ERP5TypeTestCase):
+class TestLocalRoleManagement(RoleManagementTestCase):
   """Tests Local Role Management with ERP5Security.
 
-  This test should probably part of ERP5Type ?
   """
   def getTitle(self):
     return "ERP5Security: User Role Management"
@@ -778,33 +845,8 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
   def afterSetUp(self):
     """Called after setup completed.
     """
-    self.portal = self.getPortal()
-    # create a security configuration script
-    skin_folder = self.portal.portal_skins.custom
-    if 'ERP5Type_getSecurityCategoryMapping' not in skin_folder.objectIds():
-      createZODBPythonScript(
-        skin_folder, 'ERP5Type_getSecurityCategoryMapping', '',
-        """return ((
-          'ERP5Type_getSecurityCategoryFromAssignment',
-          context.getPortalObject().getPortalAssignmentBaseCategoryList()
-          ),)
-        """)
-    # configure group, site, function categories
-    category_tool = self.getCategoryTool()
-    for bc in ['group', 'site', 'function']:
-      base_cat = category_tool[bc]
-      code = bc[0].upper()
-      if base_cat.get('subcat', None) is not None:
-        continue
-      base_cat.newContent(portal_type='Category',
-                          id='subcat',
-                          codification="%s1" % code)
-      base_cat.newContent(portal_type='Category',
-                          id='another_subcat',
-                          codification="%s2" % code)
-    self.defined_category = "group/subcat\n"\
-                            "site/subcat\n"\
-                            "function/subcat"
+    super(TestLocalRoleManagement, self).afterSetUp()
+
     # any member can add organisations
     self.portal.organisation_module.manage_permission(
             'Add portal content', roles=['Member', 'Manager'], acquire=1)
@@ -822,23 +864,6 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
                     reference=self.username,
                     password=self.username).validate()
     self.person = pers
-    self.tic()
-
-  def beforeTearDown(self):
-    """Called before teardown."""
-    # clear base categories
-    self.person.getParentValue().manage_delObjects([self.person.getId()])
-    for bc in ['group', 'site', 'function']:
-      base_cat = self.getCategoryTool()[bc]
-      base_cat.manage_delObjects(list(base_cat.objectIds()))
-    # clear role definitions
-    for ti in self.getTypesTool().objectValues():
-      ti.manage_delObjects([x.id for x in ti.getRoleInformationList()])
-    # clear modules
-    for module in self.portal.objectValues():
-      if module.getId().endswith('_module'):
-        module.manage_delObjects(list(module.objectIds()))
-    # commit this
     self.tic()
 
   def loginAsUser(self, username):
@@ -1058,6 +1083,15 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
                             basic='guest:guest')
     self.assertEqual(response.getStatus(), 401)
 
+
+class TestKeyAuthentication(RoleManagementTestCase):
+  def getBusinessTemplateList(self):
+    """This test also uses web and dms
+    """
+    return super(TestKeyAuthentication, self).getBusinessTemplateList() + (
+        'erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms', 'erp5_administration')
+
+
   def testKeyAuthentication(self):
     """
      Make sure that we can grant security using a key.
@@ -1157,6 +1191,8 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
       base_url, web_page.getReference(), 'ERP5TypeTestCase', ''))
     self.assertEqual(response.getStatus(), 200)
 
+
+class TestOwnerRole(UserManagementTestCase):
   def _createZodbUser(self, login, role_list=None):
     if role_list is None:
       role_list = ['Member', 'Assignee', 'Assignor', 'Author', 'Auditor',
@@ -1240,6 +1276,24 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
         (((cloning_owner_id), ('Owner',)),)
     )
 
+
+class TestReindexObjectSecurity(UserManagementTestCase):
+  def afterSetUp(self):
+    super(TestReindexObjectSecurity, self).afterSetUp()
+    self.username = 'usérn@me'
+    # create a user and open an assignement
+    pers = self.getPersonModule().newContent(portal_type='Person',
+                                             user_id=self.username)
+    assignment = pers.newContent( portal_type='Assignment',
+                                  group='subcat',
+                                  site='subcat',
+                                  function='subcat' )
+    assignment.open()
+    pers.newContent(portal_type='ERP5 Login',
+                    reference=self.username,
+                    password=self.username).validate()
+    self.tic()
+
   def _checkMessageMethodIdList(self, expected_method_id_list):
     actual_method_id_list = sorted([
         message.method_id
@@ -1274,9 +1328,3 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     check(['immediateReindexObject'] * (len(person) + 1))
     self.tic()
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestUserManagement))
-  suite.addTest(unittest.makeSuite(TestUserManagementExternalAuthentication))
-  suite.addTest(unittest.makeSuite(TestLocalRoleManagement))
-  return suite
