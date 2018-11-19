@@ -1,7 +1,7 @@
+from Products.PythonScripts.standard import newline_to_br, html_quote
 portal = context.getPortalObject()
 prefs = portal.portal_preferences
 report_item_list = []
-from Products.PythonScripts.standard import newline_to_br, html_quote
 message_text_format = "text/plain"
 
 if prefs.getPreferredDeferredReportStoredAsDocument():
@@ -11,12 +11,10 @@ if prefs.getPreferredDeferredReportStoredAsDocument():
           publication_section=prefs.getPreferredDeferredReportPublicationSection(),
           classification=prefs.getPreferredDeferredReportClassification(),
           filename=attachment['name'],
-          #title=attachment['name'],
     )
     document.share()
     report_item_list.append(
-      (attachment.get('title', document.getStandardFilename(format=format)), #attachment['name']),
-        document.getRelativeUrl()))
+      (attachment.get('title', document.getStandardFilename(format=format)), document.getRelativeUrl()))
 
   url_base = portal.ERP5Site_getAbsoluteUrl()
   report_url_text = '<br/>'.join([
@@ -29,19 +27,18 @@ if prefs.getPreferredDeferredReportStoredAsDocument():
     notification_message = portal.portal_notifications.getDocumentValue(reference=notification_message_reference)
     if notification_message is None:
       raise ValueError('Notification message not found by %r' % prefs.getPreferredDeferredReportNotificationMessageReference())
-    notification_mapping_dict={
+    notification_mapping_dict = {
         'report_link_list': report_url_text,
-      }
+    }
     if notification_message.getContentType() == "text/html":
       message = notification_message.asEntireHTML(
         safe_substitute=False,
-        substitution_method_parameter_dict={'mapping_dict':notification_mapping_dict})
+        substitution_method_parameter_dict={'mapping_dict': notification_mapping_dict})
     else:
       message_text_format = "text/plain"
       message = notification_message.asText(
         safe_substitute=False,
-        substitution_method_parameter_dict={'mapping_dict':notification_mapping_dict})
-
+        substitution_method_parameter_dict={'mapping_dict': notification_mapping_dict})
 
 portal.portal_notifications.activate(activity='SQLQueue').sendMessage(
     recipient=user_name,
