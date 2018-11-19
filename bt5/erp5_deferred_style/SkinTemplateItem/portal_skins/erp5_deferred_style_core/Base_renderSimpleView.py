@@ -2,7 +2,7 @@
 from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 request = portal.REQUEST
-report_format = request_form['format']
+report_format = request_form.get('format', '')
 if portal.portal_preferences.getPreferredDeferredReportStoredAsDocument():
   request_form['format'] = None
 
