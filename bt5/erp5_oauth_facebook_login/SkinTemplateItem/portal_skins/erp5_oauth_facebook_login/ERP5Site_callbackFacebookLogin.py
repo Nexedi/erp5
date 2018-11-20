@@ -1,5 +1,8 @@
 import time
 
+request = container.REQUEST
+response = request.RESPONSE
+
 def handleError(error):
   context.Base_redirect(
     'login_form',
@@ -21,7 +24,7 @@ elif code is not None:
     access_token = response_dict['access_token'].encode('utf-8')
     hash_str = context.Base_getHMAC(access_token, access_token)
 
-    context.REQUEST.RESPONSE.setCookie('__ac_facebook_hash', hash_str, path='/')
+    context.setAuthCookie(response, '__ac_facebook_hash', hash_str)
     # store timestamp in second since the epoch in UTC is enough
     response_dict["response_timestamp"] = time.time()
 
@@ -45,7 +48,7 @@ elif code is not None:
     # https://developers.facebook.com/support/bugs/318390728250352/?disable_redirect=0
     # https://stackoverflow.com/questions/7131909/facebook-callback-appends-to-return-url/33257076#33257076
     # https://lab.nexedi.com/nexedi/erp5/merge_requests/417#note_64365
-    came_from = context.REQUEST.get("came_from",  portal.absolute_url() + "#")
-    return context.REQUEST.RESPONSE.redirect(came_from)
+    came_from = request.get("came_from",  portal.absolute_url() + "#")
+    return response.redirect(came_from)
 
 return handleError('')
