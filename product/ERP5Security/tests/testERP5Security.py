@@ -1273,6 +1273,35 @@ class TestOwnerRole(UserManagementTestCase):
     )
 
 
+class TestAuthenticationCookie(UserManagementTestCase):
+  """Test the authentication cookie.
+
+  Most of this functionality is already tested in testCookieiCrumbler, this
+  test uses a fully setup ERP5 site.
+  """
+  def testCookieAttributes(self):
+    """ERP5 sets some cookie attributes
+    """
+    _, login, password = self._makePerson()
+    self.tic()
+    request = self.portal.REQUEST
+    request.form['__ac_name'] = login
+    request.form['__ac_password'] = password
+    request['parent'] = [self.portal]
+    # (the secure flag is only set if we accessed through https)
+    request.setServerURL('https', 'example.com')
+
+    request.traverse('/')
+
+    response = request.RESPONSE
+    ac_cookie, = [v for (k, v) in response.listHeaders() if k.lower() == 'set-cookie' and '__ac=' in v]
+    # Secure flag so that cookie is sent only on https
+    self.assertIn('; Secure', ac_cookie)
+
+    # HTTPOnly flag so that javascript cannot access cookie
+    self.assertIn('; HTTPOnly', ac_cookie)
+
+
 class TestReindexObjectSecurity(UserManagementTestCase):
   def afterSetUp(self):
     super(TestReindexObjectSecurity, self).afterSetUp()
