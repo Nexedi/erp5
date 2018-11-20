@@ -3,6 +3,7 @@ portal = context.getPortalObject()
 prefs = portal.portal_preferences
 report_item_list = []
 message_text_format = "text/plain"
+pre_convert_tag = 'pre-convert-report-%s' % random.randint(0, 1000)
 
 if prefs.getPreferredDeferredReportStoredAsDocument():
   for attachment in attachment_list:
@@ -15,6 +16,9 @@ if prefs.getPreferredDeferredReportStoredAsDocument():
     document.share()
     report_item_list.append(
       (attachment.get('title', document.getStandardFilename(format=format)), document.getRelativeUrl()))
+    # pre-convert document before sending notification
+    if format:
+      document.activate(tag=pre_convert_tag).convert(format=format)
 
   url_base = portal.ERP5Site_getAbsoluteUrl()
   report_url_text = '<br/>'.join([
@@ -34,7 +38,7 @@ if prefs.getPreferredDeferredReportStoredAsDocument():
         safe_substitute=False,
         substitution_method_parameter_dict={'mapping_dict': notification_mapping_dict})
 
-portal.portal_notifications.activate(activity='SQLQueue').sendMessage(
+portal.portal_notifications.activate(after_tag=pre_convert_tag, activity='SQLQueue').sendMessage(
     recipient=user_name,
     subject=subject,
     message=message,
