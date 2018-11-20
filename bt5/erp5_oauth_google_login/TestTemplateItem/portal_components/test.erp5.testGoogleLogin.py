@@ -111,7 +111,6 @@ class TestGoogleLogin(ERP5TypeTestCase):
     GoogleLoginUtility.getUserEntry = getUserEntry
 
     self.dummy_connector_id = "test_google_connector"
-    person_module = self.portal.person_module
     portal_catalog = self.portal.portal_catalog
     for obj in portal_catalog(portal_type=["Google Login", "Person"],
                               reference=getUserId(None),
