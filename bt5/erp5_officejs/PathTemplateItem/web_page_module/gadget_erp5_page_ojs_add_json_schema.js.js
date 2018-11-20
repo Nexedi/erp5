@@ -3,18 +3,6 @@
 (function (window, rJS, RSVP, Blob) {
   "use strict";
 
-  var content_type = {
-    Spreadsheet: 'application/x-asc-spreadsheet',
-    Presentation: 'application/x-asc-presentation',
-    Text: 'application/x-asc-text'
-  };
-
-  var file_ext = {
-    Spreadsheet: 'xlsy',
-    Presentation: 'ppty',
-    Text: 'docy'
-  };
-
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -30,21 +18,15 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod("render", function (options) {
+    .declareMethod("render", function () {
       var gadget = this,
-        portal_type = options.portal_type,
-        ext = file_ext[portal_type],
         ret = {
           title: "Untitled Schema",
           portal_type: "JSON Schema",
-          parent_relative_url: "schema_module",
-          content_type: content_type[portal_type] || undefined
+          parent_relative_url: "schema_module"
         };
       return RSVP.Queue()
         .push(function () {
-          if (ext) {
-            ret.filename = "default." + ext;
-          }
           return gadget.jio_post(ret);
         })
         .push(function (id) {
