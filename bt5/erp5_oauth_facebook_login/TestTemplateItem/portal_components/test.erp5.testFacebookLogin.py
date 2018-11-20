@@ -74,7 +74,6 @@ class TestFacebookLogin(ERP5TypeTestCase):
     FacebookLoginUtility.getUserEntry = getUserEntry
 
     self.dummy_connector_id = "test_facebook_connector"
-    person_module = self.portal.person_module
     portal_catalog = self.portal.portal_catalog
     for obj in portal_catalog(portal_type=["Facebook Login", "Person"],
                               reference=getUserId(None),
