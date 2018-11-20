@@ -44,5 +44,8 @@ else:
   # only stop batch ingestions
   if use == "big_data/ingestion/batch":
     context.stop()
+  # stop refresh
+  if context.getRefreshState() == "refresh_started":
+    context.stopRefresh()
 
 return out
