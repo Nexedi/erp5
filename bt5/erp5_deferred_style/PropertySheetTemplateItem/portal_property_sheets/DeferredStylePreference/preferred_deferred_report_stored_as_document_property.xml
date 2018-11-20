@@ -34,7 +34,9 @@
         </item>
         <item>
             <key> <string>property_default</string> </key>
-            <value> <string>python: True</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
