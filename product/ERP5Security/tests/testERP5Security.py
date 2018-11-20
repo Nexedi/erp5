@@ -383,10 +383,6 @@ class DuplicatePrevention(UserManagementTestCase):
     self.assertRaises(ValidationFailed, self._makePerson, user_id=user_id)
     self.assertRaises(ValidationFailed, self._makePerson, login=login)
 
-  def test_duplicatePersonUserId(self):
-    user_id, _, _ = self._makePerson()
-    self.assertRaises(ValidationFailed, self._makePerson, user_id=user_id)
-
   def test_MultiplePersonReferenceWithoutCommit(self):
     """
     Tests that it's refused to create two Persons with same user id.
