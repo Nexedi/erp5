@@ -1,3 +1,7 @@
+erp5_mysql_innodb/z0_drop_data_analysis
+erp5_mysql_innodb/z0_uncatalog_data_analysis
+erp5_mysql_innodb/z_catalog_data_analysis_list
+erp5_mysql_innodb/z_create_data_analysis
 erp5_mysql_innodb/z_related_item
 erp5_mysql_innodb/z_related_item_aggregate
 erp5_mysql_innodb/z_related_item_destination_project
