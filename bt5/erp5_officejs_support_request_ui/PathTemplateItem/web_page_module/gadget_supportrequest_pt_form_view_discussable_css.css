@@ -10,3 +10,48 @@ hr#post_item {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+
+#post_list li ol {
+  list-style: initial;
+  list-style-type: decimal;
+  padding-left: 2em;
+}
+
+#post_list li ul {
+  list-style: initial;
+  padding-left: 2em;
+}
+
+#post_list li p {
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+}
+
+#post_list li h1 {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+#post_list li h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+#post_list li h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+}
+
+#post_list li h4 {
+  font-weight: bold;
+}
+
+#post_list li h5 {
+  font-size: 0.83em;
+  font-weight: bold;
+}
+
+#post_list li h6 {
+  font-size: 0.67em;
+  font-weight: bold;
+}

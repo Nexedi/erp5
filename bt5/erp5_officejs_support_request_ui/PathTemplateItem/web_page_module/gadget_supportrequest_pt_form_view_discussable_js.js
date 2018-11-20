@@ -115,7 +115,8 @@
                     key: "comment",
                     portal_type: "HTML Post",
                     editable: true,
-                    editor: preferred_editor
+                    editor: preferred_editor,
+                    maximize: true
                   })]);
               }
             ).push(function () {

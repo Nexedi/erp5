@@ -74,16 +74,16 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>your_description</string>
-                        <string>your_file</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_description</string>
+                        <string>your_file</string>
+                      </list>
                     </value>
                 </item>
                 <item>
