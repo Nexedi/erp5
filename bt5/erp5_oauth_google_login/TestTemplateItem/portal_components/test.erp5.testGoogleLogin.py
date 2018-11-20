@@ -148,6 +148,17 @@ class TestGoogleLogin(ERP5TypeTestCase):
     self.assertNotIn("secret_key=", location)
     self.assertIn("ERP5Site_receiveGoogleCallback", location)
 
+  def test_auth_cookie(self):
+    request = self.portal.REQUEST
+    response = request.RESPONSE
+    # (the secure flag is only set if we accessed through https)
+    request.setServerURL('https', 'example.com')
+
+    self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
+    ac_cookie, = [v for (k, v) in response.listHeaders() if k.lower() == 'set-cookie' and '__ac_google_hash=' in v]
+    self.assertIn('; Secure', ac_cookie)
+    self.assertIn('; HTTPOnly', ac_cookie)
+
   def test_create_user_in_ERP5Site_createGoogleUserToOAuth(self):
     """
       Check if ERP5 set cookie properly after receive code from external service

@@ -1,5 +1,8 @@
 import time
 
+request = container.REQUEST
+response = request.RESPONSE
+
 def handleError(error):
   context.Base_redirect(
     'login_form',
@@ -19,7 +22,7 @@ elif code is not None:
   if response_dict is not None:
     access_token = response_dict['access_token'].encode('utf-8')
     hash_str = context.Base_getHMAC(access_token, access_token)
-    context.REQUEST.RESPONSE.setCookie('__ac_google_hash', hash_str, path='/')
+    context.setAuthCookie(response, '__ac_google_hash', hash_str)
     # store timestamp in second since the epoch in UTC is enough
     response_dict["response_timestamp"] = time.time()
     context.Base_setBearerToken(hash_str,
@@ -33,7 +36,6 @@ elif code is not None:
     method = getattr(context, "ERP5Site_createGoogleUserToOAuth", None)
     if method is not None:
       method(user_reference, user_dict)
-    return context.REQUEST.RESPONSE.redirect(
-      context.REQUEST.get("came_from") or context.absolute_url())
+    return response.redirect(request.get("came_from") or context.absolute_url())
 
 return handleError('')
