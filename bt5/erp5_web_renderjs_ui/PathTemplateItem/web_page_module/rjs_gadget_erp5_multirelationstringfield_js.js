@@ -7,7 +7,7 @@
                             value_uid, value_portal_type, index) {
     var input_gadget;
     return gadget.declareGadget('gadget_erp5_relation_input.html', {
-      element: document.createElement("fieldset")
+      element: "fieldset"
     })
       .push(function (result) {
         input_gadget = result;
