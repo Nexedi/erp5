@@ -136,7 +136,13 @@ class ComponentDynamicPackage(ModuleType):
         id_ = "%s.%s.%s" % (self._id_prefix, version, name)
         # aq_base() because this should not go up to ERP5Site and trigger
         # side-effects, after all this only check for existence...
-        component = getattr(aq_base(site.portal_components), id_, None)
+        try:
+          component_tool = aq_base(site.portal_components)
+        except AttributeError:
+          # For old sites, just use FS Documents...
+          return None
+
+        component = getattr(component_tool, id_, None)
         if component is None or component.getValidationState() not in ('modified',
                                                                        'validated'):
           return None
@@ -152,7 +158,12 @@ class ComponentDynamicPackage(ModuleType):
 
       # name=REFERENCE
       else:
-        component_tool = aq_base(site.portal_components)
+        try:
+          component_tool = aq_base(site.portal_components)
+        except AttributeError:
+          # For old sites, just use FS Documents...
+          return None
+
         for version in site.getVersionPriorityNameList():
           id_ = "%s.%s.%s" % (self._id_prefix, version, name)
           component = getattr(component_tool, id_, None)
