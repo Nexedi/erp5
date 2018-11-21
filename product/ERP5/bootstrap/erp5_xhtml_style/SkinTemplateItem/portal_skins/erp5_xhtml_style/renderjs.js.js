@@ -1623,6 +1623,8 @@ if (typeof document.contains !== 'function') {
     }
     gadget_instance.element.appendChild(fragment);
     setAqParent(gadget_instance, parent_gadget);
+    clearGadgetInternalParameters(gadget_instance);
+    gadget_instance.element._gadget = gadget_instance;
     if (old_element !== undefined) {
       // Add gadget to the DOM if needed
       // Do it when all DOM modifications are done
@@ -1714,6 +1716,8 @@ if (typeof document.contains !== 'function') {
     gadget_instance.element = options.element;
     gadget_instance.state = {};
     options.element.appendChild(iframe);
+    clearGadgetInternalParameters(gadget_instance);
+    gadget_instance.element._gadget = gadget_instance;
     // Add gadget to the DOM if needed
     // Do it when all DOM modifications are done
     old_element.parentNode.replaceChild(options.element,
@@ -1819,9 +1823,6 @@ if (typeof document.contains !== 'function') {
                                         old_element, scope) {
     var i,
       queue;
-    clearGadgetInternalParameters(gadget_instance);
-
-    gadget_instance.element._gadget = gadget_instance;
 
     function ready_executable_wrapper(fct) {
       return function executeReadyWrapper() {
@@ -1870,11 +1871,16 @@ if (typeof document.contains !== 'function') {
       }
       if (options.element === undefined) {
         options.element = document.createElement('div');
-      } else {
+      } else if (typeof options.element === 'string') {
+        options.element = document.createElement(options.element);
+      } else if (options.element.parentNode) {
         old_element = options.element;
         // Clean up the element content
         // Remove all existing event listener
         options.element = old_element.cloneNode(false);
+      } else {
+        throw new Error('No need to manually provide a DOM element ' +
+                        'without a parentNode: ' + url);
       }
 
       // transform url to absolute url if it is relative
@@ -2496,10 +2502,11 @@ if (typeof document.contains !== 'function') {
     }
 
     // Surcharge declareMethod to inform parent window
-    TmpConstructor.declareMethod = function declareMethod(name, callback) {
+    TmpConstructor.declareMethod = function declareMethod(name, callback,
+                                                          options) {
       var result = RenderJSGadget.declareMethod.apply(
           this,
-          [name, callback]
+          [name, callback, options]
         );
       notifyDeclareMethod(name);
       return result;
