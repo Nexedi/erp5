@@ -21,9 +21,14 @@ if prefs.getPreferredDeferredReportStoredAsDocument():
       document.activate(tag=pre_convert_tag).convert(format=format)
 
   url_base = portal.ERP5Site_getAbsoluteUrl()
-  report_url_text = '<br/>'.join([
-    '''<a href="%s/%s?format=%s">%s</a>''' % (url_base , report_url, format, report_name ) for (report_name, report_url) in report_item_list ])
-  message = '%s<br/>%s' % ( newline_to_br(html_quote(message)), report_url_text )
+  attachment_link_list = [
+    {
+      'download_link': '%s/%s?format=%s' % (url_base , report_url, format),
+      'name': report_name
+    } for  (report_name, report_url) in report_item_list 
+  ]
+  message_html = newline_to_br(html_quote(message))
+
   message_text_format = "text/html"
   attachment_list = []
   notification_message_reference = prefs.getPreferredDeferredReportNotificationMessageReference()
@@ -32,11 +37,20 @@ if prefs.getPreferredDeferredReportStoredAsDocument():
     if notification_message is None:
       raise ValueError('Notification message not found by %r' % prefs.getPreferredDeferredReportNotificationMessageReference())
     notification_mapping_dict = {
-        'report_link_list': report_url_text,
+        'report_link_list': portal.ERP5Site_viewReportCompleteNotificationMessage(
+            attachment_link_list=attachment_link_list
+        ),
+        'message': message_html
     }
     message = notification_message.asEntireHTML(
         safe_substitute=False,
         substitution_method_parameter_dict={'mapping_dict': notification_mapping_dict})
+  else:
+    # fallback to generating message with the page template when no notification message
+    message = portal.ERP5Site_viewReportCompleteNotificationMessage(
+        attachment_link_list=attachment_link_list,
+        message=message_html
+    )
 
 portal.portal_notifications.activate(after_tag=pre_convert_tag, activity='SQLQueue').sendMessage(
     recipient=user_name,

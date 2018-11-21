@@ -1,0 +1,17 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal">
+  <tal:block tal:replace="nothing">
+    This page template is used to prepare `report_link_list` variable to pass to notification message.
+    When no notification message exists, this page template acts as a "default notification message" and
+    receive `message` argument.
+  </tal:block>
+  <tal:block tal:condition="options/message | nothing">
+    <p>
+      <tal:block tal:replace="structure options/message" />
+    </p>
+  </tal:block>
+  <tal:block tal:repeat="attachment options/attachment_link_list">
+    <p>
+      <a tal:attributes="href attachment/download_link" tal:content="attachment/name"></a>
+    </p>
+  </tal:block>
+</tal:block>
