@@ -25,7 +25,7 @@
 
     return gadget.declareGadget('gadget_html5_input.html', {
       scope: item[1],
-      element: document.createElement('span')
+      element: 'span'
     })
       .push(function (result) {
         input_gadget = result;
