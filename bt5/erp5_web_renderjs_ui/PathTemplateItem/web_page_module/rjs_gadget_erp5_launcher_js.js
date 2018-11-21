@@ -36,25 +36,7 @@
   }
 
   function route(my_root_gadget, my_scope, my_method, argument_list) {
-    return my_root_gadget.getDeclaredGadget(my_scope)
-      .push(undefined, function (error) {
-        if (error instanceof rJS.ScopeError) {
-          var element = my_root_gadget
-                          .element
-                          .querySelector("[data-gadget-scope='" +
-                                         my_scope + "']");
-          if (element !== null) {
-            return my_root_gadget.declareGadget(
-              element.getAttribute('data-gadget-async-url'),
-              {
-                scope: my_scope,
-                element: element
-              }
-            );
-          }
-        }
-        throw error;
-      })
+    return my_root_gadget.getDeclareGadgetOrDeclare(my_scope)
       .push(function (my_gadget) {
         if (argument_list) {
           return my_gadget[my_method].apply(my_gadget, argument_list);
@@ -167,6 +149,28 @@
   // Page rendering
   //////////////////////////////////////////
   rJS(window)
+    .declareMethod('getDeclareGadgetOrDeclare', function (my_scope) {
+      var my_root_gadget = this;
+      return my_root_gadget.getDeclaredGadget(my_scope)
+        .push(undefined, function (error) {
+          if (error instanceof rJS.ScopeError) {
+            var element = my_root_gadget
+                            .element
+                            .querySelector("[data-gadget-scope='" +
+                                           my_scope + "']");
+            if (element !== null) {
+              return my_root_gadget.declareGadget(
+                element.getAttribute('data-gadget-async-url'),
+                {
+                  scope: my_scope,
+                  element: element
+                }
+              );
+            }
+          }
+          throw error;
+        });
+    }, {mutex: 'getDeclareGadgetOrDeclare'})
     .setState({
       panel_visible: false,
       setting_id: "setting/" + document.head.querySelector(
