@@ -35,32 +35,44 @@
     gadget.props.panel_argument_list = {};
   }
 
+  function executeRouteMethod(my_gadget, my_method, argument_list) {
+    // Execute a method on a gadget
+    if (argument_list) {
+      return my_gadget[my_method].apply(my_gadget, argument_list);
+    }
+    return my_gadget[my_method]();
+  }
+
   function route(my_root_gadget, my_scope, my_method, argument_list) {
-    return my_root_gadget.getDeclaredGadget(my_scope)
-      .push(undefined, function (error) {
-        if (error instanceof rJS.ScopeError) {
-          var element = my_root_gadget
-                          .element
-                          .querySelector("[data-gadget-scope='" +
-                                         my_scope + "']");
-          if (element !== null) {
-            return my_root_gadget.declareGadget(
-              element.getAttribute('data-gadget-async-url'),
-              {
-                scope: my_scope,
-                element: element
-              }
-            );
-          }
-        }
-        throw error;
-      })
-      .push(function (my_gadget) {
-        if (argument_list) {
-          return my_gadget[my_method].apply(my_gadget, argument_list);
-        }
-        return my_gadget[my_method]();
-      });
+    // If the gadget already has been declared, execute the method
+    // No need to care about concurrency at this point.
+    // This should be handled by the gadget itself if needed
+    if (my_root_gadget.props.is_declared_gadget_dict[my_scope]) {
+      return my_root_gadget.getDeclaredGadget(my_scope)
+        .push(function (my_gadget) {
+          return executeRouteMethod(my_gadget, my_method, argument_list);
+        });
+    }
+    // declare the gadget and run the method
+    var method;
+    if (my_scope === 'notification') {
+      method = my_root_gadget.declareAndExecuteNotificationGadget;
+    } else if (my_scope === 'translation_gadget') {
+      method = my_root_gadget.declareAndExecuteTranslationGadget;
+    } else if (my_scope === 'header') {
+      method = my_root_gadget.declareAndExecuteHeaderGadget;
+    } else if (my_scope === 'panel') {
+      method = my_root_gadget.declareAndExecutePanelGadget;
+    } else if (my_scope === 'editor_panel') {
+      method = my_root_gadget.declareAndExecuteEditorPanelGadget;
+    } else {
+      throw new Error('Unknown gadget scope: ' + my_scope);
+    }
+    return method.apply(my_root_gadget, [
+      my_scope,
+      my_method,
+      argument_list
+    ]);
   }
 
   function updateHeader(gadget) {
@@ -166,7 +178,71 @@
   //////////////////////////////////////////
   // Page rendering
   //////////////////////////////////////////
+  function declareAndExecuteRouteMethod(my_scope, my_method,
+                                        argument_list) {
+    // Must be called in a mutex protected method only
+    // The idea is to prevent loading the same gadget twice thanks to the mutex
+    var my_root_gadget = this,
+      my_gadget,
+      element;
+    // If a previous mutex method was running, no need to redeclare the gadget
+    if (my_root_gadget.props.is_declared_gadget_dict[my_scope]) {
+      return my_root_gadget.getDeclaredGadget(my_scope)
+        .push(function (my_gadget) {
+          return executeRouteMethod(my_gadget, my_method, argument_list);
+        });
+    }
+    element = my_root_gadget.element
+                            .querySelector("[data-gadget-scope='" +
+                                           my_scope + "']");
+    return my_root_gadget.declareGadget(
+      element.getAttribute('data-gadget-async-url'),
+      {scope: my_scope}
+    )
+      .push(function (result) {
+        my_gadget = result;
+        return executeRouteMethod(my_gadget, my_method, argument_list);
+      })
+      .push(function (result) {
+        // Wait for the method to be finished before adding the gadget to the
+        // DOM. This reduces the panel flickering on slow machines
+        element.parentNode.replaceChild(my_gadget.element, element);
+        my_root_gadget.props.is_declared_gadget_dict[my_scope] = true;
+        return result;
+      });
+  }
+
   rJS(window)
+
+    // Add mutex protected defered gadget loader.
+    // Multiple mutex are needed, to not prevent concurrent loading on
+    // different gadgets
+    .declareMethod(
+      'declareAndExecuteNotificationGadget',
+      declareAndExecuteRouteMethod,
+      {mutex: 'declareAndExecuteNotificationGadget'}
+    )
+    .declareMethod(
+      'declareAndExecuteTranslationGadget',
+      declareAndExecuteRouteMethod,
+      {mutex: 'declareAndExecuteTranslationGadget'}
+    )
+    .declareMethod(
+      'declareAndExecuteHeaderGadget',
+      declareAndExecuteRouteMethod,
+      {mutex: 'declareAndExecuteHeaderGadget'}
+    )
+    .declareMethod(
+      'declareAndExecutePanelGadget',
+      declareAndExecuteRouteMethod,
+      {mutex: 'declareAndExecutePanelGadget'}
+    )
+    .declareMethod(
+      'declareAndExecuteEditorPanelGadget',
+      declareAndExecuteRouteMethod,
+      {mutex: 'declareAndExecuteEditorPanelGadget'}
+    )
+
     .setState({
       panel_visible: false,
       setting_id: "setting/" + document.head.querySelector(
@@ -178,7 +254,12 @@
         setting_gadget,
         setting;
       this.props = {
-        content_element: this.element.querySelector('.gadget-content')
+        content_element: this.element.querySelector('.gadget-content'),
+        is_declared_gadget_dict: {
+          setting_gadget: true,
+          router: true,
+          jio_gadget: true
+        }
       };
       // Configure setting storage
       return gadget.getDeclaredGadget("setting_gadget")
