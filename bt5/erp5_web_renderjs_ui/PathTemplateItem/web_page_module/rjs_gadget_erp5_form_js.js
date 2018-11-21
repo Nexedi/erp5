@@ -45,12 +45,9 @@
       suboptions.field_json.editable = 0;
     }
 
-    field_element = document.createElement("div");
-
     if (modification_dict.hasOwnProperty('hash')) {
       queue = form_gadget.declareGadget('gadget_erp5_label_field.html', {
         scope: rendered_document[field_name].key, // ugly! Should be just `field_name` but too many tests depend on it
-        element: field_element,
         sandbox: "public"
       });
     } else {
@@ -69,6 +66,13 @@
 
           // gadget_list hold references to all created gadgets
           form_gadget.props.gadget_list.push(label_gadget);
+        }
+        if (modification_dict.hasOwnProperty('hash')) {
+          field_element = label_gadget.element;
+        } else {
+          // XXX Investigate why removing this break everything
+          // There is not reason to always create a DOM element
+          field_element = document.createElement("div");
         }
         return label_gadget.render(suboptions);
       })
