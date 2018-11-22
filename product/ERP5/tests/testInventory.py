@@ -1230,6 +1230,21 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       LOG('TestInventory._testGetInventory', 0, msg)
       LOG('SQL Query was : ', 0, str(simulation.getInventory(src__=1, **kw)))
       self.assertEqual(e_inventory, a_inventory, msg)
+  
+  def _testGetInventoryAssetPrice(self, expected, **kw):
+    """
+      Shared testing method
+    """
+    simulation = self.getPortal().portal_simulation
+    e_inventory = expected
+    LOG('Testing inventory with args :', 0, kw)
+    a_inventory = simulation.getInventoryAssetPrice(**kw)
+    if e_inventory != a_inventory:
+      msg = 'Inventory differs between expected (%s) and real (%s) price'\
+             % (repr(e_inventory), repr(a_inventory))
+      LOG('TestInventory._testGetInventoryAssetPrice', 0, msg)
+      LOG('SQL Query was : ', 0, str(simulation.getInventoryAssetPrice(src__=1, **kw)))
+      self.assertEqual(e_inventory, a_inventory, msg)
 
 
   def stepTestGetInventoryOnSimulationState(self, sequence=None,
@@ -3521,14 +3536,22 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     section = kw.get('section', None)
     resource = kw.get('resource', None)
     quantity = kw.get('quantity', 100)
-    mirror_node = sequence.get('mirror_node')
-    mirror_section = sequence.get('mirror_section')
+    price = kw.get('price', None)
+    mirror_node =  kw.get('mirror_node', None)
+    mirror_section = kw.get('mirror_section', None)
+    if mirror_node is None:
+      mirror_node = sequence.get('mirror_node')
+    if mirror_section is None:
+      mirror_section = sequence.get('mirror_section')
     packing_list_module = self.getPortal().getDefaultModule(
                               portal_type=self.packing_list_portal_type)
     packing_list = packing_list_module.newContent(
                               portal_type=self.packing_list_portal_type)
  
-    start_date = stop_date = DateTime() - 2
+    if kw.get('start_date', None) is not None:
+      start_date = stop_date = kw['start_date']
+    else:
+      start_date = stop_date = DateTime() - 2
     packing_list.edit(
                       specialise=self.business_process,
                       source_section_value = mirror_section,
@@ -3543,9 +3566,11 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     packing_list_line = packing_list.newContent(
                   portal_type=self.packing_list_line_portal_type)
     packing_list_line.edit(resource_value = resource,
-                           quantity = quantity
+                           quantity = quantity,
+                           price = price
                           )
     sequence.edit(packing_list=packing_list)
+    return packing_list_line
     
   
   def stepCreatePackingListWithSectionNodeFirstResource(self, sequence=None,
@@ -3850,7 +3875,336 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+  
+  
+  def stepCreateOneMoreSection(self, sequence=None,
+                                 sequence_list=None, **kw):
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    one_more_section = sequence.get('organisation')
+    sequence.edit(
+          one_more_section = one_more_section
+        )
+  
+  def stepCreatePackingListForA(self, sequence=None,
+                                            sequence_list=None, **kw):
+    #A
+    section = sequence.get('section')
+    node = sequence.get('node')
+    resource = sequence.get('resource')
+    self.stepCreatePackingList(sequence=sequence,
+                               sequence_list=sequence_list,
+                               section = section,
+                               node = node,
+                               resource = resource,
+                               quantity = 10,
+                               price = 100)
+  
+  def stepCreatePackingListForASecond(self, sequence=None,
+                                            sequence_list=None, **kw):
+    #A
+    section = sequence.get('section')
+    node = sequence.get('node')
+    resource = sequence.get('resource')
+    self.stepCreatePackingList(sequence=sequence,
+                               sequence_list=sequence_list,
+                               section = section,
+                               node = node,
+                               resource = resource,
+                               quantity = 15,
+                               price = 200)
+  
+  def stepCreatePackingListForAThird(self, sequence=None,
+                                            sequence_list=None, **kw):
+    #A
+    section = sequence.get('section')
+    node = sequence.get('node')
+    resource = sequence.get('resource')
+    self.stepCreatePackingList(sequence=sequence,
+                               sequence_list=sequence_list,
+                               section = section,
+                               node = node,
+                               resource = resource,
+                               quantity = 20,
+                               price = 200)
+
+  def stepCreatePackingListForB(self, sequence=None,
+                                            sequence_list=None, **kw):
+    #B
+    section = sequence.get('other_section')
+    node = sequence.get('other_node')
+    resource = sequence.get('resource')
+    self.stepCreatePackingList(sequence=sequence,
+                               sequence_list=sequence_list,
+                               section = section,
+                               node = node,
+                               resource = resource,
+                               quantity = 20,
+                               price = 55)
+
+  def stepCreatePackingListForC(self, sequence=None,
+                                            sequence_list=None, **kw):
+    #C
+    section = sequence.get('one_more_section')
+    node = sequence.get('node')
+    resource = sequence.get('resource')
+    self.stepCreatePackingList(sequence=sequence,
+                               sequence_list=sequence_list,
+                               section = section,
+                               node = node,
+                               resource = resource,
+                               quantity = 0,
+                               price = 0)
+  
+  
+  def stepCreatePackingListFromAToB(self, sequence=None,
+                                      sequence_list=None, **kw):
+    #B
+    section = sequence.get('other_section')
+    node = sequence.get('other_node')
+    resource = sequence.get('resource')
+    #A
+    mirror_section = sequence.get('section')
+    mirror_node = sequence.get('node')
+    packing_list_line_a_to_b = self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = section,
+                                 node = node,
+                                 mirror_section = mirror_section,
+                                 mirror_node = mirror_node,
+                                 resource = resource,
+                                 quantity = 30)
+    sequence.edit(packing_list_line_a_to_b = packing_list_line_a_to_b)
+
+  def stepCreatePackingListFromAToC(self, sequence=None,
+                                      sequence_list=None, **kw):
+    #C
+    section = sequence.get('one_more_section')
+    node = sequence.get('node')
+    resource = sequence.get('resource')
+    #A
+    mirror_section = sequence.get('section')
+    mirror_node = sequence.get('node')
+    packing_list_line_a_to_c = self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = section,
+                                 node = node,
+                                 mirror_section = mirror_section,
+                                 mirror_node = mirror_node,
+                                 resource = resource,
+                                 quantity = 10)
+    sequence.edit(packing_list_line_a_to_c = packing_list_line_a_to_c)
+
+  def stepCreatePackingListFromBToC(self, sequence=None,
+                                      sequence_list=None, **kw):
+    #C
+    section = sequence.get('one_more_section')
+    node = sequence.get('node')
+    resource = sequence.get('resource')
+    #B
+    mirror_section = sequence.get('other_section')
+    mirror_node = sequence.get('other_node')
+    packing_list_line_b_to_c = self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = section,
+                                 node = node,
+                                 mirror_section = mirror_section,
+                                 mirror_node = mirror_node,
+                                 resource = resource,
+                                 quantity = 5)
+    sequence.edit(packing_list_line_b_to_c = packing_list_line_b_to_c)
+
+  def stepCreatePackingListFromCToA(self, sequence=None,
+                                      sequence_list=None, **kw):
+    #A
+    section = sequence.get('section')
+    node = sequence.get('node')
+    resource = sequence.get('resource')
+    #C
+    mirror_section = sequence.get('one_more_section')
+    mirror_node = sequence.get('node')
+    packing_list_line_c_to_a = self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = section,
+                                 node = node,
+                                 mirror_section = mirror_section,
+                                 mirror_node = mirror_node,
+                                 resource = resource,
+                                 quantity = 2)
+    sequence.edit(packing_list_line_c_to_a = packing_list_line_c_to_a)
+
+
+  def steptestCircularMovementQuantity(self, sequence=None,
+                            sequence_list=None, **kw):
+    resource_value = sequence.get('resource')
+    node_value = sequence.get('node')
+    other_node_value = sequence.get('other_node')
+    section_value = sequence.get('section')
+    other_section_value = sequence.get('other_section')
+    one_more_section_value = sequence.get('one_more_section')
+    #C
+    self._testGetInventory(
+      expected=13,
+      section_uid=one_more_section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=resource_value.getUid()
+      )
+    #B
+    self._testGetInventory(
+      expected=45,
+      section_uid=other_section_value.getUid(),
+      node_uid=other_node_value.getUid(),
+      resource_uid=resource_value.getUid()
+      )
+    #A
+    self._testGetInventory(
+      expected=7,
+      section_uid=section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=resource_value.getUid()
+      )
     
+  def steptestCircularMovementPriceBefore(self, sequence=None,
+                            sequence_list=None, **kw):
+    resource_value = sequence.get('resource')
+    node_value = sequence.get('node')
+    other_node_value = sequence.get('other_node')
+    section_value = sequence.get('section')
+    other_section_value = sequence.get('other_section')
+    one_more_section_value = sequence.get('one_more_section')
+    #C
+    self._testGetInventoryAssetPrice(
+      expected=0,
+      section_uid=one_more_section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=resource_value.getUid()
+      )
+    #B
+    self._testGetInventoryAssetPrice(
+      expected=1100,
+      section_uid=other_section_value.getUid(),
+      node_uid=other_node_value.getUid(),
+      resource_uid=resource_value.getUid()
+      )
+    #A
+    self._testGetInventoryAssetPrice(
+      expected=8000,
+      section_uid=section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=resource_value.getUid()
+      )
+  
+  
+  def stepDefinePackingListLinePrice(self, sequence=None,
+                             sequence_list=None, **kw):
+    packing_list_line_c_to_a = sequence.get('packing_list_line_c_to_a')
+    packing_list_line_b_to_c = sequence.get('packing_list_line_b_to_c')
+    packing_list_line_a_to_c = sequence.get('packing_list_line_a_to_c')
+    packing_list_line_a_to_b = sequence.get('packing_list_line_a_to_b')
+    
+    packing_list_line_a_to_b.edit(price = 14)
+    packing_list_line_a_to_c.edit(price = 23)
+    packing_list_line_b_to_c.edit(price = 9)
+    packing_list_line_c_to_a.edit(price = 56)
+      
+  def steptestCircularMovementPriceAfter(self, sequence=None,
+                            sequence_list=None, **kw):
+    resource_value = sequence.get('resource')
+    node_value = sequence.get('node')
+    other_node_value = sequence.get('other_node')
+    section_value = sequence.get('section')
+    other_section_value = sequence.get('other_section')
+    one_more_section_value = sequence.get('one_more_section')
+    #C
+    self._testGetInventoryAssetPrice(
+      expected=163,
+      section_uid=one_more_section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=resource_value.getUid()
+      )
+    #B
+    self._testGetInventoryAssetPrice(
+      expected=1475,
+      section_uid=other_section_value.getUid(),
+      node_uid=other_node_value.getUid(),
+      resource_uid=resource_value.getUid()
+      )
+    #A
+    self._testGetInventoryAssetPrice(
+      expected=7462,
+      section_uid=section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=resource_value.getUid()
+      )
+    
+  def test_21_CircularMovements(self, quite=0, run=run_all_test):
+    """
+    Owner A, warehouse X, product G, quantity 10, total price is 1000
+    Owner B, warehouse Y, product G, quantity 20, total price is 1100
+    Owner C, warehouse X, product G, quantity 0 , total price is 0
+    
+    Then, product G was moved like below:
+
+    Owner A purchased 15 of product G for the price of 3000
+    Owner A purchased 20 of product G for the price of 4000
+    
+    Owner B purchased 30 of product G from Owner A(price is determined at the end of Nov).
+    Owner C purchased 10 of product G from Owner A(price is determined at the end of Nov).
+    Owner C get 5 of product G from Owner B(price is determined at the end of Nov).
+    Owner A get 2 of product G from Owner C(price is determined at the end of Nov).
+
+    As we see in this example, product G was moved between A and B, B and
+    C, C and A, it is circulating. Then, at the end of Mouth, Price of
+    product G of Owner A depends on price of product G of owner B, this
+    kind of thing happens. (And if it is a real circulation, price can't be
+    decided, it must not happen, but theoretically it can happen.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       CreateOneMoreSection \
+                       CreateNotVariatedResource \
+                       Tic \
+                       CreatePackingListForA \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListForB \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListForC \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListForASecond \
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListForAThird \
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListFromAToB\
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListFromAToC\
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListFromBToC\
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListFromCToA\
+                       DeliverPackingList \
+                       Tic \
+                       steptestCircularMovementQuantity \
+                       steptestCircularMovementPriceBefore \
+                       stepDefinePackingListLinePrice \
+                       Tic \
+                       steptestCircularMovementPriceAfter \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  
 
 def test_suite():
   suite = unittest.TestSuite()
