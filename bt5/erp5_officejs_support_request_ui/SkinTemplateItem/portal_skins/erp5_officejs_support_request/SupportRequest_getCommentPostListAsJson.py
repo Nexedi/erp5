@@ -39,4 +39,6 @@ if just_posted_comment is not None:
   if just_posted_comment['message_id'] not in [comment['message_id'] for comment in comment_list]:
     comment_list.append(just_posted_comment)
 
-return dumps(comment_list)
+if as_json:
+  return dumps(comment_list)
+return comment_list
