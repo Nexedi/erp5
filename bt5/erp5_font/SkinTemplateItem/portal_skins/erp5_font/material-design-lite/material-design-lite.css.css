@@ -1,0 +1,35 @@
+/*
+Generated 2018-02-20 https://fonts.googleapis.com/icon?family=Material+Icons
+==============================
+src: url(https://fonts.gstatic.com/s/materialicons/v36/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+==============================
+*/
+@font-face {
+  font-family: 'Material Icons';
+  /* src: url('material-design-lite/material-design-lite.eot'); */
+  src: /*
+       url('material-design-lite/material-design-lite.eot?#iefix') format('embedded-opentype'),
+       url('material-design-lite/material-design-lite.woff') format('woff'),
+       url('material-design-lite/material-design-lite.ttf') format('truetype'),*/
+       url('material-design-lite/material-design-lite.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/*
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+*/
