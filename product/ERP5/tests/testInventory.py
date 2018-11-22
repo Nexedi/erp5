@@ -3490,7 +3490,192 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+  
+  
+  def stepCreateNotVariatedThirdResource(self,sequence=None,
+                                          sequence_list=None,
+                                          **kw):
+    """
+      Create a third resource with no variation
+    """
+    portal = self.getPortal()
+    resource_module = portal.getDefaultModule(self.resource_portal_type)
+    resource = resource_module.newContent(portal_type=self.resource_portal_type)
+    resource.edit(
+      title = "NotVariatedThirdResource%s" % resource.getId(),
+      industrial_phase_list=["phase1", "phase2"],
+      product_line = 'apparel'
+    )
+    sequence.edit(third_resource = resource )
+    resource_list = sequence.get('resource_list',default=[])
+    resource_list.append(resource)
+    sequence.edit( resource_list = resource_list )
+  
+  
+  def stepCreatePackingList(self, sequence=None,
+                                      sequence_list=None, **kw):
+    """
+      Create a single packing_list for Inventory Module testing
+    """
+    node = kw.get('node', None)
+    section = kw.get('section', None)
+    resource = kw.get('resource', None)
+    quantity = kw.get('quantity', 100)
+    mirror_node = sequence.get('mirror_node')
+    mirror_section = sequence.get('mirror_section')
+    packing_list_module = self.getPortal().getDefaultModule(
+                              portal_type=self.packing_list_portal_type)
+    packing_list = packing_list_module.newContent(
+                              portal_type=self.packing_list_portal_type)
+ 
+    start_date = stop_date = DateTime() - 2
+    packing_list.edit(
+                      specialise=self.business_process,
+                      source_section_value = mirror_section,
+                      source_value = mirror_node,
+                      destination_section_value = section,
+                      destination_value = node,
+                      start_date = start_date,
+                      stop_date = stop_date,
+                      price_currency = self.price_currency
+                     )
+    
+    packing_list_line = packing_list.newContent(
+                  portal_type=self.packing_list_line_portal_type)
+    packing_list_line.edit(resource_value = resource,
+                           quantity = quantity
+                          )
+    sequence.edit(packing_list=packing_list)
+    
+  
+  def stepCreatePackingListWithSectionNodeFirstResource(self, sequence=None,
+                                                    sequence_list=None,
+                                                    **kw):
+    section = sequence.get('section')
+    node = sequence.get('node')
+    resource = sequence.get('resource')
+      
+    self.stepCreatePackingList(sequence=sequence,
+                               sequence_list=sequence_list,
+                               section = section,
+                               node = node,
+                               resource = resource,
+                               quantity = 100)
 
+  
+  def stepCreatePackingListWithOtherSectionNodeFirstResource(self, sequence=None,sequence_list=None,**kw):
+    section = sequence.get('other_section')
+    node = sequence.get('node')
+    resource = sequence.get('resource')
+      
+    self.stepCreatePackingList(sequence=sequence,
+                               sequence_list=sequence_list,
+                               section = section,
+                               node = node,
+                               resource = resource,
+                               quantity = 200)
+                                          
+  
+  def stepCreatePackingListWithSectionOtherNodeSecondResource(self, sequence=None,
+                                                    sequence_list=None,
+                                                    **kw):
+    section = sequence.get('section')
+    node = sequence.get('other_node')
+    resource = sequence.get('second_resource')
+      
+    self.stepCreatePackingList(sequence=sequence,
+                               sequence_list=sequence_list,
+                               section = section,
+                               node = node,
+                               resource = resource,
+                               quantity =50)
+                                          
+  
+  def stepCreatePackingListWithOtherSectionOtherNodeThirdResource(self, sequence=None,
+                                                    sequence_list=None,
+                                                    **kw):
+    section = sequence.get('other_section')
+    node = sequence.get('other_node')
+    resource = sequence.get('third_resource')
+      
+    self.stepCreatePackingList(sequence=sequence,
+                               sequence_list=sequence_list,
+                               section = section,
+                               node = node,
+                               resource = resource,
+                               quantity = 30)
+      
+  def stepTestMultipleOwnerNode(self, sequence=None, sequence_list=None, **kw):
+    first_resource_value = sequence.get('resource')
+    second_resource_value = sequence.get('second_resource')
+    third_resource_value = sequence.get('third_resource')
+    
+    node_value = sequence.get('node')
+    other_node_value = sequence.get('other_node')
+    section_value = sequence.get('section')
+    other_section_value = sequence.get('other_section')
+    
+    self._testGetInventory(expected=100,
+                           section_uid=section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=first_resource_value.getUid())
+    self._testGetInventory(expected=200,
+                           section_uid=other_section_value.getUid(),
+                           node_uid=node_value.getUid(),
+                           resource_uid=first_resource_value.getUid())
+    self._testGetInventory(expected=50,
+                           section_uid=section_value.getUid(),
+                           node_uid=other_node_value.getUid(),
+                           resource_uid=second_resource_value.getUid())
+    self._testGetInventory(expected=30,
+                           section_uid=other_section_value.getUid(),
+                           node_uid=other_node_value.getUid(),
+                           resource_uid=third_resource_value.getUid())
+  def test_19_InventoryMultipleOwner(self, quiet = 0, run=run_all_test):
+    """
+     Test multiple owner with multiple node resource.
+     The case:
+     1) movement: section=A,node=C,resource=X,quantity=100
+     2) movement: section=B,node=C,resource=X, quantity=200
+     3) movement: section=A,node=D,resource=Y,quantity=50
+     4) movement: section=B, node=D,reource=Z,quantity=30
+
+     [Test]
+     getInventory(section=A, node=C, resource=X) should return 100
+     getInventory(section=B, node=C, resource=X) should return 200
+     getInventory(section=A, node=D, resource=Y) should return 50
+     getInventory(section=B, node=D, resource=Z) should return 30
+    """
+    if not run: return
+  
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       CreateNotVariatedResource \
+                       CreateNotVariatedSecondResource \
+                       stepCreateNotVariatedThirdResource \
+                       Tic \
+                       CreatePackingListWithSectionNodeFirstResource \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListWithOtherSectionNodeFirstResource \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListWithSectionOtherNodeSecondResource \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreatePackingListWithOtherSectionOtherNodeThirdResource \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       TestMultipleOwnerNode \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+    
 
 def test_suite():
   suite = unittest.TestSuite()
