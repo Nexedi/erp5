@@ -138,16 +138,14 @@
 
                       return RSVP.all(row.map(function (column) {
                         // transform all cell-definitions into actual gadgets
-                        var col_element = document.createElement('td');
-
                         return gadget.declareGadget('gadget_erp5_label_field.html', {
                           scope: column.key,
-                          element: col_element,
+                          element: 'td',
                           sandbox: "public"
                         })
                           .push(function (sub_gadget) {
                             gadget.props.gadget_dict[column.key] = sub_gadget;
-                            return col_element;
+                            return sub_gadget.element;
                           });
                       }));
                     })
