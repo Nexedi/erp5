@@ -1,16 +1,9 @@
-/*global window, rJS, UriTemplate, Handlebars */
+/*global window, rJS, UriTemplate */
 /*jslint indent: 2, maxerr: 3, nomen: true */
-(function (window, rJS, UriTemplate, Handlebars) {
+(function (window, rJS, UriTemplate) {
   "use strict";
 
-  var gadget_klass = rJS(window),
-    form_template = Handlebars.compile(
-      gadget_klass.__template_element
-                  .getElementById("form-template")
-                  .innerHTML
-    );
-
-  gadget_klass
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // handle acquisition
     /////////////////////////////////////////////////////////////////
@@ -45,9 +38,7 @@
           return gadget.translate('Confirm');
         })
         .push(function (translated_text) {
-          gadget.element.innerHTML = form_template({
-            button_text: translated_text
-          });
+          gadget.element.querySelector('input').value = translated_text;
         });
     })
 
@@ -76,4 +67,4 @@
     .declareMethod("triggerSubmit", function () {
       return;
     });
-}(window, rJS, UriTemplate, Handlebars));
+}(window, rJS, UriTemplate));
