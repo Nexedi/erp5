@@ -3675,6 +3675,181 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepCreateIPLForModule(self, sequence=None, sequence_list=None, **kw):
+    node = sequence.get('node')
+    section = sequence.get('section')
+    other_node = sequence.get('other_node')
+    resource = sequence.get('resource')
+    packing_list_module = self.getPortal().getDefaultModule(
+                              portal_type='Internal Packing List')
+    packing_list = packing_list_module.newContent(
+                              portal_type='Internal Packing List')
+    start_date = stop_date = self.start_date_1
+    #same owner but different warehouse
+    packing_list.edit(
+                      specialise=self.business_process,
+                      source_section_value = section,
+                      source_value = node,
+                      destination_section_value = section,
+                      destination_value = other_node,
+                      start_date = start_date,
+                      stop_date = stop_date,
+                      price_currency = self.price_currency
+                     )
+    sequence.edit(packing_list=packing_list)
+
+  def stepCreatePackingListLineWithQuantity3(self, sequence=None,
+                                      sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    resource_value = sequence.get('resource')
+    packing_list_line = packing_list.newContent(
+                  portal_type='Internal Packing List Line')
+    packing_list_line.edit(resource_value = resource_value,
+                           quantity = 3.
+                          )
+                          
+  def stepCreatePackingListLineWithQuantity_3(self, sequence=None,
+                                      sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    resource_value = sequence.get('resource')
+    packing_list_line = packing_list.newContent(
+                  portal_type='Internal Packing List Line')
+    packing_list_line.edit(resource_value = resource_value,
+                           quantity = -3.
+                          )
+  
+  def stepCreatePackingListLineWithQuantity30(self, sequence=None,
+                                      sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    resource_value = sequence.get('resource')
+    packing_list_line = packing_list.newContent(
+                  portal_type='Internal Packing List Line')
+    packing_list_line.edit(resource_value = resource_value,
+                           quantity = 30.
+                          )
+  
+  def stepCreatePackingListLineWithQuantity_30(self, sequence=None,
+                                      sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    resource_value = sequence.get('resource')
+    packing_list_line = packing_list.newContent(
+                  portal_type='Internal Packing List Line')
+    packing_list_line.edit(resource_value = resource_value,
+                           quantity = -30.
+                          )
+
+  def stepCreatePackingListLineWithQuantity33(self, sequence=None,
+                                      sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    resource_value = sequence.get('resource')
+    packing_list_line = packing_list.newContent(
+                  portal_type='Internal Packing List Line')
+    packing_list_line.edit(resource_value = resource_value,
+                           quantity = 33.
+                          )
+  def stepTestMultiCancelInventory(self, sequence=None,
+                                 sequence_list=None, **kw):
+    resource_value = sequence.get('resource')
+    node_value = sequence.get('node')
+    other_node_value = sequence.get('other_node')
+    section_value = sequence.get('section')
+    at_date = self.start_date_1
+    self._testGetInventory(
+      expected=67,
+      section_uid=section_value.getUid(),
+      node_uid=node_value.getUid(),
+      resource_uid=resource_value.getUid(),
+      at_date=at_date)
+    self._testGetInventory(
+      expected=33,
+      section_uid=section_value.getUid(),
+      node_uid=other_node_value.getUid(),
+      resource_uid=resource_value.getUid(),
+      at_date=at_date)
+  
+  def test_20_InventoryWhenCancelInternalPackingList(self, quite=0, run=run_all_test):
+    """
+    When Company A's 33 of product G was shipped from warehouse X
+    to warehouse Y (ownership is still same, just location change)
+    in real world, an ERP5 user made many mistakes to enter the above
+    single fact and in the end he created five IPL(Internal Packing List)
+    to record the single fact.
+
+    IPL1 (quantity is wrong)
+      start_date 2013/Feb/10
+      source_section A       destination_section A
+      source X               destination Y
+      resource G    quantity 3
+      simulation_state 
+
+    IPL2 (Cancellation of IPL1)
+      start_date 2013/Feb/10
+      source_section A       destination_section A
+      source X               destination Y
+      resource G    quantity -3
+      simulation_state delivered
+
+    IPL3 (He made a mistake again!)
+      start_date 2013/Feb/10
+      source_section A       destination_section A
+      source X               destination Y
+      resource H    quantity 30
+      simulation_state delivered
+
+    IPL4 (Cancellation of IPL3)
+     start_date 2013/Feb/10
+     source_section A       destination_section A
+     source X               destination Y
+     resource H    quantity -30
+     simulation_state delivered
+
+    IPL5 (Finally he was able to enter data correctly!)
+     start_date 2013/Feb/10
+     source_section A       destination_section A
+     source X               destination Y
+     resource G    quantity 33
+     simulation_state delivered
+    """
+    if not run: return
+    self.start_date_1 = '2013/02/10 00:00:00 GMT+9'
+    sequence_list = SequenceList()
+    sequence_string = 'CreateOrganisationsForModule \
+                       CreateNotVariatedResource \
+                       Tic \
+                       CreatePackingListAtTheDate1 \
+                       CreatePackingListLine \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreateIPLForModule \
+                       CreatePackingListLineWithQuantity3 \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreateIPLForModule \
+                       CreatePackingListLineWithQuantity_3 \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreateIPLForModule \
+                       CreatePackingListLineWithQuantity30 \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreateIPLForModule \
+                       CreatePackingListLineWithQuantity_30\
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreateIPLForModule \
+                       CreatePackingListLineWithQuantity33 \
+                       Tic \
+                       DeliverPackingList\
+                       Tic \
+                       TestMultiCancelInventory\
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
     
 
 def test_suite():
