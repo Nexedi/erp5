@@ -304,22 +304,22 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[@data-gadget-scope='header']//div</td>
+      <td>//div[@data-gadget-scope='header']//div[@class="ui-subheader"]</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[@data-gadget-scope='header']//div</td>
+      <td>//div[@data-gadget-scope='header']//div[@class="ui-subheader"]</td>
       <td></td>
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[@data-gadget-scope='panel']//div</td>
+      <td>//div[@data-gadget-scope='panel']//div//li</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[@data-gadget-scope='panel']//div</td>
+      <td>//div[@data-gadget-scope='panel']//div//li</td>
       <td></td>
     </tr>
     <tr>
