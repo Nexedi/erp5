@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <title tal:content="template/title">The title</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  </head>
+  <body>
+  <table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3" tal:content="template/title">Support Request Zuite</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
+
+<tr><td colspan="3"><b>Post a new SR message</b></td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//input[@data-i18n='[value]Submit New Support Request']</td><td></td></tr>
+<tr><td>click</td>
+    <td>//input[@data-i18n='[value]Submit New Support Request']</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//input[@data-i18n="[value]Proceed"]</td><td></td></tr>
+<tr><td>type</td>
+    <td>//input[@name='field_your_title']</td>
+    <td>testLatestPostOnFrontPage</td></tr>
+<tr><td>select</td>
+    <td>field_your_project</td>
+    <td>RobotMaking</td></tr>
+<tr><td>waitForTextPresent</td>
+    <td>FeatureRequire</td></tr>
+<tr><td>select</td>
+    <td>field_your_resource</td>
+    <td>FeatureRequire</td></tr>
+<tal:block tal:define="text_content string:Post test">
+    <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/></tal:block>
+<tr><td>click</td>
+    <td>//input[@data-i18n='[value]Proceed']</td><td></td></tr>
+<tr><td>waitForText</td>
+    <td>//ol[@id="post_list"]//li/p</td>
+    <td>Post test</td></tr>
+
+<tr><td colspan="3"><b>Go back ot front page and check "latest post" columns</b></td></tr>
+
+<tr><td>openAndWait</td>
+    <td>${base_url}/Zuite_waitForActivities</td><td></td></tr>
+<tr><td>waitForTextPresent</td>
+    <td>Done.</td><td></td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td><td></td></tr>
+<tr><td>waitForText</td>
+    <td>//div[@class="document_table"]//tr[1]/td[1]</td>
+    <td>testLatestPostOnFrontPage</td></tr>
+<tr><td>assertText</td>
+    <td>//div[@class="document_table"]//tr[1]/td[5]</td>
+    <td tal:content="python: 'glob:*{}*'.format(modules['DateTime'].DateTime().year())"></td></tr>
+<tr><td>assertText</td>
+    <td>//div[@class="document_table"]//tr[1]/td[6]</td>
+    <td>A1 Corporation</td></tr><!-- because this test run as a ZODB user, the post author is the organisation -->
+
+</tbody></table>
+  </body>
+</html>
