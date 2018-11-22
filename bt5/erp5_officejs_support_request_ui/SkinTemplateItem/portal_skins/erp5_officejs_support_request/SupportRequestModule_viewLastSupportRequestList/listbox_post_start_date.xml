@@ -10,8 +10,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>date_only</string>
                 <string>default</string>
                 <string>editable</string>
+                <string>input_order</string>
               </list>
             </value>
         </item>
@@ -72,6 +74,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>input_order</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -83,8 +89,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>date_only</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <none/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -92,11 +104,15 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_event_start_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewCRMFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>input_order</string> </key>
+                    <value> <string>ymd</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -116,7 +132,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.SupportRequest_getLastPostDate()</string> </value>
+            <value> <string>cell/SupportRequest_getLastPostDate</string> </value>
         </item>
       </dictionary>
     </pickle>
