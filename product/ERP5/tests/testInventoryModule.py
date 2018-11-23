@@ -619,6 +619,108 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
 
     sequence_list.play(self)
 
+  def stepCreateFourOrganisations(self, sequence=None,
+                                        sequence_list=None, **kw):
+    """
+      Create sections and nodes.
+    """
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    node = sequence.get('organisation')
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    mirror_node = sequence.get('organisation')
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    section = sequence.get('organisation')
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    mirror_section = sequence.get('organisation')
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    other_section = sequence.get('organisation')
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    other_node = sequence.get('organisation')
+    sequence.edit(
+          node = node,
+          section = section,
+          mirror_node = mirror_node,
+          mirror_section = mirror_section,
+          other_section = other_section,
+          other_node = other_node,
+        )
+  
+  def stepCreateSalesPackingList(self, sequence=None, sequence_list=None, **kw):
+    node = sequence.get('node')
+    section = sequence.get('section')
+    resource_list = sequence.get('resource_list')
+    mirror_node =  sequence.get('mirror_node')
+    mirror_section = sequence.get('mirror_section')
+    packing_list_module = self.getPortal().getDefaultModule(
+                              portal_type='Sale Packing List')
+    packing_list = packing_list_module.newContent(
+                              portal_type='Sale Packing List')
+
+    start_date = stop_date = DateTime() - 2
+    packing_list.edit(
+                      specialise=self.business_process,
+                      source_section_value = mirror_section,
+                      source_value = mirror_node,
+                      destination_section_value = section,
+                      destination_value = node,
+                      start_date = start_date,
+                      stop_date = stop_date
+                     )
+    #create with last resource
+    packing_list_line = packing_list.newContent(
+                  portal_type='Sale Packing List Line')
+    packing_list_line.edit(resource_value = resource_list[-1],
+                           quantity = 100,
+                           price = 100
+                          )
+    sequence.edit(packing_list=packing_list)
+
+
+  def stepDeliverPackingList(self, sequence=None,
+                                      sequence_list=None, **kw):
+    pl = sequence.get('packing_list')
+    pl.confirm()
+    pl.setReady()
+    pl.start()
+    pl.stop()
+    pl.deliver() 
+  
+  def stepTestCalculateProduct(self, sequence=None, sequence_list=None, **kw):
+    inventory = self.getInventoryModule().newContent()
+    inventory.edit(
+      destination_value = sequence.get('node'),
+      destination_section_value = sequence.get('section')
+      )
+    self.tic()
+    inventory.Inventory_calculateProductStock()
+    self.tic()
+    inventory_line_list = inventory.contentValues(portal_type='Inventory Line')
+    self.assertEqual(len(inventory_line_list), 2)
+    for inventory_line in inventory_line_list:
+      self.assertEqual(inventory_line.quantity, 100)
+      self.assertEqual(inventory_line.total_price, 100*100)
+
+  def test_06_checkCalculateProduct(self, run=run_all_test):
+    if not run: return
+    sequence_list = SequenceList()
+    sequence_string = 'stepCreateVariatedResource \
+                       stepCreateFourOrganisations \
+                       stepCreateSalesPackingList \
+                       stepDeliverPackingList \
+                       stepCreateVariatedResource \
+                       stepCreateSalesPackingList \
+                       stepDeliverPackingList \
+                       stepTic \
+                       stepTestCalculateProduct \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 def test_suite():
   suite = unittest.TestSuite()
