@@ -302,6 +302,7 @@
   <td>${base_url}/web_site_module/${install_url}/</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Preferences']</td>
@@ -332,11 +333,7 @@
   <td>//input[@name='search_engine']</td>
   <td>${base_url}/ERP5Site_printParameterAsHTMLTitle?parameter=</td>
 </tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
 <tr>
   <td>waitForElementPresent</td>
   <td>css=div.visible[data-gadget-scope="notification"]</td>
