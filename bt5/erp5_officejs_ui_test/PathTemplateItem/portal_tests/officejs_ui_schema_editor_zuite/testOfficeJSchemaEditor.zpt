@@ -1,0 +1,104 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Test Media Player UI</title>
+  </head>
+  <body>
+    <table cellpadding="1" cellspacing="1" border="1">
+      <thead>
+      <tr>
+        <td rowspan="1" colspan="3">Test OfficeJS UI</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init"/>
+      <tal:block tal:define="web_site_name python: 'officejs_schema'">
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/install_offline_and_redirect"/>
+      </tal:block>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n='Storages']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n='Storages']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>link=Local is Enough</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>link=Local is Enough</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//a[@data-i18n='Add']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td>Schemas</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td>Add</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n='Add']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>waitForElementPresent</td>
+        <td>//button[@data-i18n='Save']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td>Upload</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td>Save</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>click</td>
+        <td>//a[@data-i18n='Schemas']</td>
+        <td></td>
+      </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded"/>
+
+      <tr>
+        <td>verifyElementPresent</td>
+        <td>//a[text()='Untitled Schema']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td>Schemas</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td>Filter</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyTextPresent</td>
+        <td>Add</td>
+        <td></td>
+      </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
