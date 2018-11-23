@@ -1338,8 +1338,9 @@ if (typeof document.contains !== 'function') {
   }
 
   function startService(gadget) {
-    if ((gadget.constructor.__service_list.length === 0) &&
-        (!gadget.constructor.__job_declared)) {
+    if (((gadget.constructor.__service_list.length === 0) &&
+         (!gadget.constructor.__job_declared)) ||
+        (gadget.hasOwnProperty('__monitor'))) {
       return;
     }
     createGadgetMonitor(gadget);
@@ -1624,7 +1625,6 @@ if (typeof document.contains !== 'function') {
     gadget_instance.element.appendChild(fragment);
     setAqParent(gadget_instance, parent_gadget);
     clearGadgetInternalParameters(gadget_instance);
-    gadget_instance.element._gadget = gadget_instance;
     if (old_element !== undefined) {
       // Add gadget to the DOM if needed
       // Do it when all DOM modifications are done
@@ -1717,7 +1717,6 @@ if (typeof document.contains !== 'function') {
     gadget_instance.state = {};
     options.element.appendChild(iframe);
     clearGadgetInternalParameters(gadget_instance);
-    gadget_instance.element._gadget = gadget_instance;
     // Add gadget to the DOM if needed
     // Do it when all DOM modifications are done
     old_element.parentNode.replaceChild(options.element,
@@ -1834,7 +1833,11 @@ if (typeof document.contains !== 'function') {
       // Always set the parent reference when all ready are finished
       // in case the gadget declaration is cancelled
       // (and ready are not finished)
+      gadget_instance.element._gadget = gadget_instance;
       parent_gadget.__sub_gadget_dict[scope] = gadget_instance;
+      if (document.contains(gadget_instance.element)) {
+        startService(gadget_instance);
+      }
       // Always return the gadget instance after ready function
       return gadget_instance;
     }
