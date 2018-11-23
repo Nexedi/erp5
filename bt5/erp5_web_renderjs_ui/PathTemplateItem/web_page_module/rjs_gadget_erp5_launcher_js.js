@@ -35,14 +35,25 @@
     gadget.props.panel_argument_list = {};
   }
 
+  function executeRouteMethod(my_gadget, my_method, argument_list) {
+    if (argument_list) {
+      return my_gadget[my_method].apply(my_gadget, argument_list);
+    }
+    return my_gadget[my_method]();
+  }
+
   function route(my_root_gadget, my_scope, my_method, argument_list) {
-    return my_root_gadget.getDeclareGadgetOrDeclare(my_scope)
-      .push(function (my_gadget) {
-        if (argument_list) {
-          return my_gadget[my_method].apply(my_gadget, argument_list);
-        }
-        return my_gadget[my_method]();
-      });
+    if (my_root_gadget.props.is_declared_gadget_dict[my_scope] === true) {
+      return my_root_gadget.getDeclaredGadget(my_scope)
+        .push(function (my_gadget) {
+          return executeRouteMethod(my_gadget, my_method, argument_list);
+        });
+    }
+    return my_root_gadget.declareAndExecuteRouteMethod(
+      my_scope,
+      my_method,
+      argument_list
+    );
   }
 
   function updateHeader(gadget) {
@@ -149,26 +160,32 @@
   // Page rendering
   //////////////////////////////////////////
   rJS(window)
-    .declareMethod('getDeclareGadgetOrDeclare', function (my_scope) {
-      var my_root_gadget = this;
-      return my_root_gadget.getDeclaredGadget(my_scope)
-        .push(undefined, function (error) {
-          if (error instanceof rJS.ScopeError) {
-            var element = my_root_gadget
-                            .element
-                            .querySelector("[data-gadget-scope='" +
-                                           my_scope + "']");
-            if (element !== null) {
-              return my_root_gadget.declareGadget(
-                element.getAttribute('data-gadget-async-url'),
-                {
-                  scope: my_scope,
-                  element: element
-                }
-              );
-            }
-          }
-          throw error;
+    .declareMethod('declareAndExecuteRouteMethod', function (my_scope,
+                                                             my_method,
+                                                             argument_list) {
+      if (this.props.is_declared_gadget_dict[my_scope] === true) {
+        return this.getDeclaredGadget(my_scope)
+          .push(function (my_gadget) {
+            return executeRouteMethod(my_gadget, my_method, argument_list);
+          });
+      }
+      var my_root_gadget = this,
+        my_gadget,
+        element = my_root_gadget.element
+                                .querySelector("[data-gadget-scope='" +
+                                               my_scope + "']");
+      return my_root_gadget.declareGadget(
+        element.getAttribute('data-gadget-async-url'),
+        {scope: my_scope}
+      )
+        .push(function (result) {
+          my_gadget = result;
+          return executeRouteMethod(my_gadget, my_method, argument_list);
+        })
+        .push(function (result) {
+          element.parentNode.replaceChild(my_gadget.element, element);
+          my_root_gadget.props.is_declared_gadget_dict[my_scope] = true;
+          return result;
         });
     }, {mutex: 'getDeclareGadgetOrDeclare'})
     .setState({
@@ -182,7 +199,12 @@
         setting_gadget,
         setting;
       this.props = {
-        content_element: this.element.querySelector('.gadget-content')
+        content_element: this.element.querySelector('.gadget-content'),
+        is_declared_gadget_dict: {
+          setting_gadget: true,
+          router: true,
+          jio_gadget: true
+        }
       };
       // Configure setting storage
       return gadget.getDeclaredGadget("setting_gadget")
