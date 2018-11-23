@@ -319,7 +319,8 @@ class SlapOSControler(object):
     return status_dict
 
   def runComputerPartition(self, config, environment,
-                           stdout=None, stderr=None, cluster_configuration=None, **kw):
+                           stdout=None, stderr=None, cluster_configuration=None,
+                           max_quantity=MAX_PARTITIONS, **kw):
     logger.debug("SlapOSControler.runComputerPartition with cluster_config: %r",
              cluster_configuration)
     for path in self.software_path_list:
@@ -335,7 +336,7 @@ class SlapOSControler(object):
     # try to run for all partitions as one partition may in theory request another one 
     # this not always is required but curently no way to know how "tree" of partitions
     # may "expand"
-    for _ in xrange(MAX_PARTITIONS):
+    for _ in xrange(max_quantity):
       status_dict = self.spawn(config['slapos_binary'], 'node', 'instance', 
                  '--pidfile', os.path.join(self.instance_root, 'slapos-node.pid'),
                  '--cfg', self.slapos_config, raise_error_if_fail=False,
