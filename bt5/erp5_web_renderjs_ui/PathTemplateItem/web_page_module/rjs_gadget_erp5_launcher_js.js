@@ -36,6 +36,7 @@
   }
 
   function executeRouteMethod(my_gadget, my_method, argument_list) {
+    // Execute a method on a gadget
     if (argument_list) {
       return my_gadget[my_method].apply(my_gadget, argument_list);
     }
@@ -43,12 +44,16 @@
   }
 
   function route(my_root_gadget, my_scope, my_method, argument_list) {
-    if (my_root_gadget.props.is_declared_gadget_dict[my_scope] === true) {
+    // If the gadget already has been declared, execute the method
+    // No need to care about concurrency at this point.
+    // This should be handled by the gadget itself if needed
+    if (my_root_gadget.props.is_declared_gadget_dict[my_scope]) {
       return my_root_gadget.getDeclaredGadget(my_scope)
         .push(function (my_gadget) {
           return executeRouteMethod(my_gadget, my_method, argument_list);
         });
     }
+    // declare the gadget and run the method
     return my_root_gadget.declareAndExecuteRouteMethod(
       my_scope,
       my_method,
@@ -159,35 +164,46 @@
   //////////////////////////////////////////
   // Page rendering
   //////////////////////////////////////////
-  rJS(window)
-    .declareMethod('declareAndExecuteRouteMethod', function (my_scope,
-                                                             my_method,
-                                                             argument_list) {
-      if (this.props.is_declared_gadget_dict[my_scope] === true) {
-        return this.getDeclaredGadget(my_scope)
-          .push(function (my_gadget) {
-            return executeRouteMethod(my_gadget, my_method, argument_list);
-          });
-      }
-      var my_root_gadget = this,
-        my_gadget,
-        element = my_root_gadget.element
-                                .querySelector("[data-gadget-scope='" +
-                                               my_scope + "']");
-      return my_root_gadget.declareGadget(
-        element.getAttribute('data-gadget-async-url'),
-        {scope: my_scope}
-      )
-        .push(function (result) {
-          my_gadget = result;
+  function declareAndExecuteRouteMethod(my_scope, my_method,
+                                        argument_list) {
+    // Must be called in a mutex protected method only
+    // The idea is to prevent loading the same gadget twice thanks to the mutex
+    var my_root_gadget = this,
+      my_gadget,
+      element;
+    // If a previous mutex method was running, no need to redeclare the gadget
+    if (my_root_gadget.props.is_declared_gadget_dict[my_scope]) {
+      return my_root_gadget.getDeclaredGadget(my_scope)
+        .push(function (my_gadget) {
           return executeRouteMethod(my_gadget, my_method, argument_list);
-        })
-        .push(function (result) {
-          element.parentNode.replaceChild(my_gadget.element, element);
-          my_root_gadget.props.is_declared_gadget_dict[my_scope] = true;
-          return result;
         });
-    }, {mutex: 'getDeclareGadgetOrDeclare'})
+    }
+    element = my_root_gadget.element
+                            .querySelector("[data-gadget-scope='" +
+                                           my_scope + "']");
+    return my_root_gadget.declareGadget(
+      element.getAttribute('data-gadget-async-url'),
+      {scope: my_scope}
+    )
+      .push(function (result) {
+        my_gadget = result;
+        return executeRouteMethod(my_gadget, my_method, argument_list);
+      })
+      .push(function (result) {
+        // Wait for the method to be finished before adding the gadget to the
+        // DOM. This reduces the panel flickering on slow machines
+        element.parentNode.replaceChild(my_gadget.element, element);
+        my_root_gadget.props.is_declared_gadget_dict[my_scope] = true;
+        return result;
+      });
+  }
+
+  rJS(window)
+    .declareMethod(
+      'declareAndExecuteRouteMethod',
+      declareAndExecuteRouteMethod,
+      {mutex: 'getDeclareGadgetOrDeclare'}
+    )
     .setState({
       panel_visible: false,
       setting_id: "setting/" + document.head.querySelector(
