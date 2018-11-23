@@ -54,11 +54,25 @@
         });
     }
     // declare the gadget and run the method
-    return my_root_gadget.declareAndExecuteRouteMethod(
+    var method;
+    if (my_scope === 'notification') {
+      method = my_root_gadget.declareAndExecuteNotificationGadget;
+    } else if (my_scope === 'translation_gadget') {
+      method = my_root_gadget.declareAndExecuteTranslationGadget;
+    } else if (my_scope === 'header') {
+      method = my_root_gadget.declareAndExecuteHeaderGadget;
+    } else if (my_scope === 'panel') {
+      method = my_root_gadget.declareAndExecutePanelGadget;
+    } else if (my_scope === 'editor_panel') {
+      method = my_root_gadget.declareAndExecuteEditorPanelGadget;
+    } else {
+      throw new Error('Unknown gadget scope: ' + my_scope);
+    }
+    return method.apply(my_root_gadget, [
       my_scope,
       my_method,
       argument_list
-    );
+    ]);
   }
 
   function updateHeader(gadget) {
@@ -199,11 +213,36 @@
   }
 
   rJS(window)
+
+    // Add mutex protected defered gadget loader.
+    // Multiple mutex are needed, to not prevent concurrent loading on
+    // different gadgets
     .declareMethod(
-      'declareAndExecuteRouteMethod',
+      'declareAndExecuteNotificationGadget',
       declareAndExecuteRouteMethod,
-      {mutex: 'getDeclareGadgetOrDeclare'}
+      {mutex: 'declareAndExecuteNotificationGadget'}
     )
+    .declareMethod(
+      'declareAndExecuteTranslationGadget',
+      declareAndExecuteRouteMethod,
+      {mutex: 'declareAndExecuteTranslationGadget'}
+    )
+    .declareMethod(
+      'declareAndExecuteHeaderGadget',
+      declareAndExecuteRouteMethod,
+      {mutex: 'declareAndExecuteHeaderGadget'}
+    )
+    .declareMethod(
+      'declareAndExecutePanelGadget',
+      declareAndExecuteRouteMethod,
+      {mutex: 'declareAndExecutePanelGadget'}
+    )
+    .declareMethod(
+      'declareAndExecuteEditorPanelGadget',
+      declareAndExecuteRouteMethod,
+      {mutex: 'declareAndExecuteEditorPanelGadget'}
+    )
+
     .setState({
       panel_visible: false,
       setting_id: "setting/" + document.head.querySelector(
