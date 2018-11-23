@@ -304,22 +304,22 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[@data-gadget-scope='header']//div[@class="ui-subheader"]</td>
+      <td>//div[@data-gadget-scope='header' and not(@data-gadget-async-url)]</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[@data-gadget-scope='header']//div[@class="ui-subheader"]</td>
+      <td>//div[@data-gadget-scope='header' and not(@data-gadget-async-url)]</td>
       <td></td>
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[@data-gadget-scope='panel']//div//ul</td>
+      <td>//div[@data-gadget-scope='panel' and not(@data-gadget-async-url)]</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[@data-gadget-scope='panel']//div//ul</td>
+      <td>//div[@data-gadget-scope='panel' and not(@data-gadget-async-url)]</td>
       <td></td>
     </tr>
     <tr>
