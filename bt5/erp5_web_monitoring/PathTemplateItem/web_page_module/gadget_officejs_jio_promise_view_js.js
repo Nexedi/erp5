@@ -172,8 +172,8 @@
             promise: options.doc,
             jio_key: options.jio_key,
             status: options.doc.category,
-            status_date: new Date(options.doc.pubDate),
-            report_date: new Date(options.doc.lastBuildDate),
+            status_date: options.doc.pubDate,
+            report_date: options.doc.lastBuildDate,
             title: options.doc.source,
             promise_output: options.doc.description,
             private_url: pass_url,
@@ -227,6 +227,13 @@
               len,
               start;
 
+            function addUTCTimezone(date_string) {
+              if (new RegExp(/[+-][\d]{2}\:?[\d]{2}$/).test(date_string)) {
+                return date_string;
+              }
+              return date_string + "+0000";
+            }
+
             if (status_history && status_history.hasOwnProperty('data')) {
               // the status history list is reversed ([old, ...., newest])
               len = status_history.data.length;
@@ -264,13 +271,11 @@
                         editable: 0,
                         hidden: 0,
                         hidden_day_is_last_day: 0,
-                        "default": new Date(
-                          status_history.data[i].date ||
-                            status_history.data[i]['start-date']
-                        ).toUTCString(),
+                        "default": addUTCTimezone(status_history.data[i].date ||
+                          status_history.data[i]['start-date']),
                         key: "start_date",
                         required: 0,
-                        timezone_style: 0,
+                        timezone_style: 1,
                         title: "Date",
                         type: "DateTimeField"
                       }
@@ -285,13 +290,12 @@
                         editable: 0,
                         hidden: 0,
                         hidden_day_is_last_day: 0,
-                        "default": new Date(
-                          status_history.data[i]['change-date'] ||
-                            status_history.data[i]['change-time'] * 1000
-                        ).toUTCString(),
+                        "default": addUTCTimezone(status_history.data[i]['change-date'] ||
+                          new Date(status_history.data[i]['change-time'] * 1000)
+                          .toUTCString()),
                         key: "change_date",
                         required: 0,
-                        timezone_style: 0,
+                        timezone_style: 1,
                         title: "Status Date",
                         type: "DateTimeField"
                       }
@@ -355,26 +359,26 @@
                 "your_status_date": {
                   "description": "",
                   "title": "Status Since",
-                  "default": gadget.state.status_date.toUTCString(),
+                  "default": gadget.state.status_date,
                   "css_class": "",
                   "required": 0,
                   "editable": 0,
                   "key": "status_date",
                   "hidden": 0,
-                  "timezone_style": 0,
+                  "timezone_style": 1,
                   "date_only": 0,
                   "type": "DateTimeField"
                 },
                 "your_report_date": {
                   "description": "",
                   "title": "Report Date",
-                  "default": gadget.state.report_date.toUTCString(),
+                  "default": gadget.state.report_date,
                   "css_class": "",
                   "required": 0,
                   "editable": 0,
                   "key": "report_date",
                   "hidden": 0,
-                  "timezone_style": 0,
+                  "timezone_style": 1,
                   "date_only": 0,
                   "type": "DateTimeField"
                 },
@@ -518,7 +522,7 @@
                   "sort": [],
                   "hide_sort": true,
                   "command": "reload",
-                  "title": "Promise Status list (On live)",
+                  "title": "Promise Status History",
                   "type": "ListBox"
                 }
               }},

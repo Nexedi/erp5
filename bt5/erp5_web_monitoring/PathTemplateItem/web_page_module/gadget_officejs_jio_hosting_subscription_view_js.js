@@ -40,7 +40,6 @@
             len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {
             if (result.data.rows[i].value.hasOwnProperty("date")) {
-              value = new Date(result.data.rows[i].value.date);
               result.data.rows[i].value.date = {
                 field_gadget_param: {
                   allow_empty_time: 0,
@@ -51,10 +50,10 @@
                   editable: 0,
                   hidden: 0,
                   hidden_day_is_last_day: 0,
-                  "default": value.toUTCString(),
+                  "default": result.data.rows[i].value.date,
                   key: "date",
                   required: 0,
-                  timezone_style: 0,
+                  timezone_style: 1,
                   title: "Status Date",
                   type: "DateTimeField"
                 }
