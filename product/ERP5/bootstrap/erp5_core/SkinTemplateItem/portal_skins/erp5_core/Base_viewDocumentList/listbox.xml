@@ -140,6 +140,18 @@
                           <string>thumbnail</string>
                           <string>Thumbnail</string>
                         </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
