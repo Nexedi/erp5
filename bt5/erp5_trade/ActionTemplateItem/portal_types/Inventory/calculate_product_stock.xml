@@ -79,7 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Inventory_calculatingProductStock</string> </value>
+            <value> <string>string:${object_url}/Inventory_calculateProductStockDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
