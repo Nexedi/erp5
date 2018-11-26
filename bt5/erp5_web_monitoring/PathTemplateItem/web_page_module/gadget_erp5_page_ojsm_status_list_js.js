@@ -17,21 +17,20 @@
           var i, j, tmp, value, len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {
             if (result.data.rows[i].value.hasOwnProperty("lastBuildDate")) {
-              value = new Date(result.data.rows[i].value.lastBuildDate);
               result.data.rows[i].value.lastBuildDate = {
                 field_gadget_param: {
-                  allow_empty_time: 0,
-                  ampm_time_style: 0,
+                  //allow_empty_time: 0,
+                  //ampm_time_style: 0,
                   css_class: "date_field",
                   date_only: 0,
                   description: "The Date",
                   editable: 0,
                   hidden: 0,
                   hidden_day_is_last_day: 0,
-                  "default": value.toUTCString(),
+                  "default": result.data.rows[i].value.lastBuildDate,
                   key: "lastBuildDate",
                   required: 0,
-                  timezone_style: 0,
+                  timezone_style: 1,
                   title: "Promise Date",
                   type: "DateTimeField"
                 }

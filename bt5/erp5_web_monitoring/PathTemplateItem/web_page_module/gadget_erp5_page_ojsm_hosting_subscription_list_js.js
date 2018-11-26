@@ -33,10 +33,10 @@
                   editable: 0,
                   hidden: 0,
                   hidden_day_is_last_day: 0,
-                  "default": new Date(result.data.rows[i].value.status_date).toUTCString(),
+                  "default": result.data.rows[i].value.status_date,
                   key: "date",
                   required: 0,
-                  timezone_style: 0,
+                  timezone_style: 1,
                   title: "Status Date",
                   type: "DateTimeField"
                 }

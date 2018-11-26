@@ -31,7 +31,34 @@
    */
 
   var rusha = new Rusha(),
-    OPML_ATTACHMENT_NAME = "__opml__";
+    OPML_ATTACHMENT_NAME = "__opml__",
+    ZONE_LIST = [
+      "-1200",
+      "-1100",
+      "-1000",
+      "-0900",
+      "-0800",
+      "-0700",
+      "-0600",
+      "-0500",
+      "-0400",
+      "-0300",
+      "-0200",
+      "-0100",
+      "+0000",
+      "+0100",
+      "+0200",
+      "+0300",
+      "+0400",
+      "+0500",
+      "+0600",
+      "+0700",
+      "+0800",
+      "+0900",
+      "+1000",
+      "+1100",
+      "+1200"
+    ];
 
   function generateHash(str) {
     return rusha.digestFromString(str);
@@ -378,7 +405,7 @@
     var status = element.status.toUpperCase();
 
     if (hosting.instance_amount === 0) {
-      hosting.status_date = element.date;
+      hosting.status_date = fixDateTimezone(element.date);
     }
     if (hosting.status === "ERROR") {
       return;
@@ -389,6 +416,15 @@
     } if (status === "OK" && hosting.status !== status) {
       hosting.status = status;
     }
+  }
+
+  function fixDateTimezone(date_string) {
+    // set default timezone offset to UTC
+    // XXX should be removed later
+    if (ZONE_LIST.indexOf(date_string.slice(-5)) === -1) {
+      return date_string + "+0000";
+    }
+    return date_string;
   }
 
   function getOpmlTree(context, opml_url, opml_spec, basic_login, opml_title) {
@@ -412,7 +448,7 @@
       opml_url: opml_url,
       status: "WARNING",
       instance_amount: 0,
-      status_date: new Date()
+      status_date: (new Date()).toUTCString() + "+0000"
     };
     return getDocumentAsAttachment(context, opml_url, OPML_ATTACHMENT_NAME)
       .push(function (opml_doc) {
@@ -579,6 +615,12 @@
               // XXX - document need to be updated to keep compatibility
               element = fixGlobalInstanceDocument(element);
             }
+            // XXX - fixing date timezone
+            element.date = fixDateTimezone(element.date);
+          }
+          // XXX - fixing date timezone
+          if (element.pubDate !== undefined) {
+            element.pubDate = fixDateTimezone(element.pubDate);
           }
 
           id_hash = generateHash(item_result.parent_id +
@@ -595,8 +637,8 @@
           };
 
           if (item_result.current_signature.hasOwnProperty(id_hash)) {
-            if (item_result.current_signature[id_hash].signature
-                === signature) {
+            if (item_result.current_signature[id_hash].signature ===
+                signature) {
               // the document was not modified return
               delete item_result.current_signature[id_hash];
               return;
@@ -625,8 +667,8 @@
             if (result_list[i].type === "promise") {
               // the first element of rss is the header
               extra_dict = {
-                lastBuildDate: result_list[i].result.data.rows[0].doc
-                  .lastBuildDate,
+                lastBuildDate: fixDateTimezone(result_list[i].result.data.
+                  rows[0].doc.lastBuildDate),
                 channel: result_list[i].result.data.rows[0].doc.description,
                 channel_item: result_list[i].result.data.rows[0].doc.title
               };
