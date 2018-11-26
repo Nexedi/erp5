@@ -1081,14 +1081,11 @@
 
     .declareMethod('start', function start() {
       var gadget = this;
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.getSetting("selected_language"),
-            gadget.getSetting("default_selected_language"),
-            gadget.getSetting("language_map")
-          ]);
-        })
+      return gadget.getSettingList([
+        "selected_language",
+        "default_selected_language",
+        "language_map"
+      ])
         .push(function (results) {
           if (results[1] !== results[0] && results[0] && JSON.parse(results[2]).hasOwnProperty(results[0])) {
             return gadget.redirect({
@@ -1116,6 +1113,7 @@
     .declareAcquiredMethod('jio_getAttachment', 'jio_getAttachment')
     .declareAcquiredMethod('setSetting', 'setSetting')
     .declareAcquiredMethod('getSetting', 'getSetting')
+    .declareAcquiredMethod('getSettingList', 'getSettingList')
     .declareAcquiredMethod('renderError', 'reportServiceError')
     .declareAcquiredMethod('translate', 'translate')
     .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
