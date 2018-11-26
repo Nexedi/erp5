@@ -19,3 +19,5 @@ for i in result_list:
         resource = i.getResource(),
         total_price = i.total_price,
         quantity = i.total_quantity)
+
+context.record()

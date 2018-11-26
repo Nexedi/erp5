@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>default state</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>calculating</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -22,19 +22,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Draft</string> </value>
+            <value> <string>Calculating</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>calculating</string>
-                <string>cancel</string>
-                <string>cancel_action</string>
-                <string>delete</string>
-                <string>delete_action</string>
-                <string>deliver</string>
-                <string>deliver_action</string>
+                <string>record</string>
               </tuple>
             </value>
         </item>
