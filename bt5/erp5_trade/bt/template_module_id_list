@@ -4,6 +4,7 @@ internal_order_module
 internal_packing_list_module
 internal_trade_condition_module
 inventory_module
+inventory_report_module
 purchase_order_module
 purchase_packing_list_module
 purchase_trade_condition_module

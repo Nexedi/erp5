@@ -42,8 +42,22 @@ from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.Document.Amount import Amount
+from Products.ERP5Type.Cache import transactional_cached
 
 from zLOG import LOG, WARNING
+
+@transactional_cached()
+def getExchangeRate(currency_value, section_currency, date):
+  currency = currency_value.getRelativeUrl()
+  if currency != section_currency:
+    from Products.ERP5Type.Document import newTempAccountingTransactionLine
+    return currency_value.getPrice(context=newTempAccountingTransactionLine(
+      currency_value.getPortalObject(),
+      "accounting_line",
+      resource=currency,
+      start_date=date,
+      price_currency=section_currency
+    ))
 
 class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   """
@@ -484,7 +498,10 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
 
       This will be implemeted by calling currency conversion on currency resources
     """
-    return self.getPrice() # XXX Not implemented yet TODO
+    type_based_script = self._getTypeBasedMethod('getSourceAssetPrice')
+    if type_based_script:
+      return type_based_script()
+    return self._getAssetPrice(section = self.getSourceSectionValue(), date = self.getStartDate())
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getDestinationAssetPrice')
@@ -492,7 +509,24 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     """
       Returns the price converted to the currency of the destination section
     """
-    return self.getPrice() # XXX Not implemented yet TODO
+    type_based_script = self._getTypeBasedMethod('getDestinationAssetPrice')
+    if type_based_script:
+      return type_based_script()
+    return self._getAssetPrice(section = self.getDestinationSectionValue(), date = self.getStopDate())
+
+  def _getAssetPrice(self,section,date):
+    price = self.getPrice()
+    if section is None or not price:
+      return price
+    currency_value = self.getPriceCurrencyValue()
+    if currency_value:
+      section_currency = section.getPriceCurrency()
+      if section_currency:
+        exchange_rate = getExchangeRate(
+          currency_value, section_currency, date)
+        if exchange_rate:
+          return exchange_rate * price
+    return price
 
   # Causality computation
   security.declareProtected( Permissions.AccessContentsInformation,
