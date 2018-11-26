@@ -916,11 +916,21 @@
 
       //execute an url command without saving
       if (gadget.props.modified && command[0] === PREFIX_COMMAND && !gadget.props.form_content) {
-        if (!window.confirm(gadget.props.warning_message)) {
-          //back to previous hash
-          gadget.props.hasUnsaved = true;
-          return synchronousChangeState(evt.oldURL);
-        }
+        return gadget.translate(
+          "This page contains unsaved changes, do you really want to leave the page ?"
+        )
+          .push(function (warning_message) {
+            if (window.confirm(warning_message)) {
+              return gadget.route({
+                method: command[0],
+                path: command.substr(1),
+                args: args
+              });
+            }
+            //back to previous hash
+            gadget.props.hasUnsaved = true;
+            return synchronousChangeState(evt.oldURL);
+          });
       }
       //don't rerender old page when back to the previous hash
       if (gadget.props.hasUnsaved) {
@@ -1076,9 +1086,7 @@
           return RSVP.all([
             gadget.getSetting("selected_language"),
             gadget.getSetting("default_selected_language"),
-            gadget.getSetting("language_map"),
-            "This page contains unsaved changes, do you really want to leave the page ?"
-            // gadget.translate()
+            gadget.getSetting("language_map")
           ]);
         })
         .push(function (results) {
@@ -1090,7 +1098,6 @@
               }
             });
           }
-          gadget.props.warning_message = results[3];
           return gadget.listenHashChange();
         })
         .push(undefined, function (error) {
