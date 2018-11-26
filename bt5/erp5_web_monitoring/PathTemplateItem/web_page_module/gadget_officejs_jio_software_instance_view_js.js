@@ -84,7 +84,7 @@
           return gadget.changeState({
             jio_key: options.jio_key,
             status: gadget.state.instance.status,
-            report_date: new Date(gadget.state.instance.date),
+            report_date: gadget.state.instance.date,
             title: current_document.title,
             error: current_document.state.error,
             success: current_document.state.success,
@@ -120,7 +120,6 @@
           var i, j, tmp, value, len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {
             if (result.data.rows[i].value.hasOwnProperty("lastBuildDate")) {
-              value = new Date(result.data.rows[i].value.lastBuildDate);
               result.data.rows[i].value.lastBuildDate = {
                 field_gadget_param: {
                   allow_empty_time: 0,
@@ -131,10 +130,10 @@
                   editable: 0,
                   hidden: 0,
                   hidden_day_is_last_day: 0,
-                  "default": value.toUTCString(),
+                  "default": result.data.rows[i].value.lastBuildDate,
                   key: "lastBuildDate",
                   required: 0,
-                  timezone_style: 0,
+                  timezone_style: 1,
                   title: "Promise Date",
                   type: "DateTimeField"
                 }
@@ -295,13 +294,13 @@
                 "your_report_date": {
                   "description": "",
                   "title": "Report Date",
-                  "default": gadget.state.report_date.toUTCString(),
+                  "default": gadget.state.report_date,
                   "css_class": "",
                   "required": 0,
                   "editable": 0,
                   "key": "report_date",
                   "hidden": 0,
-                  "timezone_style": 0,
+                  "timezone_style": 1,
                   "date_only": 0,
                   "type": "DateTimeField"
                 },
