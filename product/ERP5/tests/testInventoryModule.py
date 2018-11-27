@@ -692,19 +692,25 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     pl.deliver() 
   
   def stepTestCalculateProduct(self, sequence=None, sequence_list=None, **kw):
-    inventory = self.getInventoryModule().newContent()
-    inventory.edit(
+    inventory_report = self.getInventoryModule().newContent(portal_type='Inventory Report')
+    inventory_report.edit(
       destination_value = sequence.get('node'),
       destination_section_value = sequence.get('section')
       )
     self.tic()
-    inventory.Inventory_calculateProductStock()
+    inventory_report.InventoryReport_calculateProductStock(batch_mode=True)
+    self.assertEqual(inventory_report.getSimulationState(), 'calculating')
     self.tic()
-    inventory_line_list = inventory.contentValues(portal_type='Inventory Line')
-    self.assertEqual(len(inventory_line_list), 2)
-    for inventory_line in inventory_line_list:
-      self.assertEqual(inventory_line.quantity, 100)
-      self.assertEqual(inventory_line.total_price, 100*100)
+    self.assertEqual(inventory_report.getSimulationState(), 'record')
+    inventory_report.InventoryReport_calculateProductStock(batch_mode=True)
+    self.assertEqual(inventory_report.getSimulationState(), 'calculating')
+    self.tic()
+    self.assertEqual(inventory_report.getSimulationState(), 'record')
+    inventory_report_line_list = inventory_report.contentValues(portal_type='Inventory Report Line')
+    self.assertEqual(len(inventory_report_line_list), 2)
+    for inventory_report_line in inventory_report_line_list:
+      self.assertEqual(inventory_report_line.total_quantity, 100)
+      self.assertEqual(inventory_report_line.total_price, 100*100)
 
   def test_06_checkCalculateProduct(self, run=run_all_test):
     if not run: return

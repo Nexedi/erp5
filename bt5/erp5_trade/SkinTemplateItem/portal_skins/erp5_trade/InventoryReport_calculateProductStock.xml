@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>batch_mode=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Inventory_calculateProductStock</string> </value>
+            <value> <string>InventoryReport_calculateProductStock</string> </value>
         </item>
       </dictionary>
     </pickle>
