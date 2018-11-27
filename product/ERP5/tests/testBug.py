@@ -62,8 +62,8 @@ class TestBug(ERP5TypeTestCase):
       Return the list of required business templates.
     """
     return ( 'erp5_base'
+           , 'erp5_crm'
            , 'erp5_forge'
-           , 'erp5_base'
            , 'erp5_pdm'
            , 'erp5_trade'
            , 'erp5_project'
@@ -603,6 +603,17 @@ class TestBug(ERP5TypeTestCase):
     self.tic()
     self.workflow_tool.doActionFor(bug, 'stop_action', send_event=1)
     self.assertEqual(bug.getSimulationState(), 'stopped')
+
+  def test_posting_bug_line_updates_bug_modification_date(self):
+    bug = self.portal.bug_module.newContent(portal_type='Bug')
+    bug_modification_date = bug.getModificationDate()
+
+    bug_line = bug.newContent(portal_type='Bug Line')
+    self.assertEqual(bug.getModificationDate(), bug_modification_date)
+    bug_line.start()
+    self.commit()
+    self.assertGreater(bug.getModificationDate(), bug_modification_date)
+
 
 def test_suite():
   suite = unittest.TestSuite()
