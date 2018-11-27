@@ -76,6 +76,10 @@
   <workflow>edit_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
+  <type>Inventory Report</type>
+  <workflow>edit_workflow, inventory_report_workflow</workflow>
+ </chain>
+ <chain>
   <type>Order Root Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>

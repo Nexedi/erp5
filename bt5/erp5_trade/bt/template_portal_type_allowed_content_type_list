@@ -39,6 +39,7 @@ Internal Trade Condition | Payment Condition
 Internal Trade Condition | Trade Model Line
 Inventory Line | Inventory Cell
 Inventory Module | Inventory
+Inventory Module | Inventory Report
 Inventory | Inventory Line
 Order Root Simulation Rule | Category Membership Divergence Tester
 Order Root Simulation Rule | DateTime Divergence Tester
