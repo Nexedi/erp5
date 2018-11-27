@@ -205,7 +205,7 @@ class SyncMLSubscription(XMLObject):
     Return the path of the subscription that will be used in sql table
     _ char must be escaped because of the LIKE behaviour
     """
-    return "%s%%" % (self.getSourceValue().getPath().replace("_","\_"),)
+    return "%s/%%" % (self.getSourceValue().getPath().replace("_","\_"),)
 
   security.declarePrivate('sendSyncCommand')
   def sendSyncCommand(self, min_gid, max_gid, message_id, activate_kw):
