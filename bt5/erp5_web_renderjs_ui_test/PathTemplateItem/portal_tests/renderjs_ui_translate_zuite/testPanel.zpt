@@ -19,23 +19,19 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Home"]</td>
-  <td></td>
-</tr>
- 
- 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+
  <tr>
    <td>verifyText</td>
-   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="Home"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@class="ui-btn-icon-left ui-icon-home"]</td>
    <td>zhuye</td>
  </tr>
 
 
  <tr>
    <td>verifyText</td>
-   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="Modules"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@class="ui-btn-icon-left ui-icon-puzzle-piece"]</td>
    <td>mokuai</td>
  </tr>
  
@@ -48,28 +44,28 @@
  
   <tr>
    <td>verifyText</td>
-   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="History"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@class="ui-btn-icon-left ui-icon-tasks"]</td>
    <td>lishi</td>
  </tr>
  
  
   <tr>
    <td>verifyText</td>
-   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="Search"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@class="ui-btn-icon-left ui-icon-search"]</td>
    <td>soushuo</td>
  </tr>
  
  
   <tr>
    <td>verifyText</td>
-   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="Preferences"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@class="ui-btn-icon-left ui-icon-sliders"]</td>
    <td>pianai</td>
  </tr>
  
  
   <tr>
    <td>verifyText</td>
-   <td>//div[@data-gadget-scope='panel']//a[@data-i18n="Logout"]</td>
+   <td>//div[@data-gadget-scope='panel']//a[@class="ui-btn-icon-left ui-icon-power-off"]</td>
    <td>tuichu</td>
  </tr>
 
