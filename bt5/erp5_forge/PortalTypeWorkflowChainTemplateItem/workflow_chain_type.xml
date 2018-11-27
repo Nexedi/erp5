@@ -5,7 +5,7 @@
  </chain>
  <chain>
   <type>Bug Line</type>
-  <workflow>bug_event_workflow, edit_workflow</workflow>
+  <workflow>bug_event_workflow, edit_workflow, event_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Glossary Term</type>

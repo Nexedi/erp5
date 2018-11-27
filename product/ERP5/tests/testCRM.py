@@ -431,6 +431,20 @@ class TestCRM(BaseTestCRM):
     self.assertNotEquals(support_request.getReference(),
                                         new_support_request.getReference())
 
+  def test_posting_event_updates_support_request_modification_date(self):
+    """Posting an event following up a support request updates the support request date.
+    """
+    sr = self.portal.support_request_module.newContent(portal_type='Support Request')
+    sr_modification_date = sr.getModificationDate()
+    event = self.portal.event_module.newContent(
+        portal_type='Web Message',
+        follow_up_value=sr
+    )
+    self.assertEqual(sr.getModificationDate(), sr_modification_date)
+    event.start()
+    self.commit()
+    self.assertGreater(sr.getModificationDate(), sr_modification_date)
+
 
   def test_Event_getResourceItemList(self):
     """Event_getResourceItemList returns

@@ -44,7 +44,7 @@ class TestZeleniumKM(ERP5TypeFunctionalTestCase):
         # XXX This is a rough list, we should drop as much as we can, and
         # keep only minimal
         return ('erp5_core_proxy_field_legacy', 'erp5_full_text_mroonga_catalog',
-                'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_forge',
+                'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test',
                 'erp5_dhtml_style', 'erp5_dhtml_ui_test',
                 'erp5_jquery', 'erp5_jquery_ui',
                 'erp5_knowledge_pad', 'erp5_pdm',
@@ -57,7 +57,9 @@ class TestZeleniumKM(ERP5TypeFunctionalTestCase):
                 'erp5_knowledge_pad_ui_test',
                 'erp5_credential', 'erp5_rss_style', 'erp5_discussion',
                 'erp5_km', 'erp5_km_ui_test_data', 'erp5_km_ui_test',
-                'erp5_l10n_fr', 'erp5_crm', 'erp5_web_renderjs_ui',
+                'erp5_l10n_fr', 'erp5_crm',
+                'erp5_forge',
+                'erp5_web_renderjs_ui',
                 'erp5_web_renderjs_ui_test',
                 )
 

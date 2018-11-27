@@ -179,25 +179,26 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEqual(not_installed_bt5.getRevision(), new_bt.getRevision())
 
   def test_updateBusinessTemplateFromUrl_keep_list(self):
-    """
-     Test updateBusinessTemplateFromUrl method
-    """
     self._svn_setup_ssl()
     template_tool = self.portal.portal_templates
     url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_core'
+    # make sure this `test_core` bt is not installed
+    template_tool.updateBusinessTemplateFromUrl(url)
+    bt = template_tool.getInstalledBusinessTemplate('test_core')
+    bt.uninstall()
+    self.tic()
+
     # don't install test_file
     keep_original_list = ('portal_skins/erp5_test/test_file', )
     template_tool.updateBusinessTemplateFromUrl(url,
                                    keep_original_list=keep_original_list)
+
     bt = template_tool.getInstalledBusinessTemplate('test_core')
-    self.assertNotEquals(None, bt)
+    self.assertNotEqual(None, bt)
     erp5_test = self.portal.portal_skins['erp5_test']
     self.assertFalse(erp5_test.hasObject('test_file'))
 
   def test_updateBusinessTemplateFromUrl_after_before_script(self):
-    """
-     Test updateBusinessTemplateFromUrl method
-    """
     from Products.ERP5Type.tests.utils import createZODBPythonScript
     portal = self.getPortal()
     self._svn_setup_ssl()
@@ -686,7 +687,14 @@ class TestTemplateTool(ERP5TypeTestCase):
     template_tool = self.portal.portal_templates
     before = {bt.getTitle(): bt.getId()
       for bt in template_tool.getInstalledBusinessTemplateList()}
-    bt_title = 'erp5_forge'
+
+    bt_title = 'test_core'
+    # This test will install `bt_title` from repository and check that nothing
+    # else was installed.
+    # Test assume that `bt_title` is not installed at this point and that it
+    # does not depend on anything that's not already installed.
+    self.assertNotIn(bt_title, before)
+
     template_tool.installBusinessTemplateListFromRepository([bt_title],
         install_dependency=True)
     self.tic()
