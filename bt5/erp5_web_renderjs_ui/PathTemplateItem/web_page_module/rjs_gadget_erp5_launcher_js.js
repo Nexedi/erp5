@@ -5,7 +5,13 @@
            XMLHttpRequest, location, console, navigator, ProgressEvent) {
   "use strict";
 
-  var MAIN_SCOPE = "m";
+  var MAIN_SCOPE = "m",
+    default_state_json_string = JSON.stringify({
+      panel_visible: false,
+      setting_id: "setting/" + document.head.querySelector(
+        'script[data-renderjs-configuration="application_title"]'
+      ).textContent
+    });
 
   function renderMainGadget(gadget, url, options) {
     var page_gadget;
@@ -243,12 +249,7 @@
       {mutex: 'declareAndExecuteEditorPanelGadget'}
     )
 
-    .setState({
-      panel_visible: false,
-      setting_id: "setting/" + document.head.querySelector(
-        'script[data-renderjs-configuration="application_title"]'
-      ).textContent
-    })
+    .setState(JSON.parse(default_state_json_string))
     .ready(function () {
       var gadget = this,
         setting_gadget,
@@ -605,7 +606,7 @@
             gadget.props.content_element.querySelector('pre').textContent =
               "Error: " + gadget.state.error_text;
             // reset gadget state
-            gadget.state = {};
+            gadget.state = JSON.parse(default_state_json_string);
             // XXX Notify error
           });
       }
