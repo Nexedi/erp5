@@ -85,7 +85,13 @@ class TestI18NSearch(ERP5TypeTestCase):
     # check sort on fulltext search score
     self.assertTrue('ORDER BY\n  full_text_SearchableText__score__ ASC' in self.portal.portal_catalog(SearchableText='Faure', sort_on=(('SearchableText__score__', 'ascending'),), src__=1))
 
+  @expectedFailure
   def test_catalog_full_text_title(self):
+    # catalog_full_text is not used by default anymore (it was already deactivated a long
+    # time ago because of performance issues whene joining a full text table with a simple
+    # InnoDB table, but documents were still indexed in). Thus I deactivated the catalog list
+    # method in order to stop wasting resources, then this test is no use anymore.
+
     # check if 'é' == 'e' collation works
     result = self.person_module.searchFolder(**{'catalog_full_text.title':'Faure'})
     self.assertEqual(len(result), 1)
