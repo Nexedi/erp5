@@ -59,6 +59,11 @@
   <td>//section[@class="document_list"]//li/a[contains(text(), "Suspended Support Requests")]/span[text() = "1"]</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//section[@class="document_list"]//li/a[contains(text(), "Campaign")]/span[text() = "1"]</td>
+  <td></td>
+</tr>
 
 <!-- clicking on one worklist open the module -->
 <tr>

@@ -52,4 +52,12 @@ portal.support_request_module.newContent(
   source_project_value=portal.project_module.erp5_officejs_support_request_ui_test_project_001,
 ).validate()
 
+# create a campaign that should not appear in this worklist
+if portal.portal_workflow.ticket_workflow.worklists.get('0A_draft_campaign_list', None) is None:
+  raise ValueError('Without this worklist, tests have to be updated.')
+portal.campaign_module.newContent(
+  portal_type='Campaign',
+  title="Should not appear in support request app",
+)
+
 return "Done."

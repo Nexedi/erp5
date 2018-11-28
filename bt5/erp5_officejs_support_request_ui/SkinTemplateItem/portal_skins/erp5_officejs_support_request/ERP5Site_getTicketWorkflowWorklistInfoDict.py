@@ -1,5 +1,7 @@
 """Returns the worklists queries for ticket workflow, as a mapping where the key is the worklist ID and the value a JIO query.
 
+If `portal_type` is provided, only return worklists that apply for this portal type.
+
 This script has proxy role, as only manager can access workflow configuration.
 """
 from Products.ERP5Type.Message import translateString
@@ -11,6 +13,11 @@ workflow = portal.portal_workflow.ticket_workflow
 workflow_state_var = workflow.variables.getStateVar()
 
 for worklist in workflow.worklists.objectValues():
+  if portal_type \
+       and 'portal_type' in worklist.getVarMatchKeys() \
+       and portal_type not in worklist.getVarMatch('portal_type'):
+    continue
+
   query_list = [{
     'type': 'complex',
     'operator': 'OR',

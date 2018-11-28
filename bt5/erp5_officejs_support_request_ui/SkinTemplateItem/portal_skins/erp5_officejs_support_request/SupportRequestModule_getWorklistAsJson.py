@@ -3,8 +3,9 @@ from Products.ERP5Type.Message import translateString
 import json
 portal = context.getPortalObject()
 
-
-worklist_query_dict = portal.ERP5Site_getTicketWorkflowWorklistInfoDict()
+worklist_query_dict = portal.ERP5Site_getTicketWorkflowWorklistInfoDict(
+    portal_type='Support Request'
+)
 
 # Query portal actions to get the worklist count and
 # extend this information with the query from our helper script.
@@ -15,7 +16,9 @@ worklist_action_list = [
     'query': worklist_query_dict[action['worklist_id']],
   }
   for action in portal.portal_actions.listFilteredActionsFor(context)['global']
-  if action['category'] == 'global' and action.get('workflow_id') == 'ticket_workflow'
+  if action['category'] == 'global'
+    and action.get('workflow_id') == 'ticket_workflow'
+    and action.get('worklist_id') in worklist_query_dict
 ]
 
 return json.dumps(worklist_action_list)
