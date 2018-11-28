@@ -40,6 +40,18 @@
       value.indexOf('quantity') !== -1 ||
       value.indexOf('price') !== -1;
   }
+  function getComparisonOptionList(value) {
+    if (value.indexOf(PREFIX_COLUMN) === 0) {
+      if (isNumericComparison(value)) {
+        return NUMERIC;
+      }
+      return OTHER;
+    }
+    if (value.indexOf(PREFIX_DOMAIN) === 0) {
+      return DOMAIN;
+    }
+    return DEFAULT;
+  }
 
   function makeFilterItemInput(param) {
     var input = document.createElement("input");
@@ -121,9 +133,21 @@
       domain_list,
       domain_option_list;
 
-    if (query_dict.type === "complex") {
-      query_detail_dict = detectAtleastoneexactmatchComplexQuery(query_dict);
-      operator_default_list = OTHER;
+    query_detail_dict = detectAtleastoneexactmatchComplexQuery(query_dict);
+    if (query_detail_dict) {
+      operator_default_list = getComparisonOptionList(query_detail_dict.key);
+      if (operator_default_list !== OTHER) {
+        query_dict = query_dict.query_list[0] || {
+          type: "simple",
+          key: query_detail_dict.key,
+          value: query_detail_dict.value_list[0] || ""
+        };
+        query_detail_dict = null;
+      }
+    } else {
+      operator_default_list = getComparisonOptionList(query_dict.key);
+    }
+    if (query_detail_dict) {
 
       is_selected = false;
       for (i = 0; i < gadget.state.search_column_list.length; i += 1) {
@@ -172,20 +196,15 @@
       });
     }
 
-    if (query_dict.key.indexOf(PREFIX_COLUMN) === 0) {
-      if (isNumericComparison(query_dict.key)) {
-        operator_default_list = NUMERIC;
-        if (query_dict.key.indexOf("date") !== -1) {
-          input_type = "date";
-        } else {
-          input_type = "number";
-        }
+
+    if (operator_default_list === NUMERIC) {
+      if (query_dict.key.indexOf("date") !== -1) {
+        input_type = "date";
       } else {
-        operator_default_list = OTHER;
+        input_type = "number";
       }
-    } else if (query_dict.key.indexOf(PREFIX_DOMAIN) === 0) {
+    } else if (operator_default_list === DOMAIN) {
       is_selected = false;
-      operator_default_list = DOMAIN;
       input_type = "select";
       domain_option_list = [];
       domain_list = gadget.state.domain_dict[query_dict.key.slice(PREFIX_DOMAIN.length)];
