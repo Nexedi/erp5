@@ -686,7 +686,14 @@ class TestTemplateTool(ERP5TypeTestCase):
     template_tool = self.portal.portal_templates
     before = {bt.getTitle(): bt.getId()
       for bt in template_tool.getInstalledBusinessTemplateList()}
-    bt_title = 'erp5_forge'
+
+    bt_title = 'test_core'
+    # This test will install `bt_title` from repository and check that nothing
+    # else was installed.
+    # Test assume that `bt_title` is not installed at this point and that it
+    # does not depend on anything that's not already installed.
+    self.assertNotIn(bt_title, before)
+
     template_tool.installBusinessTemplateListFromRepository([bt_title],
         install_dependency=True)
     self.tic()

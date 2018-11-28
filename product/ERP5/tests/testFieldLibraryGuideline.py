@@ -45,6 +45,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
     """  """
     return (
       'erp5_base',
+      'erp5_crm',
       'erp5_forge',
       )
 
