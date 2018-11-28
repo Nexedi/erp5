@@ -179,25 +179,28 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEqual(not_installed_bt5.getRevision(), new_bt.getRevision())
 
   def test_updateBusinessTemplateFromUrl_keep_list(self):
-    """
-     Test updateBusinessTemplateFromUrl method
-    """
     self._svn_setup_ssl()
     template_tool = self.portal.portal_templates
     url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_core'
-    # don't install test_file
+    # install a first time
+    template_tool.updateBusinessTemplateFromUrl(url)
+    bt = template_tool.getInstalledBusinessTemplate('test_core')
+    self.assertNotEqual(None, bt)
+
+    # make a change to an object from `test_core`
+    self.portal.portal_skins['erp5_test'].test_file.title = 'modified !'
+    test_file_p_oid = self.portal.portal_skins['erp5_test'].test_file._p_oid
+
+    # update, but choose not to update the object we changed
     keep_original_list = ('portal_skins/erp5_test/test_file', )
     template_tool.updateBusinessTemplateFromUrl(url,
                                    keep_original_list=keep_original_list)
-    bt = template_tool.getInstalledBusinessTemplate('test_core')
-    self.assertNotEquals(None, bt)
-    erp5_test = self.portal.portal_skins['erp5_test']
-    self.assertFalse(erp5_test.hasObject('test_file'))
+
+    # this object was not updated
+    self.assertEqual(self.portal.portal_skins['erp5_test'].test_file.title, 'modified !')
+    self.assertEqual(self.portal.portal_skins['erp5_test'].test_file._p_oid, test_file_p_oid)
 
   def test_updateBusinessTemplateFromUrl_after_before_script(self):
-    """
-     Test updateBusinessTemplateFromUrl method
-    """
     from Products.ERP5Type.tests.utils import createZODBPythonScript
     portal = self.getPortal()
     self._svn_setup_ssl()
@@ -686,7 +689,14 @@ class TestTemplateTool(ERP5TypeTestCase):
     template_tool = self.portal.portal_templates
     before = {bt.getTitle(): bt.getId()
       for bt in template_tool.getInstalledBusinessTemplateList()}
-    bt_title = 'erp5_forge'
+
+    bt_title = 'test_core'
+    # This test will install `bt_title` from repository and check that nothing
+    # else was installed.
+    # Test assume that `bt_title` is not installed at this point and that it
+    # does not depend on anything that's not already installed.
+    self.assertNotIn(bt_title, before)
+
     template_tool.installBusinessTemplateListFromRepository([bt_title],
         install_dependency=True)
     self.tic()
