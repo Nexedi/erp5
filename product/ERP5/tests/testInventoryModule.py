@@ -680,6 +680,35 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                            price = 100
                           )
     sequence.edit(packing_list=packing_list)
+    
+  
+  def stepCreateVariatedSalesPackingListLine(self, sequence=None, sequence_list=None, **kw):
+    resource_list = sequence.get('resource_list')
+    packing_list = sequence.get('packing_list')
+    #create with last resource
+    packing_list_line = packing_list.newContent(
+                  portal_type='Sale Packing List Line')
+    packing_list_line.edit(resource_value = resource_list[-1])
+    
+    resource_vcl = list(resource_list[-1].getVariationCategoryList(
+        omit_individual_variation=1, omit_optional_variation=1))
+    resource_vcl.sort()
+    self.assertEqual(len(resource_vcl),2)
+    packing_list_line.setVariationCategoryList(resource_vcl)
+    cell_key_list = list(packing_list_line.getCellKeyList(base_id='movement'))
+    price = 50
+    quantity = 200
+    for cell_key in cell_key_list:
+      cell = packing_list_line.newCell(base_id='movement',
+                                portal_type='Sale Packing List Cell',
+                                *cell_key)
+      cell.edit(mapped_value_property_list=['price','quantity'],
+                price=price, quantity=quantity,
+                predicate_category_list=cell_key,
+                variation_category_list=cell_key,)
+      price += 1
+      quantity += 1
+    sequence.edit(packing_list=packing_list)
 
 
   def stepDeliverPackingList(self, sequence=None,
@@ -707,10 +736,20 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     self.tic()
     self.assertEqual(inventory_report.getSimulationState(), 'record')
     inventory_report_line_list = inventory_report.contentValues(portal_type='Inventory Report Line')
-    self.assertEqual(len(inventory_report_line_list), 2)
-    for inventory_report_line in inventory_report_line_list:
-      self.assertEqual(inventory_report_line.total_quantity, 100)
-      self.assertEqual(inventory_report_line.total_price, 100*100)
+    self.assertEqual(len(inventory_report_line_list), 4)
+    inventory_report_line_list.sort(key=lambda x: x.total_quantity)
+    
+    self.assertEqual(inventory_report_line_list[0].total_quantity, 100)
+    self.assertEqual(inventory_report_line_list[0].total_price, 100*100)
+    
+    self.assertEqual(inventory_report_line_list[1].total_quantity, 100)
+    self.assertEqual(inventory_report_line_list[1].total_price, 100*100)
+
+    self.assertEqual(inventory_report_line_list[2].total_quantity, 200)
+    self.assertEqual(inventory_report_line_list[2].total_price, 50*200)
+    
+    self.assertEqual(inventory_report_line_list[3].total_quantity, 201)
+    self.assertEqual(inventory_report_line_list[3].total_price, 51*201)
 
   def test_06_checkCalculateProduct(self, run=run_all_test):
     if not run: return
@@ -721,6 +760,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                        stepDeliverPackingList \
                        stepCreateVariatedResource \
                        stepCreateSalesPackingList \
+                       stepCreateVariatedSalesPackingListLine \
                        stepDeliverPackingList \
                        stepTic \
                        stepTestCalculateProduct \
