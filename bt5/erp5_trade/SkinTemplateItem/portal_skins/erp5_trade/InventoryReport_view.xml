@@ -106,6 +106,7 @@
                         <string>my_title</string>
                         <string>my_destination_title</string>
                         <string>my_destination_section_title</string>
+                        <string>your_price_currency</string>
                       </list>
                     </value>
                 </item>
