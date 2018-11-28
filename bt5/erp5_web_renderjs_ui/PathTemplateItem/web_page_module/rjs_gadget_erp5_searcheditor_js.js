@@ -72,7 +72,7 @@
     }
     return element;
   }
-  function updateFilterForAtleastoneexactmatch(gadget_element, auto_remove) {
+  function updateFilterDOM(gadget_element, auto_remove) {
     var item_list = gadget_element.querySelectorAll(".filter_item"),
       input_list = null,
       last_input = null,
@@ -97,6 +97,13 @@
         input_list = item_list[i].querySelectorAll("input");
         if (input_list.length === 1) {
           input_list[0].required = true;
+        }
+      } else {
+        if (auto_remove) {
+          input_list = item_list[i].querySelectorAll("input");
+          for (j = input_list.length - 1; j > 0; j -= 1) {
+            input_list[j].remove();
+          }
         }
       }
     }
@@ -692,13 +699,13 @@
       var filter_item_element = getFilterItemElementFromEvent(evt, this.element);
       if (filter_item_element) {
         if (filter_item_element.querySelector(".operator").value === "at_least_one_exact_match") {
-          updateFilterForAtleastoneexactmatch(this.element);
+          updateFilterDOM(this.element);
         }
       }
     }, false, false)
 
     .onEvent('change', function change(evt) {
-      updateFilterForAtleastoneexactmatch(this.element, true);
+      updateFilterDOM(this.element, true);
       if (evt.target.classList.contains('column')) {
         // Reset the operator when user change the column/key
         evt.preventDefault();
