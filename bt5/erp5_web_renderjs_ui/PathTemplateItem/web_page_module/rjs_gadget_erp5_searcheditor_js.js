@@ -693,7 +693,9 @@
         evt.preventDefault();
         var new_state = getQueryStateFromDOM(this),
           index = getElementIndex(evt.target.parentElement.parentElement);
-        delete new_state.query_list[index].operator;
+        if (new_state.query_list[index].type !== "complex") {
+          delete new_state.query_list[index].operator;
+        }
         return this.changeState(new_state);
       }
     }, false, false);
