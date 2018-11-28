@@ -49,7 +49,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
       Return the list of business templates.
     """
     return ('erp5_core_proxy_field_legacy', 'erp5_full_text_mroonga_catalog',
-            'erp5_base', 'erp5_ui_test_core', 'erp5_forge',
+            'erp5_base', 'erp5_ui_test_core',
             'erp5_dhtml_style',
             'erp5_jquery', 'erp5_jquery_ui',
             'erp5_knowledge_pad', 'erp5_pdm',
@@ -65,7 +65,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
             'erp5_web', 'erp5_dms', 'erp5_credential',
             'erp5_rss_style', 'erp5_discussion',
-            'erp5_l10n_fr', 'erp5_crm',
+            'erp5_l10n_fr', 'erp5_crm', 'erp5_forge',
             'erp5_run_my_doc',
             'erp5_user_tutorial_ui_test',
             'erp5_user_tutorial',
