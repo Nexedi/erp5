@@ -133,6 +133,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>stop_date</string>
+                          <string>End Date</string>
+                        </tuple>
+                        <tuple>
                           <string>destination_section_title</string>
                           <string>Client</string>
                         </tuple>
@@ -290,6 +294,10 @@
                         <tuple>
                           <string>start_date</string>
                           <string>Begin Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>End Date</string>
                         </tuple>
                       </list>
                     </value>
