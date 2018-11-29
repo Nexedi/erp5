@@ -1835,25 +1835,21 @@ class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
 
   @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
-  @simulate('Test_listPersons', '*args, **kwargs', """
-return context.getPortalObject().person_module.contentValues(portal_type="Person")
-""")
-  @simulate('Test_listPersonsCatalog', '*args, **kwargs', """
-return context.getPortalObject().portal_catalog.searchResults(portal_type="Person")
-""")
   @changeSkin('Hal')
-  def test_getHateoas_person_title_search(self):
-    """Person has amazing property of having attribute "title" and "getTitle" with different return values.
+  def test_getHateoas_contentValues_search(self):
+    """contentValues result must not check local properties
+    This is a listbox.py compatibility (ListMethodWrapper)
 
-    Value resolution must prefer getter over raw attribute.
     """
     fake_request = do_fake_request("GET")
 
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
       REQUEST=fake_request,
       mode="search",
-      local_roles=["Assignor", "Assignee"],
-      list_method='Test_listPersons',
+      local_roles=["Owner"],
+      relative_url='person_module',
+      list_method='contentValues',
+      query='uid:"%i"' % self.person.getUid(),
       select_list=['title'] # attribute which must be resolved through getter
     )
     result_dict = json.loads(result)
@@ -1866,8 +1862,10 @@ return context.getPortalObject().portal_catalog.searchResults(portal_type="Perso
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
       REQUEST=fake_request,
       mode="search",
-      local_roles=["Assignor", "Assignee"],
-      list_method='Test_listPersonsCatalog',
+      local_roles=["Owner"],
+      relative_url='person_module',
+      list_method='searchFolder',
+      query='uid:"%i"' % self.person.getUid(),
       select_list=['title'] # attribute which must be resolved through getter
     )
     result_dict = json.loads(result)

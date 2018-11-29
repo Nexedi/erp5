@@ -219,27 +219,6 @@ def getDomainSelection(domain_list):
   return root_dict
 
 
-def getProtectedProperty(document, select):
-  """getProtectedProperty is a security-aware substitution for builtin `getattr`
-
-  It resolves Properties on Products (visible via Zope Formulator), which are
-  accessible as ordinary attributes as well, by following security rules.
-
-  See https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5Form/ListBox.py#L2293
-  """
-  try:
-    #see https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5Form/ListBox.py#L2293
-    try:
-      select = select[select.rindex('.') + 1:]
-    except ValueError:
-      pass
-
-    return document.getProperty(select, d=None)
-  except (ConflictError, RuntimeError):
-    raise
-  except:
-    return None
-
 def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
   """Create a copy of `kwargs_dict` with only items suitable for `func`.
 
@@ -301,154 +280,6 @@ def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
         del initial_kwargs[initial_param]
 
   return initial_kwargs
-
-
-def getUidAndAccessorForAnything(search_result, result_index, traversed_document):
-  """Return unique ID, unique URL, getter for any combination of `search_result` and `index`.
-
-  You want to use this method when you need a unique reference to random object in iterable (for example
-  result of list_method or stat_method). This will give you UID and URL for identification within JIO and
-  accessors to test/access object's properties.
-
-  Usage::
-
-  for i, random_object in enumerate(unknown_iterable):
-    uid, url, getter = object_ids_and_access(random_object, i)
-    value = getter(random_object, "value")
-  """
-  if hasattr(search_result, "getObject"):
-    # "Brain" object - which simulates DB Cursor thus result must have UID
-    contents_uid = search_result.uid
-    # every document indexed in catalog has to have relativeUrl
-    contents_relative_url = getRealRelativeUrl(search_result)
-    # get property in secure way from documents
-    search_property_getter = getProtectedProperty
-  elif hasattr(search_result, 'hasProperty') and hasattr(search_result, 'getId'):
-    # Zope products have at least ID thus we work with that
-    contents_uid = search_result.uid
-    # either we got a document with relativeUrl or we got product and use ID
-    contents_relative_url = getRealRelativeUrl(search_result) or search_result.getId()
-    # documents and products have the same way of accessing properties
-    search_property_getter = getProtectedProperty
-    # search_property_hasser = lambda doc, attr: doc.hasProperty(attr)
-  else:
-    # In case of reports the `search_result` can be list of
-    # PythonScripts.standard._Object - a reimplementation of plain dictionary
-
-    # means we are iterating over plain objects
-    # list_method must be defined because POPOs can return only that
-    contents_uid = "{}#{:d}".format(list_method, result_index)
-    # JIO requires every item to have _links.self.href so it can construct
-    # links to the document. Here we have a object in RAM (which should
-    # never happen!) thus we provide temporary UID
-    contents_relative_url = "{}/{}".format(traversed_document.getRelativeUrl(), contents_uid)
-    # property getter must be simple __getattr__ implementation
-    search_property_getter = lambda obj, attr: getattr(obj, attr, None)
-
-  return contents_uid, contents_relative_url, search_property_getter
-
-
-def getAttrFromAnything(search_result, select, search_property_getter, kwargs):
-  """Given `search_result` extract value named `select` using helper getter.
-
-  :param search_result: any dict-like object (usually dict or Brain or Document)
-  :param select: field name (can represent actual attributes, Properties or even Scripts)
-  :param kwargs: available arguments for possible callables hidden under `select`
-  """
-
-  # if the variable does not have a field template we need to find its
-  # value by resolving value in the correct order. The code is copy&pasted
-  # from ListBoxRendererLine.getValueList because it is universal
-  contents_value = None
-
-  if not isinstance(select, (str, unicode)) or len(select) == 0:
-    log('There is an invalid column name "{!s}"!'.format(select), level=200)
-    return None
-
-  if "." in select:
-    select = select[select.rindex('.') + 1:]
-
-  # prepare accessor/getter name because this must be the first tried possibility
-  # getter is preferred way how to obtain properties - property itself is the second
-  getter_regex = re.compile('^(get|as|has)[A-Z]')
-  if getter_regex.match(select) or select[0] in string.ascii_uppercase:
-    # it is either getter (starts with "get", "has" or "as") or a Script (starts with capital letter)
-    accessor_name = select
-  else:
-    # maybe a hidden getter (variable accessible by a getter)
-    accessor_name = 'get' + UpperCase(select)
-
-  # Following value resolution is copied from product/ERP5Form/ListBox.py#L2223
-  # 1. resolve attribute on unwrapped object using getter
-  try:
-    unwrapped_search_result = search_result.Base_aqSelf()
-    if contents_value is None and unwrapped_search_result is not None:
-      try:
-        if getattr(unwrapped_search_result, select, None) is not None:
-          # I know this looks suspicious but product/ERP5Form/ListBox.py#L2224
-          contents_value = getattr(search_result, select)
-      except Unauthorized:
-        pass
-  except AttributeError:
-    pass  # search_result is not a Document
-
-  # 2. use the fact that wrappers (brain or acquisition wrapper) use
-  # permissioned getters
-  try:
-    raw_search_result = search_result.Base_aqBase()
-    if contents_value is None and raw_search_result is not None:
-      try:
-        if getattr(raw_search_result, accessor_name, None) is not None:
-          contents_value = getattr(search_result, accessor_name, None)
-      except Unauthorized:
-        pass
-  except AttributeError:
-    pass  # search_result is not a Document
-
-  # Following part resolves values on other objects than Documents
-  # Prefer getter (accessor) than raw property name
-  try:
-    underlying_search_result = search_result.getObject()
-  except AttributeError:
-    underlying_search_result = search_result
-
-  if contents_value is None:
-    try:
-      contents_value = getattr(underlying_search_result, accessor_name)
-    except (AttributeError, Unauthorized):
-      pass
-
-  if contents_value is None:
-    try:
-      contents_value = search_property_getter(search_result, select)
-    except (AttributeError, Unauthorized):
-      pass
-
-  if callable(contents_value):
-    callable_args = selectKwargsForCallable(contents_value, {}, {'brain': search_result})
-    try:
-      if len(callable_args) == 1 and 'brain' not in callable_args:
-        # function has one mandatory parameter
-        contents_value = contents_value(search_result)
-      else:
-        contents_value = contents_value(**callable_args)
-    except (AttributeError, KeyError, Unauthorized) as error:
-      log("Could not evaluate {} on {} with error {!s}".format(
-        contents_value, search_result, error), level=200)  # ERROR
-      contents_value = None
-
-  # make resulting value JSON serializable
-  if contents_value is not None:
-    if same_type(contents_value, DateTime()):
-      # Serialize DateTime
-      contents_value = contents_value.rfc822()
-    # XXX Kato: what exactly should the later mean?
-    elif isinstance(contents_value, datetime.date):
-      contents_value = formatdate(time.mktime(contents_value.timetuple()))
-    elif hasattr(contents_value, 'translate'):
-      contents_value = "%s" % contents_value
-
-  return contents_value
 
 
 url_template_dict = {
@@ -1894,9 +1725,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       '_select_list': select_list,
       '_embedded': {}
     })
+
+    Listbox_getBrainValue = traversed_document.Listbox_getBrainValue
+    # Compatibility with Listbox.py ListMethodWrapper
+    can_check_local_property = list_method not in ('objectValues', 'contentValues')
     # now fill in `contents_list` with actual information
     # beware that search_result_iterable can hide anything inside!
-    for result_index, search_result in enumerate(search_result_iterable):
+    for result_index, brain in enumerate(search_result_iterable):
       # skip documents out of `limit`
       if result_index < start:
         continue
@@ -1906,12 +1741,22 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # we can render fields which need 'here' to be set to currently rendered document
       #REQUEST.set('here', search_result)
       contents_item = {}
-      contents_uid, contents_relative_url, property_getter = \
-        getUidAndAccessorForAnything(search_result, result_index, traversed_document)
+      try:
+        brain_document = brain.getObject()
+      except AttributeError:
+        # This is not a ZSQLBrain/ERP5 Document
+        brain_document = brain
 
-      # Check if this object provides a specific URL method.
-      # if getattr(search_result, 'getListItemUrl', None) is not None:
-      #  search_result.getListItemUrl(contents_uid, result_index, selection_name)
+        # means we are iterating over plain objects
+        # list_method must be defined because POPOs can return only that
+        brain_uid = "{}#{:d}".format(list_method, result_index)
+        # JIO requires every item to have _links.self.href so it can construct
+        # links to the document. Here we have a object in RAM (which should
+        # never happen!) thus we provide temporary UID
+        brain_relative_url = "{}/{}".format(traversed_document.getRelativeUrl(), brain_uid)
+      else:
+        brain_uid = brain.uid
+        brain_relative_url = getRealRelativeUrl(brain_document)
 
       # _links.self.href is mandatory for JIO so it can create reference to the
       # (listbox) item alone
@@ -1919,7 +1764,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         'self': {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
-            "relative_url": contents_relative_url,
+            "relative_url": brain_relative_url,
             "script_id": script.id
           },
         },
@@ -1930,52 +1775,56 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if listbox_field_id:# and source_field.get_value("editable"):
         contents_item['listbox_uid:list'] = {
           'key': "%s_uid:list" % listbox_field_id,
-          'value': contents_uid
+          'value': brain_uid
         }
 
-      # if default value is given by evaluating Tales expression then we only
-      # put "cell" to request (expected by tales) and let the field evaluate
-      REQUEST.set('cell', search_result)
       for select in select_list:
         contents_item[select] = {}
-        default_field_value = MARKER
-        # every `select` can have a template field or be just a exotic getter for a value
-        if editable_field_dict.has_key(select):
-          # cell has a Form Field template thus render it using the field
-          # fields are nice because they are standard
-          if (not editable_field_dict[select].tales.get("default", "") and  # no tales
-              (editable_field_dict[select].meta_type != 'ProxyField' or
-               not hasattr(editable_field_dict[select], "get_recursive_tales") or  # no recursive tales
-               editable_field_dict[select].get_recursive_tales("default") == "")):
-            # if there is no tales expr (or is empty) we extract the value from search result
-            default_field_value = getAttrFromAnything(search_result, select, property_getter, {})
+        editable_field = editable_field_dict.get(select, None)
+        default_field_value = Listbox_getBrainValue(
+          brain,
+          brain_document,
+          select,
+          can_check_local_property,
+          editable_field=editable_field
+        )
 
+        if isinstance(default_field_value, Message):
+          default_field_value = default_field_value.translate()
+
+        if editable_field is None:
+          # make resulting value JSON serializable
+          if isinstance(default_field_value, DateTime):
+            # Serialize DateTime
+            default_field_value = default_field_value.rfc822()
+            # XXX Kato: what exactly should the later mean?
+          elif isinstance(default_field_value, datetime.date):
+            default_field_value = formatdate(time.mktime(default_field_value.timetuple()))
+
+          contents_item[select] = default_field_value
+
+        else:
           # If the contents_item has field rendering in it, better is to add an
           # extra layer of abstraction to not get conflicts
           contents_item[select]['field_gadget_param'] = renderField(
             traversed_document,
-            editable_field_dict[select],
+            editable_field,
             listbox_form,
             value=default_field_value,
-            key='field_%s_%s' % (editable_field_dict[select].id, contents_uid))
+            key='field_%s_%s' % (editable_field.id, brain_uid))
 
-        else:
-          # most of the complicated magic happens here - we need to resolve field names
-          # given search_result. This name can unfortunately mean almost anything from
-          # a key name to Python Script with variable number of input parameters.
-          contents_item[select] = getAttrFromAnything(search_result, select, property_getter, {'brain': search_result})
 
         # By default, we won't be generating views in the URL
         url_parameter_dict = None
         if select in url_column_dict:
           # Check if we get URL parameters using listbox field `url_columns`
           try:
-            url_column_method = getattr(search_result, url_column_dict[select])
+            url_column_method = getattr(brain, url_column_dict[select])
             # Result of `url_column_method` must be a dictionary in the format
             # {'command': <command_name, ex: 'raw', 'push_history'>,
             #  'options': {'url': <Absolute URL>, 'jio_key': <Relative URL of object>, 'view': <id of the view>}}
             url_parameter_dict = url_column_method(url_dict=True,
-                                                   brain=search_result,
+                                                   brain=brain,
                                                    selection=catalog_kw['selection'],
                                                    selection_name=catalog_kw['selection_name'],
                                                    column_id=select)
@@ -1987,16 +1836,16 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             if url_column_dict[select]:
               log("Invalid URL method {!s} on column {}".format(url_column_dict[select], select), level=800)
 
-        elif getattr(search_result, 'getListItemUrlDict', None) is not None:
+        elif getattr(brain, 'getListItemUrlDict', None) is not None:
           # Check if we can get URL result from the brain
           try:
-            url_parameter_dict = search_result.getListItemUrlDict(
+            url_parameter_dict = brain.getListItemUrlDict(
               select, result_index, catalog_kw['selection_name']
             )
           except (ConflictError, RuntimeError):
             raise
           except:
-            log('could not evaluate the url method getListItemUrlDict with %r' % search_result,
+            log('could not evaluate the url method getListItemUrlDict with %r' % brain,
                 level=800)
 
         if isinstance(url_parameter_dict, dict):
@@ -2033,7 +1882,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
               }
 
       # endfor select
-      REQUEST.other.pop('cell', None)
       contents_list.append(contents_item)
     result_dict['_embedded']['contents'] = ensureSerializable(contents_list)
 
