@@ -348,6 +348,7 @@ def getUidAndAccessorForAnything(search_result, result_index, traversed_document
   return contents_uid, contents_relative_url, search_property_getter
 
 
+getter_regex = re.compile('^(get|as|has)[A-Z]')
 def getAttrFromAnything(search_result, select, search_property_getter, kwargs):
   """Given `search_result` extract value named `select` using helper getter.
 
@@ -370,7 +371,6 @@ def getAttrFromAnything(search_result, select, search_property_getter, kwargs):
 
   # prepare accessor/getter name because this must be the first tried possibility
   # getter is preferred way how to obtain properties - property itself is the second
-  getter_regex = re.compile('^(get|as|has)[A-Z]')
   if getter_regex.match(select) or select[0] in string.ascii_uppercase:
     # it is either getter (starts with "get", "has" or "as") or a Script (starts with capital letter)
     accessor_name = select
