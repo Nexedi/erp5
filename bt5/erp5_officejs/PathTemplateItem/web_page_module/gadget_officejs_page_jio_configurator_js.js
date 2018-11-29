@@ -65,8 +65,88 @@
           });
       },
       "name": "Dropbox"
+    },
+    "linshare": {
+      "configuration": {
+        type: "query",
+        sub_storage: {
+          type: "linshare"
+        }
+      },
+      "name": "Linshare"
     }
   };
+
+  function setConfiguration(gadget) {
+    var options = storage_list[gadget.state.type];
+    if (gadget.state.type !== "linshare") {
+      return options.setConfiguration(gadget);
+    }
+    return new RSVP.Queue()
+      .push(function () {
+        return RSVP.all([
+          gadget.getSetting("portal_type"),
+          gadget.getSetting("erp5_attachment_synchro", "")
+        ]);
+      })
+      .push(function (setting) {
+        var configuration = {},
+          attachment_synchro = setting[1] !== "";
+        configuration = {
+          type: "replicate",
+          query: {
+            query: 'portal_type:"' + setting[0] + '" ',
+            limit: [0, 200],
+            sort_on: [["modification_date", "descending"]]
+          },
+          use_remote_post: false,
+          conflict_handling: 2,
+          check_local_attachment_modification: attachment_synchro,
+          check_local_attachment_creation: attachment_synchro,
+          check_remote_attachment_creation: attachment_synchro,
+          check_local_modification: true,
+          check_local_creation: true,
+          check_local_deletion: false,
+          check_remote_modification: false,
+          check_remote_creation: true,
+          check_remote_deletion: false,
+          signature_sub_storage: {
+            type: "query",
+            sub_storage: {
+              type: "uuid",
+              sub_storage: {
+                type: "indexeddb",
+                database: "ojs_" + gadget.state.type + "_hash"
+              }
+            }
+          },
+          local_sub_storage: {
+            type: "query",
+            sub_storage: {
+              type: "uuid",
+              sub_storage: {
+                type: "indexeddb",
+                database: "ojs_" + gadget.state.type
+              }
+            }
+          },
+          remote_sub_storage: options.configuration
+        };
+        return gadget.setSetting('jio_storage_description', configuration);
+      })
+      .push(function () {
+        return gadget.setSetting('jio_storage_name', options.name);
+      })
+      .push(function () {
+        return gadget.setSetting('sync_reload', true);
+      })
+      .push(function () {
+        return gadget.redirect({
+          command: "display",
+          options: {page: 'ojs_sync', auto_repair: 'true'}
+        });
+      });
+  }
 
   function getUrlParameter(gadget, name) {
     return gadget.getUrlFor({command: "display", options: {page: "ojs_configurator", type: name}})
@@ -115,7 +195,7 @@
     .onStateChange(function () {
       var gadget = this;
       if (storage_list.hasOwnProperty(gadget.state.type)) {
-        return storage_list[gadget.state.type].setConfiguration(gadget);
+        setConfiguration(gadget);
       }
       return new RSVP.Queue()
         .push(function () {
