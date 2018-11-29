@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -70,8 +68,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_configurator.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_linshare_configurator.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,15 +83,17 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_jio_configurator_js</string> </value>
+            <value> <string>gadget_officejs_page_ojs_linshare_configurator_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -99,7 +103,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS jIO Configurator Gadget JS</string> </value>
+            <value> <string>OfficeJS jIO Linshare Configurator Page</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -169,7 +173,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -191,7 +195,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442575711.45</float>
+                        <float>1545233814.39</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -236,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>972.27141.2695.3276</string> </value>
+                <value> <string>972.27118.13776.47906</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1545233718.42</float>
+                        <float>1545232594.38</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -281,7 +285,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -311,7 +315,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442575642.12</float>
+                        <float>1545232082.86</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
