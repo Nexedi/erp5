@@ -65,6 +65,12 @@
           });
       },
       "name": "Dropbox"
+    },
+    "linshare": {
+      "name": "Linshare",
+      "setConfiguration": function (gadget) {
+        return gadget.redirect({command: "change", options: {page: 'ojs_linshare_configurator'}});
+      }
     }
   };
 
@@ -108,7 +114,8 @@
         })
         .push(function () {
           return gadget.changeState({
-            type: options.type || ""
+            type: options.type || "",
+            url: options.url
           });
         });
     })
