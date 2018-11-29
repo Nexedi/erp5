@@ -84,8 +84,6 @@
                 <string>destination_reference</string>
                 <string>source_section_title</string>
                 <string>destination_section_title</string>
-                <string>start_date</string>
-                <string>stop_date</string>
               </tuple>
             </value>
         </item>

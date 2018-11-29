@@ -77,8 +77,6 @@ Once the period is closed (i.e. the Accounting Period Delimiter is in delivered 
                 <string>title</string>
                 <string>short_title</string>
                 <string>description</string>
-                <string>start_date</string>
-                <string>stop_date</string>
               </tuple>
             </value>
         </item>
