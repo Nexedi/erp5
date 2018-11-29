@@ -659,7 +659,7 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       "hide_day": field.get_value('hide_day'),
       "hidden_day_is_last_day": field.get_value('hidden_day_is_last_day'),
     })
-    date_value = getFieldDefault(form, field, key, value)
+    date_value = result["default"]
     if not date_value and field.get_value('default_now'):
       date_value = DateTime()
     if same_type(date_value, DateTime()):
