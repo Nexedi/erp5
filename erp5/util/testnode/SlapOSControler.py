@@ -301,10 +301,22 @@ class SlapOSControler(object):
 
   def runSoftwareRelease(self, config, environment, **kw):
     logger.debug("SlapOSControler.runSoftwareRelease")
+    # Set some flags to maximize CPU utilization
+    # We usually have several testnode instances running on the same server, so
+    # each testnode process should try to use the maximum amout of resources,
+    # yet leaving some resources for other instances on the machine.
+    # A typical scenario is we have all testnode re-compiling softwares at the
+    # same time because of change in repository that would cause all test nodes
+    # to recompile. That's why we try to do something a bit more clever than
+    # "all testnodes uses all CPU available", because the total utilisation
+    # will exceed the number of CPUs. Make allow fine tuning of its job server,
+    # so we configure it to use all CPUs, unless the load is >= CPUs count.
+    # numpy and rake does not expose such flexibility, so we just tell them to
+    # use the number of CPUs this testnode instance was configured to use.
     cpu_count = str(os.sysconf("SC_NPROCESSORS_ONLN"))
-    os.environ['MAKEFLAGS'] = '-j' + cpu_count
-    os.environ['NPY_NUM_BUILD_JOBS'] = cpu_count
-    os.environ['BUNDLE_JOBS'] = cpu_count
+    os.environ['MAKEFLAGS'] = '-j%s -l%s' % ( cpu_count, cpu_count)
+    os.environ['NPY_NUM_BUILD_JOBS'] = config['node_quantity']
+    os.environ['BUNDLE_JOBS'] = config['node_quantity']
     os.environ['PATH'] = environment['PATH']
     # a SR may fail for number of reasons (incl. network failures)
     # so be tolerant and run it a few times before giving up
