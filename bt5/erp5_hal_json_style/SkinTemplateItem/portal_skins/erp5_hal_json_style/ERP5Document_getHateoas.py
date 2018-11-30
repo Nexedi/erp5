@@ -559,7 +559,7 @@ def getFieldDefault(form, field, key, value=None):
   return value
 
 
-def renderField(traversed_document, field, form, value=None, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True):
+def renderField(traversed_document, field, form, value=MARKER, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True):
   """Extract important field's attributes into `result` dictionary."""
   if selection_params is None:
     selection_params = {}
@@ -593,10 +593,12 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
 
   if "Field" in meta_type:
     # fields have default value and can be required (unlike boxes)
-    result.update({
-      "required": field.get_value("required") if field.has_value("required") else None,
-      "default": getFieldDefault(form, field, key, value),
-    })
+    result["required"] = field.get_value("required") if field.has_value("required") else None
+    if value is MARKER:
+      result["default"] = getFieldDefault(form, field, key)
+    else:
+      # No need to calculate the field value if provided (used in Listbox)
+      result["default"] = value
 
   # start the actual "switch" on field's meta_type here
   if meta_type in ("ListField", "RadioField", "ParallelListField", "MultiListField"):
@@ -1936,7 +1938,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       REQUEST.set('cell', search_result)
       for select in select_list:
         contents_item[select] = {}
-        default_field_value = None
+        default_field_value = MARKER
         # every `select` can have a template field or be just a exotic getter for a value
         if editable_field_dict.has_key(select):
           # cell has a Form Field template thus render it using the field
