@@ -3102,6 +3102,12 @@ class Base( CopyContainer,
 
       # generated from properties methods and add explicitly defined method_ids as well
       for searchable_text_property_id in portal_type.getSearchableTextPropertyIdList():
+        # this "hasProperty" prevents acquisition. But also it prevents retrieving properties
+        # of relations (ie: source_section_title). This is not bad, as anyway if the property
+        # of the relation changes, the indexed searchableText property will become wrong.
+        # Also, we don't want to trigger the indexation of hundreds of documents if the
+        # title of a Person changes (which means we don't want an interaction workflow
+        # for reindexation of related documents)
         if self.hasProperty(searchable_text_property_id):
           method_id = convertToUpperCase(searchable_text_property_id)
           searchable_text_method_id_list.extend(['get%s' %method_id])

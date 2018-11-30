@@ -85,7 +85,6 @@
                 <string>short_title</string>
                 <string>subject_list</string>
                 <string>filename</string>
-                <string>source_project_title</string>
               </tuple>
             </value>
         </item>

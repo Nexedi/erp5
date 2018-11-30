@@ -54,7 +54,6 @@
                 <string>description</string>
                 <string>reference</string>
                 <string>short_title</string>
-                <string>source_title</string>
               </tuple>
             </value>
         </item>
