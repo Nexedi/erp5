@@ -1808,7 +1808,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             editable_field,
             listbox_form,
             value=default_field_value,
-            key='field_%s_%s' % (editable_field.id, brain.uid))
+            key='field_%s_%s' % (editable_field.id, brain_uid))
 
 
         # Do not generate link for empty value, as it will not be clickable in UI
