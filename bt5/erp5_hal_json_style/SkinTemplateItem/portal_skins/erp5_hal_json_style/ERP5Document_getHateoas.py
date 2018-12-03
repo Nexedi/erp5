@@ -1814,72 +1814,74 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             key='field_%s_%s' % (editable_field.id, brain_uid))
 
 
-        # By default, we won't be generating views in the URL
-        url_parameter_dict = None
-        if select in url_column_dict:
-          # Check if we get URL parameters using listbox field `url_columns`
-          try:
-            url_column_method = getattr(brain, url_column_dict[select])
-            # Result of `url_column_method` must be a dictionary in the format
-            # {'command': <command_name, ex: 'raw', 'push_history'>,
-            #  'options': {'url': <Absolute URL>, 'jio_key': <Relative URL of object>, 'view': <id of the view>}}
-            url_parameter_dict = url_column_method(url_dict=True,
-                                                   brain=brain,
-                                                   selection=catalog_kw['selection'],
-                                                   selection_name=catalog_kw['selection_name'],
-                                                   column_id=select)
-          except AttributeError as e:
-            # In case the URL method is invalid or empty, we expect to have no link
-            # for the column to maintain compatibility with old UI, hence we create
-            # an empty url_parameter_dict for these cases.
-            url_parameter_dict = {}
-            if url_column_dict[select]:
-              log("Invalid URL method {!s} on column {}".format(url_column_dict[select], select), level=800)
+        # Do not generate link for empty value, as it will not be clickable in UI
+        if default_field_value not in ('', None):
+          # By default, we won't be generating views in the URL
+          url_parameter_dict = None
+          if select in url_column_dict:
+            # Check if we get URL parameters using listbox field `url_columns`
+            try:
+              url_column_method = getattr(brain, url_column_dict[select])
+              # Result of `url_column_method` must be a dictionary in the format
+              # {'command': <command_name, ex: 'raw', 'push_history'>,
+              #  'options': {'url': <Absolute URL>, 'jio_key': <Relative URL of object>, 'view': <id of the view>}}
+              url_parameter_dict = url_column_method(url_dict=True,
+                                                     brain=brain,
+                                                     selection=catalog_kw['selection'],
+                                                     selection_name=catalog_kw['selection_name'],
+                                                     column_id=select)
+            except AttributeError as e:
+              # In case the URL method is invalid or empty, we expect to have no link
+              # for the column to maintain compatibility with old UI, hence we create
+              # an empty url_parameter_dict for these cases.
+              url_parameter_dict = {}
+              if url_column_dict[select]:
+                log("Invalid URL method {!s} on column {}".format(url_column_dict[select], select), level=800)
 
-        elif getattr(brain, 'getListItemUrlDict', None) is not None:
-          # Check if we can get URL result from the brain
-          try:
-            url_parameter_dict = brain.getListItemUrlDict(
-              select, result_index, catalog_kw['selection_name']
-            )
-          except (ConflictError, RuntimeError):
-            raise
-          except:
-            log('could not evaluate the url method getListItemUrlDict with %r' % brain,
-                level=800)
+          elif getattr(brain, 'getListItemUrlDict', None) is not None:
+            # Check if we can get URL result from the brain
+            try:
+              url_parameter_dict = brain.getListItemUrlDict(
+                select, result_index, catalog_kw['selection_name']
+              )
+            except (ConflictError, RuntimeError):
+              raise
+            except:
+              log('could not evaluate the url method getListItemUrlDict with %r' % brain,
+                  level=800)
 
-        if isinstance(url_parameter_dict, dict):
-          # We need to put URL into rendered field so just ensure it is a dict
-          if not isinstance(contents_item[select], dict):
-            contents_item[select] = {
-              'default': contents_item[select],
-            }
-          # We should be generating view if there is extra params for view in
-          # view_kw. These parameters are required to create url at hateoas side
-          # using the URL template as necessary
-          if 'view_kw' not in url_parameter_dict:
-            contents_item[select]['url_value'] = url_parameter_dict
-          else:
-            # Get extra parameters either from url_result_dict or from brain
-            extra_url_param_dict = url_parameter_dict['view_kw'].get('extra_param_json', {})
-            url_template_id = 'traverse_generator'
-            if extra_url_param_dict:
-              url_template_id = 'traverse_generator_action'
-
-            # Explicity populate url_value dict. This way we can ensure that whatever been
-            # sent via url_parameter_dict goes directly in url_value dict
-            contents_item[select]['url_value'] = {}
-            contents_item[select]['url_value']['command'] = url_parameter_dict['command']
-            contents_item[select]['url_value']['options'] = url_parameter_dict['options']
-            # Generate `view` to be used to construct URL
-            contents_item[select]['url_value']['options']['view'] = url_template_dict[url_template_id] % {
-              "root_url": site_root.absolute_url(),
-              "script_id": script.id,
-              "relative_url": url_parameter_dict['view_kw']['jio_key'].replace("/", "%2F"),
-              "view": url_parameter_dict['view_kw']['view'],
-              "extra_param_json": urlsafe_b64encode(
-                json.dumps(ensureSerializable(extra_url_param_dict)))
+          if isinstance(url_parameter_dict, dict):
+            # We need to put URL into rendered field so just ensure it is a dict
+            if not isinstance(contents_item[select], dict):
+              contents_item[select] = {
+                'default': contents_item[select],
               }
+            # We should be generating view if there is extra params for view in
+            # view_kw. These parameters are required to create url at hateoas side
+            # using the URL template as necessary
+            if 'view_kw' not in url_parameter_dict:
+              contents_item[select]['url_value'] = url_parameter_dict
+            else:
+              # Get extra parameters either from url_result_dict or from brain
+              extra_url_param_dict = url_parameter_dict['view_kw'].get('extra_param_json', {})
+              url_template_id = 'traverse_generator'
+              if extra_url_param_dict:
+                url_template_id = 'traverse_generator_action'
+
+              # Explicity populate url_value dict. This way we can ensure that whatever been
+              # sent via url_parameter_dict goes directly in url_value dict
+              contents_item[select]['url_value'] = {}
+              contents_item[select]['url_value']['command'] = url_parameter_dict['command']
+              contents_item[select]['url_value']['options'] = url_parameter_dict['options']
+              # Generate `view` to be used to construct URL
+              contents_item[select]['url_value']['options']['view'] = url_template_dict[url_template_id] % {
+                "root_url": site_root.absolute_url(),
+                "script_id": script.id,
+                "relative_url": url_parameter_dict['view_kw']['jio_key'].replace("/", "%2F"),
+                "view": url_parameter_dict['view_kw']['view'],
+                "extra_param_json": urlsafe_b64encode(
+                  json.dumps(ensureSerializable(extra_url_param_dict)))
+                }
 
       # endfor select
       contents_list.append(contents_item)
