@@ -1727,6 +1727,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     })
 
     Listbox_getBrainValue = traversed_document.Listbox_getBrainValue
+    # Compatibility with Listbox.py ListMethodWrapper
+    can_check_local_property = list_method not in ('objectValues', 'contentValues')
     # now fill in `contents_list` with actual information
     # beware that search_result_iterable can hide anything inside!
     for result_index, brain in enumerate(search_result_iterable):
@@ -1785,6 +1787,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           brain,
           brain_document,
           select,
+          can_check_local_property,
           editable_field=editable_field
         )
 

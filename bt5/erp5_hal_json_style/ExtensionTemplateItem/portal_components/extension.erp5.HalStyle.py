@@ -22,7 +22,7 @@ def Field_getSubFieldKeyDict(self, field, field_id, key=None):
   """XXX"""
   return field.generate_subfield_key(field_id, key=key)
 
-def Listbox_getBrainValue(self, brain, obj, select, editable_field=None):
+def Listbox_getBrainValue(self, brain, obj, select, can_check_local_property, editable_field=None):
   """
   ListBox.py / getValueList
   """
@@ -43,7 +43,7 @@ def Listbox_getBrainValue(self, brain, obj, select, editable_field=None):
 
   # If a tales expression is not defined, get a skin, an accessor or a property.
   if not tales:
-    if (getattr(aq_self(brain), select, None) is not None):
+    if (can_check_local_property) and (getattr(aq_self(brain), select, None) is not None):
       default_field_value = getattr(brain, select)
     else:
       try:
