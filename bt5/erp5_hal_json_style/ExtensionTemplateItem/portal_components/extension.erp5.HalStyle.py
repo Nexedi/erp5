@@ -43,7 +43,7 @@ def Listbox_getBrainValue(self, brain, obj, select, editable_field=None):
 
   # If a tales expression is not defined, get a skin, an accessor or a property.
   if not tales:
-    if isinstance(brain, ZSQLBrain) and (getattr(aq_self(brain), select, None) is not None):
+    if (getattr(aq_self(brain), select, None) is not None):
       default_field_value = getattr(brain, select)
     else:
       try:
