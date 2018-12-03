@@ -122,7 +122,8 @@ def main():
     sys.exit(1)
 
   # sanity check
-  assert len(args.zserver_address_list) == len(args.zserver_frontend_url_list)
+  assert len(args.zserver_address_list) == len(args.zserver_frontend_url_list), \
+    "len(%s) != len(%s)" % (args.zserver_address_list, args.zserver_frontend_url_list)
 
   suite = makeSuite(test_suite=args.test_suite,
                     node_quantity=args.node_quantity,
