@@ -75,8 +75,10 @@ def Listbox_getBrainValue(self, brain, obj, select, editable_field=None):
     except:
       default_field_value = None
 
-  if default_field_value is None:
-    default_field_value = ''
+  # Listbox.py forces result to be an empty string
+  # This is not needed in hal
+  # if default_field_value is None:
+  #   default_field_value = ''
 
   return default_field_value
 
