@@ -346,7 +346,7 @@
       });
   }
 
-  function loadSubStorage(context, storage_spec, parent_id, type) {
+  function loadSubStorage(context, storage_spec, parent_id, index, type) {
     var sub_storage,
       result_dict,
       storage_key,
@@ -361,7 +361,8 @@
       type:  type || storage_spec.type,
       current_signature: {},
       result: {data: {total_rows: 0}},
-      url: url
+      url: url,
+      parent_index: index
     };
     return sub_storage.allDocs({include_docs: true})
       .push(undefined, function (error) {
@@ -536,6 +537,7 @@
                 }
               },
               id_hash,
+              i,
               'promise'
             ));
             // Load private docs
@@ -548,7 +550,8 @@
                   basic_login: basic_login,
                   timeout: context._request_timeout
                 },
-                id_hash
+                id_hash,
+                i
               ));
             }
 
@@ -598,15 +601,15 @@
         var i,
           j,
           start,
-          extra_dict,
-          item_signature_dict = {};
+          extra_dict;
 
         function applyItemToTree(item, item_result, extra_dict) {
           var id_hash,
             element = item.doc,
             signature,
             item_id = item.guid || item.id,
-            status = (element.status || element.category);
+            status = (element.status || element.category),
+            item_signature_dict = {};
 
           if (element.type === 'global') {
             updateHostingSubscriptionState(hosting_subscription, element);
@@ -658,6 +661,11 @@
             id: id_hash,
             doc: element
           });
+          attachment_document_list.push({
+            id: item_result.parent_id,
+            name: item_result.url,
+            doc: item_signature_dict
+          });
         }
 
         for (i = 0; i < result_list.length; i += 1) {
@@ -681,12 +689,6 @@
                 extra_dict
               );
             }
-            attachment_document_list.push({
-              id: result_list[i].parent_id,
-              name: result_list[i].url,
-              doc: item_signature_dict
-            });
-            item_signature_dict = {};
             delete_key_list.push.apply(
               delete_key_list,
               Object.keys(result_list[i].current_signature)
@@ -700,6 +702,28 @@
               name: result_list[i].url,
               doc: result_list[i].current_signature
             });
+          }
+          else if (context._remote_storage_unreachable_status !== undefined) {
+            if (result_list[i].type === "webhttp") {
+              // In case it was impossible to get software Instance
+              // Add an empty Software Instance with unreachable status
+              applyItemToTree(
+                {
+                  id: "monitor.global",
+                  doc: {
+                    portal_type: "Software Instance",
+                    status: context._remote_storage_unreachable_status,
+                    title: opml_result_list.data.rows[result_list[i]
+                      .parent_index].doc.title,
+                    date: new Date().toUTCString() + "+0000",
+                    specialise_title: opml_result_list.data.rows[result_list[i]
+                      .parent_index].doc.opml_title
+                  }
+                },
+                result_list[i],
+                undefined
+              );
+            }
           }
         }
         opml_document_list.push({
