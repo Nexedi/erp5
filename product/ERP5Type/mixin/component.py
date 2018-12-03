@@ -309,6 +309,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     Check Component source code through Pylint or compile() builtin if not
     available
     """
+    return []
     return checkPythonSourceCode(self.getTextContent(), self.getPortalType())
 
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
