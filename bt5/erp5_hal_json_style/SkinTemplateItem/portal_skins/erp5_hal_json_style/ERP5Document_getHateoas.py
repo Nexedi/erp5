@@ -1739,7 +1739,22 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # we can render fields which need 'here' to be set to currently rendered document
       #REQUEST.set('here', search_result)
       contents_item = {}
-      brain_document = brain.getObject()
+      try:
+        brain_document = brain.getObject()
+      except AttributeError:
+        # This is not a ZSQLBrain/ERP5 Document
+        brain_document = brain
+
+        # means we are iterating over plain objects
+        # list_method must be defined because POPOs can return only that
+        brain_uid = "{}#{:d}".format(list_method, result_index)
+        # JIO requires every item to have _links.self.href so it can construct
+        # links to the document. Here we have a object in RAM (which should
+        # never happen!) thus we provide temporary UID
+        brain_relative_url = "{}/{}".format(traversed_document.getRelativeUrl(), brain_uid)
+      else:
+        brain_uid = brain.uid
+        brain_relative_url = getRealRelativeUrl(brain_document)
 
       # _links.self.href is mandatory for JIO so it can create reference to the
       # (listbox) item alone
@@ -1747,7 +1762,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         'self': {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
-            "relative_url": getRealRelativeUrl(brain_document),
+            "relative_url": brain_relative_url,
             "script_id": script.id
           },
         },
@@ -1758,7 +1773,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if listbox_field_id:# and source_field.get_value("editable"):
         contents_item['listbox_uid:list'] = {
           'key': "%s_uid:list" % listbox_field_id,
-          'value': brain.uid
+          'value': brain_uid
         }
 
       for select in select_list:
