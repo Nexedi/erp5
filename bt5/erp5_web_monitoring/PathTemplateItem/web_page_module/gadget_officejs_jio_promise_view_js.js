@@ -227,6 +227,13 @@
               len,
               start;
 
+            function addUTCTimezone(date_string) {
+              if (new RegExp(/[+-][\d]{2}\:?[\d]{2}$/).test(date_string)) {
+                return date_string;
+              }
+              return date_string + "+0000";
+            }
+
             if (status_history && status_history.hasOwnProperty('data')) {
               // the status history list is reversed ([old, ...., newest])
               len = status_history.data.length;
@@ -264,9 +271,8 @@
                         editable: 0,
                         hidden: 0,
                         hidden_day_is_last_day: 0,
-                        "default": (status_history.data[i].date ||
-                          new Date(status_history.data[i]['start-date'])
-                          .toUTCString()) + "+0000",
+                        "default": addUTCTimezone(status_history.data[i].date ||
+                          status_history.data[i]['start-date']),
                         key: "start_date",
                         required: 0,
                         timezone_style: 1,
@@ -284,9 +290,9 @@
                         editable: 0,
                         hidden: 0,
                         hidden_day_is_last_day: 0,
-                        "default": (status_history.data[i]['change-date'] ||
+                        "default": addUTCTimezone(status_history.data[i]['change-date'] ||
                           new Date(status_history.data[i]['change-time'] * 1000)
-                          .toUTCString()) + "+0000",
+                          .toUTCString()),
                         key: "change_date",
                         required: 0,
                         timezone_style: 1,
