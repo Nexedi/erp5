@@ -45,9 +45,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W: 74,  4: No exception type(s) specified (bare-except)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

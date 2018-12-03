@@ -2,6 +2,7 @@ from Acquisition import aq_self, aq_base, aq_inner
 from Products.ERP5Type.Utils import UpperCase
 from ZODB.POSException import ConflictError
 from AccessControl import Unauthorized
+from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 
 
 def Base_aqSelf(self):
@@ -42,7 +43,7 @@ def Listbox_getBrainValue(self, brain, obj, select, editable_field=None):
 
   # If a tales expression is not defined, get a skin, an accessor or a property.
   if not tales:
-    if getattr(aq_self(brain), select, None) is not None:
+    if isinstance(brain, ZSQLBrain) and (getattr(aq_self(brain), select, None) is not None):
       default_field_value = getattr(brain, select)
     else:
       try:
