@@ -150,7 +150,8 @@
         has_monitor: true,
         state: doc.state || (doc.active === "on" ? "Started" : "Stopped")
       },
-      update_password_list = [];
+      update_password_list = [],
+      allow_force = false;
     gadget.state.message.textContent = "";
 
     function validateOPML() {
@@ -177,7 +178,7 @@
         })
         .push(undefined, function (error) {
           var message_text,
-            code = 0;
+              code = 0;
           if (error instanceof jIO.util.jIOError) {
             message_text = error.message;
             code = error.status_code;
@@ -238,6 +239,7 @@
               error_msg += 'Login/password invalid for instance: ' +
                 status_list[i].title + '. ' +
                 status_list[i].msg + '\n';
+              allow_force = true;
             }
           }
           if (used_new_passwd_count > 0 &&
@@ -322,10 +324,10 @@
           return gadget.jio_put(opml_dict.url, opml_dict)
             .push(function () {
               gadget.state.message.textContent = "";
-              return status;
+              return {status: status, can_force: allow_force};
             });
         }
-        return status;
+        return {status: status, can_force: allow_force};
       });
   }
 

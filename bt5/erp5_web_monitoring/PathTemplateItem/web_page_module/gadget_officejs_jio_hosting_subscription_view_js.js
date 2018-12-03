@@ -190,6 +190,12 @@
             }
 
             for (i = 0; i < gadget.state.instance_dict.data.total_rows; i += 1) {
+              if (gadget.state.instance_dict.data.rows[i]
+                  .value.aggregate_reference === undefined) {
+                // Instance is not Synchronized!
+                promise_list.push(false);
+                continue;
+              }
               gadget_element = document.createElement("div");
               element.appendChild(gadget_element);
               promise_list.push(
@@ -205,17 +211,19 @@
           .push(function (parameter_gadget_list) {
             var i,
               promise_list = [];
+            gadget.props.parameter_form_list = parameter_gadget_list;
             for (i = 0; i < parameter_gadget_list.length; i += 1) {
-              gadget.props.parameter_form_list = parameter_gadget_list;
-              promise_list.push(
-                parameter_gadget_list[i].render({
-                  url: gadget.state.instance_dict.data.rows[i].value._links.private_url.href
-                    .replace('jio_private', 'private') + '/config',
-                  basic_login: gadget.state.opml.basic_login,
-                  title: "Parameters " + gadget.state.instance_dict.data.rows[i].value.title,
-                  parameters: gadget.state.instance_dict.data.rows[i].value.parameters
-                })
-              );
+              if (parameter_gadget_list[i]) {
+                promise_list.push(
+                  parameter_gadget_list[i].render({
+                    url: gadget.state.instance_dict.data.rows[i].value._links.private_url.href
+                      .replace('jio_private', 'private') + '/config',
+                    basic_login: gadget.state.opml.basic_login,
+                    title: "Parameters " + gadget.state.instance_dict.data.rows[i].value.title,
+                    parameters: gadget.state.instance_dict.data.rows[i].value.parameters
+                  })
+                );
+              }
             }
             return RSVP.all(promise_list);
           });

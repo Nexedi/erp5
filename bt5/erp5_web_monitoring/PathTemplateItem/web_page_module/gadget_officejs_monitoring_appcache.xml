@@ -108,7 +108,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 19 Nov 2018 16:43:45 +0000\n
+# generated on Fri, 19 Nov 2018 12:54:57 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -389,7 +389,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>971.57732.65002.56098</string> </value>
+                <value> <string>972.4099.58600.53947</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -407,7 +407,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1543224326.23</float>
+                        <float>1543855489.22</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

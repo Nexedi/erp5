@@ -64,6 +64,7 @@
           var pass_url,
             public_url,
             private_url,
+            rss_url,
             current_document = gadget.state.instance;
 
           if (current_document._embedded !== undefined &&
@@ -74,12 +75,18 @@
             current_document.software_release = current_document._embedded.instance['software-release'];
           }
           // fix URLs
-          private_url = gadget.state.instance._links
-            .private_url.href.replace("jio_private", "private");
-          public_url = gadget.state.instance._links
-            .public_url.href.replace("jio_public", "public");
-          pass_url = "https://" + atob(gadget.state.opml.basic_login) +
-            "@" + private_url.split("//")[1];
+          if (gadget.state.instance._links !== undefined) {
+            private_url = gadget.state.instance._links
+              .private_url.href.replace("jio_private", "private");
+            public_url = gadget.state.instance._links
+              .public_url.href.replace("jio_public", "public");
+            pass_url = "https://" + atob(gadget.state.opml.basic_login) +
+              "@" + private_url.split("//")[1];
+            rss_url = current_document._links.rss_url.href;
+          }
+          if (gadget.state.instance.state === undefined) {
+            current_document.state = {error: "", success: ""};
+          }
 
           return gadget.changeState({
             jio_key: options.jio_key,
@@ -90,7 +97,7 @@
             success: current_document.state.success,
             public_url: public_url,
             private_url: pass_url,
-            rss_url: current_document._links.rss_url.href,
+            rss_url: rss_url,
             //resource_url: tmp_url,
             //process_url: tmp_process_url,
             hosting_title: gadget.state.opml.title,
@@ -191,11 +198,19 @@
       return new RSVP.Queue()
         .push(function () {
           var graph_options = {
+            data_url: "",
+            data_filename: "monitor_state.data",
+            basic_login: ""
+          };
+
+          if (gadget.state.instance._links !== undefined) {
+            graph_options  = {
               data_url: gadget.state.instance._links.private_url.href +
                 'documents/',
               data_filename: gadget.state.instance.data.state,
               basic_login: gadget.state.opml.basic_login
             };
+          }
 
           graph_options.extract_method = function (element_dict) {
             var promise_data = [
@@ -260,11 +275,12 @@
         })
         .push(function (form_gadget) {
           var column_list = [
-            ['category', 'Status'],
-            ['source', 'Promise'],
-            ['lastBuildDate', 'Promise Date'],
-            ['description', 'Message']
-          ];
+              ['category', 'Status'],
+              ['source', 'Promise'],
+              ['lastBuildDate', 'Promise Date'],
+              ['description', 'Message']
+            ],
+            hide_link = (gadget.state.instance._links === undefined) ? 1 :  0;
           return form_gadget.render({
             erp5_document: {
               "_embedded": {"_view": {
@@ -316,7 +332,7 @@
                   "required": 0,
                   "editable": 0,
                   "key": "public_url",
-                  "hidden": 0,
+                  "hidden": hide_link,
                   "type": "EditorField"
                 },
                 "your_private_url": {
@@ -331,7 +347,7 @@
                   "required": 0,
                   "editable": 0,
                   "key": "private_url",
-                  "hidden": 0,
+                  "hidden": hide_link,
                   "type": "EditorField"
                 },
                 "your_error_count": {
@@ -368,7 +384,7 @@
                   "required": 0,
                   "editable": 0,
                   "key": "software_release_url",
-                  "hidden": 0,
+                  "hidden": hide_link,
                   "type": "EditorField"
                 },
                 "your_rss_url": {
@@ -383,7 +399,7 @@
                   "required": 0,
                   "editable": 0,
                   "key": "rss_url",
-                  "hidden": 0,
+                  "hidden": hide_link,
                   "type": "EditorField"
                 },
                 "your_hosting_title": {
@@ -530,15 +546,18 @@
           ]);
         })
         .push(function (url_list) {
-          return gadget.updateHeader({
-            page_title: "Instance: " + gadget.state.title,
-            selection_url: url_list[0],
-            previous_url: url_list[1],
-            next_url: url_list[2],
-            resources_url: url_list[3],
-            processes_url: url_list[4],
-            refresh_action: true
-          });
+          var options = {
+              page_title: "Instance: " + gadget.state.title,
+              selection_url: url_list[0],
+              previous_url: url_list[1],
+              next_url: url_list[2],
+              refresh_action: true
+            };
+          if (gadget.state.instance._links !== undefined) {
+            options.resources_url = url_list[3];
+            options.processes_url = url_list[4];
+          }
+          return gadget.updateHeader(options);
         });
     });
 }(window, rJS, RSVP, Handlebars, atob));
