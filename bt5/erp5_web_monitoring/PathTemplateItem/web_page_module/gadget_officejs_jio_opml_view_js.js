@@ -57,18 +57,18 @@
                 doc.title = gadget.state.opml_title;
                 return opml_gadget.saveOPML(doc, verify_opml);
               })
-              .push(function (status) {
+              .push(function (state) {
                 var msg = {message: 'Document Updated', status: 'success'};
-                if (!status) {
+                if (!state.status) {
                   msg = {message: 'Document update failed', status: "error"};
                 }
                 return RSVP.all([
                   gadget.notifySubmitted(msg),
-                  status
+                  state
                 ]);
               })
               .push(function (result) {
-                if (result[1]) {
+                if (result[1].status) {
                   return gadget.changeState({
                     "password": doc.password
                   });
