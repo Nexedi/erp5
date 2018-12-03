@@ -326,7 +326,7 @@ class ComponentMixin(with_metaclass(RecordablePropertyMetaClass, type('NewBase',
     Check Component source code through Pylint or compile() builtin if not
     available
     """
-    return checkPythonSourceCode(self.getTextContent(), self.getPortalType())
+    return []
 
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
   def PUT(self, REQUEST, RESPONSE):
