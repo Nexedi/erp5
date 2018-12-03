@@ -311,17 +311,17 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     """
     error_list = []
     warning_list = []
-    for message_dict in checkPythonSourceCode(self.getTextContent(),
-                                              self.getPortalType()):
-      message = '%s:%3d,%3d: %s' % (message_dict['type'],
-                                    message_dict['row'],
-                                    message_dict['column'],
-                                    message_dict['text'])
-
-      if message_dict['type'] in ('F', 'E'):
-        error_list.append(message)
-      else:
-        warning_list.append(message)
+#     for message_dict in checkPythonSourceCode(self.getTextContent(),
+#                                               self.getPortalType()):
+#       message = '%s:%3d,%3d: %s' % (message_dict['type'],
+#                                     message_dict['row'],
+#                                     message_dict['column'],
+#                                     message_dict['text'])
+# 
+#       if message_dict['type'] in ('F', 'E'):
+#         error_list.append(message)
+#       else:
+#         warning_list.append(message)
 
     self.setTextContentWarningMessageList(warning_list)
     self.setTextContentErrorMessageList(error_list)
