@@ -9,7 +9,7 @@
  </chain>
  <chain>
   <type>Data Analysis</type>
-  <workflow>data_simulation_workflow, edit_workflow</workflow>
+  <workflow>data_refresh_workflow, data_simulation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Data Analysis Line</type>
