@@ -38,6 +38,7 @@ this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals(this_module, globals(),
                                  permissions_module=Permissions)
 
+import mixin
 from Tool import ConfiguratorTool
 
 # Define object classes and tools

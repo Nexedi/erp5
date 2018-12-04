@@ -648,3 +648,12 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(pay_link.getDeliveryBuilderList(),
            ["portal_deliveries/payment_transaction_builder"])
 
+  def test_configurator_item_mixin(self):
+    """ConfiguratorItemMixin is available for TTW definition of portal types.
+    """
+    self.assertIn(
+        'ConfiguratorItemMixin',
+        self.portal.portal_types.newContent(
+            portal_type='Base Type',
+            temp_object=True).getMixinTypeList())
+
