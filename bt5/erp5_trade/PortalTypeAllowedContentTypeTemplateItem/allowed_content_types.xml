@@ -80,6 +80,10 @@
  </portal_type>
  <portal_type id="Inventory Module">
   <item>Inventory</item>
+  <item>Inventory Report</item>
+ </portal_type>
+ <portal_type id="Inventory Report">
+  <item>Inventory Report Line</item>
  </portal_type>
  <portal_type id="Order Root Simulation Rule">
   <item>Category Membership Divergence Tester</item>

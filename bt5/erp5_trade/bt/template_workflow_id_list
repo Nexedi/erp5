@@ -1,5 +1,6 @@
 container_interaction_workflow
 internal_packing_list_workflow
+inventory_report_workflow
 inventory_workflow
 order_workflow
 packing_list_container_workflow
