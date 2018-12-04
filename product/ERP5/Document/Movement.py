@@ -484,7 +484,10 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
 
       This will be implemeted by calling currency conversion on currency resources
     """
-    return self.getPrice() # XXX Not implemented yet TODO
+    type_based_script = self._getTypeBasedMethod('getSourceAssetPrice')
+    if type_based_script:
+      return type_based_script()
+    return self.getPrice()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getDestinationAssetPrice')
@@ -492,7 +495,10 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     """
       Returns the price converted to the currency of the destination section
     """
-    return self.getPrice() # XXX Not implemented yet TODO
+    type_based_script = self._getTypeBasedMethod('getDestinationAssetPrice')
+    if type_based_script:
+      return type_based_script()
+    return self.getPrice()
 
   # Causality computation
   security.declareProtected( Permissions.AccessContentsInformation,
