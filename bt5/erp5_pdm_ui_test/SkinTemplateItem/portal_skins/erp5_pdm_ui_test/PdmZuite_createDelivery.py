@@ -48,7 +48,9 @@ else:
     id=delivery_id,
     title=delivery_title,
     source='organisation_module/%s' % source_node_id,
+    source_section='organisation_module/%s' % source_node_id,
     destination='organisation_module/%s' % destination_node_id,
+    destination_section='organisation_module/%s' % destination_node_id,
     specialise=business_process,
     start_date=DateTime(),
   )
