@@ -83,7 +83,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_view_mode_listbox_business_configuration</string>
+                        <string>my_list_mode_listbox_business_configuration</string>
                         <string>my_view_mode_creation_date</string>
                         <string>my_view_mode_translated_simulation_state_title</string>
                         <string>my_view_mode_translated_validation_state_title</string>
