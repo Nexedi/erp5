@@ -412,6 +412,10 @@ div[data-gadget-scope='panel'] {
   }
 }
 */
+.ui-custom-content {
+   padding: 0 1em;
+    display: block;
+}
 
 
 
