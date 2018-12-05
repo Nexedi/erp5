@@ -80,6 +80,7 @@
                     <value>
                       <list>
                         <string>listbox_title</string>
+                        <string>listbox_destination_title_list</string>
                       </list>
                     </value>
                 </item>
