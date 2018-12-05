@@ -27,27 +27,22 @@
 ##############################################################################
 
 import unittest
-from Products.ERP5Configurator.tests.testFunctionalConfigurator import \
-         TestZeleniumConfiguratorStandard
-
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
         ERP5TypeFunctionalTestCase
 
-class TestZeleniumConfiguratorConsulting(TestZeleniumConfiguratorStandard, ERP5TypeFunctionalTestCase):
-   foreground = 0
-   run_only = "configurator_consulting_standard_zuite"
+class TestZeleniumConfiguratorStandard(ERP5TypeFunctionalTestCase):
+  foreground = 0
+  run_only = "configurator_standard_zuite"
 
-   def afterSetUp(self):
-     url_list = []
-     for x in self.portal.test_page_module.objectValues():
-       if x.getId() == "user-Howto.Configure.ERP5.for.SMB.With.Consultant.Configurator":
-         url_list.append("test_page_module/"+x.getId())
-     self.remote_code_url_list = url_list
-     self.setupAutomaticBusinessTemplateRepository()
-     ERP5TypeFunctionalTestCase.afterSetUp(self)
-
+  def afterSetUp(self):
+    url_list = []
+    for x in self.portal.test_page_module.objectValues():
+      if x.getId() == "user-Howto.Configure.ERP5.for.SMB.With.Configurator":
+        url_list.append("test_page_module/"+x.getId())
+    self.remote_code_url_list = url_list
+    ERP5TypeFunctionalTestCase.afterSetUp(self)
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestZeleniumConfiguratorConsulting))
+  suite.addTest(unittest.makeSuite(TestZeleniumConfiguratorStandard))
   return suite

@@ -24,11 +24,6 @@ default_site_preference.setPreferredDocumentConversionServerUrl(previous_convers
 if default_site_preference.getPreferenceState() != 'global':
   default_site_preference.enable()
 
-# update repository info of Configurator site
-if len(portal.portal_templates.getRepositoryList()) == 0:
-  portal.portal_templates.updateRepositoryBusinessTemplateList(
-    repository_list = bt_repository_list)
-
 # (Re)Create the Business Configurator
 bc_id = 'STANDARD_CONFIGURATOR_TEST'
 business_configuration = getattr(context.business_configuration_module, bc_id, None)
