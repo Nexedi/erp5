@@ -11,12 +11,16 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
             <value> <string>Install Business Configuration</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=finish_install_action</string> </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=install_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
