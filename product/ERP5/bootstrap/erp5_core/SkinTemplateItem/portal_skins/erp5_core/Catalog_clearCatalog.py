@@ -1,12 +1,9 @@
-# Script to clear Reserved UIDs from Catalog
-
-form = context.REQUEST.form
-clear_catalog = form.get('clear_catalog')
+# Script to clear Catalog
 
 REQUEST = context.REQUEST
 
 if not clear_catalog:
-  url = context.absolute_url()+'/view'
-  return REQUEST.RESPONSE.redirect(url)
+  return REQUEST.RESPONSE.redirect(context.absolute_url() +
+                            '/view?portal_status_message=Catalog%20Not%20Cleared')
 
 return context.manage_catalogClear(REQUEST)

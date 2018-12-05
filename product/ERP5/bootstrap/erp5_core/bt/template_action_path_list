@@ -48,10 +48,8 @@ Catalog Tool | hot_reindex
 Catalog Tool | view
 Catalog | catalog_filter_view
 Catalog | clear_catalog
-Catalog | clear_reserved
 Catalog | content_view
 Catalog | property
-Catalog | update_catalog
 Category Acquired Membership State Constraint | predicate
 Category Acquired Membership State Constraint | view
 Category Existence Constraint | predicate

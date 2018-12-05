@@ -1202,23 +1202,6 @@ class Catalog(Folder,
 
     RESPONSE.redirect(URL1 + '/manage_catalogView?manage_tabs_message=Object%20Uncataloged')
 
-  security.declareProtected(manage_zcatalog_entries, 'manage_catalogReindex')
-  def manage_catalogReindex(self, REQUEST, RESPONSE, URL1, urls=None):
-    """ clear the catalog, then re-index everything """
-    elapse = time.time()
-    c_elapse = time.clock()
-
-    self.aq_parent.refreshCatalog(clear=1, sql_catalog_id=self.id)
-
-    elapse = time.time() - elapse
-    c_elapse = time.clock() - c_elapse
-
-    RESPONSE.redirect(URL1 +
-              '/manage_catalogAdvanced?manage_tabs_message=' +
-              urllib.quote('Catalog Updated<br>'
-                     'Total time: %s<br>'
-                     'Total CPU time: %s' % (`elapse`, `c_elapse`)))
-
   security.declareProtected(manage_zcatalog_entries, 'manage_catalogClear')
   def manage_catalogClear(self, REQUEST=None, RESPONSE=None,
                           URL1=None, sql_catalog_id=None):
@@ -1232,15 +1215,6 @@ class Catalog(Folder,
         '%s/manage_catalogAdvanced?manage_tabs_message=Catalog%%20Cleared' % URL1,
       )
 
-  security.declareProtected(manage_zcatalog_entries, 'manage_catalogClearReserved')
-  def manage_catalogClearReserved(self, REQUEST=None, RESPONSE=None, URL1=None):
-    """ clears reserved uids """
-    self._clearReserved()
-
-    if RESPONSE and URL1:
-      RESPONSE.redirect(
-        '%s/manage_catalogAdvanced?manage_tabs_message=Catalog%%20Cleared' % URL1,
-      )
 
   security.declareProtected(manage_zcatalog_entries, 'manage_catalogFoundItems')
   def manage_catalogFoundItems(self, REQUEST, RESPONSE, URL2, URL1,

@@ -568,23 +568,6 @@ class ZCatalog(Folder, Persistent, Implicit):
     if catalog is not None:
       catalog.manage_catalogReindex(REQUEST, RESPONSE, URL1, urls=urls)
 
-  security.declareProtected(manage_zcatalog_entries, 'refreshCatalog')
-  def refreshCatalog(self, clear=0, sql_catalog_id=None):
-    """ re-index everything we can find """
-
-    catalog = self.getSQLCatalog(sql_catalog_id)
-    if catalog is not None:
-      paths = catalog.getPaths()
-      if clear:
-        catalog._clear()
-
-      for p in paths:
-        obj = self.resolve_path(p.path)
-        if not obj:
-          obj = self.resolve_url(p.path, self.REQUEST)
-        if obj is not None:
-          self.catalog_object(obj, p.path, sql_catalog_id=sql_catalog_id)
-
   security.declareProtected(manage_zcatalog_entries, 'manage_catalogClear')
   def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None, sql_catalog_id=None):
     """ clears the whole enchilada """
