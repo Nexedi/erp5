@@ -399,11 +399,13 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     """
     # This is what we use for accounting
     result = self.getSourceTotalAssetPrice()
+    from Testing import ZopeTestCase
     if result is not None:
       return result
     quantity = self.getQuantity()
     if quantity :
       source_asset_price = self.getSourceAssetPrice()
+      ZopeTestCase._print('\n source_asset_price quantity %s  %s  %s \n' % (source_asset_price, quantity,  source_asset_price * -quantity))
       if source_asset_price :
         return source_asset_price * - quantity
     return None
@@ -443,11 +445,13 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     """
     # This is what we use for accounting
     result = self.getDestinationTotalAssetPrice()
+    from Testing import ZopeTestCase
     if result is not None:
       return result
     quantity = self.getQuantity()
     if quantity :
       destination_asset_price = self.getDestinationAssetPrice()
+      ZopeTestCase._print('\n destination_asset_price quantity %s  %s  %s\n' % (destination_asset_price, quantity, destination_asset_price * quantity))
       if destination_asset_price :
         return destination_asset_price * quantity
     return None

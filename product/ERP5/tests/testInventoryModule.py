@@ -47,6 +47,17 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
   view_stock_date = '2005/12/31' # The day where we are looking for stock
   size_list = ['Child/32','Child/34']
 
+  def getBusinessTemplateList(self):
+    """
+    """
+    return ('erp5_core_proxy_field_legacy', 'erp5_base','erp5_pdm',
+            'erp5_simulation', 'erp5_trade', 'erp5_apparel', 'erp5_project',
+            'erp5_configurator_standard_solver',
+            'erp5_configurator_standard_trade_template',
+            'erp5_simulation_test', 'erp5_administration', 'erp5_dummy_movement',
+            'erp5_accounting')
+  
+
   def getTitle(self):
     return "Inventory Module"
 
@@ -621,10 +632,11 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
 
   def stepCreateThreeCurrencys(self, sequence=None,
                                  sequence_list=None, **kw):
+    self.login()
     start_date = DateTime('2018/01/01 00:00')
     stop_date = DateTime('3018/01/01 00:00')
     portal_type = 'Currency'
-    currency_module = self.portal.getDefaultModule(portal_type)
+    currency_module = self.portal.currency_module
     rmb = currency_module.newContent(
       portal_type=portal_type,
       title='Yuan',
@@ -694,7 +706,9 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     rmb.validate()
     euro.validate()
     dollar.validate()
-  
+    self.tic()
+    #self.portal.ERP5Site_reindexAll(clear_catalog=1)
+    self.tic()
     sequence.edit(
       rmb = rmb,
       euro = euro,
@@ -977,12 +991,17 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     pl.start()
     pl.stop()
     pl.deliver() 
+    self.tic()
+    from Testing import ZopeTestCase
+    for i in self.portal.portal_simulation.getInventoryList():
+      ZopeTestCase._print(' total_price %s quantity %s portal type %s  \n' % (i.total_price, i.total_quantity, i.portal_type))
   
   def stepTestCalculateProduct(self, sequence=None, sequence_list=None, **kw):
     inventory_report = self.getInventoryModule().newContent(portal_type='Inventory Report')
     inventory_report.edit(
       destination_value = sequence.get('organisation_rmb'),
-      destination_section_value = sequence.get('organisation_rmb')
+      destination_section_value = sequence.get('organisation_rmb'),
+      valuation_method = 'Fifo'
       )
     self.tic()
     inventory_report.InventoryReport_calculateProductStock(batch_mode=True)
@@ -1010,7 +1029,8 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     inventory_report = self.getInventoryModule().newContent(portal_type='Inventory Report')
     inventory_report.edit(
       destination_value = sequence.get('organisation_euro'),
-      destination_section_value = sequence.get('organisation_euro')
+      destination_section_value = sequence.get('organisation_euro'),
+      valuation_method = 'Fifo'
     )
     self.tic()
     inventory_report.InventoryReport_calculateProductStock(batch_mode=True)
@@ -1030,7 +1050,8 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     inventory_report = self.getInventoryModule().newContent(portal_type='Inventory Report')
     inventory_report.edit(
       destination_value = sequence.get('organisation_dollar'),
-      destination_section_value = sequence.get('organisation_dollar')
+      destination_section_value = sequence.get('organisation_dollar'),
+      valuation_method = 'Fifo'
     )
     self.tic()
     inventory_report.InventoryReport_calculateProductStock(batch_mode=True)
@@ -1055,22 +1076,31 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     sequence_string = 'CreateNotVariatedResource \
                        stepCreateThreeCurrencys \
                        stepCreateThreeOrganisations \
+                       stepTic \
                        stepCreateSalesPackingListRMBToEURO \
                        stepDeliverPackingList \
+                       stepTic \
                        stepCreateSalesPackingListEUROToUSD \
                        stepDeliverPackingList \
+                       stepTic \
                        stepCreatePurchasePackingListFromRMBToEURO \
                        stepDeliverPackingList \
+                       stepTic \
                        stepCreatePurchasePackingListFromEUROToUSD \
                        stepDeliverPackingList \
+                       stepTic \
                        stepCreateVariatedResource \
+                       stepTic \
                        stepCreateSalesPackingListEUROToRMB \
                        stepCreateVariatedSalesPackingListLine \
                        stepDeliverPackingList \
+                       stepTic \
                        stepCreateSalesPackingListRMBToUSD \
                        stepCreateVariatedSalesPackingListLine \
                        stepDeliverPackingList \
+                       stepTic \
                        stepCreateVariatedResource \
+                       stepTic \
                        stepCreatePurchasePackingListFromUSDToRMB \
                        stepCreateVariatedPurchasePackingListLine \
                        stepDeliverPackingList \
