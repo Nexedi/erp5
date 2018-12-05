@@ -103,20 +103,17 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-CACHE MANIFEST\n
+            <value> <string>CACHE MANIFEST\n
 # generated on Mon, 30 May 2017 10:00:00 GMT\n
 # images/ajax-loader.gif\n
 CACHE:\n
-font-awesome/font-awesome-webfont.eot?v=4.6.3\n
-font-awesome/font-awesome-webfont.eot?#iefix&v=4.6.3\n
-font-awesome/font-awesome-webfont.woff?v=4.6.3\n
-font-awesome/font-awesome-webfont.ttf?v=4.6.3\n
-font-awesome/font-awesome-webfont.svg?v=4.6.3#fontawesomeregular\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg\n
 favicon.ico\n
-gadget_erp5_afs_camera.png?format=png\n
-gadget_erp5_afs_logo.png?format=png\n
+gadget_erp5_afs_camera.png\n
+gadget_erp5_afs_logo.png\n
 URI.js\n
 erp5_launcher_nojqm.js\n
 gadget_erp5_nojqm.css\n
@@ -183,9 +180,7 @@ gadget_erp5_afs_storage.js\n
 gadget_erp5_page_afs_software_list.html\n
 gadget_erp5_page_afs_software_list.js\n
 NETWORK:\n
-*
-
-]]></string> </value>
+*</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -320,7 +315,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.46970.48446.4744</string> </value>
+                <value> <string>972.5598.40843.32341</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -338,7 +333,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1496169745.29</float>
+                        <float>1544020086.78</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
