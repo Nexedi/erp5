@@ -282,25 +282,6 @@ class ERP5Catalog(Folder, Catalog):
     return self.getCatalogMethodIds(
                   valid_method_meta_type_list=('ERP5 Python Script',))
 
-  def manage_catalogReindex(self, REQUEST, RESPONSE=None, URL1=None):
-    """ Clear the catalog and reindex everything for the erp5 catalog.
-    """
-    elapse = time.time()
-    c_elapse = time.clock()
-
-    self.aq_parent.refreshCatalog(clear=1)
-
-    elapse = time.time() - elapse
-    c_elapse = time.clock() - c_elapse
-
-    # Redirect the response to view url
-    url = self.absolute_url() + '/view' + '?portal_status_message=' \
-                                  + urllib.quote(
-                                  'Catalog Updated\r'
-                                  'Total time: %s\r'
-                                  'Total CPU time: %s' % (`elapse`, `c_elapse`))
-    return REQUEST.RESPONSE.redirect(url)
-
   def manage_catalogClear(self, REQUEST=None, RESPONSE=None, URL1=None):
     """ Clears the catalog
     """
@@ -317,20 +298,6 @@ class ERP5Catalog(Folder, Catalog):
       url = self.absolute_url() + '/view' \
                               + '?portal_status_message=Catalog%20Cleared'
       return response.redirect(url)
-
-  def manage_catalogClearReserved(self, REQUEST=None, RESPONSE=None, URL1=None):
-    """ Clears reserved uids """
-    self._clearReserved()
-
-    if REQUEST is None:
-      return
-
-    response = REQUEST.response
-    if response:
-      # Redirect the response to view url
-      url = self.absolute_url() + '/view' \
-                              + '?portal_status_message=Reserve%20UIDs%20Cleared'
-      return REQUEST.RESPONSE.redirect(url)
 
   def _getFilterDict(self):
     return FilterDict(self)
