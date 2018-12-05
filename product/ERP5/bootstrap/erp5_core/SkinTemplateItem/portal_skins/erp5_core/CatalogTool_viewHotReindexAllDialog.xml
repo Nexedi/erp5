@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Catalog_clearCatalog</string> </value>
+            <value> <string>CatalogTool_hotReindexAll</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -59,7 +59,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -71,10 +73,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_clear_catalog</string>
-                        <string>your_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -88,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewCatalogClearDialog</string> </value>
+            <value> <string>CatalogTool_viewHotReindexAllDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -96,7 +95,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Catalog_validateClearCatalog</string> </value>
+            <value> <string>CatalogTool_viewHotReindexAllDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -112,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validate Clear Catalog</string> </value>
+            <value> <string>Hot Reindex</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
