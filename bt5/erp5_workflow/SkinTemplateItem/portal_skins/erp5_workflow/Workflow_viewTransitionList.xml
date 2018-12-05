@@ -80,6 +80,7 @@
                     <value>
                       <list>
                         <string>listbox_title</string>
+                        <string>listbox_int_index</string>
                       </list>
                     </value>
                 </item>
