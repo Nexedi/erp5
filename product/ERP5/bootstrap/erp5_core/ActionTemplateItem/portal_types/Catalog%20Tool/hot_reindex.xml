@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Hot ReindexAll</string> </value>
+            <value> <string>Hot Reindex</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -77,7 +77,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/CatalogTool_hotReindexAll</string> </value>
+            <value> <string>string:${object_url}/CatalogTool_viewHotReindexAllDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

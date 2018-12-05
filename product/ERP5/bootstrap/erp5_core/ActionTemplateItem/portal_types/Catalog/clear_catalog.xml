@@ -75,7 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_viewCatalogClearDialog</string> </value>
+            <value> <string>string:${object_url}/Catalog_viewClearDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
