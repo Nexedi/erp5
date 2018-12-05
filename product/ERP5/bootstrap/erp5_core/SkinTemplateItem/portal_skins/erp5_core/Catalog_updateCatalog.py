@@ -4,4 +4,11 @@
 # of updated sql catalog.
 
 REQUEST = context.REQUEST
+form = REQUEST.form
+update_catalog = form.get('update_catalog')
+
+if not update_catalog:
+  return REQUEST.RESPONSE.redirect(context.absolute_url() +
+                    '/view?portal_status_message=Catalog%20Not%20Updated')
+
 return context.manage_catalogReindex(REQUEST)
