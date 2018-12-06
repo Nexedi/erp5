@@ -218,7 +218,16 @@ class TestSuite(object):
 #       Enough to be used by others.
 
 class EggTestSuite(TestSuite):
+  """Run `python setup.py test` in some directories defined by egg_test_path_dict.
 
+  The following arguments are expected by constructor:
+
+  ``egg_test_path_dict`` is a mapping of paths to packages directories keyed by
+  package name. The package name is what will be displayed in the test suite.
+  It has to be stable for "test result history" to work as expected.
+
+  The python interpreter is ``python_interpreter``
+  """
   def run(self, test):
     print test
     original_dir = os.getcwd()
@@ -293,12 +302,23 @@ def runTestSuite():
   master = taskdistribution.TaskDistributor(args.master_url)
   test_suite_title = args.test_suite_title or args.test_suite
   revision = args.revision
+
+  # Guess test name from path, we support mainly two cases:
+  #  /path/to/erp5.util/                  -> we want erp5.util
+  #  /path/to/slapos/software/erp5/test/  -> we want erp5
+  egg_test_path_dict = {}
+  for test_path in args.source_code_path_list.split(','):
+    path, test_name = os.path.split(test_path)
+    while test_name in ('', 'test'):
+      path, test_name = os.path.split(path)
+      assert path != os.path.sep
+    egg_test_path_dict[test_name] = test_path
+
   suite = EggTestSuite(1, test_suite=args.test_suite,
                     node_quantity=args.node_quantity,
                     revision=revision,
                     python_interpreter=args.python_interpreter,
-                    egg_test_path_dict={os.path.basename(os.path.normpath(path)): path
-                        for path in args.source_code_path_list.split(',')},
+                    egg_test_path_dict=egg_test_path_dict,
                     )
 
   test_result = master.createTestResult(revision, suite.getTestList(),
