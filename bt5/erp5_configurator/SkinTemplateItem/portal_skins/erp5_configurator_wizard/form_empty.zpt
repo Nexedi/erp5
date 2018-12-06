@@ -65,11 +65,11 @@
                     <table width="100%" class="Border">
                       <tr>
                         <td tal:repeat="cell row" valign="top">
-                          <table width="100%">
+                          <div width="100%">
                             <tal:block tal:repeat="field python:form.get_fields_in_group(groups[cell])">
                               <tal:block metal:use-macro="here/field_render/macros/field_render"/>
                             </tal:block>
-                          </table>
+                          </div>
                         </td>
                       </tr>
                     </table>
