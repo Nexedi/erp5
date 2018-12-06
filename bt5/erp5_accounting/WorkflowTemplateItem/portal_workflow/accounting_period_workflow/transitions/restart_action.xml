@@ -65,7 +65,7 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>
