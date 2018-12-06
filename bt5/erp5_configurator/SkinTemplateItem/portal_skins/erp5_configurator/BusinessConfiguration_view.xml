@@ -98,9 +98,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_configuration_state</string>
-                        <string>my_translated_simulation_state_title</string>
-                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -111,6 +108,9 @@
                         <string>my_resource_title</string>
                         <string>my_specialise_title</string>
                         <string>my_comment</string>
+                        <string>my_translated_simulation_state_title</string>
+                        <string>my_translated_validation_state_title</string>
+                        <string>my_configuration_state</string>
                       </list>
                     </value>
                 </item>

@@ -259,11 +259,23 @@
                 </item>
                 <item>
                     <key> <string>image_format</string> </key>
-                    <value> <string>gif</string> </value>
+                    <value> <string>png</string> </value>
+                </item>
+                <item>
+                    <key> <string>image_pre_converted_only</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>image_quality</string> </key>
+                    <value> <int>75</int> </value>
                 </item>
                 <item>
                     <key> <string>image_resolution</string> </key>
                     <value> <int>75</int> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string>text</string> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>

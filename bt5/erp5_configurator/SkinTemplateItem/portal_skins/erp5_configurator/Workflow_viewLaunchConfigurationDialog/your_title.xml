@@ -11,13 +11,14 @@
             <value>
               <list>
                 <string>default</string>
+                <string>description</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_guard_expression</string> </value>
+            <value> <string>your_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -75,8 +76,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The title for the new business configuration that will be created.</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_dialog_mode_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -84,7 +89,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Permission</string> </value>
+                    <value> <string>Business Configuration</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -100,7 +105,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [\'python: True\', here.getGuardExpression(evaluate=0)][str(here.getGuardExpression(evaluate=0)).startswith(\'python\')]</string> </value>
+            <value> <string>context/getTitle</string> </value>
         </item>
       </dictionary>
     </pickle>

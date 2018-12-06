@@ -85,6 +85,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_int_index</string>
                         <string>my_title</string>
                         <string>my_destination_title_list</string>
                       </list>

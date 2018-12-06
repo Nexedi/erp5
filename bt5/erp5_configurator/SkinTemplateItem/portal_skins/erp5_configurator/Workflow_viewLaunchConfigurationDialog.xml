@@ -35,7 +35,17 @@
         </item>
         <item>
             <key> <string>action</string> </key>
+            <value> <string>Workflow_launchConfiguration</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -43,7 +53,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -83,37 +93,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_list_mode_listbox_business_configuration</string>
-                        <string>my_view_mode_creation_date</string>
-                        <string>my_view_mode_translated_simulation_state_title</string>
-                        <string>my_view_mode_translated_validation_state_title</string>
-                        <string>my_view_mode_title</string>
-                        <string>my_view_mode_listbox_configuration_save</string>
-                        <string>my_view_mode_configuration_state</string>
-                        <string>my_view_mode_comment</string>
-                        <string>my_view_mode_configuration_after_script_id</string>
-                        <string>my_view_mode_description</string>
-                        <string>my_view_mode_version</string>
-                        <string>my_view_mode_listbox_configuration_item</string>
-                        <string>my_view_mode_configuration_class_dict</string>
-                        <string>my_view_mode_configuration_class_name</string>
-                        <string>my_view_mode_id</string>
-                        <string>my_view_mode_listbox_spreadsheet</string>
-                        <string>my_empty_mode_accounting_plan</string>
-                        <string>my_empty_mode_description</string>
-                        <string>my_empty_mode_date</string>
-                        <string>my_empty_mode_title</string>
-                        <string>my_empty_mode_default_email_text</string>
-                        <string>my_empty_mode_default_telephone_text</string>
-                        <string>my_empty_mode_first_name</string>
-                        <string>my_empty_mode_function</string>
-                        <string>my_empty_mode_last_name</string>
-                        <string>my_empty_mode_password</string>
-                        <string>my_empty_mode_reference</string>
-                        <string>my_empty_mode_default_address_city</string>
-                        <string>my_empty_mode_default_address_region</string>
-                        <string>my_empty_mode_default_address_zip_code</string>
-                        <string>my_view_mode_reference</string>
+                        <string>your_title</string>
                       </list>
                     </value>
                 </item>
@@ -128,7 +108,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewConfiguratorFieldLibrary</string> </value>
+            <value> <string>Workflow_viewLaunchConfigurationDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -136,7 +116,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_viewConfiguratorFieldLibrary</string> </value>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -148,11 +132,19 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Configurator Field Library</string> </value>
+            <value> <string>Launch Configuration</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

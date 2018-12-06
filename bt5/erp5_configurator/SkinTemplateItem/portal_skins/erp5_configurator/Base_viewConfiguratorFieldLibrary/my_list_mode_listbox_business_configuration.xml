@@ -10,11 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>all_columns</string>
                 <string>columns</string>
-                <string>editable_columns</string>
                 <string>portal_types</string>
-                <string>search_columns</string>
                 <string>selection_name</string>
                 <string>sort</string>
                 <string>title</string>
@@ -23,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_view_mode_listbox_business_configuration</string> </value>
+            <value> <string>my_list_mode_listbox_business_configuration</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -79,44 +76,13 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Site ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Workflow</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>Validation State</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>Installation State</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>comment</string>
-                          <string>Comments</string>
-                        </tuple>
-                        <tuple>
-                          <string>getCurrentStateTitle</string>
-                          <string>Wizard State</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Business Configuration</string>
+                        </tuple>
                         <tuple>
                           <string>reference</string>
                           <string>Reference</string>
@@ -141,17 +107,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>creation_date</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_list_mode_listbox</string> </value>
                 </item>
@@ -166,33 +121,6 @@
                         <tuple>
                           <string>Business Configuration</string>
                           <string>Business Configuration</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>search_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Workflow</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>Installation State</string>
                         </tuple>
                       </list>
                     </value>
@@ -218,7 +146,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Business Configuration</string> </value>
+                    <value> <string>Business Configurations</string> </value>
                 </item>
               </dictionary>
             </value>
