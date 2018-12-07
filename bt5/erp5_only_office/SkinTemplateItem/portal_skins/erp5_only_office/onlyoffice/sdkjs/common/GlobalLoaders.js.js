@@ -509,7 +509,7 @@
               queue,
               oThis = this;
             if (0 === start.indexOf('jio:')) {
-                queue = Common.Gateway.jio_getAttachment(this.Api.documentId, image_id.slice(4), 'asBlobURL')
+                queue = Common.Gateway.jio_getAttachment(this.Api.documentId, image_id.slice(4), {format:'blob_url'})
                   .push(undefined, function (error) {
                       console.error(error);
                       return "";

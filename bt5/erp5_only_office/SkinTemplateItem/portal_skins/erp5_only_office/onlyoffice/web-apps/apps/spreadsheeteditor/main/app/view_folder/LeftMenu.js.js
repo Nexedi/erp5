@@ -107,6 +107,14 @@ define([
                 toggleGroup: 'leftMenuGroup'
             });
 
+            this.btnRemote = new Common.UI.Button({
+                action: 'remote',
+                el: $('#left-btn-remote', this.el),
+                hint: this.tipRemote,
+                enableToggle: true,
+                disabled: true
+            });
+
             this.btnSupport = new Common.UI.Button({
                 action: 'support',
                 el: $('#left-btn-support', this.el),
@@ -150,6 +158,7 @@ define([
             this.btnPlugins.on('click',         _.bind(this.onBtnMenuClick, this));
 
             this.btnSearch.on('click',          _.bind(this.onBtnMenuClick, this));
+            this.btnRemote.on('toggle',         _.bind(this.onBtnMenuClick, this));
             this.btnAbout.on('toggle',          _.bind(this.onBtnMenuToggle, this));
             this.btnFile.on('toggle',           _.bind(this.onBtnMenuToggle, this));
 
@@ -187,7 +196,8 @@ define([
             this.btnFile.toggle(false);
             this.btnAbout.toggle(false);
 
-            if (btn.options.action == 'search') {
+            if (btn.options.action == 'search' ||
+                btn.options.action == 'remote') {
             } else {
                 if (btn.pressed) {
                     if (!(this.$el.width() > SCALE_MIN)) {
@@ -289,6 +299,7 @@ define([
         disableMenu: function(menu, disable) {
             this.btnFile.setDisabled(false);
             this.btnAbout.setDisabled(false);
+            this.btnRemote.setDisabled(false);
             this.btnSupport.setDisabled(false);
             this.btnSearch.setDisabled(false);
             /** coauthoring begin **/
@@ -369,6 +380,7 @@ define([
         tipChat     : 'Chat',
         /** coauthoring end **/
         tipAbout    : 'About',
+        tipRemote   : 'Remote Connections Settings',
         tipSupport  : 'Feedback & Support',
         tipFile     : 'File',
         tipSearch   : 'Search',

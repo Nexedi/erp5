@@ -1,3 +1,4 @@
+/*global AscCommonExcel, RSVP, Xmla, console*/
 /* jshint -W040 */
 /*
  * Copyright (c) 2017 Nexedi SA and Contributors. All Rights Reserved.
@@ -38,9 +39,8 @@
  * @param {Object} RSVP
  * @param {Xmla} Xmla
  * @param {console} console
- * @param {undefined} undefined
  */
-	function (window, RSVP, Xmla, console, undefined) {
+function (window, RSVP, Xmla, console) {
 	var cBaseFunction = AscCommonExcel.cBaseFunction;
 	var cFormulaFunctionGroup = AscCommonExcel.cFormulaFunctionGroup,
 		cElementType = AscCommonExcel.cElementType,
@@ -66,22 +66,6 @@
 	cFormulaFunctionGroup.NotRealised.push(cCUBEKPIMEMBER, cCUBEMEMBERPROPERTY, cCUBERANKEDMEMBER,
 		cCUBESET, cCUBESETCOUNT);
 
-	var xmla = new Xmla({
-// 		listeners: {
-// 			events: Xmla.EVENT_ERROR,
-// 			handler: function (eventName, eventData, xmla) {
-// 				console.log(eventData.exception);
-// //        alert(
-// //          "Snap, an error occurred: " + eventData.exception.message + " (" + eventData.exception.code + ")" +
-// //          (eventData.exception.code === Xmla.Exception.HTTP_ERROR_CDE
-// //            ? "\nstatus: " + eventData.exception.data.status + "; statusText: " + eventData.exception.data.statusText
-// //            : "")
-// //        );
-// 			}
-// 		},
-		async: true
-	});
-
 	function xmla_request(func, prop) {
 		var xmla = new Xmla({async: true});
 		// return function () {
@@ -99,32 +83,49 @@
 			});
 	}
 
-	function xmla_request_retry(func, prop) {
-		return xmla_request(func, prop)
-			.push(undefined, function (response) {
-				// fix mondrian Internal and Sql errors
-				if (response) {
-					switch (response["code"]) {
-						case "SOAP-ENV:Server.00HSBE02":
-						case "SOAP-ENV:00UE001.Internal Error":
-							// rarely server error, so try again
-							return xmla_request(func, prop);
-					}
-				}
-				throw response;
-			});
+	function xmla_request_retry(func, settings) {
+		var queue,
+			urls = settings.urls,
+			i;
+
+		function make_request(url) {
+			return function (error) {
+				settings.prop.url = url;
+                return xmla_request(func, settings.prop)
+                    .push(undefined, function (response) {
+                        // fix mondrian Internal and Sql errors
+                        if (response) {
+                            switch (response["code"]) {
+                                case "SOAP-ENV:Server.00HSBE02":
+                                case "SOAP-ENV:00UE001.Internal Error":
+                                    // rarely server error, so try again
+                                    return xmla_request(func, settings.prop);
+                            }
+                        }
+                        throw response;
+                    });
+            };
+		}
+
+		queue = make_request(urls[0])();
+		for (i = 1; i < settings.urls.length; i += 1) {
+			queue.push(undefined, make_request(urls[i]));
+		}
+		return queue;
 	}
 
 	function discover_hierarchies(connection) {
-		var settings = getProperties(connection),
-			prop = settings.prop;
-		prop.restrictions = {
-//      'CATALOG_NAME': 'FoodMart',
-// 			'HIERARCHY_NAME': hierarchy_name,
-// 			'HIERARCHY_UNIQUE_NAME': hierarchy_name,
-			'CUBE_NAME': settings["cube"]
-		};
-		return xmla_request_retry("discoverMDHierarchies", prop)
+		return getProperties(connection)
+			.push(function (settings) {
+				var prop = settings.prop;
+				prop.restrictions = {
+					// 'CATALOG_NAME': 'FoodMart',
+					// 'HIERARCHY_NAME': hierarchy_name,
+					// 'HIERARCHY_UNIQUE_NAME': hierarchy_name,
+					'CUBE_NAME': settings["cube"]
+				};
+				return xmla_request_retry("discoverMDHierarchies", settings);
+			})
 			.push(function (response) {
 				var hierarchies = {},
 					hierarchy,
@@ -168,36 +169,35 @@
 			});
 	}
 
-	function getProperties(connection) {
-		var connections = {
-			"xmla": {
-				"prop": {
-					"url": "https://d1.erp5.ru/saiku/xmla",
-					"properties": {
-						"DataSourceInfo": "FoodMart",
-						"Catalog": "FoodMart"
-					}
-				},
-				"cube": "Sales"
-			},
-			"olapy": {
-				"prop": {
-					"url": "https://d1.erp5.ru/olapy/xmla",
-					"properties": {
-						"DataSourceInfo": "-",
-						"Catalog": "sales"
-					}
-				},
-				"cube": "Sales"
-			}
-		};
-		connection = connections[connection];
-		if (!connection) {
-			throw "connection not exist";
-		}
-		connection = JSON.parse(JSON.stringify(connection));
-		return connection;
-	}
+    function getProperties(connection) {
+        return Common.Gateway.jio_getAttachment('/', 'remote_settings.json', {format: 'json'})
+            .push(undefined, function (e) {
+                if (e.status_code === 404) {
+                    return {};
+                }
+                throw e;
+            })
+            .push(function (value) {
+                var c;
+                if (!value.hasOwnProperty(connection)) {
+                    throw "connection not exist";
+                }
+                c = value[connection];
+                if (!c.hasOwnProperty('properties')) {
+                	c.properties = {};
+				}
+                return {
+                	urls: c.urls,
+                    prop: {
+                        properties: {
+                            DataSourceInfo: c.properties.DataSourceInfo,
+                            Catalog: c.properties.Catalog
+                        }
+                    },
+                    cube: c.properties.Cube
+                };
+            });
+    }
 
 	function getScheme(connection) {
 		var scheme = cubeScheme[connection],
@@ -324,16 +324,22 @@
 			scheme;
 		if (!execution_scheme.execute) {
 			execution_scheme.execute = RSVP.defer();
-			return getScheme(connection)
-				.push(function (s) {
-					var settings = getProperties(connection),
+			return RSVP.Queue()
+                .push(function () {
+                    return RSVP.all([
+                        getScheme(connection),
+                        getProperties(connection)
+                    ]);
+                })
+				.push(function (arr) {
+					var settings = arr[1],
 						prop = settings.prop,
 						hierarchies = execution_scheme.hierarchies,
 						hierarchy,
 						mdx = [],
 						tuple_str,
 						all_member;
-					scheme = s;
+					scheme = arr[0];
 					for (hierarchy in hierarchies) {
 						tuple_str = hierarchies[hierarchy].join(",");
 						all_member = scheme.hierarchies[hierarchy]["all_member"];
@@ -344,7 +350,7 @@
 					}
 					prop.statement = "SELECT " + mdx.join("*") +
 						" ON 0 FROM [" + settings["cube"] + "]";
-					return xmla_request("execute", prop);
+					return xmla_request_retry("execute", settings);
 				})
 				.push(function (dataset) {
 					var cellset = dataset.getCellset(),
@@ -360,7 +366,7 @@
 						};
 
 
-					for (axis_id = 0; axis_id < axis_count; axis_id++) {
+					for (axis_id = 0; axis_id < axis_count; axis_id += 1) {
 						axis_array.push(dataset.getAxis(axis_id));
 					}
 
@@ -410,10 +416,9 @@
 	}
 
 	function discover_members(connection, opt) {
-		return new RSVP.Queue()
-			.push(function () {
-				var settings = getProperties(connection),
-					prop = settings.prop,
+		return getProperties(connection)
+			.push(function (settings) {
+				var prop = settings.prop,
 					cached_member,
 					scheme = getExecutionScheme(connection);
 				prop.restrictions = {
@@ -433,30 +438,30 @@
 				if (cached_member) {
 					return [cached_member];
 				} else {
-					return xmla_request_retry("discoverMDMembers", prop)
+					return xmla_request_retry("discoverMDMembers", settings)
 						.push(function (r) {
 							var ret = [],
 								uname,
 								level,
-								cached_member;
+								cached_member1;
 							while (r.hasMoreRows()) {
 								uname = r["getMemberUniqueName"]();
 								level = r["getLevelUniqueName"]();
 								// we can check cache twice because fist check
 								// only if discover by member_uname
 								if (!scheme.members.hasOwnProperty(uname)) {
-									cached_member = {
+									cached_member1 = {
 										uname: uname,
 										h: r["getHierarchyUniqueName"](),
 										level: r["getLevelUniqueName"](),
 										caption: r["getMemberCaption"](),
 										type: r["getMemberType"]()
 									};
-									scheme.members[uname] = cached_member;
+									scheme.members[uname] = cached_member1;
 								} else {
-									cached_member = scheme.members[uname];
+									cached_member1 = scheme.members[uname];
 								}
-								ret.push(cached_member);
+								ret.push(cached_member1);
 								r.nextRow();
 								if (!scheme.levels.hasOwnProperty(level)) {
 									scheme.levels[level] = discover_level(connection, scheme, level);
@@ -476,15 +481,17 @@
 				var i;
 
 				function compare(a, b) {
-					if (a.uname < b.uname)
-						return -1;
-					if (a.uname > b.uname)
-						return 1;
+					if (a.uname < b.uname) {
+                        return -1;
+					}
+					if (a.uname > b.uname) {
+                        return 1;
+					}
 					return 0;
 				}
 
 				members.sort(compare);
-				for (i = 0; i < members.length; i++) {
+				for (i = 0; i < members.length; i += 1) {
 					members[i].level_index = i;
 				}
 				scheme.levels[level] = members;
@@ -498,9 +505,8 @@
 		function check_interseption(hierarchy) {
 			if (hierarchies.hasOwnProperty(hierarchy)) {
 				throw  "The tuple is invalid because there is no intersection for the specified values.";
-			} else {
-				hierarchies[hierarchy] = 1;
 			}
+			hierarchies[hierarchy] = 1;
 		}
 
 		members.forEach(function (member) {
@@ -511,11 +517,11 @@
 							member_uname: member
 						})
 							.push(function (members) {
-								var member;
+								var m;
 								if (members.length > 0) {
-									member = members[0];
-									check_interseption(member.h);
-									return member;
+									m = members[0];
+									check_interseption(m.h);
+									return m;
 								} else {
 									throw "member not found";
 								}
@@ -605,7 +611,7 @@
 			member,
 			new_member,
 			level;
-		for (i = 0; i < arg.length; i++) {
+		for (i = 0; i < arg.length; i += 1) {
 			elem = arg[i];
 			if (cElementType.string === elem.type) {
 				member = scheme.members[elem.value];
@@ -732,25 +738,25 @@
 					ret;
 
 				function getHierarchyByMember(member_path) {
-					var h;
-					h = cube.members[member_path];
-					if (h === undefined) {
+					var hierarchy;
+					hierarchy = cube.members[member_path];
+					if (hierarchy === undefined) {
 						throw "query result not contain data for member:" +
 						member_path;
 					}
-					h = h.hierarchy;
-					h = cube.hierarchies[h];
-					return h;
+					hierarchy = hierarchy.hierarchy;
+					hierarchy = cube.hierarchies[hierarchy];
+					return hierarchy;
 				}
 
-				for (i = 0; i < cube.hierarchies.length; i++) {
+				for (i = 0; i < cube.hierarchies.length; i += 1) {
 					h = cube.hierarchies[i];
 					if (!coordinate[h.axis_id]) {
 						coordinate[h.axis_id] = [];
 					}
 					coordinate[h.axis_id][h.tuple_id] = null;
 				}
-				for (i = 0; i < members.length; i++) {
+				for (i = 0; i < members.length; i += 1) {
 					member_path = members[i];
 					h = getHierarchyByMember(members[i]);
 					coordinate[h.axis_id][h.tuple_id] = member_path;
