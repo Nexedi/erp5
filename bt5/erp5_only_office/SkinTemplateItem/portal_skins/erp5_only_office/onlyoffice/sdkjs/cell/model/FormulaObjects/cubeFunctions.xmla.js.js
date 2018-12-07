@@ -116,15 +116,17 @@
 	}
 
 	function discover_hierarchies(connection) {
-		var settings = getProperties(connection),
-			prop = settings.prop;
-		prop.restrictions = {
-//      'CATALOG_NAME': 'FoodMart',
-// 			'HIERARCHY_NAME': hierarchy_name,
-// 			'HIERARCHY_UNIQUE_NAME': hierarchy_name,
-			'CUBE_NAME': settings["cube"]
-		};
-		return xmla_request_retry("discoverMDHierarchies", prop)
+		return getProperties(connection)
+			.push(function (settings) {
+				var prop = settings.prop;
+				prop.restrictions = {
+					// 'CATALOG_NAME': 'FoodMart',
+					// 'HIERARCHY_NAME': hierarchy_name,
+					// 'HIERARCHY_UNIQUE_NAME': hierarchy_name,
+					'CUBE_NAME': settings["cube"]
+				};
+				return xmla_request_retry("discoverMDHierarchies", prop);
+			})
 			.push(function (response) {
 				var hierarchies = {},
 					hierarchy,
@@ -168,36 +170,32 @@
 			});
 	}
 
-	function getProperties(connection) {
-		var connections = {
-			"xmla": {
-				"prop": {
-					"url": "https://d1.erp5.ru/saiku/xmla",
-					"properties": {
-						"DataSourceInfo": "FoodMart",
-						"Catalog": "FoodMart"
-					}
-				},
-				"cube": "Sales"
-			},
-			"olapy": {
-				"prop": {
-					"url": "https://d1.erp5.ru/olapy/xmla",
-					"properties": {
-						"DataSourceInfo": "-",
-						"Catalog": "sales"
-					}
-				},
-				"cube": "Sales"
-			}
-		};
-		connection = connections[connection];
-		if (!connection) {
-			throw "connection not exist";
-		}
-		connection = JSON.parse(JSON.stringify(connection));
-		return connection;
-	}
+    function getProperties(connection) {
+        return Common.Gateway.jio_getAttachment('/', 'remote_settings.json', {format: 'json'})
+            .push(undefined, function (e) {
+                if (e.status_code === 404) {
+                    return {};
+                }
+                throw e;
+            })
+            .push(function (value) {
+                var c;
+                if (!value.hasOwnProperty(connection)) {
+                    throw "connection not exist";
+                }
+                c = value[connection];
+                return {
+                    prop: {
+                        url: c.url,
+                        properties: {
+                            DataSourceInfo: c.properties.DataSourceInfo,
+                            Catalog: c.properties.Catalog
+                        }
+                    },
+                    cube: c.properties.Cube
+                };
+            });
+    }
 
 	function getScheme(connection) {
 		var scheme = cubeScheme[connection],
@@ -324,16 +322,22 @@
 			scheme;
 		if (!execution_scheme.execute) {
 			execution_scheme.execute = RSVP.defer();
-			return getScheme(connection)
-				.push(function (s) {
-					var settings = getProperties(connection),
+			return RSVP.Queue()
+                .push(function () {
+                    return RSVP.all([
+                        getScheme(connection),
+                        getProperties(connection)
+                    ]);
+                })
+				.push(function (arr) {
+					var settings = arr[1],
 						prop = settings.prop,
 						hierarchies = execution_scheme.hierarchies,
 						hierarchy,
 						mdx = [],
 						tuple_str,
 						all_member;
-					scheme = s;
+					scheme = arr[0];
 					for (hierarchy in hierarchies) {
 						tuple_str = hierarchies[hierarchy].join(",");
 						all_member = scheme.hierarchies[hierarchy]["all_member"];
@@ -410,10 +414,9 @@
 	}
 
 	function discover_members(connection, opt) {
-		return new RSVP.Queue()
-			.push(function () {
-				var settings = getProperties(connection),
-					prop = settings.prop,
+		return getProperties(connection)
+			.push(function (settings) {
+				var prop = settings.prop,
 					cached_member,
 					scheme = getExecutionScheme(connection);
 				prop.restrictions = {

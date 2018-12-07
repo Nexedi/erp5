@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "XMLA connection",
+  "type": "object",
+  "properties": {
+    "url": {
+      "uniqueItems": true,
+      "items": {
+        "format": "uri",
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["Cube"],
+      "properties": {
+        "DataSourceInfo": {"type": "string"},
+        "Catalog": {"type": "string"},
+        "Cube": {"type": "string"}
+      }
+    },
+    "username": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "url"
+  ],
+  "additionalProperties": false
+}
