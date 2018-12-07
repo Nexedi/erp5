@@ -69,6 +69,7 @@ DocsAPI.DocEditor.version = function () {
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
     .declareAcquiredMethod("triggerMaximize", "triggerMaximize")
     .declareAcquiredMethod('getSetting', 'getSetting')
+    .declareAcquiredMethod('notifyChange', 'notifyChange')
     .declareMethod("jio_getAttachment", function (docId, attId, opt) {
       var g = this,
         queue;
@@ -167,6 +168,25 @@ DocsAPI.DocEditor.version = function () {
           });
       }
       return queue;
+    })
+    .allowPublicAcquisition("notifyChange", function (arr, scope) {
+      var gadget = this;
+      if (scope === "remote_settings") {
+        return this.getDeclaredGadget(scope)
+          .push(function (g) {
+            return g.getContent();
+          })
+          .push(function (data) {
+            return gadget
+              .jio_putAttachment('/', 'remote_settings.json', data);
+          })
+          .push(function () {
+            return gadget.notifyChange();
+          })
+          .push(undefined, function (e) {
+            console.error(e);
+          });
+      }
     })
 
     // methods emulating Gateway used for connection with ooffice begin.
