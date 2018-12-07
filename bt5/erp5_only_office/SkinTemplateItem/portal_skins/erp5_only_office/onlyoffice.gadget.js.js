@@ -108,12 +108,19 @@ DocsAPI.DocEditor.version = function () {
         zip = g.props.value_zip_storage,
         queue,
         content_type,
-        start = data.slice(0, 5);
+        start;
       if (!docId) {
         docId = '/media/';
       }
-      if (typeof data === 'string' && start === "data:") {
-        data = dataURLtoBlob(data);
+      if (typeof data === 'string') {
+        start = data.slice(0, 5);
+        if (start === "data:") {
+          data = dataURLtoBlob(data);
+        }
+      }
+      if (typeof data === 'object' &&
+          !(data instanceof Blob)) {
+        data = new Blob([JSON.stringify(data, undefined, 2)]);
       }
       if (atId) {
         queue = zip.putAttachment(docId, atId, data)
