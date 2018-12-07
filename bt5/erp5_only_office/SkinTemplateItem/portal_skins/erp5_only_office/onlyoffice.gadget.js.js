@@ -1,6 +1,7 @@
 /*global window, rJS, RSVP, DocsAPI, console, document,
  Common, require, jIO, URL, FileReader, atob, ArrayBuffer,
  Uint8Array, XMLHttpRequest, Blob, Rusha, define,
+ Uint8ClampedArray,
  TextDecoder, DesktopOfflineAppDocumentEndSave*/
 /*jslint nomen: true, maxlen:80, indent:2*/
 "use strict";
@@ -71,9 +72,10 @@ DocsAPI.DocEditor.version = function () {
     .declareAcquiredMethod('getSetting', 'getSetting')
     .declareMethod("jio_getAttachment", function (docId, attId, opt) {
       var g = this,
-        queue;
+        convert;
+      opt = opt || {};
       if (attId === 'body.txt' || attId === 'Editor.bin') {
-        opt = 'asBinArray';
+        opt = { 'format': 'bin_array' };
         if (!docId) {
           docId = '/';
         }
@@ -82,36 +84,24 @@ DocsAPI.DocEditor.version = function () {
           docId = '/media/';
         }
       }
-      queue = g.props.value_zip_storage.getAttachment(docId, attId)
+      if (opt.format === "blob_url") {
+        convert = opt.format;
+        delete opt.format;
+      }
+      if (opt.format === "bin_array") {
+        convert = opt.format;
+        opt.format = 'array_buffer';
+      }
+      return g.props.value_zip_storage.getAttachment(docId, attId, opt)
         .push(function (blob) {
-          var data;
-          if (opt === "asText") {
-            data = jIO.util.readBlobAsText(blob)
-              .then(function (evt) {
-                return evt.target.result;
-              });
-          } else if (opt === "asBinArray") {
-            data = jIO.util.readBlobAsArrayBuffer(blob)
-              .then(function (evt) {
-                return new Uint8ClampedArray(evt.target.result);
-              });
-          } else if (opt === "asBlobURL") {
-            data = URL.createObjectURL(blob);
-          } else if (opt === "asDataURL") {
-            data = new RSVP.Promise(function (resolve, reject) {
-              var reader = new FileReader();
-              reader.addEventListener('load', function () {
-                resolve(reader.result);
-              });
-              reader.addEventListener('error', reject);
-              reader.readAsDataURL(blob);
-            });
-          } else {
-            data = blob;
+          if (convert === "bin_array") {
+            return new Uint8ClampedArray(blob);
           }
-          return data;
+          if (convert === "blob_url") {
+            return URL.createObjectURL(blob);
+          }
+          return blob;
         });
-      return queue;
     })
     .declareMethod("jio_putAttachment", function (docId, atId, data) {
       var g = this,
