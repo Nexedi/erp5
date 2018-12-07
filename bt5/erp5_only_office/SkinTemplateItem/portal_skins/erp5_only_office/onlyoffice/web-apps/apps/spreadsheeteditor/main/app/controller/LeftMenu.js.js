@@ -34,7 +34,8 @@ define([
     'core',
     'common/main/lib/util/Shortcuts',
     'spreadsheeteditor/main/app/view/LeftMenu',
-    'spreadsheeteditor/main/app/view/FileMenu'
+    'spreadsheeteditor/main/app/view/FileMenu',
+    'common/main/lib/view/RenderJSDialog'
 ], function () {
     'use strict';
 
@@ -88,6 +89,7 @@ define([
         onLaunch: function() {
             this.leftMenu = this.createView('LeftMenu').render();
             this.leftMenu.btnSearch.on('toggle', _.bind(this.onMenuSearch, this));
+            this.leftMenu.btnRemote.on('toggle', _.bind(this.onRemote, this));
 
             Common.util.Shortcuts.delegateShortcuts({
                 shortcuts: {
@@ -474,6 +476,51 @@ define([
 
         onMenuSearch: function(obj, show) {
             this.showSearchDlg(show);
+        },
+
+        onRemote: function(obj, show) {
+            var queue,
+                me = this;
+            if ( !this.dlgRemote ) {
+                queue = Common.Gateway.jio_getAttachment('/', 'remote_settings.json', {format: 'json'})
+                    .push(undefined, function (e) {
+                        if (e.status_code === 404) {
+                            return {};
+                        }
+                        throw e;
+                    })
+                    .push(function (value) {
+                        me.dlgRemote = new Common.Views.RenderJSDialog({
+                            toolclose: "hide",
+                            gadget_url: "jsonform.gadget.html",
+                            scope: "remote_settings",
+                            gadget_render_opt: {
+                                schema_url: "onlyoffice/remote_settings.json",
+                                value: value
+                            }
+                        });
+                        me.dlgRemote.on("hide", _.bind(function () {
+                            this.leftMenu.btnRemote.toggle(false, true);
+                        }, me));
+                    });
+            } else {
+                queue = RSVP.Queue();
+            }
+            queue.push(function () {
+                if (show) {
+                    if (me.dlgRemote.isVisible()) {
+                        me.dlgRemote.focus();
+                    } else {
+                        me.dlgRemote.show();
+                    }
+
+                    me.api.asc_closeCellEditor();
+                }
+
+            })
+                .push(undefined, function (e) {
+                    console.error(e);
+                });
         },
 
         onSearchDlgHide: function() {
