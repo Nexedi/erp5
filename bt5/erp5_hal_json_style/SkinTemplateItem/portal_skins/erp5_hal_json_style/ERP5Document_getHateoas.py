@@ -1780,6 +1780,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
       is_getListItemUrlDict_calculated = False
 
+      # Put 'cell' to REQUEST (expected by tales) and let the field evaluate
+      # Needed to evaluate 'items' attribute of listfield for example
+      REQUEST.set('cell', search_result)
       for select in select_list:
         contents_item[select] = {}
         editable_field = editable_field_dict.get(select, None)
@@ -1892,6 +1895,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 }
 
       # endfor select
+      REQUEST.other.pop('cell', None)
       contents_list.append(contents_item)
     result_dict['_embedded']['contents'] = ensureSerializable(contents_list)
 
