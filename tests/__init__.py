@@ -85,7 +85,6 @@ class ERP5(_ERP5):
          or test_case in ('testERP5LdapCatalog', # XXX (Ivan), until LDAP server is available this test will alway fail
                           # tests reading selenium tables from erp5.com
                           # not maintained
-                          'testFunctionalConfiguratorConsulting',
                           'testERP5eGov',
                           'testAccounting_l10n_fr_m9',
                           # Not a test
