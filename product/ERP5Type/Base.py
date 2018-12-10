@@ -2824,7 +2824,7 @@ class Base( CopyContainer,
     ancestry: a document may only be indexed if its parent is indexable, and
     it's parent's parent, etc until ERP5Site object (inclusive).
     """
-    node = self.aq_inner
+    node = self.aq_inner.aq_parent
     portal = aq_base(self.getPortalObject())
     while True:
       is_indexable = node.isSubtreeIndexable()

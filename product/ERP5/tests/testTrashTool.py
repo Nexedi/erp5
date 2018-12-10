@@ -121,15 +121,32 @@ class TestTrashTool(ERP5TypeTestCase):
     self.assertTrue('fake_bin' in trashbin.getId())
     sequence.edit(trash_id=trashbin.getId())
 
-  def stepCheckTrashBinIndexable(self, sequence=None, sequence_list=None, **kw ):
+  def stepCheckTrashBinIndexation(self, sequence=None, sequence_list=None, **kw):
     """
-    Check trash bin is indexable
+    Check trash bin is indexable and indexed
     """
     trash_id = sequence.get('trash_id')
     trash = self.getTrashTool()
     trashbin = trash._getOb(trash_id, None)
-    self.assertTrue(trashbin is not None)
     self.assertTrue(trashbin.isIndexable)
+    self.assertTrue(trash.isSubtreeIndexable())
+    self.assertFalse(trashbin.isSubtreeIndexable())
+    trash_uid = trash.getUid()
+    trashbin_uid = trashbin.getUid()
+    self.assertNotEqual(trash_uid, None)
+    self.assertNotEqual(trashbin_uid, None)
+    self.assertItemsEqual(
+      [
+        x.path
+        for x in self.portal.portal_catalog(
+          uid=(trash_uid, trashbin_uid),
+        )
+      ],
+      [
+        trash.getPath(),
+        trashbin.getPath(),
+      ],
+    )
 
   def stepCheckObjectNotBackup(self, sequence=None, sequence_list=None, **kw):
     """
@@ -349,7 +366,8 @@ class TestTrashTool(ERP5TypeTestCase):
     sequence_string = '\
                        CheckTrashToolExists  \
                        CreateTrashBin \
-                       CheckTrashBinIndexable \
+                       Tic \
+                       CheckTrashBinIndexation \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
@@ -364,7 +382,6 @@ class TestTrashTool(ERP5TypeTestCase):
     sequence_string = '\
                        CheckTrashToolExists  \
                        CreateTrashBin \
-                       CheckTrashBinIndexable \
                        AddBaseCategory \
                        AddCategories \
                        Tic \
@@ -384,7 +401,6 @@ class TestTrashTool(ERP5TypeTestCase):
     sequence_string = '\
                        CheckTrashToolExists  \
                        CreateTrashBin \
-                       CheckTrashBinIndexable \
                        AddBaseCategory \
                        AddCategories \
                        Tic \
@@ -405,7 +421,6 @@ class TestTrashTool(ERP5TypeTestCase):
     sequence_string = '\
                        CheckTrashToolExists  \
                        CreateTrashBin \
-                       CheckTrashBinIndexable \
                        AddBaseCategory \
                        AddCategories \
                        Tic \
@@ -430,7 +445,6 @@ class TestTrashTool(ERP5TypeTestCase):
     sequence_string = '\
                        CheckTrashToolExists  \
                        CreateTrashBin \
-                       CheckTrashBinIndexable \
                        AddBaseCategory \
                        AddCategories \
                        AddSubCategories \
@@ -454,7 +468,6 @@ class TestTrashTool(ERP5TypeTestCase):
     sequence_string = '\
                        CheckTrashToolExists  \
                        CreateTrashBin \
-                       CheckTrashBinIndexable \
                        AddFolder \
                        Tic \
                        BackupFolderObjectsWithSave \
