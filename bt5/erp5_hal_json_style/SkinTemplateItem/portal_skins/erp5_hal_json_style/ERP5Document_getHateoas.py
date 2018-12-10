@@ -1782,7 +1782,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
       # Put 'cell' to REQUEST (expected by tales) and let the field evaluate
       # Needed to evaluate 'items' attribute of listfield for example
-      REQUEST.set('cell', search_result)
+      REQUEST.set('cell', brain)
       for select in select_list:
         contents_item[select] = {}
         editable_field = editable_field_dict.get(select, None)
