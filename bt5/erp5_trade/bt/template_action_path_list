@@ -57,6 +57,10 @@ Inventory Line | view
 Inventory Module | view
 Inventory Module | view_stock_export
 Inventory Module | view_stock_report
+Inventory Report Line | view
+Inventory Report Module | view
+Inventory Report | calculate_product_stock
+Inventory Report | view
 Inventory | fast_input
 Inventory | fast_input_update
 Inventory | view
