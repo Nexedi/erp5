@@ -17,6 +17,9 @@
  <portal_type id="Inventory Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Inventory Report Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Purchase Order Module">
   <item>business_application</item>
  </portal_type>
