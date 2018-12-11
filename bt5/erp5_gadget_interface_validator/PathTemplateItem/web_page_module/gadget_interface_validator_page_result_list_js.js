@@ -37,8 +37,7 @@
                 sandbox: "",
                 renderjs_extra: JSON.stringify({
                   gadget_to_check_url: result.data.rows[i].value.url,
-                  summary: true,
-                  delay: 200 * i
+                  summary: true
                 }),
                 key: "field_my_validation_state",
                 hidden: 0,

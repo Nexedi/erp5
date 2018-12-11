@@ -228,19 +228,32 @@
     }
   }
 
+  var interface_loader_defer = RSVP.defer(),
+    counter = 0;
+  interface_loader_defer.resolve('Bootstrap');
+
   function getOrDeclareGadget(context, gadget_to_check_url) {
     return context.getDeclaredGadget(gadget_to_check_url)
       .push(undefined, function (error) {
         var element,
-          loader_gadget;
+          loader_gadget,
+          current_defer;
         if (error instanceof rJS.ScopeError) {
           element = document.createElement('div');
           context.element.querySelector('div').appendChild(element);
           return new RSVP.Queue()
             .push(function () {
-              return RSVP.delay(context.state.delay || 0);
+              context.element.firstElementChild.textContent =
+                'Waiting ' + counter;
+              // Wait for previous defer, and create a new one.
+              var previous_deferred = interface_loader_defer;
+              current_defer = RSVP.defer();
+              interface_loader_defer = current_defer;
+              counter += 1;
+              return previous_deferred.promise;
             })
             .push(function () {
+              context.element.firstElementChild.textContent = 'Loading';
               // XXX Load in an iframe
               return context.declareGadget('gadget_interface_loader.html', {
                 scope: gadget_to_check_url,
@@ -253,7 +266,12 @@
               return loader_gadget.declareGadgetToCheck(gadget_to_check_url);
             })
             .push(function () {
+              // Iframe loaded, unblock the next iteration
+              current_defer.resolve();
               return loader_gadget;
+            }, function (error) {
+              current_defer.resolve();
+              throw error;
             });
         }
         throw error;
@@ -434,6 +452,9 @@
           }
 
           if (context.state.summary) {
+            if (error_message !== '') {
+              console.warn(error_message, error_list);
+            }
             error_message = summary_message;
           } else {
             error_message = summary_message + '\n\n' + error_message;
