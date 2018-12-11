@@ -1,0 +1,101 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+
+  <tal:block metal:define-macro="run_app_interface_check">
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/gadget_interface_validator/</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
+    <tal:block tal:define="filter_section_configuration python: {'key': 'COLUMN_appcache_url', 'value': check_configuration['app_cache_reference'], 'index': 0}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/set_filter_section" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_filter" />
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Waiting</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Waiting</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextNotPresent</td>
+      <td>In Progress</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextNotPresent</td>
+      <td>In Progress</td>
+      <td></td>
+    </tr>
+
+    <!-- Step of 10, to prevent wait conflict between 'Waiting 2' and 'Waiting 20' -->
+    <tal:block tal:repeat="step python: range(0, check_configuration['gadget_count'] - 1, 10)">
+      <tr>
+        <td>waitForTextNotPresent</td>
+        <td tal:content="python: 'Waiting %i' % step"></td>
+        <td></td>
+      </tr>
+    </tal:block>
+
+    <tr>
+      <td>waitForTextNotPresent</td>
+      <td>Waiting</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextNotPresent</td>
+      <td>Waiting</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextNotPresent</td>
+      <td>Loading</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextNotPresent</td>
+      <td>Loading</td>
+      <td></td>
+    </tr>
+
+    <tal:block tal:define="pagination_configuration python: {'header': '(%i)' % check_configuration['gadget_count'], 'footer': '%i Records' % check_configuration['gadget_count']}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+    </tal:block>
+
+  </tal:block>
+
+  <tal:block metal:define-macro="check_app_interface_ok">
+    <tr>
+      <td colspan="3"><b>Check no error is reported</b></td>
+    </tr>
+    <tr>
+      <td>assertTextNotPresent</td>
+      <td>N/A</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextNotPresent</td>
+      <td>Failure</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextNotPresent</td>
+      <td>Error</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+</tal:block>

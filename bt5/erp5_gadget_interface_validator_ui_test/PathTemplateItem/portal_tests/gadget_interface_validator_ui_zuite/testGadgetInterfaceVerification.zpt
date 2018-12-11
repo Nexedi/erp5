@@ -10,44 +10,10 @@
 <tr><td rowspan="1" colspan="3">Test Gadget Interface Validation UI</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-<tr>
-  <td>store</td>
-  <td>gadget_interface_validator</td>
-  <td>application_title</td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/${application_title}/</td>
-  <td></td>
-</tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
-<tal:block tal:define="filter_section_configuration python: {'key': 'COLUMN_appcache_url', 'value': 'gadget_interface_validator_test.appcache', 'index': 0}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/set_filter_section" />
+<tal:block tal:define="check_configuration python: {'app_cache_reference': 'gadget_interface_validator_test.appcache',
+                                                    'gadget_count': 8}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUiInterface/macros/run_app_interface_check" />
 </tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_filter" />
-
-<tr>
-  <td>waitForTextPresent</td>
-  <td>In Progress</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>In Progress</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextNotPresent</td>
-  <td>In Progress</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextNotPresent</td>
-  <td>In Progress</td>
-  <td></td>
-</tr>
 
 <tr>
   <td colspan="3"><b>Check correct use case</b></td>
