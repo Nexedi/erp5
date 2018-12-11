@@ -55,6 +55,9 @@ Inventory Cell | pricing_interaction_workflow
 Inventory Line | edit_workflow
 Inventory Line | pricing_interaction_workflow
 Inventory Line | trade_matrix_workflow
+Inventory Report Line | edit_workflow
+Inventory Report | edit_workflow
+Inventory Report | inventory_report_workflow
 Inventory | edit_workflow
 Inventory | inventory_workflow
 Order Root Simulation Rule | edit_workflow
