@@ -2,14 +2,14 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>testAttachDocument (expected failure)</title>
+<title>testAttachDocument</title>
 </head>
 <body tal:define="file_name string:tiolive-ERP5.DMS.TioLive-001-en.odp;
                   full_filename_location python: here.Zuite_getFilenameLocation(file_name);
                   person_full_name string:DMS tester">
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">testAttachDocument (expected failure)</td></tr>
+<tr><td rowspan="1" colspan="3">testAttachDocument</td></tr>
 </thead><tbody>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />

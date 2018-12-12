@@ -2,13 +2,13 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>testMyDocumentsGadget (expected failure)</title>
+<title>testMyDocumentsGadget</title>
 </head>
 <body tal:define="file_name string:tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods;
                   full_filename_location python: here.Zuite_getFilenameLocation(file_name)">
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">testMyDocumentsGadget (expected failure)</td></tr>
+<tr><td rowspan="1" colspan="3">testMyDocumentsGadget</td></tr>
 </thead><tbody>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
