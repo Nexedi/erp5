@@ -336,8 +336,10 @@
     // initialize the gadget content
     //////////////////////////////////////////////
     .declareMethod('render', function render(options) {
+      console.log(options);
       var gadget = this,
         field_json = options.field_json,
+        field_json_string = JSON.stringify(field_json),
         sort_column_list = [],
         search_column_list = [],
         query_string,
@@ -436,6 +438,7 @@
           }
 
           return gadget.changeState({
+            field_json_string: field_json_string,
             key: field_json.key,
             title: field_json.title,
             editable: field_json.editable,
@@ -469,7 +472,9 @@
 
             field_id: options.field_id,
             extended_search: options.extended_search,
-            hide_class: options.hide_enabled ? "" : "ui-disabled",
+            // XXX wrong logic
+            // hide_class: (field_json.show_line_selector && true) ? "" : (options.hide_enabled ? "" : "ui-disabled"),
+            hide_class: true,//(options.hide_enabled ? "" : "ui-disabled"),
             configure_class: options.configure_enabled ? "" : "ui-disabled",
             command: field_json.command || 'index',
 
@@ -479,7 +484,7 @@
 
             // No error message
             has_error: false,
-            show_line_selector: false
+            show_line_selector: field_json.show_line_selector || false
           });
         });
       return queue;
@@ -1204,7 +1209,8 @@
         hide_element_list = [],
         query_list = [],
         search_query,
-        i;
+        i,
+        listbox_json;
 
       if (evt.target === configure_button) {
         evt.preventDefault();
@@ -1226,6 +1232,19 @@
 
       if (evt.target === hide_button) {
         evt.preventDefault();
+        listbox_json = JSON.parse(gadget.state.field_json_string);
+        listbox_json.show_line_selector = true;
+        // xxx
+        console.log(gadget.state.extended_search);
+        return gadget.redirect({
+          command: 'index',
+          options: {
+            page: 'select',
+            listbox_json: JSON.stringify(listbox_json),
+            extended_search: gadget.state.extended_search
+            // "extended_search": Query.objectToSearchText(search_query)
+          }
+        });
         return gadget.changeState({
           show_line_selector: true
         });
@@ -1293,13 +1312,20 @@
           }
 
           return gadget.redirect({
-            command: 'store_and_change',
+            // command: 'store_and_change',
+            command: 'history_previous',
             options: {
               "extended_search": Query.objectToSearchText(search_query)
             }
           });
         }
-
+        return gadget.redirect({
+          // command: 'store_and_change',
+          command: 'history_previous',
+          options: {
+            "extended_search": gadget.state.extended_search
+          }
+        });
         return gadget.changeState({
           show_line_selector: false
         });
