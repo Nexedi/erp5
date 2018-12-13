@@ -612,7 +612,7 @@
       });
   }
 
-  function execHistoryPreviousCommand(gadget, previous_options, load_options, drop_options) {
+  function execHistoryPreviousCommand(gadget, previous_options, load_options) {
     var history = previous_options.history,
       jio_key = previous_options.jio_key,
       relation_index = previous_options.relation_index,
@@ -667,12 +667,7 @@
         delete options.jio_key;
 
         copyStickyParameterDict(previous_options, options);
-      //////// xxx couscous
-        return addNavigationHistoryAndDisplay(
-          gadget,
-          next_jio_key,
-          calculateChangeOptions(options, load_options, drop_options)
-        );
+        return addNavigationHistoryAndDisplay(gadget, next_jio_key, options);
       }, function (error) {
         // XXX Check if 404
         if ((error instanceof jIO.util.jIOError) &&
@@ -867,7 +862,7 @@
       return execSelectionPreviousCommand(gadget, previous_options);
     }
     if (command_options.path === COMMAND_HISTORY_PREVIOUS) {
-      return execHistoryPreviousCommand(gadget, previous_options, next_options, drop_options);
+      return execHistoryPreviousCommand(gadget, previous_options, next_options);
     }
     if (command_options.path === COMMAND_PUSH_HISTORY) {
       return execPushHistoryCommand(gadget, previous_options, next_options);
