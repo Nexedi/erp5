@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,14 +58,7 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
             </value>
         </item>
         <item>
@@ -76,8 +68,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_field_listbox.js</string> </value>
+            <value> <string>gadget_erp5_page_select.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_listbox_js</string> </value>
+            <value> <string>rjs_gadget_erp5_page_select_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -95,7 +91,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -105,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Listbox JS</string> </value>
+            <value> <string>Gadget ERP5 Select Page</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -169,7 +165,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -191,8 +187,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1406898405.51</float>
-                        <string>GMT</string>
+                        <float>1544606010.45</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -236,7 +232,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>972.18503.58983.6417</string> </value>
+                <value> <string>972.16745.13400.42205</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +250,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1544715371.37</float>
+                        <float>1544609839.71</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -281,7 +277,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -311,8 +307,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1405429753.25</float>
-                        <string>GMT</string>
+                        <float>1544005790.54</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
