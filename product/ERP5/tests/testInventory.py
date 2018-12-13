@@ -76,7 +76,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
     return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
             'erp5_configurator_standard_trade_template',
-            'erp5_apparel', 'erp5_simulation_test')
+            'erp5_apparel', 'erp5_simulation_test', 'erp5_mrp')
 
   def setUpPreferences(self):
     #create apparel variation preferences
@@ -1229,21 +1229,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
              % (repr(e_inventory), repr(a_inventory))
       LOG('TestInventory._testGetInventory', 0, msg)
       LOG('SQL Query was : ', 0, str(simulation.getInventory(src__=1, **kw)))
-      self.assertEqual(e_inventory, a_inventory, msg)
-  
-  def _testGetInventoryAssetPrice(self, expected, **kw):
-    """
-      Shared testing method
-    """
-    simulation = self.getPortal().portal_simulation
-    e_inventory = expected
-    LOG('Testing inventory with args :', 0, kw)
-    a_inventory = simulation.getInventoryAssetPrice(**kw)
-    if e_inventory != a_inventory:
-      msg = 'Inventory differs between expected (%s) and real (%s) price'\
-             % (repr(e_inventory), repr(a_inventory))
-      LOG('TestInventory._testGetInventoryAssetPrice', 0, msg)
-      LOG('SQL Query was : ', 0, str(simulation.getInventoryAssetPrice(src__=1, **kw)))
       self.assertEqual(e_inventory, a_inventory, msg)
 
 
@@ -3550,8 +3535,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     packing_list = packing_list_module.newContent(
                               portal_type=packing_list_portal_type)
  
-    if kw.get('start_date', None) is not None:
-      start_date = stop_date = kw['start_date']
+    if kw.get('at_date', None) is not None:
+      start_date = stop_date = kw['at_date']
     else:
       start_date = stop_date = DateTime() - 2
     packing_list.edit(
@@ -3573,8 +3558,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                            price = price
                           )
     sequence.edit(packing_list=packing_list)
-    return packing_list_line
-    
+
   
   def stepCreateSalePackingListToSectionNodeForFirstResource(self, sequence=None,
                                                     sequence_list=None,
@@ -3707,183 +3691,276 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def stepCreateIPLForModule(self, sequence=None, sequence_list=None, **kw):
-    node = sequence.get('node')
-    section = sequence.get('section')
-    other_node = sequence.get('other_node')
+  def stepInitialAWarehouseX(self, sequence=None, sequence_list=None, **kw):
+    #sale packing list
+    at_date = DateTime('2013/02/10 00:00:00 GMT+9')
     resource = sequence.get('resource')
-    packing_list_module = self.getPortal().getDefaultModule(
-                              portal_type='Internal Packing List')
-    packing_list = packing_list_module.newContent(
-                              portal_type='Internal Packing List')
-    start_date = stop_date = self.start_date_1
-    #same owner but different warehouse
-    packing_list.edit(
-                      specialise=self.business_process,
-                      source_section_value = section,
-                      source_value = node,
-                      destination_section_value = section,
-                      destination_value = other_node,
-                      start_date = start_date,
-                      stop_date = stop_date,
-                      price_currency = self.price_currency
-                     )
-    sequence.edit(packing_list=packing_list)
+    A = sequence.get('section')
+    X = sequence.get('node')
+    mirror_section = sequence.get('mirror_section')
+    mirror_node = sequence.get('mirror_node')
+   
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = A,
+                                 node = X,
+                                 mirror_section = mirror_section,
+                                 mirror_node = mirror_node,
+                                 resource = resource,
+                                 quantity = 100,
+                                 at_date = at_date,
+                                 packing_list = 'Sale Packing List')
 
-  def stepCreatePackingListLineWithQuantity3(self, sequence=None,
+  def stepCreateIPLFromAWarehouseXToAWarehouseYWithQuantity3(self, sequence=None, sequence_list=None, **kw):
+    A = sequence.get('section')
+    X = sequence.get('node')
+    Y = sequence.get('other_node')
+    resource = sequence.get('resource')
+    at_date = DateTime('2013/02/11 00:00:00 GMT+9')
+    
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = A,
+                                 node = Y,
+                                 mirror_section = A,
+                                 mirror_node = X,
+                                 resource = resource,
+                                 quantity = 3,
+                                 at_date = at_date,
+                                 packing_list = 'Internal Packing List')
+
+  def stepCancelIPLFromAWarehouseXToAWarehouseYWithQuantity3(self, sequence=None, sequence_list=None, **kw):
+    A = sequence.get('section')
+    X = sequence.get('node')
+    Y = sequence.get('other_node')
+    resource = sequence.get('resource')
+    at_date = DateTime('2013/02/11 02:00:00 GMT+9')
+    
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = A,
+                                 node = X,
+                                 mirror_section = A,
+                                 mirror_node = Y,
+                                 resource = resource,
+                                 quantity = 3,
+                                 at_date = at_date,
+                                 packing_list = 'Internal Packing List')
+
+  def stepCreateIPLFromAWarehouseXToAWarehouseYWithQuantity30(self, sequence=None, sequence_list=None, **kw):
+    A = sequence.get('section')
+    X = sequence.get('node')
+    Y = sequence.get('other_node')
+    resource = sequence.get('resource')
+    at_date = DateTime('2013/02/13 04:00:00 GMT+9')
+    
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = A,
+                                 node = Y,
+                                 mirror_section = A,
+                                 mirror_node = X,
+                                 resource = resource,
+                                 quantity = 30,
+                                 at_date = at_date,
+                                 packing_list = 'Internal Packing List')
+
+  def stepCancelIPLFromAWarehouseXToAWarehouseYWithQuantity30(self, sequence=None, sequence_list=None, **kw):
+    A = sequence.get('section')
+    X = sequence.get('node')
+    Y = sequence.get('other_node')
+    resource = sequence.get('resource')
+    at_date = DateTime('2013/02/14 05:00:00 GMT+9')
+    
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = A,
+                                 node = X,
+                                 mirror_section = A,
+                                 mirror_node = Y,
+                                 resource = resource,
+                                 quantity = 30,
+                                 at_date = at_date,
+                                 packing_list = 'Internal Packing List')
+    
+  def stepCreateSPLFromAWarehouseXToBWarehouseYWithQuantity30(self, sequence=None,
                                       sequence_list=None, **kw):
-    packing_list = sequence.get('packing_list')
-    resource_value = sequence.get('resource')
-    packing_list_line = packing_list.newContent(
-                  portal_type='Internal Packing List Line')
-    packing_list_line.edit(resource_value = resource_value,
-                           quantity = 3.
-                          )
-                          
-  def stepCreatePackingListLineWithQuantity_3(self, sequence=None,
+    A = sequence.get('section')
+    X = sequence.get('node')
+    B = sequence.get('other_section')
+    Y = sequence.get('other_node')
+    resource = sequence.get('resource')
+    at_date = DateTime('2013/02/14 04:00:00 GMT+9')
+
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = B,
+                                 node = Y,
+                                 mirror_section = A,
+                                 mirror_node = X,
+                                 resource = resource,
+                                 quantity = 30,
+                                 at_date = at_date,
+                                 packing_list = 'Sale Packing List')
+
+  def stepCreatePPLForCWarehouseXFromAWarehouseXWithQuantity10(self, sequence=None,
                                       sequence_list=None, **kw):
-    packing_list = sequence.get('packing_list')
-    resource_value = sequence.get('resource')
-    packing_list_line = packing_list.newContent(
-                  portal_type='Internal Packing List Line')
-    packing_list_line.edit(resource_value = resource_value,
-                           quantity = -3.
-                          )
+    resource = sequence.get('resource')
+    C = sequence.get('one_more_section')
+    X = sequence.get('node')
+    A = sequence.get('section')
+    X = sequence.get('node')
+    at_date = DateTime('2013/02/11 04:00:00 GMT+9')
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = C,
+                                 node = X,
+                                 mirror_section = A,
+                                 mirror_node = X,
+                                 resource = resource,
+                                 quantity = 10,
+                                 at_date = at_date,
+                                 packing_list = 'Purchase Packing List')
   
-  def stepCreatePackingListLineWithQuantity30(self, sequence=None,
+  def stepCancelSPLFromAWarehouseXToBWarehouseYWithQuantity30(self, sequence=None,
                                       sequence_list=None, **kw):
-    packing_list = sequence.get('packing_list')
-    resource_value = sequence.get('resource')
-    packing_list_line = packing_list.newContent(
-                  portal_type='Internal Packing List Line')
-    packing_list_line.edit(resource_value = resource_value,
-                           quantity = 30.
-                          )
+    A = sequence.get('section')
+    X = sequence.get('node')
+    B = sequence.get('other_section')
+    Y = sequence.get('other_node')
+    resource = sequence.get('resource')
+    at_date = DateTime('2013/02/14 06:00:00 GMT+9')
+
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = A,
+                                 node = X,
+                                 mirror_section = B,
+                                 mirror_node = Y,
+                                 resource = resource,
+                                 quantity = 30,
+                                 at_date = at_date,
+                                 packing_list = 'Sale Packing List')
   
-  def stepCreatePackingListLineWithQuantity_30(self, sequence=None,
+
+
+  def stepCreateProductionPFromAFactoryZToAWarehouseXWithQuantity10(self, sequence=None,
                                       sequence_list=None, **kw):
-    packing_list = sequence.get('packing_list')
-    resource_value = sequence.get('resource')
-    packing_list_line = packing_list.newContent(
-                  portal_type='Internal Packing List Line')
-    packing_list_line.edit(resource_value = resource_value,
-                           quantity = -30.
-                          )
+    A = sequence.get('section')
+    Z = sequence.get('factory')
+    X = sequence.get('node')
+    resource = sequence.get('resource')
+    at_date = DateTime('2013/02/14 08:00:00 GMT+9')
 
-  def stepCreatePackingListLineWithQuantity33(self, sequence=None,
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = A,
+                                 node = X,
+                                 mirror_section = A,
+                                 mirror_node = Z,
+                                 resource = resource,
+                                 quantity = 10,
+                                 at_date = at_date,
+                                 packing_list = 'Production Packing List')
+
+
+  def stepCreateSPLFromAWarehouseXToBWarehouseYWithQuantity24(self, sequence=None,
                                       sequence_list=None, **kw):
-    packing_list = sequence.get('packing_list')
-    resource_value = sequence.get('resource')
-    packing_list_line = packing_list.newContent(
-                  portal_type='Internal Packing List Line')
-    packing_list_line.edit(resource_value = resource_value,
-                           quantity = 33.
-                          )
-  def stepTestMultiCancelInventory(self, sequence=None,
-                                 sequence_list=None, **kw):
-    resource_value = sequence.get('resource')
-    node_value = sequence.get('node')
-    other_node_value = sequence.get('other_node')
-    section_value = sequence.get('section')
-    at_date = self.start_date_1
-    self._testGetInventory(
-      expected=67,
-      section_uid=section_value.getUid(),
-      node_uid=node_value.getUid(),
-      resource_uid=resource_value.getUid(),
-      at_date=at_date)
-    self._testGetInventory(
-      expected=33,
-      section_uid=section_value.getUid(),
-      node_uid=other_node_value.getUid(),
-      resource_uid=resource_value.getUid(),
-      at_date=at_date)
+    A = sequence.get('section')
+    X = sequence.get('node')
+    B = sequence.get('other_section')
+    Y = sequence.get('other_node')
+    resource = sequence.get('resource')
+    at_date = DateTime('2013/02/16 00:00:00 GMT+9')
+
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = B,
+                                 node = Y,
+                                 mirror_section = A,
+                                 mirror_node = X,
+                                 resource = resource,
+                                 quantity = 24,
+                                 at_date = at_date,
+                                 packing_list = 'Sale Packing List')
+
+  def stepCreatePPLForCWarehouseXFromBWarehouseYWithQuantity5(self, sequence=None, sequence_list=None, **kw):
+    C = sequence.get('one_more_section')
+    X = sequence.get('node')
+    B = sequence.get('other_section')
+    Y = sequence.get('other_node')
+    resource = sequence.get('resource')
+    at_date = DateTime('2013/02/24 00:00:00 GMT+9')
+
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = C,
+                                 node = X,
+                                 mirror_section = B,
+                                 mirror_node = Y,
+                                 resource = resource,
+                                 quantity = 5,
+                                 at_date = at_date,
+                                 packing_list = 'Purchase Packing List')
+                                 
+                               
+  def stepCreateIPLFromAWarehouseXToAWarehouseYWithQuantity33(self, sequence=None, sequence_list=None, **kw):
+    A = sequence.get('section')
+    X = sequence.get('node')
   
-  def test_20_InventoryWhenCancelInternalPackingList(self, quite=0, run=run_all_test):
-    """
-    When Company A's 33 of product G was shipped from warehouse X
-    to warehouse Y (ownership is still same, just location change)
-    in real world, an ERP5 user made many mistakes to enter the above
-    single fact and in the end he created five IPL(Internal Packing List)
-    to record the single fact.
+    Y = sequence.get('other_node')
+    resource = sequence.get('resource')
+    at_date = DateTime('2013/02/25 01:00:00 GMT+9')
 
-    IPL1 (quantity is wrong)
-      start_date 2013/Feb/10
-      source_section A       destination_section A
-      source X               destination Y
-      resource G    quantity 3
-      simulation_state 
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = A,
+                                 node = Y,
+                                 mirror_section = A,
+                                 mirror_node = X,
+                                 resource = resource,
+                                 at_date = at_date,
+                                 quantity = 33,
+                                 packing_list = 'Internal Packing List')  
+                                 
 
-    IPL2 (Cancellation of IPL1)
-      start_date 2013/Feb/10
-      source_section A       destination_section A
-      source X               destination Y
-      resource G    quantity -3
-      simulation_state delivered
+  def stepCancelPPLForCWarehouseXFromBWarehouseYWithQuantity5(self, sequence=None, sequence_list=None, **kw):
+    C = sequence.get('one_more_section')
+    X = sequence.get('node')
+    B = sequence.get('other_section')
+    Y = sequence.get('other_node')
+    resource = sequence.get('resource')
+    at_date = DateTime('2013/02/25 02:00:00 GMT+9')
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = B,
+                                 node = Y,
+                                 mirror_section = C,
+                                 mirror_node = X,
+                                 resource = resource,
+                                 quantity = 5,
+                                 at_date = at_date,
+                                 packing_list = 'Purchase Packing List')
 
-    IPL3 (He made a mistake again!)
-      start_date 2013/Feb/10
-      source_section A       destination_section A
-      source X               destination Y
-      resource H    quantity 30
-      simulation_state delivered
+  def stepCreatePPLForCWarehouseXFromBWarehouseYWithQuantity10(self, sequence=None, sequence_list=None, **kw):
+    C = sequence.get('one_more_section')
+    X = sequence.get('node')
+    B = sequence.get('other_section')
+    Y = sequence.get('other_node')
+    resource = sequence.get('resource')
+    at_date = DateTime('2013/02/26 00:00:00 GMT+9')
 
-    IPL4 (Cancellation of IPL3)
-     start_date 2013/Feb/10
-     source_section A       destination_section A
-     source X               destination Y
-     resource H    quantity -30
-     simulation_state delivered
+    self.stepCreatePackingList(sequence=sequence,
+                                 sequence_list=sequence_list,
+                                 section = C,
+                                 node = X,
+                                 mirror_section = B,
+                                 mirror_node = Y,
+                                 resource = resource,
+                                 quantity = 10,
+                                 at_date = at_date,
+                                 packing_list = 'Purchase Packing List')
 
-    IPL5 (Finally he was able to enter data correctly!)
-     start_date 2013/Feb/10
-     source_section A       destination_section A
-     source X               destination Y
-     resource G    quantity 33
-     simulation_state delivered
-    """
-    if not run: return
-    self.start_date_1 = '2013/02/10 00:00:00 GMT+9'
-    sequence_list = SequenceList()
-    sequence_string = 'CreateOrganisationsForModule \
-                       CreateNotVariatedResource \
-                       Tic \
-                       CreatePackingListAtTheDate1 \
-                       CreatePackingListLine \
-                       Tic \
-                       DeliverPackingList \
-                       Tic \
-                       CreateIPLForModule \
-                       CreatePackingListLineWithQuantity3 \
-                       Tic \
-                       DeliverPackingList \
-                       Tic \
-                       CreateIPLForModule \
-                       CreatePackingListLineWithQuantity_3 \
-                       Tic \
-                       DeliverPackingList \
-                       Tic \
-                       CreateIPLForModule \
-                       CreatePackingListLineWithQuantity30 \
-                       Tic \
-                       DeliverPackingList \
-                       Tic \
-                       CreateIPLForModule \
-                       CreatePackingListLineWithQuantity_30\
-                       Tic \
-                       DeliverPackingList \
-                       Tic \
-                       CreateIPLForModule \
-                       CreatePackingListLineWithQuantity33 \
-                       Tic \
-                       DeliverPackingList\
-                       Tic \
-                       TestMultiCancelInventory\
-                       '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-  
-  
   def stepCreateOneMoreSection(self, sequence=None,
                                  sequence_list=None, **kw):
     self.stepCreateOrganisation(sequence=sequence,
@@ -3892,273 +3969,244 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     sequence.edit(
           one_more_section = one_more_section
         )
-  
-  def stepCreateSalePackingListToA(self, sequence=None,
-                                            sequence_list=None, **kw):
-    #A
-    section = sequence.get('section')
-    node = sequence.get('node')
-    resource = sequence.get('resource')
-    self.stepCreatePackingList(sequence=sequence,
-                               sequence_list=sequence_list,
-                               section = section,
-                               node = node,
-                               resource = resource,
-                               quantity = 10,
-                               price = 100,
-                               packing_list = 'Sale Packing List')
-  
-  def stepCreatePurchasePackingListForASecond(self, sequence=None,
-                                            sequence_list=None, **kw):
-    #A
-    section = sequence.get('section')
-    node = sequence.get('node')
-    resource = sequence.get('resource')
-    self.stepCreatePackingList(sequence=sequence,
-                               sequence_list=sequence_list,
-                               section = section,
-                               node = node,
-                               resource = resource,
-                               quantity = 15,
-                               price = 200,
-                               packing_list = 'Purchase Packing List')
-  
-  def stepCreatePurchasePackingListForAThird(self, sequence=None,
-                                            sequence_list=None, **kw):
-    #A
-    section = sequence.get('section')
-    node = sequence.get('node')
-    resource = sequence.get('resource')
-    self.stepCreatePackingList(sequence=sequence,
-                               sequence_list=sequence_list,
-                               section = section,
-                               node = node,
-                               resource = resource,
-                               quantity = 20,
-                               price = 200,
-                               packing_list = 'Purchase Packing List')
-
-  def stepCreatePurchasePackingListForB(self, sequence=None,
-                                            sequence_list=None, **kw):
-    #B
-    section = sequence.get('other_section')
-    node = sequence.get('other_node')
-    resource = sequence.get('resource')
-    self.stepCreatePackingList(sequence=sequence,
-                               sequence_list=sequence_list,
-                               section = section,
-                               node = node,
-                               resource = resource,
-                               quantity = 20,
-                               price = 55,
-                               packing_list = 'Purchase Packing List')
-
-  def stepCreateSalePackingListFromAToB(self, sequence=None,
+  def stepCreateFactory(self, sequence=None,
+                                 sequence_list=None, **kw):
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    factory = sequence.get('organisation')
+    sequence.edit(
+          factory = factory
+        )
+  def stepDeliverProductionPackingList(self, sequence=None,
                                       sequence_list=None, **kw):
-    #B
-    section = sequence.get('other_section')
-    node = sequence.get('other_node')
-    resource = sequence.get('resource')
-    #A
-    mirror_section = sequence.get('section')
-    mirror_node = sequence.get('node')
-    packing_list_line_a_to_b = self.stepCreatePackingList(sequence=sequence,
-                                 sequence_list=sequence_list,
-                                 section = section,
-                                 node = node,
-                                 mirror_section = mirror_section,
-                                 mirror_node = mirror_node,
-                                 resource = resource,
-                                 quantity = 30,
-                                 packing_list = 'Sale Packing List')
-    sequence.edit(packing_list_line_a_to_b = packing_list_line_a_to_b)
+    # Switch to "started" state
+    packing_list = sequence.get('packing_list')
+    workflow_tool = self.getPortal().portal_workflow
+    workflow_tool.doActionFor(packing_list,
+                      "confirm_action", "production_packing_list_workflow")
+    self.commit()
+    # Apply tic so that the packing list is not in building state
+    self.tic() # acceptable here because this is not the job
+               # of the test to check if can do all transition
+               # without processing messages
+    workflow_tool.doActionFor(packing_list,
+                      "set_ready_action", "production_packing_list_workflow")
+    self.tic()
+    workflow_tool.doActionFor(packing_list,
+                      "start_action", "production_packing_list_workflow")
+    workflow_tool.doActionFor(packing_list,
+                      "stop_action", "production_packing_list_workflow")
+    workflow_tool.doActionFor(packing_list,
+                      "deliver_action", "production_packing_list_workflow")
 
-  def stepCreatePurchasePackingListForCFromA(self, sequence=None,
-                                      sequence_list=None, **kw):
-    #C
-    section = sequence.get('one_more_section')
-    node = sequence.get('node')
-    resource = sequence.get('resource')
-    #A
-    mirror_section = sequence.get('section')
-    mirror_node = sequence.get('node')
-    packing_list_line_a_to_c = self.stepCreatePackingList(sequence=sequence,
-                                 sequence_list=sequence_list,
-                                 section = section,
-                                 node = node,
-                                 mirror_section = mirror_section,
-                                 mirror_node = mirror_node,
-                                 resource = resource,
-                                 quantity = 10,
-                                 packing_list = 'Purchase Packing List')
-    sequence.edit(packing_list_line_a_to_c = packing_list_line_a_to_c)
-
-  def stepCreatePurchasePackingListForCFromB(self, sequence=None,
-                                      sequence_list=None, **kw):
-    #C
-    section = sequence.get('one_more_section')
-    node = sequence.get('node')
-    resource = sequence.get('resource')
-    #B
-    mirror_section = sequence.get('other_section')
-    mirror_node = sequence.get('other_node')
-    packing_list_line_b_to_c = self.stepCreatePackingList(sequence=sequence,
-                                 sequence_list=sequence_list,
-                                 section = section,
-                                 node = node,
-                                 mirror_section = mirror_section,
-                                 mirror_node = mirror_node,
-                                 resource = resource,
-                                 quantity = 5,
-                                 packing_list='Purchase Packing List')
-    sequence.edit(packing_list_line_b_to_c = packing_list_line_b_to_c)
-
-  def stepCreateSalePackingListFromCToA(self, sequence=None,
-                                      sequence_list=None, **kw):
-    #A
-    section = sequence.get('section')
-    node = sequence.get('node')
-    resource = sequence.get('resource')
-    #C
-    mirror_section = sequence.get('one_more_section')
-    mirror_node = sequence.get('node')
-    packing_list_line_c_to_a = self.stepCreatePackingList(sequence=sequence,
-                                 sequence_list=sequence_list,
-                                 section = section,
-                                 node = node,
-                                 mirror_section = mirror_section,
-                                 mirror_node = mirror_node,
-                                 resource = resource,
-                                 quantity = 2,
-                                 packing_list = 'Sale Packing List')
-    sequence.edit(packing_list_line_c_to_a = packing_list_line_c_to_a)
-
-
-  def steptestCircularMovementQuantity(self, sequence=None,
-                            sequence_list=None, **kw):
+  def stepTestMultiCancelInventory(self, sequence=None,
+                                 sequence_list=None, **kw):
     resource_value = sequence.get('resource')
-    node_value = sequence.get('node')
-    other_node_value = sequence.get('other_node')
-    section_value = sequence.get('section')
-    other_section_value = sequence.get('other_section')
-    one_more_section_value = sequence.get('one_more_section')
-    #C
+    A = sequence.get('section')
+    B = sequence.get('other_section')
+    C = sequence.get('one_more_section')
+    X = sequence.get('node')
+    Y = sequence.get('other_node')
+
     self._testGetInventory(
-      expected=13,
-      section_uid=one_more_section_value.getUid(),
-      node_uid=node_value.getUid(),
-      resource_uid=resource_value.getUid()
-      )
-    #B
-    self._testGetInventory(
-      expected=45,
-      section_uid=other_section_value.getUid(),
-      node_uid=other_node_value.getUid(),
-      resource_uid=resource_value.getUid()
-      )
-    #A
-    self._testGetInventory(
-      expected=7,
-      section_uid=section_value.getUid(),
-      node_uid=node_value.getUid(),
-      resource_uid=resource_value.getUid()
-      )
+      expected=33,
+      section_uid=A.getUid(),
+      node_uid=Y.getUid(),
+      resource_uid=resource_value.getUid())
       
-  def steptestCircularMovementPrice(self, sequence=None,
-                            sequence_list=None, **kw):
-    resource_value = sequence.get('resource')
-    node_value = sequence.get('node')
-    other_node_value = sequence.get('other_node')
-    section_value = sequence.get('section')
-    other_section_value = sequence.get('other_section')
-    one_more_section_value = sequence.get('one_more_section')
-    #C
-    self._testGetInventoryAssetPrice(
-      expected=160,
-      section_uid=one_more_section_value.getUid(),
-      node_uid=node_value.getUid(),
-      resource_uid=resource_value.getUid(),
-      valuation_method='WeightedAverage'
-      )
-    #B
-    self._testGetInventoryAssetPrice(
-      expected=129,
-      section_uid=other_section_value.getUid(),
-      node_uid=other_node_value.getUid(),
-      resource_uid=resource_value.getUid(),
-      valuation_method='WeightedAverage'
-      )
-    #A
-    self._testGetInventoryAssetPrice(
-      expected=178,
-      section_uid=section_value.getUid(),
-      node_uid=node_value.getUid(),
-      resource_uid=resource_value.getUid(),
-      valuation_method='WeightedAverage'
-      )
+    self._testGetInventory(
+      expected=43,
+      section_uid=A.getUid(),
+      node_uid=X.getUid(),
+      resource_uid=resource_value.getUid())
+
+    self._testGetInventory(
+      expected=14,
+      section_uid=B.getUid(),
+      node_uid=Y.getUid(),
+      resource_uid=resource_value.getUid())
+
+    self._testGetInventory(
+      expected=20,
+      section_uid=C.getUid(),
+      node_uid=X.getUid(),
+      resource_uid=resource_value.getUid())
     
-  def test_21_CircularMovements(self, quite=0, run=run_all_test):
+    at_date = DateTime('2013/02/15 00:00:00 GMT+9')
+
+    self._testGetInventory(
+      expected=0,
+      section_uid=A.getUid(),
+      node_uid=Y.getUid(),
+      at_date = at_date,
+      resource_uid=resource_value.getUid())
+      
+    self._testGetInventory(
+      expected=100,
+      section_uid=A.getUid(),
+      node_uid=X.getUid(),
+      at_date = at_date,
+      resource_uid=resource_value.getUid())
+
+    self._testGetInventory(
+      expected=0,
+      section_uid=B.getUid(),
+      node_uid=Y.getUid(),
+      at_date = at_date,
+      resource_uid=resource_value.getUid())
+
+    self._testGetInventory(
+      expected=10,
+      section_uid=C.getUid(),
+      node_uid=X.getUid(),
+      at_date = at_date,
+      resource_uid=resource_value.getUid())
+      
+    at_date = DateTime('2013/02/25 00:00:00 GMT+9')
+
+    self._testGetInventory(
+      expected=0,
+      section_uid=A.getUid(),
+      node_uid=Y.getUid(),
+      at_date = at_date,
+      resource_uid=resource_value.getUid())
+      
+    self._testGetInventory(
+      expected=76,
+      section_uid=A.getUid(),
+      node_uid=X.getUid(),
+      at_date = at_date,
+      resource_uid=resource_value.getUid())
+
+    self._testGetInventory(
+      expected=19,
+      section_uid=B.getUid(),
+      node_uid=Y.getUid(),
+      at_date = at_date,
+      resource_uid=resource_value.getUid())
+
+    self._testGetInventory(
+      expected=15,
+      section_uid=C.getUid(),
+      node_uid=X.getUid(),
+      at_date = at_date,
+      resource_uid=resource_value.getUid())
+
+  
+  def test_20_InventoryWhenCancelPackingList(self, quite=0, run=run_all_test):
     """
-    Owner A, warehouse X, product G, quantity 10, total price is 1000
-    Owner B, warehouse Y, product G, quantity 20, total price is 1100
-    Owner C, warehouse X, product G, quantity 0 , total price is 0
+    initial 2013/02/10 00:00:00 GMT+9:
+    A warehouse X, has product: Notvariated 100
     
-    Then, product G was moved like below:
-
-    Owner A purchased 15 of product G for the price of 3000
-    Owner A purchased 20 of product G for the price of 4000
+    2013/02/11 00:00:00 GMT+9
+    IPL 1: A warehouse X ----> A warehouse Y, quantity: 3
     
-    Owner B purchased 30 of product G from Owner A(price is determined at the end of Nov).
-    Owner C purchased 10 of product G from Owner A(price is determined at the end of Nov).
-    Owner C get 5 of product G from Owner B(price is determined at the end of Nov).
-    Owner A get 2 of product G from Owner C(price is determined at the end of Nov).
+    2013/02/11 02:00:00 GMT+9
+    cancel IPL1
+    
+    2013/02/13 04:00:00 GMT+9
+    IPL 2: A warehouse X ----> A warehouse Y, quantity: 30
+    
+    2013/02/14 04:00:00 GMT+9
+    SPL 1: A warehouse X ----> B warehouse Y, quantity: 30
+    
+    2013/02/14 05:00:00 GMT+9
+    cancel IPL2
+    
+    2013/02/11 04:00:00 GMT+9
+    PPL 1: A warehouse X ----> C warehouse X, quantity: 10
+    
+    2013/02/14 06:00:00 GMT+9
+    cancel SPL1
+    
+    2013/02/14 08:00:00 GMT+9
+    Production PL: A factory Z  ---> A warehouse X, quantity: 10
+    
+    2013/02/16 00:00:00 GMT+9
+    SPL 2: A warehouse X ----> B warehouse Y, quantity: 24
+    
+    2013/02/24 00:00:00 GMT+9
+    PPL 2: B warehouse Y ----> C warehouse X, quantity: 5
+    
+    2013/02/25 01:00:00 GMT+9
+    IPL 3: A warehouse X ----> A warehouse Y, quantity: 33
 
-    As we see in this example, product G was moved between A and B, B and
-    C, C and A, it is circulating. Then, at the end of Mouth, Price of
-    product G of Owner A depends on price of product G of owner B, this
-    kind of thing happens. (And if it is a real circulation, price can't be
-    decided, it must not happen, but theoretically it can happen.
+    2013/02/25 02:00:00 GMT+9    
+    cancel PPL 2
+    
+    2013/02/26 00:00:00 GMT+9
+    PPL 3: B warehouse Y ----> C warehouse X, quantity: 10
+
     """
     if not run: return
     sequence_list = SequenceList()
     sequence_string = 'CreateOrganisationsForModule \
                        CreateOneMoreSection \
+                       CreateFactory \
                        CreateNotVariatedResource \
                        Tic \
-                       CreateSalePackingListToA \
+                       InitialAWarehouseX \
                        Tic \
                        DeliverPackingList \
                        Tic \
-                       CreatePurchasePackingListForB \
+                       CreateIPLFromAWarehouseXToAWarehouseYWithQuantity3 \
                        Tic \
                        DeliverPackingList \
                        Tic \
-                       CreatePurchasePackingListForASecond \
+                       CancelIPLFromAWarehouseXToAWarehouseYWithQuantity3 \
+                       Tic \
                        DeliverPackingList \
                        Tic \
-                       CreatePurchasePackingListForAThird \
+                       CreateIPLFromAWarehouseXToAWarehouseYWithQuantity30 \
+                       Tic \
                        DeliverPackingList \
                        Tic \
-                       CreateSalePackingListFromAToB\
+                       CreateSPLFromAWarehouseXToBWarehouseYWithQuantity30 \
+                       Tic \
                        DeliverPackingList \
                        Tic \
-                       CreatePurchasePackingListForCFromA\
+                       CancelIPLFromAWarehouseXToAWarehouseYWithQuantity30 \
+                       Tic \
                        DeliverPackingList \
                        Tic \
-                       CreatePurchasePackingListForCFromB\
+                       CreatePPLForCWarehouseXFromAWarehouseXWithQuantity10 \
+                       Tic \
+                       DeliverPackingList\
+                       Tic \
+                       CancelSPLFromAWarehouseXToBWarehouseYWithQuantity30 \
+                       Tic \
                        DeliverPackingList \
                        Tic \
-                       CreateSalePackingListFromCToA\
+                       CreateProductionPFromAFactoryZToAWarehouseXWithQuantity10 \
+                       Tic \
+                       DeliverProductionPackingList \
+                       Tic \
+                       CreateSPLFromAWarehouseXToBWarehouseYWithQuantity24 \
+                       Tic \
                        DeliverPackingList \
                        Tic \
-                       steptestCircularMovementQuantity \
+                       CreatePPLForCWarehouseXFromBWarehouseYWithQuantity5 \
                        Tic \
-                       steptestCircularMovementPrice \
+                       DeliverPackingList \
+                       Tic \
+                       CreateIPLFromAWarehouseXToAWarehouseYWithQuantity33 \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CancelPPLForCWarehouseXFromBWarehouseYWithQuantity5 \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       CreatePPLForCWarehouseXFromBWarehouseYWithQuantity10 \
+                       Tic \
+                       DeliverPackingList \
+                       Tic \
+                       TestMultiCancelInventory\
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-
   
+ 
 
 def test_suite():
   suite = unittest.TestSuite()
