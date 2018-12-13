@@ -50,15 +50,6 @@
     .allowPublicAcquisition('updateHeader', function () {
       return;
     })
-    .allowPublicAcquisition('getUrlParameter', function (argument_list) {
-      return this.getUrlParameter.apply(this, argument_list)
-        .push(function (result) {
-          if ((result === undefined) && (argument_list[0] === 'field_listbox_sort_list:json')) {
-            return [['modification_date', 'descending']];
-          }
-          return result;
-        });
-    })
     .declareMethod("triggerSubmit", function () {
       var argument_list = arguments;
       return this.getDeclaredGadget('form_list')
@@ -119,6 +110,7 @@
                 "portal_type": [],
                 "search_column_list": column_list,
                 "sort_column_list": column_list,
+                "sort": [['modification_date', 'descending']],
                 "title": "Documents",
                 "type": "ListBox"
               }
