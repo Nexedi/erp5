@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="File" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24,6 +24,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -42,6 +43,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -62,31 +65,51 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>5e1e205815a1a2206586fc6c5347cc49</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/json</string> </value>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>data/application_sample.json</string> </value>
+            <value> <string>officejs-old-landing-v1.html</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_appstore_data_application_sample_json</string> </value>
+            <value> <string>store_officejs_landing_v1_html</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>File</string> </value>
+            <value> <string>Web Page</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>application_sample.json</string> </value>
+            <value> <string>OfficeJS Store Landing Page</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value> <string>01</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -119,6 +142,12 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -136,11 +165,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -162,7 +191,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497861289.05</float>
+                        <float>1462869676.62</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -171,7 +200,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -207,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.31168.35810.58043</string> </value>
+                <value> <string>972.19793.15063.31249</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -225,7 +254,66 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1537862969.45</float>
+                        <float>1544798597.76</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>cedric.le.ninivin</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1462869630.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
