@@ -104,23 +104,9 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 09 Jun 2016 11:45:33 +0000\n
-# XXX + fonts\n
-# images/ajax-loader.gif\n
+# generated on Mon, 28 Jan 2019 11:45:33 +0000\n
 CACHE:\n
-appstore/app/contact_manager/icon_contacts.png\n
-appstore/app/contact_manager/icon_taskmanager.png\n
-appstore/app/contact_manager/icon_text_editor.png\n
-appstore/app/contact_manager/icon_workflow2.png\n
-appstore/app/icon_contacts.png\n
-appstore/app/icon_workflow2.png\n
-appstore/app/taskman-editor.png\n
-appstore/app/taskman-spreadsheet.png\n
-appstore/app/taskman-svg.png\n
-appstore/app/taskman.png\n
-appstore/app/text_editor/icon_text_editor.png\n
-appstore/app/text_editor/icon_workflow2.png\n
-appstore/app/workflow_manager/icon_workflow2.png\n
+\n
 appstore/contest/index.html\n
 appstore/css/css.css\n
 appstore/css/extensions.css\n
@@ -147,7 +133,6 @@ appstore/data/all.json\n
 appstore/data/all_apps.json\n
 appstore/data/application_fieldlist.json\n
 appstore/data/application_sample.json\n
-appstore/data/application_sample.json.bak\n
 appstore/data/apps.json\n
 appstore/data/category.json\n
 appstore/data/category_fieldlist.json\n
@@ -355,7 +340,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.54551.8564.49527</string> </value>
+                <value> <string>973.19272.23311.6092</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -373,7 +358,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1539100352.98</float>
+                        <float>1548694049.98</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
