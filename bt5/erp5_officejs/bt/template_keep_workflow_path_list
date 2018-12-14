@@ -40,6 +40,4 @@ web_site_module/officejs_todomvc
 web_site_module/officejs_wallsearch
 web_site_module/officejs_wallsearch/**
 web_site_module/officejs_whiteboard
-web_site_module/officejs_appstore
-web_site_module/officejs_appstore/**
 web_site_module/officejs_media_player/**
