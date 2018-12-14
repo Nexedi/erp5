@@ -107,24 +107,11 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 09 Jun 2016 11:45:33 +0000\n
+# generated on Wed, 30 Jun 2019 11:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
 ${logo_list}\n
-appstore/app/contact_manager/icon_contacts.png\n
-appstore/app/contact_manager/icon_taskmanager.png\n
-appstore/app/contact_manager/icon_text_editor.png\n
-appstore/app/contact_manager/icon_workflow2.png\n
-appstore/app/icon_contacts.png\n
-appstore/app/icon_workflow2.png\n
-appstore/app/taskman-editor.png\n
-appstore/app/taskman-spreadsheet.png\n
-appstore/app/taskman-svg.png\n
-appstore/app/taskman.png\n
-appstore/app/text_editor/icon_text_editor.png\n
-appstore/app/text_editor/icon_workflow2.png\n
-appstore/app/workflow_manager/icon_workflow2.png\n
 appstore/contest/index.html\n
 appstore/css/css.css\n
 appstore/css/extensions.css\n
@@ -151,7 +138,6 @@ appstore/data/all.json\n
 appstore/data/all_apps.json\n
 appstore/data/application_fieldlist.json\n
 appstore/data/application_sample.json\n
-appstore/data/application_sample.json.bak\n
 appstore/data/apps.json\n
 appstore/data/category.json\n
 appstore/data/category_fieldlist.json\n
@@ -345,7 +331,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>P1</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -359,7 +345,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.32839.48025.22852</string> </value>
+                <value> <string>973.21680.16689.44390</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -377,7 +363,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1538057221.35</float>
+                        <float>1548838531.78</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

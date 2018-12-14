@@ -1,7 +1,7 @@
 document_module/store_officejs_*
 image_module/store_officejs_*
 portal_alarms/officejs_process_submit_software_publication
-web_page_module/officejs_old_landing_v1_html
+portal_alarms/officejs_process_update_appstore
 web_page_module/store_officejs_*
 web_site_module/application-list/store
 web_site_module/application-list/store/**
