@@ -1,3 +1,4 @@
+/*global AscCommonExcel, RSVP, Xmla, console*/
 /* jshint -W040 */
 /*
  * Copyright (c) 2017 Nexedi SA and Contributors. All Rights Reserved.
@@ -38,9 +39,8 @@
  * @param {Object} RSVP
  * @param {Xmla} Xmla
  * @param {console} console
- * @param {undefined} undefined
  */
-	function (window, RSVP, Xmla, console, undefined) {
+function (window, RSVP, Xmla, console) {
 	var cBaseFunction = AscCommonExcel.cBaseFunction;
 	var cFormulaFunctionGroup = AscCommonExcel.cFormulaFunctionGroup,
 		cElementType = AscCommonExcel.cElementType,
@@ -65,22 +65,6 @@
 	cFormulaFunctionGroup.NotRealised = cFormulaFunctionGroup.NotRealised || [];
 	cFormulaFunctionGroup.NotRealised.push(cCUBEKPIMEMBER, cCUBEMEMBERPROPERTY, cCUBERANKEDMEMBER,
 		cCUBESET, cCUBESETCOUNT);
-
-	var xmla = new Xmla({
-// 		listeners: {
-// 			events: Xmla.EVENT_ERROR,
-// 			handler: function (eventName, eventData, xmla) {
-// 				console.log(eventData.exception);
-// //        alert(
-// //          "Snap, an error occurred: " + eventData.exception.message + " (" + eventData.exception.code + ")" +
-// //          (eventData.exception.code === Xmla.Exception.HTTP_ERROR_CDE
-// //            ? "\nstatus: " + eventData.exception.data.status + "; statusText: " + eventData.exception.data.statusText
-// //            : "")
-// //        );
-// 			}
-// 		},
-		async: true
-	});
 
 	function xmla_request(func, prop) {
 		var xmla = new Xmla({async: true});
@@ -364,7 +348,7 @@
 						};
 
 
-					for (axis_id = 0; axis_id < axis_count; axis_id++) {
+					for (axis_id = 0; axis_id < axis_count; axis_id += 1) {
 						axis_array.push(dataset.getAxis(axis_id));
 					}
 
@@ -441,25 +425,25 @@
 							var ret = [],
 								uname,
 								level,
-								cached_member;
+								cached_member1;
 							while (r.hasMoreRows()) {
 								uname = r["getMemberUniqueName"]();
 								level = r["getLevelUniqueName"]();
 								// we can check cache twice because fist check
 								// only if discover by member_uname
 								if (!scheme.members.hasOwnProperty(uname)) {
-									cached_member = {
+									cached_member1 = {
 										uname: uname,
 										h: r["getHierarchyUniqueName"](),
 										level: r["getLevelUniqueName"](),
 										caption: r["getMemberCaption"](),
 										type: r["getMemberType"]()
 									};
-									scheme.members[uname] = cached_member;
+									scheme.members[uname] = cached_member1;
 								} else {
-									cached_member = scheme.members[uname];
+									cached_member1 = scheme.members[uname];
 								}
-								ret.push(cached_member);
+								ret.push(cached_member1);
 								r.nextRow();
 								if (!scheme.levels.hasOwnProperty(level)) {
 									scheme.levels[level] = discover_level(connection, scheme, level);
@@ -479,15 +463,17 @@
 				var i;
 
 				function compare(a, b) {
-					if (a.uname < b.uname)
-						return -1;
-					if (a.uname > b.uname)
-						return 1;
+					if (a.uname < b.uname) {
+                        return -1;
+					}
+					if (a.uname > b.uname) {
+                        return 1;
+					}
 					return 0;
 				}
 
 				members.sort(compare);
-				for (i = 0; i < members.length; i++) {
+				for (i = 0; i < members.length; i += 1) {
 					members[i].level_index = i;
 				}
 				scheme.levels[level] = members;
@@ -501,9 +487,8 @@
 		function check_interseption(hierarchy) {
 			if (hierarchies.hasOwnProperty(hierarchy)) {
 				throw  "The tuple is invalid because there is no intersection for the specified values.";
-			} else {
-				hierarchies[hierarchy] = 1;
 			}
+			hierarchies[hierarchy] = 1;
 		}
 
 		members.forEach(function (member) {
@@ -514,11 +499,11 @@
 							member_uname: member
 						})
 							.push(function (members) {
-								var member;
+								var m;
 								if (members.length > 0) {
-									member = members[0];
-									check_interseption(member.h);
-									return member;
+									m = members[0];
+									check_interseption(m.h);
+									return m;
 								} else {
 									throw "member not found";
 								}
@@ -608,7 +593,7 @@
 			member,
 			new_member,
 			level;
-		for (i = 0; i < arg.length; i++) {
+		for (i = 0; i < arg.length; i += 1) {
 			elem = arg[i];
 			if (cElementType.string === elem.type) {
 				member = scheme.members[elem.value];
@@ -735,25 +720,25 @@
 					ret;
 
 				function getHierarchyByMember(member_path) {
-					var h;
-					h = cube.members[member_path];
-					if (h === undefined) {
+					var hierarchy;
+					hierarchy = cube.members[member_path];
+					if (hierarchy === undefined) {
 						throw "query result not contain data for member:" +
 						member_path;
 					}
-					h = h.hierarchy;
-					h = cube.hierarchies[h];
-					return h;
+					hierarchy = hierarchy.hierarchy;
+					hierarchy = cube.hierarchies[hierarchy];
+					return hierarchy;
 				}
 
-				for (i = 0; i < cube.hierarchies.length; i++) {
+				for (i = 0; i < cube.hierarchies.length; i += 1) {
 					h = cube.hierarchies[i];
 					if (!coordinate[h.axis_id]) {
 						coordinate[h.axis_id] = [];
 					}
 					coordinate[h.axis_id][h.tuple_id] = null;
 				}
-				for (i = 0; i < members.length; i++) {
+				for (i = 0; i < members.length; i += 1) {
 					member_path = members[i];
 					h = getHierarchyByMember(members[i]);
 					coordinate[h.axis_id][h.tuple_id] = member_path;
