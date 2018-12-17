@@ -30,6 +30,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import urlparse
 import httplib
 import unittest
+import ssl
 
 LOCATION = "Location"
 WEB_SITE_ID = "bouncer"
@@ -63,11 +64,9 @@ class TestStaticWebSectionRedirection(ERP5TypeTestCase):
     website = self.portal.web_site_module.newContent(
       portal_type="Static Web Site",
       id=WEB_SITE_ID,
-      **kw
-    )
-    website.edit(
       redirect_domain="https://www.example.org",
-      use_moved_temporarily=use_moved_temporarily or 0
+      use_moved_temporarily=use_moved_temporarily or 0,
+      **kw
     )
     website.publish()
 
@@ -89,22 +88,36 @@ class TestStaticWebSectionRedirection(ERP5TypeTestCase):
     if source_path.endswith("?"):
       source_path = source_path[:-1]
 
-    _, api_netloc, _, _, _ = urlparse.urlsplit(absolute_url)
+    api_scheme, api_netloc, api_path, _, _ = urlparse.urlsplit(absolute_url)
     redirect_url = website.getLayoutProperty("redirect_domain")
     redirect_location = "/".join([redirect_url, source_path])
-    connection = httplib.HTTPConnection(api_netloc)
-    connection.request(
-      method="GET",
-      url='%s/%s' % (absolute_url, source_path)
-    )
 
-    response = connection.getresponse()
     status_to_assert = httplib.MOVED_PERMANENTLY
     if use_moved_temporarily:
       status_to_assert = httplib.FOUND
 
-    self.assertEquals(response.status, status_to_assert)
-    self.assertEquals(response.getheader(LOCATION), redirect_location)
+    api_netloc = '[ERP5_IPV6]:ERP5_PORT'
+    for url_to_check in [
+      # Direct
+      # '%s://%s/%s/%s' % (api_scheme, api_netloc, website.getPath(), source_path),
+      # direct VirtualHostMonster
+      # '%s://%s/VirtualHostBase/http/example.org:1234%s/VirtualHostRoot/%s' % (api_scheme, api_netloc, website.getPath(), source_path),
+      # not direct VirtualHostMonster
+      '%s/%s' % (absolute_url, source_path),
+      # '%s://%s/VirtualHostBase/http/example.org:1234/erp5/VirtualHostRoot/%s/%s' % (api_scheme, api_netloc, website.getRelativeUrl(), source_path),
+      # '%s://%s/VirtualHostBase/http/example.org:1234/erp5/web_site_module/VirtualHostRoot/%s/%s' % (api_scheme, api_netloc, website.getId(), source_path)
+    ]:
+
+      _, netloc_to_check, _, _, _ = urlparse.urlsplit(url_to_check)
+
+      connection = httplib.HTTPSConnection(netloc_to_check, context=ssl._create_unverified_context())
+      connection.request(
+        method="GET",
+        url=url_to_check
+      )
+      response = connection.getresponse()
+      self.assertEquals(response.status, status_to_assert, '%s: %s' % (response.status, url_to_check))
+      self.assertEquals(response.getheader(LOCATION), redirect_location)
 
   ##############################################################################
 
