@@ -16,6 +16,7 @@ inventory_list = getCurrentInventoryList(
 )
 after_tag = None
 
+#only after all calculation are finished then change report state
 for inventory in inventory_list:
   inventory_report_line = newContent(portal_type='Inventory Report Line')
   inventory_report_line.edit(
@@ -24,6 +25,8 @@ for inventory in inventory_list:
     total_quantity = inventory.total_quantity,
     total_asset_price=0
   )
+  #execute one by one to deternimate when all calculations are finished
+  #any other better solution to deternimate ? XXXXXX
   tag = '%s-%s' % (inventory_report_line.getUid(), 'InventoryReportLine_updateTotalAssetPrice')
   inventory_report_line.activate(
     after_tag = after_tag,
