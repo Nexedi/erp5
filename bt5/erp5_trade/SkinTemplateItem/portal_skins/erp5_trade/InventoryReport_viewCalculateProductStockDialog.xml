@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>InventoryReport_calculateProductStockDialog</string> </value>
+            <value> <string>InventoryReport_viewCalculateProductStockDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
