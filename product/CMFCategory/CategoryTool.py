@@ -231,11 +231,8 @@ class CategoryTool(BaseTool):
 
       try:
         relative_url = str(relative_url)
-        if base_category is not None:
+        if base_category is not None and not relative_url.startswith(base_category + '/'):
           relative_url = '%s/%s' % (base_category, relative_url)
-        relative_url = \
-        self._removeDuplicateBaseCategoryIdInCategoryPath(base_category,
-                                                                 relative_url)
         value = self.unrestrictedTraverse(relative_url)
       except (TypeError, KeyError, NotFound):
         value = None
