@@ -2,6 +2,7 @@ Business Process | Reference
 Business Process | Version
 Delivery Node | DeliveryNode
 Internal Packing List | DeliveryCausalityStateConstraint
+Inventory Report | Arrow
 Inventory Report | InventoryReport
 Purchase Packing List | DeliveryCausalityStateConstraint
 Returned Purchase Packing List | DeliveryCausalityStateConstraint
