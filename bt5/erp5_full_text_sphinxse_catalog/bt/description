@@ -1,1 +1,5 @@
+WARNING: This BT5 is experimental, and the use of erp5_full_text_mroonga_catalog is recommended for
+fulltext support, as it provides an out-of-the-box experience, and years of improvements
+based on production experience.
+
 Read http://www.erp5.org/HowToUseSphinxSE *BEFORE* installing this business template. This contains all SQL methods, scripts etc. that are required to use Sphinx Search Engine with MySQL.

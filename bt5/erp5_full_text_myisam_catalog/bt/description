@@ -1,1 +1,6 @@
+WARNING: This BT5 is deprecated in favor of erp5_full_text_mroonga_catalog which is faster (search,
+index update, etc) than MyISAM, and has a better support for non-latin languages. Also, MyISAM fulltext
+engine creates a lock on write at table level, which may create slow downs for the whole application.
+For more information about mroonga, please see http://mroonga.org/docs/characteristic.html .
+
 This business template contains SQL methods etc. to use a MySQL MyISAM table as a fulltext storage.
