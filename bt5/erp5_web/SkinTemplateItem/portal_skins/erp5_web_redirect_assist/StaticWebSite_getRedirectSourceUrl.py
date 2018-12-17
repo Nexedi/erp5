@@ -26,7 +26,7 @@ if query_string:
   redirect_url = '?'.join([redirect_url, query_string])
 if redirect_url.find(INDEX) > -1 and not redirect_url.endswith(INDEX):
   redirect_url = redirect_url.replace(INDEX, '')
-if redirect_url.find(INDEX) > -1 and REQUEST.other['actual_url'].find(INDEX) == -1:
+if redirect_url.find(INDEX) > -1 and REQUEST['ACTUAL_URL'].find(INDEX) == -1:
   redirect_url = redirect_url.replace(INDEX, '')
 
 return context.Base_redirect(redirect_url, status_code=status_code)
