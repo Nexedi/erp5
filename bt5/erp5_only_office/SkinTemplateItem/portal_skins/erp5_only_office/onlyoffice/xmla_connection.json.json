@@ -3,7 +3,7 @@
   "title": "XMLA connection",
   "type": "object",
   "properties": {
-    "url": {
+    "urls": {
       "uniqueItems": true,
       "items": {
         "format": "uri",
@@ -31,7 +31,7 @@
     }
   },
   "required": [
-    "url"
+    "urls"
   ],
   "additionalProperties": false
 }
