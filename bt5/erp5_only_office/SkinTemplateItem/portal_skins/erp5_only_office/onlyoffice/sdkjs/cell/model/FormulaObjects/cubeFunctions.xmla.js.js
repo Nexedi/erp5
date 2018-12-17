@@ -332,7 +332,7 @@ function (window, RSVP, Xmla, console) {
 					}
 					prop.statement = "SELECT " + mdx.join("*") +
 						" ON 0 FROM [" + settings["cube"] + "]";
-					return xmla_request("execute", prop);
+					return xmla_request_retry("execute", prop);
 				})
 				.push(function (dataset) {
 					var cellset = dataset.getCellset(),
