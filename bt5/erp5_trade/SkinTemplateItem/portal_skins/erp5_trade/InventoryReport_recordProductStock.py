@@ -4,6 +4,7 @@ newContent = context.newContent
 section_uid = context.getDestinationSectionUid()
 node_uid = context.getDestinationUid()
 valuation_method = context.getValuationMethod()
+relative_url = context.getRelativeUrl()
 at_date = context.getAtDate()
 
 inventory_list = getCurrentInventoryList(
@@ -14,8 +15,9 @@ inventory_list = getCurrentInventoryList(
   resourceType=portal.getPortalProductTypeList(),
   at_date = at_date
 )
-after_tag = None
 
+line_tag = '%s:lineUpdateTotalAssetPrice' % relative_url
+#only after all calculation are finished then change report state
 for inventory in inventory_list:
   inventory_report_line = newContent(portal_type='Inventory Report Line')
   inventory_report_line.edit(
@@ -24,10 +26,8 @@ for inventory in inventory_list:
     total_quantity = inventory.total_quantity,
     total_asset_price=0
   )
-  tag = '%s-%s' % (inventory_report_line.getUid(), 'InventoryReportLine_updateTotalAssetPrice')
   inventory_report_line.activate(
-    after_tag = after_tag,
-    tag = tag
+    tag = line_tag
     ).InventoryReportLine_updateTotalAssetPrice(
       section_uid = section_uid,
       node_uid = node_uid,
@@ -37,6 +37,7 @@ for inventory in inventory_list:
       at_date = at_date,
       is_accountable = 1
     )
-  after_tag = tag
 
-context.activate(after_tag=after_tag).record()
+tag = '%s:updateTotalAssetPrice' % relative_url
+context.activate(after_tag=line_tag, tag=tag).InventoryReport_updateTotalAssetPrice()
+context.activate(after_tag=tag).record()
