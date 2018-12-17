@@ -83,20 +83,35 @@ function (window, RSVP, Xmla, console) {
 			});
 	}
 
-	function xmla_request_retry(func, prop) {
-		return xmla_request(func, prop)
-			.push(undefined, function (response) {
-				// fix mondrian Internal and Sql errors
-				if (response) {
-					switch (response["code"]) {
-						case "SOAP-ENV:Server.00HSBE02":
-						case "SOAP-ENV:00UE001.Internal Error":
-							// rarely server error, so try again
-							return xmla_request(func, prop);
-					}
-				}
-				throw response;
-			});
+	function xmla_request_retry(func, settings) {
+		var queue,
+			urls = settings.urls,
+			i;
+
+		function make_request(url) {
+			return function (error) {
+				settings.prop.url = url;
+                return xmla_request(func, settings.prop)
+                    .push(undefined, function (response) {
+                        // fix mondrian Internal and Sql errors
+                        if (response) {
+                            switch (response["code"]) {
+                                case "SOAP-ENV:Server.00HSBE02":
+                                case "SOAP-ENV:00UE001.Internal Error":
+                                    // rarely server error, so try again
+                                    return xmla_request(func, settings.prop);
+                            }
+                        }
+                        throw response;
+                    });
+            };
+		}
+
+		queue = make_request(urls[0])();
+		for (i = 1; i < settings.urls.length; i += 1) {
+			queue.push(undefined, make_request(urls[i]));
+		}
+		return queue;
 	}
 
 	function discover_hierarchies(connection) {
@@ -109,7 +124,7 @@ function (window, RSVP, Xmla, console) {
 					// 'HIERARCHY_UNIQUE_NAME': hierarchy_name,
 					'CUBE_NAME': settings["cube"]
 				};
-				return xmla_request_retry("discoverMDHierarchies", prop);
+				return xmla_request_retry("discoverMDHierarchies", settings);
 			})
 			.push(function (response) {
 				var hierarchies = {},
@@ -168,9 +183,12 @@ function (window, RSVP, Xmla, console) {
                     throw "connection not exist";
                 }
                 c = value[connection];
+                if (!c.hasOwnProperty('properties')) {
+                	c.properties = {};
+				}
                 return {
+                	urls: c.urls,
                     prop: {
-                        url: c.url,
                         properties: {
                             DataSourceInfo: c.properties.DataSourceInfo,
                             Catalog: c.properties.Catalog
@@ -332,7 +350,7 @@ function (window, RSVP, Xmla, console) {
 					}
 					prop.statement = "SELECT " + mdx.join("*") +
 						" ON 0 FROM [" + settings["cube"] + "]";
-					return xmla_request_retry("execute", prop);
+					return xmla_request_retry("execute", settings);
 				})
 				.push(function (dataset) {
 					var cellset = dataset.getCellset(),
@@ -420,7 +438,7 @@ function (window, RSVP, Xmla, console) {
 				if (cached_member) {
 					return [cached_member];
 				} else {
-					return xmla_request_retry("discoverMDMembers", prop)
+					return xmla_request_retry("discoverMDMembers", settings)
 						.push(function (r) {
 							var ret = [],
 								uname,
