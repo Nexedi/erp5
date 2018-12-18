@@ -469,7 +469,8 @@
 
             field_id: options.field_id,
             extended_search: options.extended_search,
-            hide_class: options.hide_enabled ? "" : "ui-disabled",
+            // hide_class: options.hide_enabled ? "" : "ui-disabled",
+            hide_class: '',
             configure_class: options.configure_enabled ? "" : "ui-disabled",
             command: field_json.command || 'index',
 
@@ -614,8 +615,9 @@
             return RSVP.all([
               gadget.getUrlForList(url_for_option_list),
               is_sortable_list,
-              gadget.getTranslationList(['Jump', 'Include', 'Exclude',
-                                         'Select', 'Configure', 'Sort'])
+              gadget.getTranslationList(['Jump',// 'Include', 'Exclude',
+                                         'Select', 'Configure', 'Sort',
+                                         'Cancel'])
             ]);
           })
           .push(function (result_list) {
@@ -647,7 +649,7 @@
             div_element.appendChild(h1_element);
 
             if (gadget.state.show_line_selector) {
-
+              /*
               // Add include button
               // <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}"></button>
               button_element = document.createElement('button');
@@ -667,6 +669,18 @@
               button_element.setAttribute('class', 'ui-icon-low-vision ui-btn-icon-left ' + gadget.state.hide_class);
               button_element.textContent = translation_list[2];
               div_element.appendChild(button_element);
+              */
+
+              // Add cancel button
+              // <button data-rel="cancel" data-i18n="Cancel" name="ExcludeRows" type="button" class="ui-icon-times ui-btn-icon-left {{hide_class}}"></button>
+              button_element = document.createElement('button');
+              button_element.setAttribute('data-rel', 'hide');
+              button_element.setAttribute('name', 'CancelSelect');
+              button_element.type = 'button';
+              button_element.setAttribute('class', 'ui-icon-times ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.textContent = translation_list[4];
+              div_element.appendChild(button_element);
+
             } else {
 
               // Add Select button
@@ -677,7 +691,7 @@
               button_element.setAttribute('name', 'Hide');
               button_element.type = 'button';
               button_element.setAttribute('class', 'ui-icon-check-square-o ui-btn-icon-left ' + gadget.state.hide_class);
-              button_element.textContent = translation_list[3];
+              button_element.textContent = translation_list[1];
               div_element.appendChild(button_element);
 
               // Add Configure button
@@ -688,7 +702,7 @@
               button_element.setAttribute('name', 'Configure');
               button_element.type = 'button';
               button_element.setAttribute('class', 'ui-icon-wrench ui-btn-icon-left ' + gadget.state.configure_class);
-              button_element.textContent = translation_list[4];
+              button_element.textContent = translation_list[2];
               div_element.appendChild(button_element);
 
               // Add Sort button
@@ -699,7 +713,7 @@
               button_element.setAttribute('name', 'Sort');
               button_element.type = 'button';
               button_element.setAttribute('class', 'ui-icon-sort-amount-desc ui-btn-icon-left ' + gadget.state.sort_class);
-              button_element.textContent = translation_list[5];
+              button_element.textContent = translation_list[3];
               div_element.appendChild(button_element);
             }
             fragment.appendChild(div_element);
@@ -1198,6 +1212,7 @@
         configure_button = gadget.element.querySelector('button[name="Configure"]'),
         include_button = gadget.element.querySelector('button[name="IncludeRows"]'),
         exclude_button = gadget.element.querySelector('button[name="ExcludeRows"]'),
+        cancel_select_button = gadget.element.querySelector('button[name="CancelSelect"]'),
         url,
         options = {},
         all_hide_element_list,
@@ -1231,6 +1246,13 @@
         });
       }
 
+      if (evt.target === cancel_select_button) {
+        evt.preventDefault();
+        return gadget.changeState({
+          show_line_selector: false
+        });
+      }
+/*
       if ((evt.target === include_button) || (evt.target === exclude_button)) {
         evt.preventDefault();
 
@@ -1305,7 +1327,7 @@
         });
 
       }
-
+*/
     }, false, false)
 
     .declareService(function enableButton() {
