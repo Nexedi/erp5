@@ -43,7 +43,7 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
   def getBusinessTemplateList(self):
     """
     """
-    return super(TestInventoryReportModule, self).getBusinessTemplateList() + ('erp5_accounting',)
+    return super(TestInventoryReportModule, self).getBusinessTemplateList() + ('erp5_accounting', 'erp5_mrp',)
   
 
   def getTitle(self):
@@ -169,9 +169,27 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
           organisation_euro = organisation_euro
         )
   
+  
+  def stepCreateTwoWarehouse(self, sequence=None,
+                                    sequence_list=None, **kw):
+  
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    warehouseA = sequence.get('organisation')
+    
+    self.stepCreateOrganisation(sequence=sequence,
+                        sequence_list=sequence_list, **kw)
+    warehouseB = sequence.get('organisation')
+    
+    sequence.edit(
+      warehouseA = warehouseA,
+      warehouseB = warehouseB
+    )
+  
+  
   def stepCreateSalesPackingListRMBToEURO(self, sequence=None,
                                             sequence_list = None, **kw):
-    self.stepCreateSalesPackingList(
+    self.stepCreatePackingList(
       sequence=sequence,
       sequence_list= sequence_list,
       source = sequence.get('organisation_rmb'),
@@ -180,11 +198,12 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
       price = 50,
       create_line = True,
       at_date = DateTime('2018/06/11 00:00:00 GMT+0'),
-      price_currency = sequence.get('rmb'))
+      price_currency = sequence.get('rmb'),
+      packing_list_type = 'Sale Packing List')
       
   def stepCreateSalesPackingListEUROToUSD(self, sequence=None,
                                             sequence_list = None, **kw):
-    self.stepCreateSalesPackingList(
+    self.stepCreatePackingList(
       sequence=sequence,
       sequence_list= sequence_list,
       source = sequence.get('organisation_euro'),
@@ -193,13 +212,14 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
       price = 50,
       create_line = True,
       at_date = DateTime('2018/06/11 05:00:00 GMT+0'),
-      price_currency = sequence.get('euro'))
+      price_currency = sequence.get('euro'),
+      packing_list_type = 'Sale Packing List')
 
 
 
   def stepCreatePurchasePackingListFromRMBToEURO(self, sequence=None,
                                                    sequence_list=None, **kw):
-    self.stepCreatePurchasePackingList(
+    self.stepCreatePackingList(
       sequence=sequence,
       sequence_list= sequence_list,
       source = sequence.get('organisation_rmb'),
@@ -208,11 +228,12 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
       price = 80,
       create_line = True,
       at_date = DateTime('2018/06/11 02:00:00 GMT+0'),
-      price_currency = sequence.get('rmb'))
+      price_currency = sequence.get('rmb'),
+      packing_list_type = 'Purchase Packing List')
 
   def stepCreatePurchasePackingListFromEUROToUSD(self, sequence=None,
                                                    sequence_list=None, **kw):
-    self.stepCreatePurchasePackingList(
+    self.stepCreatePackingList(
       sequence=sequence,
       sequence_list= sequence_list,
       source = sequence.get('organisation_euro'),
@@ -221,98 +242,134 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
       price = 123,
       create_line = True,
       at_date = DateTime('2018/06/11 03:00:00 GMT+0'),
-      price_currency = sequence.get('euro'))
+      price_currency = sequence.get('euro'),
+      packing_list_type = 'Purchase Packing List')
+
+  def stepCreateProductionPackingListFromEUROWarehouseAToEuroWarehouseB(self, sequence=None,
+                                                            sequence_list=None, **kw):
+    self.stepCreatePackingList(
+      sequence=sequence,
+      sequence_list= sequence_list,
+      source_section = sequence.get('organisation_euro'),
+      source = sequence.get('warehouseA'),
+      destination_section = sequence.get('organisation_euro'),
+      destination = sequence.get('warehouseB'),
+      quantity = 50,
+      price = 50,
+      create_line = True,
+      at_date = DateTime('2018/06/12 00:00:00 GMT+0'),
+      price_currency = sequence.get('euro'),
+      packing_list_type = 'Production Packing List')
+  
+  def stepCreateInternalPackingListFromEUROWarehouseEuroToEuroWarehouseB(self, sequence=None,
+                                                            sequence_list=None, **kw):
+    self.stepCreatePackingList(
+      sequence=sequence,
+      sequence_list= sequence_list,
+      source_section = sequence.get('organisation_euro'),
+      source = sequence.get('organisation_euro'),
+      destination_section = sequence.get('organisation_euro'),
+      destination = sequence.get('warehouseB'),
+      quantity = 14,
+      price = 16,
+      create_line = True,
+      at_date = DateTime('2018/06/13 00:00:00 GMT+0'),
+      price_currency = sequence.get('euro'),
+      packing_list_type = 'Internal Packing List')
+
 
   def stepCreateSalesPackingListEUROToRMB(self, sequence=None,
                                             sequence_list = None, **kw):
-    self.stepCreateSalesPackingList(
+    self.stepCreatePackingList(
       sequence=sequence,
       sequence_list= sequence_list,
       source = sequence.get('organisation_euro'),
       destination = sequence.get('organisation_rmb'),
       create_line = False,
       at_date = DateTime('2018/06/11 04:00:00 GMT+0'),
-      price_currency = sequence.get('euro'))
+      price_currency = sequence.get('euro'),
+      packing_list_type = 'Sale Packing List')
       
   def stepCreateSalesPackingListRMBToUSD(self, sequence=None,
                                             sequence_list = None, **kw):
-    self.stepCreateSalesPackingList(
+    self.stepCreatePackingList(
       sequence=sequence,
       sequence_list= sequence_list,
       source = sequence.get('organisation_rmb'),
       destination = sequence.get('organisation_dollar'),
       create_line = False,
       at_date = DateTime('2018/06/11 05:00:00 GMT+0'),
-      price_currency = sequence.get('rmb'))
+      price_currency = sequence.get('rmb'),
+      packing_list_type='Sale Packing List')
   
 
   def stepCreatePurchasePackingListFromUSDToRMB(self, sequence=None,
                                                    sequence_list=None, **kw):
-    self.stepCreatePurchasePackingList(
+    self.stepCreatePackingList(
       sequence=sequence,
       sequence_list= sequence_list,
       source = sequence.get('organisation_dollar'),
       destination = sequence.get('organisation_rmb'),
       create_line = False,
       at_date = DateTime('2018/07/11 03:00:00 GMT+0'),
-      price_currency = sequence.get('dollar'))
+      price_currency = sequence.get('dollar'),
+      packing_list_type='Purchase Packing List')
 
 
-  def stepCreateVariatedPurchasePackingListLine(self, sequence=None, sequence_list=None, **kw):
-    resource_list = sequence.get('resource_list')
-    packing_list = sequence.get('packing_list')
-    #create with last resource
-    packing_list_line = packing_list.newContent(
-                  portal_type='Purchase Packing List Line')
-    packing_list_line.edit(resource_value = resource_list[-1])
-    
-    resource_vcl = list(resource_list[-1].getVariationCategoryList(
-        omit_individual_variation=1, omit_optional_variation=1))
-    resource_vcl.sort()
-    self.assertEqual(len(resource_vcl),2)
-    packing_list_line.setVariationCategoryList(resource_vcl)
-    cell_key_list = list(packing_list_line.getCellKeyList(base_id='movement'))
-    price = 32
-    quantity = 134
-    for cell_key in cell_key_list:
-      cell = packing_list_line.newCell(base_id='movement',
-                                portal_type='Purchase Packing List Cell',
-                                *cell_key)
-      cell.edit(mapped_value_property_list=['price','quantity'],
-                price=price, quantity=quantity,
-                predicate_category_list=cell_key,
-                variation_category_list=cell_key,)
-      price += 1
-      quantity += 1
-    sequence.edit(packing_list=packing_list)
-  
-  
+  def stepCreateInternalPackingListFromEUROWarehouseEuroToEuroWarehouseB1(self, sequence=None,
+                                                            sequence_list=None, **kw):
+    self.stepCreatePackingList(
+      sequence=sequence,
+      sequence_list= sequence_list,
+      source_section = sequence.get('organisation_euro'),
+      source = sequence.get('organisation_euro'),
+      destination_section = sequence.get('organisation_euro'),
+      destination = sequence.get('warehouseB'),
+      create_line = False,
+      at_date = DateTime('2018/08/01 04:00:00 GMT+0'),
+      price_currency = sequence.get('euro'),
+      packing_list_type = 'Internal Packing List')
 
-  def stepCreatePurchasePackingList(self, sequence=None, sequence_list=None, **kw):
-    organisation_rmb = sequence.get('organisation_rmb')
-    organisation_dollar = sequence.get('organisation_dollar')
-    organisation_euro = sequence.get('organisation_euro')
+  def stepCreateProductionPackingListFromEUROWarehouseAToEuroWarehouseB1(self, sequence=None,
+                                                            sequence_list=None, **kw):
+    self.stepCreatePackingList(
+      sequence=sequence,
+      sequence_list= sequence_list,
+      source_section = sequence.get('organisation_euro'),
+      source = sequence.get('warehouseA'),
+      destination_section = sequence.get('organisation_euro'),
+      destination = sequence.get('warehouseB'),
+      create_line = False,
+      at_date = DateTime('2018/08/02 04:00:00 GMT+0'),
+      price_currency = sequence.get('euro'),
+      packing_list_type = 'Production Packing List')
+
+  def stepCreatePackingList(self, sequence=None, sequence_list=None, **kw):
     resource_list = sequence.get('resource_list')
     quantity = kw.get('quantity', 100)
     price = kw.get('price', 100)
     price_currency = kw.get('price_currency')
     create_line = kw.get('create_line', False)
     at_date = kw.get('at_date', DateTime())
-    
+    packing_list_type = kw.get('packing_list_type')
     source = kw.get('source')
     destination = kw.get('destination')
     
+    source_section=kw.get('source_section', source)
+    destination_section=kw.get('destination_section', destination)
+    
+    
     packing_list_module = self.getPortal().getDefaultModule(
-                              portal_type='Purchase Packing List')
+                              portal_type=packing_list_type)
     packing_list = packing_list_module.newContent(
-                              portal_type='Purchase Packing List')
+                              portal_type=packing_list_type)
 
     start_date = stop_date = at_date
     packing_list.edit(
                       specialise=self.business_process,
-                      source_section_value = source,
+                      source_section_value = source_section,
                       source_value = source,
-                      destination_section_value = destination,
+                      destination_section_value = destination_section,
                       destination_value = destination,
                       start_date = start_date,
                       stop_date = stop_date,
@@ -321,64 +378,47 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
     #create with last resource
     if create_line:
       packing_list_line = packing_list.newContent(
-                    portal_type='Purchase Packing List Line')
+                    portal_type=packing_list_type + ' Line')
       packing_list_line.edit(resource_value = resource_list[-1],
                              quantity = quantity,
                              price = price
                             )
     sequence.edit(packing_list=packing_list)
-  
-  
-  
-  
-  
-  def stepCreateSalesPackingList(self, sequence=None, sequence_list=None, **kw):
-    organisation_rmb = sequence.get('organisation_rmb')
-    organisation_dollar = sequence.get('organisation_dollar')
-    organisation_euro = sequence.get('organisation_euro')
-    resource_list = sequence.get('resource_list')
-    quantity = kw.get('quantity', 100)
-    price = kw.get('price', 100)
-    price_currency = kw.get('price_currency')
-    create_line = kw.get('create_line', False)
-    at_date = kw.get('at_date', DateTime())
-    
-    source = kw.get('source')
-    destination = kw.get('destination')
-    
-    packing_list_module = self.getPortal().getDefaultModule(
-                              portal_type='Sale Packing List')
-    packing_list = packing_list_module.newContent(
-                              portal_type='Sale Packing List')
 
-    start_date = stop_date = at_date
-    packing_list.edit(
-                      specialise=self.business_process,
-                      source_section_value = source,
-                      source_value = source,
-                      destination_section_value = destination,
-                      destination_value = destination,
-                      start_date = start_date,
-                      stop_date = stop_date,
-                      price_currency = price_currency.getRelativeUrl()
-                     )
-    #create with last resource
-    if create_line:
-      packing_list_line = packing_list.newContent(
-                    portal_type='Sale Packing List Line')
-      packing_list_line.edit(resource_value = resource_list[-1],
-                             quantity = quantity,
-                             price = price
-                            )
-    sequence.edit(packing_list=packing_list)
-  
-  
+
   def stepCreateVariatedSalesPackingListLine(self, sequence=None, sequence_list=None, **kw):
+    self.stepCreateVariatedPackingListLine(
+      sequence= sequence,
+      sequence_list=sequence_list,
+      packing_list_type='Sale Packing List')
+  
+  def stepCreateVariatedPurchasePackingListLine(self, sequence=None, sequence_list=None, **kw):
+    self.stepCreateVariatedPackingListLine(
+      sequence= sequence,
+      sequence_list=sequence_list,
+      packing_list_type='Purchase Packing List',
+      quantity= 134,
+      price=32)
+    
+  def stepCreateVariatedInternalPackingListLine(self, sequence=None, sequence_list=None, **kw):
+    self.stepCreateVariatedPackingListLine(
+      sequence= sequence,
+      sequence_list=sequence_list,
+      packing_list_type='Internal Packing List')
+  
+  def stepCreateVariatedProductionPackingListLine(self, sequence=None, sequence_list=None, **kw):
+    self.stepCreateVariatedPackingListLine(
+      sequence= sequence,
+      sequence_list=sequence_list,
+      packing_list_type='Production Packing List')
+
+  def stepCreateVariatedPackingListLine(self, sequence=None, sequence_list=None, **kw):
     resource_list = sequence.get('resource_list')
     packing_list = sequence.get('packing_list')
     #create with last resource
+    packing_list_type = kw.get('packing_list_type')
     packing_list_line = packing_list.newContent(
-                  portal_type='Sale Packing List Line')
+                  portal_type=packing_list_type + ' Line')
     packing_list_line.edit(resource_value = resource_list[-1])
     
     resource_vcl = list(resource_list[-1].getVariationCategoryList(
@@ -387,11 +427,11 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
     self.assertEqual(len(resource_vcl),2)
     packing_list_line.setVariationCategoryList(resource_vcl)
     cell_key_list = list(packing_list_line.getCellKeyList(base_id='movement'))
-    price = 50
-    quantity = 200
+    price = kw.get('price', 50)
+    quantity = kw.get('quantity', 200)
     for cell_key in cell_key_list:
       cell = packing_list_line.newCell(base_id='movement',
-                                portal_type='Sale Packing List Cell',
+                                portal_type=packing_list_type +' Cell',
                                 *cell_key)
       cell.edit(mapped_value_property_list=['price','quantity'],
                 price=price, quantity=quantity,
@@ -448,8 +488,8 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
 
     inventory_report = self.getInventoryReportModule().newContent(portal_type='Inventory Report')
     inventory_report.edit(
-      destination_value = sequence.get('organisation_euro'),
       destination_section_value = sequence.get('organisation_euro'),
+      destination_value = sequence.get('warehouseB'),
       valuation_method = 'Fifo'
     )
     self.tic()
@@ -458,12 +498,37 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
     inventory_report_line_list = inventory_report.contentValues(portal_type='Inventory Report Line')
     self.assertEqual(len(inventory_report_line_list), 3)
     inventory_report_line_list.sort(key=lambda x: x.total_quantity)
+    self.assertEqual(inventory_report_line_list[0].total_quantity, 50+14)
+    self.assertEqual(inventory_report_line_list[0].total_asset_price, 50*50 + 14*16)
+    self.assertEqual(inventory_report_line_list[1].total_quantity, 200*2)
+    self.assertEqual(inventory_report_line_list[1].total_asset_price, 200*50*2)
+    self.assertEqual(inventory_report_line_list[2].total_quantity, 201*2)
+    self.assertEqual(inventory_report_line_list[2].total_asset_price, 201*51*2)
+
+
+
+    inventory_report = self.getInventoryReportModule().newContent(portal_type='Inventory Report')
+    inventory_report.edit(
+      destination_value = sequence.get('organisation_euro'),
+      destination_section_value = sequence.get('organisation_euro'),
+      valuation_method = 'Fifo'
+    )
+    self.tic()
+    inventory_report.InventoryReport_calculateProductStock(batch_mode=True)
+    self.tic()
+    inventory_report_line_list = inventory_report.contentValues(portal_type='Inventory Report Line')
+    self.assertEqual(len(inventory_report_line_list), 5)
+    inventory_report_line_list.sort(key=lambda x: x.total_quantity)
     self.assertEqual(inventory_report_line_list[0].total_quantity, -201)
     self.assertEqual(inventory_report_line_list[0].total_asset_price, 0)
-    self.assertEqual(inventory_report_line_list[1].total_quantity, -200)
+    self.assertEqual(inventory_report_line_list[1].total_quantity, -201)
     self.assertEqual(inventory_report_line_list[1].total_asset_price, 0)
-    self.assertEqual(inventory_report_line_list[2].total_quantity, 45)
-    self.assertAlmostEqual(inventory_report_line_list[2].total_asset_price, 45*80*0.13)
+    self.assertEqual(inventory_report_line_list[2].total_quantity, -200)
+    self.assertEqual(inventory_report_line_list[2].total_asset_price, 0)
+    self.assertEqual(inventory_report_line_list[3].total_quantity, -200)
+    self.assertEqual(inventory_report_line_list[3].total_asset_price, 0)
+    self.assertEqual(inventory_report_line_list[4].total_quantity, 45-14)
+    self.assertAlmostEqual(inventory_report_line_list[4].total_asset_price, (45-14)*80*0.13)
     
     
     inventory_report = self.getInventoryReportModule().newContent(portal_type='Inventory Report')
@@ -476,14 +541,18 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
     inventory_report.InventoryReport_calculateProductStock(batch_mode=True)
     self.tic()
     inventory_report_line_list = inventory_report.contentValues(portal_type='Inventory Report Line')
-    self.assertEqual(len(inventory_report_line_list), 3)
+    self.assertEqual(len(inventory_report_line_list), 5)
     inventory_report_line_list.sort(key=lambda x: x.total_quantity)
     self.assertEqual(inventory_report_line_list[0].total_quantity, -201)
     self.assertEqual(inventory_report_line_list[0].total_asset_price, 0)
-    self.assertEqual(inventory_report_line_list[1].total_quantity, -200)
+    self.assertEqual(inventory_report_line_list[1].total_quantity, -201)
     self.assertEqual(inventory_report_line_list[1].total_asset_price, 0)
-    self.assertEqual(inventory_report_line_list[2].total_quantity, 45)
-    self.assertAlmostEqual(inventory_report_line_list[2].total_asset_price, 45*50*0.13)
+    self.assertEqual(inventory_report_line_list[2].total_quantity, -200)
+    self.assertEqual(inventory_report_line_list[2].total_asset_price, 0)
+    self.assertEqual(inventory_report_line_list[3].total_quantity, -200)
+    self.assertEqual(inventory_report_line_list[3].total_asset_price, 0)
+    self.assertEqual(inventory_report_line_list[4].total_quantity, 45-14)
+    self.assertAlmostEqual(inventory_report_line_list[4].total_asset_price, (45-14)*50*0.13)
 
     inventory_report = self.getInventoryReportModule().newContent(portal_type='Inventory Report')
     inventory_report.edit(
@@ -495,15 +564,19 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
     inventory_report.InventoryReport_calculateProductStock(batch_mode=True)
     self.tic()
     inventory_report_line_list = inventory_report.contentValues(portal_type='Inventory Report Line')
-    self.assertEqual(len(inventory_report_line_list), 3)
+    self.assertEqual(len(inventory_report_line_list), 5)
     inventory_report_line_list.sort(key=lambda x: x.total_quantity)
     self.assertEqual(inventory_report_line_list[0].total_quantity, -201)
     self.assertEqual(inventory_report_line_list[0].total_asset_price, 0)
-    self.assertEqual(inventory_report_line_list[1].total_quantity, -200)
+    self.assertEqual(inventory_report_line_list[1].total_quantity, -201)
     self.assertEqual(inventory_report_line_list[1].total_asset_price, 0)
-    self.assertEqual(inventory_report_line_list[2].total_quantity, 45)
-    #45*(80*80 + 50*50)/(80 + 50)*0.13,
-    self.assertAlmostEqual(inventory_report_line_list[2].total_asset_price, 400.5)
+    self.assertEqual(inventory_report_line_list[2].total_quantity, -200)
+    self.assertEqual(inventory_report_line_list[2].total_asset_price, 0)
+    self.assertEqual(inventory_report_line_list[3].total_quantity, -200)
+    self.assertEqual(inventory_report_line_list[3].total_asset_price, 0)
+    self.assertEqual(inventory_report_line_list[4].total_quantity, 45-14)
+    #(45-14)*(80*80 + 50*50)/(80 + 50)*0.13
+    self.assertAlmostEqual(inventory_report_line_list[4].total_asset_price, 275.9)
 
 
     inventory_report = self.getInventoryReportModule().newContent(portal_type='Inventory Report')
@@ -516,15 +589,19 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
     inventory_report.InventoryReport_calculateProductStock(batch_mode=True)
     self.tic()
     inventory_report_line_list = inventory_report.contentValues(portal_type='Inventory Report Line')
-    self.assertEqual(len(inventory_report_line_list), 3)
+    self.assertEqual(len(inventory_report_line_list), 5)
     inventory_report_line_list.sort(key=lambda x: x.total_quantity)
     self.assertEqual(inventory_report_line_list[0].total_quantity, -201)
     self.assertEqual(inventory_report_line_list[0].total_asset_price, 0)
-    self.assertEqual(inventory_report_line_list[1].total_quantity, -200)
+    self.assertEqual(inventory_report_line_list[1].total_quantity, -201)
     self.assertEqual(inventory_report_line_list[1].total_asset_price, 0)
-    self.assertEqual(inventory_report_line_list[2].total_quantity, 45)
-    #45*(80*80 + 50*50)/(80 + 50)*0.13
-    self.assertAlmostEqual(inventory_report_line_list[2].total_asset_price, 400.5)
+    self.assertEqual(inventory_report_line_list[2].total_quantity, -200)
+    self.assertEqual(inventory_report_line_list[2].total_asset_price, 0)
+    self.assertEqual(inventory_report_line_list[3].total_quantity, -200)
+    self.assertEqual(inventory_report_line_list[3].total_asset_price, 0)
+    self.assertEqual(inventory_report_line_list[4].total_quantity, 45-14)
+    #(45-14)*(80*80 + 50*50)/(80 + 50)*0.13
+    self.assertAlmostEqual(inventory_report_line_list[4].total_asset_price, 275.9)
     
     inventory_report = self.getInventoryReportModule().newContent(portal_type='Inventory Report')
     inventory_report.edit(
@@ -693,6 +770,12 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
     2018/06/11 05:00:00 GMT+0
     organisation_euro ---> organisation_dollar sale packing list, quantity: 50, price: 50 euro, product: notvariatedresource
     
+    2018/06/12 00:00:00 GMT+0
+    organisation_euro warehouseA ---> organisation_euro warehouseB production packing list, quantity: 50, price: 50 euro, product: notvariatedresource
+    
+    2018/06/13 00:00:00 GMT+0
+    organisation_euro organisation_euro ---> organisation_euro warehouseB internal packing list, quantity: 14, price: 16 euro, product: notvariatedresource
+  
     2018/06/11 04:00:00 GMT+0
     organisation_euro ---> organisation_rmb sale packing list, quantity: 200, price: 50 euro, product: variatedresourceA Child/32
     organisation_euro ---> organisation_rmb sale packing list, quantity: 201, price: 51 euro, product: variatedresourceA Child/34
@@ -704,6 +787,17 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
     2018/07/11 03:00:00 GMT+0
     organisation_dollar ---> organisation_rmb purchase packing list, quantity: 134, price: 32 dollar, product: variatedresourceB child/32
     organisation_dollar ---> organisation_rmb purchase packing list, quantity: 135, price: 33 dollar, product: variatedresourceB child/34
+    
+    
+    2018/08/01 04:00:00 GMT+0
+    organisation_euro organisation_euro ---> organisation_euro warehouseB internal packing list, quantity: 200, price: 50 euro, product: variatedresourceA Child/32
+    organisation_euro organisation_euro ---> organisation_euro warehouseB internal packing list, quantity: 201, price: 51 euro, product: variatedresourceA Child/32
+    
+    2018/08/02 04:00:00 GMT+0
+    organisation_euro warehouseA ---> organisation_euro warehouseB production packing list, quantity: 200, price: 50 euro, product: variatedresourceA Child/32
+    organisation_euro warehouseA ---> organisation_euro warehouseB production packing list, quantity: 201, price: 51 euro, product: variatedresourceA Child/32
+
+
     """
     if not run: return
     sequence_list = SequenceList()
@@ -711,6 +805,7 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
                        stepCreateThreeCurrencys \
                        stepSetResourceUnit \
                        stepCreateThreeOrganisations \
+                       stepCreateTwoWarehouse \
                        stepTic \
                        stepCreateSalesPackingListRMBToEURO \
                        stepDeliverPackingList \
@@ -722,6 +817,12 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
                        stepDeliverPackingList \
                        stepTic \
                        stepCreatePurchasePackingListFromEUROToUSD \
+                       stepDeliverPackingList \
+                       stepTic \
+                       stepCreateProductionPackingListFromEUROWarehouseAToEuroWarehouseB \
+                       stepDeliverPackingList \
+                       stepTic \
+                       stepCreateInternalPackingListFromEUROWarehouseEuroToEuroWarehouseB \
                        stepDeliverPackingList \
                        stepTic \
                        stepCreateVariatedResource \
@@ -740,6 +841,14 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
                        stepTic \
                        stepCreatePurchasePackingListFromUSDToRMB \
                        stepCreateVariatedPurchasePackingListLine \
+                       stepDeliverPackingList \
+                       stepTic \
+                       stepCreateInternalPackingListFromEUROWarehouseEuroToEuroWarehouseB1 \
+                       stepCreateVariatedInternalPackingListLine \
+                       stepDeliverPackingList \
+                       stepTic \
+                       stepCreateProductionPackingListFromEUROWarehouseAToEuroWarehouseB1 \
+                       stepCreateVariatedProductionPackingListLine \
                        stepDeliverPackingList \
                        stepTic \
                        stepTestCalculateProduct \
