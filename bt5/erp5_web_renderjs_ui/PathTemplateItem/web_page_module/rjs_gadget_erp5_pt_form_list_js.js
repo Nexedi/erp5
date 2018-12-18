@@ -1,6 +1,8 @@
-/*global window, rJS, RSVP, calculatePageTitle */
+/*global window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
+         Query, QueryFactory */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle) {
+(function (window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
+           Query, QueryFactory) {
   "use strict";
 
   rJS(window)
@@ -12,6 +14,7 @@
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
@@ -182,6 +185,91 @@
           return gadget.redirect({command: 'store_and_change', options: options});
         });
 
-    }, false, true);
+    }, false, true)
 
-}(window, rJS, RSVP, calculatePageTitle));
+    // Handle listbox custom button
+    .allowPublicAcquisition("getListboxSelectActionList", function getListboxSelectActionList() {
+      return this.getTranslationList(['Include', 'Exclude'])
+        .push(function (result_list) {
+          return [{
+            title: result_list[0],
+            icon: 'eye',
+            action: 'include'
+          }, {
+            title: result_list[1],
+            icon: 'low-vision',
+            action: 'exclude'
+          }];
+        });
+    })
+
+    .allowPublicAcquisition("triggerListboxSelectAction", function triggerListboxSelectAction(argument_list) {
+      var action = argument_list[0],
+        uid_list = argument_list[1],
+        gadget = this,
+        i,
+        search_query,
+        query_list = [];
+      if ((action === 'include') || (action === 'exclude')) {
+        for (i = 0; i < uid_list.length; i += 1) {
+          query_list.push(new SimpleQuery({
+            key: "catalog.uid",
+            type: "simple",
+            operator: (action === 'include') ? "=" : "!=",
+            value: uid_list[i]
+          }));
+        }
+        if (gadget.state.extended_search) {
+          search_query = QueryFactory.create(gadget.state.extended_search);
+        }
+        if (action === 'include') {
+          // Lines must match the existing query and be one of the selected
+          // line. Which means that is user change the query, one of the
+          // selected line could disappear.
+          if (search_query) {
+            search_query = new ComplexQuery({
+              operator: "AND",
+              query_list: [
+                new ComplexQuery({
+                  operator: "OR",
+                  query_list: query_list,
+                  type: "complex"
+                }),
+                search_query
+              ],
+              type: "complex"
+            });
+          } else {
+            search_query = new ComplexQuery({
+              operator: "OR",
+              query_list: query_list,
+              type: "complex"
+            });
+          }
+
+        } else {
+          // Lines must match the existing query and must not be one of the
+          // selected line.
+          if (search_query) {
+            query_list.push(search_query);
+          }
+          search_query = new ComplexQuery({
+            operator: "AND",
+            query_list: query_list,
+            type: "complex"
+          });
+        }
+
+        return gadget.redirect({
+          command: 'store_and_change',
+          options: {
+            "extended_search": Query.objectToSearchText(search_query)
+          }
+        });
+      }
+
+      throw new Error('Unsupported triggerListboxSelectAction action: ' + action);
+    });
+
+}(window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery, Query,
+  QueryFactory));
