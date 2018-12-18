@@ -487,7 +487,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     type_based_script = self._getTypeBasedMethod('getSourceAssetPrice')
     if type_based_script:
       return type_based_script()
-    return self.getPrice()
+    return self._getAssetPrice(section = self.getSourceSectionValue())
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getDestinationAssetPrice')
@@ -498,7 +498,30 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     type_based_script = self._getTypeBasedMethod('getDestinationAssetPrice')
     if type_based_script:
       return type_based_script()
-    return self.getPrice()
+    return self._getAssetPrice(section = self.getDestinationSectionValue())
+
+  def _getAssetPrice(self,section):
+    from Products.ERP5Type.Document import newTempAccountingTransactionLine
+    price = self.getPrice()
+    source_currency = self.getPriceCurrencyValue()
+    section_source_currency = section.getPriceCurrency(base=True)
+    if source_currency and section_source_currency:
+      temp_transaction = newTempAccountingTransactionLine(
+        self.getPortalObject(),
+        "accounting_line",
+        source_section=section.getRelativeUrl(),
+        resource=source_currency.getRelativeUrl(),
+        start_date=self.getStartDate(),
+      )
+      exchange_rate = source_currency.getPrice(
+        context=temp_transaction.asContext(
+            categories=[temp_transaction.getResource(base=True),
+                        section_source_currency],
+        )
+      )
+      if exchange_rate and price:
+        return exchange_rate * price
+    return price
 
   # Causality computation
   security.declareProtected( Permissions.AccessContentsInformation,
