@@ -1873,11 +1873,12 @@ class SimulationTool(BaseTool):
       assert 'node_uid' in kw or 'section_uid' in kw
       sql_kw = self._generateSQLKeywordDict(**kw)
 
+      """
       if 'section_uid' in kw:
-        # ignore internal movements
+        # ignore internal movements   Why?
         sql_kw['where_expression'] += ' AND ' \
           'NOT(stock.section_uid<=>stock.mirror_section_uid)'
-
+      """
       result = self.Resource_zGetAssetPrice(
           valuation_method=valuation_method,
           src__=src__,
