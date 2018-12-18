@@ -611,48 +611,73 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
     """
     """
     if not run: return
-    
-    user_id_list = ['test_user', 'manager']
+    self.createUser('test_creator',
+                    ['Auditor', 'Author'])
+
+    user_id_list = ['test_creator', 'test_user', 'manager']
     for user in user_id_list:
       self.failUnlessUserCanAddDocument(user, self.getInventoryReportModule())
-      
+
+    self.login(user_id_list[0])
     inventory_report = self.getInventoryReportModule().newContent(portal_type='Inventory Report')
+
+    self.login()
+    for user in user_id_list:
+      self.failUnlessUserCanAddDocument(user, inventory_report)
+
     inventory_report_line = inventory_report.newContent(portal_type='Inventory Report Line')
     self.assertEqual(inventory_report.getSimulationState(), 'draft')
 
     self.tic()
-
     for user in user_id_list:
       self.login(user)
       self.assertEqual(self.portal.portal_workflow.isTransitionPossible(inventory_report, 'calculate'), True)
       self.failUnlessUserCanModifyDocument(user, inventory_report)
       self.failUnlessUserCanModifyDocument(user, inventory_report_line)
-    
+
     inventory_report.calculate()
     self.tic()
     self.assertEqual(inventory_report.getSimulationState(), 'calculating')
-
     for user in user_id_list:
       self.login(user)
       self.assertEqual(self.portal.portal_workflow.isTransitionPossible(inventory_report, 'record'), True)
       self.failUnlessUserCanModifyDocument(user, inventory_report)
       self.failUnlessUserCanModifyDocument(user, inventory_report_line)
-    
+
     inventory_report.record()
     self.tic()
     self.assertEqual(inventory_report.getSimulationState(), 'recorded')
-    
+
     for user in user_id_list:
       self.login(user)
       self.assertEqual(self.portal.portal_workflow.isTransitionPossible(inventory_report, 'calculate'), False)
 
-    self.failIfUserCanModifyDocument('test_user', inventory_report)
-    self.failUnlessUserCanViewDocument('test_user', inventory_report)
-    self.failIfUserCanModifyDocument('test_user', inventory_report_line)
-    self.failUnlessUserCanViewDocument('test_user', inventory_report_line)
+    self.login()
+    self.failIfUserCanPassWorkflowTransition(user_id_list[0], 'cancel_action', inventory_report)
+    for user in user_id_list[1:]:
+      self.failUnlessUserCanPassWorkflowTransition(user, 'cancel_action', inventory_report)
+
+
+    for user in user_id_list[:-1]:
+      self.failIfUserCanModifyDocument(user, inventory_report)
+      self.failUnlessUserCanViewDocument(user, inventory_report)
+      self.failIfUserCanModifyDocument(user, inventory_report_line)
+      self.failUnlessUserCanViewDocument(user, inventory_report_line)
+
     self.failUnlessUserCanModifyDocument('manager', inventory_report)
     self.failUnlessUserCanModifyDocument('manager', inventory_report_line)
 
+    inventory_report.cancel()
+    self.tic()
+    self.assertEqual(inventory_report.getSimulationState(), 'cancelled')
+    for user in user_id_list[:-1]:
+      self.failIfUserCanModifyDocument(user, inventory_report)
+      self.failUnlessUserCanViewDocument(user, inventory_report)
+      self.failIfUserCanModifyDocument(user, inventory_report_line)
+      self.failUnlessUserCanViewDocument(user, inventory_report_line)
+
+    self.failUnlessUserCanModifyDocument('manager', inventory_report)
+    self.failUnlessUserCanModifyDocument('manager', inventory_report_line)
 
   def test_02_checkCalculateProduct(self, run=run_all_test):
     """
