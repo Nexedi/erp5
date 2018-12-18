@@ -1,8 +1,6 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, document, rJS, URI, RSVP,
-  SimpleQuery, ComplexQuery, Query, console, QueryFactory*/
-(function (window, document, rJS, URI, RSVP,
-  SimpleQuery, ComplexQuery, Query, console, QueryFactory) {
+/*global window, document, rJS, URI, RSVP, console*/
+(function (window, document, rJS, URI, RSVP, console) {
   "use strict";
 
   var variable = {},
@@ -331,6 +329,10 @@
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("getListboxSelectActionList",
+                           "getListboxSelectActionList")
+    .declareAcquiredMethod("triggerListboxSelectAction",
+                           "triggerListboxSelectAction")
 
     //////////////////////////////////////////////
     // initialize the gadget content
@@ -594,7 +596,8 @@
               current_sort,
               options,
               url_for_option_list = [],
-              is_sortable_list = [];
+              is_sortable_list = [],
+              select_list;
 
             for (k = 0; k < column_list.length; k += 1) {
               column = column_list[k];
@@ -612,12 +615,26 @@
               }
             }
 
+            if (gadget.state.show_line_selector) {
+              select_list = gadget.getListboxSelectActionList()
+                .push(undefined, function (error) {
+                  if (error instanceof rJS.AcquisitionError) {
+                    // Do not break if parent gadget does not implement it
+                    // XXX this could be a new rJS function when doing
+                    // declareAcquiredMethod
+                    return [];
+                  }
+                  throw error;
+                });
+            }
+
             return RSVP.all([
               gadget.getUrlForList(url_for_option_list),
               is_sortable_list,
-              gadget.getTranslationList(['Jump',// 'Include', 'Exclude',
+              gadget.getTranslationList(['Jump',
                                          'Select', 'Configure', 'Sort',
-                                         'Cancel'])
+                                         'Cancel']),
+              select_list
             ]);
           })
           .push(function (result_list) {
@@ -625,6 +642,7 @@
               url_for_list = result_list[0],
               translation_list = result_list[2],
               is_sortable_list = result_list[1],
+              select_option_list = result_list[3],
               k,
               url_for_index = 0,
               column,
@@ -649,27 +667,18 @@
             div_element.appendChild(h1_element);
 
             if (gadget.state.show_line_selector) {
-              /*
-              // Add include button
-              // <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}"></button>
-              button_element = document.createElement('button');
-              button_element.setAttribute('data-rel', 'hide');
-              button_element.setAttribute('name', 'IncludeRows');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-eye ui-btn-icon-left ' + gadget.state.hide_class);
-              button_element.textContent = translation_list[1];
-              div_element.appendChild(button_element);
-
-              // Add exclude button
-              // <button data-rel="hide" data-i18n="Exclude" name="ExcludeRows" type="button" class="ui-icon-low-vision ui-btn-icon-left {{hide_class}}"></button>
-              button_element = document.createElement('button');
-              button_element.setAttribute('data-rel', 'hide');
-              button_element.setAttribute('name', 'ExcludeRows');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-low-vision ui-btn-icon-left ' + gadget.state.hide_class);
-              button_element.textContent = translation_list[2];
-              div_element.appendChild(button_element);
-              */
+              for (k = 0; k < select_option_list.length; k += 1) {
+                // Add include button
+                // <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}"></button>
+                button_element = document.createElement('button');
+                button_element.setAttribute('data-rel', 'hide');
+                button_element.setAttribute('data-select-action', select_option_list[k].action);
+                button_element.setAttribute('name', 'SelectAction');
+                button_element.type = 'button';
+                button_element.setAttribute('class', 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left ' + gadget.state.hide_class);
+                button_element.textContent = select_option_list[k].title;
+                div_element.appendChild(button_element);
+              }
 
               // Add cancel button
               // <button data-rel="cancel" data-i18n="Cancel" name="ExcludeRows" type="button" class="ui-icon-times ui-btn-icon-left {{hide_class}}"></button>
@@ -1210,15 +1219,11 @@
         sort_button = gadget.element.querySelector('button[name="Sort"]'),
         hide_button = gadget.element.querySelector('button[name="Hide"]'),
         configure_button = gadget.element.querySelector('button[name="Configure"]'),
-        include_button = gadget.element.querySelector('button[name="IncludeRows"]'),
-        exclude_button = gadget.element.querySelector('button[name="ExcludeRows"]'),
         cancel_select_button = gadget.element.querySelector('button[name="CancelSelect"]'),
         url,
         options = {},
         all_hide_element_list,
-        hide_element_list = [],
-        query_list = [],
-        search_query,
+        uid_list = [],
         i;
 
       if (evt.target === configure_button) {
@@ -1252,82 +1257,28 @@
           show_line_selector: false
         });
       }
-/*
-      if ((evt.target === include_button) || (evt.target === exclude_button)) {
+
+      if ((evt.target.type === 'button') &&
+          (evt.target.name === 'SelectAction')) {
         evt.preventDefault();
+        console.log(evt.target);
 
         //hide closed
         //maybe submit
         all_hide_element_list = gadget.element.querySelectorAll(".hide_element");
         for (i = 0; i < all_hide_element_list.length; i += 1) {
           if (all_hide_element_list[i].checked) {
-            hide_element_list.push(all_hide_element_list[i]);
+            uid_list.push(all_hide_element_list[i].getAttribute("data-uid"));
           }
         }
-        if (hide_element_list.length) {
-          for (i = 0; i < hide_element_list.length; i += 1) {
-            query_list.push(new SimpleQuery({
-              key: "catalog.uid",
-              type: "simple",
-              operator: (evt.target === include_button) ? "=" : "!=",
-              value: hide_element_list[i].getAttribute("data-uid")
-            }));
-          }
-          if (gadget.state.extended_search) {
-            search_query = QueryFactory.create(gadget.state.extended_search);
-          }
-          if (evt.target === include_button) {
-            // Lines must match the existing query and be one of the selected
-            // line. Which means that is user change the query, one of the
-            // selected line could disappear.
-            if (search_query) {
-              search_query = new ComplexQuery({
-                operator: "AND",
-                query_list: [
-                  new ComplexQuery({
-                    operator: "OR",
-                    query_list: query_list,
-                    type: "complex"
-                  }),
-                  search_query
-                ],
-                type: "complex"
-              });
-            } else {
-              search_query = new ComplexQuery({
-                operator: "OR",
-                query_list: query_list,
-                type: "complex"
-              });
-            }
-
-          } else {
-            // Lines must match the existing query and must not be one of the
-            // selected line.
-            if (search_query) {
-              query_list.push(search_query);
-            }
-            search_query = new ComplexQuery({
-              operator: "AND",
-              query_list: query_list,
-              type: "complex"
-            });
-          }
-
-          return gadget.redirect({
-            command: 'store_and_change',
-            options: {
-              "extended_search": Query.objectToSearchText(search_query)
-            }
-          });
+        if (uid_list.length) {
+          return gadget.triggerListboxSelectAction(evt.target.getAttribute('data-select-action'), uid_list);
         }
-
         return gadget.changeState({
           show_line_selector: false
         });
 
       }
-*/
     }, false, false)
 
     .declareService(function enableButton() {
@@ -1344,5 +1295,4 @@
       return;
     });
 
-}(window, document, rJS, URI, RSVP,
-  SimpleQuery, ComplexQuery, Query, console, QueryFactory));
+}(window, document, rJS, URI, RSVP, console));
