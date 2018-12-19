@@ -1223,7 +1223,8 @@
         url,
         options = {},
         all_hide_element_list,
-        uid_list = [],
+        checked_uid_list,
+        unchecked_uid_list,
         i;
 
       if (evt.target === configure_button) {
@@ -1261,23 +1262,21 @@
       if ((evt.target.type === 'button') &&
           (evt.target.name === 'SelectAction')) {
         evt.preventDefault();
-        console.log(evt.target);
+
+        checked_uid_list = [];
+        unchecked_uid_list = [];
 
         //hide closed
         //maybe submit
         all_hide_element_list = gadget.element.querySelectorAll(".hide_element");
         for (i = 0; i < all_hide_element_list.length; i += 1) {
           if (all_hide_element_list[i].checked) {
-            uid_list.push(all_hide_element_list[i].getAttribute("data-uid"));
+            checked_uid_list.push(all_hide_element_list[i].getAttribute("data-uid"));
+          } else {
+            unchecked_uid_list.push(all_hide_element_list[i].getAttribute("data-uid"));
           }
         }
-        if (uid_list.length) {
-          return gadget.triggerListboxSelectAction(evt.target.getAttribute('data-select-action'), uid_list);
-        }
-        return gadget.changeState({
-          show_line_selector: false
-        });
-
+        return gadget.triggerListboxSelectAction(evt.target.getAttribute('data-select-action'), checked_uid_list, unchecked_uid_list);
       }
     }, false, false)
 
