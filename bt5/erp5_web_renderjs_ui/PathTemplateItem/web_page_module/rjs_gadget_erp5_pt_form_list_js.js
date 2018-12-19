@@ -211,6 +211,13 @@
         search_query,
         query_list = [];
       if ((action === 'include') || (action === 'exclude')) {
+        if (uid_list.length === 0) {
+          // XXX Queries do not correctly handle empty uid list
+          return gadget.redirect({
+            command: 'reload'
+          });
+        }
+
         for (i = 0; i < uid_list.length; i += 1) {
           query_list.push(new SimpleQuery({
             key: "catalog.uid",
