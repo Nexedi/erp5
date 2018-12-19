@@ -692,17 +692,6 @@
 
             } else {
 
-              // Add Select button
-              // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
-              button_element = document.createElement('button');
-              button_element.disabled = gadget.state.disabled;
-              button_element.setAttribute('data-rel', 'hide');
-              button_element.setAttribute('name', 'Hide');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-check-square-o ui-btn-icon-left ' + gadget.state.hide_class);
-              button_element.textContent = translation_list[1];
-              div_element.appendChild(button_element);
-
               // Add Configure button
               // <button {{disabled}} data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="ui-icon-wrench ui-btn-icon-left {{configure_class}}"></button>
               button_element = document.createElement('button');
@@ -723,6 +712,17 @@
               button_element.type = 'button';
               button_element.setAttribute('class', 'ui-icon-sort-amount-desc ui-btn-icon-left ' + gadget.state.sort_class);
               button_element.textContent = translation_list[3];
+              div_element.appendChild(button_element);
+
+              // Add Select button
+              // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
+              button_element = document.createElement('button');
+              button_element.disabled = gadget.state.disabled;
+              button_element.setAttribute('data-rel', 'hide');
+              button_element.setAttribute('name', 'Hide');
+              button_element.type = 'button';
+              button_element.setAttribute('class', 'ui-icon-check-square-o ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.textContent = translation_list[1];
               div_element.appendChild(button_element);
             }
             fragment.appendChild(div_element);
