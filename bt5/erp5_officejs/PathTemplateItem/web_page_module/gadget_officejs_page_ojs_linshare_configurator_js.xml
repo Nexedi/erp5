@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,14 +58,7 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
             </value>
         </item>
         <item>
@@ -77,7 +69,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>jio_ojs_storage.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_linshare_configurator.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,11 +79,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jio_ojs_storage_js</string> </value>
+            <value> <string>gadget_officejs_page_ojs_linshare_configurator_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -105,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>jio_ojs_storage.js</string> </value>
+            <value> <string>OfficeJS jIO Linshare Configurator Page JS</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -175,7 +169,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>vincent</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -197,7 +191,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1507730066.16</float>
+                        <float>1545233812.51</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -242,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>972.27209.55180.16196</string> </value>
+                <value> <string>972.27208.38202.25719</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1545237720.18</float>
+                        <float>1545237642.94</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -287,7 +281,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>vincent</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -317,7 +311,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1507197694.87</float>
+                        <float>1545232088.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -854,6 +854,7 @@
     }
     if (options.download) {
       ajax_param.url += '/download';
+      ajax_param.dataType = 'blob';
     }
     return new RSVP.Queue()
       .push(function () {
@@ -896,7 +897,9 @@
    * @constructor
    */
   function LinshareStorage(spec) {
-    this._url_template = UriTemplate.parse(spec.url_template);
+    this._url_template = UriTemplate.parse(
+      spec.url + '/linshare/webservice/rest/user/v2/documents/{uuid}'
+    );
     this._credential_token = spec.credential_token;
     this._id_map = {};
   }
@@ -988,6 +991,7 @@
   // Attachments link by field "description" - Dict
 
   LinshareStorage.prototype.allAttachments = function (id) {
+    return this._id_map[id].attachment;
   };
 
   LinshareStorage.prototype.putAttachment = function (id, name, blob) {
@@ -1024,9 +1028,6 @@
       type: "GET",
       uuid: this._id_map[id].attachment[name],
       download: true
-    })
-    .push(function (result) {
-      return new Blob([result]);
     });
   };
 
