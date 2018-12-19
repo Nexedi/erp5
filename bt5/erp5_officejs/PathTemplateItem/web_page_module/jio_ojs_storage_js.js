@@ -896,8 +896,8 @@
    * @constructor
    */
   function LinshareStorage(spec) {
-    this._url_template = UriTemplate.parse(spec.url_template || default_url);
-    this._credential_token = spec.credential_token || default_token;
+    this._url_template = UriTemplate.parse(spec.url_template);
+    this._credential_token = spec.credential_token;
     this._id_map = {};
   }
 
