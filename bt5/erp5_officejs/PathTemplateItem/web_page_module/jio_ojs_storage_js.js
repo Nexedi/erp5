@@ -835,10 +835,6 @@
 
 (function (jIO, RSVP, Blob, UriTemplate) {
   "use strict";
-  var default_url = "https://softinst89769.host.vifib.net/erp5/portal_skins/" +
-    "erp5_http_proxy/ERP5Site_getHTTPResource?url=https://demo.linshare.org/" +
-    "linshare/webservice/rest/user/v2/documents/{uuid}",
-    default_token = "dXNlcjFAbGluc2hhcmUub3JnOnBhc3N3b3JkMQ==";
 
   function makeRequest(storage, options) {
     var ajax_param = {
