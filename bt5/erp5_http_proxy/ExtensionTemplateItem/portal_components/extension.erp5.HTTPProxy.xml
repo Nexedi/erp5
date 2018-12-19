@@ -45,7 +45,9 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W:  9,  2: Unused variable \'portal\' (unused-variable)</string>
+              </tuple>
             </value>
         </item>
         <item>
