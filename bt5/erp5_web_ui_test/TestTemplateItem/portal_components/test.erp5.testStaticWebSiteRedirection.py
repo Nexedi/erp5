@@ -108,9 +108,12 @@ class TestStaticWebSectionRedirection(ERP5TypeTestCase):
       # '%s://%s/VirtualHostBase/http/example.org:1234/erp5/web_site_module/VirtualHostRoot/%s/%s' % (api_scheme, api_netloc, website.getId(), source_path)
     ]:
 
-      _, netloc_to_check, _, _, _ = urlparse.urlsplit(url_to_check)
+      scheme_to_check, netloc_to_check, _, _, _ = urlparse.urlsplit(url_to_check)
 
-      connection = httplib.HTTPSConnection(netloc_to_check, context=ssl._create_unverified_context(), timeout=10)
+      if (scheme_to_check == 'https'):
+        connection = httplib.HTTPSConnection(netloc_to_check, context=ssl._create_unverified_context(), timeout=10)
+      else:
+        connection = httplib.HTTPConnection(netloc_to_check, timeout=10)
       connection.request(
         method="GET",
         url=url_to_check
