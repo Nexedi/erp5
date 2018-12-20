@@ -313,7 +313,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://demo.linshare.org https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_jio_document_page_gadget_url</string> </key>
@@ -594,7 +594,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.17867.21127.13738</string> </value>
+                <value> <string>970.44013.57115.50517</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -612,7 +612,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1504539993.55</float>
+                        <float>1545299196.08</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
