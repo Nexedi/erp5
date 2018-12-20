@@ -4207,6 +4207,71 @@ class ConstraintTemplateItem(FilesystemDocumentTemplateItem):
   local_file_importer_name = staticmethod(importLocalConstraint)
   local_file_remover_name = staticmethod(removeLocalConstraint)
 
+# TODO-arnau-before-merge: Refactor with DocumentTemplateItem
+class _ZodbComponentTemplateItem(ObjectTemplateItem):
+  _tool_id = 'portal_components'
+
+  def isKeepWorkflowObjectLastHistoryOnly(self, path):
+    """
+    Component Validation Workflow last History of ZODB Components must always be
+    kept, without explicitly adding them to the field which requires an extra
+    action for developers
+    """
+    return path.startswith(self._tool_id + '/')
+
+  def _removeAllButLastWorkflowHistory(self, obj):
+    """
+    Only export the last state of component_validation_workflow, because only
+    the source code and its state to load it is necessary for ZODB Components
+    and too much history would be exported (edit_workflow)
+    """
+    for wf_id in obj.workflow_history.keys():
+      if wf_id != 'component_validation_workflow':
+        del obj.workflow_history[wf_id]
+        continue
+
+      wf_history = obj.workflow_history[wf_id][-1]
+      # Remove useless modifcation 'time' and 'actor' (conflicts with VCSs)
+      wf_history.pop('time', None)
+      wf_history.pop('actor', None)
+      wf_history.pop('comment', None)
+
+      obj.workflow_history[wf_id] = WorkflowHistoryList([wf_history])
+
+  def install(self, context, **kw):
+    """
+    In contrary to ZODB Property Sheets, Components are not migrated
+    automatically as the version must be set manually. This should not be an
+    issue as there are not so many Documents in bt5...
+    """
+    ObjectTemplateItem.install(self, context, **kw)
+    # Reset component on the fly, because it is possible that those
+    # components are required in the middle of the transaction. For example:
+    # - A method in a component is called while installing.
+    # - A document component is used in a different business template,
+    #   and those business templates are installed in a single transaction
+    #   by upgrader.
+    # This reset is called at most 3 times in one business template
+    # installation. (for Document, Test, Extension)
+    self.portal_components.reset(force=True)
+
+  def afterUninstall(self):
+    self.portal_components.reset(force=True,
+                                 reset_portal_type_at_transaction_boundary=True)
+
+# TODO-arnau-before-merge: Metaclass instead?
+from Products.ERP5Type.Core.InterfaceComponent import InterfaceComponent
+class InterfaceTemplateItem(_ZodbComponentTemplateItem):
+  @staticmethod
+  def _getZodbObjectId(id):
+    return InterfaceComponent.getIdPrefix() + '.' + id
+
+from Products.ERP5Type.Core.MixinComponent import MixinComponent
+class MixinTemplateItem(_ZodbComponentTemplateItem):
+  @staticmethod
+  def _getZodbObjectId(id):
+    return MixinComponent.getIdPrefix() + '.' + id
+
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 
 class DocumentTemplateItem(FilesystemToZodbTemplateItem):
@@ -5117,6 +5182,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
           ModuleTemplateItem(self.getTemplateModuleIdList())
       self._document_item = \
           DocumentTemplateItem(self.getTemplateDocumentIdList())
+      self._interface_item = \
+          InterfaceTemplateItem(self.getTemplateInterfaceIdList())
+      self._mixin_item = \
+          MixinTemplateItem(self.getTemplateMixinIdList())
       self._property_sheet_item = \
           PropertySheetTemplateItem(self.getTemplatePropertySheetIdList(),
                                     context=self)
@@ -5938,6 +6007,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'PropertySheet' : '_property_sheet_item',
         'Constraint' : '_constraint_item',
         'Document' : '_document_item',
+        'Interface': '_interface_item',
+        'Mixin': '_mixin_item',
         'Extension' : '_extension_item',
         'Test' : '_test_item',
         'Role' : '_role_item',
@@ -6048,7 +6119,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Text objects (no need to export them into XML)
       # XXX Bad naming
-      item_list_3 = ['_document_item', '_property_sheet_item',
+      item_list_3 = ['_document_item', '_interface_item', '_mixin_item',
+                     '_property_sheet_item',
                      '_constraint_item', '_extension_item',
                      '_test_item', '_message_translation_item',]
 

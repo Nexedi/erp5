@@ -108,12 +108,20 @@
   <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Interface Component</type>
+  <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Mapped Value</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Memcached Plugin</type>
   <workflow>memcached_plugin_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Mixin Component</type>
+  <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Predicate</type>
