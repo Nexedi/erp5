@@ -444,7 +444,8 @@
      update_check_running = false;
  function checkPythonSourceCode(text, updateLinting, options, cm) {
    update_check_text = text;
-   checker_parameters = {code: text};
+   checker_parameters = {code: text,
+                         portal_type: '<dtml-var name="portal_type">'};
 <dtml-if bound_names>
    checker_parameters['bound_names'] = <dtml-var name="bound_names">;
    checker_parameters['params'] = $('input[name="params"]').val();

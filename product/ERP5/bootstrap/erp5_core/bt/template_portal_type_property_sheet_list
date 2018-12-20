@@ -12,6 +12,8 @@ Category Related Membership State Constraint | ConstraintType
 Content Existence Constraint | ConstraintType
 Document Component | SortIndex
 Extension Component | SortIndex
+Interface Component | SortIndex
+Mixin Component | SortIndex
 Property Existence Constraint | ConstraintType
 Property Type Validity Constraint | ConstraintType
 Python Script | CatalogFilter

@@ -83,6 +83,7 @@ def manage_page_footer(self):
   if not textarea_selector:
     return default
 
+  portal_type = document.meta_type
   if editor == 'codemirror' and getattr(portal, 'code_mirror_support', None) is not None:
     keymap = portal.portal_preferences.getPreferredSourceCodeEditorKeymap()
     return '''<script type="text/javascript" src="%s/jquery/core/jquery.min.js"></script>
@@ -93,7 +94,8 @@ def manage_page_footer(self):
                                                      portal_url=portal_url,
                                                      bound_names=bound_names,
                                                      mode=mode,
-                                                     keymap=keymap))
+                                                     keymap=keymap,
+                                                     portal_type=portal_type))
   else:
     return '''
 <script type="text/javascript" src="%(portal_url)s/jquery/core/jquery.min.js"></script>
@@ -133,7 +135,8 @@ $(document).ready(function() {
             {'data': JSON.stringify(
             { code: editor.getSession().getValue(),
               bound_names: %(bound_names)s,
-              params: $('input[name="params"]').val() })},
+              params: $('input[name="params"]').val(),
+              portal_type: %(portal_type)s })},
             function(data){
               editor.getSession().setAnnotations(data.annotations);
             }

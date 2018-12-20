@@ -201,9 +201,8 @@ def generatePortalTypeClass(site, portal_type_name):
           klass = getattr(module, type_class)
         except AttributeError:
           LOG("ERP5Type.dynamic", WARNING,
-              "Could not get class '%s' in Component module '%s'" % \
-              (type_class,
-               module))
+              "Could not get class '%s' in Component module %r, fallback on filesystem" %
+              (type_class, module))
 
     if klass is None:
       type_class_path = document_class_registry.get(type_class)
@@ -244,18 +243,58 @@ def generatePortalTypeClass(site, portal_type_name):
   #     "Filled accessor holder list for portal_type %s (%s)" % \
   #     (portal_type_name, accessor_holder_list))
 
-  mixin_path_list = []
+  mixin_class_list = []
   if mixin_list:
-    mixin_path_list = map(mixin_class_registry.__getitem__, mixin_list)
-  mixin_class_list = map(_importClass, mixin_path_list)
+    # Only one Mixin class per ZODB Component (!= FS) where module_name ==
+    # class_name, name ending with 'Mixin'.
+    #
+    # Rationale: same as Document/Interface; consistent naming; avoid a
+    # registry like there used to be with FS.
+    import erp5.component.mixin
+    for mixin in mixin_list:
+      mixin_module = erp5.component.mixin.find_load_module(mixin)
+      mixin_class = None
+      if mixin_module is not None:
+        try:
+          mixin_class = getattr(mixin_module, mixin)
+        except AttributeError:
+          LOG("ERP5Type.dynamic", WARNING,
+              "Could not get class '%s' in Component module %r, fallback on filesystem" %
+              (mixin, mixin_module))
+
+      if mixin_class is None:
+        mixin_class = _importClass(mixin_class_registry[mixin])
+
+      mixin_class_list.append(mixin_class)
 
   base_class_list = [klass] + accessor_holder_list + mixin_class_list
 
   interface_class_list = []
   if interface_list:
-    from Products.ERP5Type import interfaces
-    interface_class_list = [getattr(interfaces, name)
-                            for name in interface_list]
+    # Filesystem Interfaces may have defined several Interfaces in one file
+    # but only *one* Interface per ZODB Component where module_name ==
+    # class_name, name starting with 'I'.
+    #
+    # Rationale: same as Document/Mixin; consistent naming; avoid a registry
+    # like there used to be for Mixin or importing all class in
+    # Products.ERP5Type.interfaces.__init__.py.
+    import erp5.component.interface
+    from Products.ERP5Type import interfaces as filesystem_interfaces
+    for interface in interface_list:
+      interface_module = erp5.component.interface.find_load_module(interface)
+      interface_class = None
+      if interface_module is not None:
+        try:
+          interface_class = getattr(interface_module, interface)
+        except AttributeError:
+          LOG("ERP5Type.dynamic", WARNING,
+              "Could not get class '%s' in Component module %r, fallback on filesystem" %
+              (interface, interface_module))
+
+      if interface_class is None:
+        interface_class = getattr(filesystem_interfaces, interface)
+
+      interface_class_list.append(interface_class)
 
   if portal_type_name in core_portal_type_class_dict:
     core_portal_type_class_dict[portal_type_name]['generating'] = False

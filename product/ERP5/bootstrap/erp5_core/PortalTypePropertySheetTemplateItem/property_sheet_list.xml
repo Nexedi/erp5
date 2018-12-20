@@ -41,6 +41,12 @@
  <portal_type id="Extension Component">
   <item>SortIndex</item>
  </portal_type>
+ <portal_type id="Interface Component">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Mixin Component">
+  <item>SortIndex</item>
+ </portal_type>
  <portal_type id="Property Existence Constraint">
   <item>ConstraintType</item>
  </portal_type>

@@ -200,36 +200,6 @@ class TypesTool(TypeProvider):
         return None
     return getattr(self, portal_type, None)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDocumentTypeList')
-  def getDocumentTypeList(self):
-    """
-    Return a list of Document types (including filesystem and ZODB Component
-    Documents) that can be used as Base classes
-    """
-    from Products.ERP5Type import document_class_registry
-    document_type_set = set(document_class_registry)
-
-    import erp5.component.document
-    portal = self.getPortalObject()
-    version_priority_set = set(portal.getVersionPriorityNameList())
-
-    # objectValues should not be used for a large number of objects, but
-    # this is only done upon reset, moreover using the Catalog is too risky
-    # as it lags behind and depends upon objects being reindexed
-    for component in portal.portal_components.objectValues(portal_type='Document Component'):
-      # Only consider modified or validated states as state transition will
-      # be handled by component_validation_workflow which will take care of
-      # updating the registry
-      validation_state_tuple = component.getValidationState()
-      if validation_state_tuple in ('modified', 'validated'):
-        version = component.getVersion(validated_only=True)
-        # The versions should have always been set on ERP5Site property
-        # beforehand
-        if version in version_priority_set:
-          document_type_set.add(component.getReference(validated_only=True))
-
-    return sorted(document_type_set)
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTypeClass')
   def getPortalTypeClass(self, context, temp=False):
     """
@@ -258,13 +228,44 @@ class TypesTool(TypeProvider):
         module = erp5.portal_type
       return getattr(module, portal_type, None)
 
+  def _getTypeList(self, component_portal_type, fs_type_list):
+    portal = self.getPortalObject()
+    version_priority_set = set(portal.getVersionPriorityNameList())
+
+    # objectValues should not be used for a large number of objects, but
+    # this is only done upon reset, moreover using the Catalog is too risky
+    # as it lags behind and depends upon objects being reindexed
+    type_set = set(fs_type_list)
+    for component in portal.portal_components.objectValues(portal_type=component_portal_type):
+      # Only consider modified or validated states as state transition will
+      # be handled by component_validation_workflow which will take care of
+      # updating the registry
+      validation_state_tuple = component.getValidationState()
+      if validation_state_tuple in ('modified', 'validated'):
+        version = component.getVersion(validated_only=True)
+        # The versions should have always been set on ERP5Site property
+        # beforehand
+        if version in version_priority_set:
+          type_set.add(component.getReference(validated_only=True))
+
+    return sorted(type_set)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDocumentTypeList')
+  def getDocumentTypeList(self):
+    """
+    Return a list of Document types (including filesystem and ZODB Component
+    Documents) that can be used as Base classes
+    """
+    from Products.ERP5Type import document_class_registry
+    return self._getTypeList('Document Component', document_class_registry)
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getMixinTypeList')
   def getMixinTypeList(self):
     """
     Return a list of class names that can be used as Mixins
     """
     from Products.ERP5Type import mixin_class_registry
-    return sorted(mixin_class_registry)
+    return self._getTypeList('Mixin Component', mixin_class_registry)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getInterfaceTypeList')
   def getInterfaceTypeList(self):
@@ -272,7 +273,9 @@ class TypesTool(TypeProvider):
     Return a list of class names that can be used as Interfaces
     """
     from Products.ERP5Type import interfaces
-    return [name for name, cls in inspect.getmembers(interfaces, inspect.isclass)]
+    return self._getTypeList(
+      'Interface Component',
+      [name for name, _ in inspect.getmembers(interfaces, inspect.isclass)])
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'resetDynamicDocumentsOnceAtTransactionBoundary')

@@ -110,12 +110,14 @@ class EditorWidget(Widget.TextAreaWidget):
         elif portal_type == "Web Style":
           mode = "css"
         site_root = here.getWebSiteValue() or here.getPortalObject()
+        portal_type = here.getPortalType()
         return code_mirror_support(field=field,
                                    content=value,
                                    field_id=key,
                                    portal_url=site_root.absolute_url(),
                                    mode=mode,
-                                   keymap=site_root.portal_preferences.getPreferredSourceCodeEditorKeymap())
+                                   keymap=site_root.portal_preferences.getPreferredSourceCodeEditorKeymap(),
+                                   portal_type=portal_type)
     elif text_editor != 'text_area':
       return here.fckeditor_wysiwyg_support.pt_render(
            extra_context= {
