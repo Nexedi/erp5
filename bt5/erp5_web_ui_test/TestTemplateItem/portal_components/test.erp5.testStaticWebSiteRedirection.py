@@ -110,7 +110,7 @@ class TestStaticWebSectionRedirection(ERP5TypeTestCase):
 
       _, netloc_to_check, _, _, _ = urlparse.urlsplit(url_to_check)
 
-      connection = httplib.HTTPSConnection(netloc_to_check, context=ssl._create_unverified_context())
+      connection = httplib.HTTPSConnection(netloc_to_check, context=ssl._create_unverified_context(), timeout=10)
       connection.request(
         method="GET",
         url=url_to_check
