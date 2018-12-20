@@ -244,18 +244,61 @@ def generatePortalTypeClass(site, portal_type_name):
   #     "Filled accessor holder list for portal_type %s (%s)" % \
   #     (portal_type_name, accessor_holder_list))
 
-  mixin_path_list = []
+  mixin_class_list = []
   if mixin_list:
-    mixin_path_list = map(mixin_class_registry.__getitem__, mixin_list)
-  mixin_class_list = map(_importClass, mixin_path_list)
+    # TODO-arnau-before-merge: Refactor with Documents and Interfaces before merging
+    import erp5.component.mixin
+    for mixin in mixin_list:
+      mixin_module = erp5.component.mixin.find_load_module(mixin)
+      if mixin_module is not None:
+        try:
+          mixin_class = getattr(mixin_module, mixin)
+        except AttributeError:
+          # XXX: Current common naming (one Mixin per file):
+          # + FS:
+          #   - Filename: foo.py
+          #   - Class name: FooMixin
+          # + ZODB Component:
+          #   - ID: mixin.VERSION.Foo
+          #   - Reference: Foo
+          #   - Class name: Foo
+          #
+          # => Considering this naming, it means it's safe to not fallback on
+          #    the FS if the class cannot be found in the ZODB Component
+          #    module because not the same 'Class name' anyway...
+          LOG("ERP5Type.dynamic", WARNING,
+              "Could not get class '%s' in Component module '%s', ignoring it" %
+              (mixin, mixin_module))
+          continue
+
+      else:
+        mixin_class = _importClass(mixin_class_registry[mixin])
+
+      mixin_class_list.append(mixin_class)
 
   base_class_list = [klass] + accessor_holder_list + mixin_class_list
 
   interface_class_list = []
   if interface_list:
-    from Products.ERP5Type import interfaces
-    interface_class_list = [getattr(interfaces, name)
-                            for name in interface_list]
+    # TODO-arnau-before-merge: Refactor with Documents and Mixins above before merging
+    import erp5.component.interface
+    from Products.ERP5Type import interfaces as filesystem_interfaces
+    for interface in interface_list:
+      interface_module = erp5.component.interface.find_load_module(interface)
+      interface_class = None
+      if interface_module is not None:
+        try:
+          interface_class = getattr(interface_module, interface)
+        except AttributeError:
+          LOG("ERP5Type.dynamic", WARNING,
+              "Could not get class '%s' in Component module '%s', ignoring it" %
+              (interface, interface_module))
+
+      # Fallback on FS
+      if interface_class is None:
+        interface_class = getattr(filesystem_interfaces, interface)
+
+      interface_class_list.append(interface_class)
 
   if portal_type_name in core_portal_type_class_dict:
     core_portal_type_class_dict[portal_type_name]['generating'] = False
