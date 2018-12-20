@@ -2,7 +2,7 @@
 /*jslint nomen: true, indent: 2, maxerr: 3*/
 (function (window, rJS, RSVP) {
   "use strict";
-
+//"https://softinst89769.host.vifib.net/erp5/portal_skins/erp5_http_proxy/ERP5Site_getHTTPResource?url="
   function setjIOLinshareConfiguration(gadget, options) {
     return new RSVP.Queue()
       .push(function () {
