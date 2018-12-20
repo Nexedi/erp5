@@ -182,6 +182,10 @@ def initializeDynamicModules():
       holds ZODB Component packages
     erp5.component.document:
       holds Document modules previously found in bt5 in $INSTANCE_HOME/Document
+    erp5.component.interface:
+      holds Interface modules previously found in Products.NAME.interfaces
+    erp5.component.mixin:
+      holds Mixin modules previously found in Products.NAME.mixin
     erp5.component.extension:
       holds Extension modules previously found in bt5 in
       $INSTANCE_HOME/Extensions
@@ -235,6 +239,12 @@ def initializeDynamicModules():
 
     erp5.component.document = ComponentDynamicPackage('erp5.component.document',
                                                       'Document Component')
+
+    erp5.component.interface = ComponentDynamicPackage('erp5.component.interface',
+                                                       'Interface Component')
+
+    erp5.component.mixin = ComponentDynamicPackage('erp5.component.mixin',
+                                                   'Mixin Component')
 
     erp5.component.test = ComponentDynamicPackage('erp5.component.test',
                                                   'Test Component')

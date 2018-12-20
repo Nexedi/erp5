@@ -71,8 +71,16 @@
               <list>
                 <string>Document Component</string>
                 <string>Extension Component</string>
+                <string>Interface Component</string>
+                <string>Mixin Component</string>
                 <string>Test Component</string>
               </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type_group_filter</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
