@@ -31,6 +31,7 @@ from Products.ERP5Type.mixin.component import ComponentMixin
 from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 
 import zope.interface
 from Products.ERP5Type.interfaces.component import IComponent
@@ -62,3 +63,35 @@ class DocumentComponent(ComponentMixin, TextContentHistoryMixin):
   @staticmethod
   def getIdPrefix():
     return 'document'
+
+  _message_reference_class_not_defined = "Class ${reference} must be defined"
+  def checkConsistency(self, *args, **kw):
+    """
+    Per convention, a Document Component must have at least a class whose name
+    is the same as the Reference so that it can be assigned to Portal Types.
+
+    XXX: Very basic check for now.
+    """
+    error_list = super(DocumentComponent, self).checkConsistency(*args ,**kw)
+    reference = self.getReference()
+    text_content = self.getTextContent()
+    # Already checked in the parent class
+    if reference and text_content:
+      class_definition_str = 'class %s' % reference
+      try:
+        sep = text_content[text_content.index(class_definition_str) +
+                           len(class_definition_str)]
+      except (ValueError, IndexError):
+        pass
+      else:
+        if (sep == ':' or # old-style class
+            sep == '('):  # new-style class
+          return error_list
+
+      error_list.append(ConsistencyMessage(
+        self,
+        self.getRelativeUrl(),
+        message=self._message_reference_class_not_defined,
+        mapping={'reference': reference}))
+
+    return error_list

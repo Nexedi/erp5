@@ -423,7 +423,7 @@ def fill_args_from_request(*optional_args):
 _pylint_message_re = re.compile(
   '^(?P<type>[CRWEF]):\s*(?P<row>\d+),\s*(?P<column>\d+):\s*(?P<message>.*)$')
 
-def checkPythonSourceCode(source_code_str):
+def checkPythonSourceCode(source_code_str, portal_type=None):
   """
   Check source code with pylint or compile() builtin if not available.
 
@@ -511,6 +511,15 @@ def checkPythonSourceCode(source_code_str):
            '--disable=W0212',
            # string module does not only contain deprecated functions...
            '--deprecated-modules=regsub,TERMIOS,Bastion,rexec']
+
+      if portal_type == 'Interface Component':
+        # Interface inherits from InterfaceClass:
+        # E: 4, 0: Inheriting 'Interface', which is not a class. (inherit-non-class)
+        args.append('--disable=E0239')
+        # Interfaces methods have no arguments:
+        # E: 5, 2: Method has no argument (no-method-argument)
+        args.append('--disable=E0211')
+
       try:
         from pylint.extensions.bad_builtin import __name__ as ext
         args.append('--load-plugins=' + ext)

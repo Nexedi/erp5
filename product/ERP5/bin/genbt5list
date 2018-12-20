@@ -58,6 +58,8 @@ item_name_list = (
   'workflow',
   'product',
   'document',
+  'interface',
+  'mixin',
   'property_sheet',
   'constraint',
   'extension',

@@ -1,5 +1,6 @@
 <tal:block tal:define='site_root python: here.getWebSiteValue() or here.getPortalObject();
                        portal_url python: site_root.absolute_url();
+                       portal_type python: here.getPortalType();
                        div_id string:${id}_ace;
                        mode python: here.Base_getAceEditorMode();
                        container_div_id string:${div_id}_container;
@@ -150,6 +151,7 @@
   ace_editor_container_div = null;
   ace_editor = null;
   var mode = '${mode}';
+  var portal_type = '${portal_type}';
   var params = '${params}';
 
   function maximizeFullscreenRemoveSaveMessage() {
@@ -394,6 +396,7 @@
     ace.require('ace/ext/language_tools');
     ace_editor.setOptions({ enableBasicAutocompletion: true, enableSnippets: true });
     var data_options = {};
+    data_options.portal_type = portal_type;
     if (params !== 'None') {
       data_options.bound_names = ['context','container','script','traverse_subpath','printed','same_type','string','sequence','random','DateTime','whrandom','reorder','sets','test','math'],
       data_options.params = params;
