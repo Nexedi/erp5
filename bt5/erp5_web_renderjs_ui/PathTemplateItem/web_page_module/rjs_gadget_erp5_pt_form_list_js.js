@@ -205,25 +205,30 @@
 
     .allowPublicAcquisition("triggerListboxSelectAction", function triggerListboxSelectAction(argument_list) {
       var action = argument_list[0],
-        uid_list = argument_list[1],
+        checked_uid_list = argument_list[1],
+        unchecked_uid_list = argument_list[2],
         gadget = this,
         i,
         search_query,
         query_list = [];
       if ((action === 'include') || (action === 'exclude')) {
-        if (uid_list.length === 0) {
+        if (checked_uid_list.length === 0) {
+          // If nothing is checked, use all unchecked values (same as xhtml style)
+          checked_uid_list = unchecked_uid_list;
+        }
+        if (checked_uid_list.length === 0) {
           // XXX Queries do not correctly handle empty uid list
           return gadget.redirect({
             command: 'reload'
           });
         }
 
-        for (i = 0; i < uid_list.length; i += 1) {
+        for (i = 0; i < checked_uid_list.length; i += 1) {
           query_list.push(new SimpleQuery({
             key: "catalog.uid",
             type: "simple",
             operator: (action === 'include') ? "=" : "!=",
-            value: uid_list[i]
+            value: checked_uid_list[i]
           }));
         }
         if (gadget.state.extended_search) {
