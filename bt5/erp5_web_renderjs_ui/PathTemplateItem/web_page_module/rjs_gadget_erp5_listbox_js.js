@@ -471,8 +471,7 @@
 
             field_id: options.field_id,
             extended_search: options.extended_search,
-            // hide_class: options.hide_enabled ? "" : "ui-disabled",
-            hide_class: '',
+            hide_class: options.hide_enabled ? "" : "ui-disabled",
             configure_class: options.configure_enabled ? "" : "ui-disabled",
             command: field_json.command || 'index',
 
