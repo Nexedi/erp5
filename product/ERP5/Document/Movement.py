@@ -42,8 +42,22 @@ from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.Document.Amount import Amount
+from Products.ERP5Type.Cache import transactional_cached
 
 from zLOG import LOG, WARNING
+
+@transactional_cached()
+def getExchangeRate(source_currency_value, section_currency, start_date):
+  source_currency = source_currency_value.getRelativeUrl()
+  if source_currency != section_currency:
+    from Products.ERP5Type.Document import newTempAccountingTransactionLine
+    return source_currency_value.getPrice(context=newTempAccountingTransactionLine(
+      source_currency_value.getPortalObject(),
+      "accounting_line",
+      resource=source_currency,
+      start_date=start_date,
+      price_currency=section_currency
+    ))
 
 class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   """
@@ -501,26 +515,17 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     return self._getAssetPrice(section = self.getDestinationSectionValue())
 
   def _getAssetPrice(self,section):
-    from Products.ERP5Type.Document import newTempAccountingTransactionLine
     price = self.getPrice()
-    source_currency = self.getPriceCurrencyValue()
-    section_source_currency = section.getPriceCurrency(base=True)
-    if source_currency and section_source_currency:
-      temp_transaction = newTempAccountingTransactionLine(
-        self.getPortalObject(),
-        "accounting_line",
-        source_section=section.getRelativeUrl(),
-        resource=source_currency.getRelativeUrl(),
-        start_date=self.getStartDate(),
-      )
-      exchange_rate = source_currency.getPrice(
-        context=temp_transaction.asContext(
-            categories=[temp_transaction.getResource(base=True),
-                        section_source_currency],
-        )
-      )
-      if exchange_rate and price:
-        return exchange_rate * price
+    if section is None or not price:
+      return price
+    source_currency_value = self.getPriceCurrencyValue()
+    if source_currency_value:
+      section_currency = section.getPriceCurrency()
+      if section_currency:
+        exchange_rate = getExchangeRate(
+          source_currency_value, section_currency, self.getStartDate())
+        if exchange_rate:
+          return exchange_rate * price
     return price
 
   # Causality computation
