@@ -1873,8 +1873,8 @@ class SimulationTool(BaseTool):
       assert 'node_uid' in kw or 'section_uid' in kw
       sql_kw = self._generateSQLKeywordDict(**kw)
 
-      if 'section_uid' in kw:
-        # ignore internal movements
+      if 'section_uid' in kw and 'node_uid' not in kw:
+        # ignore internal movements if ignore node
         sql_kw['where_expression'] += ' AND ' \
           'NOT(stock.section_uid<=>stock.mirror_section_uid)'
 
