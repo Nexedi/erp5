@@ -42,6 +42,7 @@ from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.Document.Amount import Amount
+from Products.ERP5Type.Cache import transactional_cached
 
 from zLOG import LOG, WARNING
 
@@ -501,27 +502,38 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     return self._getAssetPrice(section = self.getDestinationSectionValue())
 
   def _getAssetPrice(self,section):
-    from Products.ERP5Type.Document import newTempAccountingTransactionLine
     price = self.getPrice()
+    if section is None or not price:
+      return price
     source_currency = self.getPriceCurrencyValue()
     section_source_currency = section.getPriceCurrency(base=True)
-    if source_currency and section_source_currency:
-      temp_transaction = newTempAccountingTransactionLine(
-        self.getPortalObject(),
-        "accounting_line",
-        source_section=section.getRelativeUrl(),
-        resource=source_currency.getRelativeUrl(),
-        start_date=self.getStartDate(),
-      )
-      exchange_rate = source_currency.getPrice(
-        context=temp_transaction.asContext(
-            categories=[temp_transaction.getResource(base=True),
-                        section_source_currency],
-        )
-      )
-      if exchange_rate and price:
+    if source_currency and section_source_currency and source_currency.getRelativeUrl() != section_source_currency:
+      exchange_rate = self._getExchangeRate(
+        source_currency = source_currency,
+        section_source_currency = section_source_currency,
+        section = section,
+        start_date = self.getStartDate())
+      if exchange_rate:
         return exchange_rate * price
     return price
+
+  @transactional_cached(lambda self, section, source_currency, section_source_currency, start_date:
+                          (section, source_currency, section_source_currency, start_date))
+  def _getExchangeRate(self, section, source_currency, section_source_currency, start_date):
+    from Products.ERP5Type.Document import newTempAccountingTransactionLine
+    temp_transaction = newTempAccountingTransactionLine(
+      self.getPortalObject(),
+      "accounting_line",
+      source_section=section.getRelativeUrl(),
+      resource=source_currency.getRelativeUrl(),
+      start_date=start_date,
+    )
+    return source_currency.getPrice(
+      context=temp_transaction.asContext(
+        categories=[temp_transaction.getResource(base=True),
+                    section_source_currency],
+      )
+    )
 
   # Causality computation
   security.declareProtected( Permissions.AccessContentsInformation,
