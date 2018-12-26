@@ -503,9 +503,11 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   def _getAssetPrice(self,section):
     from Products.ERP5Type.Document import newTempAccountingTransactionLine
     price = self.getPrice()
+    if section is None:
+      return price
     source_currency = self.getPriceCurrencyValue()
     section_source_currency = section.getPriceCurrency(base=True)
-    if source_currency and section_source_currency:
+    if source_currency and section_source_currency and source_currency != section_source_currency:
       temp_transaction = newTempAccountingTransactionLine(
         self.getPortalObject(),
         "accounting_line",
