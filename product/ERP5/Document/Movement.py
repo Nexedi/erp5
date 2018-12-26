@@ -501,26 +501,17 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     return self._getAssetPrice(section = self.getDestinationSectionValue())
 
   def _getAssetPrice(self,section):
-    from Products.ERP5Type.Document import newTempAccountingTransactionLine
     price = self.getPrice()
+    if section is None or not price:
+      return price
     source_currency = self.getPriceCurrencyValue()
-    section_source_currency = section.getPriceCurrency(base=True)
-    if source_currency and section_source_currency:
-      temp_transaction = newTempAccountingTransactionLine(
-        self.getPortalObject(),
-        "accounting_line",
-        source_section=section.getRelativeUrl(),
-        resource=source_currency.getRelativeUrl(),
-        start_date=self.getStartDate(),
-      )
-      exchange_rate = source_currency.getPrice(
-        context=temp_transaction.asContext(
-            categories=[temp_transaction.getResource(base=True),
-                        section_source_currency],
-        )
-      )
-      if exchange_rate and price:
-        return exchange_rate * price
+    if source_currency:
+      section_currency = section.getPriceCurrency()
+      if section_currency and source_currency.getRelativeUrl() != section_currency:
+        exchange_rate = source_currency.getExchangeRate(
+          section_currency, self.getStartDate())
+        if exchange_rate:
+          return exchange_rate * price
     return price
 
   # Causality computation
