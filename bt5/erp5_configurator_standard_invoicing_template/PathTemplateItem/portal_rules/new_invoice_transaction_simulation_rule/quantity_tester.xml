@@ -19,16 +19,6 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>use_delivery_ratio</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>int</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>quantity_range_min</string> </value>
                   </item>
                   <item>
@@ -87,10 +77,6 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>quantity divergence tester</string> </value>
-        </item>
-        <item>
-            <key> <string>use_delivery_ratio</string> </key>
-            <value> <int>1</int> </value>
         </item>
       </dictionary>
     </pickle>

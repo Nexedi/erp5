@@ -477,10 +477,6 @@
                       <key> <string>title</string> </key>
                       <value> <string>quantity divergence tester</string> </value>
                   </item>
-                  <item>
-                      <key> <string>use_delivery_ratio</string> </key>
-                      <value> <int>1</int> </value>
-                  </item>
                 </dictionary>
                 <dictionary>
                   <item>
