@@ -100,7 +100,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/assert_listbox_not_selectable" />
 
-<tal:block tal:define="pagination_configuration python: {'header': '(1 - 3 / 10)', 'footer': 'Records 1 - 3 / 10'}">
+<tal:block tal:define="pagination_configuration python: {'header': '(3)', 'footer': '3 Records'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 
@@ -133,7 +133,7 @@
 </tal:block>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
-<tal:block tal:define="filter_section_configuration python: {'key': 'TEXT', 'value': 'title', 'index': 0}">
+<tal:block tal:define="filter_section_configuration python: {'key': 'TEXT', 'value': 'title', 'index': 1}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_filter_section" />
 </tal:block>
 
