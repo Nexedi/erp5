@@ -29,7 +29,6 @@
 
 import unittest
 import os
-import urllib
 import requests
 
 from subprocess import Popen, PIPE
@@ -37,7 +36,6 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.CMFCore.utils import getToolByName
 from zLOG import LOG
-from xml.dom import minidom
 # You can invoke same tests in your favourite collection of business templates
 # by using TestXHTMLMixin like the following :
 #
@@ -777,7 +775,7 @@ def addTestMethodDynamically(test_class, validator, target_business_templates):
                        tested_portal_type_list=tested_portal_type_list)
 
 
-# Two validators are available : nu and tidy validator
+# Two validators are available : nu and tidy
 # It's hightly recommanded to use the nu validator which validates html5
 validator_to_use = 'nu'
 show_warnings = True
