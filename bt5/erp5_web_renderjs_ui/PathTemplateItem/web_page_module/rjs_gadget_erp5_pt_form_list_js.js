@@ -1,8 +1,8 @@
 /*global window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
-         Query, QueryFactory */
+         Query, QueryFactory, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
-           Query, QueryFactory) {
+           Query, QueryFactory, ensureArray) {
   "use strict";
 
   rJS(window)
@@ -281,7 +281,34 @@
       }
 
       throw new Error('Unsupported triggerListboxSelectAction action: ' + action);
+    })
+
+    // Handle listbox custom button
+    .allowPublicAcquisition("getListboxClipboardActionList", function getListboxClipboardActionList() {
+      var delete_list = ensureArray(this.state.erp5_document._links.action_object_delete_action);
+      if (!delete_list.length) {
+        return [];
+      }
+      return this.getTranslationList(['Delete'])
+        .push(function (result_list) {
+          return [{
+            title: result_list[0],
+            icon: 'trash-o',
+            action: 'delete'
+          }];
+        });
+    })
+
+    .allowPublicAcquisition("triggerListboxClipboardAction", function triggerListboxClipboardAction(argument_list) {
+      var delete_list = ensureArray(this.state.erp5_document._links.action_object_delete_action);
+      return this.redirect({
+        command: 'change',
+        options: {
+          "view": delete_list[0].href,
+          "page": undefined
+        }
+      });
     });
 
 }(window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery, Query,
-  QueryFactory));
+  QueryFactory, ensureArray));
