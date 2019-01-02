@@ -278,7 +278,9 @@
       "row_list": row_list,
       "show_anchor": gadget.state.show_anchor,
       "column_list": column_list,
-      "show_line_selector": gadget.state.show_line_selector
+      "show_line_selector": gadget.state.show_line_selector,
+      "show_select_action": gadget.state.show_select_action,
+      "show_clipboard_action": gadget.state.show_clipboard_action
     });
     return new RSVP.Queue()
       .push(function () {
@@ -331,6 +333,8 @@
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("getListboxSelectActionList",
                            "getListboxSelectActionList")
+    .declareAcquiredMethod("getListboxClipboardActionList",
+                           "getListboxClipboardActionList")
     .declareAcquiredMethod("triggerListboxSelectAction",
                            "triggerListboxSelectAction")
 
@@ -481,7 +485,9 @@
 
             // No error message
             has_error: false,
-            show_line_selector: false
+            show_line_selector: false,
+            show_select_action: false,
+            show_clipboard_action: false
           });
         });
       return queue;
@@ -497,6 +503,7 @@
         j,
         result_queue = new RSVP.Queue(),
         button_selector_list = ['button[name="Sort"]', 'button[name="Hide"]',
+                                'button[name="Clipboard"]',
                                 'button[name="Configure"]',
                                 'button[name="SelectRows"]'],
         button;
@@ -614,8 +621,21 @@
               }
             }
 
-            if (gadget.state.show_line_selector) {
+            if (gadget.state.show_select_action) {
               select_list = gadget.getListboxSelectActionList()
+                .push(undefined, function (error) {
+                  if (error instanceof rJS.AcquisitionError) {
+                    // Do not break if parent gadget does not implement it
+                    // XXX this could be a new rJS function when doing
+                    // declareAcquiredMethod
+                    return [];
+                  }
+                  throw error;
+                });
+            }
+
+            if (gadget.state.show_clipboard_action) {
+              select_list = gadget.getListboxClipboardActionList()
                 .push(undefined, function (error) {
                   if (error instanceof rJS.AcquisitionError) {
                     // Do not break if parent gadget does not implement it
@@ -632,7 +652,7 @@
               is_sortable_list,
               gadget.getTranslationList(['Jump',
                                          'Select', 'Configure', 'Sort',
-                                         'Cancel']),
+                                         'Cancel', 'Clipboard']),
               select_list
             ]);
           })
@@ -711,6 +731,17 @@
               button_element.type = 'button';
               button_element.setAttribute('class', 'ui-icon-sort-amount-desc ui-btn-icon-left ' + gadget.state.sort_class);
               button_element.textContent = translation_list[3];
+              div_element.appendChild(button_element);
+
+              // Add Do button
+              // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
+              button_element = document.createElement('button');
+              button_element.disabled = gadget.state.disabled;
+              button_element.setAttribute('data-rel', 'clipboard');
+              button_element.setAttribute('name', 'Clipboard');
+              button_element.type = 'button';
+              button_element.setAttribute('class', 'ui-icon-ellipsis-v ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.textContent = translation_list[5];
               div_element.appendChild(button_element);
 
               // Add Select button
@@ -1210,6 +1241,7 @@
     .onEvent('click', function click(evt) {
       // For some reason, Zelenium can click even if button has the disabled
       // attribute. So, it is needed for now to manually checks
+      console.log('onCLick', this.state.disabled);
       if (this.state.disabled) {
         return;
       }
@@ -1217,6 +1249,7 @@
       var gadget = this,
         sort_button = gadget.element.querySelector('button[name="Sort"]'),
         hide_button = gadget.element.querySelector('button[name="Hide"]'),
+        clipboard_button = gadget.element.querySelector('button[name="Clipboard"]'),
         configure_button = gadget.element.querySelector('button[name="Configure"]'),
         cancel_select_button = gadget.element.querySelector('button[name="CancelSelect"]'),
         url,
@@ -1225,6 +1258,8 @@
         checked_uid_list,
         unchecked_uid_list,
         i;
+
+      console.log('onCLick', clipboard_button, evt.target);
 
       if (evt.target === configure_button) {
         evt.preventDefault();
@@ -1247,14 +1282,26 @@
       if (evt.target === hide_button) {
         evt.preventDefault();
         return gadget.changeState({
-          show_line_selector: true
+          show_line_selector: true,
+          show_select_action: true
+        });
+      }
+
+      if (evt.target === clipboard_button) {
+        console.log('couscous clipboard');
+        evt.preventDefault();
+        return gadget.changeState({
+          show_line_selector: true,
+          show_clipboard_action: true
         });
       }
 
       if (evt.target === cancel_select_button) {
         evt.preventDefault();
         return gadget.changeState({
-          show_line_selector: false
+          show_line_selector: false,
+          show_select_action: false,
+          show_clipboard_action: false
         });
       }
 
