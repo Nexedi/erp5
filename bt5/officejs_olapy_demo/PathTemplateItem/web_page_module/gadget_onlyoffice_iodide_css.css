@@ -1,0 +1,20 @@
+.main-content > div {
+  width: 50vw;
+  height: 100vh;
+}
+.main-content iframe {
+  width: 50vw;
+  height: 98vh;
+}
+.main-content {
+  display: flex;
+}
+button {
+  padding: 10px 50px;
+  background-color: coral;
+  color: white;
+  border-radius: 5px;
+}
+button:hover {
+  background-color: #ff7f50cf;
+}
