@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> OfficeJS Install </title>
+
+    ${webapp_manifest_full_link_tag}
+    <script src="${latest_version}/rsvp.js"></script>
+    <script src="${latest_version}/renderjs.js"></script>
+    <script src="${latest_version}/jiodev.js"></script>
+    <script src="jio_appcachestorage.js"></script>
+
+    <script src="gadget_officejs_bootloader.js"></script>
+  </head>
+  <body>
+    <script data-install-configuration="document_version" type="text/x-renderjs-configuration">${latest_document_version}</script>
+    <script data-install-configuration="version_url" type="text/x-renderjs-configuration">${latest_version}/</script>
+    <script data-install-configuration="redirect_url" type="text/x-renderjs-configuration">${redirect_url}/</script>
+    <script data-install-configuration="cache_file" type="text/x-renderjs-configuration">${cache_file}</script>
+    <script data-install-configuration="app_name" type="text/x-renderjs-configuration">${application_name}</script>
+  </body>
+</html>

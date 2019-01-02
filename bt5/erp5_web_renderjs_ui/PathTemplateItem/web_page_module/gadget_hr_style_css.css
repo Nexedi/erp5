@@ -1,0 +1,47 @@
+@media only screen and (max-width: 45em){
+  html div.gadget-content {
+    padding: 1.3em 0.1em 0.1em 0.1em;
+  }
+}
+
+@media (max-width: 62em) {
+  html .gadget-content .custom-grid thead {
+    display: none;
+  }
+}
+
+html .document-access section.ui-content-section form:not(.synchro-form) {
+  display: none;
+}
+
+html .document-access .ui-content-section {
+  box-shadow: none;
+  border: none;
+  margin: 0.1em auto;
+  padding: 0.1em 0.1em 0.1em 0.1em;
+}
+
+html .ui-content .custom-grid-wrap .ui-shadow {
+   box-shadow: none;
+}
+
+html div[data-gadget-scope='header'] .ui-header {
+  position: fixed;
+  z-index: 1000;
+  text-align: center;
+  display: flex;
+  flex-flow: row wrap;
+  width: 100%;  
+}
+
+html div[data-gadget-scope='header'] .ui-header h1 {
+  width: 100%;
+}
+
+html div.ui-content {
+  padding-top: 1.3em;
+}
+
+html .modal .close {
+  margin-top: 2em;
+}

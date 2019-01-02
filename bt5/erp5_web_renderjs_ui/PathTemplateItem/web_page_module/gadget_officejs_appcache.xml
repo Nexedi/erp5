@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Manifest" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_officejs.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_officejs_appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Manifest</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>CACHE MANIFEST\n
+# generated on Fri, 09 Jun 2016 11:45:33 +0000\n
+# XXX + fonts\n
+# images/ajax-loader.gif\n
+CACHE:\n
+font-awesome/font-awesome.css\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.woff2\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg\n
+URI.js\n
+dygraph.js\n
+gadget_erp5.css\n
+gadget_global.js\n
+gadget_jio.html\n
+gadget_jio.js\n
+gadget_translate.html\n
+gadget_translate.js\n
+handlebars.js\n
+jiodev.js\n
+jquery.js\n
+jquerymobile.css\n
+jquerymobile.js\n
+renderjs.js\n
+rsvp.js\n
+gadget_officejs_header.html\n
+gadget_officejs_jio.html\n
+gadget_officejs_page_add_document.html\n
+gadget_officejs_page_jio_configurator.html\n
+gadget_officejs_page_jio_dav_configurator.html\n
+gadget_officejs_page_jio_erp5_configurator.html\n
+gadget_officejs_page_share_webrtc_jio.html\n
+gadget_officejs_page_sync.html\n
+gadget_officejs_page_document_list.html\n
+gadget_officejs_application_panel.html\n
+gadget_translation.html\n
+gadget_officejs_webrtc_jio.html\n
+gadget_officejs_widget_listbox.html\n
+gadget_erp5_editor_panel.html\n
+gadget_erp5_editor_panel.js\n
+gadget_officejs_header.js\n
+gadget_officejs_jio.js\n
+gadget_officejs_page_add_document.js\n
+gadget_officejs_page_jio_configurator.js\n
+gadget_officejs_page_jio_dav_configurator.js\n
+gadget_officejs_page_jio_erp5_configurator.js\n
+gadget_officejs_page_share_webrtc_jio.js\n
+gadget_officejs_page_sync.js\n
+gadget_officejs_page_document_list.js\n
+gadget_officejs_router.js\n
+gadget_officejs_application_panel.js\n
+gadget_translation.js\n
+gadget_translation_data.js\n
+gadget_officejs_webrtc_jio.js\n
+gadget_officejs_widget_listbox.js\n
+erp5_launcher.js\n
+erp5_launcher.html\n
+gadget_officejs_text_editor_router.html\n
+gadget_officejs_svg_editor_router.html\n
+gadget_officejs_jio_web_page_view.html\n
+gadget_officejs_jio_web_page_view.js\n
+gadget_officejs_jio_web_illustration_view.html\n
+gadget_officejs_jio_web_illustration_view.js\n
+gadget_officejs_liberator.js\n
+gadget_officejs_liberator.html\n
+NETWORK:\n
+*</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>RenderJS Gadget OfficeJS AppCache</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html manifest="${manifest_url}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <title>${application_title}</title>
+
+    <link href="font-awesome/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="jquerymobile.css">
+    <link rel="stylesheet" href="gadget_erp5.css">
+
+    <script data-renderjs-configuration="application_title" type="text/x-renderjs-configuration">${application_title}</script>
+    <script data-renderjs-configuration="panel_gadget" type="text/x-renderjs-configuration">${panel_gadget}</script>
+    <script data-renderjs-configuration="action_view" type="text/x-renderjs-configuration">${action_view}</script>
+    <script data-renderjs-configuration="default_view_reference" type="text/x-renderjs-configuration">${default_view_reference}</script>
+    <script data-renderjs-configuration="hateoas_url" type="text/x-renderjs-configuration">${hateoas_url}</script>
+    <script data-renderjs-configuration="frontpage_gadget" type="text/x-renderjs-configuration">${frontpage_gadget}</script>
+    <script data-renderjs-configuration="language_map" type="text/x-renderjs-configuration">${language_map}</script>
+    <script data-renderjs-configuration="default_selected_language" type="text/x-renderjs-configuration">${default_selected_language}</script>
+    <script data-renderjs-configuration="website_url_set" type="text/x-renderjs-configuration">${website_url_set}</script>
+
+    <script src="jquery.js"></script>
+    <script src="jquerymobile.js"></script>
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="gadget_global.js" ></script>
+    <script src="erp5_launcher.js"></script>
+
+  </head>
+
+  <body>
+    <div data-role="page">
+
+      <div data-gadget-url="gadget_jio.html"
+          data-gadget-scope="setting_gadget"
+          data-gadget-sandbox="public"></div>
+
+      <div data-gadget-url="${router_gadget}"
+          data-gadget-scope="router"
+          data-gadget-sandbox="public"></div>
+
+      <div data-gadget-url="${translation_gadget}"
+          data-gadget-scope="translation_gadget"
+          data-gadget-sandbox="public"></div>
+
+      <div data-gadget-url="${header_gadget}"
+          data-gadget-scope="header"
+          data-gadget-sandbox="public"></div>
+
+      <div data-gadget-url="${jio_gadget}"
+          data-gadget-scope="jio_gadget"
+          data-gadget-sandbox="public"></div>
+
+
+      <div data-gadget-url="gadget_erp5_editor_panel.html"
+          data-gadget-scope="editor_panel"
+          data-gadget-sandbox="public"></div>
+
+      <div data-gadget-url="${panel_gadget}"
+          data-gadget-scope="panel"
+          data-gadget-sandbox="public"></div>
+
+      <div role="main" class="ui-content gadget-content"></div>
+    </div>
+
+  </body>
+</html>

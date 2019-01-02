@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>audio control</title>
+    <!-- renderjs -->
+    <script src="source/audioplayer/lib/rsvp.min.js" type="text/javascript"></script>
+    <script src="source/audioplayer/lib/renderjs.min.js" type="text/javascript"></script>
+  <script src="source/audioplayer/lib/jquery.js" type="text/javascript"></script>
+
+    <script src="source/audioplayer/lib/URI.js" type="text/javascript"></script>
+    <script src="source/audioplayer/lib/uritemplate.min.js" type="text/javascript"></script>
+    <script src="source/audioplayer/lib/jio.js" type="text/javascript"></script>
+
+    <script src="source/audioplayer/mixin_promise.js" type="text/javascript"></script>
+    <!-- custom script -->
+    <script src="gadget_officejs_audioplayer_video_control.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="gadget_officejs_audioplayer_video_control.css" media="screen" >
+  </head>
+  <body>
+    <div class="info">
+    </div>
+    <div id="video" >
+      <video id="videoControl" class="videoMP4" controls>
+        <type="video/mp4">
+          Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <!-- data-position="fixed" -->
+    <div data-role="footer" data-position="fixed" data-theme="b">
+      <div data-role="navbar">
+        <ul>
+          <li><a data-role="button" class="next" data-icon="arrow-r">next(random)</a></li>
+          <li><a data-role="button" class="share" data-icon="star" target="_blank">share</a></li>
+        </ul>
+      </div><!-- /navbar -->
+    </div><!-- /footer -->
+  </body>
+</html>

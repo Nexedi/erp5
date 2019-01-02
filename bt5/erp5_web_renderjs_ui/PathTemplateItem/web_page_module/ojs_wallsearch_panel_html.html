@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>ERP5 Panel</title>
+    <!--
+      data-i18n=Editable
+    -->
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="handlebars.js" type="text/javascript"></script>
+    <script src="gadget_global.js" type="text/javascript"></script>
+
+    <script id="panel-template-header" type="text/x-handlebars-template">
+      <div data-role="header" class="ui-bar-inherit">
+        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">
+          <div class="ui-controlgroup-controls">
+            <button data-i18n="Close" class="ui-btn ui-btn-icon-notext ui-icon-delete">Close</button>
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script id="panel-template-body" type="text/x-handlebars-template">
+      <div class="ui-content">
+
+        <form class="dialog_form">
+          <button type="submit" class="ui-btn ui-btn-b ui-btn-inline
+                                       ui-icon-action ui-btn-icon-right ui-screen-hidden">Submit</button>
+          <div data-gadget-url="gadget_erp5_searchfield.html"
+               data-gadget-scope="erp5_searchfield"
+               data-gadget-sandbox="public"></div>
+        </form>
+
+        <ul data-role="listview" class="ui-listview" data-enhanced="true"></ul>
+        <div data-gadget-url="gadget_erp5_field_checkbox.html"
+             data-gadget-scope="erp5_checkbox"
+             data-gadget-sandbox="public"></div>
+        <dl></dl>
+      </div>
+    </script>
+
+    <script id="panel-template-body-list" type="text/x-handlebars-template">
+          <li class="ui-first-child"><a href="{{document_list_href}}" class="ui-btn ui-btn-icon-left ui-icon-search" data-i18n="Document" accesskey="s">Posts</a></li>
+          <li class="ui-last-child"><a href="{{sync_href}}" class="ui-btn ui-btn-icon-left ui-icon-refresh" data-i18n="Synchronize">Synchronize</a></li>
+          <li><a href="{{storage_href}}" class="ui-btn ui-btn-icon-left ui-icon-gear" data-i18n="Login/Logout">Storages</a></li>
+    </script>
+
+    <script id="panel-template-body-desktop" type="text/x-handlebars-template">
+        <dt class="ui-content-title ui-body-c ui-btn ui-btn-icon-left ui-icon-eye" data-i18n="Views">Views</dt>
+        {{#each view_list}}
+        <dd data-role="listview" data-theme="c" data-inset="true" class="document-listview">
+          <a data-i18n="{{title}}" class="ui-body-inherit" href="{{href}}">{{title}}</a>
+        </dd>
+        {{/each}}
+        <dt class="ui-content-title ui-body-c  ui-btn ui-btn-icon-left ui-icon-cogs" data-i18n="Decisions">Decisions</dt>
+        {{#each workflow_list}}
+        <dd data-role="listview" data-theme="c" data-inset="true" class="document-listview">
+          <a data-i18n="{{title}}" class="ui-body-inherit" href="{{href}}">{{title}}</a>
+        </dd>
+        {{/each}}
+    </script>
+
+    <!-- custom script -->
+    <script src="gadget_erp5_page_ojs_wallsearch_panel.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+
+  <div class="jqm-navmenu-panel"></div>
+  </body>
+</html>

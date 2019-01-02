@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Travel Expense App Report</title>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="gadget_global.js" ></script>
+    <script src="handlebars.js"></script>
+
+    <link rel="stylesheet" href="chartist.min.css">
+    <script src="chartist.min.js"></script>
+    <script src="gadget_officejs_expense_excellentexport.js"></script>
+    <script src="gadget_officejs_expense_xlsx.core.min.js"></script>
+    <script src="gadget_officejs_expense_filesaver.min.js"></script>
+    <script src="gadget_officejs_expense_tableexport.min.js"></script>
+
+
+    <script class="view-report-template" type="text/x-handlebars-template">
+      <div class="ui-grid-b ui-responsive">
+        <div class="ui-block-a"></div>
+        <div class="ui-block-b">
+
+          <form class="view-report-form">
+
+            <div class="ct-chart ct-perfect-fourth"></div>
+
+            <a name="download_xls" data-role="button" data-i18n="Download XLSX">Download XLSX</a>
+            <a download="travel_expense.xls" name="hidden_download_xls" style="visibility: hidden"></a>
+
+          </form>
+
+        </div>
+        <div class="ui-block-c"></div>
+      </div>
+    </script>
+
+    <script src="gadget_officejs_page_expense_report.js"></script>
+
+  </head>
+
+  <body>
+  </body>
+</html>
+

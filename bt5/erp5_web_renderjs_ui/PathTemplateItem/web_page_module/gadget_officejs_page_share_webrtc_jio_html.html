@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Share jIO</title>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="gadget_officejs_page_share_webrtc_jio.js"></script>
+  </head>
+
+  <body>
+    <div class="ui-grid-b ui-responsive">
+      <div class="ui-block-a"></div>
+      <div class="ui-block-b">
+        <p data-i18n="This is a renderJS gadget which shares a jIO storage via WebRTC.">This is a renderJS gadget which shares a jIO storage via WebRTC.</p>
+        <h2 data-i18n="Peer list">Peer list</h2>
+        <p><span data-i18n="Connected peers:">Connected peers:</span> <span class="peer_count">0</span></p>
+        <pre class="info"></pre>
+      </div>
+      <div class="ui-block-c"></div>
+    </div>
+
+    <div class="gadget_websocket">
+      <div data-gadget-url="gadget_websocket.html" data-gadget-scope="gadget_websocket.html">
+      </div>
+    </div>
+    <div class="gadget_webrtc_datachannel"></div>
+  </body>
+</html>

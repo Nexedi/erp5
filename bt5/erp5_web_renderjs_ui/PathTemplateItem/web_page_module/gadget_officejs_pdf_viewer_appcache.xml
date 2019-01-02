@@ -1,0 +1,470 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Manifest" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_officejs_pdf_viewer.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_officejs_pdf_viewer_appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Manifest</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>CACHE MANIFEST\n
+# generated on Fri, 09 Jun 2016 11:45:33 +0000\n
+# XXX + fonts\n
+# images/ajax-loader.gif\n
+CACHE:\n
+font-awesome/font-awesome.css\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.woff2\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg\n
+gadget_erp5_nojqm.css\n
+jio_ojs_storage.js\n
+gadget_erp5_global.js\n
+URI.js\n
+dygraph.js\n
+handlebars.js\n
+jiodev.js\n
+renderjs.js\n
+rsvp.js\n
+gadget_global.js\n
+erp5_launcher_nojqm.js\n
+gadget_officejs_router.js\n
+gadget_erp5_router.html\n
+gadget_erp5_router.js\n
+gadget_jio.html\n
+gadget_jio.js\n
+gadget_translate.html\n
+gadget_translate.js\n
+gadget_translation.html\n
+gadget_translation.js\n
+gadget_translation_data.js\n
+gadget_erp5_editor_panel.html\n
+gadget_erp5_editor_panel.js\n
+gadget_erp5_ojs_panel.html\n
+gadget_erp5_ojs_panel.js\n
+gadget_erp5_header.html\n
+gadget_erp5_header.js\n
+gadget_ojs_jio.html\n
+gadget_ojs_jio.js\n
+gadget_erp5_page_ojs_controller.html\n
+gadget_erp5_page_ojs_controller.js\n
+gadget_erp5_page_ojs_add_document.html\n
+gadget_erp5_page_ojs_add_document.js\n
+gadget_erp5_page_ojs_configurator.html\n
+gadget_erp5_page_ojs_configurator.js\n
+gadget_erp5_page_ojs_dav_configurator.html\n
+gadget_erp5_page_ojs_dav_configurator.js\n
+gadget_erp5_page_ojs_erp5_configurator.html\n
+gadget_erp5_page_ojs_erp5_configurator.js\n
+gadget_erp5_page_ojs_dropbox_configurator.html\n
+gadget_erp5_page_ojs_dropbox_configurator.js\n
+gadget_erp5_page_ojs_sync.html\n
+gadget_erp5_page_ojs_sync.js\n
+gadget_erp5_page_ojs_document_list.html\n
+gadget_erp5_page_ojs_document_list.js\n
+gadget_ojs_configurator_access.html\n
+gadget_ojs_configurator_access.js\n
+gadget_html5_input.html\n
+gadget_html5_input.js\n
+gadget_erp5_field_multicheckbox.html\n
+gadget_erp5_field_multicheckbox.js\n
+gadget_erp5_searchfield.html\n
+gadget_erp5_searchfield.js\n
+gadget_erp5_pt_form_list.html\n
+gadget_erp5_pt_form_list.js\n
+gadget_erp5_form.html\n
+gadget_erp5_form.js\n
+gadget_erp5_label_field.html\n
+gadget_erp5_label_field.js\n
+gadget_erp5_field_listbox.html\n
+gadget_erp5_field_listbox.js\n
+gadget_erp5_field_datetime.html\n
+gadget_erp5_field_datetime.js\n
+gadget_html5_element.html\n
+gadget_html5_element.js\n
+gadget_erp5_notification.html\n
+gadget_erp5_notification.js\n
+gadget_erp5_field_string.html\n
+gadget_erp5_field_string.js\n
+gadget_erp5_field_editor.html\n
+gadget_erp5_field_editor.js\n
+gadget_erp5_field_gadget.html\n
+gadget_erp5_field_gadget.js\n
+gadget_erp5_search_editor.html\n
+gadget_erp5_search_editor.js\n
+gadget_erp5_sort_editor.html\n
+gadget_erp5_sort_editor.js\n
+gadget_erp5_field_password.html\n
+gadget_erp5_field_password.js\n
+gadget_erp5_field_textarea.html\n
+gadget_erp5_field_textarea.js\n
+gadget_html5_textarea.html\n
+gadget_html5_textarea.js\n
+gadget_erp5_configure_editor.html\n
+gadget_erp5_configure_editor.js\n
+gadget_editor.html\n
+gadget_editor.js\n
+gadget_button_maximize.html\n
+gadget_button_maximize.js\n
+\n
+#setting\n
+gadget_officejs_setting.js\n
+gadget_officejs_setting.html\n
+\n
+#pdf viewer\n
+gadget_officejs_pdf_viewer_router.html\n
+gadget_officejs_jio_pdf_view.html\n
+gadget_officejs_jio_pdf_view.js\n
+\n
+#pdf_js\n
+pdf_js/pdfjs.gadget.html\n
+pdf_js/pdf.gadget.js\n
+pdf_js/images/toolbarButton-pageUp.png\n
+pdf_js/images/annotation-insert.svg\n
+pdf_js/images/annotation-paragraph.svg\n
+pdf_js/images/secondaryToolbarButton-rotateCcw.png\n
+pdf_js/images/grab.cur\n
+pdf_js/images/treeitem-collapsed-rtl.png\n
+pdf_js/images/toolbarButton-presentationMode.png\n
+pdf_js/images/secondaryToolbarButton-firstPage.png\n
+pdf_js/images/toolbarButton-zoomIn.png\n
+pdf_js/images/toolbarButton-pageDown.png\n
+pdf_js/images/toolbarButton-search.png\n
+pdf_js/images/findbarButton-next.png\n
+pdf_js/images/annotation-note.svg\n
+pdf_js/images/shadow.png\n
+pdf_js/images/texture.png\n
+pdf_js/images/loading-icon.gif\n
+pdf_js/images/toolbarButton-sidebarToggle.png\n
+pdf_js/images/toolbarButton-pageDown-rtl.png\n
+pdf_js/images/toolbarButton-menuArrows.png\n
+pdf_js/images/toolbarButton-secondaryToolbarToggle-rtl.png\n
+pdf_js/images/annotation-comment.svg\n
+pdf_js/images/treeitem-collapsed.png\n
+pdf_js/images/secondaryToolbarButton-handTool.png\n
+pdf_js/images/annotation-newparagraph.svg\n
+pdf_js/images/toolbarButton-sidebarToggle-rtl.png\n
+pdf_js/images/secondaryToolbarButton-lastPage.png\n
+pdf_js/images/toolbarButton-secondaryToolbarToggle.png\n
+pdf_js/images/grabbing.cur\n
+pdf_js/images/annotation-help.svg\n
+pdf_js/images/toolbarButton-viewOutline-rtl.png\n
+pdf_js/images/toolbarButton-openFile.png\n
+pdf_js/images/toolbarButton-viewOutline.png\n
+pdf_js/images/annotation-check.svg\n
+pdf_js/images/annotation-noicon.svg\n
+pdf_js/images/loading-small.png\n
+pdf_js/images/secondaryToolbarButton-rotateCw.png\n
+pdf_js/images/findbarButton-next-rtl.png\n
+pdf_js/images/toolbarButton-bookmark.png\n
+pdf_js/images/findbarButton-previous.png\n
+pdf_js/images/toolbarButton-download.png\n
+pdf_js/images/secondaryToolbarButton-documentProperties.png\n
+pdf_js/images/annotation-key.svg\n
+pdf_js/images/toolbarButton-zoomOut.png\n
+pdf_js/images/toolbarButton-print.png\n
+pdf_js/images/toolbarButton-pageUp-rtl.png\n
+pdf_js/images/findbarButton-previous-rtl.png\n
+pdf_js/images/toolbarButton-viewAttachments.png\n
+pdf_js/images/treeitem-expanded.png\n
+pdf_js/images/toolbarButton-viewThumbnail.png\n
+pdf_js/compatibility.js\n
+pdf_js/viewer.css\n
+pdf_js/viewer.js\n
+pdf_js/l10n.js\n
+pdf_js/locale/uk/viewer.properties\n
+pdf_js/locale/en-US/viewer.properties\n
+pdf_js/locale/locale.properties\n
+pdf_js/locale/en-GB/viewer.properties\n
+pdf_js/build/pdf.js\n
+pdf_js/build/pdf.worker.js\n
+pdf_js/cmaps/UniJIS2004-UTF8-H.bcmap\n
+pdf_js/cmaps/Hankaku.bcmap\n
+pdf_js/cmaps/UniKS-UTF32-V.bcmap\n
+pdf_js/cmaps/UniGB-UTF16-V.bcmap\n
+pdf_js/cmaps/HKscs-B5-V.bcmap\n
+pdf_js/cmaps/ETHK-B5-V.bcmap\n
+pdf_js/cmaps/Roman.bcmap\n
+pdf_js/cmaps/UniKS-UCS2-V.bcmap\n
+pdf_js/cmaps/UniCNS-UTF32-H.bcmap\n
+pdf_js/cmaps/90ms-RKSJ-H.bcmap\n
+pdf_js/cmaps/78-RKSJ-V.bcmap\n
+pdf_js/cmaps/GB-H.bcmap\n
+pdf_js/cmaps/Add-H.bcmap\n
+pdf_js/cmaps/HKm314-B5-H.bcmap\n
+pdf_js/cmaps/Adobe-CNS1-6.bcmap\n
+pdf_js/cmaps/Ext-H.bcmap\n
+pdf_js/cmaps/ETen-B5-V.bcmap\n
+pdf_js/cmaps/UniJISPro-UCS2-HW-V.bcmap\n
+pdf_js/cmaps/Adobe-CNS1-5.bcmap\n
+pdf_js/cmaps/UniKS-UCS2-H.bcmap\n
+pdf_js/cmaps/NWP-H.bcmap\n
+pdf_js/cmaps/NWP-V.bcmap\n
+pdf_js/cmaps/78-EUC-V.bcmap\n
+pdf_js/cmaps/HKgccs-B5-H.bcmap\n
+pdf_js/cmaps/HKscs-B5-H.bcmap\n
+pdf_js/cmaps/Adobe-CNS1-2.bcmap\n
+pdf_js/cmaps/Adobe-GB1-1.bcmap\n
+pdf_js/cmaps/UniCNS-UCS2-H.bcmap\n
+pdf_js/cmaps/GBK2K-H.bcmap\n
+pdf_js/cmaps/90pv-RKSJ-V.bcmap\n
+pdf_js/cmaps/UniJIS-UTF16-H.bcmap\n
+pdf_js/cmaps/Adobe-Japan1-UCS2.bcmap\n
+pdf_js/cmaps/HKdlb-B5-H.bcmap\n
+pdf_js/cmaps/EUC-H.bcmap\n
+pdf_js/cmaps/UniJIS2004-UTF8-V.bcmap\n
+pdf_js/cmaps/Adobe-GB1-4.bcmap\n
+pdf_js/cmaps/HKm314-B5-V.bcmap\n
+pdf_js/cmaps/CNS-EUC-H.bcmap\n
+pdf_js/cmaps/H.bcmap\n
+pdf_js/cmaps/UniJIS-UCS2-HW-V.bcmap\n
+pdf_js/cmaps/B5pc-V.bcmap\n
+pdf_js/cmaps/UniKS-UTF16-V.bcmap\n
+pdf_js/cmaps/90pv-RKSJ-H.bcmap\n
+pdf_js/cmaps/78-EUC-H.bcmap\n
+pdf_js/cmaps/KSCms-UHC-V.bcmap\n
+pdf_js/cmaps/UniJIS-UCS2-H.bcmap\n
+pdf_js/cmaps/Adobe-Japan1-4.bcmap\n
+pdf_js/cmaps/UniJISX0213-UTF32-H.bcmap\n
+pdf_js/cmaps/UniJIS-UCS2-HW-H.bcmap\n
+pdf_js/cmaps/GB-EUC-V.bcmap\n
+pdf_js/cmaps/Adobe-CNS1-1.bcmap\n
+pdf_js/cmaps/GBKp-EUC-V.bcmap\n
+pdf_js/cmaps/KSCms-UHC-HW-V.bcmap\n
+pdf_js/cmaps/B5-H.bcmap\n
+pdf_js/cmaps/GB-V.bcmap\n
+pdf_js/cmaps/UniKS-UTF8-V.bcmap\n
+pdf_js/cmaps/UniJISX02132004-UTF32-H.bcmap\n
+pdf_js/cmaps/Add-RKSJ-V.bcmap\n
+pdf_js/cmaps/Adobe-Korea1-UCS2.bcmap\n
+pdf_js/cmaps/HKdlb-B5-V.bcmap\n
+pdf_js/cmaps/Ext-RKSJ-V.bcmap\n
+pdf_js/cmaps/GBTpc-EUC-V.bcmap\n
+pdf_js/cmaps/UniJIS-UTF8-V.bcmap\n
+pdf_js/cmaps/CNS1-H.bcmap\n
+pdf_js/cmaps/B5pc-H.bcmap\n
+pdf_js/cmaps/HKdla-B5-H.bcmap\n
+pdf_js/cmaps/UniKS-UTF16-H.bcmap\n
+pdf_js/cmaps/B5-V.bcmap\n
+pdf_js/cmaps/UniJIS2004-UTF32-V.bcmap\n
+pdf_js/cmaps/UniGB-UTF32-V.bcmap\n
+pdf_js/cmaps/GBT-V.bcmap\n
+pdf_js/cmaps/UniJIS2004-UTF16-H.bcmap\n
+pdf_js/cmaps/ETHK-B5-H.bcmap\n
+pdf_js/cmaps/V.bcmap\n
+pdf_js/cmaps/KSC-Johab-V.bcmap\n
+pdf_js/cmaps/UniJISX0213-UTF32-V.bcmap\n
+pdf_js/cmaps/UniGB-UCS2-H.bcmap\n
+pdf_js/cmaps/UniJISPro-UTF8-V.bcmap\n
+pdf_js/cmaps/UniJIS-UTF32-H.bcmap\n
+pdf_js/cmaps/UniJIS-UTF32-V.bcmap\n
+pdf_js/cmaps/Adobe-Korea1-0.bcmap\n
+pdf_js/cmaps/GBK2K-V.bcmap\n
+pdf_js/cmaps/Adobe-GB1-UCS2.bcmap\n
+pdf_js/cmaps/KSC-EUC-V.bcmap\n
+pdf_js/cmaps/UniJISX02132004-UTF32-V.bcmap\n
+pdf_js/cmaps/Adobe-GB1-5.bcmap\n
+pdf_js/cmaps/90msp-RKSJ-H.bcmap\n
+pdf_js/cmaps/UniJIS-UTF8-H.bcmap\n
+pdf_js/cmaps/Adobe-CNS1-4.bcmap\n
+pdf_js/cmaps/UniCNS-UTF16-H.bcmap\n
+pdf_js/cmaps/Adobe-CNS1-0.bcmap\n
+pdf_js/cmaps/WP-Symbol.bcmap\n
+pdf_js/cmaps/90msp-RKSJ-V.bcmap\n
+pdf_js/cmaps/78ms-RKSJ-H.bcmap\n
+pdf_js/cmaps/KSCms-UHC-HW-H.bcmap\n
+pdf_js/cmaps/HKdla-B5-V.bcmap\n
+pdf_js/cmaps/Ext-V.bcmap\n
+pdf_js/cmaps/GBTpc-EUC-H.bcmap\n
+pdf_js/cmaps/UniCNS-UTF32-V.bcmap\n
+pdf_js/cmaps/78-V.bcmap\n
+pdf_js/cmaps/Adobe-Japan1-6.bcmap\n
+pdf_js/cmaps/GBK-EUC-H.bcmap\n
+pdf_js/cmaps/KSCms-UHC-H.bcmap\n
+pdf_js/cmaps/UniJIS-UCS2-V.bcmap\n
+pdf_js/cmaps/GB-EUC-H.bcmap\n
+pdf_js/cmaps/HKm471-B5-H.bcmap\n
+pdf_js/cmaps/KSCpc-EUC-H.bcmap\n
+pdf_js/cmaps/HKgccs-B5-V.bcmap\n
+pdf_js/cmaps/UniGB-UTF8-V.bcmap\n
+pdf_js/cmaps/78ms-RKSJ-V.bcmap\n
+pdf_js/cmaps/UniCNS-UCS2-V.bcmap\n
+pdf_js/cmaps/UniGB-UTF16-H.bcmap\n
+pdf_js/cmaps/ETenms-B5-H.bcmap\n
+pdf_js/cmaps/GBK-EUC-V.bcmap\n
+pdf_js/cmaps/Add-V.bcmap\n
+pdf_js/cmaps/Adobe-Japan1-5.bcmap\n
+pdf_js/cmaps/GBT-EUC-V.bcmap\n
+pdf_js/cmaps/KSCpc-EUC-V.bcmap\n
+pdf_js/cmaps/UniCNS-UTF16-V.bcmap\n
+pdf_js/cmaps/LICENSE\n
+pdf_js/cmaps/UniKS-UTF32-H.bcmap\n
+pdf_js/cmaps/UniGB-UCS2-V.bcmap\n
+pdf_js/cmaps/GBpc-EUC-V.bcmap\n
+pdf_js/cmaps/Adobe-GB1-0.bcmap\n
+pdf_js/cmaps/Hiragana.bcmap\n
+pdf_js/cmaps/UniJIS2004-UTF32-H.bcmap\n
+pdf_js/cmaps/Ext-RKSJ-H.bcmap\n
+pdf_js/cmaps/CNS-EUC-V.bcmap\n
+pdf_js/cmaps/UniGB-UTF8-H.bcmap\n
+pdf_js/cmaps/UniCNS-UTF8-H.bcmap\n
+pdf_js/cmaps/RKSJ-V.bcmap\n
+pdf_js/cmaps/UniGB-UTF32-H.bcmap\n
+pdf_js/cmaps/Adobe-CNS1-3.bcmap\n
+pdf_js/cmaps/Katakana.bcmap\n
+pdf_js/cmaps/UniKS-UTF8-H.bcmap\n
+pdf_js/cmaps/Adobe-GB1-2.bcmap\n
+pdf_js/cmaps/Adobe-Japan1-0.bcmap\n
+pdf_js/cmaps/CNS2-H.bcmap\n
+pdf_js/cmaps/CNS2-V.bcmap\n
+pdf_js/cmaps/78-RKSJ-H.bcmap\n
+pdf_js/cmaps/Adobe-Japan1-1.bcmap\n
+pdf_js/cmaps/CNS1-V.bcmap\n
+pdf_js/cmaps/UniJIS-UTF16-V.bcmap\n
+pdf_js/cmaps/Adobe-Japan1-2.bcmap\n
+pdf_js/cmaps/Adobe-Korea1-1.bcmap\n
+pdf_js/cmaps/GBT-H.bcmap\n
+pdf_js/cmaps/ETenms-B5-V.bcmap\n
+pdf_js/cmaps/GBT-EUC-H.bcmap\n
+pdf_js/cmaps/KSC-Johab-H.bcmap\n
+pdf_js/cmaps/90ms-RKSJ-V.bcmap\n
+pdf_js/cmaps/Adobe-CNS1-UCS2.bcmap\n
+pdf_js/cmaps/KSC-V.bcmap\n
+pdf_js/cmaps/Adobe-Korea1-2.bcmap\n
+pdf_js/cmaps/KSC-H.bcmap\n
+pdf_js/cmaps/UniCNS-UTF8-V.bcmap\n
+pdf_js/cmaps/UniJISPro-UCS2-V.bcmap\n
+pdf_js/cmaps/83pv-RKSJ-H.bcmap\n
+pdf_js/cmaps/GBKp-EUC-H.bcmap\n
+pdf_js/cmaps/78-H.bcmap\n
+pdf_js/cmaps/GBpc-EUC-H.bcmap\n
+pdf_js/cmaps/Add-RKSJ-H.bcmap\n
+pdf_js/cmaps/Adobe-GB1-3.bcmap\n
+pdf_js/cmaps/UniJIS2004-UTF16-V.bcmap\n
+pdf_js/cmaps/Adobe-Japan1-3.bcmap\n
+pdf_js/cmaps/ETen-B5-H.bcmap\n
+pdf_js/cmaps/HKm471-B5-V.bcmap\n
+pdf_js/cmaps/RKSJ-H.bcmap\n
+pdf_js/cmaps/KSC-EUC-H.bcmap\n
+pdf_js/cmaps/EUC-V.bcmap\n
+pdf_js/debugger.js\n
+\n
+NETWORK:\n
+*</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>OfficeJS PDF Viewer AppCache</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dummy Interface Invalid 1</title>
+  </head>
+  <body>
+    <h1>interface1</h1>
+    <h3>description of interface1</h3>
+    <dl>
+      <dt>method1</dt>
+      <dd>description of method1</dd>
+      <dl>
+        <dt data-parameter-required="required" data-parameter-type="int">param1</dt>
+        <dd>description of param1</dd>
+        <dt data-parameter-required="optional">param2</dt>
+        <dd>description of param2</dd>
+      </dl>
+
+      <!--Missing <dt></dt> tag for method name-->
+
+      <dd>description of method2</dd>
+      <dl>
+        <dt data-parameter-required="required" data-parameter-type="boolean">param1</dt>
+        <dd>description of param1</dd>
+      </dl>
+      </dd>
+      <dt>method3</dt>
+      <dd>description of method3</dd>
+      <dl></dl>
+    </dl>
+  </body>
+</html>

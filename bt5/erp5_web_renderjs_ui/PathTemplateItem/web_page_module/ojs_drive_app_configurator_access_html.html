@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<!--
+  data-i18n=Worklist
+-->
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>ERP5 Page Worklist</title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="handlebars.js" type="text/javascript"></script>
+
+    <!-- custom script -->
+    <script src="gadget_drive_app_configurator_access.js" type="text/javascript"></script>
+
+    <!-- XXX must set theme here! -->
+    <script id="table-template" type="text/x-handlebars-template">
+      <article class="ui-content ui-body-c document-access">
+        <section class="ui-content-header-plain">
+          <h3 class="ui-content-title ui-body-c">
+            <span class="ui-icon ui-icon-custom ui-icon-file-text-o">&nbsp;</span>
+            Your Documents
+          </h3>
+        </section>
+        <section class="ui-body-c ui-content-section">
+          <ul data-role="listview" class="document-listview">
+            <li>
+                <a href="{{sync_href}}" data-i18n="Synchronize">Synchronize</a>
+            </li><li>
+                <a href="{{document_list_href}}" data-i18n="Go to document List">Go to Document List</a>
+            </li>
+          </ul>
+        </section>
+      </article>
+    </script>
+
+  </head>
+  <body>
+    <section class="document_list"></section>
+  </body>
+</html>

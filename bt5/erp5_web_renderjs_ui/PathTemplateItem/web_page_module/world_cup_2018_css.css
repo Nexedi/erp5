@@ -1,0 +1,285 @@
+/**********************************************
+* Colors
+**********************************************/
+/**********************************************
+* Fonts (font-family)
+**********************************************/
+/**********************************************
+* Shared
+**********************************************/
+/**********************************************
+* http://meyerweb.com/eric/tools/css/reset/ 
+*   v2.0 | 20110126
+*   License: none (public domain)
+**********************************************/
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+/**********************************************
+* Default
+**********************************************/
+html {
+  height: 100%;
+  width: 100%;
+  display: block;
+  background-color: white;
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+body {
+  height: 100%;
+  width: 100%;
+  display: block;
+  word-wrap: break-word;
+}
+body,
+button,
+input,
+textarea,
+select {
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+  font-size: 12pt;
+  padding: 0;
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.5;
+}
+@media only screen and (min-width: 70em) {
+  body,
+  button,
+  input,
+  textarea,
+  select {
+    font-size: 12pt;
+  }
+}
+/**********************************************
+* Style
+**********************************************/
+body > header {
+  text-align: center;
+}
+body > header > h1 {
+  font-size: 5em;
+}
+body > main > form {
+  max-width: 20em;
+}
+body > main > form > h2 {
+  text-align: center;
+  background: indianred;
+}
+body > main > form > ul > li {
+  text-align: center;
+}
+body > main > form > ul > li label {
+  width: 7em;
+  display: inline-block;
+}
+body > main > form > ul > li input[type="radio"] {
+  display: none;
+}
+body > main > form > ul > li input[type="radio"]:checked + label {
+  font-weight: bold;
+}
+body > main > form > ul > li input[type="integer"] {
+  width: 2em;
+}
+body > main > ul {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 20em;
+}
+@media only screen and (min-width: 70em) {
+  body > main > ul {
+    width: 70em;
+  }
+}
+body > main > ul > li {
+  width: 100%;
+  flex-shrink: 1;
+  vertical-align: top;
+  padding: 3pt;
+}
+@media only screen and (min-width: 70em) {
+  body > main > ul > li {
+    width: 10em;
+  }
+  body > main > ul > li:first-of-type {
+    margin-left: 30em;
+  }
+}
+body > main > ul > li > button {
+  background-image: none;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  width: 100%;
+  padding: 6pt;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 0.325em;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
+}
+body > main > ul > li > button h2 {
+  margin-bottom: 6pt;
+  text-align: center;
+  background: indianred;
+}
+body > main > ul > li > button ul {
+  text-align: left;
+  font-size: small;
+}
+body > main > table {
+  max-width: 40em;
+  border: 1px solid black;
+  margin-left: 1em;
+  padding: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+body > main > table tr {
+  border: 1px solid black;
+  padding-top: 6pt;
+  padding-bottom: 6pt;
+}
+body > main > table th,
+body > main > table td {
+  text-align: center;
+  padding-top: 6pt;
+  padding-bottom: 6pt;
+}
+body > main > table thead {
+  text-align: center;
+  background: indianred;
+}
+body > main > table thead th {
+  min-width: 10em;
+  text-transform: uppercase;
+}

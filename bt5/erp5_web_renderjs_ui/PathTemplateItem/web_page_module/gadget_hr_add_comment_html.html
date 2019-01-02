@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Discussion</title>
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="handlebars.js"></script>
+    <script src="alertify.js"></script>
+    <script class="discussion-template" type="text/x-handlebars-template">
+    <div>
+      <pre>{{content}}</pre>
+      {{#if can_add_discussion}}
+          <div class="ui-header">
+            <div>
+              <textarea></textarea>
+              <button name="submit" type="submit" class="responsive ui-btn ui-icon-comment ui-btn-icon-left ui-corner-all ui-shadow-inset">Post Answer</button>
+            </div>
+          </div>
+      {{/if}}
+    </div>
+    </script>
+    <script src="gadget_officejs_jio_text_post.js"></script>
+  </head>
+
+  <body>
+    <form></form>
+  </body>
+</html>

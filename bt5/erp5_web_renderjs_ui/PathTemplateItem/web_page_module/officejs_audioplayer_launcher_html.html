@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html manifest="gadget_officejs_audioplayer.appcache">
+  <head>
+    <!-- renderjs  -->
+    <base href="">
+    <script src="source/audioplayer/lib/rsvp.min.js" type="text/javascript"></script>
+    <script src="source/audioplayer/lib/renderjs.min.js" type="text/javascript"></script>
+    <script src="source/audioplayer/lib/jquery.js" type="text/javascript"></script>
+    <script src="source/audioplayer/lib/jquerymobile.js"></script>
+    <link rel="stylesheet" href="source/audioplayer/lib/jquerymobile.css">
+    <!-- custom script -->
+    <script src="gadget_officejs_audioplayer.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="gadget_officejs_audioplayer.css" media="screen">
+  </head>
+  <body>
+    <div data-role="page" class="ui-page" >
+      <div class="nav" data-role="header" data-theme="b">
+        <h1>media player</h1>
+        <a class="addMusic"  data-icon="plus" href="#page=upload">add</a>
+        <a data-icon="grid" href="#page=playlist" >media library</a>
+      </div>
+      <div class="page">
+      </div>
+      <div class="console">
+      </div>
+      <div class="offline" data-gadget-url="gadget_officejs_audioplayer_bridge.html" data-gadget-scope="offline" >
+      </div>
+      <div class="localhost" data-gadget-url="gadget_officejs_audioplayer_bridge.html" data-gadget-scope="localhost" >
+      </div>
+      <div class="online" data-gadget-url="gadget_officejs_audioplayer_bridge.html" data-gadget-scope="online" >
+      </div>
+      <article class="gadget_container"></article>
+    </div>
+  </body>
+</html>

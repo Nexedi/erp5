@@ -1,0 +1,73 @@
+div.ui-view-only-label > div.ui-field-contain > div {
+  display: none;
+}
+div.ui-label-circle > div.ui-field-contain {
+  display: block;
+}
+div.ui-a-circle > div > a,
+div.ui-label-circle > div.ui-field-contain > label {
+  text-align: center;
+  background: #085078;
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  cursor: pointer;
+  display: block;
+}
+div.ui-a-circle > div > a::before,
+div.ui-label-circle > div.ui-field-contain > label::before {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  font-family: FontAwesome;
+  display: inline-block;
+  color: #FFFFFF;
+}
+div.ui-a-circle > div > a:hover,
+div.ui-label-circle > div.ui-field-contain > label:hover {
+  background: #3388cc;
+}
+.ui-label-icon-files-o > div > label::before {
+  content: "\f0c5";
+}
+.ui-label-icon-camera > div > label::before {
+  content: "\f030";
+}
+.ui-a-icon-microphone > div > a::before {
+  content: "\f130";
+}
+.ui-a-icon-pencil-square-o > div > a::before {
+  content: "\f044";
+}
+div.ui-record-circle {
+  position: relative;
+  background-color: #E50000;
+  animation-name: recording;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-timing-function: linear;
+  text-align: center;
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+}
+div.ui-record-circle > div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+}
+@keyframes recording {
+  to {
+    background-color: #F49797;
+  }
+}
+@media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 85em) {
+  div.ui-flex-center > div {
+    display: flex;
+    justify-content: space-around;
+  }
+}

@@ -1,0 +1,1942 @@
+/* GLOBALS */
+/* Font: */
+/* colors: consider #353535 */
+  /* BASE */
+body, input, select, textarea, button, p, legend, html.ui-mobile label, .ui-btn, .ui-li-static {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 95%;
+}
+body .ui-controlgroup-label legend {
+  font-size: 82.5%;
+}
+@media (max-width: 40em) {
+  body, input, select, textarea, button, p, legend, html.ui-mobile label, .ui-btn, body .ui-controlgroup-label legend {
+    font-size: 92.5%;
+  }
+}
+/* Modified on BASE */
+html .listview .ui-li-divider {
+  font-size: 80%;
+}
+
+/* Watermark NOTE: breaks links if ui-content is kept position:static 
+.ui-page-active:before,
+.ui-page-active .ui-panel-wrapper:before {
+  background: url("../img/slapos.png") no-repeat center center;
+  background-attachment: fixed;
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  opacity: .2;
+  filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale");
+  filter: gray;
+  -webkit-filter: grayscale(100%) brightness(10%) contrast(100%);
+}
+
+.ui-page.ui-page-active:before,
+.ui-page.ui-page-active .ui-panel-wrapper:before{
+  pointer-events: none;
+}
+
+@media (max-width: 40em) {
+  .ui-page-theme-slapos-white:before,
+  .ui-page-theme-slapos-white .ui-panel-wrapper:before {
+    -webkit-background-size: 30%;
+    background-size: 30%;
+  }
+}
+@media (max-width: 30em) {
+  .ui-page-theme-slapos-white:before,
+  .ui-page-theme-slapos-white .ui-panel-wrapper:before {
+    -webkit-background-size: 35%;
+    background-size: 35%;
+  }
+}
+@media (max-width: 20em) {
+    .ui-page-theme-slapos-white:before,
+  .ui-page-theme-slapos-white .ui-panel-wrapper:before {
+    -webkit-background-size: 40%;
+    background-size: 40%;
+  }
+}
+*/
+/* JQM custom themes */
+/* slapos-white */
+/*-----------------------------------------------------------------------------------------------------------*/
+
+/* Bar: Toolbars, dividers, slider track */
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #aaa;
+  margin: 1em 0;
+  padding: 0;
+}
+.ui-bar-slapos-white,
+.ui-page-theme-slapos-white .ui-bar-inherit,
+html .ui-bar-slapos-white .ui-bar-inherit,
+html .ui-body-slapos-white .ui-bar-inherit,
+html body .ui-group-theme-slapos-white .ui-bar-inherit {
+  background: 0 none;
+  background-color: #fff;
+  color: rgb(129, 137, 138);
+  color: rgba(0, 0, 0, 0.25);
+  text-shadow: none;
+  border-color: #aaa;
+  font-weight: normal;
+}
+.ui-bar-slapos-white {
+  border-width: 1px;
+  border-style: solid;
+}
+/* tables & controlbar & tabs */
+html .ui-page-theme-slapos-white .ui-table-wrapper.ui-table-wrapper-top .ui-btn,
+html .ui-page-theme-slapos-white .ui-table-wrapper.ui-table-wrapper-top .ui-plain-text,
+html .ui-page-theme-slapos-white .ui-table-wrapper.ui-table-wrapper-bottom .ui-btn,
+html .ui-page-theme-slapos-white .ui-table-wrapper.ui-table-wrapper-bottom .ui-plain-text,
+html .ui-page-theme-slapos-white .ui-controlbar .ui-btn,
+html .ui-page-theme-slapos-white .ui-collapsible-set .ui-collapsible h1 a.ui-btn,
+html .ui-page-theme-slapos-white .ui-table thead a.ui-btn,
+html .ui-page-theme-slapos-white .ui-table thead label{
+  color: #aaa;
+  text-shadow: #FFFFFF 0px 1px 0px;
+}
+html .ui-page-theme-slapos-white .ui-table {
+  background-color: #fff;
+  border-color: #aaa;
+}
+html .ui-page-theme-slapos-white .ui-table-wrapper,
+html .ui-page-theme-slapos-white .ui-popup .ui-header,
+html .ui-page-theme-slapos-white .ui-popup .ui-footer,
+html .ui-page-theme-slapos-white .ui-table-wrapper .ui-btn,
+html .ui-page-theme-slapos-white .ui-collapsible-set .ui-collapsible h1 a.ui-btn {
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #fff ), to( #f1f1f1 ));
+  background-image: -webkit-linear-gradient( #fff , #f1f1f1 );
+  background-image:    -moz-linear-gradient( #fff , #f1f1f1 );
+  background-image:     -ms-linear-gradient( #fff , #f1f1f1 );
+  background-image:      -o-linear-gradient( #fff , #f1f1f1 );
+  background-image:         linear-gradient( #fff , #f1f1f1 );
+  border-color: #aaa;
+}
+
+/* Page: background */
+.ui-page-theme-slapos-white,
+.ui-page-theme-slapos-white .ui-panel-wrapper {
+  color: #333;
+  text-shadow: none;
+  background: #f9f9f9;
+  background-image:  -webkit-gradient(linear, left top, left bottom, from( #f9f9f9), to( #eee ));
+  background-image:  -webkit-linear-gradient( #f9f9f9, #eee );
+  background-image:    -moz-linear-gradient( #f9f9f9, #eee );
+  background-image:     -ms-linear-gradient( #f9f9f9, #eee );
+  background-image:      -o-linear-gradient( #f9f9f9, #eee );
+  background-image:         linear-gradient( #f9f9f9, #eee );
+}
+/* Body: Read-only lists, text inputs, collapsible content */
+.ui-body-slapos-white,
+.ui-page-theme-slapos-white .ui-body-inherit,
+.ui-page-theme-slapos-white .ui-content-element,
+html .ui-bar-slapos-white .ui-body-inherit,
+html .ui-body-slapos-white .ui-body-inherit,
+html body .ui-group-theme-slapos-white .ui-body-inherit,
+.ui-overlay-slapos-white {
+  background-image: none;
+  background: #fff;
+  border-color:  #aaa;
+  color: #111;
+  text-shadow: none;
+}
+.ui-body-slapos-white {
+  border-width: 1px;
+  border-style: solid;
+}
+
+
+
+
+/* Links */
+.ui-page-theme-slapos-white a,
+html .ui-bar-slapos-white a,
+html .ui-body-slapos-white a
+/* visited */
+.ui-page-theme-slapos-white a:visited,
+html .ui-bar-slapos-white a:visited,
+html .ui-body-slapos-white a:visited,
+html body .ui-group-theme-slapos-white a:visited,
+/* hover */
+.ui-overlay-slapos-white a:hover,
+.ui-page-theme-slapos-white a:hover,
+html .ui-bar-slapos-white a:hover,
+html .ui-body-slapos-white a:hover,
+html body .ui-group-theme-slapos-white a:hover,
+.ui-overlay-slapos-white .ui-btn:hover,
+.ui-page-theme-slapos-white .ui-btn:hover,
+html .ui-bar-slapos-white .ui-btn:hover,
+html .ui-body-slapos-white .ui-btn:hover,
+html body .ui-group-theme-slapos-white .ui-btn:hover,
+/* texts */
+html body .ui-group-theme-slapos-white p, /* overwritten by ui-btn */
+html body .ui-group-theme-slapos-white h1,
+html body .ui-group-theme-slapos-white h2,
+html body .ui-group-theme-slapos-white h3,
+html body .ui-group-theme-slapos-white h4,
+html body .ui-group-theme-slapos-white h5,
+html body .ui-group-theme-slapos-white h6,
+html .ui-page-theme-slapos-white .ui-content-element {
+  color: rgb(115, 115, 115);
+  color: rgba(0, 0, 0, 0.55);
+}
+.ui-page-theme-slapos-white .ui-btn:active,
+html .ui-bar-slapos-white .ui-btn:active,
+html .ui-body-slapos-white .ui-btn:active,
+html body .ui-group-theme-slapos-white .ui-btn:active {
+  color: #fff;
+}
+/* Button up */
+.ui-page-theme-slapos-white .ui-btn,
+html .ui-bar-slapos-white .ui-btn,
+html .ui-body-slapos-white .ui-btn,
+html body .ui-btn.ui-btn-slapos-white,
+html body .ui-group-theme-slapos-white .ui-btn,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-white,
+.ui-page-theme-slapos-white .ui-bar-plain,
+/* Button visited */
+.ui-page-theme-slapos-white .ui-btn:visited,
+html .ui-bar-slapos-white .ui-btn:visited,
+html .ui-body-slapos-white .ui-btn:visited,
+html body .ui-btn.ui-btn-slapos-white:visited,
+html body .ui-group-theme-slapos-white .ui-btn:visited,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-white:visited,
+/* table wrappers 
+html .ui-page-theme-slapos-white .ui-table-wrapper-top,
+html .ui-page-theme-slapos-white .ui-table-wrapper-bottom,*/
+html .ui-page-theme-slapos-white .ui-table-wrapper-top ~ table,
+html .ui-page-theme-slapos-white .ui-table-wrapper-bottom ~ table,
+html .ui-page-theme-slapos-white table tr td a:visited {
+  background: #fff;
+  color: rgb(115, 115, 115);
+  color: rgba(0, 0, 0, 0.55);
+  text-shadow: none;
+  border-color: #aaa;
+}
+html .ui-page-theme-slapos-white .ui-input-clear:active,
+html .ui-page-theme-slapos-white .ui-input-clear.ui-btn-active,
+html .ui-page-theme-slapos-white .ui-input-action:active,
+html .ui-page-theme-slapos-white .ui-input-action.ui-btn-active {
+  background: #fff !important;
+}
+/* Header Buttons */
+.ui-page-theme-slapos-white .ui-header .ui-btn,
+html .ui-bar-slapos-white .ui-header .ui-btn,
+html .ui-bar-slapos-white.ui-header .ui-btn,
+html .ui-body-slapos-white  .ui-header .ui-btn,
+html body  .ui-header .ui-btn.ui-btn-slapos-white,
+html body  .ui-header .ui-group-theme-slapos-white .ui-btn,
+ .ui-header [class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-white,
+/* Button visited */
+.ui-page-theme-slapos-white  .ui-header  .ui-btn:visited,
+html .ui-bar-slapos-white  .ui-header .ui-btn:visited,
+html .ui-body-slapos-white  .ui-header .ui-btn:visited,
+html body .ui-header .ui-btn.ui-btn-slapos-white:visited,
+html body .ui-header .ui-group-theme-slapos-white .ui-btn:visited,
+.ui-header [class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-white:visited,
+.ui-page-theme-slapos-white  .ui-header  a:visited,
+html .ui-bar-slapos-white  .ui-header a:visited,
+html .ui-body-slapos-white  .ui-header a:visited,
+html body .ui-header a.ui-btn-slapos-white:visited,
+html body .ui-header .ui-group-theme-slapos-white a:visited,
+.ui-header [class*="ui-group-theme-"] a.ui-btn-slapos-white:visited {
+  background: none repeat scroll 0 center transparent;
+  border: 0 none;
+  -webkit-border-radius: 0 0 0 0  /* iOS3 */ !important;
+  border-radius: 0 0 0 0  /* iOS3 */ !important;
+  -webkit-box-shadow: none /* iOS3 */ !important;
+  box-shadow: none /* iOS3 */ !important;
+  color: rgb(129, 137, 138);
+  color: rgba(0, 0, 0, 0.25);
+  text-shadow: none;
+  font-weight: normal;
+  line-height: 325% /* could also be 3.25em, but this is more flexible, while being crap! */;
+}
+/* Button special handling: panel listitems */
+.ui-page-theme-slapos-white .ui-panel-inner li .ui-btn,
+html .ui-bar-slapos-white .ui-panel-inner li .ui-btn,
+html .ui-body-slapos-white .ui-panel-inner li .ui-btn,
+html .ui-body-slapos-white .ui-panel-inner li.ui-li-static,
+html body .ui-panel-inner li .ui-btn.ui-btn-slapos-white,
+html body .ui-panel-inner li .ui-group-theme-slapos-white .ui-btn,
+[class*="ui-group-theme-"] .ui-panel-inner li .ui-btn.ui-btn-slapos-white,
+/* Button visited */
+.ui-page-theme-slapos-white .ui-panel-inner li .ui-btn:visited,
+html .ui-bar-slapos-white .ui-panel-inner li .ui-btn:visited,
+html .ui-body-slapos-white .ui-panel-inner li .ui-btn:visited,
+html body .ui-panel-inner li .ui-btn.ui-btn-slapos-white:visited,
+html body .ui-panel-inner li .ui-group-theme-slapos-white .ui-btn:visited,
+[class*="ui-group-theme-"] .ui-panel-inner li .ui-btn.ui-btn-slapos-white:visited {
+  background: none repeat scroll 0 0 transparent;
+  border-color: rgb(232, 232, 232);
+  border-color: rgba(255,255,255,.3);
+}
+/* dropshadow */
+html body .ui-group-theme-slapos-white li {
+  border-top: 1px solid #111;
+}
+html body .ui-group-theme-slapos-white li.ui-last-child {
+  border-top: 1px solid #111;
+  border-bottom: 1px solid #111;
+}
+html body .ui-group-theme-slapos-black li.ui-last-child a.ui-btn {
+  border-bottom: none
+}
+/* Button background hover */
+.ui-page-theme-slapos-white .ui-btn:hover,
+html .ui-bar-slapos-white .ui-btn:hover,
+html .ui-body-slapos-white .ui-btn:hover,
+html body .ui-btn.ui-btn-slapos-white:hover,
+html body .ui-group-theme-slapos-white .ui-btn:hover,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-white:hover,
+/* table wrapper buttons */
+html .ui-page-theme-slapos-white .ui-table-wrapper .ui-btn:hover,
+/* table rows */
+html .ui-page-theme-slapos-white table tr th:hover ~ td,
+/* controlbars */
+html .ui-page-theme-slapos-white .ui-controlbar .ui-btn:hover,
+/* tabs */
+html .ui-page-theme-slapos-white .ui-collapsible-set .ui-collapsible h1 a.ui-btn:hover {
+  background-color: #e8e8e8;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#e8e8e8));
+  background:        -webkit-linear-gradient(bottom, #fff, #e8e8e8);
+  background:                linear-gradient(bottom, #fff, #e8e8e8);
+  background:           -moz-linear-gradient(bottom, #fff, #e8e8e8);
+  background:             -o-linear-gradient(bottom, #fff, #e8e8e8);
+  background:            -ms-linear-gradient(bottom, #fff, #e8e8e8);
+}
+
+
+
+
+/* slapos-black */header
+/*-----------------------------------------------------------------------------------------------------------*/
+/* Bar: Toolbars, dividers, slider track */
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid rgb(232, 232, 232);
+  border-top: 1px solid rgba(255,255,255,.3);
+  margin: 1em 0;
+  padding: 0;
+}
+.ui-bar-slapos-black,
+.ui-page-theme-slapos-black .ui-bar-inherit,
+html .ui-bar-slapos-black .ui-bar-inherit,
+html .ui-body-slapos-black .ui-bar-inherit,
+html body .ui-group-theme-slapos-black .ui-bar-inherit {
+  background: 0 none;
+  background: #222;
+  color: #fff;
+  text-shadow: 0 1px 0 #111111;
+  font-weight: normal;
+}
+.ui-bar-slapos-black {
+  border-width: 1px;
+  border-style: solid;
+}
+/* tables & controlbar & tabs */
+html .ui-page-theme-slapos-black .ui-table-wrapper.ui-table-wrapper-top .ui-btn,
+html .ui-page-theme-slapos-black .ui-table-wrapper.ui-table-wrapper-top .ui-plain-text,
+html .ui-page-theme-slapos-black .ui-table-wrapper.ui-table-wrapper-bottom .ui-btn,
+html .ui-page-theme-slapos-black .ui-table-wrapper.ui-table-wrapper-bottom .ui-plain-text,
+html .ui-page-theme-slapos-black .ui-controlbar .ui-btn,
+html .ui-page-theme-slapos-black .ui-collapsible-set .ui-collapsible h1 a.ui-btn,
+html .ui-page-theme-slapos-black .ui-table thead a.ui-btn,
+html .ui-page-theme-slapos-black .ui-table thead label {
+  color: #444;
+  text-shadow: 0 1px 0 #111111;
+}
+/* tables & controlbars */
+.ui-page-theme-slapos-black .ui-table {
+  background-color: #222;
+  border-color: rgb(232, 232, 232);
+  border-color: rgba(255,255,255,.3);
+}
+html .ui-page-theme-slapos-black .ui-table-wrapper,
+html .ui-page-theme-slapos-black .ui-popup .ui-header,
+html .ui-page-theme-slapos-black .ui-popup .ui-footer,
+html .ui-page-theme-slapos-black .ui-table-wrapper .ui-btn,
+html .ui-page-theme-slapos-black .ui-collapsible-set .ui-collapsible h1 a.ui-btn {
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));
+  background-image: -webkit-linear-gradient( #444 , #222 );
+  background-image:    -moz-linear-gradient( #444 , #222 );
+  background-image:     -ms-linear-gradient( #444 , #222 );
+  background-image:      -o-linear-gradient( #444 , #222 );
+  background-image:         linear-gradient( #444 , #222 );
+  border-color: #444;
+}
+
+/* Page background */
+.ui-page-theme-slapos-black,
+.ui-page-theme-slapos-black .ui-panel-wrapper {
+  color: #fff;
+  text-shadow: 0 1px 0 #111111;
+  background: #222;
+  border-color:  #444;
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));
+  background-image: -webkit-linear-gradient( #444 , #222 );
+  background-image:    -moz-linear-gradient( #444 , #222 );
+  background-image:     -ms-linear-gradient( #444 , #222 );
+  background-image:      -o-linear-gradient( #444 , #222 );
+  background-image:         linear-gradient( #444 , #222 );
+}
+/* Body: Read-only lists, text inputs, collapsible content */
+.ui-body-slapos-black,
+.ui-page-theme-slapos-black .ui-body-inherit,
+.ui-page-theme-slapos-black .ui-content-element,
+html .ui-bar-slapos-black .ui-body-inherit,
+html .ui-body-slapos-black .ui-body-inherit,
+html body .ui-group-theme-slapos-black .ui-body-inherit,
+.ui-overlay-slapos-black,
+html .ui-page-theme-slapos-black .ui-table-wrapper {
+  color: #fff;
+  text-shadow: 0 1px 0 #111111;
+  background: #222;
+  border-color:  #444;
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));
+  background-image: -webkit-linear-gradient( #444 , #222 );
+  background-image:    -moz-linear-gradient( #444 , #222 );
+  background-image:     -ms-linear-gradient( #444 , #222 );
+  background-image:      -o-linear-gradient( #444 , #222 );
+  background-image:         linear-gradient( #444 , #222 );
+}
+.ui-body-slapos-black {
+  border-width: 1px;
+  border-style: solid;
+}
+/* Input filterable */
+html .ui-body-slapos-black .ui-body-inherit.ui-input-search {
+  background-image: none;
+}
+
+/* Links */
+.ui-page-theme-slapos-black a,
+html .ui-bar-slapos-black a,
+html .ui-body-slapos-black a,
+html body .ui-group-theme-slapos-black a,
+  /* visited */
+.ui-page-theme-slapos-black a:visited,
+html .ui-bar-slapos-black a:visited,
+html .ui-body-slapos-black a:visited,
+html body .ui-group-theme-slapos-black a:visited,
+/* hover */
+.ui-overlay-slapos-black a:hover,
+.ui-page-theme-slapos-black a:hover,
+html .ui-bar-slapos-black a:hover,
+html .ui-body-slapos-black a:hover,
+html body .ui-group-theme-slapos-white a:hover,
+.ui-overlay-slapos-black .ui-btn:hover,
+.ui-page-theme-slapos-black .ui-btn:hover,
+html .ui-page-theme-slapos-black .ui-btn:hover,
+html .ui-page-theme-slapos-black .ui-btn:hover,
+html body .ui-group-theme-slapos-black .ui-btn:hover,
+/* active */
+.ui-page-theme-slapos-black .ui-btn:active,
+html .ui-bar-slapos-black .ui-btn:active,
+html .ui-body-slapos-black .ui-btn:active,
+html body .ui-group-theme-slapos-black .ui-btn:active,
+/* Texts */
+html body .ui-group-theme-slapos-black p,
+html body .ui-group-theme-slapos-black h1,
+html body .ui-group-theme-slapos-black h2,
+html body .ui-group-theme-slapos-black h3,
+html body .ui-group-theme-slapos-black h4,
+html body .ui-group-theme-slapos-black h5,
+html body .ui-group-theme-slapos-black h6,
+html .ui-page-theme-slapos-black .ui-content-element {
+  color: #fff;
+}
+/* Button up */
+.ui-page-theme-slapos-black .ui-btn,
+html .ui-bar-slapos-black .ui-btn,
+html .ui-body-slapos-black .ui-btn,
+html body .ui-btn.ui-btn-slapos-black,
+html body .ui-group-theme-slapos-black .ui-btn,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-black,
+.ui-page-theme-slapos-black .ui-bar-plain,
+/* Button visited */
+.ui-page-theme-slapos-black .ui-btn:visited,
+html .ui-bar-slapos-black .ui-btn:visited,
+html .ui-body-slapos-black .ui-btn:visited,
+html body .ui-btn.ui-btn-slapos-black:visited,
+html body .ui-group-theme-slapos-black .ui-btn:visited,
+[class*="ui-group-theme-"] a.ui-btn-slapos-black:visited,
+.ui-page-theme-slapos-black a:visited,
+html .ui-bar-slapos-black a:visited,
+html .ui-body-slapos-black a:visited,
+html body a.ui-btn-slapos-black:visited,
+html body .ui-group-theme-slapos-black a:visited,
+[class*="ui-group-theme-"] a.ui-btn-slapos-black:visited,
+html .ui-page-theme-slapos-black table tr td a:visited,
+/* table wrappers 
+html .ui-page-theme-slapos-black .ui-table-wrapper-top,
+html .ui-page-theme-slapos-black .ui-table-wrapper-bottom, */
+html .ui-page-theme-slapos-black .ui-table-wrapper-top ~ table,
+html .ui-page-theme-slapos-black .ui-table-wrapper-bottom ~ table {
+  background: #222;
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));
+  background-image: -webkit-linear-gradient( #444 , #222 );
+  background-image:    -moz-linear-gradient( #444 , #222 );
+  background-image:     -ms-linear-gradient( #444 , #222 );
+  background-image:      -o-linear-gradient( #444 , #222 );
+  background-image:         linear-gradient( #444 , #222 );
+  border-color: #444;
+  color: #fff;
+  text-shadow: 0px 1px 0px #111;
+}
+html .ui-page-theme-slapos-black .ui-input-clear:active,
+html .ui-page-theme-slapos-black .ui-input-clear.ui-btn-active,
+html .ui-page-theme-slapos-black .ui-input-action:active,
+html .ui-page-theme-slapos-black .ui-input-action.ui-btn-active {
+  background: #222 !important;
+}
+/* Header Buttons */
+.ui-page-theme-slapos-black .ui-header .ui-btn,
+html .ui-bar-slapos-black.ui-header .ui-btn,
+html .ui-bar-slapos-black  .ui-header .ui-btn,
+html .ui-body-slapos-black  .ui-header .ui-btn,
+html body  .ui-header .ui-btn.ui-btn-slapos-black,
+html body  .ui-header .ui-group-theme-slapos-black .ui-btn,
+ .ui-header [class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-black,
+/* Button visited */
+.ui-page-theme-slapos-black  .ui-header  .ui-btn:visited,
+html .ui-bar-slapos-black  .ui-header .ui-btn:visited,
+html .ui-body-slapos-black  .ui-header .ui-btn:visited,
+html body .ui-header .ui-btn.ui-btn-slapos-black:visited,
+html body .ui-header .ui-group-theme-slapos-black .ui-btn:visited,
+.ui-header [class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-black:visited,
+/* ADD also not on :hover */
+.ui-page-theme-slapos-black .ui-header  .ui-btn:hover,
+html .ui-bar-slapos-black .ui-header  .ui-btn:hover,
+html .ui-body-slapos-black .ui-header  .ui-btn:hover,
+html body .ui-header  .ui-btn.ui-btn-slapos-black:hover,
+html body .ui-header  .ui-group-theme-slapos-black .ui-btn:hover,
+.ui-header  [class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-black:hover {
+  background: none repeat scroll 0 center transparent;
+  -webkit-border-radius: 0 0 0 0  /* iOS3 */ !important;
+  border-radius: 0 0 0 0  /* iOS3 */ !important;
+  -webkit-box-shadow: none /* iOS3 */ !important;
+  box-shadow: none /* iOS3 */ !important;
+  color: #fff;
+  text-shadow: none;
+  font-weight: normal;
+  line-height: 325% /* could also be 3.25em, but this is more flexible, while being crap! */;
+}
+/* Button special handling: listitem */
+.ui-page-theme-slapos-black .ui-panel-inner li .ui-btn,
+html .ui-bar-slapos-black .ui-panel-inner li .ui-btn,
+html .ui-body-slapos-black .ui-panel-inner li .ui-btn,
+html .ui-body-slapos-black .ui-panel-inner li.ui-li-static,
+html body .ui-panel-inner li .ui-btn.ui-btn-slapos-black,
+html body .ui-panel-inner li .ui-group-theme-slapos-black .ui-btn,
+[class*="ui-group-theme-"] .ui-panel-inner li .ui-btn.ui-btn-slapos-black,
+/* Button visited */
+.ui-page-theme-slapos-black .ui-panel-inner li .ui-btn:visited,
+html .ui-bar-slapos-black .ui-panel-inner li .ui-btn:visited,
+html .ui-body-slapos-black .ui-panel-inner li .ui-btn:visited,
+html body .ui-panel-inner li .ui-btn.ui-btn-slapos-black:visited,
+html body .ui-panel-inner li .ui-group-theme-slapos-black .ui-btn:visited,
+[class*="ui-group-theme-"] .ui-panel-inner li .ui-btn.ui-btn-slapos-black:visited {
+  background: none repeat scroll 0 0 transparent;
+  border-color: rgb(232, 232, 232);
+  border-color: rgba(255,255,255,.3);
+}
+/* dropshadow */
+html body .ui-group-theme-slapos-black li {
+  border-top: 1px solid #111;
+}
+html body .ui-group-theme-slapos-black li.ui-last-child {
+  border-bottom: 1px solid #111;
+}
+html body .ui-group-theme-slapos-black li.ui-last-child a.ui-btn {
+  border-bottom: none
+}
+
+/* Button hover */
+.ui-page-theme-slapos-black .ui-btn:hover,
+html .ui-bar-slapos-black .ui-btn:hover,
+html .ui-body-slapos-black .ui-btn:hover,
+html body .ui-btn.ui-btn-slapos-black:hover,
+html body .ui-group-theme-slapos-black .ui-btn:hover, 
+[class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-black:hover,
+/* table wrapper buttons */
+html .ui-page-theme-slapos-black .ui-table-wrapper .ui-btn:hover,
+/* table rows */
+html .ui-page-theme-slapos-black table tr th:hover ~ td,
+/* controlbars */
+html .ui-page-theme-slapos-black .ui-controlbar .ui-btn:hover,
+/* tabs */
+html .ui-page-theme-slapos-black .ui-collapsible-set .ui-collapsible h1 a.ui-btn:hover {
+  background: #222;
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #444 ), to( #222 ));
+  background-image: -webkit-linear-gradient( #444 , #222 );
+  background-image:    -moz-linear-gradient( #444 , #222 );
+  background-image:     -ms-linear-gradient( #444 , #222 );
+  background-image:      -o-linear-gradient( #444 , #222 );
+  background-image:         linear-gradient( #444 , #222 );
+  border-color: rgb(232, 232, 232);
+  border-color: rgba(255,255,255,.3);
+  /* border-color: #444 */
+  color: #fff;
+  text-shadow: 0px 1px 0px #111;
+}
+
+
+
+
+
+/* swatch "active" - need this for every swatch!!! */
+/*-----------------------------------------------------------------------------------------------------------*/
+/* Count bubble */
+/* white */
+.ui-page-theme-slapos-white .ui-li-count,
+html .ui-bar-slapos-white .ui-li-count,
+html .ui-body-slapos-white .ui-li-count,
+html body .ui-group-theme-slapos-white .ui-li-count,
+.ui-btn.ui-btn-slapos-white > .ui-li-count,
+.ui-li-static.ui-body-slapos-white > .ui-li-count,
+.ui-li-divider.ui-bar-slapos-white > .ui-li-count,
+.ui-listview li .ui-li-count.ui-body-slapos-white,
+/* black */
+.ui-page-theme-slapos-black .ui-li-count,
+html .ui-bar-slapos-black .ui-li-count,
+html .ui-body-slapos-black .ui-li-count,
+html body .ui-group-theme-slapos-black .ui-li-count,
+.ui-btn.ui-btn-slapos-black > .ui-li-count,
+.ui-li-static.ui-body-slapos-black > .ui-li-count,
+.ui-li-divider.ui-bar-slapos-black > .ui-li-count,
+.ui-listview li .ui-li-count.ui-body-slapos-black {
+  color: #ffffff;
+  font-size: .8em;
+  text-shadow: none;
+  font-weight: bold;
+  font-family: arial;
+  -webkit-box-shadow: 0 1px 2px #999;
+  box-shadow: 0 1px 2px #999;
+  padding: 0 6px 1px;
+  border: 0.15em solid #ffffff;
+  border-radius: 14px;
+  -moz-border-radius: 14px;
+  -webkit-border-radius: 14px;
+  display: inline-block;
+  background-position: 0 0 !important;
+  position: absolute;
+  right: 0;
+  line-height: 1.75em;
+  top: -14px;
+  background-color: #0FBABD;
+  background-image:  -webkit-gradient(linear,left top,left bottom, color-stop(0,#0FBABD),color-stop(1,#94f2f1));
+  background-image:  -webkit-linear-gradient(top, #0FBABD, #94f2f1);
+  background-image:          linear-gradient(top, #0FBABD, #94f2f1);
+  background-image:     -moz-linear-gradient(top, #0FBABD, #94f2f1);
+  background-image:       -o-linear-gradient(top, #0FBABD, #94f2f1);
+  background-image:      -ms-linear-gradient(top, #0FBABD, #94f2f1);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#0FBABD', EndColorStr='#94f2f1');
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#0FBABD', EndColorStr='#94f2f1')";
+}
+
+/* Button down */
+html .ui-page-theme-slapos-white .ui-bar-active, /* if we do more like this, we need to have a proper theme */
+.ui-page-theme-slapos-white .ui-btn:active,
+html .ui-bar-slapos-white .ui-btn:active,
+html .ui-body-slapos-white .ui-btn:active,
+html body .ui-btn.ui-btn-slapos-white:active,
+html body .ui-group-theme-slapos-white .ui-btn:active,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-white:active,
+/* Active button */
+.ui-page-theme-slapos-white .ui-btn.ui-btn-active,
+html .ui-bar-slapos-white .ui-btn.ui-btn-active,
+html .ui-body-slapos-white .ui-btn.ui-btn-active,
+html body .ui-btn.ui-btn-slapos-white.ui-btn-active,
+html body .ui-group-theme-slapos-white .ui-btn.ui-btn-active,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-white.ui-btn-active,
+/* radio button */
+.ui-page-theme-slapos-white .ui-btn.ui-radio-on,
+html .ui-bar-slapos-white .ui-btn.ui-radio-on,
+html .ui-body-slapos-white .ui-btn.ui-radio-on,
+html body .ui-group-theme-slapos-white .ui-btn.ui-radio-on,
+.ui-btn.ui-radio-on.ui-btn-slapos-white,
+/* Active flipswitch background */
+.ui-page-theme-slapos-white .ui-flipswitch-active,
+html .ui-bar-slapos-white .ui-flipswitch-active,
+html .ui-body-slapos-white .ui-flipswitch-active,
+html body .ui-group-theme-slapos-white .ui-flipswitch-active,
+html body .ui-flipswitch.ui-bar-slapos-white.ui-flipswitch-active,
+/* Active slider track */
+.ui-page-theme-slapos-white .ui-slider-track .ui-btn-active,
+html .ui-bar-slapos-white .ui-slider-track .ui-btn-active,
+html .ui-body-slapos-white .ui-slider-track .ui-btn-active,
+html body .ui-group-theme-slapos-white .ui-slider-track .ui-btn-active,
+html body div.ui-slider-track.ui-body-slapos-white .ui-btn-active,
+/* Table buttons */
+html .ui-page-theme-slapos-white .ui-table-wrapper .ui-btn:active,
+html .ui-page-theme-slapos-white .ui-table-wrapper .ui.btn.ui-btn-active,
+/* Controlbar */
+html .ui-page-theme-slapos-white .ui-controlbar .ui-btn:active,
+html .ui-page-theme-slapos-white .ui-controlbar .ui-btn.ui-btn-active,
+/* Tab Buttons */
+html .ui-page-theme-slapos-white .ui-collapsible-set .ui-collapsible h1 a.ui-btn:active,
+html .ui-page-theme-slapos-white .ui-collapsible-set .ui-collapsible h1 a.ui-btn.ui-btn-active,
+/* black */
+html .ui-page-theme-slapos-black .ui-bar-active,
+.ui-page-theme-slapos-black .ui-btn:active,
+html .ui-bar-slapos-black .ui-btn:active,
+html .ui-body-slapos-black .ui-btn:active,
+html body .ui-btn.ui-btn-slapos-black:active,
+html body .ui-group-theme-slapos-black .ui-btn:active,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-black:active,
+/* Active button */
+.ui-page-theme-slapos-black .ui-btn.ui-btn-active,
+html .ui-bar-slapos-black .ui-btn.ui-btn-active,
+html .ui-body-slapos-black .ui-btn.ui-btn-active,
+html body .ui-btn.ui-btn-slapos-black.ui-btn-active,
+html body .ui-group-theme-slapos-black .ui-btn.ui-btn-active,
+[class*="ui-group-theme-"] .ui-btn.ui-btn-slapos-black.ui-btn-active,
+/* radio on */
+.ui-page-theme-slapos-black .ui-btn.ui-radio-on,
+html .ui-bar-slapos-black .ui-btn.ui-radio-on,
+html .ui-body-slapos-black .ui-btn.ui-radio-on,
+html body .ui-group-theme-slapos-black .ui-btn.ui-radio-on,
+.ui-btn.ui-radio-on.ui-btn-slapos-black ,
+/* Active flipswitch background */
+.ui-page-theme-slapos-black .ui-flipswitch-active,
+html .ui-bar-slapos-black .ui-flipswitch-active,
+html .ui-body-slapos-black .ui-flipswitch-active,
+html body .ui-group-theme-slapos-black .ui-flipswitch-active,
+html body .ui-flipswitch.ui-bar-slapos-black.ui-flipswitch-active,
+/* Active slider track */
+.ui-page-theme-slapos-black .ui-slider-track .ui-btn-active,
+html .ui-bar-slapos-black .ui-slider-track .ui-btn-active,
+html .ui-body-slapos-black .ui-slider-track .ui-btn-active,
+html body .ui-group-theme-slapos-black .ui-slider-track .ui-btn-active,
+html body div.ui-slider-track.ui-body-slapos-black .ui-btn-active,
+/* Table buttons */
+html .ui-page-theme-slapos-black .ui-table-wrapper .ui-btn:active,
+html .ui-page-theme-slapos-black .ui-table-wrapper .ui.btn.ui-btn-active,
+/* Table rows on hover */
+html table.ui-table tbody tr:hover td,
+html table.ui-table tbody tr:hover th,
+/* Controlbar */
+html .ui-page-theme-slapos-black .ui-controlbar .ui-btn:active,
+html .ui-page-theme-slapos-black .ui-controlbar .ui-btn.ui-btn-active,
+/* Tab Buttons */
+html .ui-page-theme-slapos-black .ui-collapsible-set .ui-collapsible h1 a.ui-btn:active,
+html .ui-page-theme-slapos-black .ui-collapsible-set .ui-collapsible h1 a.ui-btn.ui-btn-active {
+  background-color: #94f2f1;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0fbabd), to(#94f2f1));
+  background:        -webkit-linear-gradient(bottom, #0fbabd, #94f2f1);
+  background:                linear-gradient(bottom, #0fbabd, #94f2f1);
+  background:           -moz-linear-gradient(bottom, #0fbabd, #94f2f1);
+  background:             -o-linear-gradient(bottom, #0fbabd, #94f2f1);
+  background:            -ms-linear-gradient(bottom, #0fbabd, #94f2f1);
+  color: #fff !important;
+  text-shadow: none;
+  cursor: pointer;
+}
+/* Table rows ,no pointer... */
+html table.ui-table tbody tr:hover td {
+  cursor: default;
+}
+
+/* Active radio button */
+/* white */
+.ui-page-theme-slapos-white .ui-btn.ui-radio-on:after,
+html .ui-bar-slapos-white .ui-btn.ui-radio-on:after,
+html .ui-body-slapos-white .ui-btn.ui-radio-on:after,
+html body .ui-group-theme-slapos-white .ui-btn.ui-radio-on:after,
+.ui-btn.ui-radio-on.ui-btn-slapos-white:after,
+/* black */
+.ui-page-theme-slapos-black .ui-btn.ui-radio-on:after,
+html .ui-bar-slapos-black .ui-btn.ui-radio-on:after,
+html .ui-body-slapos-black .ui-btn.ui-radio-on:after,
+html body .ui-group-theme-slapos-black .ui-btn.ui-radio-on:after,
+.ui-btn.ui-radio-on.ui-btn-slapos-black:after {
+  border-color:     #fff;
+}
+
+/* Focus */
+/* white */
+.ui-overlay-slapos-white .ui-btn:focus,
+.ui-page-theme-slapos-white .ui-btn:focus,
+html .ui-bar-slapos-white .ui-btn:focus,
+html .ui-body-slapos-white .ui-btn:focus,
+html body .ui-group-theme-slapos-white .ui-btn:focus,
+html head + body .ui-btn.ui-btn-slapos-white:focus,
+/* Focus buttons and text inputs with div wrap */
+.ui-overlay-slapos-white .ui-focus,
+.ui-page-theme-slapos-white .ui-focus,
+html .ui-bar-slapos-white .ui-focus,
+html .ui-body-slapos-white .ui-focus,
+html body .ui-group-theme-slapos-white .ui-focus,
+html head + body .ui-btn-slapos-white.ui-focus,
+html head + body .ui-body-slapos-white.ui-focus,
+/* black */
+.ui-overlay-slapos-black .ui-btn:focus,
+.ui-page-theme-slapos-black .ui-btn:focus,
+html .ui-bar-slapos-black .ui-btn:focus,
+html .ui-body-slapos-black .ui-btn:focus,
+html body .ui-group-theme-slapos-black .ui-btn:focus,
+html head + body .ui-btn.ui-btn-slapos-black:focus,
+/* Focus buttons and text inputs with div wrap */
+.ui-overlay-slapos-black .ui-focus,
+.ui-page-theme-slapos-black .ui-focus,
+html .ui-bar-slapos-black .ui-focus,
+html .ui-body-slapos-black .ui-focus,
+html body .ui-group-theme-slapos-black .ui-focus,
+html head + body .ui-btn-slapos-black.ui-focus,
+html head + body .ui-body-slapos-black.ui-focus{
+  -webkit-box-shadow: 0 0 6px #0fbabd;
+  -moz-box-shadow: 0 0 6px #0fbabd;
+  box-shadow: 0 0 6px #0fbabd;
+}
+
+
+/* ================================ overwriting widgets  ==================================== */
+
+/* toolbar */
+/* unset theme overwriting structure */
+.ui-header, .ui-footer {
+  border-width: 1px 0;
+}
+.ui-header .ui-first-wrap,
+.ui-header .ui-last-wrap {
+  position: absolute;
+  bottom: 0;
+}
+.ui-header .ui-first-wrap {
+  left: 0;
+}
+.ui-header .ui-last-wrap {
+  right: 0;
+}
+/* double borders */
+html .ui-header .ui-first-wrap .ui-controlgroup-controls .ui-btn {
+  border-right: 1px solid rgb(232, 232, 232);
+  border-right: 1px solid rgba(232, 232, 232, 0.5);
+}
+html .ui-header .ui-last-wrap .ui-controlgroup-controls .ui-btn {
+  border-left: 1px solid rgb(47, 79, 79);
+  border-left: 1px solid rgba(0, 0, 0, 0.25);
+}
+.ui-header .ui-first-wrap .ui-btn:before,
+.ui-header .ui-last-wrap .ui-btn:before {
+  content: "";
+  height: 100%;
+  position: absolute;
+  width: 0;
+  bottom: 0;
+  top: 0;
+}
+.ui-header .ui-first-wrap .ui-btn:before {
+  right: 0px;
+  border-right: 1px solid rgb(47, 79, 79);
+  border-right: 1px solid rgba(0, 0, 0, 0.25);
+}
+.ui-header .ui-last-wrap .ui-btn:before {
+  left: 0px;
+  border-left: 1px solid rgb(232, 232, 232);
+  border-left: 1px solid rgba(232, 232, 232, 0.5);
+}
+/* form & fieldcontain */
+/* set label/input width on large screens */
+/* TODO: form fields should auto-expand to full width */
+@media (min-width: 40em) {
+  .ui-fieldcontain label:not(.ui-btn),
+  .ui-fieldcontain div.ui-input-text,
+  .ui-fieldcontain div.ui-input-search,
+  .ui-fieldcontain div.ui-select {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .ui-fieldcontain label:not(.ui-btn) {
+    width: 46% /*40%*/;
+  }
+  .ui-fieldcontain div.ui-input-text,
+  .ui-fieldcontain div.ui-input-search {
+    width: 50%;
+  }
+  .ui-fieldcontain div.ui-select {
+    width: 56%;
+  }
+  .ui-fieldcontain div.ui-select .ui-btn {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    min-height: 19px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .ui-fieldcontain div.ui-select .ui-btn.ui-btn-icon-right:after {
+    right: 0.25em;
+  }
+}
+
+/* ============================= forms ============================= */
+/*
+form {
+  font-size: .85em;
+}
+form p {
+  font-size: 1em;
+}
+@media (max-width: 40em) {
+  form {
+    font-size: 1em;
+  }
+}
+*/
+/* ============================= content grid ============================= */
+.span_1, .span_2 {
+  display: inline-block;
+  vertical-align: middle;
+  width: 45%;
+  padding-left: 2%;
+  padding-right: 2%;
+  /* ~ 98% for 2 col layout */
+  padding-top: 2%;
+}
+.span_1 textarea {
+  width: 56%;
+  display: inline-block;
+  vertical-align: middle;
+}
+.span_2 {
+  width: 96% /* 2% padding-left/right */
+}
+/* is this padding really necessary? */
+.span_1 .ui-controlgroup-vertical,
+.span_2 .ui-controlgroup-vertical,
+.span_1 .ui-controlgroup-horizontal,
+.span_2 .ui-controlgroup-horizontal,
+.span_1 form,
+.span_2 form {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  vertical-align: middle;
+}
+@media (max-width: 40em) {
+  .span_1, .span_2 {
+    width: 100%;
+    padding: 0;
+  }
+  .span_1 textarea {
+    width: 100%;
+  }
+}
+.span_1 .ui-input-search,
+.span_2 .ui-input-search {
+  width: 50%;
+}
+.span_1 .ui-table-wrapper .ui-input-search,
+.span_2 .ui-table-wrapper .ui-input-search{
+  width: auto;
+  margin: 0;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  border-width: 0;
+  border-bottom-width: 1px;
+}
+@media (max-width: 45em) {
+  .span_1 .ui-input-search,
+  .span_2 .ui-input-search {
+    width: 100%;
+  }
+}
+@media (min-width: 45em) {
+  .span_1 .ui-input-search,
+  .span_2 .ui-input-search {
+    width: 60%;
+  }
+}
+/* ============================= content elements ============================= */
+/* TODO: merge with span_1 span_2... */
+html div.ui-page div.ui-content .ui-content-element {
+  /* TODO: should have corners and shadow - but not like this!*/
+  /*
+  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.15);
+  -moz-box-shadow: 0 1px 3px rgba(0,0,0,.15);
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+  */
+  -webkit-border-radius:  .3125em;
+  border-radius: .3125em;
+  border: 1px solid #aaa;
+  padding: 1em;
+  margin: 1em auto;
+  text-align: center;
+}
+html div.ui-page div.ui-content .ui-content-element > .ui-btn {
+  max-width: 10%;
+  margin: 1em auto 0;
+  display: block;
+}
+
+
+.panel .ui-panel-inner .panel_element {
+  margin-left: -1em;
+  margin-right: -1em;
+}
+.panel .ui-panel-inner .panel_element.panel_element_first {
+  margin-top: -1em;
+}
+.panel .ui-panel-inner .panel_element.panel_element_last {
+  margin-bottom: -1em;
+}
+.panel .panel_element.panel_header {
+  border-width: 0;
+  padding-top: 1px;
+  top: -1px;
+}
+
+/* navbar */
+.navbar ul li a.ui-btn-active.clone_item span.navbar_clone {
+  font-weight: bold;
+}
+/* controlgroup */
+.ui-header .ui-controlgroup,
+.ui-header .ui-controlgroup fieldset.ui-controlgroup,
+/* controlgroup header outside of page */
+.ui-controlgroup,
+.ui-controlgroup fieldset.ui-controlgroup{
+  padding: 0;
+  margin: 0;
+  height: 100%;
+}
+.ui-header .ui-controlgroup-controls {
+  height: 100%;
+}
+/* single button controlgroup */
+.ui-controlgroup.ui-corner-all .ui-controlgroup-controls .ui-btn.ui-first-child.ui-last-child {
+  border-radius: inherit;
+}
+/* button  */
+.ui-header a.ui-btn ,
+html .ui-header a.ui-btn ,
+html body .ui-header a.ui-btn,
+html body .ui-header .ui-controlgroup .ui-controlgroup-controls div.ui-select .ui-btn{
+  height: 100%;
+  margin: 0;
+  position: relative; /* otherwise multiple buttons break */
+  padding-top: 0;
+  padding-bottom: 0;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+}
+html .ui-btn, label.ui-btn {
+  font-weight: normal;
+}
+
+/* no bold buttons */
+html .ui-btn, label.ui-btn {
+  font-weight: normal;
+}
+/* fix svg icon positioning */
+.ui-btn-icon-notext:after,
+.ui-btn-icon-left:after,
+.ui-btn-icon-right:after,
+.ui-listview > li > .ui-btn[class*="ui-icon-"]:after {
+  margin-top: -15px;
+}
+/* reset fix */
+.ui-nosvg .ui-btn-icon-notext:after,
+.ui-nosvg .ui-btn-icon-left:after,
+.ui-nosvg .ui-btn-icon-right:after,
+.ui-nosvg .ui-listview > li > .ui-btn[class*="ui-icon-"]:after,
+.ui-input-clear.ui-btn-icon-notext:after {
+  margin-top: -11px;
+}
+/* fix text-indent when trying to use custom icons on iconpos-notext buttons */
+.ui-btn-icon-notext {
+  text-indent: -9999px;
+}
+.ui-btn-icon-notext:after {
+  text-indent: 0px;
+}
+/* fix font-size on notext buttons, so icons don't zoom, JQMs-px font-size */
+.ui-header .ui-btn-icon-notext,
+.ui-footer .ui-btn-icon-notext {
+  font-size: 12.5px;
+}
+
+/* popup */
+.ui-popup {
+  max-width: 20em; /* so... all popups should get this??? */
+  /* width: 25%; does not work, because max-width will still be screen-padding */
+  min-width: 20em;
+  margin: 0 auto;
+}
+.ui-popup.ui-popup-wide {
+  max-width: 40em;
+  min-width: 40em;
+}
+@media (max-width: 40em) {
+  .ui-popup, html .ui-popup.ui-popup-wide {
+    min-width: 0;
+    margin: 0;
+    width: auto;
+  }
+}
+.ui-popup fieldset {
+  display: block; /* fix offset caused when using display: table-column */
+}
+
+/* all of this should go into a single wrapper/toolbar widget */
+.ui-popup.ui-popup-wide form.draggable div.ui-grid-row {
+  cursor: move;
+}
+.ui-popup.ui-popup-wide form div.ui-grid-row {
+  padding-top: .25em;
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+.ui-popup.ui-popup-wide form .ui-grid-title {
+  max-width: 25%;
+}
+.ui-popup.ui-popup-wide form .ui-grid-search {
+  min-width: 35%;
+  width: auto;
+}
+@media (max-width: 40em) {
+.ui-popup.ui-popup-wide form .ui-grid-search {
+  max-width: 35%;
+}
+}
+.ui-popup.ui-popup-wide form .ui-grid-action {
+  max-width: 5%;
+}
+.ui-popup.ui-popup-wide form .ui-block-a,
+.ui-popup.ui-popup-wide form .ui-block-b,
+.ui-popup.ui-popup-wide form .ui-block-c,
+.ui-popup.ui-popup-wide form .ui-block-d {
+  height: 2.5em;
+  line-height: 2.5em;
+  vertical-align: middle;
+}
+.ui-popup.ui-popup-wide div > p {
+  padding: 0 15px;
+  text-align: center;
+}
+.ui-popup.ui-popup-wide .ui-slider.ui-mini {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.ui-popup.ui-popup-wide form .ui-grid-title span {
+  display: table-cell;
+  padding: 0.25em 0 0.25em 0.5em;
+  font-size: .9em;
+}
+.ui-popup.ui-popup-wide form .ui-input-text {
+  margin: 0 0.5em;
+}
+.ui-popup.ui-popup-wide .ui-grid-3,
+.ui-popup.ui-popup-narrow .ui-grid-3,
+.ui-popup.ui-popup-wide .ui-grid-2,
+.ui-popup.ui-popup-narrow .ui-grid-2 {
+  margin: 0;
+}
+.ui-popup.ui-popup-wide .ui-popup-menu,
+.ui-popup.ui-popup-narrow .ui-popup-menu {
+  text-align: center;
+  margin-bottom: .5em;
+}
+.ui-popup.ui-popup-wide .ui-popup-menu .ui-controlgroup-controls .ui-btn,
+.ui-popup.ui-popup-wide .ui-grid-row .ui-select .ui-btn,
+.ui-popup.ui-popup-narrow .ui-popup-menu .ui-controlgroup-controls .ui-btn {
+  font-size: 85%;
+}
+.ui-popup.ui-popup-wide .ui-grid-row .ui-select,
+.ui-popup.ui-popup-wide .ui-grid-row .ui-checkbox {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.ui-popup.ui-popup-wide .ui-popup-menu .ui-controlgroup-controls .ui-btn:after,
+.ui-popup.ui-popup-narrow .ui-popup-menu .ui-controlgroup-controls .ui-btn:after{
+  margin-top: -12px;
+}
+.ui-popup.ui-popup-wide .ui-grid-3.ui-controlgroup-controls,
+.ui-popup.ui-popup-wide .ui-grid-2.ui-controlgroup-controls,
+.ui-popup.ui-popup-narrow .ui-grid-3.ui-controlgroup-controls,
+.ui-popup.ui-popup-narrow .ui-grid-2.ui-controlgroup-controls {
+  width: 100%;
+}
+.ui-popup.ui-popup-wide .ui-grid-3 a.ui-btn,
+.ui-popup.ui-popup-narrow .ui-grid-3 a.ui-btn{
+  width: 33.33%;
+  box-sizing: padding-box;
+  -moz-box-sizing: padding-box;
+  -webkit-box-sizing: padding-box;
+  border-width: 0px;
+}
+.ui-popup.ui-popup-wide .ui-grid-2 a.ui-btn,
+.ui-popup.ui-popup-narrow .ui-grid-2 a.ui-btn{
+  width: 50%;
+  box-sizing: padding-box;
+  -moz-box-sizing: padding-box;
+  -webkit-box-sizing: padding-box;
+  border-width: 0px;
+}
+
+
+/* panel */
+.ui-panel {
+  border-width: 0px; /* overwrite border-width reset by panel-swatch ui-overlay... */
+}
+/* panel closer */
+html .ui-panel-inner .ui-btn.panel-close {
+  background-color: transparent;
+  background-image: none;
+  margin: 12px 0.3125em 0; /* no friend ... */
+}
+html .ui-panel-inner .ui-btn.panel-close:hover {
+  border-color: transparent;
+}
+html .ui-panel-inner .ui-btn.panel-close:after {
+  font-size: 1.25em;
+  margin-top: -12px; /* no friend ... */
+}
+html .ui-btn.panel-close {
+  position: absolute !important;
+  top: -9999px;
+  left: -9999px;
+  clip: rect(1px 1px 1px 1px);
+  display: none;
+}
+@media (max-width: 30em) {
+  html .ui-btn.panel-close {
+    right: 0;
+    top: 0;
+    left: auto;
+    clip: auto;
+    display: block;
+  }
+}
+/* panel search input overriding width */
+html .ui-panel-inner .ui-input-search {
+  margin: 2% 1%;
+}
+@media (max-width: 30em) {
+  html .ui-panel-inner .ui-input-search {
+    width: 77%;
+  }
+}
+
+@media (max-width: 25em) {
+  html .ui-panel-inner .ui-input-search {
+    width: 77%;
+  }
+}
+@media (max-width: 20em) {
+  html .ui-panel-inner .ui-input-search {
+    width: 77%;
+  }
+}
+/* filterable */
+html .ui-filterable {
+  width: 75%;
+  margin: 0 auto;
+}
+@media (max-width: 40em) {
+  html .ui-filterable  {
+    width: 100%;
+    margin: 0.5em 0;
+  }
+}
+
+/* extend panel to fullwidth on small screens */
+@media (max-width: 30em) {
+  /* override JQM 17em */
+  .ui-panel {
+    width: 100%;
+  }
+  /* positioning: panel */
+  /* panel left  */
+  .ui-panel-position-left {
+    left: -100%;
+  }
+  /* animated: panel left (for overlay and push) */
+  .ui-panel-animate.ui-panel-position-left.ui-panel-display-overlay,
+  .ui-panel-animate.ui-panel-position-left.ui-panel-display-push {
+    left: 0;
+    -webkit-transform: translate3d(-100%,0,0);
+    -moz-transform: translate3d(-100%,0,0);
+    transform: translate3d(-100%,0,0);
+  }
+  /* panel left open */
+  .ui-panel-position-left.ui-panel-display-reveal, /* negate "panel left" for reveal */
+  .ui-panel-position-left.ui-panel-open {
+    left: 0;
+  }
+  /* animated: panel left open (for overlay and push) */
+  .ui-panel-animate.ui-panel-position-left.ui-panel-open.ui-panel-display-overlay,
+  .ui-panel-animate.ui-panel-position-left.ui-panel-open.ui-panel-display-push {
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+    -moz-transform: none;
+  }
+  /* panel right */
+  .ui-panel-position-right {
+    right: -100%;
+  }
+  /* animated: panel right (for overlay and push) */
+  .ui-panel-animate.ui-panel-position-right.ui-panel-display-overlay,
+  .ui-panel-animate.ui-panel-position-right.ui-panel-display-push {
+    right: 0;
+    -webkit-transform: translate3d(100%,0,0);
+    -moz-transform: translate3d(100%,0,0);
+    transform: translate3d(100%,0,0);
+  }
+  /* panel right open */
+  .ui-panel-position-right.ui-panel-display-reveal,  /* negate "panel right" for reveal */
+  .ui-panel-position-right.ui-panel-open {
+    right: 0;
+  }
+  /* animated: panel right open (for overlay and push) */
+  .ui-panel-animate.ui-panel-position-right.ui-panel-open.ui-panel-display-overlay,
+  .ui-panel-animate.ui-panel-position-right.ui-panel-open.ui-panel-display-push {
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+    -moz-transform: none;
+  }
+  /* positioning: pages, fixed toolbars and dismiss */
+  /* panel left open */
+  .ui-panel-page-content-position-left.ui-panel-page-content-open,
+  .ui-panel-dismiss-position-left.ui-panel-dismiss-open {
+    left: 100%;
+    right: -100%;
+  }
+  /* animated: panel left open (for reveal and push) */
+  .ui-panel-animate.ui-panel-page-content-position-left.ui-panel-page-content-open.ui-panel-page-content-display-reveal,
+  .ui-panel-animate.ui-panel-page-content-position-left.ui-panel-page-content-open.ui-panel-page-content-display-push {
+    left: 0;
+    right: 0;
+    -webkit-transform: translate3d(100%,0,0);
+    -moz-transform: translate3d(100%,0,0);
+    transform: translate3d(100%,0,0);
+  }
+  /* panel right open */
+  .ui-panel-page-content-position-right.ui-panel-page-content-open,
+  .ui-panel-dismiss-position-right.ui-panel-dismiss-open {
+    left: -100%;
+    right: 100%;
+  }
+  /* animated: panel right open (for reveal and push) */
+  .ui-panel-animate.ui-panel-page-content-position-right.ui-panel-page-content-open.ui-panel-page-content-display-reveal,
+  .ui-panel-animate.ui-panel-page-content-position-right.ui-panel-page-content-open.ui-panel-page-content-display-push {
+    left: 0;
+    right: 0;
+    -webkit-transform: translate3d(-100%,0,0);
+    -moz-transform: translate3d(-100%,0,0);
+    transform: translate3d(-100%,0,0);
+  }
+  /* negate "panel left/right open" for overlay */
+  .ui-panel-page-content-open.ui-panel-page-content-display-overlay {
+    left: 0;
+  }
+}
+
+/* allow interaction with page on large displays */
+@media (min-width: 30em) {
+  /* wrap on wide viewports once open */
+  .ui-page-panel-open .ui-panel-content-fixed-toolbar-display-push.ui-panel-content-fixed-toolbar-position-left,
+  .ui-page-panel-open .ui-panel-content-fixed-toolbar-display-reveal.ui-panel-content-fixed-toolbar-position-left,
+  .ui-page-panel-open .ui-panel-content-wrap-display-push.ui-panel-content-wrap-position-left,
+  .ui-page-panel-open .ui-panel-content-wrap-display-reveal.ui-panel-content-wrap-position-left {
+    margin-right: 17em;
+  }
+  .ui-page-panel-open .ui-panel-content-fixed-toolbar-display-push.ui-panel-content-fixed-toolbar-position-right,
+  .ui-page-panel-open .ui-panel-content-fixed-toolbar-display-reveal.ui-panel-content-fixed-toolbar-position-right,
+  .ui-page-panel-open .ui-panel-content-wrap-display-push.ui-panel-content-wrap-position-right,
+  .ui-page-panel-open .ui-panel-content-wrap-display-reveal.ui-panel-content-wrap-position-right {
+    margin-left: 17em;
+  }
+  .ui-page-panel-open .ui-panel-content-fixed-toolbar-display-push,
+  .ui-page-panel-open .ui-panel-content-fixed-toolbar-display-reveal {
+    width: auto;
+  }
+  /* disable "dismiss" on wide viewports */
+  .ui-panel-dismiss {
+    display: none;
+  }
+  /* same as the above but for panels with display mode "push" only */
+  .ui-panel-dismiss-display-push {
+    display: none;
+  }
+}
+/* action/input buttons */
+.bare_button,
+.bare_button .ui-btn-inner,
+.bare_button .ui-icon {
+  background: 0 none;
+  border: 0 none;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+.bare_button .ui-icon {
+  bottom: 0;
+  line-height: 1em;
+  margin: 0;
+  text-align: center;
+  top: 31%;
+  font-size: 1.25em;
+  border-radius: 0px !important;
+  -webkit-border-radius: 0px !important;
+}
+
+
+
+/* listview/list */
+/* plain list */
+.list {
+  list-style: none;
+  text-align: center;
+  padding: 0;
+  margin: 0.5em 0;
+}
+.list li a {
+  text-decoration: none;
+}
+
+/* ============================== RESPONSIVE ============================== */
+/* hide button text on small screens */
+@media (max-width: 40em) {
+  .responsive.ui-btn,
+  .ui-select span.responsive /*,
+ .responsive .ui-btn */ {
+    text-indent: -9999px;
+    white-space: nowrap !important;
+  }
+  .responsive.ui-btn:after /*,
+  .responsive .ui-btn:after*/ {
+    text-indent: 0px;
+    left: 10px;
+  }
+}
+
+/* responsive listview */
+.ui-listview.responsive > li.ui-first-child:only-child {
+  border-bottom-right-radius: .3125em;
+  border-bottom-left-radius: .3125em;
+  -webkit-border-bottom-right-radius: .3125em;
+  -webkit-border-bottom-left-radius: .3125em;
+}
+.ui-listview.responsive > li > a.ui-btn:only-child {
+  border-bottom-width: 1px;
+}
+/* icon size in regular listview */
+.ui-listview.responsive li .ui-btn .ui-li-icon-custom:after {
+    font-size: 1.5em;
+    padding: 0.5em 0.1em;
+}
+/* text padding in regular listview */
+.ui-listview.responsive > .ui-li-has-icon > .ui-btn,
+.ui-listview.responsive > .ui-li-static.ui-li-has-icon {
+  padding-left: 3.5em;
+}
+/* First breakpoint is 48em (768px). 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
+@media ( min-width: 48em ) {
+  /* TODO: fix this - app icons */
+  .ui-listview.responsive .ui-li-has-thumb > img:first-child, 
+  .ui-listview.responsive .ui-li-has-thumb > .ui-btn > img:first-child, 
+  .ui-listview.responsive .ui-li-has-thumb .ui-li-thumb {
+    max-width: 8em;
+    max-height: 8em;
+    left: 31%;
+    top: 5%;
+  }
+
+  /* limit controlbar width */
+  html .ui-page .ui-controlbar.responsive,
+  form.responsive {
+    max-width: 40em; /* 640px */
+    margin: 0 auto;
+    clear: both;
+  }
+  .ui-listview.responsive li {
+    float: left;
+    width: 30.9333%; /* 33.3333% incl. 2 x 1.2% margin */
+    height: 14.5em; /* 232p */
+    margin: .5625em 1.2%;
+  }
+  .ui-listview.responsive li > .ui-btn {
+    -webkit-box-sizing: border-box; /* include padding and border in height so we can set it to 100% */
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 100%;
+    border-bottom-width: 1px;
+  }
+  .ui-listview.responsive li.ui-li-has-thumb .ui-li-thumb,
+  .ui-listview.responsive li.ui-li-has-icon .ui-li-icon-custom {
+    height: auto; /* To keep aspect ratio. */
+    max-width: 100% !important;
+    max-height: none;
+  }
+  /* Overwrite custom icon width 22px */
+  .ui-listview.responsive li span.ui-li-icon-custom {
+    width: 100% !important;
+  }
+  /* Make all list items and anchors inherit the border-radius from the UL. */
+  .ui-listview.responsive li,
+  .ui-listview.responsive li .ui-btn,
+  .ui-listview.responsive .ui-li-thumb,
+  .ui-listview.responsive .ui-li-icon-custom {
+    -webkit-border-radius: inherit;
+    border-radius: inherit;
+  }
+  /* Hide the icon */
+  .ui-listview.responsive .ui-btn-icon-right:after {
+    display: none;
+  }
+  /* Enlarge custom icon */
+  .ui-listview.responsive li .ui-btn .ui-li-icon-custom:after {
+    font-size: 3em;
+  }
+  /* Align center */
+  .ui-listview.responsive li > .ui-btn {
+    text-align: center;
+  }
+  /* Make text wrap. */
+  .ui-listview.responsive h1,
+  .ui-listview.responsive p {
+    white-space: normal;
+    overflow: visible;
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+  /* Text position */
+  .ui-listview.responsive h1 {
+    font-size: 1.25em;
+    margin: 0;
+    padding: .125em 1em;
+    bottom: 40%;
+  }
+  .ui-listview.responsive p {
+    font-size: 1em;
+    margin: 0;
+    padding: 0 1.25em;
+    min-height: 40%;
+    bottom: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  /* Semi transparent background and different position if there is a thumb. The button has overflow hidden so we don't need to set border-radius. */
+  .ui-listview.responsive .ui-li-has-thumb h1,
+  .ui-listview.responsive .ui-li-has-thumb p,
+  .ui-listview.responsive .ui-li-has-icon h1,
+  .ui-listview.responsive .ui-li-has-icon p,{
+    background: #111;
+    background: rgba(0,0,0,.8);
+  }
+  .ui-listview.responsive .ui-li-has-thumb h1,
+  .ui-listview.responsive .ui-li-has-icon h1 {
+    bottom: 25%;
+  }
+  .ui-listview.responsive .ui-li-has-thumb p,
+  .ui-listview.responsive .ui-li-has-icon p{
+    min-height: 25%;
+  }
+  /* ui-li-aside has class .ui-li-desc as well so we have to override some things. */
+  .ui-listview.responsive .ui-li-aside {
+    padding: .125em .625em;
+    width: auto;
+    min-height: 0;
+    top: 0;
+    left: auto;
+    bottom: auto;
+    /* Custom styling. */
+    background: #990099;
+    background: rgba(153,0,153,.85);
+    -webkit-border-top-right-radius: inherit;
+    border-top-right-radius: inherit;
+    -webkit-border-bottom-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+    -webkit-border-bottom-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  /* Animate focus and hover style, and resizing. */
+  .ui-listview.responsive li,
+  .ui-listview.responsive .ui-btn {
+    -webkit-transition: all 500ms ease;
+    -moz-transition: all 500ms ease;
+    -o-transition: all 500ms ease;
+    -ms-transition: all 500ms ease;
+    transition: all 500ms ease;
+  }
+}
+
+/* Second breakpoint is 63.75em (1020px). 4 column layout. Tiles will be 250x250 pixels incl. margin again at the breakpoint. */
+@media ( min-width: 63.75em ) {
+  .ui-listview.responsive .ui-li-has-thumb > img:first-child, 
+  .ui-listview.responsive .ui-li-has-thumb > .ui-btn > img:first-child, 
+  .ui-listview.responsive .ui-li-has-thumb .ui-li-thumb {
+    max-width: 8em;
+    max-height: 8em;
+    left: 25%;
+    top: 5%;
+  }
+  /* Set a max-width for the last breakpoint to prevent too much stretching on large screens.
+  By setting the max-width equal to the breakpoint width minus padding we keep square tiles. */
+  /* responsive content */
+  html form.responsive,
+  html .ui-page .ui-content-element.responsive,
+  html .ui-page .ui-listview.responsive,
+  html .ui-page .ui-controlbar.responsive {
+    max-width: 62.5em; /* 1000px */
+    margin: 0 auto;
+    clear: both;
+  }
+  /* Enlarge custom icon */
+  .ui-listview.responsive li .ui-btn .ui-li-icon-custom:after {
+    font-size: 4em;
+  }
+  /* Align center */
+  .ui-listview.responsive li > .ui-btn {
+    text-align: center;
+  }
+  /* Overwrite custom icon width 22px */
+  .ui-listview.responsive li span.ui-li-icon-custom {
+    width: 100% !important;
+  }
+  /* Because of the 1000px max-width the width will always be 230px (and margin left/right 10px),
+  but we stick to percentage values for demo purposes. */
+  .ui-listview.responsive li {
+    width: 23%;
+    height: 230px;
+    margin: .625em 1%;
+  }
+}
+/* =========== */
+
+
+/* listview */
+html .ui-panel-inner .ui-listview .ui-li-divider {
+  font-weight: bold;
+  padding: 0.5em 1em;
+  border: 0 none;
+}
+html .ui-panel-inner .ui-listview li a {
+  padding: 0.4em 2.75em !important;
+}
+.ui-panel-inner .ui-listview > li h1,
+.ui-panel-inner .ui-listview > li h2,
+.ui-panel-inner .ui-listview > li h3,
+.ui-panel-inner .ui-listview > li h4,
+.ui-panel-inner .ui-listview > li h5,
+.ui-panel-inner .ui-listview > li h6 {
+  font-size: .9em;
+  margin: 0;
+}
+.ui-panel-inner .ui-listview > li p {
+  font-size: .7em;
+  margin: 0;
+}
+.ui-panel-inner .ui-listview .ui-li-has-thumb > img:first-child,
+.ui-panel-inner .ui-listview .ui-li-has-thumb > .ui-btn > img:first-child {
+  max-height: 2.5em;
+  max-width: 2.5em;
+  overflow: hidden;
+  padding: 0.2em 0;
+}
+
+/* overwrite icon positioning for fontawesome */
+/*
+.ui-panel-inner .ui-btn-icon-right:after,
+.ui-panel-inner .ui-listview > li > .ui-btn[class*="ui-icon-"]:after {
+  right: 0;
+}
+.ui-btn-icon-right:after,
+.ui-listview > li > .ui-btn[class*="ui-icon-"]:after {
+  right: 0.3625em;
+}
+*/
+/* reset */
+/*
+html.ui-nosvg .ui-btn-icon-right:after,
+html.ui-nosvg .ui-panel-inner .ui-listview > li > .ui-btn[class*="ui-icon-"]:after {
+  right: 0.5625em;
+}
+.ui-btn.ui-btn-icon-left:after {
+  left: 0.3625em;
+}
+html.ui-nosvg .ui-btn-icon-left:after {
+  left: 0.5625em;
+}
+*/
+/* custom icons */
+.ui-listview li span.ui-li-icon-custom {
+  bottom: 0;
+  top: 0;
+  box-shadow: none !important;
+  font-size: 1.25em;
+  height: 100%;
+  left: 0.25em;
+  line-height: 1em;
+  margin: 0;
+  max-height: 80px;
+  max-width: 80px;
+  position: absolute;
+  text-align: center;
+  width: 22px;
+  top: 19%; /* no friend... */
+}
+.ui-listview li span.ui-li-icon-custom:after {
+  background: none repeat scroll 0 center transparent;
+}
+
+/* checkboxradio */
+/* overwrite icon background for fontawesome */
+.ui-radio .ui-btn.ui-radio-on:after {
+  background: 0 none;
+  border-width: 0;
+}
+/* reset */
+.ui-nosvg .ui-radio .ui-btn-ui-radio-on:after {
+  background-color: #FFFFFF;
+  background-image: none;
+  border-width: 5px;
+}
+/* position icons */
+.ui-radio .ui-btn.ui-radio-on:after,
+.ui-radio .ui-btn.ui-radio-off:after,
+.ui-checkbox .ui-btn.ui-checkbox-on:after,
+.ui-checkbox .ui-btn.ui-checkbox-off:after {
+  margin: -14px 2px 0;
+}
+/* icon size */
+.ui-checkbox .ui-btn.ui-checkbox-on:after,
+.ui-checkbox .ui-btn.ui-checkbox-off:after {
+  font-size: 1.25em;
+  opacity: 1; /* overwrite JQM .3 for off... */
+}
+/* reset */
+.ui-nosvg .ui-radio .ui-btn.ui-radio-on:after,
+.ui-nosvg .ui-radio .ui-btn.ui-radio-off:after,
+.ui-checkbox .ui-btn.ui-checkbox-on:after,
+.ui-checkbox .ui-btn.ui-checkbox-off:after {
+  background: 0 none;
+  background-image: none;
+  margin: -11px 2px 0;
+}
+/* overwrite JQM showing focus icon */
+.ui-icon-check:after,
+html .ui-btn.ui-checkbox-on.ui-checkbox-on:after {
+  background-image: none;
+}
+
+/* filterable */
+html .ui-panel-inner .ui-input-search.ui-input-has-clear .ui-btn.ui-input-clear,
+html .ui-panel-inner .ui-input-search .ui-input-action {
+  background-image: none;
+}
+html .ui-panel-inner .ui-input-search.ui-input-has-clear .ui-btn.ui-input-clear {
+  margin: -9px 0.3125em 0;
+}
+html .ui-input-search .ui-input-clear:after,
+html .ui-input-search .ui-input-action:after {
+  margin-top: -12px;
+}
+html .ui-panel-inner .ui-input-search .ui-input-clear:after,
+html .ui-panel-inner .ui-input-search .ui-input-action:after {
+  margin-top: -16px;
+}
+/* reset */
+html.ui-nosvg .ui-panel-inner .ui-input-search.ui-input-has-clear .ui-btn.ui-input-clear,
+html.ui-nosvg .ui-panel-inner .ui-input-search .ui-input-action {
+  margin: -15px 0.3125em 0;
+}
+html .ui-panel-inner .ui-input-search .ui-input-clear:after,
+html .ui-panel-inner .ui-input-search .ui-input-action:after {
+  font-size: 1.25em;
+}
+/*
+html .ui-panel-inner .ui-input-search .ui-input-clear:focus,
+html .ui-panel-inner .ui-input-search .ui-input-action:focus {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+*/
+html .ui-input-search .ui-input-action {
+  display:none;
+}
+html .ui-input-search input:focus ~ .ui-input-action,
+html .ui-input-search input.ui-focus ~ .ui-input-action{
+  display:block;
+}
+html body .ui-input-search .ui-input-clear:hover,
+html body .ui-input-search .ui-input-clear:active {
+  background: transparent;
+  background-image: none;
+  -webkit-box-shadow: none /* iOS3 */ !important;
+  box-shadow: none /* iOS3 */ !important;
+}
+/* collapsibles - fix default 200% font-size set by browser */
+html .ui-collapsible h1 {
+  font-size: 100%; /* clean this up... should not be necessary */
+}
+html .ui-collapsible .ui-collapsible-content .ui-listview li a.ui-btn {
+  font-weight: normal;
+}
+
+/* selectmenu - crap... */
+.ui-select .ui-btn-corner-all,
+.ui-select .ui-btn.ui-corner-all {
+   border-radius: .6em;
+   -webkit-border-radius: .6em;
+}
+
+/* inside controlgroup */
+.ui-controlgroup .ui-controlgroup-controls div.ui-select,
+.ui-controlgroup .ui-controlgroup-controls div.ui-select div.ui-btn {
+  border-radius: 0;
+  -webkit-border-radius: 0;
+}
+/* select is first in controlgroup ... after label... */
+.ui-controlgroup .ui-controlgroup-controls :first-child + div.ui-select,
+.ui-controlgroup .ui-controlgroup-controls :first-child + div.ui-select div.ui-btn{
+  border-top-left-radius: .6em;
+  border-bottom-left-radius: .6em;
+  -webkit-border-top-left-raidus: .6em;
+  -webkit-border-bottom-left-radius: .6em;
+}
+html .ui-select .ui-btn-icon-notext:after,
+html .ui-select .ui-btn-icon-left:after,
+html .ui-select .ui-btn-icon-right:after {
+  margin-top: -12px;
+}
+.ui-input-text .ui-input-clear:hover {
+  background: transparent;
+}
+/* header logo, careful, no more buttons possible! */
+html .ui-header .ui-header-logo img {
+  max-height: 37px;
+  padding: 2px 0.5em;
+  vertical-align: middle;
+}
+@media (max-width: 40em) {
+  html .ui-header .ui-header-logo ~ h1 {
+    margin-right: 1em;
+    text-align: right;
+  }
+}
+
+
+
+/* breadcrumbs - need work! 
+.ui-breadcrumbs {
+  background: none repeat scroll 0 0 #DDDDDD;
+  border-bottom: 1px solid #81898A;
+  box-shadow: 0 -7px 4px -6px #aaa inset;
+  -webkit-box-shadow: 0 -7px 4px -6px #aaa inset;
+  display: block;
+  margin: -15px -15px 0;
+  padding: 0.5em 0;
+  white-space: nowrap;
+}
+/* experimental ... thx http://fiddle.jshell.net/leaverou/EjE7c/show/light */
+
+/* -moz-border-radius: 0.6em 10px 10px 0.6em / 0.6em 100px 100px 0.6em; */
+/*
+div.round {
+    background:
+        -moz-radial-gradient(0 100%, circle, rgba(204,0,0,0) 14px, #c00 15px),
+        -moz-radial-gradient(100% 100%, circle, rgba(204,0,0,0) 14px, #c00 15px),
+        -moz-radial-gradient(100% 0, circle, rgba(204,0,0,0) 14px, #c00 15px),
+        -moz-radial-gradient(0 0, circle, rgba(204,0,0,0) 14px, #c00 15px);
+    background:
+         -o-radial-gradient(0 100%, circle, rgba(204,0,0,0) 14px, #c00 15px),
+         -o-radial-gradient(100% 100%, circle, rgba(204,0,0,0) 14px, #c00 15px),
+         -o-radial-gradient(100% 0, circle, rgba(204,0,0,0) 14px, #c00 15px),
+         -o-radial-gradient(0 0, circle, rgba(204,0,0,0) 14px, #c00 15px);
+    background:
+         -webkit-radial-gradient(0 100%, circle, rgba(204,0,0,0) 14px, #c00 15px),
+         -webkit-radial-gradient(100% 100%, circle, rgba(204,0,0,0) 14px, #c00 15px),
+         -webkit-radial-gradient(100% 0, circle, rgba(204,0,0,0) 14px, #c00 15px),
+         -webkit-radial-gradient(0 0, circle, rgba(204,0,0,0) 14px, #c00 15px);
+}
+
+div, div.round {
+    background-position: bottom left, bottom right, top right, top left;
+    -moz-background-size: 50% 50%;
+    -webkit-background-size: 50% 50%;
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
+}*/
+/*
+.ui-breadcrumbs .ui-btn {
+
+  border-top-left-radius: .6em ;
+  border-bottom-left-radius: .6em;
+  border-top-right-radius: 10px / 100px;
+  border-bottom-right-radius: 10px / 100px;
+  border-right-width: 0;
+  padding-right: 2em;
+  overflow: visible;
+  margin: auto .5em;
+  padding-left: 30px;
+  font-weight: bold;
+}
+.ui-breadcrumbs .ui-btn.ui-btn-active {
+  cursor: default;
+}
+.ui-breadcrumbs .ui-btn:before {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  background: none repeat scroll 0 0 transparent;
+  border-color: #DDDDDD #DDDDDD transparent;
+  border-style: solid;
+  border-width: 0.4em 2em 2em;
+  content: "";
+  display: block;
+  height: 0;
+  position: absolute;
+  right: -1.2em;
+  top: 0.25em;
+  -webkit-transform: rotate(90deg);
+     -moz-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+       -o-transform: rotate(90deg);
+          transform: rotate(90deg);
+  width: 0;
+}
+.ui-breadcrumbs .ui-btn.ui-last-child {
+  border-right-width: 1px;
+  padding-right: .5em;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  outline: 0 !important;
+  display: inline-block;
+  border-radius: .6em;
+}
+.ui-breadcrumbs .ui-btn.ui-last-child:before {
+  content: none;
+}
+
+.ui-breadcrumbs .ui-btn.ui-crumbs {
+  font-size: 70%;
+  max-width: 23%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: auto .5em;
+}
+.ui-breadcrumbs .ui-btn.ui-crumbs:after {
+  margin-top: -10px;
+}*/
+

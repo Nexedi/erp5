@@ -1,0 +1,580 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Manifest" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_officejs_text_editor.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_officejs_text_editor_appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Manifest</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>CACHE MANIFEST\n
+# generated on Fri, 25 Jun 2016 11:45:33 +0000\n
+# XXX + fonts\n
+# images/ajax-loader.gif\n
+CACHE:\n
+#officejs\n
+font-awesome/font-awesome.css\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.woff2\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg\n
+gadget_erp5_nojqm.css\n
+jio_ojs_storage.js\n
+gadget_erp5_global.js\n
+URI.js\n
+dygraph.js\n
+handlebars.js\n
+jiodev.js\n
+renderjs.js\n
+rsvp.js\n
+gadget_global.js\n
+erp5_launcher_nojqm.js\n
+gadget_officejs_router.js\n
+gadget_erp5_router.html\n
+gadget_erp5_router.js\n
+gadget_jio.html\n
+gadget_jio.js\n
+gadget_translate.html\n
+gadget_translate.js\n
+gadget_translation.html\n
+gadget_translation.js\n
+gadget_translation_data.js\n
+gadget_erp5_editor_panel.html\n
+gadget_erp5_editor_panel.js\n
+gadget_erp5_ojs_panel.html\n
+gadget_erp5_ojs_panel.js\n
+gadget_erp5_header.html\n
+gadget_erp5_header.js\n
+gadget_ojs_jio.html\n
+gadget_ojs_jio.js\n
+gadget_erp5_page_ojs_controller.html\n
+gadget_erp5_page_ojs_controller.js\n
+gadget_erp5_page_ojs_add_document.html\n
+gadget_erp5_page_ojs_add_document.js\n
+gadget_erp5_page_ojs_configurator.html\n
+gadget_erp5_page_ojs_configurator.js\n
+gadget_erp5_page_ojs_dav_configurator.html\n
+gadget_erp5_page_ojs_dav_configurator.js\n
+gadget_erp5_page_ojs_erp5_configurator.html\n
+gadget_erp5_page_ojs_erp5_configurator.js\n
+gadget_erp5_page_ojs_dropbox_configurator.html\n
+gadget_erp5_page_ojs_dropbox_configurator.js\n
+gadget_erp5_page_ojs_sync.html\n
+gadget_erp5_page_ojs_sync.js\n
+gadget_erp5_page_ojs_document_list.html\n
+gadget_erp5_page_ojs_document_list.js\n
+gadget_ojs_configurator_access.html\n
+gadget_ojs_configurator_access.js\n
+gadget_html5_input.html\n
+gadget_html5_input.js\n
+gadget_erp5_field_multicheckbox.html\n
+gadget_erp5_field_multicheckbox.js\n
+gadget_erp5_searchfield.html\n
+gadget_erp5_searchfield.js\n
+gadget_erp5_pt_form_list.html\n
+gadget_erp5_pt_form_list.js\n
+gadget_erp5_form.html\n
+gadget_erp5_form.js\n
+gadget_erp5_label_field.html\n
+gadget_erp5_label_field.js\n
+gadget_erp5_field_listbox.html\n
+gadget_erp5_field_listbox.js\n
+gadget_erp5_field_datetime.html\n
+gadget_erp5_field_datetime.js\n
+gadget_html5_element.html\n
+gadget_html5_element.js\n
+gadget_erp5_notification.html\n
+gadget_erp5_notification.js\n
+gadget_erp5_field_string.html\n
+gadget_erp5_field_string.js\n
+gadget_erp5_field_editor.html\n
+gadget_erp5_field_editor.js\n
+gadget_erp5_field_gadget.html\n
+gadget_erp5_field_gadget.js\n
+gadget_erp5_search_editor.html\n
+gadget_erp5_search_editor.js\n
+gadget_erp5_sort_editor.html\n
+gadget_erp5_sort_editor.js\n
+gadget_erp5_field_password.html\n
+gadget_erp5_field_password.js\n
+gadget_erp5_field_textarea.html\n
+gadget_erp5_field_textarea.js\n
+gadget_html5_textarea.html\n
+gadget_html5_textarea.js\n
+gadget_editor.html\n
+gadget_editor.js\n
+gadget_button_maximize.html\n
+gadget_button_maximize.js\n
+gadget_erp5_configure_editor.html\n
+gadget_erp5_configure_editor.js\n
+\n
+#setting\n
+gadget_officejs_setting.js\n
+gadget_officejs_setting.html\n
+\n
+#text editor\n
+gadget_officejs_text_editor_router.html\n
+gadget_officejs_jio_web_page_view.html\n
+gadget_officejs_jio_web_page_view.js\n
+\n
+#Ckeditor\n
+ckeditor.gadget.html\n
+ckeditor.gadget.js\n
+ckeditor/skins/moono-lisa/icons.png\n
+ckeditor/skins/moono-lisa/editor_iequirks.css\n
+ckeditor/skins/moono-lisa/images/lock.png\n
+ckeditor/skins/moono-lisa/images/lock-open.png\n
+ckeditor/skins/moono-lisa/images/refresh.png\n
+ckeditor/skins/moono-lisa/images/spinner.gif\n
+ckeditor/skins/moono-lisa/images/arrow.png\n
+ckeditor/skins/moono-lisa/images/close.png\n
+ckeditor/skins/moono-lisa/images/hidpi/lock.png\n
+ckeditor/skins/moono-lisa/images/hidpi/lock-open.png\n
+ckeditor/skins/moono-lisa/images/hidpi/refresh.png\n
+ckeditor/skins/moono-lisa/images/hidpi/close.png\n
+ckeditor/skins/moono-lisa/editor_ie.css\n
+ckeditor/skins/moono-lisa/dialog_iequirks.css\n
+ckeditor/skins/moono-lisa/dialog_ie8.css\n
+ckeditor/skins/moono-lisa/icons_hidpi.png\n
+ckeditor/skins/moono-lisa/editor_gecko.css\n
+ckeditor/skins/moono-lisa/editor_ie8.css\n
+ckeditor/skins/moono-lisa/editor.css\n
+ckeditor/skins/moono-lisa/dialog_ie.css\n
+ckeditor/skins/moono-lisa/dialog.css\n
+ckeditor/lang/ro.js\n
+ckeditor/lang/id.js\n
+ckeditor/lang/fi.js\n
+ckeditor/lang/mk.js\n
+ckeditor/lang/es-mx.js\n
+ckeditor/lang/az.js\n
+ckeditor/lang/bg.js\n
+ckeditor/lang/af.js\n
+ckeditor/lang/et.js\n
+ckeditor/lang/km.js\n
+ckeditor/lang/sr-latn.js\n
+ckeditor/lang/da.js\n
+ckeditor/lang/bn.js\n
+ckeditor/lang/eo.js\n
+ckeditor/lang/si.js\n
+ckeditor/lang/fa.js\n
+ckeditor/lang/fo.js\n
+ckeditor/lang/uk.js\n
+ckeditor/lang/en.js\n
+ckeditor/lang/mn.js\n
+ckeditor/lang/fr.js\n
+ckeditor/lang/pl.js\n
+ckeditor/lang/it.js\n
+ckeditor/lang/eu.js\n
+ckeditor/lang/ug.js\n
+ckeditor/lang/sr.js\n
+ckeditor/lang/ka.js\n
+ckeditor/lang/gl.js\n
+ckeditor/lang/nl.js\n
+ckeditor/lang/vi.js\n
+ckeditor/lang/lv.js\n
+ckeditor/lang/sk.js\n
+ckeditor/lang/ja.js\n
+ckeditor/lang/sq.js\n
+ckeditor/lang/no.js\n
+ckeditor/lang/th.js\n
+ckeditor/lang/en-gb.js\n
+ckeditor/lang/sl.js\n
+ckeditor/lang/en-au.js\n
+ckeditor/lang/el.js\n
+ckeditor/lang/hi.js\n
+ckeditor/lang/cy.js\n
+ckeditor/lang/ar.js\n
+ckeditor/lang/nb.js\n
+ckeditor/lang/ms.js\n
+ckeditor/lang/is.js\n
+ckeditor/lang/pt-br.js\n
+ckeditor/lang/es.js\n
+ckeditor/lang/fr-ca.js\n
+ckeditor/lang/de-ch.js\n
+ckeditor/lang/ko.js\n
+ckeditor/lang/bs.js\n
+ckeditor/lang/ku.js\n
+ckeditor/lang/tt.js\n
+ckeditor/lang/hu.js\n
+ckeditor/lang/ru.js\n
+ckeditor/lang/cs.js\n
+ckeditor/lang/zh.js\n
+ckeditor/lang/sv.js\n
+ckeditor/lang/lt.js\n
+ckeditor/lang/tr.js\n
+ckeditor/lang/hr.js\n
+ckeditor/lang/zh-cn.js\n
+ckeditor/lang/pt.js\n
+ckeditor/lang/he.js\n
+ckeditor/lang/de.js\n
+ckeditor/lang/en-ca.js\n
+ckeditor/lang/ca.js\n
+ckeditor/lang/gu.js\n
+ckeditor/lang/oc.js\n
+ckeditor/build-config.js\n
+ckeditor/plugins/icons.png\n
+ckeditor/plugins/specialchar/dialogs/lang/id.js\n
+ckeditor/plugins/specialchar/dialogs/lang/fi.js\n
+ckeditor/plugins/specialchar/dialogs/lang/es-mx.js\n
+ckeditor/plugins/specialchar/dialogs/lang/az.js\n
+ckeditor/plugins/specialchar/dialogs/lang/bg.js\n
+ckeditor/plugins/specialchar/dialogs/lang/af.js\n
+ckeditor/plugins/specialchar/dialogs/lang/et.js\n
+ckeditor/plugins/specialchar/dialogs/lang/km.js\n
+ckeditor/plugins/specialchar/dialogs/lang/da.js\n
+ckeditor/plugins/specialchar/dialogs/lang/eo.js\n
+ckeditor/plugins/specialchar/dialogs/lang/si.js\n
+ckeditor/plugins/specialchar/dialogs/lang/fa.js\n
+ckeditor/plugins/specialchar/dialogs/lang/uk.js\n
+ckeditor/plugins/specialchar/dialogs/lang/en.js\n
+ckeditor/plugins/specialchar/dialogs/lang/fr.js\n
+ckeditor/plugins/specialchar/dialogs/lang/pl.js\n
+ckeditor/plugins/specialchar/dialogs/lang/it.js\n
+ckeditor/plugins/specialchar/dialogs/lang/eu.js\n
+ckeditor/plugins/specialchar/dialogs/lang/ug.js\n
+ckeditor/plugins/specialchar/dialogs/lang/gl.js\n
+ckeditor/plugins/specialchar/dialogs/lang/nl.js\n
+ckeditor/plugins/specialchar/dialogs/lang/vi.js\n
+ckeditor/plugins/specialchar/dialogs/lang/lv.js\n
+ckeditor/plugins/specialchar/dialogs/lang/sk.js\n
+ckeditor/plugins/specialchar/dialogs/lang/ja.js\n
+ckeditor/plugins/specialchar/dialogs/lang/sq.js\n
+ckeditor/plugins/specialchar/dialogs/lang/no.js\n
+ckeditor/plugins/specialchar/dialogs/lang/th.js\n
+ckeditor/plugins/specialchar/dialogs/lang/en-gb.js\n
+ckeditor/plugins/specialchar/dialogs/lang/sl.js\n
+ckeditor/plugins/specialchar/dialogs/lang/en-au.js\n
+ckeditor/plugins/specialchar/dialogs/lang/el.js\n
+ckeditor/plugins/specialchar/dialogs/lang/cy.js\n
+ckeditor/plugins/specialchar/dialogs/lang/ar.js\n
+ckeditor/plugins/specialchar/dialogs/lang/nb.js\n
+ckeditor/plugins/specialchar/dialogs/lang/pt-br.js\n
+ckeditor/plugins/specialchar/dialogs/lang/es.js\n
+ckeditor/plugins/specialchar/dialogs/lang/fr-ca.js\n
+ckeditor/plugins/specialchar/dialogs/lang/de-ch.js\n
+ckeditor/plugins/specialchar/dialogs/lang/ko.js\n
+ckeditor/plugins/specialchar/dialogs/lang/ku.js\n
+ckeditor/plugins/specialchar/dialogs/lang/tt.js\n
+ckeditor/plugins/specialchar/dialogs/lang/hu.js\n
+ckeditor/plugins/specialchar/dialogs/lang/ru.js\n
+ckeditor/plugins/specialchar/dialogs/lang/cs.js\n
+ckeditor/plugins/specialchar/dialogs/lang/zh.js\n
+ckeditor/plugins/specialchar/dialogs/lang/sv.js\n
+ckeditor/plugins/specialchar/dialogs/lang/lt.js\n
+ckeditor/plugins/specialchar/dialogs/lang/tr.js\n
+ckeditor/plugins/specialchar/dialogs/lang/hr.js\n
+ckeditor/plugins/specialchar/dialogs/lang/zh-cn.js\n
+ckeditor/plugins/specialchar/dialogs/lang/pt.js\n
+ckeditor/plugins/specialchar/dialogs/lang/he.js\n
+ckeditor/plugins/specialchar/dialogs/lang/de.js\n
+ckeditor/plugins/specialchar/dialogs/lang/en-ca.js\n
+ckeditor/plugins/specialchar/dialogs/lang/ca.js\n
+ckeditor/plugins/specialchar/dialogs/lang/oc.js\n
+ckeditor/plugins/specialchar/dialogs/specialchar.js\n
+ckeditor/plugins/smiley/images/embaressed_smile.gif\n
+ckeditor/plugins/smiley/images/shades_smile.png\n
+ckeditor/plugins/smiley/images/whatchutalkingabout_smile.gif\n
+ckeditor/plugins/smiley/images/lightbulb.png\n
+ckeditor/plugins/smiley/images/tounge_smile.gif\n
+ckeditor/plugins/smiley/images/teeth_smile.png\n
+ckeditor/plugins/smiley/images/wink_smile.png\n
+ckeditor/plugins/smiley/images/tongue_smile.gif\n
+ckeditor/plugins/smiley/images/broken_heart.png\n
+ckeditor/plugins/smiley/images/tongue_smile.png\n
+ckeditor/plugins/smiley/images/confused_smile.gif\n
+ckeditor/plugins/smiley/images/heart.gif\n
+ckeditor/plugins/smiley/images/cry_smile.png\n
+ckeditor/plugins/smiley/images/omg_smile.gif\n
+ckeditor/plugins/smiley/images/regular_smile.png\n
+ckeditor/plugins/smiley/images/angel_smile.gif\n
+ckeditor/plugins/smiley/images/angel_smile.png\n
+ckeditor/plugins/smiley/images/kiss.png\n
+ckeditor/plugins/smiley/images/heart.png\n
+ckeditor/plugins/smiley/images/cry_smile.gif\n
+ckeditor/plugins/smiley/images/omg_smile.png\n
+ckeditor/plugins/smiley/images/whatchutalkingabout_smile.png\n
+ckeditor/plugins/smiley/images/angry_smile.png\n
+ckeditor/plugins/smiley/images/shades_smile.gif\n
+ckeditor/plugins/smiley/images/angry_smile.gif\n
+ckeditor/plugins/smiley/images/lightbulb.gif\n
+ckeditor/plugins/smiley/images/kiss.gif\n
+ckeditor/plugins/smiley/images/wink_smile.gif\n
+ckeditor/plugins/smiley/images/thumbs_up.png\n
+ckeditor/plugins/smiley/images/thumbs_up.gif\n
+ckeditor/plugins/smiley/images/teeth_smile.gif\n
+ckeditor/plugins/smiley/images/devil_smile.gif\n
+ckeditor/plugins/smiley/images/broken_heart.gif\n
+ckeditor/plugins/smiley/images/thumbs_down.gif\n
+ckeditor/plugins/smiley/images/thumbs_down.png\n
+ckeditor/plugins/smiley/images/sad_smile.png\n
+ckeditor/plugins/smiley/images/embarrassed_smile.png\n
+ckeditor/plugins/smiley/images/envelope.png\n
+ckeditor/plugins/smiley/images/devil_smile.png\n
+ckeditor/plugins/smiley/images/sad_smile.gif\n
+ckeditor/plugins/smiley/images/embarrassed_smile.gif\n
+ckeditor/plugins/smiley/images/regular_smile.gif\n
+ckeditor/plugins/smiley/images/envelope.gif\n
+ckeditor/plugins/smiley/images/confused_smile.png\n
+ckeditor/plugins/smiley/dialogs/smiley.js\n
+ckeditor/plugins/pastefromword/filter/default.js\n
+ckeditor/plugins/templates/templates/images/template2.gif\n
+ckeditor/plugins/templates/templates/images/template3.gif\n
+ckeditor/plugins/templates/templates/images/template1.gif\n
+ckeditor/plugins/templates/templates/default.js\n
+ckeditor/plugins/templates/dialogs/templates.js\n
+ckeditor/plugins/templates/dialogs/templates.css\n
+ckeditor/plugins/div/dialogs/div.js\n
+ckeditor/plugins/showblocks/images/block_h3.png\n
+ckeditor/plugins/showblocks/images/block_h4.png\n
+ckeditor/plugins/showblocks/images/block_div.png\n
+ckeditor/plugins/showblocks/images/block_p.png\n
+ckeditor/plugins/showblocks/images/block_h2.png\n
+ckeditor/plugins/showblocks/images/block_pre.png\n
+ckeditor/plugins/showblocks/images/block_address.png\n
+ckeditor/plugins/showblocks/images/block_blockquote.png\n
+ckeditor/plugins/showblocks/images/block_h1.png\n
+ckeditor/plugins/showblocks/images/block_h5.png\n
+ckeditor/plugins/showblocks/images/block_h6.png\n
+ckeditor/plugins/colordialog/dialogs/colordialog.css\n
+ckeditor/plugins/colordialog/dialogs/colordialog.js\n
+ckeditor/plugins/scayt/skins/moono-lisa/scayt.css\n
+ckeditor/plugins/scayt/dialogs/options.js\n
+ckeditor/plugins/scayt/dialogs/toolbar.css\n
+ckeditor/plugins/scayt/dialogs/dialog.css\n
+ckeditor/plugins/table/dialogs/table.js\n
+ckeditor/plugins/find/dialogs/find.js\n
+ckeditor/plugins/about/dialogs/about.js\n
+ckeditor/plugins/about/dialogs/logo_ckeditor.png\n
+ckeditor/plugins/about/dialogs/hidpi/logo_ckeditor.png\n
+ckeditor/plugins/image/images/noimage.png\n
+ckeditor/plugins/image/dialogs/image.js\n
+ckeditor/plugins/preview/preview.html\n
+ckeditor/plugins/copyformatting/styles/copyformatting.css\n
+ckeditor/plugins/copyformatting/cursors/cursor.svg\n
+ckeditor/plugins/copyformatting/cursors/cursor-disabled.svg\n
+ckeditor/plugins/link/images/anchor.png\n
+ckeditor/plugins/link/images/hidpi/anchor.png\n
+ckeditor/plugins/link/dialogs/anchor.js\n
+ckeditor/plugins/link/dialogs/link.js\n
+ckeditor/plugins/wsc/skins/moono-lisa/wsc.css\n
+ckeditor/plugins/wsc/dialogs/ciframe.html\n
+ckeditor/plugins/wsc/dialogs/wsc.css\n
+ckeditor/plugins/wsc/dialogs/wsc.js\n
+ckeditor/plugins/wsc/dialogs/wsc_ie.js\n
+ckeditor/plugins/wsc/dialogs/tmpFrameset.html\n
+ckeditor/plugins/icons_hidpi.png\n
+ckeditor/plugins/tabletools/dialogs/tableCell.js\n
+ckeditor/plugins/forms/images/hiddenfield.gif\n
+ckeditor/plugins/forms/dialogs/button.js\n
+ckeditor/plugins/forms/dialogs/radio.js\n
+ckeditor/plugins/forms/dialogs/checkbox.js\n
+ckeditor/plugins/forms/dialogs/textarea.js\n
+ckeditor/plugins/forms/dialogs/textfield.js\n
+ckeditor/plugins/forms/dialogs/select.js\n
+ckeditor/plugins/forms/dialogs/hiddenfield.js\n
+ckeditor/plugins/forms/dialogs/form.js\n
+ckeditor/plugins/magicline/images/icon-rtl.png\n
+ckeditor/plugins/magicline/images/icon.png\n
+ckeditor/plugins/magicline/images/hidpi/icon-rtl.png\n
+ckeditor/plugins/magicline/images/hidpi/icon.png\n
+ckeditor/plugins/liststyle/dialogs/liststyle.js\n
+ckeditor/plugins/flash/images/placeholder.png\n
+ckeditor/plugins/flash/dialogs/flash.js\n
+ckeditor/plugins/pagebreak/images/pagebreak.gif\n
+ckeditor/plugins/dialog/dialogDefinition.js\n
+ckeditor/plugins/iframe/images/placeholder.png\n
+ckeditor/plugins/iframe/dialogs/iframe.js\n
+ckeditor/plugins/tableselection/styles/tableselection.css\n
+ckeditor/plugins/a11yhelp/dialogs/lang/ro.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/id.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/fi.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/mk.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/es-mx.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/az.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/bg.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/af.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/et.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/km.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/sr-latn.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/da.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/eo.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/si.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/fa.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/fo.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/uk.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/en.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/mn.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/fr.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/pl.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/it.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/eu.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/ug.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/sr.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/gl.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/nl.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/vi.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/lv.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/sk.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/ja.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/sq.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/no.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/th.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/en-gb.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/sl.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/el.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/hi.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/cy.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/ar.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/nb.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/pt-br.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/es.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/fr-ca.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/de-ch.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/ko.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/ku.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/tt.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/hu.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/ru.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/cs.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/zh.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/sv.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/lt.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/tr.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/hr.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/zh-cn.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/pt.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/he.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/de.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/ca.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/gu.js\n
+ckeditor/plugins/a11yhelp/dialogs/lang/oc.js\n
+ckeditor/plugins/a11yhelp/dialogs/a11yhelp.js\n
+ckeditor/contents.css\n
+ckeditor/styles.js\n
+ckeditor/config.js\n
+ckeditor/ckeditor.js\n
+ckeditor/adapters/jquery.js\n
+\n
+NETWORK:\n
+*</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>OfficeJS Text Editor AppCache</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

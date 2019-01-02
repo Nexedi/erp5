@@ -1,0 +1,213 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Expense Record Module View Expense Record</title>
+
+   <link rel="stylesheet" type="text/css" href="alertify.css" />
+   <link rel="stylesheet" type="text/css" href="expense_record_image.css" />
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="gadget_global.js" ></script>
+    <script src="handlebars.js"></script>
+    <script src="alertify.js"></script>
+    <script src="gadget_officejs_hr_tool.js"></script>
+
+
+   <script id="relation-listview-template" type="text/x-handlebars-template">
+      {{#if list.length}}
+        <li class="ui-autocomplete ui-li ui-li-divider ui-bar-inherit ui-first-child" role="heading">Select from the {{list.length}} Search Results</li>
+        {{#each list}}
+          <li class="ui-li ui-bar-inherit ui-li-static ui-body-inherit ui-icon-mail-forward ui-btn-icon-right" data-relative-url='{{id}}' >{{value}}</li>
+        {{/each}}
+      {{else}}
+        <li class="ui-autocomplete ui-li ui-li-divider ui-bar-inherit" role="heading">No result</li>
+     {{/if}}
+      <li class="ui-li-static ui-body-inherit ui-last-child ui-bar-inherit ui-icon-search ui-btn-icon-right" data-explore=true >Explore the Search Result List</li>
+    </script>
+
+    <script class="view-expense-record-template" type="text/x-handlebars-template">
+      <form class="view-expense-record-form">
+       <button type="submit" data-i18n="Save" style="display:none;">Save</button>
+         <div class="ui-field-contain">
+           <label data-i18n="State">State</label>
+           <div name="state">{{state}}</div>
+         </div>
+         {{#if not_readonly}}
+           <div class="ui-field-contain">		 
+             <label data-i18n="Description">Description</label>		 
+             <textarea name="comment">{{comment}}</textarea>		 
+           </div>
+          <div class="ui-field-contain">
+            <label data-i18n="Total Price">Total Price</label>
+            <input type="number" name="quantity" value="{{quantity}}" step="0.01" required>
+          </div>
+
+          <div class="ui-field-contain">
+            <label data-i18n="Currency">Currency</label>
+            <select class="new-performed-task" name="resource"  required>
+            {{#each select_options}}
+                {{#if is_selected}}
+                  <option value={{value}} selected>{{title}}</option>
+                {{else}}
+                  <option value={{value}}>{{title}}</option>
+                {{/if}}
+            {{/each}}
+            </select>
+          </div>
+
+          <div class="ui-field-contain">
+            <label data-i18n="Type">Type</label>
+            <select class="new-performed-task" name="type"  required>
+            {{#each type_options}}
+                {{#if is_selected}}
+                  <option value={{value}} selected>{{title}}</option>
+                {{else}}
+                  <option value={{value}}>{{title}}</option>
+                {{/if}}
+            {{/each}}
+            </select>
+          </div>
+
+           <div class="ui-field-contain">
+              <label data-i18n="Photo">Photo</label>
+              <input name="photo" type="file"><!--accept="image/*" capture="camera"-->
+           </div>
+
+          <div class="ui-field-contain">
+              <label data-i18n="Preview">Preview</label>
+              {{#if preview}}
+                <img class='preview' name="preview" src="{{preview}}" style='width:20em;'/>
+              {{else}}
+                <img class='preview' name="preview" style='width:20em;'/>
+              {{/if}}
+          </div>
+
+           <div class="ui-field-contain" style="display:none;">
+            <label data-i18n="Longitude">Longitude</label>
+            <input type="number" name="longitude" value="{{longitude}}" readonly class='ui-state-readonly' />
+          </div>
+          
+          <div class="ui-field-contain" style="display:none;">
+            <label data-i18n="Latitude">Latitude</label>
+            <input type="number" name="latitude" value="{{latitude}}" readonly class='ui-state-readonly' />
+          </div>
+
+
+          <div class="ui-field-contain">
+            <label data-i18n="Input Date">Input Date</label>
+            <input type="date" name="date" value="{{date}}" required>
+          </div>
+
+        <div class="ui-field-contain">
+          <label data-i18n="Related Mission">Related Mission</label>
+            <div class='ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset ui-input-has-clear ui-input-has-icon'>
+              <div>
+                <input class='relation_input' type='search' name='related_mission' autocomplete="off" data-enhanced="true" value="{{related_mission}}" >
+                <ul class="ui-listview ui-corner-all search_ul"></ul>
+              </div>
+             <a href='{{related_mission_url}}' class='{{related_mission_class}}'></a>
+           </div>
+          </div>
+        </div>
+
+          <div class="ui-field-contain">
+            <label data-i18n="Sync Method">Sync Method</label>
+            <div>
+              <input type="radio" id="sync_flag_yes" {{sync_checked}} name="sync_flag" value=1>
+              <label for="sync_flag_yes" data-i18n="Ready To Sync">Ready To Sync</label>
+              <input type="radio" id="sync_flag_no" {{not_sync_checked}} name="sync_flag" value=0 >
+              <label for="sync_flag_no" data-i18n="Do Not Sync">Do Not Sync</label>
+            </div>
+          </div>
+         {{else}}
+            <div class="ui-field-contain">
+              <label data-i18n="Description">Description</label>
+              <textarea name="comment" readonly class='ui-state-readonly'>{{comment}}</textarea>
+            </div>
+
+          <div class="ui-field-contain">
+            <label data-i18n="Total Price">Total Price</label>
+            <input type="number" name="quantity" value="{{quantity}}" step="0.01" readonly class='ui-state-readonly'>
+          </div>
+
+          <div class="ui-field-contain" class='ui-state-readonly'>
+            <label data-i18n="Currency">Currency</label>
+            <select name="resource" readonly class='ui-state-readonly'>
+            {{#each select_options}}
+                {{#if is_selected}}
+                  <option value={{value}} selected>{{title}}</option>
+                {{else}}
+                  <option value={{value}}>{{title}}</option>
+                {{/if}}
+            {{/each}}
+            </select>
+          </div>
+
+          <div class="ui-field-contain" class='ui-state-readonly'>
+            <label data-i18n="Type">Type</label>
+            <select name="type"  readonly class='ui-state-readonly'>
+            {{#each type_options}}
+                {{#if is_selected}}
+                  <option value={{value}} selected>{{title}}</option>
+                {{else}}
+                  <option value={{value}}>{{title}}</option>
+                {{/if}}
+            {{/each}}
+            </select>
+          </div>
+
+           <div class="ui-field-contain" style="display:none;">
+              <label data-i18n="Photo">Photo</label>
+              <input name="photo" type="file" accept="image/*" capture="camera" readonly class='ui-state-readonly'>
+           </div>
+
+          <div class="ui-field-contain">
+              <label data-i18n="Preview">Preview</label>
+              {{#if preview}}
+                <img class='preview' name="preview" src="{{preview}}" style='width:20em;'/>
+              {{else}}
+                <img class='preview' name="preview" style='width:20em;'/>
+              {{/if}}
+          </div>
+
+          <div class="ui-field-contain">
+            <label data-i18n="Input Date">Input Date</label>
+            <input type="date" name="date" value="{{date}}" readonly class='ui-state-readonly'>
+          </div>
+          
+             <div class="ui-field-contain">
+          <label data-i18n="Related Mission">Related Mission</label>
+            <div class='ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset ui-input-has-clear ui-input-has-icon'>
+              <div>
+                <input class='relation_input' type='search' name='related_mission' autocomplete="off" data-enhanced="true" value="{{related_mission}}" readonly class='ui-state-readonly' >
+                <ul class="ui-listview ui-corner-all search_ul"></ul>
+              </div>
+             <a href='{{related_mission_url}}' class='{{related_mission_class}}'></a>
+           </div>
+          </div>
+        </div>
+         
+         {{/if}}
+
+           <div class="ui-field-contain">
+             <label data-i18n="Discussion">Discussion</label>
+             <div class='discussion'>
+             </div>
+           </div>
+          <div id="myModal" class="modal">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="img01" name="img01">
+            <div id="caption"></div>
+          </div>
+        </form>
+    </script>
+    <script src="gadget_officejs_jio_expense_record_view.js"></script>
+
+  </head>
+
+  <body>
+  </body>
+</html>

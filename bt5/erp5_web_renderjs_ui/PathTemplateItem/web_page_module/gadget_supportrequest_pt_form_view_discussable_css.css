@@ -1,0 +1,12 @@
+hr#post_item {
+  border-color: #0E81C2;
+}
+
+#comment-title {
+  margin-top: 20px;
+}
+
+#comment {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

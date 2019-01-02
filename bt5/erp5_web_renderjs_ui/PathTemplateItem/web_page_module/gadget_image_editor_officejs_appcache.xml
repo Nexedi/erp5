@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Manifest" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_officejs_image_editor.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_image_editor_officejs_appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Manifest</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>CACHE MANIFEST\n
+# generated on Fri, 09 Jun 2016 11:45:33 +0000\n
+# XXX + fonts\n
+# images/ajax-loader.gif\n
+CACHE:\n
+font-awesome/font-awesome.css\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.woff2\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg\n
+gadget_erp5_nojqm.css\n
+jio_ojs_storage.js\n
+gadget_erp5_global.js\n
+URI.js\n
+dygraph.js\n
+handlebars.js\n
+jiodev.js\n
+renderjs.js\n
+rsvp.js\n
+gadget_global.js\n
+erp5_launcher_nojqm.js\n
+gadget_officejs_router.js\n
+gadget_erp5_router.html\n
+gadget_erp5_router.js\n
+gadget_jio.html\n
+gadget_jio.js\n
+gadget_translate.html\n
+gadget_translate.js\n
+gadget_translation.html\n
+gadget_translation.js\n
+gadget_translation_data.js\n
+gadget_erp5_editor_panel.html\n
+gadget_erp5_editor_panel.js\n
+gadget_erp5_ojs_panel.html\n
+gadget_erp5_ojs_panel.js\n
+gadget_erp5_header.html\n
+gadget_erp5_header.js\n
+gadget_ojs_jio.html\n
+gadget_ojs_jio.js\n
+gadget_erp5_page_ojs_controller.html\n
+gadget_erp5_page_ojs_controller.js\n
+gadget_erp5_page_ojs_add_document.html\n
+gadget_erp5_page_ojs_add_document.js\n
+gadget_erp5_page_ojs_configurator.html\n
+gadget_erp5_page_ojs_configurator.js\n
+gadget_erp5_page_ojs_dav_configurator.html\n
+gadget_erp5_page_ojs_dav_configurator.js\n
+gadget_erp5_page_ojs_erp5_configurator.html\n
+gadget_erp5_page_ojs_erp5_configurator.js\n
+gadget_erp5_page_ojs_dropbox_configurator.html\n
+gadget_erp5_page_ojs_dropbox_configurator.js\n
+gadget_erp5_page_ojs_sync.html\n
+gadget_erp5_page_ojs_sync.js\n
+gadget_erp5_page_ojs_document_list.html\n
+gadget_erp5_page_ojs_document_list.js\n
+gadget_ojs_configurator_access.html\n
+gadget_ojs_configurator_access.js\n
+gadget_html5_input.html\n
+gadget_html5_input.js\n
+gadget_erp5_field_multicheckbox.html\n
+gadget_erp5_field_multicheckbox.js\n
+gadget_erp5_searchfield.html\n
+gadget_erp5_searchfield.js\n
+gadget_erp5_pt_form_list.html\n
+gadget_erp5_pt_form_list.js\n
+gadget_erp5_form.html\n
+gadget_erp5_form.js\n
+gadget_erp5_label_field.html\n
+gadget_erp5_label_field.js\n
+gadget_erp5_field_listbox.html\n
+gadget_erp5_field_listbox.js\n
+gadget_erp5_field_datetime.html\n
+gadget_erp5_field_datetime.js\n
+gadget_html5_element.html\n
+gadget_html5_element.js\n
+gadget_erp5_notification.html\n
+gadget_erp5_notification.js\n
+gadget_erp5_field_string.html\n
+gadget_erp5_field_string.js\n
+gadget_erp5_field_editor.html\n
+gadget_erp5_field_editor.js\n
+gadget_erp5_field_gadget.html\n
+gadget_erp5_field_gadget.js\n
+gadget_erp5_search_editor.html\n
+gadget_erp5_search_editor.js\n
+gadget_erp5_sort_editor.html\n
+gadget_erp5_sort_editor.js\n
+gadget_erp5_field_password.html\n
+gadget_erp5_field_password.js\n
+gadget_erp5_field_textarea.html\n
+gadget_erp5_field_textarea.js\n
+gadget_html5_textarea.html\n
+gadget_html5_textarea.js\n
+gadget_erp5_configure_editor.html\n
+gadget_erp5_configure_editor.js\n
+gadget_editor.html\n
+gadget_editor.js\n
+gadget_button_maximize.html\n
+gadget_button_maximize.js\n
+\n
+#setting\n
+gadget_officejs_setting.js\n
+gadget_officejs_setting.html\n
+\n
+#image app\n
+gadget_officejs_image_editor_router.html\n
+gadget_officejs_jio_image_view.html\n
+gadget_officejs_jio_image_view.js\n
+\n
+#image editor\n
+minipaint.gadget.html\n
+minipaint.gadget.js\n
+miniPaint/config.js\n
+miniPaint/img/right.png\n
+miniPaint/img/logo.png\n
+miniPaint/img/colorwheel.png\n
+miniPaint/img/favicon.png\n
+miniPaint/img/preview.jpg\n
+miniPaint/img/sprites.png\n
+miniPaint/js/draw_tools.js\n
+miniPaint/js/edit.js\n
+miniPaint/js/effects.js\n
+miniPaint/js/elements.js\n
+miniPaint/js/events.js\n
+miniPaint/js/file.js\n
+miniPaint/js/gui.js\n
+miniPaint/js/help.js\n
+miniPaint/js/image.js\n
+miniPaint/js/layers.js\n
+miniPaint/js/main.js\n
+miniPaint/js/tools.js\n
+miniPaint/languages/de.js\n
+miniPaint/languages/empty.js\n
+miniPaint/languages/es.js\n
+miniPaint/languages/fr.js\n
+miniPaint/languages/it.js\n
+miniPaint/languages/ja.js\n
+miniPaint/languages/ko.js\n
+miniPaint/languages/lt.js\n
+miniPaint/languages/pt.js\n
+miniPaint/languages/ru.js\n
+miniPaint/languages/tr.js\n
+miniPaint/languages/zh.js\n
+miniPaint/libs/helpers.js\n
+miniPaint/libs/popup.js\n
+miniPaint/libs/sift.js\n
+miniPaint/libs/vintage.js\n
+miniPaint/styles/styles.css\n
+miniPaint/vendor/exif/exif.js\n
+miniPaint/vendor/exif/exif.min.js\n
+miniPaint/vendor/file-saver/FileSaver.min.js\n
+miniPaint/vendor/file-saver/canvas-toBlob.js\n
+miniPaint/vendor/glfx/glfx.js\n
+miniPaint/vendor/harmony/harmony.js\n
+miniPaint/vendor/harmony/harmony.min.js\n
+miniPaint/vendor/hermite-resize/hermite.js\n
+miniPaint/vendor/hqx/hqx.js\n
+miniPaint/vendor/hqx/hqx.min.js\n
+miniPaint/vendor/imagefilters/imagefilters.js\n
+miniPaint/vendor/imagefilters/imagefilters.min.js\n
+miniPaint/vendor/jquery/jquery-migrate.js\n
+miniPaint/vendor/jquery/jquery.js\n
+miniPaint/vendor/menu/menu.js\n
+miniPaint/vendor/menu/menu.min.js\n
+miniPaint/vendor/translate/jquery.translate.js\n
+miniPaint/vendor/translate/jquery.translate.min.js\n
+NETWORK:\n
+*</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>OfficeJS Image Editor AppCache</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
