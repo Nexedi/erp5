@@ -278,7 +278,9 @@
       "row_list": row_list,
       "show_anchor": gadget.state.show_anchor,
       "column_list": column_list,
-      "show_line_selector": gadget.state.show_line_selector
+      "show_line_selector": gadget.state.show_line_selector,
+      "show_select_action": gadget.state.show_select_action,
+      "show_clipboard_action": gadget.state.show_clipboard_action
     });
     return new RSVP.Queue()
       .push(function () {
@@ -331,8 +333,12 @@
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("getListboxSelectActionList",
                            "getListboxSelectActionList")
+    .declareAcquiredMethod("getListboxClipboardActionList",
+                           "getListboxClipboardActionList")
     .declareAcquiredMethod("triggerListboxSelectAction",
                            "triggerListboxSelectAction")
+    .declareAcquiredMethod("triggerListboxClipboardAction",
+                           "triggerListboxClipboardAction")
 
     //////////////////////////////////////////////
     // initialize the gadget content
@@ -481,7 +487,9 @@
 
             // No error message
             has_error: false,
-            show_line_selector: false
+            show_line_selector: false,
+            show_select_action: false,
+            show_clipboard_action: false
           });
         });
       return queue;
@@ -497,6 +505,7 @@
         j,
         result_queue = new RSVP.Queue(),
         button_selector_list = ['button[name="Sort"]', 'button[name="Hide"]',
+                                'button[name="Clipboard"]',
                                 'button[name="Configure"]',
                                 'button[name="SelectRows"]'],
         button;
@@ -614,8 +623,21 @@
               }
             }
 
-            if (gadget.state.show_line_selector) {
+            if (gadget.state.show_select_action) {
               select_list = gadget.getListboxSelectActionList()
+                .push(undefined, function (error) {
+                  if (error instanceof rJS.AcquisitionError) {
+                    // Do not break if parent gadget does not implement it
+                    // XXX this could be a new rJS function when doing
+                    // declareAcquiredMethod
+                    return [];
+                  }
+                  throw error;
+                });
+            }
+
+            if (gadget.state.show_clipboard_action) {
+              select_list = gadget.getListboxClipboardActionList()
                 .push(undefined, function (error) {
                   if (error instanceof rJS.AcquisitionError) {
                     // Do not break if parent gadget does not implement it
@@ -632,7 +654,7 @@
               is_sortable_list,
               gadget.getTranslationList(['Jump',
                                          'Select', 'Configure', 'Sort',
-                                         'Cancel']),
+                                         'Cancel', 'Clipboard']),
               select_list
             ]);
           })
@@ -665,7 +687,7 @@
             h1_element.appendChild(span_element);
             div_element.appendChild(h1_element);
 
-            if (gadget.state.show_line_selector) {
+            if (gadget.state.show_select_action) {
               for (k = 0; k < select_option_list.length; k += 1) {
                 // Add include button
                 // <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}"></button>
@@ -673,6 +695,30 @@
                 button_element.setAttribute('data-rel', 'hide');
                 button_element.setAttribute('data-select-action', select_option_list[k].action);
                 button_element.setAttribute('name', 'SelectAction');
+                button_element.type = 'button';
+                button_element.setAttribute('class', 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left ' + gadget.state.hide_class);
+                button_element.textContent = select_option_list[k].title;
+                div_element.appendChild(button_element);
+              }
+
+              // Add cancel button
+              // <button data-rel="cancel" data-i18n="Cancel" name="ExcludeRows" type="button" class="ui-icon-times ui-btn-icon-left {{hide_class}}"></button>
+              button_element = document.createElement('button');
+              button_element.setAttribute('data-rel', 'hide');
+              button_element.setAttribute('name', 'CancelSelect');
+              button_element.type = 'button';
+              button_element.setAttribute('class', 'ui-icon-times ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.textContent = translation_list[4];
+              div_element.appendChild(button_element);
+
+            } else if (gadget.state.show_clipboard_action) {
+              for (k = 0; k < select_option_list.length; k += 1) {
+                // Add include button
+                // <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}"></button>
+                button_element = document.createElement('button');
+                button_element.setAttribute('data-rel', 'clipboard');
+                button_element.setAttribute('data-clipboard-action', select_option_list[k].action);
+                button_element.setAttribute('name', 'ClipboardAction');
                 button_element.type = 'button';
                 button_element.setAttribute('class', 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left ' + gadget.state.hide_class);
                 button_element.textContent = select_option_list[k].title;
@@ -711,6 +757,17 @@
               button_element.type = 'button';
               button_element.setAttribute('class', 'ui-icon-sort-amount-desc ui-btn-icon-left ' + gadget.state.sort_class);
               button_element.textContent = translation_list[3];
+              div_element.appendChild(button_element);
+
+              // Add Do button
+              // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
+              button_element = document.createElement('button');
+              button_element.disabled = gadget.state.disabled;
+              button_element.setAttribute('data-rel', 'clipboard');
+              button_element.setAttribute('name', 'Clipboard');
+              button_element.type = 'button';
+              button_element.setAttribute('class', 'ui-icon-ellipsis-v ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.textContent = translation_list[5];
               div_element.appendChild(button_element);
 
               // Add Select button
@@ -1217,6 +1274,7 @@
       var gadget = this,
         sort_button = gadget.element.querySelector('button[name="Sort"]'),
         hide_button = gadget.element.querySelector('button[name="Hide"]'),
+        clipboard_button = gadget.element.querySelector('button[name="Clipboard"]'),
         configure_button = gadget.element.querySelector('button[name="Configure"]'),
         cancel_select_button = gadget.element.querySelector('button[name="CancelSelect"]'),
         url,
@@ -1247,19 +1305,30 @@
       if (evt.target === hide_button) {
         evt.preventDefault();
         return gadget.changeState({
-          show_line_selector: true
+          show_line_selector: true,
+          show_select_action: true
+        });
+      }
+
+      if (evt.target === clipboard_button) {
+        evt.preventDefault();
+        return gadget.changeState({
+          show_line_selector: true,
+          show_clipboard_action: true
         });
       }
 
       if (evt.target === cancel_select_button) {
         evt.preventDefault();
         return gadget.changeState({
-          show_line_selector: false
+          show_line_selector: false,
+          show_select_action: false,
+          show_clipboard_action: false
         });
       }
 
       if ((evt.target.type === 'button') &&
-          (evt.target.name === 'SelectAction')) {
+          ((evt.target.name === 'SelectAction') || (evt.target.name === 'ClipboardAction'))) {
         evt.preventDefault();
 
         checked_uid_list = [];
@@ -1275,7 +1344,10 @@
             unchecked_uid_list.push(all_hide_element_list[i].getAttribute("data-uid"));
           }
         }
-        return gadget.triggerListboxSelectAction(evt.target.getAttribute('data-select-action'), checked_uid_list, unchecked_uid_list);
+        if (evt.target.name === 'SelectAction') {
+          return gadget.triggerListboxSelectAction(evt.target.getAttribute('data-select-action'), checked_uid_list, unchecked_uid_list);
+        }
+        return gadget.triggerListboxClipboardAction(evt.target.getAttribute('data-clipboard-action'), checked_uid_list, unchecked_uid_list);
       }
     }, false, false)
 
