@@ -337,6 +337,8 @@
                            "getListboxClipboardActionList")
     .declareAcquiredMethod("triggerListboxSelectAction",
                            "triggerListboxSelectAction")
+    .declareAcquiredMethod("triggerListboxClipboardAction",
+                           "triggerListboxClipboardAction")
 
     //////////////////////////////////////////////
     // initialize the gadget content
@@ -685,7 +687,7 @@
             h1_element.appendChild(span_element);
             div_element.appendChild(h1_element);
 
-            if (gadget.state.show_line_selector) {
+            if (gadget.state.show_select_action) {
               for (k = 0; k < select_option_list.length; k += 1) {
                 // Add include button
                 // <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}"></button>
@@ -693,6 +695,30 @@
                 button_element.setAttribute('data-rel', 'hide');
                 button_element.setAttribute('data-select-action', select_option_list[k].action);
                 button_element.setAttribute('name', 'SelectAction');
+                button_element.type = 'button';
+                button_element.setAttribute('class', 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left ' + gadget.state.hide_class);
+                button_element.textContent = select_option_list[k].title;
+                div_element.appendChild(button_element);
+              }
+
+              // Add cancel button
+              // <button data-rel="cancel" data-i18n="Cancel" name="ExcludeRows" type="button" class="ui-icon-times ui-btn-icon-left {{hide_class}}"></button>
+              button_element = document.createElement('button');
+              button_element.setAttribute('data-rel', 'hide');
+              button_element.setAttribute('name', 'CancelSelect');
+              button_element.type = 'button';
+              button_element.setAttribute('class', 'ui-icon-times ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.textContent = translation_list[4];
+              div_element.appendChild(button_element);
+
+            } else if (gadget.state.show_clipboard_action) {
+              for (k = 0; k < select_option_list.length; k += 1) {
+                // Add include button
+                // <button data-rel="hide" data-i18n="Include" name="IncludeRows" type="button" class="ui-icon-eye ui-btn-icon-left {{hide_class}}"></button>
+                button_element = document.createElement('button');
+                button_element.setAttribute('data-rel', 'clipboard');
+                button_element.setAttribute('data-clipboard-action', select_option_list[k].action);
+                button_element.setAttribute('name', 'ClipboardAction');
                 button_element.type = 'button';
                 button_element.setAttribute('class', 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left ' + gadget.state.hide_class);
                 button_element.textContent = select_option_list[k].title;
@@ -1306,7 +1332,7 @@
       }
 
       if ((evt.target.type === 'button') &&
-          (evt.target.name === 'SelectAction')) {
+          ((evt.target.name === 'SelectAction') || (evt.target.name === 'ClipboardAction'))) {
         evt.preventDefault();
 
         checked_uid_list = [];
@@ -1322,7 +1348,10 @@
             unchecked_uid_list.push(all_hide_element_list[i].getAttribute("data-uid"));
           }
         }
-        return gadget.triggerListboxSelectAction(evt.target.getAttribute('data-select-action'), checked_uid_list, unchecked_uid_list);
+        if (evt.target.name === 'SelectAction') {
+          return gadget.triggerListboxSelectAction(evt.target.getAttribute('data-select-action'), checked_uid_list, unchecked_uid_list);
+        }
+        return gadget.triggerListboxClipboardAction(evt.target.getAttribute('data-clipboard-action'), checked_uid_list, unchecked_uid_list);
       }
     }, false, false)
 
