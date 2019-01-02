@@ -382,7 +382,7 @@
   function execDisplayERP5ActionCommand(gadget, options) {
     return gadget.jio_getAttachment(options.jio_key, 'links')
       .push(function (document_view) {
-        var action, action_data, action_url, i, j;
+        var action, action_data, action_url, i, j, new_options;
 
         for (i = 0; i < Object.keys(document_view._links).length; i = i + 1) {
           action = Object.keys(document_view._links)[i];
@@ -393,12 +393,14 @@
             for (j = 0;  j < document_view._links[action].length; j = j + 1) {
               action_data = document_view._links[action][j];
               if (action_data.name === options.page) {
+                new_options = {
+                  jio_key: options.jio_key,
+                  view: action_data.href
+                };
+                copyStickyParameterDict(options, new_options);
                 action_url = getDisplayUrlFor(
                   options.jio_key,
-                  {
-                    jio_key: options.jio_key,
-                    view: action_data.href
-                  }
+                  new_options
                 );
                 return synchronousChangeState(action_url);
               }
