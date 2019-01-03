@@ -492,10 +492,10 @@ define([
                     .push(function (value) {
                         me.dlgRemote = new Common.Views.RenderJSDialog({
                             toolclose: "hide",
-                            gadget_url: "jsonform.gadget.html",
+                            gadget_url: "onlyoffice/remote_settings.html",
                             scope: "remote_settings",
                             gadget_render_opt: {
-                                schema_url: "onlyoffice/remote_settings.json",
+                                schema_url: "remote_settings.json",
                                 value: value
                             }
                         });

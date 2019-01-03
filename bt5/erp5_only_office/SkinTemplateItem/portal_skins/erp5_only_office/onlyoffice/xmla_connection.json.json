@@ -14,20 +14,7 @@
       "type": "array"
     },
     "properties": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["Cube"],
-      "properties": {
-        "DataSourceInfo": {"type": "string"},
-        "Catalog": {"type": "string"},
-        "Cube": {"type": "string"}
-      }
-    },
-    "username": {
-      "type": "string"
-    },
-    "password": {
-      "type": "string"
+      "$ref": "urn:jio:properties_from_xmla.connection.json"
     }
   },
   "required": [

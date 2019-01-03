@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Demo UI OLAP Query editor based on JSON Schema form generator</title>
+  <link rel="stylesheet" href="../gadget_erp5_nojqm.css">
+
+  <script src="../rsvp.js"></script>
+  <script src="../renderjs.js"></script>
+  <script src="../jio.js"></script>
+  <script src="web-apps/vendor/xmla4js/Xmla-compiled.js"></script>
+  <script src="remote_settings.js"></script>
+</head>
+
+<body>
+<div data-role="page">
+  <div role="main" class="ui-content gadget-content">
+    <section class="ui-content-header-plain">
+      <h3 class="ui-content-title ui-body-c">
+        Xmla connection settings form
+      </h3>
+    </section>
+    <div data-gadget-url="../jsonform.gadget.html"
+         data-gadget-scope="xmla_settings"
+         data-gadget-sandbox="public"></div>
+    <br>
+  </div>
+</div>
+</body>
+
+</html>
