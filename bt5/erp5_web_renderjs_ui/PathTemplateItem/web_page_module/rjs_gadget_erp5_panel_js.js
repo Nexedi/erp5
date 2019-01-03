@@ -318,7 +318,7 @@
             if (result.editable.length === 1) {
               options.editable = true;
             }
-            return context.redirect({command: 'change', options: options});
+            return context.redirect({command: 'change', options: options}, true);
           });
       }
       // Typing a search query should not modify the header status
@@ -363,7 +363,7 @@
           });
         })
         .push(function () {
-          return gadget.redirect({command: 'store_and_display', options: redirect_options});
+          return gadget.redirect({command: 'store_and_display', options: redirect_options}, true);
         });
 
     }, /*useCapture=*/false, /*preventDefault=*/true);
