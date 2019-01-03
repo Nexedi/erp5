@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>movement_dict, reference, modify=True</string> </value>
+            <value> <string>specialise_list, data_ingestion_reference, data_ingestion_id=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>IngestionPolicy_getIngestionOperationAndParameterDict</string> </value>
+            <value> <string>ERP5Site_createDataIngestion</string> </value>
         </item>
       </dictionary>
     </pickle>
