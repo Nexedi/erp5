@@ -5,6 +5,63 @@
            Query, QueryFactory, ensureArray) {
   "use strict";
 
+  function updateSearchQueryFromSelection(extended_search, checked_uid_list,
+                                          key, to_include) {
+    var i,
+      search_query,
+      query_list = [];
+
+    for (i = 0; i < checked_uid_list.length; i += 1) {
+      query_list.push(new SimpleQuery({
+        key: key,
+        type: "simple",
+        operator: to_include ? "=" : "!=",
+        value: checked_uid_list[i]
+      }));
+    }
+    if (extended_search) {
+      search_query = QueryFactory.create(extended_search);
+    }
+    if (to_include) {
+      // Lines must match the existing query and be one of the selected
+      // line. Which means that is user change the query, one of the
+      // selected line could disappear.
+      if (search_query) {
+        search_query = new ComplexQuery({
+          operator: "AND",
+          query_list: [
+            new ComplexQuery({
+              operator: "OR",
+              query_list: query_list,
+              type: "complex"
+            }),
+            search_query
+          ],
+          type: "complex"
+        });
+      } else {
+        search_query = new ComplexQuery({
+          operator: "OR",
+          query_list: query_list,
+          type: "complex"
+        });
+      }
+
+    } else {
+      // Lines must match the existing query and must not be one of the
+      // selected line.
+      if (search_query) {
+        query_list.push(search_query);
+      }
+      search_query = new ComplexQuery({
+        operator: "AND",
+        query_list: query_list,
+        type: "complex"
+      });
+    }
+    return Query.objectToSearchText(search_query);
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -207,10 +264,7 @@
       var action = argument_list[0],
         checked_uid_list = argument_list[1],
         unchecked_uid_list = argument_list[2],
-        gadget = this,
-        i,
-        search_query,
-        query_list = [];
+        gadget = this;
       if ((action === 'include') || (action === 'exclude')) {
         if (checked_uid_list.length === 0) {
           // If nothing is checked, use all unchecked values (same as xhtml style)
@@ -223,59 +277,15 @@
           });
         }
 
-        for (i = 0; i < checked_uid_list.length; i += 1) {
-          query_list.push(new SimpleQuery({
-            key: "catalog.uid",
-            type: "simple",
-            operator: (action === 'include') ? "=" : "!=",
-            value: checked_uid_list[i]
-          }));
-        }
-        if (gadget.state.extended_search) {
-          search_query = QueryFactory.create(gadget.state.extended_search);
-        }
-        if (action === 'include') {
-          // Lines must match the existing query and be one of the selected
-          // line. Which means that is user change the query, one of the
-          // selected line could disappear.
-          if (search_query) {
-            search_query = new ComplexQuery({
-              operator: "AND",
-              query_list: [
-                new ComplexQuery({
-                  operator: "OR",
-                  query_list: query_list,
-                  type: "complex"
-                }),
-                search_query
-              ],
-              type: "complex"
-            });
-          } else {
-            search_query = new ComplexQuery({
-              operator: "OR",
-              query_list: query_list,
-              type: "complex"
-            });
-          }
-
-        } else {
-          // Lines must match the existing query and must not be one of the
-          // selected line.
-          if (search_query) {
-            query_list.push(search_query);
-          }
-          search_query = new ComplexQuery({
-            operator: "AND",
-            query_list: query_list,
-            type: "complex"
-          });
-        }
-
         return gadget.redirect({
           command: 'store_and_change',
           options: {
-            "extended_search": Query.objectToSearchText(search_query)
+            "extended_search": updateSearchQueryFromSelection(
+              gadget.state.extended_search,
+              checked_uid_list,
+              'catalog.uid',
+              (action === 'include')
+            )
           }
         });
       }
@@ -300,12 +310,25 @@
     })
 
     .allowPublicAcquisition("triggerListboxClipboardAction", function triggerListboxClipboardAction(argument_list) {
-      var delete_list = ensureArray(this.state.erp5_document._links.action_object_delete_action);
+      var delete_list = ensureArray(this.state.erp5_document._links.action_object_delete_action),
+        checked_uid_list = argument_list[1],
+        unchecked_uid_list = argument_list[2],
+        gadget = this;
+      if (checked_uid_list.length === 0) {
+        // If nothing is checked, use all unchecked values (same as xhtml style)
+        checked_uid_list = unchecked_uid_list;
+      }
       return this.redirect({
         command: 'change',
         options: {
           "view": delete_list[0].href,
-          "page": undefined
+          "page": undefined,
+          "extended_search": updateSearchQueryFromSelection(
+            gadget.state.extended_search,
+            checked_uid_list,
+            'catalog.uid',
+            true
+          )
         }
       });
     });
