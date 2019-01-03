@@ -275,7 +275,6 @@
         })
         .push(function () {
           var cancel_url_promise;
-          console.log('back to history', form_gadget.state.back_to_history);
           if (form_gadget.state.back_to_history) {
             cancel_url_promise = form_gadget.getUrlFor({command: 'history_previous'});
           } else {

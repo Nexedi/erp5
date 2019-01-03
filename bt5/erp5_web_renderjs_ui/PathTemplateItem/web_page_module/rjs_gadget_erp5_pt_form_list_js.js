@@ -326,7 +326,6 @@
           true
         );
       }
-      console.log('push history');
       return this.redirect({
         command: 'push_history',
         options: {
