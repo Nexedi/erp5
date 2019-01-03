@@ -477,8 +477,8 @@
     var jio_key = next_options.jio_key;
     delete next_options.jio_key;
     // XXX Hack to support create dialog
-    delete previous_options.view;
-    delete previous_options.page;
+    // delete previous_options.view;
+    // delete previous_options.page;
     return addHistory(gadget, previous_options)
       .push(function (id) {
         next_options.history = id;
