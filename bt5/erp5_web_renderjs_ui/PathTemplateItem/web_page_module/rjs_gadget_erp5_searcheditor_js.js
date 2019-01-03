@@ -426,7 +426,7 @@
       return this.redirect({
         command: 'store_and_change',
         options : options
-      });
+      }, true);
 
     })
 
