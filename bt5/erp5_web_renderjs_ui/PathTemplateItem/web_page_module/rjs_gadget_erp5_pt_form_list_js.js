@@ -182,7 +182,10 @@
             options.extended_search = undefined;
           }
 
-          return gadget.redirect({command: 'store_and_change', options: options});
+          return gadget.redirect({
+            command: 'store_and_change',
+            options: options
+          }, true);
         });
 
     }, false, true)
@@ -277,7 +280,7 @@
           options: {
             "extended_search": Query.objectToSearchText(search_query)
           }
-        });
+        }, true);
       }
 
       throw new Error('Unsupported triggerListboxSelectAction action: ' + action);
