@@ -245,18 +245,19 @@
     return new URL(mapped_url + hash);
   }
 
-  function loadJSONSchema(g, $ref, path) {
+  function loadJSONSchema(g, $ref, schema_path, path) {
     var protocol,
       abs_url,
       url,
       download_url,
       hash,
+      external_reference = false,
       queue;
     // XXX need use `id` property
-    if (!path) {
-      path = "/";
+    if (!schema_path) {
+      schema_path = "/";
     }
-    abs_url = convertUrlToAbsolute(g, path, decodeURI($ref), window.location);
+    abs_url = convertUrlToAbsolute(g, schema_path, decodeURI($ref), window.location);
     url = map_url(g, abs_url);
     abs_url = abs_url.href;
     protocol = url.protocol;
@@ -271,9 +272,10 @@
     hash = url.hash;
     url = url.href;
     if (download_url.startsWith("urn:jio:")) {
+      external_reference = true;
       queue = RSVP.Queue()
         .push(function () {
-          return g.resolveExternalReference(download_url);
+          return g.resolveExternalReference(download_url, schema_path, path);
         });
     } else {
       queue = RSVP.Queue()
@@ -283,7 +285,7 @@
     }
     return queue
       .push(function (json) {
-        if (checkHardCircular(g, path, url)) {
+        if (checkHardCircular(g, schema_path, url)) {
           throw new Error("Circular reference detected");
         }
         return resolveLocalReference(json, hash);
@@ -292,7 +294,7 @@
         // XXX it will be great to have ability convert json_pointers(hash)
         // in line numbers for pointed to line in rich editors.
         // we can use https://github.com/vtrushin/json-to-ast for it
-        var url_from_pointed = convertToRealWorldSchemaPath(g, path),
+        var url_from_pointed = convertToRealWorldSchemaPath(g, schema_path),
           schema_a = document.createElement("a"),
           pointed_a = document.createElement("a");
         schema_a.setAttribute("href", download_url);
@@ -300,7 +302,7 @@
         pointed_a.setAttribute("href", url_from_pointed);
         pointed_a.text = (new URLwithJio(url_from_pointed)).pathname;
         g.props.schema_resolve_errors[url_from_pointed] = {
-          schemaPath: path,
+          schemaPath: schema_path,
           message: [
             document.createTextNode("schema error: "),
             document.createTextNode(err.message),
@@ -312,7 +314,6 @@
         return null; // schema part can't be null
       })
       .push(function (schema_part) {
-        // console.log(path);
         if (schema_part === null) {
           // if resolving schema part contain errors
           // use {} as failback
@@ -320,16 +321,17 @@
         } else {
           // save map url only for correctly resolved schema
           // otherwise we have issue in convertToRealWorldSchemaPath
-          if (!g.props.hasOwnProperty(path)) {
-            g.props.schema_map[path] = abs_url;
+          if (!g.props.hasOwnProperty(schema_path)) {
+            g.props.schema_map[schema_path] = abs_url;
           }
         }
-        schemaPushSchemaPart(g.props.schema, path, JSON.parse(JSON.stringify(schema_part)));
+        schemaPushSchemaPart(g.props.schema, schema_path, JSON.parse(JSON.stringify(schema_part)));
         // console.log(g.props.schema[""]);
-        return expandSchema(g, schema_part, path, $ref);
+        return expandSchema(g, schema_part, schema_path, path, $ref);
       })
       .push(function (schema_arr) {
-        checkAndMarkSoftCircular(g, schema_arr, path, url);
+        checkAndMarkSoftCircular(g, schema_arr, schema_path, url);
+        schema_arr.external_reference = external_reference;
         return schema_arr;
       });
   }
@@ -495,13 +497,13 @@
     return x;
   }
 
-  function allOf(g, schema_array, schema_path, base_schema) {
+  function allOf(g, schema_array, schema_path, path, base_schema) {
     return RSVP.Queue()
       .push(function () {
         var i,
           arr = [];
         for (i = 0; i < schema_array.length; i += 1) {
-          arr.push(expandSchema(g, schema_array[i], schema_path + '/' + i.toString()));
+          arr.push(expandSchema(g, schema_array[i], schema_path + '/' + i.toString(), path));
         }
         return RSVP.all(arr);
       })
@@ -535,13 +537,13 @@
       });
   }
 
-  function anyOf(g, schema_array, schema_path, base_schema) {
+  function anyOf(g, schema_array, schema_path, path, base_schema) {
     return RSVP.Queue()
       .push(function () {
         var i,
           arr = [];
         for (i = 0; i < schema_array.length; i += 1) {
-          arr.push(expandSchema(g, schema_array[i], schema_path + '/' + i.toString()));
+          arr.push(expandSchema(g, schema_array[i], schema_path + '/' + i.toString(), path));
         }
         return RSVP.all(arr);
       })
@@ -569,7 +571,7 @@
       });
   }
 
-  expandSchema = function (g, schema, schema_path, ref) {
+  expandSchema = function (g, schema, schema_path, path, ref) {
     // XXX `if then else` construction can be simplify to
     // anyOf(allOf(if_schema, then_schema), else_schema)
     // and realized by existed rails
@@ -578,16 +580,16 @@
       schema = true;
     }
     if (schema.anyOf !== undefined) {
-      return anyOf(g, schema.anyOf, schema_path + '/anyOf', schema);
+      return anyOf(g, schema.anyOf, schema_path + '/anyOf', path, schema);
     }
     if (schema.oneOf !== undefined) {
-      return anyOf(g, schema.oneOf, schema_path + '/oneOf', schema);
+      return anyOf(g, schema.oneOf, schema_path + '/oneOf', path, schema);
     }
     if (schema.allOf !== undefined) {
-      return allOf(g, schema.allOf, schema_path + '/allOf', schema);
+      return allOf(g, schema.allOf, schema_path + '/allOf', path, schema);
     }
     if (schema.$ref) {
-      return loadJSONSchema(g, schema.$ref, schema_path);
+      return loadJSONSchema(g, schema.$ref, schema_path, path);
     }
     if (schema.definitions) {
       var key,
@@ -635,7 +637,7 @@
     return schema_arr;
   }
 
-  function expandSchemaForField(g, schema, schema_path, for_required) {
+  function expandSchemaForField(g, schema, schema_path, path, for_required) {
     var required_stack,
       prev_field_path;
     if (for_required) {
@@ -645,8 +647,25 @@
       required_stack = [];
     }
     g.props.schema_required_urls[schema_path] = required_stack;
-    return expandSchema(g, schema, schema_path)
+    return expandSchema(g, schema, schema_path, path)
       .push(schema_arr_marker);
+  }
+
+  function convertOnMultiLevel(d, key) {
+    var ii,
+      kk,
+      key_list = key.split("/");
+    for (ii = 1; ii < key_list.length; ii += 1) {
+      kk = decodeJsonPointer(key_list[ii]);
+      if (ii === key_list.length - 1) {
+        return d[kk];
+      } else {
+        if (!d.hasOwnProperty(kk)) {
+          return;
+        }
+        d = d[kk];
+      }
+    }
   }
 
   rJS(window)
@@ -657,14 +676,17 @@
     })
     .declareAcquiredMethod("resolveExternalReference", "resolveExternalReference")
     .declareAcquiredMethod("notifyChange", "notifyChange")
-    .allowPublicAcquisition("rootNotifyChange", function () {
+    .allowPublicAcquisition("rootNotifyChange", function (arr, scope) {
       this.props.changed = true;
-      return this.notifyChange();
+      return this.notifyChange(arr[0], scope);
     })
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .allowPublicAcquisition("checkValidity", function (arr) {
       return this.checkValidity(arr[0]);
+    })
+    .declareMethod('getGadgetByPath', function (path) {
+      return this.props.form_gadget.getGadgetByPath(path || "/");
     })
     .declareMethod('checkValidity', function (json_document) {
       // XXX need use local schema and local json document
@@ -783,6 +805,10 @@
         });
     })
 
+    .allowPublicAcquisition('parentGetJsonPath', function (arr, scope) {
+      return "";
+    })
+
     .declareMethod('render', function (options) {
       var z = {
         saveOrigValue: options.saveOrigValue,
@@ -871,7 +897,7 @@
             g.props.schema_map["/"] = schema_url;
             g.props.schemas[schema_url] = URL
               .createObjectURL(new Blob([g.state.schema], {type : 'application/json'}));
-            queue = expandSchemaForField(g, schema, "/", true);
+            queue = expandSchemaForField(g, schema, "/", "/". true);
           } else {
             schema_url = g.state.schema_url ||
                          (json_document && json_document.$schema);
@@ -913,7 +939,7 @@
         });
     })
     .allowPublicAcquisition("expandSchema", function (arr) {
-      return expandSchemaForField(this, arr[0], arr[1], arr[2]);
+      return expandSchemaForField(this, arr[0], arr[1], arr[2], arr[3]);
     })
     .onLoop(function () {
       var gadget = this;
@@ -925,7 +951,7 @@
       }
     }, 500)
 
-    .declareMethod('getContent', function () {
+    .declareMethod('getContent', function (sub_path) {
       var g = this;
       if (g.state.editable) {
         return g.props.form_gadget.getContent()
@@ -935,6 +961,9 @@
             // its parent call render with the same value
             // (as ERP5 does in case of formulator error)
             g.state.value = JSON.stringify(value);
+            if (sub_path) {
+              value = convertOnMultiLevel(value, sub_path);
+            }
             if (g.state.key) {
               var form_data = {};
               value = JSON.stringify(value);

@@ -285,8 +285,8 @@
       scope;
 
     scope = "j" + Math.random().toString(36).substr(2, 9);
+    parent_path = options.parent_path;
     if (options.parent_type !== "array") {
-      parent_path = options.path;
       property_name = options.property_name;
       if (!property_name) {
         property_name = input_element.value;
@@ -310,9 +310,9 @@
       .push(function (form_gadget) {
         form_gadget.element.setAttribute("data-gadget-parent-scope",
           g.element.getAttribute("data-gadget-scope"));
+        form_gadget.element.setAttribute("data-json-parent", parent_path);
         if (options.parent_type !== "array") {
           g.props.objects[parent_path][property_name] = scope;
-          form_gadget.element.setAttribute("data-json-parent", parent_path);
           form_gadget.element.setAttribute("data-json-property-name", property_name);
         }
         return form_gadget.renderForm({
@@ -335,14 +335,14 @@
       });
   }
 
-  function expandItems(g, items, schema_path, minItems) {
+  function expandItems(g, items, schema_path, path, minItems) {
     if (!(items instanceof Array)) {
-      return g.expandSchema(items, schema_path, minItems !== 0);
+      return g.expandSchema(items, schema_path, path, minItems !== 0);
     }
     var i,
       tasks = [];
     for (i = 0; i < items.length; i += 1) {
-      tasks.push(g.expandSchema(items[i], schema_path + '/' + i, i < minItems));
+      tasks.push(g.expandSchema(items[i], schema_path + '/' + i, path, i < minItems));
     }
     return RSVP.Queue()
       .push(function () {
@@ -350,27 +350,29 @@
       });
   }
 
-  function expandProperties(g, properties, schema_path, required) {
+  function expandProperties(g, properties, schema_path, path, required) {
     var ret_obj = {};
     return RSVP.Queue()
       .push(function () {
         var property_name,
           arr = [];
         function addPropertyName(p_name) {
-          return function (schema_array) {
-            ret_obj[p_name] = schema_array;
-          };
+          return g.getJsonPath(path)
+            .push(function (p) {
+              return g.expandSchema(
+                properties[p_name],
+                schema_path + encodeJsonPointer(p_name),
+                p + encodeJsonPointer(p_name),
+                required.indexOf(p_name) >= 0
+              );
+            })
+            .push(function (schema_array) {
+              ret_obj[p_name] = schema_array;
+            });
         }
         for (property_name in properties) {
           if (properties.hasOwnProperty(property_name)) {
-            arr.push(
-              g.expandSchema(
-                properties[property_name],
-                schema_path + encodeJsonPointer(property_name),
-                required.indexOf(property_name) >= 0
-              )
-                .push(addPropertyName(property_name))
-            );
+            arr.push(addPropertyName(property_name));
           }
         }
         return RSVP.all(arr);
@@ -633,6 +635,8 @@
                           return g.render(render_options);
                         })
                         .push(function () {
+                          // XXX need path argument
+                          // absent in current context
                           return gadget.rootNotifyChange();
                         });
                     },
@@ -689,6 +693,8 @@
                       } else {
                         input.removeAttribute("style");
                       }
+                      // XXX need path argument
+                      // absent in current context
                       return gadget.rootNotifyChange();
                     });
                 },
@@ -744,11 +750,11 @@
 
     // XXX add failback rendering if json_document not array
     // input = render_textarea(schema, default_value, "array");
-    return RSVP.Queue()
-      .push(function () {
+    return gadget.getJsonPath(path)
+      .push(function (p) {
         return RSVP.all([
-          expandItems(gadget, schema.items, schema_path + '/items', minItems),
-          gadget.expandSchema(schema.additionalItems, schema_path + '/additionalItems', false)
+          expandItems(gadget, schema.items, schema_path + '/items', p, minItems),
+          gadget.expandSchema(schema.additionalItems, schema_path + '/additionalItems', p, false)
         ]);
       })
       .push(function (arr) {
@@ -773,6 +779,7 @@
                 addSubForm.bind(gadget, {
                   gadget: gadget,
                   parent_type: 'array',
+                  parent_path: path,
                   schema_arr: schema_arr,
                   json_document: json_document[i],
                   required: i < minItems
@@ -799,6 +806,7 @@
                   addSubForm.bind(gadget, {
                     gadget: gadget,
                     parent_type: 'array',
+                    parent_path: path,
                     schema_arr: schema_arr,
                     required: true
                   })
@@ -818,6 +826,7 @@
               return addSubForm({
                 gadget: gadget,
                 parent_type: 'array',
+                parent_path: path,
                 type: value.type,
                 selected_schema: value,
                 schema_arr: schema_arr
@@ -832,6 +841,7 @@
                   addSubForm.bind(gadget, {
                     gadget: gadget,
                     parent_type: 'array',
+                    parent_path: path,
                     schema_arr: schema_arr,
                     required: true
                   })
@@ -846,6 +856,7 @@
               return addSubForm({
                 gadget: gadget,
                 parent_type: 'array',
+                parent_path: path,
                 type: value.type,
                 selected_schema: value,
                 schema_arr: schema_arr
@@ -1154,7 +1165,10 @@
     input.placeholder = "name of " + title;
     div_input.appendChild(input);
 
-    return g.expandSchema(schema, schema_path)
+    return g.getJsonPath(path)
+      .push(function (p) {
+        return g.expandSchema(schema, schema_path, p);
+      })
       .push(function (schema_arr) {
         var queue = RSVP.Queue(),
           property_name;
@@ -1171,7 +1185,7 @@
                 addSubForm.bind(g, {
                   gadget: g,
                   property_name: property_name,
-                  path: path,
+                  parent_path: path,
                   schema_arr: schema_arr,
                   json_document: json_document[property_name]
                 })
@@ -1184,7 +1198,7 @@
             return addSubForm({
               gadget: g,
               element: input,
-              path: path,
+              parent_path: path,
               type: value.type,
               schema_arr: [value]
             })
@@ -1344,7 +1358,7 @@
       json_document = {};
     }
 
-    return expandProperties(g, schema.properties, schema_path + '/properties/', required)
+    return expandProperties(g, schema.properties, schema_path + '/properties/', path, required)
       .push(function (ret) {
         var schema_arr,
           q = RSVP.Queue(),
@@ -1356,7 +1370,7 @@
             schema_arr = properties[key];
             filtered_schema_arr = schemaArrFilteredByDocument(schema_arr, json_document[key]);
             // XXX need schema merge with patternProperties passed key
-            if (checkSchemaArrOneChoise(schema_arr)) {
+            if (checkSchemaArrOneChoise(schema_arr) && !schema_arr.external_reference) {
               if (required.indexOf(key) >= 0) {
                 used_properties[key] = false;
                 q.push(render_field.bind(g, g, key, path,
@@ -1376,13 +1390,15 @@
               }
             }
             if (!used_properties.hasOwnProperty(key) &&
-                json_document.hasOwnProperty(key)) {
+                (json_document.hasOwnProperty(key) ||
+                 schema_arr.external_reference)) {
               used_properties[key] = "";
               q.push(
                 addSubForm.bind(g, {
                   gadget: g,
                   property_name: key,
-                  path: path,
+                  parent_path: path,
+                  delete_button: false,
                   schema_arr: filtered_schema_arr,
                   json_document: json_document[key]
                 })
@@ -1400,7 +1416,7 @@
           return addSubForm({
             gadget: g,
             property_name: value.property_name,
-            path: path,
+            parent_path: path,
             type: value.type,
             schema_arr: [value]
           })
@@ -1511,7 +1527,7 @@
                   addSubForm.bind(g, {
                     gadget: g,
                     property_name: key,
-                    path: path,
+                    parent_path: path,
                     schema_arr: [{
                       schema: undefined,
                       schema_path: ""
@@ -1730,7 +1746,14 @@
       g.props = {};
       g.options = {};
     })
-    .declareAcquiredMethod("rootNotifyChange", "rootNotifyChange")
+    .declareAcquiredMethod("rNotifyChange", "rootNotifyChange")
+    .declareMethod("rootNotifyChange", function (path) {
+      var g = this;
+      return this.getJsonPath(path)
+        .push(function (p) {
+          return g.rNotifyChange(p);
+        });
+    })
     .declareAcquiredMethod("selfRemove", "deleteChildren")
     .allowPublicAcquisition("deleteChildren", function (arr, scope) {
       var g = this,
@@ -1749,23 +1772,85 @@
           }
         }
       }
-      element.parentNode.removeChild(element);
       for (key in g.props.add_custom_data) {
         if (g.props.add_custom_data.hasOwnProperty(key)) {
-          tasks.push(g.props.add_custom_data[key].rerender());
+          tasks.push(g.props.add_custom_data[key].rerender);
         }
       }
       for (i = 0; i < button_list.length; i = i + 1) {
-        tasks.push(button_list[i].rerender());
+        tasks.push(button_list[i].rerender);
       }
-      tasks.push(g.rootNotifyChange());
       return RSVP.Queue()
         .push(function () {
           return RSVP.all(tasks);
+        })
+        .push(function () {
+          return g.rootNotifyChange();
+        })
+        .push(function () {
+          // remove gadget at end otherwise
+          // current queue canceled.
+          element.parentNode.removeChild(element);
         });
     })
 
-    .declareMethod('getElementByPath', function (data_path) {
+    .declareAcquiredMethod('parentGetJsonPath', 'parentGetJsonPath')
+    .allowPublicAcquisition('parentGetJsonPath', function (arr, scope) {
+      var g = this,
+        key,
+        arrays = g.props.arrays,
+        array,
+        len,
+        i,
+        objects = g.props.objects,
+        o,
+        element = getSubGadgetElement(g, scope),
+        parent;
+      if (element) {
+        parent = element.getAttribute("data-json-parent");
+      } else {
+        parent = arr[0];
+      }
+      if (arrays.hasOwnProperty(parent)) {
+        array = arrays[parent]
+          .querySelectorAll("div[data-gadget-parent-scope='" + g.element.getAttribute("data-gadget-scope") + "']");
+        len = array.length;
+        for (i = 0; i < len; i += 1) {
+          if (array[i].getAttribute('data-gadget-scope') === scope) {
+            break;
+          }
+        }
+        return g.parentGetJsonPath(this.element.getAttribute("data-json-parent"))
+          .push(function (path) {
+            return path + parent + i;
+          });
+      }
+      if (objects.hasOwnProperty(parent)) {
+        o = objects[parent];
+        for (key in o) {
+          if (o.hasOwnProperty(key)) {
+            if (o[key] === scope) {
+              break;
+            }
+          }
+        }
+        return g.parentGetJsonPath(this.element.getAttribute("data-json-parent"))
+          .push(function (path) {
+            return path + parent + encodeJsonPointer(key);
+          });
+      }
+    })
+    .declareMethod('getJsonPath', function (parent_path) {
+      return this.parentGetJsonPath(this.element.getAttribute("data-json-parent"))
+        .push(function (p) {
+          if (parent_path) {
+            p = p + parent_path;
+          }
+          return p;
+        });
+    })
+
+    .declareMethod('getGadgetByPath', function (data_path) {
       var g = this,
         array,
         path,
@@ -1795,7 +1880,7 @@
           next_data_path = "/" + next_data_path.slice(1).join("/");
           return g.getDeclaredGadget(array[idx].getAttribute('data-gadget-scope'))
             .push(function (gadget) {
-              return gadget.getElementByPath(next_data_path);
+              return gadget.getGadgetByPath(next_data_path);
             });
         }
 
@@ -1823,22 +1908,29 @@
         if (scope === false) {
           // gadget for this element absent
           // so find element in current gadget
-          return document.getElementById(
-            g.element.getAttribute("data-gadget-scope") + bingo + key + '/'
-          );
+          return {
+            gadget: g,
+            path: bingo + key + '/'
+          };
         }
         if (scope) {
           // get gadget by scope and use relative path for find element in gadget
           return g.getDeclaredGadget(scope)
             .push(function (gadget) {
-              return gadget.getElementByPath(next_data_path);
+              return gadget.getGadgetByPath(next_data_path);
             });
         }
       }
-      return RSVP.Queue()
-        .push(function () {
+      return {
+        gadget: g,
+        path: data_path
+      };
+    })
+    .declareMethod('getElementByPath', function (data_path) {
+      return this.getGadgetByPath(data_path)
+        .push(function (ret) {
           return document.getElementById(
-            g.element.getAttribute("data-gadget-scope") + data_path
+            ret.gadget.element.getAttribute("data-gadget-scope") + ret.path
           );
         });
     })
@@ -1851,33 +1943,23 @@
     })
     .allowPublicAcquisition("notifyChange", function (arr, sub_scope) {
       var g = this,
-        opt = arr[0],
+        evt = arr[0],
         event_object;
       event_object = g.props.add_custom_data[sub_scope];
-      if (event_object && opt.type === "change") {
+      if (event_object && evt.type === "change") {
         return event_object.event();
       }
-      return g.rootNotifyChange();
+      return g.rootNotifyChange(evt.target.name);
     })
     .declareMethod('renderForm', function (options) {
       var g = this,
         property_name = g.element.getAttribute('data-json-property-name'),
-        schema = options.schema_arr !== undefined && options.schema_arr[0].schema,
-        root;
+        schema = options.schema_arr !== undefined && options.schema_arr[0].schema;
       g.props.changed = false;
       g.props.saveOrigValue = options.saveOrigValue;
-      g.props.inputs = [];
-      g.props.add_buttons = [];
-      g.props.add_custom_data = {};
-      g.props.arrays = {};
-      g.props.objects = {};
       g.props.path = options.path; // self gadget scope
       if (!property_name || !options.display_label) {
         property_name = "";
-      }
-      root = g.element.querySelector('[data-json-path="/"]');
-      if (!root) {
-        root = g.element;
       }
       if (options.delete_button === undefined) {
         if (options.top) {
@@ -1892,23 +1974,44 @@
       // used for empty document generation
       g.props.type = (schema && typeof schema.type === "string" && schema.type) ||
                      options.type || getDocumentType(options.document);
-      while (root.firstChild) {
-        root.removeChild(root.firstChild);
-      }
       if (checkSchemaIsMetaSchema(schema)) {
         g.props.updatePropertySelectors = true;
         g.props.current_document = options.document;
       }
-      return render_field(g, property_name, "", options.schema_arr,
-        options.document, root,
-        {
-          type: options.type,
-          selected_schema: options.selected_schema,
-          required: options.required,
-          delete_button: options.delete_button,
-          top: options.top
-        })
+      g.props.property_name = property_name;
+      g.props.schema_arr = options.schema_arr;
+      g.props.render_opt = {
+        type: options.type,
+        selected_schema: options.selected_schema,
+        required: options.required,
+        delete_button: options.delete_button,
+        top: options.top
+      };
+      return g.rerender({value: options.document});
+    })
+
+    .declareMethod('rerender', function (opt) {
+      var g = this,
+        for_delete,
+        root = g.element.querySelector('[data-json-path="/"]');
+      g.props.inputs = [];
+      g.props.add_buttons = [];
+      g.props.add_custom_data = {};
+      g.props.arrays = {};
+      g.props.objects = {};
+      if (!root) {
+        root = g.element;
+      }
+      for_delete = Array.from(root.childNodes);
+      if (opt.schema) {
+        g.props.schema_arr[0].schema = opt.schema;
+      }
+      return render_field(g, g.props.property_name, "", g.props.schema_arr,
+        opt.value, root, g.props.render_opt)
         .push(function () {
+          for (var i = 0; i < for_delete.length; i += 1) {
+            root.removeChild(for_delete[i]);
+          }
           return g.element;
         });
     })
@@ -1972,10 +2075,11 @@
             }
           }
           changed = true;
+          break;
         }
       }
       if (changed) {
-        return gadget.rootNotifyChange();
+        return gadget.rootNotifyChange(input.name);
       }
     })
 
