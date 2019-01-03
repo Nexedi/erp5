@@ -71,7 +71,7 @@
         if (is_updating || !jio_key) {
           return;
         }
-        if (gadget.state.redirect_to_parent) {
+        if ((gadget.state.redirect_to_parent) || (gadget.state.back_to_history)) {
           return gadget.redirect({command: 'history_previous'});
         }
         if (gadget.state.jio_key === jio_key) {
@@ -132,6 +132,7 @@
   gadget_klass
     .setState({
       'redirect_to_parent': false,  // set by a presence of special field
+      'back_to_history': false,
       'has_update_action': undefined  // default "submit" issue update in case of its presence
     })
 
@@ -163,8 +164,14 @@
     .declareMethod('render', function render(options) {
       var gadget = this;
       // copy out wanted items from options and pass it to `changeState`
-      return gadget.getUrlParameter('extended_search')
-        .push(function (extended_search) {
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.getUrlParameter('extended_search'),
+            gadget.getUrlParameter('back_to_history')
+          ]);
+        })
+        .push(function (result_list) {
           return gadget.changeState({
             jio_key: options.jio_key,
             view: options.view,
@@ -175,8 +182,9 @@
             // editable: true,  // ignore global editable state (be always editable)
             has_update_action: Boolean(options.form_definition.update_action),
             // pass extended_search from previous view in case any gadget is curious
-            extended_search: extended_search,
+            extended_search: result_list[0],
             // XXX Hack of ERP5 how to express redirect to parent after success
+            back_to_history: result_list[1],
             redirect_to_parent: options.erp5_document._embedded._view.field_your_redirect_to_parent !== undefined
           });
         });
@@ -266,9 +274,16 @@
           return erp5_form.render(form_options);
         })
         .push(function () {
+          var cancel_url_promise;
+          console.log('back to history', form_gadget.state.back_to_history);
+          if (form_gadget.state.back_to_history) {
+            cancel_url_promise = form_gadget.getUrlFor({command: 'history_previous'});
+          } else {
+            cancel_url_promise = form_gadget.getUrlFor({command: 'change', options: {page: undefined, view: undefined}});
+          }
           // Render the headers
           return RSVP.all([
-            form_gadget.getUrlFor({command: 'change', options: {page: undefined, view: undefined}}),
+            cancel_url_promise,
             calculatePageTitle(form_gadget, form_gadget.state.erp5_document)
           ]);
         })
