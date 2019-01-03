@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray */
+/*global window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray) {
+(function (window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -19,15 +19,14 @@
    * @param {Array} command_list - array of links obtained from ERP5 HATEOAS
    */
   function renderLinkList(gadget, title, icon, erp5_link_list) {
-    return gadget.getUrlParameter("extended_search")
-      .push(function (query) {
-        // obtain RJS links from ERP5 links
+    return new RSVP.Queue()
+      .push(function () {
         return RSVP.all(
           erp5_link_list.map(function (erp5_link) {
             return gadget.getUrlFor({
               "command": 'change',
               "options": {
-                "view": UriTemplate.parse(erp5_link.href).expand({query: query}),
+                "view": erp5_link.href,
                 "page": undefined
               }
             });
@@ -109,4 +108,4 @@
       return;
     });
 
-}(window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray));
+}(window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray));
