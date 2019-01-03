@@ -3,6 +3,7 @@ Data Acquisition Unit | validation_workflow
 Data Aggregation Unit | edit_workflow
 Data Aggregation Unit | validation_workflow
 Data Analysis Line | edit_workflow
+Data Analysis | data_refresh_workflow
 Data Analysis | data_simulation_workflow
 Data Analysis | edit_workflow
 Data Array Line | edit_workflow
