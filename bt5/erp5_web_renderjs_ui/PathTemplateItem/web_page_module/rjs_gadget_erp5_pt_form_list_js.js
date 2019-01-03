@@ -312,23 +312,23 @@
     .allowPublicAcquisition("triggerListboxClipboardAction", function triggerListboxClipboardAction(argument_list) {
       var delete_list = ensureArray(this.state.erp5_document._links.action_object_delete_action),
         checked_uid_list = argument_list[1],
-        unchecked_uid_list = argument_list[2],
-        gadget = this;
-      if (checked_uid_list.length === 0) {
-        // If nothing is checked, use all unchecked values (same as xhtml style)
-        checked_uid_list = unchecked_uid_list;
+        gadget = this,
+        extended_search = gadget.state.extended_search;
+      if (checked_uid_list.length !== 0) {
+        // If nothing is checked, use original query
+        extended_search = updateSearchQueryFromSelection(
+          extended_search,
+          checked_uid_list,
+          'catalog.uid',
+          true
+        );
       }
       return this.redirect({
         command: 'change',
         options: {
           "view": delete_list[0].href,
           "page": undefined,
-          "extended_search": updateSearchQueryFromSelection(
-            gadget.state.extended_search,
-            checked_uid_list,
-            'catalog.uid',
-            true
-          )
+          "extended_search": extended_search
         }
       });
     });
