@@ -309,6 +309,7 @@ class ERP5TypeInformation(XMLObject,
       # Wendelin
       'device',
       'device_configuration',
+      'data_configuration',
       'data_descriptor',
       'data_sink',
       # LEGACY - needs a warning - XXX-JPS

@@ -201,10 +201,12 @@ portal_data_sink_type_list = ('Data Stream',
                               'Data Bucket Stream')
 
 portal_device_type_list = ('Data Acquisition Unit',
-                           'Data Aggregation Unit',
+                           'Data Aggregation Unit'
                            'Sensor')
 
 portal_device_configuration_type_list = ()
+
+portal_data_configuration_type_list = ()
 
 # This transaction lines are special because destination must be None.
 portal_balance_transaction_line_type_list = ('Balance Transaction Line',)
