@@ -239,7 +239,10 @@
             options.extended_search = undefined;
           }
 
-          return gadget.redirect({command: 'store_and_change', options: options});
+          return gadget.redirect({
+            command: 'store_and_change',
+            options: options
+          }, true);
         });
 
     }, false, true)
@@ -287,7 +290,7 @@
               (action === 'include')
             )
           }
-        });
+        }, true);
       }
 
       throw new Error('Unsupported triggerListboxSelectAction action: ' + action);
@@ -324,13 +327,15 @@
         );
       }
       return this.redirect({
-        command: 'change',
+        command: 'push_history',
         options: {
+          "jio_key": gadget.state.jio_key,
           "view": delete_list[0].href,
-          "page": undefined,
-          "extended_search": extended_search
+          "page": "form",
+          "extended_search": extended_search,
+          "back_to_history": 1
         }
-      });
+      }, true);
     });
 
 }(window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery, Query,
