@@ -1267,7 +1267,6 @@
     .onEvent('click', function click(evt) {
       // For some reason, Zelenium can click even if button has the disabled
       // attribute. So, it is needed for now to manually checks
-      console.log('onCLick', this.state.disabled);
       if (this.state.disabled) {
         return;
       }
@@ -1284,8 +1283,6 @@
         checked_uid_list,
         unchecked_uid_list,
         i;
-
-      console.log('onCLick', clipboard_button, evt.target);
 
       if (evt.target === configure_button) {
         evt.preventDefault();
@@ -1314,7 +1311,6 @@
       }
 
       if (evt.target === clipboard_button) {
-        console.log('couscous clipboard');
         evt.preventDefault();
         return gadget.changeState({
           show_line_selector: true,
