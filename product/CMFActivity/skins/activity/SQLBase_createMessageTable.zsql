@@ -10,13 +10,13 @@ class_file:
 <params>table</params>
 CREATE TABLE <dtml-var table> (
   `uid` BIGINT UNSIGNED NOT NULL,
-  `date` DATETIME NOT NULL,
+  `date` DATETIME(6) NOT NULL,
   `path` VARCHAR(255) NOT NULL,
   `active_process_uid` INT UNSIGNED NULL,
   `method_id` VARCHAR(255) NOT NULL,
   `processing_node` SMALLINT NOT NULL DEFAULT -1,
   `processing` TINYINT NOT NULL DEFAULT 0,
-  `processing_date` DATETIME,
+  `processing_date` DATETIME(6),
   `priority` TINYINT NOT NULL DEFAULT 0,
   `group_method_id` VARCHAR(255) NOT NULL DEFAULT '',
   `tag` VARCHAR(255) NOT NULL,

@@ -75,6 +75,8 @@ _DequeueMessageException = Exception()
 def sqltest_dict():
   sqltest_dict = {}
   no_quote_type = int, float, long
+  def render_datetime(x):
+      return "%.4d-%.2d-%.2d %.2d:%.2d:%09.6f" % x.toZone('UTC').parts()[:6]
   def _(name, column=None, op="="):
     if column is None:
       column = name
@@ -83,18 +85,17 @@ def sqltest_dict():
       if isinstance(value, no_quote_type):
         return column_op + str(value)
       if isinstance(value, DateTime):
-        value = value.toZone('UTC').ISO()
+        value = render_datetime(value)
       if isinstance(value, basestring):
         return column_op + render_string(value)
       assert op == "=", value
       if value is None: # XXX: see comment in SQLBase._getMessageList
         return column + " IS NULL"
       for x in value:
-        if isinstance(x, no_quote_type):
-          render_string = str
-        elif isinstance(x, DateTime):
-          value = (x.toZone('UTC').ISO() for x in value)
-        return "%s IN (%s)" % (column, ', '.join(map(render_string, value)))
+        return "%s IN (%s)" % (column, ', '.join(map(
+          str if isinstance(x, no_quote_type) else
+          render_datetime if isinstance(x, DateTime) else
+          render_string, value)))
       return "0"
     sqltest_dict[name] = render
   _('active_process_uid')

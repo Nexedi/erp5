@@ -15,7 +15,7 @@ delay
 UPDATE
   <dtml-var table>
 SET
-  date = DATE_ADD(UTC_TIMESTAMP(), INTERVAL
+  date = DATE_ADD(UTC_TIMESTAMP(6), INTERVAL
     <dtml-sqlvar delay type="int"> SECOND)
 <dtml-if expr="retry is not None">
   , priority = priority + <dtml-sqlvar retry type="int">
