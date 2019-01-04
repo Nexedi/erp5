@@ -226,9 +226,9 @@ and handling data send&receive.
             if (!result._embedded) {
               return gadget.jio_getAttachment(options.jio_key, "links")
                 .push(function (result2) {
-                  return gadget.redirect({command: 'change', options: {
-                    view: result2._links.view[0].href,
-                    page: undefined
+                  return gadget.redirect({command: 'display_with_history', options: {
+                    jio_key: options.jio_key,
+                    view: result2._links.view[0].href
                   }});
                 });
             }
@@ -314,6 +314,7 @@ and handling data send&receive.
             return gadget.updatePanel({
               erp5_document: erp5_document,
               editable: gadget.state.options.editable,
+              jio_key: jio_key,
               view: options.view
             });
           }

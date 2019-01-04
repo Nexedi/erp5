@@ -743,8 +743,7 @@
                 view: command_options.args.view || 'view',
                 selection: command_options.args.selection,
                 selection_index: command_options.args.selection_index,
-                history: command_options.args.history,
-                extended_search: command_options.args.extended_search
+                history: command_options.args.history
               })
             );
           });
