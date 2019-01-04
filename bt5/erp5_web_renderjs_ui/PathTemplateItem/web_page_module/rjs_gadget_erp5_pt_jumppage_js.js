@@ -51,7 +51,7 @@
         .push(function (result) {
           var i,
             promise_list = [
-              gadget.getUrlFor({command: 'change', options: {page: undefined}})
+              gadget.getUrlFor({command: 'display_with_history', options: {jio_key: options.jio_key}})
             ];
           erp5_document = result;
           view_list = erp5_document._links.action_object_jump || [];
