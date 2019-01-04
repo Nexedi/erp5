@@ -8,8 +8,8 @@ define([
             var _options = {};
             _.extend(_options,  {
                 title: this.textTitle,
-                width: 1024,
-                height: 621,
+                width: Common.Utils.innerWidth() - 40,
+                height: Common.Utils.innerHeight() - 40,
                 header: true
             }, options);
 
@@ -44,7 +44,7 @@ define([
                         me.gadget = sub_gadget;
                         var iframe = sub_gadget.element.querySelector("iframe");
                         iframe.width        = '100%';
-                        iframe.height       = "585px";
+                        iframe.height       = (Common.Utils.innerHeight() - 80) + 'px';
                         iframe.setAttribute("frameBorder","0");
                         // iframe.style = "border: none;";
                         // iframe.align        = "top";
