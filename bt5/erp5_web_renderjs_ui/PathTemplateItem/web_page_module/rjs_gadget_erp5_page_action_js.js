@@ -18,16 +18,16 @@
    * @param {string} icon - alias used in font-awesome iconset
    * @param {Array} command_list - array of links obtained from ERP5 HATEOAS
    */
-  function renderLinkList(gadget, title, icon, erp5_link_list) {
+  function renderLinkList(gadget, jio_key, title, icon, erp5_link_list) {
     return new RSVP.Queue()
       .push(function () {
         return RSVP.all(
           erp5_link_list.map(function (erp5_link) {
             return gadget.getUrlFor({
-              "command": 'change',
+              "command": 'display_with_history',
               "options": {
-                "view": erp5_link.href,
-                "page": undefined
+                "jio_key": jio_key,
+                "view": erp5_link.href
               }
             });
           })
@@ -83,16 +83,16 @@
           erp5_document = jio_attachment;
 
           return RSVP.all([
-            renderLinkList(gadget, "Workflows", "random", transition_list),
-            renderLinkList(gadget, "Actions", "gear", action_list),
-            renderLinkList(gadget, "Clone", "clone", clone_list)
+            renderLinkList(gadget, options.jio_key, "Workflows", "random", transition_list),
+            renderLinkList(gadget, options.jio_key, "Actions", "gear", action_list),
+            renderLinkList(gadget, options.jio_key, "Clone", "clone", clone_list)
           ]);
         })
         .push(function (translated_html_link_list) {
           gadget.element.innerHTML = translated_html_link_list.join("\n");
           return RSVP.all([
             calculatePageTitle(gadget, erp5_document),
-            gadget.getUrlFor({command: 'change', options: {page: undefined}})
+            gadget.getUrlFor({command: 'display_with_history', options: {jio_key: options.jio_key}})
           ]);
         })
         .push(function (result_list) {
