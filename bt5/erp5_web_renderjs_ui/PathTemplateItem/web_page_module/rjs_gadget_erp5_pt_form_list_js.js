@@ -151,13 +151,14 @@
         .push(function () {
           var new_content_action = form_gadget.state.erp5_document._links.action_object_new_content_action,
             url_for_parameter_list = [
-              {command: 'change', options: {page: "action"}},
+              {command: 'display_with_history', options: {jio_key: form_gadget.state.jio_key, page: "action"}},
               {command: 'display', options: {}},
-              {command: 'change', options: {page: "export"}}
+              {command: 'display_with_history', options: {jio_key: form_gadget.state.jio_key, page: "export"}}
             ];
 
           if (new_content_action !== undefined) {
-            url_for_parameter_list.push({command: 'change', options: {
+            url_for_parameter_list.push({command: 'display_with_history', options: {
+              jio_key: form_gadget.state.jio_key,
               view: new_content_action.href,
               editable: true
             }});
