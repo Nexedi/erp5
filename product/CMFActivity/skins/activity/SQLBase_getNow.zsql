@@ -8,4 +8,4 @@ class_name:
 class_file:
 </dtml-comment>
 <params></params>
-SELECT UTC_TIMESTAMP()
+SELECT UTC_TIMESTAMP(6)

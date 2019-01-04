@@ -19,7 +19,7 @@ FROM
   <dtml-var table>
 WHERE
   processing_node=0
-  AND date <= <dtml-sqlvar to_date type="datetime">
+  AND date <= <dtml-sqlvar to_date type="datetime(6)">
   <dtml-if expr="group_method_id is not None">
     AND group_method_id = <dtml-sqlvar group_method_id type="string">
   </dtml-if>

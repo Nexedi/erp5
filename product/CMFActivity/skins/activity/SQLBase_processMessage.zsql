@@ -12,7 +12,7 @@ uid</params>
 UPDATE
   <dtml-var table>
 SET
-  processing_date = UTC_TIMESTAMP(),
+  processing_date = UTC_TIMESTAMP(6),
   processing = 1
 WHERE
   <dtml-sqltest uid type="int" multiple>
