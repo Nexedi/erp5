@@ -77,11 +77,10 @@
         if (gadget.state.jio_key === jio_key) {
           // don't update navigation history when not really redirecting
           return gadget.redirect({
-            command: 'change',
+            command: 'display_with_history',
             options: {
               "jio_key": jio_key,
-              "view": "view",
-              "page": undefined
+              "view": "view"
               // do not mingle with editable because it isn't necessary
             }
           });
@@ -278,7 +277,7 @@
           if (form_gadget.state.back_to_history) {
             cancel_url_promise = form_gadget.getUrlFor({command: 'history_previous'});
           } else {
-            cancel_url_promise = form_gadget.getUrlFor({command: 'change', options: {page: undefined, view: undefined}});
+            cancel_url_promise = form_gadget.getUrlFor({command: 'display_with_history', options: {jio_key: form_gadget.state.jio_key}});
           }
           // Render the headers
           return RSVP.all([
