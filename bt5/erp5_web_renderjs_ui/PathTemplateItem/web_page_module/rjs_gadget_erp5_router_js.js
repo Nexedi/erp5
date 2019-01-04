@@ -489,6 +489,7 @@
   function execKeepHistoryAndDisplayCommand(gadget, previous_options, next_options) {
     next_options.selection = previous_options.selection;
     next_options.history = previous_options.history;
+    next_options.selection_index = previous_options.selection_index;
     copyStickyParameterDict(previous_options, next_options);
     return execDisplayCommand(gadget, next_options);
   }
