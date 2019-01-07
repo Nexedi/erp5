@@ -29,16 +29,12 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Add']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Add</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
@@ -58,28 +54,16 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Relation Fields' and contains(@href, '#!change')]</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Relation Fields'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Relation Fields' and contains(@href, '#!change')]</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>waitForElementPresent</td>
