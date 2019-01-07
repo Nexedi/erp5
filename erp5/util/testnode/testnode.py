@@ -253,6 +253,7 @@ shared = true
     config = self.config
     portal_url = config['test_suite_master_url']
     test_node_slapos = SlapOSInstance(config['slapos_directory'])
+    testnode_software_successfully_built = False
     try:
       while True:
         test_result = None
@@ -301,7 +302,11 @@ shared = true
           runner = runner_class(self)
           logger.info("Type of current test is %s", my_test_type)
           # master testnode gets test_suites, slaves get nothing
-          runner.prepareSlapOSForTestNode(test_node_slapos)
+          if not(testnode_software_successfully_built):
+            testnode_software_status_dict = runner.prepareSlapOSForTestNode(test_node_slapos)
+            if testnode_software_status_dict['status_code'] == 0:
+              testnode_software_successfully_built = True
+              logger.info("Will now skip build of testnode software")
           # Clean-up test suites
           self.purgeOldTestSuite(test_suite_data)
           for test_suite in test_suite_data:
