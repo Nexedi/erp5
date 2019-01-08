@@ -25,7 +25,7 @@
         return RSVP.all(
           erp5_link_list.map(function (erp5_link) {
             return gadget.getUrlFor({
-              "command": 'display_with_history',
+              "command": 'display_with_history_and_cancel',
               "options": {
                 "jio_key": jio_key,
                 "view": erp5_link.href
