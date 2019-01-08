@@ -51,14 +51,14 @@
 <!-- Generate back link -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo Module' and contains(@href, '#!change') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foo Module' and contains(@href, '#!display_with_history') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 
 <!-- Follow back link -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo Module' and contains(@href, '#!change') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foo Module' and contains(@href, '#!display_with_history') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
