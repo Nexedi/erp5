@@ -33,12 +33,12 @@
      Here, we assume that portal_types/Foo has at least one Object JIO Report Action -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Export' and contains(@href, '#!change') and contains(@href, 'n.page=export')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Export' and contains(@href, '#!display_with_history') and contains(@href, 'n.page=export')]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Export' and contains(@href, '#!change') and contains(@href, 'n.page=export')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Export' and contains(@href, '#!display_with_history') and contains(@href, 'n.page=export')]</td>
   <td></td>
 </tr>
 <tr>
