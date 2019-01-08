@@ -1112,7 +1112,7 @@ class ActivityTool (BaseTool):
         #      getPriority does not see messages dequeueMessage would process.
         activity_list = activity_dict.values()
         def sort_key(activity):
-          return activity.getPriority(self)
+          return activity.getPriority(self, processing_node)
         while is_running_lock.acquire(0):
           try:
             activity_list.sort(key=sort_key) # stable sort
@@ -1181,7 +1181,9 @@ class ActivityTool (BaseTool):
         thread_activity_buffer[my_thread_key] = buffer
         return buffer
 
-    def activateObject(self, object, activity=DEFAULT_ACTIVITY, active_process=None, **kw):
+    def activateObject(self, object, activity=DEFAULT_ACTIVITY,
+                       active_process=None, serialization_tag=None,
+                       node=None, **kw):
       if active_process is None:
         active_process_uid = None
       elif isinstance(active_process, str):
@@ -1201,8 +1203,16 @@ class ActivityTool (BaseTool):
         except AttributeError:
           pass
         url = object.getPhysicalPath()
-      if kw.get('serialization_tag', False) is None:
-        del kw['serialization_tag']
+      if serialization_tag is not None:
+        kw['serialization_tag'] = serialization_tag
+      if node is not None:
+        if node != 'same':
+          raise ValueError("Invalid node argument %r" % node)
+        try:
+          kw['node'] = 1 + self.getNodeList(
+            role=ROLE_PROCESSING).index(getCurrentNode())
+        except ValueError:
+          pass
       return ActiveWrapper(self, url, oid, activity,
                            active_process, active_process_uid, kw,
                            getattr(self, 'REQUEST', None))
