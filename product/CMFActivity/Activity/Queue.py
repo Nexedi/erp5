@@ -187,11 +187,11 @@ class Queue(object):
     """
     pass
 
-  def getPriority(self, activity_tool):
+  def getPriority(self, activity_tool, node):
     """
       Get priority from this queue.
       Lower number means higher priority value.
-      Legal value range is [-128, 127].
+      Legal value range is [-385, 382].
       Values out of this range might work, but are non-standard.
     """
-    return 128,
+    return 384,
