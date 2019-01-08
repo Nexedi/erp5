@@ -80,15 +80,15 @@
         // render the header
         .push(function () {
           var url_for_parameter_list = [
-            {command: 'display_with_history', options: {jio_key: gadget.state.jio_key, page: "tab"}},
-            {command: 'display_with_history', options: {jio_key: gadget.state.jio_key, page: "action"}},
+            {command: 'display_dialog_with_history', options: {jio_key: gadget.state.jio_key, page: "tab"}},
+            {command: 'display_dialog_with_history', options: {jio_key: gadget.state.jio_key, page: "action"}},
             {command: 'history_previous'},
             {command: 'selection_previous'},
             {command: 'selection_next'},
-            {command: 'display_with_history', options: {jio_key: gadget.state.jio_key, page: "export"}}
+            {command: 'display_dialog_with_history', options: {jio_key: gadget.state.jio_key, page: "export"}}
           ];
           if (gadget.state.erp5_document._links.action_object_new_content_action) {
-            url_for_parameter_list.push({command: 'display_with_history', options: {
+            url_for_parameter_list.push({command: 'display_dialog_with_history', options: {
               jio_key: gadget.state.jio_key,
               view: gadget.state.erp5_document._links.action_object_new_content_action.href,
               editable: true

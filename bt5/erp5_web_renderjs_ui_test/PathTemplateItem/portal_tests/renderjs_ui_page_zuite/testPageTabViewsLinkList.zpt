@@ -34,14 +34,14 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='View' and contains(@href, '#!change') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='View' and contains(@href, '#!display_with_history') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 
 <!-- Follow one link -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='View' and contains(@href, '#!change') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='View' and contains(@href, '#!display_with_history') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 <tr>
