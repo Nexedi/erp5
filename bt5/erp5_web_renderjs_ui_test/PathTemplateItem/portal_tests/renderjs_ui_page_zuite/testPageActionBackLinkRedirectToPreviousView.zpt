@@ -32,7 +32,7 @@
 <!-- Get the list of tabs -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!display_with_history') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 <tr>
@@ -49,7 +49,7 @@
 <!-- Go to the duration tab -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Duration Field' and contains(@href, '#!change')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Duration Field' and contains(@href, '#!display_with_history')]</td>
   <td></td>
 </tr>
 <tr>
@@ -64,14 +64,14 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Actions' and contains(@href, '#!change') and contains(@href, 'n.page=action')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Actions' and contains(@href, '#!display_with_history') and contains(@href, 'n.page=action')]</td>
   <td></td>
 </tr>
 
 <!-- Follow action link -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Actions' and contains(@href, '#!change') and contains(@href, 'n.page=action')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Actions' and contains(@href, '#!display_with_history') and contains(@href, 'n.page=action')]</td>
   <td></td>
 </tr>
 <tr>

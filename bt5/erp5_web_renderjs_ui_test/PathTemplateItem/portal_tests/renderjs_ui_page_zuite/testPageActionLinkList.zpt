@@ -38,14 +38,14 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing Action' and contains(@href, '#!change') and contains(@href, 'do_nothing_action_jio') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing Action' and contains(@href, '#!display_with_history') and contains(@href, 'do_nothing_action_jio') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 
 <!-- Follow one link -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing Action' and contains(@href, '#!change') and contains(@href, 'do_nothing_action_jio') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing Action' and contains(@href, '#!display_with_history') and contains(@href, 'do_nothing_action_jio') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 <tr>
