@@ -32,7 +32,7 @@
 <!-- Go to the new content dialog -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Add' and contains(@href, '#!change') and contains(@href, 'view%3Dcreate_a_document')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Add' and contains(@href, '#!display_with_history') and contains(@href, 'view%3Dcreate_a_document')]</td>
   <td></td>
 </tr>
 <tr>

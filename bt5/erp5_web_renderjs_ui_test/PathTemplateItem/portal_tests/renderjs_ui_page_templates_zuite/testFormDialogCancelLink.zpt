@@ -32,7 +32,7 @@
 <!-- Go to the new content dialog -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Add' and contains(@href, '#!change') and contains(@href, 'view%3Dcreate_a_document')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Add' and contains(@href, '#!display_with_history') and contains(@href, 'view%3Dcreate_a_document')]</td>
   <td></td>
 </tr>
 <tr>
@@ -42,19 +42,19 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!change') and contains(@href, 'u.page=') and contains(@href, 'u.view=')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!display_with_history') and contains(@href, 'u.page=') and contains(@href, 'u.view=')]</td>
   <td></td>
 </tr>
 
 <!-- Header has a link to the previous history entry -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!change') and contains(@href, 'u.page=') and contains(@href, 'u.view=')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!display_with_history') and contains(@href, 'u.page=') and contains(@href, 'u.view=')]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!change') and contains(@href, 'u.page=') and contains(@href, 'u.view=')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!display_with_history') and contains(@href, 'u.page=') and contains(@href, 'u.view=')]</td>
   <td></td>
 </tr>
 <tr>
