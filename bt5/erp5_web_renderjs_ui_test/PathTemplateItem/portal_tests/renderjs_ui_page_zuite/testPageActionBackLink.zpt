@@ -32,14 +32,14 @@
 <!-- Generate back link -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!change') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!display_with_history') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 
 <!-- Follow back link -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!change') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!display_with_history') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 <tr>

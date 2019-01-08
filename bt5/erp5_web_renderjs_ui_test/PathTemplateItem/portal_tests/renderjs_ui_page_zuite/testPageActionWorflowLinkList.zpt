@@ -38,14 +38,14 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Validate Action' and contains(@href, '#!change') and contains(@href, 'validate_action') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Validate Action' and contains(@href, '#!display_with_history') and contains(@href, 'validate_action') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 
 <!-- Follow one link -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Validate Action' and contains(@href, '#!change') and contains(@href, 'validate_action') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Validate Action' and contains(@href, '#!display_with_history') and contains(@href, 'validate_action') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 <tr>
