@@ -16,49 +16,34 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=true</td>
   <td></td>
 </tr>
-
-<!-- Wait for gadget to be loaded -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Add</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <!-- Go to the new content dialog -->
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Add' and contains(@href, '#!change') and contains(@href, 'view%3Dcreate_a_document')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_dialog.html']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!change') and contains(@href, 'u.page=') and contains(@href, 'u.view=')]</td>
   <td></td>
 </tr>
 
 <!-- Header has a link to the previous history entry -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!change') and contains(@href, 'u.page=') and contains(@href, 'u.view=')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!cancel_dialog_with_history')]</td>
   <td></td>
 </tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'Foo: Title 1'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Title 1' and contains(@href, '#!change') and contains(@href, 'u.page=') and contains(@href, 'u.view=')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
   <td></td>
 </tr>
