@@ -655,11 +655,6 @@ class ActivityTool (BaseTool):
     activity_timing_log = False
     cancel_and_invoke_links_hidden = False
 
-    def SQLDict_setPriority(self, **kw):
-      real_SQLDict_setPriority = getattr(self.aq_parent, 'SQLDict_setPriority')
-      LOG('ActivityTool', 0, real_SQLDict_setPriority(src__=1, **kw))
-      return real_SQLDict_setPriority(**kw)
-
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
         # Filters the list of available meta types.
@@ -669,6 +664,9 @@ class ActivityTool (BaseTool):
             if meta_type['name'] in self.allowed_types:
                 meta_types.append(meta_type)
         return meta_types
+
+    def getSQLConnection(self):
+      return self.aq_inner.aq_parent.cmf_activity_sql_connection()
 
     def maybeMigrateConnectionClass(self):
       connection_id = 'cmf_activity_sql_connection'
@@ -1127,14 +1125,16 @@ class ActivityTool (BaseTool):
     def hasActivity(self, *args, **kw):
       # Check in each queue if the object has deferred tasks
       # if not argument is provided, then check on self
-      if len(args) > 0:
-        obj = args[0]
+      if args:
+        obj, = args
       else:
         obj = self
-      for activity in activity_dict.itervalues():
-        if activity.hasActivity(aq_inner(self), obj, **kw):
-          return True
-      return False
+      path = None if obj is None else '/'.join(obj.getPhysicalPath())
+      db = self.getSQLConnection()
+      quote = db.string_literal
+      return bool(db.query("(%s)" % ") UNION ALL (".join(
+        activity.hasActivitySQL(quote, path=path, **kw)
+        for activity in activity_dict.itervalues()))[1])
 
     security.declarePrivate('getActivityBuffer')
     def getActivityBuffer(self, create_if_not_found=True):
@@ -1443,8 +1443,9 @@ class ActivityTool (BaseTool):
       """
       if not(isinstance(message_uid_list, list)):
         message_uid_list = [message_uid_list]
-      self.SQLBase_makeMessageListAvailable(table=activity_dict[activity].sql_table,
-                              uid=message_uid_list)
+      if message_uid_list:
+        activity_dict[activity].unreserveMessageList(self.getSQLConnection(),
+                                                     0, message_uid_list)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (
           self.absolute_url(), 'view'))
@@ -1470,8 +1471,8 @@ class ActivityTool (BaseTool):
       """
       if not(isinstance(message_uid_list, list)):
         message_uid_list = [message_uid_list]
-      self.SQLBase_delMessage(table=activity_dict[activity].sql_table,
-                              uid=message_uid_list)
+      activity_dict[activity].deleteMessageList(
+        self.getSQLConnection(), message_uid_list)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (
           self.absolute_url(), 'view'))
@@ -1523,10 +1524,7 @@ class ActivityTool (BaseTool):
       """
         Return the number of messages which match the given tag.
       """
-      message_count = 0
-      for activity in activity_dict.itervalues():
-        message_count += activity.countMessageWithTag(aq_inner(self), value)
-      return message_count
+      return self.countMessage(tag=value)
 
     security.declarePublic('countMessage')
     def countMessage(self, **kw):
@@ -1540,10 +1538,11 @@ class ActivityTool (BaseTool):
         tag : activities with a particular tag
         message_uid : activities with a particular uid
       """
-      message_count = 0
-      for activity in activity_dict.itervalues():
-        message_count += activity.countMessage(aq_inner(self), **kw)
-      return message_count
+      db = self.getSQLConnection()
+      quote = db.string_literal
+      return sum(x for x, in db.query("(%s)" % ") UNION ALL (".join(
+        activity.countMessageSQL(quote, **kw)
+        for activity in activity_dict.itervalues()))[1])
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
     def newActiveProcess(self, REQUEST=None, **kw):

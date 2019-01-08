@@ -115,18 +115,29 @@ def sqltest_dict():
   return sqltest_dict
 sqltest_dict = sqltest_dict()
 
+def getNow(db):
+  """
+    Return the UTC date from the point of view of the SQL server.
+    Note that this value is not cached, and is not transactionnal on MySQL
+    side.
+  """
+  return db.query("SELECT UTC_TIMESTAMP(6)", 0)[1][0][0]
+
 class SQLBase(Queue):
   """
     Define a set of common methods for SQL-based storage of activities.
   """
+  _createMessageTable = 'SQLBase_createMessageTable'
+
   def initialize(self, activity_tool, clear):
     folder = activity_tool.getPortalObject().portal_skins.activity
     try:
-      createMessageTable = folder.SQLBase_createMessageTable
+      createMessageTable = getattr(folder, self._createMessageTable)
     except AttributeError:
       return
     if clear:
-      folder.SQLBase_dropMessageTable(table=self.sql_table)
+      activity_tool.getSQLConnection().query(
+        "DROP TABLE IF EXISTS " + self.sql_table)
       createMessageTable(table=self.sql_table)
     else:
       src = createMessageTable._upgradeSchema(create_if_not_exists=1,
@@ -185,33 +196,21 @@ class SQLBase(Queue):
       else:
         raise ValueError("Maximum retry for SQLBase_writeMessageList reached")
 
-  def getNow(self, context):
-    """
-      Return the current value for SQL server's NOW().
-      Note that this value is not cached, and is not transactionnal on MySQL
-      side.
-    """
-    result = context.SQLBase_getNow()
-    assert len(result) == 1
-    assert len(result[0]) == 1
-    return result[0][0]
-
-  def _getMessageList(self, activity_tool, count=1000, src__=0, **kw):
+  def _getMessageList(self, db, count=1000, src__=0, **kw):
     # XXX: Because most columns have NOT NULL constraint, conditions with None
     #      value should be ignored, instead of trying to render them
     #      (with comparisons with NULL).
-    sql_connection = activity_tool.getPortalObject().cmf_activity_sql_connection
-    q = sql_connection.sql_quote__
+    q = db.string_literal
     sql = '\n  AND '.join(sqltest_dict[k](v, q) for k, v in kw.iteritems())
     sql = "SELECT * FROM %s%s\nORDER BY priority, date, uid%s" % (
       self.sql_table,
       sql and '\nWHERE ' + sql,
       '' if count is None else '\nLIMIT %d' % count,
     )
-    return sql if src__ else Results(sql_connection().query(sql, max_rows=0))
+    return sql if src__ else Results(db.query(sql, max_rows=0))
 
-  def getMessageList(self, *args, **kw):
-    result = self._getMessageList(*args, **kw)
+  def getMessageList(self, activity_tool, *args, **kw):
+    result = self._getMessageList(activity_tool.getSQLConnection(), *args, **kw)
     if type(result) is str: # src__ == 1
       return result,
     class_name = self.__class__.__name__
@@ -223,57 +222,27 @@ class SQLBase(Queue):
                              processing=line.processing)
       for line in result]
 
-  def countMessage(self, activity_tool, tag=None, path=None,
-                   method_id=None, message_uid=None, **kw):
-    """Return the number of messages which match the given parameters.
-    """
-    if isinstance(tag, str):
-      tag = [tag]
-    if isinstance(path, str):
-      path = [path]
-    if isinstance(method_id, str):
-      method_id = [method_id]
-    result = activity_tool.SQLBase_validateMessageList(table=self.sql_table,
-                                                       method_id=method_id,
-                                                       path=path,
-                                                       message_uid=message_uid,
-                                                       tag=tag,
-                                                       serialization_tag=None,
-                                                       count=1)
-    return result[0].uid_count
+  def countMessageSQL(self, quote, **kw):
+    return "SELECT count(*) FROM %s WHERE processing_node > -10 AND %s" % (
+      self.sql_table, " AND ".join(
+        sqltest_dict[k](v, quote) for (k, v) in kw.iteritems() if v
+        ) or "1")
 
-  def hasActivity(self, activity_tool, object, method_id=None, only_valid=None,
-                  active_process_uid=None,
-                  only_invalid=False):
-    hasMessage = getattr(activity_tool, 'SQLBase_hasMessage', None)
-    if hasMessage is not None:
-      if object is None:
-        path = None
-      else:
-        path = '/'.join(object.getPhysicalPath())
-      try:
-        result = hasMessage(table=self.sql_table, path=path, method_id=method_id,
-          only_valid=only_valid, active_process_uid=active_process_uid,
-          only_invalid=only_invalid)
-      except DatabaseError:
-        LOG(
-          'SQLBase',
-          ERROR,
-          '%r raised, considering there are no activities' % (
-            hasMessage,
-          ),
-          error=True,
-        )
-      else:
-        return result[0].message_count > 0
-    return 0
+  def hasActivitySQL(self, quote, only_valid=False, only_invalid=False, **kw):
+    where = [sqltest_dict[k](v, quote) for (k, v) in kw.iteritems() if v]
+    if only_valid:
+      where.append('processing_node > -2')
+    if only_invalid:
+      where.append('processing_node < -1')
+    return "SELECT 1 FROM %s WHERE %s LIMIT 1" % (
+      self.sql_table, " AND ".join(where) or "1")
 
   def getPriority(self, activity_tool):
-    result = activity_tool.SQLBase_getPriority(table=self.sql_table)
-    if result:
-      result, = result
-      return result['priority'], result['date']
-    return Queue.getPriority(self, activity_tool)
+    result = activity_tool.getSQLConnection().query(
+      "SELECT priority, date FROM %s"
+      " WHERE processing_node=0 AND date <= UTC_TIMESTAMP(6)"
+      " ORDER BY priority, date LIMIT 1" % self.sql_table, 0)[1]
+    return result[0] if result else Queue.getPriority(self, activity_tool)
 
   def _retryOnLockError(self, method, args=(), kw={}):
     while True:
@@ -349,10 +318,8 @@ class SQLBase(Queue):
         error=severity>INFO and sys.exc_info() or None)
 
   def distribute(self, activity_tool, node_count):
-    assignMessage = getattr(activity_tool, 'SQLBase_assignMessage', None)
-    if assignMessage is None:
-      return
-    now_date = self.getNow(activity_tool)
+    db = activity_tool.getSQLConnection()
+    now_date = getNow(db)
     where_kw = {
       'processing_node': -1,
       'to_date': now_date,
@@ -360,7 +327,7 @@ class SQLBase(Queue):
     }
     validated_count = 0
     while 1:
-      result = self._getMessageList(activity_tool, **where_kw)
+      result = self._getMessageList(db, **where_kw)
       if not result:
         return
       transaction.commit()
@@ -395,8 +362,7 @@ class SQLBase(Queue):
               distributable_uid_set.add(message.uid)
         distributable_count = len(distributable_uid_set)
         if distributable_count:
-          assignMessage(table=self.sql_table,
-            processing_node=0, uid=tuple(distributable_uid_set))
+          self.unreserveMessageList(db, 0, distributable_uid_set)
           validated_count += distributable_count
           if validated_count >= MAX_VALIDATED_LIMIT:
             return
@@ -404,7 +370,7 @@ class SQLBase(Queue):
       where_kw['from_date'] = line.date
       where_kw['above_uid'] = line.uid
 
-  def getReservedMessageList(self, activity_tool, date, processing_node,
+  def getReservedMessageList(self, db, date, processing_node,
                              limit=None, group_method_id=None):
     """
       Get and reserve a list of messages.
@@ -418,29 +384,34 @@ class SQLBase(Queue):
         If None (or not given) no limit apply.
     """
     assert limit
+    quote = db.string_literal
+    query = db.query
+    sql_group = ('' if group_method_id is None else
+                 ' AND group_method_id=' + quote(group_method_id))
+
+    # Select reserved messages.
     # Do not check already-assigned messages when trying to reserve more
     # activities, because in such case we will find one reserved activity.
-    result = activity_tool.SQLBase_selectReservedMessageList(
-      table=self.sql_table,
-      count=limit,
-      processing_node=processing_node,
-      group_method_id=group_method_id,
-    )
+    result = Results(query(
+      "SELECT * FROM %s WHERE processing_node=%s%s LIMIT %s" % (
+      self.sql_table, processing_node, sql_group, limit), 0))
     limit -= len(result)
     if limit:
-      reservable = activity_tool.SQLBase_getReservableMessageList(
-        table=self.sql_table,
-        count=limit,
-        processing_node=processing_node,
-        to_date=date,
-        group_method_id=group_method_id,
-      )
+      # Get reservable messages.
+      # During normal operation, sorting by date (as last criteria) is fairer
+      # for users and reduce the probability to do the same work several times
+      # (think of an object that is modified several times in a short period of
+      # time).
+      reservable = Results(query(
+          "SELECT * FROM %s WHERE processing_node=0 AND %s%s"
+          " ORDER BY priority, date LIMIT %s FOR UPDATE" % (
+          self.sql_table, sqltest_dict['to_date'](date, quote), sql_group,
+          limit), 0))
       if reservable:
-        activity_tool.SQLBase_reserveMessageList(
-          uid=[x.uid for x in reservable],
-          table=self.sql_table,
-          processing_node=processing_node,
-        )
+        # Reserve messages.
+        query("UPDATE %s SET processing_node=%s WHERE uid IN (%s)\0COMMIT" % (
+          self.sql_table, processing_node,
+          ','.join(str(x.uid) for x in reservable)))
         # DC.ZRDB.Results.Results does not implement concatenation
         # Implement an imperfect (but cheap) concatenation. Do not update
         # __items__ nor _data_dictionary.
@@ -449,15 +420,15 @@ class SQLBase(Queue):
         result._data += reservable._data
     return result
 
-  def makeMessageListAvailable(self, activity_tool, uid_list):
+  def unreserveMessageList(self, db, state, uid_list):
     """
-      Put messages back in processing_node=0 .
+      Put messages back in given processing_node.
     """
-    if len(uid_list):
-      activity_tool.SQLBase_makeMessageListAvailable(table=self.sql_table,
-                                                     uid=uid_list)
+    db.query(
+      "UPDATE %s SET processing_node=%s, processing=0 WHERE uid IN (%s)\0"
+      "COMMIT" % (self.sql_table, state, ','.join(map(str, uid_list))))
 
-  def getProcessableMessageLoader(self, activity_tool, processing_node):
+  def getProcessableMessageLoader(self, db, processing_node):
     # do not merge anything
     def load(line):
       uid = line.uid
@@ -494,8 +465,9 @@ class SQLBase(Queue):
           - group_method_id
           - uid_to_duplicate_uid_list_dict
     """
+    db = activity_tool.getSQLConnection()
     def getReservedMessageList(limit, group_method_id=None):
-      line_list = self.getReservedMessageList(activity_tool=activity_tool,
+      line_list = self.getReservedMessageList(db,
                                               date=now_date,
                                               processing_node=processing_node,
                                               limit=limit,
@@ -503,12 +475,12 @@ class SQLBase(Queue):
       if line_list:
         self._log(TRACE, 'Reserved messages: %r' % [x.uid for x in line_list])
       return line_list
-    now_date = self.getNow(activity_tool)
+    now_date = getNow(db)
     uid_to_duplicate_uid_list_dict = {}
     try:
       result = getReservedMessageList(1)
       if result:
-        load = self.getProcessableMessageLoader(activity_tool, processing_node)
+        load = self.getProcessableMessageLoader(db, processing_node)
         m, uid, uid_list = load(result[0])
         message_list = [m]
         uid_to_duplicate_uid_list_dict[uid] = uid_list
@@ -538,10 +510,14 @@ class SQLBase(Queue):
               message_list.append(m)
               if cost >= 1:
                 # Unreserve extra messages as soon as possible.
-                self.makeMessageListAvailable(activity_tool=activity_tool,
-                  uid_list=[line.uid for line in result if line.uid != uid])
-        activity_tool.SQLBase_processMessage(table=self.sql_table,
-          uid=uid_to_duplicate_uid_list_dict.keys())
+                uid_list = [line.uid for line in result if line.uid != uid]
+                if uid_list:
+                  self.unreserveMessageList(db, 0, uid_list)
+        # Process messages.
+        db.query("UPDATE %s"
+          " SET processing=1, processing_date=UTC_TIMESTAMP(6)"
+          " WHERE uid IN (%s)\0COMMIT" % (
+          self.sql_table, ','.join(map(str, uid_to_duplicate_uid_list_dict))))
         return message_list, group_method_id, uid_to_duplicate_uid_list_dict
     except:
       self._log(WARNING, 'Exception while reserving messages.')
@@ -550,8 +526,7 @@ class SQLBase(Queue):
         for uid_list in uid_to_duplicate_uid_list_dict.itervalues():
           to_free_uid_list += uid_list
         try:
-          self.makeMessageListAvailable(activity_tool=activity_tool,
-                                        uid_list=to_free_uid_list)
+          self.unreserveMessageList(db, 0, to_free_uid_list)
         except:
           self._log(ERROR, 'Failed to free messages: %r' % to_free_uid_list)
         else:
@@ -636,6 +611,18 @@ class SQLBase(Queue):
     transaction.commit()
     return not message_list
 
+  def deleteMessageList(self, db, uid_list):
+    db.query("DELETE FROM %s WHERE uid IN (%s)" % (
+      self.sql_table, ','.join(map(str, uid_list))))
+
+  def reactivateMessageList(self, db, uid_list, delay, retry):
+    db.query("UPDATE %s SET"
+      " date = DATE_ADD(UTC_TIMESTAMP(6), INTERVAL %s SECOND)"
+      "%s WHERE uid IN (%s)" % (
+        self.sql_table, delay,
+        ", priority = priority + 1, retry = retry + 1" if retry else "",
+        ",".join(map(str, uid_list))))
+
   def finalizeMessageExecution(self, activity_tool, message_list,
                                uid_to_duplicate_uid_list_dict=None):
     """
@@ -648,6 +635,7 @@ class SQLBase(Queue):
           be put in a permanent-error state.
         - In all other cases, retry count is increased and message is delayed.
     """
+    db = activity_tool.getSQLConnection()
     deletable_uid_list = []
     delay_uid_list = []
     final_error_uid_list = []
@@ -692,10 +680,7 @@ class SQLBase(Queue):
             delay = VALIDATION_ERROR_DELAY * (retry * retry + 1) * 2
           try:
             # Immediately update, because values different for every message
-            activity_tool.SQLBase_reactivate(table=self.sql_table,
-                                             uid=[uid],
-                                             delay=delay,
-                                             retry=1)
+            self.reactivateMessageList(db, (uid,), delay, True)
           except:
             self._log(WARNING, 'Failed to reactivate %r' % uid)
         make_available_uid_list.append(uid)
@@ -709,9 +694,7 @@ class SQLBase(Queue):
         deletable_uid_list.append(uid)
     if deletable_uid_list:
       try:
-        self._retryOnLockError(activity_tool.SQLBase_delMessage,
-                               kw={'table': self.sql_table,
-                                   'uid': deletable_uid_list})
+        self._retryOnLockError(self.deleteMessageList, (db, deletable_uid_list))
       except:
         self._log(ERROR, 'Failed to delete messages %r' % deletable_uid_list)
       else:
@@ -719,21 +702,19 @@ class SQLBase(Queue):
     if delay_uid_list:
       try:
         # If this is a conflict error, do not increase 'retry' but only delay.
-        activity_tool.SQLBase_reactivate(table=self.sql_table,
-          uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY, retry=None)
+        self.reactivateMessageList(db, delay_uid_list,
+                                   VALIDATION_ERROR_DELAY, False)
       except:
         self._log(ERROR, 'Failed to delay %r' % delay_uid_list)
     if final_error_uid_list:
       try:
-        activity_tool.SQLBase_assignMessage(table=self.sql_table,
-          uid=final_error_uid_list, processing_node=INVOKE_ERROR_STATE)
+        self.unreserveMessageList(db, INVOKE_ERROR_STATE, final_error_uid_list)
       except:
         self._log(ERROR, 'Failed to set message to error state for %r'
                          % final_error_uid_list)
     if make_available_uid_list:
       try:
-        self.makeMessageListAvailable(activity_tool=activity_tool,
-                                      uid_list=make_available_uid_list)
+        self.unreserveMessageList(db, 0, make_available_uid_list)
       except:
         self._log(ERROR, 'Failed to unreserve %r' % make_available_uid_list)
       else:
@@ -783,13 +764,14 @@ class SQLBase(Queue):
           invoke(m)
         activity_tool.unregisterMessage(self, m)
     uid_list = []
-    for line in self._getMessageList(activity_tool, path=path, processing=0,
+    db = activity_tool.getSQLConnection()
+    for line in self._getMessageList(db, path=path, processing=0,
         **({'method_id': method_id} if method_id else {})):
       uid_list.append(line.uid)
       if invoke:
         invoke(Message.load(line.message, uid=line.uid, line=line))
     if uid_list:
-      activity_tool.SQLBase_delMessage(table=self.sql_table, uid=uid_list)
+      self.deleteMessageList(db, uid_list)
 
   # Required for tests
   def timeShift(self, activity_tool, delay, processing_node=None):
@@ -797,5 +779,9 @@ class SQLBase(Queue):
       To simulate time shift, we simply substract delay from
       all dates in message(_queue) table
     """
-    activity_tool.SQLBase_timeShift(table=self.sql_table, delay=delay,
-                                    processing_node=processing_node)
+    activity_tool.getSQLConnection().query("UPDATE %s SET"
+      " date = DATE_SUB(date, INTERVAL %s SECOND),"
+      " processing_date = DATE_SUB(processing_date, INTERVAL %s SECOND)"
+      % (self.sql_table, delay, delay)
+      + ('' if processing_node is None else
+         "WHERE processing_node=%s" % processing_node))

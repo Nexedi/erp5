@@ -45,25 +45,7 @@ class SQLJoblib(SQLDict):
   sql_table = 'message_job'
   uid_group = 'portal_activity_job'
 
-  def initialize(self, activity_tool, clear):
-    """
-      Initialize the message table using MYISAM Engine 
-    """
-    folder = activity_tool.getPortalObject().portal_skins.activity
-    try:
-      createMessageTable = folder.SQLJoblib_createMessageTable
-    except AttributeError:
-      return
-    if clear:
-      folder.SQLBase_dropMessageTable(table=self.sql_table)
-      createMessageTable()
-    else:
-      src = createMessageTable._upgradeSchema(create_if_not_exists=1,
-                                              initialize=self._initialize,
-                                              table=self.sql_table)
-      if src:
-        LOG('CMFActivity', INFO, "%r table upgraded\n%s"
-            % (self.sql_table, src))
+  _createMessageTable = 'SQLJoblib_createMessageTable'
 
   def generateMessageUID(self, m):
     return (tuple(m.object_path), m.method_id, m.activity_kw.get('signature'),
@@ -114,8 +96,9 @@ class SQLJoblib(SQLDict):
       else:
         raise ValueError("Maximum retry for SQLBase_writeMessageList reached")
 
-  def getProcessableMessageLoader(self, activity_tool, processing_node):
+  def getProcessableMessageLoader(self, db, processing_node):
     path_and_method_id_dict = {}
+    quote = db.string_literal
     def load(line):
       # getProcessableMessageList already fetch messages with the same
       # group_method_id, so what remains to be filtered on are path, method_id
@@ -128,19 +111,23 @@ class SQLJoblib(SQLDict):
       if original_uid is None:
         m = Message.load(line.message, uid=uid, line=line)
         try:
-          result = activity_tool.SQLJoblib_selectDuplicatedLineList(
-            path=path,
-            method_id=method_id,
-            group_method_id=line.group_method_id,
-            signature=line.signature)
-          reserve_uid_list = uid_list = [x.uid for x in result]
-          if reserve_uid_list:
-            activity_tool.SQLBase_reserveMessageList(
-              table=self.sql_table,
-              processing_node=processing_node,
-              uid=reserve_uid_list)
+          # Select duplicates.
+          result = db.query("SELECT uid FROM message_job"
+            " WHERE processing_node = 0 AND path = %s AND signature = %s"
+            " AND method_id = %s AND group_method_id = %s FOR UPDATE" % (
+              quote(path), quote(line.signature),
+              quote(method_id), quote(line.group_method_id),
+            ), 0)[1]
+          uid_list = [x for x, in result]
+          if uid_list:
+            db.query(
+              "UPDATE message_job SET processing_node=%s WHERE uid IN (%s)" % (
+                processing_node, ','.join(map(str, uid_list)),
+              ))
+          db.query("COMMIT")
         except:
-          self._log(WARNING, 'getDuplicateMessageUidList got an exception')
+          self._log(WARNING, 'Failed to reserve duplicates')
+          db.query("ROLLBACK")
           raise
         if uid_list:
           self._log(TRACE, 'Reserved duplicate messages: %r' % uid_list)

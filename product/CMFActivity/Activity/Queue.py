@@ -189,9 +189,6 @@ class Queue(object):
     elif cached_result:
       message_dict[message.uid] = message
 
-  def hasActivity(self, activity_tool, object, processing_node=None, active_process=None, **kw):
-    return 0
-
   def flush(self, activity_tool, object, **kw):
     pass
 
@@ -215,14 +212,6 @@ class Queue(object):
 
   def getMessageList(self, activity_tool, processing_node=None,**kw):
     return []
-
-  def countMessage(self, activity_tool,**kw):
-    return 0
-
-  def countMessageWithTag(self, activity_tool,value):
-    """Return the number of messages which match the given tag.
-    """
-    return self.countMessage(activity_tool, tag=value)
 
   # Transaction Management
   def prepareQueueMessageList(self, activity_tool, message_list):

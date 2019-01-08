@@ -2184,7 +2184,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     activity.getProcessableMessageList(activity_tool, 3)
     self.commit()
 
-    result = activity._getMessageList(activity_tool)
+    result = activity._getMessageList(activity_tool.getSQLConnection())
     try:
       self.assertEqual(len([message
                             for message in result
@@ -2205,8 +2205,8 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
                        1)
     finally:
       # Clear activities from all nodes
-      activity_tool.SQLBase_delMessage(table=SQLDict.sql_table,
-                                       uid=[message.uid for message in result])
+      activity.deleteMessageList(activity_tool.getSQLConnection(),
+                                 [message.uid for message in result])
       self.commit()
 
   def test_116_RaiseInCommitBeforeMessageExecution(self):
