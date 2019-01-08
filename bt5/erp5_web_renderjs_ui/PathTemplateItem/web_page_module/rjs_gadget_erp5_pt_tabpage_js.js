@@ -156,9 +156,7 @@
           gadget.element.innerHTML = my_translated_html;
 
           return RSVP.all([
-            gadget.getUrlFor({command: 'display_with_history', options: {
-              jio_key: gadget.state.jio_key
-            }}),
+            gadget.getUrlFor({command: 'cancel_dialog_with_history'}),
             calculatePageTitle(gadget, erp5_document)
           ]);
         })

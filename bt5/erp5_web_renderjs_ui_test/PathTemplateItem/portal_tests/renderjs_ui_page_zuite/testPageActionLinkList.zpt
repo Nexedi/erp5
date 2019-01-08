@@ -16,15 +16,15 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?page=action</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<!-- Wait for gadget to be loaded -->
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_action.html']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>Title 1</td>
   <td></td>
 </tr>
@@ -38,23 +38,23 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing Action' and contains(@href, '#!change') and contains(@href, 'do_nothing_action_jio') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing Action' and contains(@href, '#!display_with_history_and_cancel') and contains(@href, 'do_nothing_action_jio')]</td>
   <td></td>
 </tr>
 
 <!-- Follow one link -->
+<tal:block tal:define="click_configuration python: {'text': 'Do Nothing Action'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing Action' and contains(@href, '#!change') and contains(@href, 'do_nothing_action_jio') and contains(@href, 'u.page=')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_dialog.html']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>Please do nothing Dialog</td>
   <td></td>
 </tr>
