@@ -39,14 +39,18 @@ its name should onnly hide label of the FormBox field.
 
 <tr><td>open</td>
     <td>${renderjs_url}/#/foo_module/0</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="FormBox"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="FormBox"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'FormBox'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 
 <!-- Check non-editable rendering -->
 <tr><td>waitForElementPresent</td>
@@ -58,8 +62,8 @@ its name should onnly hide label of the FormBox field.
     <td>Title 0</td><td></td></tr>
 
 <!-- Check editable rendering and functionality -->
-<tr><td>click</td>
-    <td>//a[@data-i18n="Editable"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr><td>waitForElementPresent</td>
     <td>//input[@name="field_my_formbox_my_title"]</td><td></td></tr>
 
@@ -78,10 +82,7 @@ its name should onnly hide label of the FormBox field.
     <td>field_my_formbox_my_description</td>
     <td>AZERTY</td></tr>
 
-<tr><td>click</td>
-    <td>//button[@name="submit" and @data-i18n="Save"]</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//button[@type="submit" and text()="Data updated."]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 <!-- Verify saving of values. -->
 <!-- RenderJS is not ready for that yet...
@@ -99,12 +100,16 @@ its name should onnly hide label of the FormBox field.
     <td>AZERTY</td></tr>
 
 <!-- Verify saved values in basic view -->
-<tr><td>click</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="View"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="View"]</td><td></td></tr>
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'View'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr><td>waitForElementPresent</td>
     <td>//input[@name="field_my_title"]</td><td></td></tr>
 <tr><td>verifyValue</td>
