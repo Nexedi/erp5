@@ -60,9 +60,29 @@ class ActiveObject(ExtensionClass.Base):
                activate_kw=None, REQUEST=None, **kw):
     """Returns an active wrapper for this object.
 
-      Reserved Optional parameters:
+      priority          --  any integer between -128 and 127 included
+                            (default: 1)
+
+      node              --  SQLDict & SQLQueue only;
+                            can be one of the following values:
+        - "same": prefer execution on this node, to make
+                  better use of the ZODB Storage cache
+        - "": no node preference
 
       at_date           --  request execution date for this activate call
+                            (default: date of commit)
+
+      Messages are executed according to the following ordering:
+
+        priority, node_preference, date
+
+      where node_preference is:
+
+        -1 -> same node
+         0 -> no preferred node
+         1 -> another node
+
+      Validation parameters:
 
       after_method_id   --  never validate message if after_method_id
                             is in the list of methods which are
