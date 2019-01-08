@@ -142,11 +142,9 @@ class SQLDict(SQLBase):
               ), 0)[1]
             reserve_uid_list = uid_list = [x for x, in result]
           if reserve_uid_list:
-            db.query(
-              "UPDATE message SET processing_node=%s WHERE uid IN (%s)" % (
-                processing_node, ','.join(map(str, reserve_uid_list)),
-              ))
-          db.query("COMMIT")
+            self.assignMessageList(db, processing_node, reserve_uid_list)
+          else:
+            db.query("COMMIT") # XXX: useful ?
         except:
           self._log(WARNING, 'Failed to reserve duplicates')
           db.query("ROLLBACK")
