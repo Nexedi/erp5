@@ -29,6 +29,7 @@
 import inspect
 import unittest
 from functools import wraps
+from itertools import product
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -80,6 +81,14 @@ def registerFailingTransactionManager(*args, **kw):
     def _abort(self):
       pass
   dummy_tm()._register()
+
+class LockOnce(object):
+
+  def __init__(self):
+    self.acquire = threading.Lock().acquire
+
+  def release(self):
+    pass
 
 class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
@@ -148,6 +157,14 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
+
+  def ticOnce(self, *args, **kw):
+    is_running_lock = ActivityTool.is_running_lock
+    try:
+      ActivityTool.is_running_lock = LockOnce()
+      self.portal.portal_activities.tic(*args, **kw)
+    finally:
+      ActivityTool.is_running_lock = is_running_lock
 
   @for_each_activity
   def testInvokeAndCancelActivity(self, activity):
@@ -2452,6 +2469,35 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(address, server_address)
     activity_address = self.portal.portal_activities.getServerAddress()
     self.assertEqual(activity_address, server_address)
+
+  def test_nodeSpecialisation(self):
+    activity_tool = self.portal.portal_activities
+    o = self.getOrganisation()
+
+    node_dict = dict(activity_tool.getNodeDict())
+    assert len(node_dict) == 1 and '' not in node_dict, node_dict
+    before = DateTime() - 1
+
+    activities = 'SQLDict', 'SQLQueue'
+    for activities in product(activities, activities):
+      for node, expected in (None, '21'), ("same", '12'):
+        o._setTitle('0')
+        # The dance around getNodeDict is to simulate the creation of
+        # activities from 2 different nodes. We also change title in 2
+        # different way so that SQLDict does not merge them.
+        o.activate(activity=activities[0], node=node)._setTitle('1')
+        activity_tool.getNodeDict = lambda: node_dict
+        node_dict[''] = ActivityTool.ROLE_PROCESSING
+        o.activate(activity=activities[1], node=node, at_date=before
+          )._setProperty('title', '2')
+        del node_dict['']
+        activity_tool._p_invalidate()
+        self.commit()
+
+        for title in expected:
+          self.ticOnce()
+          self.assertEqual(o.getTitle(), title, (activities, expected))
+        self.assertFalse(activity_tool.getMessageList())
 
 def test_suite():
   suite = unittest.TestSuite()
