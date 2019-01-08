@@ -15,34 +15,25 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=1</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Dummy Crashing Workflow Action'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//a[text()='Actions']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[text()='Actions']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Dummy Crashing Workflow Action']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Dummy Crashing Workflow Action']</td>
-  <td></td>
-</tr>
-<!-- Wait for gadget to be loaded -->
-<tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_dialog.html']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//textarea[@name='field_my_comment']</td>
   <td></td>
 </tr>
@@ -57,6 +48,7 @@
   <td>//input[@type='submit' and @value='Dummy Crashing Workflow Action']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <!-- Wait for the notification to appear. We cannot use verifyText because the button
      is there all the time. It gets text assigned and is shown asynchronously later. -->

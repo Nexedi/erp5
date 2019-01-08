@@ -71,19 +71,12 @@
         if (is_updating || !jio_key) {
           return;
         }
-        if ((gadget.state.redirect_to_parent) || (gadget.state.back_to_history)) {
+        if (gadget.state.redirect_to_parent) {
           return gadget.redirect({command: 'history_previous'});
         }
         if (gadget.state.jio_key === jio_key) {
           // don't update navigation history when not really redirecting
-          return gadget.redirect({
-            command: 'display_with_history',
-            options: {
-              "jio_key": jio_key,
-              "view": "view"
-              // do not mingle with editable because it isn't necessary
-            }
-          });
+          return gadget.redirect({command: 'cancel_dialog_with_history'});
         }
         // Check if the redirection goes to a same parent's subdocument.
         // In this case, do not add current document to the history
@@ -273,15 +266,9 @@
           return erp5_form.render(form_options);
         })
         .push(function () {
-          var cancel_url_promise;
-          if (form_gadget.state.back_to_history) {
-            cancel_url_promise = form_gadget.getUrlFor({command: 'history_previous'});
-          } else {
-            cancel_url_promise = form_gadget.getUrlFor({command: 'display_with_history', options: {jio_key: form_gadget.state.jio_key}});
-          }
           // Render the headers
           return RSVP.all([
-            cancel_url_promise,
+            form_gadget.getUrlFor({command: 'cancel_dialog_with_history'}),
             calculatePageTitle(form_gadget, form_gadget.state.erp5_document)
           ]);
         })
