@@ -248,7 +248,7 @@
               }
               for (i = 0; i < workflow_list.length; i += 1) {
                 parameter_list.push({
-                  command: 'display_with_history',
+                  command: 'display_dialog_with_history',
                   options: {
                     jio_key: gadget.state.jio_key,
                     view: workflow_list[i].href
@@ -257,7 +257,7 @@
               }
               for (i = 0; i < action_list.length; i += 1) {
                 parameter_list.push({
-                  command: 'display_with_history',
+                  command: 'display_dialog_with_history',
                   options: {
                     jio_key: gadget.state.jio_key,
                     view: action_list[i].href

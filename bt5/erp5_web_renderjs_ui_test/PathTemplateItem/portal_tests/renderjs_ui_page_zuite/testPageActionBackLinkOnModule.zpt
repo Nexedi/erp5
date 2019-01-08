@@ -30,20 +30,18 @@
 </tal:block>
 
 <!-- Wait for gadget to be loaded -->
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Actions' and contains(@href, '#!change') and contains(@href, 'n.page=action')]</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_action.html']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>Foo Module</td>
   <td></td>
 </tr>
@@ -51,25 +49,23 @@
 <!-- Generate back link -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo Module' and contains(@href, '#!change') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foo Module' and contains(@href, '#!cancel_dialog_with_history')]</td>
   <td></td>
 </tr>
 
 <!-- Follow back link -->
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo Module' and contains(@href, '#!change') and contains(@href, 'u.page=')]</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Foo Module'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>Foos</td>
   <td></td>
 </tr>
