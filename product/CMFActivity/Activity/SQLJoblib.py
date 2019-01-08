@@ -163,11 +163,9 @@ CREATE TABLE %s (
             ), 0)[1]
           uid_list = [x for x, in result]
           if uid_list:
-            db.query(
-              "UPDATE message_job SET processing_node=%s WHERE uid IN (%s)" % (
-                processing_node, ','.join(map(str, uid_list)),
-              ))
-          db.query("COMMIT")
+            self.assignMessageList(db, processing_node, uid_list)
+          else:
+            db.query("COMMIT") # XXX: useful ?
         except:
           self._log(WARNING, 'Failed to reserve duplicates')
           db.query("ROLLBACK")
