@@ -134,6 +134,7 @@ CREATE TABLE %s (
   `method_id` VARCHAR(255) NOT NULL,
   `processing_node` SMALLINT NOT NULL DEFAULT -1,
   `priority` TINYINT NOT NULL DEFAULT 0,
+  `node` SMALLINT NOT NULL DEFAULT 0,
   `group_method_id` VARCHAR(255) NOT NULL DEFAULT '',
   `tag` VARCHAR(255) NOT NULL,
   `serialization_tag` VARCHAR(255) NOT NULL,
@@ -141,7 +142,9 @@ CREATE TABLE %s (
   `message` LONGBLOB NOT NULL,
   PRIMARY KEY (`uid`),
   KEY `processing_node_priority_date` (`processing_node`, `priority`, `date`),
+  KEY `node2_priority_date` (`processing_node`, `node`, `priority`, `date`),
   KEY `node_group_priority_date` (`processing_node`, `group_method_id`, `priority`, `date`),
+  KEY `node2_group_priority_date` (`processing_node`, `node`, `group_method_id`, `priority`, `date`),
   KEY `serialization_tag_processing_node` (`serialization_tag`, `processing_node`),
   KEY (`path`),
   KEY (`active_process_uid`),
@@ -172,7 +175,7 @@ CREATE TABLE %s (
 
   _insert_template = ("INSERT INTO %s (uid,"
     " path, active_process_uid, date, method_id, processing_node,"
-    " priority, group_method_id, tag, serialization_tag,"
+    " priority, node, group_method_id, tag, serialization_tag,"
     " message) VALUES\n(%s)")
   _insert_separator = "),\n("
 
@@ -216,6 +219,7 @@ CREATE TABLE %s (
           quote(m.method_id),
           '0' if order_validation_text == 'none' else '-1',
           str(m.activity_kw.get('priority', 1)),
+          str(m.activity_kw.get('node', 0)),
           quote(m.getGroupId()),
           quote(m.activity_kw.get('tag', '')),
           quote(m.activity_kw.get('serialization_tag', '')),
@@ -274,12 +278,26 @@ CREATE TABLE %s (
     return "SELECT 1 FROM %s WHERE %s LIMIT 1" % (
       self.sql_table, " AND ".join(where) or "1")
 
-  def getPriority(self, activity_tool):
-    result = activity_tool.getSQLConnection().query(
-      "SELECT priority, date FROM %s"
-      " WHERE processing_node=0 AND date <= UTC_TIMESTAMP(6)"
-      " ORDER BY priority, date LIMIT 1" % self.sql_table, 0)[1]
-    return result[0] if result else Queue.getPriority(self, activity_tool)
+  def getPriority(self, activity_tool, node=None):
+    if node is None:
+      q = ("SELECT 3*priority, date FROM %s"
+        " WHERE processing_node=0 AND date <= UTC_TIMESTAMP(6)"
+        " ORDER BY priority, date LIMIT 1" % self.sql_table)
+    else:
+      subquery = ("(SELECT 3*priority{} as effective_priority, date FROM %s"
+        " WHERE {} AND processing_node=0 AND date <= UTC_TIMESTAMP(6)"
+        " ORDER BY priority, date LIMIT 1)" % self.sql_table).format
+      node = 'node=%s' % node
+      q = ("SELECT * FROM (%s UNION ALL %s UNION %s) as t"
+        " ORDER BY effective_priority, date LIMIT 1" % (
+          subquery(-1, node),
+          subquery('', 'node=0'),
+          subquery('+IF(node, IF(%s, -1, 1), 0)' % node, 1),
+        ))
+    result = activity_tool.getSQLConnection().query(q, 0)[1]
+    if result:
+      return result[0]
+    return Queue.getPriority(self, activity_tool, node)
 
   def _retryOnLockError(self, method, args=(), kw={}):
     while True:
@@ -398,7 +416,7 @@ CREATE TABLE %s (
       where_kw['above_uid'] = line.uid
 
   def getReservedMessageList(self, db, date, processing_node, limit,
-                             group_method_id=None):
+                             group_method_id=None, node=None):
     """
       Get and reserve a list of messages.
       limit
@@ -418,10 +436,25 @@ CREATE TABLE %s (
     # for users and reduce the probability to do the same work several times
     # (think of an object that is modified several times in a short period of
     # time).
-    if 1:
+    if node is None:
       result = Results(query(
         "SELECT * FROM %s WHERE processing_node=0 AND %s%s"
         " ORDER BY priority, date LIMIT %s FOR UPDATE" % args, 0))
+    else:
+      # We'd like to write
+      #   ORDER BY priority, IF(node, IF(node={node}, -1, 1), 0), date
+      # but this makes indices inefficient.
+      subquery = ("(SELECT *, 3*priority{} as effective_priority FROM %s"
+        " WHERE {} AND processing_node=0 AND %s%s"
+        " ORDER BY priority, date LIMIT %s FOR UPDATE)" % args).format
+      node = 'node=%s' % node
+      result = Results(query(
+        "SELECT * FROM (%s UNION ALL %s UNION %s) as t"
+        " ORDER BY effective_priority, date LIMIT %s"% (
+            subquery(-1, node),
+            subquery('', 'node=0'),
+            subquery('+IF(node, IF(%s, -1, 1), 0)' % node, 1),
+            limit), 0))
     if result:
       # Reserve messages.
       uid_list = [x.uid for x in result]
@@ -490,7 +523,7 @@ CREATE TABLE %s (
           result = Results(result)
         else:
           result = self.getReservedMessageList(db, now_date, processing_node,
-                                               1)
+                                               1, node=processing_node)
           if not result:
             break
         load = self.getProcessableMessageLoader(db, processing_node)
@@ -519,7 +552,7 @@ CREATE TABLE %s (
                 # adding more results from getReservedMessageList if the
                 # limit is not reached.
               or self.getReservedMessageList(db, now_date, processing_node,
-                limit, group_method_id))
+                limit, group_method_id, processing_node))
             for line in result:
               if line.uid in uid_to_duplicate_uid_list_dict:
                 continue
