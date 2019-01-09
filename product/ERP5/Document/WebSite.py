@@ -38,6 +38,7 @@ from ZPublisher import BeforeTraverse
 from ZPublisher.HTTPRequest import HTTPRequest
 from warnings import warn
 from zExceptions import Redirect
+from Acquisition import aq_self
 
 WEBSITE_KEY = 'web_site_value'
 WEBSITE_LANGUAGE_KEY = 'web_site_language'
@@ -190,7 +191,7 @@ class WebSite(WebSection):
 
     security.declarePublic('isSubtreeIndexable')
     def isSubtreeIndexable(self):
-      if self.isTempObject() and getattr(self, '__language_web_site__', False):
+      if self.isTempObject() and getattr(aq_self(self), '__language_web_site__', False):
         return True
       return super(WebSite, self).isSubtreeIndexable()
 
