@@ -38,15 +38,16 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/bar_module/1?editable=true</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <!-- Wait for gadget to be loaded -->
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>Title 1</td>
   <td></td>
 </tr>
@@ -54,7 +55,7 @@
 <!-- Header has a link to the action page -->
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Add' and contains(@href, '#!display_with_history') and contains(@href, 'view%3Dcreate_a_document')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Add' and contains(@href, '#!display_dialog_with_history') and contains(@href, 'view%3Dcreate_a_document')]</td>
   <td></td>
 </tr>
 

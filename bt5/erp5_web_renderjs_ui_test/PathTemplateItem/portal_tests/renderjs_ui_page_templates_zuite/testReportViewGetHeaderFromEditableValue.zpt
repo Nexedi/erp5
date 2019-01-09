@@ -16,52 +16,46 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?page=tab</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<!-- Wait for gadget to be loaded -->
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_tab.html']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>Title 1</td>
   <td></td>
 </tr>
 
 <!-- Follow one link -->
+<tal:block tal:define="click_configuration python: {'text': 'History'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='History' and contains(@href, '#!display_with_history') and contains(@href, 'history') and contains(@href, 'u.page=')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_report_view.html']</td>
   <td></td>
 </tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n="Editable"]</td>
-  <td></td>
-</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'Editable'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>View ZODB History</td>
   <td></td>
 </tr>
 
 <!-- Header has a link to the action page -->
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Add']</td>
-  <td></td>
-</tr>
-
-<tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Add' and contains(@href, '#!display_with_history') and contains(@href, 'view%3Dcreate_a_document')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Add' and contains(@href, '#!display_dialog_with_history') and contains(@href, 'view%3Dcreate_a_document')]</td>
   <td></td>
 </tr>
 
