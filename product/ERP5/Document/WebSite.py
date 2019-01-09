@@ -185,8 +185,14 @@ class WebSite(WebSection):
             query_string = request.get('QUERY_STRING')
             if query_string:
               request['minimum_language_redirect_url'] += '?' + query_string
-          return self.getOriginalDocument().asContext(id=name)
+          return self.getOriginalDocument().asContext(id=name, __language_web_site__=True)
       return WebSection.getExtensibleContent(self, request, name)
+
+    security.declarePublic('isSubtreeIndexable')
+    def isSubtreeIndexable(self):
+      if self.isTempObject() and getattr(self, '__language_web_site__', False):
+        return True
+      return super(WebSite, self).isSubtreeIndexable()
 
     def _getExtensibleContent(self, request, name):
       """
