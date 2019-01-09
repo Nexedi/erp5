@@ -42,7 +42,6 @@ from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.Document.Amount import Amount
-from Products.ERP5Type.Cache import transactional_cached
 
 from zLOG import LOG, WARNING
 
@@ -508,23 +507,11 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     source_currency_value = self.getPriceCurrencyValue()
     if source_currency_value:
       section_currency = section.getPriceCurrency()
-      if section_currency and source_currency_value.getRelativeUrl() != section_currency:
-        exchange_rate = self._getExchangeRate(
-          source_currency_value, section_currency, self.getStartDate())
+      if section_currency:
+        exchange_rate = source_currency_value._getExchangeRate(section_currency, self.getStartDate())
         if exchange_rate:
           return exchange_rate * price
     return price
-
-  @transactional_cached(lambda self, *args: args)
-  def _getExchangeRate(self,source_currency_value,section_currency,start_date):
-    from Products.ERP5Type.Document import newTempAccountingTransactionLine
-    return source_currency_value.getPrice(context=newTempAccountingTransactionLine(
-      self.getPortalObject(),
-      "accounting_line",
-      resource=source_currency_value.getRelativeUrl(),
-      start_date=start_date,
-      price_currency=section_currency
-  ))
 
   # Causality computation
   security.declareProtected( Permissions.AccessContentsInformation,

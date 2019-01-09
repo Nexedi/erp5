@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Resource import Resource
+from Products.ERP5Type.Cache import transactional_cached
 
 class Currency(Resource):
   """
@@ -71,3 +72,16 @@ class Currency(Resource):
   def asNumericCode(self):
     """Return a numeric code defined in ISO 4217."""
     return self.Base_convertCurrencyCodeToNumericCode(self.getReference())
+
+  @transactional_cached()
+  def _getExchangeRate(self, section_currency, start_date):
+    source_currency =  self.getRelativeUrl()
+    if source_currency != section_currency:
+      from Products.ERP5Type.Document import newTempAccountingTransactionLine
+      return self.getPrice(context=newTempAccountingTransactionLine(
+        self.getPortalObject(),
+        "accounting_line",
+        resource=source_currency,
+        start_date=start_date,
+        price_currency=section_currency
+      ))
