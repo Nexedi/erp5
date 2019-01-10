@@ -328,13 +328,12 @@
         );
       }
       return this.redirect({
-        command: 'push_history',
+        command: 'display_dialog_with_history',
         options: {
           "jio_key": gadget.state.jio_key,
           "view": delete_list[0].href,
           "page": "form",
-          "extended_search": extended_search,
-          "back_to_history": 1
+          "extended_search": extended_search
         }
       }, true);
     });
