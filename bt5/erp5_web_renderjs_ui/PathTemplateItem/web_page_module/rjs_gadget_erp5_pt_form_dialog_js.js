@@ -124,7 +124,6 @@
   gadget_klass
     .setState({
       'redirect_to_parent': false,  // set by a presence of special field
-      'back_to_history': false,
       'has_update_action': undefined  // default "submit" issue update in case of its presence
     })
 
@@ -156,14 +155,8 @@
     .declareMethod('render', function render(options) {
       var gadget = this;
       // copy out wanted items from options and pass it to `changeState`
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.getUrlParameter('extended_search'),
-            gadget.getUrlParameter('back_to_history')
-          ]);
-        })
-        .push(function (result_list) {
+      return gadget.getUrlParameter('extended_search')
+        .push(function (extended_search) {
           return gadget.changeState({
             jio_key: options.jio_key,
             view: options.view,
@@ -174,9 +167,7 @@
             // editable: true,  // ignore global editable state (be always editable)
             has_update_action: Boolean(options.form_definition.update_action),
             // pass extended_search from previous view in case any gadget is curious
-            extended_search: result_list[0],
-            // XXX Hack of ERP5 how to express redirect to parent after success
-            back_to_history: result_list[1],
+            extended_search: extended_search,
             redirect_to_parent: options.erp5_document._embedded._view.field_your_redirect_to_parent !== undefined
           });
         });
