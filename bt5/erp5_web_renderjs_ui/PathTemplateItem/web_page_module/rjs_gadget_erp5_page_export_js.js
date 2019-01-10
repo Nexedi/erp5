@@ -90,7 +90,7 @@
           gadget.element.innerHTML = translated_html_link_list.join("\n");
           return RSVP.all([
             calculatePageTitle(gadget, erp5_document),
-            gadget.getUrlFor({command: 'display_with_history', options: {jio_key: options.jio_key}})
+            gadget.getUrlFor({command: 'cancel_dialog_with_history', options: {jio_key: options.jio_key}})
           ]);
         })
         .push(function (result_list) {
