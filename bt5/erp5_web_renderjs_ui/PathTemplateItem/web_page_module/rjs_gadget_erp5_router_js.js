@@ -523,7 +523,6 @@
 
   function execKeepHistoryCancelAndDisplayCommand(gadget, previous_options, next_options) {
     next_options.cancel = previous_options.cancel;
-    console.log('keep hiscan', next_options);
     return execKeepHistoryAndDisplayCommand(gadget, previous_options, next_options);
   }
 
