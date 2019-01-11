@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray */
+/*global window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray) {
+(function (window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -19,8 +19,8 @@
    * @param {Array} command_list - array of links obtained from ERP5 HATEOAS
    */
   function renderLinkList(gadget, jio_key, title, icon, erp5_link_list) {
-    return gadget.getUrlParameter("extended_search")
-      .push(function (query) {
+    return new RSVP.Queue()
+      .push(function () {
         // obtain RJS links from ERP5 links
         return RSVP.all(
           erp5_link_list.map(function (erp5_link) {
@@ -75,8 +75,8 @@
       return gadget.jio_getAttachment(options.jio_key, options.view || "links")
         .push(function (result) {
           var export_list = ensureArray(result._links.action_object_jio_exchange),
-          report_list = ensureArray(result._links.action_object_jio_report),
-          print_list = ensureArray(result._links.action_object_jio_print);
+            report_list = ensureArray(result._links.action_object_jio_report),
+            print_list = ensureArray(result._links.action_object_jio_print);
 
           erp5_document = result;
 
@@ -104,4 +104,4 @@
       return;
     });
 
-}(window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray));
+}(window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray));
