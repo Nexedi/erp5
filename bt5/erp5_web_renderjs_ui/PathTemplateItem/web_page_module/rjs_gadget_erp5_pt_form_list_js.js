@@ -94,9 +94,17 @@
         .push(function () {
           var new_content_action = form_gadget.state.erp5_document._links.action_object_new_content_action,
             url_for_parameter_list = [
-              {command: 'display_dialog_with_history', options: {jio_key: form_gadget.state.jio_key, page: "action"}},
+              {command: 'display_dialog_with_history', options: {
+                jio_key: form_gadget.state.jio_key,
+                page: "action",
+                view: form_gadget.state.view
+              }},
               {command: 'display', options: {}},
-              {command: 'display_dialog_with_history', options: {jio_key: form_gadget.state.jio_key, page: "export"}}
+              {command: 'display_dialog_with_history', options: {
+                jio_key: form_gadget.state.jio_key,
+                page: "export",
+                view: form_gadget.state.view
+              }}
             ];
 
           if (new_content_action !== undefined) {
