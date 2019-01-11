@@ -1,9 +1,108 @@
 /*global window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
-         Query, QueryFactory */
-/*jslint nomen: true, indent: 2, maxerr: 3 */
+         Query, QueryFactory, ensureArray */
+/*jslint nomen: true, indent: 2, maxerr: 3, continue: true */
 (function (window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
-           Query, QueryFactory) {
+           Query, QueryFactory, ensureArray) {
   "use strict";
+
+  function updateSearchQueryFromSelection(extended_search, checked_uid_list,
+                                          key, to_include) {
+    var i,
+      search_query,
+      query_list = [];
+
+    for (i = 0; i < checked_uid_list.length; i += 1) {
+      query_list.push(new SimpleQuery({
+        key: key,
+        type: "simple",
+        operator: to_include ? "=" : "!=",
+        value: checked_uid_list[i]
+      }));
+    }
+    if (extended_search) {
+      search_query = QueryFactory.create(extended_search);
+    }
+    if (to_include) {
+      // Lines must match the existing query and be one of the selected
+      // line. Which means that is user change the query, one of the
+      // selected line could disappear.
+      if (search_query) {
+        search_query = new ComplexQuery({
+          operator: "AND",
+          query_list: [
+            new ComplexQuery({
+              operator: "OR",
+              query_list: query_list,
+              type: "complex"
+            }),
+            search_query
+          ],
+          type: "complex"
+        });
+      } else {
+        search_query = new ComplexQuery({
+          operator: "OR",
+          query_list: query_list,
+          type: "complex"
+        });
+      }
+
+    } else {
+      // Lines must match the existing query and must not be one of the
+      // selected line.
+      if (search_query) {
+        query_list.push(search_query);
+      }
+      search_query = new ComplexQuery({
+        operator: "AND",
+        query_list: query_list,
+        type: "complex"
+      });
+    }
+    return Query.objectToSearchText(search_query);
+  }
+
+  function triggerListboxClipboardAction(argument_list) {
+    var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
+      action_name = argument_list[0],
+      checked_uid_list = argument_list[1],
+      gadget = this,
+      extended_search = gadget.state.extended_search,
+      view,
+      i;
+
+    for (i = 0; i < action_list.length; i += 1) {
+      if (action_name === action_list[i].name) {
+        view = action_list[i].href;
+      }
+    }
+
+    if (checked_uid_list.length !== 0) {
+      // If nothing is checked, use original query
+      extended_search = updateSearchQueryFromSelection(
+        extended_search,
+        checked_uid_list,
+        'catalog.uid',
+        true
+      );
+    }
+
+    if (view === undefined) {
+      // Action was not found.
+      // Reload
+      return gadget.redirect({
+        command: 'reload'
+      });
+    }
+    return gadget.redirect({
+      command: 'display_dialog_with_history',
+      options: {
+        "jio_key": gadget.state.jio_key,
+        "view": view,
+        "extended_search": extended_search
+      }
+    }, true);
+  }
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -201,17 +300,38 @@
 
     // Handle listbox custom button
     .allowPublicAcquisition("getListboxSelectActionList", function getListboxSelectActionList() {
-      return this.getTranslationList(['Include', 'Exclude'])
-        .push(function (result_list) {
-          return [{
-            title: result_list[0],
+      var gadget = this;
+      return gadget.getTranslationList(['Include', 'Exclude'])
+        .push(function (translation_list) {
+          var result_list = [{
+            title: translation_list[0],
             icon: 'eye',
             action: 'include'
           }, {
-            title: result_list[1],
+            title: translation_list[1],
             icon: 'low-vision',
             action: 'exclude'
-          }];
+          }],
+            action_list = ensureArray(gadget.state.erp5_document._links.action_object_list_action || []),
+            i,
+            icon;
+
+          for (i = 0; i < action_list.length; i += 1) {
+            if (action_list[i].name === 'delete_document_list') {
+              continue;
+            }
+            if (action_list[i].name === 'mass_workflow_jio') {
+              icon = 'random';
+            } else {
+              icon = 'star';
+            }
+            result_list.unshift({
+              title: action_list[i].title,
+              icon: icon,
+              action: action_list[i].name
+            });
+          }
+          return result_list;
         });
     })
 
@@ -219,10 +339,7 @@
       var action = argument_list[0],
         checked_uid_list = argument_list[1],
         unchecked_uid_list = argument_list[2],
-        gadget = this,
-        i,
-        search_query,
-        query_list = [];
+        gadget = this;
       if ((action === 'include') || (action === 'exclude')) {
         if (checked_uid_list.length === 0) {
           // If nothing is checked, use all unchecked values (same as xhtml style)
@@ -235,65 +352,48 @@
           });
         }
 
-        for (i = 0; i < checked_uid_list.length; i += 1) {
-          query_list.push(new SimpleQuery({
-            key: "catalog.uid",
-            type: "simple",
-            operator: (action === 'include') ? "=" : "!=",
-            value: checked_uid_list[i]
-          }));
-        }
-        if (gadget.state.extended_search) {
-          search_query = QueryFactory.create(gadget.state.extended_search);
-        }
-        if (action === 'include') {
-          // Lines must match the existing query and be one of the selected
-          // line. Which means that is user change the query, one of the
-          // selected line could disappear.
-          if (search_query) {
-            search_query = new ComplexQuery({
-              operator: "AND",
-              query_list: [
-                new ComplexQuery({
-                  operator: "OR",
-                  query_list: query_list,
-                  type: "complex"
-                }),
-                search_query
-              ],
-              type: "complex"
-            });
-          } else {
-            search_query = new ComplexQuery({
-              operator: "OR",
-              query_list: query_list,
-              type: "complex"
-            });
-          }
-
-        } else {
-          // Lines must match the existing query and must not be one of the
-          // selected line.
-          if (search_query) {
-            query_list.push(search_query);
-          }
-          search_query = new ComplexQuery({
-            operator: "AND",
-            query_list: query_list,
-            type: "complex"
-          });
-        }
-
         return gadget.redirect({
           command: 'store_and_change',
           options: {
-            "extended_search": Query.objectToSearchText(search_query)
+            "extended_search": updateSearchQueryFromSelection(
+              gadget.state.extended_search,
+              checked_uid_list,
+              'catalog.uid',
+              (action === 'include')
+            )
           }
         }, true);
       }
 
+      if (action !== 'delete_document_list') {
+        return triggerListboxClipboardAction.apply(this, [argument_list]);
+      }
+
       throw new Error('Unsupported triggerListboxSelectAction action: ' + action);
-    });
+    })
+
+    // Handle listbox custom button
+    .allowPublicAcquisition("getListboxClipboardActionList", function getListboxClipboardActionList() {
+      var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
+        i,
+        result_list = [],
+        icon;
+      for (i = 0; i < action_list.length; i += 1) {
+        if (action_list[i].name === 'delete_document_list') {
+          icon = 'trash-o';
+        } else {
+          continue;
+        }
+        result_list.push({
+          title: action_list[i].title,
+          icon: icon,
+          action: action_list[i].name
+        });
+      }
+      return result_list;
+    })
+
+    .allowPublicAcquisition("triggerListboxClipboardAction", triggerListboxClipboardAction);
 
 }(window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery, Query,
-  QueryFactory));
+  QueryFactory, ensureArray));
