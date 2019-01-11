@@ -78,16 +78,14 @@
             action_list = ensureArray(jio_attachment._links.action_object_jio_action)
               .concat(ensureArray(jio_attachment._links.action_object_jio_button))
               .concat(ensureArray(jio_attachment._links.action_object_jio_fast_input)),
-            clone_list = ensureArray(jio_attachment._links.action_object_clone_action),
-            delete_list = ensureArray(jio_attachment._links.action_object_delete_action);
+            clone_list = ensureArray(jio_attachment._links.action_object_clone_action);
 
           erp5_document = jio_attachment;
 
           return RSVP.all([
             renderLinkList(gadget, options.jio_key, "Workflows", "random", transition_list),
             renderLinkList(gadget, options.jio_key, "Actions", "gear", action_list),
-            renderLinkList(gadget, options.jio_key, "Clone", "clone", clone_list),
-            renderLinkList(gadget, options.jio_key, "Delete", "trash-o", delete_list)
+            renderLinkList(gadget, options.jio_key, "Clone", "clone", clone_list)
           ]);
         })
         .push(function (translated_html_link_list) {
