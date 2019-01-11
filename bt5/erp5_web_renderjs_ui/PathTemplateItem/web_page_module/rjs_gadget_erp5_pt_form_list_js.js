@@ -307,25 +307,42 @@
 
     // Handle listbox custom button
     .allowPublicAcquisition("getListboxClipboardActionList", function getListboxClipboardActionList() {
-      var delete_list = ensureArray(this.state.erp5_document._links.action_object_delete_action);
-      if (!delete_list.length) {
-        return [];
-      }
-      return this.getTranslationList(['Delete'])
-        .push(function (result_list) {
-          return [{
-            title: result_list[0],
-            icon: 'trash-o',
-            action: 'delete'
-          }];
+      var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
+        i,
+        result_list = [],
+        icon;
+      for (i = 0; i < action_list.length; i += 1) {
+        if (action_list[i].name === 'delete_document_list') {
+          icon = 'trash-o';
+        } else if (action_list[i].name === 'mass_workflow_jio') {
+          icon = 'random';
+        } else {
+          icon = 'star';
+        }
+        result_list.push({
+          title: action_list[i].title,
+          icon: icon,
+          action: action_list[i].name
         });
+      }
+      return result_list;
     })
 
     .allowPublicAcquisition("triggerListboxClipboardAction", function triggerListboxClipboardAction(argument_list) {
-      var delete_list = ensureArray(this.state.erp5_document._links.action_object_delete_action),
+      var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
+        action_name = argument_list[0],
         checked_uid_list = argument_list[1],
         gadget = this,
-        extended_search = gadget.state.extended_search;
+        extended_search = gadget.state.extended_search,
+        view,
+        i;
+
+      for (i = 0; i < action_list.length; i += 1) {
+        if (action_name === action_list[i].name) {
+          view = action_list[i].href;
+        }
+      }
+
       if (checked_uid_list.length !== 0) {
         // If nothing is checked, use original query
         extended_search = updateSearchQueryFromSelection(
@@ -335,12 +352,19 @@
           true
         );
       }
+
+      if (view === undefined) {
+        // Action was not found.
+        // Reload
+        return gadget.redirect({
+          command: 'reload'
+        });
+      }
       return this.redirect({
         command: 'display_dialog_with_history',
         options: {
           "jio_key": gadget.state.jio_key,
-          "view": delete_list[0].href,
-          "page": "form",
+          "view": view,
           "extended_search": extended_search
         }
       }, true);
