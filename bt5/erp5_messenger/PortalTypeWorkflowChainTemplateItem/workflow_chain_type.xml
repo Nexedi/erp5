@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Messenger Thread</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>
