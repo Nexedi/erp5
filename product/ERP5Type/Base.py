@@ -2878,14 +2878,11 @@ class Base( CopyContainer,
       kw = reindex_kw
     # And top activate_kw priority: the direct parameter.
     full_activate_kw.update(activate_kw or ())
-    group_id_list  = []
-    if kw.get("group_id") not in ('', None):
-      group_id_list.append(kw["group_id"])
-    if kw.get("sql_catalog_id") not in ('', None):
-      group_id_list.append(kw["sql_catalog_id"])
-    if full_activate_kw.get('group_id') not in ('', None):
-      group_id_list.append(full_activate_kw['group_id'])
-    full_activate_kw['group_id'] = ' '.join(group_id_list)
+    full_activate_kw['group_id'] = ' '.join(group_id for group_id in (
+        kw.pop("group_id", None),
+        kw.get("sql_catalog_id"),
+        full_activate_kw.get('group_id'),
+      ) if group_id)
     full_activate_kw['group_method_id'] = 'portal_catalog/catalogObjectList'
     full_activate_kw['alternate_method_id'] = 'alternateReindexObject'
     full_activate_kw['activity'] = 'SQLDict'
