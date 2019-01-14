@@ -128,7 +128,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>discussion_post_selection</string> </value>
+                    <value> <string>messenger_post_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

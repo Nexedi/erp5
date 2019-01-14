@@ -43,9 +43,7 @@
         </item>
         <item>
             <key> <string>edit_order</string> </key>
-            <value>
-              <list/>
-            </value>
+            <value> <string>[]</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>

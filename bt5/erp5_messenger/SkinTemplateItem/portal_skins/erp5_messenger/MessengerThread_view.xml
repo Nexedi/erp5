@@ -78,6 +78,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>my_listbox</string>
                       </list>
                     </value>
                 </item>
@@ -108,7 +109,6 @@
                         <string>my_title</string>
                         <string>my_short_title</string>
                         <string>my_reference</string>
-                        <string>my_listbox</string>
                       </list>
                     </value>
                 </item>

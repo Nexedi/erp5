@@ -20,7 +20,7 @@
           <li>By <strong>{{ user }}</strong> -
             <time datetime="{{ date }}" title="{{ date_formatted }}">{{ date_relative }}</time>
             <br/>
-            {{{ text }}}
+            {{{ value.text_content }}}
             {{#if attachment_link }}
               <br/>
               <strong>Attachment: </strong>
@@ -30,7 +30,7 @@
           </li>
         {{/each }}
       {{else }}
-        <p><em>No comment yet.</em></p><hr id="post_item">
+        <p><em>No posts yet.</em></p><hr id="post_item">
       {{/if }}
     </script>
 
