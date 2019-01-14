@@ -33,11 +33,9 @@
 
     .onStateChange(function () {
       var gadget = this;
-      console.log("gadget.state.query:");
-      console.log(gadget.state.query);
       return gadget.jio_allDocs({
         "query": gadget.state.query,
-        "select_list": ["text_content", "modification_date", "local_role"],
+        "select_list": ["text_content", "modification_date", "Base_getOwnerId"],
         "sort_on": [["modification_date", "ascending"]]
       })
       .push(function (results) {
@@ -66,7 +64,7 @@
         }
         var queue_list = [], i = 0;
         for (i = 0; i < post_list.length; i += 1) {
-          post_list[i].user = "zope"; // problems getting Owner property
+          post_list[i].user = post_list[i].value.Base_getOwnerId;
           // TODO: attachments
           post_list[i].attachment_link = null;
           post_list[i].attachment_name = null;
