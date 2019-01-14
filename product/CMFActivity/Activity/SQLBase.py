@@ -40,7 +40,7 @@ from Products.CMFActivity.ActivityTool import (
   Message, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED, SkippedMessage)
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
   DEFAULT_MAX_RETRY, ActivityRuntimeEnvironment)
-from Queue import Queue, VALIDATION_ERROR_DELAY, VALID, INVALID_PATH
+from Queue import Queue, VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Errors import ActivityFlushError
 
 # Stop validating more messages when this limit is reached
@@ -743,17 +743,14 @@ class SQLBase(Queue):
         except AttributeError:
           pass
         line = getattr(message, 'line', None)
-        validate_value = VALID if line and line.processing_node != -1 else \
-                         message.validate(self, activity_tool)
-        if validate_value == VALID:
+        if (line and line.processing_node != -1 or
+            not activity_tool.getDependentMessageList(message)):
           # Try to invoke the message - what happens if invoke calls flushActivity ??
           with ActivityRuntimeEnvironment(message):
             activity_tool.invoke(message)
           if message.getExecutionState() != MESSAGE_EXECUTED:
             raise ActivityFlushError('Could not invoke %s on %s'
                                      % (message.method_id, path))
-        elif validate_value is INVALID_PATH:
-          raise ActivityFlushError('The document %s does not exist' % path)
         else:
           raise ActivityFlushError('Could not validate %s on %s'
                                    % (message.method_id, path))

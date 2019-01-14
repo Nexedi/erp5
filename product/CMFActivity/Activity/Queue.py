@@ -35,12 +35,6 @@ from cStringIO import StringIO
 
 import transaction
 
-# Error values for message validation
-EXCEPTION      = -1
-VALID          = 0
-INVALID_PATH   = 1
-INVALID_ORDER  = 2
-
 # Time global parameters
 MAX_PROCESSING_TIME = 900 # in seconds
 VALIDATION_ERROR_DELAY = 15 # in seconds
@@ -96,52 +90,6 @@ class Queue(object):
   def distribute(self, activity_tool, node_count):
     raise NotImplementedError
 
-  def validate(self, activity_tool, message, check_order_validation=1, **kw):
-    """
-      This is the place where activity semantics is implemented
-      **kw contains all parameters which allow to implement synchronisation,
-      constraints, delays, etc.
-
-      Standard synchronisation parameters:
-
-      after_method_id   --  never validate message if after_method_id
-                            is in the list of methods which are
-                            going to be executed
-
-      after_message_uid --  never validate message if after_message_uid
-                            is in the list of messages which are
-                            going to be executed
-
-      after_path        --  never validate message if after_path
-                            is in the list of path which are
-                            going to be executed
-    """
-    try:
-      if activity_tool.unrestrictedTraverse(message.object_path, None) is None:
-        # Do not try to call methods on objects which do not exist
-        LOG('CMFActivity', WARNING,
-           'Object %s does not exist' % '/'.join(message.object_path))
-        return INVALID_PATH
-      if check_order_validation:
-        for k, v in kw.iteritems():
-          if activity_tool.validateOrder(message, k, v):
-            return INVALID_ORDER
-    except ConflictError:
-      raise
-    except:
-      LOG('CMFActivity', WARNING,
-          'Validation of Object %s raised exception' % '/'.join(message.object_path),
-          error=sys.exc_info())
-      # Do not try to call methods on objects which cause errors
-      return EXCEPTION
-    return VALID
-
-  def getDependentMessageList(self, activity_tool, message):
-    message_list = []
-    for k, v in message.activity_kw.iteritems():
-      message_list += activity_tool.getDependentMessageList(message, k, v)
-    return message_list
-
   def getExecutableMessageList(self, activity_tool, message, message_dict,
                                validation_text_dict, now_date=None):
     """Get messages which have no dependent message, and store them in the dictionary.
@@ -165,7 +113,7 @@ class Queue(object):
 
     cached_result = validation_text_dict.get(message.order_validation_text)
     if cached_result is None:
-      message_list = self.getDependentMessageList(activity_tool, message)
+      message_list = activity_tool.getDependentMessageList(message)
       transaction.commit() # Release locks.
       if message_list:
         # The result is not empty, so this message is not executable.

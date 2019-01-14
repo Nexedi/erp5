@@ -555,37 +555,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(o.getTitle(), 'a')
     self.assertEqual(activity_tool.countMessageWithTag('toto'), 0)
 
-  def TryConflictErrorsWhileValidating(self, activity):
-    """Try to execute active objects which may throw conflict errors
-    while validating, and check if they are still executed."""
-    o = self.getOrganisation()
-
-    # Monkey patch Queue to induce conflict errors artificially.
-    def validate(self, *args, **kwargs):
-      if Queue.current_num_conflict_errors < Queue.conflict_errors_limit:
-        Queue.current_num_conflict_errors += 1
-        # LOG('TryConflictErrorsWhileValidating', 0, 'causing a conflict error artificially')
-        raise ConflictError
-      return self.original_validate(*args, **kwargs)
-    from Products.CMFActivity.Activity.Queue import Queue
-    Queue.original_validate = Queue.validate
-    Queue.validate = validate
-
-    try:
-      # Test some range of conflict error occurences.
-      for i in xrange(10):
-        Queue.current_num_conflict_errors = 0
-        Queue.conflict_errors_limit = i
-        o.activate(activity = activity).getId()
-        self.commit()
-        self.flushAllActivities(silent = 1, loop_size = i + 10)
-        self.assertFalse(self.portal.portal_activities.getMessageList())
-    finally:
-      Queue.validate = Queue.original_validate
-      del Queue.original_validate
-      del Queue.current_num_conflict_errors
-      del Queue.conflict_errors_limit
-
   def TryErrorsWhileFinishingCommitDB(self, activity):
     """Try to execute active objects which may throw conflict errors
     while validating, and check if they are still executed."""
@@ -1055,24 +1024,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     finally:
       del activity_tool.__class__.doSomething
     self.assertFalse(activity_tool.getMessageList())
-
-  def test_72_TestConflictErrorsWhileValidatingWithSQLDict(self):
-    """
-      Test if conflict errors spoil out active objects with SQLDict.
-    """
-    self.TryConflictErrorsWhileValidating('SQLDict')
-
-  def test_73_TestConflictErrorsWhileValidatingWithSQLQueue(self):
-    """
-      Test if conflict errors spoil out active objects with SQLQueue.
-    """
-    self.TryConflictErrorsWhileValidating('SQLQueue')
-
-  def test_74_TestConflictErrorsWhileValidatingWithSQLJoblib(self):
-    """
-      Test if conflict errors spoil out active objects with SQLJoblib.
-    """
-    self.TryConflictErrorsWhileValidating('SQLJoblib')
 
   def test_75_TestErrorsWhileFinishingCommitDBWithSQLDict(self):
     """

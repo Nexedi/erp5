@@ -367,11 +367,6 @@ class Message(BaseMessage):
     except:
       self.setExecutionState(MESSAGE_NOT_EXECUTED, context=activity_tool)
 
-  def validate(self, activity, activity_tool, check_order_validation=1):
-    return activity.validate(activity_tool, self,
-                             check_order_validation=check_order_validation,
-                             **self.activity_kw)
-
   def notifyUser(self, activity_tool, retry=False):
     """Notify the user that the activity failed."""
     portal = activity_tool.getPortalObject()
@@ -1553,22 +1548,17 @@ class ActivityTool (BaseTool):
         REQUEST['RESPONSE'].redirect( 'manage_main' )
       return obj
 
-    # Active synchronisation methods
-    security.declarePrivate('validateOrder')
-    def validateOrder(self, message, validator_id, validation_value):
-      message_list = self.getDependentMessageList(message, validator_id, validation_value)
-      return len(message_list) > 0
-
     security.declarePrivate('getDependentMessageList')
-    def getDependentMessageList(self, message, validator_id, validation_value):
+    def getDependentMessageList(self, message):
       message_list = []
-      method_id = "_validate_" + validator_id
-      for activity in activity_dict.itervalues():
-        method = getattr(activity, method_id, None)
-        if method is not None:
-          result = method(aq_inner(self), message, validation_value)
-          if result:
-            message_list += [(activity, m) for m in result]
+      for validator_id, validation_value in message.activity_kw.iteritems():
+        method_id = "_validate_" + validator_id
+        for activity in activity_dict.itervalues():
+          method = getattr(activity, method_id, None)
+          if method is not None:
+            result = method(self, message, validation_value)
+            if result:
+              message_list += [(activity, m) for m in result]
       return message_list
 
     # Required for tests (time shift)
