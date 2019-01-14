@@ -254,25 +254,28 @@ class SQLBase(Queue):
         LOG('SQLBase', INFO, 'Got a lock error, retrying...')
 
   # Validation private methods
-  def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None,
-                serialization_tag=None):
-    if isinstance(method_id, str):
-      method_id = [method_id]
-    if isinstance(path, str):
-      path = [path]
-    if isinstance(tag, str):
-      tag = [tag]
-
-    if method_id or message_uid or path or tag or serialization_tag:
-      result = activity_tool.SQLBase_validateMessageList(table=self.sql_table,
-          method_id=method_id,
-          message_uid=message_uid,
-          path=path,
-          tag=tag,
-          count=False,
-          serialization_tag=serialization_tag)
+  def getDependentMessageList(self, db, activate_kw, same_queue):
+    q = db.string_literal
+    validate_list = []
+    for k, v in activate_kw.iteritems():
+      if v is not None:
+        try:
+          method = getattr(self, '_validate_' + k, None)
+          if method:
+            validate_list.append(' AND '.join(method(v, q)))
+        except Exception:
+          LOG('CMFActivity', WARNING, 'invalid %s value: %r' % (k, v),
+              error=True)
+          # Prevent validation by depending on anything, at least itself.
+          validate_list = '1',
+          same_queue = False
+          break
+    if validate_list:
       message_list = []
-      for line in result:
+      for line in Results(db.query(
+          "SELECT * FROM %s WHERE processing_node > -10 AND (%s) LIMIT %s" % (
+            self.sql_table, ' OR '.join(validate_list),
+            READ_MESSAGE_LIMIT if same_queue else 1), 0)):
         m = Message.load(line.message,
                          line=line,
                          uid=line.uid,
@@ -282,36 +285,32 @@ class SQLBase(Queue):
           m.order_validation_text = self.getOrderValidationText(m)
         message_list.append(m)
       return message_list
+    return ()
 
-  def _validate_after_method_id(self, activity_tool, message, value):
-    return self._validate(activity_tool, method_id=value)
+  def _validate_after_method_id(self, *args):
+    return sqltest_dict['method_id'](*args),
 
-  def _validate_after_path(self, activity_tool, message, value):
-    return self._validate(activity_tool, path=value)
+  def _validate_after_path(self, *args):
+    return sqltest_dict['path'](*args),
 
-  def _validate_after_message_uid(self, activity_tool, message, value):
-    return self._validate(activity_tool, message_uid=value)
+  def _validate_after_message_uid(self, *args):
+    return sqltest_dict['uid'](*args),
 
-  def _validate_after_path_and_method_id(self, activity_tool, message, value):
-    if not (isinstance(value, (tuple, list)) and len(value) == 2):
-      LOG('CMFActivity', WARNING,
-          'unable to recognize value for after_path_and_method_id: %r' % (value,))
-      return []
-    return self._validate(activity_tool, path=value[0], method_id=value[1])
+  def _validate_after_path_and_method_id(self, value, quote):
+    path, method_id = value
+    return (sqltest_dict['method_id'](method_id, quote),
+            sqltest_dict['path'](path, quote))
 
-  def _validate_after_tag(self, activity_tool, message, value):
-    return self._validate(activity_tool, tag=value)
+  def _validate_after_tag(self, *args):
+    return sqltest_dict['tag'](*args),
 
-  def _validate_after_tag_and_method_id(self, activity_tool, message, value):
-    # Count number of occurances of tag and method_id
-    if not (isinstance(value, (tuple, list)) and len(value) == 2):
-      LOG('CMFActivity', WARNING,
-          'unable to recognize value for after_tag_and_method_id: %r' % (value,))
-      return []
-    return self._validate(activity_tool, tag=value[0], method_id=value[1])
+  def _validate_after_tag_and_method_id(self, value, quote):
+    tag, method_id = value
+    return (sqltest_dict['method_id'](method_id, quote),
+            sqltest_dict['tag'](tag, quote))
 
-  def _validate_serialization_tag(self, activity_tool, message, value):
-    return self._validate(activity_tool, serialization_tag=value)
+  def _validate_serialization_tag(self, *args):
+    return 'processing_node > -1', sqltest_dict['serialization_tag'](*args)
 
   def _log(self, severity, summary):
     LOG(self.__class__.__name__, severity, summary,

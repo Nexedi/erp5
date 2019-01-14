@@ -1549,17 +1549,13 @@ class ActivityTool (BaseTool):
       return obj
 
     security.declarePrivate('getDependentMessageList')
-    def getDependentMessageList(self, message):
-      message_list = []
-      for validator_id, validation_value in message.activity_kw.iteritems():
-        method_id = "_validate_" + validator_id
-        for activity in activity_dict.itervalues():
-          method = getattr(activity, method_id, None)
-          if method is not None:
-            result = method(self, message, validation_value)
-            if result:
-              message_list += [(activity, m) for m in result]
-      return message_list
+    def getDependentMessageList(self, message, validating_queue=None):
+      activity_kw = message.activity_kw
+      db = self.getSQLConnection()
+      return [(activity, m)
+        for activity in activity_dict.itervalues()
+        for m in activity.getDependentMessageList(
+          db, activity_kw, activity is validating_queue)]
 
     # Required for tests (time shift)
     def timeShift(self, delay):

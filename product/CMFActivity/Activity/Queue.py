@@ -113,7 +113,7 @@ class Queue(object):
 
     cached_result = validation_text_dict.get(message.order_validation_text)
     if cached_result is None:
-      message_list = activity_tool.getDependentMessageList(message)
+      message_list = activity_tool.getDependentMessageList(message, self)
       transaction.commit() # Release locks.
       if message_list:
         # The result is not empty, so this message is not executable.
@@ -146,7 +146,7 @@ class Queue(object):
     key_list = message.activity_kw.keys()
     key_list.sort()
     for key in key_list:
-      method_id = "_validate_%s" % key
+      method_id = "_validate_" + key
       if getattr(self, method_id, None) is not None:
         order_validation_item_list.append((key, message.activity_kw[key]))
     if len(order_validation_item_list) == 0:
