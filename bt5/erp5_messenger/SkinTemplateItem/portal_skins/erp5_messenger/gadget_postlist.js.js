@@ -35,7 +35,7 @@
       var gadget = this;
       return gadget.jio_allDocs({
         "query": gadget.state.query,
-        "select_list": ["text_content", "modification_date", "Base_getOwnerId"],
+        "select_list": ["text_content", "modification_date", "source_title"],
         "sort_on": [["modification_date", "ascending"]]
       })
       .push(function (results) {
@@ -64,7 +64,7 @@
         }
         var queue_list = [], i = 0;
         for (i = 0; i < post_list.length; i += 1) {
-          post_list[i].user = post_list[i].value.Base_getOwnerId;
+          post_list[i].user = post_list[i].value.source_title;
           // TODO: attachments
           post_list[i].attachment_link = null;
           post_list[i].attachment_name = null;
