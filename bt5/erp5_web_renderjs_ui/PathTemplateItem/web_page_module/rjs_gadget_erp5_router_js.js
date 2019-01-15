@@ -486,9 +486,6 @@
     var jio_key = next_options.jio_key,
       history_options;
     delete next_options.jio_key;
-    // XXX Hack to support create dialog
-    // delete previous_options.view;
-    // delete previous_options.page;
     if (previous_options.hasOwnProperty('cancel')) {
       history_options = JSON.parse(previous_options.cancel);
       history_options.selection = previous_options.selection;
