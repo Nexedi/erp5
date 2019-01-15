@@ -5,6 +5,48 @@
            Query, QueryFactory, ensureArray) {
   "use strict";
 
+  function triggerListboxClipboardAction(argument_list) {
+    var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
+      action_name = argument_list[0],
+      checked_uid_list = argument_list[1],
+      gadget = this,
+      extended_search = gadget.state.extended_search,
+      view,
+      i;
+
+    for (i = 0; i < action_list.length; i += 1) {
+      if (action_name === action_list[i].name) {
+        view = action_list[i].href;
+      }
+    }
+
+    if (checked_uid_list.length !== 0) {
+      // If nothing is checked, use original query
+      extended_search = updateSearchQueryFromSelection(
+        extended_search,
+        checked_uid_list,
+        'catalog.uid',
+        true
+      );
+    }
+
+    if (view === undefined) {
+      // Action was not found.
+      // Reload
+      return gadget.redirect({
+        command: 'reload'
+      });
+    }
+    return gadget.redirect({
+      command: 'display_dialog_with_history',
+      options: {
+        "jio_key": gadget.state.jio_key,
+        "view": view,
+        "extended_search": extended_search
+      }
+    }, true);
+  }
+
   function updateSearchQueryFromSelection(extended_search, checked_uid_list,
                                           key, to_include) {
     var i,
@@ -258,17 +300,37 @@
 
     // Handle listbox custom button
     .allowPublicAcquisition("getListboxSelectActionList", function getListboxSelectActionList() {
-      return this.getTranslationList(['Include', 'Exclude'])
-        .push(function (result_list) {
-          return [{
-            title: result_list[0],
+      var gadget = this;
+      return gadget.getTranslationList(['Include', 'Exclude'])
+        .push(function (translation_list) {
+          var result_list = [{
+            title: translation_list[0],
             icon: 'eye',
             action: 'include'
           }, {
-            title: result_list[1],
+            title: translation_list[1],
             icon: 'low-vision',
             action: 'exclude'
-          }];
+          }],
+            action_list = ensureArray(gadget.state.erp5_document._links.action_object_list_action || []),
+            i,
+            icon;
+
+          for (i = 0; i < action_list.length; i += 1) {
+            if (action_list[i].name === 'delete_document_list') {
+              continue;
+            } else if (action_list[i].name === 'mass_workflow_jio') {
+              icon = 'random';
+            } else {
+              icon = 'star';
+            }
+            result_list.unshift({
+              title: action_list[i].title,
+              icon: icon,
+              action: action_list[i].name
+            });
+          }
+          return result_list;
         });
     })
 
@@ -300,6 +362,8 @@
             )
           }
         }, true);
+      } else if (action !== 'delete_document_list') {
+        return triggerListboxClipboardAction.apply(this, [argument_list]);
       }
 
       throw new Error('Unsupported triggerListboxSelectAction action: ' + action);
@@ -314,10 +378,8 @@
       for (i = 0; i < action_list.length; i += 1) {
         if (action_list[i].name === 'delete_document_list') {
           icon = 'trash-o';
-        } else if (action_list[i].name === 'mass_workflow_jio') {
-          icon = 'random';
         } else {
-          icon = 'star';
+          continue;
         }
         result_list.push({
           title: action_list[i].title,
@@ -328,47 +390,7 @@
       return result_list;
     })
 
-    .allowPublicAcquisition("triggerListboxClipboardAction", function triggerListboxClipboardAction(argument_list) {
-      var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
-        action_name = argument_list[0],
-        checked_uid_list = argument_list[1],
-        gadget = this,
-        extended_search = gadget.state.extended_search,
-        view,
-        i;
-
-      for (i = 0; i < action_list.length; i += 1) {
-        if (action_name === action_list[i].name) {
-          view = action_list[i].href;
-        }
-      }
-
-      if (checked_uid_list.length !== 0) {
-        // If nothing is checked, use original query
-        extended_search = updateSearchQueryFromSelection(
-          extended_search,
-          checked_uid_list,
-          'catalog.uid',
-          true
-        );
-      }
-
-      if (view === undefined) {
-        // Action was not found.
-        // Reload
-        return gadget.redirect({
-          command: 'reload'
-        });
-      }
-      return this.redirect({
-        command: 'display_dialog_with_history',
-        options: {
-          "jio_key": gadget.state.jio_key,
-          "view": view,
-          "extended_search": extended_search
-        }
-      }, true);
-    });
+    .allowPublicAcquisition("triggerListboxClipboardAction", triggerListboxClipboardAction);
 
 }(window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery, Query,
   QueryFactory, ensureArray));
