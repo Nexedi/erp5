@@ -3795,7 +3795,7 @@ class ModuleTemplateItem(BaseTemplateItem):
     pass
 
 # XXX-arnau: when everything has been migrated to Components, this class
-# should be renamed to DocumentTemplateItem
+# should be removed and only _ZodbComponentTemplateItem should remain
 class FilesystemDocumentTemplateItem(BaseTemplateItem):
   local_file_reader_name = staticmethod(readLocalDocument)
   local_file_writer_name = staticmethod(writeLocalDocument)
@@ -4207,9 +4207,10 @@ class ConstraintTemplateItem(FilesystemDocumentTemplateItem):
   local_file_importer_name = staticmethod(importLocalConstraint)
   local_file_remover_name = staticmethod(removeLocalConstraint)
 
-# TODO-arnau-before-merge: Refactor with DocumentTemplateItem
 class _ZodbComponentTemplateItem(ObjectTemplateItem):
-  _tool_id = 'portal_components'
+  @staticmethod
+  def _getZodbObjectId(id):
+    raise NotImplementedError
 
   def isKeepWorkflowObjectLastHistoryOnly(self, path):
     """
@@ -4217,7 +4218,7 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
     kept, without explicitly adding them to the field which requires an extra
     action for developers
     """
-    return path.startswith(self._tool_id + '/')
+    return True
 
   def _removeAllButLastWorkflowHistory(self, obj):
     """
@@ -4259,7 +4260,6 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
     self.portal_components.reset(force=True,
                                  reset_portal_type_at_transaction_boundary=True)
 
-# TODO-arnau-before-merge: Metaclass instead?
 from Products.ERP5Type.Core.InterfaceComponent import InterfaceComponent
 class InterfaceTemplateItem(_ZodbComponentTemplateItem):
   @staticmethod
@@ -4273,8 +4273,8 @@ class MixinTemplateItem(_ZodbComponentTemplateItem):
     return MixinComponent.getIdPrefix() + '.' + id
 
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
-
-class DocumentTemplateItem(FilesystemToZodbTemplateItem):
+class DocumentTemplateItem(FilesystemToZodbTemplateItem,
+                           _ZodbComponentTemplateItem):
   """
   Documents are now stored in ZODB rather than on the filesystem. However,
   some Business Templates may still have filesystem Documents which need to be
@@ -4315,25 +4315,6 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
     action for developers
     """
     return path.startswith(self._tool_id + '/')
-
-  def _removeAllButLastWorkflowHistory(self, obj):
-    """
-    Only export the last state of component_validation_workflow, because only
-    the source code and its state to load it is necessary for ZODB Components
-    and too much history would be exported (edit_workflow)
-    """
-    for wf_id in obj.workflow_history.keys():
-      if wf_id != 'component_validation_workflow':
-        del obj.workflow_history[wf_id]
-        continue
-
-      wf_history = obj.workflow_history[wf_id][-1]
-      # Remove useless modifcation 'time' and 'actor' (conflicts with VCSs)
-      wf_history.pop('time', None)
-      wf_history.pop('actor', None)
-      wf_history.pop('comment', None)
-
-      obj.workflow_history[wf_id] = WorkflowHistoryList([wf_history])
   
   # XXX temporary should be eliminated from here
   def _importFile(self, file_name, file_obj):
@@ -4354,6 +4335,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
     if not self._archive:
       return
 
+    # After running the migration script, update bt5 property accordingly
     if not self._is_already_migrated(self._archive.keys()):
       document_id_list = self.getTemplateIdList()
       if document_id_list[0] not in getattr(context.getPortalObject(),
@@ -4372,23 +4354,15 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
     issue as there are not so many Documents in bt5...
     """
     if self._is_already_migrated(self._objects.keys()):
-      ObjectTemplateItem.install(self, context, **kw)
-      # Reset component on the fly, because it is possible that those
-      # components are required in the middle of the transaction. For example:
-      # - A method in a component is called while installing.
-      # - A document component is used in a different business template,
-      #   and those business templates are installed in a single transaction
-      #   by upgrader.
-      # This reset is called at most 3 times in one business template
-      # installation. (for Document, Test, Extension)
-      self.portal_components.reset(force=True)
+      _ZodbComponentTemplateItem.install(self, context, **kw)
     else:
       FilesystemDocumentTemplateItem.install(self, context, **kw)
 
   def afterUninstall(self, already_migrated=False):
     if already_migrated:
-      self.portal_components.reset(force=True,
-                                   reset_portal_type_at_transaction_boundary=True)
+      _ZodbComponentTemplateItem.install(self)
+    else:
+      FilesystemDocumentTemplateItem.afterUninstall(self)
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
