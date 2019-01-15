@@ -74,7 +74,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_text_content</string>
-                        <string>my_thread</string>
+                        <string>my_follow_up_title</string>
                         <string>my_source_title</string>
                       </list>
                     </value>

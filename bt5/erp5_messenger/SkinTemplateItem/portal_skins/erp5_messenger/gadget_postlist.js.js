@@ -35,7 +35,7 @@
       var gadget = this;
       return gadget.jio_allDocs({
         "query": gadget.state.query,
-        "select_list": ["text_content", "modification_date", "source_title"],
+        "select_list": ["text_content", "modification_date", "source_title", "follow_up_title"],
         "sort_on": [["modification_date", "ascending"]]
       })
       .push(function (results) {
@@ -73,6 +73,8 @@
         return RSVP.all(queue_list);
       })
       .push(function (comment_list) {
+        console.log("comment_list results:");
+        console.log(comment_list);
         var comments = gadget.element.querySelector("#post_list");
         comments.innerHTML = comment_list_template({comments: comment_list});
       });

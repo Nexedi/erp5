@@ -7,27 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -35,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>MessengerThreadModule_addThread</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -53,19 +32,17 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>multipart/form-data</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left (Document Reference)</string>
-                <string>right (Publication Information)</string>
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
-                <string>hidden</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -76,9 +53,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>my_listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -96,15 +71,9 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left (Document Reference)</string> </key>
-                    <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_reference</string>
+                        <string>my_thread_title</string>
+                        <string>my_text_content</string>
                       </list>
                     </value>
                 </item>
@@ -114,18 +83,12 @@
                       <list/>
                     </value>
                 </item>
-                <item>
-                    <key> <string>right (Publication Information)</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
               </dictionary>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>MessengerThread_view</string> </value>
+            <value> <string>MessengerThreadModule_viewAddThreadDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -133,11 +96,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_viewClassification</string> </value>
+            <value> <string>MessengerThreadModule_viewAddThreadDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -149,7 +112,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Messenger Thread</string> </value>
+            <value> <string>New Thread</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
