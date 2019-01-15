@@ -57,6 +57,7 @@ from Products.ERP5Type.UnrestrictedMethod import PrivilegedUser
 from zope.site.hooks import setSite
 import transaction
 from App.config import getConfiguration
+from Shared.DC.ZRDB.Results import Results
 
 import Products.Localizer.patches
 localizer_lock = Products.Localizer.patches._requests_lock
@@ -1552,10 +1553,27 @@ class ActivityTool (BaseTool):
     def getDependentMessageList(self, message, validating_queue=None):
       activity_kw = message.activity_kw
       db = self.getSQLConnection()
-      return [(activity, m)
-        for activity in activity_dict.itervalues()
-        for m in activity.getDependentMessageList(
-          db, activity_kw, activity is validating_queue)]
+      quote = db.string_literal
+      queries = []
+      for activity in activity_dict.itervalues():
+        q = activity.getValidationSQL(
+          quote, activity_kw, activity is validating_queue)
+        if q:
+          queries.append(q)
+      if queries:
+        message_list = []
+        for line in Results(db.query("(%s)" % ") UNION ALL (".join(queries))):
+          activity = activity_dict[line.activity]
+          m = Message.load(line.message,
+                           line=line,
+                           uid=line.uid,
+                           date=line.date,
+                           processing_node=line.processing_node)
+          if not hasattr(m, 'order_validation_text'): # BBB
+            m.order_validation_text = activity.getOrderValidationText(m)
+          message_list.append((activity, m))
+        return message_list
+      return ()
 
     # Required for tests (time shift)
     def timeShift(self, delay):
