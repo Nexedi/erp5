@@ -254,15 +254,14 @@ class SQLBase(Queue):
         LOG('SQLBase', INFO, 'Got a lock error, retrying...')
 
   # Validation private methods
-  def getDependentMessageList(self, db, activate_kw, same_queue):
-    q = db.string_literal
+  def getValidationSQL(self, quote, activate_kw, same_queue):
     validate_list = []
     for k, v in activate_kw.iteritems():
       if v is not None:
         try:
           method = getattr(self, '_validate_' + k, None)
           if method:
-            validate_list.append(' AND '.join(method(v, q)))
+            validate_list.append(' AND '.join(method(v, quote)))
         except Exception:
           LOG('CMFActivity', WARNING, 'invalid %s value: %r' % (k, v),
               error=True)
@@ -271,21 +270,12 @@ class SQLBase(Queue):
           same_queue = False
           break
     if validate_list:
-      message_list = []
-      for line in Results(db.query(
-          "SELECT * FROM %s WHERE processing_node > -10 AND (%s) LIMIT %s" % (
-            self.sql_table, ' OR '.join(validate_list),
-            READ_MESSAGE_LIMIT if same_queue else 1), 0)):
-        m = Message.load(line.message,
-                         line=line,
-                         uid=line.uid,
-                         date=line.date,
-                         processing_node=line.processing_node)
-        if not hasattr(m, 'order_validation_text'): # BBB
-          m.order_validation_text = self.getOrderValidationText(m)
-        message_list.append(m)
-      return message_list
-    return ()
+      return ("SELECT '%s' as activity, uid, date, processing_node,"
+              " priority, group_method_id, message FROM %s"
+              " WHERE processing_node > -10 AND (%s) LIMIT %s" % (
+                type(self).__name__, self.sql_table,
+                ' OR '.join(validate_list),
+                READ_MESSAGE_LIMIT if same_queue else 1))
 
   def _validate_after_method_id(self, *args):
     return sqltest_dict['method_id'](*args),
