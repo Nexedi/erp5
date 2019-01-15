@@ -1,51 +1,9 @@
 /*global window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
          Query, QueryFactory, ensureArray */
-/*jslint nomen: true, indent: 2, maxerr: 3 */
+/*jslint nomen: true, indent: 2, maxerr: 3, continue: true */
 (function (window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
            Query, QueryFactory, ensureArray) {
   "use strict";
-
-  function triggerListboxClipboardAction(argument_list) {
-    var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
-      action_name = argument_list[0],
-      checked_uid_list = argument_list[1],
-      gadget = this,
-      extended_search = gadget.state.extended_search,
-      view,
-      i;
-
-    for (i = 0; i < action_list.length; i += 1) {
-      if (action_name === action_list[i].name) {
-        view = action_list[i].href;
-      }
-    }
-
-    if (checked_uid_list.length !== 0) {
-      // If nothing is checked, use original query
-      extended_search = updateSearchQueryFromSelection(
-        extended_search,
-        checked_uid_list,
-        'catalog.uid',
-        true
-      );
-    }
-
-    if (view === undefined) {
-      // Action was not found.
-      // Reload
-      return gadget.redirect({
-        command: 'reload'
-      });
-    }
-    return gadget.redirect({
-      command: 'display_dialog_with_history',
-      options: {
-        "jio_key": gadget.state.jio_key,
-        "view": view,
-        "extended_search": extended_search
-      }
-    }, true);
-  }
 
   function updateSearchQueryFromSelection(extended_search, checked_uid_list,
                                           key, to_include) {
@@ -102,6 +60,48 @@
       });
     }
     return Query.objectToSearchText(search_query);
+  }
+
+  function triggerListboxClipboardAction(argument_list) {
+    var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
+      action_name = argument_list[0],
+      checked_uid_list = argument_list[1],
+      gadget = this,
+      extended_search = gadget.state.extended_search,
+      view,
+      i;
+
+    for (i = 0; i < action_list.length; i += 1) {
+      if (action_name === action_list[i].name) {
+        view = action_list[i].href;
+      }
+    }
+
+    if (checked_uid_list.length !== 0) {
+      // If nothing is checked, use original query
+      extended_search = updateSearchQueryFromSelection(
+        extended_search,
+        checked_uid_list,
+        'catalog.uid',
+        true
+      );
+    }
+
+    if (view === undefined) {
+      // Action was not found.
+      // Reload
+      return gadget.redirect({
+        command: 'reload'
+      });
+    }
+    return gadget.redirect({
+      command: 'display_dialog_with_history',
+      options: {
+        "jio_key": gadget.state.jio_key,
+        "view": view,
+        "extended_search": extended_search
+      }
+    }, true);
   }
 
   rJS(window)
@@ -319,7 +319,8 @@
           for (i = 0; i < action_list.length; i += 1) {
             if (action_list[i].name === 'delete_document_list') {
               continue;
-            } else if (action_list[i].name === 'mass_workflow_jio') {
+            }
+            if (action_list[i].name === 'mass_workflow_jio') {
               icon = 'random';
             } else {
               icon = 'star';
@@ -362,7 +363,9 @@
             )
           }
         }, true);
-      } else if (action !== 'delete_document_list') {
+      }
+
+      if (action !== 'delete_document_list') {
         return triggerListboxClipboardAction.apply(this, [argument_list]);
       }
 
