@@ -1577,17 +1577,17 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='ClipboardAction' and @data-clipboard-action='mass_workflow_jio']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='SelectAction' and @data-select-action='mass_workflow_jio']</td>
       <td></td>
     </tr>
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='ClipboardAction' and @data-clipboard-action='mass_workflow_jio']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='SelectAction' and @data-select-action='mass_workflow_jio']</td>
       <td></td>
     </tr>
     <tr>
       <td>click</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='ClipboardAction' and @data-clipboard-action='mass_workflow_jio']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='SelectAction' and @data-select-action='mass_workflow_jio']</td>
       <td></td>
     </tr>
     <tr>
