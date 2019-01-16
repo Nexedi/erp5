@@ -529,6 +529,33 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="click_on_header_link">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Click on header link \'%(text)s\'' % click_configuration"></b></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td tal:content="python: '//div[contains(@data-gadget-scope, \'header\')]//a[text()=\'%s\' and contains(@href, \'#!\')]' % click_configuration['text']"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="click_on_page_link">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Click on page link \'%(text)s\'' % click_configuration"></b></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td tal:content="python: '//div[contains(@data-gadget-scope, \'m\')]//a[text()=\'%s\' and contains(@href, \'#!\')]' % click_configuration['text']"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
 
   <tal:block metal:define-macro="go_to_history_view">
     <tr>
