@@ -1341,7 +1341,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         })
 
         global_action_type = ("view", "workflow", "object_new_content_action",
-                              "object_clone_action", "object_delete_action")
+                              "object_clone_action", "object_delete_action",
+                              "object_list_action")
         if (erp5_action_key == view_action_type or
             erp5_action_key in global_action_type or
             "_jio" in erp5_action_key):
