@@ -95,7 +95,8 @@
           jump_list = ensureArray(erp5_document._links.action_object_jump);
 
           for (i = 0; i < view_list.length; i += 1) {
-            promise_list.push(gadget.getUrlFor({command: 'change', options: {
+            promise_list.push(gadget.getUrlFor({command: 'display_with_history', options: {
+              jio_key: gadget.state.jio_key,
               view: view_list[i].href,
               page: undefined  // Views in ERP5 must be forms but because of
                                // OfficeJS we keep it empty for different default
@@ -155,9 +156,7 @@
           gadget.element.innerHTML = my_translated_html;
 
           return RSVP.all([
-            gadget.getUrlFor({command: 'change', options: {
-              page: undefined
-            }}),
+            gadget.getUrlFor({command: 'cancel_dialog_with_history'}),
             calculatePageTitle(gadget, erp5_document)
           ]);
         })

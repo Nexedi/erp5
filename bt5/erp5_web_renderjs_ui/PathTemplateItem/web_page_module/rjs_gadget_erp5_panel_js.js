@@ -58,6 +58,7 @@
 
     .declareMethod('render', function render(options) {
       var erp5_document = options.erp5_document,
+        jio_key = options.jio_key,
         view = options.view,
         visible = options.visible,
         context = this,
@@ -69,7 +70,7 @@
       if (visible === undefined) {
         visible = context.state.visible;
       }
-      if (erp5_document !== undefined) {
+      if ((erp5_document !== undefined) && (jio_key !== undefined)) {
         workflow_list = ensureArray(erp5_document._links.action_workflow);
         view_list = ensureArray(erp5_document._links.action_object_view);
         action_list = ensureArray(erp5_document._links.action_object_jio_action)
@@ -105,6 +106,7 @@
             view_list: view_list,
             action_list: action_list,
             global: true,
+            jio_key: jio_key,
             editable: asBoolean(options.editable) || asBoolean(editable) || false
           });
         });
@@ -222,6 +224,7 @@
           (modification_dict.hasOwnProperty("editable") ||
           modification_dict.hasOwnProperty("workflow_list") ||
           modification_dict.hasOwnProperty("action_list") ||
+          modification_dict.hasOwnProperty("jio_key") ||
           modification_dict.hasOwnProperty("view_list"))) {
         if (this.state.view_list === undefined) {
           gadget.element.querySelector("dl").textContent = '';
@@ -236,28 +239,28 @@
 
               for (i = 0; i < view_list.length; i += 1) {
                 parameter_list.push({
-                  command: 'change',
+                  command: 'display_with_history',
                   options: {
-                    view: view_list[i].href,
-                    page: undefined
+                    jio_key: gadget.state.jio_key,
+                    view: view_list[i].href
                   }
                 });
               }
               for (i = 0; i < workflow_list.length; i += 1) {
                 parameter_list.push({
-                  command: 'change',
+                  command: 'display_dialog_with_history',
                   options: {
-                    view: workflow_list[i].href,
-                    page: undefined
+                    jio_key: gadget.state.jio_key,
+                    view: workflow_list[i].href
                   }
                 });
               }
               for (i = 0; i < action_list.length; i += 1) {
                 parameter_list.push({
-                  command: 'change',
+                  command: 'display_dialog_with_history',
                   options: {
-                    view: action_list[i].href,
-                    page: undefined
+                    jio_key: gadget.state.jio_key,
+                    view: action_list[i].href
                   }
                 });
               }

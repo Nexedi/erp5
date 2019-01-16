@@ -20,6 +20,12 @@
     COMMAND_DISPLAY_STATE = "display",
     // Display a jio document with only the passed parameters + the history
     COMMAND_KEEP_HISTORY_AND_DISPLAY_STATE = "display_with_history",
+    // Display a jio document with only the passed parameters + the history + the cancel url
+    COMMAND_KEEP_HISTORY_CANCEL_AND_DISPLAY_STATE = "display_with_history_and_cancel",
+    // Display a jio document with only the passed parameters + the history + create current url as cancellable url
+    COMMAND_KEEP_HISTORY_AND_DISPLAY_DIALOG_STATE = "display_dialog_with_history",
+    // Display the cancellable url (or the current doc default) + the history
+    COMMAND_KEEP_HISTORY_AND_CANCEL_DIALOG_STATE = "cancel_dialog_with_history",
     // Store the jio key for the person document of the user
     COMMAND_LOGIN = "login",
     // Display a raw string URL
@@ -56,6 +62,9 @@
 
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_DISPLAY_STATE] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_CANCEL_AND_DISPLAY_STATE] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_DISPLAY_DIALOG_STATE] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_CANCEL_DIALOG_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STORED_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_CHANGE_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_ERP5_ACTION] = null;
@@ -474,24 +483,57 @@
   }
 
   function execPushHistoryCommand(gadget, previous_options, next_options) {
-    var jio_key = next_options.jio_key;
+    var jio_key = next_options.jio_key,
+      history_options;
     delete next_options.jio_key;
     // XXX Hack to support create dialog
-    delete previous_options.view;
-    delete previous_options.page;
-    return addHistory(gadget, previous_options)
+    // delete previous_options.view;
+    // delete previous_options.page;
+    if (previous_options.hasOwnProperty('cancel')) {
+      history_options = JSON.parse(previous_options.cancel);
+      history_options.selection = previous_options.selection;
+      history_options.history = previous_options.history;
+      history_options.selection_index = previous_options.selection_index;
+      copyStickyParameterDict(previous_options, history_options);
+    } else {
+      history_options = previous_options;
+    }
+    return addHistory(gadget, history_options)
       .push(function (id) {
         next_options.history = id;
         return addNavigationHistoryAndDisplay(gadget, jio_key, next_options);
       });
   }
 
-  function execKeepHistoryAndDisplayCommand(gadget, previous_options, next_options) {
+  function execKeepHistoryAndDisplayCommand(gadget, previous_options, next_options, create_cancel_url) {
     next_options.selection = previous_options.selection;
     next_options.history = previous_options.history;
     next_options.selection_index = previous_options.selection_index;
     copyStickyParameterDict(previous_options, next_options);
+    if (create_cancel_url) {
+      // Keep cancel parameters as small as possible to prevent huge url
+      previous_options = dropStickyParameterEntry(previous_options);
+      delete previous_options.selection;
+      delete previous_options.history;
+      delete previous_options.selection_index;
+      next_options.cancel = JSON.stringify(previous_options);
+    }
     return execDisplayCommand(gadget, next_options);
+  }
+
+  function execKeepHistoryCancelAndDisplayCommand(gadget, previous_options, next_options) {
+    next_options.cancel = previous_options.cancel;
+    return execKeepHistoryAndDisplayCommand(gadget, previous_options, next_options);
+  }
+
+  function execKeepHistoryAndCancelDialogCommand(gadget, previous_options) {
+    var next_options;
+    if (previous_options.hasOwnProperty('cancel')) {
+      next_options = JSON.parse(previous_options.cancel);
+    } else {
+      next_options = {jio_key: previous_options.jio_key};
+    }
+    return execKeepHistoryAndDisplayCommand(gadget, previous_options, next_options);
   }
 
   function execSelectionNextCommand(gadget, previous_options) {
@@ -744,7 +786,7 @@
                 selection: command_options.args.selection,
                 selection_index: command_options.args.selection_index,
                 history: command_options.args.history,
-                extended_search: command_options.args.extended_search
+                cancel: command_options.args.cancel
               })
             );
           });
@@ -839,6 +881,15 @@
     }
     if (command_options.path === COMMAND_KEEP_HISTORY_AND_DISPLAY_STATE) {
       return execKeepHistoryAndDisplayCommand(gadget, previous_options, next_options);
+    }
+    if (command_options.path === COMMAND_KEEP_HISTORY_CANCEL_AND_DISPLAY_STATE) {
+      return execKeepHistoryCancelAndDisplayCommand(gadget, previous_options, next_options);
+    }
+    if (command_options.path === COMMAND_KEEP_HISTORY_AND_DISPLAY_DIALOG_STATE) {
+      return execKeepHistoryAndDisplayCommand(gadget, previous_options, next_options, true);
+    }
+    if (command_options.path === COMMAND_KEEP_HISTORY_AND_CANCEL_DIALOG_STATE) {
+      return execKeepHistoryAndCancelDialogCommand(gadget, previous_options);
     }
     if (command_options.path === COMMAND_DISPLAY_STORED_STATE) {
       return execDisplayStoredStateCommand(gadget, next_options);

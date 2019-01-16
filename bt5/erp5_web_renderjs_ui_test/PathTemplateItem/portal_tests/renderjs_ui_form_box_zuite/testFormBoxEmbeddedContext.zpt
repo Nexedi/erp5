@@ -36,22 +36,27 @@
 
 <tr><td>open</td>
     <td>${renderjs_url}/#/foo_module/0</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="FormBox FooLine"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="FormBox FooLine"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<!-- Go to the view page -->
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'FormBox FooLine'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <!-- Check non-editable rendering shows datetime field inside formbox -->
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-scope="field_fooline_my_start_date"]/div/label</td><td></td></tr>
 
 <!-- Check editable rendering and functionality -->
-<tr><td>click</td>
-    <td>//a[@data-i18n="Editable"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-scope="field_fooline_my_start_date"]//input</td><td></td></tr>
 
@@ -67,10 +72,7 @@
     <td>field_fooline_my_start_date</td>
     <td>2016-12-24</td></tr>
 
-<tr><td>click</td>
-    <td>//button[@name="submit" and @data-i18n="Save"]</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//button[@type="submit" and text()="Data updated."]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 <!-- Verify saving of values. -->
 <tr><td>verifyValue</td>
@@ -84,12 +86,16 @@
     <td>2016-12-24</td></tr>
 
 <!-- Verify saved values in basic view -->
-<tr><td>click</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="View"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="View"]</td><td></td></tr>
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'View'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_datetime.html"]//input</td><td></td></tr>
 <tr><td>verifyValue</td>
