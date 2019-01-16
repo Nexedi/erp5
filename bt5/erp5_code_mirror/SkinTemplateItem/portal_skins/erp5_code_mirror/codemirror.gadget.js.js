@@ -79,7 +79,8 @@
         mode = 'javascript';
       } else if (options.portal_type === 'Web Style') {
         mode = 'css';
-      } else if (options.portal_type === 'Python Script') {
+      } else if ((options.portal_type === 'Python Script') ||
+                 (options.portal_type === 'Test Component')) {
         mode = 'python';
       }
       state_dict.mode = mode;
