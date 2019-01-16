@@ -33,8 +33,6 @@ from zLOG import LOG, WARNING, ERROR
 from ZODB.POSException import ConflictError
 from cStringIO import StringIO
 
-import transaction
-
 # Time global parameters
 MAX_PROCESSING_TIME = 900 # in seconds
 VALIDATION_ERROR_DELAY = 15 # in seconds
@@ -114,7 +112,6 @@ class Queue(object):
     cached_result = validation_text_dict.get(message.order_validation_text)
     if cached_result is None:
       message_list = activity_tool.getDependentMessageList(message, self)
-      transaction.commit() # Release locks.
       if message_list:
         # The result is not empty, so this message is not executable.
         validation_text_dict[message.order_validation_text] = 0

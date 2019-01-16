@@ -329,6 +329,7 @@ class SQLBase(Queue):
           message.order_validation_text = self.getOrderValidationText(message)
         self.getExecutableMessageList(activity_tool, message, message_dict,
                                       validation_text_dict, now_date=now_date)
+      transaction.commit()
       if message_dict:
         distributable_uid_set = set()
         serialization_tag_dict = {}
