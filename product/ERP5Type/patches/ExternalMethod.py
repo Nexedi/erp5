@@ -52,22 +52,10 @@ class _(PatchClass(ExternalMethod)):
         return self._getFunction(reload)[0]
 
     def _getFunction(self, reload=False):
-        try:
-            component_module = __import__(
-                'erp5.component.extension.' + self._module,
-                fromlist="*", level=0)
-        except ImportError, e:
-            if str(e) != "No module named " + self._module:
-                # Fall back loudly if a component exists but is broken.
-                # XXX: We used __import__ instead of
-                #      erp5.component.extension.find_load_module
-                #      because the latter is much slower.
-                # XXX: Should we also fall back on FS if the module imports
-                #      successfully but does not contain the wanted function?
-                LOG("ERP5Type.dynamic", WARNING,
-                    "Could not load Component module %r"
-                    % ('erp5.component.extension.' + self._module),
-                    error=1)
+        import erp5.component.extension
+        component_module = erp5.component.extension.find_load_module(self._module)
+        if component_module is None:
+            # Fall back on filesystem
             if not reload:
                 from Globals import DevelopmentMode
                 if DevelopmentMode:

@@ -39,6 +39,7 @@ from . import aq_method_lock
 from types import ModuleType
 from zLOG import LOG, BLATHER, WARNING
 from Acquisition import aq_base
+from importlib import import_module
 
 class ComponentVersionPackage(ModuleType):
   """
@@ -369,15 +370,15 @@ class ComponentDynamicPackage(ModuleType):
     plain import would hide the real error, instead log it...
     """
     fullname = self._namespace + '.' + name
-    loader = self.find_module(fullname)
-    if loader is not None:
-      try:
-        return loader.load_module(fullname)
-      except ImportError, e:
-        import traceback
+    try:
+      # Wrapper around __import__ much faster than calling find_module() then
+      # load_module(), and returning module 'name' in contrary to __import__
+      # returning 'erp5' (requiring fromlist parameter which is slower)
+      return import_module(fullname)
+    except ImportError as e:
+      if str(e) != "No module named " + name:
         LOG("ERP5Type.dynamic", WARNING,
-            "Could not load Component module '%s'\n%s" % (fullname,
-                                                          traceback.format_exc()))
+            "Could not load Component module %r" % fullname, error=True)
 
     return None
 
