@@ -45,66 +45,39 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//a[@data-i18n='Add']</td>
-  <td></td>
-</tr>
- 
-<tr>
- <td>click</td>
- <td>link=Add</td>
- <td></td>
-</tr>
+<!-- create one doc -->
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Document created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
-
-
-<tr>
-  <td>waitForElementPresent</td>
- 	<td>//a[@data-i18n="Add"]</td>
- 	<td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n="Add"]</td>
-  <td></td>
-</tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 
 <!-- create 2 Foo lines, one has same id as parent  -->
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Document created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//button[@data-i18n='Save']</td>
- 	<td></td>
-</tr>
 
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//a[text()='Foo Line: 1']</td>
- 	<td></td>
-</tr>
 
-<tr>
-  <td>click</td>
- 	<td>//a[text()='Foo Line: 1']</td>
- 	<td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Foo Line: 1'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>waitForElementPresent</td>
@@ -112,27 +85,18 @@
  	<td></td>
 </tr>
 
-
-<tr>
-  <td>waitForElementPresent</td>
- 	<td>//a[@data-i18n="Add"]</td>
- 	<td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n="Add"]</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Document created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 
 <tr>
  	<td>waitForElementPresent</td>
@@ -161,19 +125,13 @@
  	<td>${url}</td>
  	<td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//a[text()='Foo Line: 2']</td>
- 	<td></td>
-</tr>
-
-<tr>
-  <td>click</td>
- 	<td>//a[text()='Foo Line: 2']</td>
- 	<td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Foo Line: 2'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
@@ -181,28 +139,14 @@
 </tal:block>
 
 <!-- Wait for the action page and click on the delete link -->
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//a[@data-i18n='Actions']</td>
- 	<td></td>
-</tr>
-<tr>
- 	<td>click</td>
- 	<td>//a[@data-i18n='Actions']</td>
- 	<td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>waitForElementPresent</td>
- 	<td>//a[@data-i18n='Delete Document']</td>
- 	<td></td>
-</tr>
-<tr>
-  <td>click</td>
- 	<td>//a[@data-i18n='Delete Document']</td>
- 	<td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Delete Document'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
@@ -258,28 +202,14 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
 
 <!-- Wait for the action page and click on the delete link -->
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//a[@data-i18n='Actions']</td>
- 	<td></td>
-</tr>
-<tr>
- 	<td>click</td>
- 	<td>//a[@data-i18n='Actions']</td>
- 	<td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>waitForElementPresent</td>
- 	<td>//a[@data-i18n='Delete Document']</td>
- 	<td></td>
-</tr>
-<tr>
-  <td>click</td>
- 	<td>//a[@data-i18n='Delete Document']</td>
- 	<td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Delete Document'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
@@ -318,27 +248,14 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <!-- Wait for the action page and click on the delete link -->
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//a[@data-i18n='Actions']</td>
- 	<td></td>
-</tr>
-<tr>
- 	<td>click</td>
- 	<td>//a[@data-i18n='Actions']</td>
- 	<td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tr>
-  <td>waitForElementPresent</td>
- 	<td>//a[@data-i18n='Delete Document']</td>
- 	<td></td>
-</tr>
-<tr>
-  <td>click</td>
- 	<td>//a[@data-i18n='Delete Document']</td>
- 	<td></td>
-</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'Delete Document'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
@@ -359,17 +276,11 @@
 </tal:block>
 
 <!-- Wait for the action page and check no delete link is here-->
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//a[@data-i18n='Actions']</td>
- 	<td></td>
-</tr>
-<tr>
- 	<td>click</td>
- 	<td>//a[@data-i18n='Actions']</td>
- 	<td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
  	<td>waitForTextPresent</td>
  	<td>Delete</td>

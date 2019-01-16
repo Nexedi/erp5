@@ -39,14 +39,14 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing' and contains(@href, '#!change')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing' and contains(@href, '#!display_with_history')]</td>
   <td></td>
 </tr>
 
 <!-- Follow one link -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing' and contains(@href, '#!change')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing' and contains(@href, '#!display_with_history')]</td>
   <td></td>
 </tr>
 <tr>
