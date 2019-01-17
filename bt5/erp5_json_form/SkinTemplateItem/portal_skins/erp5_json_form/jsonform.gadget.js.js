@@ -1,7 +1,7 @@
 /*jslint nomen: true, maxlen: 200, indent: 2, maxerr: 100*/
 /*global window, document, URL, rJS, RSVP, jIO, tv4, Blob */
 
-(function (window, document, Blob, rJS, RSVP, jIO, tv4) {
+(function (window, document, Blob, rJS, RSVP, jIO) {
   "use strict";
   var expandSchema;
 
@@ -575,18 +575,32 @@
     // XXX `if then else` construction can be simplify to
     // anyOf(allOf(if_schema, then_schema), else_schema)
     // and realized by existed rails
+    var schema_p;
     if (schema === undefined ||
         Object.keys(schema).length === 0) {
       schema = true;
     }
+    if (schema_path === "/") {
+      schema_p = "";
+    } else {
+      schema_p = schema_path;
+    }
     if (schema.anyOf !== undefined) {
-      return anyOf(g, schema.anyOf, schema_path + '/anyOf', path, schema);
+      return anyOf(g, schema.anyOf, schema_p + '/anyOf', path, schema);
     }
     if (schema.oneOf !== undefined) {
-      return anyOf(g, schema.oneOf, schema_path + '/oneOf', path, schema);
+      return anyOf(g, schema.oneOf, schema_p + '/oneOf', path, schema)
+        .push(function (ret) {
+          ret.schema_path = schema_path;
+          return ret;
+        });
     }
     if (schema.allOf !== undefined) {
-      return allOf(g, schema.allOf, schema_path + '/allOf', path, schema);
+      return allOf(g, schema.allOf, schema_p + '/allOf', path, schema)
+        .push(function (ret) {
+          ret.schema_path = schema_path;
+          return ret;
+        });
     }
     if (schema.$ref) {
       return loadJSONSchema(g, schema.$ref, schema_path, path);
@@ -655,6 +669,9 @@
     var ii,
       kk,
       key_list = key.split("/");
+    if (key === "/") {
+      return d;
+    }
     for (ii = 1; ii < key_list.length; ii += 1) {
       kk = decodeJsonPointer(key_list[ii]);
       if (ii === key_list.length - 1) {
@@ -671,41 +688,43 @@
   rJS(window)
     .ready(function () {
       var g = this;
-      g.props = {};
+      g.props = {
+        errors: {}
+      };
       g.options = {};
     })
     .declareAcquiredMethod("resolveExternalReference", "resolveExternalReference")
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .allowPublicAcquisition("rootNotifyChange", function (arr, scope) {
-      this.props.changed = true;
       return this.notifyChange(arr[0], scope);
     })
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
-    .allowPublicAcquisition("checkValidity", function (arr) {
-      return this.checkValidity(arr[0]);
+    .allowPublicAcquisition("notifyInvalid", function (arr) {
+      if (arr[0].length === 0) {
+        delete this.props.errors[arr[1]];
+      } else {
+        this.props.errors[arr[1]] = arr[0];
+      }
     })
     .declareMethod('getGadgetByPath', function (path) {
       return this.props.form_gadget.getGadgetByPath(path || "/");
     })
-    .declareMethod('checkValidity', function (json_document) {
-      // XXX need use local schema and local json document
-      // in every subgadget to take into account user anyOf choice
-      // and so more precisely point to issue
+    .allowPublicAcquisition("getSchema", function (arr) {
+      var schema_path = arr[0];
+      return convertOnMultiLevel(this.props.schema[""], schema_path);
+    })
+    .declareJob('jobPrintErrors', function () {
+      return this.printErrors();
+    })
+    .allowPublicAcquisition("printErrors", function () {
+      return this.jobPrintErrors();
+    })
+    .declareMethod("printErrors", function () {
       var g = this.props.form_gadget,
         gadget = this;
       return RSVP.Queue()
         .push(function () {
-          if (json_document === undefined) {
-            return g.getContent();
-          }
-          return json_document;
-        })
-        .push(function (json_d) {
-          gadget.state.value = JSON.stringify(json_d);
-          return tv4.validateMultiple(json_d, gadget.props.schema[""]);
-        })
-        .push(function (validation) {
           var i,
             error_id,
             error,
@@ -728,14 +747,17 @@
             div.setAttribute("class", "");
           });
 
+          for (i in gadget.props.errors) {
+            if (gadget.props.errors.hasOwnProperty(i)) {
+              errors = errors.concat(gadget.props.errors[i]);
+            }
+          }
+
           for (i in schema_resolve_errors) {
             if (schema_resolve_errors.hasOwnProperty(i)) {
               errors.push(schema_resolve_errors[i]);
             }
           }
-
-          errors = errors.concat(validation.errors);
-          errors = errors.concat(validation.missing);
 
           if (errors.length === 0) {
             return gadget.notifyValid()
@@ -752,14 +774,14 @@
 
           function print_error(error, errorUid, errorId) {
             return function (element) {
-              var id = element.id,
-                error_message,
+              var error_message,
                 createTextNode = document.createTextNode.bind(document),
                 a = document.createElement("a");
+              element = element || error.element;
               a.setAttribute("href", "#" + errorUid);
               a.text = errorId;
               element.setAttribute("class", "error-input");
-              error_message = document.getElementById(id).querySelector(".error");
+              error_message = element.querySelector(".error");
               error_message.appendChild(a);
               error_message.setAttribute("id", errorUid);
               if (error.message instanceof Array) {
@@ -785,10 +807,17 @@
           for (i = 0; i < errors.length; i += 1) {
             error = errors[i];
             error_id = (i + 1).toString();
-            tasks.push(
-              g.getElementByPath(error.dataPath || "/")
-                .push(print_error(error, "error" + error_id, error_id))
-            );
+            if (error.element) {
+              tasks.push(
+                new RSVP.Queue()
+                  .push(print_error(error, "error" + error_id, error_id))
+              );
+            } else {
+              tasks.push(
+                g.getElementByPath(error.dataPath || "/")
+                  .push(print_error(error, "error" + error_id, error_id))
+              );
+            }
           }
 
           return RSVP.Queue()
@@ -824,7 +853,7 @@
           z.schema = JSON.stringify(options.schema);
         }
       }
-      if (options.hasOwnProperty("schema_url")) {
+      if (options.schema_url) {
         z.schema_url = (new URL(options.schema_url, window.location))
           .toString();
       }
@@ -897,7 +926,7 @@
             g.props.schema_map["/"] = schema_url;
             g.props.schemas[schema_url] = URL
               .createObjectURL(new Blob([g.state.schema], {type : 'application/json'}));
-            queue = expandSchemaForField(g, schema, "/", "/". true);
+            queue = expandSchemaForField(g, schema, "/", "/", true);
           } else {
             schema_url = g.state.schema_url ||
                          (json_document && json_document.$schema);
@@ -924,7 +953,7 @@
           });
         })
         .push(function () {
-          return g.checkValidity();
+          return g.printErrors();
         })
         .push(function () {
           if (g.props.form_gadget.props.changed) {
@@ -935,21 +964,33 @@
           return g;
         })
         .push(undefined, function (err) {
-          console.log(err);
+          console.error(err);
         });
     })
+    .declareMethod('rerender', function (path, schema) {
+      var g = this,
+        gadget;
+      if (path) {
+        return g.props.form_gadget.getGadgetByPath(path)
+          .push(function (ret) {
+            gadget = ret.gadget;
+            return gadget.getContent();
+          })
+          .push(function (value) {
+            return gadget.rerender({
+              schema: schema,
+              value: value
+            })
+              .push(function () {
+                return gadget.reValidate(value, schema);
+              });
+          });
+      }
+    })
+
     .allowPublicAcquisition("expandSchema", function (arr) {
       return expandSchemaForField(this, arr[0], arr[1], arr[2], arr[3]);
     })
-    .onLoop(function () {
-      var gadget = this;
-      if (this.props.changed) {
-        return this.checkValidity()
-          .push(function () {
-            gadget.props.changed = false;
-          });
-      }
-    }, 500)
 
     .declareMethod('getContent', function (sub_path) {
       var g = this;
@@ -976,4 +1017,4 @@
       return {};
     }, {mutex: 'changestate'});
 
-}(window, document, Blob, rJS, RSVP, jIO, tv4));
+}(window, document, Blob, rJS, RSVP, jIO));

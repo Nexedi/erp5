@@ -40,6 +40,10 @@
     return _str.replace(/~/g, '~0').replace(/\//g, '~1');
   }
 
+  function escapeId(s) {
+    return s.replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&");
+  }
+
   function getDocumentType(doc) {
     if (doc === undefined) {
       return;
@@ -1398,7 +1402,7 @@
                   gadget: g,
                   property_name: key,
                   parent_path: path,
-                  delete_button: false,
+                  delete_button: !schema_arr.external_reference,
                   schema_arr: filtered_schema_arr,
                   json_document: json_document[key]
                 })
@@ -1743,18 +1747,44 @@
   rJS(window)
     .ready(function () {
       var g = this;
-      g.props = {};
+      g.props = {
+        needValidate: false
+      };
       g.options = {};
     })
     .declareAcquiredMethod("rNotifyChange", "rootNotifyChange")
     .declareMethod("rootNotifyChange", function (path) {
       var g = this;
-      return this.getJsonPath(path)
+      this.props.needValidate = true;
+      return g.getJsonPath(path)
         .push(function (p) {
-          return g.rNotifyChange(p);
+          return g.rNotifyChange({
+            scope: g.element.getAttribute("data-gadget-scope"),
+            rel_path: path,
+            path: p
+          });
         });
     })
-    .declareAcquiredMethod("selfRemove", "deleteChildren")
+    .declareMethod("selfRemove", function () {
+      var g = this,
+        sub_gadets = g.element.querySelectorAll("div[data-gadget-scope]"),
+        i,
+        tasks = [];
+      for (i = 0; i < sub_gadets.length; i += 1) {
+        tasks.push(
+          g.notifyInvalid([], sub_gadets[i].getAttribute("data-gadget-scope"))
+        );
+      }
+      tasks.push(g.notifyInvalid([], g.element.getAttribute("data-gadget-scope")));
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all(tasks);
+        })
+        .push(function () {
+          return g.deleteChildren();
+        });
+    })
+    .declareAcquiredMethod("deleteChildren", "deleteChildren")
     .allowPublicAcquisition("deleteChildren", function (arr, scope) {
       var g = this,
         key,
@@ -1929,14 +1959,13 @@
     .declareMethod('getElementByPath', function (data_path) {
       return this.getGadgetByPath(data_path)
         .push(function (ret) {
-          return document.getElementById(
-            ret.gadget.element.getAttribute("data-gadget-scope") + ret.path
-          );
+          return ret.gadget.element.querySelector("#" +
+            ret.gadget.element.getAttribute("data-gadget-scope") +
+            escapeId(ret.path));
         });
     })
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
-    .declareAcquiredMethod("checkValidity", "checkValidity")
 
     .allowPublicAcquisition("notifyValid", function () {
       return true;
@@ -2004,14 +2033,25 @@
       }
       for_delete = Array.from(root.childNodes);
       if (opt.schema) {
+        if (g.props.render_opt.selected_schema) {
+          g.props.render_opt.selected_schema.schema = opt.schema;
+        }
         g.props.schema_arr[0].schema = opt.schema;
       }
       return render_field(g, g.props.property_name, "", g.props.schema_arr,
         opt.value, root, g.props.render_opt)
         .push(function () {
-          for (var i = 0; i < for_delete.length; i += 1) {
+          var value = opt.value,
+            i;
+          for (i = 0; i < for_delete.length; i += 1) {
             root.removeChild(for_delete[i]);
           }
+          if (g.props.changed) {
+            value = undefined;
+          }
+          return g.checkValidity(value);
+        })
+        .push(function () {
           return g.element;
         });
     })
@@ -2054,6 +2094,120 @@
         return this.rootNotifyChange();
       }
     })
+
+    .declareAcquiredMethod("rootGetSchema", "getSchema")
+    .declareMethod('getSchema', function (json_document) {
+      var g = this,
+        schema_arr = g.props.schema_arr,
+        schema_path;
+      if (g.props.render_opt.selected_schema) {
+        schema_path = g.props.render_opt.selected_schema.schema_path;
+      } else {
+        if (json_document !== undefined && !g.props.render_opt.top) {
+          schema_path = schemaArrFilteredByDocument(schema_arr, json_document)[0].schema_path;
+        } else if (schema_arr.schema_path) {
+          schema_path = schema_arr.schema_path;
+        } else if (json_document !== undefined) {
+          schema_path = schemaArrFilteredByDocument(schema_arr, json_document)[0].schema_path;
+        } else {
+          schema_path = schema_arr[0].schema_path;
+        }
+      }
+      return g.rootGetSchema(schema_path);
+    })
+
+    .declareMethod('checkValidity', function (json_document, schema) {
+      var g = this;
+      return RSVP.Queue()
+        .push(function () {
+          if (json_document === undefined) {
+            return g.getContent();
+          }
+          return json_document;
+        })
+        .push(function (json_d) {
+          json_document = json_d;
+          if (schema === undefined) {
+            return g.getSchema(json_document);
+          }
+          return schema;
+        })
+        .push(function (s) {
+          schema = s;
+          return tv4.validateMultiple(json_document, schema);
+        })
+        .push(function (validation) {
+          var i,
+            error,
+            tasks = [],
+            errors = [],
+            self_scope = g.element.getAttribute("data-gadget-scope"),
+            ret_errors = [];
+
+          errors = errors.concat(validation.errors);
+          errors = errors.concat(validation.missing);
+
+          if (errors.length === 0) {
+            return g.notifyInvalid(
+              errors,
+              self_scope
+            );
+          }
+
+          function print_error(error) {
+            return function (ret) {
+              var scope = ret.gadget.element.getAttribute("data-gadget-scope"),
+                parent_scope = ret.gadget.element.getAttribute("data-gadget-parent-scope");
+              if ((scope === self_scope && (g.props.render_opt.top || ret.path !== "/")) ||
+                  (parent_scope === self_scope && ret.path === "/")) {
+                error.element = ret.gadget.element.querySelector("#" +
+                  scope +
+                  escapeId(ret.path));
+                ret_errors.push(error);
+              }
+            };
+          }
+          for (i = 0; i < errors.length; i += 1) {
+            error = errors[i];
+            tasks.push(
+              g.getGadgetByPath(error.dataPath || "/")
+                .push(print_error(error))
+            );
+          }
+
+          return RSVP.Queue()
+            .push(function () {
+              return RSVP.all(tasks);
+            })
+            .push(function () {
+              return g.notifyInvalid(
+                ret_errors,
+                self_scope
+              );
+            });
+        });
+    })
+
+    .allowPublicAcquisition("printErrors", function () {
+      this.props.needValidate = true;
+    })
+    .declareAcquiredMethod("parentPrintErrors", "printErrors")
+    .declareJob("reValidate", function (json_document, schema) {
+      var gadget = this;
+      return this.checkValidity(json_document, schema)
+        .push(function () {
+          return gadget.parentPrintErrors();
+        })
+        .push(function () {
+          gadget.props.needValidate = false;
+        });
+    })
+
+    .onLoop(function () {
+      if (this.props.needValidate) {
+        return this.reValidate();
+      }
+    }, 500)
 
     .onEvent('input', function (evt) {
       var gadget = this,
