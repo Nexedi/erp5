@@ -16,7 +16,7 @@ def getReportSectionListForObject(doc):
                                            title = title,
                                            form_id = None))
   for action in portal.portal_actions.listFilteredActionsFor(doc)['object_view']:
-    form_id = action['url'].split('/')[-1].split('?')[0]
+    form_id = action['url'].split('?')[0].split('/')[-1]
     action_title = action['title']
     if action_title != 'History' and action_title != 'Metadata':
       report_section_list.append(ReportSection(path = doc.getPath(),
