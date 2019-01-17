@@ -1,5 +1,5 @@
 /*jslint nomen: true, maxlen: 200, indent: 2*/
-/*global rJS, console, window, document, RSVP, Xmla, Error*/
+/*global rJS, console, window, document, RSVP, Xmla*/
 
 (function (window, rJS) {
   "use strict";
@@ -230,29 +230,21 @@
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .allowPublicAcquisition("notifyChange", function (arr, scope) {
       var g = this,
-        p = arr[0],
+        p = arr[0].path,
         gadget_settings,
         path;
 
-      function f(p) {
-        var settings;
+      function f(settings_path, rerender_path) {
         return g.getDeclaredGadget("xmla_settings")
           .push(function (gadget) {
             gadget_settings = gadget;
-            return gadget.getContent(p);
+            return gadget.getContent(settings_path);
           })
-          .push(function (c) {
-            settings = c;
-            return generateSchema(c);
+          .push(function (settings) {
+            return generateSchema(settings);
           })
           .push(function (schema) {
-            return gadget_settings.getGadgetByPath(p + '/properties')
-              .push(function (ret) {
-                return ret.gadget.rerender({
-                  schema: schema,
-                  value: convertOnMultiLevel(settings, '/properties')
-                });
-              });
+            return gadget_settings.rerender(rerender_path, schema);
           })
           .push(function () {
             return g.notifyChange();
@@ -262,7 +254,7 @@
       for (path in g.props.xmla_connections) {
         if (g.props.xmla_connections.hasOwnProperty(path) &&
             p.startsWith(path)) {
-          return f(path);
+          return f(path, g.props.xmla_connections[path]);
         }
       }
       return g.notifyChange();
@@ -276,22 +268,20 @@
         connection_path;
       if ("urn:jio:properties_from_xmla.connection.json" === url) {
         connection_path = path.split('/').slice(0, -1).join('/');
-        if (!g.props.xmla_connections[connection_path]) {
-          return new RSVP.Queue()
-            .push(function () {
-              if (g.props.init_value) {
-                settings = convertOnMultiLevel(g.props.init_value, connection_path);
-                if (settings) {
-                  convertOnMultiLevel(g.props.init_value, connection_path, []);
-                }
+        return new RSVP.Queue()
+          .push(function () {
+            if (g.props.init_value) {
+              settings = convertOnMultiLevel(g.props.init_value, connection_path);
+              if (settings) {
+                convertOnMultiLevel(g.props.init_value, connection_path, []);
               }
-              return generateSchema(settings);
-            })
-            .push(function (s) {
-              g.props.xmla_connections[connection_path] = false;
-              return s;
-            });
-        }
+            }
+            return generateSchema(settings);
+          })
+          .push(function (s) {
+            g.props.xmla_connections[connection_path] = path;
+            return s;
+          });
       }
       throw new Error("urn: '" + url + "' not supported");
     });
