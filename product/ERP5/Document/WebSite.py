@@ -186,12 +186,12 @@ class WebSite(WebSection):
             query_string = request.get('QUERY_STRING')
             if query_string:
               request['minimum_language_redirect_url'] += '?' + query_string
-          return self.getOriginalDocument().asContext(id=name, __language_web_site__=True)
+          return self.getOriginalDocument().asContext(id=name, __language_web_site=True)
       return WebSection.getExtensibleContent(self, request, name)
 
     security.declarePublic('isSubtreeIndexable')
     def isSubtreeIndexable(self):
-      if self.isTempObject() and getattr(aq_self(self), '__language_web_site__', False):
+      if self.isTempObject() and getattr(aq_self(self), '__language_web_site', False):
         # temp Web Site used to select a language must not prevent
         # document indexation
         return self.aq_inner.aq_parent.isSubtreeIndexable()
