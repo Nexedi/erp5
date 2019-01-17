@@ -70,8 +70,7 @@ class TestWebSiteLanguageIndexation(ERP5TypeTestCase):
     self.tic()
 
     # Check that web site itself is indexable
-    sql_web_site_list = self.portal.portal_catalog(relative_url=web_site.getRelativeUrl())
-    self.assertEquals(len(sql_web_site_list), 1)
+    self.assertDocumentIndexed(web_site, True)
 
     # Test that document created in the context of a web site
     # is correctly indexed
@@ -80,9 +79,27 @@ class TestWebSiteLanguageIndexation(ERP5TypeTestCase):
     self.tic()
     self.assertDocumentIndexed(foo, True)
 
-    # Test that document created in the context of a temp web site
+    # Test that document created in an "asContext" web site
     # is not indexed
     foo_module = web_site.asContext().restrictedTraverse('foo_module')
+    foo = foo_module.newContent(portal_type='Foo')
+    self.tic()
+    self.assertDocumentIndexed(foo, False)
+
+    # Test that document created in the context of a temp web site
+    # is not indexed
+    tmp_web_site = web_site.getParentValue().newContent(temp_object=True,
+                                                        portal_type='Web Site')
+    foo_module = tmp_web_site.restrictedTraverse('foo_module')
+    foo = foo_module.newContent(portal_type='Foo')
+    self.tic()
+    self.assertDocumentIndexed(foo, False)
+
+    # Test that document created in the context of a temp web section
+    # is not indexed
+    web_section = web_site.newContent(temp_object=True,
+                                      portal_type='Web Section')
+    foo_module = web_section.restrictedTraverse('foo_module')
     foo = foo_module.newContent(portal_type='Foo')
     self.tic()
     self.assertDocumentIndexed(foo, False)
