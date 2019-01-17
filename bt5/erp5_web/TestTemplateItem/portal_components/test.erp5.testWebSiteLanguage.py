@@ -41,6 +41,7 @@ class TestWebSiteLanguageIndexation(ERP5TypeTestCase):
       "erp5_base",
       "erp5_web",
       "erp5_ui_test_core",
+      "erp5_ui_test",
       "erp5_l10n_fr"
     )
 
