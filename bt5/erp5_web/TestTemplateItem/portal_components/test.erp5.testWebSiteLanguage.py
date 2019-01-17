@@ -44,18 +44,12 @@ class TestWebSiteLanguageIndexation(ERP5TypeTestCase):
       "erp5_l10n_fr"
     )
 
-  def afterSetup(self):
-    """
-    This is ran before anything, used to set the environment
-    """
-    self.portal = self.getPortalObject()
-
   def setupWebSite(self, **kw):
     """
     Setup Web Site
     """
 
-    if WEB_SITE_ID in self.portal.web_site_module.objectIds():
+    if WEB_SITE_ID in self.portal.web_site_module:
       self.portal.web_site_module.manage_delObjects(WEB_SITE_ID)
 
     website = self.portal.web_site_module.newContent(
@@ -79,28 +73,28 @@ class TestWebSiteLanguageIndexation(ERP5TypeTestCase):
     sql_web_site_list = self.portal.portal_catalog(relative_url=web_site.getRelativeUrl())
     self.assertEquals(len(sql_web_site_list), 1)
 
-    # First, test that document created in the context of a web site
+    # Test that document created in the context of a web site
     # is correctly indexed
     foo_module = web_site.restrictedTraverse('foo_module')
     foo = foo_module.newContent(portal_type='Foo')
     self.tic()
     self.assertDocumentIndexed(foo, True)
 
-    # Second, test that document created in the context of a temp web site
+    # Test that document created in the context of a temp web site
     # is not indexed
     foo_module = web_site.asContext().restrictedTraverse('foo_module')
     foo = foo_module.newContent(portal_type='Foo')
     self.tic()
     self.assertDocumentIndexed(foo, False)
 
-    # Third, test that document created in the context of a temp web site
+    # Test that document created in the context of a temp web site
     # for language is correctly indexed
     foo_module = web_site.restrictedTraverse('fr/foo_module')
     foo = foo_module.newContent(portal_type='Foo')
     self.tic()
     self.assertDocumentIndexed(foo, True)
 
-    # Third, test that document created in the context of a temp web site
+    # Test that document created in the context of a temp web site
     # for language inside a temp web site is not indexed
     foo_module = web_site.asContext().restrictedTraverse('fr/foo_module')
     foo = foo_module.newContent(portal_type='Foo')
