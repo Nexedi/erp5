@@ -17,7 +17,12 @@
     <script id="template-document-list" type="text/x-handlebars-template">
       {{#if comments }}
         {{#each comments }}
-          <li>By <strong>{{ user }}</strong> -
+          <li>By <strong>{{#if user }}
+                            {{ user }}
+                          {{else }}
+                            Manager
+                          {{/if }}
+                 </strong> -
             <time datetime="{{ date }}" title="{{ date_formatted }}">{{ date_relative }}</time>
             <br/>
             {{{ value.text_content }}}

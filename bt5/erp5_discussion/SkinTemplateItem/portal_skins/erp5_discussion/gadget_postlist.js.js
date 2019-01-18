@@ -35,7 +35,7 @@
       var gadget = this;
       return gadget.jio_allDocs({
         "query": gadget.state.query,
-        "select_list": ["text_content", "modification_date", "source_title", "follow_up_title"],
+        "select_list": ["text_content", "modification_date", "source_title"],
         "sort_on": [["modification_date", "ascending"]]
       })
       .push(function (results) {
