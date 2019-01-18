@@ -45,7 +45,7 @@ class _ERP5(ERP5TypeTestSuite):
         # glob('%s/bt5/erp5_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_token_login/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_pdm_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_crm_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_crm_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_accounting_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_gadget_interface_validator_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_web_monitoring_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
