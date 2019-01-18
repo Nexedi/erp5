@@ -47,15 +47,15 @@ from Products.ERP5Type.Cache import transactional_cached
 from zLOG import LOG, WARNING
 
 @transactional_cached()
-def getExchangeRate(source_currency_value, section_currency, start_date):
-  source_currency = source_currency_value.getRelativeUrl()
-  if source_currency != section_currency:
+def getExchangeRate(currency_value, section_currency, date):
+  currency = currency_value.getRelativeUrl()
+  if currency != section_currency:
     from Products.ERP5Type.Document import newTempAccountingTransactionLine
-    return source_currency_value.getPrice(context=newTempAccountingTransactionLine(
-      source_currency_value.getPortalObject(),
+    return currency_value.getPrice(context=newTempAccountingTransactionLine(
+      currency_value.getPortalObject(),
       "accounting_line",
-      resource=source_currency,
-      start_date=start_date,
+      resource=currency,
+      start_date=date,
       price_currency=section_currency
     ))
 
@@ -501,7 +501,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     type_based_script = self._getTypeBasedMethod('getSourceAssetPrice')
     if type_based_script:
       return type_based_script()
-    return self._getAssetPrice(section = self.getSourceSectionValue())
+    return self._getAssetPrice(section = self.getSourceSectionValue(), date = self.getStartDate())
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getDestinationAssetPrice')
@@ -512,18 +512,18 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     type_based_script = self._getTypeBasedMethod('getDestinationAssetPrice')
     if type_based_script:
       return type_based_script()
-    return self._getAssetPrice(section = self.getDestinationSectionValue())
+    return self._getAssetPrice(section = self.getDestinationSectionValue(), date = self.getStopDate())
 
-  def _getAssetPrice(self,section):
+  def _getAssetPrice(self,section,date):
     price = self.getPrice()
     if section is None or not price:
       return price
-    source_currency_value = self.getPriceCurrencyValue()
-    if source_currency_value:
+    currency_value = self.getPriceCurrencyValue()
+    if currency_value:
       section_currency = section.getPriceCurrency()
       if section_currency:
         exchange_rate = getExchangeRate(
-          source_currency_value, section_currency, self.getStartDate())
+          currency_value, section_currency, date)
         if exchange_rate:
           return exchange_rate * price
     return price
