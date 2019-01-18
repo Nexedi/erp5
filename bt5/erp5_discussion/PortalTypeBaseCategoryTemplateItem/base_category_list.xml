@@ -1,11 +1,4 @@
 <base_category_list>
- <portal_type id="Discussion Post">
-  <item>successor</item>
- </portal_type>
- <portal_type id="Discussion Thread">
-  <item>contributor</item>
-  <item>source</item>
- </portal_type>
  <portal_type id="Discussion Thread Module">
   <item>business_application</item>
  </portal_type>

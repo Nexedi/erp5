@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>Base_doSelect</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -54,7 +54,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>my_listbox</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
@@ -73,10 +73,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_reference</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -90,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionThread_view</string> </value>
+            <value> <string>DiscussionThreadModule_viewDiscussionThreadList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -98,11 +95,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DiscussionThread_view</string> </value>
+            <value> <string>DiscussionThreadModule_viewDiscussionThreadList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_list</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -114,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Discussion Thread</string> </value>
+            <value> <string>Discussion Threads</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

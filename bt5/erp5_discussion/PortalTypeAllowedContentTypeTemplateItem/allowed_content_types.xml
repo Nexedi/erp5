@@ -1,7 +1,4 @@
 <allowed_content_type_list>
- <portal_type id="Discussion Thread">
-  <item>Discussion Post</item>
- </portal_type>
  <portal_type id="Discussion Thread Module">
   <item>Discussion Thread</item>
  </portal_type>

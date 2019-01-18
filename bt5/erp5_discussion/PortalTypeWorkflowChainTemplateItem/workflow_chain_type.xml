@@ -1,10 +1,6 @@
 <workflow_chain>
  <chain>
-  <type>Discussion Post</type>
-  <workflow>edit_workflow, embedded_workflow</workflow>
- </chain>
- <chain>
   <type>Discussion Thread</type>
-  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

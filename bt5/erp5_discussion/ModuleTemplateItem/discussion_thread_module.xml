@@ -12,7 +12,6 @@
   </permission>
   <permission type='tuple'>
    <name>Access contents information</name>
-   <role>Anonymous</role>
    <role>Assignee</role>
    <role>Assignor</role>
    <role>Associate</role>
@@ -31,7 +30,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add portal content</name>
-   <role>Assignee</role>
    <role>Assignor</role>
    <role>Author</role>
    <role>Manager</role>
@@ -79,14 +77,16 @@
    <name>View</name>
    <role>Assignee</role>
    <role>Assignor</role>
+   <role>Associate</role>
    <role>Auditor</role>
-   <role>Author</role>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>View History</name>
    <role>Assignee</role>
    <role>Assignor</role>
+   <role>Associate</role>
+   <role>Auditor</role>
    <role>Author</role>
    <role>Manager</role>
   </permission>
