@@ -192,7 +192,6 @@ class Message(BaseMessage):
   call_traceback = None
   exc_info = None
   is_executed = MESSAGE_NOT_EXECUTED
-  processing = None
   traceback = None
   oid = None
   is_registered = False

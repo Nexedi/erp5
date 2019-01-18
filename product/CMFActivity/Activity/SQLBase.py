@@ -102,7 +102,6 @@ def sqltest_dict():
   _('group_method_id')
   _('method_id')
   _('path')
-  _('processing')
   _('processing_node')
   _('serialization_tag')
   _('tag')
@@ -218,8 +217,7 @@ class SQLBase(Queue):
                              activity=class_name,
                              uid=line.uid,
                              processing_node=line.processing_node,
-                             retry=line.retry,
-                             processing=line.processing)
+                             retry=line.retry)
       for line in result]
 
   def countMessageSQL(self, quote, **kw):
@@ -413,9 +411,8 @@ class SQLBase(Queue):
     """
       Put messages back in given processing_node.
     """
-    db.query(
-      "UPDATE %s SET processing_node=%s, processing=0 WHERE uid IN (%s)\0"
-      "COMMIT" % (self.sql_table, state, ','.join(map(str, uid_list))))
+    db.query("UPDATE %s SET processing_node=%s WHERE uid IN (%s)\0COMMIT" % (
+      self.sql_table, state, ','.join(map(str, uid_list))))
 
   def getProcessableMessageLoader(self, db, processing_node):
     # do not merge anything
@@ -432,14 +429,12 @@ class SQLBase(Queue):
         reserved (definitely lost, but they are expandable since redundant).
 
       - reserve a message
-      - set reserved message to processing=1 state
       - if this message has a group_method_id:
         - reserve a bunch of messages
         - until the total "cost" of the group goes over 1
           - get one message from the reserved bunch (this messages will be
             "needed")
           - update the total cost
-        - set "needed" reserved messages to processing=1 state
         - unreserve "unneeded" messages
       - return still-reserved message list and a group_method_id
 
@@ -502,11 +497,6 @@ class SQLBase(Queue):
                 uid_list = [line.uid for line in result if line.uid != uid]
                 if uid_list:
                   self.unreserveMessageList(db, 0, uid_list)
-        # Process messages.
-        db.query("UPDATE %s"
-          " SET processing=1, processing_date=UTC_TIMESTAMP(6)"
-          " WHERE uid IN (%s)\0COMMIT" % (
-          self.sql_table, ','.join(map(str, uid_to_duplicate_uid_list_dict))))
         return message_list, group_method_id, uid_to_duplicate_uid_list_dict
     except:
       self._log(WARNING, 'Exception while reserving messages.')
@@ -751,10 +741,10 @@ class SQLBase(Queue):
         activity_tool.unregisterMessage(self, m)
     uid_list = []
     db = activity_tool.getSQLConnection()
-    for line in self._getMessageList(db, path=path, processing=0,
+    for line in self._getMessageList(db, path=path,
         **({'method_id': method_id} if method_id else {})):
       uid_list.append(line.uid)
-      if invoke:
+      if invoke and line.processing_node <= 0:
         invoke(Message.load(line.message, uid=line.uid, line=line))
     if uid_list:
       self.deleteMessageList(db, uid_list)
@@ -766,8 +756,7 @@ class SQLBase(Queue):
       all dates in message(_queue) table
     """
     activity_tool.getSQLConnection().query("UPDATE %s SET"
-      " date = DATE_SUB(date, INTERVAL %s SECOND),"
-      " processing_date = DATE_SUB(processing_date, INTERVAL %s SECOND)"
-      % (self.sql_table, delay, delay)
+      " date = DATE_SUB(date, INTERVAL %s SECOND)"
+      % (self.sql_table, delay)
       + ('' if processing_node is None else
          "WHERE processing_node=%s" % processing_node))

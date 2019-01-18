@@ -142,10 +142,6 @@
                           <string>retry</string>
                           <string>Retry</string>
                         </tuple>
-                        <tuple>
-                          <string>processing</string>
-                          <string>Processing</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -221,10 +217,6 @@
                           <string>retry</string>
                           <string>Retry</string>
                         </tuple>
-                        <tuple>
-                          <string>processing</string>
-                          <string>Processing</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -299,10 +291,6 @@
                         </tuple>
                         <tuple>
                           <string>retry</string>
-                          <string></string>
-                        </tuple>
-                        <tuple>
-                          <string>processing</string>
                           <string></string>
                         </tuple>
                       </list>

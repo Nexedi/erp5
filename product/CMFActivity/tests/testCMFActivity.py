@@ -1355,7 +1355,8 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     """
     self.TryUserNotificationOnActivityFailure('SQLQueue')
 
-  def TryUserNotificationRaise(self, activity):
+  def test_93_tryUserNotificationRaise(self):
+    activity_tool = self.portal.portal_activities
     obj = self.portal.organisation_module.newContent(portal_type='Organisation')
     self.tic()
     original_notifyUser = Message.notifyUser
@@ -1363,34 +1364,20 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       raise ValueError('This method always fail')
     Message.notifyUser = failingMethod
     Organisation.failingMethod = failingMethod
-    getMessageList = self.portal.portal_activities.getMessageList
     try:
-      obj.activate(activity=activity, priority=6).failingMethod()
-      self.commit()
-      self.flushAllActivities(silent=1, loop_size=100)
-      message, = getMessageList(activity=activity, method_id='failingMethod')
-      self.assertEqual(message.processing, 0)
+      for activity in ActivityTool.activity_dict:
+        obj.activate(activity=activity, priority=6).failingMethod()
+        self.commit()
+        self.flushAllActivities(silent=1, loop_size=100)
+        message, = activity_tool.getMessageList(
+          activity=activity, method_id='failingMethod')
+        self.assertEqual(message.processing_node, -2)
+        self.assertTrue(message.retry)
+        activity_tool.manageDelete(message.uid, activity)
+        self.commit()
     finally:
       Message.notifyUser = original_notifyUser
       del Organisation.failingMethod
-
-  def test_93_userNotificationRaiseWithSQLDict(self):
-    """
-      Check that activities are not left with processing=1 when notifyUser raises.
-    """
-    self.TryUserNotificationRaise('SQLDict')
-
-  def test_94_userNotificationRaiseWithSQLQueue(self):
-    """
-      Check that activities are not left with processing=1 when notifyUser raises.
-    """
-    self.TryUserNotificationRaise('SQLQueue')
-
-  def test_95_userNotificationRaiseWithSQLJoblib(self):
-    """
-      Check that activities are not left with processing=1 when notifyUser raises.
-    """
-    self.TryUserNotificationRaise('SQLJoblib')
 
   def TryActivityRaiseInCommitDoesNotStallActivityConection(self, activity):
     """

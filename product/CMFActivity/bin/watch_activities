@@ -1,6 +1,5 @@
 #!/bin/sh
 set -e
-# Small watching script based on Sébastien idea.
 
 # ideas:
 #  - more control on what would be displayed
@@ -32,13 +31,26 @@ INTERVAL=$2
   exit 1
 }
 
-SELECT=""
-for t in message message_queue ; do
-  SELECT=$SELECT"""
-  SELECT count(*) AS $t, ${text_group:-method_id}, processing, processing_node AS node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY ${text_group:-method_id}, processing, processing_node ORDER BY node;
-  SELECT count(*) AS $t, processing, processing_node, min(priority) AS min_pri, max(priority) AS max_pri FROM $t GROUP BY processing, processing_node;
-  SELECT priority as pri, MIN(timediff(NOW(), date)) AS min, AVG(timediff(NOW() , date)) AS avg, MAX(timediff(NOW() , date)) AS max FROM $t GROUP BY priority;
-  SELECT count(*) AS ${t}_count FROM $t;
-  """
+node_priority_cols="processing_node AS node, MIN(priority) AS min_pri, MAX(priority) AS max_pri"
+for t in message message_queue message_job; do
+  SELECT=$SELECT"
+  SELECT count(*) AS $t, ${text_group:-method_id}, $node_priority_cols, MAX(retry) FROM $t
+    GROUP BY processing_node, ${text_group:-method_id}
+    ORDER BY processing_node, ${text_group:-method_id};
+  SELECT priority,
+    TIME_FORMAT(TIMEDIFF(UTC_TIMESTAMP(6), MAX(date)), \"%T\") AS min,
+    TIME_FORMAT(TIMEDIFF(UTC_TIMESTAMP(6), AVG(date)), \"%T\") AS avg,
+    TIME_FORMAT(TIMEDIFF(UTC_TIMESTAMP(6), MIN(date)), \"%T\") AS max
+    FROM $t GROUP BY priority ORDER BY priority;"
+  [ $t = message ] || {
+    not_processing=$not_processing" UNION ALL "
+    count=$count,
+  }
+  not_processing=$not_processing"
+  SELECT count(*) AS count, $node_priority_cols, MIN(date) AS min_date, MAX(date) AS max_date
+    FROM $t WHERE processing_node<=0 GROUP BY processing_node"
+  count=$count"(SELECT count(*) AS $t FROM $t) as _$t"
 done
-exec watch -n ${INTERVAL:-5} "${MYSQL:-mysql} $MYSQL_OPT --disable-pager -t -e '$SELECT' "
+exec watch -n ${INTERVAL:-5} "${MYSQL:-mysql} $MYSQL_OPT --disable-pager -t -e '
+SET autocommit=off; SELECT * FROM $count;$SELECT
+SELECT SUM(count) as count, node, MIN(min_pri) AS min_pri, MAX(max_pri) AS max_pri, MIN(min_date) AS min_date, MAX(max_date) AS max_date FROM ($not_processing) as t GROUP BY node;'"
