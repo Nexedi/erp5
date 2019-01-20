@@ -32,25 +32,46 @@ INTERVAL=$2
 }
 
 node_priority_cols="processing_node AS node, MIN(priority) AS min_pri, MAX(priority) AS max_pri"
-for t in message message_queue message_job; do
-  SELECT=$SELECT"
-  SELECT count(*) AS $t, ${text_group:-method_id}, $node_priority_cols, MAX(retry) FROM $t
+for t in message:dict message_queue:queue message_job:joblib; do
+  table=${t%:*}
+  t=${t#*:}
+  create=$create"
+  CREATE TEMPORARY TABLE _$t(
+    n INT UNSIGNED NOT NULL,
+    ${text_group:-method_id} VARCHAR(255) NOT NULL,
+    processing_node SMALLINT NOT NULL,
+    priority TINYINT NOT NULL,
+    min_date DATETIME(6) NOT NULL,
+    max_date DATETIME(6) NOT NULL,
+    max_retry TINYINT UNSIGNED NOT NULL
+  ) ENGINE=MEMORY;"
+  collect=$collect"
+  INSERT INTO _$t SELECT count(*), ${text_group:-method_id},
+      processing_node, priority, MIN(date), MAX(date), MAX(retry) FROM $table
+    GROUP BY processing_node, priority, ${text_group:-method_id};"
+  select=$select"
+  SELECT IFNULL(SUM(n),0) AS $t, ${text_group:-method_id},
+      $node_priority_cols, MAX(max_retry) AS max_retry FROM _$t
     GROUP BY processing_node, ${text_group:-method_id}
     ORDER BY processing_node, ${text_group:-method_id};
   SELECT priority,
-    TIME_FORMAT(TIMEDIFF(UTC_TIMESTAMP(6), MAX(date)), \"%T\") AS min,
-    TIME_FORMAT(TIMEDIFF(UTC_TIMESTAMP(6), AVG(date)), \"%T\") AS avg,
-    TIME_FORMAT(TIMEDIFF(UTC_TIMESTAMP(6), MIN(date)), \"%T\") AS max
-    FROM $t GROUP BY priority ORDER BY priority;"
-  [ $t = message ] || {
+    TIME_FORMAT(TIMEDIFF(UTC_TIMESTAMP(6), MAX(max_date)), \"%T\") AS min,
+    TIME_FORMAT(TIMEDIFF(UTC_TIMESTAMP(6), MIN(min_date)), \"%T\") AS max
+    FROM _$t GROUP BY priority ORDER BY priority;"
+  [ "$count" ] && {
     not_processing=$not_processing" UNION ALL "
     count=$count,
   }
   not_processing=$not_processing"
-  SELECT count(*) AS count, $node_priority_cols, MIN(date) AS min_date, MAX(date) AS max_date
-    FROM $t WHERE processing_node<=0 GROUP BY processing_node"
-  count=$count"(SELECT count(*) AS $t FROM $t) as _$t"
+  SELECT IFNULL(SUM(n),0) AS count, $node_priority_cols,
+      MIN(min_date) AS min_date, MAX(max_date) AS max_date
+    FROM _$t WHERE processing_node<=0 GROUP BY processing_node"
+  count=$count"(SELECT IFNULL(SUM(n),0) AS $t FROM _$t) as $t"
+  total=$total+$t
 done
 exec watch -n ${INTERVAL:-5} "${MYSQL:-mysql} $MYSQL_OPT --disable-pager -t -e '
-SET autocommit=off; SELECT * FROM $count;$SELECT
-SELECT SUM(count) as count, node, MIN(min_pri) AS min_pri, MAX(max_pri) AS max_pri, MIN(min_date) AS min_date, MAX(max_date) AS max_date FROM ($not_processing) as t GROUP BY node;'"
+SET autocommit=off;$create$collect
+SELECT *, $total as total FROM $count;$select
+SELECT SUM(count) as count, node, MIN(min_pri) AS min_pri, MAX(max_pri) AS max_pri,
+  MIN(min_date) AS min_date, MAX(max_date) AS max_date
+  FROM ($not_processing) as t GROUP BY node;'"
