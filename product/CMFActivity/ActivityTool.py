@@ -682,6 +682,20 @@ class ActivityTool (BaseTool):
       self.maybeMigrateConnectionClass()
       for activity in activity_dict.itervalues():
         activity.initialize(self, clear=False)
+      # Remove old skin if any.
+      skins_tool = self.getPortalObject().portal_skins
+      name = 'activity'
+      if (getattr(skins_tool.get(name), '_dirpath', None)
+          == 'Products.CMFActivity:skins/activity'):
+        for selection, skins in skins_tool.getSkinPaths():
+          skins = skins.split(',')
+          try:
+            skins.remove(name)
+          except ValueError:
+            continue
+          skins_tool.manage_skinLayers(
+            add_skin=1, skinname=selection, skinpath=skins)
+        skins_tool._delObject(name)
 
     def _callSafeFunction(self, batch_function):
       return batch_function()
