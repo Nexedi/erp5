@@ -148,7 +148,6 @@ CREATE TABLE %s (
   KEY (`path`),
   KEY (`active_process_uid`),
   KEY (`method_id`),
-  KEY (`priority`),
   KEY (`tag`)
 ) ENGINE=InnoDB""" % self.sql_table
 
