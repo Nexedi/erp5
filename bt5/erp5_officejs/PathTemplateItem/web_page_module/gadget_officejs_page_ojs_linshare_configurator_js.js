@@ -8,7 +8,7 @@
       .push(function () {
         return RSVP.all([
           gadget.getSetting("portal_type"),
-          gadget.getSetting("erp5_attachment_synchro", "")
+          gadget.getSetting("erp5_attachment_synchro", true)
         ]);
       })
       .push(function (setting) {
@@ -22,16 +22,20 @@
             sort_on: [["modification_date", "descending"]]
           },
           use_remote_post: false,
-          conflict_handling: 2,
+          conflict_handling: 1,
+          debug: true,
           check_local_attachment_modification: attachment_synchro,
           check_local_attachment_creation: attachment_synchro,
+          check_local_attachment_deletion: false,
           check_remote_attachment_creation: attachment_synchro,
+          check_remote_attachment_modification: attachment_synchro,
+          check_remote_attachment_deletion: true,
           check_local_modification: true,
           check_local_creation: true,
           check_local_deletion: false,
-          check_remote_modification: false,
+          check_remote_modification: true,
           check_remote_creation: true,
-          check_remote_deletion: false,
+          check_remote_deletion: true,
           signature_sub_storage: {
             type: "query",
             sub_storage: {
@@ -43,23 +47,41 @@
             }
           },
           local_sub_storage: {
-            type: "query",
+            type: "mapping",
+            attachment: {
+              'data': {
+                get: {uri_template: 'enclosure'},
+                put: {uri_template: 'enclosure'}
+              }
+            },
             sub_storage: {
-              type: "uuid",
+              type: "query",
               sub_storage: {
-                type: "indexeddb",
-                database: "ojs_linshare"
+                type: "uuid",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "ojs_linshare"
+                }
               }
             }
           },
           remote_sub_storage: {
-            type: "query",
+            type: "mapping",
+            attachment: {
+              'data': {
+                get: {uri_template: 'enclosure'},
+                put: {uri_template: 'enclosure'}
+              }
+            },
             sub_storage: {
-              type: "linshare",
-              url: options.url,
-              credential_token: window.btoa(
-                options.username + ':' + options.password
-              )
+              type: "query",
+              sub_storage: {
+                type: "linshare",
+                url: options.url,
+                credential_token: window.btoa(
+                  options.username + ':' + options.password
+                )
+              }
             }
           }
         };
