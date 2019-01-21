@@ -682,6 +682,19 @@ class ActivityTool (BaseTool):
       self.maybeMigrateConnectionClass()
       for activity in activity_dict.itervalues():
         activity.initialize(self, clear=False)
+      # Remove old skin if any.
+      skin_folder = self.getPortalObject().portal_skins
+      name = 'activity'
+      if skin_folder.hasObject(name):
+        for selection, skins in skin_folder.getSkinPaths():
+          skins = skins.split(',')
+          try:
+            skins.remove(name)
+          except ValueError:
+            continue
+          skin_folder.manage_skinLayers(
+            add_skin=1, skinname=selection, skinpath=skins)
+        skin_folder._delObject(name)
 
     def _callSafeFunction(self, batch_function):
       return batch_function()
