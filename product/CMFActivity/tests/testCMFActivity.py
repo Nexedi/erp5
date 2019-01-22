@@ -2048,29 +2048,61 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       DB.query = DB.original_query
       del DB.original_query
 
-  def test_MAX_MESSAGE_LIST_SIZE(self):
-    from Products.CMFActivity.Activity import SQLBase
-    MAX_MESSAGE_LIST_SIZE = SQLBase.MAX_MESSAGE_LIST_SIZE
+  def test_insert_max_payload(self):
+    activity_tool = self.portal.portal_activities
+    max_allowed_packet = activity_tool.getSQLConnection().getMaxAllowedPacket()
+    insert_list = []
+    invoke_list = []
+    N = 100
+    class Skip(Exception):
+      """
+      Speed up test by not interrupting the first transaction
+      as soon as we have the information we want.
+      """
+    original_query = DB.query.__func__
+    def query(self, query_string, *args, **kw):
+      if query_string.startswith('INSERT'):
+        insert_list.append(len(query_string))
+        if not n:
+          raise Skip
+      return original_query(self, query_string, *args, **kw)
+    def check():
+      for i in xrange(1, N):
+        activity_tool.activate(activity=activity, group_id=str(i)
+                              ).doSomething(arg)
+      activity_tool.activate(activity=activity, group_id='~'
+                            ).doSomething(' ' * n)
+      self.tic()
+      self.assertEqual(len(invoke_list), N)
+      invoke_list.remove(n)
+      self.assertEqual(set(invoke_list), {len(arg)})
+      del invoke_list[:]
+    activity_tool.__class__.doSomething = \
+      lambda self, arg: invoke_list.append(len(arg))
     try:
-      SQLBase.MAX_MESSAGE_LIST_SIZE = 3
-      def dummy_counter(o):
-        self.__call_count += 1
-      o = self.portal.organisation_module.newContent(portal_type='Organisation')
-
-      for activity in "SQLDict", "SQLQueue", "SQLJoblib":
-        self.__call_count = 0
-        try:
-          for i in xrange(10):
-            method_name = 'dummy_counter_%s' % i
-            getattr(o.activate(activity=activity), method_name)()
-            setattr(Organisation, method_name, dummy_counter)
-          self.flushAllActivities()
-        finally:
-          for i in xrange(10):
-            delattr(Organisation, 'dummy_counter_%s' % i)
-        self.assertEqual(self.__call_count, 10)
+      DB.query = query
+      for activity in ActivityTool.activity_dict:
+        arg = ' ' * (max_allowed_packet // N)
+        # Find the size of the last message argument, such that all messages
+        # are inserted in a single query whose size is to the maximum allowed.
+        n = 0
+        self.assertRaises(Skip, check)
+        self.abort()
+        n = max_allowed_packet - insert_list.pop()
+        self.assertFalse(insert_list)
+        # Now check with the biggest insert query possible.
+        check()
+        self.assertEqual(max_allowed_packet, insert_list.pop())
+        self.assertFalse(insert_list)
+        # And check that the insert query is split
+        # in order not to exceed max_allowed_packet.
+        n += 1
+        check()
+        self.assertEqual(len(insert_list), 2)
+        del insert_list[:]
     finally:
-      SQLBase.MAX_MESSAGE_LIST_SIZE = MAX_MESSAGE_LIST_SIZE
+      del activity_tool.__class__.doSomething
+      DB.query = original_query
 
   def test_115_TestSerializationTagSQLDictPreventsParallelExecution(self):
     """
@@ -2340,38 +2372,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
   def test_126_userNotificationSavedOnEventLogWhenSiteErrorLoggerRaisesWithSQLQueue(self):
     self.TryNotificationSavedOnEventLogWhenSiteErrorLoggerRaises('SQLQueue')
-
-  def test_127_checkConflictErrorAndNoRemainingActivities(self):
-    """
-    When an activity creates several activities, make sure that all newly
-    created activities are not commited if there is ZODB Conflict error
-    """
-    from Products.CMFActivity.Activity import SQLBase
-    MAX_MESSAGE_LIST_SIZE = SQLBase.MAX_MESSAGE_LIST_SIZE
-    try:
-      SQLBase.MAX_MESSAGE_LIST_SIZE = 1
-      activity_tool = self.portal.portal_activities
-      def doSomething(self):
-        self.serialize()
-        self.activate(activity='SQLQueue').getId()
-        self.activate(activity='SQLQueue').getTitle()
-        conn = self._p_jar
-        tid = self._p_serial
-        oid = self._p_oid
-        try:
-          conn.db().invalidate({oid: tid})
-        except TypeError:
-          conn.db().invalidate(tid, {oid: tid})
-
-      activity_tool.__class__.doSomething = doSomething
-      activity_tool.activate(activity='SQLQueue').doSomething()
-      self.commit()
-      activity_tool.tic()
-      message_list = activity_tool.getMessageList()
-      self.assertEqual(['doSomething'],[x.method_id for x in message_list])
-      activity_tool.manageClearActivities()
-    finally:
-      SQLBase.MAX_MESSAGE_LIST_SIZE = MAX_MESSAGE_LIST_SIZE
 
   def test_128_CheckDistributeWithSerializationTagAndGroupMethodId(self):
     activity_tool = self.portal.portal_activities
