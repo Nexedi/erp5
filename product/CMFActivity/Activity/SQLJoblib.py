@@ -31,7 +31,7 @@ from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 import MySQLdb
 from MySQLdb.constants.ER import DUP_ENTRY
 from SQLBase import (
-  SQLBase, sort_message_key, MAX_MESSAGE_LIST_SIZE,
+  SQLBase, sort_message_key,
   UID_SAFE_BITSIZE, UID_ALLOCATION_TRY_COUNT,
 )
 from Products.CMFActivity.ActivityTool import Message
@@ -75,11 +75,16 @@ CREATE TABLE %s (
     return (tuple(m.object_path), m.method_id, m.activity_kw.get('signature'),
                   m.activity_kw.get('tag'), m.activity_kw.get('group_id'))
 
+  _insert_template = ("INSERT INTO %s (uid,"
+    " path, active_process_uid, date, method_id, processing_node,"
+    " priority, group_method_id, tag, signature, serialization_tag,"
+    " message) VALUES\n(%s)")
+
   def prepareQueueMessageList(self, activity_tool, message_list):
     db = activity_tool.getSQLConnection()
     quote = db.string_literal
     def insert(reset_uid):
-      values = "),\n(".join(values_list)
+      values = self._insert_separator.join(values_list)
       del values_list[:]
       for _ in xrange(UID_ALLOCATION_TRY_COUNT):
         if reset_uid:
@@ -87,10 +92,7 @@ CREATE TABLE %s (
           # Overflow will result into IntegrityError.
           db.query("SET @uid := %s" % getrandbits(UID_SAFE_BITSIZE))
         try:
-          db.query("INSERT INTO %s (uid,"
-            " path, active_process_uid, date, method_id, processing_node,"
-            " priority, group_method_id, tag, signature, serialization_tag,"
-            " message) VALUES\n(%s)" % (self.sql_table, values))
+          db.query(self._insert_template % (self.sql_table, values))
         except MySQLdb.IntegrityError, (code, _):
           if code != DUP_ENTRY:
             raise
@@ -102,17 +104,19 @@ CREATE TABLE %s (
     i = 0
     reset_uid = True
     values_list = []
+    max_payload = self._insert_max_payload
+    sep_len = len(self._insert_separator)
     for m in message_list:
       if m.is_registered:
         active_process_uid = m.active_process_uid
         order_validation_text = m.order_validation_text = \
           self.getOrderValidationText(m)
         date = m.activity_kw.get('at_date')
-        values_list.append(','.join((
+        row = ','.join((
           '@uid+%s' % i,
           quote('/'.join(m.object_path)),
           'NULL' if active_process_uid is None else str(active_process_uid),
-          "UTC_TIMESTAMP(6)" if date is None else render_datetime(date),
+          "UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
           quote(m.method_id),
           '0' if order_validation_text == 'none' else '-1',
           str(m.activity_kw.get('priority', 1)),
@@ -120,11 +124,18 @@ CREATE TABLE %s (
           quote(m.activity_kw.get('tag', '')),
           quote(m.activity_kw.get('signature', '')),
           quote(m.activity_kw.get('serialization_tag', '')),
-          quote(Message.dump(m)))))
+          quote(Message.dump(m))))
         i += 1
-        if not i % MAX_MESSAGE_LIST_SIZE:
-          insert(reset_uid)
-          reset_uid = False
+        n = sep_len + len(row)
+        max_payload -= n
+        if max_payload < 0:
+          if values_list:
+            insert(reset_uid)
+            reset_uid = False
+            max_payload = self._insert_max_payload - n
+          else:
+            raise ValueError("max_allowed_packet too small to insert message")
+        values_list.append(row)
     if values_list:
       insert(reset_uid)
 
