@@ -9,6 +9,10 @@
  <portal_type id="Internal Packing List">
   <item>DeliveryCausalityStateConstraint</item>
  </portal_type>
+ <portal_type id="Inventory Report">
+  <item>Arrow</item>
+  <item>InventoryReport</item>
+ </portal_type>
  <portal_type id="Purchase Packing List">
   <item>DeliveryCausalityStateConstraint</item>
  </portal_type>

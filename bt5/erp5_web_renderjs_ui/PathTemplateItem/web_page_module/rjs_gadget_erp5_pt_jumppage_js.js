@@ -51,7 +51,7 @@
         .push(function (result) {
           var i,
             promise_list = [
-              gadget.getUrlFor({command: 'change', options: {page: undefined}})
+              gadget.getUrlFor({command: 'cancel_dialog_with_history'})
             ];
           erp5_document = result;
           view_list = erp5_document._links.action_object_jump || [];

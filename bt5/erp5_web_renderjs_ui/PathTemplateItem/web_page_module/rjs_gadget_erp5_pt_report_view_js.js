@@ -71,6 +71,7 @@
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
         form_gadget_url: form_gadget_url,
+        jio_key: options.jio_key
       });
     })
     .onStateChange(function (modification_dict) {
@@ -95,7 +96,8 @@
           return form_gadget.render({
             erp5_document: gadget.state.erp5_document,
             form_definition: gadget.state.form_definition,
-            editable: 0
+            editable: 0,
+            jio_key: gadget.state.jio_key
           });
         })
 

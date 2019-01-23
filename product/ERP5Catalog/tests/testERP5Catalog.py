@@ -3092,6 +3092,37 @@ VALUES
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 2)
     self.tic()
 
+  def test_reindexWithGroupId(self):
+    CatalogTool = type(self.getCatalogTool().aq_base)
+    counts = []
+    orig_catalogObjectList = CatalogTool.catalogObjectList.__func__
+    def catalogObjectList(self, object_list, *args, **kw):
+      counts.append(len(object_list))
+      return orig_catalogObjectList(self, object_list, *args, **kw)
+    def check(*x):
+      self.tic()
+      self.assertEqual(counts, list(x))
+      del counts[:]
+    try:
+      CatalogTool.catalogObjectList = catalogObjectList
+      module = self.getPersonModule()
+      ob = module.newContent(), module.newContent()
+      check(2)
+      ob[0].reindexObject(group_id='x')
+      ob[1].reindexObject(group_id='x')
+      check(2)
+      ob[0].reindexObject(group_id='1')
+      ob[1].reindexObject(group_id='2')
+      check(1, 1)
+      ob[0].reindexObject(activate_kw={'group_id':'x'})
+      ob[1].reindexObject(activate_kw={'group_id':'x'})
+      check(2)
+      ob[0].reindexObject(activate_kw={'group_id':'1'})
+      ob[1].reindexObject(activate_kw={'group_id':'2'})
+      check(1, 1)
+    finally:
+      CatalogTool.catalogObjectList = orig_catalogObjectList
+
   def test_PercentCharacter(self):
     """
     Check expected behaviour of % character for simple query

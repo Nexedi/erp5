@@ -76,15 +76,7 @@
         }
         if (gadget.state.jio_key === jio_key) {
           // don't update navigation history when not really redirecting
-          return gadget.redirect({
-            command: 'change',
-            options: {
-              "jio_key": jio_key,
-              "view": "view",
-              "page": undefined
-              // do not mingle with editable because it isn't necessary
-            }
-          });
+          return gadget.redirect({command: 'cancel_dialog_with_history'});
         }
         // Check if the redirection goes to a same parent's subdocument.
         // In this case, do not add current document to the history
@@ -176,7 +168,6 @@
             has_update_action: Boolean(options.form_definition.update_action),
             // pass extended_search from previous view in case any gadget is curious
             extended_search: extended_search,
-            // XXX Hack of ERP5 how to express redirect to parent after success
             redirect_to_parent: options.erp5_document._embedded._view.field_your_redirect_to_parent !== undefined
           });
         });
@@ -268,7 +259,7 @@
         .push(function () {
           // Render the headers
           return RSVP.all([
-            form_gadget.getUrlFor({command: 'change', options: {page: undefined, view: undefined}}),
+            form_gadget.getUrlFor({command: 'cancel_dialog_with_history'}),
             calculatePageTitle(form_gadget, form_gadget.state.erp5_document)
           ]);
         })

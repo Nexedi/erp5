@@ -25,6 +25,9 @@ Inventory
 Inventory Cell
 Inventory Line
 Inventory Module
+Inventory Report
+Inventory Report Line
+Inventory Report Module
 Order
 Order Root Simulation Rule
 Payment Condition

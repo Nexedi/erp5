@@ -167,7 +167,7 @@
       return gadget.redirect({
         command: 'store_and_change',
         options: options
-      });
+      }, true);
     });
 
 }(window, document, rJS, RSVP, Handlebars));

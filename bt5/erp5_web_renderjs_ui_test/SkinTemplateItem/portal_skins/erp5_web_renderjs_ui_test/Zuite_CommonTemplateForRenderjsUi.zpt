@@ -529,6 +529,33 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="click_on_header_link">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Click on header link \'%(text)s\'' % click_configuration"></b></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td tal:content="python: '//div[contains(@data-gadget-scope, \'header\')]//a[text()=\'%s\' and contains(@href, \'#!\')]' % click_configuration['text']"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="click_on_page_link">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Click on page link \'%(text)s\'' % click_configuration"></b></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td tal:content="python: '//div[contains(@data-gadget-scope, \'m\')]//a[text()=\'%s\' and contains(@href, \'#!\')]' % click_configuration['text']"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
 
   <tal:block metal:define-macro="go_to_history_view">
     <tr>
@@ -1374,6 +1401,46 @@
     </tr>
   </tal:block>
 
+
+  <tal:block metal:define-macro="triggle_clipboard">
+    <tr>
+      <td colspan="3"><b>Switch to clipboard mode</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Clipboard']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Clipboard']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Clipboard' and @disabled]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Clipboard']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Clipboard']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='Clipboard']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
   <tal:block metal:define-macro="check_listbox_cell_text">
     <tr>
       <td colspan="3"><b tal:content="python: 'Check the listbox cell %(line)i %(index)i' % cell_configuration"></b></td>
@@ -1473,6 +1540,54 @@
     <tr>
       <td>waitForElementNotPresent</td>
       <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='SelectAction' and @data-select-action='exclude']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="delete_selected_line">
+    <tr>
+      <td colspan="3"><b>Delete selected lines</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='ClipboardAction' and @data-clipboard-action='delete_document_list']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='ClipboardAction' and @data-clipboard-action='delete_document_list']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='ClipboardAction' and @data-clipboard-action='delete_document_list']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="change_state_selected_line">
+    <tr>
+      <td colspan="3"><b>Change state selected lines</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='SelectAction' and @data-select-action='mass_workflow_jio']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='SelectAction' and @data-select-action='mass_workflow_jio']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='SelectAction' and @data-select-action='mass_workflow_jio']</td>
       <td></td>
     </tr>
     <tr>

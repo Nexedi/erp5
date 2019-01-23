@@ -33,7 +33,7 @@ def checkPythonScript(script_instance, script_path):
       {'bound_names': extra_builtins +
          script_instance.getBindingAssignments().getAssignedNamesInOrder(),
        'params': script_instance.params(),
-       'code': unicode(script_instance.read(), 'utf8')
+       'code': unicode(script_instance.body(), 'utf8')
       }))['annotations']:
     annotation["script_path"] = script_path
     line_list.append(
