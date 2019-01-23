@@ -50,6 +50,8 @@
             limit: [0, 50],
             sort_on: [["modification_date", "descending"]]
           },
+          debug: true,
+          report_level: 500,
           use_remote_post: true,
           conflict_handling: 1,
           parallel_operation_attachment_amount: is_low_memory ? 1 : 10,
