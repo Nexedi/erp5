@@ -62,28 +62,14 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_post_list.js</string> </value>
+            <value> <string>gadget_officejs_jio_html_post_view.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,31 +79,12 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_erp5_page_post_list_js</string> </value>
+            <value> <string>gadget_officejs_jio_html_post_view_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.18</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
             </value>
         </item>
         <item>
@@ -132,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Post List JS</string> </value>
+            <value> <string>OfficeJS Jio HTML Post View JS</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -224,7 +191,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1547819961.25</float>
+                        <float>1548258468.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -269,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.12023.55154.25190</string> </value>
+                <value> <string>973.13279.14894.17732</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1548320460.62</float>
+                        <float>1548335462.14</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -344,7 +311,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1547819835.32</float>
+                        <float>1548258202.95</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

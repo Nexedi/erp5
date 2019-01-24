@@ -119,7 +119,7 @@
         })
         .push(function () {
           return RSVP.all([
-            gadget.getUrlFor({command: "change", options: {"page": "ojs_add_document"}}),
+            gadget.getUrlFor({command: "change", options: {"page": "ojs_add_post"}}),
             gadget.getSetting('document_title_plural'),
             gadget.getUrlFor({command: "change", options: {"page": "ojs_upload_convert"}}),
             gadget.getSetting('upload_dict', false)
