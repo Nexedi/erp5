@@ -76,6 +76,7 @@
                         <string>my_source_reference</string>
                         <string>my_portal_type</string>
                         <string>your_modification_date</string>
+                        <string>my_text_content</string>
                       </list>
                     </value>
                 </item>
