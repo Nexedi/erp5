@@ -27,8 +27,6 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
-import unittest
-
 WEB_SITE_ID = "test_language_indexation"
 
 class TestWebSiteLanguageIndexation(ERP5TypeTestCase):
