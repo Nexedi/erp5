@@ -413,7 +413,7 @@
         </item>
         <item>
             <key> <string>configuration_cache_file</string> </key>
-            <value> <string>gadget_officejs_text_editor.appcache</string> </value>
+            <value> <string>gadget_officejs_discussion_tool.appcache</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
@@ -732,7 +732,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.4697.64562.15069</string> </value>
+                <value> <string>973.4704.30999.13380</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -750,7 +750,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1547819230.22</float>
+                        <float>1548406357.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
