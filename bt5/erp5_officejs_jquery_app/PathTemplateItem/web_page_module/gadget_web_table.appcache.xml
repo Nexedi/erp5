@@ -105,7 +105,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 09 Jun 2016 11:45:33 +0000\n
+# generated on Tue, 29 Jan 2019 10:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -213,7 +213,6 @@ gadget_officejs_setting.html\n
 gadget_officejs_web_table_router.html\n
 gadget_officejs_jio_web_table_view.html\n
 gadget_officejs_jio_web_table_view.js\n
-gadget_officejs_web_table_install.json\n
 gadget_officejs_web_table.json\n
 web_table_app_logo.svg\n
 \n
@@ -387,7 +386,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.26748.61427.10154</string> </value>
+                <value> <string>973.20297.54241.65382</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -405,7 +404,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1537978521.45</float>
+                        <float>1548760435.51</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
