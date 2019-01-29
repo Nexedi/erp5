@@ -298,10 +298,6 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
           return transformation_list[0].getObject()
         return None
 
-      method = context._getTypeBasedMethod('getDefaultTransformationValue')
-      if method is not None:
-        return method(context)
-
       transformation_list = self.portal_domains.searchPredicateList(context,
                                 portal_type=self.getPortalObject().getPortalTransformationTypeList(),
                                 limit=1)
