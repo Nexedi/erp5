@@ -109,12 +109,11 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 09 Jun 2016 11:45:33 +0000\n
+# generated on Tue, 29 Jan 2019 10:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
 officejs_smart_assistant_icon.png\n
-gadget_officejs_json_manifest_smart_assistant_install.json\n
 gadget_officejs_json_manifest_smart_assistant.json\n
 gadget_officejs_smart_assistant.css\n
 gadget_custom_player.html\n
@@ -728,7 +727,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>967.24873.52661.51575</string> </value>
+                <value> <string>973.18816.7751.29457</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -746,7 +745,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1525699250.39</float>
+                        <float>1548759435.97</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
