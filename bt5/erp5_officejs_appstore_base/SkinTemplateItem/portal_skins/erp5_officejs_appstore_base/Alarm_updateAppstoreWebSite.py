@@ -1,6 +1,7 @@
 import json
 
 portal = context.getPortalObject()
+preference_tool = portal.portal_preferences
 software_product_list = portal.portal_catalog(portal_type='Software Product', validation_state='validated')
 appstore_data = []
 logo_url_list = []
@@ -29,7 +30,9 @@ for software_product in software_product_list:
           "application_published": 'some_date',
           "application_submitted": 'other_date',
           "application_description": data["description"] if "description" in data else data["name"],
-          "application_url": "https://%s.app.officejs.com/" % app_domain,
+          "application_url": "%s://%s.%s/" % (preference_tool.getPreferredSystemAppstoreWildcardProtocol(),
+                                              app_domain,
+                                              preference_tool.getPreferredSystemAppstoreWildcardDomain()),
           "application_title": data['short_name'],
           "application_category": data['category'] if "category" in data else "Documents",
           "application_title_i18n": "application.custom.%s.title" % app_domain,
