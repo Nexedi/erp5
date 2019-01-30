@@ -1,4 +1,5 @@
 import json
+from DateTime import DateTime
 
 portal = context.getPortalObject()
 preference_tool = portal.portal_preferences
@@ -39,6 +40,14 @@ for software_product in software_product_list:
           "application_description_i18n": "application.custom.%s.description" % app_domain
         })
         i+=1
-portal.document_module['store_officejs_data_application_sample_json'].setData(json.dumps(appstore_data))
-manifest_content = portal.web_page_module['store_officejs_base_appcache'].getTextContent()
-portal.web_page_module['store_officejs_appcache'].setTextContent(manifest_content.replace('${logo_list}', '\n'.join(logo_url_list)))
+
+json_data = json.dumps(appstore_data)
+json_document = portal.document_module['store_officejs_data_application_sample_json']
+
+if (json_data != json_document.getData()):
+  # Do not modify document history with edit if nothing changed
+  json_document.edit(data=json.dumps(appstore_data))
+  manifest_content = portal.web_page_module['store_officejs_base_appcache'].getTextContent()
+  # Ensure the appcache content is modified when the json is too
+  logo_url_list.append('# %s' % DateTime())
+  portal.web_page_module['store_officejs_appcache'].edit(text_content=manifest_content.replace('${logo_list}', '\n'.join(logo_url_list)))
