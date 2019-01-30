@@ -36,6 +36,6 @@ for software_product in software_product_list:
           "application_description_i18n": "application.custom.%s.description" % app_domain
         })
         i+=1
-portal.document_module['store_officejs_data_application_sample_json'].setData(json.dumps(appstore_data))
+portal.document_module['store_officejs_data_application_sample_json'].edit(data=json.dumps(appstore_data))
 manifest_content = portal.web_page_module['store_officejs_base_appcache'].getTextContent()
-portal.web_page_module['store_officejs_appcache'].setTextContent(manifest_content.replace('${logo_list}', '\n'.join(logo_url_list)))
+portal.web_page_module['store_officejs_appcache'].edit(text_content=manifest_content.replace('${logo_list}', '\n'.join(logo_url_list)))
