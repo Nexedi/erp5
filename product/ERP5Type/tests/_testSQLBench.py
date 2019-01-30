@@ -43,17 +43,21 @@ class TestSQLBench(unittest.TestCase):
     sql_connection_string = os.environ['erp5_sql_connection_string']
     database_and_server, user, password = sql_connection_string.split(' ')
     database, host = database_and_server.split('@')
-    software_home = os.environ['OPENSSL_BINARY'].replace(
-      "parts/openssl/bin/openssl", "")
-    mariadb_folder = software_home + '/parts/mariadb'
-    perl_command = software_home + "/parts/perl/bin/perl"
+    sqlbench_path = os,environ.get('SQLBENCH_PATH')
+    if not sqlbench_path:
+      software_home = os.environ['OPENSSL_BINARY'].replace(
+           "parts/openssl/bin/openssl", "")
+      sqlbench_path = software_home + '/parts/mariadb/sql-bench'
+      perl_command = software_home + "/parts/perl/bin/perl"
+    else:
+      perl_command = 'perl'
     command_list = [perl_command,
-       mariadb_folder + '/sql-bench/test-alter-table',
+       sqlbench_path + '/test-alter-table',
       '--database', database,
       '--host', host, '--user', user, '--password', password]
     print command_list
     process = subprocess.Popen(command_list,
-      cwd = mariadb_folder + '/sql-bench/',
+      cwd = sqlbench_path,
       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
     self.assertEqual(0, len(error), error)
