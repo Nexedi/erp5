@@ -170,7 +170,7 @@
             <value>
               <tuple>
                 <string>aggregate/web_page_module/store_officejs_landing_v1_html</string>
-                <string>caching_policy/one-day-max-modification-date</string>
+                <string>caching_policy/must-revalidate</string>
               </tuple>
             </value>
         </item>
@@ -439,7 +439,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>972.19793.15063.31249</string> </value>
+                <value> <string>973.19266.58629.39680</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -457,7 +457,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1544798605.03</float>
+                        <float>1548837469.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
