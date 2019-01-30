@@ -43,8 +43,10 @@ class TestSQLBench(unittest.TestCase):
     sql_connection_string = os.environ['erp5_sql_connection_string']
     database_and_server, user, password = sql_connection_string.split(' ')
     database, host = database_and_server.split('@')
-    software_home = os.environ['OPENSSL_BINARY'].replace(
-      "parts/openssl/bin/openssl", "")
+    software_home = os.environ.get(
+      'SLAPOS_SOFTWARE_HOME',  # new SlapOS key
+       os.environ['OPENSSL_BINARY'].replace(  # BBB for old SlapOS key
+         "parts/openssl/bin/openssl", ""))
     mariadb_folder = software_home + '/parts/mariadb'
     perl_command = software_home + "/parts/perl/bin/perl"
     command_list = [perl_command,
