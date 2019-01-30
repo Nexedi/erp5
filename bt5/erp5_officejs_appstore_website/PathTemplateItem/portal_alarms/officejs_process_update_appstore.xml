@@ -37,10 +37,12 @@
         <item>
             <key> <string>periodicity_minute</string> </key>
             <value>
-              <tuple>
-                <int>15</int>
-              </tuple>
+              <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>periodicity_minute_frequency</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>periodicity_month</string> </key>
@@ -66,7 +68,7 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1514764800.0</float>
+                    <float>1546300800.0</float>
                     <string>GMT</string>
                   </tuple>
                 </state>
