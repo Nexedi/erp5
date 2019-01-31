@@ -3,13 +3,9 @@
 :param keep_items: is used mainly to pass "portal_status_message" to be showed to the user
                    the new UI supports "portal_status_level" with values "success" or "error"
 """
+from zExceptions import Redirect
 from ZTUtils import make_query
 import json
-
-if abort_transaction:
-  # Old UI simply throws a Redirect exception and Published does its job
-  # but we cannot use it here so we abort using External Method
-  context.getPortalObject().Portal_abortTransaction()
 
 request_form = context.REQUEST.form
 request_form.update(kw)
@@ -34,7 +30,7 @@ if len(parameters):
 response = context.REQUEST.RESPONSE
 context.Base_prepareCorsResponse(RESPONSE=response)
 # http://en.wikipedia.org/wiki/Post/Redirect/Get
-response.setStatus(201)
+response.setStatus(201, lock=True)
 response.setHeader("X-Location", "urn:jio:get:%s" % context.getRelativeUrl())
 # be explicit with the reponse content type because in case of reports - they
 # can be in text/plain, application/pdf ... so the RJS form needs to know what
@@ -59,4 +55,8 @@ result_dict = {
     }
   }
 }
-return json.dumps(result_dict, indent=2)
+result = json.dumps(result_dict, indent=2)
+if abort_transaction:
+  response.write(result)
+  raise Redirect
+return result

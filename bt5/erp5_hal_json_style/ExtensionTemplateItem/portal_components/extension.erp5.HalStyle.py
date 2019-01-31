@@ -14,10 +14,6 @@ def Base_aqBase(self):
 def Base_aqInner(self):
   return aq_inner(self)
 
-def Portal_abortTransaction(self):
-  import transaction
-  transaction.abort()
-
 def Field_getSubFieldKeyDict(self, field, field_id, key=None):
   """XXX"""
   return field.generate_subfield_key(field_id, key=key)

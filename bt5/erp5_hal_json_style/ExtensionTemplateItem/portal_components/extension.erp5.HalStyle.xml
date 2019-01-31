@@ -45,7 +45,10 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W: 71,  4: No exception type(s) specified (bare-except)</string>
+                <string>W:  5,  0: Unused ZSQLBrain imported from Products.ZSQLCatalog.zsqlbrain (unused-import)</string>
+              </tuple>
             </value>
         </item>
         <item>
