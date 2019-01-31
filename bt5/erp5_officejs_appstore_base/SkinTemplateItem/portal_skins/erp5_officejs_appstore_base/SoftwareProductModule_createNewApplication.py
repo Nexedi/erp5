@@ -1,9 +1,12 @@
-return context.ERP5Site_createNewSoftwarePublication(
-  file=file,
+portal = context.getPortalObject()
+
+# Create the software product
+software_product = portal.software_product_module.newContent(
+  portal_type="Software Product",
   product_line="software/application",
   title=title,
-  version_title= str(DateTime()),
-  changelog="",
   description=description,
-  **kw
+  source_value=portal.ERP5Site_getAuthenticatedMemberPersonValue()
 )
+
+return software_product.SoftwareProduct_updateApplication(file, changelog=description)
