@@ -53,7 +53,7 @@
           delete options.previous_url;
           delete options.tab_url;
           delete options.export_url;
-          if (gadget.state.is_software_product && options.add_url) {
+          if (gadget.state.is_software_product) {
             return gadget.getUrlFor({
               command: 'display_erp5_action',
               options: {
