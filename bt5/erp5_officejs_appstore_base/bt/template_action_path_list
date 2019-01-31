@@ -2,6 +2,5 @@ Software Product Module | create_new_application_dialog
 Software Product | application_version_list_view
 Software Product | document_view
 Software Product | update_application
-Software Publication Module | create_sofware_publication_dialog
 Software Release | document_view
 System Preference | appstore_preference
