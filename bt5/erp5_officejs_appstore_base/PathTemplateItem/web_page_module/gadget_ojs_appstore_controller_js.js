@@ -97,7 +97,7 @@
         child_gadget_url: 'gadget_erp5_page_form.html',
         options: options,
         is_software_product:
-          options.jio_key.indexOf('software_product_module/') !== -1
+          options.jio_key.indexOf('software_product_module/') === 0
       });
     })
     .onStateChange(function (modification_dict) {
