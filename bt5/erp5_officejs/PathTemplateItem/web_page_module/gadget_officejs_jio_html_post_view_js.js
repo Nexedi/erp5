@@ -26,7 +26,7 @@
         title: "Post",
         group_list: [[
           "left",
-          [["my_title", {meta_type: "StringField"}], ["my_reference", {meta_type: "StringField"}]]
+          [["my_title", {meta_type: "StringField"}]]
         ], [
           "bottom",
           [["my_text_content", {meta_type: "ProxyField"}]]
@@ -82,11 +82,11 @@
           if (my_element.startsWith("my_")) {
             element_id = my_element.replace("my_", "");
           }
-          if (gadget.state.doc.hasOwnProperty(element_id)) {
-            var field_info = form_definition.field_info_dict[my_element];
+          var field_info = form_definition.field_info_dict[my_element];
+          if (gadget.state.hasOwnProperty("doc") && gadget.state.doc.hasOwnProperty(element_id)) {
             field_info["default"] = gadget.state.doc[element_id];
-            form_json.erp5_document._embedded._view[my_element] = field_info;
           }
+          form_json.erp5_document._embedded._view[my_element] = field_info;
         }
       }
       return form_json;

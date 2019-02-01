@@ -22,16 +22,14 @@
         .push(function () {
           return RSVP.all([
             gadget.getSetting('portal_type'),
-            gadget.getSetting('parent_relative_url'),
-            gadget.getSetting('text_content', "")
+            gadget.getSetting('parent_relative_url')
           ]);
         })
         .push(function (result) {
           var doc = {
             title: "Untitled Document",
             portal_type: result[0],
-            parent_relative_url: result[1],
-            text_content: result[2]
+            parent_relative_url: result[1]
           };
           return gadget.jio_post(doc);
         })

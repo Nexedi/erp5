@@ -10,47 +10,70 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("getSetting", "getSetting")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .allowPublicAcquisition("jio_allDocs", function (param_list) {
-      var gadget = this;
-      return gadget.jio_allDocs(param_list[0])
-        .push(function (result) {
-          var i, date, len = result.data.total_rows;
-          for (i = 0; i < len; i += 1) {
-            if (result.data.rows[i].value.hasOwnProperty("modification_date")) {
-              date = new Date(result.data.rows[i].value.modification_date);
-              result.data.rows[i].value.modification_date = {
-                field_gadget_param: {
-                  allow_empty_time: 0,
-                  ampm_time_style: 0,
-                  css_class: "date_field",
-                  date_only: 0,
-                  description: "The Date",
-                  editable: 0,
-                  hidden: 0,
-                  hidden_day_is_last_day: 0,
-                  "default": date.toUTCString(),
-                  key: "modification_date",
-                  required: 0,
-                  timezone_style: 0,
-                  title: "Modification Date",
-                  type: "DateTimeField"
-                }
-              };
-              result.data.rows[i].value["listbox_uid:list"] = {
-                key: "listbox_uid:list",
-                value: 2713
-              };
-            }
+    .declareMethod("generateJsonRenderForm", function (gadget) {
+      //hardcoded form_definition (this should come from erp5 form)
+      var form_definition = {
+        _debug: "traverse",
+        pt: "form_view",
+        title: "Post",
+        group_list: [[
+          "bottom",
+          [["my_listbox"]]
+        ]],
+        //this field_info is totally made up, but somewhere in the definition there must be
+        //information about the fields. So, foreach field: key->info
+        field_info_dict: {
+          "my_listbox": {
+            "column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
+            "show_anchor": 0,
+            "default_params": {},
+            "editable": 1,
+            "editable_column_list": [],
+            "key": "field_listbox",
+            "lines": 30,
+            "list_method": "portal_catalog",
+            // is this correct? the query should come from the form definition, right?
+            "query": "urn:jio:allDocs?query=portal_type%3A%22HTML Post%22",
+            "portal_type": [],
+            "search_column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
+            "sort_column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
+            "sort": [['modification_date', 'descending']],
+            "title": "Posts",
+            "type": "ListBox"
           }
-          return result;
-        });
+        },
+        action: "Base_edit",
+        update_action: "",
+        _links: {}
+      },
+      form_json = {
+        erp5_document: {
+          "_embedded": {"_view": {}},
+          "_links": {}
+        },
+        form_definition: form_definition
+      };
+      for (var i = 0; i < form_definition.group_list.length; i++) {
+        var fields = form_definition.group_list[i][1];
+        for (var j = 0; j < fields.length; j++) {
+          var my_element = fields[j][0], element_id;
+          if (my_element.startsWith("my_")) {
+            element_id = my_element.replace("my_", "");
+          }
+          var field_info = form_definition.field_info_dict[my_element];
+          if (gadget.state.hasOwnProperty("doc") && gadget.state.doc.hasOwnProperty(element_id)) {
+            field_info["default"] = gadget.state.doc[element_id];
+          }
+          form_json.erp5_document._embedded._view[my_element] = field_info;
+        }
+      }
+      return form_json;
     })
 
     .allowPublicAcquisition('notifySubmit', function () {
@@ -72,56 +95,16 @@
         .push(function () {
           return RSVP.all([
             gadget.getDeclaredGadget('form_list'),
-            gadget.getSetting("portal_type")
+            gadget.generateJsonRenderForm(gadget)
           ]);
         })
         .push(function (result) {
-          var column_list = [
-            ['title', 'Title'],
-            ['modification_date', 'Modification Date']
-          ];
-          return result[0].render({
-            erp5_document: {
-              "_embedded": {"_view": {
-                "listbox": {
-                  "column_list": column_list,
-                  "show_anchor": 0,
-                  "default_params": {},
-                  "editable": 1,
-                  "editable_column_list": [],
-                  "key": "field_listbox",
-                  "lines": 30,
-                  "list_method": "portal_catalog",
-                  "query": "urn:jio:allDocs?query=portal_type%3A%22" +
-                    result[1] + "%22",
-                  "portal_type": [],
-                  "search_column_list": column_list,
-                  "sort_column_list": column_list,
-                  "sort": [['modification_date', 'descending']],
-                  "title": "Posts",
-                  "type": "ListBox"
-                }
-              }},
-              "_links": {
-                "type": {
-                  // form_list display portal_type in header
-                  name: ""
-                }
-              }
-            },
-            form_definition: {
-              group_list: [[
-                "bottom",
-                [["listbox"]]
-              ]]
-            }
-          });
+          return result[0].render(result[1]);
         })
         .push(function () {
           return RSVP.all([
             gadget.getUrlFor({command: "change", options: {"page": "ojs_add_post"}}),
             gadget.getSetting('document_title_plural'),
-            gadget.getUrlFor({command: "change", options: {"page": "ojs_upload_convert"}}),
             gadget.getSetting('upload_dict', false)
           ]);
         })
