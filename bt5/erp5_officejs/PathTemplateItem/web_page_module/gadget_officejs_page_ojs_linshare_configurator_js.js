@@ -26,10 +26,9 @@
           debug: true,
           check_local_attachment_modification: attachment_synchro,
           check_local_attachment_creation: attachment_synchro,
-          check_local_attachment_deletion: false,
-          check_remote_attachment_creation: attachment_synchro,
           check_remote_attachment_modification: attachment_synchro,
-          check_remote_attachment_deletion: true,
+          check_remote_attachment_creation: attachment_synchro,
+          check_remote_attachment_deletion: attachment_synchro,
           check_local_modification: true,
           check_local_creation: true,
           check_local_deletion: false,
@@ -47,40 +46,36 @@
             }
           },
           local_sub_storage: {
-            type: "mapping",
-            attachment: {
-              'data': {
-                get: {uri_template: 'enclosure'},
-                put: {uri_template: 'enclosure'}
-              }
-            },
+            type: "query",
+            schema: {"modification_date": {type: "string", format: "date-time"}},
             sub_storage: {
-              type: "query",
+              type: "uuid",
               sub_storage: {
-                type: "uuid",
-                sub_storage: {
-                  type: "indexeddb",
-                  database: "ojs_linshare"
-                }
+                type: "indexeddb",
+                database: "ojs_linshare"
               }
             }
           },
           remote_sub_storage: {
-            type: "mapping",
-            attachment: {
-              'data': {
-                get: {uri_template: 'enclosure'},
-                put: {uri_template: 'enclosure'}
-              }
-            },
+            type: "saferepair",
             sub_storage: {
-              type: "query",
+              type: "mapping",
+              attachment_list: ["data"],
+              attachment: {
+                'data': {
+                  get: {uri_template: 'enclosure'},
+                  put: {uri_template: 'enclosure'}
+                }
+              },
               sub_storage: {
-                type: "linshare",
-                url: options.url,
-                access_token: window.btoa(
-                  options.username + ':' + options.password
-                )
+                type: "query",
+                sub_storage: {
+                  type: "linshare",
+                  url: options.url,
+                  access_token: window.btoa(
+                    options.username + ':' + options.password
+                  )
+                }
               }
             }
           }
