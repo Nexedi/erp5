@@ -78,7 +78,7 @@
               sub_storage: {
                 type: "linshare",
                 url: options.url,
-                credential_token: window.btoa(
+                access_token: window.btoa(
                   options.username + ':' + options.password
                 )
               }
