@@ -108,7 +108,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Tue, 26 Dec 2017 11:45:33 +0000\n
+# generated on Fri, 01 Feb 2019 11:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -157,6 +157,8 @@ gadget_erp5_page_ojs_erp5_configurator.html\n
 gadget_erp5_page_ojs_erp5_configurator.js\n
 gadget_erp5_page_ojs_dropbox_configurator.html\n
 gadget_erp5_page_ojs_dropbox_configurator.js\n
+gadget_erp5_page_ojs_linshare_configurator.html\n
+gadget_erp5_page_ojs_linshare_configurator.js\n
 gadget_erp5_page_ojs_sync.html\n
 gadget_erp5_page_ojs_sync.js\n
 gadget_ojs_configurator_access.html\n
@@ -348,7 +350,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>vincent</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -362,7 +364,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>964.48513.5538.10342</string> </value>
+                <value> <string>973.18816.7751.29457</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -380,7 +382,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1516115771.45</float>
+                        <float>1549009641.74</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
