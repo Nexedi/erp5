@@ -50,7 +50,7 @@
         },
         action: "Base_edit",
         update_action: "",
-        _links: {}
+        _links: { "type": { name: "" } }
       },
       form_json = {
         erp5_document: {
@@ -71,6 +71,7 @@
             field_info["default"] = gadget.state.doc[element_id];
           }
           form_json.erp5_document._embedded._view[my_element] = field_info;
+          form_json.erp5_document._links = form_definition._links;
         }
       }
       return form_json;
@@ -90,7 +91,6 @@
 
     .declareMethod("render", function () {
       var gadget = this;
-
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([

@@ -53,20 +53,7 @@
         },
         action: "Base_edit",
         update_action: "",
-        _links: {
-          action_object_delete_action: {
-            href: "https://somewhere.com/",
-            icon: "",
-            name: "delete action name",
-            title: "Delete action title"
-          },
-          action_object_search: {
-            href: "https://somewhere.com/",
-            icon: "",
-            name: "search action name",
-            title: "Search action title"
-          } //etc
-        }
+        _links: {}
       },
       form_json = {
         erp5_document: {
@@ -87,6 +74,7 @@
             field_info["default"] = gadget.state.doc[element_id];
           }
           form_json.erp5_document._embedded._view[my_element] = field_info;
+          form_json.erp5_document._links = form_definition._links;
         }
       }
       return form_json;
