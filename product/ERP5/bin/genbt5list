@@ -40,10 +40,19 @@ try:
 except ImportError:
   from cgi import escape
 from base64 import b64encode
-from six import BytesIO
+from io import BytesIO
 from hashlib import sha1
-from six.moves.urllib.parse import unquote
-import six
+try:
+  from urllib.parse import unquote
+except ImportError:
+  from urllib import unquote
+
+if sys.version_info[0] == 3:
+  def iteritems(d):
+    return iter(d.items())
+else:
+  def iteritems(d):
+    return d.iteritems()
 
 # Order is important for installation
 # We want to have:
@@ -152,7 +161,7 @@ force_install
 
   def __iter__(self):
     self['revision'] = self.revision.digest()
-    return iter(sorted(six.iteritems(self)))
+    return iter(sorted(iteritems(self)))
 
   @classmethod
   def fromTar(cls, tar):
