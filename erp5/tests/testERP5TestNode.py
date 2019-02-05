@@ -489,21 +489,35 @@ shared = true
     test_node.purgeOldTestSuite(test_suite_data)
     self.assertEquals(['foo'], os.listdir(self.working_directory))
 
-  def test_purgeOldTestSuiteChmod(self):
+  def test_purgeOldTestSuiteChmodNonWriteable(self):
     """Old test suites can be deleted even when some files/directories have
-    been chmod'd to make read only.  """
+    been chmod'd to make non-writeable  """
     test_node = self.getTestNode()
     test_suite_data = self.getTestSuiteData(add_third_repository=True)
     os.mkdir(os.path.join(self.working_directory, 'bar'))
     non_writable_file = open(os.path.join(self.working_directory, 'bar', 'non-writable-file'), 'w')
     non_writable_file.close()
-    # make this file and directory non writeable
-    os.chmod(os.path.join(self.working_directory, 'bar', 'non-writable-file'), 0o000)
-    os.chmod(os.path.join(self.working_directory, 'bar'), 0o000)
+
+    os.chmod(os.path.join(self.working_directory, 'bar', 'non-writable-file'), 0o400) # -r--------
+    os.chmod(os.path.join(self.working_directory, 'bar'), 0o500) # dr-x------
 
     test_node.purgeOldTestSuite(test_suite_data) # should not fail
     self.assertEqual([], os.listdir(self.working_directory))
 
+  def test_purgeOldTestSuiteChmodNonWriteableNonReadable(self):
+    """Old test suites can be deleted even when some files/directories have
+    been chmod'd to make them non readable and non writeable. """
+    test_node = self.getTestNode()
+    test_suite_data = self.getTestSuiteData(add_third_repository=True)
+    os.mkdir(os.path.join(self.working_directory, 'bar'))
+    non_writable_file = open(os.path.join(self.working_directory, 'bar', 'non-writable-file'), 'w')
+    non_writable_file.close()
+
+    os.chmod(os.path.join(self.working_directory, 'bar', 'non-writable-file'), 0o000) # ----------
+    os.chmod(os.path.join(self.working_directory, 'bar'), 0o000) # d---------
+
+    test_node.purgeOldTestSuite(test_suite_data) # should not fail
+    self.assertEqual([], os.listdir(self.working_directory))
 
   def test_09_runTestSuite(self, my_test_type='UnitTest'):
     """
