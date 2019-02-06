@@ -11,6 +11,9 @@
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("submitContent", "submitContent")
+    .declareAcquiredMethod("updateHeader", "updateHeader")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -52,7 +55,8 @@
         },
         action: "Base_edit",
         update_action: "",
-        _links: {}
+        _links: { "type": { name: "" } },
+        _actions: { "put": true }
       };
     })
 
@@ -76,11 +80,27 @@
             field_info["default"] = document[element_id];
           }
           form_json.erp5_document._embedded._view[my_element] = field_info;
-          form_json.erp5_document._links = form_definition._links;
         }
       }
-      return form_json;
+      //form_json.erp5_document._embedded._view._actions = form_definition._actions;
+      form_json.erp5_document._links = form_definition._links;
+      return this.getUrlFor({command: "change", options: {"page": "ojs_add_post"}})
+        .push(function (url) {
+          form_json.erp5_document._embedded._view._actions = { "put": { "href": url } };
+          return form_json;
+        });
     })
+
+    /*.allowPublicAcquisition('submitContent', function (options) {
+      console.log("CONTROLLER ADQUISITION OF submitContent. options");
+      console.log(options);
+      //return this.submitContent(options);
+      return this.getUrlFor({command: "change", options: {"page": "ojs_add_post"}})
+        .push(function (url) {
+          console.log("url");
+          console.log(url);
+        });
+    })*/
 
     .allowPublicAcquisition('notifySubmit', function () {
       return this.triggerSubmit();
@@ -105,7 +125,37 @@
         });
     })
 
+    .declareMethod("renderSubGadget", function (gadget, subgadget, form_json) {
+      return subgadget.render({
+        jio_key: gadget.state.jio_key,
+        doc: gadget.state.doc,
+        erp5_document: form_json.erp5_document,
+        form_definition: form_json.form_definition,
+        editable: gadget.state.editable,
+        view: gadget.state.view,
+        form_json: form_json
+      })
+      .push(function () {
+        return RSVP.all([
+          gadget.getUrlFor({command: 'history_previous'}),
+          gadget.getUrlFor({command: 'selection_previous'}),
+          gadget.getUrlFor({command: 'selection_next'})
+        ]);
+      })
+      .push(function (url_list) {
+        return subgadget.updateHeader({
+          page_title: gadget.state.doc.title,
+          save_action: true,
+          selection_url: url_list[0],
+          previous_url: url_list[1],
+          next_url: url_list[2]
+        });
+      });
+    })
+
     .declareMethod("render", function (options) {
+      console.log("CONTROLLER. render method -options-");
+      console.log(options);
       var gadget = this,
         child_gadget_url;
       return gadget.jio_get(options.jio_key)
@@ -114,6 +164,10 @@
             child_gadget_url = 'gadget_officejs_jio_' +
               result.portal_type.replace(/ /g, '_').toLowerCase() +
               '_view.html';
+            
+            // [HARDCODED] force to use form view editable
+            //child_gadget_url = 'gadget_erp5_pt_form_view_editable.html'
+            
           } else {
             throw new Error('Can not display document: ' + options.jio_key);
           }
@@ -124,12 +178,34 @@
                 jio_key: options.jio_key,
                 doc: result,
                 child_gadget_url: child_gadget_url,
-                form_definition: form_definition
+                form_definition: form_definition,
+                editable: options.editable,
+                view: options.view
               });
             });
         });
     })
+  
+    .onEvent('submit', function () {
+      console.log("CONTROLLER submit method");
+      var gadget = this;
+      return gadget.notifySubmitting()
+        .push(function () {
+          return gadget.getDeclaredGadget('form_view');
+        })
+        .push(function (form_gadget) {
+          return form_gadget.getContent();
+        })
+        .push(function (content) {
+          return gadget.updateDocument(content);
+        })
+        .push(function () {
+          return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
+        });
+    })
+
     .onStateChange(function (modification_dict) {
+      console.log("CONTROLLER. onStateChange method");
       var fragment = document.createElement('div'),
         gadget = this;
       return gadget.generateJsonRenderForm(gadget.state.form_definition, gadget.state.doc)
@@ -137,11 +213,7 @@
           if (!modification_dict.hasOwnProperty('child_gadget_url')) {
             return gadget.getDeclaredGadget('fg')
               .push(function (child_gadget) {
-                return child_gadget.render({
-                  jio_key: gadget.state.jio_key,
-                  doc: gadget.state.doc,
-                  form_json: form_json
-                });
+                return gadget.renderSubGadget(gadget, child_gadget, form_json);
               });
           }
           // Clear first to DOM, append after to reduce flickering/manip
@@ -149,15 +221,9 @@
             gadget.element.removeChild(gadget.element.firstChild);
           }
           gadget.element.appendChild(fragment);
-
-          return gadget.declareGadget(gadget.state.child_gadget_url, {element: fragment,
-                                                                      scope: 'fg'})
+          return gadget.declareGadget(gadget.state.child_gadget_url, {element: fragment, scope: 'fg'})
             .push(function (form_gadget) {
-              return form_gadget.render({
-                jio_key: gadget.state.jio_key,
-                doc: gadget.state.doc,
-                form_json: form_json
-              });
+              return gadget.renderSubGadget(gadget, form_gadget, form_json);
             });
         });
     });
