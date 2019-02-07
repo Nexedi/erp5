@@ -39,6 +39,8 @@ class TestOfficejSUIDiscussionTool(ERP5TypeFunctionalTestCase):
       'erp5_officejs',
       'erp5_officejs_ui_test',
       'erp5_ui_test_core',
+      'erp5_post',
+      'erp5_discussion'
       )
 
 def test_suite():
