@@ -80,6 +80,7 @@
                         <string>my_destination_project_title</string>
                         <string>my_destination_reference</string>
                         <string>my_destination_carrier_title</string>
+                        <string>my_destination_payment_request_title</string>
                       </list>
                     </value>
                 </item>
@@ -95,6 +96,7 @@
                         <string>my_source_project_title</string>
                         <string>my_source_reference</string>
                         <string>my_source_carrier_title</string>
+                        <string>my_source_payment_request_title</string>
                       </list>
                     </value>
                 </item>

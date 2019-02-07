@@ -88,6 +88,7 @@
                         <string>my_source_function</string>
                         <string>my_source_funding</string>
                         <string>my_source_project_title</string>
+                        <string>my_source_payment_request_title</string>
                         <string>my_source_payment</string>
                         <string>my_payment_mode</string>
                         <string>my_aggregate_title_list</string>

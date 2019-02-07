@@ -1658,6 +1658,14 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
            self._getPortalConfiguration('portal_device_configuration_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalPaymentRequestTypeList')
+  def getPortalPaymentRequestTypeList(self):
+    """
+    Returns Payment Request types.
+    """
+    return self._getPortalGroupedTypeList('payment_request')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModuleId')
   def getDefaultModuleId(self, portal_type, default=MARKER, only_visible=False):
     """
