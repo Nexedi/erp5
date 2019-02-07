@@ -285,6 +285,7 @@ class ERP5TypeInformation(XMLObject,
       # CRM
       'event', 'ticket',
       'interface_post', # object used to track exchanges in/out of ERP5
+      'payment_request',
       # DMS
       'document', 'web_document', 'file_document', 'embedded_document',
       'recent_document', 'my_document', 'template_document',
