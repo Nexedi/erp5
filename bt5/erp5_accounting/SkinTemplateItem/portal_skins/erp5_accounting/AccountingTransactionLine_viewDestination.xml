@@ -88,6 +88,7 @@
                         <string>my_destination_function</string>
                         <string>my_destination_funding</string>
                         <string>my_destination_project_title</string>
+                        <string>my_destination_payment_request_title</string>
                         <string>my_destination_payment</string>
                         <string>my_payment_mode</string>
                         <string>my_aggregate_title_list</string>
