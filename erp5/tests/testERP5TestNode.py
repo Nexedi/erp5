@@ -172,10 +172,10 @@ class ERP5TestNode(TestCase):
       output = call(['git', 'log', '--format=%H %s'])
       output = output.strip()
       output_line_list = output.split("\n")
-      self.assertEquals(2, len(output_line_list))
+      self.assertEqual(2, len(output_line_list))
       expected_commit_subject_list = ["next_commit", "first_commit"]
       commit_subject_list = [x.split()[1] for x in output_line_list]
-      self.assertEquals(expected_commit_subject_list, commit_subject_list)
+      self.assertEqual(expected_commit_subject_list, commit_subject_list)
       commit_dict['rep%i' % i] = [x.split() for x in output_line_list]
       if repository_path == self.remote_repository2:
         output = call('git checkout master -b foo'.split())
@@ -192,13 +192,13 @@ class ERP5TestNode(TestCase):
     """
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
-    self.assertEquals(0, node_test_suite.retry_software_count)
+    self.assertEqual(0, node_test_suite.retry_software_count)
     node_test_suite.retry_software_count = 2
     self.assertIs(node_test_suite, test_node.getNodeTestSuite('foo'))
-    self.assertEquals(2, node_test_suite.retry_software_count)
+    self.assertEqual(2, node_test_suite.retry_software_count)
     del test_node.node_test_suite_dict['foo']
     node_test_suite = test_node.getNodeTestSuite('foo')
-    self.assertEquals(0, node_test_suite.retry_software_count)
+    self.assertEqual(0, node_test_suite.retry_software_count)
 
   def test_02_NodeTestSuiteWorkingDirectory(self):
     """
@@ -206,9 +206,9 @@ class ERP5TestNode(TestCase):
     """
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
-    self.assertEquals("%s/foo" % self.working_directory,
+    self.assertEqual("%s/foo" % self.working_directory,
                       node_test_suite.working_directory)
-    self.assertEquals("%s/foo/test_suite" % self.working_directory,
+    self.assertEqual("%s/foo/test_suite" % self.working_directory,
                       node_test_suite.test_suite_directory)
 
   def test_03_NodeTestSuiteCheckDataAfterEdit(self):
@@ -219,13 +219,13 @@ class ERP5TestNode(TestCase):
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
-    self.assertEquals(2, len(node_test_suite.vcs_repository_list))
+    self.assertEqual(2, len(node_test_suite.vcs_repository_list))
     repository_path_list = []
     for vcs_repository in node_test_suite.vcs_repository_list:
       repository_path_list.append(vcs_repository['repository_path'])
     expected_list = ["%s/rep0" % node_test_suite.working_directory,
                      "%s/rep1" % node_test_suite.working_directory]
-    self.assertEquals(expected_list, repository_path_list)
+    self.assertEqual(expected_list, repository_path_list)
 
   def test_04_constructProfile(self, my_test_type='UnitTest'):
     """
@@ -239,7 +239,7 @@ class ERP5TestNode(TestCase):
     node_test_suite.revision_list = (('rep1', (1234, 'azerty')),
                                      ('rep2', (3456, 'qwerty')))
     test_node.constructProfile(node_test_suite,my_test_type)
-    self.assertEquals("%s/software.cfg" % (node_test_suite.working_directory,),
+    self.assertEqual("%s/software.cfg" % (node_test_suite.working_directory,),
                       node_test_suite.custom_profile_path)
     profile = open(node_test_suite.custom_profile_path, 'r')
     if my_test_type=='UnitTest':
@@ -282,7 +282,7 @@ ignore-ssl-certificate = true
 develop = false
 shared = true
 """ % {'temp_dir': self._temp_dir, 'revision1': revision1, 'revision2': revision2}
-    self.assertEquals(expected_profile, profile.read())
+    self.assertEqual(expected_profile, profile.read())
     profile.close()
 
   def getAndUpdateFullRevisionList(self, test_node, node_test_suite):
@@ -298,9 +298,9 @@ shared = true
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
-    self.assertEquals(2, len(rev_list))
-    self.assertEquals(rev_list[0], 'rep0=2-%s' % commit_dict['rep0'][0][0])
-    self.assertEquals(rev_list[1], 'rep1=2-%s' % commit_dict['rep1'][0][0])
+    self.assertEqual(2, len(rev_list))
+    self.assertEqual(rev_list[0], 'rep0=2-%s' % commit_dict['rep0'][0][0])
+    self.assertEqual(rev_list[1], 'rep1=2-%s' % commit_dict['rep1'][0][0])
     my_file = open(os.path.join(self.remote_repository1, 'first_file'), 'w')
     my_file.write("next_content")
     my_file.close()
@@ -309,7 +309,7 @@ shared = true
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertTrue(rev_list[0].startswith('rep0=2-'))
     self.assertTrue(rev_list[1].startswith('rep1=3-'))
-    self.assertEquals(2, len(node_test_suite.vcs_repository_list))
+    self.assertEqual(2, len(node_test_suite.vcs_repository_list))
     for vcs_repository in node_test_suite.vcs_repository_list:
       self.assertTrue(os.path.exists(vcs_repository['repository_path']))
 
@@ -323,8 +323,8 @@ shared = true
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
-    self.assertEquals(3, len(rev_list))
-    self.assertEquals(3, len(node_test_suite.vcs_repository_list))
+    self.assertEqual(3, len(rev_list))
+    self.assertEqual(3, len(node_test_suite.vcs_repository_list))
     rep2_clone_path = [x['repository_path'] for x in \
                        node_test_suite.vcs_repository_list \
                        if x['repository_path'].endswith("rep2")][0]
@@ -332,8 +332,8 @@ shared = true
     output = call("git branch".split()).strip()
     self.assertTrue("* foo" in output.split('\n'))
     vcs_repository_info = node_test_suite.vcs_repository_list[0]
-    self.assertEquals(vcs_repository_info['repository_id'], 'rep2')
-    self.assertEquals(vcs_repository_info['branch'], 'foo')
+    self.assertEqual(vcs_repository_info['repository_id'], 'rep2')
+    self.assertEqual(vcs_repository_info['branch'], 'foo')
     # change it to master
     vcs_repository_info['branch'] = 'master'
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
@@ -368,8 +368,8 @@ shared = true
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
-    self.assertEquals(2, len(rev_list))
-    self.assertEquals(2, len(node_test_suite.vcs_repository_list))
+    self.assertEqual(2, len(rev_list))
+    self.assertEqual(2, len(node_test_suite.vcs_repository_list))
     # patch deleteRepository to make sure it will be called once for the wrong
     # repos, and not for the repos which has not changed
     deleted_repository_path_list = []
@@ -386,12 +386,12 @@ shared = true
                          node_test_suite.vcs_repository_list \
                          if x['repository_path'].endswith("rep0")][0]
       call = self.getCaller(cwd=rep0_clone_path)
-      self.assertEquals(call("git config --get remote.origin.url".split()).strip(),
+      self.assertEqual(call("git config --get remote.origin.url".split()).strip(),
                         self.remote_repository0)
       rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
-      self.assertEquals(call("git config --get remote.origin.url".split()).strip(),
+      self.assertEqual(call("git config --get remote.origin.url".split()).strip(),
                         self.remote_repository2)
-      self.assertEquals([rep0_clone_path], deleted_repository_path_list)
+      self.assertEqual([rep0_clone_path], deleted_repository_path_list)
     finally:
       Updater.deleteRepository = original_deleteRepository
 
@@ -407,8 +407,8 @@ shared = true
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
-    self.assertEquals(2, len(rev_list))
-    self.assertEquals(2, len(node_test_suite.vcs_repository_list))
+    self.assertEqual(2, len(rev_list))
+    self.assertEqual(2, len(node_test_suite.vcs_repository_list))
     rep0_clone_path = [x['repository_path'] for x in \
                    node_test_suite.vcs_repository_list \
                    if x['repository_path'].endswith("rep0")][0]
@@ -458,8 +458,8 @@ shared = true
           info_list.append(
             call("git log -n1 --format=%H".split()).strip())
       return info_list
-    self.assertEquals(['2', '2'], getRepInfo(count=1))
-    self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][0][0]],
+    self.assertEqual(['2', '2'], getRepInfo(count=1))
+    self.assertEqual([commit_dict['rep0'][0][0],commit_dict['rep1'][0][0]],
                       getRepInfo(hash=1))
     class TestResult(object):
       revision = NodeTestSuite.revision
@@ -469,25 +469,25 @@ shared = true
     test_result.revision_list = (('rep0', (2, commit_dict['rep0'][0][0])),
                                  ('rep1', (1, commit_dict['rep1'][1][0])))
     test_node.checkRevision(test_result, node_test_suite)
-    self.assertEquals(['2', '1'], getRepInfo(count=1))
-    self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][1][0]],
+    self.assertEqual(['2', '1'], getRepInfo(count=1))
+    self.assertEqual([commit_dict['rep0'][0][0],commit_dict['rep1'][1][0]],
                       getRepInfo(hash=1))
 
   def test_07_checkExistingTestSuite(self):
     test_node = self.getTestNode()
     test_suite_data = self.getTestSuiteData(add_third_repository=True)
-    self.assertEquals([], os.listdir(self.working_directory))
+    self.assertEqual([], os.listdir(self.working_directory))
     test_node.purgeOldTestSuite(test_suite_data)
-    self.assertEquals([], os.listdir(self.working_directory))
+    self.assertEqual([], os.listdir(self.working_directory))
     os.mkdir(os.path.join(self.working_directory, 'foo'))
-    self.assertEquals(['foo'], os.listdir(self.working_directory))
+    self.assertEqual(['foo'], os.listdir(self.working_directory))
     test_node.purgeOldTestSuite(test_suite_data)
-    self.assertEquals(['foo'], os.listdir(self.working_directory))
+    self.assertEqual(['foo'], os.listdir(self.working_directory))
     os.mkdir(os.path.join(self.working_directory, 'bar'))
-    self.assertEquals(set(['bar','foo']),
+    self.assertEqual(set(['bar','foo']),
                       set(os.listdir(self.working_directory)))
     test_node.purgeOldTestSuite(test_suite_data)
-    self.assertEquals(['foo'], os.listdir(self.working_directory))
+    self.assertEqual(['foo'], os.listdir(self.working_directory))
 
   def test_purgeOldTestSuiteChmodNonWriteable(self):
     """Old test suites can be deleted even when some files/directories have
@@ -601,11 +601,11 @@ shared = true
     method_list_for_prepareSlapOSForTestSuite = ["initializeSlapOSControler",
                                  "runSoftwareRelease", "runComputerPartition"]
     runner.prepareSlapOSForTestNode(test_node_slapos)
-    self.assertEquals(method_list_for_prepareSlapOSForTestNode,
+    self.assertEqual(method_list_for_prepareSlapOSForTestNode,
                       [x["method_name"] for x in call_list])
     call_list = []
     runner.prepareSlapOSForTestSuite(node_test_suite)
-    self.assertEquals(method_list_for_prepareSlapOSForTestSuite,
+    self.assertEqual(method_list_for_prepareSlapOSForTestSuite,
                       [x["method_name"] for x in call_list])
     call_list = []
     SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease", status_code=1)
@@ -649,7 +649,7 @@ shared = true
         return json.dumps([])
 
       def _checkExistingTestSuite(reference_set):
-        test_self.assertEquals(set(reference_set),
+        test_self.assertEqual(set(reference_set),
                   set(os.listdir(test_node.working_directory)))
         for x in reference_set:
           test_self.assertTrue(os.path.exists(os.path.join(
@@ -727,7 +727,7 @@ shared = true
     SlapOSControler.initializeSlapOSControler = doNothing
     # Inside test_node a runner is created using new UnitTestRunner methods
     test_node.run()
-    self.assertEquals(5, counter)
+    self.assertEqual(5, counter)
     time.sleep = original_sleep
     # Restore old class methods
     if my_test_type == "ScalabilityTest":
@@ -763,23 +763,23 @@ shared = true
     file_name = 'AC_Ra\xc3\xadzertic\xc3\xa1ma'
     non_ascii_file = open(os.path.join(controler.software_root, file_name), 'w')
     non_ascii_file.close()
-    self.assertEquals([file_name], os.listdir(controler.software_root))
+    self.assertEqual([file_name], os.listdir(controler.software_root))
     controler._resetSoftware()
-    self.assertEquals([], os.listdir(controler.software_root))
+    self.assertEqual([], os.listdir(controler.software_root))
 
   def test_14_createFolder(self):
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     folder = node_test_suite.test_suite_directory
-    self.assertEquals(False, os.path.exists(folder))
+    self.assertEqual(False, os.path.exists(folder))
     createFolder(folder)
-    self.assertEquals(True, os.path.exists(folder))
+    self.assertEqual(True, os.path.exists(folder))
     to_drop_path = os.path.join(folder, 'drop')
     to_drop = open(to_drop_path, 'w')
     to_drop.close()
-    self.assertEquals(True, os.path.exists(to_drop_path))
+    self.assertEqual(True, os.path.exists(to_drop_path))
     createFolder(folder, clean=True)
-    self.assertEquals(False, os.path.exists(to_drop_path))
+    self.assertEqual(False, os.path.exists(to_drop_path))
 
   def test_15_suite_log_directory(self, my_test_type='UnitTest', grade='master'):
     def doNothing(self, *args, **kw):
@@ -827,7 +827,7 @@ shared = true
     def checkTestSuite(test_node):
       test_node.node_test_suite_dict
       rand_part_set = set()
-      self.assertEquals(2, len(test_node.node_test_suite_dict))
+      self.assertEqual(2, len(test_node.node_test_suite_dict))
       for ref, suite in test_node.node_test_suite_dict.items():
         self.assertTrue('var/log/testnode/%s' % suite.reference in \
                          suite.suite_log_path,
@@ -889,7 +889,7 @@ shared = true
     RunnerClass._prepareSlapOS = doNothing
     SlapOSControler.initializeSlapOSControler = doNothing
     test_node.run()
-    self.assertEquals(counter, 3)
+    self.assertEqual(counter, 3)
     checkTestSuite(test_node)
     time.sleep = original_sleep
     # Restore old class methods
@@ -985,18 +985,18 @@ shared = true
     def callRaisingPrepareSlapos():
       self.assertRaises(SubprocessError, callPrepareSlapOS)
 
-    self.assertEquals(node_test_suite.retry_software_count, 0)
+    self.assertEqual(node_test_suite.retry_software_count, 0)
     for x in range(11):
       callRaisingPrepareSlapos()
-    self.assertEquals(len(init_call_kw_list), 11)
-    self.assertEquals(init_call_kw_list[-1]['reset_software'], False)
-    self.assertEquals(node_test_suite.retry_software_count, 11)
+    self.assertEqual(len(init_call_kw_list), 11)
+    self.assertEqual(init_call_kw_list[-1]['reset_software'], False)
+    self.assertEqual(node_test_suite.retry_software_count, 11)
     callRaisingPrepareSlapos()
-    self.assertEquals(init_call_kw_list[-1]['reset_software'], True)
-    self.assertEquals(node_test_suite.retry_software_count, 1)
+    self.assertEqual(init_call_kw_list[-1]['reset_software'], True)
+    self.assertEqual(node_test_suite.retry_software_count, 1)
     callRaisingPrepareSlapos()
-    self.assertEquals(init_call_kw_list[-1]['reset_software'], False)
-    self.assertEquals(node_test_suite.retry_software_count, 2)
+    self.assertEqual(init_call_kw_list[-1]['reset_software'], False)
+    self.assertEqual(node_test_suite.retry_software_count, 2)
     SlapOSControler.initializeSlapOSControler = \
       initial_initializeSlapOSControler
     SlapOSControler.runSoftwareRelease = initial_runSoftwareRelease
