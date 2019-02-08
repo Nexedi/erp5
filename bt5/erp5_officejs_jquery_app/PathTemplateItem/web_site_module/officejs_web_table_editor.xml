@@ -491,7 +491,7 @@
         </item>
         <item>
             <key> <string>configuration_webapp_manifest_url</string> </key>
-            <value> <string>app/gadget_officejs_web_table.json</string> </value>
+            <value> <string>gadget_officejs_web_table.json</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -732,7 +732,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.20297.54241.65382</string> </value>
+                <value> <string>973.33482.4166.8669</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -750,7 +750,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1548760397.87</float>
+                        <float>1549644552.81</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

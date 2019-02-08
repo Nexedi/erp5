@@ -505,7 +505,7 @@
         </item>
         <item>
             <key> <string>configuration_webapp_manifest_url</string> </key>
-            <value> <string>app/gadget_officejs_json_manifest_smart_assistant.json</string> </value>
+            <value> <string>gadget_officejs_json_manifest_smart_assistant.json</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -746,7 +746,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.19266.58629.39680</string> </value>
+                <value> <string>973.33482.4166.8669</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -764,7 +764,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1548759372.28</float>
+                        <float>1549644504.92</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
