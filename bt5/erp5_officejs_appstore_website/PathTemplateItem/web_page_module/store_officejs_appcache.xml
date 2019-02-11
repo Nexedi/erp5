@@ -166,11 +166,7 @@ appstore/dev/index.en.html\n
 appstore/dev/index.html\n
 appstore/documentation/brainstorming_page_json.txt\n
 appstore/documentation/documentation.txt\n
-appstore/img/appjabbericon.svg\n
-appstore/img/erp5-logo.png\n
 appstore/img/flags.png\n
-appstore/img/slapos.png\n
-appstore/img/vifib-logo.png\n
 appstore/\n
 appstore/js/bin.js\n
 appstore/js/erp5_loader.js\n
@@ -340,7 +336,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.19272.23311.6092</string> </value>
+                <value> <string>973.40487.50916.35840</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -358,7 +354,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1548694049.98</float>
+                        <float>1549966616.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
