@@ -117,6 +117,8 @@
 CACHE:\n
 \n
 #notebook\n
+gadget_officejs_notebook.json\n
+nexedi_logo_officejs_iodide.svg\n
 gadget_officejs_notebook_router.html\n
 gadget_officejs_jio_notebook_view.html\n
 gadget_officejs_jio_notebook_view.js\n
@@ -406,7 +408,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.18816.7751.29457</string> </value>
+                <value> <string>973.33482.4166.8669</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -424,7 +426,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1549009818.34</float>
+                        <float>1549888313.28</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

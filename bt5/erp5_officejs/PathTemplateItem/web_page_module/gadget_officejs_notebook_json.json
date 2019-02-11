@@ -1,0 +1,12 @@
+{
+      "short_name": "Iodide Notebook",
+      "name": "OfficeJS Iodide Notebook",
+      "description": "In-browser python/js notebooks",
+      "icons": [{
+        "src": "nexedi_logo_officejs_iodide.svg",
+        "sizes": "any",
+        "type": "image/svg"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}
