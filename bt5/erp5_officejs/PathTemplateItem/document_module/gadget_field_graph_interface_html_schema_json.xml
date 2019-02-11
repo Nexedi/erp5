@@ -12,12 +12,8 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Director</string>
                 <string>Manager</string>
                 <string>Owner</string>
-                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -27,11 +23,17 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Director</string>
                 <string>Manager</string>
                 <string>Owner</string>
-                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
@@ -41,11 +43,8 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Director</string>
                 <string>Manager</string>
                 <string>Owner</string>
-                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -55,12 +54,8 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Director</string>
                 <string>Manager</string>
                 <string>Owner</string>
-                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
