@@ -1,0 +1,12 @@
+{
+      "short_name": "Wallsearch Editor",
+      "name": "OfficeJS Wallsearch Editor",
+      "description": "Search your Facebook posts",
+      "icons": [{
+        "src": "wallsearch_icon.svg",
+        "sizes": "any",
+        "type": "image/svg"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}
