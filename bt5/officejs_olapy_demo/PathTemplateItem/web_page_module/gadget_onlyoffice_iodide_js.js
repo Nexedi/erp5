@@ -1,68 +1,117 @@
 /*jslint indent: 2*/
-/*global rJS, window, RSVP, jIO */
-(function (rJS, window, RSVP, jIO) {
+/*global rJS, window, RSVP, jIO, MessageChannel, Promise */
+(function (rJS, window, RSVP, jIO, MessageChannel, Promise) {
   "use strict";
 
+  var SW = "gadget_onlyoffice_iodide_sw.js";
+
+  function makeRequestOnIodide(gadget, xml) {
+    var parameter;
+    parameter = xml;
+    return gadget.getDeclaredGadget('iodide')
+      .push(function (iodide) {
+        return iodide.evalCode(
+          'callFunction({"fun": "get_olapy_response", argument_list: [' +
+          parameter + ']})'
+        );
+      });
+  }
+
+  function waitForServiceWorkerActive(gadget, registration) {
+    var serviceWorker;
+    if (registration.installing) {
+      serviceWorker = registration.installing;
+    } else if (registration.waiting) {
+      serviceWorker = registration.waiting;
+    } else if (registration.active) {
+      serviceWorker = registration.active;
+    }
+    if (serviceWorker.state !== "activated") {
+      return RSVP.Promise(function (resolve, reject) {
+        serviceWorker.addEventListener('statechange', function (e) {
+          if (e.target.state === "activated") {
+            resolve();
+          }
+        });
+        RSVP.delay(500).then(function () {
+          reject(new Error("Timeout service worker install"));
+        });
+      });
+    }
+  }
+
   rJS(window)
+  .ready(function (gadget) {
+    return new RSVP.Queue()
+      .push(function () {
+        return window.navigator.serviceWorker.register(SW);
+      })
+      .push(function (registration) {
+        window.navigator.serviceWorker.addEventListener('message', function (event) {
+          event.ports[0].postMessage(makeRequestOnIodide(gadget, event.data));
+        });
+        return waitForServiceWorkerActive(gadget, registration);
+      });
+  })
   .allowPublicAcquisition('notifyChange', function (options) {
     window.console.warn(options);
+  })
+  .allowPublicAcquisition('notifyInvalid', function (options) {
+    window.console.error(options);
+  })
+  .allowPublicAcquisition('notifyValid', function (options) {
+    window.console.log(options);
   })
   .allowPublicAcquisition('submitContent', function () {
     window.console.warn(arguments);
   })
+  .allowPublicAcquisition('getSetting', function (param) {
+    if (param[0] === 'portal_type') {
+      return 'Spreadsheet';
+    }
+    throw new Error("get Setting undefined for : " + param[0]);
+  })
   .ready(function (gadget) {
     return gadget.render();
   })
-  .onStateChange(function (modif_dict) {
-    var gadget = this;
-    if (modif_dict.hasOwnProperty("script")) {
-      gadget.element.querySelector('.script').value = gadget.state.script;
-    }
-    if (modif_dict.hasOwnProperty("result")) {
-      gadget.element.querySelector('.result').value = gadget.state.result;
-    }
-  })
   .declareMethod("render", function () {
     var gadget = this;
-    return gadget.changeState({
-      script:
-        'var dataframes_paths = ["olapy-data/cubes/sales/Facts.csv","olapy-data/cubes/sales/Product.csv","olapy-data/cubes/sales/Geography.csv"]\n' +
-        '\n' +
-        'var mdx_query = "SELECT  FROM [sales] WHERE ([Measures].[Amount]) CELL PROPERTIES VALUE, FORMAT_STRING, LANGUAGE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"\n' +
-        '\n' +
-        '\n' +
-        'callFunction({"fun": "get_olapy_response", argument_list: [dataframes_paths,mdx_query]})',
-      result: ""
-    })
+    return new RSVP.Queue()
       .push(function () {
         return RSVP.all([
           gadget.getDeclaredGadget('iodide'),
           jIO.util.ajax({
             url: "gadget_onlyoffice_iodide.jsmd"
-          })
+          }),
+          gadget.getDeclaredGadget('onlyoffice')
         ]);
       })
       .push(function (result) {
         return result[0].render({
           key: 'script',
           value: result[1].target.response
-        });
-      });
-  })
-  .onEvent('click', function (evt) {
-    var gadget = this, script;
-    if (evt.target.tagName === 'BUTTON') {
-      return gadget.getDeclaredGadget('iodide')
-        .push(function (iodide) {
-          script = gadget.element.querySelector('.script').value;
-          return iodide.evalCode(script);
         })
-        .push(function (result) {
-          return gadget.changeState({"script" : script, "result": result});
-        }, function (error) {
-          return gadget.changeState({"script" : script, "result": error});
-        });
-    }
+          .push(function () {
+            var storage = jIO.createJIO({
+              type: "erp5",
+              url: "https://softinst89769.host.vifib.net/erp5/web_site_module/hateoas/",
+              default_view_reference: "jio_view_attachment"
+            });
+            return storage.getAttachment(
+              'document_module/onlyoffice_iodide_test_xlsy',
+              'https://softinst89769.host.vifib.net/erp5/web_site_module/hateoas/document_module/onlyoffice_iodide_test_xlsy/Document_downloadForOnlyOfficeApp'
+            );
+          })
+          .push(function (blob) {
+            return jIO.util.readBlobAsDataURL(blob);
+          })
+          .push(function (event) {
+            return result[2].render({
+              key: 'content',
+              value: event.target.result
+            });
+          });
+      });
   });
 
-}(rJS, window, RSVP, jIO));
+}(rJS, window, RSVP, jIO, MessageChannel, Promise));
