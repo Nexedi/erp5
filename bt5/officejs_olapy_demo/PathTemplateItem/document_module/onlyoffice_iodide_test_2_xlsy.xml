@@ -1,0 +1,416 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Spreadsheet" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts49987645.64</string> </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_base_metadata</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>AppVersion</string> </key>
+                    <value> <string>5.0</string> </value>
+                </item>
+                <item>
+                    <key> <string>CreationDate</string> </key>
+                    <value> <string>00/00/0000 00:00:00</string> </value>
+                </item>
+                <item>
+                    <key> <string>Generator</string> </key>
+                    <value> <string>LibreOffice/5.2.4.2$Linux_X86_64 LibreOffice_project/3d5603e1122f0f102b62521720ab13a38a4e0eb0</string> </value>
+                </item>
+                <item>
+                    <key> <string>ImplementationName</string> </key>
+                    <value> <string>com.sun.star.comp.comphelper.OPropertyBag</string> </value>
+                </item>
+                <item>
+                    <key> <string>MIMEType</string> </key>
+                    <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
+                </item>
+                <item>
+                    <key> <string>ModificationDate</string> </key>
+                    <value> <string>00/00/0000 00:00:00</string> </value>
+                </item>
+                <item>
+                    <key> <string>PrintDate</string> </key>
+                    <value> <string>00/00/0000 00:00:00</string> </value>
+                </item>
+                <item>
+                    <key> <string>TemplateDate</string> </key>
+                    <value> <string>00/00/0000 00:00:00</string> </value>
+                </item>
+                <item>
+                    <key> <string>mime</string> </key>
+                    <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>base_data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>6e1cb9233a3900bf53b093b7d0e0bcaa</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-asc-spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>onlyoffice_iodide_test_2.xlsy</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>filename</string> </key>
+            <value> <string>sales.xlsy</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>onlyoffice_iodide_test_2_xlsy</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5243289</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Onlyoffice Iodide Demo 2</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1549987612.85</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>973.40839.28126.22545</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1549987963.38</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>conversion_failed</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string encoding="cdata"><![CDATA[
+
+Conversion Error: OOoDocument: Error converting document to base format. (Code 402: Traceback (most recent call last):\n
+  File "/opt/slapgrid/b5bcac0e6de3a0a91d68ecb1018182c8/parts/cloudooo-repository/cloudooo/handler/ooo/helper/unoconverter.py", line 348, in <module>\n
+    main()\n
+  File "/opt/slapgrid/b5bcac0e6de3a0a91d68ecb1018182c8/parts/cloudooo-repository/cloudooo/handler/ooo/helper/unoconverter.py", line 324, in main\n
+    uno_path, office_binary_path, refresh)\n
+  File "/opt/slapgrid/b5bcac0e6de3a0a91d68ecb1018182c8/parts/cloudooo-repository/cloudooo/handler/ooo/helper/unoconverter.py", line 87, in __init__\n
+    self._load()\n
+  File "/opt/slapgrid/b5bcac0e6de3a0a91d68ecb1018182c8/parts/cloudooo-repository/cloudooo/handler/ooo/helper/unoconverter.py", line 154, in _load\n
+    self.office_binary_path)\n
+  File "/opt/slapgrid/b5bcac0e6de3a0a91d68ecb1018182c8/parts/cloudooo-repository/cloudooo/handler/ooo/helper/helper_util.py", line 23, in getServiceManager\n
+    uno_connection = resolver.resolve("uno:socket,host=%s,port=%s;urp;StarOffice.ComponentContext" % (host, port))\n
+helper_util.NoConnectException: Connector : couldn\'t connect to socket (Success)\n
+\n
+error of the second run: Traceback (most recent call last):\n
+  File "/opt/slapgrid/b5bcac0e6de3a0a91d68ecb1018182c8/parts/cloudooo-repository/cloudooo/handler/ooo/helper/unoconverter.py", line 348, in <module>\n
+    main()\n
+  File "/opt/slapgrid/b5bcac0e6de3a0a91d68ecb1018182c8/parts/cloudooo-repository/cloudooo/handler/ooo/helper/unoconverter.py", line 324, in main\n
+    uno_path, office_binary_path, refresh)\n
+  File "/opt/slapgrid/b5bcac0e6de3a0a91d68ecb1018182c8/parts/cloudooo-repository/cloudooo/handler/ooo/helper/unoconverter.py", line 87, in __init__\n
+    self._load()\n
+  File "/opt/slapgrid/b5bcac0e6de3a0a91d68ecb1018182c8/parts/cloudooo-repository/cloudooo/handler/ooo/helper/unoconverter.py", line 154, in _load\n
+    self.office_binary_path)\n
+  File "/opt/slapgrid/b5bcac0e6de3a0a91d68ecb1018182c8/parts/cloudooo-repository/cloudooo/handler/ooo/helper/helper_util.py", line 23, in getServiceManager\n
+    uno_connection = resolver.resolve("uno:socket,host=%s,port=%s;urp;StarOffice.ComponentContext" % (host, port))\n
+helper_util.NoConnectException: Connector : couldn\'t connect to socket (Success)\n
+)
+
+]]></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>conversion_failed</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>973.40839.28126.22545</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1549987854.97</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
