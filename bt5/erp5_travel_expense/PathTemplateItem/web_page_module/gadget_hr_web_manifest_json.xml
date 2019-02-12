@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,8 +58,13 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -70,20 +74,18 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>officejs_hr_launcher.html</string> </value>
+            <value> <string>gadget_officejs_hr_web_manifest.json</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Starting Point</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_hr_landing_html</string> </value>
+            <value> <string>gadget_hr_web_manifest_json</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -91,7 +93,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -100,12 +102,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS HR Application Launcher</string> </value>
+            <value> <string>Gadget Officejs Json Manifest HR</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -169,7 +167,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -191,7 +189,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1505315250.57</float>
+                        <float>1549964659.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -236,7 +234,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.40447.29564.60893</string> </value>
+                <value> <string>973.40455.26813.17629</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +252,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1549964847.35</float>
+                        <float>1549964625.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -281,7 +279,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -311,7 +309,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1505315183.46</float>
+                        <float>1549964465.89</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

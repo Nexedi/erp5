@@ -299,6 +299,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_webapp_manifest_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -384,6 +394,10 @@
         <item>
             <key> <string>configuration_view_action_category</string> </key>
             <value> <string>object_view</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_webapp_manifest_url</string> </key>
+            <value> <string>gadget_officejs_hr_web_manifest.json</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -624,7 +638,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>966.51303.25888.32000</string> </value>
+                <value> <string>973.40447.29564.60893</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -642,8 +656,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1523518073.81</float>
-                        <string>GMT+2</string>
+                        <float>1549964409.02</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
