@@ -407,10 +407,17 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
           removed_set.add(d)
         del dirnames[i]
       for f in filenames:
-        f = os.path.join(dirpath, f)
-        if f not in self.file_set:
-          os.remove(os.path.join(self.path, f))
-          removed_set.add(f)
+        # Do not remove hidden files
+        # This is important as we primarily use ERP5 VCS for Business Templates
+        # and sometimes they can be in form of git submodule.
+        # In case of submodule, `.git` is a file pointing to the directory
+        # in its parent repo <parent_repo>/.git/modules/<submodule>, hence we
+        # do not want it to be removed
+        if f[0] != '.':
+          f = os.path.join(dirpath, f)
+          if f not in self.file_set:
+            os.remove(os.path.join(self.path, f))
+            removed_set.add(f)
     return self.file_set, removed_set
 
 class File(object):
