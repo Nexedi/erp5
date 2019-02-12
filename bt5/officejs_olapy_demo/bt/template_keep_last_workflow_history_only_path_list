@@ -3,3 +3,4 @@ web_site_module/onlyoffice_iodide
 web_site_module/onlyoffice_iodide/**
 web_site_module/onlyoffice_iodide_test
 web_site_module/onlyoffice_iodide_test/**
+document_module/onlyoffice_iodide*
