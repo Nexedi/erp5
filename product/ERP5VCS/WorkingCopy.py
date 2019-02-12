@@ -407,10 +407,15 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
           removed_set.add(d)
         del dirnames[i]
       for f in filenames:
-        f = os.path.join(dirpath, f)
-        if f not in self.file_set:
-          os.remove(os.path.join(self.path, f))
-          removed_set.add(f)
+        # Ignore hidden files, at least for submodule support.
+        #  e.g. `.git` is a file pointing to the directory in its parent repo
+        #        <parent_repo>/.git/modules/<submodule>
+        #    or `.gitattributes`, etc.
+        if f[0] != '.':
+          f = os.path.join(dirpath, f)
+          if f not in self.file_set:
+            os.remove(os.path.join(self.path, f))
+            removed_set.add(f)
     return self.file_set, removed_set
 
 class File(object):
