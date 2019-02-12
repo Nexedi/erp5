@@ -1,0 +1,555 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Spreadsheet" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts46619809.75</string> </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_base_metadata</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>AppVersion</string> </key>
+                    <value> <string>5.0</string> </value>
+                </item>
+                <item>
+                    <key> <string>CreationDate</string> </key>
+                    <value> <string>00/00/0000 00:00:00</string> </value>
+                </item>
+                <item>
+                    <key> <string>Generator</string> </key>
+                    <value> <string>LibreOffice/5.2.4.2$Linux_X86_64 LibreOffice_project/3d5603e1122f0f102b62521720ab13a38a4e0eb0</string> </value>
+                </item>
+                <item>
+                    <key> <string>ImplementationName</string> </key>
+                    <value> <string>com.sun.star.comp.comphelper.OPropertyBag</string> </value>
+                </item>
+                <item>
+                    <key> <string>MIMEType</string> </key>
+                    <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
+                </item>
+                <item>
+                    <key> <string>ModificationDate</string> </key>
+                    <value> <string>00/00/0000 00:00:00</string> </value>
+                </item>
+                <item>
+                    <key> <string>PrintDate</string> </key>
+                    <value> <string>00/00/0000 00:00:00</string> </value>
+                </item>
+                <item>
+                    <key> <string>TemplateDate</string> </key>
+                    <value> <string>00/00/0000 00:00:00</string> </value>
+                </item>
+                <item>
+                    <key> <string>mime</string> </key>
+                    <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>base_content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>base_data</string> </key>
+            <value> <string encoding="base64">UEsDBBQAAAgAAJmEJE6FbDmKLgAAAC4AAAAIAAAAbWltZXR5cGVhcHBsaWNhdGlvbi92bmQub2Fz
+aXMub3BlbmRvY3VtZW50LnNwcmVhZHNoZWV0UEsDBBQAAAgAAJmEJE638XVX+AMAAPgDAAAYAAAA
+VGh1bWJuYWlscy90aHVtYm5haWwucG5niVBORw0KGgoAAAANSUhEUgAAALsAAAD/CAMAAACeh1ci
+AAAATlBMVEVAQEBOTk5UVFRbW1tjY2Nra2tzc3N7e3uDg4OLi4uTk5Oampqjo6Orq6uzs7O+vr7D
+w8PLy8vT09Pb29vj4+Ps7Ozz8/P+/v4AAAD///+BbGM1AAADZUlEQVR42u3Y25KbOBCA4RkOQgh0
+ROp+/zfdtm+SzeZiUmYnmdSvAVmWC/xNu4UQbyF/zdJU37LeV8b41u6i/3d5y+PM4b/9TVv55ZMd
+6Vt7a59gd6JFatfWzdsvtZdRZS596KN3/IIhJS3Djn5sx2fYZ6v3vl1zX8X2tq3FF/uPzhisd7pW
+DR89WU6bLMOnesb0KfbJ6lnP7NSJ7fa7N6/qNMdFY3K6Dfl43Gd16bDkOc5Psdcj53iE8d6m+n69
+l7UMl7svYU8hjKlN7cNxDyHEIHb0enoXP8GuX7Zgx44dO3bs2LH/yz5+8qF8DfuYf/Lhet38bUU0
+dwuT2Jqs9VyqXu0l+/X8W22B2UWkW9uqIWOMvY5ne9wC71XirkllE926egnSRg3ygt3X4OvWluZC
+XON+nHv14Zzbcq17dtfm87T3O+xnaDmlrLVlTWc/xlGKSnol7ostc1qwpd069VHPHOPh+nBiHXs/
+fLjE3ZP3ZxxZw6HJYt32msYhQ6+X8t2VK51bXMvhY4v+COFYap9tpTr5uPel9emetK+2AO+ylaz7
+4/lKLL7GUcZL+W5H25JUHi9Wi23WsHy3jLeAy6N911gVee7PEz9HFNd37L9nblq+63w8oLm/yCEa
+i13mVU4bX7EeKY9cb4j7+v23bPfLS+3bqvnS6FRd0uxl0RJlfcV+xrA115bsc/Jz24+0y+aLLzGF
+G+3O5TMcpUtaLfyLpk2ns2mLr9gtWcJzblqmXMqRrrTIFvNZ31/5PX8sY/f91DX0GH3UvOVus59d
+LstL+T6P68wuLd2vres03DV3l+zmYBr9xrjnpLvKW7NqHrHZrC2zjYD0kv1xT1e7XDaEHg+gddSr
+ZbEeKXfeA9t8ZMk+riw912Jvc8m5vHhPwPUdO3bs2LFjx44dO3bs2LFjx44dO3bs2LFjx44dO3bs
+2LFjx44dO3bs2LFjx44dO3bs2LFjx44dO3bs2LFjx44dO3bs2LFjx44dO3bs2LFjx44dO3bs2LFj
+x44dO3bs2LFjx44dO3bs2LFjx44dO3bs2LFjx44dO3bs2LFjx44dO3bs2LFjx44dO3bs2LFjx44d
+O3bs2LFjx44dO3bs2LFjx44dO3bs2LH/pfYzl/wlt5zJGezYsWPH/sfZ+xe2K/bfUf4BD9aTHbA9
+jLMAAAAASUVORK5CYIJQSwMEFAAICAgAmYQkTgAAAAAAAAAAAAAAAAwAAABzZXR0aW5ncy54bWzt
+WV1z2jgUfd9fwfidGEhLEk+gQ2izZJttM5iku30T9gU0kXU9ksxHf/3KNu4Q126MsXa6M/sEWNa5
+19dH5x6J63fbgLXWICRFPrC6Zx2rBdxDn/LlwHqc3bYvrXfD365xsaAeOD56UQBctSUopW+RLT2d
+SycdHliR4A4SSaXDSQDSUZ6DIfBsmnN4t5MES69sGeXPA2ulVOjY9mazOducn6FY2t2rqys7Gc1u
+9ZAv6LJqqPTuw1CI+D1QPCFNJgnW63Te2Olvq7VP8qA0PWuY1SF7/OH1PkD60aYKgrg2rf3lOLWB
+pUM6awqb71Wziua9nPNEJZ0zGAkgMwytbFDtQj1IubKGnWv7R5CjgO9hocwgf6G+WhVBd7uXvf7J
+8BOgy1Vh6m/7l92q8O2AhG3KfdiCnw8Fm+KXlMzR9BK7KgnD5s7PZSmV0AywhjEfjss0Bs3lOSO6
+IK8l+nKKuwJQ3QoEHEdConhASZXm/18N8uQl8t9FyOf1kCco6DfkijA3ZFT9iT7ky79CcQLDQSjq
+mULPZZ8VqMkVepi/AfyRp+gaEvQp4cuS8vTqgWf5NqxaGey0TFJOxG1WvTPUG1QKgwaBvyIGM43S
+KKNj0CfCojxq2go6dWtAlhBr60/R+zXB3RVufhc0L9tzRAaEW0MlIihGLrh42C3KhhNZr7q0EsEv
+6Sipsp8sPZ5AxuZElLbwi/OL/yl2KsXiADfayTw/CIitQBndFoTJEr5VCfMVBCb5y+P5XAX/EypT
+0PUW4WvIMeoYGYocNMN4CXV7/fNe721Ng/rivRqoyoRInXoU8CluJkB8vTMxEiQREq00BtDv5OdI
+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
+eG1sUEsFBgAAAAARABEAZQQAAHghAAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>e9ba4ba9657649906df44330ab0167ff</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-asc-spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>onlyoffice_iodide_test.xlsy</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>filename</string> </key>
+            <value> <string>olap_mondrian (3) (4).xlsy</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>onlyoffice_iodide_test_xlsy</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5243548</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Onlyoffice Iodide Demo</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>003</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1546522256.54</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>972.50240.5236.64409</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1546619809.77</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>convert_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string>Converted to application/vnd.oasis.opendocument.spreadsheet.</string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>972.50244.54405.45653</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1546619812.35</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
