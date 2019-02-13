@@ -921,15 +921,14 @@
 
   <tal:block metal:define-macro="set_filter_section">
     <tr>
-      <td tal:condition="python: filter_section_configuration.get('operator')" colspan="3"><b tal:content="python: 'Set the filter section %(index)i to %(key)s %(operator)s %(value)s' % filter_section_configuration"></b></td>
-      <td tal:condition="python: not filter_section_configuration.get('operator')" colspan="3"><b tal:content="python: 'Set the filter section %(index)i to %(key)s - %(value)s' % filter_section_configuration"></b></td>
+      <td colspan="3"><b tal:content="python: 'Set the filter section %i to %s %s %s' % (filter_section_configuration.get('index', '?'), filter_section_configuration.get('key', '-'), filter_section_configuration.get('operator', '-'), filter_section_configuration.get('value', '-'))"></b></td>
     </tr>
     <tr>
       <td>waitForElementPresent</td>
       <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select' % (filter_section_configuration['index'] + 1)"></td>
       <td></td>
     </tr>
-    <tr>
+    <tr tal:condition="python: filter_section_configuration.get('key')">
       <td>select</td>
       <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select[@class=\'column\']' % (filter_section_configuration['index'] + 1)"></td>
       <td tal:content="python: 'value=%s' % filter_section_configuration['key']"></td>
@@ -939,6 +938,7 @@
       <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//select[@class=\'operator\']' % (filter_section_configuration['index'] + 1)"></td>
       <td tal:content="python: 'value=%s' % filter_section_configuration['operator']"></td>
     </tr>
+    <tal:block tal:condition="python: 'value' in filter_section_configuration">
     <tal:block tal:define="_set_filter_section_value_list python: filter_section_configuration['value'] if isinstance(filter_section_configuration['value'], (tuple, list)) else [filter_section_configuration['value']]"
                tal:repeat="_set_filter_section_index python: range(len(_set_filter_section_value_list))">
     <tr>
@@ -946,6 +946,7 @@
       <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//input[%i]' % (filter_section_configuration['index'] + 1, _set_filter_section_index + 1)"></td>
       <td tal:content="python: _set_filter_section_value_list[_set_filter_section_index]"></td>
     </tr>
+    </tal:block>
     </tal:block>
     <tr>
       <td colspan="3"><p></p></td>
@@ -1060,10 +1061,15 @@
     </tr>
     <tal:block tal:define="_check_filter_section_value_list python: filter_section_configuration['value'] if isinstance(filter_section_configuration['value'], (tuple, list)) else [filter_section_configuration['value']]"
                tal:repeat="_check_filter_section_index python: range(len(_check_filter_section_value_list))">
-    <tr>
+    <tr tal:condition="python: _check_filter_section_value_list[_check_filter_section_index] is not None">
       <td>verifyValue</td>
       <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//input[%i]' % (filter_section_configuration['index'] + 1, _check_filter_section_index + 1)"></td>
       <td tal:content="python: _check_filter_section_value_list[_check_filter_section_index]"></td>
+    </tr>
+    <tr tal:condition="python: _check_filter_section_value_list[_check_filter_section_index] is None">
+      <td>verifyElementNotPresent</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_search_editor.html\')]//div[@class=\'filter_item_container\']/div[%i]//input[%i]' % (filter_section_configuration['index'] + 1, _check_filter_section_index + 1)"></td>
+      <td></td>
     </tr>
     </tal:block>
     <tr>
