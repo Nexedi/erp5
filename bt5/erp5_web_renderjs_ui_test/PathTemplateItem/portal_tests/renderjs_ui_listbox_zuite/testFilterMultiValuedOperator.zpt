@@ -1,0 +1,90 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>&#36;{base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/bar_module</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Previous']</td>
+  <td></td>
+</tr>
+
+<!-- Prepare panel with a multi-valued operator  -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
+<tal:block tal:define="filter_section_configuration python: {'key': 'COLUMN_title', 'operator': 'at_least_one_exact_match', 'value': ['a', 'b'], 'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/set_filter_section" />
+</tal:block>
+
+<!-- Select a non-multi-valued operator -->
+<tal:block tal:define="filter_section_configuration python: {'operator': 'keyword', 'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/set_filter_section" />
+</tal:block>
+
+<!-- Check if the multi-valued fields are gone and submit -->
+<tal:block tal:define="filter_section_configuration python: {'key': 'COLUMN_title', 'value': ['a', None], 'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_filter_section" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_filter" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+
+<!-- Prepare panel with a multi-valued operator  -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
+<tal:block tal:define="filter_section_configuration python: {'key': 'COLUMN_title', 'operator': 'at_least_one_exact_match', 'value': ['a', 'b'], 'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/set_filter_section" />
+</tal:block>
+
+<!-- Select a non-multi-valued operator -->
+<tal:block tal:define="filter_section_configuration python: {'key': 'COLUMN_id', 'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/set_filter_section" />
+</tal:block>
+
+<!-- Check if the multi-valued fields are still present and submit -->
+<tal:block tal:define="filter_section_configuration python: {'key': 'COLUMN_id', 'value': ['a', 'b'], 'index': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_filter_section" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_filter" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+</tbody></table>
+</body>
+</html>
