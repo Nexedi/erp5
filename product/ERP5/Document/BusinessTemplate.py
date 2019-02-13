@@ -5161,10 +5161,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
           ModuleTemplateItem(self.getTemplateModuleIdList())
       self._document_item = \
           DocumentTemplateItem(self.getTemplateDocumentIdList())
-      self._interface_item = \
-          InterfaceTemplateItem(self.getTemplateInterfaceIdList())
-      self._mixin_item = \
-          MixinTemplateItem(self.getTemplateMixinIdList())
       self._property_sheet_item = \
           PropertySheetTemplateItem(self.getTemplatePropertySheetIdList(),
                                     context=self)
@@ -5246,6 +5242,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
         self._catalog_security_uid_column_item = \
           CatalogSecurityUidColumnTemplateItem(
                self.getTemplateCatalogSecurityUidColumnList())
+        self._interface_item = \
+          InterfaceTemplateItem(self.getTemplateInterfaceIdList())
+        self._mixin_item = \
+          MixinTemplateItem(self.getTemplateMixinIdList())
       except AttributeError:
         # be backwards compatible with old zope instances which
         # do not contain recent version of erp5_property_sheets
