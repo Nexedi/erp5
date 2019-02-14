@@ -49,7 +49,13 @@
             return gadget.redirect({ command: "row", url: site});
           }
         }
-        throw error;
+        // User entered wrong password ?
+        // Notify
+        return gadget.notifySubmitted({message: 'Unauthorized storage access', status: 'error'})
+          .push(function () {
+            return gadget.redirect({command: 'display',
+                                    options: {page: 'ojs_configurator'}});
+          });
       });
   }
 
@@ -60,6 +66,7 @@
       gadget.state_parameter_dict = {};
     })
 
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
