@@ -48,14 +48,15 @@
           if (site) {
             return gadget.redirect({ command: "row", url: site});
           }
+          // User entered wrong password ?
+          // Notify
+          return gadget.notifySubmitted({message: 'Unauthorized storage access', status: 'error'})
+            .push(function () {
+              return gadget.redirect({command: 'display',
+                                      options: {page: 'ojs_configurator'}});
+            });
         }
-        // User entered wrong password ?
-        // Notify
-        return gadget.notifySubmitted({message: 'Unauthorized storage access', status: 'error'})
-          .push(function () {
-            return gadget.redirect({command: 'display',
-                                    options: {page: 'ojs_configurator'}});
-          });
+        throw error;
       });
   }
 
