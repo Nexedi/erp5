@@ -419,7 +419,9 @@
         sub_jio_query_detail_dict,
         search_column_list = [],
         search_column_dict = {},
-        search_domain_dict = {};
+        search_domain_dict = {},
+        additional_search_column_list = [],
+        additional_search_column_dict = {};
 
       len = options.search_column_list.length;
       for (i = 0; i < len; i += 1) {
@@ -512,9 +514,17 @@
                     operator: sub_jio_query.operator
                   });
                 } else {
+                  if (!additional_search_column_dict.hasOwnProperty(sub_jio_query.key)) {
+                    additional_search_column_dict[sub_jio_query.key] = true;
+                    additional_search_column_list.push([
+                      PREFIX_COLUMN + sub_jio_query.key,
+                      sub_jio_query.key
+                    ]);
+                  }
                   query_list.push({
-                    key: PREFIX_RAW,
-                    value: Query.objectToSearchText(sub_jio_query)
+                    key: PREFIX_COLUMN + sub_jio_query.key,
+                    value: sub_jio_query.value,
+                    operator: sub_jio_query.operator
                   });
                 }
               } else {
@@ -527,8 +537,15 @@
               sub_jio_query_dict = sub_jio_query.toJSON();
               sub_jio_query_detail_dict =
                 detectAtleastoneexactmatchComplexQuery(sub_jio_query_dict);
-              if (sub_jio_query_detail_dict &&
-                  search_column_dict.hasOwnProperty(sub_jio_query_detail_dict.key)) {
+              if (sub_jio_query_detail_dict) {
+                if (!search_column_dict.hasOwnProperty(sub_jio_query_detail_dict.key) &&
+                    !additional_search_column_list.hasOwnProperty(sub_jio_query_detail_dict.key)) {
+                  additional_search_column_dict[sub_jio_query_detail_dict.key] = true;
+                  additional_search_column_list.push([
+                    PREFIX_COLUMN + sub_jio_query_detail_dict.key,
+                    sub_jio_query_detail_dict.key
+                  ]);
+                }
                 querySetKeyInDeep(
                   sub_jio_query_dict,
                   PREFIX_COLUMN + sub_jio_query_detail_dict.key
@@ -551,7 +568,7 @@
       }
 
       return this.changeState({
-        search_column_list: search_column_list,
+        search_column_list: search_column_list.concat(additional_search_column_list),
         begin_from_key: options.begin_from,
         // [{key: 'title', value: 'Foo', operator: 'like'}]
         query_list: query_list,
