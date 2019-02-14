@@ -9,6 +9,9 @@ file_content = file.getData()
 # The vanilla HTML is wanted
 response.setBase(None)
 
+# Allow any external app to download the source code
+response.setHeader("Access-Control-Allow-Origin", "*")
+
 if REQUEST.getHeader('If-Modified-Since', '') == file.getModificationDate().rfc822():
   response.setStatus(304)
   return ""
