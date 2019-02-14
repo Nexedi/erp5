@@ -482,6 +482,10 @@ class DB(TM):
             if m[0] not in hosed_connection:
                 raise
 
+    def getMaxAllowedPacket(self):
+        # minus 2-bytes overhead from mysql library
+        return self._query("SELECT @@max_allowed_packet-2").fetch_row()[0][0]
+
     @contextmanager
     def lock(self):
         """Lock for the connected DB"""

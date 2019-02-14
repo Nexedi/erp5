@@ -2211,11 +2211,8 @@ class ERP5Generator(PortalGenerator):
       createDirectoryView(ps, reg_key)
 
   def setupDefaultSkins(self, p):
-    from Products.CMFCore.DirectoryView import addDirectoryViews
-    from Products.CMFActivity import cmfactivity_globals
     ps = p.portal_skins
     self.addCMFDefaultDirectoryViews(p)
-    addDirectoryViews(ps, 'skins', cmfactivity_globals)
     ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
     ps.manage_addProduct['OFSP'].manage_addFolder(id='custom')
     # Set the 'custom' layer a high priority, so it remains the first
@@ -2223,7 +2220,6 @@ class ERP5Generator(PortalGenerator):
     ps['custom'].manage_addProperty("business_template_skin_layer_priority", 100.0, "float")
     skin_folder_list = [ 'custom'
                        , 'external_method'
-                       , 'activity'
                        ] + self.CMFDEFAULT_FOLDER_LIST
     skin_folders = ', '.join(skin_folder_list)
     ps.addSkinSelection( 'View'

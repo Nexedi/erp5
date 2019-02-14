@@ -1,1 +1,1 @@
-return 'ActivityTool_manageDelete?uid=%s&activity=%s' % (context.uid, context.activity)
+return 'manageDelete?message_uid_list:int:list=%s&activity=%s' % (context.uid, context.activity)

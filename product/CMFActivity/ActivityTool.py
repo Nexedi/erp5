@@ -57,6 +57,7 @@ from Products.ERP5Type.UnrestrictedMethod import PrivilegedUser
 from zope.site.hooks import setSite
 import transaction
 from App.config import getConfiguration
+from Shared.DC.ZRDB.Results import Results
 
 import Products.Localizer.patches
 localizer_lock = Products.Localizer.patches._requests_lock
@@ -191,7 +192,6 @@ class Message(BaseMessage):
   call_traceback = None
   exc_info = None
   is_executed = MESSAGE_NOT_EXECUTED
-  processing = None
   traceback = None
   oid = None
   is_registered = False
@@ -366,11 +366,6 @@ class Message(BaseMessage):
           self.setExecutionState(MESSAGE_EXECUTED)
     except:
       self.setExecutionState(MESSAGE_NOT_EXECUTED, context=activity_tool)
-
-  def validate(self, activity, activity_tool, check_order_validation=1):
-    return activity.validate(activity_tool, self,
-                             check_order_validation=check_order_validation,
-                             **self.activity_kw)
 
   def notifyUser(self, activity_tool, retry=False):
     """Notify the user that the activity failed."""
@@ -655,11 +650,6 @@ class ActivityTool (BaseTool):
     activity_timing_log = False
     cancel_and_invoke_links_hidden = False
 
-    def SQLDict_setPriority(self, **kw):
-      real_SQLDict_setPriority = getattr(self.aq_parent, 'SQLDict_setPriority')
-      LOG('ActivityTool', 0, real_SQLDict_setPriority(src__=1, **kw))
-      return real_SQLDict_setPriority(**kw)
-
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
         # Filters the list of available meta types.
@@ -669,6 +659,9 @@ class ActivityTool (BaseTool):
             if meta_type['name'] in self.allowed_types:
                 meta_types.append(meta_type)
         return meta_types
+
+    def getSQLConnection(self):
+      return self.aq_inner.aq_parent.cmf_activity_sql_connection()
 
     def maybeMigrateConnectionClass(self):
       connection_id = 'cmf_activity_sql_connection'
@@ -689,6 +682,20 @@ class ActivityTool (BaseTool):
       self.maybeMigrateConnectionClass()
       for activity in activity_dict.itervalues():
         activity.initialize(self, clear=False)
+      # Remove old skin if any.
+      skins_tool = self.getPortalObject().portal_skins
+      name = 'activity'
+      if (getattr(skins_tool.get(name), '_dirpath', None)
+          == 'Products.CMFActivity:skins/activity'):
+        for selection, skins in skins_tool.getSkinPaths():
+          skins = skins.split(',')
+          try:
+            skins.remove(name)
+          except ValueError:
+            continue
+          skins_tool.manage_skinLayers(
+            add_skin=1, skinname=selection, skinpath=skins)
+        skins_tool._delObject(name)
 
     def _callSafeFunction(self, batch_function):
       return batch_function()
@@ -1127,14 +1134,16 @@ class ActivityTool (BaseTool):
     def hasActivity(self, *args, **kw):
       # Check in each queue if the object has deferred tasks
       # if not argument is provided, then check on self
-      if len(args) > 0:
-        obj = args[0]
+      if args:
+        obj, = args
       else:
         obj = self
-      for activity in activity_dict.itervalues():
-        if activity.hasActivity(aq_inner(self), obj, **kw):
-          return True
-      return False
+      path = None if obj is None else '/'.join(obj.getPhysicalPath())
+      db = self.getSQLConnection()
+      quote = db.string_literal
+      return bool(db.query("(%s)" % ") UNION ALL (".join(
+        activity.hasActivitySQL(quote, path=path, **kw)
+        for activity in activity_dict.itervalues()))[1])
 
     security.declarePrivate('getActivityBuffer')
     def getActivityBuffer(self, create_if_not_found=True):
@@ -1443,8 +1452,9 @@ class ActivityTool (BaseTool):
       """
       if not(isinstance(message_uid_list, list)):
         message_uid_list = [message_uid_list]
-      self.SQLBase_makeMessageListAvailable(table=activity_dict[activity].sql_table,
-                              uid=message_uid_list)
+      if message_uid_list:
+        activity_dict[activity].unreserveMessageList(self.getSQLConnection(),
+                                                     0, message_uid_list)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (
           self.absolute_url(), 'view'))
@@ -1470,8 +1480,8 @@ class ActivityTool (BaseTool):
       """
       if not(isinstance(message_uid_list, list)):
         message_uid_list = [message_uid_list]
-      self.SQLBase_delMessage(table=activity_dict[activity].sql_table,
-                              uid=message_uid_list)
+      activity_dict[activity].deleteMessageList(
+        self.getSQLConnection(), message_uid_list)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (
           self.absolute_url(), 'view'))
@@ -1523,10 +1533,7 @@ class ActivityTool (BaseTool):
       """
         Return the number of messages which match the given tag.
       """
-      message_count = 0
-      for activity in activity_dict.itervalues():
-        message_count += activity.countMessageWithTag(aq_inner(self), value)
-      return message_count
+      return self.countMessage(tag=value)
 
     security.declarePublic('countMessage')
     def countMessage(self, **kw):
@@ -1540,10 +1547,11 @@ class ActivityTool (BaseTool):
         tag : activities with a particular tag
         message_uid : activities with a particular uid
       """
-      message_count = 0
-      for activity in activity_dict.itervalues():
-        message_count += activity.countMessage(aq_inner(self), **kw)
-      return message_count
+      db = self.getSQLConnection()
+      quote = db.string_literal
+      return sum(x for x, in db.query("(%s)" % ") UNION ALL (".join(
+        activity.countMessageSQL(quote, **kw)
+        for activity in activity_dict.itervalues()))[1])
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
     def newActiveProcess(self, REQUEST=None, **kw):
@@ -1554,23 +1562,31 @@ class ActivityTool (BaseTool):
         REQUEST['RESPONSE'].redirect( 'manage_main' )
       return obj
 
-    # Active synchronisation methods
-    security.declarePrivate('validateOrder')
-    def validateOrder(self, message, validator_id, validation_value):
-      message_list = self.getDependentMessageList(message, validator_id, validation_value)
-      return len(message_list) > 0
-
     security.declarePrivate('getDependentMessageList')
-    def getDependentMessageList(self, message, validator_id, validation_value):
-      message_list = []
-      method_id = "_validate_" + validator_id
+    def getDependentMessageList(self, message, validating_queue=None):
+      activity_kw = message.activity_kw
+      db = self.getSQLConnection()
+      quote = db.string_literal
+      queries = []
       for activity in activity_dict.itervalues():
-        method = getattr(activity, method_id, None)
-        if method is not None:
-          result = method(aq_inner(self), message, validation_value)
-          if result:
-            message_list += [(activity, m) for m in result]
-      return message_list
+        q = activity.getValidationSQL(
+          quote, activity_kw, activity is validating_queue)
+        if q:
+          queries.append(q)
+      if queries:
+        message_list = []
+        for line in Results(db.query("(%s)" % ") UNION ALL (".join(queries))):
+          activity = activity_dict[line.activity]
+          m = Message.load(line.message,
+                           line=line,
+                           uid=line.uid,
+                           date=line.date,
+                           processing_node=line.processing_node)
+          if not hasattr(m, 'order_validation_text'): # BBB
+            m.order_validation_text = activity.getOrderValidationText(m)
+          message_list.append((activity, m))
+        return message_list
+      return ()
 
     # Required for tests (time shift)
     def timeShift(self, delay):

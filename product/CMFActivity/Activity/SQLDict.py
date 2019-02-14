@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from Shared.DC.ZRDB.Results import Results
 from Products.CMFActivity.ActivityTool import Message
 import sys
 #from time import time
@@ -74,8 +75,9 @@ class SQLDict(SQLBase):
     message_list = activity_buffer.getMessageList(self)
     return [m for m in message_list if m.is_registered]
 
-  def getProcessableMessageLoader(self, activity_tool, processing_node):
+  def getProcessableMessageLoader(self, db, processing_node):
     path_and_method_id_dict = {}
+    quote = db.string_literal
     def load(line):
       # getProcessableMessageList already fetch messages with the same
       # group_method_id, so what remains to be filtered on are path and
@@ -87,6 +89,8 @@ class SQLDict(SQLBase):
       uid = line.uid
       original_uid = path_and_method_id_dict.get(key)
       if original_uid is None:
+        sql_method_id = " AND method_id = %s AND group_method_id = %s" % (
+          quote(method_id), quote(line.group_method_id))
         m = Message.load(line.message, uid=uid, line=line)
         merge_parent = m.activity_kw.get('merge_parent')
         try:
@@ -101,11 +105,14 @@ class SQLDict(SQLBase):
               path_list.append(path)
             uid_list = []
             if path_list:
-              result = activity_tool.SQLDict_selectParentMessage(
-                path=path_list,
-                method_id=method_id,
-                group_method_id=line.group_method_id,
-                processing_node=processing_node)
+              # Select parent messages.
+              result = Results(db.query("SELECT * FROM message"
+                " WHERE processing_node IN (0, %s) AND path IN (%s)%s"
+                " ORDER BY path LIMIT 1 FOR UPDATE" % (
+                  processing_node,
+                  ','.join(map(quote, path_list)),
+                  sql_method_id,
+                ), 0))
               if result: # found a parent
                 # mark child as duplicate
                 uid_list.append(uid)
@@ -115,29 +122,32 @@ class SQLDict(SQLBase):
                 uid = line.uid
                 m = Message.load(line.message, uid=uid, line=line)
             # return unreserved similar children
-            result = activity_tool.SQLDict_selectChildMessageList(
-              path=line.path,
-              method_id=method_id,
-              group_method_id=line.group_method_id)
-            reserve_uid_list = [x.uid for x in result]
+            path = line.path
+            result = db.query("SELECT uid FROM message"
+              " WHERE processing_node = 0 AND (path = %s OR path LIKE %s)"
+              "%s FOR UPDATE" % (
+                quote(path), quote(path.replace('_', r'\_') + '/%'),
+                sql_method_id,
+              ), 0)[1]
+            reserve_uid_list = [x for x, in result]
             uid_list += reserve_uid_list
             if not line.processing_node:
               # reserve found parent
               reserve_uid_list.append(uid)
           else:
-            result = activity_tool.SQLDict_selectDuplicatedLineList(
-              path=path,
-              method_id=method_id,
-              group_method_id=line.group_method_id)
-            reserve_uid_list = uid_list = [x.uid for x in result]
+            # Select duplicates.
+            result = db.query("SELECT uid FROM message"
+              " WHERE processing_node = 0 AND path = %s%s FOR UPDATE" % (
+                quote(path), sql_method_id,
+              ), 0)[1]
+            reserve_uid_list = uid_list = [x for x, in result]
           if reserve_uid_list:
-            activity_tool.SQLDict_reserveDuplicatedLineList(
-              processing_node=processing_node, uid=reserve_uid_list)
+            self.assignMessageList(db, processing_node, reserve_uid_list)
           else:
-            activity_tool.SQLDict_commit() # release locks
+            db.query("COMMIT") # XXX: useful ?
         except:
-          self._log(WARNING, 'getDuplicateMessageUidList got an exception')
-          activity_tool.SQLDict_rollback() # release locks
+          self._log(WARNING, 'Failed to reserve duplicates')
+          db.query("ROLLBACK")
           raise
         if uid_list:
           self._log(TRACE, 'Reserved duplicate messages: %r' % uid_list)

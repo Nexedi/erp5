@@ -1,1 +1,1 @@
-SELECT count(*) AS message, method_id, processing, processing_node AS node, min(priority) AS min_pri, max(priority) AS max_pri FROM <dtml-var table> GROUP BY method_id, processing, processing_node ORDER BY node
+SELECT count(*) AS `count`, method_id, processing_node AS node, min(priority) AS min_pri, max(priority) AS max_pri FROM <dtml-var table> GROUP BY processing_node, method_id ORDER BY processing_node, method_id

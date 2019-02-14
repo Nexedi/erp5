@@ -31,7 +31,7 @@ from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 import MySQLdb
 from MySQLdb.constants.ER import DUP_ENTRY
 from SQLBase import (
-  SQLBase, sort_message_key, MAX_MESSAGE_LIST_SIZE,
+  SQLBase, sort_message_key,
   UID_SAFE_BITSIZE, UID_ALLOCATION_TRY_COUNT,
 )
 from Products.CMFActivity.ActivityTool import Message
@@ -45,77 +45,103 @@ class SQLJoblib(SQLDict):
   sql_table = 'message_job'
   uid_group = 'portal_activity_job'
 
-  def initialize(self, activity_tool, clear):
-    """
-      Initialize the message table using MYISAM Engine 
-    """
-    folder = activity_tool.getPortalObject().portal_skins.activity
-    try:
-      createMessageTable = folder.SQLJoblib_createMessageTable
-    except AttributeError:
-      return
-    if clear:
-      folder.SQLBase_dropMessageTable(table=self.sql_table)
-      createMessageTable()
-    else:
-      src = createMessageTable._upgradeSchema(create_if_not_exists=1,
-                                              initialize=self._initialize,
-                                              table=self.sql_table)
-      if src:
-        LOG('CMFActivity', INFO, "%r table upgraded\n%s"
-            % (self.sql_table, src))
+  def createTableSQL(self):
+    return """\
+CREATE TABLE %s (
+  `uid` BIGINT UNSIGNED NOT NULL,
+  `date` DATETIME(6) NOT NULL,
+  `path` VARCHAR(255) NOT NULL,
+  `active_process_uid` INT UNSIGNED NULL,
+  `method_id` VARCHAR(255) NOT NULL,
+  `processing_node` SMALLINT NOT NULL DEFAULT -1,
+  `priority` TINYINT NOT NULL DEFAULT 0,
+  `group_method_id` VARCHAR(255) NOT NULL DEFAULT '',
+  `tag` VARCHAR(255) NOT NULL,
+  `signature` BINARY(16) NOT NULL,
+  `serialization_tag` VARCHAR(255) NOT NULL,
+  `retry` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `message` LONGBLOB NOT NULL,
+  PRIMARY KEY (`uid`),
+  KEY `processing_node_priority_date` (`processing_node`, `priority`, `date`),
+  KEY `node_group_priority_date` (`processing_node`, `group_method_id`, `priority`, `date`),
+  KEY `serialization_tag_processing_node` (`serialization_tag`, `processing_node`),
+  KEY (`path`),
+  KEY (`active_process_uid`),
+  KEY (`method_id`),
+  KEY (`tag`)
+) ENGINE=InnoDB""" % self.sql_table
 
   def generateMessageUID(self, m):
     return (tuple(m.object_path), m.method_id, m.activity_kw.get('signature'),
                   m.activity_kw.get('tag'), m.activity_kw.get('group_id'))
 
+  _insert_template = ("INSERT INTO %s (uid,"
+    " path, active_process_uid, date, method_id, processing_node,"
+    " priority, group_method_id, tag, signature, serialization_tag,"
+    " message) VALUES\n(%s)")
+
   def prepareQueueMessageList(self, activity_tool, message_list):
-    registered_message_list = [m for m in message_list if m.is_registered]
-    portal = activity_tool.getPortalObject()
-    for i in xrange(0, len(registered_message_list), MAX_MESSAGE_LIST_SIZE):
-      message_list = registered_message_list[i:i+MAX_MESSAGE_LIST_SIZE]
-      path_list = ['/'.join(m.object_path) for m in message_list]
-      active_process_uid_list = [m.active_process_uid for m in message_list]
-      method_id_list = [m.method_id for m in message_list]
-      priority_list = [m.activity_kw.get('priority', 1) for m in message_list]
-      date_list = [m.activity_kw.get('at_date') for m in message_list]
-      group_method_id_list = [m.getGroupId() for m in message_list]
-      tag_list = [m.activity_kw.get('tag', '') for m in message_list]
-      signature_list=[m.activity_kw.get('signature', '') for m in message_list]
-      serialization_tag_list = [m.activity_kw.get('serialization_tag', '')
-                                for m in message_list]
-      processing_node_list = []
-      for m in message_list:
-        m.order_validation_text = x = self.getOrderValidationText(m)
-        processing_node_list.append(0 if x == 'none' else -1)
+    db = activity_tool.getSQLConnection()
+    quote = db.string_literal
+    def insert(reset_uid):
+      values = self._insert_separator.join(values_list)
+      del values_list[:]
       for _ in xrange(UID_ALLOCATION_TRY_COUNT):
+        if reset_uid:
+          reset_uid = False
+          # Overflow will result into IntegrityError.
+          db.query("SET @uid := %s" % getrandbits(UID_SAFE_BITSIZE))
         try:
-          portal.SQLJoblib_writeMessage(
-            uid_list=[
-              getrandbits(UID_SAFE_BITSIZE)
-              for _ in xrange(len(message_list))
-            ],
-            path_list=path_list,
-            active_process_uid_list=active_process_uid_list,
-            method_id_list=method_id_list,
-            priority_list=priority_list,
-            message_list=map(Message.dump, message_list),
-            group_method_id_list=group_method_id_list,
-            date_list=date_list,
-            tag_list=tag_list,
-            processing_node_list=processing_node_list,
-            signature_list=signature_list,
-            serialization_tag_list=serialization_tag_list)
+          db.query(self._insert_template % (self.sql_table, values))
         except MySQLdb.IntegrityError, (code, _):
           if code != DUP_ENTRY:
             raise
+          reset_uid = True
         else:
           break
       else:
-        raise ValueError("Maximum retry for SQLBase_writeMessageList reached")
+        raise ValueError("Maximum retry for prepareQueueMessageList reached")
+    i = 0
+    reset_uid = True
+    values_list = []
+    max_payload = self._insert_max_payload
+    sep_len = len(self._insert_separator)
+    for m in message_list:
+      if m.is_registered:
+        active_process_uid = m.active_process_uid
+        order_validation_text = m.order_validation_text = \
+          self.getOrderValidationText(m)
+        date = m.activity_kw.get('at_date')
+        row = ','.join((
+          '@uid+%s' % i,
+          quote('/'.join(m.object_path)),
+          'NULL' if active_process_uid is None else str(active_process_uid),
+          "UTC_TIMESTAMP(6)" if date is None else quote(render_datetime(date)),
+          quote(m.method_id),
+          '0' if order_validation_text == 'none' else '-1',
+          str(m.activity_kw.get('priority', 1)),
+          quote(m.getGroupId()),
+          quote(m.activity_kw.get('tag', '')),
+          quote(m.activity_kw.get('signature', '')),
+          quote(m.activity_kw.get('serialization_tag', '')),
+          quote(Message.dump(m))))
+        i += 1
+        n = sep_len + len(row)
+        max_payload -= n
+        if max_payload < 0:
+          if values_list:
+            insert(reset_uid)
+            reset_uid = False
+            max_payload = self._insert_max_payload - n
+          else:
+            raise ValueError("max_allowed_packet too small to insert message")
+        values_list.append(row)
+    if values_list:
+      insert(reset_uid)
 
-  def getProcessableMessageLoader(self, activity_tool, processing_node):
+  def getProcessableMessageLoader(self, db, processing_node):
     path_and_method_id_dict = {}
+    quote = db.string_literal
     def load(line):
       # getProcessableMessageList already fetch messages with the same
       # group_method_id, so what remains to be filtered on are path, method_id
@@ -128,19 +154,21 @@ class SQLJoblib(SQLDict):
       if original_uid is None:
         m = Message.load(line.message, uid=uid, line=line)
         try:
-          result = activity_tool.SQLJoblib_selectDuplicatedLineList(
-            path=path,
-            method_id=method_id,
-            group_method_id=line.group_method_id,
-            signature=line.signature)
-          reserve_uid_list = uid_list = [x.uid for x in result]
-          if reserve_uid_list:
-            activity_tool.SQLBase_reserveMessageList(
-              table=self.sql_table,
-              processing_node=processing_node,
-              uid=reserve_uid_list)
+          # Select duplicates.
+          result = db.query("SELECT uid FROM message_job"
+            " WHERE processing_node = 0 AND path = %s AND signature = %s"
+            " AND method_id = %s AND group_method_id = %s FOR UPDATE" % (
+              quote(path), quote(line.signature),
+              quote(method_id), quote(line.group_method_id),
+            ), 0)[1]
+          uid_list = [x for x, in result]
+          if uid_list:
+            self.assignMessageList(db, processing_node, uid_list)
+          else:
+            db.query("COMMIT") # XXX: useful ?
         except:
-          self._log(WARNING, 'getDuplicateMessageUidList got an exception')
+          self._log(WARNING, 'Failed to reserve duplicates')
+          db.query("ROLLBACK")
           raise
         if uid_list:
           self._log(TRACE, 'Reserved duplicate messages: %r' % uid_list)

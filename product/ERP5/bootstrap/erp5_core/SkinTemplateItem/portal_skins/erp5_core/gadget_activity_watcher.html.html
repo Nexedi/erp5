@@ -10,7 +10,7 @@
        <table>
         <tr>
          <th>Type</th>
-         <th>Message</th>
+         <th>Count</th>
          <th>Method Id</th>
          <th>Processing Node</th>
          <th>Min pri</th>
@@ -19,7 +19,7 @@
   {{#each messageList1}}
       <tr> 
          <td>{{this.messagetype}} </td>
-         <td>{{this.message}}</td>
+         <td>{{this.count}}</td>
          <td>{{this.method_id}}</td>
          <td>{{this.node}}</td>
          <td>{{this.min_pri}}</td>
@@ -29,7 +29,7 @@
   {{#each messageList2}}
       <tr> 
          <td>{{this.messagetype}} </td>
-         <td>{{this.message}}</td>
+         <td>{{this.count}}</td>
          <td>{{this.method_id}}</td>
          <td>{{this.node}}</td>
          <td>{{this.min_pri}}</td>
@@ -40,7 +40,7 @@
     <table>
       <tr>
        <th>Type</th>
-       <th>Pri</th>
+       <th>Priority</th>
        <th>Min</th>
        <th>Avg</th>
        <th>Max</th>
