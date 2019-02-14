@@ -1,6 +1,6 @@
-/*global document, window, rJS, RSVP */
+/*global document, window, rJS, RSVP, jIO */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (document, window, rJS, RSVP) {
+(function (document, window, rJS, RSVP, jIO) {
   "use strict";
 
   rJS(window)
@@ -11,6 +11,7 @@
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
@@ -20,6 +21,27 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("getFormDefinition", function () {
+      //preparing a less hardcoded version, moving form definition to erp5 side
+      /*var gadget = this;
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.getSetting('hateoas_url'),
+            gadget.getSetting('default_view_reference')
+          ]);
+        })
+        .push(function (setting_list) {
+          var jio_options = {
+            type: "erp5",
+            url: setting_list[0],
+            default_view_reference: setting_list[1]
+          },
+          jio_storage = jIO.createJIO(jio_options);
+          return jio_storage.get('portal_skins/erp5_officejs_jio_connector/HTMLPost_viewAsJio')
+            .push(function (result) {
+              return result.form_definition;
+            });
+        });*/
       //somehow the form_definition should come from the erp5-doc/form (jio?)
       //for now, hardcoded form_definition for POST VIEW
       return {
@@ -74,6 +96,8 @@
           my_element = fields[j][0];
           if (my_element.startsWith("my_")) {
             element_id = my_element.replace("my_", "");
+          } else if (my_element.startsWith("your_")) {
+            element_id = my_element.replace("your_", "");
           }
           field_info = form_definition.field_info_dict[my_element];
           if (document && document.hasOwnProperty(element_id)) {
@@ -161,7 +185,6 @@
           } else {
             throw new Error('Can not display document: ' + options.jio_key);
           }
-          //somehow the form_definition should come from the erp5-doc/form (jio?)
           return gadget.getFormDefinition(options.jio_key)
             .push(function (form_definition) {
               return gadget.changeState({
@@ -199,4 +222,4 @@
         });
     });
 
-}(document, window, rJS, RSVP));
+}(document, window, rJS, RSVP, jIO));
