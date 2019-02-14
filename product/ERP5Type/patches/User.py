@@ -13,7 +13,14 @@
 #
 ##############################################################################
 
-from AccessControl.User import BasicUser
+from threading import local
+from Acquisition import aq_inner, aq_parent
+from AccessControl.PermissionRole import _what_not_even_god_should_do
+from AccessControl.User import BasicUser, SimpleUser
+from App.config import getConfiguration
+from ..TransactionalVariable import TransactionalVariable
+
+DEVELOPER_ROLE_ID = 'Developer'
 
 BasicUser_allowed = BasicUser.allowed
 def allowed(self, object, object_roles=None):
@@ -22,81 +29,82 @@ def allowed(self, object, object_roles=None):
   and remove it, as it should never be acquired anyhow, before calling the
   original method
   """
-  # XXX-arnau: copy/paste (PropertiedUser)
-  if object_roles is not None:
-    object_roles = set(object_roles)
-    if 'Developer' in object_roles:
-      object_roles.remove('Developer')
-      product_config = getattr(getConfiguration(), 'product_config', None)
-      if product_config:
-        config = product_config.get('erp5')
-        if config and self.getId() in config.developer_list:
-          return 1
-
+  # Skip "self._check_context(object)"
+  if (
+    object_roles is not _what_not_even_god_should_do and
+    object_roles is not None and
+    DEVELOPER_ROLE_ID in set(object_roles or ()).intersection(self.getRoles())
+  ):
+    return 1
   return BasicUser_allowed(self, object, object_roles)
 
 BasicUser.allowed = allowed
 
-from App.config import getConfiguration
-from AccessControl.User import SimpleUser
-
 SimpleUser_getRoles = SimpleUser.getRoles
-def getRoles(self):
+def getRoles(self, _transactional_variable_pool=local()):
   """
   Add Developer Role if the user has been explicitely set as Developer in Zope
   configuration file
   """
-  role_tuple = SimpleUser_getRoles(self)
-  if role_tuple:
-    product_config = getattr(getConfiguration(), 'product_config', None)
-    if product_config:
-      config = product_config.get('erp5')
-      if config:
-        role_set = set(role_tuple)
-        user_id = self.getId()
-        if config and user_id in config.developer_list:
-          role_set.add('Developer')
-        elif user_id in role_set:
-          role_set.remove('Developer')
-
-        return role_set
-
-  return role_tuple
+  role_tuple = tuple(
+    x
+    for x in SimpleUser_getRoles(self)
+    if x != DEVELOPER_ROLE_ID
+  )
+  # Use our private transactional cache pool, to avoid code meddling with
+  # roles. Hide it in a default parameter value to make it harder to access
+  # than just importing it from the module.
+  try:
+    tv = _transactional_variable_pool.instance
+  except AttributeError:
+    tv = TransactionalVariable()
+    _transactional_variable_pool.instance = tv
+  try:
+    extra_role_tuple = tv['user_extra_role_tuple']
+  except KeyError:
+    tv['user_extra_role_tuple'] = extra_role_tuple = (
+      (DEVELOPER_ROLE_ID, )
+      if self.getId() in getattr(
+        getattr(
+          getConfiguration(),
+          'product_config',
+          {},
+        ).get('erp5'),
+        'developer_list',
+        (),
+      ) else
+      ()
+    )
+  return role_tuple + extra_role_tuple
 
 SimpleUser.getRoles = getRoles
 
-SimpleUser_getRolesInContext = SimpleUser.getRolesInContext
 def getRolesInContext(self, object):
   """
   Return the list of roles assigned to the user, including local roles
   assigned in context of the passed in object.
   """
-  userid=self.getId()
-  roles=self.getRoles()
-  local={}
-  object=getattr(object, 'aq_inner', object)
+  userid = self.getId()
+  result = set()
+  object = aq_inner(object)
   while 1:
-    local_roles = getattr(object, '__ac_local_roles__', None)
-    if local_roles:
-      if callable(local_roles):
-        local_roles=local_roles()
-      dict=local_roles or {}
-      for r in dict.get(userid, []):
-        local[r]=1
-    inner = getattr(object, 'aq_inner', object)
-    parent = getattr(inner, '__parent__', None)
+    local_role_dict = getattr(object, '__ac_local_roles__', None)
+    if local_role_dict is not None:
+      if callable(local_role_dict):
+        local_role_dict = local_role_dict() or {}
+      result.update(local_role_dict.get(userid, []))
+    parent = aq_parent(aq_inner(object))
     if parent is not None:
       object = parent
       continue
-    if hasattr(object, 'im_self'):
-      object=object.im_self
-      object=getattr(object, 'aq_inner', object)
+    new = getattr(object, '__self__', None)
+    if new is not None:
+      object = aq_inner(new)
       continue
     break
-
   # Patched: Developer role should never be available as local role
-  local.pop('Developer', None)
-  roles=list(roles) + local.keys()
-  return roles
+  result.discard(DEVELOPER_ROLE_ID)
+  result.update(self.getRoles())
+  return list(result)
 
 SimpleUser.getRolesInContext = getRolesInContext

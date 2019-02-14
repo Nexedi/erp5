@@ -17,7 +17,7 @@
 # Locale roles acquisition patch for PAS
 
 from Acquisition import aq_inner, aq_parent
-
+from App.config import getConfiguration
 try:
   from Products.PluggableAuthService.PropertiedUser import PropertiedUser
   from Products.PluggableAuthService.PropertiedUser import\
@@ -25,7 +25,10 @@ try:
 except ImportError:
   PropertiedUser = None
 
-def getRolesInContext( self, object ):
+TRUE_LAMBDA = lambda: True
+DEVELOPER_ROLE_ID = 'Developer'
+
+def getRolesInContext(self, object):
 
     """ Return the list of roles assigned to the user.
 
@@ -37,83 +40,34 @@ def getRolesInContext( self, object ):
     o Ripped off from AccessControl.User.BasicUser, which provides
       no other extension mechanism. :(
     """
-    user_id = self.getId()
-    # [ x.getId() for x in self.getGroups() ]
-    group_ids = self.getGroups()
-
-    principal_ids = list( group_ids )
-    principal_ids.insert( 0, user_id )
-
-    local ={}
-    object = aq_inner( object )
-
+    principal_id_list = [self.getId()]
+    principal_id_list.extend(self.getGroups())
+    result = set()
+    object = aq_inner(object)
     while 1:
-
-        local_roles = getattr( object, '__ac_local_roles__', None )
-
-        if local_roles:
-
-            if callable( local_roles ):
-                local_roles = local_roles()
-
-            dict = local_roles or {}
-
-            for principal_id in principal_ids:
-                for role in dict.get( principal_id, [] ):
-                    local[ role ] = 1
-
-        # patch by Klaus for LocalRole blocking
-        _getAcquireLocalRoles = getattr(object, '_getAcquireLocalRoles', None)
-        if _getAcquireLocalRoles is not None:
-            if not _getAcquireLocalRoles():
-                break
-
-        inner = aq_inner( object )
-        parent = aq_parent( inner )
-
-        if parent is not None:
-            object = parent
-            continue
-
-        new = getattr( object, 'im_self', None )
-
-        if new is not None:
-
-            object = aq_inner( new )
-            continue
-
+        local_role_dict = getattr(object, '__ac_local_roles__', None)
+        if local_role_dict is not None:
+            if callable(local_role_dict):
+                local_role_dict = local_role_dict() or {}
+            for principal_id in principal_id_list:
+                for role in local_role_dict.get(principal_id, ()):
+                    result.add(role)
+        if getattr(object, '_getAcquireLocalRoles', TRUE_LAMBDA)():
+            parent = aq_parent(aq_inner(object))
+            if parent is not None:
+                object = parent
+                continue
+            new = getattr(object, '__self__', None)
+            if new is not None:
+                object = aq_inner(new)
+                continue
         break
+    # Patched: Developer role should never be available as local role
+    result.discard(DEVELOPER_ROLE_ID)
+    result.update(self.getRoles())
+    return list(result)
 
-    # Patched: Developer role should not never be available as local role
-    local.pop('Developer', None)
-    return list( self.getRoles() ) + local.keys()
-
-from App.config import getConfiguration
-
-def getRoles( self ):
-    """ -> [ role ]
-
-    o Include only "global" roles.
-    """
-    role_tuple = self._roles.keys()
-    if role_tuple:
-        product_config = getattr(getConfiguration(), 'product_config', None)
-        if product_config:
-            config = product_config.get('erp5')
-            if config:
-                role_set = set(role_tuple)
-                user_id = self.getId()
-                if config and user_id in config.developer_list:
-                    role_set.add('Developer')
-                elif user_id in role_set:
-                    role_set.remove('Developer')
-
-                return role_set
-
-    return role_tuple
-
-def allowed(self, object, object_roles=None ):
-
+def allowed(self, object, object_roles=None):
     """ Check whether the user has access to object.
 
     o The user must have one of the roles in object_roles to allow access.
@@ -131,16 +85,7 @@ def allowed(self, object, object_roles=None ):
     if object_roles is None or 'Anonymous' in object_roles:
         return 1
 
-    # Check for Developer Role, see patches.User for rationale
-    # XXX-arnau: copy/paste
     object_roles = set(object_roles)
-    if 'Developer' in object_roles:
-      object_roles.remove('Developer')
-      product_config = getattr(getConfiguration(), 'product_config', None)
-      if product_config:
-        config = product_config.get('erp5')
-        if config and self.getId() in config.developer_list:
-          return 1
 
     # Provide short-cut access if object is protected by 'Authenticated'
     # role and user is not nobody
@@ -156,75 +101,59 @@ def allowed(self, object, object_roles=None ):
         if object_roles is None or 'Anonymous' in object_roles:
             return 1
 
-    # Check for a role match with the normal roles given to
-    # the user, then with local roles only if necessary. We
-    # want to avoid as much overhead as possible.
-    user_roles = self.getRoles()
-    for role in object_roles:
-        if role in user_roles:
-            if self._check_context(object):
-                return 1
-            return None
+    # Check global roles.
+    if object_roles.intersection(self.getRoles()):
+        return self._check_context(object)
+    # Do not match Developer as a local role.
+    object_roles.discard(DEVELOPER_ROLE_ID)
 
-    # Still have not found a match, so check local roles. We do
-    # this manually rather than call getRolesInContext so that
-    # we can incur only the overhead required to find a match.
-    inner_obj = aq_inner( object )
-    user_id = self.getId()
-    # [ x.getId() for x in self.getGroups() ]
-    group_ids = self.getGroups()
-
-    principal_ids = list( group_ids )
-    principal_ids.insert( 0, user_id )
-
+    check_context = self._check_context
+    # Check local roles.
+    inner_obj = aq_inner(object)
+    principal_id_list = [self.getId()]
+    principal_id_list.extend(self.getGroups())
     while 1:
-
-        local_roles = getattr( inner_obj, '__ac_local_roles__', None )
-
-        if local_roles:
-
-            if callable( local_roles ):
-                local_roles = local_roles()
-
-            dict = local_roles or {}
-
-            for principal_id in principal_ids:
-
-                local_roles = dict.get( principal_id, [] )
-
-                for role in object_roles:
-
-                    if role in local_roles:
-
-                        if self._check_context( object ):
-                            return 1
-
-                        return 0
-
-        # patch by Klaus for LocalRole blocking
-        _getAcquireLocalRoles = getattr(object, '_getAcquireLocalRoles', None)
-        if _getAcquireLocalRoles is not None:
-            if not _getAcquireLocalRoles():
-                break
-
-        inner = aq_inner( inner_obj )
-        parent = aq_parent( inner )
-
+      local_role_dict = getattr(inner_obj, '__ac_local_roles__', None)
+      if local_role_dict is not None:
+        if callable(local_role_dict):
+          local_role_dict = local_role_dict() or {}
+        for principal_id in principal_id_list:
+          for role in object_roles.intersection(
+            local_role_dict.get(principal_id, ()),
+          ):
+            return int(bool(check_context(object)))
+      if getattr(inner_obj, '_getAcquireLocalRoles', TRUE_LAMBDA)():
+        parent = aq_parent(aq_inner(inner_obj))
         if parent is not None:
-            inner_obj = parent
-            continue
-
-        new = getattr( inner_obj, 'im_self', None )
-
+          inner_obj = parent
+          continue
+        new = getattr(inner_obj, '__self__', None)
         if new is not None:
-            inner_obj = aq_inner( new )
-            continue
-
-        break
-
+          inner_obj = aq_inner(new)
+          continue
+      break
     return None
 
+orig_PropertiedUser__init__ = getattr(PropertiedUser, '__init__', None)
+def PropertiedUser__init__(self, id, login=None):
+    orig_PropertiedUser__init__(self, id, login)
+    if id in getattr(
+        getattr(
+            getConfiguration(),
+            'product_config',
+            {},
+        ).get('erp5'),
+        'developer_list',
+        (),
+    ):
+        self._roles[DEVELOPER_ROLE_ID] = 1
+
+orig_PropertiedUser__addRoles = getattr(PropertiedUser, '_addRoles', None)
+def PropertiedUser__addRoles(self, roles=()):
+    orig_PropertiedUser__addRoles(self, (x for x in roles if x != DEVELOPER_ROLE_ID))
+
 if PropertiedUser is not None:
-  PropertiedUser.getRolesInContext = getRolesInContext
-  PropertiedUser.allowed = allowed
-  PropertiedUser.getRoles = getRoles
+    PropertiedUser.getRolesInContext = getRolesInContext
+    PropertiedUser.allowed = allowed
+    PropertiedUser.__init__ = PropertiedUser__init__
+    PropertiedUser._addRoles = PropertiedUser__addRoles
