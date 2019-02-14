@@ -1,5 +1,6 @@
 test.erp5.testFunctionalOfficeJSSmartAssistant
 test.erp5.testFunctionalOfficeJSTextEditor
+test.erp5.testFunctionalOfficeJSDiscussionTool
 test.erp5.testFunctionalOfficeJSCodeMirror
 test.erp5.testFunctionalOfficeJSMediaPlayer
 test.erp5.testFunctionalOfficeJSCribJS

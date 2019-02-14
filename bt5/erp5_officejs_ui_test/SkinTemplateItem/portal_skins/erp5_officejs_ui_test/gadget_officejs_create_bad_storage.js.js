@@ -11,7 +11,7 @@
       }),
         gadget = this;
       return storage.put(
-        'setting/Text Editor',
+        'setting/Discussion Tool',
         {'jio_storage_description': {type: 'unknownstorage'}}
       )
       .push(function () {
