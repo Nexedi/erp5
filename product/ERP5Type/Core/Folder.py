@@ -966,6 +966,12 @@ class Folder(CopyContainer, OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, F
     return self._getFolderHandlerData()[2].generateId(self, prefix, suffix, rand_ceiling)
 
   def __getattr__(self, name):
+    # Subobject ids are forbidden to start with an underscore.
+    # This saves time by not even attempting traversal when not needed,
+    # for example when AccessControl.users.BasicUser._check_context checks
+    # whether given object is a bound function.
+    if name.startswith('_'):
+      raise AttributeError(name)
     property_id, _, folder = self._getFolderHandlerData()
     if getattr(self, property_id) is None:
       raise AttributeError(name)
