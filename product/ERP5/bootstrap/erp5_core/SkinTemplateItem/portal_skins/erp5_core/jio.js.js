@@ -13111,7 +13111,12 @@ return new Parser;
                 _linshare_uuid: entry_list[i].uuid
               };
               if (options.include_docs === true) {
-                entry.doc = JSON.parse(entry_list[i].metaData) || {};
+                try {
+                  entry.doc = JSON.parse(entry_list[i].metaData) || {};
+                } catch (error) {
+                  // Metadata are not always JSON
+                  entry.doc = {};
+                }
               }
               result_list.push(entry);
 
