@@ -72,6 +72,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>my_listbox</string>
                       </list>
                     </value>
                 </item>

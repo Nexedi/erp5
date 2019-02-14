@@ -36,6 +36,8 @@ web_site_module/officejs_svg_editor
 web_site_module/officejs_svg_editor/**
 web_site_module/officejs_text_editor
 web_site_module/officejs_text_editor/**
+web_site_module/officejs_discussion_tool
+web_site_module/officejs_discussion_tool/**
 web_site_module/officejs_todomvc
 web_site_module/officejs_wallsearch
 web_site_module/officejs_wallsearch/**
