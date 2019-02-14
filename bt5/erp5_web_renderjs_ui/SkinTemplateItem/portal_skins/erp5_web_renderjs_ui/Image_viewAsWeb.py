@@ -6,6 +6,9 @@ if response is None:
 # The vanilla HTML is wanted
 response.setBase(None)
 
+# Allow any external app to download the source code
+response.setHeader("Access-Control-Allow-Origin", "*")
+
 image = context
 if REQUEST.getHeader('If-Modified-Since', '') == image.getModificationDate().rfc822():
   response.setStatus(304)
