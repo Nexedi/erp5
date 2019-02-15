@@ -3042,16 +3042,13 @@ class Base( CopyContainer,
       - False means that the role acquisition chain is cut.
 
     The code to support this is on the user class, see
-    ERP5Security.ERP5UserFactory.ERP5User
-    """
-    def cached_getAcquireLocalRoles(portal_type):
-      ti = self._getTypesTool().getTypeInfo(portal_type)
-      return ti is None or ti.getTypeAcquireLocalRole()
+    ERP5Type.patches.User and ERP5Type.patches.PropertiedUser .
 
-    cached_getAcquireLocalRoles = CachingMethod(cached_getAcquireLocalRoles,
-                                                id='Base__getAcquireLocalRoles',
-                                                cache_factory='erp5_content_short')
-    return cached_getAcquireLocalRoles(portal_type=self.getPortalType())
+    This specific implementation of this method should only be reached when
+    processing an object with a missing portal type, otherwise portal type
+    class should hold such accessor.
+    """
+    return True
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'get_local_permissions')

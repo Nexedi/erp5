@@ -1609,8 +1609,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Check that Owner is not catalogued when he can't view the
     # object and when the portal type does not acquire the local roles.
-    sub_portal_type.acquire_local_roles = False
-    self.portal.portal_caches.clearAllCache()
+    sub_portal_type.setTypeAcquireLocalRole(False)
+    self.commit() # So dynamic class gets updated for setTypeAcquireLocalRole change
     logout()
     self.loginByUserName('super_owner')
     obj = folder.newContent(portal_type='Organisation')
@@ -1625,8 +1625,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Check that Owner is catalogued when he can view the
     # object and when the portal type does not acquire the local roles.
-    sub_portal_type.acquire_local_roles = False
-    self.portal.portal_caches.clearAllCache()
+    sub_portal_type.setTypeAcquireLocalRole(False)
+    self.commit() # So dynamic class gets updated for setTypeAcquireLocalRole change
     logout()
     self.loginByUserName('super_owner')
     obj = folder.newContent(portal_type='Organisation')
@@ -1642,8 +1642,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Check that Owner is catalogued when he can view the
     # object because permissions are acquired and when the portal type does not
     # acquire the local roles.
-    sub_portal_type.acquire_local_roles = False
-    self.portal.portal_caches.clearAllCache()
+    sub_portal_type.setTypeAcquireLocalRole(False)
+    self.commit() # So dynamic class gets updated for setTypeAcquireLocalRole change
     logout()
     self.loginByUserName('super_owner')
     obj = folder.newContent(portal_type='Organisation')
@@ -1658,8 +1658,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Check that Owner is not catalogued when he can't view the
     # object and when the portal type acquires the local roles.
-    sub_portal_type.acquire_local_roles = True
-    self.portal.portal_caches.clearAllCache()
+    sub_portal_type.setTypeAcquireLocalRole(True)
+    self.commit() # So dynamic class gets updated for setTypeAcquireLocalRole change
     logout()
     self.loginByUserName('super_owner')
     obj = folder.newContent(portal_type='Organisation')
@@ -1674,8 +1674,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Check that Owner is catalogued when he can view the
     # object and when the portal type acquires the local roles.
-    sub_portal_type.acquire_local_roles = True
-    self.portal.portal_caches.clearAllCache()
+    sub_portal_type.setTypeAcquireLocalRole(True)
+    self.commit() # So dynamic class gets updated for setTypeAcquireLocalRole change
     logout()
     self.loginByUserName('super_owner')
     obj = folder.newContent(portal_type='Organisation')
@@ -1691,8 +1691,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Check that Owner is catalogued when he can view the
     # object because permissions are acquired and when the portal type
     # acquires the local roles.
-    sub_portal_type.acquire_local_roles = True
-    self.portal.portal_caches.clearAllCache()
+    sub_portal_type.setTypeAcquireLocalRole(True)
+    self.commit() # So dynamic class gets updated for setTypeAcquireLocalRole change
     logout()
     self.loginByUserName('super_owner')
     obj = folder.newContent(portal_type='Organisation')
@@ -1840,14 +1840,13 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person_module = portal.person_module
     person = 'Person'
     person_portal_type = portal_types._getOb(person)
-    person_portal_type.acquire_local_roles = False
+    person_portal_type.setTypeAcquireLocalRole(False)
     # Organisation stuff
     organisation_module = portal.organisation_module
     organisation = 'Organisation'
     organisation_portal_type = portal_types._getOb(organisation)
-    organisation_portal_type.acquire_local_roles = True
-
-    self.portal.portal_caches.clearAllCache()
+    organisation_portal_type.setTypeAcquireLocalRole(True)
+    self.commit() # So dynamic class gets updated for setTypeAcquireLocalRole change
 
     def newContent(container, portal_type, acquire_view_permission, view_role_list, local_role_dict):
       document = container.newContent(portal_type=portal_type)

@@ -61,6 +61,7 @@
                 <string>_setTypeInterface.*</string>
                 <string>_setTypePropertySheet.*</string>
                 <string>_setTypeBaseCategory.*</string>
+                <string>_setTypeAcquireLocalRole</string>
               </list>
             </value>
         </item>

@@ -534,12 +534,12 @@ class ERP5TypeInformation(XMLObject,
       return getPropertySheetValueList(self.getPortalObject(),
                                        property_sheet_name_set)
 
-    # XXX these methods, _baseGetTypeClass, getTypeMixinList, and
-    # getTypeInterfaceList, are required for a bootstrap issue that
-    # the portal type class Base Type is required for _aq_dynamic on
-    # Base Type. So surpress calling _aq_dynamic when obtaining information
-    # required for generating a portal type class by declaring these methods
-    # explicitly.
+    # XXX these methods, _baseGetTypeClass, getTypeMixinList,
+    # getTypeAcquireLocalRole and getTypeInterfaceList, are required for a
+    # bootstrap issue that the portal type class Base Type is required for
+    # _aq_dynamic on Base Type. So surpress calling _aq_dynamic when obtaining
+    # information required for generating a portal type class by declaring
+    # these methods explicitly.
     def _baseGetTypeClass(self):
       return getattr(aq_base(self), 'type_class', None)
 
@@ -552,6 +552,11 @@ class ERP5TypeInformation(XMLObject,
                               'getTypeMixinList')
     def getTypeMixinList(self):
       return getattr(aq_base(self), 'type_mixin', ())
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeAcquireLocalRole')
+    def getTypeAcquireLocalRole(self):
+      return getattr(aq_base(self), 'acquire_local_roles', None)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTypeInterfaceList')

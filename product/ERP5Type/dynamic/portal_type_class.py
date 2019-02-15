@@ -39,9 +39,12 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
 from Products.ERP5Type.dynamic.accessor_holder import createAllAccessorHolderList
+from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.TransactionalVariable import TransactionalResource
 
 from zLOG import LOG, ERROR, INFO, WARNING, PANIC
+
+ACQUIRE_LOCAL_ROLE_GETTER_ID = '_getAcquireLocalRoles'
 
 def _importClass(classpath):
   try:
@@ -153,6 +156,11 @@ def generatePortalTypeClass(site, portal_type_name):
     interface_list = portal_type.getTypeInterfaceList()
     portal_type_category_list = portal_type.getTypeBaseCategoryList()
     attribute_dict['_categories'] = portal_type_category_list[:]
+    attribute_dict[ACQUIRE_LOCAL_ROLE_GETTER_ID] = ConstantGetter(
+      id=ACQUIRE_LOCAL_ROLE_GETTER_ID,
+      key=None,
+      value=bool(portal_type.getTypeAcquireLocalRole()),
+    )
   else:
     LOG("ERP5Type.dynamic", WARNING,
         "Cannot find a portal type definition for '%s', trying to guess..."

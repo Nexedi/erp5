@@ -146,8 +146,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # set Person.acquire_local_roles back.
       if getattr(self, 'person_acquire_local_roles', None) is not None:
-        self.getTypesTool().getTypeInfo('Person').acquire_local_roles = self.person_acquire_local_roles
-        self.portal.portal_caches.clearAllCache()
+        self.getTypesTool().getTypeInfo('Person').setTypeAcquireLocalRole(self.person_acquire_local_roles)
 
       # restore workflows for other tests
       self.getWorkflowTool().setChainForPortalTypes(
@@ -1653,9 +1652,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # turn on Person.acquire_local_roles
       person = self.getTypesTool().getTypeInfo('Person')
-      self.person_acquire_local_roles = person.acquire_local_roles
-      person.acquire_local_roles = True
-      portal.portal_caches.clearAllCache()
+      self.person_acquire_local_roles = person.getTypeAcquireLocalRole()
+      person.setTypeAcquireLocalRole(True)
 
       # Make a plain user.
       uf = portal.acl_users

@@ -1008,7 +1008,8 @@ class TestLocalRoleManagement(RoleManagementTestCase):
     """Tests that document does not acquire loal roles from their parents if
     "acquire local roles" is not checked."""
     ti = self._getTypeInfo()
-    ti.acquire_local_roles = False
+    ti.setTypeAcquireLocalRole(False)
+    self.commit() # So dynamic class gets updated for setTypeAcquireLocalRole change
     self._getModuleTypeInfo().newContent(portal_type='Role Information',
       role_name='Assignor',
       description='desc.',
