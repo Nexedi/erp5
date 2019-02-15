@@ -81,7 +81,7 @@
         return RSVP.all([
           gadget.getDeclaredGadget('iodide'),
           jIO.util.ajax({
-            url: "gadget_onlyoffice_iodide.jsmd"
+            url: "olapy_notebook.jsmd"
           }),
           gadget.getDeclaredGadget('onlyoffice')
         ]);
@@ -94,12 +94,12 @@
           .push(function () {
             var storage = jIO.createJIO({
               type: "erp5",
-              url: "https://softinst89769.host.vifib.net/erp5/web_site_module/hateoas/",
+              url: "https://softinst114089.host.vifib.net/erp5/web_site_module/hateoas/",
               default_view_reference: "jio_view_attachment"
             });
             return storage.getAttachment(
-              'document_module/onlyoffice_iodide_test_xlsy',
-              'https://softinst89769.host.vifib.net/erp5/web_site_module/hateoas/document_module/onlyoffice_iodide_test_xlsy/Document_downloadForOnlyOfficeApp'
+              'document_module/onlyoffice_iodide_test_2_xlsy',
+              'https://softinst114089.host.vifib.net/erp5/web_site_module/hateoas/document_module/onlyoffice_iodide_test_2_xlsy/Document_downloadForOnlyOfficeApp'
             );
           })
           .push(function (blob) {
