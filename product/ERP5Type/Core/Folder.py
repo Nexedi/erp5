@@ -671,10 +671,17 @@ class Folder(CopyContainer, OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, F
 
   def _getFolderHandlerData(self):
     # Internal API working around bogus _folder_handler values.
-    folder_handler = self._folder_handler
-    if folder_handler == _BROKEN_BTREE_HANDLER:
-      folder_handler = BTREE_HANDLER
-    return _HANDLER_LIST[folder_handler]
+    # This method is a hot-spot for all Folder accesses. DO NOT SLOW IT DOWN.
+    try:
+      # Fast path: folder is sane.
+      return _HANDLER_LIST[self._folder_handler]
+    # Note: TypeError and not IndexError, as bogus value is a string and
+    # _HANDLER_LIST only accepts integers indices.
+    except TypeError:
+      # Slow path: handle insane folders.
+      if self._folder_handler == _BROKEN_BTREE_HANDLER:
+        return _HANDLER_LIST[BTREE_HANDLER]
+      raise
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isBTree')
   def isBTree(self):
