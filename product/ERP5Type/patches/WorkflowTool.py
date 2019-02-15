@@ -461,9 +461,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
   for wf_id in self.getChainFor(info.object):
     wf = self.getWorkflowById(wf_id)
     if wf is not None:
-      a = wf.listObjectActions(info)
-      if a is not None:
-        actions.extend(a)
+      actions.extend(wf.listObjectActions(info))
 
   portal = self.getPortalObject()
   portal_url = portal.portal_url()

@@ -225,31 +225,36 @@ def DCWorkflowDefinition_listObjectActions(self, info):
     info.object.
     Returns the actions to be displayed to the user.
     '''
-    fmt_data = None
     ob = info.object
     sdef = self._getWorkflowStateOf(ob)
     if sdef is None:
-        return None
-    res = []
-    for tid in sdef.transitions:
-        tdef = self.transitions.get(tid, None)
-        if tdef is not None and tdef.trigger_type == TRIGGER_USER_ACTION and \
-                tdef.actbox_name and self._checkTransitionGuard(tdef, ob):
+        return ()
+    fmt_data = None
+    result = []
+    for transition_id in sdef.transitions:
+        tdef = self.transitions.get(transition_id)
+        if (
+            tdef is not None and
+            tdef.trigger_type == TRIGGER_USER_ACTION and
+            tdef.actbox_name and
+            self._checkTransitionGuard(tdef, ob)
+        ):
             if fmt_data is None:
                 fmt_data = TemplateDict()
                 fmt_data._push(info)
-            fmt_data._push({'transition_id': tid})
-            res.append((tid, {
-                'id': tid,
+            fmt_data._push({'transition_id': transition_id})
+            result.append({
+                'id': transition_id,
                 'name': tdef.actbox_name % fmt_data,
                 'url': tdef.actbox_url % fmt_data,
                 'icon': tdef.actbox_icon % fmt_data,
                 'permissions': (),  # Predetermined.
                 'category': tdef.actbox_category,
-                'transition': tdef}))
+                'transition': tdef,
+            })
             fmt_data._pop()
-    res.sort()
-    return [ result[1] for result in res ]
+    result.sort(key=lambda x: x['id'])
+    return result
 DCWorkflowDefinition.listObjectActions = DCWorkflowDefinition_listObjectActions
 
 from Products.DCWorkflow.Expression import Expression
