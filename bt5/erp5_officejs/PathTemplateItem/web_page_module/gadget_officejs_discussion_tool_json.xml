@@ -62,6 +62,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/team</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -69,7 +77,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_linshare_configurator.js</string> </value>
+            <value> <string>gadget_officejs_discussion_tool.json</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,13 +87,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_ojs_linshare_configurator_js</string> </value>
+            <value> <string>gadget_officejs_discussion_tool_json</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -99,13 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS jIO Linshare Configurator Page JS</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Officejs Discussion Tool Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -191,7 +191,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1545233812.51</float>
+                        <float>1550237456.6</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -236,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.44981.11075.37051</string> </value>
+                <value> <string>973.45002.1369.42888</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1550236694.62</float>
+                        <float>1550237444.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -311,7 +311,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1545232088.73</float>
+                        <float>1550237340.91</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -10,11 +10,8 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -52,11 +49,8 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -69,7 +63,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_linshare_configurator.js</string> </value>
+            <value> <string>gadget_officejs_jio_html_post_view.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,7 +73,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_ojs_linshare_configurator_js</string> </value>
+            <value> <string>gadget_officejs_jio_html_post_view_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -99,7 +93,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS jIO Linshare Configurator Page JS</string> </value>
+            <value> <string>OfficeJS Jio HTML Post View JS</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -165,7 +159,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>hide</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -191,7 +185,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1545233812.51</float>
+                        <float>1549565688.07</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -200,7 +194,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>hidden</string> </value>
             </item>
           </dictionary>
         </list>
@@ -236,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.44981.11075.37051</string> </value>
+                <value> <string>973.33807.14910.57139</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +248,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1550236694.62</float>
+                        <float>1549565721.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -311,7 +305,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1545232088.73</float>
+                        <float>1548258202.95</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

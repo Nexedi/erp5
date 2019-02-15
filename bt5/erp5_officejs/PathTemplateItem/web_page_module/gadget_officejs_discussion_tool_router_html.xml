@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -62,14 +62,34 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>creators</string> </key>
+            <value>
+              <tuple>
+                <string>cedric.le.ninivin</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_linshare_configurator.js</string> </value>
+            <value> <string>gadget_officejs_discussion_tool_router.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,17 +99,34 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_ojs_linshare_configurator_js</string> </value>
+            <value> <string>gadget_officejs_discussion_tool_router_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>modification_date</string> </key>
             <value>
-              <none/>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1455284352.21</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
             </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -98,8 +135,12 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content_substitution_mapping_method_id</string> </key>
+            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS jIO Linshare Configurator Page JS</string> </value>
+            <value> <string>OfficeJS Discussion Tool router Gadget</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -191,7 +232,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1545233812.51</float>
+                        <float>1547819538.55</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -236,7 +277,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.44981.11075.37051</string> </value>
+                <value> <string>973.4707.8937.55978</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +295,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1550236694.62</float>
+                        <float>1549460594.44</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -311,7 +352,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1545232088.73</float>
+                        <float>1547819391.93</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

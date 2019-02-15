@@ -1,0 +1,12 @@
+{
+      "short_name": "Discussion Tool",
+      "name": "OfficeJS Discussion Tool",
+      "description": "App to support communication",
+      "icons": [{
+        "src": "officejs_logo_text_editor.png",
+        "sizes": "any",
+        "type": "image/png"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}
