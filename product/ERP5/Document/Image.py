@@ -323,7 +323,10 @@ class Image(TextConvertableMixin, File, OFSImage):
 
   def _resize(self, quality, width, height, format, resolution, frame, crop=False):
     """Resize and resample photo."""
-    parameter_list = ['convert', '-colorspace', 'sRGB', '-depth', '8']
+    icc_profile = os.path.join(os.path.dirname(__file__),
+                               '..', 'misc', 'sRGB.icc')
+    parameter_list = ['convert', '-colorspace', 'sRGB', '-depth', '8',
+                      '-profile', icc_profile]
     if crop :
       parameter_list += '-thumbnail', '%sx%s^' % (width, height),\
                         '-gravity', 'center',\
