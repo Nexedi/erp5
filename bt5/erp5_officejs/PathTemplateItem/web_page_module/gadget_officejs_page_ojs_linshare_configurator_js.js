@@ -13,7 +13,16 @@
       })
       .push(function (setting) {
         var configuration = {},
-          attachment_synchro = setting[1] !== "";
+          attachment_synchro = setting[1] !== "",
+          linshare_json = {
+            type: "linshare",
+            url: options.url
+          };
+        if (options.username || options.password) {
+          linshare_json.access_token = window.btoa(
+            options.username + ':' + options.password
+          );
+        }
         configuration = {
           type: "replicate",
           query: {
@@ -69,13 +78,7 @@
               },
               sub_storage: {
                 type: "query",
-                sub_storage: {
-                  type: "linshare",
-                  url: options.url,
-                  access_token: window.btoa(
-                    options.username + ':' + options.password
-                  )
-                }
+                sub_storage: linshare_json
               }
             }
           }
@@ -111,7 +114,8 @@
       var gadget = this;
       if (options.url) {
         return gadget.changeState({
-          url: options.url || ""
+          url: options.url || "",
+          username: options.username || ""
         });
       }
       return gadget.getSetting('linshare_storage', "")
@@ -160,7 +164,7 @@
               "my_username": {
                 "description": "",
                 "title": "Username",
-                "default": "",
+                "default": gadget.state.username || "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,

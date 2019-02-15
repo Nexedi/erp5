@@ -6,6 +6,9 @@ if response is None:
 # The vanilla HTML is wanted
 response.setBase(None)
 
+# Allow any external app to download the source code
+response.setHeader("Access-Control-Allow-Origin", "*")
+
 web_page = context
 web_section = REQUEST.get("current_web_section")
 if web_section is None:

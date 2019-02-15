@@ -36,11 +36,6 @@ import transaction
 
 from zLOG import TRACE, WARNING
 
-# Stop validating more messages when this limit is reached
-MAX_VALIDATED_LIMIT = 1000
-# Read up to this number of messages to validate.
-READ_MESSAGE_LIMIT = 1000
-
 class SQLDict(SQLBase):
   """
     A simple OOBTree based queue. It should be compatible with transactions

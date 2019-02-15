@@ -1,0 +1,12 @@
+{
+      "short_name": "HR",
+      "name": "OfficeJS HR",
+      "description": "Business travel, Expense remboursement, Leave request management",
+      "icons": [{
+        "src": "hr_logo.svg",
+        "sizes": "any",
+        "type": "image/svg"
+      }],
+      "start_url": "../../",
+      "display": "standalone"
+}
