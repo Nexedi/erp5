@@ -45,8 +45,10 @@ class TestSQLBench(unittest.TestCase):
     database, host = database_and_server.split('@')
     sqlbench_path = os.environ.get('SQLBENCH_PATH')
     if not sqlbench_path:
+      print 'DEBUG OPENSSL_BINARY %s' % (os.environ['OPENSSL_BINARY'],)
       software_home = os.environ['OPENSSL_BINARY'].replace(
            "parts/openssl/bin/openssl", "")
+      print 'DEBUG software_home %s' % (software_home,)
       sqlbench_path = software_home + '/parts/mariadb/sql-bench'
       perl_command = software_home + "/parts/perl/bin/perl"
     else:
