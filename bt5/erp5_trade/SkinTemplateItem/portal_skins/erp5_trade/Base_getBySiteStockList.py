@@ -1,7 +1,15 @@
 result_list = []
-for brain in context.portal_simulation.getCurrentInventoryList(
+inventory_list_method_dict = {
+  'current': 'getCurrentInventoryList',
+  'future': 'getFutureInventoryList',
+  'available': 'getAvailableInventoryList',
+}
+
+if section_category:
+  kw['section_category'] = section_category
+
+for brain in getattr(context.portal_simulation, inventory_list_method_dict[simulation_period])(
     node_category=node_category,
-    section_category=section_category,
     group_by_resource=True,
     group_by_variation=True,
     group_by_node=False,

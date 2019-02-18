@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>at_date=None, node_category=None, section_category=None, positive_stock=None, negative_stock=None, zero_stock=None, **kw</string> </value>
+            <value> <string>at_date=None, node_category=None, section_category=None, positive_stock=None, negative_stock=None, zero_stock=None, simulation_period="current", **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getBySiteCurrentStockList</string> </value>
+            <value> <string>Base_getBySiteStockList</string> </value>
         </item>
       </dictionary>
     </pickle>
