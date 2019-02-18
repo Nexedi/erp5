@@ -67,6 +67,8 @@ class ActiveObject(ExtensionClass.Base):
         - "same": prefer execution on this node, to make
                   better use of the ZODB Storage cache
         - "": no node preference
+        - None (default): let CMFActivity decide between the above 2 cases
+                          (see ActivityTool.activateObject)
 
       at_date           --  request execution date for this activate call
                             (default: date of commit)
