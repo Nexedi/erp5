@@ -1,8 +1,8 @@
 /*jslint indent: 2*/
-/*global self, fetch, Request, Response, MessageChannel */
+/*global self, Response, MessageChannel, console */
 var global = self, window = self;
 
-(function (self, fetch, Request, Response, Promise, MessageChannel) {
+(function (self, Response, Promise, MessageChannel) {
   "use strict";
 
   self.importScripts('rsvp.js');
@@ -47,6 +47,7 @@ var global = self, window = self;
     event.waitUntil(self.clients.claim());
   });
 
+  console.warn("I m the SW");
   self.addEventListener("fetch", function (event) {
     var relative_url = event.request.url.split("#")[0]
       .replace(self.registration.scope, "");
@@ -73,4 +74,4 @@ var global = self, window = self;
     }
   });
 
-}(self, fetch, Request, Response, Promise, MessageChannel));
+}(self, Response, Promise, MessageChannel));
