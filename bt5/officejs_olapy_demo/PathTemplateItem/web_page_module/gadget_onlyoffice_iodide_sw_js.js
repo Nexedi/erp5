@@ -64,7 +64,7 @@ var global = self, window = self;
             return send_message_to_client(result[1], result[0]);
           })
           .push(function (result) {
-            return new Response(result);
+            return new Response(result, {headers: {'Content-Type': 'text/xml'}});
           }, function (error) {
             return new Response(error, {status: "500"});
           })

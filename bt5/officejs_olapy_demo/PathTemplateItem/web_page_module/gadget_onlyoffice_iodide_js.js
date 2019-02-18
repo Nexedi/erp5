@@ -1,21 +1,26 @@
 /*jslint indent: 2, unparam: true*/
-/*global rJS, window, RSVP, jIO, Promise, console */
+/*global rJS, window, RSVP, jIO, Promise, console, DOMParser */
 (function (rJS, window, RSVP, jIO, Promise) {
   "use strict";
 
   var SW = "gadget_onlyoffice_iodide_sw.js";
 
   function makeRequestOnIodide(gadget, xml) {
-    console.log("make request on iodide", xml);
+
     return gadget.getDeclaredGadget('iodide')
       .push(function (iodide) {
+
         return iodide.evalCode(
-          'callFunction({"fun": "get_olapy_response", argument_list: [' +
-            xml + ']})'
+          'callFunction(' +
+            JSON.stringify({
+              fun: "requestOlapy",
+              argument_list: [xml]
+            }) +
+            ')'
         );
       })
       .push(function (result) {
-        console.log('eval result', result);
+        // console.log('eval result', result);
         return result;
       }, function (error) {
         console.warn('eval error', error);

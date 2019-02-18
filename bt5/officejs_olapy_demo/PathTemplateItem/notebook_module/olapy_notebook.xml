@@ -72,44 +72,61 @@
             <value> <string>olapy_notebook.jsmd</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>olapy_notebook</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Notebook</string> </value>
         </item>
         <item>
+            <key> <string>revision</string> </key>
+            <value> <string>3</string> </value>
+        </item>
+        <item>
             <key> <string>text_content</string> </key>
-            <value> <string>%% meta\r\n
-{\r\n
-  "title": "Python",\r\n
-  "languages": {\r\n
-    "js": {\r\n
-      "pluginType": "language",\r\n
-      "languageId": "js",\r\n
-      "displayName": "Javascript",\r\n
-      "codeMirrorMode": "javascript",\r\n
-      "module": "window",\r\n
-      "evaluator": "eval",\r\n
-      "keybinding": "j",\r\n
-      "url": ""\r\n
-    },\r\n
-    "py": {\r\n
-      "languageId": "py",\r\n
-      "displayName": "python",\r\n
-      "codeMirrorMode": "python",\r\n
-      "keybinding": "p",\r\n
-      "url": "/pyodide_dev.js",\r\n
-      "module": "pyodide",\r\n
-      "evaluator": "runPython",\r\n
-      "pluginType": "language"\r\n
-    }\r\n
-  },\r\n
-  "lastExport": "2019-02-15T15:20:07.196Z"\r\n
-}\r\n
-\r\n
-%% plugin\r\n
+            <value> <string encoding="cdata"><![CDATA[
+
+%% meta\n
+{\n
+  "lastSaved": "2019-02-18T14:22:57.854Z",\n
+  "languages": {\n
+    "js": {\n
+      "pluginType": "language",\n
+      "languageId": "js",\n
+      "displayName": "Javascript",\n
+      "codeMirrorMode": "javascript",\n
+      "module": "window",\n
+      "evaluator": "eval",\n
+      "keybinding": "j",\n
+      "url": ""\n
+    },\n
+    "py": {\n
+      "languageId": "py",\n
+      "displayName": "python",\n
+      "codeMirrorMode": "python",\n
+      "keybinding": "p",\n
+      "url": "/pyodide_dev.js",\n
+      "module": "pyodide",\n
+      "evaluator": "runPython",\n
+      "pluginType": "language"\n
+    }\n
+  }\n
+}\n
+\n
+%% plugin\n
 {\r\n
   "languageId": "py",\r\n
   "displayName": "python",\r\n
@@ -119,74 +136,124 @@
   "module": "pyodide",\r\n
   "evaluator": "runPython",\r\n
   "pluginType": "language"\r\n
-}\r\n
-\r\n
-%% js\r\n
-pyodide.loadPackage(\'olapy\')\r\n
-\r\n
-%% code {"language":"py"}\r\n
-import os\r\n
-\r\n
-import pandas as pd\r\n
-import pyodide\r\n
-from olapy.core.services.xmla_lib import get_response\r\n
-\r\n
-# ******************************** CUBEMEMBER **************************** \r\n
-def olapy_response(dataframes_paths, mdx_query):\r\n
-    dataframes = {}\r\n
-    for df_path in dataframes_paths:\r\n
-        dataframes[os.path.splitext(os.path.basename(df_path))[0]] = pd.read_csv(pyodide.open_url(df_path), sep=\';\',\r\n
-                                                                                 encoding=\'utf8\')\r\n
-    #    xmla_request_params = {\'cube\': \'sales\',\r\n
-    #                           \'properties\': {\'AxisFormat\': \'TupleFormat\', \'Format\': \'Multidimensional\',\r\n
-    #                                          \'Content\': \'SchemaData\',\r\n
-    #                                          \'Catalog\': \'sales\',\r\n
-    #                                          \'LocaleIdentifier\': \'1033\', \'Timeout\': \'0\'},\r\n
-    #                           \'mdx_query\': mdx_query}\r\n
-\r\n
-    xmla_request_params = {\'cube\': \'sales\',\r\n
-                           \'request_type\': \'MDSCHEMA_MEMBERS\',\r\n
-\'properties\': {\'Catalog\': \'sales\'},\r\n
-                           \'restrictions\': {\'CUBE_NAME\': \'sales\',\r\n
-                                            \'MEMBER_UNIQUE_NAME\': \'[Geography].[Geography].[America]\',\r\n
-                                            \'TREE_OP\': \'3\',\r\n
-                                            \'mdx_query\': mdx_query}\r\n
-                           }\r\n
-\r\n
-    return get_response(xmla_request_params=xmla_request_params, dataframes=dataframes,\r\n
-                        output=\'xmla\')  # or output=\'dict\'\r\n
-\r\n
-# ********************************* CUBEVALUE ********************************** \r\n
-def olapy_response2(dataframes_paths, mdx_query):\r\n
-    dataframes = {}\r\n
-    for df_path in dataframes_paths:\r\n
-        dataframes[os.path.splitext(os.path.basename(df_path))[0]] = pd.read_csv(pyodide.open_url(df_path), sep=\';\',\r\n
-                                                                                 encoding=\'utf8\')\r\n
-\r\n
-    xmla_request_params = {\'cube\': \'sales\',\r\n
-                           \'properties\': {\'Catalog\': \'sales\',\r\n
-                                          \'Content\': \'SchemaData\',\r\n
-                                          \'Format\': \'Multidimensional\'},\r\n
-                           \'mdx_query\': mdx_query\r\n
-                           }\r\n
-\r\n
-    return get_response(xmla_request_params=xmla_request_params, dataframes=dataframes,\r\n
-                        output=\'xmla\')  # or output=\'dict\'\r\n
-\r\n
-%% js\r\n
-function get_olapy_response(dataframes_paths, mdx_query) {\r\n
-  var reponse = pyodide.pyimport("olapy_response")\r\n
-  return reponse(dataframes_paths, mdx_query)\r\n
-}\r\n
-\r\n
-function get_olapy_response2(dataframes_paths, mdx_query) {\r\n
-  var reponse = pyodide.pyimport("olapy_response2")\r\n
-  return reponse(dataframes_paths, mdx_query)\r\n
-}</string> </value>
+}\n
+\n
+%% js\n
+pyodide.loadPackage(\'olapy\')\n
+\n
+%% code {"language":"py"}\n
+import os\n
+\n
+import pandas as pd\n
+import pyodide\n
+from olapy.core.services.xmla_lib import get_response\n
+import json\n
+\n
+def calculateOlapyResponse(request_type, restriction_json, property_json):\n
+  restriction_dict = json.loads(restriction_json)\n
+  property_dict = json.loads(property_json)\n
+  # XXX Calculate the list of dataframe dynamically instead of hardcoding it\n
+  cube = restriction_dict[\'CUBE_NAME\']\n
+\n
+  dataframe_dict = {}\n
+  frame_set = ["[Facts]", "[Product]", "[Geography]"]\n
+  for frame in frame_set:\n
+    # XXX HARDCODED\n
+    df_path = "olapy-data/cubes/%s/%s.csv" % (cube, frame[1:-1])\n
+    dataframe_dict[frame[1:-1]] = pd.read_csv(pyodide.open_url(df_path), sep=\';\', encoding=\'utf8\')\n
+\n
+  if (request_type == \'MDSCHEMA_MEMBERS\'):\n
+    if \'TREE_OP\' not in restriction_dict:\n
+      # XXX HARDCODED 3\n
+      restriction_dict[\'TREE_OP\'] = len(restriction_dict[\'MEMBER_UNIQUE_NAME\'].split(\'.\'))\n
+      # restriction_dict[\'mdx_query\'] = \'\'\n
+\n
+  xmla_request_param_dict = {\n
+    \'cube\': cube,\n
+    \'request_type\': request_type,\n
+    # XXX HARDCODED\n
+    # \'properties\': {\'Catalog\': \'sales\'},\n
+    \'properties\': property_dict,\n
+    \'restrictions\': restriction_dict\n
+  }\n
+                                                                                 \n
+  # raise NotImplementedError(json.dumps(xmla_request_param_dict))\n
+\n
+  return get_response(xmla_request_params=xmla_request_param_dict,\n
+                      dataframes=dataframe_dict,\n
+                      output=\'xmla\')  # or output=\'dict\'\n
+\n
+# ********************************* CUBEVALUE ********************************** \n
+def olapy_response2(dataframes_paths, mdx_query):\n
+    dataframes = {}\n
+    for df_path in dataframes_paths:\n
+        dataframes[os.path.splitext(os.path.basename(df_path))[0]] = pd.read_csv(pyodide.open_url(df_path), sep=\';\',\n
+                                                                                 encoding=\'utf8\')\n
+\n
+    xmla_request_params = {\'cube\': \'sales\',\n
+                           \'properties\': {\'Catalog\': \'sales\',\n
+                                          \'Content\': \'SchemaData\',\n
+                                          \'Format\': \'Multidimensional\'},\n
+                           \'mdx_query\': mdx_query\n
+                           }\n
+\n
+    return get_response(xmla_request_params=xmla_request_params, dataframes=dataframes,\n
+                        output=\'xmla\')  # or output=\'dict\'\n
+\n
+\n
+%% js\n
+function requestOlapy(xml) {\n
+  // Parse the XML.\n
+  // XXX Olapy must have the functionnality normally\n
+  var parser = new DOMParser().parseFromString(\n
+    xml,\n
+    "application/xml"\n
+  ),\n
+    request_type = parser.querySelector("RequestType").textContent,\n
+    restriction_dict = {},\n
+    property_dict = {},\n
+\n
+    restriction_element = parser.querySelector("RestrictionList"),\n
+    property_element = parser.querySelector("PropertyList"),\n
+    child_element,\n
+    i;\n
+  console.log(xml);\n
+  for (i = 0; i < restriction_element.childNodes.length; i += 1) {\n
+    // XXX How to filter only XML elements?\n
+    child_element = restriction_element.childNodes[i];\n
+    if (child_element.tagName) {\n
+      restriction_dict[child_element.tagName] = child_element.textContent;\n
+    }\n
+  }\n
+\n
+  for (i = 0; i < property_element.childNodes.length; i += 1) {\n
+    // XXX How to filter only XML elements?\n
+    child_element = property_element.childNodes[i];\n
+    if (child_element.tagName) {\n
+      property_dict[child_element.tagName] = child_element.textContent;\n
+    }\n
+  }\n
+  console.log(\'restriction_dict\', request_type, restriction_dict, property_dict);\n
+  // XXX Check if JSON encoding is needed\n
+  return pyodide.pyimport("calculateOlapyResponse")(request_type,\n
+                                                    JSON.stringify(restriction_dict),\n
+                                                    JSON.stringify(property_dict));\n
+}\n
+\n
+%% js\n
+1+1
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string>olapy_notebook.jsmd</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -313,7 +380,7 @@ function get_olapy_response2(dataframes_paths, mdx_query) {\r\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.45115.23569.17544</string> </value>
+                <value> <string>973.49487.38318.8465</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -331,7 +398,7 @@ function get_olapy_response2(dataframes_paths, mdx_query) {\r\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1550244208.38</float>
+                        <float>1550507002.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
