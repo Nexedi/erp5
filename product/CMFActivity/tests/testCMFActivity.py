@@ -2480,7 +2480,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
     activities = 'SQLDict', 'SQLQueue'
     for activities in product(activities, activities):
-      for node, expected in (None, '21'), ("same", '12'):
+      for node, expected in (None, '12'), ('', '21'), ('same', '12'):
         o._setTitle('0')
         # The dance around getNodeDict is to simulate the creation of
         # activities from 2 different nodes. We also change title in 2

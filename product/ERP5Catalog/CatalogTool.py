@@ -1330,14 +1330,14 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if result_count == limit:
           next_kw = activate_kw.copy()
           next_kw['priority'] = 1 + next_kw.get('priority', 1)
-          self.activate(activity='SQLQueue', **next_kw) \
+          self.activate(activity='SQLQueue', node='', **next_kw) \
               ._searchAndActivate(method_id,method_args, method_kw,
                                   activate_kw, r[-1].getUid(),
                                   group_kw=group_kw, **kw)
         if select_method_id:
           portal_activities = self.getPortalObject().portal_activities
           active_portal_activities = portal_activities.activate(
-            activity='SQLQueue', **activate_kw)
+            activity='SQLQueue', node='', **activate_kw)
           r = getattr(portal_activities, select_method_id)(r)
           activate = getattr(active_portal_activities, method_id)
           for i in xrange(0, len(r), packet_size):
