@@ -91,6 +91,11 @@ _server_address = None
 ROLE_IDLE = 0
 ROLE_PROCESSING = 1
 
+# Activating a path means we tried to avoid loading useless
+# data in cache so there would be no gain to expect.
+# And all nodes are likely to have tools already loaded.
+NO_DEFAULT_NODE_PREFERENCE = str, BaseTool
+
 # Logging channel definitions
 import logging
 # Main logging channel
@@ -1205,14 +1210,25 @@ class ActivityTool (BaseTool):
         url = object.getPhysicalPath()
       if serialization_tag is not None:
         kw['serialization_tag'] = serialization_tag
-      if node is not None:
-        if node != 'same':
+      while 1: # not a loop
+        if node is None:
+          # The caller lets us decide whether we prefer to execute on same node
+          # (to increase the efficiency of the ZODB Storage cache).
+          if (isinstance(object, NO_DEFAULT_NODE_PREFERENCE)
+              # A grouped activity is the sign we may have many of them so make
+              # sure that this node won't overprioritize too many activities.
+              or kw.get('group_method_id', '') != ''):
+            break
+        elif node == '':
+          break
+        elif node != 'same':
           raise ValueError("Invalid node argument %r" % node)
         try:
           kw['node'] = 1 + self.getNodeList(
             role=ROLE_PROCESSING).index(getCurrentNode())
         except ValueError:
           pass
+        break
       return ActiveWrapper(self, url, oid, activity,
                            active_process, active_process_uid, kw,
                            getattr(self, 'REQUEST', None))
