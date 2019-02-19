@@ -212,7 +212,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Base_getBySiteCurrentStockList</string> </value>
+            <value> <string>Base_getBySiteStockList</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -43,7 +43,8 @@ class TestTradeReports(ERP5ReportTestCase):
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
     return ('erp5_core_proxy_field_legacy',
-            'erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_pdm', )
+            'erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_simulation',
+            'erp5_simulation_test', 'erp5_configurator_standard_trade_template', )
 
   def login(self):
     """login with Manager roles."""
@@ -70,6 +71,7 @@ class TestTradeReports(ERP5ReportTestCase):
     self.sale_order_module = self.portal.sale_order_module
     self.product_module = self.portal.product_module
     self.portal_categories = self.portal.portal_categories
+    self.validateRules()
 
     # Create site category
     for site_id, codification in (
@@ -195,6 +197,8 @@ class TestTradeReports(ERP5ReportTestCase):
                       list(self.inventory_module.objectIds()))
     self.sale_order_module.manage_delObjects(
                       list(self.sale_order_module.objectIds()))
+    self.sale_packing_list_module.manage_delObjects(
+                      list(self.sale_packing_list_module.objectIds()))
 
     self.tic()
 
@@ -931,6 +935,30 @@ class TestTradeReports(ERP5ReportTestCase):
 
     self.tic()
 
+
+  def _createConfirmedSalePackingListForStockReportTest(self):
+    confirmed_sale_packing_list = self.portal.sale_packing_list_module.newContent(
+        portal_type='Sale Packing List',
+        title='%s 1' % self.id(),
+        destination_value=self.organisation_module.Organisation_1,
+        destination_section_value=self.organisation_module.Organisation_1,
+        source_value=self.organisation_module.Organisation_2,
+        source_section_value=self.organisation_module.Organisation_2,
+        start_date=DateTime(2006, 2, 2),
+        specialise = 'business_process_module/erp5_default_business_process',
+        description='The description',
+    )
+
+    confirmed_sale_packing_list.newContent(
+        portal_type='Sale Packing List Line',
+        resource_value=self.portal.product_module.product_A,
+        quantity=1,
+        price=10,
+    )
+
+    confirmed_sale_packing_list.confirm()
+    self.tic()
+
   def testStockReport_when_section_category_is_empty(self):
     self._createInventoryForStockReportTest()
     request = self.portal.REQUEST
@@ -944,6 +972,29 @@ class TestTradeReports(ERP5ReportTestCase):
 
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEqual(1, len(data_line_list))
+
+  def testStockReport_future_simulation_period(self):
+    self._createConfirmedSalePackingListForStockReportTest()
+    request = self.portal.REQUEST
+    request.form['at_date'] = DateTime(2007, 3, 3)
+    request.form['node_category'] = 'site/demo_site_A'
+    request.form['simulation_period'] = 'future'
+
+    line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+
+    self.checkLineProperties(
+                   data_line_list[0],
+                   resource_title='product_A',
+                   resource_reference='ref 2',
+                   variation_category_item_list=[],
+                   inventory=1,
+                   quantity_unit='G')
+
 
   def testStockReport_old_date(self):
     """
