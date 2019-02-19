@@ -1,7 +1,8 @@
 result_list = []
+if section_category:
+  kw['section_category'] = section_category
 for brain in context.portal_simulation.getCurrentInventoryList(
     node_category=node_category,
-    section_category=section_category,
     group_by_resource=True,
     group_by_variation=True,
     group_by_node=False,
