@@ -931,6 +931,20 @@ class TestTradeReports(ERP5ReportTestCase):
 
     self.tic()
 
+  def testStockReport_when_section_category_is_empty(self):
+    self._createInventoryForStockReportTest()
+    request = self.portal.REQUEST
+    request.form['at_date'] = DateTime(2006, 4, 4)
+    request.form['node_category'] = 'site/demo_site_A'
+    request.form['section_category'] = ''
+
+    line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+
   def testStockReport_old_date(self):
     """
     Old date
