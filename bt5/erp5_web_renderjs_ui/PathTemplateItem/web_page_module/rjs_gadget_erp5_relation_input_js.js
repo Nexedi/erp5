@@ -377,6 +377,12 @@
       }
 
       var context = this;
+
+      //XXX temporary hack to remove users from project
+      if(event.target.value == ""){
+        event.target.value = " ";
+      }
+
       return this.changeState({
         value_text: event.target.value,
         value_relative_url: null,
