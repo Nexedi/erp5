@@ -91,6 +91,11 @@ _server_address = None
 ROLE_IDLE = 0
 ROLE_PROCESSING = 1
 
+# Activating a path means we tried to avoid loading useless
+# data in cache so there would be no gain to expect.
+# And all nodes are likely to have tools already loaded.
+NO_DEFAULT_NODE_PREFERENCE = str, BaseTool
+
 # Logging channel definitions
 import logging
 # Main logging channel
@@ -1112,7 +1117,7 @@ class ActivityTool (BaseTool):
         #      getPriority does not see messages dequeueMessage would process.
         activity_list = activity_dict.values()
         def sort_key(activity):
-          return activity.getPriority(self)
+          return activity.getPriority(self, processing_node)
         while is_running_lock.acquire(0):
           try:
             activity_list.sort(key=sort_key) # stable sort
@@ -1181,7 +1186,9 @@ class ActivityTool (BaseTool):
         thread_activity_buffer[my_thread_key] = buffer
         return buffer
 
-    def activateObject(self, object, activity=DEFAULT_ACTIVITY, active_process=None, **kw):
+    def activateObject(self, object, activity=DEFAULT_ACTIVITY,
+                       active_process=None, serialization_tag=None,
+                       node=None, **kw):
       if active_process is None:
         active_process_uid = None
       elif isinstance(active_process, str):
@@ -1201,8 +1208,27 @@ class ActivityTool (BaseTool):
         except AttributeError:
           pass
         url = object.getPhysicalPath()
-      if kw.get('serialization_tag', False) is None:
-        del kw['serialization_tag']
+      if serialization_tag is not None:
+        kw['serialization_tag'] = serialization_tag
+      while 1: # not a loop
+        if node is None:
+          # The caller lets us decide whether we prefer to execute on same node
+          # (to increase the efficiency of the ZODB Storage cache).
+          if (isinstance(object, NO_DEFAULT_NODE_PREFERENCE)
+              # A grouped activity is the sign we may have many of them so make
+              # sure that this node won't overprioritize too many activities.
+              or kw.get('group_method_id', '') != ''):
+            break
+        elif node == '':
+          break
+        elif node != 'same':
+          raise ValueError("Invalid node argument %r" % node)
+        try:
+          kw['node'] = 1 + self.getNodeList(
+            role=ROLE_PROCESSING).index(getCurrentNode())
+        except ValueError:
+          pass
+        break
       return ActiveWrapper(self, url, oid, activity,
                            active_process, active_process_uid, kw,
                            getattr(self, 'REQUEST', None))
