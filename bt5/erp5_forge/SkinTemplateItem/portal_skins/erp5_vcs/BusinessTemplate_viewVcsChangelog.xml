@@ -72,6 +72,7 @@
                     <value>
                       <list>
                         <string>your_push</string>
+                        <string>your_version_up</string>
                         <string>your_changelog</string>
                         <string>reminder</string>
                         <string>added_files</string>
