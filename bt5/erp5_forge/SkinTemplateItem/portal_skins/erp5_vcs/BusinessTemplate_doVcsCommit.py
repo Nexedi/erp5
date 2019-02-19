@@ -1,3 +1,4 @@
+from Products.ERP5Type.Log import log
 kw = {}
 request = container.REQUEST
 for k in 'added', 'modified', 'removed':
@@ -17,7 +18,11 @@ if not changelog.strip():
     '&portal_status_message=Commit%20cancelled.')
   return context.asContext(**kw).BusinessTemplate_viewVcsChangelog()
 
+version_up_submodule = request.get('version_up', False)
 try:
   return context.getVcsTool().commit(changelog, **kw)
+  if version_up_submodule:
+    # Use interaction workflow in this case rather than trying imperative way
+    log("Check if we reach this point, it should be reachable by default")
 except Exception, error:
   return context.BusinessTemplate_handleException(error, script.id)
