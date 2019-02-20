@@ -5,6 +5,8 @@
     var fun = window[options.fun];
     return fun.apply(fun, options.argument_list);
   };
+  // Hack pyodide URL resolution while loading python libraries
+  window.languagePluginUrl = window.location.toString();
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
