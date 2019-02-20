@@ -240,7 +240,8 @@
             input = gadget.element.querySelector("input");
           plane.href = '';
 
-          if (input.value !== gadget.state.value_text) {
+          if (modification_dict.hasOwnProperty("value_text") &&
+              input.value !== gadget.state.value_text) {
             input.value = gadget.state.value_text;
           }
 
