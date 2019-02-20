@@ -1,8 +1,12 @@
 /*global window, rJS, RSVP, document, localStorage */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP) {
-  "use strict";
-
+  window.callFunction = function (options) {
+    var fun = window[options.fun];
+    return fun.apply(fun, options.argument_list);
+  };
+  // Hack pyodide URL resolution while loading python libraries
+  window.languagePluginUrl = window.location.toString();
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -24,6 +28,9 @@
         value: options.value,
         first_render: true
       });
+    })
+    .declareMethod("evalCode", function (code) {
+      return eval(code);
     })
     .onStateChange(function (modified_dict) {
       this.element.querySelector('script').textContent = this.state.value;
