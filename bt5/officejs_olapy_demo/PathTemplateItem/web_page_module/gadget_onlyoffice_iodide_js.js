@@ -9,7 +9,6 @@
 
     return gadget.getDeclaredGadget('iodide')
       .push(function (iodide) {
-
         return iodide.evalCode(
           'callFunction(' +
             JSON.stringify({

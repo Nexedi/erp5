@@ -96,6 +96,12 @@
             <value> <string>3</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
@@ -127,15 +133,15 @@
 }\n
 \n
 %% plugin\n
-{\r\n
-  "languageId": "py",\r\n
-  "displayName": "python",\r\n
-  "codeMirrorMode": "python",\r\n
-  "keybinding": "p",\r\n
-  "url": "/pyodide_dev.js",\r\n
-  "module": "pyodide",\r\n
-  "evaluator": "runPython",\r\n
-  "pluginType": "language"\r\n
+{\n
+  "languageId": "py",\n
+  "displayName": "python",\n
+  "codeMirrorMode": "python",\n
+  "keybinding": "p",\n
+  "url": "./pyodide_dev.js",\n
+  "module": "pyodide",\n
+  "evaluator": "runPython",\n
+  "pluginType": "language"\n
 }\n
 \n
 %% js\n
@@ -256,7 +262,7 @@ function requestOlapy(xml) {\n
 }\n
 \n
 %% js\n
-1+2
+1+3
 
 ]]></string> </value>
         </item>
@@ -395,7 +401,7 @@ function requestOlapy(xml) {\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.49531.15701.57429</string> </value>
+                <value> <string>973.49546.47911.47274</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -413,7 +419,7 @@ function requestOlapy(xml) {\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1550510083.84</float>
+                        <float>1550664695.8</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
