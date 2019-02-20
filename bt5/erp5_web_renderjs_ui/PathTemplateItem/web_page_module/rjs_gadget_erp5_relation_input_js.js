@@ -196,6 +196,7 @@
 
     .onStateChange(function (modification_dict) {
       var gadget = this,
+        input = null,
         value_text = gadget.state.value_text,
         // target_url,
         SEARCHING_CLASS_STR = "ui-btn ui-corner-all ui-btn-icon-notext" +
@@ -224,6 +225,11 @@
         buildEditableInputHTML(gadget);
       }
 
+      input = gadget.element.querySelector("input");
+      if (modification_dict.hasOwnProperty("value_text")) {
+        input.value = gadget.state.value_text;
+      }
+
       gadget.element.querySelector(".search_ul").innerHTML = "";
       // Display the airplane link or the search button
       if ((gadget.state.value_relative_url) || (gadget.state.value_text)) {
@@ -236,8 +242,7 @@
       return RSVP.Queue()
         .push(function () {
           var plane = gadget.element.querySelector("a"),
-            ul = gadget.element.querySelector(".search_ul"),
-            input = gadget.element.querySelector("input");
+            ul = gadget.element.querySelector(".search_ul");
           plane.href = '';
 
           if (input.value !== gadget.state.value_text) {
