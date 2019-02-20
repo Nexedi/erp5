@@ -98,27 +98,21 @@
             jIO.util.ajax({
               url: "olapy_notebook.jsmd"
             }),
-            gadget.getDeclaredGadget('onlyoffice')
+            gadget.getDeclaredGadget('onlyoffice'),
+            jIO.util.ajax({
+              url: "onlyoffice_iodide_test_2.xlsy",
+              dataType: "blob"
+            })
           ]);
         })
         .push(function (result) {
+          console.log(result);
           return result[0].render({
             key: 'script',
             value: result[1].target.response
           })
             .push(function () {
-              var storage = jIO.createJIO({
-                type: "erp5",
-                url: "https://softinst114089.host.vifib.net/erp5/web_site_module/hateoas/",
-                default_view_reference: "jio_view_attachment"
-              });
-              return storage.getAttachment(
-                'document_module/onlyoffice_iodide_test_2_xlsy',
-                'https://softinst114089.host.vifib.net/erp5/web_site_module/hateoas/document_module/onlyoffice_iodide_test_2_xlsy/Document_downloadForOnlyOfficeApp'
-              );
-            })
-            .push(function (blob) {
-              return jIO.util.readBlobAsDataURL(blob);
+              return jIO.util.readBlobAsDataURL(result[3].target.response);
             })
             .push(function (event) {
               return result[2].render({
