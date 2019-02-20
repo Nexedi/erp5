@@ -187,7 +187,7 @@ class ProcessManager(object):
     return re.findall(r'^  (--\w+)',
       self.spawn(program_path, '--help')['stdout'], re.M)
 
-  def killall(self, name):
+  def killall(self, path):
     """
     Kill processes of given name, only if they're orphan or subprocesses of
     the testnode.
@@ -196,20 +196,12 @@ class ProcessManager(object):
     pid = os.getpid()
     for process in psutil.process_iter():
       try:
-        if process.name() != name:
+        if not(path in str(process.cmdline())):
           continue
-        p = process.parent()
-        if p is not None:
-          while p is not None:
-            if p.pid == pid:
-              break
-            p = p.parent()
-          else:
-            continue
       except (psutil.AccessDenied, psutil.NoSuchProcess):
         continue
       logger.debug('ProcesssManager, killall on %s having pid %s',
-               name, process.pid)
+               process.name, process.pid)
       to_kill_list.append(process.pid)
     for pid in to_kill_list:
       killCommand(pid)

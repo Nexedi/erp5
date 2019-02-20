@@ -48,6 +48,7 @@ class NodeTestSuite(SlapOSInstance):
   
   """
   def __init__(self, reference, working_directory):
+    self.test_node_working_directory = working_directory
     d = os.path.join(working_directory, reference)
     super(NodeTestSuite, self).__init__(d)
     self.reference = reference

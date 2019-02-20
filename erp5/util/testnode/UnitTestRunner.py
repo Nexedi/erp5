@@ -53,7 +53,8 @@ class UnitTestRunner(object):
                self.testnode.config)
  
   def _prepareSlapOS(self, working_directory, slapos_instance,
-          create_partition=1, software_path_list=None, **kw):
+          create_partition=1, software_path_list=None,
+          process_path_to_kill=None, **kw):
     """
     Launch slapos to build software and partitions
     """
@@ -72,7 +73,7 @@ class UnitTestRunner(object):
 
     slapos_controler.initializeSlapOSControler(slapproxy_log=slapproxy_log,
        process_manager=self.testnode.process_manager, reset_software=reset_software,
-       software_path_list=software_path_list)
+       software_path_list=software_path_list, process_path_to_kill=process_path_to_kill)
     self.testnode.process_manager.supervisord_pid_file = os.path.join(\
          slapos_controler.instance_root, 'var', 'run', 'supervisord.pid')
     method_list= ["runSoftwareRelease"]
@@ -118,7 +119,8 @@ class UnitTestRunner(object):
     return self._prepareSlapOS(node_test_suite.working_directory,
               node_test_suite,
               software_path_list=[node_test_suite.custom_profile_path],
-              cluster_configuration={'_': json.dumps(node_test_suite.cluster_configuration)})
+              cluster_configuration={'_': json.dumps(node_test_suite.cluster_configuration)},
+              process_path_to_kill=node_test_suite.test_node_working_directory)
 
   def getInstanceRoot(self, node_test_suite):
     return self._getSlapOSControler(
