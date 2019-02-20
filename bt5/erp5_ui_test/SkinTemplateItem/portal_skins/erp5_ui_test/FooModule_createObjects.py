@@ -1,6 +1,7 @@
 """Create objects with given parameters"""
 from DateTime import DateTime
-category_list = ('a', 'b', 'a/a1', 'a/a2')
+if category_list is None:
+  category_list = ('a', 'b', 'a/a1', 'a/a2')
 big_category_list = ('c1', 'c10', 'c2', 'c20', 'c3', 'c4')
 
 for i in range(start, start + num):

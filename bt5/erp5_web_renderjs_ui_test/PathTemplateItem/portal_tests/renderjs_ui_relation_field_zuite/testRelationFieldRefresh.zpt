@@ -1,0 +1,105 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>&#36;{base_url}/foo_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=2&amp;category_list:list=a&amp;category_list:list=</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr>
+  <td>open</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module?editable=true</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<!-- Go to foo_module/0 in View tab -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text()="Title 0"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text()="Title 0"]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<!-- Check the relation field is up to date -->
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name="field_my_foo_category_title"]</td>
+  <td>a</td>
+</tr>
+<!-- Place a mark on the element to check later if it is correctly updated (not re-created) -->
+<tr>
+  <td>storeEval</td>
+  <td>document.getElementById("selenium_myiframe").contentWindow.document.querySelector('input[name="field_my_foo_category_title"]').setAttribute("test-relation-field-refresh", "1")</td>
+  <td>dummy</td>
+</tr>
+
+<!-- Trigger update the relation field with an empty value -->
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Next"]</td>
+  <td></td>
+</tr>
+<!-- When pressing Next button, the spinner spins twice. So we can't use the macro `wait_for_content_loaded`
+     because selenium sometimes misses one spinner (bad timing). By checking the header title we ensure the
+     spins are done. -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Foo: Title 1</td>
+  <td></td>
+</tr>
+
+<!-- Check the element is updated, not re-created -->
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//input[@name="field_my_foo_category_title" and @test-relation-field-refresh="1"]</td>
+  <td></td>
+</tr>
+<!-- The field should be updated to empty -->
+<!-- Here waitForTextNotPresent or waitForElementPresent passes no matter the state of the field, because the field is updated in javascript (not in html attributes) and so the selection //input[@value=''] does not work. -->
+<!-- When not passing, you can see that the plane is correctly replaced by a magnifying glass, as if the field was only partly updated -->
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name="field_my_foo_category_title"]</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
