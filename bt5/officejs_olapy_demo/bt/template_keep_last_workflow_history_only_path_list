@@ -1,7 +1,5 @@
 web_page_module/gadget_onlyoffice_iodide*
 web_site_module/onlyoffice_iodide
 web_site_module/onlyoffice_iodide/**
-web_site_module/onlyoffice_iodide_test
-web_site_module/onlyoffice_iodide_test/**
 document_module/onlyoffice_iodide*
 notebook_module/olapy_notebook
