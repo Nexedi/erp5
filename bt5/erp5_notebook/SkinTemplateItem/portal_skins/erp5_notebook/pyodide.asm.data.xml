@@ -7,12 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_Cacheable__manager_id</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>pyodide.asm.data</string> </value>
         </item>
@@ -26,7 +20,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Pyodide ASM Data</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
