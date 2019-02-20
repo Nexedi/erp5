@@ -76,6 +76,7 @@
                         <string>my_preferred_subversion_user_name</string>
                         <string>my_preferred_working_copy_list</string>
                         <string>my_preferred_vcs_push_mode</string>
+                        <string>my_preferred_version_up_submodule</string>
                       </list>
                     </value>
                 </item>
