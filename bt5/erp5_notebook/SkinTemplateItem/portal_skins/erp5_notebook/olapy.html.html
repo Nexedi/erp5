@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>OlaPy, Iodide</title>
+    <link rel="stylesheet" type="text/css" href="https://iodide.io/dist/iodide.pyodide-20180623.css">
+</head>
+<body>
+<!--%% meta
+{
+  "title": "Python",
+  "languages": {
+    "js": {
+      "pluginType": "language",
+      "languageId": "js",
+      "displayName": "Javascript",
+      "codeMirrorMode": "javascript",
+      "module": "window",
+      "evaluator": "eval",
+      "keybinding": "j",
+      "url": ""
+    },
+    "py": {
+      "languageId": "py",
+      "displayName": "python",
+      "codeMirrorMode": "python",
+      "keybinding": "p",
+      "url": "/pyodide_dev.js",
+      "module": "pyodide",
+      "evaluator": "runPython",
+      "pluginType": "language"
+    }
+  },
+  "lastExport": "2018-05-04T17:13:00.489Z"
+}
+
+%% plugin
+{
+  "languageId": "py",
+  "displayName": "python",
+  "codeMirrorMode": "python",
+  "keybinding": "p",
+  "url": "/pyodide_dev.js",
+  "module": "pyodide",
+  "evaluator": "runPython",
+  "pluginType": "language"
+}
+
+
+%% js
+
+pyodide.loadPackage('olapy')
+
+%% code {"language":"py"}
+
+import pandas as pd
+import pyodide
+from olapy.core.services.xmla_lib import get_response
+
+xmla_request_params = {'cube': 'sales','request_type': 'DISCOVER_PROPERTIES','properties': {},
+          'restrictions': {'PropertyName': 'ServerName'},'mdx_query': None}
+
+dataframes = {'Facts' : pd.read_csv(pyodide.open_url("olapy-data/cubes/sales/Facts.csv"),sep=';', encoding='utf8'),
+'Product':pd.read_csv(pyodide.open_url("olapy-data/cubes/sales/Product.csv"),sep=';', encoding='utf8'),
+'Geography':pd.read_csv(pyodide.open_url("olapy-data/cubes/sales/Geography.csv"),sep=';', encoding='utf8')
+}
+
+get_response(xmla_request_params=xmla_request_params,dataframes=dataframes, output='xmla') # or output='dict'
+
+
+%% code {"language":"py"}
+
+import pandas as pd
+import pyodide
+from olapy.core.services.xmla_lib import get_response
+
+dataframes = {'Facts' : pd.read_csv(pyodide.open_url("olapy-data/cubes/sales/Facts.csv"),sep=';', encoding='utf8'),
+'Product':pd.read_csv(pyodide.open_url("olapy-data/cubes/sales/Product.csv"),sep=';', encoding='utf8'),
+'Geography':pd.read_csv(pyodide.open_url("olapy-data/cubes/sales/Geography.csv"),sep=';', encoding='utf8')
+}
+
+xmla_request_params = {'cube': 'sales',
+          'properties': {'AxisFormat': 'TupleFormat', 'Format': 'Multidimensional', 'Content': 'SchemaData',
+                         'Catalog': 'sales',
+                         'LocaleIdentifier': '1033', 'Timeout': '0'},
+          'mdx_query': """SELECT  FROM [sales] WHERE ([Measures].[Amount]) CELL PROPERTIES VALUE,
+          FORMAT_STRING, LANGUAGE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"""}
+
+
+get_response(xmla_request_params=xmla_request_params,dataframes=dataframes, output='xmla') # or output='dict'
+
+-->
+<script id="jsmd" type="text/jsmd">
+</script>
+<div id='page'></div>
+<script src="./iodide_master.js"></script>
+<!--<script src='https://iodide.io/dist/iodide.pyodide-20180623.js'></script>-->
+<!--<script src='https://iodide.io/dist/iodide.v0.6-alpha.js'></script>-->
+
+</body>
+</html>
