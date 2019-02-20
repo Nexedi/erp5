@@ -302,8 +302,8 @@ shared = true
           runner = runner_class(self)
           logger.info("Type of current test is %s", my_test_type)
           # master testnode gets test_suites, slaves get nothing
+          testnode_software_status_dict = runner.prepareSlapOSForTestNode(test_node_slapos)
           if not(testnode_software_successfully_built):
-            testnode_software_status_dict = runner.prepareSlapOSForTestNode(test_node_slapos)
             if testnode_software_status_dict['status_code'] == 0:
               testnode_software_successfully_built = True
               logger.info("Will now skip build of testnode software")

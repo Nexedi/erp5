@@ -720,9 +720,11 @@ shared = true
     # TestNode
     test_node = self.getTestNode()
     # Modify class UnitTestRunner(or more after) method
+    def patch_prepareSlapOS(*args, **kw):
+      return {'status_code':0}
     original_prepareSlapOS = RunnerClass._prepareSlapOS
     original_runTestSuite = RunnerClass.runTestSuite
-    RunnerClass._prepareSlapOS = doNothing
+    RunnerClass._prepareSlapOS = patch_prepareSlapOS
     RunnerClass.runTestSuite = patch_runTestSuite
     SlapOSControler.initializeSlapOSControler = doNothing
     # Inside test_node a runner is created using new UnitTestRunner methods
@@ -886,7 +888,9 @@ shared = true
     else:
       RunnerClass.runTestSuite = doNothing
 
-    RunnerClass._prepareSlapOS = doNothing
+    def patch_prepareSlapOS(*args, **kw):
+      return {'status_code':0}
+    RunnerClass._prepareSlapOS = patch_prepareSlapOS
     SlapOSControler.initializeSlapOSControler = doNothing
     test_node.run()
     self.assertEquals(counter, 3)
