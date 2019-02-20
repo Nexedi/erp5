@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessTemplate_createVersionUpCommit</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
