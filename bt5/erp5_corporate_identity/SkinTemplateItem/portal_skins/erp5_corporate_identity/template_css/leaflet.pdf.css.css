@@ -14,12 +14,7 @@ html{
 .ci-leaflet #left-summary .title,
 .ci-leaflet p.ci-leaflet-source-header,
 .ci-leaflet p.ci-leaflet-sheet-header {
-  font-size: 28px; 
-}
-.ci-leaflet h2,
-.ci-leaflet #main-content .summary,
-.ci-leaflet #legalese .bottom {
-  font-size: 18px;
+  font-size: 28px;
 }
 .ci-leaflet p,
 .ci-leaflet li,
@@ -32,11 +27,19 @@ html{
 .ci-leaflet-footer div {
   font-size: 14px;
 }
-.ci-leaflet #legalese p,
-.ci-leaflet #legalese span,
 .ci-leaflet #left-summary .excerpt,
 .ci-leaflet #main-content .left-icon .excerpt {
   font-size: 11px;
+}
+.ci-leaflet #legalese p,
+.ci-leaflet #legalese span {
+  font-size: 13px;
+  line-height: 14px;
+}
+.ci-leaflet h2,
+.ci-leaflet #main-content .summary,
+.ci-leaflet #legalese .bottom span {
+  font-size: 18px;
 }
 /* === font style === */
 .ci-leaflet #main-content .summary {
@@ -127,12 +130,12 @@ html{
   box-sizing: border-box;
 }
 .ci-leaflet #left-summary {
-  width: 28%;
+  width: 30%;
   position: absolute;
   left: 5mm;
   top: 0;
-  padding-left: 10mm;
-  padding-right: 10mm;
+  padding-left: 12mm;
+  padding-right: 12mm;
   margin-top: 10mm;
   margin-bottom: 10mm;
   -webkit-box-sizing: border-box;
@@ -152,7 +155,7 @@ html{
 .ci-leaflet #left-summary .title {
   padding-top: 2mm;
   border-top: 2px solid #a1a1a1;
-} 
+}
 
 /* === fullwidth === */
 .ci-leaflet .ci-leaflet-body-fullwidth #left-summary,
@@ -178,19 +181,27 @@ html{
 .ci-leaflet #left-summary:before {
   content: "";
   display: block;
-  background-size: 60%;
+  background-size: 40%;
   background-position: center;
-  width: 100%;
+  width: 70%;
+  margin: 0 auto;
+  text-align: center;
   height: 50mm;
+  /*
+  background-size: contain;
+  max-width: 12em;
+  text-align: center;
+  margin: 0 auto;
+  */
 }
 .ci-leaflet #main-content {
-  width: 63%;
+  width: 61%;
   display: inline-block;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   padding-right: 0;
-  padding-left: 1%; /* to align with <h1>*/
+  padding-left: 3%; /* to align with <h1>*/
   text-align: justify;
   text-align-last: left;
   vertical-align: bottom;
@@ -233,14 +244,16 @@ html{
 
 /* === legalse === */
 .ci-leaflet #legalese {
-  width: 28%;
+  width: 30%;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   display: inline-block;
   vertical-align: bottom;
-  margin:0;
+  margin: 0;
   padding: 1em;
+  padding-left: 2em;
+  padding-right: 2em;
   text-align: left;
   text-align: justify;
   text-align-last: left;
@@ -251,8 +264,7 @@ html{
 }
 .ci-leaflet #legalese .bottom {
   margin: 0;
-  padding: 3mm 0;
-  padding-left: 12mm;
+  padding: 2mm 0;
   display:block;
   border-bottom: 2px solid #a1a1a1;
   -webkit-box-sizing: border-box;
@@ -260,6 +272,7 @@ html{
   box-sizing: border-box;
 }
 .ci-leaflet #legalese .bottom img {
-  max-height: 1em;
+  max-height: 2em;
+  margin-left: 3em;
   vertical-align: middle;
 }
