@@ -7758,6 +7758,144 @@ class _ZodbComponentTemplateItemMixin(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+class _ProductMigrationTemplateItemMixin:
+  """
+  Test Cases specific to migration of Products from filesystem
+  (Products.XXX.{Document,mixin,interfaces}.YYY) to ZODB Components
+  (erp5.component.{document,mixin,interface}.YYY).
+  """
+  def stepCreateProductDocumentAndPortalType(self, sequence=None, **_):
+    # Delete the bt5 Document created by previous tests (same name)
+    file_path = os.path.join(self.document_base_path, self.document_title + '.py')
+    if os.path.exists(file_path):
+      os.remove(file_path)
+
+    # getMigratableSourceCodeFromFilesystemList()
+    document_source_reference = 'Products.ERP5.Document.%s' % self.document_title
+    import Products.ERP5.Document
+    file_path = os.path.join(Products.ERP5.Document.__path__[0],
+                             self.document_title + '.py')
+    with open(file_path, 'w') as f:
+      f.write(self.document_data)
+    self.assertTrue(os.path.exists(file_path))
+    from Products.ERP5Type.Utils import importLocalDocument
+    # This is normally called at Zope startup to register Products Documents
+    # into document_class_registry then used in generatePortalTypeClass().
+    #
+    # Another reason to do that is because bt5 Document may already be there
+    # from a previous tests execution and thus would be used instead of this
+    # one...
+    importLocalDocument(
+      self.document_title,
+      class_path="%s.%s" % (document_source_reference, self.document_title))
+    sequence.edit(document_title=self.document_title,
+                  document_path=file_path,
+                  document_data=self.document_data,
+                  document_source_reference=document_source_reference)
+
+    object_type = self.getTypeTool().newContent(self.document_portal_type,
+                                                'Base Type',
+                                                type_class=self.document_title)
+    self.assertTrue(object_type is not None)
+    sequence.edit(object_ptype_id=self.document_portal_type)
+
+    import erp5.portal_type
+    portal_type_class = getattr(erp5.portal_type, sequence['object_ptype_id'])
+    # Accessing __mro__ would not load the class...
+    portal_type_class.loadClass()
+    from importlib import import_module
+    filesystem_module = import_module(document_source_reference)
+    filesystem_class = getattr(filesystem_module, self.document_title)
+    self.assertTrue(filesystem_class in portal_type_class.__mro__)
+
+  def stepCheckProductDocumentMigration(self, sequence=None, **kw):
+    self.stepCheckDocumentMigration(sequence, **kw)
+
+    from importlib import import_module
+
+    module_name = sequence['document_title']
+    import erp5.portal_type
+    portal_type_class = getattr(erp5.portal_type, sequence['object_ptype_id'])
+    # Accessing __mro__ would not load the class...
+    portal_type_class.loadClass()
+
+    filesystem_module = import_module('Products.ERP5.Document.%s' % module_name)
+    filesystem_class = getattr(filesystem_module, module_name)
+    self.assertFalse(filesystem_class in portal_type_class.__mro__)
+
+    component_module_name = 'erp5.component.document.' + module_name
+    try:
+      component_module = import_module(component_module_name)
+    except ImportError:
+      raise AssertionError("%s should be importable" % component_module_name)
+    else:
+      component_class = getattr(component_module, module_name)
+      self.assertTrue(component_class in portal_type_class.__mro__)
+
+  def test_BusinessTemplateUpgradeProductDocumentFromFilesystemToZodb(self):
+    """
+    Same as test_BusinessTemplateUpgradeDocumentFromFilesystemToZodb above,
+    but for Product Document rather than bt5 Document. Also, Products Document
+    are not going to be removed automatically (safer).
+    """
+    sequence_list = SequenceList()
+    sequence_string = """
+      CreateProductDocumentAndPortalType
+      CreateNewBusinessTemplate
+      UseExportBusinessTemplate
+      AddPortalTypeToBusinessTemplate
+      UseExportBusinessTemplate
+      CheckModifiedBuildingState
+      CheckNotInstalledInstallationState
+      BuildBusinessTemplate
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      CheckObjectPropertiesInBusinessTemplate
+      UseCurrentBusinessTemplateForInstall
+      InstallWithoutForceBusinessTemplate
+      Tic
+      CheckInstalledInstallationState
+      CheckBuiltBuildingState
+      CheckSkinsLayers
+      CheckDocumentExists
+
+      CopyAndMigrateDocumentBusinessTemplate
+      CheckProductDocumentMigration
+      BuildBusinessTemplate
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      SaveBusinessTemplate
+      RemoveBusinessTemplate
+      CheckZodbDocumentWorkflowHistoryUnchanged
+      RemoveZodbDocument
+      CheckDocumentExists
+      CheckZodbDocumentRemoved
+
+      ImportBusinessTemplate
+      UseImportBusinessTemplate
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      InstallWithoutForceBusinessTemplate
+      Tic
+      CheckInstalledInstallationState
+      CheckBuiltBuildingState
+      CheckSkinsLayers
+      CheckDocumentExists
+      CheckZodbDocumentExistsAndValidated
+
+      UseExportBusinessTemplate
+      CheckReplacedInstallationState
+      UseImportBusinessTemplate
+
+      UninstallBusinessTemplate
+      RemoveAllTrashBins
+      CheckBuiltBuildingState
+      CheckNotInstalledInstallationState
+      CheckZodbDocumentRemoved
+      """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 # bt5 (instancehome and ZODB Component)
 class _LocalTemplateItemMixin:
   """
@@ -7772,8 +7910,9 @@ class _LocalTemplateItemMixin:
     f.write(self.document_data)
     f.close()
     self.assertTrue(os.path.exists(file_path))
-    sequence.edit(document_title=self.document_title, document_path=file_path,
-        document_data=self.document_data)
+    sequence.edit(document_title=self.document_title,
+                  document_path=file_path,
+                  document_data=self.document_data)
 
   def stepCreateUpdatedDocument(self, sequence=None, **kw):
     file_path = os.path.join(self.document_base_path, self.document_title+'.py')
@@ -7788,7 +7927,11 @@ class _LocalTemplateItemMixin:
 
   def stepAddDocumentToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence['current_bt']
-    bt.edit(**{self.template_property: [sequence['document_title']]})
+    document_title = sequence['document_title']
+    bt.edit(**{self.template_property: [document_title]})
+    # getMigratableSourceCodeFromFilesystemList()
+    sequence.edit(document_source_reference='%s:%s' % (bt.getTitle(),
+                                                       document_title))
 
   def stepRemoveDocument(self, sequence=None, **kw):
     document_path = sequence['document_path']
@@ -8081,6 +8224,8 @@ class _LocalTemplateItemMixin:
     self.assertEqual(component.getReference(), sequence['document_title'])
     self.assertEqual(component.getTextContent(), sequence['document_data'])
     self.assertEqual(component.getPortalType(), self.component_portal_type)
+    self.assertEqual(component.getSourceReference(), sequence['document_source_reference'])
+    self.assertEqual(component.getValidationState(), 'validated')
     sequence.edit(document_id=component_id)
 
   def test_BusinessTemplateWithZodbDocumentMigrated(self):
@@ -8308,16 +8453,35 @@ class _LocalTemplateItemMixin:
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 # bt5 (instancehome and ZODB Component) and Products
 class TestDocumentTemplateItem(_LocalTemplateItemMixin,
-                               _ZodbComponentTemplateItemMixin):
+                               _ZodbComponentTemplateItemMixin,
+                               _ProductMigrationTemplateItemMixin):
   document_title = 'UnitTest'
-  document_data = """class UnitTest:
-  meta_type = 'ERP5 Unit Test'
-  portal_type = 'Unit Test'"""
-  document_data_updated = """class UnitTest:
+  document_portal_type = 'Unit Test'
+  document_data = """from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Globals import InitializeClass
+from AccessControl import ClassSecurityInfo
+
+class UnitTest(XMLObject):
   meta_type = 'ERP5 Unit Test'
   portal_type = 'Unit Test'
+  security = ClassSecurityInfo()
+
+InitializeClass(UnitTest)
+"""
+  document_data_updated = """from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Globals import InitializeClass
+from AccessControl import ClassSecurityInfo
+
+class UnitTest(XMLObject):
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'
+  security = ClassSecurityInfo()
+
   def updated(self):
-    pass"""
+    pass
+
+InitializeClass(UnitTest)
+"""
   document_base_path = os.path.join(getConfiguration().instancehome, 'Document')
   template_property = 'template_document_id_list'
   component_id_prefix = DocumentComponent.getIdPrefix()
@@ -8325,7 +8489,8 @@ class TestDocumentTemplateItem(_LocalTemplateItemMixin,
 
 from Products.ERP5Type.Core.InterfaceComponent import InterfaceComponent
 # bt5 (ZODB Component only) and Products
-class TestInterfaceTemplateItem(_ZodbComponentTemplateItemMixin):
+class TestInterfaceTemplateItem(_ZodbComponentTemplateItemMixin,
+                                _ProductMigrationTemplateItemMixin):
   document_title = 'IUnitTest'
   document_data = '''from zope.interface import Interface
 
@@ -8341,7 +8506,8 @@ class IUnitTest(Interface):
 
 from Products.ERP5Type.Core.MixinComponent import MixinComponent
 # bt5 (ZODB Component only) and Products
-class TestMixinTemplateItem(_ZodbComponentTemplateItemMixin):
+class TestMixinTemplateItem(_ZodbComponentTemplateItemMixin,
+                            _ProductMigrationTemplateItemMixin):
   document_title = 'UnitTestMixin'
   document_data = '''class UnitTestMixin:
   def foo(self):
@@ -8356,7 +8522,8 @@ class TestMixinTemplateItem(_ZodbComponentTemplateItemMixin):
 
 # bt5 (instancehome (legacy) and ZODB Component) and Products
 class TestConstraintTemplateItem(_LocalTemplateItemMixin,
-                                 _ZodbComponentTemplateItemMixin):
+                                 _ZodbComponentTemplateItemMixin,
+                                 _ProductMigrationTemplateItemMixin):
   document_title = 'UnitTest'
   document_data = ' \nclass UnitTest: \n  """ \n  Fake constraint for unit test \n \
     """ \n  _properties = ( \n  ) \n  _categories = ( \n  ) \n\n'
@@ -8388,7 +8555,8 @@ class TestExtensionTemplateItem(_LocalTemplateItemMixin,
 from Products.ERP5Type.Core.TestComponent import TestComponent
 # bt5 (instancehome (legacy) and ZODB Component) and Products
 class TestTestTemplateItem(_LocalTemplateItemMixin,
-                           _ZodbComponentTemplateItemMixin):
+                           _ZodbComponentTemplateItemMixin,
+                           _ProductMigrationTemplateItemMixin):
   document_title = 'UnitTest'
   document_data = """class UnitTest:
   meta_type = 'ERP5 Unit Test'
@@ -8507,6 +8675,19 @@ TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZ
 
 TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithSyntaxError = \
     skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateUpgradeDocumentFromFilesystemToZodbWithSyntaxError)
+
+TestConstraintTemplateItem.test_BusinessTemplateUpgradeProductDocumentFromFilesystemToZodb = \
+    skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateUpgradeProductDocumentFromFilesystemToZodb)
+
+# TODO-arnau
+TestInterfaceTemplateItem.test_BusinessTemplateUpgradeProductDocumentFromFilesystemToZodb = \
+    skip('Not implemented yet')(TestInterfaceTemplateItem.test_BusinessTemplateUpgradeProductDocumentFromFilesystemToZodb)
+
+TestTestTemplateItem.test_BusinessTemplateUpgradeProductDocumentFromFilesystemToZodb = \
+    skip('Not implemented yet')(TestTestTemplateItem.test_BusinessTemplateUpgradeProductDocumentFromFilesystemToZodb)
+
+TestMixinTemplateItem.test_BusinessTemplateUpgradeProductDocumentFromFilesystemToZodb = \
+    skip('Not implemented yet')(TestMixinTemplateItem.test_BusinessTemplateUpgradeProductDocumentFromFilesystemToZodb)
 
 def test_suite():
   suite = unittest.TestSuite()

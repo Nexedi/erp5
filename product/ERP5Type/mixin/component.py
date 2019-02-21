@@ -345,14 +345,21 @@ class ComponentMixin(PropertyRecordableMixin, Base):
   security.declareProtected(Permissions.ModifyPortalContent,
                             'importFromFilesystem')
   @classmethod
-  def importFromFilesystem(cls, context, reference, version):
+  def importFromFilesystem(cls, context, reference, version, source_reference=None):
     """
     Import a Component from the filesystem into ZODB and validate it so it can
     be loaded straightaway provided validate() does not raise any error of
     course
     """
     import os.path
-    path = os.path.join(cls._getFilesystemPath(), reference + '.py')
+    if source_reference is None or not source_reference.startswith('Products'):
+      path = os.path.join(cls._getFilesystemPath(), reference + '.py')
+    else:
+      import inspect
+      module_obj = __import__(source_reference, globals(), {},
+                              level=0, fromlist=[source_reference])
+      path = inspect.getsourcefile(module_obj)
+
     with open(path) as f:
       source_code = f.read()
 
@@ -363,6 +370,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     object_id = '%s.%s.%s' % (cls.getIdPrefix(), version, reference)
     new_component = context.newContent(id=object_id,
                                        reference=reference,
+                                       source_reference=source_reference,
                                        version=version,
                                        text_content=source_code,
                                        portal_type=cls.portal_type)
