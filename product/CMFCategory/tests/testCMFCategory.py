@@ -221,6 +221,14 @@ class TestCMFCategory(ERP5TypeTestCase):
     p1.setRegionList(region_list)
     self.assertEqual(p1.getRegion(), None)
 
+    region_list = [self.region1, self.region2, self.region1]
+    p1.setRegionList(region_list)
+    self.assertEqual(p1.getRegionList(), self.region_list)
+    p1.setRegionValueList([region_value_list[0],
+                           region_value_list[1],
+                           region_value_list[0]])
+    self.assertEqual(p1.getRegionList(), self.region_list)
+
   def test_03_CategoryValue(self):
     # Test if we can get categories values
     region_value = self.portal.portal_categories.resolveCategory('region/%s' % self.region1)
@@ -1251,13 +1259,13 @@ class TestCMFCategory(ERP5TypeTestCase):
     def _set(*args, **kw):
       return category_tool._setCategoryMembership(person, *args, **kw)
     _set(bc.id, list('aa'))
-    self.assertEqual(get(bc.id), list('aa'))
+    self.assertEqual(get(bc.id), list('a'))
     _set(bc.id, list('baa'))
-    self.assertEqual(get(bc.id), list('aba'))
+    self.assertEqual(get(bc.id), list('ab'))
     _set(bc.id, map(base, 'bb'), 1)
-    self.assertEqual(get(bc.id), list('bb'))
+    self.assertEqual(get(bc.id), list('b'))
     _set(bc.id, map(base, 'abb'), 1)
-    self.assertEqual(get(bc.id), list('bab'))
+    self.assertEqual(get(bc.id), list('ba'))
     _set(bc.id, ())
 
   def test_relatedIndex(self):

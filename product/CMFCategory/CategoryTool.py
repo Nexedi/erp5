@@ -30,7 +30,7 @@
 """\
 ERP portal_categories tool.
 """
-from collections import deque
+from collections import deque, OrderedDict
 import re
 from BTrees.OOBTree import OOTreeSet
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
@@ -1189,7 +1189,8 @@ class CategoryTool(BaseTool):
         # note that we don't want to cast as set at this point to keep ordering (and duplicates).
         value = [x for x in tuple(value) if x != relative_url]
 
-      context.categories = value = tuple(value)
+      # Keep only the first occurrence of each category while preserving order.
+      context.categories = value = tuple(OrderedDict.fromkeys(value))
       if context.isTempDocument():
         return
 
