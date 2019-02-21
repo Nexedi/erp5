@@ -104,6 +104,9 @@ class Sequence:
   def __setitem__(self, key, value):
     self._dict[key] = value
 
+  def __contains__(self, key):
+    return key in self._dict
+
   def asText(self):
     """
     Representation of the current Sequence. Useful for debuggers.
