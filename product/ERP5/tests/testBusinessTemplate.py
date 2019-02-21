@@ -7555,10 +7555,10 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-
-from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
-
-class _TestZodbOnlyComponentTemplateItemMixin:
+class _ZodbComponentTemplateItemMixin(BusinessTemplateMixin):
+  """
+  Test cases for all Test*TemplateItem test classes.
+  """
   def stepCreateZodbDocument(self, sequence=None, **kw):
     document_id = self.component_id_prefix + '.erp5.' + self.document_title
     component = self.portal.portal_components.newContent(
@@ -7758,20 +7758,12 @@ class _TestZodbOnlyComponentTemplateItemMixin:
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-class TestDocumentTemplateItem(BusinessTemplateMixin,
-                               _TestZodbOnlyComponentTemplateItemMixin):
-  document_title = 'UnitTest'
-  document_data = """class UnitTest:
-  meta_type = 'ERP5 Unit Test'
-  portal_type = 'Unit Test'"""
-  document_data_updated = """class UnitTest:
-  meta_type = 'ERP5 Unit Test'
-  portal_type = 'Unit Test'
-  def updated(self):
-    pass"""
-  document_base_path = os.path.join(getConfiguration().instancehome, 'Document')
-  template_property = 'template_document_id_list'
-
+# bt5 (instancehome and ZODB Component)
+class _LocalTemplateItemMixin:
+  """
+  Test Cases for (legacy) local documents (eg instancehome/{Document,Test,
+  Constraint,Extensions}) and their migration to ZODB Components.
+  """
   def stepCreateDocument(self, sequence=None, **kw):
     file_path = os.path.join(self.document_base_path, self.document_title+'.py')
     if os.path.exists(file_path):
@@ -8091,9 +8083,6 @@ class TestDocumentTemplateItem(BusinessTemplateMixin,
     self.assertEqual(component.getPortalType(), self.component_portal_type)
     sequence.edit(document_id=component_id)
 
-  component_id_prefix = DocumentComponent.getIdPrefix()
-  component_portal_type = DocumentComponent.portal_type
-
   def test_BusinessTemplateWithZodbDocumentMigrated(self):
     """
     Checks that if Business Template defines filesystem Document, they are
@@ -8316,9 +8305,27 @@ class TestDocumentTemplateItem(BusinessTemplateMixin,
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
+# bt5 (instancehome and ZODB Component) and Products
+class TestDocumentTemplateItem(_LocalTemplateItemMixin,
+                               _ZodbComponentTemplateItemMixin):
+  document_title = 'UnitTest'
+  document_data = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'"""
+  document_data_updated = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'
+  def updated(self):
+    pass"""
+  document_base_path = os.path.join(getConfiguration().instancehome, 'Document')
+  template_property = 'template_document_id_list'
+  component_id_prefix = DocumentComponent.getIdPrefix()
+  component_portal_type = DocumentComponent.portal_type
+
 from Products.ERP5Type.Core.InterfaceComponent import InterfaceComponent
-class TestInterfaceTemplateItem(BusinessTemplateMixin,
-                                _TestZodbOnlyComponentTemplateItemMixin):
+# bt5 (ZODB Component only) and Products
+class TestInterfaceTemplateItem(_ZodbComponentTemplateItemMixin):
   document_title = 'IUnitTest'
   document_data = '''from zope.interface import Interface
 
@@ -8333,8 +8340,8 @@ class IUnitTest(Interface):
   component_portal_type = InterfaceComponent.portal_type
 
 from Products.ERP5Type.Core.MixinComponent import MixinComponent
-class TestMixinTemplateItem(BusinessTemplateMixin,
-                            _TestZodbOnlyComponentTemplateItemMixin):
+# bt5 (ZODB Component only) and Products
+class TestMixinTemplateItem(_ZodbComponentTemplateItemMixin):
   document_title = 'UnitTestMixin'
   document_data = '''class UnitTestMixin:
   def foo(self):
@@ -8347,7 +8354,9 @@ class TestMixinTemplateItem(BusinessTemplateMixin,
   component_id_prefix = MixinComponent.getIdPrefix()
   component_portal_type = MixinComponent.portal_type
 
-class TestConstraintTemplateItem(TestDocumentTemplateItem):
+# bt5 (instancehome (legacy) and ZODB Component) and Products
+class TestConstraintTemplateItem(_LocalTemplateItemMixin,
+                                 _ZodbComponentTemplateItemMixin):
   document_title = 'UnitTest'
   document_data = ' \nclass UnitTest: \n  """ \n  Fake constraint for unit test \n \
     """ \n  _properties = ( \n  ) \n  _categories = ( \n  ) \n\n'
@@ -8357,8 +8366,9 @@ class TestConstraintTemplateItem(TestDocumentTemplateItem):
   template_property = 'template_constraint_id_list'
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
-
-class TestExtensionTemplateItem(TestDocumentTemplateItem):
+# bt5 (instancehome (legacy) and ZODB Component)
+class TestExtensionTemplateItem(_LocalTemplateItemMixin,
+                                _ZodbComponentTemplateItemMixin):
   document_title = 'UnitTest'
   document_data = """class UnitTest:
   meta_type = 'ERP5 Unit Test'
@@ -8376,8 +8386,9 @@ class TestExtensionTemplateItem(TestDocumentTemplateItem):
   component_portal_type = ExtensionComponent.portal_type
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
-
-class TestTestTemplateItem(TestDocumentTemplateItem):
+# bt5 (instancehome (legacy) and ZODB Component) and Products
+class TestTestTemplateItem(_LocalTemplateItemMixin,
+                           _ZodbComponentTemplateItemMixin):
   document_title = 'UnitTest'
   document_data = """class UnitTest:
   meta_type = 'ERP5 Unit Test'
