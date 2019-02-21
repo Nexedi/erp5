@@ -207,7 +207,7 @@ class SlapOSControler(object):
     createFolder(self.software_root, True)
 
   def initializeSlapOSControler(self, slapproxy_log=None, process_manager=None,
-        reset_software=False, software_path_list=None, process_path_to_kill=None):
+              reset_software=False, software_path_list=None):
     self.process_manager = process_manager
     self.software_path_list = software_path_list
     logger.debug('SlapOSControler, initialize, reset_software: %r', reset_software)
@@ -229,9 +229,6 @@ class SlapOSControler(object):
       slapproxy_log_fp = open(slapproxy_log, 'w')
       kwargs['stdout'] = slapproxy_log_fp
       kwargs['stderr'] = slapproxy_log_fp
-    # Make sure there is no slapos alive from previous run
-    if process_path_to_kill is not None:
-      process_manager.killall(process_path_to_kill)
     proxy = subprocess.Popen([config['slapos_binary'], 
       'proxy', 'start', '--cfg' , self.slapos_config], **kwargs)
     process_manager.process_pid_set.add(proxy.pid)

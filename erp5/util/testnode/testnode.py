@@ -246,6 +246,7 @@ shared = true
   def cleanUp(self):
     logger.debug('Testnode.cleanUp')
     self.process_manager.killPreviousRun()
+    self.process_manager.killall(self.working_directory)
     self._cleanupLog()
     self._cleanupTemporaryFiles()
 
