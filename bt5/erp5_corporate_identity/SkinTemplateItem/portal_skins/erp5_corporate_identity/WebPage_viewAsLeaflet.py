@@ -85,7 +85,7 @@ if leaflet_theme.get("theme").lower() == leaflet_theme.get("theme_logo_descripti
 leaflet_recycle_url = "template_images/recycle.png"
 leaflet_css = ''.join([
   'html .ci-leaflet #left-summary:before {',
-    'background: url("%s") center no-repeat;' % (leaflet_theme.get("enhanced_logo_url")),
+    'background: url("%s") center no-repeat;' % (leaflet_theme.get("theme_logo_url")),
     'background-size: contain;',
   '}'
 ])
