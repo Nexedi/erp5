@@ -18,6 +18,10 @@ if img_string is None or img_string == "":
   return img_string
 
 img_src = re.findall("src=['\"](.*?)['\"]", img_string)[0]
+
+if img_src.startswith('data:image/'):
+  return img_string
+
 img_type = None
 
 # START user ignoring guidelines:
