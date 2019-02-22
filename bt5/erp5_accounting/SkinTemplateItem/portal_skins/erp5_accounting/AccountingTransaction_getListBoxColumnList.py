@@ -89,7 +89,7 @@ if len(payment_request_set) > 1:
 min_project_count = 1
 if context.getSourceProject() or context.getDestinationProject():
   min_project_count = 2
-if len(project_set) > min_project_count:
+if force_project or len(project_set) > min_project_count:
   if source:
     a(('getSourceProjectTitle', 'Project'))
   else:

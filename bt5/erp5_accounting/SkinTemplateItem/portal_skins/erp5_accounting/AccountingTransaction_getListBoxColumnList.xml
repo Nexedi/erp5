@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>source=0</string> </value>
+            <value> <string>source=0, force_project=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
