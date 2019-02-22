@@ -53,21 +53,21 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
   def getInventoryModule(self):
     return getattr(self.getPortal(), 'inventory_module',None)
 
+  def deliverPackingList(self, packing_list):
+    """step through all steps of packing list workflow."""
+    packing_list.confirm()
+    packing_list.setReady()
+    packing_list.start()
+    packing_list.stop()
+    packing_list.deliver()
+    self.assertEqual(packing_list.getSimulationState(), 'delivered')
+
   def stepCreateInitialMovements(self, sequence=None, **kw):
     """Create movements before this inventory.
     """
     pplm = self.getPortal().purchase_packing_list_module
     splm = self.getPortal().sale_packing_list_module
     iplm = self.getPortal().internal_packing_list_module
-
-    def deliverPackingList(pl):
-      """step through all steps of packing list workflow."""
-      pl.confirm()
-      pl.setReady()
-      pl.start()
-      pl.stop()
-      pl.deliver()
-      self.assertEqual(pl.getSimulationState(), 'delivered')
 
     # we create content :
     #   1 purchase packing list
@@ -85,7 +85,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
                       resource_value=sequence.get('resource'),
                       quantity=month*10) # dummy quantity, it will be
                                          # replaced by inventory
-      deliverPackingList(ppl)
+      self.deliverPackingList(ppl)
 
       spl = splm.newContent(
                       portal_type='Sale Packing List',
@@ -97,7 +97,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
       spl.newContent( portal_type='Sale Packing List Line',
                       resource_value=sequence.get('resource'),
                       quantity=month*10)
-      deliverPackingList(spl)
+      self.deliverPackingList(spl)
 
       ipl = iplm.newContent(
                       portal_type='Internal Packing List',
@@ -109,7 +109,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
       ipl.newContent( portal_type='Internal Packing List Line',
                       resource_value=sequence.get('resource'),
                       quantity=month*10)
-      deliverPackingList(ipl)
+      self.deliverPackingList(ipl)
 
   def createInventory(self, start_date=None,
                                        sequence=None,**kw):
@@ -619,6 +619,131 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
 
     sequence_list.play(self)
 
+  def createInitialDeliveryForCheckingUselessCorrection(self, sequence=None):
+    organisation =  sequence.get('organisation1')
+    from_organisation = sequence.get('organsation2')
+    delivery = self.getPortal().internal_packing_list_module.newContent(
+                    portal_type='Internal Packing List',
+                    specialise=self.business_process,
+                    source_value = from_organisation,
+                    destination_value = organisation,
+                    start_date=DateTime(2019, 02, 20),
+                  )
+    resource_value = sequence.get('resource')
+    delivery.newContent( portal_type='Internal Packing List Line',
+                    resource_value=resource_value,
+                    quantity=2)
+    self.deliverPackingList(delivery)
+    self.tic()
+    return delivery
+
+  def stepCheckInventoryDoesNotKeepUselessCorrectionAtInventoryLevel(self, sequence=None):
+    organisation =  sequence.get('organisation1')
+    resource_value = sequence.get('resource')
+    delivery = self.createInitialDeliveryForCheckingUselessCorrection(sequence=sequence)
+
+    def getInventoryQuantity():
+      return self.getSimulationTool().getCurrentInventory(node_uid=organisation.getUid(),
+                                                  resource=resource_value.getRelativeUrl())
+
+    self.assertEqual(2, getInventoryQuantity())
+
+    inventory = self.getInventoryModule().newContent()
+    inventory.edit(start_date=DateTime(2019, 02, 21),
+                   destination_value=organisation,
+                   full_inventory=True)
+    inventory.deliver()
+    self.tic()
+
+    self.assertEqual(0, getInventoryQuantity())
+
+    delattr(delivery, 'workflow_history')
+    self.assertEqual('draft', delivery.getSimulationState())
+    delivery.reindexObject()
+    self.tic()
+    inventory.reindexObject()
+    self.tic()
+    self.assertEqual(0, getInventoryQuantity())
+
+  def test_06_InventoryDoesNotKeepUselessCorrectionAtInventoryLevel(self):
+    """
+    We will create a movement, then a full inventory setting all stock to 0.
+    This will insert a correction line in stock table with uid of inventory.
+    But then, if initial movement is cancelled, a reindex of inventory must remove the correction
+    """
+    sequence_list = SequenceList()
+
+    # Test with a simple inventory without cell
+    sequence_string = 'stepCreateNotVariatedResource \
+                       stepCreateOrganisation1 \
+                       stepTic \
+                       stepCheckInventoryDoesNotKeepUselessCorrectionAtInventoryLevel'
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
+  def stepCheckInventoryDoesNotKeepUselessCorrectionAtLineLevel(self, sequence=None):
+    organisation =  sequence.get('organisation1')
+    resource_value = sequence.get('resource')
+    delivery = self.createInitialDeliveryForCheckingUselessCorrection(sequence=sequence)
+
+    def getInventoryQuantity():
+      return self.getSimulationTool().getCurrentInventory(node_uid=organisation.getUid(),
+                                                  resource=resource_value.getRelativeUrl())
+
+    self.assertEqual(2, getInventoryQuantity())
+
+    inventory = self.getInventoryModule().newContent()
+    inventory.edit(start_date=DateTime(2019, 02, 21),
+                   destination_value=organisation,
+                   full_inventory=True)
+    inventory_line = inventory.newContent(portal_type='Inventory Line',
+                    resource_value=resource_value,
+                    quantity=3)
+    inventory.deliver()
+    self.tic()
+
+    self.assertEqual(3, getInventoryQuantity())
+
+    delattr(delivery, 'workflow_history')
+    self.assertEqual('draft', delivery.getSimulationState())
+    delivery.reindexObject()
+    self.tic()
+    inventory.reindexObject()
+    self.tic()
+    self.assertEqual(3, getInventoryQuantity())
+    # Even though this scenario might not really, happen, make sure the code does not
+    # keep a correction line for a resource which is not set any more
+    inventory_line.setResourceValue(None)
+    inventory.reindexObject()
+    self.tic()
+    self.assertEqual(0, getInventoryQuantity())
+    inventory_line.setResourceValue(resource_value)
+    inventory.reindexObject()
+    self.tic()
+    self.assertEqual(3, getInventoryQuantity())
+    # last safety check, make sure deletion of line of inventory has really an impact
+    inventory.manage_delObjects(ids=[inventory_line.getId()])
+    inventory.reindexObject()
+    self.tic()
+    self.assertEqual(0, getInventoryQuantity())
+
+  def test_07_InventoryDoesNotKeepUselessCorrectionAtLineLevel(self):
+    """
+    We will create a movement, then a full inventory changing stock value.
+    This will insert a correction line in stock table with uid of inventory line.
+    But then, if initial movement is cancelled, a reindex of inventory must remove the correction
+    """
+    sequence_list = SequenceList()
+
+    # Test with a simple inventory without cell
+    sequence_string = 'stepCreateNotVariatedResource \
+                       stepCreateOrganisation1 \
+                       stepTic \
+                       stepCheckInventoryDoesNotKeepUselessCorrectionAtLineLevel'
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
 
 def test_suite():
   suite = unittest.TestSuite()

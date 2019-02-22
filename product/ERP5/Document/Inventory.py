@@ -149,6 +149,8 @@ class Inventory(Delivery):
 
     stock_object_list = []
     stock_append = stock_object_list.append
+    to_delete_stock_uid_set = set()
+    to_delete_stock_uid_add = to_delete_stock_uid_set.add
 
     for inventory_calculation_dict in default_inventory_calculation_list:
 
@@ -200,6 +202,8 @@ class Inventory(Delivery):
         return value
 
       for movement in method():
+        # Make sure we remove any any value
+        to_delete_stock_uid_add(movement.getUid())
         if movement.getResourceValue() is not None and \
             movement.getInventoriatedQuantity() not in (None, ''):
 
@@ -325,18 +329,27 @@ class Inventory(Delivery):
       disable_archive=disable_archive,
       immediate_reindex_archive=immediate_reindex_archive)
 
+    # Do deletion for everything first, even if there is no need to apply correction,
+    # in case we need to remove previous corrections
+    to_delete_stock_uid_add(self.getUid())
+    to_delete_list = []
+    to_delete_list_append = to_delete_list.append
+    for uid in to_delete_stock_uid_set:
+      temp_line = temp_constructor(self, inventory_id)
+      temp_line.setUid(uid)
+      to_delete_list_append(temp_line)
+    catalog_kw = dict(sql_catalog_id=sql_catalog_id,
+         disable_cache=1, check_uid=0, disable_archive=disable_archive,
+         immediate_reindex_archive=immediate_reindex_archive)
+    method_id_list = ['z0_uncatalog_stock']
+    if portal.portal_catalog.getSQLCatalog(sql_catalog_id) \
+       .hasObject('SQLCatalog_trimInventoryCacheOnCatalog'):
+      method_id_list.append('SQLCatalog_trimInventoryCacheOnCatalog')
+    # Delete existing stock records and old inventory_cache first.
+    portal.portal_catalog.catalogObjectList(
+         to_delete_list[:], method_id_list=method_id_list, **catalog_kw)
     if stock_object_list:
-      kw = dict(sql_catalog_id=sql_catalog_id,
-           disable_cache=1, check_uid=0, disable_archive=disable_archive,
-           immediate_reindex_archive=immediate_reindex_archive)
-      method_id_list = ['z0_uncatalog_stock']
-      if portal.portal_catalog.getSQLCatalog(sql_catalog_id) \
-         .hasObject('SQLCatalog_trimInventoryCacheOnCatalog'):
-        method_id_list.append('SQLCatalog_trimInventoryCacheOnCatalog')
-      # Delete existing stock records and old inventory_cache first.
-      portal.portal_catalog.catalogObjectList(
-           stock_object_list[:], method_id_list=method_id_list, **kw)
       # Then insert new records without delete.
       portal.portal_catalog.catalogObjectList(
-           stock_object_list, method_id_list=('z_catalog_stock_list_without_delete_for_inventory_virtual_movement', ),
-           **kw)
+           stock_object_list[:], method_id_list=('z_catalog_stock_list_without_delete_for_inventory_virtual_movement', ),
+           **catalog_kw)
