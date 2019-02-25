@@ -1,6 +1,16 @@
 Changes
 =======
 
+0.4.57 (2019-02-25)
+-------------------
+
+ * erp5.util
+
+   - testnode: Allow to pass max_quantity to runComputerPartition [Lukasz Nowak]
+   - testnode: use CPUs a bit less agressively [Jerome Perrin]
+   - testnode: avoid to rebuild testnode dependencies (firefox) all the time [Sebastien Robin]
+   - testnode: try much more agressively to kill remaining processes [Sebastien Robin]
+
 0.4.56 (2018-09-28)
 -------------------
 
