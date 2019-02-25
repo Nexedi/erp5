@@ -417,7 +417,7 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['type']['name'], document.getPortalType())
 
     self.assertEqual(result_dict['_links']['raw_search']['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search{&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}" % self.portal.absolute_url())
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search{&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}" % self.portal.absolute_url())
     self.assertEqual(result_dict['_links']['raw_search']['templated'], True)
     self.assertEqual(result_dict['_links']['raw_search']['name'], "Raw Search")
 
@@ -633,7 +633,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['editable_column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'quantity'], ['start_date', 'Date']])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['sort_column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'Quantity'], ['start_date', 'Date']])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['list_method_template'],
-                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_ui_test/Foo_view/listbox&list_method=objectValues&extra_param_json=eyJmb3JtX2lkIjogIkZvb192aWV3In0=&default_param_json=eyJwb3J0YWxfdHlwZSI6IFsiRm9vIExpbmUiXSwgImlnbm9yZV91bmtub3duX2NvbHVtbnMiOiB0cnVlfQ=={&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
+                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_ui_test/Foo_view/listbox&list_method=objectValues&extra_param_json=eyJmb3JtX2lkIjogIkZvb192aWV3In0=&default_param_json=eyJwb3J0YWxfdHlwZSI6IFsiRm9vIExpbmUiXSwgImlnbm9yZV91bmtub3duX2NvbHVtbnMiOiB0cnVlfQ=={&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['domain_root_list'], [['foo_category', 'FooCat'], ['foo_domain', 'FooDomain'], ['not_existing_domain', 'NotExisting']])
     NBSP_prefix = u'\xA0' * 4
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['domain_dict'], {'foo_domain': [['a', 'a'], ['%sa1' % NBSP_prefix, 'a/a1'], ['%sa2' % NBSP_prefix, 'a/a2'], ['b', 'b']], 'foo_category': [['a', 'a'], ['a/a1', 'a/a1'], ['a/a2', 'a/a2'], ['b', 'b']]})
@@ -1059,7 +1059,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['editable_column_list'], [['time', 'Time'], ['comment', 'Comment'], ['error_message', 'Error Message']])
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['sort_column_list'], [])
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['list_method_template'],
-                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_core/Base_viewWorkflowHistory/listbox&list_method=Base_getWorkflowHistoryItemList&extra_param_json=eyJmb3JtX2lkIjogIkJhc2Vfdmlld1dvcmtmbG93SGlzdG9yeSJ9&default_param_json=eyJ3b3JrZmxvd19pZCI6ICJmb29fd29ya2Zsb3ciLCAiY2hlY2tlZF9wZXJtaXNzaW9uIjogIlZpZXciLCAid29ya2Zsb3dfdGl0bGUiOiAiRm9vIFdvcmtmbG93IiwgImlnbm9yZV91bmtub3duX2NvbHVtbnMiOiB0cnVlfQ=={&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
+                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_core/Base_viewWorkflowHistory/listbox&list_method=Base_getWorkflowHistoryItemList&extra_param_json=eyJmb3JtX2lkIjogIkJhc2Vfdmlld1dvcmtmbG93SGlzdG9yeSJ9&default_param_json=eyJ3b3JrZmxvd19pZCI6ICJmb29fd29ya2Zsb3ciLCAiY2hlY2tlZF9wZXJtaXNzaW9uIjogIlZpZXciLCAid29ya2Zsb3dfdGl0bGUiOiAiRm9vIFdvcmtmbG93IiwgImlnbm9yZV91bmtub3duX2NvbHVtbnMiOiB0cnVlfQ=={&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
 
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
@@ -1148,6 +1148,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_query'], None)
     self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_select_list'], [])
+    self.assertEqual(result_dict['_group_by'], None)
+    self.assertEqual(result_dict['_sort_on'], None)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 10)
     self.assertEqual(result_dict['_embedded']['contents'][0]["_links"]["self"]["href"][:12], "urn:jio:get:")
@@ -1174,6 +1176,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_query'], None)
     self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_select_list'], [])
+    self.assertEqual(result_dict['_group_by'], None)
+    self.assertEqual(result_dict['_sort_on'], None)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
     self.assertEqual(result_dict['_embedded']['contents'][0]["_links"]["self"]["href"][:12], "urn:jio:get:")
@@ -1256,8 +1260,41 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_query'], None)
     self.assertEqual(result_dict['_local_roles'], ["Assignor", "Assignee"])
     self.assertEqual(result_dict['_select_list'], [])
+    self.assertEqual(result_dict['_group_by'], None)
+    self.assertEqual(result_dict['_sort_on'], None)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 0)
+    # No count if not in the listbox context currently
+    self.assertEqual(result_dict['_embedded'].get('count', None), None)
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoas_group_by_param(self):
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search",
+                                                                         select_list=['count(*)'],
+                                                                         query='portal_type:"Base Category"',
+                                                                         group_by=["portal_type"])
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    self.assertEqual(result_dict['_debug'], "search")
+    self.assertEqual(result_dict['_limit'], 10)
+    self.assertEqual(result_dict['_query'], 'portal_type:"Base Category"')
+    self.assertEqual(result_dict['_local_roles'], None)
+    self.assertEqual(result_dict['_select_list'], ['count(*)'])
+    self.assertEqual(result_dict['_group_by'], ["portal_type"])
+    self.assertEqual(result_dict['_sort_on'], None)
+
+    self.assertEqual(len(result_dict['_embedded']['contents']), 1)
+    self.assertTrue(10 < result_dict['_embedded']['contents'][0]['count(*)'] < 1000)
     # No count if not in the listbox context currently
     self.assertEqual(result_dict['_embedded'].get('count', None), None)
 
@@ -1282,6 +1319,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_selection_domain'], '{"foo_category": "a/a2"}')
     self.assertEqual(result_dict['_select_list'], [])
+    self.assertEqual(result_dict['_group_by'], None)
+    self.assertEqual(result_dict['_sort_on'], None)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
     self.assertEqual(result_dict['_embedded']['contents'][0]["_links"]["self"]["href"], "urn:jio:get:portal_categories/foo_category/a/a2")
@@ -1310,6 +1349,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_selection_domain'], '{"foo_domain": "a/a1"}')
     self.assertEqual(result_dict['_select_list'], [])
+    self.assertEqual(result_dict['_group_by'], None)
+    self.assertEqual(result_dict['_sort_on'], None)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
     self.assertEqual(result_dict['_embedded']['contents'][0]["_links"]["self"]["href"], "urn:jio:get:portal_categories/foo_category/a/a1")
