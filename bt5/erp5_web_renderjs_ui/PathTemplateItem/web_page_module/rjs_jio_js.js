@@ -6274,7 +6274,6 @@ parse: function parse(input) {
         vstack.length = vstack.length - n;
         lstack.length = lstack.length - n;
     }
-    _token_stack:
         var lex = function () {
             var token;
             token = lexer.lex() || EOF;
@@ -8536,6 +8535,7 @@ return new Parser;
       if (context.hasCapacity("list") &&
           ((options.query === undefined) || context.hasCapacity("query")) &&
           ((options.sort_on === undefined) || context.hasCapacity("sort")) &&
+          ((options.group_by === undefined) || context.hasCapacity("group")) &&
           ((options.select_list === undefined) ||
            context.hasCapacity("select")) &&
           ((options.include_docs === undefined) ||
@@ -8849,7 +8849,7 @@ return new Parser;
         var ceilHeapSize = function (v) {
             // The asm.js spec says:
             // The heap object's byteLength must be either
-            // 2^n for n in [12, 24) or 2^24 * n for n ≥ 1.
+            // 2^n for n in [12, 24) or 2^24 * n for n â‰¥ 1.
             // Also, byteLengths smaller than 2^16 are deprecated.
             var p;
             // If v is smaller than 2^16, the smallest possible solution
@@ -13094,11 +13094,18 @@ return new Parser;
           i,
           len = entry_list.length,
           entry_name,
+          entry_metadata,
           entry,
           result_list = [];
 
         for (i = 0; i < len; i += 1) {
-          entry_name = entry_list[i].name;
+          try {
+            entry_metadata = JSON.parse(entry_list[i].metaData) || {};
+          } catch (error) {
+            // Metadata are not always JSON
+            entry_metadata = {};
+          }
+          entry_name = entry_metadata.jio_id || entry_list[i].name;
 
           // If we only need one precise name, no need to check the others
           if (!options.hasOwnProperty('only_id') ||
@@ -13111,12 +13118,7 @@ return new Parser;
                 _linshare_uuid: entry_list[i].uuid
               };
               if (options.include_docs === true) {
-                try {
-                  entry.doc = JSON.parse(entry_list[i].metaData) || {};
-                } catch (error) {
-                  // Metadata are not always JSON
-                  entry.doc = {};
-                }
+                entry.doc = entry_metadata.jio_metadata || {};
               }
               result_list.push(entry);
 
@@ -13167,9 +13169,12 @@ return new Parser;
     var data = new FormData();
     data.append('file', blob, id);
     data.append('filesize', blob.size);
-    data.append('filename', id);
-    data.append('description', doc.title || doc.description || '');
-    data.append('metadata', jIO.util.stringify(doc));
+    data.append('filename', doc.title || id);
+    data.append('description', doc.description || id);
+    data.append('metadata', jIO.util.stringify({
+      jio_id: id,
+      jio_metadata: doc
+    }));
     return makeRequest(storage, '', {
       type: 'POST',
       data: data
@@ -13187,9 +13192,12 @@ return new Parser;
           // Update existing document metadata
           var data = {
             uuid: result_list[0]._linshare_uuid,
-            metaData: jIO.util.stringify(doc),
-            name: id,
-            description: doc.title || doc.description || ''
+            metaData: jIO.util.stringify({
+              jio_id: id,
+              jio_metadata: doc
+            }),
+            name: doc.title || id,
+            description: doc.description || id
           };
           return makeRequest(storage, result_list[0]._linshare_uuid, {
             type: 'PUT',
@@ -13318,6 +13326,7 @@ return new Parser;
       if (options.headers === undefined) {
         options.headers = {};
       }
+      options.headers.Accept = "*/*";
       options.headers['X-ACCESS-TOKEN'] = storage._access_token;
       options.xhrFields.withCredentials = false;
     } else {
@@ -13695,7 +13704,7 @@ return new Parser;
   ERP5Storage.prototype.hasCapacity = function (name) {
     return ((name === "list") || (name === "query") ||
             (name === "select") || (name === "limit") ||
-            (name === "sort"));
+            (name === "sort") || (name === "group"));
   };
 
   function isSingleLocalRoles(parsed_query) {
@@ -13763,7 +13772,8 @@ return new Parser;
           local_roles,
           local_role_found = false,
           selection_domain,
-          sort_list = [];
+          sort_list = [],
+          group_list = [];
         if (options.query) {
           parsed_query = jIO.QueryFactory.create(options.query);
           result_list = isSingleLocalRoles(parsed_query);
@@ -13829,10 +13839,8 @@ return new Parser;
           }
         }
 
-        if (options.sort_on) {
-          for (i = 0; i < options.sort_on.length; i += 1) {
-            sort_list.push(JSON.stringify(options.sort_on[i]));
-          }
+        if (options.group_by) {
+          group_list = options.group_by;
         }
 
         if (selection_domain) {
@@ -13848,6 +13856,7 @@ return new Parser;
               select_list: options.select_list || ["title", "reference"],
               limit: options.limit,
               sort_on: sort_list,
+              group_by: group_list,
               local_roles: local_roles,
               selection_domain: selection_domain
             })
