@@ -293,7 +293,7 @@ url_template_dict = {
 
   # Search template will call standard "searchValues" on a document described by `root_url`
   "search_template": "%(root_url)s/%(script_id)s?mode=search" + \
-                     "{&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}",
+                     "{&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}",
   "worklist_template": "%(root_url)s/%(script_id)s?mode=worklist",
   # Custom search comes with Listboxes where "list_method" is specified. We pass even listbox's
   # own URL so the search can resolve template fields for proper rendering/formatting/editability
@@ -305,7 +305,7 @@ url_template_dict = {
                      "&list_method=%(list_method)s" \
                      "&extra_param_json=%(extra_param_json)s" \
                      "&default_param_json=%(default_param_json)s" \
-                     "{&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}",
+                     "{&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}",
   # Non-editable searches suppose the search results will be rendered as-is and no template
   # fields will get involved. Unfortunately, fields need to be resolved because of formatting
   # all the time so we abandoned this no_editable version
@@ -313,7 +313,7 @@ url_template_dict = {
                      "&relative_url=%(relative_url)s" \
                      "&list_method=%(list_method)s" \
                      "&default_param_json=%(default_param_json)s" \
-                     "{&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}",
+                     "{&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}",
   "new_content_action": "%(root_url)s/%(script_id)s?mode=newContent",
   "bulk_action": "%(root_url)s/%(script_id)s?mode=bulk",
   # XXX View is set by default to empty
@@ -1591,6 +1591,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
       catalog_kw = {
         "local_roles": local_roles,
+        "group_by_list": None,
         "sort_on": ()  # default is an empty tuple
       }
       if default_param_json is not None:
@@ -1635,6 +1636,12 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           catalog_kw['sort_on'] = list(map(parseSortOn, sort_on))
         else:
           catalog_kw['sort_on'] = [parseSortOn(sort_on), ]
+
+      if group_by is not None:
+        if isinstance(group_by, list):
+          catalog_kw['group_by_list'] = group_by
+        else:
+          catalog_kw['group_by_list'] = [str(group_by)]
 
       if limit:
         catalog_kw["limit"] = limit
