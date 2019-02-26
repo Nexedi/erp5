@@ -6,4 +6,7 @@
   <item>Reference</item>
   <item>Url</item>
  </portal_type>
+ <portal_type id="Template Tool">
+  <item>TemplateToolERP5AccessTokenExtractionPluginConstraint</item>
+ </portal_type>
 </property_sheet_list>
