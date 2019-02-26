@@ -56,7 +56,9 @@ class TestERP5DumbHTTPExtractionPlugin(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-  def do_fake_request(self, request_method, headers={}):
+  def do_fake_request(self, request_method, headers=None):
+    if headers is None:
+      headers = {}
     __version__ = "0.1"
     env={}
     env['SERVER_NAME']='bobo.server'
@@ -103,7 +105,7 @@ class TestERP5DumbHTTPExtractionPlugin(ERP5TypeTestCase):
     return person
 
   def test_working_authentication(self):
-    person = self.person = self._createPerson(self.new_id, "test")
+    self._createPerson(self.new_id, "test")
     request = self.do_fake_request("GET", {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("%s:test" % self.new_id)})
     ret = ERP5DumbHTTPExtractionPlugin("default_extraction").extractCredentials(request)
-    self.assertEquals(ret, {'login': self.new_id, 'password': 'test', 'remote_host': 'bobo.remote.host', 'remote_address': '204.183.226.81 '})
+    self.assertEqual(ret, {'login': self.new_id, 'password': 'test', 'remote_host': 'bobo.remote.host', 'remote_address': '204.183.226.81 '})
