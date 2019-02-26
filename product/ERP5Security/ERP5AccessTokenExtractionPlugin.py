@@ -59,35 +59,49 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
   #ILoginPasswordHostExtractionPlugin#
   ####################################
   security.declarePrivate('extractCredentials')
-  @UnrestrictedMethod
   def extractCredentials(self, request):
-    """ Extract CookieHash credentials from the request header. """
+    """ Extract credentials from the request header. """
     creds = {}
-    # XXX Extract from HTTP Header, URL parameter are hardcoded.
-    # More flexible way would be to configure on the portal type level
-    token = request.getHeader("X-ACCESS-TOKEN", None)
-    if token is None:
-      token = request.form.get("access_token", None)
-    if token is not None:
+    # Extract token from HTTP Header
+    token = request.getHeader("X-ACCESS-TOKEN", request.form.get("access_token", None))
+    if token:
+      creds['erp5_access_token_id'] = token
+      creds['remote_host'] = request.get('REMOTE_HOST', '')
+      try:
+        creds['remote_address'] = request.getClientAddr()
+      except AttributeError:
+        creds['remote_address'] = request.get('REMOTE_ADDR', '')
+    return creds
+
+  #######################
+  #IAuthenticationPlugin#
+  #######################
+  security.declarePrivate('authenticateCredentials')
+  @UnrestrictedMethod
+  def authenticateCredentials(self, credentials):
+    """ Map credentials to a user ID. """
+    if 'erp5_access_token_id' in credentials:
+      erp5_access_token_id = credentials['erp5_access_token_id']
       token_document = self.getPortalObject().access_token_module.\
-                                        _getOb(token, None)
+                     _getOb(erp5_access_token_id, None)
       # Access Token should be validated
       # Check restricted access of URL
       # Extract login information
       if token_document is not None:
-        external_login = None
+        # Token API changed from returning a login to returning a user id.
+        # We detect if the old way of configuration is still in place and
+        # advise that configuration has to be updated in that case.
         method = token_document._getTypeBasedMethod('getExternalLogin')
-        if method is not None:
-          external_login = method()
+        assert method is None, "Please update and remove obsolete method %r" % method
 
-        if external_login is not None:
-          creds['external_login'] = external_login
-          creds['remote_host'] = request.get('REMOTE_HOST', '')
-          try:
-            creds['remote_address'] = request.getClientAddr()
-          except AttributeError:
-            creds['remote_address'] = request.get('REMOTE_ADDR', '')
-    return creds
+        user_id = None
+        method = token_document._getTypeBasedMethod('getUserId')
+        if method is not None:
+          user_id = method()
+
+        if user_id is not None:
+          return (user_id, 'token {erp5_access_token_id} for {user_id}'.format(**locals()))
+
 
 #Form for new plugin in ZMI
 manage_addERP5AccessTokenExtractionPluginForm = PageTemplateFile(
@@ -109,6 +123,7 @@ def addERP5AccessTokenExtractionPlugin(dispatcher, id, title=None, REQUEST=None)
 
 #List implementation of class
 classImplements(ERP5AccessTokenExtractionPlugin,
-                plugins.ILoginPasswordHostExtractionPlugin
-               )
+                plugins.ILoginPasswordHostExtractionPlugin,
+                plugins.IAuthenticationPlugin,
+                )
 InitializeClass(ERP5AccessTokenExtractionPlugin)
