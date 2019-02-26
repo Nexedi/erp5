@@ -32,7 +32,6 @@ from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
 from Products.ERP5Security.ERP5DumbHTTPExtractionPlugin import ERP5DumbHTTPExtractionPlugin
 import base64
-import transaction
 import StringIO
 
 class TestERP5DumbHTTPExtractionPlugin(ERP5TypeTestCase):
@@ -50,10 +49,8 @@ class TestERP5DumbHTTPExtractionPlugin(ERP5TypeTestCase):
     """
     This is ran before anything, used to set the environment
     """
-    self.portal = self.getPortalObject()
     self.new_id = self.generateNewId()
     self._setupDumbHTTPExtraction()
-    transaction.commit()
     self.tic()
 
   def do_fake_request(self, request_method, headers=None):
@@ -90,7 +87,7 @@ class TestERP5DumbHTTPExtractionPlugin(ERP5TypeTestCase):
       self.test_id = access_extraction_list[0].getId()
     elif len(access_extraction_list) > 1:
       raise ValueError
-    transaction.commit()
+    self.commit()
 
   def _createPerson(self, new_id, password=None):
     """Creates a person in person module, and returns the object, after
@@ -101,7 +98,7 @@ class TestERP5DumbHTTPExtractionPlugin(ERP5TypeTestCase):
     if password:
       person.setPassword(password)
     person.newContent(portal_type = 'Assignment').open()
-    transaction.commit()
+    self.tic()
     return person
 
   def test_working_authentication(self):

@@ -1,7 +1,6 @@
 # Copyright (c) 2002-2013 Nexedi SA and Contributors. All Rights Reserved.
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import transaction
 
 class TestERP5AccessTokenSkins(ERP5TypeTestCase):
 
@@ -19,10 +18,8 @@ class TestERP5AccessTokenSkins(ERP5TypeTestCase):
     """
     This is ran before anything, used to set the environment
     """
-    self.portal = self.getPortalObject()
     self.new_id = self.generateNewId()
     self._setupAccessTokenExtraction()
-    transaction.commit()
     self.tic()
 
   def _setupAccessTokenExtraction(self):
@@ -38,7 +35,7 @@ class TestERP5AccessTokenSkins(ERP5TypeTestCase):
       self.test_token_extraction_id = access_extraction_list[0].getId()
     elif len(access_extraction_list) > 1:
       raise ValueError
-    transaction.commit()
+    self.commit()
 
   def _createPerson(self, new_id):
     """Creates a person in person module, and returns the object, after
@@ -47,7 +44,7 @@ class TestERP5AccessTokenSkins(ERP5TypeTestCase):
     person = person_module.newContent(portal_type='Person',
       user_id='TESTP-' + new_id)
     person.newContent(portal_type = 'Assignment').open()
-    transaction.commit()
+    self.tic()
     return person
 
   def _getTokenCredential(self, request):
