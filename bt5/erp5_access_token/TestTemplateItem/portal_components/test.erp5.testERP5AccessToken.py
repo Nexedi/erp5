@@ -29,6 +29,7 @@
 
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
+from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from DateTime import DateTime
 import base64
 import StringIO
@@ -55,7 +56,6 @@ class AccessTokenTestCase(ERP5TypeTestCase):
 
 
 class TestERP5AccessTokenSkins(AccessTokenTestCase):
-  test_token_extraction_id = 'test_erp5_access_token_extraction'
 
   def generateNewId(self):
     return str(self.portal.portal_ids.generateNewId(
@@ -66,27 +66,13 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
     This is ran before anything, used to set the environment
     """
     self.new_id = self.generateNewId()
-    self._setupAccessTokenExtraction()
+    self.portal.portal_templates.TemplateTool_checkERP5AccessTokenExtractionPluginExistenceConsistency(
+        fixit=True)
     self.tic()
-
-  def _setupAccessTokenExtraction(self):
-    pas = self.portal.acl_users
-    access_extraction_list = [q for q in pas.objectValues() \
-        if q.meta_type == 'ERP5 Access Token Extraction Plugin']
-    if len(access_extraction_list) == 0:
-      dispacher = pas.manage_addProduct['ERP5Security']
-      dispacher.addERP5AccessTokenExtractionPlugin(self.test_token_extraction_id)
-      getattr(pas, self.test_token_extraction_id).manage_activateInterfaces(
-        ('IExtractionPlugin', 'IAuthenticationPlugin'))
-    elif len(access_extraction_list) == 1:
-      self.test_token_extraction_id = access_extraction_list[0].getId()
-    elif len(access_extraction_list) > 1:
-      raise ValueError
-    self.commit()
 
   def _getTokenCredential(self, request):
     """Authenticate the request and return (user_id, login) or None if not authorized."""
-    plugin = getattr(self.portal.acl_users, self.test_token_extraction_id)
+    plugin = self.portal.acl_users.erp5_access_token_plugin
     return plugin.authenticateCredentials(plugin.extractCredentials(request))
 
   def _createRestrictedAccessToken(self, new_id, person, method, url_string):
@@ -412,3 +398,27 @@ class TestERP5DumbHTTPExtractionPlugin(AccessTokenTestCase):
     request = self.do_fake_request("GET", {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("%s:test" % self.new_id)})
     ret = ERP5DumbHTTPExtractionPlugin("default_extraction").extractCredentials(request)
     self.assertEqual(ret, {'login': self.new_id, 'password': 'test', 'remote_host': 'bobo.remote.host', 'remote_address': '204.183.226.81 '})
+
+
+class TestERP5AccessTokenUpgraderEnablePlugin(AccessTokenTestCase):
+  def afterSetUp(self):
+    # disable plugin if it had been enabled by another test.
+    acl_users = self.portal.acl_users
+    acl_users.manage_delObjects(ids=[
+      x.getId() for x in
+        acl_users.objectValues(spec=('ERP5 Access Token Extraction Plugin',))])
+    self.commit()
+
+  def test_post_upgrade_constraint_enable_plugin(self):
+    consistency_list = self.portal.portal_templates.checkConsistency(
+        filter={"constraint_type": "post_upgrade"})
+    self.assertIn(
+        'erp5_access_token_plugin is missing',
+        [x.message for x in consistency_list])
+    self.portal.portal_templates.checkConsistency(
+        fixit=True,
+        filter={"constraint_type": "post_upgrade"})
+    self.commit()
+    self.assertIn(
+      'erp5_access_token_plugin',
+      self.portal.acl_users.plugins.listPluginIds(IAuthenticationPlugin))
