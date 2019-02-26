@@ -77,7 +77,7 @@ class SupportRequestTestCase(ERP5TypeTestCase, object):
     self.user.newContent(
         id='erp5_login',
         portal_type='ERP5 Login',
-        reference=self.user.getUserId(), # XXX workaround until https://lab.nexedi.com/nexedi/erp5/merge_requests/478
+        reference=self.id(),
         password=self.user_password
     ).validate()
     self.user.validate()
@@ -380,18 +380,10 @@ class TestSupportRequestCommentOnExistingSupportRequest(SupportRequestTestCase):
 
 
 class SupportRequestRSSTestCase(SupportRequestTestCase):
-  # XXX token PAS plugin is not set up automatically when installing erp5_access_token
-  # so we set it up the same way test.erp5.testERP5AccessTokenSkins is setting it up
   def _setupAccessTokenExtraction(self):
-    pas = self.portal.acl_users
-    access_extraction_list = [q for q in pas.objectValues() \
-        if q.meta_type == 'ERP5 Access Token Extraction Plugin']
-    if len(access_extraction_list) == 0:
-      dispacher = pas.manage_addProduct['ERP5Security']
-      dispacher.addERP5AccessTokenExtractionPlugin('token_login')
-      pas.token_login.manage_activateInterfaces(('IExtractionPlugin',))
-    elif len(access_extraction_list) > 1:
-      raise ValueError("Too many token extraction plugins")
+    # post upgrade step of erp5_access_token
+    self.portal.portal_templates.TemplateTool_checkERP5AccessTokenExtractionPluginExistenceConsistency(
+        fixit=True)
     self.tic()
 
   def afterSetUp(self):
