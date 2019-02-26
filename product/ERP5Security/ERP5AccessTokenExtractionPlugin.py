@@ -59,35 +59,38 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
   #ILoginPasswordHostExtractionPlugin#
   ####################################
   security.declarePrivate('extractCredentials')
-  @UnrestrictedMethod
   def extractCredentials(self, request):
-    """ Extract CookieHash credentials from the request header. """
+    """ Extract credentials from the request header. """
     creds = {}
-    # XXX Extract from HTTP Header, URL parameter are hardcoded.
-    # More flexible way would be to configure on the portal type level
-    token = request.getHeader("X-ACCESS-TOKEN", None)
-    if token is None:
-      token = request.form.get("access_token", None)
-    if token is not None:
-      token_document = self.getPortalObject().access_token_module.\
-                                        _getOb(token, None)
-      # Access Token should be validated
-      # Check restricted access of URL
-      # Extract login information
-      if token_document is not None:
-        external_login = None
-        method = token_document._getTypeBasedMethod('getExternalLogin')
-        if method is not None:
-          external_login = method()
-
-        if external_login is not None:
-          creds['external_login'] = external_login
-          creds['remote_host'] = request.get('REMOTE_HOST', '')
-          try:
-            creds['remote_address'] = request.getClientAddr()
-          except AttributeError:
-            creds['remote_address'] = request.get('REMOTE_ADDR', '')
+    # Extract token from HTTP Header
+    token = request.getHeader("X-ACCESS-TOKEN", request.form.get("access_token", None))
+    if token:
+      creds['erp5_access_token_id'] = token
+      creds['remote_host'] = request.get('REMOTE_HOST', '')
+      try:
+        creds['remote_address'] = request.getClientAddr()
+      except AttributeError:
+        creds['remote_address'] = request.get('REMOTE_ADDR', '')
     return creds
+
+  #######################
+  #IAuthenticationPlugin#
+  #######################
+  security.declarePrivate('authenticateCredentials')
+  @UnrestrictedMethod
+  def authenticateCredentials(self, credentials):
+    """ Map credentials to a user ID. """
+    if 'erp5_access_token_id' in credentials:
+      erp5_access_token_id = credentials['erp5_access_token_id']
+      token_document = self.getPortalObject().access_token_module.\
+                     _getOb(erp5_access_token_id, None)
+      if token_document is not None:
+        method = token_document._getTypeBasedMethod('getUserValue')
+        if method is not None:
+          user_value = method()
+          if user_value is not None:
+            return (user_value.getUserId(), token_document.getRelativeUrl())
+
 
 #Form for new plugin in ZMI
 manage_addERP5AccessTokenExtractionPluginForm = PageTemplateFile(
@@ -109,6 +112,7 @@ def addERP5AccessTokenExtractionPlugin(dispatcher, id, title=None, REQUEST=None)
 
 #List implementation of class
 classImplements(ERP5AccessTokenExtractionPlugin,
-                plugins.ILoginPasswordHostExtractionPlugin
-               )
+                plugins.ILoginPasswordHostExtractionPlugin,
+                plugins.IAuthenticationPlugin,
+                )
 InitializeClass(ERP5AccessTokenExtractionPlugin)
