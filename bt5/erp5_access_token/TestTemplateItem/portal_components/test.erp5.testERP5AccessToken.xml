@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>testERP5DumbHTTPExtractionPlugin</string> </value>
+            <value> <string>testERP5AccessToken</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test.erp5.testERP5DumbHTTPExtractionPlugin</string> </value>
+            <value> <string>test.erp5.testERP5AccessToken</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
