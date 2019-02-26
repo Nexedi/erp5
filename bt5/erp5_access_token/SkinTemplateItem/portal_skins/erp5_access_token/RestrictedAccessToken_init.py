@@ -1,6 +1,6 @@
 alpha = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 random_id = ''
-for i in range(0,128):
+for _ in range(0, 128):
   random_id += random.choice(alpha)
 
 # Define Reference from ID provided by portal_ids
