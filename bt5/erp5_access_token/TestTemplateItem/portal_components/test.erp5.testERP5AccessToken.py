@@ -137,6 +137,28 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
     result = self._getTokenCredential(self.portal.REQUEST)
     self.assertFalse(result)
 
+  def test_token_without_assignment(self):
+    # Token does not work when person has no open assignment
+    person = self._createPerson(self.new_id)
+    for assignment in person.contentValues(portal_type='Assignment'):
+      assignment.close()
+    access_url = "http://exemple.com/foo"
+    access_method = "GET"
+    access_token = self._createRestrictedAccessToken(self.new_id,
+                        person,
+                        access_method,
+                        access_url)
+    access_token.validate()
+    self.tic()
+
+    self.portal.REQUEST.form["access_token"] = access_token.getId()
+    self.portal.REQUEST["REQUEST_METHOD"] = access_method
+    self.portal.REQUEST["ACTUAL_URL"] = access_url
+    self.portal.REQUEST.form["access_token_secret"] = access_token.getReference()
+
+    result = self._getTokenCredential(self.portal.REQUEST)
+    self.assertFalse(result)
+
   def test_RestrictedAccessToken_getUserId(self):
     person = self.person = self._createPerson(self.new_id)
     access_url = "http://exemple.com/foo"

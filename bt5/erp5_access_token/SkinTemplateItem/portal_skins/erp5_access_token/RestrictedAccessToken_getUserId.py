@@ -22,6 +22,21 @@ if access_token_document.getValidationState() == 'validated':
 
     agent_document = access_token_document.getAgentValue()
     if agent_document is not None:
+      if agent_document.getPortalType() == 'Person':
+        # if this is a token for a person, only make accept if person has valid
+        # assignments (for compatibility with login/password authentication)
+        if agent_document.getValidationState() == 'deleted':
+          return None
+        now = DateTime()
+        for assignment in agent_document.contentValues(portal_type='Assignment'):
+          if assignment.getValidationState() == "open" and (
+              not assignment.hasStartDate() or assignment.getStartDate() <= now
+            ) and (
+              not assignment.hasStopDate() or assignment.getStopDate() >= now
+            ):
+            break
+        else:
+          return None
       result = agent_document.Person_getUserId()
 
 return result
