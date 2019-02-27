@@ -96,7 +96,7 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
     return access_token
 
   def test_working_token(self):
-    person = self.person = self._createPerson(self.new_id)
+    person = self._createPerson(self.new_id)
     access_url = "http://exemple.com/foo"
     access_method = "GET"
     access_token = self._createRestrictedAccessToken(self.new_id,
@@ -119,7 +119,7 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
     self.assertIn('token', login)
 
   def test_bad_token(self):
-    person = self.person = self._createPerson(self.new_id)
+    person = self._createPerson(self.new_id)
     access_url = "http://exemple.com/foo"
     access_method = "GET"
     access_token = self._createRestrictedAccessToken(self.new_id,
@@ -160,7 +160,7 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
     self.assertFalse(result)
 
   def test_RestrictedAccessToken_getUserId(self):
-    person = self.person = self._createPerson(self.new_id)
+    person = self._createPerson(self.new_id)
     access_url = "http://exemple.com/foo"
     access_method = "GET"
     access_token = self._createRestrictedAccessToken(self.new_id,
@@ -180,7 +180,7 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
     self.assertEqual(access_token.getValidationState(), 'validated')
 
   def test_RestrictedAccessToken_getUserId_access_token_secret(self):
-    person = self.person = self._createPerson(self.new_id)
+    person = self._createPerson(self.new_id)
     access_url = "http://exemple.com/foo"
     access_method = "GET"
     access_token = self._createRestrictedAccessToken(self.new_id,
@@ -224,7 +224,7 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
     self.assertEqual(result, None)
 
   def test_RestrictedAccessToken_getUserId_wrong_values(self):
-    person = self.person = self._createPerson(self.new_id)
+    person = self._createPerson(self.new_id)
     access_url = "http://exemple.com/foo"
     access_method = "GET"
     access_token = self._createRestrictedAccessToken(self.new_id,
@@ -258,7 +258,7 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
 
 
   def test_OneTimeRestrictedAccessToken_getUserId(self):
-    person = self.person = self._createPerson(self.new_id)
+    person = self._createPerson(self.new_id)
     access_url = "http://exemple.com/foo"
     access_method = "GET"
     access_token = self._createOneTimeRestrictedAccessToken(self.new_id,
@@ -277,7 +277,7 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
     self.assertEqual(access_token.getValidationState(), 'invalidated')
 
   def test_OneTimeRestrictedAccessToken_getUserId_wrong_values(self):
-    person = self.person = self._createPerson(self.new_id)
+    person = self._createPerson(self.new_id)
     access_url = "http://exemple.com/foo"
     access_method = "POST"
     access_token = self._createOneTimeRestrictedAccessToken(self.new_id,
