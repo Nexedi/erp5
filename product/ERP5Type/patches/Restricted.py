@@ -261,6 +261,9 @@ allow_type(type(hashlib.md5()))
 allow_module('time')
 allow_module('unicodedata')
 allow_module('urlparse')
+import urlparse
+allow_type(urlparse.ParseResult)
+allow_type(urlparse.SplitResult)
 allow_module('struct')
 
 ModuleSecurityInfo('os.path').declarePublic(

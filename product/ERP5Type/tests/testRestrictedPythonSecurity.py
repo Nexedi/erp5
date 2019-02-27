@@ -91,7 +91,35 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     self.createAndRunScript('import decimal',
                             'return decimal.Decimal.from_float(3.3)')
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRestrictedPythonSecurity))
-  return suite
+  def test_urlparse(self):
+    self.createAndRunScript(
+        'import urlparse',
+        'return urlparse.urlparse("http://example.com/pa/th/?q=s").path',
+        expected='/pa/th/'
+    )
+    # access computed attributes (property) is also OK
+    self.createAndRunScript(
+        'import urlparse',
+        'return urlparse.urlparse("http://example.com/pa/th/?q=s").hostname',
+        expected='example.com'
+    )
+    self.createAndRunScript(
+        'import urlparse',
+        'return urlparse.urlsplit("http://example.com/pa/th/?q=s").path',
+        expected='/pa/th/'
+    )
+    self.createAndRunScript(
+        'import urlparse',
+        'return urlparse.urldefrag("http://example.com/#frag")[1]',
+        expected='frag'
+    )
+    self.createAndRunScript(
+        'import urlparse',
+        'return urlparse.parse_qs("q=s")',
+        expected={'q': ['s']}
+    )
+    self.createAndRunScript(
+        'import urlparse',
+        'return urlparse.parse_qsl("q=s")',
+        expected=[('q', 's')]
+    )
