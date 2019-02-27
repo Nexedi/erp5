@@ -67,7 +67,7 @@ class TestNamingConvention(ERP5TypeTestCase):
       'erp5_jquery_plugin_jgraduate', 'erp5_jquery_plugin_svgicon', 'erp5_jquery_plugin_jquerybbq',
       'erp5_jquery_plugin_spinbtn', 'erp5_jquery_plugin_svg_editor', 'erp5_svg_editor', 'erp5_syncml',
       'erp5_system_event', 'erp5_tiosafe_core', 'erp5_tiosafe_accounting', 'erp5_tiosafe_document',
-      'erp5_tiosafe_pdm', 'erp5_utils', 'erp5_workflow', 'erp5_wizard', 'tiolive_base',
+      'erp5_tiosafe_pdm', 'erp5_workflow', 'erp5_wizard', 'tiolive_base',
       'tiolive_decouple_instance', 'erp5_public_accounting_budget', 'erp5_publication',
       'erp5_social_contracts', 'test_core', 'test_accounting', 'test_web', 'test_html_style',
       'test_xhtml_style', 'cloudooo_data', 'cloudooo_web', 'erp5_configurator',
