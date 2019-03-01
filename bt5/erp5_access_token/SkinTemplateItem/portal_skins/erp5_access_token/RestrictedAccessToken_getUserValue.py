@@ -24,7 +24,8 @@ if access_token_document.getValidationState() == 'validated':
     if agent_document is not None:
       if agent_document.getPortalType() == 'Person':
         # if this is a token for a person, only make accept if person has valid
-        # assignments (for compatibility with login/password authentication)
+        # assignments and a validated login (for compatibility with login/password
+        # authentication)
         if agent_document.getValidationState() == 'deleted':
           return None
         now = DateTime()
@@ -36,6 +37,12 @@ if access_token_document.getValidationState() == 'validated':
             ):
             break
         else:
+          return None
+
+        user, = context.getPortalObject().acl_users.searchUsers(
+            exact_match=True,
+            id=agent_document.Person_getUserId())
+        if not user['login_list']:
           return None
 
       result = agent_document
