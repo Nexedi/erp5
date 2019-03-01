@@ -38,7 +38,7 @@ if theme is not None:
     if len(theme_logo_list) > 0:
       theme_logo_dict = theme_logo_list[0]
 theme_dict = {}
-theme_logo_url = pref.getPreferredCorporateIdentityTemplateFallbackLogoRelativeUrl()
+theme_logo_url = pref.getPreferredCorporateIdentityTemplateFallbackLogoRelativeUrl() + "?format=png"
 
 theme_dict["theme"] = theme
 theme_dict["theme_logo_description"] = theme_logo_dict.get("description", blank)
