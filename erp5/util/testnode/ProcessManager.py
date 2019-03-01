@@ -166,7 +166,8 @@ class ProcessManager(object):
     logger.info('$ %s', command)
     sys.stdout.flush()
     p = subprocess.Popen(args, stdin=self.stdin, stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE, env=env, **subprocess_kw)
+                         stderr=subprocess.PIPE, env=env, close_fds=True,
+                         **subprocess_kw)
     self.process_pid_set.add(p.pid)
     timer = threading.Timer(self.max_timeout, timeoutExpired, args=(p,))
     self.timer_set.add(timer)
