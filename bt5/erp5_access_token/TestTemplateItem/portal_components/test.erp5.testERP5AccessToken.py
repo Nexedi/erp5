@@ -42,15 +42,13 @@ class AccessTokenTestCase(ERP5TypeTestCase):
     return ('erp5_base',
             'erp5_access_token')
 
-  def _createPerson(self, new_id, password=None):
+  def _createPerson(self, new_id):
     """Creates a person in person module, and returns the object, after
     indexing is done. """
     person_module = self.getPersonModule()
     person = person_module.newContent(portal_type='Person',
       reference='TESTP-' + new_id)
-    if password:
-      person.setPassword(password)
-    person.newContent(portal_type = 'Assignment').open()
+    person.newContent(portal_type='Assignment').open()
     self.tic()
     return person
 
@@ -365,20 +363,6 @@ class TestERP5AccessTokenAlarm(AccessTokenTestCase):
 
 class TestERP5DumbHTTPExtractionPlugin(AccessTokenTestCase):
 
-  test_id = 'test_erp5_dumb_http_extraction'
-
-  def generateNewId(self):
-    return str(self.portal.portal_ids.generateNewId(
-         id_group=('erp5_dumb_http_test_id')))
-
-  def afterSetUp(self):
-    """
-    This is ran before anything, used to set the environment
-    """
-    self.new_id = self.generateNewId()
-    self._setupDumbHTTPExtraction()
-    self.tic()
-
   def do_fake_request(self, request_method, headers=None):
     if headers is None:
       headers = {}
@@ -400,26 +384,10 @@ class TestERP5DumbHTTPExtractionPlugin(AccessTokenTestCase):
     env.update(headers)
     return HTTPRequest(StringIO.StringIO(), env, HTTPResponse())
 
-  def _setupDumbHTTPExtraction(self):
-    pas = self.portal.acl_users
-    access_extraction_list = [q for q in pas.objectValues() \
-        if q.meta_type == 'ERP5 Dumb HTTP Extraction Plugin']
-    if len(access_extraction_list) == 0:
-      dispacher = pas.manage_addProduct['ERP5Security']
-      dispacher.addERP5DumbHTTPExtractionPlugin(self.test_id)
-      getattr(pas, self.test_id).manage_activateInterfaces(
-        ('IExtractionPlugin',))
-    elif len(access_extraction_list) == 1:
-      self.test_id = access_extraction_list[0].getId()
-    elif len(access_extraction_list) > 1:
-      raise ValueError
-    self.commit()
-
   def test_working_authentication(self):
-    self._createPerson(self.new_id, "test")
-    request = self.do_fake_request("GET", {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("%s:test" % self.new_id)})
+    request = self.do_fake_request("GET", {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("login:password")})
     ret = ERP5DumbHTTPExtractionPlugin("default_extraction").extractCredentials(request)
-    self.assertEqual(ret, {'login': self.new_id, 'password': 'test', 'remote_host': 'bobo.remote.host', 'remote_address': '204.183.226.81 '})
+    self.assertEqual(ret, {'login': 'login', 'password': 'password', 'remote_host': 'bobo.remote.host', 'remote_address': '204.183.226.81 '})
 
 
 class TestERP5AccessTokenUpgraderEnablePlugin(AccessTokenTestCase):
