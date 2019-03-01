@@ -1148,6 +1148,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_query'], None)
     self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_select_list'], [])
+    self.assertEqual(result_dict['_group_by'], None)
+    self.assertEqual(result_dict['_sort_on'], None)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 10)
     self.assertEqual(result_dict['_embedded']['contents'][0]["_links"]["self"]["href"][:12], "urn:jio:get:")
@@ -1174,6 +1176,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_query'], None)
     self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_select_list'], [])
+    self.assertEqual(result_dict['_group_by'], None)
+    self.assertEqual(result_dict['_sort_on'], None)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
     self.assertEqual(result_dict['_embedded']['contents'][0]["_links"]["self"]["href"][:12], "urn:jio:get:")
@@ -1256,6 +1260,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_query'], None)
     self.assertEqual(result_dict['_local_roles'], ["Assignor", "Assignee"])
     self.assertEqual(result_dict['_select_list'], [])
+    self.assertEqual(result_dict['_group_by'], None)
+    self.assertEqual(result_dict['_sort_on'], None)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 0)
     # No count if not in the listbox context currently
@@ -1282,6 +1288,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_selection_domain'], '{"foo_category": "a/a2"}')
     self.assertEqual(result_dict['_select_list'], [])
+    self.assertEqual(result_dict['_group_by'], None)
+    self.assertEqual(result_dict['_sort_on'], None)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
     self.assertEqual(result_dict['_embedded']['contents'][0]["_links"]["self"]["href"], "urn:jio:get:portal_categories/foo_category/a/a2")
@@ -1310,6 +1318,8 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_selection_domain'], '{"foo_domain": "a/a1"}')
     self.assertEqual(result_dict['_select_list'], [])
+    self.assertEqual(result_dict['_group_by'], None)
+    self.assertEqual(result_dict['_sort_on'], None)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
     self.assertEqual(result_dict['_embedded']['contents'][0]["_links"]["self"]["href"], "urn:jio:get:portal_categories/foo_category/a/a1")
