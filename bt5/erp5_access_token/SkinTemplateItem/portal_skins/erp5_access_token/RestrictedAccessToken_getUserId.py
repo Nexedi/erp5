@@ -24,7 +24,8 @@ if access_token_document.getValidationState() == 'validated':
     if agent_document is not None:
       if agent_document.getPortalType() == 'Person':
         # if this is a token for a person, only make accept if person has valid
-        # assignments (for compatibility with login/password authentication)
+        # assignments and a validated login (for compatibility with login/password
+        # authentication)
         if agent_document.getValidationState() == 'deleted':
           return None
         now = DateTime()
@@ -34,6 +35,12 @@ if access_token_document.getValidationState() == 'validated':
             ) and (
               not assignment.hasStopDate() or assignment.getStopDate() >= now
             ):
+            break
+        else:
+          return None
+        for login in agent_document.contentValues(
+            portal_type=context.getPortalObject().getPortalLoginTypeList()):
+          if login.getValidationState() == 'validated':
             break
         else:
           return None
