@@ -1272,6 +1272,37 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
   @changeSkin('Hal')
+  def test_getHateoas_group_by_param(self):
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search",
+                                                                         select_list=['count(*)'],
+                                                                         query='portal_type:"Base Category"',
+                                                                         group_by=["portal_type"])
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    self.assertEqual(result_dict['_debug'], "search")
+    self.assertEqual(result_dict['_limit'], 10)
+    self.assertEqual(result_dict['_query'], 'portal_type:"Base Category"')
+    self.assertEqual(result_dict['_local_roles'], None)
+    self.assertEqual(result_dict['_select_list'], ['count(*)'])
+    self.assertEqual(result_dict['_group_by'], ["portal_type"])
+    self.assertEqual(result_dict['_sort_on'], None)
+
+    self.assertEqual(len(result_dict['_embedded']['contents']), 1)
+    self.assertTrue(10 < result_dict['_embedded']['contents'][0]['count(*)'] < 1000)
+    # No count if not in the listbox context currently
+    self.assertEqual(result_dict['_embedded'].get('count', None), None)
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
   def test_getHateoas_selection_domain_category_param(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search", selection_domain=json.dumps({'foo_category': 'a/a2'}))
