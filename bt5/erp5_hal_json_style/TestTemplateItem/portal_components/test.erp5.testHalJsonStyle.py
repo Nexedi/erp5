@@ -417,7 +417,7 @@ class TestERP5Document_getHateoas_mode_root(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['type']['name'], document.getPortalType())
 
     self.assertEqual(result_dict['_links']['raw_search']['href'],
-                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search{&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}" % self.portal.absolute_url())
+                     "%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search{&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}" % self.portal.absolute_url())
     self.assertEqual(result_dict['_links']['raw_search']['templated'], True)
     self.assertEqual(result_dict['_links']['raw_search']['name'], "Raw Search")
 
@@ -633,7 +633,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['editable_column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'quantity'], ['start_date', 'Date']])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['sort_column_list'], [['id', 'ID'], ['title', 'Title'], ['quantity', 'Quantity'], ['start_date', 'Date']])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['list_method_template'],
-                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_ui_test/Foo_view/listbox&list_method=objectValues&extra_param_json=eyJmb3JtX2lkIjogIkZvb192aWV3In0=&default_param_json=eyJwb3J0YWxfdHlwZSI6IFsiRm9vIExpbmUiXSwgImlnbm9yZV91bmtub3duX2NvbHVtbnMiOiB0cnVlfQ=={&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
+                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_ui_test/Foo_view/listbox&list_method=objectValues&extra_param_json=eyJmb3JtX2lkIjogIkZvb192aWV3In0=&default_param_json=eyJwb3J0YWxfdHlwZSI6IFsiRm9vIExpbmUiXSwgImlnbm9yZV91bmtub3duX2NvbHVtbnMiOiB0cnVlfQ=={&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['domain_root_list'], [['foo_category', 'FooCat'], ['foo_domain', 'FooDomain'], ['not_existing_domain', 'NotExisting']])
     NBSP_prefix = u'\xA0' * 4
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['domain_dict'], {'foo_domain': [['a', 'a'], ['%sa1' % NBSP_prefix, 'a/a1'], ['%sa2' % NBSP_prefix, 'a/a2'], ['b', 'b']], 'foo_category': [['a', 'a'], ['a/a1', 'a/a1'], ['a/a2', 'a/a2'], ['b', 'b']]})
@@ -1059,7 +1059,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['editable_column_list'], [['time', 'Time'], ['comment', 'Comment'], ['error_message', 'Error Message']])
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['sort_column_list'], [])
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['list_method_template'],
-                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_core/Base_viewWorkflowHistory/listbox&list_method=Base_getWorkflowHistoryItemList&extra_param_json=eyJmb3JtX2lkIjogIkJhc2Vfdmlld1dvcmtmbG93SGlzdG9yeSJ9&default_param_json=eyJ3b3JrZmxvd19pZCI6ICJmb29fd29ya2Zsb3ciLCAiY2hlY2tlZF9wZXJtaXNzaW9uIjogIlZpZXciLCAid29ya2Zsb3dfdGl0bGUiOiAiRm9vIFdvcmtmbG93IiwgImlnbm9yZV91bmtub3duX2NvbHVtbnMiOiB0cnVlfQ=={&query,select_list*,limit*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
+                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=foo_module%%2F%s&form_relative_url=portal_skins/erp5_core/Base_viewWorkflowHistory/listbox&list_method=Base_getWorkflowHistoryItemList&extra_param_json=eyJmb3JtX2lkIjogIkJhc2Vfdmlld1dvcmtmbG93SGlzdG9yeSJ9&default_param_json=eyJ3b3JrZmxvd19pZCI6ICJmb29fd29ya2Zsb3ciLCAiY2hlY2tlZF9wZXJtaXNzaW9uIjogIlZpZXciLCAid29ya2Zsb3dfdGl0bGUiOiAiRm9vIFdvcmtmbG93IiwgImlnbm9yZV91bmtub3duX2NvbHVtbnMiOiB0cnVlfQ=={&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}' % (self.portal.absolute_url(), document.getId()))
 
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
