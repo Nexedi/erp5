@@ -1,0 +1,34 @@
+html {
+  height: 100%;
+  width: 100%;
+  display: block;
+
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  display: block;
+
+  word-wrap: break-word;
+  margin: 0;
+  padding: 0;
+}
+
+iframe {
+  max-width: 100%;
+  max-height: 100vh;
+  width: 100%;
+  height: 25em;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
