@@ -82,10 +82,6 @@
                           <string>description</string>
                           <string>Description</string>
                         </tuple>
-                        <tuple>
-                          <string>text_content</string>
-                          <string>Content</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
