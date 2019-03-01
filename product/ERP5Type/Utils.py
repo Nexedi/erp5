@@ -463,14 +463,7 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
   #started = time.time()
   message_list = []
   output_file = cStringIO.StringIO()
-
-  # pylint prints directly on stderr/stdout (only reporter content matters)
-  stderr = sys.stderr
-  stdout = sys.stdout
   try:
-    sys.stderr = cStringIO.StringIO()
-    sys.stdout = cStringIO.StringIO()
-
     with tempfile.NamedTemporaryFile(suffix='.py') as input_file:
       input_file.write(source_code_str)
       input_file.flush()
@@ -535,11 +528,8 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
                              'row': int(match_obj.group('row')),
                              'column': int(match_obj.group('column')),
                              'text': match_obj.group('message')})
-
   finally:
     output_file.close()
-    sys.stderr = stderr
-    sys.stdout = stdout
 
   #LOG('Utils', INFO, 'Checking time (pylint): %.2f' % (time.time() - started))
   return message_list
