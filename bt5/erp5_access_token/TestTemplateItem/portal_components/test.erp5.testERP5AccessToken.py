@@ -50,7 +50,8 @@ class AccessTokenTestCase(ERP5TypeTestCase):
       reference='TESTP-' + new_id)
     if password:
       person.setPassword(password)
-    person.newContent(portal_type = 'Assignment').open()
+    person.newContent(portal_type='Assignment').open()
+    person.newContent(portal_type='ERP5 Login', reference=new_id).validate()
     self.tic()
     return person
 
@@ -142,6 +143,28 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
     person = self._createPerson(self.new_id)
     for assignment in person.contentValues(portal_type='Assignment'):
       assignment.close()
+    access_url = "http://exemple.com/foo"
+    access_method = "GET"
+    access_token = self._createRestrictedAccessToken(self.new_id,
+                        person,
+                        access_method,
+                        access_url)
+    access_token.validate()
+    self.tic()
+
+    self.portal.REQUEST.form["access_token"] = access_token.getId()
+    self.portal.REQUEST["REQUEST_METHOD"] = access_method
+    self.portal.REQUEST["ACTUAL_URL"] = access_url
+    self.portal.REQUEST.form["access_token_secret"] = access_token.getReference()
+
+    result = self._getTokenCredential(self.portal.REQUEST)
+    self.assertFalse(result)
+
+  def test_token_without_login(self):
+    # Token does not work when person has no validated login
+    person = self._createPerson(self.new_id)
+    for login in person.contentValues(portal_type='ERP5 Login'):
+      login.invalidate()
     access_url = "http://exemple.com/foo"
     access_method = "GET"
     access_token = self._createRestrictedAccessToken(self.new_id,
