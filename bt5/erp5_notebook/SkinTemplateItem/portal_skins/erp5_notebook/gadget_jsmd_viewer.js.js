@@ -39,7 +39,7 @@
         base_url = document.location.toString(),
         doc;
 
-      return fetchHTML("gadget_notebook_eval_romain2.html", base_url)
+      return fetchHTML("gadget_jsmd_eval.html", base_url)
         .push(function (result) {
           doc = result;
           // Insert text
