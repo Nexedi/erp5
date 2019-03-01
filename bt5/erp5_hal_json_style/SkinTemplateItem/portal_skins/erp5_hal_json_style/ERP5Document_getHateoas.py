@@ -1642,6 +1642,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           catalog_kw['group_by_list'] = group_by
         else:
           catalog_kw['group_by_list'] = [str(group_by)]
+        # Include select, as user may want to count
+        catalog_kw["select_list"] = select_list
 
       if limit:
         catalog_kw["limit"] = limit
