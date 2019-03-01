@@ -68,7 +68,7 @@
     })
 
     .declareMethod('render', function (options) {
-      var mode,
+      var mode = 'text',
         state_dict = {
           key: options.key,
           editable: options.editable === undefined ? true : options.editable
