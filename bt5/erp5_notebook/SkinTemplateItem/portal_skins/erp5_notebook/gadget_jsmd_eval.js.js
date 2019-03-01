@@ -290,7 +290,6 @@
       len = cell_list.length,
       i,
       queue = new RSVP.Queue();
-    console.log(cell_list);
 
     for (i = 0; i < len; i += 1) {
       queue.push(deferCellExecution(cell_list[i]));
