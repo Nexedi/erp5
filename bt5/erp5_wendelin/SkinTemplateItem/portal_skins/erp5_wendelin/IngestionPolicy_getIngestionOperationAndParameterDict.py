@@ -6,15 +6,21 @@ portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 
 data_ingestion_reference = movement_dict.get('reference', reference)
-data_ingestion_id =  "%s-%s" %(today_string, data_ingestion_reference)
 resource_reference = movement_dict.get('resource_reference', None)
 specialise_reference = movement_dict.get('specialise_reference', None)
+destination_section_reference = movement_dict.get('destination_section_reference', None)
+data_ingestion_id =  "%s-%s-%s" %(today_string, destination_section_reference, data_ingestion_reference)
 
-# first search for applicable data ingestion
-data_ingestion = portal_catalog.getResultValue(
+data_ingestion_query_kw = dict(
   portal_type = 'Data Ingestion',
   simulation_state = ['started', 'stopped'],
   reference = data_ingestion_reference)
+
+if destination_section_reference is not None:
+  data_ingestion_query_kw["destination_section_reference"] = destination_section_reference
+
+# first search for applicable data ingestion
+data_ingestion = portal_catalog.getResultValue(**data_ingestion_query_kw)
 
 def init_input_line(input_line, operation_line):
   # copy device and configuration from operation line to input line
@@ -92,21 +98,22 @@ def init_input_line(input_line, operation_line):
 
 if data_ingestion is None:
   document = portal.data_ingestion_module.get(data_ingestion_id)
-  if (document is not None) and document.getSimulationState() == 'started':
+  if (document is not None) and document.getSimulationState() in ('started', 'stopped'):
     data_ingestion = document
 
 if modify and data_ingestion is None:
-  specialise_list = [x.getRelativeUrl() for x in portal_catalog.searchResults(
-    portal_type = 'Data Supply',
+  specialise_query_kw = dict(    portal_type = 'Data Supply',
     reference = specialise_reference,
-    validation_state = 'validated')]
+    validation_state = 'validated')
+  if destination_section_reference is not None:
+    specialise_query_kw["destination_section_reference"] = destination_section_reference
+
+  specialise_list = [x.getRelativeUrl() for x in portal_catalog.searchResults(specialise_query_kw)]
 
   # if we do not find a validated data supply, we look for a default data supply
   if not specialise_list:
-    specialise_list = [x.getRelativeUrl() for x in portal_catalog.searchResults(
-      portal_type = 'Data Supply',
-      reference = specialise_reference,
-      validation_state = 'default')]
+    specialise_query_kw["validation_state"] = 'default'
+    specialise_list = [x.getRelativeUrl() for x in portal_catalog.searchResults(specialise_query_kw)]
 
   # create a new data ingestion
   data_ingestion = portal.ERP5Site_createDataIngestion(specialise_list,
