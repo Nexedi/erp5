@@ -464,82 +464,70 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
   message_list = []
   output_file = cStringIO.StringIO()
 
-  # pylint prints directly on stderr/stdout (only reporter content matters)
-  stderr = sys.stderr
-  stdout = sys.stdout
-  try:
-    sys.stderr = cStringIO.StringIO()
-    sys.stdout = cStringIO.StringIO()
+  with tempfile.NamedTemporaryFile(suffix='.py') as input_file:
+    input_file.write(source_code_str)
+    input_file.flush()
 
-    with tempfile.NamedTemporaryFile(suffix='.py') as input_file:
-      input_file.write(source_code_str)
-      input_file.flush()
+    args = [input_file.name, '--reports=n', '--indent-string="  "',
+         # Disable Refactoring and Convention messages which are too verbose
+         # TODO-arnau: Should perphaps check ERP5 Naming Conventions?
+         '--disable=R,C',
+         # 'String statement has no effect': eg docstring at module level
+         '--disable=W0105',
+         # 'Using possibly undefined loop variable %r': Spurious warning
+         # (loop variables used after the loop)
+         '--disable=W0631',
+         # 'fixme': No need to display TODO/FIXME entry in warnings
+         '--disable=W0511',
+         # 'Unused argument %r': Display for readability or when defining abstract methods
+         '--disable=W0613',
+         # 'Catching too general exception %s': Too coarse
+         # TODO-arnau: Should consider raise in except
+         '--disable=W0703',
+         # 'Used * or ** magic': commonly used in ERP5
+         '--disable=W0142',
+         # 'Class has no __init__ method': Spurious warning
+         '--disable=W0232',
+         # 'Attribute %r defined outside __init__': Spurious warning
+         '--disable=W0201',
+         # Dynamic class generation so some attributes may not be found
+         # TODO-arnau: Enable it properly would require inspection API
+         # '%s %r has no %r member'
+         '--disable=E1101,E1103',
+         # 'No name %r in module %r'
+         '--disable=E0611',
+         # map and filter should not be considered bad as in some cases
+         # map is faster than its recommended replacement (list
+         # comprehension)
+         '--bad-functions=apply,input',
+         # 'Access to a protected member %s of a client class'
+         '--disable=W0212',
+         # string module does not only contain deprecated functions...
+         '--deprecated-modules=regsub,TERMIOS,Bastion,rexec']
 
-      args = [input_file.name, '--reports=n', '--indent-string="  "',
-           # Disable Refactoring and Convention messages which are too verbose
-           # TODO-arnau: Should perphaps check ERP5 Naming Conventions?
-           '--disable=R,C',
-           # 'String statement has no effect': eg docstring at module level
-           '--disable=W0105',
-           # 'Using possibly undefined loop variable %r': Spurious warning
-           # (loop variables used after the loop)
-           '--disable=W0631',
-           # 'fixme': No need to display TODO/FIXME entry in warnings
-           '--disable=W0511',
-           # 'Unused argument %r': Display for readability or when defining abstract methods
-           '--disable=W0613',
-           # 'Catching too general exception %s': Too coarse
-           # TODO-arnau: Should consider raise in except
-           '--disable=W0703',
-           # 'Used * or ** magic': commonly used in ERP5
-           '--disable=W0142',
-           # 'Class has no __init__ method': Spurious warning
-           '--disable=W0232',
-           # 'Attribute %r defined outside __init__': Spurious warning
-           '--disable=W0201',
-           # Dynamic class generation so some attributes may not be found
-           # TODO-arnau: Enable it properly would require inspection API
-           # '%s %r has no %r member'
-           '--disable=E1101,E1103',
-           # 'No name %r in module %r'
-           '--disable=E0611',
-           # map and filter should not be considered bad as in some cases
-           # map is faster than its recommended replacement (list
-           # comprehension)
-           '--bad-functions=apply,input',
-           # 'Access to a protected member %s of a client class'
-           '--disable=W0212',
-           # string module does not only contain deprecated functions...
-           '--deprecated-modules=regsub,TERMIOS,Bastion,rexec']
+    if portal_type == 'Interface Component':
+      # Interface inherits from InterfaceClass:
+      # E: 4, 0: Inheriting 'Interface', which is not a class. (inherit-non-class)
+      args.append('--disable=E0239')
+      # Interfaces methods have no arguments:
+      # E: 5, 2: Method has no argument (no-method-argument)
+      args.append('--disable=E0211')
 
-      if portal_type == 'Interface Component':
-        # Interface inherits from InterfaceClass:
-        # E: 4, 0: Inheriting 'Interface', which is not a class. (inherit-non-class)
-        args.append('--disable=E0239')
-        # Interfaces methods have no arguments:
-        # E: 5, 2: Method has no argument (no-method-argument)
-        args.append('--disable=E0211')
+    try:
+      from pylint.extensions.bad_builtin import __name__ as ext
+      args.append('--load-plugins=' + ext)
+    except ImportError:
+      pass
+    Run(args, reporter=TextReporter(output_file), exit=False)
 
-      try:
-        from pylint.extensions.bad_builtin import __name__ as ext
-        args.append('--load-plugins=' + ext)
-      except ImportError:
-        pass
-      Run(args, reporter=TextReporter(output_file), exit=False)
-
-    output_file.reset()
-    for line in output_file:
-      match_obj = _pylint_message_re.match(line)
-      if match_obj:
-        message_list.append({'type': match_obj.group('type'),
-                             'row': int(match_obj.group('row')),
-                             'column': int(match_obj.group('column')),
-                             'text': match_obj.group('message')})
-
-  finally:
-    output_file.close()
-    sys.stderr = stderr
-    sys.stdout = stdout
+  output_file.reset()
+  for line in output_file:
+    match_obj = _pylint_message_re.match(line)
+    if match_obj:
+      message_list.append({'type': match_obj.group('type'),
+                           'row': int(match_obj.group('row')),
+                           'column': int(match_obj.group('column')),
+                           'text': match_obj.group('message')})
 
   #LOG('Utils', INFO, 'Checking time (pylint): %.2f' % (time.time() - started))
   return message_list
