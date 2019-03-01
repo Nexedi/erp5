@@ -116,6 +116,12 @@
             </value>
         </item>
         <item>
+            <key> <string>subject</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Template Test Leaflet Page</string> </value>
         </item>
