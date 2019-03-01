@@ -1733,6 +1733,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       '_selection_domain': selection_domain,
       '_limit': limit,
       '_select_list': select_list,
+      '_group_by': group_by,
+      '_sort_on': sort_on,
       '_embedded': {}
     })
 
