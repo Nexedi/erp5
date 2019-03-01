@@ -13,7 +13,8 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
     "minipaint": {"url": "minipaint.gadget.html"},
     "jquery-sheets": {"url": "jquery-sheets.gadget.html"},
     "pdf": {"url": "pdf_js/pdfjs.gadget.html"},
-    "notebook_editor": {"url": "gadget_notebook.html"}
+    "notebook_editor": {"url": "gadget_notebook.html"},
+    "jsmd_editor": {"url": "gadget_jsmd_viewer.html"}
   };
 
 
@@ -73,15 +74,16 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
 
       if ((modification_dict.hasOwnProperty('editable')) ||
           (modification_dict.hasOwnProperty('editor')) || 
-          (gadget.state.editor == 'notebook_editor')) {
+          (gadget.state.editor === 'notebook_editor')) {
         // Clear first to DOM, append after to reduce flickering/manip
         while (element.firstChild) {
           element.removeChild(element.firstChild);
         }
         if (modification_dict.hasOwnProperty('maximize') || 
-          (gadget.state.editor == 'notebook_editor')) {
+          (gadget.state.editor === 'notebook_editor')) {
           // for fck_editor fields, we want to be able to maximize also in non editable
           if ((gadget.state.maximize && gadget.state.editable) ||
+              (gadget.state.maximize && gadget.state.editor === 'jsmd_editor') ||
               (gadget.state.maximize && gadget.state.editor === 'fck_editor')) {
             element.appendChild(div_max);
             queue
@@ -108,11 +110,16 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         if ((gadget.state.editable &&
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
             (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
+            (!gadget.state.editable && gadget.state.editor === 'jsmd_editor') ||
             (gadget.state.editor === 'pdf')) {
           queue
             .push(function () {
+              var url = editor_dict[gadget.state.editor].url;
+              if (gadget.state.editable && (gadget.state.editor === 'jsmd_editor')) {
+                url = editor_dict.codemirror.url;
+              }
               return gadget.declareGadget(
-                editor_dict[gadget.state.editor].url,
+                url,
                 {
                   scope: 'editor',
                   sandbox: 'iframe',
@@ -134,6 +141,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
       if ((gadget.state.editable &&
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
             (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
+            (!gadget.state.editable && gadget.state.editor === 'jsmd_editor') ||
             (gadget.state.editor === 'pdf')) {
         queue
           .push(function () {
