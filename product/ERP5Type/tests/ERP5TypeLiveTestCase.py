@@ -31,7 +31,6 @@ import os
 import sys
 import imp
 import re
-import thread
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
@@ -97,10 +96,9 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         registry._conns[-1] = portal
 
       # This is for Localizer patch
-      from Products.Localizer import patches
+      from zope.globalrequest import setRequest
       request = portal.REQUEST
-      with patches._requests_lock:
-        patches._requests[thread.get_ident()] = request
+      setRequest(request)
 
       # Make live tests run under the same server URL than the host instance.
       if _request_server_url:
