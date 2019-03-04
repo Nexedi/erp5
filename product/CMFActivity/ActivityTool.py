@@ -60,12 +60,7 @@ import transaction
 from App.config import getConfiguration
 from Shared.DC.ZRDB.Results import Results
 
-import Products.Localizer.patches
-localizer_lock = Products.Localizer.patches._requests_lock
-localizer_contexts = Products.Localizer.patches._requests
-LocalizerContext = lambda request: request
-
-
+from zope.globalrequest import getRequest, setRequest
 from Products.MailHost.MailHost import MailHostError
 
 from zLOG import LOG, INFO, WARNING, ERROR
@@ -1464,7 +1459,7 @@ class ActivityTool (BaseTool):
     def invoke(self, message):
       if self.activity_tracking:
         activity_tracking_logger.info('invoking message: object_path=%s, method_id=%s, args=%r, kw=%r, activity_kw=%r, user_name=%s' % ('/'.join(message.object_path), message.method_id, message.args, message.kw, message.activity_kw, message.user_name))
-      old_localizer_context = False
+      old_request = None
       if getattr(self, 'aq_chain', None) is not None:
         # Grab existing acquisition chain and extrach base objects.
         base_chain = [aq_base(x) for x in self.aq_chain]
@@ -1500,16 +1495,8 @@ class ActivityTool (BaseTool):
           new_request.other['VirtualRootPhysicalPath'] = request_info['VirtualRootPhysicalPath']
         if 'HTTP_ACCEPT_LANGUAGE' in request_info:
           new_request.environ['HTTP_ACCEPT_LANGUAGE'] = request_info['HTTP_ACCEPT_LANGUAGE']
-          # Replace Localizer/iHotfix Context, saving existing one
-          localizer_context = LocalizerContext(new_request)
-          id = get_ident()
-          localizer_lock.acquire()
-          try:
-            old_localizer_context = localizer_contexts.get(id)
-            localizer_contexts[id] = localizer_context
-          finally:
-            localizer_lock.release()
-          # Execute Localizer/iHotfix "patch 2"
+          old_request = getRequest()
+          setRequest(new_request)
           new_request.processInputs()
 
         new_request_container = request_container.__class__(REQUEST=new_request)
@@ -1528,17 +1515,7 @@ class ActivityTool (BaseTool):
           # Restore default skin selection
           skinnable = self.getPortalObject()
           skinnable.changeSkin(skinnable.getSkinNameFromRequest(request))
-        if old_localizer_context is not False:
-          # Restore Localizer/iHotfix context
-          id = get_ident()
-          localizer_lock.acquire()
-          try:
-            if old_localizer_context is None:
-              del localizer_contexts[id]
-            else:
-              localizer_contexts[id] = old_localizer_context
-          finally:
-            localizer_lock.release()
+        setRequest(old_request)
       if self.activity_tracking:
         activity_tracking_logger.info('invoked message')
       if my_self is not self: # We rewrapped self
