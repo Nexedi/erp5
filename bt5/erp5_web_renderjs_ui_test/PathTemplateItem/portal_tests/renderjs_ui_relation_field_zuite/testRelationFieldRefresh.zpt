@@ -26,7 +26,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=2</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=2&category_list:list=a&category_list:list=</td>
   <td></td>
 </tr>
 <tr>
@@ -34,66 +34,69 @@
   <td>Created Successfully.</td>
   <td></td>
 </tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module/0?editable=true</td>
+  <td>&#36;{base_url}/web_site_module/renderjs_runner/#/foo_module?editable=true</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<!-- Set successor value of foo_module/0 to foo_module/1 -->
+<!-- Go to foo_module/0 in View tab -->
 <tr>
-  <td>storeEval</td>
-  <td>document.getElementById("selenium_myiframe").contentWindow.document.location.href = "&#36;{base_url}/foo_module/0/setSuccessor?value=foo_module/1"</td>
-  <td>dummy</td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
+  <td>waitForElementPresent</td>
+  <td>//a[text()="Title 0"]</td>
   <td></td>
 </tr>
-
-<!-- Go to Relation Fields tab directly (without using other dialogs like "Views") -->
 <tr>
   <td>click</td>
-  <td>//a[text()="Relation Fields"]</td>
+  <td>//a[text()="Title 0"]</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<!-- Check the relation field is update to date -->
+<!-- Check the relation field is up to date -->
 <tr>
   <td>verifyValue</td>
-  <td>//input[@name="field_my_successor_title"]</td>
-  <td>Title 1</td>
+  <td>//input[@name="field_my_foo_category_title"]</td>
+  <td>a</td>
 </tr>
-
-<!-- Set successor value of foo_module/0 to empty -->
+<!-- Place a mark on the element to check later if it is correctly updated (not re-created) -->
 <tr>
   <td>storeEval</td>
-  <td>document.getElementById("selenium_myiframe").contentWindow.document.location.href = "&#36;{base_url}/foo_module/0/setSuccessor?value="</td>
+  <td>document.getElementById("selenium_myiframe").contentWindow.document.querySelector('input[name="field_my_foo_category_title"]').setAttribute("test-relation-field-refresh", "1")</td>
   <td>dummy</td>
 </tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
 
-<!-- Update the form view by clicking on the same tab link -->
+<!-- Trigger update the relation field with an empty value -->
 <tr>
   <td>click</td>
-  <td>//a[text()="Relation Fields"]</td>
+  <td>//a[@data-i18n="Next"]</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<!-- When pressing Next button, the spinner spins twice. So we can't use the macro `wait_for_content_loaded`
+     because selenium sometimes misses one spinner (bad timing). By checking the header title we ensure the
+     spins are done. -->
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Foo: Title 1</td>
+  <td></td>
+</tr>
 
+<!-- Check the element is updated, not re-created -->
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//input[@name="field_my_foo_category_title" and @test-relation-field-refresh="1"]</td>
+  <td></td>
+</tr>
 <!-- The field should be updated to empty -->
 <!-- Here waitForTextNotPresent or waitForElementPresent passes no matter the state of the field, because the field is updated in javascript (not in html attributes) and so the selection //input[@value=''] does not work. -->
 <!-- When not passing, you can see that the plane is correctly replaced by a magnifying glass, as if the field was only partly updated -->
 <tr>
   <td>verifyValue</td>
-  <td>//input[@name="field_my_successor_title"]</td>
+  <td>//input[@name="field_my_foo_category_title"]</td>
   <td></td>
 </tr>
 
