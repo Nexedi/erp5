@@ -21,7 +21,6 @@ This is a hotfix, it dynamically applies several patches to Zope.
 # Import from the Standard Library
 import logging
 import os
-from thread import allocate_lock, get_ident
 
 # Import from itools
 from .itools.i18n import AcceptLanguageType
@@ -30,7 +29,8 @@ from .itools.i18n import AcceptLanguageType
 import Globals
 from ZPublisher import Publish
 from ZPublisher.HTTPRequest import HTTPRequest
-
+from zope.globalrequest import clearRequest, setRequest
+from zope.globalrequest import getRequest as get_request
 
 # Flag
 patch = False
@@ -57,56 +57,21 @@ logger = logging.getLogger('Localizer')
 # Also, we keep the get_request method in the Globals module for backwards
 # compatibility (with TranslationService for example).
 
-_requests = {}
-_requests_lock = allocate_lock()
-
-
-def get_request():
-    """Get a request object"""
-    return _requests.get(get_ident(), None)
-
-
-def new_publish(request, module_name, after_list, debug=0,
-                zope_publish=Publish.publish):
-    # Get the process id
-    ident = get_ident()
-
-    # Add the request object to the global dictionnary
-    _requests_lock.acquire()
-    try:
-        _requests[ident] = request
-    finally:
-        _requests_lock.release()
-
-    # Call the old publish
-    try:
-        # Publish
-        x = zope_publish(request, module_name, after_list, debug)
-    finally:
-        # Remove the request object.
-        # When conflicts occur the "publish" method is called again,
-        # recursively. In this situation the "_requests dictionary would
-        # be cleaned in the innermost call, hence outer calls find the
-        # request does not exist anymore. For this reason we check first
-        # wether the request is there or not.
-        if ident in _requests:
-            _requests_lock.acquire()
-            try:
-                del _requests[ident]
-            finally:
-                _requests_lock.release()
-
-    return x
+def get_new_publish(zope_publish):
+    def publish(request, *args, **kwargs):
+        try:
+            setRequest(request)
+            return zope_publish(request, *args, **kwargs)
+        finally:
+            clearRequest()
+    return publish
 
 
 if patch is False:
     logger.info('Install "Globals.get_request".')
 
     # Apply the patch
-    Publish.publish = new_publish
-
-    # First import (it's not a refresh operation).
-    # We need to apply the patches.
+    Publish.publish = get_new_publish(Publish.publish)
     patch = True
 
     # Add to Globals for backwards compatibility
