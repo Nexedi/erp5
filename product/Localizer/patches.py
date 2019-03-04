@@ -28,7 +28,7 @@ from .itools.i18n import AcceptLanguageType
 
 # Import from Zope
 import Globals
-from ZPublisher import Publish
+from ZPublisher import Publish, WSGIPublisher
 from ZPublisher.HTTPRequest import HTTPRequest
 
 
@@ -65,45 +65,44 @@ def get_request():
     """Get a request object"""
     return _requests.get(get_ident(), None)
 
+def get_new_publish(zope_publish):
+    def publish(request, *args, **kwargs):
+        # Get the process id
+        ident = get_ident()
 
-def new_publish(request, module_name, after_list, debug=0,
-                zope_publish=Publish.publish):
-    # Get the process id
-    ident = get_ident()
+        # Add the request object to the global dictionnary
+        with _requests_lock:
+            _requests[ident] = request
 
-    # Add the request object to the global dictionnary
-    _requests_lock.acquire()
-    try:
-        _requests[ident] = request
-    finally:
-        _requests_lock.release()
-
-    # Call the old publish
-    try:
-        # Publish
-        x = zope_publish(request, module_name, after_list, debug)
-    finally:
-        # Remove the request object.
-        # When conflicts occur the "publish" method is called again,
-        # recursively. In this situation the "_requests dictionary would
-        # be cleaned in the innermost call, hence outer calls find the
-        # request does not exist anymore. For this reason we check first
-        # wether the request is there or not.
-        if ident in _requests:
-            _requests_lock.acquire()
-            try:
-                del _requests[ident]
-            finally:
-                _requests_lock.release()
-
-    return x
+        # Call the old publish
+        try:
+            # Publish
+            return zope_publish(request, *args, **kwargs)
+        finally:
+            # Remove the request object.
+            # When conflicts occur the "publish" method is called again,
+            # recursively. In this situation the "_requests dictionary would
+            # be cleaned in the innermost call, hence outer calls find the
+            # request does not exist anymore. For this reason we check first
+            # wether the request is there or not.
+            if ident in _requests:
+                with _requests_lock:
+                    del _requests[ident]
+    return publish
 
 
 if patch is False:
     logger.info('Install "Globals.get_request".')
 
     # Apply the patch
-    Publish.publish = new_publish
+    Publish.publish = get_new_publish(Publish.publish)
+    WSGIPublisher.publish = get_new_publish(WSGIPublisher.publish)
+
+    # Update WSGIPublisher.publish_module.__defaults__, otherwise it will use
+    # the unpatched WSGIPublisher.publish.
+    WSGIPublisher.publish_module.__defaults__ = (
+      WSGIPublisher.publish,
+      ) + WSGIPublisher.publish_module.__defaults__[1:]
 
     # First import (it's not a refresh operation).
     # We need to apply the patches.
