@@ -30,7 +30,7 @@
     ERP5Type is provides a RAD environment for Zope / CMF
     All ERP5 classes derive from ERP5Type
 """
-from patches import python, pylint
+from patches import python, pylint, globalrequest
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 
