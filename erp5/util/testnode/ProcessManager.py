@@ -34,7 +34,7 @@ import sys
 import time
 from . import logger
 
-MAX_TIMEOUT = 3600 * 4
+MAX_TIMEOUT = 3600 * 8  # EXP: maybe timeout kill results in hanging processes?
 
 class SubprocessError(EnvironmentError):
   def __init__(self, status_dict):
