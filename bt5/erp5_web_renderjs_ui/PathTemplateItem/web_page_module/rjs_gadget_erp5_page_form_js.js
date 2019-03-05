@@ -49,6 +49,7 @@ and handling data send&receive.
       'gadget_html5_textarea.html',
       'gadget_html5_select.html'
     ],
+    erp5_module_regexp = /^[^\/]+_module$/,
     erp5_module_document_regexp = /^[^\/]+_module\/.+$/;
   /*jslint regexp: false*/
 
@@ -98,6 +99,22 @@ and handling data send&receive.
       rJS.declareGadgetKlass(rJS.getAbsoluteURL(url_list[i],
                                                 gadget.__path));
     }
+  }
+
+  function popActionByName(links, category_id, action_name) {
+    var i = 0,
+      action_list = links["action_" + category_id] || [];
+    if (Array.isArray(action_list)) {
+      for (i = 0; i < action_list.length; i += 1) {
+        if (action_list[i].name === action_name) {
+          return action_list.splice(i, 1)[0];
+        }
+      }
+    } else if (action_list.name === action_name) {
+      delete links["action_" + category_id];
+      return action_list;
+    }
+    return null;
   }
 
   rJS(window)
@@ -308,16 +325,25 @@ and handling data send&receive.
         })
         .push(function () {
           var jio_key = gadget.state.options.jio_key;
-          /*jslint regexp: true*/
-          if ((erp5_module_document_regexp.test(jio_key)) || (/^portal_.*\/.+$/.test(jio_key))) {
+          if (erp5_module_regexp.test(jio_key)) {
+            if (erp5_document._links) {
+              // hardcode "VIEW: View" to hide "consistency", "history" and "metadata"
+              erp5_document._links.action_object_view =
+                [{"name": "view", "title": "View", "href": "view", "icon": null}];
+              // hide "ACTIONS: Change State" ("mass_workflow_jio") as it does not work yet on the panel
+              popActionByName(erp5_document._links, "object_jio_action", "mass_workflow_jio");
+            }
+            /*jslint regexp: true*/
+          } else if (!(erp5_module_document_regexp.test(jio_key) || (/^portal_.*\/.+$/.test(jio_key)))) {
             /*jslint regexp: false*/
-            return gadget.updatePanel({
-              erp5_document: erp5_document,
-              editable: gadget.state.options.editable,
-              jio_key: jio_key,
-              view: options.view
-            });
+            return;
           }
+          return gadget.updatePanel({
+            erp5_document: erp5_document,
+            editable: gadget.state.options.editable,
+            jio_key: jio_key,
+            view: options.view
+          });
         });
     })
     /** SubmitContent should be called by the gadget which renders submit button
