@@ -215,10 +215,14 @@
     .allowPublicAcquisition("notifyInvalid", function (arr, scope) {
     })
     .declareMethod("render", function (opt) {
-      this.props.init_value = opt.value;
-      return this.getDeclaredGadget("xmla_settings")
+      var gadget = this;
+      gadget.props.init_value = opt.value;
+      return gadget.getDeclaredGadget("xmla_settings")
         .push(function (g) {
           return g.render(opt);
+        })
+        .push(function () {
+          delete gadget.props.init_value;
         });
     })
     .declareMethod("getContent", function () {
@@ -228,13 +232,15 @@
         });
     })
     .declareAcquiredMethod("notifyChange", "notifyChange")
-    .allowPublicAcquisition("notifyChange", function (arr, scope) {
+    .allowPublicAcquisition("notifyChange", function (arr, s) {
       var g = this,
         p = arr[0].path,
-        gadget_settings,
+        scope = arr[0].scope,
+        action = arr[0].action,
         path;
 
-      function f(settings_path, rerender_path) {
+      function rerender(sub_scope, settings_path) {
+        var gadget_settings;
         return g.getDeclaredGadget("xmla_settings")
           .push(function (gadget) {
             gadget_settings = gadget;
@@ -244,7 +250,12 @@
             return generateSchema(settings);
           })
           .push(function (schema) {
-            return gadget_settings.rerender(rerender_path, schema);
+            return gadget_settings.rerender({
+              scope: sub_scope,
+              path: '/properties',
+              schema: schema,
+              ignore_incorrect: true
+            });
           })
           .push(function () {
             return g.notifyChange();
@@ -252,35 +263,43 @@
       }
 
       for (path in g.props.xmla_connections) {
-        if (g.props.xmla_connections.hasOwnProperty(path) &&
-            p.startsWith(path)) {
-          return f(path, g.props.xmla_connections[path]);
+        if (g.props.xmla_connections.hasOwnProperty(path)) {
+          if (p === path && action === "add") {
+            g.props.xmla_connections[path] = scope;
+            return rerender(scope, path);
+          }
+          s = g.props.xmla_connections[path];
+          if (action === "delete") {
+            if (s === scope) {
+              // xxx memory leak
+              g.props.xmla_connections[path] = false;
+            }
+          } else {
+            // check if receive message from gadget with scope == s or his sub_gadgets
+            if (scope.startsWith(s)) {
+              return rerender(s, path);
+            }
+          }
         }
       }
       return g.notifyChange();
     })
-    .allowPublicAcquisition("resolveExternalReference", function (arr) {
+    .allowPublicAcquisition("resolveExternalReference", function (arr, scope) {
       var g = this,
         url = arr[0],
         schema_path = arr[1],
-        path = arr[2],
-        settings,
-        connection_path;
+        path = arr[2];
+      console.log(scope);
       if ("urn:jio:properties_from_xmla.connection.json" === url) {
-        connection_path = path.split('/').slice(0, -1).join('/');
         return new RSVP.Queue()
           .push(function () {
+            var connection_path = path.split('/').slice(0, -1).join('/'),
+              settings;
+            g.props.xmla_connections[connection_path] = false;
             if (g.props.init_value) {
               settings = convertOnMultiLevel(g.props.init_value, connection_path);
-              if (settings) {
-                convertOnMultiLevel(g.props.init_value, connection_path, []);
-              }
             }
             return generateSchema(settings);
-          })
-          .push(function (s) {
-            g.props.xmla_connections[connection_path] = path;
-            return s;
           });
       }
       throw new Error("urn: '" + url + "' not supported");
