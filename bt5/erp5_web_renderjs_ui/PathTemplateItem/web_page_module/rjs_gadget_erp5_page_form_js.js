@@ -49,6 +49,7 @@ and handling data send&receive.
       'gadget_html5_textarea.html',
       'gadget_html5_select.html'
     ],
+    erp5_module_regexp = /^[^\/]+_module$/,
     erp5_module_document_regexp = /^[^\/]+_module\/.+$/;
   /*jslint regexp: false*/
 
@@ -114,6 +115,7 @@ and handling data send&receive.
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
@@ -307,17 +309,27 @@ and handling data send&receive.
           }
         })
         .push(function () {
+          return gadget.getTranslationList(["List"]);
+        })
+        .push(function (translation_list) {
           var jio_key = gadget.state.options.jio_key;
-          /*jslint regexp: true*/
-          if ((erp5_module_document_regexp.test(jio_key)) || (/^portal_.*\/.+$/.test(jio_key))) {
+          if (erp5_module_regexp.test(jio_key)) {
+            if (erp5_document._links) {
+              // hardcode "VIEWS: List" to hide "consistency", "history" and "metadata"
+              erp5_document._links.action_object_view =
+                [{"name": "view", "title": translation_list[0], "href": "view", "icon": null}];
+            }
+            /*jslint regexp: true*/
+          } else if (!(erp5_module_document_regexp.test(jio_key) || (/^portal_.*\/.+$/.test(jio_key)))) {
             /*jslint regexp: false*/
-            return gadget.updatePanel({
-              erp5_document: erp5_document,
-              editable: gadget.state.options.editable,
-              jio_key: jio_key,
-              view: options.view
-            });
+            return;
           }
+          return gadget.updatePanel({
+            erp5_document: erp5_document,
+            editable: gadget.state.options.editable,
+            jio_key: jio_key,
+            view: options.view
+          });
         });
     })
     /** SubmitContent should be called by the gadget which renders submit button

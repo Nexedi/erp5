@@ -3,6 +3,8 @@
 (function (window, document, rJS, RSVP, Node, asBoolean, ensureArray) {
   "use strict";
 
+  var erp5_module_document_regexp = /^[^\/]+_module\/.+$/;
+
   function appendDt(fragment, dt_title, dt_icon,
                     action_list, href_list, index) {
 // <dt class="ui-btn-icon-left ui-icon-eye">Views</dt>
@@ -278,8 +280,11 @@
 
               appendDt(dl_fragment, result_list[1][0], 'eye',
                        view_list, result_list[0], 0);
-              appendDt(dl_fragment, result_list[1][1], 'random',
-                       workflow_list, result_list[0], view_list.length);
+              if (erp5_module_document_regexp.test(gadget.state.jio_key)) {
+                // show Workflows only on document
+                appendDt(dl_fragment, result_list[1][1], 'random',
+                  workflow_list, result_list[0], view_list.length);
+              }
               appendDt(dl_fragment, result_list[1][2], 'cogs',
                        action_list, result_list[0],
                        view_list.length + workflow_list.length);
