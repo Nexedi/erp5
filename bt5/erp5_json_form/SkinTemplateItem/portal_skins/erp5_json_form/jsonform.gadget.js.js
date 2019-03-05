@@ -1,5 +1,5 @@
 /*jslint nomen: true, maxlen: 200, indent: 2, maxerr: 100*/
-/*global window, document, URL, rJS, RSVP, jIO, tv4, Blob */
+/*global window, document, URL, rJS, RSVP, jIO, Blob */
 
 (function (window, document, Blob, rJS, RSVP, jIO) {
   "use strict";
@@ -676,12 +676,11 @@
       kk = decodeJsonPointer(key_list[ii]);
       if (ii === key_list.length - 1) {
         return d[kk];
-      } else {
-        if (!d.hasOwnProperty(kk)) {
-          return;
-        }
-        d = d[kk];
       }
+      if (!d.hasOwnProperty(kk)) {
+        return;
+      }
+      d = d[kk];
     }
   }
 
@@ -967,25 +966,48 @@
           console.error(err);
         });
     })
-    .declareMethod('rerender', function (path, schema) {
+    .declareMethod('rerender', function (opt) {
       var g = this,
-        gadget;
-      if (path) {
-        return g.props.form_gadget.getGadgetByPath(path)
-          .push(function (ret) {
-            gadget = ret.gadget;
-            return gadget.getContent();
+        gadget,
+        queue = RSVP.Queue();
+      if (opt.scope) {
+        queue
+          .push(function () {
+            return g.props.form_gadget.getDeclaredGadget(opt.scope);
           })
-          .push(function (value) {
-            return gadget.rerender({
-              schema: schema,
-              value: value
-            })
-              .push(function () {
-                return gadget.reValidate(value, schema);
-              });
+          .push(function (ret) {
+            gadget = ret;
           });
       }
+      if (opt.path) {
+        queue
+          .push(function () {
+            if (!gadget) {
+              gadget = g.props.form_gadget;
+            }
+            return gadget.getGadgetByPath(opt.path);
+          })
+          .push(function (ret) {
+            gadget = ret.gadget;
+          });
+      }
+      return queue
+        .push(function () {
+          return gadget.getContent();
+        })
+        .push(function (value) {
+          return gadget.rerender({
+            schema: opt.schema,
+            value: value,
+            ignore_incorrect: opt.ignore_incorrect
+          })
+            .push(function () {
+              if (gadget.props.changed) {
+                value = undefined;
+              }
+              return gadget.reValidate(value, opt.schema);
+            });
+        });
     })
 
     .allowPublicAcquisition("expandSchema", function (arr) {

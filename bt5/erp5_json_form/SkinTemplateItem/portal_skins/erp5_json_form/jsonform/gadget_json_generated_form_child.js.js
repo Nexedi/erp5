@@ -125,58 +125,62 @@
     return schema;
   }
 
-  function render_enum(schema, json_document) {
+  function render_enum(g, schema, json_document) {
     var input = document.createElement("select"),
       option,
       i,
       ser_value,
       selected = false,
+      empty_option,
       enum_arr = schema['enum'];
     input.size = 1;
-    option = document.createElement("option");
-    option.value = "";
+    empty_option = document.createElement("option");
+    empty_option.value = "";
     if (json_document === undefined) {
-      option.selected = true;
+      empty_option.selected = true;
     }
-    input.appendChild(option);
+    input.appendChild(empty_option);
     for (i = 0; i < enum_arr.length; i += 1) {
-      if (enum_arr.hasOwnProperty(i)) {
-        option = document.createElement("option");
-        // XXX use number id for speedup
-        ser_value = JSON.stringify(enum_arr[i]);
-        option.value = ser_value;
-        if (typeof enum_arr[i] === "string") {
-          option.textContent = enum_arr[i];
-        } else {
-          option.textContent = ser_value;
-        }
-        if (deepEqual(enum_arr[i], json_document)) {
-          option.selected = true;
-          selected = true;
-        }
-        input.appendChild(option);
-      }
-    }
-    if (json_document !== undefined && !selected) {
-      // save original json_document even if it
-      // not support with schema
-      // XXX element should be removed on first user interact
       option = document.createElement("option");
-      ser_value = JSON.stringify(json_document);
+      ser_value = JSON.stringify(enum_arr[i]);
       option.value = ser_value;
-      if (typeof json_document === "string") {
-        option.textContent = json_document;
+      if (typeof enum_arr[i] === "string") {
+        option.textContent = enum_arr[i];
       } else {
         option.textContent = ser_value;
       }
-      option.selected = true;
+      if (deepEqual(enum_arr[i], json_document)) {
+        option.selected = true;
+        selected = true;
+      }
       input.appendChild(option);
+    }
+    if (json_document !== undefined && !selected) {
+      if (g.props.ignore_incorrect) {
+        empty_option.selected = true;
+        g.props.changed = true;
+      } else {
+        // save original json_document even if it
+        // not support with schema
+        // XXX element should be removed on first user interact
+        option = document.createElement("option");
+        ser_value = JSON.stringify(json_document);
+        option.value = ser_value;
+        if (typeof json_document === "string") {
+          option.textContent = json_document;
+        } else {
+          option.textContent = ser_value;
+        }
+        option.selected = true;
+        input.appendChild(option);
+      }
     }
     return input;
   }
 
-  function render_enum_with_title(schema_arr, json_document, selected_schema) {
+  function render_enum_with_title(g, schema_arr, json_document, selected_schema) {
     var input = document.createElement("select"),
+      empty_option,
       option,
       i,
       ser_value,
@@ -185,12 +189,12 @@
     if (json_document === undefined && selected_schema !== undefined) {
       json_document = selected_schema.schema.const;
     }
-    option = document.createElement("option");
-    option.value = "";
+    empty_option = document.createElement("option");
+    empty_option.value = "";
     if (json_document === undefined) {
-      option.selected = true;
+      empty_option.selected = true;
     }
-    input.appendChild(option);
+    input.appendChild(empty_option);
     for (i = 0; i < schema_arr.length; i += 1) {
       option = document.createElement("option");
       // XXX use number id for speedup
@@ -210,24 +214,29 @@
       input.appendChild(option);
     }
     if (json_document !== undefined && !selected) {
-      // save original json_document even if it
-      // not support with schema
-      // XXX element should be removed on first user interact
-      option = document.createElement("option");
-      ser_value = JSON.stringify(json_document);
-      option.value = ser_value;
-      if (typeof json_document === "string") {
-        option.textContent = json_document;
+      if (g.props.ignore_incorrect) {
+        empty_option.selected = true;
+        g.props.changed = true;
       } else {
-        option.textContent = ser_value;
+        // save original json_document even if it
+        // not support with schema
+        // XXX element should be removed on first user interact
+        option = document.createElement("option");
+        ser_value = JSON.stringify(json_document);
+        option.value = ser_value;
+        if (typeof json_document === "string") {
+          option.textContent = json_document;
+        } else {
+          option.textContent = ser_value;
+        }
+        option.selected = true;
+        input.appendChild(option);
       }
-      option.selected = true;
-      input.appendChild(option);
     }
     return input;
   }
 
-  function render_boolean(json_document) {
+  function render_boolean(g, json_document) {
     var input,
       schema_for_selection = {
         type: "boolean",
@@ -240,7 +249,7 @@
     if (json_document === "false") {
       json_document = false;
     }
-    input = render_enum(schema_for_selection, json_document);
+    input = render_enum(g, schema_for_selection, json_document);
     input.setAttribute('data-json-type', "boolean");
     return input;
   }
@@ -281,6 +290,14 @@
     return input;
   }
 
+  function generateUid(g) {
+    // generate scope use parent scope as prefix so
+    // we can filter all sub_gadgets target gadget
+    // XXX size?
+    var z = g.element.getAttribute('data-gadget-scope');
+    return z + '_' + Math.random().toString(36).substr(2, 5);
+  }
+
   function addSubForm(options) {
     var input_element = options.element,
       g = options.gadget,
@@ -288,7 +305,7 @@
       parent_path,
       scope;
 
-    scope = "j" + Math.random().toString(36).substr(2, 9);
+    scope = generateUid(g);
     parent_path = options.parent_path;
     if (options.parent_type !== "array") {
       property_name = options.property_name;
@@ -328,6 +345,7 @@
           document: options.json_document,
           display_label: options.parent_type !== "array",
           saveOrigValue: g.props.saveOrigValue,
+          ignore_incorrect: g.props.ignore_incorrect,
           scope: scope
         })
           .push(function () {
@@ -625,11 +643,16 @@
                   gadget.props.add_custom_data[scope] = {
                     element: g.element,
                     event: function () {
+                      var notify = {
+                        action: "add"
+                      };
                       return g.getContent()
                         .push(function (value) {
                           return event(schema_alternatives[value[scope]].value);
                         })
-                        .push(function () {
+                        .push(function (v) {
+                          notify.scope = v.scope;
+                          notify.path = v.path;
                           if (rerender) {
                             return rerender(g, schema_alternatives);
                           }
@@ -639,9 +662,7 @@
                           return g.render(render_options);
                         })
                         .push(function () {
-                          // XXX need path argument
-                          // absent in current context
-                          return gadget.rootNotifyChange();
+                          return gadget.rootNotifyChange(notify);
                         });
                     },
                     rerender: function () {
@@ -684,8 +705,13 @@
               gadget.props.add_buttons.push({
                 element: input,
                 event: function () {
+                  var notify = {
+                    action: "add"
+                  };
                   return event(schema_alternatives[0].value)
-                    .push(function () {
+                    .push(function (v) {
+                      notify.scope = v.scope;
+                      notify.path = v.path;
                       if (rerender) {
                         return rerender(undefined, schema_alternatives);
                       }
@@ -697,9 +723,7 @@
                       } else {
                         input.removeAttribute("style");
                       }
-                      // XXX need path argument
-                      // absent in current context
-                      return gadget.rootNotifyChange();
+                      return gadget.rootNotifyChange(notify);
                     });
                 },
                 rerender: function () {
@@ -729,8 +753,23 @@
       });
   }
 
+  function get_scope_path_from_element(gadget, element) {
+    var scope = element.getAttribute("data-gadget-scope");
+    return gadget.getDeclaredGadget(scope)
+      .push(function (g) {
+        return g.getJsonPath();
+      })
+      .push(function (path) {
+        return {
+          scope: scope,
+          path: path
+        };
+      });
+  }
+
   function render_array(gadget, schema, json_document, div_input, path, schema_path) {
     var input,
+      array_path,
       is_items_arr = schema.items instanceof Array,
       minItems = schema.minItems || 0;
     if (json_document instanceof Array &&
@@ -738,10 +777,36 @@
       div_input.setAttribute("data-json-empty-array", "true");
     }
 
+    function current_array_length() {
+      var array = div_input
+        .querySelectorAll("div[data-gadget-parent-scope='" +
+                          gadget.element.getAttribute("data-gadget-scope") +
+                          "']");
+      return array.length;
+    }
+
+    function add_item_form(id, required) {
+      return function (value) {
+        return gadget.expandSchema(schema.items, schema_path + '/items', array_path + id, required)
+          .push(function (s_arr) {
+            return addSubForm({
+              gadget: gadget,
+              parent_type: 'array',
+              parent_path: path,
+              type: value && value.schema.type,
+              selected_schema: value,
+              schema_arr: s_arr,
+              required: required
+            });
+          });
+      };
+    }
+
     function element_append(child) {
       if (child) {
         input.parentNode.insertBefore(child, input);
         div_input.removeAttribute("data-json-empty-array");
+        return get_scope_path_from_element(gadget, child);
       }
     }
 
@@ -756,6 +821,7 @@
     // input = render_textarea(schema, default_value, "array");
     return gadget.getJsonPath(path)
       .push(function (p) {
+        array_path = p;
         return RSVP.all([
           expandItems(gadget, schema.items, schema_path + '/items', p, minItems),
           gadget.expandSchema(schema.additionalItems, schema_path + '/additionalItems', p, false)
@@ -839,17 +905,9 @@
             }));
         } else {
           if (minItems > len && checkSchemaArrOneChoise(schema_arr)) {
-            for (i = 0; i < (minItems - len); i += 1) {
+            for (i = len; i < minItems; i += 1) {
               queue
-                .push(
-                  addSubForm.bind(gadget, {
-                    gadget: gadget,
-                    parent_type: 'array',
-                    parent_path: path,
-                    schema_arr: schema_arr,
-                    required: true
-                  })
-                )
+                .push(add_item_form(i, true))
                 .push(div_append);
             }
           }
@@ -857,14 +915,7 @@
           queue.push(render_schema_selector.bind(gadget,
             gadget, "add item to array",
             schema_arr, function (value) {
-              return addSubForm({
-                gadget: gadget,
-                parent_type: 'array',
-                parent_path: path,
-                type: value.type,
-                selected_schema: value,
-                schema_arr: schema_arr
-              })
+              return add_item_form(current_array_length(), false)(value)
                 .push(element_append);
             }));
         }
@@ -956,13 +1007,13 @@
 
     // render input begin
     if (!input && schema_arr[0].is_arr_of_const && schema_arr.length > 1) {
-      input = render_enum_with_title(schema_arr, json_document, options.selected_schema);
+      input = render_enum_with_title(gadget, schema_arr, json_document, options.selected_schema);
     }
     if (!input && schema.const !== undefined) {
       input = render_const(gadget, schema, json_document);
     }
     if (!input && schema.enum !== undefined) {
-      input = render_enum(schema, json_document);
+      input = render_enum(gadget, schema, json_document);
       // XXX take in account existing type with enum
       type_changed = false;
     }
@@ -972,7 +1023,7 @@
     }
 
     if (!input && type === "boolean") {
-      input = render_boolean(json_document);
+      input = render_boolean(gadget, json_document);
     }
 
     if (!input && ["string", "integer", "number", "null"].indexOf(type) >= 0) {
@@ -1351,6 +1402,7 @@
       if (child) {
         // insert additionalProperty before selector
         selector.element.parentNode.insertBefore(child, selector.element);
+        return get_scope_path_from_element(g, child);
       }
     }
 
@@ -1521,6 +1573,10 @@
         return queue;
       })
       .push(function () {
+        if (g.props.ignore_incorrect) {
+          g.props.changed = true;
+          return;
+        }
         var key,
           queue = RSVP.Queue();
         for (key in json_document) {
@@ -1753,15 +1809,16 @@
       g.options = {};
     })
     .declareAcquiredMethod("rNotifyChange", "rootNotifyChange")
-    .declareMethod("rootNotifyChange", function (path) {
+    .declareMethod("rootNotifyChange", function (v) {
       var g = this;
       this.props.needValidate = true;
-      return g.getJsonPath(path)
+      return g.getJsonPath(v.path)
         .push(function (p) {
           return g.rNotifyChange({
-            scope: g.element.getAttribute("data-gadget-scope"),
-            rel_path: path,
-            path: p
+            scope: v.scope || g.element.getAttribute("data-gadget-scope"),
+            rel_path: v.path,
+            path: p,
+            action: v.action
           });
         });
     })
@@ -1781,7 +1838,10 @@
           return RSVP.all(tasks);
         })
         .push(function () {
-          return g.deleteChildren();
+          return g.getJsonPath();
+        })
+        .push(function (path) {
+          return g.deleteChildren(path);
         });
     })
     .declareAcquiredMethod("deleteChildren", "deleteChildren")
@@ -1789,6 +1849,7 @@
       var g = this,
         key,
         i,
+        path = arr[0],
         button_list = this.props.add_buttons,
         objects = this.props.objects,
         element = getSubGadgetElement(g, scope),
@@ -1815,7 +1876,11 @@
           return RSVP.all(tasks);
         })
         .push(function () {
-          return g.rootNotifyChange();
+          return g.rootNotifyChange({
+            scope: scope,
+            path: path,
+            action: "delete"
+          });
         })
         .push(function () {
           // remove gadget at end otherwise
@@ -1978,13 +2043,14 @@
       if (event_object && evt.type === "change") {
         return event_object.event();
       }
-      return g.rootNotifyChange(evt.target.name);
+      return g.rootNotifyChange({
+        path: evt.target.name
+      });
     })
     .declareMethod('renderForm', function (options) {
       var g = this,
         property_name = g.element.getAttribute('data-json-property-name'),
         schema = options.schema_arr !== undefined && options.schema_arr[0].schema;
-      g.props.changed = false;
       g.props.saveOrigValue = options.saveOrigValue;
       g.props.path = options.path; // self gadget scope
       if (!property_name || !options.display_label) {
@@ -2009,6 +2075,8 @@
       }
       g.props.property_name = property_name;
       g.props.schema_arr = options.schema_arr;
+      // XXX realized only for enum and object
+      g.props.ignore_incorrect = options.ignore_incorrect;
       g.props.render_opt = {
         type: options.type,
         selected_schema: options.selected_schema,
@@ -2023,6 +2091,10 @@
       var g = this,
         for_delete,
         root = g.element.querySelector('[data-json-path="/"]');
+      if (opt.ignore_incorrect !== undefined) {
+        g.props.ignore_incorrect = opt.ignore_incorrect;
+      }
+      g.props.changed = false;
       g.props.inputs = [];
       g.props.add_buttons = [];
       g.props.add_custom_data = {};
@@ -2034,6 +2106,8 @@
       for_delete = Array.from(root.childNodes);
       if (opt.schema) {
         if (g.props.render_opt.selected_schema) {
+          g.props.render_opt.selected_schema =
+            JSON.parse(JSON.stringify(g.props.render_opt.selected_schema));
           g.props.render_opt.selected_schema.schema = opt.schema;
         }
         g.props.schema_arr[0].schema = opt.schema;
@@ -2233,7 +2307,9 @@
         }
       }
       if (changed) {
-        return gadget.rootNotifyChange(input.name);
+        return gadget.rootNotifyChange({
+          path: input.name
+        });
       }
     })
 
