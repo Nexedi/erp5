@@ -725,6 +725,24 @@
                 div_element.appendChild(button_element);
               }
 
+              // Add copy button
+              button_element = document.createElement('button');
+              button_element.setAttribute('data-rel', 'hide');
+              button_element.setAttribute('name', 'CopySelect');
+              button_element.type = 'button';
+              button_element.setAttribute('class', 'ui-icon-copy ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.textContent = 'XXX COPY';//translation_list[4];
+              div_element.appendChild(button_element);
+
+              // Add paste button
+              button_element = document.createElement('button');
+              button_element.setAttribute('data-rel', 'hide');
+              button_element.setAttribute('name', 'PasteSelect');
+              button_element.type = 'button';
+              button_element.setAttribute('class', 'ui-icon-paste ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.textContent = 'XXX PASTE';//translation_list[4];
+              div_element.appendChild(button_element);
+
               // Add cancel button
               // <button data-rel="cancel" data-i18n="Cancel" name="ExcludeRows" type="button" class="ui-icon-times ui-btn-icon-left {{hide_class}}"></button>
               button_element = document.createElement('button');
