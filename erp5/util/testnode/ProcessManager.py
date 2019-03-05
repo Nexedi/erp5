@@ -228,7 +228,22 @@ class ProcessManager(object):
           logger.debug('ProcessManager killPreviousRun,'
                        ' going to kill supervisor with pid %r', pid)
           os.kill(pid, signal.SIGTERM)
+          # Give at most two minutes to supervisord to stop everything
+          i = 0
+          while True:
+            try:
+              psutil.Process(pid)
+              logger.debug('ProcessManager killPreviousRun, supervisor still there with pid %r', pid)
+            except psutil.NoSuchProcess:
+              break
+            else:
+              time.sleep(1)
+              i += 1
+              if i > 120:
+                logger.debug('ProcessManager killPreviousRun, supervisor still there after two minutes %r', pid)
+                break
       except Exception:
+        raise
         logger.exception(
           'ProcessManager killPreviousRun, exception when killing supervisor')
     self.process_pid_set.clear()
