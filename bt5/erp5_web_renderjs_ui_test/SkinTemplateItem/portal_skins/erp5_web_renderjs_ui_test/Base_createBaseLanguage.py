@@ -75,6 +75,7 @@ param_dict = [
   { 'message': 'Foo Category', 'translation': 'Foo leibie', 'language': 'wo'},
   { 'message': 'Configure', 'translation': 'peizhi', 'language': 'wo'},
   { 'message': 'Configure Editor', 'translation': 'peizhibianjiqi', 'language': 'wo'},
+  { 'message': 'List', 'translation': 'liebiao', 'language': 'wo'},
   { 'message': 'This page contains unsaved changes, do you really want to leave the page ?', 'translation': 'querenlikai?', 'language': 'wo'}
 ]
 for tmp in param_dict:

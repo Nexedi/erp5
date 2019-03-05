@@ -61,6 +61,7 @@
         jio_key = options.jio_key,
         view = options.view,
         visible = options.visible,
+        display_workflow_list,
         context = this,
         workflow_list,
         view_list,
@@ -70,6 +71,13 @@
       if (visible === undefined) {
         visible = context.state.visible;
       }
+
+      if (options.display_workflow_list === undefined) {
+        display_workflow_list = true;
+      } else {
+        display_workflow_list = asBoolean(options.display_workflow_list);
+      }
+
       if ((erp5_document !== undefined) && (jio_key !== undefined)) {
         workflow_list = ensureArray(erp5_document._links.action_workflow);
         view_list = ensureArray(erp5_document._links.action_object_view);
@@ -102,6 +110,7 @@
         .push(function (editable) {
           return context.changeState({
             visible: visible,
+            display_workflow_list: display_workflow_list,
             workflow_list: workflow_list,
             view_list: view_list,
             action_list: action_list,
@@ -115,6 +124,7 @@
     .onStateChange(function onStateChange(modification_dict) {
       var context = this,
         gadget = this,
+        workflow_list,
         queue = new RSVP.Queue();
 
       if (modification_dict.hasOwnProperty("visible")) {
@@ -233,9 +243,9 @@
             .push(function () {
               var i = 0,
                 parameter_list = [],
-                workflow_list = JSON.parse(gadget.state.workflow_list),
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list);
+              workflow_list = JSON.parse(gadget.state.workflow_list);
 
               for (i = 0; i < view_list.length; i += 1) {
                 parameter_list.push({
@@ -272,14 +282,16 @@
             .push(function (result_list) {
               var dl_element,
                 dl_fragment = document.createDocumentFragment(),
-                workflow_list = JSON.parse(gadget.state.workflow_list),
                 view_list = JSON.parse(gadget.state.view_list),
                 action_list = JSON.parse(gadget.state.action_list);
 
               appendDt(dl_fragment, result_list[1][0], 'eye',
                        view_list, result_list[0], 0);
-              appendDt(dl_fragment, result_list[1][1], 'random',
-                       workflow_list, result_list[0], view_list.length);
+              if (gadget.state.display_workflow_list) {
+                // show Workflows only on document
+                appendDt(dl_fragment, result_list[1][1], 'random',
+                  workflow_list, result_list[0], view_list.length);
+              }
               appendDt(dl_fragment, result_list[1][2], 'cogs',
                        action_list, result_list[0],
                        view_list.length + workflow_list.length);
