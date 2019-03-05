@@ -1591,7 +1591,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
       catalog_kw = {
         "local_roles": local_roles,
-        "group_by_list": None,
         "sort_on": ()  # default is an empty tuple
       }
       if default_param_json is not None:
