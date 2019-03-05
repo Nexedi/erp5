@@ -71,6 +71,17 @@
       view,
       i;
 
+    if (action_name === 'copy_document_list') {
+      console.log('Copying', checked_uid_list);
+      return gadget.setSetting('clipboard', checked_uid_list)
+        .push(function () {
+          return gadget.notifySubmitted({
+            "message": "Copied.",
+            "status": "success"
+          });
+        });
+    }
+
     for (i = 0; i < action_list.length; i += 1) {
       if (action_name === action_list[i].name) {
         view = action_list[i].href;
@@ -94,6 +105,33 @@
         command: 'reload'
       });
     }
+
+    if (action_name === 'paste_document_list') {
+      return gadget.getSetting('clipboard')
+        .push(function (uid_list) {
+          uid_list = uid_list || [];
+          if (uid_list.length === 0) {
+            // Nothing to paste, go away
+            uid_list = ['XXX'];
+          }
+          extended_search = updateSearchQueryFromSelection(
+            '',
+            uid_list,
+            'catalog.uid',
+            true
+          );
+          console.log('Pasting', uid_list);
+          return gadget.redirect({
+            command: 'display_dialog_with_history',
+            options: {
+              "jio_key": gadget.state.jio_key,
+              "view": view,
+              "extended_search": extended_search
+            }
+          }, true);
+        });
+    }
+
     return gadget.redirect({
       command: 'display_dialog_with_history',
       options: {
@@ -108,12 +146,15 @@
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
+    .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
@@ -320,6 +361,9 @@
             if (action_list[i].name === 'delete_document_list') {
               continue;
             }
+            if (action_list[i].name === 'paste_document_list') {
+              continue;
+            }
             if (action_list[i].name === 'mass_workflow_jio') {
               icon = 'random';
             } else {
@@ -365,7 +409,8 @@
         }, true);
       }
 
-      if (action !== 'delete_document_list') {
+      if ((action !== 'delete_document_list') &&
+          (action !== 'paste_document_list')) {
         return triggerListboxClipboardAction.apply(this, [argument_list]);
       }
 
@@ -378,9 +423,16 @@
         i,
         result_list = [],
         icon;
+      result_list.push({
+        title: 'Copy',
+        icon: 'copy',
+        action: 'copy_document_list'
+      });
       for (i = 0; i < action_list.length; i += 1) {
         if (action_list[i].name === 'delete_document_list') {
           icon = 'trash-o';
+        } else if (action_list[i].name === 'paste_document_list') {
+          icon = 'paste';
         } else {
           continue;
         }

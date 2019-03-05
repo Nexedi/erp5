@@ -344,6 +344,7 @@
     // initialize the gadget content
     //////////////////////////////////////////////
     .declareMethod('render', function render(options) {
+      console.log('listbox render', options);
       var gadget = this,
         field_json = options.field_json,
         sort_column_list = [],
@@ -1328,7 +1329,8 @@
       }
 
       if ((evt.target.type === 'button') &&
-          ((evt.target.name === 'SelectAction') || (evt.target.name === 'ClipboardAction'))) {
+          ((evt.target.name === 'SelectAction') ||
+           (evt.target.name === 'ClipboardAction'))) {
         evt.preventDefault();
 
         checked_uid_list = [];
