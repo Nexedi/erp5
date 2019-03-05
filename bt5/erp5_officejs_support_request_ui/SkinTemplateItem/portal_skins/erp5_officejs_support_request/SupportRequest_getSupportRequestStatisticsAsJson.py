@@ -16,6 +16,10 @@ date_30_midnight = DateTime(now_date - timedelta(days=30)).earliestTime()
 # currently active support requests by state. Unless CRM agents are late
 # in the processing of these support requests, they should not be too many.
 count_by_state_and_date_range = defaultdict(lambda:defaultdict(int))
+# Set default entried, as the JS tries to access them
+for hardcoded_js_state in ['validated', 'submitted', 'suspended', 'invalidated', 'YYY']:
+  count_by_state_and_date_range[hardcoded_js_state]["XXX"] = 0
+
 for brain in portal.portal_catalog(
     portal_type="Support Request",
     simulation_state=("submitted", "suspended", "validated",),
@@ -49,6 +53,14 @@ count_by_state_and_date_range = {
                       for date_range in date_range_list ]
   } for state in count_by_state_and_date_range }
 
+# XXX
+state_title_by_state_id = portal.ERP5Site_getTicketWorkflowStateInfoDict()
+for c in state_title_by_state_id.keys():
+  if c not in count_by_state_and_date_range:
+    count_by_state_and_date_range[c] = {
+    "date_range_list": date_range_list,
+    "count_list": [0, 0, 0, 0],
+  }
 
 # Count last month activity by state
 # we only select support requests from last 30 days, so there should not be too many.
