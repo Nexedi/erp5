@@ -512,7 +512,8 @@ function (window, RSVP, Xmla, console) {
 				promises
 					.push(
 						discover_members(connection, {
-							member_uname: member
+							member_uname: member,
+							tree_op: 8
 						})
 							.push(function (members) {
 								var m;
