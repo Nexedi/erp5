@@ -110,6 +110,11 @@
   <td>shitu</td>
 </tr>
 <tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()="yanzhen"]</td>
+  <td></td>
+</tr>
+<tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='panel']//a[text()="yanzhen"]</td>
   <td></td>
