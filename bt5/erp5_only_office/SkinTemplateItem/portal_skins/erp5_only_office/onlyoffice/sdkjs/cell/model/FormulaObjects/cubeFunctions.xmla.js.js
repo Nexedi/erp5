@@ -430,46 +430,44 @@ function (window, RSVP, Xmla, console) {
 				}
 				if (opt.member_uname) {
 					prop.restrictions["MEMBER_UNIQUE_NAME"] = opt.member_uname;
-					cached_member = scheme.members[opt.member_uname];
 				}
 				if (opt.level_uname) {
 					prop.restrictions["LEVEL_UNIQUE_NAME"] = opt.level_uname;
 				}
-				if (cached_member) {
-					return [cached_member];
-				} else {
-					return xmla_request_retry("discoverMDMembers", settings)
-						.push(function (r) {
-							var ret = [],
-								uname,
-								level,
-								cached_member1;
-							while (r.hasMoreRows()) {
-								uname = r["getMemberUniqueName"]();
-								level = r["getLevelUniqueName"]();
-								// we can check cache twice because fist check
-								// only if discover by member_uname
-								if (!scheme.members.hasOwnProperty(uname)) {
-									cached_member1 = {
-										uname: uname,
-										h: r["getHierarchyUniqueName"](),
-										level: r["getLevelUniqueName"](),
-										caption: r["getMemberCaption"](),
-										type: r["getMemberType"]()
-									};
-									scheme.members[uname] = cached_member1;
-								} else {
-									cached_member1 = scheme.members[uname];
-								}
-								ret.push(cached_member1);
-								r.nextRow();
-								if (!scheme.levels.hasOwnProperty(level)) {
-									scheme.levels[level] = discover_level(connection, scheme, level);
-								}
-							}
-							return ret;
-						});
+				if (opt.tree_op) {
+					prop.restrictions["TREE_OP"] = opt.tree_op;
 				}
+				return xmla_request_retry("discoverMDMembers", settings)
+					.push(function (r) {
+						var ret = [],
+							uname,
+							level,
+							cached_member;
+						while (r.hasMoreRows()) {
+							uname = r["getMemberUniqueName"]();
+							level = r["getLevelUniqueName"]();
+							// we can check cache twice because fist check
+							// only if discover by member_uname
+							if (!scheme.members.hasOwnProperty(uname)) {
+								cached_member = {
+									uname: uname,
+									h: r["getHierarchyUniqueName"](),
+									level: r["getLevelUniqueName"](),
+									caption: r["getMemberCaption"](),
+									type: r["getMemberType"]()
+								};
+								scheme.members[uname] = cached_member;
+							} else {
+								cached_member = scheme.members[uname];
+							}
+							ret.push(cached_member);
+							r.nextRow();
+							if (!scheme.levels.hasOwnProperty(level)) {
+								scheme.levels[level] = discover_level(connection, scheme, level);
+							}
+						}
+						return ret;
+					});
 			});
 	}
 
