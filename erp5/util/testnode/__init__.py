@@ -62,7 +62,7 @@ def main(*args):
     logger.disable(logging.CRITICAL)
 
   CONFIG = {
-    'partition_reference': 'test0',
+    'partition_reference': 't0',
   }
   config = ConfigParser.SafeConfigParser()
   # do not change case of option keys
