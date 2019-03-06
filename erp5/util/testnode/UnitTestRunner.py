@@ -139,7 +139,7 @@ class UnitTestRunner(object):
       '--revision', node_test_suite.revision,
       '--test_suite', node_test_suite.test_suite,
       '--test_suite_title', node_test_suite.test_suite_title)
-    soft = config['slapos_directory'] + '/soft/'
+    soft = config['slapos_directory'] + '/s/'
     software_list = [soft + md5digest(x) for x in config['software_list']]
     PATH = os.getenv('PATH', '')
     PATH = ':'.join(x + '/bin' for x in software_list) + (PATH and ':' + PATH)
