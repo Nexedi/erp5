@@ -43,7 +43,7 @@ class SlapOSControler(object):
   def __init__(self, working_directory, config):
     self.config = config
     self.software_root = os.path.join(working_directory, 'soft')
-    self.instance_root = os.path.join(working_directory, 'inst')
+    self.instance_root = os.path.join(working_directory, 'i')
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
     self.instance_config = {}
