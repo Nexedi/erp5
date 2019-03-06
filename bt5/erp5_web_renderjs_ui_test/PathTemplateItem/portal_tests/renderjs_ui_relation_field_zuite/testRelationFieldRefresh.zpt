@@ -26,7 +26,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=2&category_list:list=a&category_list:list=</td>
+  <td>&#36;{base_url}/foo_module/FooModule_createObjects?num:int=2&amp;category_list:list=a&amp;category_list:list=</td>
   <td></td>
 </tr>
 <tr>
