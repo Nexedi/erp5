@@ -90,13 +90,14 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_follow_up_title_list</string>
-                        <string>my_function_list</string>
+                        <string>my_classification</string>
                         <string>my_group_list</string>
-                        <string>my_publication_section_list</string>
                         <string>my_site_list</string>
-                        <string>my_subject_list</string>
+                        <string>my_function_list</string>
+                        <string>my_follow_up_title_list</string>
+                        <string>my_publication_section_list</string>
                         <string>my_translated_validation_state_title</string>
+                        <string>my_subject_list</string>
                       </list>
                     </value>
                 </item>
