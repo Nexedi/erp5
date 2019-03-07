@@ -7,14 +7,32 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>table_0\n
 table_1\n
-table_2</string> </value>
+table_2\n
+RELATED_QUERY_SEPARATOR=" AND "\n
+query_table="catalog"</string> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
-            <value> <string>cmf_activity_sql_connection</string> </value>
+            <value> <string>erp5_sql_connection</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -26,7 +44,7 @@ table_2</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z_related_explanation_destination_section</string> </value>
         </item>
       </dictionary>
     </pickle>
