@@ -95,7 +95,7 @@ pref.setPreferredHtmlStyleUnsavedFormWarning(False)
 
 my_organisation.activate(
   after_path_and_method_id=(
-    my_organisation.getPath(), 'immediateRecusriveReindexObject', 'immediateReindexObject')) \
+    my_organisation.getPath(), ('immediateRecusriveReindexObject', 'immediateReindexObject'))) \
   .Organisation_addConditionallyAccountingPeriod()
 
 for rule_reference in ('default_delivering_rule',

@@ -1,4 +1,4 @@
-from time import sleep
+from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 
 def waitForActivities(self, count=1000):
   """
@@ -8,14 +8,16 @@ def waitForActivities(self, count=1000):
     to finish activities.
   """
   activity_tool = self.getPortalObject().portal_activities
-  for x in xrange(count):
+  while count > 0:
+    count -= 1
     x = activity_tool.getMessageList()
     if not x:
       return 'Done.'
     if all(x.processing_node == -2 for x in x):
       break
     activity_tool.process_timer(None, None)
-    sleep(1)
+    if count % 10 == 0:
+      activity_tool.timeShift(3 * VALIDATION_ERROR_DELAY)
   raise RuntimeError('tic is looping forever.')
 
 def UpdateImage(image):
