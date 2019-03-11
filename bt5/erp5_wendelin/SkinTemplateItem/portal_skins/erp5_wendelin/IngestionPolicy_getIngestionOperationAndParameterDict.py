@@ -102,18 +102,18 @@ if data_ingestion is None:
     data_ingestion = document
 
 if modify and data_ingestion is None:
-  specialise_query_kw = dict(    portal_type = 'Data Supply',
+  specialise_query_kw = dict(portal_type = 'Data Supply',
     reference = specialise_reference,
     validation_state = 'validated')
   if destination_section_reference is not None:
     specialise_query_kw["destination_section_reference"] = destination_section_reference
 
-  specialise_list = [x.getRelativeUrl() for x in portal_catalog.searchResults(specialise_query_kw)]
+  specialise_list = [x.getRelativeUrl() for x in portal_catalog(**specialise_query_kw)]
 
   # if we do not find a validated data supply, we look for a default data supply
   if not specialise_list:
     specialise_query_kw["validation_state"] = 'default'
-    specialise_list = [x.getRelativeUrl() for x in portal_catalog.searchResults(specialise_query_kw)]
+    specialise_list = [x.getRelativeUrl() for x in portal_catalog(**specialise_query_kw)]
 
   # create a new data ingestion
   data_ingestion = portal.ERP5Site_createDataIngestion(specialise_list,
