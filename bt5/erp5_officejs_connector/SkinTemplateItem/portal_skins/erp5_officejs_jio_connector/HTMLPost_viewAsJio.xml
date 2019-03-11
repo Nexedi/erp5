@@ -75,8 +75,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_reference</string>
-                        <string>my_portal_type</string>
                         <string>your_modification_date</string>
                       </list>
                     </value>
@@ -84,9 +82,7 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_translated_validation_state_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
