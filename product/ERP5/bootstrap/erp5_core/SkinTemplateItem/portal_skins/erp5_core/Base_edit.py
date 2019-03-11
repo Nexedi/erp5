@@ -8,6 +8,7 @@
   from the context update logic
 """
 from Products.Formulator.Errors import FormValidationError
+from ZTUtils import make_query
 
 request=container.REQUEST
 portal = context.getPortalObject()
@@ -258,25 +259,21 @@ if context.REQUEST.get('is_web_mode', False) and \
     not editable_mode:
   form_id = 'view'
 
-if not selection_index:
-  redirect_url = '%s/%s?ignore_layout:int=%s&editable_mode:int=%s&portal_status_message=%s' % (
-                                  context.absolute_url(),
-                                  form_id,
-                                  ignore_layout,
-                                  editable_mode,
-                                  message)
-
-
-else:
-  redirect_url = '%s/%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s&editable_mode=%s&portal_status_message=%s' % (
-                              context.absolute_url(),
-                              form_id,
-                              selection_index,
-                              selection_name,
-                              ignore_layout,
-                              editable_mode,
-                              message)
-
+redirect_url_kw = dict(
+    ignore_layout=ignore_layout,
+    editable_mode=editable_mode,
+    portal_status_message=message
+    )
+if selection_index:
+  redirect_url_kw.update(
+    selection_index=selection_index,
+    selection_name=selection_name
+  )
+redirect_url = '%s/%s?%s' % (
+    context.absolute_url(),
+    form_id,
+    make_query(**redirect_url_kw)
+    )
 
 result = request['RESPONSE'].redirect(redirect_url) 
 
