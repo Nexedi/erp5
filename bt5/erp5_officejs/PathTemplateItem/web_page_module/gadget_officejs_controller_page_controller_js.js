@@ -3,6 +3,74 @@
 (function (document, window, rJS, RSVP, jIO) {
   "use strict";
 
+  function renderField(field_id, field_definition, document) {
+    var result = {};
+    for (var key in field_definition.values) {
+      // order to get the final value (based on Field.py get_value)
+      // 1.tales, 2.override, 3.form-def-value, 4.context-default
+      var raw_value = field_definition.values[key],
+        tales_expr = field_definition.tales[key],
+        override = field_definition.overrides[key],
+        final_value;
+      final_value = undefined;
+      if (tales_expr !== undefined && tales_expr !== null && tales_expr !== '') {
+        try {
+          final_value = eval(tales_expr);
+        } catch (e) {} // TALES expressions are usually python code, so for now ignore
+      }
+      if (final_value === undefined) {
+        if (override !== undefined && override !== null && override !== '') {
+          final_value = override;
+        } else if (raw_value !== undefined && raw_value !== null && raw_value !== '') {
+          final_value = raw_value;
+        } else if (document && document.hasOwnProperty(key)) {
+          final_value = document[key];
+        }
+      }
+      if (final_value !== undefined && final_value !== null && final_value !== '') {
+        result[key] = final_value;
+      }
+    }
+    result.type = field_definition.type;
+    result.key = field_id;
+    if (document && document.hasOwnProperty(field_id)) {
+      result["default"] = document[field_id];
+    }
+    return result;
+  }
+
+  function renderForm(form_definition, document) {
+    var raw_properties = form_definition.fields_raw_properties;
+    var form_json = {
+      erp5_document: {
+        "_embedded": {"_view": {}},
+        "_links": {}
+      },
+      form_definition: form_definition
+    }, i, j, fields, field_info, my_element, element_id;
+    for (i = 0; i < form_definition.group_list.length; i += 1) {
+      fields = form_definition.group_list[i][1];
+      for (j = 0; j < fields.length; j += 1) {
+        my_element = fields[j][0];
+        if (my_element.startsWith("my_")) {
+          element_id = my_element.replace("my_", "");
+        } else if (my_element.startsWith("your_")) {
+          element_id = my_element.replace("your_", "");
+        } else {
+          element_id = my_element;
+        }
+        if (raw_properties.hasOwnProperty(my_element)) {
+          field_info = raw_properties[my_element];
+          var rendered_field = renderField(element_id, field_info, document);
+          form_json.erp5_document._embedded._view[my_element] = rendered_field;
+        }
+      }
+    }
+    form_json.erp5_document._embedded._view._actions = form_definition._actions;
+    form_json.erp5_document._links = form_definition._links;
+    return form_json;
+  }
+
   rJS(window)
 
     /////////////////////////////////////////////////////////////////
@@ -20,14 +88,14 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("getFormDefinition", function () {
-      //preparing a less hardcoded version, moving form definition to erp5 side
-      /*var gadget = this;
+    .declareMethod("getFormDefinition", function (jio_key) {
+      var gadget = this;
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.getSetting('hateoas_url'),
-            gadget.getSetting('default_view_reference')
+            gadget.getSetting('default_view_reference'),
+            gadget.jio_get(jio_key)
           ]);
         })
         .push(function (setting_list) {
@@ -36,80 +104,21 @@
             url: setting_list[0],
             default_view_reference: setting_list[1]
           },
-          jio_storage = jIO.createJIO(jio_options);
-          return jio_storage.get('portal_skins/erp5_officejs_jio_connector/HTMLPost_viewAsJio')
+          jio_storage = jIO.createJIO(jio_options),
+          form_path = 'portal_skins/erp5_officejs_jio_connector/' +
+            setting_list[2].portal_type.replace(/ /g, '') +
+            '_viewAsJio';
+          return jio_storage.get(form_path)
             .push(function (result) {
               return result.form_definition;
             });
-        });*/
-      //somehow the form_definition should come from the erp5-doc/form (jio?)
-      //for now, hardcoded form_definition for POST VIEW
-      return {
-        _debug: "traverse",
-        pt: "form_view",
-        title: "Post",
-        group_list: [[
-          "left",
-          [["my_title", {meta_type: "StringField"}]]
-        ], [
-          "bottom",
-          [["my_text_content", {meta_type: "ProxyField"}]]
-        ]],
-        //this field_info is totally made up, but somewhere in the definition there must be
-        //information about the fields. So, foreach field: key->info
-        field_info_dict: {
-          "my_title": {
-            "title": "Title",
-            "default": "Undefined title",
-            "editable": 1,
-            "key": "title",
-            "type": "StringField"
-          },
-          "my_text_content": {
-            "editable": 1,
-            "key": "text_content",
-            "renderjs_extra": '{"editor": "fck_editor",' +
-              '"maximize": true}',
-            "type": "GadgetField",
-            "url": "gadget_editor.html",
-            "sandbox": "public"
-          }
-        },
-        action: "Base_edit",
-        update_action: "",
-        _links: { "type": { name: "" } },
-        _actions: { "put": true }
-      };
+        });
     })
 
-    .declareMethod("generateJsonRenderForm", function (form_definition, document) {
-      var form_json = {
-        erp5_document: {
-          "_embedded": {"_view": {}},
-          "_links": {}
-        },
-        form_definition: form_definition
-      }, i, j, fields, field_info, my_element, element_id;
-      for (i = 0; i < form_definition.group_list.length; i += 1) {
-        fields = form_definition.group_list[i][1];
-        for (j = 0; j < fields.length; j += 1) {
-          my_element = fields[j][0];
-          if (my_element.startsWith("my_")) {
-            element_id = my_element.replace("my_", "");
-          } else if (my_element.startsWith("your_")) {
-            element_id = my_element.replace("your_", "");
-          }
-          field_info = form_definition.field_info_dict[my_element];
-          if (document && document.hasOwnProperty(element_id)) {
-            field_info["default"] = document[element_id];
-          }
-          form_json.erp5_document._embedded._view[my_element] = field_info;
-        }
-      }
-      form_json.erp5_document._embedded._view._actions = form_definition._actions;
-      form_json.erp5_document._links = form_definition._links;
-      return form_json;
+    .declareMethod("renderForm", function (form_definition, document) {
+      return renderForm(form_definition, document);
     })
+
     .allowPublicAcquisition('submitContent', function (options) {
       var gadget = this,
         jio_key = options[0],
@@ -202,7 +211,7 @@
     .onStateChange(function (modification_dict) {
       var fragment = document.createElement('div'),
         gadget = this;
-      return gadget.generateJsonRenderForm(gadget.state.form_definition, gadget.state.doc)
+      return gadget.renderForm(gadget.state.form_definition, gadget.state.doc)
         .push(function (form_json) {
           if (!modification_dict.hasOwnProperty('child_gadget_url')) {
             return gadget.getDeclaredGadget('fg')

@@ -5,7 +5,7 @@ var repair = false;
   "use strict";
 
   function createStorage(gadget) {
-    return jIO.createJIO({
+    var jio_options = {
       type: "replicate",
       parallel_operation_attachment_amount: 10,
       parallel_operation_amount: 1,
@@ -41,7 +41,8 @@ var repair = false;
         version: gadget.props.version_url,
         take_installer: true
       }
-    });
+    }
+    return jIO.createJIO(jio_options);
   }
 
   function waitForServiceWorkerActive(registration) {

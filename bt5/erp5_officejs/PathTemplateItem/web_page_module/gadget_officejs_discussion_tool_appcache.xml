@@ -109,7 +109,9 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
+            <value> <string encoding="cdata"><![CDATA[
+
+CACHE MANIFEST\n
 # generated on Fri, 25 Jun 2016 11:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
@@ -222,6 +224,11 @@ officejs_logo_text_editor.png\n
 gadget_erp5_pt_form_view_editable.html\n
 gadget_erp5_pt_form_view_editable.js\n
 gadget_officejs_discussion_tool_router.html\n
+\n
+\n
+#hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view\n
+\n
+\n
 gadget_erp5_page_ojs_controller.html\n
 gadget_erp5_page_ojs_controller.js\n
 gadget_erp5_page_ojs_post_list.html\n
@@ -571,7 +578,9 @@ ckeditor/ckeditor.js\n
 ckeditor/adapters/jquery.js\n
 \n
 NETWORK:\n
-*</string> </value>
+*
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -712,7 +721,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.45023.7563.33484</string> </value>
+                <value> <string>974.18578.47200.44049</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -730,7 +739,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1550239187.57</float>
+                        <float>1552327822.46</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
