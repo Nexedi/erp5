@@ -8,16 +8,12 @@ portal_catalog = portal.portal_catalog
 data_ingestion_reference = movement_dict.get('reference', reference)
 resource_reference = movement_dict.get('resource_reference', None)
 specialise_reference = movement_dict.get('specialise_reference', None)
-destination_section_reference = movement_dict.get('destination_section_reference', None)
-data_ingestion_id =  "%s-%s-%s" %(today_string, destination_section_reference, data_ingestion_reference)
+data_ingestion_id =  "%s-%s" %(today_string, data_ingestion_reference)
 
 data_ingestion_query_kw = dict(
   portal_type = 'Data Ingestion',
   simulation_state = ['started', 'stopped'],
   reference = data_ingestion_reference)
-
-if destination_section_reference is not None:
-  data_ingestion_query_kw["destination_section_reference"] = destination_section_reference
 
 # first search for applicable data ingestion
 data_ingestion = portal_catalog.getResultValue(**data_ingestion_query_kw)
@@ -105,8 +101,6 @@ if modify and data_ingestion is None:
   specialise_query_kw = dict(portal_type = 'Data Supply',
     reference = specialise_reference,
     validation_state = 'validated')
-  if destination_section_reference is not None:
-    specialise_query_kw["destination_section_reference"] = destination_section_reference
 
   specialise_list = [x.getRelativeUrl() for x in portal_catalog(**specialise_query_kw)]
 
