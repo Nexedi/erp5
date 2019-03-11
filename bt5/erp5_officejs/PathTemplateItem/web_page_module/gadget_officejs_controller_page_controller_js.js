@@ -15,7 +15,8 @@
       final_value = undefined;
       if (tales_expr !== undefined && tales_expr !== null && tales_expr !== '') {
         try {
-          final_value = eval(tales_expr);
+          throw "error";
+          //final_value = eval(tales_expr);
         } catch (e) {} // TALES expressions are usually python code, so for now ignore
       }
       if (final_value === undefined) {
@@ -99,19 +100,37 @@
           ]);
         })
         .push(function (setting_list) {
-          var jio_options = {
+          var jio_options_remote = {
             type: "erp5",
             url: setting_list[0],
             default_view_reference: setting_list[1]
           },
-          jio_storage = jIO.createJIO(jio_options),
+          jio_options_localIndexdb = {
+            type: "query",
+            sub_storage: {
+              type: "indexeddb",
+              database: "officejs-forms"
+            }
+          },
+          jio_storage_remote,
+          jio_indexdb_local = jIO.createJIO(jio_options_localIndexdb),
           form_path = 'portal_skins/erp5_officejs_jio_connector/' +
             setting_list[2].portal_type.replace(/ /g, '') +
             '_viewAsJio';
-          return jio_storage.get(form_path)
+          return jio_indexdb_local.get(form_path)
             .push(function (result) {
               return result.form_definition;
-            });
+            }, function (error) {
+            if ((error.constructor.name === 'jIOError' && error.status_code === 404)) {
+              jio_storage_remote = jIO.createJIO(jio_options_remote);
+              return jio_storage_remote.get(form_path)
+                .push(function (result) {
+                  jio_indexdb_local.put(form_path, result);
+                  return result.form_definition;
+                });
+            }
+            throw error;
+          });
         });
     })
 
