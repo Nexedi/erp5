@@ -254,7 +254,7 @@ var addOnChangeEventHandler = function() {
               if ($(this).attr("class") == "listbox-search-line") {
                 return non-false;
               }
-              $(this).find('input').each(function(){
+              $(this).find('input,textarea').each(function(){
                 if ($(this).attr("type") != "hidden" &&
                     !this.onchange) {
                   this.onchange = function() { changed = true; };
