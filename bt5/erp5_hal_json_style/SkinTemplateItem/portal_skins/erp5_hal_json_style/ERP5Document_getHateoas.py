@@ -47,6 +47,7 @@ When handling form, we can expect field values to be stored in REQUEST.form in t
 -  python-object parsed from raw values under <field.id>
 """
 
+
 from ZTUtils import make_query
 import json
 from base64 import urlsafe_b64encode, urlsafe_b64decode
@@ -71,7 +72,6 @@ if REQUEST is None:
 
 if response is None:
   response = REQUEST.RESPONSE
-
 
 def isFieldType(field, type_name):
   if field.meta_type == 'ProxyField':
@@ -389,6 +389,30 @@ def getFieldDefault(form, field, key, value=None):
     return "%s" % value
   return value
 
+def getFieldRawProperties(field, meta_type=None, key=None, key_prefix=None):
+  """ Return the raw properties of the field """
+  if meta_type is None:
+    meta_type = field.meta_type
+  if key is None:
+    key = field.generate_field_key(key_prefix=key_prefix)
+  if meta_type == "ProxyField":
+    meta_type = field.getRecursiveTemplateField().meta_type
+  result = {
+    "type": meta_type,
+    "key": key,
+    "values": {},
+    "tales": {},
+    "overrides": field.overrides,
+    "message_values": field.message_values
+  }
+  for key in field.values.keys():
+    # sometimes, field.values returns a key as string and also as a tuple
+    if type(key) is str:
+      result["values"][key] = field.values[key]
+  for key in field.tales.keys():
+    if field.tales[key]:
+      result["tales"][key] = str(field.tales[key])
+  return result
 
 def renderField(traversed_document, field, form, value=MARKER, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True):
   """Extract important field's attributes into `result` dictionary."""
@@ -893,7 +917,6 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       view='view'
     )
   }
-
   use_relation_form_page_template = (form.pt == "relation_form")
   if use_relation_form_page_template:
     # Provide the list of possible listboxes
@@ -1132,7 +1155,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                      query=None, select_list=None, limit=None, form=None,
                      relative_url=None, restricted=None, list_method=None,
                      default_param_json=None, form_relative_url=None, extra_param_json=None):
-
   if relative_url:
     try:
       traversed_document = site_root.restrictedTraverse(str(relative_url))
@@ -1232,6 +1254,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     for k, v in byteify(extra_param_json.items()):
       REQUEST.set(k, v)
+
 
     # Add a link to the portal type if possible
     if not is_portal:
@@ -1408,7 +1431,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # XXX Custom slapos code
     ##############
     if is_site_root:
-  
+
       result_dict['default_view'] = 'view'
       REQUEST.set("X-HATEOAS-CACHE", 1)
   
@@ -1452,19 +1475,19 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         'method': 'POST',
         'name': 'Bulk'
       }
-  
+
       # Handle also other kind of users: instance, computer, master
       person = portal.portal_membership.getAuthenticatedMember().getUserValue()
       if person is not None and portal.portal_membership.checkPermission('View', person):
         result_dict['_links']['me'] = {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
-            "relative_url": person.getRelativeUrl(), 
+            "relative_url": person.getRelativeUrl(),
             "script_id": script.id
           },
-  #         '_relative_url': person.getRelativeUrl()
+            #'_relative_url': person.getRelativeUrl()
         }
-  
+
     else:
       traversed_document_portal_type = traversed_document.getPortalType()
       if traversed_document_portal_type in ("ERP5 Form", "ERP5 Report"):
@@ -1474,6 +1497,18 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           response.setHeader("Vary", "Cookie,Authorization,Accept-Encoding")
           response.setHeader("Last-Modified", DateTime().rfc822())
           REQUEST.set("X-HATEOAS-CACHE", 1)
+
+        fields_raw_properties = {}
+        # check if it's the first call to calculateHateoas so nothing was rendered yet
+        if REQUEST != None and response != None:
+          for group in traversed_document.Form_getGroupTitleAndId():
+            if 'hidden' in group['gid']:
+              continue
+            for field in traversed_document.get_fields_in_group(group['goid']):
+              fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
+        if fields_raw_properties:
+          result_dict['fields_raw_properties'] = fields_raw_properties
+
       elif relative_url == 'portal_workflow':
         result_dict['_links']['action_worklist'] = {
           "href": url_template_dict['worklist_template'] % {
@@ -2071,9 +2106,20 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
   else:
     raise NotImplementedError("Unsupported mode %s" % mode)
-  
-  return result_dict
 
+  # if form has my_form_definition field, set it with fields_raw_properties and form_definition
+  # my_form_definition will be used for rendering in JS side
+  if "_embedded" in result_dict:
+    if "_view" in result_dict["_embedded"]:
+      if "my_form_definition" in  result_dict["_embedded"]["_view"]:
+        default_form_definition = result_dict["_embedded"]["_view"]["_embedded"]["form_definition"].copy()
+        default_form_definition["group_list"] = result_dict["group_list"]
+        default_form_definition["_actions"] = result_dict["_embedded"]["_view"]["_actions"]
+        if result_dict["fields_raw_properties"]:
+          default_form_definition["fields_raw_properties"] = result_dict["fields_raw_properties"].copy()
+          result_dict.pop('fields_raw_properties', None)
+        result_dict["_embedded"]["_view"]["my_form_definition"]["default"] = default_form_definition
+  return result_dict
 
 mime_type = 'application/hal+json'
 portal = context.getPortalObject()
@@ -2091,6 +2137,7 @@ else:
 
 context.Base_prepareCorsResponse(RESPONSE=response)
 
+
 # Check if traversed_document is the site_root
 if relative_url:
   temp_traversed_document = site_root.restrictedTraverse(relative_url, None)
@@ -2104,6 +2151,7 @@ temp_is_site_root = (temp_traversed_document.getPath() == site_root.getPath())
 temp_is_portal = (temp_traversed_document.getPath() == portal.getPath())
 
 response.setHeader('Content-Type', mime_type)
+
 hateoas = calculateHateoas(is_portal=temp_is_portal, is_site_root=temp_is_site_root,
                            traversed_document=temp_traversed_document,
                            relative_url=relative_url,
@@ -2113,6 +2161,7 @@ hateoas = calculateHateoas(is_portal=temp_is_portal, is_site_root=temp_is_site_r
                            default_param_json=default_param_json,
                            form_relative_url=form_relative_url,
                            extra_param_json=extra_param_json)
+
 if hateoas == "":
   return hateoas
 else:
