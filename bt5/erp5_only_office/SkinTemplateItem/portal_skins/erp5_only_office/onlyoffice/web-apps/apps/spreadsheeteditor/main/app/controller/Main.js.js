@@ -716,7 +716,7 @@ define([
                 Common.Gateway.on('processrightschange', _.bind(me.onProcessRightsChange, me));
                 Common.Gateway.on('processmouse', _.bind(me.onProcessMouse, me));
                 Common.Gateway.on('save', function () {
-                    if (me.api.asc_isDocumentModified()) {
+                    if (me.api.asc_isDocumentModified() && me.api.asc_isDocumentCanSave()) {
                         me.api.asc_Save();
                         return true;
                     }

@@ -1367,6 +1367,7 @@ var editor;
         this.CoAuthoringApi.saveChanges(arrChanges, deleteIndex, excelAdditionalInfo, this.canUnlockDocument2);
         History.CanNotAddChanges = true;
       } else {
+        this.CoAuthoringApi.onUnSaveLock();
         this.CoAuthoringApi.unLockDocument(true, this.canUnlockDocument2);
       }
       this.canUnlockDocument2 = false;

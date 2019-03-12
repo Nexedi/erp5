@@ -500,7 +500,7 @@ DocsAPI.DocEditor.version = function () {
             g.props.save_defer.resolve();
             g.props.save_defer = null;
           } else {
-            g.triggerSubmit();
+            return g.triggerSubmit();
           }
         });
     })
