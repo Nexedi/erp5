@@ -60,34 +60,3 @@ def appendTestToWebPage(text, test_text):
   else:
     root.replace(table_list[0], tutorial_test)
   return lxml.html.tostring(root).replace('\n','').replace("\'","'")
-
-from App.config import getConfiguration
-import os
-
-def prepareReportDirectory(self, expected_filename):
-  """
-  Remove existing report with the given filename if any. This must be called
-  before a report button is clicked
-  """
-  filename_path = os.path.join(getConfiguration().instancehome, 'var',
-                               expected_filename)
-
-  if os.path.exists(filename_path):
-    os.remove(filename_path)
-
-  return 'Done'
-
-def isReportGenerated(self, expected_filename):
-  """
-  Check that the report has been generated. Firefox will not prompt for PDF
-  files as defined in ERP5Type.tests.ERP5TypeFunctionalTestCase.Firefox in
-  getPrefJs() method
-  """
-  filename_path = os.path.join(getConfiguration().instancehome, 'var',
-                               expected_filename)
-
-  if os.path.isfile(filename_path):
-    os.remove(filename_path)
-    return 'Done'
-
-  return 'Report not generated!'
