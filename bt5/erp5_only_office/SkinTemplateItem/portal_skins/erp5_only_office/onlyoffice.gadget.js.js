@@ -178,7 +178,9 @@ DocsAPI.DocEditor.version = function () {
               .jio_putAttachment('/', 'remote_settings.json', data);
           })
           .push(function () {
-            return gadget.notifyChange();
+            History.Create_NewPoint();
+            Asc.editor._onUpdateDocumentCanSave();
+            return gadget.changeState({changed: true});
           })
           .push(undefined, function (e) {
             console.error(e);
@@ -550,5 +552,11 @@ DocsAPI.DocEditor.version = function () {
           DesktopOfflineAppDocumentEndSave(0);
           return data;
         });
+    })
+    .onStateChange(function (m_dict) {
+      var g = this;
+      if (m_dict.changed === true) {
+        return g.notifyChange();
+      }
     });
 }(rJS, RSVP, require, jIO));
