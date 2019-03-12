@@ -1,4 +1,3 @@
-from time import sleep
 
 def waitForActivities(self, count=1000):
   """
@@ -15,7 +14,6 @@ def waitForActivities(self, count=1000):
     if all(x.processing_node == -2 for x in x):
       break
     activity_tool.process_timer(None, None)
-    sleep(1)
   raise RuntimeError('tic is looping forever.')
 
 def UpdateImage(image):
