@@ -2021,6 +2021,7 @@ def function_foo(*args, **kwargs):
     self.failIfUserCanAccessDocument(None, component)
 
     user_id = 'ERP5TypeTestCase'
+    DEVELOPER_ROLE_ID = 'Developer'
 
     self.assertUserCanChangeLocalRoles(user_id, self._component_tool)
     self.assertUserCanModifyDocument(user_id, self._component_tool)
@@ -2029,6 +2030,15 @@ def function_foo(*args, **kwargs):
     self.assertUserCanDeleteDocument(user_id, component)
 
     getConfiguration().product_config['erp5'].developer_list = []
+    # Add global & local roles, which must be ignored.
+    zodb_roles = self.portal.acl_users.zodb_roles
+    try:
+      zodb_roles.addRole(DEVELOPER_ROLE_ID, '', '')
+    except KeyError:
+      pass
+    zodb_roles.assignRoleToPrincipal(DEVELOPER_ROLE_ID, user_id)
+    self._component_tool.manage_addLocalRoles(user_id, [DEVELOPER_ROLE_ID])
+    component.manage_addLocalRoles(user_id, [DEVELOPER_ROLE_ID])
 
     # Component Tool and the Component should be viewable by Manager
     self.assertUserCanViewDocument(user_id, self._component_tool)
@@ -2045,6 +2055,21 @@ def function_foo(*args, **kwargs):
     self.failIfUserCanChangeLocalRoles(user_id, component)
 
     getConfiguration().product_config['erp5'].developer_list = [user_id]
+    zodb_roles.removeRoleFromPrincipal(DEVELOPER_ROLE_ID, user_id)
+    # Keep the role available (unassigned) in zodb_roles, it should be
+    # harmless.
+    def revokeLocalRole(document_value, user_id, role):
+      role_list = [
+        x
+        for x in document_value.get_local_roles_for_userid(user_id)
+        if x != role
+      ]
+      if role_list:
+        document_value.manage_setLocalRoles(user_id, role_list)
+      else:
+        document_value.manage_delLocalRoles(user_id)
+    revokeLocalRole(self._component_tool, user_id, DEVELOPER_ROLE_ID)
+    revokeLocalRole(component, user_id, DEVELOPER_ROLE_ID)
 
     self.assertUserCanChangeLocalRoles(user_id, self._component_tool)
     self.assertUserCanModifyDocument(user_id, self._component_tool)
