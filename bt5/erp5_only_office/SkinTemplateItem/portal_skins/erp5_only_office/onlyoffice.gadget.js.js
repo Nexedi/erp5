@@ -551,6 +551,9 @@ DocsAPI.DocEditor.version = function () {
           // it clear modification state onlyoffice
           DesktopOfflineAppDocumentEndSave(0);
           return data;
+        })
+        .push(undefined, function (error) {
+          display_error(g, error);
         });
     })
     .onStateChange(function (m_dict) {
