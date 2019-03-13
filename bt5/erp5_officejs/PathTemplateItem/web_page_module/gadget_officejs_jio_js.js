@@ -78,6 +78,17 @@
       if (jio_options === undefined) {
         return;
       }
+      // adding a layer to replicate appcache content into jio data storage
+      jio_options = {
+        type: "replicate",
+        local_sub_storage: jio_options,
+        remote_sub_storage: {
+          type: "appcache",
+          manifest: "gadget_officejs_discussion_tool.appcache",
+          version: "app/",
+          take_installer: true
+        }
+      };
       jio_options = {
         type: 'dateupdater',
         sub_storage: jio_options,
@@ -90,6 +101,7 @@
       }
       return this.getSetting("jio_storage_name")
         .push(function (jio_storage_name) {
+          gadget.state_parameter_dict.jio_storage.repair();
           gadget.state_parameter_dict.jio_storage_name = jio_storage_name;
         });
     })
