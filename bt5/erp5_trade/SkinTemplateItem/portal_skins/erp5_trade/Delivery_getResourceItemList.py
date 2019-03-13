@@ -64,7 +64,7 @@ sql_kw['default_use_uid'] = [context.portal_categories.resolveCategory(use).getU
 
 
 getResourceItemList = CachingMethod(getResourceItemList, ("getResourceItemList", context.aq_parent.getId()),
-                                          cache_factory="erp5_ui_long")
+                                          cache_factory="erp5_ui_short")
 
 
 return getResourceItemList(sql_kw)
