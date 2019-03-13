@@ -44,7 +44,7 @@
         </item>
         <item>
             <key> <string>periodicity_minute_frequency</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>3</int> </value>
         </item>
         <item>
             <key> <string>periodicity_month</string> </key>
