@@ -1479,7 +1479,7 @@ class ActivityTool (BaseTool):
       if not(isinstance(message_uid_list, list)):
         message_uid_list = [message_uid_list]
       if message_uid_list:
-        activity_dict[activity].unreserveMessageList(self.getSQLConnection(),
+        activity_dict[activity].assignMessageList(self.getSQLConnection(),
                                                      0, message_uid_list)
       if REQUEST is not None:
         return REQUEST.RESPONSE.redirect('%s/%s' % (
