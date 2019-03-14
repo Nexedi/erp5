@@ -41,30 +41,19 @@ if len(sql_kw) == 0:
   except AttributeError:
     pass
 
-def getResourceItemList(sql_kw):
-  portal = context.getPortalObject()
-
-  result = []
-  for resource in portal.portal_catalog.searchResults(sort_on=(('portal_type', 'asc'),
-                                                               ('title', 'asc')),
-                                                      **sql_kw):
-    result.append(
-      (resource.getTitle(),
-       resource.getRelativeUrl()))
-
-  result.append(('', ''))
-  return result
-
-
-
 sql_kw['portal_type'] = portal_type
 sql_kw['validation_state'] = validation_state
 sql_kw['default_use_uid'] = [context.portal_categories.resolveCategory(use).getUid()
                              for use in use_list]
+sql_kw['limit'] = 20
 
+result = []
+for resource in portal.portal_catalog.searchResults(sort_on=(('portal_type', 'asc'),
+                                                             ('title', 'asc')),
+                                                    **sql_kw):
+  result.append(
+    (resource.getTitle(),
+     resource.getRelativeUrl()))
 
-getResourceItemList = CachingMethod(getResourceItemList, ("getResourceItemList", context.aq_parent.getId()),
-                                          cache_factory="erp5_ui_short")
-
-
-return getResourceItemList(sql_kw)
+result.append(('', ''))
+return result
