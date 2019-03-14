@@ -237,6 +237,8 @@
         p = arr[0].path,
         scope = arr[0].scope,
         action = arr[0].action,
+        url = arr[0].ref,
+        connection_path,
         path;
 
       function rerender(sub_scope, settings_path) {
@@ -262,17 +264,23 @@
           });
       }
 
+      if (action === "render") {
+        if ("urn:jio:properties_from_xmla.connection.json" === url) {
+          connection_path = p.split('/').slice(0, -1).join('/');
+          g.props.xmla_connections[connection_path] = scope.split('_').slice(0, -1).join('_');
+        }
+        // action `render` fake change so do nothing
+        return;
+      }
       for (path in g.props.xmla_connections) {
         if (g.props.xmla_connections.hasOwnProperty(path)) {
           if (p === path && action === "add") {
-            g.props.xmla_connections[path] = scope;
             return rerender(scope, path);
           }
           s = g.props.xmla_connections[path];
           if (action === "delete") {
             if (s === scope) {
-              // xxx memory leak
-              g.props.xmla_connections[path] = false;
+              delete g.props.xmla_connections[path];
             }
           } else {
             // check if receive message from gadget with scope == s or his sub_gadgets
@@ -284,18 +292,16 @@
       }
       return g.notifyChange();
     })
-    .allowPublicAcquisition("resolveExternalReference", function (arr, scope) {
+    .allowPublicAcquisition("resolveExternalReference", function (arr) {
       var g = this,
         url = arr[0],
         schema_path = arr[1],
         path = arr[2];
-      console.log(scope);
       if ("urn:jio:properties_from_xmla.connection.json" === url) {
         return new RSVP.Queue()
           .push(function () {
             var connection_path = path.split('/').slice(0, -1).join('/'),
               settings;
-            g.props.xmla_connections[connection_path] = false;
             if (g.props.init_value) {
               settings = convertOnMultiLevel(g.props.init_value, connection_path);
             }
