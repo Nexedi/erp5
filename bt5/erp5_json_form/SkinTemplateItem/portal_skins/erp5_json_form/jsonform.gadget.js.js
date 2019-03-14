@@ -272,7 +272,7 @@
     hash = url.hash;
     url = url.href;
     if (download_url.startsWith("urn:jio:")) {
-      external_reference = true;
+      external_reference = download_url;
       queue = RSVP.Queue()
         .push(function () {
           return g.resolveExternalReference(download_url, schema_path, path);
@@ -705,6 +705,31 @@
       } else {
         this.props.errors[arr[1]] = arr[0];
       }
+    })
+    .declareMethod('getSubGadget', function (scope) {
+      // recursive getDeclaredGadget
+      // work only if subgadget scope contain parent
+      // scope as prefix
+      // example:
+      // gadget: scope1234
+      // subgadet: scope1234_subgadgetscope1
+      // subsubgadet: scope1234_subgadgetscope1_subsubgadetscope
+      var i,
+        gadget = this,
+        scope_arr = scope.split('_'),
+        queue = RSVP.Queue()
+          .push(function () {
+            return gadget.props.form_gadget;
+          });
+      function getDeclaredGadget(scope) {
+        return function (g) {
+          return g.getDeclaredGadget(scope);
+        };
+      }
+      for (i = 2; i <= scope_arr.length; i += 1) {
+        queue.push(getDeclaredGadget(scope_arr.slice(0, i).join('_')));
+      }
+      return queue;
     })
     .declareMethod('getGadgetByPath', function (path) {
       return this.props.form_gadget.getGadgetByPath(path || "/");

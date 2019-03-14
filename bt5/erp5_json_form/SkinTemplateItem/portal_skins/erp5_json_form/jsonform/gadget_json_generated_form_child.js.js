@@ -349,6 +349,15 @@
           scope: scope
         })
           .push(function () {
+            if (options.schema_arr.external_reference) {
+              return form_gadget.rootNotifyChange({
+                scope: scope,
+                action: "render",
+                path: "/"
+              });
+            }
+          })
+          .push(function () {
             if (form_gadget.props.changed) {
               g.props.changed = true;
             }
@@ -535,6 +544,7 @@
         return schema_arr;
       }
       ret_arr[0].circular = circular;
+      ret_arr.external_reference = schema_arr.external_reference;
       return ret_arr;
     }
     return schema_arr;
@@ -1818,6 +1828,7 @@
             scope: v.scope || g.element.getAttribute("data-gadget-scope"),
             rel_path: v.path,
             path: p,
+            ref: g.props.schema_arr.external_reference,
             action: v.action
           });
         });
@@ -1833,6 +1844,7 @@
         );
       }
       tasks.push(g.notifyInvalid([], g.element.getAttribute("data-gadget-scope")));
+      g.props.deleted = true;
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all(tasks);
@@ -2315,6 +2327,9 @@
 
     .declareMethod('getContent', function () {
       var g = this;
+      if (g.props.deleted) {
+        return;
+      }
       return getFormValuesAsJSONDict(g)
         .push(function (data) {
           if (g.props.updatePropertySelectors) {
