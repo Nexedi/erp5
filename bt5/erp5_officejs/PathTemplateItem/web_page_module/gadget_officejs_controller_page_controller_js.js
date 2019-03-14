@@ -78,6 +78,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getSetting", "getSetting")
@@ -90,47 +91,16 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("getFormDefinition", function (jio_key) {
-      var gadget = this;
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.getSetting('hateoas_url'),
-            gadget.getSetting('default_view_reference'),
-            gadget.jio_get(jio_key)
-          ]);
-        })
-        .push(function (setting_list) {
-          var jio_options_remote = {
-            type: "erp5",
-            url: setting_list[0],
-            default_view_reference: setting_list[1]
-          },
-          jio_options_localIndexdb = {
-            type: "query",
-            sub_storage: {
-              type: "indexeddb",
-              database: "officejs-forms"
-            }
-          },
-          jio_storage_remote,
-          jio_indexdb_local = jIO.createJIO(jio_options_localIndexdb),
-          form_path = 'portal_skins/erp5_officejs_jio_connector/' +
-            setting_list[2].portal_type.replace(/ /g, '') +
-            '_viewAsJio';
-          return jio_indexdb_local.get(form_path)
-            .push(function (result) {
-              return result.form_definition;
-            }, function (error) {
-            if ((error.constructor.name === 'jIOError' && error.status_code === 404)) {
-              jio_storage_remote = jIO.createJIO(jio_options_remote);
-              return jio_storage_remote.get(form_path)
-                .push(function (result) {
-                  jio_indexdb_local.put(form_path, result);
-                  return result.form_definition;
-                });
-            }
-            throw error;
-          });
+      //TODO parameter will be a portal_type
+      var gadget = this,
+          // this urls will change to a more appropiate id like "portal_skins/couscous/MyPortalType_viewAsJio"
+          // and probably for a jio.get instead of getAttachment
+          // now it is like this due to the appcachestorage
+          url = "./app/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view",
+          origin_url = "https://softinst112382.host.vifib.net/erp5/web_site_module/officejs_discussion_tool/app/#/?page=ojs_sync&auto_repair=true";
+      return gadget.jio_getAttachment(origin_url, url, {"format": "json"})
+        .push(function (result) {
+          return result._embedded._view.my_form_definition["default"];
         });
     })
 
@@ -203,8 +173,8 @@
       var gadget = this,
         child_gadget_url;
       return gadget.jio_get(options.jio_key)
-        .push(function (result) {
-          if (result.portal_type !== undefined) {
+        .push(function (document) {
+          if (document.portal_type !== undefined) {
             /*child_gadget_url = 'gadget_officejs_jio_' +
               result.portal_type.replace(/ /g, '_').toLowerCase() +
               '_view.html';*/
@@ -213,11 +183,12 @@
           } else {
             throw new Error('Can not display document: ' + options.jio_key);
           }
+          //TODO pass document.portal_type as parameter
           return gadget.getFormDefinition(options.jio_key)
             .push(function (form_definition) {
               return gadget.changeState({
                 jio_key: options.jio_key,
-                doc: result,
+                doc: document,
                 child_gadget_url: child_gadget_url,
                 form_definition: form_definition,
                 editable: options.editable,

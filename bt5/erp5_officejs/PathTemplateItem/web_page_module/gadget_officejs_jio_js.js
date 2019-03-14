@@ -74,21 +74,41 @@
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
 
     .declareMethod('createJio', function (jio_options) {
-      var gadget = this;
+      var gadget = this,
+        // for now using appcachestorage to copy form json from appcache to local
+        // maybe it will be better to have a new storage
+        jio_appchache_options = {
+          type: "replicate",
+          parallel_operation_attachment_amount: 10,
+          parallel_operation_amount: 1,
+          conflict_handling: 2,
+          signature_hash_key: 'hash',
+          check_remote_attachment_modification: true,
+          check_remote_attachment_creation: true,
+          check_remote_attachment_deletion: true,
+          check_remote_deletion: true,
+          check_local_creation: false,
+          check_local_deletion: false,
+          check_local_modification: false,
+          signature_sub_storage: {
+            type: "query",
+            sub_storage: {
+              type: "indexeddb",
+              database: "officejs-hash"
+            }
+          },
+          local_sub_storage: {},
+          remote_sub_storage: {
+            type: "appcache",
+            manifest: "gadget_officejs_discussion_tool.appcache",
+            version: "app/",
+            take_installer: false
+          }
+        }, appcache_storage;
       if (jio_options === undefined) {
         return;
       }
-      // adding a layer to replicate appcache content into jio data storage
-      jio_options = {
-        type: "replicate",
-        local_sub_storage: jio_options,
-        remote_sub_storage: {
-          type: "appcache",
-          manifest: "gadget_officejs_discussion_tool.appcache",
-          version: "app/",
-          take_installer: true
-        }
-      };
+      jio_appchache_options.local_sub_storage = JSON.parse(JSON.stringify(jio_options));
       jio_options = {
         type: 'dateupdater',
         sub_storage: jio_options,
@@ -96,13 +116,26 @@
       };
       try {
         this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);
+        appcache_storage = jIO.createJIO(jio_appchache_options);
       } catch (error) {
         this.state_parameter_dict.jio_storage = undefined;
+        appcache_storage = undefined;
       }
       return this.getSetting("jio_storage_name")
         .push(function (jio_storage_name) {
-          gadget.state_parameter_dict.jio_storage.repair();
-          gadget.state_parameter_dict.jio_storage_name = jio_storage_name;
+          // check if appcache-local sync needs to be done
+          // TODO: find a better flag for this
+          return appcache_storage.get("appcache-stored")
+            .push(undefined, function (error) {
+                return appcache_storage.repair()
+                  .push(function () {
+                    return appcache_storage.put("appcache-stored", {})
+                      .push(undefined);
+                  }, function (error) {
+                    console.log("Error while appcache-local storage synchronization");
+                    console.log(error);
+                  });
+              });
         });
     })
     .declareMethod('allDocs', function () {
