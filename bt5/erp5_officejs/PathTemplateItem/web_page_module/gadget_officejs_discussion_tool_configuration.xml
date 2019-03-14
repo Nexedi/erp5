@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -62,14 +62,26 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_ojs_jio.js</string> </value>
+            <value> <string>gadget_officejs_discussion_tool.configuration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_js</string> </value>
+            <value> <string>gadget_officejs_discussion_tool_configuration</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -87,7 +99,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -96,8 +108,24 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+CACHE MANIFEST\n
+# generated on Thu, 14 Jan 2019 11:55:33 +0000\n
+CACHE:\n
+\n
+#discussion tool\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view\n
+\n
+NETWORK:\n
+*
+
+]]></string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Jio Gadget JS</string> </value>
+            <value> <string>OfficeJS Discussion Tool Configuration</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -167,7 +195,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -189,7 +217,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441645260.43</float>
+                        <float>1552575414.66</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -234,7 +262,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>974.22753.27435.21418</string> </value>
+                <value> <string>974.22751.14721.17885</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,7 +280,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1552575739.83</float>
+                        <float>1552575389.52</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -279,7 +307,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -309,7 +337,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441643341.2</float>
+                        <float>1552575268.51</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

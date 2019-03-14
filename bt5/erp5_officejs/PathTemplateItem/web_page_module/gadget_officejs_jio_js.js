@@ -100,7 +100,7 @@
           local_sub_storage: {},
           remote_sub_storage: {
             type: "appcache",
-            manifest: "gadget_officejs_discussion_tool.appcache",
+            manifest: "gadget_officejs_discussion_tool.configuration",
             version: "app/",
             take_installer: false
           }
