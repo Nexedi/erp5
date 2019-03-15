@@ -141,13 +141,15 @@
                         return new RSVP.Queue()
                           .push(function () {
                             var promise_list = [], i = 0,
-                                ignore_urls = [prefix + "/", prefix + version, prefix + version + manifest];
+                                blob_urls = [prefix + "/", prefix + version, prefix + version + manifest];
                             for (var id in attachment_dict) {
-                              if (ignore_urls.indexOf(id) < 0) {
+                              if (blob_urls.indexOf(id) >= 0) {
+                                promise_list.push(appcache_storage.getAttachment(origin_url, id));
+                              } else {
                                 promise_list.push(appcache_storage.getAttachment(origin_url, id, {"format": "json"}));
-                                configuration_ids_dict["" + i] = id;
-                                i += 1;
                               }
+                              configuration_ids_dict["" + i] = id;
+                              i += 1;
                             }
                             return RSVP.all(promise_list);
                           })
@@ -159,6 +161,7 @@
                               parser.href = id;
                               var urlParams = new URLSearchParams(parser.search);
                               id = urlParams.get("relative_url");
+                              if (id === null) { id = configuration_ids_dict["" + i]; }
                               promise_list.push(appcache_storage.put(id, content_list[i]));
                             }
                             return RSVP.all(promise_list);
