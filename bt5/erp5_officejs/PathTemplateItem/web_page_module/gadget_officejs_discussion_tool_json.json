@@ -4,7 +4,7 @@
       "description": "App to support communication",
       "icons": [{
         "src": "officejs_logo_text_editor.png",
-        "sizes": "any",
+        "sizes": "128x128",
         "type": "image/png"
       }],
       "start_url": "../../",

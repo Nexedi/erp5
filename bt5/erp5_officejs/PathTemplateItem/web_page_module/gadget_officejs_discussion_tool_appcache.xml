@@ -227,11 +227,11 @@ gadget_erp5_pt_form_view_editable.js\n
 gadget_officejs_discussion_tool_router.html\n
 \n
 \n
-#hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view\n
 \n
 \n
-gadget_erp5_page_ojs_controller.html\n
-gadget_erp5_page_ojs_controller.js\n
+#gadget_erp5_page_ojs_controller.html\n
+#gadget_erp5_page_ojs_controller.js\n
 gadget_erp5_page_ojs_post_list.html\n
 gadget_erp5_page_ojs_post_list.js\n
 gadget_erp5_page_ojs_add_post.html\n
@@ -722,7 +722,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>974.21872.50504.4437</string> </value>
+                <value> <string>974.23087.41251.34321</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -740,7 +740,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1552523148.3</float>
+                        <float>1552654934.35</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

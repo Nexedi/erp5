@@ -41,7 +41,7 @@ var repair = false;
         version: gadget.props.version_url,
         take_installer: true
       }
-    }
+    };
     return jIO.createJIO(jio_options);
   }
 
