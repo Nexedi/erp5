@@ -82,6 +82,9 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
+    .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
+    .declareAcquiredMethod('getUrlParameter', 'getUrlParameter')
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
 
@@ -91,7 +94,7 @@
 
     .declareMethod("getFormDefinition", function (portal_type) {
       var gadget = this,
-          // TODO: how to generate this path? context? portal type definition?
+          // TODO: task "Remove the hardcoded form name"
           form_path = 'portal_skins/erp5_officejs_jio_connector/' +
             portal_type.replace(/ /g, '') +
             '_viewAsJio';
@@ -138,7 +141,8 @@
         });
     })
 
-    .declareMethod("renderSubGadget", function (gadget, subgadget, form_json) {
+    // kept until submit is done in controller
+    .declareMethod("renderEditableView", function (gadget, subgadget, form_json) {
       return subgadget.render({
         jio_key: gadget.state.jio_key,
         doc: gadget.state.doc,
@@ -194,25 +198,93 @@
         });
     })
 
+    .declareMethod("renderSubGadget", function (gadget, subgadget, form_json) {
+      var render_options = {
+        jio_key: gadget.state.jio_key,
+        doc: gadget.state.doc,
+        erp5_document: form_json.erp5_document,
+        form_definition: form_json.form_definition,
+        editable: gadget.state.editable,
+        view: gadget.state.view,
+        form_json: form_json,
+        new_content_action: false,
+        delete_action: false,
+        save_action: false
+      };
+      if (form_json.erp5_document._embedded._view._actions !== undefined) {
+        if (form_json.erp5_document._embedded._view._actions.put !== undefined) {
+          render_options.save_action = true;
+        }
+      }
+      return subgadget.render(render_options)
+        .push(function () {
+          var url_for_parameter_list = [
+            {command: 'change', options: {page: "tab"}},
+            {command: 'change', options: {page: "action"}},
+            {command: 'history_previous'},
+            {command: 'selection_previous'},
+            {command: 'selection_next'},
+            {command: 'change', options: {page: "export"}}
+          ];
+          if (form_json.erp5_document._links.action_object_new_content_action) {
+            url_for_parameter_list.push({command: 'change', options: {
+              view: form_json.erp5_document._links.action_object_new_content_action.href,
+              editable: true
+            }});
+          }
+          return RSVP.all([
+            //calculatePageTitle(gadget, gadget.state.erp5_document),
+            gadget.getUrlParameter('selection_index'),
+            gadget.getUrlForList(url_for_parameter_list),
+            gadget.isDesktopMedia()
+          ]);
+        })
+        .push(function (result_list) {
+          var url_list = result_list[1],
+            header_dict = {
+              //tab_url: url_list[0],
+              //actions_url: url_list[1],
+              //add_url: url_list[6] || '',
+              selection_url: url_list[2],
+              previous_url: result_list[0] ? url_list[3] : '',
+              next_url: result_list[0] ? url_list[4] : '',
+              page_title: gadget.state.doc.title //or calculatePageTitle in RSVP.all ?
+            };
+          if (render_options.save_action === true) {
+            header_dict.save_action = true;
+          }
+          if (result_list[2]) {
+            header_dict.export_url = (
+              form_json.erp5_document._links.action_object_jio_report ||
+              form_json.erp5_document._links.action_object_jio_exchange ||
+              form_json.erp5_document._links.action_object_jio_print
+            ) ? url_list[5] : '';
+          }
+          return gadget.updateHeader(header_dict);
+        });
+    })
+
     .onStateChange(function (modification_dict) {
       var fragment = document.createElement('div'),
         gadget = this;
       return gadget.renderForm(gadget.state.form_definition, gadget.state.doc)
         .push(function (form_json) {
-          if (!modification_dict.hasOwnProperty('child_gadget_url')) {
+          /*if (!modification_dict.hasOwnProperty('child_gadget_url')) {
             return gadget.getDeclaredGadget('fg')
               .push(function (child_gadget) {
                 return gadget.renderSubGadget(gadget, child_gadget, form_json);
               });
-          }
+          }*/
           // Clear first to DOM, append after to reduce flickering/manip
           while (gadget.element.firstChild) {
             gadget.element.removeChild(gadget.element.firstChild);
           }
           gadget.element.appendChild(fragment);
           return gadget.declareGadget(gadget.state.child_gadget_url, {element: fragment, scope: 'fg'})
+          //return gadget.declareGadget("gadget_erp5_form.html", {element: fragment, scope: 'fg'})
             .push(function (form_gadget) {
-              return gadget.renderSubGadget(gadget, form_gadget, form_json);
+              //return gadget.renderSubGadget(gadget, form_gadget, form_json);
+              return gadget.renderEditableView(gadget, form_gadget, form_json);
             });
         });
     });
