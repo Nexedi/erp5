@@ -1,6 +1,6 @@
 /*global window, rJS, jIO, FormData, UriTemplate */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS, jIO) {
+(function (window, rJS, jIO, RSVP, document, URLSearchParams) {
   "use strict";
 
   // jIO call wrapper for redirection to authentication page if needed
@@ -75,8 +75,13 @@
 
     .declareMethod('createJio', function (jio_options) {
       var gadget = this,
-        // for now using appcachestorage to copy form json from appcache to local
-        // maybe it will be better to have a new storage
+        origin_url = window.location.protocol + "//" + window.location.hostname + window.location.pathname,
+        prefix = "./",
+        // TODO these values should come from gadget.props.cache_file/version -add script in html body
+        version = "app/",
+        manifest = "gadget_officejs_discussion_tool.configuration",
+        // TODO review this storage because is not necessary to save the attachments into data storage
+        // it should be enough with only the appcache (and a aux local storage) in order to get the attachments
         jio_appchache_options = {
           type: "replicate",
           parallel_operation_attachment_amount: 10,
@@ -100,11 +105,13 @@
           local_sub_storage: {},
           remote_sub_storage: {
             type: "appcache",
-            manifest: "gadget_officejs_discussion_tool.configuration",
-            version: "app/",
-            take_installer: false
+            manifest: manifest,
+            version: version,
+            origin_url: origin_url
           }
-        }, appcache_storage;
+        }, appcache_storage,
+        sync_flag = "appcache-stored",
+        configuration_ids_dict = {};
       if (jio_options === undefined) {
         return;
       }
@@ -125,16 +132,46 @@
         .push(function (jio_storage_name) {
           // check if appcache-local sync needs to be done
           // TODO: find a better flag for this
-          return appcache_storage.get("appcache-stored")
+          return appcache_storage.get(sync_flag)
             .push(undefined, function (error) {
                 return appcache_storage.repair()
                   .push(function () {
-                    return appcache_storage.put("appcache-stored", {})
-                      .push(undefined);
+                    return appcache_storage.allAttachments(origin_url)
+                      .push(function (attachment_dict) {
+                        return new RSVP.Queue()
+                          .push(function () {
+                            var promise_list = [], i = 0,
+                                ignore_urls = [prefix + "/", prefix + version, prefix + version + manifest];
+                            for (var id in attachment_dict) {
+                              if (ignore_urls.indexOf(id) < 0) {
+                                promise_list.push(appcache_storage.getAttachment(origin_url, id, {"format": "json"}));
+                                configuration_ids_dict["" + i] = id;
+                                i += 1;
+                              }
+                            }
+                            return RSVP.all(promise_list);
+                          })
+                          .push(function (content_list) {
+                            var promise_list = [];
+                            for (var i = 0; i < content_list.length; i += 1) {
+                              var id = configuration_ids_dict["" + i],
+                                  parser = document.createElement('a');
+                              parser.href = id;
+                              var urlParams = new URLSearchParams(parser.search);
+                              id = urlParams.get("relative_url");
+                              promise_list.push(appcache_storage.put(id, content_list[i]));
+                            }
+                            return RSVP.all(promise_list);
+                          })
+                          .push(function () {
+                            return appcache_storage.put(sync_flag, {})
+                              .push(undefined);
+                          });
+                      });
                   }, function (error) {
-                    console.log("Error while appcache-local storage synchronization");
-                    console.log(error);
-                  });
+                  console.log("Error while appcache-local storage synchronization");
+                  console.log(error);
+                });
               });
         });
     })
@@ -169,4 +206,4 @@
       return wrapJioCall(this, 'repair', arguments);
     });
 
-}(window, rJS, jIO));
+}(window, rJS, jIO, RSVP, document, URLSearchParams));

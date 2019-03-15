@@ -78,7 +78,6 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
-    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getSetting", "getSetting")
@@ -90,15 +89,13 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("getFormDefinition", function (jio_key) {
-      //TODO parameter will be a portal_type
+    .declareMethod("getFormDefinition", function (portal_type) {
       var gadget = this,
-          // this urls will change to a more appropiate id like "portal_skins/couscous/MyPortalType_viewAsJio"
-          // and probably for a jio.get instead of getAttachment
-          // now it is like this due to the appcachestorage
-          url = "./app/hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view",
-          origin_url = "https://softinst112382.host.vifib.net/erp5/web_site_module/officejs_discussion_tool/app/#/?page=ojs_sync&auto_repair=true";
-      return gadget.jio_getAttachment(origin_url, url, {"format": "json"})
+          // TODO: how to generate this path? context? portal type definition?
+          form_path = 'portal_skins/erp5_officejs_jio_connector/' +
+            portal_type.replace(/ /g, '') +
+            '_viewAsJio';
+      return gadget.jio_get(form_path)
         .push(function (result) {
           return result._embedded._view.my_form_definition["default"];
         });
@@ -183,8 +180,7 @@
           } else {
             throw new Error('Can not display document: ' + options.jio_key);
           }
-          //TODO pass document.portal_type as parameter
-          return gadget.getFormDefinition(options.jio_key)
+          return gadget.getFormDefinition(document.portal_type)
             .push(function (form_definition) {
               return gadget.changeState({
                 jio_key: options.jio_key,
