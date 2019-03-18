@@ -858,6 +858,8 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     # prevent allowing editing if user doesn't have permission
     include_action = False
 
+  # [HARDCODED] when adding hateoas script url to appcache, it fails due to lack of permissions
+  include_action = True
   if (include_action):
     # Form action
     response_dict['_actions'] = {
@@ -1210,7 +1212,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       'status': statusLevelToString(portal_status_level)
     }
 
-  if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
+  # [HARDCODED] when adding hateoas script url to appcache, it fails due to lack of permissions
+  if False:
+  #if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
     login_relative_url = site_root.getLayoutProperty("configuration_login", default="")
     if (login_relative_url):
       response.setHeader(
