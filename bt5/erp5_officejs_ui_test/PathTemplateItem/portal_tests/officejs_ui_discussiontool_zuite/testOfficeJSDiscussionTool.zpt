@@ -121,8 +121,3 @@
   <td>//input[@title='Title']</td>
   <td>${title}</td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>identifier=cke_1_contents</td>
-  <td></td>
-</tr>
