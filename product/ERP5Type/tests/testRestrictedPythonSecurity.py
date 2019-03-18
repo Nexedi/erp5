@@ -91,6 +91,10 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     self.createAndRunScript('import decimal',
                             'return decimal.Decimal.from_float(3.3)')
 
+  def testSystemRandom(self):
+    self.createAndRunScript('import random',
+                            'return random.SystemRandom().getrandbits(10)')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestRestrictedPythonSecurity))
