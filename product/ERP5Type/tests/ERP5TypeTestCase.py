@@ -721,7 +721,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         '''Publishes the object at 'path' returning a response object.'''
 
         from ZPublisher.Response import Response
-        from ZPublisher.Test import publish_module
+        from ZPublisher.Publish import publish_module_standard
 
         from AccessControl.SecurityManagement import getSecurityManager
         from AccessControl.SecurityManagement import setSecurityManager
@@ -734,8 +734,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
         if env is None:
             env = {}
-        if extra is None:
-            extra = {}
 
         request = self.app.REQUEST
 
@@ -776,11 +774,20 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         try:
           if user:
             PAS._extractUserIds = _extractUserIds
-          publish_module('Zope2',
+
+          # The following `HTTPRequest` object would be created anyway inside
+          # `publish_module_standard` if no `request` argument was given.
+          request = request.__class__(stdin, env, response)
+          # However, we need to inject the content of `extra` inside the
+          # request.
+          if extra:
+            for k, v in extra.items(): request[k] = v
+
+          publish_module_standard('Zope2',
+                         request=request,
                          response=response,
                          stdin=stdin,
                          environ=env,
-                         extra=extra,
                          debug=not handle_errors,
                         )
         finally:
