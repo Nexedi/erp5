@@ -25,8 +25,6 @@
 #
 ##############################################################################
 
-import unittest
-
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
@@ -123,3 +121,19 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         'return urlparse.parse_qsl("q=s")',
         expected=[('q', 's')]
     )
+
+  def testSystemRandom(self):
+    self.createAndRunScript('import random',
+                            'return random.SystemRandom().getrandbits(10)')
+
+  def test_os_urandom(self):
+    self.createAndRunScript('import os',
+                            'return os.urandom(10)')
+    # other "unsafe" os members are not exposed
+    self.assertRaises(Unauthorized,
+      self.createAndRunScript, 'import os',
+                               'return os.path.exists("/")')
+    self.assertRaises(Unauthorized,
+      self.createAndRunScript, 'import os',
+                               'return os.system')
+

@@ -344,3 +344,7 @@ for member_id in dir(decimal):
   if isinstance(member, type) and issubclass(member, decimal.DecimalException):
     ContainerAssertions[member] = 1
 del member_id, member
+
+from random import SystemRandom
+allow_type(SystemRandom)
+ModuleSecurityInfo('os').declarePublic('urandom')
