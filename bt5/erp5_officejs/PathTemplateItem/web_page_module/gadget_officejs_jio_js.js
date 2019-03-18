@@ -77,8 +77,8 @@
       var gadget = this,
         origin_url = window.location.protocol + "//" + window.location.hostname + window.location.pathname,
         prefix = "./",
-        // TODO these values should come from gadget.props.cache_file/version -add script in html body
-        version = "app/",
+        hateoas_script = "hateoas/ERP5Document_getHateoas",
+        // TODO manifest should come from gadget.props.cache_file -add script in html body
         manifest = "gadget_officejs_discussion_tool.configuration",
         // TODO review this storage because is not necessary to save the attachments into data storage
         // it should be enough with only the appcache (and a aux local storage) in order to get the attachments
@@ -106,7 +106,6 @@
           remote_sub_storage: {
             type: "appcache",
             manifest: manifest,
-            version: version,
             origin_url: origin_url
           }
         }, appcache_storage,
@@ -140,10 +139,9 @@
                       .push(function (attachment_dict) {
                         return new RSVP.Queue()
                           .push(function () {
-                            var promise_list = [], i = 0,
-                                blob_urls = [prefix + "/", prefix + version, prefix + version + manifest];
+                            var promise_list = [], i = 0;
                             for (var id in attachment_dict) {
-                              if (blob_urls.indexOf(id) >= 0) {
+                              if (id.indexOf(hateoas_script) === -1) {
                                 promise_list.push(appcache_storage.getAttachment(origin_url, id));
                               } else {
                                 promise_list.push(appcache_storage.getAttachment(origin_url, id, {"format": "json"}));
@@ -173,7 +171,7 @@
                       });
                   }, function (error) {
                   console.log("Error while appcache-local storage synchronization");
-                  console.log(error);
+                  throw error;
                 });
               });
         });
