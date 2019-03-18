@@ -115,7 +115,7 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
     user_id, login = result
     self.assertEqual(user_id, person.Person_getUserId())
     # tokens have a login value, for auditing purposes
-    self.assertIn('token', login)
+    self.assertEqual(access_token.getRelativeUrl(), login)
 
   def test_bad_token(self):
     person = self._createPerson(self.new_id)

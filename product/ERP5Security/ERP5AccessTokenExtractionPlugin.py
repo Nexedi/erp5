@@ -94,7 +94,8 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
           user_id = method()
 
         if user_id is not None:
-          return (user_id, 'token {erp5_access_token_id} for {user_id}'.format(**locals()))
+          # Return token relative URL as login, for traceability.
+          return (user_id, token_document.getRelativeUrl())
 
 
 #Form for new plugin in ZMI
