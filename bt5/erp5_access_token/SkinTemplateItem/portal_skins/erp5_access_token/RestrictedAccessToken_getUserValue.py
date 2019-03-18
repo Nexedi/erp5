@@ -38,12 +38,13 @@ if access_token_document.getValidationState() == 'validated':
             break
         else:
           return None
-        for login in agent_document.contentValues(
-            portal_type=context.getPortalObject().getPortalLoginTypeList()):
-          if login.getValidationState() == 'validated':
-            break
-        else:
+
+        user, = context.getPortalObject().acl_users.searchUsers(
+            exact_match=True,
+            id=agent_document.Person_getUserId())
+        if not user['login_list']:
           return None
+
       result = agent_document
 
 return result
