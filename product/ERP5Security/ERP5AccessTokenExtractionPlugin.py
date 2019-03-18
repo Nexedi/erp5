@@ -82,14 +82,11 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
       token_document = self.getPortalObject().access_token_module.\
                      _getOb(erp5_access_token_id, None)
       if token_document is not None:
-        user_id = None
-        method = token_document._getTypeBasedMethod('getUserId')
+        method = token_document._getTypeBasedMethod('getUserValue')
         if method is not None:
-          user_id = method()
-
-        if user_id is not None:
-          # Return token relative URL as login, for traceability.
-          return (user_id, token_document.getRelativeUrl())
+          user_value = method()
+          if user_value is not None:
+            return (user_value.getUserId(), token_document.getRelativeUrl())
 
 
 #Form for new plugin in ZMI

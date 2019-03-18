@@ -44,6 +44,6 @@ if access_token_document.getValidationState() == 'validated':
             break
         else:
           return None
-      result = agent_document.Person_getUserId()
+      result = agent_document
 
 return result
