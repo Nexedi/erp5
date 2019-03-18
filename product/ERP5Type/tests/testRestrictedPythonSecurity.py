@@ -123,3 +123,12 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         'return urlparse.parse_qsl("q=s")',
         expected=[('q', 's')]
     )
+
+  def testSystemRandom(self):
+    self.createAndRunScript('import random',
+                            'return random.SystemRandom().getrandbits(10)')
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestRestrictedPythonSecurity))
+  return suite
