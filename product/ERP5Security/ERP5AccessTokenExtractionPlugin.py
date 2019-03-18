@@ -67,10 +67,7 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
     if token:
       creds['erp5_access_token_id'] = token
       creds['remote_host'] = request.get('REMOTE_HOST', '')
-      try:
-        creds['remote_address'] = request.getClientAddr()
-      except AttributeError:
-        creds['remote_address'] = request.get('REMOTE_ADDR', '')
+      creds['remote_address'] = request.getClientAddr()
     return creds
 
   #######################
