@@ -81,9 +81,6 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
       erp5_access_token_id = credentials['erp5_access_token_id']
       token_document = self.getPortalObject().access_token_module.\
                      _getOb(erp5_access_token_id, None)
-      # Access Token should be validated
-      # Check restricted access of URL
-      # Extract login information
       if token_document is not None:
         user_id = None
         method = token_document._getTypeBasedMethod('getUserId')
