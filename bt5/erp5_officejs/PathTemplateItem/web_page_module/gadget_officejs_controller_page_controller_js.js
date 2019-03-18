@@ -79,7 +79,6 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
-    .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("updateHeader", "updateHeader")
@@ -285,13 +284,7 @@
                 action.href,
                 content_dict
               ]);
-            })
-          .push(function (jio_key) {
-            if (jio_key) {
-              // success redirect callback receives jio_key
-              return gadget.redirect({command: 'reload'});
-            }
-          });
+            });
         });
     }, false, true);
 
