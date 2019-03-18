@@ -88,12 +88,6 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
       # Check restricted access of URL
       # Extract login information
       if token_document is not None:
-        # Token API changed from returning a login to returning a user id.
-        # We detect if the old way of configuration is still in place and
-        # advise that configuration has to be updated in that case.
-        method = token_document._getTypeBasedMethod('getExternalLogin')
-        assert method is None, "Please update and remove obsolete method %r" % method
-
         user_id = None
         method = token_document._getTypeBasedMethod('getUserId')
         if method is not None:
