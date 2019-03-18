@@ -125,3 +125,15 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
   def testSystemRandom(self):
     self.createAndRunScript('import random',
                             'return random.SystemRandom().getrandbits(10)')
+
+  def test_os_urandom(self):
+    self.createAndRunScript('import os',
+                            'return os.urandom(10)')
+    # other "unsafe" os members are not exposed
+    self.assertRaises(Unauthorized,
+      self.createAndRunScript, 'import os',
+                               'return os.path.exists("/")')
+    self.assertRaises(Unauthorized,
+      self.createAndRunScript, 'import os',
+                               'return os.system')
+

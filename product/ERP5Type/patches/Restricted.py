@@ -347,3 +347,4 @@ del member_id, member
 
 from random import SystemRandom
 allow_type(SystemRandom)
+ModuleSecurityInfo('os').declarePublic('urandom')
