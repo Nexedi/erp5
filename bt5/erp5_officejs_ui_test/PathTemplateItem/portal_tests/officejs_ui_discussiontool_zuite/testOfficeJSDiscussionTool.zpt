@@ -26,6 +26,27 @@
 <tal:block tal:define="web_site_name python: 'officejs_discussion_tool'">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/install_offline_and_redirect" />
 </tal:block>
+<!-- check that sync configuration manifest is accessible -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_discussion_tool/app/gadget_officejs_discussion_tool.configuration</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>appcache=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_discussion_tool/app/</td>
+  <td></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Storages']</td>
