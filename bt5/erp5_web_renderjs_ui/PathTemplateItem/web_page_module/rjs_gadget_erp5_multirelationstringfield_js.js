@@ -83,7 +83,8 @@
           JSON.stringify(field_json.relation_item_relative_url);
         state_dict.value_text_list =
           JSON.stringify(field_json.default);
-        state_dict.value_uid_list = JSON.stringify([]);
+        state_dict.value_uid_list =
+          JSON.stringify(field_json.relation_item_uid);
         state_dict.value_portal_type_list = JSON.stringify([]);
       }
       return this.changeState(state_dict);
