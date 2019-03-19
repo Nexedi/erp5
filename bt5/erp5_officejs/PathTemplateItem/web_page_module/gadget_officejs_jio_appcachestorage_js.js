@@ -140,7 +140,10 @@
           console.log(error);
           var extra = "no-extra-info";
           if (error && error.currentTarget) {
-            extra = "target.responseURL: " + error.currentTarget.responseURL + " . with status: " + error.currentTarget.status;
+            extra = "target.responseURL: " + error.currentTarget.responseURL +
+              " .|| with status: " + error.currentTarget.status +
+              " .|| with response: " + error.currentTarget.response +
+              " .|| with responseText: " + error.currentTarget.responseText;
           }
           error.message = "Can't get manifest. URL: " + url + " \n. error extra: " + String(extra);
         }
