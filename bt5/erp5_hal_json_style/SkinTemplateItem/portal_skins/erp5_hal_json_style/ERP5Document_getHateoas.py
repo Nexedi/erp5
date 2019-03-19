@@ -565,7 +565,8 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     result.update({
       "relation_field_id": traversed_document.Field_getSubFieldKeyDict(field, "relation", key=result["key"]),
       "relation_item_key": traversed_document.Field_getSubFieldKeyDict(field, "item", key=result["key"]),
-      "relation_item_relative_url": [jump_reference.getRelativeUrl() for jump_reference in jump_reference_list]
+      "relation_item_relative_url": [jump_reference.getRelativeUrl() for jump_reference in jump_reference_list],
+      "relation_item_uid": [jump_reference.getUid() for jump_reference in jump_reference_list],
     })
     return result
 
