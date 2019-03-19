@@ -171,7 +171,7 @@
                       });
                   }, function (error) {
                   console.log("Error while appcache-local storage synchronization");
-                  if (error.currentTarget.status == "401") {
+                  if (error && error.currentTarget && error.currentTarget.status == "401") {
                     console.log("Unauthorized access to storage, sync cancelled");
                     return;
                   }
