@@ -6,7 +6,7 @@ big_category_list = ('c1', 'c10', 'c2', 'c20', 'c3', 'c4')
 
 for i in range(start, start + num):
   category = category_list[i % len(category_list)]
-  foo = context.newContent(id = str(i), title = 'Title %d' % i, quantity = 10.0 - float(i),
+  foo = context.newContent(id=str(i), title=title_format.format(index=i), quantity=10.0 - float(i),
                     foo_category = category, portal_type=portal_type)
   if set_dates:
     foo.setStartDate(DateTime(i, i, i))
