@@ -80,8 +80,6 @@
         hateoas_script = "hateoas/ERP5Document_getHateoas",
         // TODO manifest should come from gadget.props.cache_file -add script in html body
         manifest = "gadget_officejs_discussion_tool.configuration",
-        // TODO review this storage because is not necessary to save the attachments into data storage
-        // it should be enough with only the appcache (and a aux local storage) in order to get the attachments
         jio_appchache_options = {
           type: "replicate",
           parallel_operation_attachment_amount: 10,
@@ -99,7 +97,7 @@
             type: "query",
             sub_storage: {
               type: "indexeddb",
-              database: "officejs-hash"
+              database: ""
             }
           },
           local_sub_storage: {},
@@ -122,13 +120,15 @@
       };
       try {
         this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);
-        appcache_storage = jIO.createJIO(jio_appchache_options);
       } catch (error) {
         this.state_parameter_dict.jio_storage = undefined;
-        appcache_storage = undefined;
       }
       return this.getSetting("jio_storage_name")
         .push(function (jio_storage_name) {
+          if (jio_storage_name === undefined) { return; }
+          // the hash layer of the appcachestorage is asociated to local data storage selected
+          jio_appchache_options.signature_sub_storage.sub_storage.database = "appcachestorage-hash-" + jio_storage_name;
+          appcache_storage = jIO.createJIO(jio_appchache_options);
           // check if appcache-local sync needs to be done
           // TODO: find a better flag for this
           return appcache_storage.get(sync_flag)
