@@ -9,6 +9,7 @@ web_page_module/dhtmlx_gantt_*
 web_page_module/fb_sdk_js
 web_page_module/gadget_field_*
 web_page_module/gadget_officejs_*
+web_page_module/gadget_officejs_discussion_tool_configuration
 web_page_module/jio_*
 web_page_module/officejs_audioplayer_*
 web_page_module/officejs_todomvc_*
