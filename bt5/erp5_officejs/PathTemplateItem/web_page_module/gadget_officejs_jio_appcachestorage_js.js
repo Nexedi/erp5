@@ -97,9 +97,9 @@
     var storage = this, url = "";
     return new RSVP.Queue()
       .push(function () {
-        console.log("[DEBUG] APPCACHESTORAGE JIO.util.ajax...");
         url = new URL(storage._manifest, new URL(storage._version,
                                                  storage._origin_url))
+        console.log("[DEBUG] APPCACHESTORAGE JIO.util.ajax to url: " + url);
         return jIO.util.ajax({
           type: "GET",
           url: url
@@ -138,14 +138,7 @@
         if (!error.message) {
           console.log("error getting the manifest:");
           console.log(error);
-          var extra = "no-extra-info";
-          if (error && error.currentTarget) {
-            extra = "target.responseURL: " + error.currentTarget.responseURL +
-              " .|| with status: " + error.currentTarget.status +
-              " .|| with response: " + error.currentTarget.response +
-              " .|| with responseText: " + error.currentTarget.responseText;
-          }
-          error.message = "Can't get manifest. URL: " + url + " \n. error extra: " + String(extra);
+          error.message = "Can't get manifest. URL: " + url;
         }
         throw error;
       });
