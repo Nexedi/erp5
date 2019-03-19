@@ -138,7 +138,11 @@
         if (!error.message) {
           console.log("error getting the manifest:");
           console.log(error);
-          error.message = "Can't get manifest. URL: " + url + " \n. error object: " + String(error);
+          var extra = "no-extra-info";
+          if (error && error.currentTarget) {
+            extra = "target.responseURL: " + error.currentTarget.responseURL + " . with status: " + error.currentTarget.status;
+          }
+          error.message = "Can't get manifest. URL: " + url + " \n. error extra: " + String(extra);
         }
         throw error;
       });
