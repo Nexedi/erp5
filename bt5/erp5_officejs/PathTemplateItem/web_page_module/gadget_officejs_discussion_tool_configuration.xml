@@ -116,7 +116,7 @@ CACHE MANIFEST\n
 CACHE:\n
 \n
 #discussion tool\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view&appcache=1\n
 \n
 NETWORK:\n
 *
@@ -262,7 +262,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>974.28632.10387.52002</string> </value>
+                <value> <string>974.29872.40794.13499</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -280,7 +280,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1552929997.96</float>
+                        <float>1553006157.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

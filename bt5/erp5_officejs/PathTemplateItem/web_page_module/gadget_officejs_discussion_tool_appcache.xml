@@ -239,7 +239,7 @@ officejs_logo.png\n
 jio_appcachestorage.js\n
 \n
 #configuration resources\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view&appcache=1\n
 \n
 gadget_erp5_page_ojs_controller.html\n
 gadget_erp5_page_ojs_controller.js\n
@@ -733,7 +733,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>974.28784.24754.58845</string> </value>
+                <value> <string>974.29872.42985.19473</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -751,7 +751,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1552947714.61</float>
+                        <float>1553006152.79</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
