@@ -80,11 +80,7 @@
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("getUrlForList", "getUrlForList")
-    .declareAcquiredMethod('isDesktopMedia', 'isDesktopMedia')
-    .declareAcquiredMethod('getUrlParameter', 'getUrlParameter')
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
 
@@ -108,7 +104,7 @@
       return renderForm(form_definition, document);
     })
 
-    .declareMethod('submitContent', function (options) {
+    .allowPublicAcquisition('submitContent', function (options) {
       var gadget = this,
         jio_key = options[0],
         //target_url = options[1],
@@ -131,12 +127,6 @@
           return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
         });
     })
-    .allowPublicAcquisition('notifySubmit', function () {
-      return this.triggerSubmit();
-    })
-    .declareMethod('triggerSubmit', function triggerSubmit() {
-      this.element.querySelector('button').click();
-    })
 
     .declareMethod("render", function (options) {
       var gadget = this,
@@ -148,7 +138,7 @@
               result.portal_type.replace(/ /g, '_').toLowerCase() +
               '_view.html';*/
             // [HARDCODED] force to use form view
-            child_gadget_url = "gadget_erp5_form.html";
+            child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
           } else {
             throw new Error('Can not display document: ' + options.jio_key);
           }
@@ -165,82 +155,51 @@
             });
         });
     })
+    .allowPublicAcquisition('notifySubmit', function () {
+      return this.triggerSubmit();
+    })
+    .declareMethod('triggerSubmit', function () {
+      return this.getDeclaredGadget('fg')
+        .push(function (gadget) {
+          return gadget.triggerSubmit();
+        });
+    })
 
     .declareMethod("renderSubGadget", function (gadget, subgadget, form_json) {
-      var render_options = {
+      return subgadget.render({
         jio_key: gadget.state.jio_key,
         doc: gadget.state.doc,
         erp5_document: form_json.erp5_document,
         form_definition: form_json.form_definition,
         editable: gadget.state.editable,
         view: gadget.state.view,
-        form_json: form_json,
-        //new_content_action: false,
-        //delete_action: false,
-        save_action: false
-      };
-      if (form_json.erp5_document._embedded._view._actions !== undefined) {
-        if (form_json.erp5_document._embedded._view._actions.put !== undefined) {
-          render_options.save_action = true;
-        }
-      }
-      return subgadget.render(render_options)
+        form_json: form_json
+      })
         .push(function () {
-          var url_for_parameter_list = [
-            {command: 'change', options: {page: "tab"}},
-            {command: 'change', options: {page: "action"}},
-            {command: 'history_previous'},
-            {command: 'selection_previous'},
-            {command: 'selection_next'},
-            {command: 'change', options: {page: "export"}}
-          ];
-          if (form_json.erp5_document._links.action_object_new_content_action) {
-            url_for_parameter_list.push({command: 'change', options: {
-              view: form_json.erp5_document._links.action_object_new_content_action.href,
-              editable: true
-            }});
-          }
           return RSVP.all([
-            //calculatePageTitle(gadget, gadget.state.erp5_document),
-            gadget.getUrlParameter('selection_index'), // check if needed
-            gadget.getUrlForList(url_for_parameter_list),
-            gadget.isDesktopMedia()
+            gadget.getUrlFor({command: 'history_previous'}),
+            gadget.getUrlFor({command: 'selection_previous'}),
+            gadget.getUrlFor({command: 'selection_next'})
           ]);
         })
-        .push(function (result_list) {
-          var url_list = result_list[1],
-            header_dict = {
-              //tab_url: url_list[0],
-              //actions_url: url_list[1],
-              //add_url: url_list[6] || '',
-              selection_url: url_list[2],
-              previous_url: url_list[3],
-              next_url: url_list[4],
-              page_title: gadget.state.doc.title //or calculatePageTitle in RSVP.all ?
-            };
-          if (render_options.save_action === true) {
-            header_dict.save_action = true;
-          }
-          if (result_list[2]) {
-            header_dict.export_url = (
-              form_json.erp5_document._links.action_object_jio_report ||
-              form_json.erp5_document._links.action_object_jio_exchange ||
-              form_json.erp5_document._links.action_object_jio_print
-            ) ? url_list[5] : '';
-          }
-          return gadget.updateHeader(header_dict);
+        .push(function (url_list) {
+          return subgadget.updateHeader({
+            page_title: gadget.state.doc.title,
+            save_action: true,
+            selection_url: url_list[0],
+            previous_url: url_list[1],
+            next_url: url_list[2]
+          });
         });
     })
 
     .onStateChange(function (modification_dict) {
       var fragment = document.createElement('div'),
-        gadget = this,
-        submit_button = gadget.element.querySelector('button'),
-        form = document.createElement('form');
+        gadget = this;
       return gadget.renderForm(gadget.state.form_definition, gadget.state.doc)
         .push(function (form_json) {
           if (!modification_dict.hasOwnProperty('child_gadget_url')) {
-            return gadget.getDeclaredGadget('sub_form')
+            return gadget.getDeclaredGadget('fg')
               .push(function (child_gadget) {
                 return gadget.renderSubGadget(gadget, child_gadget, form_json);
               });
@@ -249,43 +208,12 @@
           while (gadget.element.firstChild) {
             gadget.element.removeChild(gadget.element.firstChild);
           }
-          form.appendChild(fragment);
-          form.appendChild(submit_button);
-          gadget.element.appendChild(form);
-          return gadget.declareGadget(gadget.state.child_gadget_url, {element: fragment, scope: 'sub_form'})
+          gadget.element.appendChild(fragment);
+          return gadget.declareGadget(gadget.state.child_gadget_url, {element: fragment, scope: 'fg'})
             .push(function (form_gadget) {
               return gadget.renderSubGadget(gadget, form_gadget, form_json);
             });
         });
-    })
-
-    .onEvent('submit', function submit() {
-      var gadget = this;
-      return gadget.getDeclaredGadget("sub_form")
-        .push(function (form_gadget) {
-          if (form_gadget.state.erp5_document._embedded._view._actions === undefined ||
-              form_gadget.state.erp5_document._embedded._view._actions.put === undefined) {
-            return;
-          }
-          var action = form_gadget.state.erp5_document._embedded._view._actions.put;
-          return form_gadget.checkValidity()
-            .push(function (is_valid) {
-              if (!is_valid) {
-                return null;
-              }
-              return form_gadget.getContent();
-            })
-            .push(function (content_dict) {
-              if (content_dict === null) {
-                return;
-              }
-              return gadget.submitContent([
-                gadget.state.jio_key,
-                action.href,
-                content_dict
-              ]);
-            });
-        });
-    }, false, true);
+    });
 
 }(document, window, rJS, RSVP));
