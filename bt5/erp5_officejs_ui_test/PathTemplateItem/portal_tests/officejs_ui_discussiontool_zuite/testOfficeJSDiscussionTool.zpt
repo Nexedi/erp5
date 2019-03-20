@@ -34,9 +34,6 @@
 </tr>
 <tr>
   <td>open</td>
-  <!--
-  <td>${base_url}/web_site_module/officejs_discussion_tool/app/gadget_officejs_discussion_tool.configuration</td>
-  -->
   <td>${base_url}/web_site_module/${install_url}/app/gadget_officejs_discussion_tool.configuration</td>
   <td></td>
 </tr>
@@ -47,9 +44,6 @@
 </tr>
 <tr>
   <td>open</td>
-  <!--
-  <td>${base_url}/web_site_module/officejs_discussion_tool/app/</td>
-  -->
   <td>${base_url}/web_site_module/${install_url}/</td>
   <td></td>
 </tr>
