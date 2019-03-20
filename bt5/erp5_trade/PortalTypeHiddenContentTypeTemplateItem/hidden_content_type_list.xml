@@ -8,8 +8,14 @@
  <portal_type id="Internal Packing List Line">
   <item>Internal Packing List Cell</item>
  </portal_type>
+ <portal_type id="Inventory">
+  <item>Inventory Offset Line</item>
+ </portal_type>
  <portal_type id="Inventory Line">
   <item>Inventory Cell</item>
+ </portal_type>
+ <portal_type id="Inventory Offset Line">
+  <item>Inventory Offset Cell</item>
  </portal_type>
  <portal_type id="Preference">
   <item>Sale Order</item>

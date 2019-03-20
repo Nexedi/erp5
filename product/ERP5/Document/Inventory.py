@@ -29,59 +29,15 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5.Document.Delivery import Delivery
+from Products.ERP5.Document.NoIndexStockInventory import NoIndexStockInventory
 
-class Inventory(Delivery):
+class Inventory(NoIndexStockInventory):
   """
   Inventory
   """
   # CMF Type Definition
   meta_type = 'ERP5 Inventory'
   portal_type = 'Inventory'
-  isInventory = ConstantGetter('isInventory', value=True)
-
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Default Properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore
-                    , PropertySheet.Task
-                    , PropertySheet.Arrow
-                    , PropertySheet.Movement
-                    , PropertySheet.Delivery
-                    , PropertySheet.Path
-                    , PropertySheet.FlowCapacity
-                    , PropertySheet.Inventory
-                    )
-
-  security.declarePublic('alternateReindexObject')
-  def alternateReindexObject(self, **kw):
-    """
-    This method is called when an inventory object is included in a
-    group of catalogged objects.
-    """
-    return self.immediateReindexObject(**kw)
-
-  # method used to build category list that willbe set on tmp line
-  def appendToCategoryListFromUid(self, category_list, uid, base_category):
-    object_list = [x.getObject() for x in self.portal_catalog(uid=uid)]
-    if len(object_list):
-      category_list.append("%s/%s" %(base_category, object_list[0].getRelativeUrl()))
-
-  def appendToCategoryList(self, category_list, value, base_category):
-    category_list.append("%s/%s" %(base_category, value))
-
-  def splitAndExtendToCategoryList(self, category_list, value, *args, **kw):
-    if value is not None:
-      value_list = value.split('\n')
-    else:
-      value_list = []
-    category_list.extend(value_list)
-
 
   def immediateReindexObject(self, temp_constructor=None, **kw):
     """

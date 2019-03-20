@@ -120,11 +120,17 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     inventory = self.getInventoryModule().newContent()
     inventory.edit(start_date=start_date,
                    destination_value=organisation)
-    inventory.deliver()
     inventory_list = sequence.get('inventory_list',[])
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
     return inventory
+
+  def deliverInventory(self, sequence=None, **kw):
+    inventory = sequence.get('inventory_list')[-1]
+    inventory.validate()
+    self.tic()
+    inventory.deliver()
+    self.tic()
 
   @UnrestrictedMethod
   def createNotVariatedInventoryLine(self, quantity=None,
@@ -150,6 +156,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     self.createInventory(start_date=date,sequence=sequence)
     self.createNotVariatedInventoryLine(sequence=sequence,
                                     quantity=quantity)
+    self.deliverInventory(sequence=sequence)
 
   def stepCreateSecondNotVariatedInventory(self, sequence=None,
                                            sequence_list=None, **kw):
@@ -161,6 +168,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     self.createInventory(start_date=date,sequence=sequence)
     self.second_inventory = self.createNotVariatedInventoryLine(sequence=sequence,
                                     quantity=quantity)
+    self.deliverInventory(sequence=sequence)
 
 
   @UnrestrictedMethod
@@ -169,9 +177,8 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     """
     Modify the quantity to have a tmp line with null quantity
     """
-    quantity=self.default_quantity
-    inventory_line = self.second_inventory.objectValues()[0]
-    inventory_line.edit(inventory=quantity)
+    inventory_offset_line = self.second_inventory.contentValues(portal_type='Inventory Offset Line')[0]
+    inventory_offset_line.edit(quantity=0)
 
 
   def stepCheckFirstNotVariatedInventory(self, start_date=None,quantity=None,
@@ -279,6 +286,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     quantity = self.default_quantity
     self.createVariatedInventoryLine(start_date=date,
                   sequence=sequence, quantity=quantity)
+    self.deliverInventory(sequence=sequence)
 
   def stepCreateSecondVariatedInventory(self, sequence=None, sequence_list=None, \
                                  **kw):
@@ -290,6 +298,8 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     quantity = self.default_quantity - 10
     self.createVariatedInventoryLine(start_date=date,
                   sequence=sequence, quantity=quantity)
+    self.deliverInventory(sequence=sequence)
+
 
   @UnrestrictedMethod
   def createVariatedInventory(self, start_date=None,quantity=None,
@@ -400,6 +410,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     self.createVariatedInventoryLine(start_date=date,
                   sequence=sequence, quantity=quantity,
                   item_list=item_list)
+    self.deliverInventory(sequence=sequence)
 
   def getAggregateRelativeUrlText(self,item_list):
     relative_url_list = ['aggregate/%s' % x.getRelativeUrl() for x in item_list]
@@ -473,6 +484,8 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     self.createVariatedInventoryLine(start_date=date,
                   sequence=sequence, quantity=quantity,
                   item_list=item_list)
+    self.deliverInventory(sequence=sequence)
+
 
   def stepCheckSecondVariatedAggregatedInventory(self, start_date=None,
                                 quantity=None, sequence=None, **kw):
@@ -578,6 +591,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     inventory_line.setQuantityUnitValue(self.portal.portal_categories.quantity_unit.unit.drum)
     self.createVariatedInventoryLine(start_date=date,
                   sequence=sequence, quantity=quantity)
+    self.deliverInventory(sequence = sequence)
 
   def stepCheckFirstVariatedMultipleQuantityUnitResourceInventory(self, sequence=None, sequence_list=None, \
                                  **kw):
@@ -585,7 +599,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     resource_url = sequence.get('resource').getRelativeUrl()
     date = DateTime(self.view_stock_date)
     inventory = sequence.get('inventory_list')[-1]
-    total_quantity = sum([inventory_movement.getInventoriatedQuantity() for inventory_movement in inventory.getMovementList()])
+    total_quantity = sum([inventory_movement.getInventoriatedQuantity() for inventory_movement in inventory.getMovementList(portal_type='Inventory Cell')])
     self.assertEqual(total_quantity, (99*100 + 100*100 + 99 + 100))
     quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
                                                      resource=resource_url,
@@ -652,6 +666,9 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     inventory.edit(start_date=DateTime(2019, 02, 21),
                    destination_value=organisation,
                    full_inventory=True)
+    
+    inventory.validate()
+    self.tic()
     inventory.deliver()
     self.tic()
 
@@ -661,7 +678,8 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     self.assertEqual('draft', delivery.getSimulationState())
     delivery.reindexObject()
     self.tic()
-    inventory.reindexObject()
+    self.login()
+    inventory.cancel()
     self.tic()
     self.assertEqual(0, getInventoryQuantity())
 
@@ -700,6 +718,8 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     inventory_line = inventory.newContent(portal_type='Inventory Line',
                     resource_value=resource_value,
                     quantity=3)
+    inventory.validate()
+    self.tic()
     inventory.deliver()
     self.tic()
 
@@ -709,21 +729,20 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     self.assertEqual('draft', delivery.getSimulationState())
     delivery.reindexObject()
     self.tic()
-    inventory.reindexObject()
-    self.tic()
-    self.assertEqual(3, getInventoryQuantity())
+    self.assertEqual(1, getInventoryQuantity())
     # Even though this scenario might not really, happen, make sure the code does not
     # keep a correction line for a resource which is not set any more
-    inventory_line.setResourceValue(None)
+    inventory_offset_line = inventory.contentValues(portal_type='Inventory Offset Line')[0]
+    inventory_offset_line.setResourceValue(None)
     inventory.reindexObject()
     self.tic()
     self.assertEqual(0, getInventoryQuantity())
-    inventory_line.setResourceValue(resource_value)
+    inventory_offset_line.setResourceValue(resource_value)
     inventory.reindexObject()
     self.tic()
-    self.assertEqual(3, getInventoryQuantity())
+    self.assertEqual(1, getInventoryQuantity())
     # last safety check, make sure deletion of line of inventory has really an impact
-    inventory.manage_delObjects(ids=[inventory_line.getId()])
+    inventory.manage_delObjects(ids=[inventory_offset_line.getId()])
     inventory.reindexObject()
     self.tic()
     self.assertEqual(0, getInventoryQuantity())

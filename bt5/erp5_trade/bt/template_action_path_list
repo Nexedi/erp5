@@ -57,12 +57,17 @@ Inventory Line | view
 Inventory Module | view
 Inventory Module | view_stock_export
 Inventory Module | view_stock_report
+Inventory Offset Cell | view
+Inventory Offset Line | inventory_view
+Inventory Offset Line | price_view
+Inventory Offset Line | view
 Inventory Report Line | view
 Inventory Report Module | view
 Inventory Report | calculate_product_stock
 Inventory Report | view
 Inventory | fast_input
 Inventory | fast_input_update
+Inventory | offset
 Inventory | view
 Order Root Simulation Rule | view
 Organisation | jump_to_internal_trade_condition

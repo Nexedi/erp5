@@ -200,6 +200,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     # Now, quantity is not defined any more automatically.
     inventory_line.edit(quantity=sum([x.getQuantity() for x in \
         aggregate_value_list]))
+    inventory.validate()
+    self.tic()
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list = inventory_list)
@@ -234,6 +236,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory_line.edit(resource_value = sequence.get('resource'),
                         inventory = 24.
                        )
+    inventory.validate()
+    self.tic()
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
@@ -249,6 +253,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       portal_type = self.inventory_line_portal_type,
       resource_value = sequence.get("second_resource"),
       inventory = 101)
+    inventory.validate()
+    self.tic()
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
@@ -264,6 +270,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       portal_type = self.inventory_line_portal_type,
       resource_value = sequence.get("second_resource"),
       inventory = 101)
+    inventory.validate()
+    self.tic()
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
@@ -318,6 +326,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         )
     # When checking the not full inventory function, quantity must remain the same if
     # no inventory line defined for a variation
+    inventory.validate()
+    self.tic()
     inventory.deliver()
 
 
@@ -342,6 +352,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       portal_type = self.inventory_line_portal_type,
       resource_value = sequence.get("second_resource"),
       inventory = 101)
+    inventory.validate()
+    self.tic()
     inventory.deliver()
 
   def stepCreatePackingListForModule(self, sequence=None,
@@ -1899,6 +1911,13 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory_line.edit(
         aggregate_value_list=aggregate_value_list,
         quantity=sum([x.getQuantity() for x in aggregate_value_list]))
+    inventory_offset_line = inventory['2']
+    inventory_offset_line.edit(
+      aggregate_value_list=aggregate_value_list,
+    )
+    inventory_offset_line.edit(
+      quantity = inventory_offset_line.getQuantity() + item_list[4].getQuantity() - (item_list[2].getQuantity() - item_list[1].getQuantity()))
+      
 
 
   def stepCreateNotVariatedSecondResource(self,sequence=None,
@@ -1952,6 +1971,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       portal_type = self.inventory_line_portal_type,
       resource_value = sequence.get("second_resource"),
       inventory = 100)
+    inventory.validate()
+    self.tic()
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
@@ -2101,6 +2122,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       portal_type = self.inventory_line_portal_type,
       resource_value = resource_value,
       inventory = 100)
+    inventory.validate()
+    self.tic()
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
@@ -2305,6 +2328,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       portal_type=self.inventory_line_portal_type,
       resource_value=resource_value,
       inventory=inventory_quantity)
+    inventory.validate()
+    self.tic()
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
@@ -2424,6 +2449,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       portal_type = self.inventory_line_portal_type,
       resource_value = sequence.get("second_resource"),
       inventory = 100)
+    inventory.validate()
+    self.tic()
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
@@ -2457,6 +2484,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       portal_type = self.inventory_line_portal_type,
       resource_value = sequence.get("second_resource"),
       inventory = inventory2)
+    inventory.validate()
+    self.tic()
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
@@ -2762,7 +2791,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         node_uid=organisation.getUid(),
         resource_uid=product.getUid()),
       0)
-
+    inventory.validate()
+    self.tic()
     inventory.deliver()
     self.tic()
 
@@ -3302,6 +3332,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       full_inventory_1.newContent(portal_type='Inventory Line',
                                   resource_value=resource_value,
                                   quantity=123)
+    full_inventory_1.validate()
+    self.tic()
     full_inventory_1.deliver()
 
     self.commit()
@@ -3314,7 +3346,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     self.assertEqual(sorted([(brain.resource_uid, brain.inventory)
                              for brain in result]),
                      sorted([(movement.getResourceUid(), movement.getQuantity())
-                             for movement in full_inventory_1.getMovementList()]))
+                             for movement in full_inventory_1.contentValues(portal_type='Inventory Line')]))
 
     # Create second inventory which deletes inventories of many resources.
     date_2 = DateTime('2013/05/03 00:00:00 GMT+9')
@@ -3326,6 +3358,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     full_inventory_2.newContent(portal_type='Inventory Line',
                                 resource_value=resource_value_list[0],
                                 quantity=1)
+    full_inventory_2.validate()
+    self.tic()
     full_inventory_2.deliver()
 
     self.commit()
@@ -3338,7 +3372,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     self.assertEqual(sorted([(brain.resource_uid, brain.inventory)
                              for brain in result if brain.inventory != 0]),
                      sorted([(movement.getResourceUid(), movement.getQuantity())
-                             for movement in full_inventory_2.getMovementList()]))
+                             for movement in full_inventory_2.contentValues(portal_type='Inventory Line')]))
 
   @expectedFailure
   def test_16_CorruptedInventoryCacheAndFullInventory(

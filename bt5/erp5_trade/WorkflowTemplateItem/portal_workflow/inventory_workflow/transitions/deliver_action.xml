@@ -11,8 +11,12 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Validate Inventory</string> </value>
+            <value> <string>Deliver Inventory</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -46,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validate Inventory Action</string> </value>
+            <value> <string>Deliver Inventory Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

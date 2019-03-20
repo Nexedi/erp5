@@ -74,12 +74,16 @@
  </portal_type>
  <portal_type id="Inventory">
   <item>Inventory Line</item>
+  <item>Inventory Offset Line</item>
  </portal_type>
  <portal_type id="Inventory Line">
   <item>Inventory Cell</item>
  </portal_type>
  <portal_type id="Inventory Module">
   <item>Inventory</item>
+ </portal_type>
+ <portal_type id="Inventory Offset Line">
+  <item>Inventory Offset Cell</item>
  </portal_type>
  <portal_type id="Inventory Report">
   <item>Inventory Report Line</item>

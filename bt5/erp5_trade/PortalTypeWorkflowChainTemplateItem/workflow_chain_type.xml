@@ -65,7 +65,7 @@
  </chain>
  <chain>
   <type>Inventory</type>
-  <workflow>edit_workflow, inventory_workflow</workflow>
+  <workflow>edit_workflow, inventory_interaction_workflow, inventory_workflow</workflow>
  </chain>
  <chain>
   <type>Inventory Cell</type>
@@ -73,6 +73,14 @@
  </chain>
  <chain>
   <type>Inventory Line</type>
+  <workflow>edit_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Inventory Offset Cell</type>
+  <workflow>pricing_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Inventory Offset Line</type>
   <workflow>edit_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>

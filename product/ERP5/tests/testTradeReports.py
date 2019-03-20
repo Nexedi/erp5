@@ -213,6 +213,8 @@ class TestTradeReports(ERP5ReportTestCase):
                                           inventory=quantity)
 
     if simulation_state == 'delivered':
+      inventory.validate()
+      self.tic()
       inventory.deliver()
 
     # sanity check
@@ -921,6 +923,8 @@ class TestTradeReports(ERP5ReportTestCase):
                 inventory=66,
                 predicate_category_list=cell_key,
                 variation_category_list=cell_key)
+    fifth.validate()
+    self.tic()
     fifth.deliver()
 
     # services are ignored
@@ -1150,6 +1154,8 @@ class TestTradeReports(ERP5ReportTestCase):
                 inventory=66,
                 predicate_category_list=cell_key,
                 variation_category_list=cell_key)
+    fifth.validate()
+    self.tic()
     fifth.deliver()
 
     # services are ignored

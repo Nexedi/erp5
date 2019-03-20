@@ -514,6 +514,8 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
                      start_date=DateTime('2018/01/12'),
                      destination_value=node_1,
                      full_inventory=1)
+    inventory.validate()
+    self.tic()
     inventory.deliver()
     self.tic()
     # keep in stock only movements coming from inventory. It is intentional to
