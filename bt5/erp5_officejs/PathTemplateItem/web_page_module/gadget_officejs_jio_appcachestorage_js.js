@@ -10,8 +10,6 @@
     this._take_installer = spec.take_installer || false;
     this._origin_url = spec.origin_url !== undefined ?
         spec.origin_url : window.location.href;
-    console.log("[DEBUG] APPCACHESTORAGE window.location.href:");
-    console.log(window.location.href);
     this._version = spec.version || "";
     this._prefix = spec.prefix || "./";
     this._documents = {};
@@ -50,7 +48,6 @@
 
   AppCacheStorage.prototype.getAttachment = function (origin_url,
                                                        relative_url) {
-    console.log("[DEBUG] APPCACHESTORAGE: getAttachment for" + relative_url);
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax({
@@ -65,11 +62,6 @@
   };
 
   AppCacheStorage.prototype.allAttachments = function (id) {
-    console.log("[DEBUG] APPCACHESTORAGE allAttachments");
-    console.log("[DEBUG] APPCACHESTORAGE this._origin_url");
-    console.log(this._origin_url);
-    console.log("[DEBUG] APPCACHESTORAGE parameter id");
-    console.log(id);
     if (id === this._origin_url) {
       var result = {}, i, len = this._relative_url_list.length;
       for (i = 0; i < len; i += 1) {
@@ -95,21 +87,17 @@
   };
 
   AppCacheStorage.prototype.repair = function () {
-    console.log("[DEBUG] APPCACHESTORAGE repair");
     var storage = this, url = "";
     return new RSVP.Queue()
       .push(function () {
         url = new URL(storage._manifest, new URL(storage._version,
-                                                 storage._origin_url))
-        console.log("[DEBUG] APPCACHESTORAGE JIO.util.ajax to url: " + url);
+                                                 storage._origin_url));
         return jIO.util.ajax({
           type: "GET",
           url: url
         });
       })
       .push(function (response) {
-        console.log("[DEBUG] APPCACHESTORAGE ajax response:");
-        console.log(response);
         var text = response.target.responseText,
           relative_url_list = text.split('\n'),
           i,
@@ -133,21 +121,10 @@
             take = true;
           }
         }
-        console.log("[DEBUG] APPCACHESTORAGE end url-iteration. storage._relative_url_list:");
-        console.log(storage._relative_url_list);
       })
       .push(undefined, function (error) {
         if (!error.message) {
-          console.log("error getting the manifest:");
-          console.log(error);
-          var info = " . ";
-          if (error.currentTarget) {
-            info += "status: " + error.currentTarget.status;
-            info += " . response: " + error.currentTarget.response;
-          } else {
-            info += "error.currentTarget: " + error.currentTarget;
-          }
-          error.message = "Can't get manifest. URL: " + url + info;
+          error.message = "Can't get manifest. URL: " + url;
         }
         throw error;
       });

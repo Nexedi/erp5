@@ -75,7 +75,6 @@
 
     .declareMethod('createJio', function (jio_options) {
       var gadget = this,
-        //origin_url = window.location.protocol + "//" + window.location.hostname + window.location.pathname,
         origin_url = window.location.href,
         prefix = "./",
         hateoas_script = "hateoas/ERP5Document_getHateoas",
@@ -104,16 +103,11 @@
           local_sub_storage: {},
           remote_sub_storage: {
             type: "appcache",
-            manifest: manifest/*,
-            origin_url: origin_url*/
+            manifest: manifest
           }
         }, appcache_storage,
         sync_flag = "appcache-stored",
         configuration_ids_dict = {};
-      console.log("[DEBUG] JIO GADGET window.location.href:");
-      console.log(window.location.href);
-      console.log("[DEBUG] JIO GADGET generated origin_url:");
-      console.log(origin_url);
       if (jio_options === undefined) {
         return;
       }
