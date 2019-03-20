@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>async=True</string> </value>
+            <value> <string>section_category, node_uid, mirror_section_uid, grouping_reference</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionLine_resetGroupingReference</string> </value>
+            <value> <string>ERP5Site_resetAccountingTransactionLineGroupingReference</string> </value>
         </item>
       </dictionary>
     </pickle>
