@@ -3675,7 +3675,7 @@ class TestTransactions(AccountingTestCase):
 
     # reset from the payment line, the invoice line from the same group will be
     # ungrouped
-    payment_line.AccountingTransactionLine_resetGroupingReference()
+    payment_line.AccountingTransactionLine_resetGroupingReference(async=False)
     self.assertFalse(payment_line.getGroupingReference())
     self.assertFalse(payment_line.getGroupingDate())
     self.assertFalse(invoice_line.getGroupingReference())
@@ -3687,6 +3687,41 @@ class TestTransactions(AccountingTestCase):
     self.assertTrue(other_section_line.getGroupingReference())
     self.assertTrue(other_section_line.getGroupingDate())
     self.assertTrue(other_letter_line.getGroupingDate())
+
+  def test_GroupingReferenceResetedOnCancelWithDeleteRaceCondition(self):
+    """Reproduction for a bug when transaction is cancelled and grouped line
+    is deleted before the reset-grouping-reference activity is executed, the
+    related grouped lines where not reset.
+    """
+    invoice = self._makeOne(
+               title='First Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100,
+                           id='line_with_grouping_reference',
+                           grouping_date=DateTime(),
+                           grouping_reference='A'),))
+    payment = self._makeOne(
+               title='First Invoice Payment',
+               portal_type='Payment Transaction',
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_with_grouping_reference',
+                           grouping_reference='A',
+                           grouping_date=DateTime(),
+                           source_debit=100),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=100,)))
+    payment_line = payment.line_with_grouping_reference
+    self.tic()
+    invoice.cancel()
+    invoice.manage_delObjects([line.getId() for line in invoice.contentValues()])
+    self.tic()
+    self.assertFalse(payment.line_with_grouping_reference.getGroupingReference())
 
   def test_automatically_setting_grouping_reference(self):
     invoice = self._makeOne(
