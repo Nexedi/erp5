@@ -10,6 +10,8 @@
     this._take_installer = spec.take_installer || false;
     this._origin_url = spec.origin_url !== undefined ?
         spec.origin_url : window.location.href;
+    console.log("[DEBUG] APPCACHESTORAGE window.location.href:");
+    console.log(window.location.href);
     this._version = spec.version || "";
     this._prefix = spec.prefix || "./";
     this._documents = {};
@@ -138,7 +140,14 @@
         if (!error.message) {
           console.log("error getting the manifest:");
           console.log(error);
-          error.message = "Can't get manifest. URL: " + url;
+          var info = " . ";
+          if (error.currentTarget) {
+            info += "status: " + error.currentTarget.status;
+            info += " . response: " + error.currentTarget.response;
+          } else {
+            info += "error.currentTarget: " + error.currentTarget;
+          }
+          error.message = "Can't get manifest. URL: " + url + info;
         }
         throw error;
       });

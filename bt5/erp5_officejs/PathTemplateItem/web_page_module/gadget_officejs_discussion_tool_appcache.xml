@@ -229,7 +229,7 @@ gadget_officejs_discussion_tool_router.html\n
 /\n
 app/\n
 gadget_officejs_discussion_tool.configuration\n
-app/gadget_officejs_discussion_tool.configuration\n
+#app/gadget_officejs_discussion_tool.configuration\n
 gadget_officejs_discussion_tool.json\n
 gadget_officejs_bootloader.js\n
 gadget_officejs_bootloader_presentation.html\n
@@ -734,7 +734,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>974.29931.57668.55773</string> </value>
+                <value> <string>974.30099.13229.45585</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -752,7 +752,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1553016192.1</float>
+                        <float>1553084611.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
