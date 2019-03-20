@@ -3196,20 +3196,20 @@ class TestTransactions(AccountingTestCase):
     section_period_2001 = self.section.newContent(
                         portal_type='Accounting Period',
                         short_title='code-2001',
-                        start_date=DateTime(2001, 01, 01),
+                        start_date=DateTime(2001, 1, 1),
                         stop_date=DateTime(2001, 12, 31))
     section_period_2001.start()
     section_period_2002 = self.section.newContent(
                         portal_type='Accounting Period',
                         short_title='code-2002',
-                        start_date=DateTime(2002, 01, 01),
+                        start_date=DateTime(2002, 1, 1),
                         stop_date=DateTime(2002, 12, 31))
     section_period_2002.start()
 
     accounting_transaction = self._makeOne(
               destination_section_value=self.organisation_module.client_1,
-              start_date=DateTime(2001, 01, 01),
-              stop_date=DateTime(2001, 01, 01))
+              start_date=DateTime(2001, 1, 1),
+              stop_date=DateTime(2001, 1, 1))
     self.portal.portal_workflow.doActionFor(
           accounting_transaction, 'stop_action')
     # The reference generated for the source section uses the short title from
@@ -3225,16 +3225,16 @@ class TestTransactions(AccountingTestCase):
 
     other_transaction = self._makeOne(
               destination_section_value=self.organisation_module.client_2,
-              start_date=DateTime(2001, 01, 01),
-              stop_date=DateTime(2001, 01, 01))
+              start_date=DateTime(2001, 1, 1),
+              stop_date=DateTime(2001, 1, 1))
     self.portal.portal_workflow.doActionFor(other_transaction, 'stop_action')
     self.assertEqual('code-2001-2', other_transaction.getSourceReference())
     self.assertEqual('2001-1', other_transaction.getDestinationReference())
 
     next_year_transaction = self._makeOne(
               destination_section_value=self.organisation_module.client_1,
-              start_date=DateTime(2002, 01, 01),
-              stop_date=DateTime(2002, 01, 01))
+              start_date=DateTime(2002, 1, 1),
+              stop_date=DateTime(2002, 1, 1))
     self.portal.portal_workflow.doActionFor(next_year_transaction, 'stop_action')
     self.assertEqual('code-2002-1', next_year_transaction.getSourceReference())
     self.assertEqual('2002-1', next_year_transaction.getDestinationReference())
@@ -3246,21 +3246,21 @@ class TestTransactions(AccountingTestCase):
     section_period_2001 = self.main_section.newContent(
                         portal_type='Accounting Period',
                         short_title='code-2001',
-                        start_date=DateTime(2001, 01, 01),
+                        start_date=DateTime(2001, 1, 1),
                         stop_date=DateTime(2001, 12, 31))
     section_period_2001.start()
     section_period_2002 = self.main_section.newContent(
                         portal_type='Accounting Period',
                         short_title='code-2002',
-                        start_date=DateTime(2002, 01, 01),
+                        start_date=DateTime(2002, 1, 1),
                         stop_date=DateTime(2002, 12, 31))
     section_period_2002.start()
 
     accounting_transaction = self._makeOne(
               source_section_value=self.main_section,
               destination_section_value=self.organisation_module.client_1,
-              start_date=DateTime(2001, 01, 01),
-              stop_date=DateTime(2001, 01, 01))
+              start_date=DateTime(2001, 1, 1),
+              stop_date=DateTime(2001, 1, 1))
     self.portal.portal_workflow.doActionFor(
           accounting_transaction, 'stop_action')
     # The reference generated for the source section uses the short title from
@@ -3276,8 +3276,8 @@ class TestTransactions(AccountingTestCase):
 
     other_section_transaction = self._makeOne(
               destination_section_value=self.organisation_module.client_2,
-              start_date=DateTime(2001, 01, 01),
-              stop_date=DateTime(2001, 01, 01))
+              start_date=DateTime(2001, 1, 1),
+              stop_date=DateTime(2001, 1, 1))
     self.portal.portal_workflow.doActionFor(other_section_transaction, 'stop_action')
     # The numbering is shared by all the sections
     self.assertEqual('code-2001-2', other_section_transaction.getSourceReference())
@@ -3290,14 +3290,14 @@ class TestTransactions(AccountingTestCase):
     section_period_2001 = self.section.newContent(
                         portal_type='Accounting Period',
                         short_title='code-2001',
-                        start_date=DateTime(2001, 01, 01),
+                        start_date=DateTime(2001, 1, 1),
                         stop_date=DateTime(2001, 12, 31))
     section_period_2001.start()
 
     accounting_transaction = self._makeOne(
               destination_section_value=self.organisation_module.client_1,
-              start_date=DateTime(2001, 01, 01),
-              stop_date=DateTime(2001, 01, 01))
+              start_date=DateTime(2001, 1, 1),
+              stop_date=DateTime(2001, 1, 1))
     accounting_transaction.manage_permission('Modify portal content',
                                              roles=['Manager'], acquire=0)
     self.assertFalse(_checkPermission('Modify portal content',
@@ -3340,7 +3340,7 @@ class TestTransactions(AccountingTestCase):
     section_period_2001 = self.main_section.newContent(
                         portal_type='Accounting Period',
                         short_title='code-2001',
-                        start_date=DateTime(2001, 01, 01),
+                        start_date=DateTime(2001, 1, 1),
                         stop_date=DateTime(2001, 12, 31))
 
     self.assertEqual(self.main_section,
@@ -3756,7 +3756,7 @@ class TestTransactions(AccountingTestCase):
     section_period_2001 = self.main_section.newContent(
                         portal_type='Accounting Period',
                         short_title='code-2001',
-                        start_date=DateTime(2001, 01, 01),
+                        start_date=DateTime(2001, 1, 1),
                         stop_date=DateTime(2001, 12, 31))
 
     invoice = self._makeOne(
@@ -4530,7 +4530,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
   purchase_invoice_transaction_line_portal_type = \
                 'Purchase Invoice Transaction Line'
 
-  start_date = DateTime(2004, 01, 01)
+  start_date = DateTime(2004, 1, 1)
   stop_date  = DateTime(2004, 12, 31)
 
   default_region = 'europe/west/france'
@@ -5079,7 +5079,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     kw.setdefault('source_section_value', self.vendor)
     kw.setdefault('destination_section_value', self.client)
     if 'start_date' not in kw:
-      start_date = DateTime(2000, 01, 01)
+      start_date = DateTime(2000, 1, 1)
       # get a valid date for source section
       for openned_source_section_period in\
         kw['source_section_value'].searchFolder(
@@ -5090,7 +5090,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
 
     if 'stop_date' not in kw:
       # get a valid date for destination section
-      stop_date = DateTime(2000, 02, 02)
+      stop_date = DateTime(2000, 2, 2)
       for openned_destination_section_period in\
         kw['destination_section_value'].searchFolder(
               portal_type=self.accounting_period_portal_type,
@@ -5225,7 +5225,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     try:
       self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
       self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
-    except ValidationFailed, err :
+    except ValidationFailed as err:
       self.assert_(0, "Validation failed : %s" % err.msg)
 
     # if we do not use any payable / receivable account, then we can
@@ -5247,7 +5247,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       try:
         self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
         self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
-      except ValidationFailed, err :
+      except ValidationFailed as err:
         self.assert_(0, "Validation failed : %s" % err.msg)
 
   def stepValidateNoCurrency(self, sequence, sequence_list=None, **kw) :
@@ -5338,7 +5338,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     try:
       self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
       self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
-    except ValidationFailed, err :
+    except ValidationFailed as err:
       self.assert_(0, "Validation failed : %s" % err.msg)
 
   def stepValidateNotBalanced(self, sequence, sequence_list=None, **kw) :
@@ -5383,7 +5383,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     try:
       self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
       self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
-    except ValidationFailed, err :
+    except ValidationFailed as err:
       self.assert_(0, "Validation failed : %s" % err.msg)
 
   def stepValidateNoPayment(self, sequence, sequence_list=None, **kw) :
@@ -5445,7 +5445,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       try:
         self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
         self.assertEqual(accounting_transaction.getSimulationState(), 'stopped')
-      except ValidationFailed, err :
+      except ValidationFailed as err:
         self.fail("Validation failed : %s" % err.msg)
 
   def stepValidateRemoveEmptyLines(self, sequence, sequence_list=None, **kw):
