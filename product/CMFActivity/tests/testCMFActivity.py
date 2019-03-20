@@ -2455,15 +2455,8 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(activity_node, current_node)
 
   def test_getServerAddress(self):
-    ip = port = ''
-    for k, v in socket_map.items():
-      if hasattr(v, 'addr'):
-        type = str(getattr(v, '__class__', 'unknown'))
-        if type == 'ZServer.HTTPServer.zhttp_server':
-          ip, port = v.addr
-          break
-    if ip == '0.0.0.0':
-      ip = socket.gethostbyname(socket.gethostname())
+    host, port = self.startZServer()
+    ip = socket.gethostbyname(host)
     server_address = '%s:%s' % (ip, port)
     address = getServerAddress()
     self.assertEqual(address, server_address)

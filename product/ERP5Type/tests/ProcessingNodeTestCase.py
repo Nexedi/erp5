@@ -158,6 +158,13 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         t = Thread(target=Lifetime.loop)
         t.setDaemon(1)
         t.start()
+      from Products.CMFActivity import ActivityTool
+      # Reset, in case that getServerAddress was already called,
+      # in which case, the value was ('', '')
+      if ActivityTool._server_address:
+        if ActivityTool.currentNode == ActivityTool._server_address:
+          ActivityTool.currentNode = None
+        ActivityTool._server_address = None
     return utils._Z2HOST, utils._Z2PORT
 
   def _registerNode(self, distributing, processing):
