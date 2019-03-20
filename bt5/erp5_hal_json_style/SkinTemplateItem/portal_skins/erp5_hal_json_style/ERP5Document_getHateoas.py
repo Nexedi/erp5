@@ -67,6 +67,8 @@ from collections import OrderedDict
 MARKER = []
 COUNT_LIMIT = 1000
 
+appcache = True if context.REQUEST.get('appcache', None) is not None else False
+
 if REQUEST is None:
   REQUEST = context.REQUEST
 
@@ -854,12 +856,10 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     action_to_call = "Base_callDialogMethod"
   else:
     action_to_call = form.action
-  if (action_to_call == 'Base_edit') and (not portal.portal_membership.checkPermission('Modify portal content', traversed_document)):
+  if (not appcache) and (action_to_call == 'Base_edit') and (not portal.portal_membership.checkPermission('Modify portal content', traversed_document)):
     # prevent allowing editing if user doesn't have permission
     include_action = False
 
-  # [HARDCODED] when adding hateoas script url to appcache, it fails due to lack of permissions
-  include_action = True
   if (include_action):
     # Form action
     response_dict['_actions'] = {
@@ -1212,9 +1212,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       'status': statusLevelToString(portal_status_level)
     }
 
-  # [HARDCODED] when adding hateoas script url to appcache, it fails due to lack of permissions
-  if False:
-  #if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
+  if (not appcache) and (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
     login_relative_url = site_root.getLayoutProperty("configuration_login", default="")
     if (login_relative_url):
       response.setHeader(
