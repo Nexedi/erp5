@@ -30,13 +30,11 @@
 
 """
 
-import unittest
-
 from DateTime import DateTime
 from Products.CMFCore.utils import _checkPermission
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.CodingStyleTestCase import CodingStyleTestCase
+from Products.ERP5Type.tests import CodingStyleTestCase
 from Products.ERP5Type.tests.utils import reindex
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
@@ -5886,7 +5884,7 @@ class TestInternalInvoiceTransaction(AccountingTestCase):
               portal_type='Internal Invoice Transaction Line')])
 
 
-class TestAccountingCodingStyle(CodingStyleTestCase, AccountingTestCase):
+class TestAccountingCodingStyle(CodingStyleTestCase.CodingStyleTestCase, AccountingTestCase):
   """Runs CodingStyleTestCase checks on erp5_accounting
   """
   def getBusinessTemplateList(self):
@@ -5901,16 +5899,3 @@ class TestAccountingCodingStyle(CodingStyleTestCase, AccountingTestCase):
     # we don't want to run AccountingTestCase.tearDown
     pass
 
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAccountingWithSequences))
-  suite.addTest(unittest.makeSuite(TestTransactions))
-  suite.addTest(unittest.makeSuite(TestAccounts))
-  suite.addTest(unittest.makeSuite(TestClosingPeriod))
-  suite.addTest(unittest.makeSuite(TestTransactionValidation))
-  suite.addTest(unittest.makeSuite(TestAccountingExport))
-  suite.addTest(unittest.makeSuite(TestAccountingTransactionTemplate))
-  suite.addTest(unittest.makeSuite(TestInternalInvoiceTransaction))
-  suite.addTest(unittest.makeSuite(TestAccountingCodingStyle))
-  return suite
