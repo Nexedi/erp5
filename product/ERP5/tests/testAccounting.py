@@ -5901,16 +5901,3 @@ class TestAccountingCodingStyle(CodingStyleTestCase, AccountingTestCase):
     # we don't want to run AccountingTestCase.tearDown
     pass
 
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestAccountingWithSequences))
-  suite.addTest(unittest.makeSuite(TestTransactions))
-  suite.addTest(unittest.makeSuite(TestAccounts))
-  suite.addTest(unittest.makeSuite(TestClosingPeriod))
-  suite.addTest(unittest.makeSuite(TestTransactionValidation))
-  suite.addTest(unittest.makeSuite(TestAccountingExport))
-  suite.addTest(unittest.makeSuite(TestAccountingTransactionTemplate))
-  suite.addTest(unittest.makeSuite(TestInternalInvoiceTransaction))
-  suite.addTest(unittest.makeSuite(TestAccountingCodingStyle))
-  return suite
