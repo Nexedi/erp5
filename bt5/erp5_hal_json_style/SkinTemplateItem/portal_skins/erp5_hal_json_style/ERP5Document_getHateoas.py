@@ -608,14 +608,14 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
 
     # try to get specified searchable columns and fail back to all searchable columns
     search_column_list = [(name, _translate(title))
-                          for name, title in field.get_value("search_columns")
-                          if sql_catalog.isValidColumn(name)] or catalog_column_list
+                          for name, title in (field.get_value("search_columns") or catalog_column_list)
+                          if sql_catalog.isValidColumn(name)]
 
     # try to get specified sortable columns and fail back to searchable fields
     sort_column_list = [(name, _translate(title))
                         for name, title in (selection_params.get('selection_sort_order', [])
-                                            or field.get_value("sort_columns"))
-                        if sql_catalog.isValidColumn(name)] or search_column_list
+                                            or field.get_value("sort_columns") or search_column_list)
+                        if sql_catalog.isValidColumn(name)]
     # portal_type list can be overriden by selection too
     # since it can be intentionally empty we don't override with non-empty field value
     portal_type_list = selection_params.get("portal_type", field.get_value('portal_types'))
