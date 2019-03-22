@@ -25,8 +25,6 @@
 #
 ##############################################################################
 
-import unittest
-
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
@@ -138,9 +136,3 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     self.assertRaises(Unauthorized,
       self.createAndRunScript, 'import os',
                                'return os.system')
-
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRestrictedPythonSecurity))
-  return suite
