@@ -5901,3 +5901,96 @@ class TestAccountingCodingStyle(CodingStyleTestCase, AccountingTestCase):
     # we don't want to run AccountingTestCase.tearDown
     pass
 
+
+class TestAccountingAlarms(AccountingTestCase):
+  def test_check_payable_receivable_account_grouped(self):
+    invoice = self._makeOne(
+               title='First Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               simulation_state='stopped',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.goods_sales,
+                           id='line_to_group_with_itself',
+                           source_debit=0),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100,
+                           id='line_to_group',),))
+    payment = self._makeOne(
+               title='First Invoice Payment',
+               portal_type='Payment Transaction',
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               simulation_state='stopped',
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_to_group',
+                           source_debit=100),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=100,)))
+    self.tic()
+
+    self.login()
+    alarm = self.portal.portal_alarms.check_payable_receivable_account_grouped
+    alarm.edit(section_category='group/demo_group')
+
+    # this alarm detect problem
+    alarm.activeSense()
+    self.tic()
+    self.assertEqual(
+        ['organisation_module/client_1 has a 0 balance but some not grouped transactions.\n'],
+        [x.getProperty('detail') for x in alarm.getLastActiveProcess().getResultList()])
+    self.assertTrue(alarm.sense())
+
+    # and can fix problems
+    alarm.activeSense(fixit=True)
+    self.tic()
+    self.assertTrue(alarm.sense())
+    self.assertTrue(invoice.line_to_group.getGroupingReference())
+    self.assertEqual(
+        invoice.line_to_group.getGroupingReference(),
+        payment.line_to_group.getGroupingReference())
+    self.assertTrue(invoice.line_to_group_with_itself.getGroupingReference())
+
+  def test_check_grouping_reference_validity(self):
+    # Two transactions grouped together, but grouped quantities do not match (3 != 7)
+    invoice = self._makeOne(
+               title='First Invoice',
+               destination_section_value=self.organisation_module.client_1,
+               simulation_state='stopped',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=3),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=3,
+                           id='grouped_line',
+                           grouping_reference='A',
+                           grouping_date=DateTime(),),))
+    payment = self._makeOne(
+               title='First Invoice Payment',
+               portal_type='Payment Transaction',
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               simulation_state='stopped',
+               lines=(dict(source_value=self.account_module.receivable,
+                           source_debit=7,
+                           id='grouped_line',
+                           grouping_reference='A',
+                           grouping_date=DateTime(),),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=7,)))
+    self.tic()
+
+    self.login()
+    alarm = self.portal.portal_alarms.check_grouping_reference_validity
+
+    # this alarm detect problem
+    alarm.activeSense()
+    self.tic()
+    self.assertEqual(
+        sorted([
+            # 4.0 is the difference in grouping ( 7 - 3 )
+            '{} has wrong grouping (4.0)'.format(invoice.grouped_line.getRelativeUrl()),
+            '{} has wrong grouping (4.0)'.format(payment.grouped_line.getRelativeUrl()),]),
+        sorted([x.getProperty('detail') for x in alarm.getLastActiveProcess().getResultList()]))
+    self.assertTrue(alarm.sense())
