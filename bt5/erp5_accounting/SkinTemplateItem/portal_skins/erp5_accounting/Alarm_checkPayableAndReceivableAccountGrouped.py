@@ -41,14 +41,15 @@ for brain in portal.portal_simulation.getInventoryList(**search_params):
       grouped_line_list = tr.AccountingTransaction_guessGroupedLines()
       if not grouped_line_list:
         # Group whatever can be grouped. XXX maybe we want to make this optional.
-        grouped_line_list = tr.AccountingTransaction_guessGroupedLines(accounting_transaction_line_uid_list=[
+        grouped_line_list = tr.AccountingTransaction_guessGroupedLines(
+          accounting_transaction_line_uid_list=[
             line.uid for line in portal.portal_simulation.getMovementHistoryList(
                                     node_uid=brain.node_uid,
                                     mirror_section_uid=brain.mirror_section_uid,
                                     section_uid=section_uid_list,
                                     simulation_state=('stopped', 'delivered'),
                                     portal_type=portal.getPortalAccountingMovementTypeList(),
-                                    grouping_reference=None,)])
+                                    grouping_reference=None,) if not line.getObject().getGroupingReference()])
       if grouped_line_list:
         print 'FIXED', grouped_line_list
       else:
