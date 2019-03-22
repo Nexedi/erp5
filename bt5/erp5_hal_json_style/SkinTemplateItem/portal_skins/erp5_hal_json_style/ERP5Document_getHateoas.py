@@ -1289,6 +1289,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         }
 
     # Find current action URL and extract embedded view
+    log("[DEBUG] getting action URL for traversed_document:");
+    log(traversed_document)
     erp5_action_dict = portal.Base_filterDuplicateActions(
       portal.portal_actions.listFilteredActionsFor(traversed_document))
     for erp5_action_key in erp5_action_dict.keys():
@@ -2163,7 +2165,10 @@ hateoas = calculateHateoas(is_portal=temp_is_portal, is_site_root=temp_is_site_r
                            default_param_json=default_param_json,
                            form_relative_url=form_relative_url,
                            extra_param_json=extra_param_json)
-
+# [HARDCODED] expresion string:${object_url} must be evaluated before return
+if "_embedded" in hateoas.keys() and "_view" in hateoas["_embedded"].keys() and "my_action" in hateoas["_embedded"]["_view"].keys():
+  if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/HTMLPost_viewAsJio':
+    hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_officejs_jio_connector/HTMLPost_viewAsJio'
 if hateoas == "":
   return hateoas
 else:
