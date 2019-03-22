@@ -79,6 +79,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
@@ -89,14 +90,14 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("getFormDefinition", function (portal_type) {
-      var gadget = this,
-          // TODO: task "Remove the hardcoded form name"
-          form_path = 'portal_skins/erp5_officejs_jio_connector/' +
-            portal_type.replace(/ /g, '') +
-            '_viewAsJio';
-      return gadget.jio_get(form_path)
-        .push(function (result) {
-          return result._embedded._view.my_form_definition["default"];
+      var gadget = this;
+      //TODO: the corresponding action must be get via allDocs -not implemented in appcachestorage yet
+      return gadget.jio_get("portal_types/HTML Post/2")
+        .push(function (action_result) {
+          return gadget.jio_get(action_result._embedded._view.my_action["default"])
+            .push(function (result) {
+              return result._embedded._view.my_form_definition["default"];
+            });
         });
     })
 

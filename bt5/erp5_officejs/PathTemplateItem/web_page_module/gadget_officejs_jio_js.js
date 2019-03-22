@@ -159,6 +159,9 @@
                               var urlParams = new URLSearchParams(parser.search);
                               id = urlParams.get("relative_url");
                               if (id === null) { id = configuration_ids_dict["" + i]; }
+                              //TODO: remember that the content is the pure hateoas dict returned by the script
+                              // it should be processed in order to save a json document that allows allDocs queries
+                              // without nested levels like _embedded, _view, etc
                               promise_list.push(appcache_storage.put(id, content_list[i]));
                             }
                             return RSVP.all(promise_list);
