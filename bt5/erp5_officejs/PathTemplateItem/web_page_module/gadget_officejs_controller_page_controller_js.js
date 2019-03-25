@@ -40,38 +40,6 @@
     return result;
   }
 
-  function renderForm(form_definition, document) {
-    var raw_properties = form_definition.fields_raw_properties;
-    var form_json = {
-      erp5_document: {
-        "_embedded": {"_view": {}},
-        "_links": {}
-      },
-      form_definition: form_definition
-    }, i, j, fields, field_info, my_element, element_id;
-    for (i = 0; i < form_definition.group_list.length; i += 1) {
-      fields = form_definition.group_list[i][1];
-      for (j = 0; j < fields.length; j += 1) {
-        my_element = fields[j][0];
-        if (my_element.startsWith("my_")) {
-          element_id = my_element.replace("my_", "");
-        } else if (my_element.startsWith("your_")) {
-          element_id = my_element.replace("your_", "");
-        } else {
-          element_id = my_element;
-        }
-        if (raw_properties.hasOwnProperty(my_element)) {
-          field_info = raw_properties[my_element];
-          var rendered_field = renderField(element_id, field_info, document);
-          form_json.erp5_document._embedded._view[my_element] = rendered_field;
-        }
-      }
-    }
-    form_json.erp5_document._embedded._view._actions = form_definition._actions;
-    form_json.erp5_document._links = form_definition._links;
-    return form_json;
-  }
-
   rJS(window)
 
     /////////////////////////////////////////////////////////////////
@@ -109,7 +77,35 @@
     })
 
     .declareMethod("renderForm", function (form_definition, document) {
-      return renderForm(form_definition, document);
+      var raw_properties = form_definition.fields_raw_properties;
+      var form_json = {
+        erp5_document: {
+          "_embedded": {"_view": {}},
+          "_links": {}
+        },
+        form_definition: form_definition
+      }, i, j, fields, field_info, my_element, element_id;
+      for (i = 0; i < form_definition.group_list.length; i += 1) {
+        fields = form_definition.group_list[i][1];
+        for (j = 0; j < fields.length; j += 1) {
+          my_element = fields[j][0];
+          if (my_element.startsWith("my_")) {
+            element_id = my_element.replace("my_", "");
+          } else if (my_element.startsWith("your_")) {
+            element_id = my_element.replace("your_", "");
+          } else {
+            element_id = my_element;
+          }
+          if (raw_properties.hasOwnProperty(my_element)) {
+            field_info = raw_properties[my_element];
+            var rendered_field = renderField(element_id, field_info, document);
+            form_json.erp5_document._embedded._view[my_element] = rendered_field;
+          }
+        }
+      }
+      form_json.erp5_document._embedded._view._actions = form_definition._actions;
+      form_json.erp5_document._links = form_definition._links;
+      return form_json;
     })
 
     .allowPublicAcquisition('submitContent', function (options) {
@@ -142,10 +138,7 @@
       return gadget.jio_get(options.jio_key)
         .push(function (document) {
           if (document.portal_type !== undefined) {
-            /*child_gadget_url = 'gadget_officejs_jio_' +
-              result.portal_type.replace(/ /g, '_').toLowerCase() +
-              '_view.html';*/
-            // [HARDCODED] force to use form view
+            // use generic editable form view
             child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
           } else {
             throw new Error('Can not display document: ' + options.jio_key);
