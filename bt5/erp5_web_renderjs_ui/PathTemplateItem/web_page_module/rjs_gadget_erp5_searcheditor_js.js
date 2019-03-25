@@ -1,5 +1,5 @@
 /*jslint indent: 2, maxerr: 3, maxlen: 100, nomen: true */
-/*global window, document, rJS, Handlebars,
+/*global window, document, rJS, Handlebars, RSVP,
   QueryFactory, SimpleQuery, ComplexQuery, Query*/
 (function (window, document, rJS, Handlebars, RSVP,
   QueryFactory, SimpleQuery, ComplexQuery, Query) {
@@ -759,13 +759,16 @@
 
     .onEvent('change', function change(evt) {
       var select_list = getFilterItemElementFromEvent(evt, this).querySelectorAll("select"),
-        operator = select_list[1][select_list[1].selectedIndex].value;
-      updateFilterDOM(this, true, "at_least_one_exact_match" === operator && evt.target.tagName === "INPUT" ? false : true);
+        operator = select_list[1][select_list[1].selectedIndex].value,
+        new_state,
+        index;
+      updateFilterDOM(this, true, ("at_least_one_exact_match" === operator) &&
+                                  (evt.target.tagName === "INPUT" ? false : true));
       if (evt.target.classList.contains('column')) {
         // Reset the operator when user change the column/key
         evt.preventDefault();
-        var new_state = getQueryStateFromDOM(this),
-          index = getElementIndex(evt.target.parentElement.parentElement);
+        new_state = getQueryStateFromDOM(this);
+        index = getElementIndex(evt.target.parentElement.parentElement);
         if (new_state.query_list[index].type !== "complex") {
           delete new_state.query_list[index].operator;
         }
