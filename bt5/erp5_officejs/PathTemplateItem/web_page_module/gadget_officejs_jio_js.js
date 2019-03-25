@@ -60,6 +60,34 @@
       });
   }
 
+  function processHateoasDict(raw_dict) {
+    var return_dict = {};
+    try {
+      var raw_fields = raw_dict._embedded._view,
+          type = raw_dict._links.type.name,
+          parent = raw_dict._links.parent.name;
+      return_dict.parent_relative_url = "portal_types/" + parent;
+      return_dict.portal_type = type;
+      for (var field_key in raw_fields) {
+        var field_id = "";
+        if (raw_fields[field_key]["default"] !== undefined && raw_fields[field_key]["default"] !== "") {
+          if (field_key.startsWith("my_")) {
+            field_id = field_key.replace("my_", "");
+          } else if (field_key.startsWith("your_")) {
+            field_id = field_key.replace("your_", "");
+          } else {
+            field_id = field_key;
+          }
+          return_dict[field_id] = raw_fields[field_key]["default"];
+        }
+      }
+    } catch (e) {
+      // raw_dict is a blob
+      return raw_dict;
+    }
+    return return_dict;
+  }
+
   rJS(window)
 
     .ready(function (gadget) {
@@ -128,8 +156,8 @@
           // the hash layer of the appcachestorage is asociated to local data storage selected
           jio_appchache_options.signature_sub_storage.sub_storage.database = "appcachestorage-hash-" + jio_storage_name;
           appcache_storage = jIO.createJIO(jio_appchache_options);
-          // check if appcache-local sync needs to be done
-          // TODO: find a better flag for this
+          // verify if appcache-local sync needs to be done
+          // TODO: find a better flag for this?
           return appcache_storage.get(sync_flag)
             .push(undefined, function (error) {
                 return appcache_storage.repair()
@@ -159,10 +187,8 @@
                               var urlParams = new URLSearchParams(parser.search);
                               id = urlParams.get("relative_url");
                               if (id === null) { id = configuration_ids_dict["" + i]; }
-                              //TODO: remember that the content is the pure hateoas dict returned by the script
-                              // it should be processed in order to save a json document that allows allDocs queries
-                              // without nested levels like _embedded, _view, etc
-                              promise_list.push(appcache_storage.put(id, content_list[i]));
+                              var content = processHateoasDict(content_list[i]);
+                              promise_list.push(appcache_storage.put(id, content));
                             }
                             return RSVP.all(promise_list);
                           })

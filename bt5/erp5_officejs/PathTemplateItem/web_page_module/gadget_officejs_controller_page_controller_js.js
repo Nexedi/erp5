@@ -90,13 +90,20 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("getFormDefinition", function (portal_type) {
-      var gadget = this;
-      //TODO: the corresponding action must be get via allDocs -not implemented in appcachestorage yet
-      return gadget.jio_get("portal_types/HTML Post/2")
-        .push(function (action_result) {
-          return gadget.jio_get(action_result._embedded._view.my_action["default"])
-            .push(function (result) {
-              return result._embedded._view.my_form_definition["default"];
+      var gadget = this,
+          parent = "portal_types/" + portal_type,
+          query = 'portal_type: "Action Information" AND reference: "jio_view" AND parent_relative_url: "' + parent + '"';
+      return gadget.jio_allDocs({query: query})
+        .push(function (data) {
+          if (data.data.rows.length === 0) {
+            throw "Can not find jio_view action for portal type " + portal_type;
+          }
+          return gadget.jio_get(data.data.rows[0].id)
+            .push(function (action_result) {
+              return gadget.jio_get(action_result.action)
+                .push(function (form_result) {
+                  return form_result.form_definition;
+                });
             });
         });
     })
