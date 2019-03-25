@@ -151,6 +151,7 @@
           }
         })
         .push(function () {
+          $(gadget.element).enhanceWithin();    
           return gadget.notifyChange();
         });
     })
