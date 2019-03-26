@@ -98,13 +98,15 @@
                     <value>
                       <list>
                         <string>my_configuration_panel_gadget_url</string>
-                        <string>my_configuration_manifest_url</string>
-                        <string>my_configuration_webapp_manifest_url</string>
-                        <string>my_configuration_service_worker_url</string>
                         <string>my_configuration_jio_gadget_url</string>
                         <string>my_configuration_translation_gadget_url</string>
                         <string>my_configuration_router_gadget_url</string>
                         <string>my_configuration_header_gadget_url</string>
+                        <string>my_configuration_manifest_url</string>
+                        <string>my_configuration_webapp_manifest_url</string>
+                        <string>my_configuration_service_worker_url</string>
+                        <string>my_modification_date</string>
+                        <string>my_configuration_precache_manifest_script_list</string>
                       </list>
                     </value>
                 </item>

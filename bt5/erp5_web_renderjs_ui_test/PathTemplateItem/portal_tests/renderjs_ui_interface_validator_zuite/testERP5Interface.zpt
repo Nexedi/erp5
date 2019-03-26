@@ -12,8 +12,8 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 
-<tal:block tal:define="check_configuration python: {'app_cache_reference': 'gadget_erp5.appcache',
-                                                    'gadget_count': 65}">
+<tal:block tal:define="check_configuration python: {'precache_reference': '../renderjs_runner/WebSection_getPrecacheManifest',
+                                                    'gadget_count': 66}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUiInterface/macros/run_app_interface_check" />
 </tal:block>
 

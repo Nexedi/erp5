@@ -1,0 +1,110 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=test_service_worker</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Has SW: true</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Has SW: true</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[text()='Proceed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>SW changed on server</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>SW changed on server</td>
+  <td></td>
+</tr>
+
+<!-- Navigating ERP5JS should trigger service worker update -->
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Has SW: true</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Has SW: true</td>
+  <td></td>
+</tr>
+
+<!-- Update is not triggered immediately -->
+<tr>
+  <td>pause</td>
+  <td>30000</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>New SW ready</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>New SW ready</td>
+  <td></td>
+</tr>
+
+<!-- ERP5JS should reload itself while user is browsing it... -->
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Has SW: true</td>
+  <td></td>
+</tr>
+
+<!-- ...But only once -->
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Has SW: true</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
