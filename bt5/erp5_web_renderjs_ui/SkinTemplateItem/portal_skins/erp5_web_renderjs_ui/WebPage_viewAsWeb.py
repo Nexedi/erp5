@@ -1,3 +1,6 @@
+from DateTime import DateTime
+import json
+
 if REQUEST is None:
   REQUEST = context.REQUEST
 if response is None:
@@ -11,11 +14,14 @@ response.setHeader("Access-Control-Allow-Origin", "*")
 
 web_page = context
 web_section = context.getWebSectionValue()
-
 # Must-Revalidate caching policy uses Base_getWebSiteDrivenModificationDate
-if REQUEST.getHeader('If-Modified-Since', '') == web_page.Base_getWebSiteDrivenModificationDate().rfc822():
-  response.setStatus(304)
-  return ""
+modification_date_string = web_page.Base_getWebSiteDrivenModificationDate().rfc822()
+
+modified_since = REQUEST.getHeader('If-Modified-Since', '')
+if modified_since:
+  if DateTime(modified_since).rfc822() == modification_date_string:
+    response.setStatus(304)
+    return ""
 
 portal_type = web_page.getPortalType()
 web_content = web_page.getTextContent()
@@ -23,6 +29,12 @@ web_content = web_page.getTextContent()
 # set headers depending on type of script
 if (portal_type == "Web Script"):
   response.setHeader('Content-Type', 'application/javascript; charset=utf-8')
+  if web_page.getTextContentSubstitutionMappingMethodId():
+    web_content = web_page.TextDocument_substituteTextContent(web_content, mapping_dict={
+      'modification_date': modification_date_string,
+      # Make JSLint happy for the service worker code
+      'required_url_list': json.dumps(web_section.WebSection_getPrecacheManifest())
+    })
 
 elif (portal_type == "Web Style"):
   response.setHeader('Content-Type', 'text/css; charset=utf-8')
