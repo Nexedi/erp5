@@ -279,6 +279,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_service_worker_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -353,11 +363,17 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_erp5.appcache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
             <value> <string>gadget_erp5_panel.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_service_worker_url</string> </key>
+            <value> <string>gadget_erp5_serviceworker.js</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -600,7 +616,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.19244.13768.6758</string> </value>
+                <value> <string>973.33482.4166.8669</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -618,7 +634,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1517843997.55</float>
+                        <float>1553593373.77</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
