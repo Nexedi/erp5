@@ -4,32 +4,33 @@
   "use strict";
 
   function renderField(field_id, field_definition, document) {
-    var result = {};
-    for (var key in field_definition.values) {
-      // order to get the final value (based on Field.py get_value)
-      // 1.tales, 2.override, 3.form-def-value, 4.context-default
-      var raw_value = field_definition.values[key],
-        tales_expr = field_definition.tales[key],
-        override = field_definition.overrides[key],
-        final_value;
-      final_value = undefined;
-      if (tales_expr !== undefined && tales_expr !== null && tales_expr !== '') {
-        try {
-          throw "error";
-          //final_value = eval(tales_expr);
-        } catch (e) {} // TALES expressions are usually python code, so for now ignore
-      }
-      if (final_value === undefined) {
-        if (override !== undefined && override !== null && override !== '') {
-          final_value = override;
-        } else if (raw_value !== undefined && raw_value !== null && raw_value !== '') {
-          final_value = raw_value;
-        } else if (document && document.hasOwnProperty(key)) {
-          final_value = document[key];
+    var key, raw_value, tales_expr, override, final_value, result = {};
+    for (key in field_definition.values) {
+      if (field_definition.values.hasOwnProperty(key)) {
+        // order to get the final value (based on Field.py get_value)
+        // 1.tales, 2.override, 3.form-def-value, 4.context-default
+        raw_value = field_definition.values[key];
+        tales_expr = field_definition.tales[key];
+        override = field_definition.overrides[key];
+        final_value = undefined;
+        if (tales_expr !== undefined && tales_expr !== null && tales_expr !== '') {
+          try {
+            throw "error";
+            //final_value = eval(tales_expr);
+          } catch (ignore) {} // TALES expressions are usually python code, so for now ignore
         }
-      }
-      if (final_value !== undefined && final_value !== null && final_value !== '') {
-        result[key] = final_value;
+        if (final_value === undefined) {
+          if (override !== undefined && override !== null && override !== '') {
+            final_value = override;
+          } else if (raw_value !== undefined && raw_value !== null && raw_value !== '') {
+            final_value = raw_value;
+          } else if (document && document.hasOwnProperty(key)) {
+            final_value = document[key];
+          }
+        }
+        if (final_value !== undefined && final_value !== null && final_value !== '') {
+          result[key] = final_value;
+        }
       }
     }
     result.type = field_definition.type;
@@ -59,8 +60,8 @@
 
     .declareMethod("getFormDefinition", function (portal_type) {
       var gadget = this,
-          parent = "portal_types/" + portal_type,
-          query = 'portal_type: "Action Information" AND reference: "jio_view" AND parent_relative_url: "' + parent + '"';
+        parent = "portal_types/" + portal_type,
+        query = 'portal_type: "Action Information" AND reference: "jio_view" AND parent_relative_url: "' + parent + '"';
       return gadget.jio_allDocs({query: query})
         .push(function (data) {
           if (data.data.rows.length === 0) {
@@ -77,14 +78,15 @@
     })
 
     .declareMethod("renderForm", function (form_definition, document) {
-      var raw_properties = form_definition.fields_raw_properties;
-      var form_json = {
-        erp5_document: {
-          "_embedded": {"_view": {}},
-          "_links": {}
-        },
-        form_definition: form_definition
-      }, i, j, fields, field_info, my_element, element_id;
+      var i, j, fields, field_info, my_element, element_id, rendered_field,
+        raw_properties = form_definition.fields_raw_properties,
+        form_json = {
+          erp5_document: {
+            "_embedded": {"_view": {}},
+            "_links": {}
+          },
+          form_definition: form_definition
+        };
       for (i = 0; i < form_definition.group_list.length; i += 1) {
         fields = form_definition.group_list[i][1];
         for (j = 0; j < fields.length; j += 1) {
@@ -98,7 +100,7 @@
           }
           if (raw_properties.hasOwnProperty(my_element)) {
             field_info = raw_properties[my_element];
-            var rendered_field = renderField(element_id, field_info, document);
+            rendered_field = renderField(element_id, field_info, document);
             form_json.erp5_document._embedded._view[my_element] = rendered_field;
           }
         }
