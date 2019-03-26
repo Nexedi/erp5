@@ -1295,6 +1295,8 @@
         clipboard_button = gadget.element.querySelector('button[name="Clipboard"]'),
         configure_button = gadget.element.querySelector('button[name="Configure"]'),
         cancel_select_button = gadget.element.querySelector('button[name="CancelSelect"]'),
+        copy_select_button = gadget.element.querySelector('button[name="CopySelect"]'),
+        paste_select_button = gadget.element.querySelector('button[name="PasteSelect"]'),
         url,
         options = {},
         all_hide_element_list,
@@ -1346,7 +1348,10 @@
       }
 
       if ((evt.target.type === 'button') &&
-          ((evt.target.name === 'SelectAction') || (evt.target.name === 'ClipboardAction'))) {
+          ((evt.target.name === 'SelectAction') ||
+           (evt.target.name === 'ClipboardAction') ||
+           (evt.target.name === 'PasteSelect') ||
+           (evt.target.name === 'CopySelect'))) {
         evt.preventDefault();
 
         checked_uid_list = [];
@@ -1361,6 +1366,27 @@
           } else {
             unchecked_uid_list.push(all_hide_element_list[i].getAttribute("data-uid"));
           }
+        }
+        if (evt.target.name === 'CopySelect') {
+          return navigator.clipboard.writeText(checked_uid_list.join('\n'));
+          // console.log('Copy', checked_uid_list, unchecked_uid_list);
+          // return;
+        }
+        if (evt.target.name === 'PasteSelect') {
+          return new RSVP.Queue()
+            .push(function () {
+              return navigator.clipboard.readText();
+            })
+            .push(function (clipboard_text) {
+            /*
+              return jIO.util.ajax({
+                url: ''
+              });
+              */
+              console.log('please paste', clipboard_text.split('\n'));
+            });
+          // console.log('Copy', checked_uid_list, unchecked_uid_list);
+          // return;
         }
         if (evt.target.name === 'SelectAction') {
           return gadget.triggerListboxSelectAction(evt.target.getAttribute('data-select-action'), checked_uid_list, unchecked_uid_list);
