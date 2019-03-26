@@ -10,7 +10,7 @@ attribute_filter_re = re.compile(r"""(data-i18n)=["']?((?:.(?!["']?\s+(?:\S+)=|[
 translate_word = []
 
 for web_page in portal.web_page_module.searchFolder(portal_type='Web Page',
-                                                    reference=context.Base_getListFileFromAppcache(only_html=1)):
+                                                    reference=context.Base_getTranslationSourceFileList(only_html=1)):
   data = attribute_filter_re.findall(web_page.getTextContent())
   for attribute in data:
     a = re.sub(r'[{|}]', "", attribute[1])
@@ -44,6 +44,9 @@ content += ";\n}(window));"
 #return json.dumps(tmp, indent=3, ensure_ascii=False, separators=(',', ': '))
 translation_data_file=context.web_page_module.searchFolder(portal_type='Web Script',reference=translation_data_file)[0]
 translation_data_file.edit(text_content = content)
+
+# Edit web section modification date
+context.edit()
 
 if batch_mode:
   return 'done'

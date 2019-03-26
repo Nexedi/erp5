@@ -10,15 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>first_item</string>
-                <string>items</string>
                 <string>title</string>
+                <string>width</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_translation_data_file</string> </value>
+            <value> <string>my_configuration_precache_manifest_url_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -55,21 +54,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -81,41 +66,22 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_field</string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>my_text_area_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>Service Worker Precache Manifest</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Translation Data File</string> </value>
+                    <key> <string>width</string> </key>
+                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [ (x,x) for x in here.Base_getTranslationSourceFileList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
