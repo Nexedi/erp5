@@ -278,17 +278,14 @@
         result = document.createElement('code');
     div.style.border = '1px solid #C3CCD0';
     div.style.margin = '40px 10px';
-
-    result.classList.add('shell');
-    result.classList.add('hljs');
-    hljs.highlightBlock(result);
+    div.style.paddingLeft = '10px';
 
     if (result_text !== 'undefined') {
       result.innerHTML = result_text;
       pre.appendChild(result);
       div.appendChild(pre);
+      document.body.appendChild(div);
     }
-    document.body.appendChild(div);
   }
 
   function executeCell(cell) {
