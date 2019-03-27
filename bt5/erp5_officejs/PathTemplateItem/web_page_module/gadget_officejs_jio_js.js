@@ -127,8 +127,7 @@
           signature_sub_storage: {
             type: "query",
             sub_storage: {
-              type: "indexeddb",
-              database: ""
+              type: "memory"
             }
           },
           local_sub_storage: {},
@@ -156,8 +155,6 @@
       return this.getSetting("jio_storage_name")
         .push(function (jio_storage_name) {
           if (jio_storage_name === undefined) { return; }
-          // the hash layer of the appcachestorage is asociated to local data storage selected
-          jio_appchache_options.signature_sub_storage.sub_storage.database = "appcachestorage-hash-" + jio_storage_name;
           appcache_storage = jIO.createJIO(jio_appchache_options);
           // verify if appcache-local sync needs to be done
           // TODO: find a better flag for this?
