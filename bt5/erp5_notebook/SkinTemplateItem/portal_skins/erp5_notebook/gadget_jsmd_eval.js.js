@@ -107,7 +107,6 @@
       pre,
       br,
       code;
-    renderCodeblock(line_list.join('\n'), 'undefined', 'js');
 
     try {
       return eval.call(window, text);
@@ -263,52 +262,35 @@
       } catch (e) {
         result_text = e.message;
       }
-      console.log("Result test:");
-      console.log(result_text);
-      console.log("=================");
+
       if (typeof(result_text) === 'undefined') {
         result_text = 'undefined';
       }
 
-      renderCodeblock(code_text, result_text, 'python');
+      renderCodeblock(result_text, 'python');
       resolve();
     });
   }
 
-  function renderCodeblock(code_text, result_text, language) {
+  function renderCodeblock(result_text, language) {
     var div = document.createElement('div'),
-        pre0 = document.createElement('pre'),
-        p = document.createElement('p'),
-        pre1 = document.createElement('pre'),
-        pre2 = document.createElement('pre'),
-        code = document.createElement('code'),
+        pre = document.createElement('pre'),
         result = document.createElement('code');
     div.style.border = '1px solid #C3CCD0';
     div.style.margin = '40px 10px';
-    code.style.border = '1px solid #C3CCD0';
-
-    code.classList.add(language);
-    code.classList.add('hljs');
 
     result.classList.add('shell');
     result.classList.add('hljs');
-    code.innerHTML = code_text;
-    hljs.highlightBlock(code);
     hljs.highlightBlock(result);
 
-    p.innerHTML = language;
-    p.style.marginLeft = '10px';
-    pre0.appendChild(p);
-    pre1.appendChild(code);
-    div.appendChild(pre0);
-    div.appendChild(pre1);
     if (result_text !== 'undefined') {
       result.innerHTML = result_text;
-      pre2.appendChild(result);
-      div.appendChild(pre2);
+      pre.appendChild(result);
+      div.appendChild(pre);
     }
     document.body.appendChild(div);
   }
+
   function executeCell(cell) {
     if (cell._type === 'raw') {
       // Do nothing...
