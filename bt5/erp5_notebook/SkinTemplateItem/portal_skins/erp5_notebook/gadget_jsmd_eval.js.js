@@ -1,6 +1,6 @@
-/*global window, console, RSVP, document, URL, eval, XMLHttpRequest, marked */
+/*global window, console, RSVP, document, URL, eval, XMLHttpRequest, marked, pyodide hljs */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window) {
+(function (window, languagePluginLoader) {
   "use strict";
 
   var IODide = function createIODide() {
@@ -107,6 +107,8 @@
       pre,
       br,
       code;
+    renderCodeblock(line_list.join('\n'), 'undefined', 'js');
+
     try {
       return eval.call(window, text);
     } catch (e) {
@@ -253,6 +255,60 @@
     });
   }
 
+  function executePyCell(line_list) {
+    return new RSVP.Promise(function (resolve, reject) {
+      var result_text, code_text = line_list.join('\n');
+      try {
+        result_text = pyodide.runPython(line_list.join('\n'));
+      } catch (e) {
+        result_text = e.message;
+      }
+      console.log("Result test:");
+      console.log(result_text);
+      console.log("=================");
+      if (typeof(result_text) === 'undefined') {
+        result_text = 'undefined';
+      }
+
+      renderCodeblock(code_text, result_text, 'python');
+      resolve();
+    });
+  }
+
+  function renderCodeblock(code_text, result_text, language) {
+    var div = document.createElement('div'),
+        pre0 = document.createElement('pre'),
+        p = document.createElement('p'),
+        pre1 = document.createElement('pre'),
+        pre2 = document.createElement('pre'),
+        code = document.createElement('code'),
+        result = document.createElement('code');
+    div.style.border = '1px solid #C3CCD0';
+    div.style.margin = '40px 10px';
+    code.style.border = '1px solid #C3CCD0';
+
+    code.classList.add(language);
+    code.classList.add('hljs');
+
+    result.classList.add('shell');
+    result.classList.add('hljs');
+    code.innerHTML = code_text;
+    hljs.highlightBlock(code);
+    hljs.highlightBlock(result);
+
+    p.innerHTML = language;
+    p.style.marginLeft = '10px';
+    pre0.appendChild(p);
+    pre1.appendChild(code);
+    div.appendChild(pre0);
+    div.appendChild(pre1);
+    if (result_text !== 'undefined') {
+      result.innerHTML = result_text;
+      pre2.appendChild(result);
+      div.appendChild(pre2);
+    }
+    document.body.appendChild(div);
+  }
   function executeCell(cell) {
     if (cell._type === 'raw') {
       // Do nothing...
@@ -273,6 +329,9 @@
     if (cell._type === 'css') {
       return executeCssCell(cell._line_list);
     }
+    if (cell._type === 'py') {
+      return executePyCell(cell._line_list);
+    }
     return executeUnknownCellType(cell);
   }
 
@@ -291,6 +350,9 @@
       i,
       queue = new RSVP.Queue();
 
+    queue.push(function () {
+      return languagePluginLoader;
+    });
     for (i = 0; i < len; i += 1) {
       queue.push(deferCellExecution(cell_list[i]));
     }
@@ -299,6 +361,11 @@
         console.info('JSMD executed.');
       }, function (error) {
         console.error(error);
+        // do not print the error page with a non-styled pre tag
+        // the Python error message will be displayed along with Python source code in above
+        if (error.message.startsWith('Traceback')) {
+          return;
+        }
         var pre = document.createElement('pre');
         pre.textContent = error;
         document.body.appendChild(pre);
@@ -306,4 +373,4 @@
 
   }, false);
 
-}(window));
+}(window, languagePluginLoader));
