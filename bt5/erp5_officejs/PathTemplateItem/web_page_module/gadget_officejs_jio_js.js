@@ -191,9 +191,10 @@
                             parser.href = id;
                             urlParams = new URLSearchParams(parser.search);
                             id = urlParams.get("relative_url");
-                            if (id === null) { id = configuration_ids_dict[String(i)]; }
-                            content = processHateoasDict(content_list[i]);
-                            promise_list.push(appcache_storage.put(id, content));
+                            if (id !== null) { // ignore non configuration elements
+                              content = processHateoasDict(content_list[i]);
+                              promise_list.push(appcache_storage.put(id, content));
+                            }
                           }
                           return RSVP.all(promise_list);
                         })
