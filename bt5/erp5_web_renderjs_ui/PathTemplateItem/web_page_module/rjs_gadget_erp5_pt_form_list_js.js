@@ -66,12 +66,23 @@
     var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
       action_name = argument_list[0],
       checked_uid_list = argument_list[1],
+      unchecked_uid_list = argument_list[2],
       gadget = this,
       extended_search = gadget.state.extended_search,
       view,
       i;
 
     if (action_name === 'copy_document_list') {
+      if (checked_uid_list.length === 0) {
+        // If nothing is checked, use all unchecked values (same as xhtml style)
+        checked_uid_list = unchecked_uid_list;
+      }
+      if (checked_uid_list.length === 0) {
+        // XXX Queries do not correctly handle empty uid list
+        return gadget.redirect({
+          command: 'reload'
+        });
+      }
       console.log('Copying', checked_uid_list);
       return gadget.setSetting('clipboard', checked_uid_list)
         .push(function () {
