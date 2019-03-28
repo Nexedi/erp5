@@ -344,6 +344,7 @@
     // initialize the gadget content
     //////////////////////////////////////////////
     .declareMethod('render', function render(options) {
+      console.log('listbox render', options);
       var gadget = this,
         field_json = options.field_json,
         sort_column_list = [],
@@ -724,24 +725,6 @@
                 button_element.textContent = select_option_list[k].title;
                 div_element.appendChild(button_element);
               }
-
-              // Add copy button
-              button_element = document.createElement('button');
-              button_element.setAttribute('data-rel', 'hide');
-              button_element.setAttribute('name', 'CopySelect');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-copy ui-btn-icon-left ' + gadget.state.hide_class);
-              button_element.textContent = 'XXX COPY';//translation_list[4];
-              div_element.appendChild(button_element);
-
-              // Add paste button
-              button_element = document.createElement('button');
-              button_element.setAttribute('data-rel', 'hide');
-              button_element.setAttribute('name', 'PasteSelect');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-paste ui-btn-icon-left ' + gadget.state.hide_class);
-              button_element.textContent = 'XXX PASTE';//translation_list[4];
-              div_element.appendChild(button_element);
 
               // Add cancel button
               // <button data-rel="cancel" data-i18n="Cancel" name="ExcludeRows" type="button" class="ui-icon-times ui-btn-icon-left {{hide_class}}"></button>
@@ -1295,8 +1278,6 @@
         clipboard_button = gadget.element.querySelector('button[name="Clipboard"]'),
         configure_button = gadget.element.querySelector('button[name="Configure"]'),
         cancel_select_button = gadget.element.querySelector('button[name="CancelSelect"]'),
-        copy_select_button = gadget.element.querySelector('button[name="CopySelect"]'),
-        paste_select_button = gadget.element.querySelector('button[name="PasteSelect"]'),
         url,
         options = {},
         all_hide_element_list,
@@ -1349,9 +1330,7 @@
 
       if ((evt.target.type === 'button') &&
           ((evt.target.name === 'SelectAction') ||
-           (evt.target.name === 'ClipboardAction') ||
-           (evt.target.name === 'PasteSelect') ||
-           (evt.target.name === 'CopySelect'))) {
+           (evt.target.name === 'ClipboardAction'))) {
         evt.preventDefault();
 
         checked_uid_list = [];
@@ -1366,27 +1345,6 @@
           } else {
             unchecked_uid_list.push(all_hide_element_list[i].getAttribute("data-uid"));
           }
-        }
-        if (evt.target.name === 'CopySelect') {
-          return navigator.clipboard.writeText(checked_uid_list.join('\n'));
-          // console.log('Copy', checked_uid_list, unchecked_uid_list);
-          // return;
-        }
-        if (evt.target.name === 'PasteSelect') {
-          return new RSVP.Queue()
-            .push(function () {
-              return navigator.clipboard.readText();
-            })
-            .push(function (clipboard_text) {
-            /*
-              return jIO.util.ajax({
-                url: ''
-              });
-              */
-              console.log('please paste', clipboard_text.split('\n'));
-            });
-          // console.log('Copy', checked_uid_list, unchecked_uid_list);
-          // return;
         }
         if (evt.target.name === 'SelectAction') {
           return gadget.triggerListboxSelectAction(evt.target.getAttribute('data-select-action'), checked_uid_list, unchecked_uid_list);
