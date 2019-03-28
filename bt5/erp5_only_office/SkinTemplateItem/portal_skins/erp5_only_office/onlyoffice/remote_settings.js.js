@@ -24,7 +24,7 @@
 
   function xmla_request_retry(func, settings) {
     var queue,
-      urls = settings.urls,
+      urls = settings.urls || [""],
       i;
 
     function make_request(url) {
@@ -47,7 +47,7 @@
     }
 
     queue = make_request(urls[0])();
-    for (i = 1; i < settings.urls.length; i += 1) {
+    for (i = 1; i < urls.length; i += 1) {
       queue.push(undefined, make_request(urls[i]));
     }
     return queue;
