@@ -1126,7 +1126,7 @@
       <td colspan="3"><b tal:content="python: 'Check the listbox header %(index)i' % header_configuration"></b></td>
     </tr>
     <tr>
-      <td>verifyText</td>
+      <td>assertText</td>
       <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//thead/tr/th[%i]' % (header_configuration['index'] + 1)"></td>
       <td tal:content="python: header_configuration['text']"></td>
     </tr>
@@ -1452,7 +1452,7 @@
       <td colspan="3"><b tal:content="python: 'Check the listbox cell %(line)i %(index)i' % cell_configuration"></b></td>
     </tr>
     <tr>
-      <td>verifyText</td>
+      <td>assertText</td>
       <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//tbody/tr[%i]/td[%i]' % (cell_configuration['line'] + 1, cell_configuration['index'] + 1)"></td>
       <td tal:content="python: cell_configuration['text']"></td>
     </tr>
@@ -1466,7 +1466,7 @@
       <td colspan="3"><b tal:content="python: 'Check the listbox line selection %(line)i' % line_configuration"></b></td>
     </tr>
     <tr>
-      <td>verifyValue</td>
+      <td>assertValue</td>
       <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//tbody/tr[%i]/td/input[@type=\'checkbox\'][@class=\'hide_element\']' % (line_configuration['line'] + 1)"></td>
       <td tal:content="python: line_configuration['value']"></td>
     </tr>
@@ -1577,6 +1577,55 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="copy_selected_line">
+    <tr>
+      <td colspan="3"><b>Copy selected lines</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='ClipboardAction' and @data-clipboard-action='copy_document_list']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='ClipboardAction' and @data-clipboard-action='copy_document_list']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='ClipboardAction' and @data-clipboard-action='copy_document_list']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+
+  <tal:block metal:define-macro="paste_selected_line">
+    <tr>
+      <td colspan="3"><b>Paste selected lines</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='ClipboardAction' and @data-clipboard-action='paste_document_list']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='ClipboardAction' and @data-clipboard-action='paste_document_list']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='ClipboardAction' and @data-clipboard-action='paste_document_list']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
   <tal:block metal:define-macro="change_state_selected_line">
     <tr>
       <td colspan="3"><b>Change state selected lines</b></td>
@@ -1623,6 +1672,25 @@
 
     <tr>
       <td>assertElementNotPresent</td>
+      <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//tbody/tr/td/input[@type=\'checkbox\'][@class=\'hide_element\']'"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="assert_listbox_selectable">
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Check the listbox is in select mode'"></b></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//button[@name='CancelSelect']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
       <td tal:content="python: '//div[contains(@data-gadget-url, \'gadget_erp5_field_listbox.html\')]//tbody/tr/td/input[@type=\'checkbox\'][@class=\'hide_element\']'"></td>
       <td></td>
     </tr>

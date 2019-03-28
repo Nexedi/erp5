@@ -92,7 +92,7 @@
     <td>//textarea[@name="field_workflow_form_your_comment"]</td>
     <td>Crème brulée</td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
-<tal:block tal:define="pagination_configuration python: {'header': '(4)', 'footer': '4 Records'}">
+<tal:block tal:define="pagination_configuration python: {'header': '(3)', 'footer': '3 Records'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
@@ -168,7 +168,7 @@
 <tr><td>waitForElementPresent</td>
     <td>//textarea[@name="field_workflow_form_your_comment"]</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
-<tal:block tal:define="pagination_configuration python: {'header': '(4)', 'footer': '4 Records'}">
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 
@@ -189,7 +189,7 @@
     <td>//textarea[@name="field_workflow_form_your_comment"]</td>
     <td>Foobar comment</td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
-<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+<tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
 
