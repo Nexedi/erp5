@@ -1,6 +1,6 @@
-/*global window, console, RSVP, document, URL, eval, XMLHttpRequest, marked, pyodide hljs */
+/*global window, console, RSVP, document, URL, eval, XMLHttpRequest, marked, pyodide */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, languagePluginLoader) {
+(function (window, initPyodide) {
   "use strict";
 
   var IODide = function createIODide() {
@@ -330,7 +330,7 @@
       queue = new RSVP.Queue();
 
     queue.push(function () {
-      return languagePluginLoader;
+      return initPyodide;
     });
     for (i = 0; i < len; i += 1) {
       queue.push(deferCellExecution(cell_list[i]));
@@ -352,4 +352,4 @@
 
   }, false);
 
-}(window, languagePluginLoader));
+}(window, initPyodide));
