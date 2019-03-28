@@ -4,3 +4,4 @@ portal_actions | create_a_document
 portal_actions | delete_document
 portal_actions | delete_document_list
 portal_actions | mass_workflow_jio
+portal_actions | paste_document_list
