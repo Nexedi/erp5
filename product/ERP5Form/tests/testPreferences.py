@@ -578,6 +578,25 @@ class TestPreferences(PropertySheetTestCase):
     self.assertTrue(portal_preferences.getDummy())
     self.assertTrue(portal_preferences.isDummy())
 
+  def test_multivalued_accessor(self):
+    self._addProperty('Preference',
+        'test_multivaluated_accessor Preference',
+        portal_type='Standard Property',
+        property_id='dummy_multi',
+        preference=True,
+        elementary_type='string',
+        multivalued=True)
+    portal_preferences = self.portal.portal_preferences
+    self.assertEqual(None, portal_preferences.getDummyMulti())
+
+    preference = portal_preferences.newContent(portal_type='Preference')
+    preference.setDummyMultiList(['one', 'two'])
+    preference.enable()
+    self.tic()
+
+    self.assertEqual('one', portal_preferences.getDummyMulti())
+    self.assertEqual(['one', 'two'], portal_preferences.getDummyMultiList())
+
   def test_property_sheet_security_on_permission(self):
     """ Added a test to make sure permissions are used into portal
         preference level. """
