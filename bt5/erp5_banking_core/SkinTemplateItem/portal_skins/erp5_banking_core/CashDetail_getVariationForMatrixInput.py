@@ -22,13 +22,13 @@ else :
    default_column_base = 'variation'
 
 allow_add_line = False
-if len(default_emission_letter_list) > 1 and default_column_base <> 'emission_letter':
+if len(default_emission_letter_list) > 1 and default_column_base != 'emission_letter':
    return_list.append(['emission_letter','Emission Letter'])
    allow_add_line = True
-if len(default_cash_status_list) > 1 and default_column_base <> 'cash_status':
+if len(default_cash_status_list) > 1 and default_column_base != 'cash_status':
    return_list.append(['cash_status','Cash Status'])
    allow_add_line = True
-if len(default_variation_list) > 1 and default_column_base <> 'variation':
+if len(default_variation_list) > 1 and default_column_base != 'variation':
    return_list.append(['variation','Variation'])
    allow_add_line = True
 

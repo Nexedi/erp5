@@ -27,6 +27,6 @@ resource = ob.CashDelivery_checkCounterInventory(source=vault, portal_type='Outg
 if resource == 2:
   msg = Message(domain="ui", message="No Returned banknote defined.")
   raise ValidationFailed(msg,)
-elif resource <> 0 :
+elif resource != 0 :
   msg = Message(domain="ui", message="Insufficient Balance.")
   raise ValidationFailed(msg,)
