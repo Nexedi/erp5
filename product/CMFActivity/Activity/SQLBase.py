@@ -192,9 +192,8 @@ CREATE TABLE %s (
           db.query("SET @uid := %s" % getrandbits(UID_SAFE_BITSIZE))
         try:
           db.query(self._insert_template % (self.sql_table, values))
-        except MySQLdb.IntegrityError as xxx_todo_changeme:
-          (code, _) = xxx_todo_changeme.args
-          if code != DUP_ENTRY:
+        except MySQLdb.IntegrityError as e:
+          if e.args[0] != DUP_ENTRY:
             raise
           reset_uid = True
         else:

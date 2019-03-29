@@ -147,15 +147,15 @@ class Checker(URLOpener):
       while thread.isAlive():
         sleep(0.5)
       print "Connection to %s went fine" % url
-    except IOError as xxx_todo_changeme:
-      (errno, strerror) = xxx_todo_changeme.args
+    except IOError as e:
+      (errno, strerror) = e.args
       print "Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror)
 
   def SearchUrl(self, url=None):
     try:
       conn = self.open_http(url)
-    except IOError as xxx_todo_changeme1:
-      (errno, strerror) = xxx_todo_changeme1.args
+    except IOError as e:
+      (errno, strerror) = e.args
       print "Can't connect to %s because of I/O error(%s): %s" % (url, errno, strerror)
 
 
