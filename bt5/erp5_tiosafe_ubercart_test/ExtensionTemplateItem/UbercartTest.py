@@ -184,7 +184,7 @@ class UbercartTestConnector:
 
   def getPerson(self, *args, **kw):
     if not kw.has_key('person_id'):
-      raise ValueError, "No parameter person_id passed to PersonGet, got %s / %s" %(args, kw)
+      raise ValueError("No parameter person_id passed to PersonGet, got %s / %s" %(args, kw))
     person_id = kw["person_id"]
     # retrieve the person inside the test module
     person_list = self.context.getPortalObject().ubercart_test_module.searchFolder(id=person_id,
@@ -212,7 +212,7 @@ class UbercartTestConnector:
 
   def getDeliveredPerson(self, *args, **kw):
     if not kw.has_key('person_id'):
-      raise ValueError, "No parameter person_id passed to PersonGet, got %s / %s" %(args, kw)
+      raise ValueError("No parameter person_id passed to PersonGet, got %s / %s" %(args, kw))
     person_id = kw["person_id"]
     # retrieve the person inside the test module
     person_list = self.context.getPortalObject().ubercart_test_module.searchFolder(id=person_id,
@@ -242,7 +242,7 @@ class UbercartTestConnector:
     if kw.has_key('id') and not kw.has_key('person_id'):
        kw["person_id"] = kw["id"]
     if not kw.has_key('person_id'):
-      raise ValueError, "No parameter person_id passed to PersonGet, got %s / %s" %(args, kw)
+      raise ValueError("No parameter person_id passed to PersonGet, got %s / %s" %(args, kw))
     person_id = kw["person_id"]
     # retrieve the person inside the test module
     person_list = self.context.getPortalObject().ubercart_test_module.searchFolder(id=person_id,
@@ -273,7 +273,7 @@ class UbercartTestConnector:
     if kw.has_key('id') and not kw.has_key('person_id'):
        kw["person_id"] = kw["id"]
     if not kw.has_key('person_id'):
-      raise ValueError, "No parameter person_id passed to PersonGet, got %s / %s" %(args, kw)
+      raise ValueError("No parameter person_id passed to PersonGet, got %s / %s" %(args, kw))
     person_id = kw["person_id"]
     # retrieve the person inside the test module
     person_list = self.context.getPortalObject().ubercart_test_module.searchFolder(id=person_id,
@@ -355,7 +355,7 @@ class UbercartTestConnector:
 
   def getOrganisation(self, *args, **kw):
     if not kw.has_key('organisation_id'):
-      raise ValueError, "No parameter organisation_id passed to getOrganisation, got %s / %s" %(args, kw)
+      raise ValueError("No parameter organisation_id passed to getOrganisation, got %s / %s" %(args, kw))
     organisation_id = kw["organisation_id"]
     # retrieve the organisation inside the test module
     org_list = self.context.getPortalObject().ubercart_test_module.searchFolder(id=organisation_id,
@@ -469,7 +469,7 @@ class UbercartTestConnector:
 
   def getDeliveryOrganisation(self, *args, **kw):
     if not kw.has_key('organisation_id'):
-      raise ValueError, "No parameter organisation_id passed to getOrganisation, got %s / %s" %(args, kw)
+      raise ValueError("No parameter organisation_id passed to getOrganisation, got %s / %s" %(args, kw))
     organisation_id = kw["organisation_id"]
     # retrieve the organisation inside the test module
     org_list = self.context.getPortalObject().ubercart_test_module.searchFolder(id=organisation_id,
@@ -540,7 +540,7 @@ class UbercartTestConnector:
 
   def updatePerson(self, *args, **kw):
     if not kw.has_key('person_id'):
-      raise ValueError, "No parameter person_id passed to PersonGet, got %s / %s" %(args, kw)
+      raise ValueError("No parameter person_id passed to PersonGet, got %s / %s" %(args, kw))
     person_id = kw["person_id"]
     # retrieve the person inside the test module
     person_list = self.context.getPortalObject().ubercart_test_module.searchFolder(id=person_id,
@@ -572,7 +572,7 @@ class UbercartTestConnector:
 
   def getProductCategoryList(self, *args, **kw):
     if not kw.has_key('product_id'):
-      raise ValueError, "No product_id passed to getProductCategoryList, got %s / %s" %(args, kw)
+      raise ValueError("No product_id passed to getProductCategoryList, got %s / %s" %(args, kw))
     resource_id = kw['product_id']
     # retrieve the product inside the test module
     resource_list = self.context.getPortalObject().ubercart_test_module.searchFolder(id=resource_id,
@@ -607,15 +607,15 @@ class UbercartTestConnector:
       else:
         kw["product_id"] = kw['id_product']
     if not kw.has_key('product_id'):
-      raise ValueError, "No product_id passed to createProductCategory, got %s / %s" %(args, kw)
+      raise ValueError("No product_id passed to createProductCategory, got %s / %s" %(args, kw))
     resource_id = kw['product_id']
     if not kw.has_key('base_category'):
-      raise ValueError, "No base_category passed to createProductCategory, got %s / %s" %(args, kw)
+      raise ValueError("No base_category passed to createProductCategory, got %s / %s" %(args, kw))
     base_category = kw['base_category']
     if base_category.startswith("'") or base_category.startswith('"'):
        base_category = base_category[1:len(base_category)-1]
     if not kw.has_key('variation'):
-      raise ValueError, "No variation passed to createProductCategory, got %s / %s" %(args, kw)
+      raise ValueError("No variation passed to createProductCategory, got %s / %s" %(args, kw))
     variation = kw['variation']
     if variation.startswith("'") or variation.startswith('"'):
        variation= variation[1:len(variation)-1]
@@ -643,15 +643,15 @@ class UbercartTestConnector:
       else:
         kw["product_id"] = kw['id_product']    
     if not kw.has_key('product_id'):
-      raise ValueError, "No product_id passed to deleteProductCategory, got %s / %s" %(args, kw)
+      raise ValueError("No product_id passed to deleteProductCategory, got %s / %s" %(args, kw))
     resource_id = kw['product_id']
     if not kw.has_key('base_category'):
-      raise ValueError, "No base_category passed to deleteProductCategory, got %s / %s" %(args, kw)
+      raise ValueError("No base_category passed to deleteProductCategory, got %s / %s" %(args, kw))
     base_category = kw['base_category']
     if base_category.startswith("'") or base_category.startswith('"'):
        base_category = base_category[1:len(base_category)-1]
     if not kw.has_key('variation'):
-      raise ValueError, "No variation passed to deleteProductCategory, got %s / %s" %(args, kw)
+      raise ValueError("No variation passed to deleteProductCategory, got %s / %s" %(args, kw))
     variation = kw['variation']
     if variation.startswith("'") or variation.startswith('"'):
        variation= variation[1:len(variation)-1]
@@ -680,15 +680,15 @@ class UbercartTestConnector:
 
   def deleteProductCategory(self, *args, **kw):
     if not kw.has_key('product_id'):
-      raise ValueError, "No product_id passed to deleteProductCategory, got %s / %s" %(args, kw)
+      raise ValueError("No product_id passed to deleteProductCategory, got %s / %s" %(args, kw))
     resource_id = kw['product_id']
     if not kw.has_key('base_category'):
-      raise ValueError, "No base_category passed to deleteProductCategory, got %s / %s" %(args, kw)
+      raise ValueError("No base_category passed to deleteProductCategory, got %s / %s" %(args, kw))
     base_category = kw['base_category']
     if base_category.startswith("'") or base_category.startswith('"'):
        base_category = base_category[1:len(base_category)-1]
     if not kw.has_key('variation'):
-      raise ValueError, "No variation passed to deleteProductCategory, got %s / %s" %(args, kw)
+      raise ValueError("No variation passed to deleteProductCategory, got %s / %s" %(args, kw))
     variation = kw['variation']
     if variation.startswith("'") or variation.startswith('"'):
        variation= variation[1:len(variation)-1]
@@ -742,7 +742,7 @@ class UbercartTestConnector:
 
   def getProduct(self, *args, **kw):
     if not kw.has_key('product_id'):
-      raise ValueError, "No product_id passed to ProductGet, got %s / %s" %(args, kw)
+      raise ValueError("No product_id passed to ProductGet, got %s / %s" %(args, kw))
     resource_id = kw['product_id']
     # retrieve the product inside the test module
     resource_list = self.context.getPortalObject().ubercart_test_module.searchFolder(id=resource_id,
@@ -789,7 +789,7 @@ class UbercartTestConnector:
 
   def createProduct(self, *args, **kw):
     if not kw.has_key('reference'):
-      raise ValueError, "No reference passed to createProduct, got %s / %s" %(args, kw)
+      raise ValueError("No reference passed to createProduct, got %s / %s" %(args, kw))
     keywords = {} 
     keywords["reference"] = kw['reference'].strip('"').strip("'")
     if kw.has_key('title'):
@@ -808,7 +808,7 @@ class UbercartTestConnector:
 
   def deleteProduct(self, *args, **kw):
     if not kw.has_key('product_id'):
-      raise ValueError, "No product_id passed to deleteProduct, got %s / %s" %(args, kw)
+      raise ValueError("No product_id passed to deleteProduct, got %s / %s" %(args, kw))
     resource_id = kw['product_id']
     # retrieve the product inside the test module
     resource_list = self.context.getPortalObject().ubercart_test_module.searchFolder(id=resource_id,
@@ -825,9 +825,9 @@ class UbercartTestConnector:
 
   def updateProduct(self, *args, **kw):
     if not kw.has_key('product_id') :
-      raise ValueError, "No product_id passed to updateProductName, got %s / %s" %(args, kw)
+      raise ValueError("No product_id passed to updateProductName, got %s / %s" %(args, kw))
     if not kw.has_key('title') :
-      raise ValueError, "No title passed to updateProductName, got %s / %s" %(args, kw)
+      raise ValueError("No title passed to updateProductName, got %s / %s" %(args, kw))
     title = kw['title']
     resource_id = kw['product_id']
     # retrieve the product inside the test module
@@ -851,7 +851,7 @@ class UbercartTestConnector:
   #
   def getSaleOrder(self, *args, **kw):
     if not kw.has_key('sale_order_id'):
-      raise ValueError, "No sale_order_id passed to getSaleOrder, got %s / %s" %(args, kw)
+      raise ValueError("No sale_order_id passed to getSaleOrder, got %s / %s" %(args, kw))
     order_id = kw['sale_order_id']
 
     sale_order_list = self.context.getPortalObject().ubercart_test_module.searchFolder(id=order_id,
@@ -916,7 +916,7 @@ class UbercartTestConnector:
 
   def getSaleOrderLineList(self, *args, **kw):
     if not kw.has_key('sale_order_id'):
-      raise ValueError, "No sale_order_id passed to OrderGetDetails, got %s / %s" %(args, kw)
+      raise ValueError("No sale_order_id passed to OrderGetDetails, got %s / %s" %(args, kw))
     sale_order_id = kw['sale_order_id']
 
     sale_order_list = self.context.getPortalObject().ubercart_test_module.searchFolder(id=sale_order_id,

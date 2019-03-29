@@ -176,9 +176,9 @@ class UbercartNodeConduit(ERP5NodeConduit):
     try:
       previous_value = previous_xml[0].text
     except IndexError:
-      raise IndexError, 'Too little or too many value, only one is required for %s' % (
+      raise IndexError('Too little or too many value, only one is required for %s' % (
           previous_xml
-      )
+      ))
 
     if previous_value is None:
       previous_value = ""

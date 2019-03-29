@@ -40,9 +40,9 @@ def CMFBTreeFolder_allowedContentTypes(self):
       for portal_type in myType.getTypeAllowedContentTypeList():
         contentType = portal_types.getTypeInfo(portal_type)
         if contentType is None:
-          raise AttributeError, "Portal type '%s' does not exist " \
+          raise AttributeError("Portal type '%s' does not exist " \
                                 "and should not be allowed in '%s'" % \
-                                (portal_type, self.getPortalType())
+                                (portal_type, self.getPortalType()))
         result.append(contentType)
     else:
       for contentType in portal_types.listTypeInfo(self):

@@ -43,7 +43,7 @@ def convertTravelerCheckReferenceToInt(traveler_check_reference):
 
 def convertCheckReferenceToInt(check_reference):
   if len(check_reference) != 7:
-    raise ValueError, 'Check reference must be 7-char long.'
+    raise ValueError('Check reference must be 7-char long.')
   return int(check_reference)
 
 # listbox is not passed at the first time when this script is called.

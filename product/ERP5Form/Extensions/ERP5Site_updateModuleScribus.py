@@ -97,11 +97,11 @@ def ERP5Site_updateModuleScribus(self,
 
   # We should have only one result
   if len(good_result) > 1:
-    raise ValueError, "Error: There is more than one result for the "\
-        "view '%s_view' : %s" % (object_portal_type, good_result)
+    raise ValueError("Error: There is more than one result for the "\
+        "view '%s_view' : %s" % (object_portal_type, good_result))
   elif len(good_result) < 1:
-    raise ValueError, "Error: There is no result for the view "\
-                            "'%s_view'" % object_portal_type
+    raise ValueError("Error: There is no result for the view "\
+                            "'%s_view'" % object_portal_type)
 
   # use the result to get the object_title and portal_skin folder
   object_result = good_result.items()[0][1]
@@ -119,8 +119,8 @@ def ERP5Site_updateModuleScribus(self,
   # get the skin_folder object
   if not portal_skins_folder in portal.portal_skins.objectIds():
     # the skin folder should exists
-    raise ValueError, "Error: portal_skins %s not found" % \
-        portal_skins_folder
+    raise ValueError("Error: portal_skins %s not found" % \
+        portal_skins_folder)
   skin_folder = ManageModule.setSkinFolder(portal,
                                            portal_skins_folder)
 
@@ -141,7 +141,7 @@ def ERP5Site_updateModuleScribus(self,
   # move the old objects in portal_trash
   trash = getToolByName(self.getPortalObject(), 'portal_trash', None)
   if trash is None:
-    raise AttributeError, 'Trash Tool is not installed'
+    raise AttributeError('Trash Tool is not installed')
 
   trashbin = trash.newTrashBin(bt_title='scribus_skin_folder_%s' % \
       skin_folder.getId())

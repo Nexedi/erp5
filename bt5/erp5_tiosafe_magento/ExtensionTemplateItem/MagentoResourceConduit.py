@@ -168,9 +168,9 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
     try:
       previous_value = previous_xml[0].text
     except IndexError:
-      raise ValueError, 'Too little or too many value, only one is required for %s' % (
+      raise ValueError('Too little or too many value, only one is required for %s' % (
           previous_xml
-      )
+      ))
 
     # check if it'a work on product or on categories
     if tag.split('[')[0] == 'category':
@@ -272,9 +272,9 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
             previous_xml[0].text,
         )
       except IndexError:
-        raise IndexError, 'Too little or too many value, only one is required for %s' % (
+        raise IndexError('Too little or too many value, only one is required for %s' % (
             previous_xml
-        )
+        ))
 
       # retrieve the current value to check if exists a conflict
       current_value = etree.XML(document.asXML()).xpath(tag)[0].text

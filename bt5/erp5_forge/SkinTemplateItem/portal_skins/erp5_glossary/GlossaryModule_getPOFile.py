@@ -52,7 +52,7 @@ for i in catalog(portal_type='Glossary Term',
                                         business_field_uid=term.getBusinessFieldUid())
   if english_term is None:
     continue
-    raise ValueError, 'Corresponding English term to "%s" does not exist in glossary.' % term.Title()
+    raise ValueError('Corresponding English term to "%s" does not exist in glossary.' % term.Title())
 
   translated_title = term.getTitle()
   translated_description = term.getDescription()
@@ -63,7 +63,7 @@ for i in catalog(portal_type='Glossary Term',
 
   if translated_title:
     if not english_title:
-      raise ValueError, 'Title of corresponding English term(%s) to "%s" is empty.' % (english_relative_url, translated_title)
+      raise ValueError('Title of corresponding English term(%s) to "%s" is empty.' % (english_relative_url, translated_title))
     if translated_title!=english_title:
       print formatMessage(english=format(english_title),
                           translation=format(translated_title),
@@ -71,7 +71,7 @@ for i in catalog(portal_type='Glossary Term',
 
   if translated_description:
     if not english_description:
-      raise ValueError, 'Description of corresponding English term(%s) to "%s" is empty.' % (english_relative_url, translated_description)
+      raise ValueError('Description of corresponding English term(%s) to "%s" is empty.' % (english_relative_url, translated_description))
 
     if translated_description!=english_description:
       print formatMessage(english=format(english_description),

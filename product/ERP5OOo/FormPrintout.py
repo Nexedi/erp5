@@ -220,7 +220,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
     elif self.template:
       printout_template = getattr(obj, self.template)
     else:
-      raise ValueError, 'Can not create a ODF Document without a printout template'
+      raise ValueError('Can not create a ODF Document without a printout template')
 
     report_method = None
     if hasattr(form, 'report_method'):
@@ -248,7 +248,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
   def doSettings(self, REQUEST, title='', form_name='', template='', filename='object/title_or_id'):
     """Change title, form_name, template, filename."""
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
-      raise ResourceLockedError, "File is locked via WebDAV"
+      raise ResourceLockedError("File is locked via WebDAV")
     self.form_name = form_name
     self.template = template
     self.title = title
@@ -264,7 +264,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
       return ODTStrategy()
     if guess_extension(content_type) == '.odg':
       return ODGStrategy()
-    raise ValueError, 'Template type: %s is not supported' % content_type
+    raise ValueError('Template type: %s is not supported' % content_type)
 
   def _oooConvertByFormat(self, printout, content_type, extra_context,
                           REQUEST, format, batch_mode):
@@ -337,11 +337,11 @@ class ODFStrategy(Implicit):
     """
     here = extra_context['here']
     if here is None:
-      raise ValueError, 'Can not create a ODF Document without a parent acquisition context'
+      raise ValueError('Can not create a ODF Document without a parent acquisition context')
     form = extra_context['form']
     if not extra_context.has_key('printout_template') or \
         extra_context['printout_template'] is None:
-      raise ValueError, 'Can not create a ODF Document without a printout template'
+      raise ValueError('Can not create a ODF Document without a printout template')
 
     odf_template = extra_context['printout_template']
 

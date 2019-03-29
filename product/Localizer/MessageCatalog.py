@@ -739,7 +739,7 @@ class POFile(SimpleItem):
     def PUT(self, REQUEST, RESPONSE):
         """ """
         if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
-            raise Forbidden, 'REQUEST_METHOD should be PUT.'
+            raise Forbidden('REQUEST_METHOD should be PUT.')
         body = REQUEST['BODY']
         self.po_import(self.id, body)
         RESPONSE.setStatus(204)

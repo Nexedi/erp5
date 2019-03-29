@@ -27,5 +27,5 @@ for site in site_list:
 if user_site is None:
   from Products.ERP5Type.Message import Message
   message = Message(domain="ui", message="The owner is not assigned to the right vault.")
-  raise ValueError,message
+  raise ValueError(message)
 context.setSource(user_site)

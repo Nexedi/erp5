@@ -96,7 +96,7 @@ class IntegrationModule(XMLObject):
         else:
           return self.getObjectList[item]
     except ValueError as msg:
-      raise KeyError, msg
+      raise KeyError(msg)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getGIDFor')

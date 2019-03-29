@@ -15,11 +15,11 @@ if bank_account is None:
   
 if bank_account is None:
   msg = Message(domain='ui',message='Sorry, you must select an account')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 if resource is None:
   msg = Message(domain='ui',message='Sorry, you must select a resource')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 if reference is not None:
   reference_list = [reference]
@@ -38,11 +38,11 @@ elif reference_range_min is not None or reference_range_max is not None:
     reference_range_max = int(reference_range_max)
   except ValueError:
     msg = Message(domain='ui', message='Sorry, make sure you have entered the right check number.')
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)
 
   if reference_range_min>reference_range_max :
     msg = Message(domain='ui', message='Sorry, the min number must be less than the max number.')
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)
 
   for ref in range(reference_range_min,reference_range_max+1):
     # We will look for each reference and add the right number
@@ -59,7 +59,7 @@ for check_reference in reference_list:
   # just raise an error.
   if context.portal_activities.countMessageWithTag(message_tag) != 0:
     msg = Message(domain='ui', message="There are operations pending that prevent to validate this document. Please try again later.")
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)
   result = context.portal_catalog(portal_type = 'Check', reference = check_reference, 
                                   destination_payment_uid = bank_account.getUid(),
                                   default_resource_uid = resource_value.uid,
@@ -70,13 +70,13 @@ for check_reference in reference_list:
       msg = Message(domain = "ui", message="Sorry, the $type $reference for the account $account does not exist",
                                    mapping={'reference' : check_reference, 'account': bank_account.getInternalBankAccountNumber(),
                                             'type': resource_value.getTitle()})
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
 
   elif result_len > 1:
     msg = Message(domain = "ui", message="Sorry, the $type $reference for the account $account is duplicated",
                                    mapping={'reference' : reference, 'account': bank_account.getInternalBankAccountNumber(),
                                             'type': resource_value.getTitle()})
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)
 
   reference_dict[check_reference] = {}
   reference_dict[check_reference]['result'] = result
@@ -96,10 +96,10 @@ for check_reference in reference_list:
       composition_related_list = resource_value.getCompositionRelatedValueList()
       if len(composition_related_list) == 0:
         msg = Message(domain = "ui", message="Sorry, no checkbook model found")
-        raise ValidationFailed, (msg,)
+        raise ValidationFailed(msg,)
       if len(composition_related_list) != 1:
         msg = Message(domain = "ui", message="Sorry, too many many checkbook model found")
-        raise ValidationFailed, (msg,)
+        raise ValidationFailed(msg,)
       generic_model = composition_related_list[0]
 
     #generic_model = context.portal_catalog(portal_type = 'Checkbook Model', title = 'Generic')[0].getObject()
@@ -120,7 +120,7 @@ for check_reference in reference_list:
       checkbook_tag = "checkbook_%s_%s" % (resource, bank_account_uid) 
       if context.portal_activities.countMessageWithTag(checkbook_tag) != 0:
         msg = Message(domain='ui', message="There are operations pending that prevent to validate this document. Please try again later.")
-        raise ValidationFailed, (msg,)
+        raise ValidationFailed(msg,)
       checkbook = context.checkbook_module.newContent(portal_type = 'Checkbook',
                                                       title = 'Generic',
                                                       resource_value = generic_model,

@@ -460,7 +460,7 @@ Named Parameters: %r
       if exc_info[0] is None:
         # Raise a dummy exception, ignore it, fetch it and use it as if it was the error causing message non-execution. This will help identifyting the cause of this misbehaviour.
         try:
-          raise Exception, 'Message execution failed, but there is no exception to explain it. This is a dummy exception so that one can track down why we end up here outside of an exception handling code path.'
+          raise Exception('Message execution failed, but there is no exception to explain it. This is a dummy exception so that one can track down why we end up here outside of an exception handling code path.')
         except Exception:
           exc_info = sys.exc_info()
       elif exc_info[0] is SkippedMessage:
@@ -1104,7 +1104,7 @@ class ActivityTool (BaseTool):
         active_threads += 1
       else:
         tic_lock.release()
-        raise RuntimeError, 'Too many threads'
+        raise RuntimeError('Too many threads')
       tic_lock.release()
 
       inner_self = aq_inner(self)

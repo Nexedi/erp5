@@ -82,7 +82,7 @@ class MagentoTestConnector:
 
   def UserGet(self, *args, **kw):
     if not kw.has_key('customer_id'):
-      raise ValueError, "No customer_id in the arguments, got %s / %s" %(args, kw)
+      raise ValueError("No customer_id in the arguments, got %s / %s" %(args, kw))
 
     customer_id = kw['customer_id']
 
@@ -91,7 +91,7 @@ class MagentoTestConnector:
                                                                                  validation_state='validated')
 
     if len(person_list) != 1:
-      raise KeyError, "Error retrieving user with ID  %s" %(customer_id,)
+      raise KeyError("Error retrieving user with ID  %s" %(customer_id,))
     else:
       person = person_list[0].getObject()
     result_list = []
@@ -108,13 +108,13 @@ class MagentoTestConnector:
 
   def UserUpdate(self, *args, **kw):
     if not kw.has_key('customer_id'):
-      raise ValueError, "No customer_id int the paramaters, got %s / %s" %(args, kw)
+      raise ValueError("No customer_id int the paramaters, got %s / %s" %(args, kw))
 
     customer_id = kw['customer_id']
     person_list = self.context.getPortalObject().magento_test_module.searchFolder(reference=user_id,
                                                                                  portal_type="Magento Test Person")
     if len(person_list) != 1:
-      raise KeyError, "Error retrieving person with ID %s" %(customer_id)
+      raise KeyError("Error retrieving person with ID %s" %(customer_id))
     else:
       person = person_list[0].getObject()
     context = etree.iterparse(StringIO(kw['data']), events=('end',))

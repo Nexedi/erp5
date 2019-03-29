@@ -134,7 +134,7 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
                    last_request_error="No connection available, connector is %s" %(self.getSourceValue(),))
         return []
       else:
-        raise ValueError, "No connection available"
+        raise ValueError("No connection available")
 
     # Add specific parameters defined on integration site
     site = self.getIntegrationSite()
@@ -236,7 +236,7 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
           if test_mode:
             self._edit(last_request_error="Bad XML returned by request, impossible to parse it")
           else:
-            raise ValueError, "Bad XML returned by request %s with kw = %s, xml = %s" %(self.getPath(), kw, xml)
+            raise ValueError("Bad XML returned by request %s with kw = %s, xml = %s" %(self.getPath(), kw, xml))
 
     brain = getBrain(self.brain_class_file, self.brain_class_name, reload=1)
 
@@ -269,17 +269,17 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     try:
       long(item)
     except ValueError:
-      raise KeyError, "Item %s does not exists call by Web Service Request %s : not a long" % (item,
-                                                                                               self.getTitle(),)
+      raise KeyError("Item %s does not exists call by Web Service Request %s : not a long" % (item,
+                                                                                               self.getTitle(),))
     kw = {self.getIDParameterName() : str(item), }
     object_list = self(**kw)
     if len(object_list) == 1:
       return object_list[0]
     else:
-      raise KeyError, "Item %s does not exists call by Web Service Request %s with params %s return %d results" % (item,
+      raise KeyError("Item %s does not exists call by Web Service Request %s with params %s return %d results" % (item,
                                                                                                                    self.getTitle(),
                                                                                                                    kw,
-                                                                                                                   len(object_list))
+                                                                                                                   len(object_list)))
 
   def parse_dict(self, parser_dict, dict_list):
     """ Render the dict list mapped by the parser dict. """

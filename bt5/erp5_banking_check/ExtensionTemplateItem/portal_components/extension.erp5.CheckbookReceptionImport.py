@@ -43,7 +43,7 @@ def CheckbookReception_importItemFile(self, import_file=None, REQUEST=None, **kw
                                                      'Check Model'],
                                         reference = reference_dict[checkbook_type])
     if len(resource_list) != 1:
-      raise ValueError, "The import does not support this type : %s" % checkbook_type
+      raise ValueError("The import does not support this type : %s" % checkbook_type)
     resource = resource_list[0].getObject()
     resource_relative_url = resource.getRelativeUrl()
     resource_amount_dict = {}

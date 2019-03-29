@@ -39,16 +39,16 @@ amount_total = transaction.getSourceTotalAssetPrice()
 
 if resource_two == 2:
   msg = Message(domain="ui", message="No resource.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif resource_two == 1:
   msg = Message(domain="ui", message="Insufficient Balance.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 
 if incoming_total != outgoing_total:
   msg = Message(domain="ui", message="No same balance.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 if amount_total != outgoing_total:
   msg = Message(domain="ui", message="Amount not correct.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)

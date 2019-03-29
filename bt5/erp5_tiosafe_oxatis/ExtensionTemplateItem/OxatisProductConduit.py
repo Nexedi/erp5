@@ -66,7 +66,7 @@ class OxatisProductConduit(TioSafeResourceConduit):
     if create_method is not None:
       create_result = create_method(**keyword)
     else:
-      raise ValueError, 'Impossible to find a create method named %s and object %s' %(create_method_id, object.getPath(),)
+      raise ValueError('Impossible to find a create method named %s and object %s' %(create_method_id, object.getPath(),))
     if len(create_result):
       # We suppose the id of the object created was returned by the plugin
       new_id = create_result[0].getId()
@@ -85,7 +85,7 @@ class OxatisProductConduit(TioSafeResourceConduit):
     if delete_method is not None:
       return delete_method(product_id=object_id)
     else:
-      raise ValueError, 'Impossible to find a delete method named %s and object %s' %(delete_method_id, object.getPath(),)
+      raise ValueError('Impossible to find a delete method named %s and object %s' %(delete_method_id, object.getPath(),))
 
 
   def _updateXupdateUpdate(self, document=None, xml=None, previous_xml=None, **kw):
@@ -112,9 +112,9 @@ class OxatisProductConduit(TioSafeResourceConduit):
     try:
       previous_value = previous_xml[0].text
     except IndexError:
-      raise ValueError, 'Too little or too many value, only one is required for %s' % (
+      raise ValueError('Too little or too many value, only one is required for %s' % (
           previous_xml
-      )
+      ))
 
     if isinstance(previous_value, unicode):
       previous_value = previous_value.encode('utf-8')
@@ -157,7 +157,7 @@ class OxatisProductConduit(TioSafeResourceConduit):
         elif tag == "reference":
           document.context.product_module.updateProductReference(**keyword)
         else:
-          raise ValueError, "Do not know how to update this property %s / %s for %s" %(tag, new_value, document.getId())
+          raise ValueError("Do not know how to update this property %s / %s for %s" %(tag, new_value, document.getId()))
 
     elif base_tag.startswith("mapping"):
       index = int(base_tag[-2])

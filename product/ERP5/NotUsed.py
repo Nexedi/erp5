@@ -41,7 +41,7 @@ def callbase(obj, base, methodname='__init__', args=(), kw={}, raiseIfMissing=No
   try: method = getattr(base, methodname)
   except AttributeError:
       if raiseIfMissing:
-          raise CallbaseError, methodname
+          raise CallbaseError(methodname)
       return None
   if args is None: args = ()
   return method(obj, *args, **kw)

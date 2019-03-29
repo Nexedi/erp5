@@ -10,7 +10,7 @@ now = DateTime()
 source = transaction.getSource(None)
 if source is None:
   msg = Message(domain='ui', message='No counter defined.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 # No need for stop payment to check the counter date
 #if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):
@@ -64,10 +64,10 @@ for movement in movement_list:
   for item in aggregate_value_list:
     if item.getPortalType()!='Check':
       msg = Message(domain = "ui", message="Sorry, You should select a check")
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
     if item.getSimulationState()!='confirmed':
       msg = Message(domain = "ui", message="Sorry, this check is not issued")
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
     # Test check is valid based on date
     transaction.Check_checkIntervalBetweenDate(resource=item.getResourceValue(),
                                              start_date=date,
@@ -78,7 +78,7 @@ for movement in movement_list:
 debit_required = transaction.isDebitRequired()
 if total_debit in (None,0.0) and debit_required:
   msg = Message(domain = "ui", message="Sorry, you forgot to give the amount")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 if debit_required:
   # Source and destination will be updated automaticaly based on the category of bank account
   # The default account chosen should act as some kind of *temp* account or *parent* account
@@ -101,7 +101,7 @@ if debit_required:
   # Make sure there are no other operations pending for this account
   if transaction.BankAccount_isMessagePending(bank_account):
     msg = Message(domain='ui', message="There are operations pending for this account that prevent form calculating its position. Please try again later.")
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)
 
   # Index the banking operation line so it impacts account position
   transaction.BankingOperationLine_index(line)
@@ -110,10 +110,10 @@ if debit_required:
   error = transaction.BankAccount_checkBalance(bank_account.getRelativeUrl(), total_debit)
   if error['error_code'] == 1:
     msg = Message(domain='ui', message="Bank account is not sufficient.")
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)
   elif error['error_code'] == 2:
     msg = Message(domain='ui', message="Bank account is not valid.")
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)
   elif error['error_code'] != 0:
     msg = Message(domain='ui', message="Unknown error code.")
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)

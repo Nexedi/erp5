@@ -13,4 +13,4 @@ if request_eform.getPortalType() == 'P2':
                                     or request_eform.getCompanyCorporateRegistrationCode(),
                                             ignore_empty_string = 0)
   if not len(organisation_list):
-    raise ValidationFailed, 'Organisation was not found for this person'
+    raise ValidationFailed('Organisation was not found for this person')

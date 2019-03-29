@@ -56,10 +56,10 @@ except ValidationFailed as error_message:
   if len(message) > 2000: # too long message will generate a too long URI
                           # that would become an error.
     message = "%s ..." % message[:(2000 - 4)]
-  raise Redirect, "%s?portal_status_message=%s" % (
+  raise Redirect("%s?portal_status_message=%s" % (
     context.getAbsoluteUrl(),
     message
-    )
+    ))
 transaction.confirm()
 
 return transaction.getRelativeUrl()

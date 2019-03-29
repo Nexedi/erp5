@@ -317,7 +317,7 @@ class testTioSafeMixin(ERP5TypeTestCase):
       diff = "\n"
       for x in unified_diff(plugin_xml.split('\n'), tiosafe_xml.split('\n'), "plugin", "tiosafe", lineterm=''):
         diff += "%s\n" %(x)
-      raise AssertionError, diff
+      raise AssertionError(diff)
 
   def validateXMLSchema(self, xml, file_path):
     """ This method allows to check and validate the schema of an xml. """

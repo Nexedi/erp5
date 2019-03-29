@@ -37,7 +37,7 @@ if to_url is None:
       else:
         to_url_list.append(email)
     else:
-      raise ValueError, 'Recipient %s has no defined email' % recipient
+      raise ValueError('Recipient %s has no defined email' % recipient)
 elif same_type(to_url, ''):
   to_url_list.append(to_url)
 

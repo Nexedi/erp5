@@ -7,14 +7,14 @@ bank_account = state_change['object']
 if bank_account.getParentValue().getPortalType()!= 'Person':
   vliste = bank_account.checkConsistency()
   if len(vliste) != 0:
-    raise ValidationFailed, (vliste[0].getTranslatedMessage(),)
+    raise ValidationFailed(vliste[0].getTranslatedMessage(),)
 
 if bank_account.getParentValue().getPortalType()== 'Person':
   # Can't have two bank account
   for obj in bank_account.getParentValue().objectValues():
     if obj.getPortalType() == "Bank Account" and obj.getValidationState() not in ('draft', 'closed') \
            and obj.getSource() == bank_account.getSource() and obj.getPath()!= bank_account.getPath():
-      raise ValidationFailed, "You cannot open two bank accounts for the same person on the same site"
+      raise ValidationFailed("You cannot open two bank accounts for the same person on the same site")
 
 valid_state = ["valid", "being_closed", "validating_closing",
                "being_modified", "validating_modification", "closed"]
@@ -26,7 +26,7 @@ same_ref_list = context.portal_catalog(validation_state=valid_state,
 for doc in same_ref_list:
   if doc.getPath() != bank_account.getPath():
     context.log("doc path %s" %(doc.getPath(),))
-    raise ValidationFailed, "Bank account with same reference already exists"
+    raise ValidationFailed("Bank account with same reference already exists")
 
 
 # Same for internal reference if exists
@@ -38,4 +38,4 @@ if bank_account.getInternalBankAccountNumber() not in ("", None):
   for doc in same_ref_list:
     if doc.getPath() != bank_account.getPath():
       context.log("doc path %s" %(doc.getPath(),))
-      raise ValidationFailed, "Bank account with same internal reference already exists"
+      raise ValidationFailed("Bank account with same internal reference already exists")

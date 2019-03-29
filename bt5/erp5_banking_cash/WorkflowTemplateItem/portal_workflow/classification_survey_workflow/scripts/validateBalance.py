@@ -22,10 +22,10 @@ output_cash = transaction.getTotalPrice(portal_type=['Outgoing Classification Su
 
 if input_cash != output_cash :
   msg=Message(domain="ui", message="Incoming cash amount is different from outgoing cash amount.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif price != output_cash :
   msg=Message(domain='ui',message='Amount differs from cash total.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif resource != 0 :
   msg=Message(domain='ui',message='Insufficient Balance.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)

@@ -16,4 +16,4 @@ if 'encaisse_des_devises' in vault_list:
 else:
   return context.currency_module[context.Baobab_getPortalReferenceCurrencyID()].getRelativeUrl()
 
-raise ValueError, 'No currency found for vault %s'  %vault
+raise ValueError('No currency found for vault %s'  %vault)

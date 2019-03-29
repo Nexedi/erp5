@@ -495,7 +495,7 @@ class OOoChartWidget(Widget.Widget):
           </div>''' % (url,
                        UrlIconPdf)
       else:
-        raise NotImplementedError, 'Format: %s not handled' % format
+        raise NotImplementedError('Format: %s not handled' % format)
 
     extra_context = self.getArgumentDict(field, REQUEST)
 

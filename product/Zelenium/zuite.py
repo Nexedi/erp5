@@ -201,7 +201,7 @@ class Zuite( OrderedFolder ):
         if value is not _MARKER:
             return value
 
-        raise KeyError, key
+        raise KeyError(key)
 
 
     security.declareProtected( View, 'listTestCases' )
@@ -678,7 +678,7 @@ class ZuiteResults( Folder ):
         if default is not _MARKER:
             return default
 
-        raise KeyError, key
+        raise KeyError(key)
 
 InitializeClass( ZuiteResults )
 
@@ -718,7 +718,7 @@ class _FilesystemProxy( Folder ):
         if default is not _MARKER:
             return default
 
-        raise KeyError, key
+        raise KeyError(key)
 
     security.declareProtected( View, 'listTestCases' )
     def listTestCases( self, prefix=() ):

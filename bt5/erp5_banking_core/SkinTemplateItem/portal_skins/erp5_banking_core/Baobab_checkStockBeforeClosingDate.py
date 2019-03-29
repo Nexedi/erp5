@@ -35,13 +35,13 @@ for counter_vault in counter_vault_list:
         message = Message(domain='ui',
                     message='Sorry, some resources are still remaining here : $counter_title',
                     mapping={'counter_title':counter_title})
-        raise ValidationFailed,message
+        raise ValidationFailed(message)
 
 max_price = context.portal_preferences.getPreferredUsualCashMaxRenderingPrice()
 if max_price is None:
   message = Message(domain='ui',
               message='Sorry, you must defined the max price for the usual cash in your preference')
-  raise ValidationFailed,message
+  raise ValidationFailed(message)
 
 usual_cash = site.getRelativeUrl() + '/surface/caisse_courante/encaisse_des_billets_et_monnaies'
 inventory_list = context.portal_simulation.getCurrentInventoryList(
@@ -53,4 +53,4 @@ context.log('current_price',total_price)
 if total_price > max_price:
   message = Message(domain='ui',
               message='Sorry, the amount in the usual cash is too high')
-  raise ValidationFailed,message
+  raise ValidationFailed(message)

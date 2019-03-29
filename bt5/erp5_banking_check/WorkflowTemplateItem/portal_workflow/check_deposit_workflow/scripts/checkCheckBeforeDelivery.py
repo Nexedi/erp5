@@ -37,14 +37,14 @@ else:
     if error['error_code'] == 1:
       msg = Message(domain='ui', message="Bank account $account is not sufficient on line $line.",
                     mapping={"account": source_bank_account.getInternalBankAccountNumber(), "line" : check_operation_line.getId()})
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
     elif error['error_code'] == 2:
       msg = Message(domain='ui', message="Bank account $account is not valid on $line.",
                     mapping={"account": source_bank_account.getInternalBankAccountNumber(), "line" : check_operation_line.getId()})
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
     elif error['error_code'] != 0:
       msg = Message(domain='ui', message="Unknown error code.")
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
 
 
 context.validateSourceAndDestination(state_change)

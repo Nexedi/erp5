@@ -18,7 +18,7 @@ for site in site_list:
 
 if baobab_source is None:
   msg = Message(domain="ui", message="Unable to determine counter from user assignement.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 source = baobab_source
 source_object = context.portal_categories.getCategoryValue(source)
@@ -40,16 +40,16 @@ cash_detail = transaction.getTotalPrice(portal_type = ('Cash Delivery Line','Cas
 #transaction.log("price vs cash detail", str((price, cash_detail)))
 if resource == 3:
   msg = Message(domain="ui", message="No banknote or coin defined.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif resource == 2:
   msg = Message(domain="ui", message="No resource defined.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif price != cash_detail:
   msg = Message(domain="ui", message="Amount differs from input.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif resource == 1:
   msg = Message(domain="ui", message="Insufficient Balance in counter.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 
 transaction.Base_checkCheck(None, None, None, check=transaction.getAggregateValue())

@@ -205,7 +205,7 @@ def getSecurityCategoryFromAssignment(self, base_category_list, user_name,
   
   if len(person_object_list) != 1:
     if len(person_object_list) > 1:
-      raise ConsistencyError, "Error: There is more than one Person with reference '%s'" % user_name
+      raise ConsistencyError("Error: There is more than one Person with reference '%s'" % user_name)
     else:
       # if a person_object was not found in the module, we do nothing more
       # this happens for example when a manager with no associated person 
@@ -271,7 +271,7 @@ def getSecurityCategoryFromEntity(self, base_category_list, entity_name,
   
   if len(object_list) != 1:
     if len(object_list) > 1:
-      raise ConsistencyError, "Error: There is more than one Entity with reference '%s'" % entity_name
+      raise ConsistencyError("Error: There is more than one Entity with reference '%s'" % entity_name)
     else:
       # if a person_object was not found in the module, we do nothing more
       # this happens for example when a manager with no associated person 

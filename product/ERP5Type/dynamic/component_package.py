@@ -306,8 +306,7 @@ class ComponentDynamicPackage(ModuleType):
           del sys.modules[module_fullname_alias]
 
         raise ImportError(
-          "%s: cannot load Component %s (%s)" % (fullname, name, error)), \
-          None, sys.exc_info()[2]
+          "%s: cannot load Component %s (%s)" % (fullname, name, error)).with_traceback(sys.exc_info()[2])
 
       # Add the newly created module to the Version package and add it as an
       # alias to the top-level package as well

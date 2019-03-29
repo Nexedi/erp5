@@ -3,8 +3,8 @@ if id:
   try:
     long(id)
   except ValueError:
-    raise KeyError, "Item %s does not exists call by Python Script %s : not a long" % (id,
-                                                                                               context.getTitle(),)
+    raise KeyError("Item %s does not exists call by Python Script %s : not a long" % (id,
+                                                                                               context.getTitle(),))
 
 product_list = context.getProductList(*args, **kw)
 

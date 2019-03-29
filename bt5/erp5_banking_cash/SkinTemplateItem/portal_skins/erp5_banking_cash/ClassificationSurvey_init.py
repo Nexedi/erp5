@@ -1,6 +1,6 @@
 site_list = context.Baobab_getUserAssignedSiteList()
 if len(site_list) == 0:
-  raise ValueError, "Unable to determine site"
+  raise ValueError("Unable to determine site")
 
 site = site_list[0]
 site = context.Baobab_getVaultSite(site)

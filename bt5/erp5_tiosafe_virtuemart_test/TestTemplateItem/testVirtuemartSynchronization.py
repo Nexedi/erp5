@@ -420,7 +420,7 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
             self.assertEqual(test_person.getZip(), default_address.getZipCode())
             self.assertEqual(test_person.getCity(), default_address.getCity())
         else:
-          raise ValueError, 'bad type'
+          raise ValueError('bad type')
         
             
     mapping_dict = {}

@@ -40,7 +40,7 @@ if same_type(vault, 'a'):
   vault_url_list = [vault,]
 #context.log("vault_url_list", vault_url_list)
 if vault_url_list is None:
-  raise ValueError, "The vault must be defined"
+  raise ValueError("The vault must be defined")
 for vault_url in vault_url_list:
   vault_dict[vault_url] = 1
   vault_inventory_dict[vault_url] = {}
@@ -67,7 +67,7 @@ total_inventory_list = []
 inventory_kw = {}
 #context.log('CounterModule_getVaultTransactionList, vault_report_type',vault_report_type)
 if vault_report_type == 'inventory' and from_date is not None:
-  raise ValueError, "The from date must be None in the case of inventory"
+  raise ValueError("The from date must be None in the case of inventory")
 if vault_report_type is None or vault_report_type=='inventory':
   inventory_kw['group_by_variation'] = 1
   inventory_kw['group_by_resource'] = 1

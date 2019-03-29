@@ -21,7 +21,7 @@ if resource_portal_type == 'Banknote':
       # This case is/must be protected by a constraint: a document containing a
       # line matching this condition must not get validated.
       # XXX: Maybe we should return None here instead of raising.
-      raise Exception, 'Should not be here'
+      raise Exception('Should not be here')
   elif emission_letter == site_letter:
     if cash_status == "valid":
       # banknote 'valid' from same country -> caisse de reserve / billets et monnaies

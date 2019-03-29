@@ -260,7 +260,7 @@ class TestUbercartSynchronization(ERP5TypeTestCase):
           self.assertEqual(test_person.getZip(), default_address.getZipCode())
           self.assertEqual(test_person.getCity(), default_address.getCity())
         else:
-          raise ValueError, 'bad type'
+          raise ValueError('bad type')
 
     #
     # Modify persons on the plugin side

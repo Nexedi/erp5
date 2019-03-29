@@ -41,7 +41,7 @@ def name_or_expr(mapping, name_attr, expr_attr, default):
         return Eval(expr)
     if expr is None:
         return name
-    raise ParseError, ('%s and %s given' % (name_attr, expr_attr), 'calendar')
+    raise ParseError('%s and %s given' % (name_attr, expr_attr), 'calendar')
 
 
 

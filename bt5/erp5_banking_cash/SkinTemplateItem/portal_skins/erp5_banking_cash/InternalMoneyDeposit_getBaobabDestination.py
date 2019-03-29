@@ -9,4 +9,4 @@ for site in site_list:
     return site + '/encaisse_des_billets_et_monnaies/entrante'
 from Products.ERP5Type.Message import Message
 message = Message(domain="ui", message="Object owner is not assigned to a counter.")
-raise ValueError,message
+raise ValueError(message)

@@ -81,7 +81,7 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
     if create_method is not None:
       create_result = create_method(**keyword)
     else:
-      raise ValueError, 'Impossible to find a create method named %s and object %s' %(create_method_id, object.getPath(),)
+      raise ValueError('Impossible to find a create method named %s and object %s' %(create_method_id, object.getPath(),))
     if len(create_result):
       # We suppose the id of the object created was returned by the plugin
       new_id = create_result[0].getId()
@@ -128,7 +128,7 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
     if delete_method is not None:
       return delete_method(product_id=object_id)
     else:
-      raise ValueError, 'Impossible to find a delete method named %s and object %s' %(delete_method_id, object.getPath(),)
+      raise ValueError('Impossible to find a delete method named %s and object %s' %(delete_method_id, object.getPath(),))
 
 
   def _updateXupdateUpdate(self, document=None, xml=None, previous_xml=None, **kw):
@@ -147,9 +147,9 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
     try:
       previous_value = previous_xml[0].text
     except IndexError:
-      raise ValueError, 'Too little or too many value, only one is required for %s' % (
+      raise ValueError('Too little or too many value, only one is required for %s' % (
           previous_xml
-      )
+      ))
 
     if isinstance(previous_value, unicode):
       previous_value = previous_value.encode('utf-8')
@@ -208,9 +208,9 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
             selected_previous_xml[0].text,
         )
       except IndexError:
-        raise IndexError, 'Too little or too many value, only one is required for %s' % (
+        raise IndexError('Too little or too many value, only one is required for %s' % (
             previous_xml
-        )
+        ))
       LOG("TiosafeResourceConduit.del", 300, "will remove category %s from %s" %(tag, previous_xml.text))
       # retrieve the current value to check if exists a conflict
       current_value = etree.XML(object_xml).xpath(tag)[0].text

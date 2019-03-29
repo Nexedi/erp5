@@ -8,6 +8,6 @@ transaction = state_change['object']
 stop_date_key = 'stop_date'
 if not state_change.kwargs.has_key(stop_date_key):
   msg = Message(domain = "ui", message="No stop date provided")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 transaction.setStopDate(state_change.kwargs[stop_date_key])
 context.validateDestinationCounterDate(state_change, **kw)

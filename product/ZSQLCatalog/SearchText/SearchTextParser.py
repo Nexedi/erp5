@@ -51,7 +51,7 @@ class ParserPool(object):
     parser_registry = self.parser_registry
     name = '.'.join((parser.__module__, parser.__name__))
     if name in parser_registry:
-      raise ValueError, 'Duplicate parser for name %r' % (name, )
+      raise ValueError('Duplicate parser for name %r' % (name, ))
     parser_registry[name] = parser
     return name
 

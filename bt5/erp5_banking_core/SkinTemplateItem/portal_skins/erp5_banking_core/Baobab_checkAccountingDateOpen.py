@@ -35,6 +35,6 @@ else:
 
 if DateTime(date) < opened_accounting_date:
   msg = Message(domain = "ui", message="Transaction date incompatible with opened accounting date ${accounting_date}.", mapping={'accounting_date': opened_accounting_date})
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 return "ok"

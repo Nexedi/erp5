@@ -155,8 +155,8 @@ class TestPersonERP5Synchronization(testPrestashopMixin):
         self.assertEqual(address.getCity(), 'Dortmund')
         self.assertEqual(address.getRegionTitle(), 'Allemagne')
       else:
-        raise ValueError, 'Can not check the address: %s of the person: %s' % \
-            (address.getId(), person.getTitle())
+        raise ValueError('Can not check the address: %s of the person: %s' % \
+            (address.getId(), person.getTitle()))
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         plugin_xml=self.root_xml % person.Node_asTioSafeXML(),
@@ -336,8 +336,8 @@ class TestPersonERP5Synchronization(testPrestashopMixin):
         self.assertEqual(address.getCity(), 'Paris')
         self.assertEqual(address.getRegionTitle(), 'France')
       else:
-        raise ValueError, 'Can not check the address: %s of the person: %s' % \
-            (index, person.getTitle())
+        raise ValueError('Can not check the address: %s of the person: %s' % \
+            (index, person.getTitle()))
     # The first update check remove of simple element, remove an address
     self.loadSQLDump(
         self.connection,
@@ -389,8 +389,8 @@ class TestPersonERP5Synchronization(testPrestashopMixin):
         self.assertEqual(address.getCity(), 'Stuttgart')
         self.assertEqual(address.getRegionTitle(), 'Allemagne')
       else:
-        raise ValueError, 'Can not check the address: %s of the person: %s' % \
-            (index, person.getTitle())
+        raise ValueError('Can not check the address: %s of the person: %s' % \
+            (index, person.getTitle()))
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         plugin_xml=self.root_xml % person.Node_asTioSafeXML(),

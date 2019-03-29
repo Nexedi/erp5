@@ -16,14 +16,14 @@ else:
   while True:
     if not hasattr(site, 'getVaultTypeList'):
       msg = Message(domain = 'ui', message = 'The site value is misconfigured; report this to system administrators.')
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
     if 'site' in site.getVaultTypeList():
       break
     site = site.getParentValue()
 
 if site is None:
   msg = Message(domain = 'ui', message = 'Impossible to determine site for the transaction.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 
 date = transaction.getStartDate()
@@ -40,13 +40,13 @@ document_date = DateTime(date).Date()
 price = transaction.getSourceTotalAssetPrice() 
 if price is None or price <= 0:
   msg = Message(domain="ui", message="Amount is not valid.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 # Check the bank account.
 bank_account = transaction.getDestinationPaymentValue()
 if bank_account is None:
   msg = Message(domain='ui', message='Bank account is not defined.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 # Check the check.
 check_number = transaction.getAggregateFreeText()
@@ -59,10 +59,10 @@ transaction.edit(aggregate_resource=check_resource)
 
 if not check_number:
   msg = Message(domain='ui', message="Check not defined.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 if check_resource is None:
   msg = Message(domain='ui', message="Check type not defined.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 check = transaction.Base_checkCheck(reference=check_number, bank_account=bank_account, 
                             resource=check_resource)
@@ -79,10 +79,10 @@ if no_balance_check == 1:
 error = transaction.BankAccount_checkAvailableBalance(bank_account.getRelativeUrl(), price)
 if error['error_code'] == 1:
   msg = Message(domain='ui', message="Bank account is not sufficient.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif error['error_code'] == 2:
   msg = Message(domain='ui', message="Bank account is not valid.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif error['error_code'] != 0:
   msg = Message(domain='ui', message="Unknown error code.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)

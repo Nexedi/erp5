@@ -8,4 +8,4 @@ for elem in consistency:
   error_msg =error_msg+' '+elem[4]
 
 if consistency != []:
-  raise ValidationFailed, str(error_msg)
+  raise ValidationFailed(str(error_msg))

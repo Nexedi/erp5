@@ -25,7 +25,7 @@ def order_line_list(line_list, current_structure, depth=0, index=0, last_dict=No
       index += 1
       index = order_line_list(line_list, new_structure, depth=new_depth, index=index, last_dict=last_dict)
     elif section_depth > (depth +2):
-      raise ValueError, "A depth is missing"
+      raise ValueError("A depth is missing")
     else:
       return index
   if index < len(line_list):

@@ -182,10 +182,10 @@ class StrippingParser( SGMLParser ):
             for k, v in attrs:
 
                 if k.lower().startswith( 'on' ):
-                    raise IllegalHTML, 'Javascipt event "%s" not allowed.' % k
+                    raise IllegalHTML('Javascipt event "%s" not allowed.' % k)
 
                 if v.lower().startswith( 'javascript:' ):
-                    raise IllegalHTML, 'Javascipt URI "%s" not allowed.' % v
+                    raise IllegalHTML('Javascipt URI "%s" not allowed.' % v)
 
                 self.result = '%s %s="%s"' % (self.result, k, v)
 
@@ -196,7 +196,7 @@ class StrippingParser( SGMLParser ):
                 self.result = self.result + ' />'
 
         elif NASTY_TAGS.get( tag ):
-            raise IllegalHTML, 'Dynamic tag "%s" not allowed.' % tag
+            raise IllegalHTML('Dynamic tag "%s" not allowed.' % tag)
 
         else:
             pass    # omit tag

@@ -15,6 +15,6 @@ if source_trade is None or context.getSimulationState() != 'delivered':
       return source_trade
   from Products.ERP5Type.Message import Message
   message = Message(domain="ui", message="The owner is not assigned to the right vault.")
-  raise ValueError,message
+  raise ValueError(message)
 else:
   return source_trade

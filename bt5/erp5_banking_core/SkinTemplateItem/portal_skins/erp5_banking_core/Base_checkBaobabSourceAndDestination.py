@@ -16,4 +16,4 @@ for object in object_to_check_list:
       except KeyError:
         context.log('Error on ', (context.getRelativeUrl(),node_url))
         msg = Message(domain='ui',message='Sorry, wrong source or destination')
-        raise ValidationFailed, (msg,)
+        raise ValidationFailed(msg,)

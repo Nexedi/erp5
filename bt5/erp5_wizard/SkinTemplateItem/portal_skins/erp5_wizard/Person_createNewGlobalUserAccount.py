@@ -17,4 +17,4 @@ if portal.Base_validatePersonReference(kw['reference'], context.REQUEST):
                          **kw)
 else:
   # user reference is NOT unique (valid) in Nexedi ERP5
-  raise ValueError, "User reference not unique"
+  raise ValueError("User reference not unique")

@@ -80,7 +80,7 @@ class Agent(Folder, Image):
                                   % self.absolute_url())
         return
       else :
-        raise RuntimeError, 'No file or an empty file was specified'
+        raise RuntimeError('No file or an empty file was specified')
 
     import_file.seek(0)
     self.manage_upload(file=import_file)

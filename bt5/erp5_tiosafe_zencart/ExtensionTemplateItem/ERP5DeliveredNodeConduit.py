@@ -56,7 +56,7 @@ class ERP5DeliveredNodeConduit(ERP5NodeConduit):
     if len(stc_list) == 0:
       self._createSaleTradeCondition(object, **kw)
     elif len(stc_list) > 1:
-      raise ValueError, "Multiple trade condition (%s) retrieve for %s" %([x.path for x in stc_list], object.getTitle())
+      raise ValueError("Multiple trade condition (%s) retrieve for %s" %([x.path for x in stc_list], object.getTitle()))
     else:
       stc = stc_list[0].getObject()
       stc.edit(destination=object.getRelativeUrl(),)

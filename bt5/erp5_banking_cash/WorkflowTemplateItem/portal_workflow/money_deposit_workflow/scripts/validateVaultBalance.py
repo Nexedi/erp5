@@ -40,10 +40,10 @@ cash_detail = transaction.getTotalPrice(portal_type=['Cash Delivery Line','Cash 
 #transaction.log("price vs cash detail", str((price, cash_detail)))
 if resource == 3:
   msg = Message(domain="ui", message="No banknote or coin defined.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif resource == 2:
   msg = Message(domain="ui", message="No resource defined.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif price != cash_detail:
   msg = Message(domain="ui", message="Amount differs from input.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)

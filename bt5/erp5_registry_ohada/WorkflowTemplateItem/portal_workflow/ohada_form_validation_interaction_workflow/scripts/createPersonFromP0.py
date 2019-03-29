@@ -24,11 +24,11 @@ else:
     organisation_list = portal.organisation_module.searchFolder(\
         corporate_registration_code=rccm)
     if len(organisation_list) >1 :
-      raise ValidationFailed, "Error : There is more than one organisation with the "\
-              " rccm number '%s'" % rccm
+      raise ValidationFailed("Error : There is more than one organisation with the "\
+              " rccm number '%s'" % rccm)
     elif len(organisation_list) == 0:
-      raise ValidationFailed, "Error : There is no organisation with the "\
-              " rccm number '%s'" % rccm
+      raise ValidationFailed("Error : There is no organisation with the "\
+              " rccm number '%s'" % rccm)
     organisation = organisation_list[0].getObject()
 
 if request_eform.getBeginning():
@@ -108,15 +108,15 @@ if  request_eform.getBeginning() or request_eform.getOpening():
 
   else: # person exists
     if len(person_list) >1 :
-      raise ValidationFailed, "Error : There is more than one person with the "\
+      raise ValidationFailed("Error : There is more than one person with the "\
               " title '%s', birth date '%s' and birthplace '%s'" % (request_eform.getTitle(),
                   request_eform.getStartDate(),
-                  request_eform.getDefaultBirthplaceAddressCity())
+                  request_eform.getDefaultBirthplaceAddressCity()))
     elif len(person_list) == 0:
-      raise ValidationFailed, "Error : There is nobody with the "\
+      raise ValidationFailed("Error : There is nobody with the "\
               " title '%s', birth date '%s' and birthplace '%s'" % (request_eform.getTitle(),
                   request_eform.getStartDate(),
-                  request_eform.getDefaultBirthplaceAddressCity())
+                  request_eform.getDefaultBirthplaceAddressCity()))
     else:
       person = person_list[0]
 

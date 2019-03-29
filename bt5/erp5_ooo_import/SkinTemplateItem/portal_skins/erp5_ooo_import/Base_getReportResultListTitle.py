@@ -10,4 +10,4 @@ if active_process_path is not None:
     return '%s lines imported sucessfully' % \
                       len(context.Base_getReportResultList(active_process_path=active_process_path))
 
-raise AttributeError, 'Unable to get the active process'
+raise AttributeError('Unable to get the active process')

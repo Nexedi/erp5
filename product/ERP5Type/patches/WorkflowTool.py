@@ -57,12 +57,12 @@ def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=No
       raise ValueError('WorkflowMethod should be attached to exactly 1 transition per DCWorkflow instance.')
     sdef = self._getWorkflowStateOf(ob)
     if sdef is None:
-        raise WorkflowException, 'Object is in an undefined state'
+        raise WorkflowException('Object is in an undefined state')
     if method_id not in sdef.transitions:
         raise Unauthorized(method_id)
     tdef = self.transitions.get(method_id, None)
     if tdef is None or tdef.trigger_type != TRIGGER_WORKFLOW_METHOD:
-        raise WorkflowException, (
+        raise WorkflowException(
             'Transition %s is not triggered by a workflow method'
             % method_id)
     if not self._checkTransitionGuard(tdef, ob):
@@ -756,7 +756,7 @@ class WorkflowHistoryList(Persistent):
             return self.__class__((self[x] for x in
                                    xrange(*index.indices(len(self)))))
         else:
-            raise TypeError, 'tuple indices must be integers'
+            raise TypeError('tuple indices must be integers')
 
     def __getslice__(self, start, end):
         return self.__getitem__(slice(start, end))

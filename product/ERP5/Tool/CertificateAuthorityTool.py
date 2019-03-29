@@ -218,7 +218,7 @@ class CertificateAuthorityTool(BaseTool):
         except:
           # do not raise during cleanup
           pass
-        raise e[0], e[1], e[2]
+        raise e[0](e[1]).with_traceback(e[2])
     finally:
       self._unlockCertificateAuthority()
 
@@ -261,7 +261,7 @@ class CertificateAuthorityTool(BaseTool):
         except:
           # do not raise during cleanup
           pass
-        raise e[0], e[1], e[2]
+        raise e[0](e[1]).with_traceback(e[2])
     finally:
       self._unlockCertificateAuthority()
 

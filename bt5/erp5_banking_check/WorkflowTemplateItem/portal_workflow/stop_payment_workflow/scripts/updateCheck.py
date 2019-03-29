@@ -14,7 +14,7 @@ ref_max = transaction.getReferenceRangeMin()
 if ref_min is not None or ref_max is not None:
   if len(aggregate_list)==0:
     msg = Message(domain='ui', message='Sorry, no check was found, but there is a reference.')
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)
   for aggregate in aggregate_list:
     if aggregate.getPortalType()=='Check':
       aggregate.setStopDate(transaction.getStartDate())

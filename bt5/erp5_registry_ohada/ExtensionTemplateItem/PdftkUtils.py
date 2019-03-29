@@ -65,8 +65,8 @@ def addBackgroundOnPdfFile(orginal_pdf, background_pdf):
       orginal_pdf_file.close()
       background_pdf_file.close()
 
-      raise ValueError, 'Error: pdftk command failed with the following'\
-                        'error message : \n%s' % result[1]
+      raise ValueError('Error: pdftk command failed with the following'\
+                        'error message : \n%s' % result[1])
 
   finally:
     background_pdf_file.close()
@@ -107,8 +107,8 @@ def mergePDF(pdf_document_list):
       for tmp_file in tmp_pdf_list:
         tmp_file.close()
 
-      raise ValueError, 'Error: pdftk command failed with the following'\
-                        'error message : \n%s' % result[1]
+      raise ValueError('Error: pdftk command failed with the following'\
+                        'error message : \n%s' % result[1])
 
     else:
       # going to the begining of the input file

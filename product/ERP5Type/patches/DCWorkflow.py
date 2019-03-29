@@ -475,7 +475,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         sci.setWorkflowVariable(error_message=before_script_error_message)
         if validation_exc :
             # reraise validation failed exception
-            raise validation_exc, None, validation_exc_traceback
+            raise validation_exc.with_traceback(validation_exc_traceback)
         return new_sdef
 
     # Update state.
@@ -533,7 +533,7 @@ def _executeMetaTransition(self, ob, new_state_id):
 
   new_sdef = self.states.get(new_state_id, None)
   if new_sdef is None:
-    raise WorkflowException, ('Destination state undefined: ' + new_state_id)
+    raise WorkflowException('Destination state undefined: ' + new_state_id)
 
   # Update variables.
   state_values = new_sdef.var_values
@@ -587,12 +587,12 @@ def DCWorkflowDefinition_wrapWorkflowMethod(self, ob, method_id, func, args, kw)
     '''
     sdef = self._getWorkflowStateOf(ob)
     if sdef is None:
-        raise WorkflowException, 'Object is in an undefined state'
+        raise WorkflowException('Object is in an undefined state')
     if method_id not in sdef.transitions:
         raise Unauthorized(method_id)
     tdef = self.transitions.get(method_id, None)
     if tdef is None or tdef.trigger_type != TRIGGER_WORKFLOW_METHOD:
-        raise WorkflowException, (
+        raise WorkflowException(
             'Transition %s is not triggered by a workflow method'
             % method_id)
     if not self._checkTransitionGuard(tdef, ob):

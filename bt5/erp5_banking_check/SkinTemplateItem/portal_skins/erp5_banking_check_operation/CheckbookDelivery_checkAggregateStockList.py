@@ -16,4 +16,4 @@ for line in context.getMovementList():
         reference = '%s - %s' % (aggregate_value.getReferenceRangeMin() or '', aggregate_value.getReferenceRangeMax() or '')
       msg = Message(domain="ui", message="Sorry, the item with reference $reference is not available any more",
                     mapping={'reference':reference})
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)

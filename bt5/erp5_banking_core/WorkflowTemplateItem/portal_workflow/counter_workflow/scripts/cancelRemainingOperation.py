@@ -13,7 +13,7 @@ date_list = [x.getObject() for x in context.portal_catalog(**kwd)]
 current_date = None
 if len(date_list) == 0:
   msg = Message(domain = 'ui', message = 'No Counter Date found for this counter')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 else:
   current_date = date_list[0].getStartDate()
 

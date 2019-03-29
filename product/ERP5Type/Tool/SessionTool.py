@@ -96,7 +96,7 @@ class RamSession(Session):
         # returned it wrapped in aquisition context
         value = value.__of__(self._aq_context)
       return value
-    raise KeyError, key
+    raise KeyError(key)
 
   def __setitem__(self, key, item):
     # save value without its acquisition context

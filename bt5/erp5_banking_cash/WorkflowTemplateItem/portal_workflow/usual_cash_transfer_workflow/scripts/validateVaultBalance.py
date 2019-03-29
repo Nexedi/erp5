@@ -19,7 +19,7 @@ context.Baobab_checkCounterOpened(source_counter)
 vliste = transaction.checkConsistency()
 transaction.log('vliste', vliste)
 if len(vliste) != 0:
-  raise ValidationFailed, (vliste[0].getMessage(),)
+  raise ValidationFailed(vliste[0].getMessage(),)
 
 resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type='Cash Delivery Line')
 
@@ -29,10 +29,10 @@ total_price = transaction.getTotalPrice(portal_type=['Cash Delivery Line','Cash 
 
 if resource == 2:
   msg = Message(domain="ui", message="No Resource.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif amount != total_price:
   msg = Message(domain="ui", message="Amount differ from total price.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif resource <> 0 :
   msg = Message(domain="ui", message="Insufficient Balance.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)

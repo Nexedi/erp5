@@ -18,4 +18,4 @@ for resource, total_quantity in resource_dict.items():
     resource_value = portal.restrictedTraverse(resource)
     message = Message(domain='ui', message="Sorry, you must have a quantity of 1 for : $resource_title",
                       mapping={'resource_title': resource_value.getTranslatedTitle()})
-    raise ValidationFailed, message
+    raise ValidationFailed(message)

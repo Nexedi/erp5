@@ -7,7 +7,7 @@ date = transaction.getStartDate()
 source = transaction.getSource(None)
 if source is None:
   msg = Message(domain='ui', message='No counter defined.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 # No need to check the counter date for stop payment
 #if not transaction.Baobab_checkCounterDateOpen(site=source, date=date):
@@ -24,17 +24,17 @@ for movement in movement_list:
   for item in aggregate_value_list:
     if item.getPortalType()!='Check':
       msg = Message(domain = "ui", message="Sorry, You should select a check")
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
     if item.getSimulationState()!='stopped':
       msg = Message(domain = "ui", message="Sorry, this check is not stopped")
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
 debit_required = transaction.isDebitRequired()
 if debit_required:
   if transaction.getSimulationState() == 'started':
     stop_date = state_change.kwargs.get('stop_date')
     if stop_date is None:
       msg = Message(domain = "ui", message="No stop date provided")
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
     transaction.setStopDate(stop_date)
 
   # Source and destination will be updated automaticaly based on the category of bank account

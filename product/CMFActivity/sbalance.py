@@ -34,7 +34,7 @@ from select import select
 import re
 
 if not hasattr(socket, 'setdefaulttimeout'):
-  raise RuntimeError, 'Your Python interpreter is too old. Please upgrade it.'
+  raise RuntimeError('Your Python interpreter is too old. Please upgrade it.')
 
 class ClientInfo: pass
 

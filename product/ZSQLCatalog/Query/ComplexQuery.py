@@ -158,7 +158,7 @@ class ComplexQuery(Query):
         assert len(search_text_list) == 1
         result = 'NOT %s' % (search_text_list[0], )
       else:
-        raise ValueError, 'Unknown operator %r' % (self.logical_operator, )
+        raise ValueError('Unknown operator %r' % (self.logical_operator, ))
       if column not in (None, ''):
         if self_is_composed:
           result = '(%s)' % (result, )
