@@ -321,7 +321,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     employee = sequence.get('employee')
     model.edit(destination_section_value=employer,
         source_section_value=employee,
-        effective_date=DateTime(2009,01,01),
+        effective_date=DateTime(2009,1,1),
         expiration_date=DateTime(2009,12,31),
         version='001',
         reference='basic_model',
@@ -557,8 +557,8 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
                   source_section_value=sequence.get('employee'),
                   destination_section_value=sequence.get('employer'),
                   resource_value=sequence.get('price_currency'),
-                  start_date=DateTime(2009,06,01),
-                  stop_date=DateTime(2009,06,30))
+                  start_date=DateTime(2009,6,1),
+                  stop_date=DateTime(2009,6,30))
     sequence.edit(paysheet = paysheet)
 
   def createPaysheetLine(self, document, **kw):
@@ -1028,7 +1028,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     model.edit(\
         price_currency_value=currency,
         default_payment_condition_trade_date='custom',
-        default_payment_condition_payment_date=DateTime(2009,05,25),
+        default_payment_condition_payment_date=DateTime(2009,5,25),
         work_time_annotation_line_quantity=151.67,
         work_time_annotation_line_quantity_unit='time/hours',
         )
@@ -1049,7 +1049,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     self.assertEqual(paysheet.getPriceCurrencyValue(), currency)
     self.assertEqual(paysheet.getDefaultPaymentConditionTradeDate(), 'custom')
     self.assertEqual(paysheet.getDefaultPaymentConditionPaymentDate(),
-        DateTime(2009,05,25))
+        DateTime(2009,5,25))
     self.assertEqual(paysheet.getWorkTimeAnnotationLineQuantity(), 151.67)
     self.assertEqual(paysheet.getWorkTimeAnnotationLineQuantityUnit(),
       'time/hours')
@@ -1639,14 +1639,14 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         variation_settings_category_list=['salary_range/france',],
         reference='fabien_model_2009',
         effective_date=DateTime(2009, 1, 1),
-        expiration_date=DateTime(2009, 06, 30))
+        expiration_date=DateTime(2009, 6, 30))
 
     model_2 = self.getPortalObject().paysheet_model_module.newContent( \
         specialise_value=sequence.get('business_process'),
         portal_type='Pay Sheet Model',
         variation_settings_category_list=['salary_range/france',],
         reference='fabien_model_2009',
-        effective_date=DateTime(2009, 07, 1),
+        effective_date=DateTime(2009, 7, 1),
         expiration_date=DateTime(2009, 12, 31))
 
     model_line_3 = self.createModelLine(model_1)
@@ -1676,8 +1676,8 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     paysheet = self.portal.accounting_module.newContent(
                               portal_type='Pay Sheet Transaction',
                               specialise_value=model_1,
-                              start_date=DateTime(2009, 07, 1),
-                              stop_date=DateTime(2009, 07, 31),
+                              start_date=DateTime(2009, 7, 1),
+                              stop_date=DateTime(2009, 7, 31),
                               price_currency_value=eur)
     paysheet.PaySheetTransaction_applyModel()
     self.tic()
@@ -1706,8 +1706,8 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         portal_type='Pay Sheet Model',
         variation_settings_category_list=['salary_range/france',],
         reference='fabien_model_2009',
-        effective_date=DateTime(2009, 01, 1),
-        expiration_date=DateTime(2009, 02, 28),
+        effective_date=DateTime(2009, 1, 1),
+        expiration_date=DateTime(2009, 2, 28),
         specialise_value=sequence.get('business_process'))
 
     # define two models with same references and same dates
@@ -1716,7 +1716,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         portal_type='Pay Sheet Model',
         variation_settings_category_list=['salary_range/france',],
         reference='fabien_model_2009',
-        effective_date=DateTime(2009, 07, 1),
+        effective_date=DateTime(2009, 7, 1),
         expiration_date=DateTime(2009, 12, 31),
         version='002',
         specialise_value=sequence.get('business_process'))
@@ -1725,7 +1725,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         portal_type='Pay Sheet Model',
         variation_settings_category_list=['salary_range/france',],
         reference='fabien_model_2009',
-        effective_date=DateTime(2009, 07, 1),
+        effective_date=DateTime(2009, 7, 1),
         expiration_date=DateTime(2009, 12, 31),
         version='001',
         specialise_value=sequence.get('business_process'))
@@ -1735,8 +1735,8 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     paysheet = self.portal.accounting_module.newContent(
                               portal_type='Pay Sheet Transaction',
                               specialise_value=model_1,
-                              start_date=DateTime(2009, 07, 1),
-                              stop_date=DateTime(2009, 07, 31),
+                              start_date=DateTime(2009, 7, 1),
+                              stop_date=DateTime(2009, 7, 31),
                               price_currency_value=eur)
     paysheet.PaySheetTransaction_applyModel()
     self.tic()
@@ -1798,8 +1798,8 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         portal_type='Pay Sheet Model',
         specialise_value=sequence.get('business_process'),
         reference='fabien_model_2009',
-        effective_date=DateTime(2009, 01, 1),
-        expiration_date=DateTime(2009, 02, 28))
+        effective_date=DateTime(2009, 1, 1),
+        expiration_date=DateTime(2009, 2, 28))
     model_line_1 = self.createModelLine(model_1)
     model_line_1.edit(
         resource_value=labour,
@@ -1813,7 +1813,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         portal_type='Pay Sheet Model',
         specialise_value=sequence.get('business_process'),
         reference='fabien_model_2009',
-        effective_date=DateTime(2009, 07, 1),
+        effective_date=DateTime(2009, 7, 1),
         expiration_date=DateTime(2009, 12, 31),
         version='002')
     model_line_2 = self.createModelLine(model_2)
@@ -1827,7 +1827,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         portal_type='Pay Sheet Model',
         specialise_value=sequence.get('business_process'),
         reference='fabien_model_2009',
-        effective_date=DateTime(2009, 07, 1),
+        effective_date=DateTime(2009, 7, 1),
         expiration_date=DateTime(2009, 12, 31),
         version='001')
     model_line_3 = self.createModelLine(model_3)
@@ -1843,8 +1843,8 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         portal_type='Pay Sheet Model',
         specialise_value=sequence.get('business_process'),
         reference='fabien_model_level_2_2009',
-        effective_date=DateTime(2009, 01, 1),
-        expiration_date=DateTime(2009, 06, 30),
+        effective_date=DateTime(2009, 1, 1),
+        expiration_date=DateTime(2009, 6, 30),
         version='002')
     model_line_4 = self.createModelLine(model_4)
     model_line_4.edit(
@@ -1857,7 +1857,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         portal_type='Pay Sheet Model',
         specialise_value=sequence.get('business_process'),
         reference='fabien_model_level_2_2009',
-        effective_date=DateTime(2009, 07, 1),
+        effective_date=DateTime(2009, 7, 1),
         expiration_date=DateTime(2009, 12, 31),
         version='001')
     model_line_5 = self.createModelLine(model_5)
@@ -1873,8 +1873,8 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         portal_type='Pay Sheet Model',
         specialise_value=sequence.get('business_process'),
         reference='fabien_model_level_3_2009',
-        effective_date=DateTime(2009, 01, 1),
-        expiration_date=DateTime(2009, 06, 30),
+        effective_date=DateTime(2009, 1, 1),
+        expiration_date=DateTime(2009, 6, 30),
         version='002')
     model_line_6 = self.createModelLine(model_6)
     model_line_6.edit(
@@ -1887,7 +1887,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         portal_type='Pay Sheet Model',
         specialise_value=sequence.get('business_process'),
         reference='fabien_model_level_3_2009',
-        effective_date=DateTime(2009, 07, 1),
+        effective_date=DateTime(2009, 7, 1),
         expiration_date=DateTime(2009, 12, 31),
         version='001')
     model_line_7 = self.createModelLine(model_7)
@@ -1903,8 +1903,8 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     paysheet = self.portal.accounting_module.newContent(
                               portal_type='Pay Sheet Transaction',
                               specialise_value=model_1,
-                              start_date=DateTime(2009, 07, 1),
-                              stop_date=DateTime(2009, 07, 31),
+                              start_date=DateTime(2009, 7, 1),
+                              stop_date=DateTime(2009, 7, 31),
                               price_currency_value=eur)
     specialise_value = paysheet.getSpecialiseValue()
 

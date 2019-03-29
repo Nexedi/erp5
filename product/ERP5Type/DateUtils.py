@@ -447,7 +447,7 @@ def convertDateToHour(date=None):
   # and this provides the use of toordinal method.
   formatted_creation_date = datetime(creation_date_dict['year'],creation_date_dict['month'],creation_date_dict['day'])
   # reference date which is the first day of creation date year
-  reference_date = datetime(creation_date_dict['year'], 01, 1)
+  reference_date = datetime(creation_date_dict['year'], 1, 1)
   # calculate the ordinal date of the creation date and the reference date
   ordinal_date = datetime.toordinal(formatted_creation_date)
   ordinal_reference_date = datetime.toordinal(reference_date)
