@@ -585,6 +585,7 @@
     } else {
       schema_p = schema_path;
     }
+    // XXX check oneOf anyOf allOf length >= 1 and generate exception if not
     if (schema.anyOf !== undefined) {
       return anyOf(g, schema.anyOf, schema_p + '/anyOf', path, schema);
     }
@@ -863,6 +864,9 @@
     })
 
     .declareMethod('render', function (options) {
+      if (!options) {
+        options = {};
+      }
       var z = {
         saveOrigValue: options.saveOrigValue,
         editable: options.editable === undefined ? true : options.editable
@@ -980,12 +984,9 @@
           return g.printErrors();
         })
         .push(function () {
-          if (g.props.form_gadget.props.changed) {
+          if (g.props.form_gadget.props.changed.length > 0) {
             g.notifyChange();
           }
-        })
-        .push(function () {
-          return g;
         })
         .push(undefined, function (err) {
           console.error(err);
@@ -1027,10 +1028,13 @@
             ignore_incorrect: opt.ignore_incorrect
           })
             .push(function () {
-              if (gadget.props.changed) {
+              if (gadget.props.changed.length > 0) {
                 value = undefined;
               }
               return gadget.reValidate(value, opt.schema);
+            })
+            .push(function () {
+              return gadget.props.changed;
             });
         });
     })

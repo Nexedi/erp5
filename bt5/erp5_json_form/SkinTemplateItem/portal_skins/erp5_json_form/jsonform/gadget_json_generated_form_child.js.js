@@ -158,7 +158,7 @@
     if (json_document !== undefined && !selected) {
       if (g.props.ignore_incorrect) {
         empty_option.selected = true;
-        g.props.changed = true;
+        g.props.changed.push(input);
       } else {
         // save original json_document even if it
         // not support with schema
@@ -216,7 +216,7 @@
     if (json_document !== undefined && !selected) {
       if (g.props.ignore_incorrect) {
         empty_option.selected = true;
-        g.props.changed = true;
+        g.props.changed.push(input);
       } else {
         // save original json_document even if it
         // not support with schema
@@ -259,9 +259,10 @@
       ser_doc = JSON.stringify(json_document),
       ser_const = JSON.stringify(schema.const);
     input.setAttribute('readonly', true);
-    if (json_document === undefined || deepEqual(json_document, schema.const)) {
-      if (json_document === undefined) {
-        g.props.changed = true;
+    if (json_document === undefined || g.props.ignore_incorrect ||
+        deepEqual(json_document, schema.const)) {
+      if (json_document === undefined || !deepEqual(json_document, schema.const)) {
+        g.props.changed.push(input);
       }
       input.setAttribute('data-origin-value', ser_const);
       if (schema.title) {
@@ -358,8 +359,9 @@
             }
           })
           .push(function () {
-            if (form_gadget.props.changed) {
-              g.props.changed = true;
+            if (form_gadget.props.changed.length > 0) {
+              // XXX not exactly path changed element
+              g.props.changed.push(parent_path);
             }
             return form_gadget.element;
           });
@@ -1001,7 +1003,7 @@
           const: json_document
         };
       } else {
-        gadget.props.changed = true;
+        gadget.props.changed.push(first_path);
       }
     }
     if (type === undefined && json_document !== undefined) {
@@ -1583,15 +1585,15 @@
         return queue;
       })
       .push(function () {
-        if (g.props.ignore_incorrect) {
-          g.props.changed = true;
-          return;
-        }
         var key,
           queue = RSVP.Queue();
         for (key in json_document) {
           if (json_document.hasOwnProperty(key)) {
             if (!used_properties.hasOwnProperty(key)) {
+              if (g.props.ignore_incorrect) {
+                g.props.changed.push(path);
+                return;
+              }
               queue
                 .push(
                   addSubForm.bind(g, {
@@ -2106,7 +2108,7 @@
       if (opt.ignore_incorrect !== undefined) {
         g.props.ignore_incorrect = opt.ignore_incorrect;
       }
-      g.props.changed = false;
+      g.props.changed = [];
       g.props.inputs = [];
       g.props.add_buttons = [];
       g.props.add_custom_data = {};
@@ -2132,9 +2134,15 @@
           for (i = 0; i < for_delete.length; i += 1) {
             root.removeChild(for_delete[i]);
           }
-          if (g.props.changed) {
+          if (g.props.changed.length > 0) {
             value = undefined;
           }
+          g.props.changed = g.props.changed.map(function (el) {
+            if (el.name) {
+              return el.name;
+            }
+            return el;
+          });
           return g.checkValidity(value);
         })
         .push(function () {
@@ -2174,10 +2182,13 @@
             input.removeAttribute('data-const-value');
             changed = true;
           }
+          break;
         }
       }
       if (changed) {
-        return this.rootNotifyChange();
+        return this.rootNotifyChange({
+          path: input.name
+        });
       }
     })
 
