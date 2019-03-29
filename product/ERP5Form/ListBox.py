@@ -2769,7 +2769,7 @@ class ListBoxValidator(Validator.Validator):
                   value = editable_field._validate_helper(key, REQUEST) # We need cell
                   # Here we set the property
                   row_result[sql] = value
-                except ValidationError, err:
+                except ValidationError as err:
                   pass
                 except KeyError:
                   pass
@@ -2803,7 +2803,7 @@ class ListBoxValidator(Validator.Validator):
                   try:
                     row_result[sql] = editable_field._validate_helper(
                       key, REQUEST) # We need cell
-                  except ValidationError, err:
+                  except ValidationError as err:
                     #LOG("ListBox ValidationError",0,str(err))
                     err.field_id = error_result_key
                     errors.append(err)
@@ -2819,7 +2819,7 @@ class ListBoxValidator(Validator.Validator):
               # because sometimes, we can be provided bad uids
               try :
                 o = here.portal_catalog.getObject(uid)
-              except (KeyError, NotFound, ValueError), err:
+              except (KeyError, NotFound, ValueError) as err:
                 # It is possible that this object is not catalogged yet. So
                 # the object must be obtained from ZODB.
                 if object_list is None:
@@ -2847,7 +2847,7 @@ class ListBoxValidator(Validator.Validator):
                     try:
                       row_result[sql] = error_result[error_result_key] = \
                         editable_field._validate_helper(key, REQUEST)
-                    except ValidationError, err:
+                    except ValidationError as err:
                       err.field_id = error_result_key
                       errors.append(err)
                     except KeyError:

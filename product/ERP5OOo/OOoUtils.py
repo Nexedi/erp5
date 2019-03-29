@@ -242,7 +242,7 @@ class OOoParser(Implicit):
     # Try to unzip the Open Office doc
     try:
       oo_unzipped = ZipFile(file_descriptor, mode="r")
-    except Exception, e:
+    except Exception as e:
       LOG('ERP5OOo', DEBUG, 'Error in openFile', error=sys.exc_info())
       raise CorruptedOOoFile(e)
     # Test the integrity of the file

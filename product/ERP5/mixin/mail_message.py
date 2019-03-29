@@ -45,7 +45,7 @@ def testCharsetAndConvert(text_content, content_type, encoding):
       text_content = text_content.decode(encoding).encode('utf-8')
     else:
       text_content = text_content.decode().encode('utf-8')
-  except (UnicodeDecodeError, LookupError), error_message:
+  except (UnicodeDecodeError, LookupError) as error_message:
     encoding = guessEncodingFromText(text_content, content_type)
     if encoding is not None:
       try:
@@ -123,7 +123,7 @@ class MailMessageMixin:
     for (name, value) in self._getMessage().items():
       try:
         decoded_header = decode_header(value)
-      except HeaderParseError, error_message:
+      except HeaderParseError as error_message:
         decoded_header = ()
         LOG('MailMessageMixin.getContentInformation', INFO,
             'Failed to decode %s header of %s with error: %s' %

@@ -789,7 +789,7 @@ class TestOOoImport(TestOOoImportMixin):
     try:
       self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
              import_file=import_file)
-    except ValueError, error:
+    except ValueError as error:
       # 'france' is the duplicate ID in this spreadsheet
       self.assertTrue('france' in str(error), str(error))
     else:
@@ -818,7 +818,7 @@ class TestOOoImport(TestOOoImportMixin):
     try:
       self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
              import_file=import_file)
-    except ValueError, error:
+    except ValueError as error:
       # 'wrong_hierarchy' is the ID of the category where the problem happens
       self.assertTrue('wrong_hierarchy' in str(error), str(error))
     else:
@@ -832,7 +832,7 @@ class TestOOoImport(TestOOoImportMixin):
     try:
       self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
              import_file=import_file)
-    except ValueError, error:
+    except ValueError as error:
       self.assertTrue('More that one path is defined' in str(error), str(error))
     else:
       self.fail('ValueError not raised')

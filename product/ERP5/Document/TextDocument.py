@@ -365,7 +365,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
           # if succeeds, not need to change encoding
           # it's already utf-8
           text_content.decode('utf-8')
-        except (UnicodeDecodeError, LookupError), error_message:
+        except (UnicodeDecodeError, LookupError) as error_message:
           text_content, message = guessCharsetAndConvert(self,
                                                     text_content, content_type)
         else:

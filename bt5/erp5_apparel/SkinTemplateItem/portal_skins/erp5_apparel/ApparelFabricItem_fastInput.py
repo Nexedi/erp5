@@ -196,7 +196,7 @@ try:
               cell.edit(quantity=total_quantity)
 
 
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   redirect_url = '%s/view?%s' % ( context.absolute_url()
                                   , 'portal_status_message=%s' % localizer.erp5_ui.gettext("input failed.")
                                   )

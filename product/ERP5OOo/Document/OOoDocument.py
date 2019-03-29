@@ -111,12 +111,12 @@ class OOoServerProxy():
           # Cloudooo return result in (200 or 402, dict(), '') format or just based type
           # 402 for error and 200 for ok
           result_set =  func(*args, **kw)
-        except SocketError, e:
+        except SocketError as e:
           message = 'Socket Error: %s' % (repr(e) or 'undefined.')
           socket_error_list.append(message)
           retry_server_list.append(server_proxy)
           continue
-        except ProtocolError, e:
+        except ProtocolError as e:
           # Network issue
           message = "%s: %s %s" % (e.url, e.errcode, e.errmsg)
           if e.errcode == -1:
@@ -124,7 +124,7 @@ class OOoServerProxy():
           protocol_error_list.append(message)
           retry_server_list.append(server_proxy)
           continue
-        except Fault, e:
+        except Fault as e:
           # Return not supported data types
           fault_error_list.append(e)
           continue
@@ -279,7 +279,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                                 " formats for conversion (Code %s: %s)" % (
                                       response_code, response_message))
 
-      except Fault, f:
+      except Fault as f:
         allowed = server_proxy.getAllowedTargets(content_type)
         warn('Your oood version is too old, using old method '
             'getAllowedTargets instead of getAllowedTargetList',

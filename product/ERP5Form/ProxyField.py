@@ -139,7 +139,7 @@ class ProxyValidator(Validator.Validator):
     proxy_field = field.getRecursiveTemplateField()
     try:
       result = proxy_field.validator.validate(field, key, REQUEST)
-    except ValidationError, error:
+    except ValidationError as error:
       error.field_id = field.id
       raise error
     return result
@@ -195,7 +195,7 @@ class ProxyField(ZMIField):
       try:
         # validate the form and get results
         result = template_field.form.validate(REQUEST)
-      except ValidationError, err:
+      except ValidationError as err:
         if REQUEST:
           message = "Error: %s - %s" % (err.field.get_value('title'),
                                         err.error_text)
@@ -213,7 +213,7 @@ class ProxyField(ZMIField):
     try:
       # validate the form and get results
       result = self.form.validate(REQUEST)
-    except ValidationError, err:
+    except ValidationError as err:
       if REQUEST:
         message = "Error: %s - %s" % (err.field.get_value('title'),
                                       err.error_text)
@@ -305,7 +305,7 @@ class ProxyField(ZMIField):
       try:
         # validate the form and get results
         result = template_field.tales_form.validate(REQUEST)
-      except ValidationError, err:
+      except ValidationError as err:
         if REQUEST:
           message = "Error: %s - %s" % (err.field.get_value('title'),
                                         err.error_text)
@@ -319,7 +319,7 @@ class ProxyField(ZMIField):
     try:
       # validate the form and get results
       result = self.tales_form.validate(REQUEST)
-    except ValidationError, err:
+    except ValidationError as err:
       if REQUEST:
         message = "Error: %s - %s" % (err.field.get_value('title'),
                                       err.error_text)

@@ -63,7 +63,7 @@ class SSHConnection(object):
     rsa_key = paramiko.RSAKey.from_private_key_file(self.key_path)
     try:
       self.transport.connect(username=self.username, pkey=rsa_key)
-    except SSHException, e:
+    except SSHException as e:
       self.transport.close()
       raise SSHConnectionError(str(e))
     else:

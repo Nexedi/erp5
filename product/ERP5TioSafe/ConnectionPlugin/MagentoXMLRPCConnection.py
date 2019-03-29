@@ -43,7 +43,7 @@ class MethodWrapper(object):
       else:
         return self._method, self._conn.server.call(self._conn.session,
                                                     self._method, [args])
-    except Fault, msg:
+    except Fault as msg:
       error = "XMLRPC error, reason is %s : %s" %(msg.faultCode, msg.faultString,)
       raise ConnectionError(error)
 

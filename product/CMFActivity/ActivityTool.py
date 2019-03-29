@@ -406,7 +406,7 @@ Named Parameters: %r
       mail_text += '\nCreated at:\n' + self.call_traceback
     try:
       portal.MailHost.send(mail_text)
-    except (socket.error, MailHostError), message:
+    except (socket.error, MailHostError) as message:
       LOG('ActivityTool.notifyUser', WARNING,
           'Mail containing failure information failed to be sent: %s' % message)
 

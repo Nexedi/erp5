@@ -518,7 +518,7 @@ class TestReturnedSalePackingList(ReturnedSalePackingListMixin, ERP5TypeTestCase
     sequence_list.addSequenceString(sequence_string)
     try:
       sequence_list.play(self, quiet=quiet)
-    except UnsupportedWorkflowMethod, e:
+    except UnsupportedWorkflowMethod as e:
       self.assertTrue(True)
 
   def test_04_ReturnedSalePackingListCreating(self, quiet=quiet,

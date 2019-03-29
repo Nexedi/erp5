@@ -90,7 +90,7 @@ def ERP5Site_runVerificationScript(self, method_id):
     return 'Script %s was not Found!' % (method_id)
   try:
     integrity_result = method()
-  except Exception, e:
+  except Exception as e:
     # Is it required include the trace back
     return 'Script %s fail to run, Exception: %s , message: %s .' % (method_id, e.__class__, e )
   if len(integrity_result) > 0:

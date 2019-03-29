@@ -87,7 +87,7 @@ class InotifyTool(TimerServiceMixin, BaseTool):
                   p = os.path.join(inode_path, name)
                   try:
                     s = os.lstat(p)
-                  except OSError, e:
+                  except OSError as e:
                     if e.errno != errno.ENOENT:
                       raise
                   else:

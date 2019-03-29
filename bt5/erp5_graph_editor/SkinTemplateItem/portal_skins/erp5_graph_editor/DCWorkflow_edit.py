@@ -7,7 +7,7 @@ edit_order = form.edit_order
 try:
   # Validate
   form.validate_all_to_request(request, key_prefix='my_')
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   # Pack errors into the request
   result = {}
   result['field_errors'] = {}

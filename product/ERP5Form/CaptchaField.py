@@ -262,7 +262,7 @@ class CaptchaField(ZMIField):
       try:
         # validate the form and get results
         result[field.get_real_field().id] = field.get_real_field().validate(REQUEST)
-      except ValidationError, err:
+      except ValidationError as err:
         if REQUEST:
           message = "Error: %s - %s" % (err.field.get_value('title'),
                                         err.error_text)
@@ -278,7 +278,7 @@ class CaptchaField(ZMIField):
     try:
       # validate the form and get results
       result.update(self.form.validate(REQUEST))
-    except ValidationError, err:
+    except ValidationError as err:
       if REQUEST:
         message = "Error: %s - %s" % (err.field.get_value('title'),
                                       err.error_text)
@@ -328,7 +328,7 @@ class CaptchaField(ZMIField):
       try:
         # validate the form and get results
         result[field.id] = field.validate(REQUEST)
-      except ValidationError, err:
+      except ValidationError as err:
         if REQUEST:
           message = "Error: %s - %s" % (err.field.get_value('title'),
                                         err.error_text)
@@ -341,7 +341,7 @@ class CaptchaField(ZMIField):
     try:
       # validate the form and get results
       result.update(self.tales_form.validate(REQUEST))
-    except ValidationError, err:
+    except ValidationError as err:
       if REQUEST:
         message = "Error: %s - %s" % (err.field.get_value('title'),
                                       err.error_text)

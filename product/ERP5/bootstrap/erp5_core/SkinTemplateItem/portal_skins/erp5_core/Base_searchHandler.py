@@ -28,7 +28,7 @@ try:
   url_params_string = make_query(kw)
 #  raise str(kw), url_params_string
 
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)

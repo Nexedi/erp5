@@ -129,7 +129,7 @@ if not next_url_dict.has_key(form_id):
     message=""
     context.portal_workflow.doActionFor(context,
                                       submit_action)
-  except ValidationFailed, message: 
+  except ValidationFailed as message: 
     context.pdb()
     return request['RESPONSE'].redirect(
                "%s/%s?portal_status_message=%s" %

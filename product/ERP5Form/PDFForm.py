@@ -127,7 +127,7 @@ class PDFTk:
         input = input.read()
       try :
         stdin.write(input)
-      except IOError, e:
+      except IOError as e:
         raise IOError, str(e) + " ( make sure "\
           "%s exists and is in your $PATH )"%PDFTK_EXECUTABLE
     stdin.close()
@@ -391,7 +391,7 @@ class PDFForm(File):
     for url in self.getProperty('download_url') :
       try :
         response = urllib.urlopen(url)
-      except IOError, e :
+      except IOError as e :
         LOG("PDFForm", WARNING, "Unable to download from %s" % url, e)
         continue
       if response.headers.getheader('Content-Type') != 'application/pdf':

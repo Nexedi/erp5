@@ -50,7 +50,7 @@ class OscommerceNode(NodeBrain):
           category = 'Country/%s' % self.country, create_mapping=True,
           create_mapping_line=True,
           ).split('/', 1)[-1]
-      except ValueError, msg:
+      except ValueError as msg:
         LOG("OscommerceBrain.OscommerceNode.__init__", ERROR, "Getting category for %s raise with msg = %s" %(value, msg))
         self.country = ""
 

@@ -415,11 +415,11 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         try:
             #LOG('_executeTransition', 0, "script = %s, sci = %s" % (repr(script), repr(sci)))
             script(sci)  # May throw an exception.
-        except ValidationFailed, validation_exc:
+        except ValidationFailed as validation_exc:
             before_script_success = 0
             before_script_error_message = deepcopy(validation_exc.msg)
             validation_exc_traceback = sys.exc_traceback
-        except ObjectMoved, moved_exc:
+        except ObjectMoved as moved_exc:
             ob = moved_exc.getNewObject()
             # Re-raise after transition
 
@@ -603,7 +603,7 @@ def DCWorkflowDefinition_wrapWorkflowMethod(self, ob, method_id, func, args, kw)
     except ObjectDeleted:
         # Re-raise with a different result.
         raise ObjectDeleted(res)
-    except ObjectMoved, ex:
+    except ObjectMoved as ex:
         # Re-raise with a different result.
         raise ObjectMoved(ex.getNewObject(), res)
     return res

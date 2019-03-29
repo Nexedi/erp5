@@ -230,7 +230,7 @@ class Coordinate(Base):
         self._writeFromPUT( body )
         RESPONSE.setStatus(204)
         return RESPONSE
-      except ResourceLockedError, msg:
+      except ResourceLockedError as msg:
         get_transaction().abort()
         RESPONSE.setStatus(423)
         return RESPONSE

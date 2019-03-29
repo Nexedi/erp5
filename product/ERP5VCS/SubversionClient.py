@@ -273,7 +273,7 @@ try:
         return Revision(self.client.checkin(path,
                                             log_message=log_message or 'none',
                                             recurse=recurse))
-      except pysvn.ClientError, error:
+      except pysvn.ClientError as error:
         excep = self.getException()
         if excep:
           raise excep
@@ -283,7 +283,7 @@ try:
     def update(self, path):
       try:
         return [Revision(x) for x in self.client.update(path)]
-      except pysvn.ClientError, error:
+      except pysvn.ClientError as error:
         excep = self.getException()
         if excep:
           raise excep
@@ -295,7 +295,7 @@ try:
       # Zope, convert the objects.
       try:
         status_list = [Status(x) for x in self.client.status(path=path, **kw)]
-      except pysvn.ClientError, error:
+      except pysvn.ClientError as error:
         excep = self.getException()
         if excep:
           raise excep
@@ -330,7 +330,7 @@ try:
     def log(self, path):
       try:
         log_list = self.client.log(path)
-      except pysvn.ClientError, error:
+      except pysvn.ClientError as error:
         if 'path not found' in error.args[0]:
           return
         excep = self.getException()
@@ -363,7 +363,7 @@ try:
         path = os.path.realpath(path)
       try:
         entry = self.client.info(path=path)
-      except pysvn.ClientError, error:
+      except pysvn.ClientError as error:
         excep = self.getException()
         if excep:
           raise excep
@@ -383,7 +383,7 @@ try:
     def ls(self, path):
       try:
         dict_list = self.client.ls(url_or_path=path, recurse=False)
-      except pysvn.ClientError, error:
+      except pysvn.ClientError as error:
         if 'non-existent' in error.args[0]:
           return
         excep = self.getException()

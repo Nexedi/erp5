@@ -93,7 +93,7 @@ class FunctionalTestRunner:
                    "portal_name=", "run_only=", "user=",
                    "password=", "alarms=",
                    "email_subject=", "smtp_host=", "xvfb_display="] )
-    except getopt.GetoptError, msg:
+    except getopt.GetoptError as msg:
       self.usage(sys.stderr, msg)
       sys.exit(2)
 
@@ -273,7 +273,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     try:
       status = self.openUrl('%s/portal_tests/TestTool_getResults'
                                % (self.portal_url))
-    except urllib2.HTTPError, e:
+    except urllib2.HTTPError as e:
       if e.msg == "No Content" :
         status = ""
       else:

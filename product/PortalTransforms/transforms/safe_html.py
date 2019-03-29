@@ -440,7 +440,7 @@ class SafeHTML:
                     remove_javascript=self.config.get('remove_javascript', True),
                     raise_error=False,
                     default_encoding=self.config.get('default_encoding', 'utf-8'))
-            except IllegalHTML, inst:
+            except IllegalHTML as inst:
                 data.setData(msg_pat % ("Error", str(inst)))
                 break
             except (HTMLParseError, UnicodeDecodeError):

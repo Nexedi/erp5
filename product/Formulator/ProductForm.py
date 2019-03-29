@@ -114,7 +114,7 @@ class ProductForm(BasicForm):
 
         try:
             result=self.validate_all(REQUEST)
-        except FormValidationError, e:
+        except FormValidationError as e:
             for error in e.errors:
                 errors[error.field.get_value('title')]=error.error_text
 

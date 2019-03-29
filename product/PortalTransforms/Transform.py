@@ -26,7 +26,7 @@ def import_from_name(module_name):
     try:
         for sub in module_name.split('.')[1:]:
             m = getattr(m, sub)
-    except AttributeError, e:
+    except AttributeError as e:
         raise ImportError(str(e))
     return m
 
@@ -148,7 +148,7 @@ class Transform(SimpleItem):
             pass
         try:
             m = import_from_name(self.module)
-        except ImportError, err:
+        except ImportError as err:
             transform = BrokenTransform(self.id, self.module, err)
             msg = "Cannot register transform %s (ImportError), using BrokenTransform: Error\n %s" % (self.id, err)
             self.title = 'BROKEN'
@@ -159,7 +159,7 @@ class Transform(SimpleItem):
             raise TransformException(msg)
         try:
             transform = m.register()
-        except Exception, err:
+        except Exception as err:
             transform = BrokenTransform(self.id, self.module, err)
             msg = "Cannot register transform %s, using BrokenTransform: Error\n %s" % (self.id, err)
             self.title = 'BROKEN'

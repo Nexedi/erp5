@@ -207,7 +207,7 @@ def xmlString(results, resourceType, foldersOnly):
             try:
                xmlFolders.append('\r            <Folder name="%s" title="%s" linkbyuid="%s" uid="%s" type="%s" metatype="%s" />'%(ConvertToXmlAttribute(result.id),ConvertToXmlAttribute(titre), tagLinkbyuid, uid, resourceType, ConvertToXmlAttribute(result.meta_type)))
                
-            except Exception , e:
+            except Exception as e:
                pass
             
         else :
@@ -216,13 +216,13 @@ def xmlString(results, resourceType, foldersOnly):
             size=0
             try:
                size= result.getContent().get_size()
-            except Exception,e:
+            except Exception as e:
                
                pass
             try:
                xmlFiles.append('\r            <File name="%s/preview" size="%s" title="%s" photo="%s" linkbyuid="%s" uid="%s" type="%s" isPA3img="no" isattach="no" attachid="" />'%(ConvertToXmlAttribute(result.getId()),size,ConvertToXmlAttribute(titre), tagPhoto, tagLinkbyuid, uid, resourceType))
                
-            except Exception,e:
+            except Exception as e:
                pass
    
     xmlFiles.append('\r        </Files>')
@@ -264,7 +264,7 @@ def GetFoldersAndFiles( resourceType, currentFolder ):
     if currentFolder != "/" :
       try:
         obj = context.restrictedTraverse(currentFolder.lstrip('/'))
-      except Exception,e:
+      except Exception as e:
         
         obj = context.portal_url.getPortalObject()
     else :
@@ -335,7 +335,7 @@ def GetFolders( resourceType, currentFolder ):
             results.append(object)
           elif user.has_role(rolesSeeUnpublishedContent,object) :
             results.append(object)
-      except Exception,e:
+      except Exception as e:
           pass  
     results = [ s for s in results if user.has_permission('View', s) ]
      
@@ -448,7 +448,7 @@ def UploadFile(resourceType, currentFolder, data, title) :
                 #context.createCPSDocument(context=obj,REQUEST=request)
                 obj.reindexObject()
                 
-            except Exception , e :
+            except Exception as e :
                 
                 error = "103"
                 

@@ -128,14 +128,14 @@ class TextContent:
       headers.setdefault('content_type', content_type)
       headers['file'] = body
       self._edit(**headers)
-    except 'EditingConflict', msg:
+    except 'EditingConflict' as msg:
       # XXX Can we get an error msg through?  Should we be raising an
       #     exception, to be handled in the FTP mechanism?  Inquiring
       #     minds...
       transaction.abort()
       RESPONSE.setStatus(450)
       return RESPONSE
-    except ResourceLockedError, msg:
+    except ResourceLockedError as msg:
       transaction.abort()
       RESPONSE.setStatus(423)
       return RESPONSE

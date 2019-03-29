@@ -18,7 +18,7 @@ try:
   request.set('editable_mode', 1)
   form.validate_all_to_request(request)
   request.set('editable_mode', editable_mode)
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)
@@ -69,7 +69,7 @@ try:
     context,
     doaction_param_list['workflow_action'],
     **doaction_param_list)
-except ValidationFailed, error_message:
+except ValidationFailed as error_message:
   if getattr(error_message, 'msg', None):
     # use of Message class to store message+mapping+domain
     message = error_message.msg
