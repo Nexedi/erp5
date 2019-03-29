@@ -29,7 +29,7 @@
     }
 
     suboptions = {
-      hide_enabled: form_definition.hide_enabled, // listbox specific
+      hide_enabled: true,//form_definition.hide_enabled, // listbox specific
       configure_enabled: form_definition.configure_enabled, // listbox specific
       extended_search: form_definition.extended_search, // searchfield specific
       field_type: rendered_document[field_name].type,
