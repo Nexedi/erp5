@@ -83,7 +83,6 @@
           command: 'reload'
         });
       }
-      console.log('Copying', checked_uid_list);
       return gadget.setSetting('clipboard', checked_uid_list)
         .push(function () {
           return gadget.notifySubmitted({
@@ -131,7 +130,6 @@
             'catalog.uid',
             true
           );
-          console.log('Pasting', uid_list);
           return gadget.redirect({
             command: 'display_dialog_with_history',
             options: {
