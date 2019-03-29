@@ -30,6 +30,6 @@ if resource == 2:
 elif amount != total_price:
   msg = Message(domain="ui", message="Amount differ from total price.")
   raise ValidationFailed(msg,)
-elif resource <> 0 :
+elif resource != 0 :
   msg = Message(domain="ui", message="Insufficient Balance.")
   raise ValidationFailed(msg,)

@@ -205,7 +205,7 @@ if not error:
     line.updateCellRange(script_id='CashDetail_asCellRange', base_id=cell_base_id)
     # create cell
     cell_range_key_list = line.getCellRangeKeyList(base_id=cell_base_id)
-    if cell_range_key_list <> [[None, None]] :
+    if cell_range_key_list != [[None, None]] :
       for k in cell_range_key_list:
         # check we don't create a cell for variation which is not defined
         key = "%s_%s_%s" %(k[2], k[0], k[1])

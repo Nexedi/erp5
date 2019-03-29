@@ -1197,7 +1197,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     line.setVariationCategoryList(variation_category_list)
     line.updateCellRange(script_id='CashDetail_asCellRange', base_id=base_id)
     cell_range_key_list = line.getCellRangeKeyList(base_id=base_id)
-    if cell_range_key_list <> [[None, None]] :
+    if cell_range_key_list != [[None, None]] :
       for k in cell_range_key_list:
         category_list = filter(lambda k_item: k_item is not None, k)
         c = line.newCell(*k, **line_kwd)
