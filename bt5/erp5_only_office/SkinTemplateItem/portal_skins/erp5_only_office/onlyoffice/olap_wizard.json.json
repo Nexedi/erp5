@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "OLAP Query parameters",
+  "type": "object",
+  "definitions": {
+    "choice": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "urn:jio:choice.json"
+      }
+    }
+  },
+  "properties": {
+    "connection_name": {
+      "$ref": "urn:jio:remote_connections.json"
+    },
+    "columns": {
+      "title": "columns",
+      "$ref": "#/definitions/choice"
+    },
+    "rows": {
+      "title": "rows",
+      "$ref": "#/definitions/choice"
+    }
+  },
+  "additionalProperties": false
+}

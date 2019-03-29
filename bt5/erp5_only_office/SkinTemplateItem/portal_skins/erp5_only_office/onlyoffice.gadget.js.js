@@ -187,6 +187,9 @@ DocsAPI.DocEditor.version = function () {
           });
       }
     })
+    .allowPublicAcquisition("getRemoteSettings", function () {
+      return this.jio_getAttachment('/', 'remote_settings.json', {format: 'json'});
+    })
 
     // methods emulating Gateway used for connection with ooffice begin.
     .declareMethod('appReady', function () {

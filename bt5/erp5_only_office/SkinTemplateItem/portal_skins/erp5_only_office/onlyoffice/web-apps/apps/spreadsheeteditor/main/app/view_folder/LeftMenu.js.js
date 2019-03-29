@@ -42,6 +42,7 @@ define([
     'common/main/lib/view/Chat',
     /** coauthoring end **/
     'common/main/lib/view/SearchDialog',
+    'common/main/lib/view/RenderJSPanel',
     'common/main/lib/view/Plugins',
     'spreadsheeteditor/main/app/view/FileMenu'
 ], function (menuTemplate, $, _, Backbone) {
@@ -63,6 +64,7 @@ define([
                 'click #left-btn-chat': _.bind(this.onCoauthOptions, this),
                 /** coauthoring end **/
                 'click #left-btn-plugins': _.bind(this.onCoauthOptions, this),
+                'click #left-btn-xmlawizard': _.bind(this.onCoauthOptions, this),
                 'click #left-btn-support': function() {
                     var config = this.mode.customization;
                     config && !!config.feedback && !!config.feedback.url ?
@@ -77,7 +79,8 @@ define([
         },
 
         render: function () {
-            var el = $(this.el);
+            var el = $(this.el),
+              me = this;
             el.html(this.template({
             }));
 
@@ -156,6 +159,26 @@ define([
             });
             this.btnPlugins.hide();
             this.btnPlugins.on('click',         _.bind(this.onBtnMenuClick, this));
+
+            this.btnXmlaWizard = new Common.UI.Button({
+                el: $('#left-btn-xmlawizard', this.el),
+                enableToggle: true,
+                disabled: true,
+                toggleGroup: 'leftMenuGroup'
+            });
+            this.btnXmlaWizard.on('click',      _.bind(this.onBtnMenuClick, this));
+            this.btnXmlaWizard.on('toggle',     _.bind(this.onBtnMenuToggle, this));
+            (new Common.Views.RenderJSPanel({
+                el: $('#left-panel-xmlawizard'),
+                scope: "xmlawizard",
+                gadget_url: "onlyoffice/olap_wizard.html"
+            })).render()
+              .push(function (z) {
+                me.btnXmlaWizard.panel = z;
+              })
+              .push(undefined, function (e) {
+                console.error(e);
+              });
 
             this.btnSearch.on('click',          _.bind(this.onBtnMenuClick, this));
             this.btnRemote.on('toggle',         _.bind(this.onBtnMenuClick, this));
@@ -267,6 +290,7 @@ define([
         close: function(menu) {
             this.btnFile.toggle(false);
             this.btnAbout.toggle(false);
+            this.btnXmlaWizard.toggle(false);
             this.$el.width(SCALE_MIN);
             /** coauthoring begin **/
             if (this.mode.canCoAuthoring) {
@@ -300,6 +324,7 @@ define([
             this.btnFile.setDisabled(false);
             this.btnAbout.setDisabled(false);
             this.btnRemote.setDisabled(false);
+            this.btnXmlaWizard.setDisabled(false);
             this.btnSupport.setDisabled(false);
             this.btnSearch.setDisabled(false);
             /** coauthoring begin **/
