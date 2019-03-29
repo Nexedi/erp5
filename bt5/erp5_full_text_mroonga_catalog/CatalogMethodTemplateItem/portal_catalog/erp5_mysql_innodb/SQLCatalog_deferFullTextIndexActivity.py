@@ -21,7 +21,7 @@ for group_object in object_list:
   except Unauthorized: # should happen in tricky testERP5Catalog tests only
     # Fake activity success: if indexation cannot View document, ignore it.
     group_object.result = None
-  except Exception, e:
+  except Exception as e:
     group_object.raised()
   else:
     for property, value in tmp_dict.iteritems():

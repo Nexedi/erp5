@@ -1098,7 +1098,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       try:
         OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
         old_obj_xml = old_io.getvalue()
-      except (ImportError, UnicodeDecodeError), e: # module is already
+      except (ImportError, UnicodeDecodeError) as e: # module is already
                                                    # removed etc.
         old_obj_xml = '(%s: %s)' % (e.__class__.__name__, e)
       new_io.close()
@@ -1769,7 +1769,7 @@ class PathTemplateItem(ObjectTemplateItem):
       # Ignore any object without PortalType (non-ERP5 objects)
       try:
         portal_type = aq_base(obj).getPortalType()
-      except Exception, e:
+      except Exception as e:
         pass
       else:
         if portal_type not in p.portal_types:
@@ -3875,7 +3875,7 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
         path, name = posixpath.split(key)
         try:
           self.local_file_writer_name(name, text, create=0)
-        except IOError, error:
+        except IOError as error:
           LOG(self.__class__.__name__, WARNING,
               "Cannot install class %r on file system" % name)
           if error.errno:
@@ -6530,7 +6530,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                                               temp_obj.getReference(),
                                               version,
                                               source_reference)
-        except Exception, e:
+        except Exception as e:
           LOG("BusinessTemplate", WARNING,
               "Could not import component '%s' ('%s') from the filesystem" %
               (temp_obj.getReference(),

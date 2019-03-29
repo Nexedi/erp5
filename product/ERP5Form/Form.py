@@ -755,12 +755,12 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
                     alternate_name = field.get_value('alternate_name')
                     if alternate_name:
                         result[alternate_name] = value
-                except FormValidationError, e: # XXX JPS Patch for listbox
+                except FormValidationError as e: # XXX JPS Patch for listbox
                     errors.extend(e.errors)
                     result.update(e.result)
-                except ValidationError, err:
+                except ValidationError as err:
                     errors.append(err)
-                except KeyError, err:
+                except KeyError as err:
                     LOG('ERP5Form/Form.py:validate_all', 0, 'KeyError : %s' % (err, ))
 
         if len(errors) > 0:

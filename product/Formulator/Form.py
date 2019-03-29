@@ -381,7 +381,7 @@ class Form:
                 alternate_name = field.get_value('alternate_name')
                 if alternate_name:
                     result[alternate_name] = value
-            except ValidationError, err:
+            except ValidationError as err:
                 errors.append(err)
         if len(errors) > 0:
             raise FormValidationError(errors, result)
@@ -394,7 +394,7 @@ class Form:
         """
         try:
             result = self.validate_all(REQUEST, key_prefix=key_prefix)
-        except FormValidationError, e:
+        except FormValidationError as e:
             # put whatever result we have in REQUEST
             for key, value in e.result.items():
                 REQUEST.set(key, value)
@@ -783,7 +783,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         """
         try:
             result = self.settings_form.validate_all(REQUEST)
-        except FormValidationError, e:
+        except FormValidationError as e:
             message = "Validation error(s).<br />" + string.join(
                 map(lambda error: "%s: %s" % (error.field.get_value('title'),
                                               error.error_text), e.errors), "<br />")

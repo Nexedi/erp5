@@ -3,15 +3,15 @@ from Products.ERP5VCS.SubversionClient import SubversionSSLTrustError, Subversio
 
 try:
   raise exception
-except SubversionSSLTrustError, e:
+except SubversionSSLTrustError as e:
   message = 'SSL Certificate was not recognized'
   kw = dict(trust_dict=e.getTrustDict())
   method = 'BusinessTemplate_viewSvnSSLTrust'
-except SubversionLoginError, e:
+except SubversionLoginError as e:
   message = 'Server needs authentication, no cookie found'
   kw = dict(realm=e.getRealm(), username=context.getVcsTool().getPreferredUsername())
   method = 'BusinessTemplate_viewSvnLogin'
-except GitLoginError, e:
+except GitLoginError as e:
   message = str(e)
   kw = dict(remote_url=context.getVcsTool().getRemoteUrl())
   method = 'BusinessTemplate_viewGitLogin'

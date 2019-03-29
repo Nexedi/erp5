@@ -557,7 +557,7 @@ class ContributionTool(BaseTool):
       try:
         url = content.asURL()
         file_object, filename, content_type = self._openURL(url)
-      except urllib2.URLError, error:
+      except urllib2.URLError as error:
         if repeat == 0 or not batch_mode:
           # XXX - Call the extendBadURLList method,--NOT Implemented--
           raise
@@ -606,7 +606,7 @@ class ContributionTool(BaseTool):
       elif document.getCrawlingDepth() > 0:
         # If this is an index document, stop crawling if crawling_depth is 0
         document.activate().crawlContent()
-    except urllib2.HTTPError, error:
+    except urllib2.HTTPError as error:
       if repeat == 0 or not batch_mode:
         # here we must call the extendBadURLList method,--NOT Implemented--
         # which had to add this url to bad URL list, so next time we avoid

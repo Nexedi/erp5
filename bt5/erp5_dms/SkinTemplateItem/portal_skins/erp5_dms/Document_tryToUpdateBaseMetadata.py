@@ -7,9 +7,9 @@ try:
   return context.updateBaseMetadata(**kw)
 except ConflictError:
   raise
-except ConversionError, e:
+except ConversionError as e:
   message = 'Conversion Error: %s' % (str(e) or 'undefined.')
-except Exception, e:
+except Exception as e:
   message = 'Problem: %s' % (repr(e) or 'undefined.')
 except:
   message = 'Problem: unknown'

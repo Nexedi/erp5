@@ -52,7 +52,7 @@ class ZencartNode(NodeBrain):
           category = 'Country/%s' % self.country, create_mapping=True,
           create_mapping_line=True,
           ).split('/', 1)[-1]
-      except ValueError, msg:
+      except ValueError as msg:
         LOG("ZencartBrain.ZencartNode.__init__", ERROR, "Getting category for %s raise with msg = %s" %(self.country, msg))
         self.country = ""
 
@@ -91,7 +91,7 @@ class ZencartNode(NodeBrain):
               create_mapping_line=True,
               )
             value = "/".join(value.split('/')[1:])
-          except ValueError, msg:
+          except ValueError as msg:
             LOG("ZencartBrain.ZencartNode._generateCoordinatesXML", ERROR, "Getting category for %s raise with msg = %s" %(value, msg))
             #return ""
 

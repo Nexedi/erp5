@@ -54,7 +54,7 @@ class TestRealTimeInventoryAccountingMixin:
         self.portal.portal_workflow.doActionFor(document, workflow_method_id)
       else:
         getattr(document, workflow_method_id)()
-    except ValidationFailed, error:
+    except ValidationFailed as error:
       self.fail("Transition '%s' on %r should have succeeded (%s)" % \
                   (workflow_method_id, document,
                    sorted([m.message for m in error.msg])))

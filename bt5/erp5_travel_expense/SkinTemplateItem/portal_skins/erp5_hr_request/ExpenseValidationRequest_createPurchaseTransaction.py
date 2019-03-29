@@ -43,7 +43,7 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from zExceptions import Redirect
 try:
   transaction.Base_checkConsistency()
-except ValidationFailed, error_message:
+except ValidationFailed as error_message:
   if getattr(error_message, 'msg', None):
     # use of Message class to store message+mapping+domain
     message = error_message.msg

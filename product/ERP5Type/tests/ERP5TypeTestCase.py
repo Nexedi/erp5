@@ -1412,7 +1412,7 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       try:
         self.zeo_server = StorageServer(host_port, storage)
         break
-      except socket.error, e:
+      except socket.error as e:
         if e[0] != errno.EADDRINUSE:
           raise
     if zeo_client:

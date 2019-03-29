@@ -60,7 +60,7 @@ else:
                     except TypeError:
                         # BBB
                         server.expect("END")
-            except (_Error, socket.error), msg:
+            except (_Error, socket.error) as msg:
                 if isinstance(msg, tuple): msg = msg[1]
                 server.mark_dead(msg)
                 # (patch)
@@ -79,7 +79,7 @@ else:
                 # (patch)
                 # return None
                 raise _ConnectionDeadError
-            except (_ConnectionDeadError, socket.error), msg:
+            except (_ConnectionDeadError, socket.error) as msg:
                 server.mark_dead(msg)
             # (patch)
             # return None

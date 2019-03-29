@@ -78,7 +78,7 @@ for handler_id, module_id in handler_module_dict.iteritems():
   else:
     try:
       registerConnectionPlugin(handler_id, getattr(module, module_id))
-    except ValueError, msg:
+    except ValueError as msg:
       LOG('ERP5TioSafe.ConnectionPlugin.__init__', WARNING,
           'Unable to register module %r. error is %r.' % \
           (module_id, msg),

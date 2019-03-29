@@ -809,7 +809,7 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     try:
       p1.setCareerSubordination(o1)
-    except Exception, e:
+    except Exception as e:
       self.assertTrue(isinstance(e, TypeError))
       self.assertEqual(e.args[0], 'Category must be of string, tuple of '
                                   'string or list of string type.')

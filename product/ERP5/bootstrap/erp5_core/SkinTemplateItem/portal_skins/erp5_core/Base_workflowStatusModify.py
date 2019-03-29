@@ -11,7 +11,7 @@ if 1: # keep indentation
      **kw)
   except WorkflowException:
     pass
-  except ValidationFailed, message:
+  except ValidationFailed as message:
     if getattr(message, 'msg', None) and same_type(message.msg, []):
       message = '. '.join('%s' % x for x in message.msg)
     if not batch :

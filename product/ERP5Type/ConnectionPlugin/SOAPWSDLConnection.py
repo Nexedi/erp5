@@ -156,7 +156,7 @@ class MethodWrapper(object):
   def __call__(self, *args, **kw):
     try:
       return self._method(*args, **kw)
-    except SOAPpy.Types.faultType, exception:
+    except SOAPpy.Types.faultType as exception:
       raise SOAPWSDLException(*exception())
 
 # SOAPpy says nothing about thread-safeness of parsed WSDL.

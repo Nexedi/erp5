@@ -172,9 +172,9 @@ def sendResponse(text, to_url, client_url):
 
   try:
     result = urllib2.urlopen(request).read()
-  except socket.error, msg:
+  except socket.error as msg:
     print 'error, url:%s ,data : %s'%(to_url, data)
-  except urllib2.URLError, msg:
+  except urllib2.URLError as msg:
     print "sendResponse, can't open url : %s" % to_url
 
   return result

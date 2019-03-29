@@ -1420,7 +1420,8 @@ class SimulationTool(BaseTool):
         inventory_cache_kw['date'] = to_date
       try:
           cached_sql_result = Resource_zGetInventoryCacheResult(**inventory_cache_kw)
-      except ProgrammingError, (code, _):
+      except ProgrammingError as xxx_todo_changeme:
+          (code, _) = xxx_todo_changeme.args
           if code != NO_SUCH_TABLE:
             raise
           # First use of the optimisation, we need to create the table

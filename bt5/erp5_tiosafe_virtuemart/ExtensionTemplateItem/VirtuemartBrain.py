@@ -52,7 +52,7 @@ class VirtuemartNode(NodeBrain):
           category = 'Country/%s' % self.country, create_mapping=True,
           create_mapping_line=True,
           ).split('/', 1)[-1]
-      except ValueError, msg:
+      except ValueError as msg:
         LOG("VirtuemartBrain.VirtuemartNode.__init__", ERROR, "Getting category for %s raise with msg = %s" %(self.country, msg))
         self.country = ""
 
@@ -91,7 +91,7 @@ class VirtuemartNode(NodeBrain):
               create_mapping_line=True,
               )
             value = "/".join(value.split('/')[1:])
-          except ValueError, msg:
+          except ValueError as msg:
             LOG("VirtuemartBrain.VirtuemartNode._generateCoordinatesXML", ERROR, "Getting category for %s raise with msg = %s" %(value, msg))
             #return ""
 

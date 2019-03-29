@@ -115,7 +115,7 @@ class GhostBaseMetaClass(ExtensionClass, AccessorHolderType):
         self.__class__.loadClass()
       except ConflictError:
         raise
-      except Exception, e:
+      except Exception as e:
         LOG('lazy_class.__getattribute__', WARNING, 'Failed to load class : %r' % (e,),
             error=sys.exc_info())
         raise

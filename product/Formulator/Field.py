@@ -505,7 +505,7 @@ class ZMIField(
         try:
             # validate the form and get results
             result = self.form.validate(REQUEST)
-        except ValidationError, err:
+        except ValidationError as err:
             if REQUEST:
                 message = "Error: %s - %s" % (err.field.get_value('title'),
                                               err.error_text)
@@ -587,7 +587,7 @@ class ZMIField(
         try:
             # validate the form and get results
             result = self.override_form.validate(REQUEST)
-        except ValidationError, err:
+        except ValidationError as err:
             if REQUEST:
                 message = "Error: %s - %s" % (err.field.get_value('title'),
                                               err.error_text)
@@ -620,7 +620,7 @@ class ZMIField(
         try:
             # validate the form and get results
             result = self.tales_form.validate(REQUEST)
-        except ValidationError, err:
+        except ValidationError as err:
             if REQUEST:
                 message = "Error: %s - %s" % (err.field.get_value('title'),
                                               err.error_text)

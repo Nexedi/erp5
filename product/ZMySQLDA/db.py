@@ -353,7 +353,7 @@ class DB(TM):
         """
         try:
             self.db.query(query)
-        except OperationalError, m:
+        except OperationalError as m:
             if m[0] in query_syntax_error:
               raise OperationalError(m[0], '%s: %s' % (m[1], query))
             if m[0] in lock_error:
@@ -365,7 +365,7 @@ class DB(TM):
             # Hm. maybe the db is hosed.  Let's restart it.
             self._forceReconnection()
             self.db.query(query)
-        except ProgrammingError, exception:
+        except ProgrammingError as exception:
           LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
           # XXX sometimes, after a programming error, the database object
           # gets fully broken and non-functional. So recover it by
@@ -476,7 +476,7 @@ class DB(TM):
                 self._query("ROLLBACK")
             else:
                 LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
-        except OperationalError, m:
+        except OperationalError as m:
             LOG('ZMySQLDA', ERROR, "exception during _abort",
                 error=sys.exc_info())
             if m[0] not in hosed_connection:
@@ -531,7 +531,7 @@ class DB(TM):
         with (nested if src__ else self.lock)():
             try:
                 old_list, old_set, old_default = self._getTableSchema(name)
-            except ProgrammingError, e:
+            except ProgrammingError as e:
                 if e[0] != ER.NO_SUCH_TABLE or not create_if_not_exists:
                     raise
                 if not src__:

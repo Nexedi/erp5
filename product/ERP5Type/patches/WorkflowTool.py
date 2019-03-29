@@ -567,13 +567,13 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
             % grouped_worklist_dict.keys(),
             error=sys.exc_info())
         continue
-      except ProgrammingError, error_value:
+      except ProgrammingError as error_value:
         # 1146 = table does not exist
         if not use_cache or error_value[0] != 1146:
           raise
         try:
           self.Base_zCreateWorklistTable()
-        except ProgrammingError, error_value:
+        except ProgrammingError as error_value:
           # 1050 = table exists (alarm run just a bit too late)
           if error_value[0] != 1050:
             raise
@@ -649,7 +649,7 @@ def WorkflowTool_refreshWorklistCache(self):
       else:
         try:
           self.Base_zClearWorklistTable()
-        except ProgrammingError, error_value:
+        except ProgrammingError as error_value:
           # 1146 = table does not exist
           if error_value[0] != 1146:
             raise
@@ -709,7 +709,7 @@ def WorkflowTool_refreshWorklistCache(self):
         if len(value_column_dict[COUNT_COLUMN_TITLE]):
           try:
             Base_zInsertIntoWorklistTable(**value_column_dict)
-          except (ProgrammingError, OperationalError), error_value:
+          except (ProgrammingError, OperationalError) as error_value:
             # OperationalError 1054 = unknown column
             if isinstance(error_value, OperationalError) and error_value[0] != 1054:
               raise
@@ -898,7 +898,7 @@ class WorkflowMethod( Method ):
             # No workflow tool found.
             try:
                 res = self._m(instance, *args, **kw)
-            except ObjectDeleted, ex:
+            except ObjectDeleted as ex:
                 res = ex.getResult()
             else:
                 if hasattr(aq_base(instance), 'reindexObject'):

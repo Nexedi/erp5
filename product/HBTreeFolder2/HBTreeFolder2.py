@@ -485,7 +485,7 @@ class HBTreeFolder2Base (Persistent):
         object = self._getOb(id)
         try:
             object.manage_beforeDelete(object, self)
-        except BeforeDeleteException, ob:
+        except BeforeDeleteException as ob:
             raise
         except ConflictError:
             raise

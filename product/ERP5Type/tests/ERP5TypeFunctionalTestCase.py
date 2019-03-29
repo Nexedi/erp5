@@ -351,7 +351,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     error = None
     try:
       iframe = self.runner.test(debug=debug)
-    except TimeoutError, e:
+    except TimeoutError as e:
       error = repr(e)
       self._verboseErrorLog(20)
     else:

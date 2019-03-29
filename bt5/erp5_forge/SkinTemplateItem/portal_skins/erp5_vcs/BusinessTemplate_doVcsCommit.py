@@ -19,5 +19,5 @@ if not changelog.strip():
 
 try:
   return context.getVcsTool().commit(changelog, **kw)
-except Exception, error:
+except Exception as error:
   return context.BusinessTemplate_handleException(error, script.id)

@@ -239,7 +239,7 @@ class WorkflowMethod(Method):
       except ObjectDeleted:
         # Re-raise with a different result.
         raise ObjectDeleted(result)
-      except ObjectMoved, ex:
+      except ObjectMoved as ex:
         # Re-raise with a different result.
         raise ObjectMoved(ex.getNewObject(), result)
 

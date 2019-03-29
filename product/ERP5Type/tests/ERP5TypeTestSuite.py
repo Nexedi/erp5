@@ -48,7 +48,7 @@ class ERP5TypeTestSuite(TestSuite):
            + ('--verbose', '--erp5_sql_connection_string=' + mysql_db_list[0]) \
            + args
       status_dict = self.spawn(*args, **kw)
-    except SubprocessError, e:
+    except SubprocessError as e:
       status_dict = e.status_dict
     test_log = status_dict['stderr']
     search = self.RUN_RE.search(test_log)

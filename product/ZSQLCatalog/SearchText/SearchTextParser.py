@@ -306,7 +306,7 @@ if __name__ == '__main__':
   for input, expected in check_list:
     try:
       result = parse(input)
-    except ParserOrLexerError, message:
+    except ParserOrLexerError as message:
       print "ERROR when checking %r" % (input, )
       print " crashed with: %s" % (message, )
       print " instead of producing %r" % (expected, )
@@ -328,7 +328,7 @@ if __name__ == '__main__':
       try:
         detector_result = parser_pool.get(DETECTOR_ID)(input,
           isColumn)
-      except ParserOrLexerError, message:
+      except ParserOrLexerError as message:
         print '  Detector raise: %r' % (message, )
         detector_result = False
       else:
@@ -348,7 +348,7 @@ if __name__ == '__main__':
         print '    %r' % (parse(input, debug=2), )
       else:
         print '    %r' % (input, )
-    except ParserOrLexerError, message:
+    except ParserOrLexerError as message:
       print message
   print
 

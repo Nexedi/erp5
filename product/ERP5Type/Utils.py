@@ -437,11 +437,11 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
   try:
     from pylint.lint import Run
     from pylint.reporters.text import TextReporter
-  except ImportError, error:
+  except ImportError as error:
     try:
       compile(source_code_str, '<string>', 'exec')
       return []
-    except Exception, error:
+    except Exception as error:
       if isinstance(error, SyntaxError):
         message = {'type': 'F',
                    'row': error.lineno,
@@ -1045,7 +1045,7 @@ def initializeLocalRegistry(directory_name, import_local_method):
           LOG('ERP5Type', BLATHER,
               'Added local %s to ERP5Type repository: %s (%s)'
               % (directory_name, module_name, document_path))
-        except Exception, e:
+        except Exception as e:
           if DevelopmentMode:
             raise
           LOG('E5RP5Type', PROBLEM,
@@ -1319,7 +1319,7 @@ def evaluateExpressionFromString(expression_context, expression_string):
   # An AttributeError is raised when instanciating an Expression
   # class, and CompilerError and ValueError are raised in case of
   # error when evaluation the expression
-  except (AttributeError, CompilerError, ValueError), e:
+  except (AttributeError, CompilerError, ValueError) as e:
     raise ValueError("Error in TALES expression: '%s': %s" % (expression_string,
                                                               str(e)))
 
@@ -1334,7 +1334,7 @@ def isValidTALESExpression(value):
   """
   try:
     ExpressionEngine.compile(value)
-  except CompilerError, message:
+  except CompilerError as message:
     return False, message
   else:
     return True, None
@@ -1364,7 +1364,7 @@ def assertAttributePortalType(o, attribute_name, portal_type):
           portal_type = [portal_type]
         if getattr(o, attribute_name).portal_type not in portal_type:
           o._delObject(attribute_name)
-      except (KeyError, AttributeError), err:
+      except (KeyError, AttributeError) as err:
         LOG('ERP5Type', PROBLEM, "assertAttributePortalType failed on %s" % o,
             error=err)
 

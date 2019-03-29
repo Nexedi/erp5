@@ -455,7 +455,7 @@ class WizardTool(BaseTool):
     try:
       method = getattr(witch_tool, distant_method)
       html = method(parameter_dict)
-    except socket.error, message:
+    except socket.error as message:
       html = _generateErrorXML("""Cannot contact the server: %s.
                                   Please check your network settings.""" %
                                   server_url)
@@ -464,7 +464,7 @@ class WizardTool(BaseTool):
                           "data": html,
                           "next": None,
                           "previous": None})
-    except xmlrpclib.ProtocolError, message:
+    except xmlrpclib.ProtocolError as message:
       html = _generateErrorXML("""The server %s refused to reply.
                                   Please contact erp5-dev@erp5.org""" %
                                   server_url)
@@ -473,7 +473,7 @@ class WizardTool(BaseTool):
                           "data": html,
                           "next": None,
                           "previous": None})
-    except xmlrpclib.Fault, message:
+    except xmlrpclib.Fault as message:
       html = _generateErrorXML("Error/bug inside the server: %s." %server_url)
       zLOG.LOG('Wizard Tool xmlrpc fault', zLOG.ERROR, message)
       result_call.update({"command": "show",

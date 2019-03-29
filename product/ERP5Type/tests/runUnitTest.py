@@ -740,7 +740,7 @@ def main(argument_list=None):
         "sys_path=",
         "instance_home=",
         ])
-  except getopt.GetoptError, msg:
+  except getopt.GetoptError as msg:
     usage(sys.stderr, msg)
     sys.exit(2)
 

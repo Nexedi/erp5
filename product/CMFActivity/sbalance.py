@@ -306,7 +306,7 @@ def main():
   try:
     opts, args = getopt.getopt(sys.argv[1:], "hvb:t:T:dfps",
                                ["help", "version", "bind=", "connect-timeout=", "select-timeout=", "debug", "foreground", "packet-dump", "sticky"])
-  except getopt.GetoptError, msg:
+  except getopt.GetoptError as msg:
     print msg
     print "Try ``sbalance --help'' for more information."
     sys.exit(2)

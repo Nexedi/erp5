@@ -57,7 +57,7 @@ class Parser:
         self.out.write('<pre class="python">\n')
         try:
             tokenize.tokenize(text.readline, self)
-        except tokenize.TokenError, ex:
+        except tokenize.TokenError as ex:
             msg = ex[0]
             line = ex[1][0]
             self.out.write("<h5 class='error>'ERROR: %s%s</h5>" % (

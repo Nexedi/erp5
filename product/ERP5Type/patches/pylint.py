@@ -39,7 +39,7 @@ else:
     def _get_imported_module(self, importnode, modname):
         try:
             return importnode.do_import_module(modname)
-        except astroid.InferenceError, ex:
+        except astroid.InferenceError as ex:
             # BEGIN
 
             # XXX-arnau: Ignore ERP5 dynamic modules, hackish but required

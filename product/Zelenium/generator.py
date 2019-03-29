@@ -181,7 +181,7 @@ class ScenarioGenerator:
                                            , 'test-case-title='
                                            ]
                                          )
-        except getopt.GetoptError, msg:
+        except getopt.GetoptError as msg:
             self.printUsage( msg=msg)
 
         for o, v in opts:

@@ -146,14 +146,14 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           hs.server_protocol, hs.server_name, hs.server_port))
       try:
         hs = createZServer(log)
-      except RuntimeError, e:
+      except RuntimeError as e:
         ZopeTestCase._print(str(e))
       else:
         utils._Z2HOST, utils._Z2PORT = hs.server_name, hs.server_port
         _print(hs)
         try:
           _print(createZServer(log, zserver_type='webdav'))
-        except RuntimeError, e:
+        except RuntimeError as e:
           ZopeTestCase._print('Could not start webdav zserver: %s\n' % e)
         t = Thread(target=Lifetime.loop)
         t.setDaemon(1)
@@ -251,7 +251,7 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           error_message = 'tic is looping forever. '
           try:
             self.assertNoPendingMessage()
-          except AssertionError, e:
+          except AssertionError as e:
             error_message += str(e)
           raise RuntimeError(error_message)
         # This give some time between messages

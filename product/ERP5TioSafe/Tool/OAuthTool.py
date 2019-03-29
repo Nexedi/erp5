@@ -687,7 +687,7 @@ class OAuthTool(BaseTool):
             # self.end_headers()
             # # return the token
             # self.wfile.write(token.to_string())
-        except OAuthError, err:
+        except OAuthError as err:
             raise
             LOG("Error returned %s" %(err,), 300, "")
             self.send_oauth_error(err, REQUEST)
@@ -709,7 +709,7 @@ class OAuthTool(BaseTool):
             # self.end_headers()
             # # return the callback url (to show server has it)
             # self.wfile.write(token.get_callback_url())
-        except OAuthError, err:
+        except OAuthError as err:
             self.send_oauth_error(err, REQUEST)
         return
 
@@ -723,7 +723,7 @@ class OAuthTool(BaseTool):
             # send okay response
             LOG("calling the callback url %s" %(token.get_callback_url(),), 300, "")
             return REQUEST.RESPONSE.redirect(token.get_callback_url())
-        except OAuthError, err:
+        except OAuthError as err:
             self.send_oauth_error(err, REQUEST)
         return
 
@@ -739,7 +739,7 @@ class OAuthTool(BaseTool):
             # self.end_headers()
             # # return the token
             # self.wfile.write(token.to_string())
-        except OAuthError, err:
+        except OAuthError as err:
             self.send_oauth_error(err, REQUEST)
         return
 
@@ -754,7 +754,7 @@ class OAuthTool(BaseTool):
             # # return the extra parameters - just for something to return
             # self.wfile.write(str(params))
             return str(params)
-        except OAuthError, err:
+        except OAuthError as err:
             self.send_oauth_error(err, REQUEST)
         return
 

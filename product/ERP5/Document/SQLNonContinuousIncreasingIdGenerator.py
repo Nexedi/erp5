@@ -94,7 +94,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
       new_id = result_query[0]['LAST_INSERT_ID()']
       # Commit the changement of new_id
       portal.IdTool_zCommit()
-    except ProgrammingError, error:
+    except ProgrammingError as error:
       if error[0] != NO_SUCH_TABLE:
         raise
 
@@ -173,7 +173,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     portal = self.getPortalObject()
     try:
       portal.IdTool_zGetValueList()
-    except ProgrammingError, error:
+    except ProgrammingError as error:
       if error[0] != NO_SUCH_TABLE:
         raise
       portal.IdTool_zDropTable()

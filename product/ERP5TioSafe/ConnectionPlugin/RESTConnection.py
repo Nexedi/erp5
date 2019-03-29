@@ -46,10 +46,10 @@ class MethodWrapper(object):
     try:
       response = urlopen(request)
       return self._conn.url, response.read()
-    except HTTPError, msg:
+    except HTTPError as msg:
       error = "Impossible to access to the plugin, error code is %s - %s" %(msg.msg, msg.code,)
       raise ConnectionError(error)
-    except URLError, msg:
+    except URLError as msg:
       error = "Impossible to connect to the plugin, reason is %s" %(msg.reason,)
       raise ConnectionError(error)
 
