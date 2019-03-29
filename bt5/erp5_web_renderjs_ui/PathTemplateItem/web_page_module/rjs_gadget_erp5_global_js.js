@@ -41,18 +41,18 @@
   Calling getNonEmpy(a, b, "") is more robust way of writing a || b || "".
   Variables coercing to false (e.g 0) do not get skipped anymore.
   */
-  function getFirstNonEmpty() {
+  function getFirstNonEmpty(first_argument) {
     var i;
     if (arguments.length === 0) {
       return null;
     }
-    for (i = 0; i < arguments.length; i++) {
+    for (i = 0; i < arguments.length; i += 1) {
       if (!isEmpty(arguments[i])) {
         return arguments[i];
       }
     }
     if (arguments.length === 1) {
-      return arguments[0];
+      return first_argument;
     }
     return arguments[arguments.length - 1];
   }
