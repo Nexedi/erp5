@@ -42,7 +42,7 @@ class ERP5InvoicedNodeConduit(ERP5NodeConduit):
                                                                         specialise=default_stc,
                                                                         destination_decision=object.getRelativeUrl(),
                                                                         destination_administration=object.getRelativeUrl(),
-                                                                        version=0o01)
+                                                                        version='001')
     stc.validate()
 
   def _updateSaleTradeCondition(self, object, **kw):
