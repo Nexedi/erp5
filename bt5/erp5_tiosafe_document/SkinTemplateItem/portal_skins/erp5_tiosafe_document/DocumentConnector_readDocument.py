@@ -6,7 +6,7 @@ document_list = portal.document_module.searchFolder(
   sort_on=[('version', 'DESC')],
 )
 if len(document_list) != 1:
-  raise ValueError, "Impossible to find document with reference %s" %(reference)
+  raise ValueError("Impossible to find document with reference %s" %(reference))
 document = document_list[0].getObject()
 
 

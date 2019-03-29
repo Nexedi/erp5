@@ -7,7 +7,7 @@ date = DateTime()
 portal = context.getPortalObject()
 
 if portal_type not in portal.event_module.getVisibleAllowedContentTypeList():
-  raise WorkflowException, "You Don't Have Permission to Add New Event"
+  raise WorkflowException("You Don't Have Permission to Add New Event")
 
 # Create the draft Event
 related_event = portal.event_module.newContent(

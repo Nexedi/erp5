@@ -16,12 +16,12 @@ result = portal_catalog(portal_type='Organisation',
 if len(result) > 1:
   msg = "Error : There is more than one company with the NINEA code ${code}"
   msg = translateString(msg, mapping=dict(code=vat_code))
-  raise ValidationFailed, msg 
+  raise ValidationFailed(msg) 
 
 if len(result) == 0:
   msg = "No organisation with the NINEA code ${code}"
   msg = translateString(msg, mapping=dict(code=vat_code))
-  raise ValidationFailed, msg 
+  raise ValidationFailed(msg) 
 
 organisation = result[0]
 

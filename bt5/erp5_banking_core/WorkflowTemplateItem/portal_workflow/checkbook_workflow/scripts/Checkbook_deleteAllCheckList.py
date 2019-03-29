@@ -5,4 +5,4 @@ for check in checkbook.objectValues():
   if check.getSimulationState() != 'deleted':
     msg = Message(domain="ui", message="Sorry, no way to delete this check $id",
                   mapping = {'id' : check.getId()})
-    raise ValueError, (msg,)
+    raise ValueError(msg,)

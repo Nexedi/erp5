@@ -20,7 +20,7 @@ elif kw_len == 2:
   object_a = getObjectFromArg(kw_value_list[0])
   object_b = getObjectFromArg(kw_value_list[1])
 else:
-  raise ValueError, '%s is not a valid number of arguments for diff.' % (kw_len, )
+  raise ValueError('%s is not a valid number of arguments for diff.' % (kw_len, ))
 
 diff_dict, missing_in_a_dict, missing_in_b_dict = diff_recursive(object_a, object_b)
 

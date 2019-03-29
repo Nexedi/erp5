@@ -97,9 +97,9 @@ class StringBaseValidator(Validator):
       value = REQUEST.get(key, REQUEST.get('default_%s' % (key, )))
       if value is None:
         if field.get_value('required'):
-          raise Exception, 'Required field %s has not been transmitted. Check that all required fields are in visible groups.' % (repr(field.id), )
+          raise Exception('Required field %s has not been transmitted. Check that all required fields are in visible groups.' % (repr(field.id), ))
         else:
-          raise KeyError, 'Field %s is not present in request object.' % (repr(field.id), )
+          raise KeyError('Field %s is not present in request object.' % (repr(field.id), ))
       if isinstance(value, str):
         if field.has_value('whitespace_preserve'):
           if not field.get_value('whitespace_preserve'):
@@ -537,7 +537,7 @@ class MultiSelectionValidator(Validator):
 
     def validate(self, field, key, REQUEST):
       if REQUEST.get('default_%s' % (key, )) is None:
-        raise KeyError, 'Field %s is not present in request object (marker field default_%s not found).' % (repr(field.id), key)
+        raise KeyError('Field %s is not present in request object (marker field default_%s not found).' % (repr(field.id), key))
       values = REQUEST.get(key, [])
       # NOTE: a hack to deal with single item selections
       if not isinstance(values, list):

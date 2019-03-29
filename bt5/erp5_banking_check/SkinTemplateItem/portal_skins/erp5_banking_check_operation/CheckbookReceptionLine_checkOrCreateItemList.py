@@ -27,7 +27,7 @@ def validateTravelerCheckReferenceFormat(traveler_check_reference):
   """
   if len(traveler_check_reference) != 10:
     message = Message(domain='ui', message='Traveler check reference must be 10-char long.')
-    raise ValueError, (message,)
+    raise ValueError(message,)
   int(traveler_check_reference[4:])
 
 def getTravelerCheckReferenceNumber(traveler_check_reference):
@@ -51,10 +51,10 @@ def generateTravelerCheckReference(number, original_traveler_check_reference):
   """
   if not same_type(number, 0):
     message = Message(domain='ui', message='Traveler check number must be only numeric.')
-    raise ValueError, (message, )
+    raise ValueError(message,)
   if len(str(number)) > 6:
     message = Message(domain='ui', message='Traveler check number representation length must not exceed 6 char.')
-    raise ValueError, (message,)
+    raise ValueError(message,)
   prefix = getTravelerCheckReferencePrefix(original_traveler_check_reference)
   return '%s%06d' % (prefix, number)
 
@@ -69,7 +69,7 @@ def assertReferenceMatchListEmpty(match_list, internal_bank_account_number):
       matched_reference_list.append('%s (%s)' % (match.getReference(), internal_bank_account_number))
     message = Message(domain='ui', message='The following references are already allocated : $reference_list',
                       mapping={'reference_list': matched_reference_list})
-    raise ValidationFailed, (message,)
+    raise ValidationFailed(message,)
 
 def checkReferenceListUniqueness(reference_list, model_uid, destination_payment_value, unique_per_account):
   """
@@ -101,7 +101,7 @@ def checkReferenceListUniqueness(reference_list, model_uid, destination_payment_
     if encountered_check_identifiers_dict.has_key(tag):
       message = Message(domain='ui', message='The following references are already allocated : $reference_list',
                         mapping={'reference_list': ['%s (%s)' % (reference, internal_bank_account_number) ]})
-      raise ValidationFailed, (message,)
+      raise ValidationFailed(message,)
     encountered_check_identifiers_dict[tag] = None
 
 start_date = checkbook_reception.getStartDate()
@@ -149,7 +149,7 @@ if resource.getAccountNumberEnabled():
   context.log('context.getRelativeUrl() before getUid of destination payment', context.getRelativeUrl())
   if destination_payment_value is None:
     message = Message(domain='ui', message='There is not destination payment on line with id: $id', mapping={'id': context.getId()})
-    raise ValueError, (message,)
+    raise ValueError(message,)
   destination_trade = line.getDestinationTrade()
 else:
   destination_payment_value = None

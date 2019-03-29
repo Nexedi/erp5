@@ -69,6 +69,6 @@ class WebServiceRequestGroup(XMLObject):
     # after browsing all web service requests check that item exists and only
     # one time
     if len(object_list) != 1:
-      raise KeyError, "No entry for the item %s" % item
+      raise KeyError("No entry for the item %s" % item)
     return object_list[0]
 

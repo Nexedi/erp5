@@ -9,4 +9,4 @@ for site in site_list:
     return site
 from Products.ERP5Type.Message import Message
 message = Message(domain="ui", message="The owner is not assigned to the right vault.")
-raise ValueError,message
+raise ValueError(message)

@@ -128,14 +128,14 @@ class PDFTk:
       try :
         stdin.write(input)
       except IOError as e:
-        raise IOError, str(e) + " ( make sure "\
-          "%s exists and is in your $PATH )"%PDFTK_EXECUTABLE
+        raise IOError(str(e) + " ( make sure "\
+          "%s exists and is in your $PATH )"%PDFTK_EXECUTABLE)
     stdin.close()
     ret = stdout.read()
     stdout.close()
     if assert_not_empty and len(ret) == 0 :
-      raise IOError, "Got no output from external program, make sure"\
-                   " %s exists and is in your $PATH"%PDFTK_EXECUTABLE
+      raise IOError("Got no output from external program, make sure"\
+                   " %s exists and is in your $PATH"%PDFTK_EXECUTABLE)
     return ret
 
   def _escapeString(self, value) :
@@ -404,8 +404,8 @@ class PDFForm(File):
               "%s/manage_main?manage_tabs_message=Content+Downloaded"
               % self.absolute_url())
       return
-    raise ValueError, "Unable to download from any url from the "\
-                      "`download_url` property."
+    raise ValueError("Unable to download from any url from the "\
+                      "`download_url` property.")
 
   security.declareProtected(Permissions.ManagePortal,
                            'deletePdfContent')
@@ -445,7 +445,7 @@ class PDFForm(File):
   def doEditCells(self, REQUEST, RESPONSE=None):
     """ This is the action to the 'Edit Cell TALES' tab. """
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
-      raise ResourceLockedError, "File is locked via WebDAV"
+      raise ResourceLockedError("File is locked via WebDAV")
 
     for k, v in self.cells.items() :
       self.setCellTALES(k, REQUEST.get(str(k), v))
@@ -459,7 +459,7 @@ class PDFForm(File):
   def generatePDF(self, REQUEST=None, RESPONSE=None, *args, **kwargs) :
     """ generates the PDF with form filled in """
     if not self.hasPdfContent() :
-      raise EmptyERP5PdfFormError, 'Pdf content must be downloaded first'
+      raise EmptyERP5PdfFormError('Pdf content must be downloaded first')
     values = self.calculateCellValues(REQUEST, *args, **kwargs)
     context = { 'here' : self.aq_parent,
                 'context' : self.aq_parent,
@@ -557,7 +557,7 @@ class PDFForm(File):
       LOG("PDFForm", PROBLEM,
          'TALES is not a string for cell "%s", it is = "%s"'
           %(cell_name, `TALES`))
-      raise ValueError, 'TALES must be a string'
+      raise ValueError('TALES must be a string')
     self.all_cells[str(cell_name)] = self.cells[str(cell_name)] = TALES
     # invalidate for persistence
     self.all_cells = self.all_cells

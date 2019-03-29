@@ -16,7 +16,7 @@ context.Baobab_checkCounterOpened(source)
 
 if transaction.getPaymentType() in (None, ""):
   msg = Message(domain="ui", message="No payment type defined.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 
 #test if the source or the destination is correct
@@ -28,11 +28,11 @@ total_price = transaction.getTotalPrice(portal_type=('Cash Delivery Line','Cash 
 
 if amount != total_price:
   msg = Message(domain="ui", message="Amount differ from total price.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 if source is None:
   msg = Message(domain='ui', message='No counter defined.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 
 
@@ -47,4 +47,4 @@ resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_t
 
 if resource == 2:
   msg = Message(domain="ui", message="No Resource.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)

@@ -10,7 +10,7 @@ def getCountry(site):
   organisation = context.organisation_module[orga_id]
   country = organisation.getDefaultRegionTitle()
   if country is None:
-    raise ValueError, "No Region found for site %s / %s defined by organisation %s" %(site.getPath(), site.getCodification(), organisation.getPath())
+    raise ValueError("No Region found for site %s / %s defined by organisation %s" %(site.getPath(), site.getCodification(), organisation.getPath()))
   return country
 
 

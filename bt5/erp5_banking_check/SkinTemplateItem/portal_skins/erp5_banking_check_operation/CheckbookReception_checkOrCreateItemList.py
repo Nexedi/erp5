@@ -12,7 +12,7 @@ from Products.ERP5Type.Message import Message
 destination_id = context.getDestinationId()
 if destination_id is None:
   msg = Message(domain='ui', message='Sorry, you must define the site')
-  raise ValidationFailed, (msg, )
+  raise ValidationFailed(msg,)
 
 # serialize destination vault to only have one operation at a time
 destination_value = context.getDestinationValue()
@@ -28,7 +28,7 @@ else:
   msg = Message(domain='ui', message='Sorry, there is already a checkbook reception newly validated')
   checkbook_reception_tag = "CheckbookReception_%s" % destination_id
 if context.portal_activities.countMessageWithTag(checkbook_reception_tag) != 0:
-  raise ValidationFailed, (msg, )
+  raise ValidationFailed(msg,)
 
 if check == 1:
   encountered_check_identifiers_dict = {}

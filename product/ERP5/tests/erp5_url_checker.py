@@ -98,7 +98,7 @@ class URLOpener(FancyURLopener):
                 if user_passwd:
                     selector = "%s://%s%s" % (urltype, realhost, rest)
             #print "proxy via http:", host, selector
-        if not host: raise IOError, ('http error', 'no host given')
+        if not host: raise IOError('http error', 'no host given')
         if user_passwd:
             import base64
             auth = string.strip(base64.encodestring(user_passwd))

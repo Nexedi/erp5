@@ -32,21 +32,21 @@ for line in transaction_lines:
     ):
 
     if account is not None and account.getValidationState() != 'validated':
-      raise ValidationFailed, translateString(
+      raise ValidationFailed(translateString(
           "Account ${account_title} is not validated.",
-           mapping=dict(account_title=account.Account_getFormattedTitle()))
+           mapping=dict(account_title=account.Account_getFormattedTitle())))
       
     if third_party is not None and\
         third_party.getValidationState() in invalid_state_list:
-      raise ValidationFailed, translateString(
+      raise ValidationFailed(translateString(
           "Third party ${third_party_name} is invalid.",
-           mapping=dict(third_party_name=third_party.getTitle()))
+           mapping=dict(third_party_name=third_party.getTitle())))
       
     if bank_account is not None:
       if bank_account.getValidationState() in invalid_state_list:
-        raise ValidationFailed, translateString(
+        raise ValidationFailed(translateString(
             "Bank Account ${bank_account_reference} is invalid.",
-             mapping=dict(bank_account_reference=bank_account.getReference()))
+             mapping=dict(bank_account_reference=bank_account.getReference())))
       
       if account is not None and account.isMemberOf('account_type/asset/cash/bank'):
         # also check that currencies are consistent if we use this quantity for
@@ -54,11 +54,11 @@ for line in transaction_lines:
         bank_account_currency = bank_account.getProperty('price_currency')
         if bank_account_currency is not None and \
               bank_account_currency != line.getResource():
-          raise ValidationFailed, translateString(
+          raise ValidationFailed(translateString(
             "Bank Account ${bank_account_reference} "
             "uses ${bank_account_currency} as default currency.",
             mapping=dict(bank_account_reference=bank_account.getReference(),
-                         bank_account_currency=bank_account.getPriceCurrencyReference()))
+                         bank_account_currency=bank_account.getPriceCurrencyReference())))
 
   source_currency = None
   source_section = line.getSourceSectionValue()

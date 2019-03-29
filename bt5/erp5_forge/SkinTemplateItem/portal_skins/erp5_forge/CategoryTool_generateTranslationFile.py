@@ -13,7 +13,7 @@ request = container.REQUEST
 response = request.RESPONSE
 
 if import_filename=='':
-  raise ValueError, "You must upload a file"
+  raise ValueError("You must upload a file")
 
 def addReportLine(error, category, message):
   report_line = newTempBase(context, 'item')

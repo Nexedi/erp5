@@ -130,9 +130,9 @@ class EGOVGroupManager(ERP5GroupManager):
 
         if len(catalog_result) != 1: # we won't proceed with groups
           if len(catalog_result) > 1: # configuration is screwed
-            raise ConsistencyError, 'There is more than one Person whose \
+            raise ConsistencyError('There is more than one Person whose \
                 login is %s : %s' % (user_name,
-                repr([r.getObject() for r in catalog_result]))
+                repr([r.getObject() for r in catalog_result])))
           else: # no person is linked to this user login
             portal = self.getPortalObject()
 

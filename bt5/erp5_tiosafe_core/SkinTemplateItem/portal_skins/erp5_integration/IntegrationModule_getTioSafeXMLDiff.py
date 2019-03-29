@@ -44,7 +44,7 @@ if pub_method is not None and sub_method is not None:
       sub_xml.append(getattr(ob, sub_xml_method)())
 
 else:
-  raise ValueError, "Impossible to get method, pub_method = %s from %s, sub_method = %s from %s" %(pub_method, pub_list, sub_method, sub_list,)
+  raise ValueError("Impossible to get method, pub_method = %s from %s, sub_method = %s from %s" %(pub_method, pub_list, sub_method, sub_list,))
 
 pub_xml = '\n'.join(pub_xml)
 sub_xml = '\n'.join(sub_xml)

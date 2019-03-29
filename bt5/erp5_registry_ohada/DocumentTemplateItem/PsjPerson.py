@@ -165,7 +165,7 @@ class PsjPerson(XMLObject):
               user_list = acl_users.searchUsers(id=value,
                                                 exact_match=True)
               if len(user_list) > 0:
-                raise RuntimeError, 'user id %s already exist' % (value,)
+                raise RuntimeError('user id %s already exist' % (value,))
               break
       self._setReference(value)
       self.reindexObject()

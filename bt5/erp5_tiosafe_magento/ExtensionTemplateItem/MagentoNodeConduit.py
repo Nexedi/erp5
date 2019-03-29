@@ -110,9 +110,9 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
     try:
       previous_value = previous_xml[0].text
     except IndexError:
-      raise IndexError, 'Too little or too many value, only one is required for %s' % (
+      raise IndexError('Too little or too many value, only one is required for %s' % (
           previous_xml
-      )
+      ))
 
     # check if it'a work on person or on address
     if tag in ['street', 'zip', 'city', 'country']:

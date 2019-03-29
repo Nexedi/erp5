@@ -116,7 +116,7 @@ def getOptimalValue(file):
         glpk.glp_lpx_set_real_parm(lp, glpk.LPX_K_TMLIM, 2000) # XXX
         ret = glpk.glp_lpx_simplex(lp)
         if ret != glpk.LPX_E_OK:
-            raise RuntimeError, "The simplex method of GLPK failed"
+            raise RuntimeError("The simplex method of GLPK failed")
         return glpk.glp_lpx_get_obj_val(lp)
     finally:
         glpk.glp_lpx_delete_prob(lp)
@@ -128,7 +128,7 @@ def solve(matrix, point):
     import tempfile
     import os
     if shape(point)[0] != shape(matrix)[1]:
-        raise TypeError, "The argument 'point' has a different number of dimensions from the capacity"
+        raise TypeError("The argument 'point' has a different number of dimensions from the capacity")
     mod_name = tempfile.mktemp(suffix='.mod')
     mod = file(mod_name, 'w')
     try:

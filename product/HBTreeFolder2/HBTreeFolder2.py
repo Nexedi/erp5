@@ -449,7 +449,7 @@ class HBTreeFolder2Base (Persistent):
 
     def _checkId(self, id, allow_dup=0):
         if not allow_dup and self.has_key(id):
-            raise BadRequestException, ('The id "%s" is invalid--'
+            raise BadRequestException('The id "%s" is invalid--'
                                         'it is already in use.' % id)
 
 

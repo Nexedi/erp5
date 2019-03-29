@@ -42,7 +42,7 @@ def printFile(printer_name, file_path_to_print, use_ps_file=True, nb_copy=1):
     file_path_to_print = convertPdfIntoPs(file_path_to_print)
 
   if not os.path.exists('/usr/bin/lp'):
-      raise ValueError, "lp command is not installed"
+      raise ValueError("lp command is not installed")
   cmd = '/usr/bin/lp -d %s -n %s %s' % (printer_name, nb_copy,
       file_path_to_print)
   result = commands.getstatusoutput(cmd)
@@ -71,7 +71,7 @@ def convertPdfIntoPs(file_path_to_print):
 
 
   if not os.path.exists('/usr/bin/pdf2ps'):
-      raise ValueError, "pdf2ps command is not installed"
+      raise ValueError("pdf2ps command is not installed")
   cmd = '/usr/bin/pdf2ps %s %s'%(file_path_to_print, ps_file_name)
   result = commands.getstatusoutput(cmd)
   if result[0] != 0:
@@ -88,7 +88,7 @@ def getPrinterList(self):
     return the list of installed printers
   '''
   if not os.path.exists('/usr/bin/lpstat'):
-      raise ValueError, "lpstat command is not installed"
+      raise ValueError("lpstat command is not installed")
   cmd = '/usr/bin/lpstat -a'
   result = commands.getstatusoutput(cmd)
   if result[0] != 0:

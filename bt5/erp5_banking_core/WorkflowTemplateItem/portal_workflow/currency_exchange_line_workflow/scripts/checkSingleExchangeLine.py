@@ -10,7 +10,7 @@ exchange_line = state_change['object']
 
 if exchange_line.getBasePrice() in (None, 0, 0.0):
   msg = Message(domain = 'ui', message = 'Sorry, you must define a fixing price.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 
 # We have to looking for other currency exchanges lines
@@ -34,7 +34,7 @@ line_list = [x for x in exchange_line.portal_domains.searchPredicateList(temp_ob
 start_date = exchange_line.getStartDate()
 if start_date is None:
   msg = Message(domain = 'ui', message = 'Sorry, you must define a start date.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 # Make sure there is not two exchange lines wich defines the same dates
 # for this particular ressource and price_currency

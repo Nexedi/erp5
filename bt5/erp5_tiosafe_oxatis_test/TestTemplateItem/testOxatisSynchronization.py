@@ -139,7 +139,7 @@ class TestOxatisSynchronization(ERP5TypeTestCase):
           diff = "\n"
           for line in self.oxatis[im].IntegrationModule_getTioSafeXMLDiff(html=False).split('\n'):
             diff += "%s\n" %(line)
-          raise AssertionError, diff
+          raise AssertionError(diff)
 
 
 
@@ -301,7 +301,7 @@ class TestOxatisSynchronization(ERP5TypeTestCase):
           self.assertEqual(test_person.getShippingzipcode(), default_address.getZipCode())
           self.assertEqual(test_person.getShippingcity(), default_address.getCity())
         else:
-          raise ValueError, 'bad type'
+          raise ValueError('bad type')
 
     #
     # Modify persons on the plugin side

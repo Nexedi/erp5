@@ -20,15 +20,15 @@ Based on the new implementation of Zope 2.7.1 altered for PortalTransforms
 try:
     import docutils
 except ImportError:
-    raise ImportError, 'Please install docutils 0.3.3+ from http://docutils.sourceforge.net/#download.'
+    raise ImportError('Please install docutils 0.3.3+ from http://docutils.sourceforge.net/#download.')
 
 version = docutils.__version__.split('.')
 if version < ['0', '3', '3']:
-    raise ImportError, """Old version of docutils found:
+    raise ImportError("""Old version of docutils found:
 Got: %(version)s, required: 0.3.3+
 Please remove docutils from %(path)s and replace it with a new version. You
 can download docutils at http://docutils.sourceforge.net/#download.
-""" % {'version' : docutils.__version__, 'path' : docutils.__path__[0] }
+""" % {'version' : docutils.__version__, 'path' : docutils.__path__[0] })
 
 
 import sys, os, locale

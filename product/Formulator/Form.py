@@ -681,19 +681,19 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         FIXME: hack that could be removed once Zope 2.4.x
         goes back to a useful semantics..."""
         try: self._checkId(new_id)
-        except: raise CopyError, MessageDialog(
+        except: raise CopyError(MessageDialog(
                       title='Invalid Id',
                       message=sys.exc_info()[1],
-                      action ='manage_main')
+                      action ='manage_main'))
         ob=self._getOb(id)
         if not ob.cb_isMoveable():
-            raise CopyError, eNotSupported % id
+            raise CopyError(eNotSupported % id)
         self._verifyObjectPaste(ob)
         try:    ob._notifyOfCopyTo(self, op=1)
-        except: raise CopyError, MessageDialog(
+        except: raise CopyError(MessageDialog(
                       title='Rename Error',
                       message=sys.exc_info()[1],
-                      action ='manage_main')
+                      action ='manage_main'))
         self._delObject(id)
         ob = aq_base(ob)
         ob._setId(new_id)
@@ -728,7 +728,7 @@ class ZMIForm(ObjectManager, PropertyManager, RoleManager, Item, Form):
         """
         field = self._getOb(id, None)
         if field is None or not hasattr(aq_base(field), 'is_field'):
-            raise AttributeError, "No field %s" % id
+            raise AttributeError("No field %s" % id)
         if include_disabled or field.get_value('enabled'):
             return field
         raise FieldDisabledError("Field %s disabled" % id, field)

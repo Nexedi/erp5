@@ -202,7 +202,7 @@ class SimulationTool(BaseTool):
         if not as_text:
           prop_value = category_tool.getCategoryValue(prop)
           if prop_value is None:
-            raise ValueError, 'Category %s does not exists' % prop
+            raise ValueError('Category %s does not exists' % prop)
           property_uid_list.append(prop_value.getUid())
         else:
           property_uid_list.append(prop)
@@ -211,7 +211,7 @@ class SimulationTool(BaseTool):
           if not as_text:
             prop_value = category_tool.getCategoryValue(property_item)
             if prop_value is None:
-              raise ValueError, 'Category %s does not exists' % property_item
+              raise ValueError('Category %s does not exists' % property_item)
             property_uid_list.append(prop_value.getUid())
           else:
             property_uid_list.append(property_item)
@@ -223,7 +223,7 @@ class SimulationTool(BaseTool):
           if not as_text:
             prop_value = category_tool.getCategoryValue(property_item)
             if prop_value is None:
-              raise ValueError, 'Category %s does not exists' % property_item
+              raise ValueError('Category %s does not exists' % property_item)
             tmp_uid_list.append(prop_value.getUid())
           else:
             tmp_uid_list.append(property_item)
@@ -1142,7 +1142,7 @@ class SimulationTool(BaseTool):
       total_result = 0.0
       if len(result) > 0:
         if len(result) != 1:
-          raise ValueError, 'Sorry we must have only one'
+          raise ValueError('Sorry we must have only one')
         result = result[0]
 
         if hasattr(result, "converted_quantity"):
@@ -2364,7 +2364,7 @@ class SimulationTool(BaseTool):
           elif resource_aggregation_base_category is None or resource_aggregation_depth is None:
             # XXX use an appropriate error class
             # XXX should guess a base category instead of emitting an exception
-            raise RuntimeError, "The resource '%s' is not found in the capacity, and the argument 'resource_aggregation_base_category' or the argument 'resource_aggregation_depth' is not specified" % resource
+            raise RuntimeError("The resource '%s' is not found in the capacity, and the argument 'resource_aggregation_base_category' or the argument 'resource_aggregation_depth' is not specified" % resource)
           else:
             # It is necessary to aggregate resources, to guess the capacity of this resource.
 
@@ -2458,7 +2458,7 @@ class SimulationTool(BaseTool):
               if done:
                 break
             if not done:
-              raise RuntimeError, "Aggregation failed"
+              raise RuntimeError("Aggregation failed")
 
       # Build a matrix from the capacity item list.
 #      LOG('resource_map', 0, str(resource_map))
@@ -2660,9 +2660,9 @@ class SimulationTool(BaseTool):
       """
       # Sanity checks.
       if len(delivery_list) == 0:
-        raise self.MergeDeliveryListError, "No delivery is passed"
+        raise self.MergeDeliveryListError("No delivery is passed")
       elif len(delivery_list) == 1:
-        raise self.MergeDeliveryListError, "Only one delivery is passed"
+        raise self.MergeDeliveryListError("Only one delivery is passed")
 
       main_delivery = delivery_list[0]
       delivery_list = delivery_list[1:]
@@ -2678,15 +2678,14 @@ class SimulationTool(BaseTool):
           main_value = main_delivery.getProperty(attr)
           value = delivery.getProperty(attr)
           if  main_value != value:
-            raise self.MergeDeliveryListError, \
-              "%s is not the same between %s and %s (%s and %s)" % (attr, delivery.getId(), main_delivery.getId(), value, main_value)
+            raise self.MergeDeliveryListError("%s is not the same between %s and %s (%s and %s)" % (attr, delivery.getId(), main_delivery.getId(), value, main_value))
 
       # One more sanity check. Check if discounts are the same, if any.
       main_discount_list = main_delivery.contentValues(filter = {'portal_type': self.getPortalDiscountTypeList()})
       for delivery in delivery_list:
         discount_list = delivery.contentValues(filter = {'portal_type': self.getPortalDiscountTypeList()})
         if len(main_discount_list) != len(discount_list):
-          raise self.MergeDeliveryListError, "Discount is not the same between %s and %s" % (delivery.getId(), main_delivery.getId())
+          raise self.MergeDeliveryListError("Discount is not the same between %s and %s" % (delivery.getId(), main_delivery.getId()))
         for discount in discount_list:
           for main_discount in main_discount_list:
             if discount.getDiscount() == main_discount.getDiscount() \
@@ -2695,14 +2694,14 @@ class SimulationTool(BaseTool):
                and discount.getImmediateDiscount() == main_discount.getImmediateDiscount():
               break
           else:
-            raise self.MergeDeliveryListError, "Discount is not the same between %s and %s" % (delivery.getId(), main_delivery.getId())
+            raise self.MergeDeliveryListError("Discount is not the same between %s and %s" % (delivery.getId(), main_delivery.getId()))
 
       # One more sanity check. Check if payment conditions are the same, if any.
       main_payment_condition_list = main_delivery.contentValues(filter = {'portal_type': self.getPortalPaymentConditionTypeList()})
       for delivery in delivery_list:
         payment_condition_list = delivery.contentValues(filter = {'portal_type': self.getPortalPaymentConditionTypeList()})
         if len(main_payment_condition_list) != len(payment_condition_list):
-          raise self.MergeDeliveryListError, "Payment Condition is not the same between %s and %s" % (delivery.getId(), main_delivery.getId())
+          raise self.MergeDeliveryListError("Payment Condition is not the same between %s and %s" % (delivery.getId(), main_delivery.getId()))
         for condition in payment_condition_list:
           for main_condition in main_payment_condition_list:
             if condition.getPaymentMode() == main_condition.getPaymentMode() \
@@ -2713,7 +2712,7 @@ class SimulationTool(BaseTool):
                and condition.getPaymentTerm() == main_condition.getPaymentTerm():
               break
           else:
-            raise self.MergeDeliveryListError, "Payment Condition is not the same between %s and %s" % (delivery.getId(), main_delivery.getId())
+            raise self.MergeDeliveryListError("Payment Condition is not the same between %s and %s" % (delivery.getId(), main_delivery.getId()))
 
       # Make sure that all activities are flushed, to get simulation movements from delivery cells.
       for delivery in delivery_list:
@@ -2867,9 +2866,9 @@ class SimulationTool(BaseTool):
                                           price = cell_price,
                                           )
                   else:
-                    raise self.MergeDeliveryListError, "Unknown portal type %s" % str(object_to_update.getPortalType())
+                    raise self.MergeDeliveryListError("Unknown portal type %s" % str(object_to_update.getPortalType()))
                 else:
-                  raise self.MergeDeliveryListError, "No object to update"
+                  raise self.MergeDeliveryListError("No object to update")
 
       # Merge containers. Just copy them from other deliveries into the main.
       for delivery in delivery_list:
@@ -2935,8 +2934,7 @@ class SimulationTool(BaseTool):
       """
       # XXX For now, consider that from_date and to_date are required
       if (from_date is None) or (to_date is None):
-        raise NotImplementedError, \
-              "getAvailableTime does not managed yet None values"
+        raise NotImplementedError("getAvailableTime does not managed yet None values")
       portal = self.getPortalObject()
       # Calculate portal_type
       if portal_type == []:

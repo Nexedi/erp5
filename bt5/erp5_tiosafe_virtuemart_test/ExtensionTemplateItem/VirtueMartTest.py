@@ -181,7 +181,7 @@ class VirtueMartTestConnector:
   def updatePerson(self, *args, **kw):
     LOG("Viewing updatePerson ", INFO, "kw: %s" %(kw))
     if not kw.has_key('person_id'):
-      raise ValueError, "No parameter person_id given, got %s / %s" %(args, kw)
+      raise ValueError("No parameter person_id given, got %s / %s" %(args, kw))
     person_id = kw["person_id"]
     # get corresponding person from test module
     person_list = self.context.getPortalObject().virtuemart_test_module.searchFolder(id=person_id,
@@ -213,7 +213,7 @@ class VirtueMartTestConnector:
 
   def deletePerson(self, *args, **kw):
     if not kw.has_key('person_id'):
-      raise ValueError, "No parameter person_id given, got %s / %s" %(args, kw)
+      raise ValueError("No parameter person_id given, got %s / %s" %(args, kw))
     person_id = kw['person_id']
     # get corresponding person from test module
     person_list = self.context.getPortalObject().virtuemart_test_module.searchFolder(id=person_id,
@@ -264,7 +264,7 @@ class VirtueMartTestConnector:
 
   def createAddress(self, *args, **kw):
     if not kw.has_key('person_id'):
-      raise ValueError, "No person_id given, got %s / %s" %(args, kw)
+      raise ValueError("No person_id given, got %s / %s" %(args, kw))
     keywords = {} 
     if kw.has_key('street'):
       keywords["street"] = kw['street'].strip('"').strip("'")
@@ -286,7 +286,7 @@ class VirtueMartTestConnector:
   def updateAddress(self, *args, **kw):
     LOG("Viewing updateAddress ", INFO, "kw: %s" %(kw))
     if not kw.has_key('person_id') :
-      raise ValueError, "No parameter person_id given, got %s / %s" %(args, kw)
+      raise ValueError("No parameter person_id given, got %s / %s" %(args, kw))
     keywords = {} 
     if kw.has_key('street'):
       keywords["street"] = kw['street'].strip('"').strip("'")
@@ -431,7 +431,7 @@ class VirtueMartTestConnector:
 
   def createProduct(self, *args, **kw):
     if not kw.has_key('reference'):
-      raise ValueError, "No reference passed to createProduct, got %s / %s" %(args, kw)
+      raise ValueError("No reference passed to createProduct, got %s / %s" %(args, kw))
     keywords = {} 
     keywords["reference"] = kw['reference'].strip('"').strip("'")
     if kw.has_key('title'):
@@ -453,7 +453,7 @@ class VirtueMartTestConnector:
 
   def deleteProduct(self, *args, **kw):
     if not kw.has_key('product_id'):
-      raise ValueError, "No parameter product_id given, got %s / %s" %(args, kw)
+      raise ValueError("No parameter product_id given, got %s / %s" %(args, kw))
     resource_id = kw['product_id']
     # retrieve the product inside the test module
     resource_list = self.context.getPortalObject().virtuemart_test_module.searchFolder(id=resource_id,
@@ -470,7 +470,7 @@ class VirtueMartTestConnector:
 
   def updateProduct(self, *args, **kw):
     if not kw.has_key('product_id') :
-      raise ValueError, "No parameter product_id given, got %s / %s" %(args, kw)
+      raise ValueError("No parameter product_id given, got %s / %s" %(args, kw))
     keywords = {} 
     if kw.has_key('title'):
       keywords["title"] = kw['title'].strip('"').strip("'")
@@ -498,9 +498,9 @@ class VirtueMartTestConnector:
 
   def createProductCategory(self, *args, **kw):
     if not kw.has_key('product_id'):
-      raise ValueError, "No parameter product_id given, got %s / %s" %(args, kw)
+      raise ValueError("No parameter product_id given, got %s / %s" %(args, kw))
     if not kw.has_key('base_category') or not kw.has_key('variation'):
-      raise ValueError, "No parameter base_category or variation given, got %s " %(kw)
+      raise ValueError("No parameter base_category or variation given, got %s " %(kw))
     base_category = kw['base_category'].strip('"').strip("'")
     variation = kw['variation'].strip('"').strip("'")
     category = "%s/%s" % (base_category, variation)
@@ -522,9 +522,9 @@ class VirtueMartTestConnector:
 
   def deleteProductCategory(self, *args, **kw):
     if not kw.has_key('product_id'):
-      raise ValueError, "No parameter product_id given, got %s / %s" %(args, kw)
+      raise ValueError("No parameter product_id given, got %s / %s" %(args, kw))
     if not kw.has_key('base_category') or not kw.has_key('variation'):
-      raise ValueError, "No parameter base_category or variation given, got %s" %(kw)
+      raise ValueError("No parameter base_category or variation given, got %s" %(kw))
     base_category = kw['base_category'].strip('"').strip("'")
     variation = kw['variation'].strip('"').strip("'")
     category = "%s/%s" % (base_category, variation)
@@ -551,7 +551,7 @@ class VirtueMartTestConnector:
 
   def getProductCategoryList(self, *args, **kw):
     if not kw.has_key('product_id') and not kw.has_key('group_id'):
-      raise ValueError, "No parameter product_id given, got %s / %s" %(args, kw)
+      raise ValueError("No parameter product_id given, got %s / %s" %(args, kw))
     if kw.has_key('product_id'):
       resource_id = kw['product_id']
     else:
@@ -585,7 +585,7 @@ class VirtueMartTestConnector:
 
   def getLastID(self, *args, **kw):
     if not kw.has_key('type'):
-      raise ValueError, "No parameter type given, got %s / %s" %(args, kw)
+      raise ValueError("No parameter type given, got %s / %s" %(args, kw))
     type = kw['type']
 
     last_id = -1
@@ -671,7 +671,7 @@ class VirtueMartTestConnector:
 
   def getSaleOrderLineList(self, *args, **kw):
     if not kw.has_key('sale_order_id'):
-      raise ValueError, "No parameter sale_order_id given, got %s / %s" %(args, kw)
+      raise ValueError("No parameter sale_order_id given, got %s / %s" %(args, kw))
     sale_order_id = kw['sale_order_id']
 
     sale_order_list = self.context.getPortalObject().virtuemart_test_module.searchFolder(id=sale_order_id,
@@ -707,7 +707,7 @@ class VirtueMartTestConnector:
 
   def getSaleOrderLineCategoryList(self, *args, **kw):
     if not kw.has_key('sale_order_id'):
-      raise ValueError, "No parameter sale_order_id given, got %s / %s" %(args, kw)
+      raise ValueError("No parameter sale_order_id given, got %s / %s" %(args, kw))
     sale_order_id = kw['sale_order_id']
     # retrieve the sale order from the test module
     sale_order_list = self.context.getPortalObject().virtuemart_test_module.searchFolder(id=sale_order_id,
@@ -719,7 +719,7 @@ class VirtueMartTestConnector:
       sale_order = sale_order_list[0].getObject()
     #LOG("Viewing sale_order", INFO, "sale_order: %s" %(sale_order))
     if not kw.has_key('sale_order_line_id'):
-      raise ValueError, "No parameter sale_order_line_id given, got %s / %s" %(args, kw)
+      raise ValueError("No parameter sale_order_line_id given, got %s / %s" %(args, kw))
     sale_order_line_id = kw['sale_order_line_id']
     # retrieve the resource from the test module
     resource_list = sale_order.searchFolder(id=sale_order_line_id, validation_state="validated",

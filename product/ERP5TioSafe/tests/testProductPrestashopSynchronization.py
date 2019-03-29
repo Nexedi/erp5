@@ -438,7 +438,7 @@ class TestProductPrestashopSynchronization(testPrestashopMixin):
     pref_list = portal.portal_preferences.searchFolder(portal_type="System Preference",
                                                        validation_state="enabled")
     if len(pref_list) > 1:
-      raise ValueError, "Too many system preferences, does not know which to choose"
+      raise ValueError("Too many system preferences, does not know which to choose")
     elif len(pref_list) == 0:
       pref = portal.portal_preferences.newContent(portal_type="System Preference",
                                            title="default system preference for TioSafe",

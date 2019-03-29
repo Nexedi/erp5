@@ -8,4 +8,4 @@ for site in site_list:
     return
 
 msg = Message(domain = "ui", message="Vault differ between initialisation and transition")
-raise ValidationFailed, (msg,)
+raise ValidationFailed(msg,)

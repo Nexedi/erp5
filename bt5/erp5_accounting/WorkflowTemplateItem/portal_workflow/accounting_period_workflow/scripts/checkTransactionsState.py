@@ -34,7 +34,7 @@ while section.getPortalType() == period.getPortalType():
 
 section_category = section.getGroup(base=True)
 if not section_category:
-  raise ValidationFailed, translateString("This Organisation must be member of a Group")
+  raise ValidationFailed(translateString("This Organisation must be member of a Group"))
 
 
 # XXX copy and paste from AccountingPeriod_createBalanceTransaction !
@@ -81,5 +81,5 @@ movement_list = portal.portal_simulation.getMovementHistoryList(
       limit=1)
 
 if movement_list:
-  raise ValidationFailed, translateString(
-    "All Accounting Transactions for this organisation during the period have to be closed first.")
+  raise ValidationFailed(translateString(
+    "All Accounting Transactions for this organisation during the period have to be closed first."))

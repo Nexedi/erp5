@@ -81,7 +81,7 @@ class PrestashopResourceConduit(TioSafeResourceConduit):
     if create_method is not None:
       create_result = create_method(**keyword)
     else:
-      raise ValueError, 'Impossible to find a create method named %s and object %s' %(create_method_id, object.getPath(),)
+      raise ValueError('Impossible to find a create method named %s and object %s' %(create_method_id, object.getPath(),))
     if len(create_result):
       # We suppose the id of the object created was returned by the plugin
       new_id = create_result[0].getId()

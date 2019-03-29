@@ -131,8 +131,8 @@ class TestProductERP5Synchronization(testPrestashopMixin):
         self.assertEqual(title, 'Noir')
         self.assertEqual(base_category_list, ['colour', ])
       else:
-        raise ValueError, 'Can not check variation: %s of the product: %s' % \
-            (index, product.getTitle())
+        raise ValueError('Can not check variation: %s of the product: %s' % \
+            (index, product.getTitle()))
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         plugin_xml= self.root_xml % product.Resource_asTioSafeXML(),
@@ -178,8 +178,8 @@ class TestProductERP5Synchronization(testPrestashopMixin):
       elif i == 3:
         self.assertEqual(variation, 'colour/white')
       else:
-        raise ValueError, 'Can not check variation: %s of the product: %s' % \
-            (variation, product.getTitle())
+        raise ValueError('Can not check variation: %s of the product: %s' % \
+            (variation, product.getTitle()))
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         plugin_xml= self.root_xml % product.Resource_asTioSafeXML(),
@@ -238,8 +238,8 @@ class TestProductERP5Synchronization(testPrestashopMixin):
       elif i == 1:
         self.assertEqual(variation, 'colour/white')
       else:
-        raise ValueError, 'Can not check variation: %s of the product: %s' % \
-            (variation, product.getTitle())
+        raise ValueError('Can not check variation: %s of the product: %s' % \
+            (variation, product.getTitle()))
     individual_variation_list = product.searchFolder(
         portal_type='Product Individual Variation',
         sort_on=(['id', 'ASC'], ),
@@ -259,8 +259,8 @@ class TestProductERP5Synchronization(testPrestashopMixin):
         self.assertEqual(title, 's5')
         self.assertEqual(base_category_list, ['ball_size'])
       else:
-        raise ValueError, 'Can not check variation: %s of the product: %s' % \
-            (index, product.getTitle())
+        raise ValueError('Can not check variation: %s of the product: %s' % \
+            (index, product.getTitle()))
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         plugin_xml= self.root_xml % product.Resource_asTioSafeXML(),
@@ -340,8 +340,8 @@ class TestProductERP5Synchronization(testPrestashopMixin):
         self.assertEqual(title, 's5')
         self.assertEqual(base_category_list, ['ball_size'])
       else:
-        raise ValueError, 'Can not check variation: %s of the product: %s' % \
-            (index, product_2.getTitle())
+        raise ValueError('Can not check variation: %s of the product: %s' % \
+            (index, product_2.getTitle()))
     # Check the product 'Ballon de foot'
     product_3 = self.product_module.searchFolder(
         portal_type='Product',
@@ -364,8 +364,8 @@ class TestProductERP5Synchronization(testPrestashopMixin):
       elif i == 1:
         self.assertEqual(variation, 'colour/white')
       else:
-        raise ValueError, 'Can not check variation: %s of the product: %s' % \
-            (variation, product_3.getTitle())
+        raise ValueError('Can not check variation: %s of the product: %s' % \
+            (variation, product_3.getTitle()))
     # Check the product 'Ballon de Basket'
     product_4 = self.product_module.searchFolder(
         portal_type='Product',
@@ -384,8 +384,8 @@ class TestProductERP5Synchronization(testPrestashopMixin):
       elif i == 1:
         self.assertEqual(variation, 'colour/white')
       else:
-        raise ValueError, 'Can not check variation: %s of the product: %s' % \
-            (variation, product_4.getTitle())
+        raise ValueError('Can not check variation: %s of the product: %s' % \
+            (variation, product_4.getTitle()))
     individual_variation_list = product_4.searchFolder(
         portal_type='Product Individual Variation',
         sort_on=(['id', 'ASC'], ),
@@ -405,8 +405,8 @@ class TestProductERP5Synchronization(testPrestashopMixin):
         self.assertEqual(title, 's5')
         self.assertEqual(base_category_list, ['ball_size'])
       else:
-        raise ValueError, 'Can not check variation: %s of the product: %s' % \
-            (index, product_4.getTitle())
+        raise ValueError('Can not check variation: %s of the product: %s' % \
+            (index, product_4.getTitle()))
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         plugin_xml= self.root_xml % product_1.Resource_asTioSafeXML(),
@@ -612,8 +612,8 @@ class TestProductERP5Synchronization(testPrestashopMixin):
         self.assertEqual(title, 's5')
         self.assertEqual(base_category_list, ['ball_size'])
       else:
-        raise ValueError, 'Can not check variation: %s of the product: %s' % \
-            (individual_variation.getId(), product.getTitle())
+        raise ValueError('Can not check variation: %s of the product: %s' % \
+            (individual_variation.getId(), product.getTitle()))
     # The first update remove, add and update some elements but not realise an
     # hard work on variations
     self.loadSQLDump(
@@ -656,8 +656,8 @@ class TestProductERP5Synchronization(testPrestashopMixin):
         self.assertEqual(title, 's6')
         self.assertEqual(base_category_list, ['ball_size'])
       else:
-        raise ValueError, 'Can not check variation: %s of the product: %s' % \
-            (index, product.getTitle())
+        raise ValueError('Can not check variation: %s of the product: %s' % \
+            (index, product.getTitle()))
     # The second update remove variations (individuals and shareds)
     self.loadSQLDump(
         self.connection,
@@ -721,8 +721,8 @@ class TestProductERP5Synchronization(testPrestashopMixin):
         self.assertEqual(title, 's6')
         self.assertEqual(base_category_list, ['ball_size'])
       else:
-        raise ValueError, 'Can not check variation: %s of the product: %s' % \
-            (individual_variation.getId(), product.getTitle())
+        raise ValueError('Can not check variation: %s of the product: %s' % \
+            (individual_variation.getId(), product.getTitle()))
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         plugin_xml= self.root_xml % product.Resource_asTioSafeXML(),

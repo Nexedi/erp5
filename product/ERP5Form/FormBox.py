@@ -213,7 +213,7 @@ class FormBoxValidator(Validator.Validator):
         REQUEST.set('field_errors', current_field_errors)
         getattr(here, formbox_target_id).validate_all_to_request(REQUEST, key_prefix=key)
       else:
-        raise NotImplementedError, result_type
+        raise NotImplementedError(result_type)
 
 FormBoxWidgetInstance = FormBoxWidget()
 FormBoxValidatorInstance = FormBoxValidator()

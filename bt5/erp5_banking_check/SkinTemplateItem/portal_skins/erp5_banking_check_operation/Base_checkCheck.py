@@ -18,6 +18,6 @@ if simulation_state != 'confirmed':
     msg = Message(domain='ui', message=bad_simulation_state_dict[simulation_state])
   else:
     msg = 'Invalid and unhandled simulation state: %s' % (simulation_state, )
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 return check

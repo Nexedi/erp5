@@ -99,7 +99,7 @@ class OxatisMethodWrapper(MethodWrapper):
       if sub_error_code == RECORD_NOT_FOUND:
         raise KeyError
       elif sub_error_code == INVALID_DATA:
-        raise TypeError, "Invalid data sent to WebService, url = %s, args =%s, kw = %s" %(url, args, kw)
+        raise TypeError("Invalid data sent to WebService, url = %s, args =%s, kw = %s" %(url, args, kw))
       else:
         raise ValueError(error_message)
     else:

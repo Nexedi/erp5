@@ -52,7 +52,7 @@ class SSHConnection(object):
     if os.path.exists(key_path):
       self.key_path = key_path
     else:
-      raise ValueError, 'key_path does not exist: %s' % key_path
+      raise ValueError('key_path does not exist: %s' % key_path)
 
   security.declarePublic(Permissions.ManagePortal, 'connect')
   def connect(self):

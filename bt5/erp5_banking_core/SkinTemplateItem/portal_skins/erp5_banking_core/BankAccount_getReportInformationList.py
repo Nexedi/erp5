@@ -6,7 +6,7 @@ portal_type = "Bank Account"
 
 if reference is None:
   message = Message(domain="ui", message="Please give a reference")
-  raise ValueError, message
+  raise ValueError(message)
 
 #context.log('reference',reference)
 account_list = catalog(string_index=reference, portal_type=portal_type, validation_state=('valid', 'closed'))
@@ -17,10 +17,10 @@ if len(account_list) == 0:
 #context.log('len 2',len(account_list))
 if len(account_list) == 0:
   message = Message(domain="ui", message="No bank account have this reference")
-  raise ValueError, message
+  raise ValueError(message)
 if force_one_account and len(account_list) != 1:
   message = Message(domain="ui", message="More than one account match this research")
-  raise ValueError, message
+  raise ValueError(message)
 
 account_list = [x.getObject() for x in account_list]
 

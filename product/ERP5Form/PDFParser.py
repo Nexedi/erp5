@@ -53,7 +53,7 @@ class PDFParser:
     self.pages = None
 
     if pdf_file_descriptor is None:
-      raise ValueError, "No PDF file provided, please choose a pdf form "
+      raise ValueError("No PDF file provided, please choose a pdf form ")
 
 
     if type(pdf_file_descriptor) == 'str':
@@ -80,8 +80,8 @@ class PDFParser:
     command_output = commands.getstatusoutput('pdfinfo %s' % \
         temp_pdf_name)
     if command_output[0] != 0:
-        raise ValueError, 'Error: convert command failed with the following'\
-                          'error message : \n%s' % command_output[1]
+        raise ValueError('Error: convert command failed with the following'\
+                          'error message : \n%s' % command_output[1])
 
     # get the pdf page size
     rawstr = r'''
@@ -177,8 +177,8 @@ class PDFParser:
     command_output = commands.getstatusoutput('pdftk %s output %s flatten'\
                       % (temp_input_name, temp_output_name))
     if command_output[0] != 0:
-      raise IOError, "pdftk failed with the following error %s"\
-                      % command_output[1]
+      raise IOError("pdftk failed with the following error %s"\
+                      % command_output[1])
     temp_output = open(temp_output_name,'rb')
     temp_output.seek(0)
     datas = temp_output.read()

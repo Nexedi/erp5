@@ -23,4 +23,4 @@ for assignment in person_object.contentValues(filter={'portal_type': 'Assignment
 
 # The only case when several assignments can be started at the same time is when they share the same 'site' value.
 if len(assignment_site_list) != 1:
-  raise ValidationFailed, "Error: started assignments must have the same site value."
+  raise ValidationFailed("Error: started assignments must have the same site value.")

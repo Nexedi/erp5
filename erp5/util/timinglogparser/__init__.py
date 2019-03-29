@@ -185,7 +185,7 @@ for name, value in opts:
     decimate_count = int(value)
 
 if configuration is None:
-  raise ValueError, '--config is mandatory'
+  raise ValueError('--config is mandatory')
 
 config_file = os.path.splitext(os.path.basename(configuration))[0]
 config_path = [os.path.dirname(os.path.abspath(configuration))] + sys.path

@@ -646,8 +646,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     else:
       movement_list = movement_group_node.getMovementList()
       if len(movement_list) != 1:
-        raise CollectError, "DeliveryBuilder: %s unable to distinct those\
-              movements: %s" % (self.getId(), str(movement_list))
+        raise CollectError("DeliveryBuilder: %s unable to distinct those\
+              movements: %s" % (self.getId(), str(movement_list)))
       else:
         # XXX Hardcoded value
         base_id = 'movement'
@@ -705,8 +705,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                        membership_criterion_base_category_list=movement.\
                                              getVariationBaseCategoryList())
           else:
-            raise MatrixError, 'Cell: %s already exists on %s' % \
-                  (str(cell_key), str(delivery_line))
+            raise MatrixError('Cell: %s already exists on %s' % \
+                  (str(cell_key), str(delivery_line)))
           object_to_update = cell
         self._setUpdated(object_to_update, 'cell')
         self._setDeliveryMovementProperties(

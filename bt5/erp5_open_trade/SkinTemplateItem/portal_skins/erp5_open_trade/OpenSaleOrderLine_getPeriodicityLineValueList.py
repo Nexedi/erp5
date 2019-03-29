@@ -21,4 +21,4 @@ for sale_trade_condition in sale_trade_condition_list:
     if periodicity_line.getResourceUid()==resource_uid:
       return [periodicity_line]
 
-raise RuntimeError, 'Cannot find an appropriate Periodicity Line for the movement: %s' % context.getRelativeUrl()
+raise RuntimeError('Cannot find an appropriate Periodicity Line for the movement: %s' % context.getRelativeUrl())

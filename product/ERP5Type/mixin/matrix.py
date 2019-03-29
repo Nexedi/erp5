@@ -200,9 +200,8 @@ class Matrix(object):
     """
     script = self._getTypeBasedMethod('asCellRange', **kw)
     if script is None:
-      raise UnboundLocalError,\
-             "Did not find cell range script for portal type: %r" %\
-             self.getPortalType()
+      raise UnboundLocalError("Did not find cell range script for portal type: %r" %\
+             self.getPortalType())
     cell_range = script(base_id=base_id, matrixbox=0, **kw)
     self._setCellRange(base_id=base_id, *cell_range)
 
@@ -336,7 +335,7 @@ class Matrix(object):
 
     cell_id = self.keyToId(kw, base_id = base_id)
     if cell_id is None:
-      raise KeyError, 'Invalid key: %s' % str(kw)
+      raise KeyError('Invalid key: %s' % str(kw))
 
     cell = self.get(cell_id)
     if cell is not None:

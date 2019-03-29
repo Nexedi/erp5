@@ -12,34 +12,34 @@ transaction.Baobab_checkAccountingDateOpen(site=site, date=date)
 if transaction.getDestinationSection() not in ("", None) and \
        transaction.getDestinationPayment() not in ("", None):
   msg = Message(domain='ui', message="You can't defined both account and accounting code.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
   
 if transaction.getDestinationSection() in ("", None) and \
        transaction.getDestinationPayment() in ("", None):
   msg = Message(domain='ui', message="You must defined an account or and accounting code as destination.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 if transaction.getSite() in ("", None):
   msg = Message(domain='ui', message="You must defined site on document.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 # Check the amount.
 price = transaction.getSourceTotalAssetPrice()
 if price is None or price <= 0:
   msg = Message(domain='ui', message='Amount is not valid.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 # Check the bank account.
 destination_bank_account = transaction.getDestinationPaymentValue()
 if destination_bank_account is not None:
   if destination_bank_account.getValidationState() != 'valid':
     msg = Message(domain='ui', message='Destination bank account is not valid.')
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)
 
 # Check if the total price is equal to the total asset price.
 if transaction.getTotalPrice(fast=0, portal_type = 'Check Operation Line') != transaction.getSourceTotalAssetPrice():
   msg = Message(domain='ui', message="Total price doesn't match.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 seen_check_dict = {}
 
@@ -51,13 +51,13 @@ for check_operation_line in transaction.contentValues(filter = {'portal_type' : 
   if check_operation_line.getDescription() in (None, ''):
     msg = Message(domain='ui', message='The description is not defined on line $line.'
                   , mapping={"line" : check_operation_line.getId()})
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)
 
   source_bank_account = check_operation_line.getSourcePaymentValue()
   if source_bank_account is None:
     msg = Message(domain='ui', message='Bank account not defined on line $line.'
                   , mapping={"line" : check_operation_line.getId()})
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)
 
   check_number = check_operation_line.getAggregateFreeText()
   check_type = check_operation_line.getAggregateResource()
@@ -65,29 +65,29 @@ for check_operation_line in transaction.contentValues(filter = {'portal_type' : 
     if check_number:
       msg = Message(domain='ui', message='Check is defined on line $line.'
                     , mapping={"line" : check_operation_line.getId()})
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
 
     if check_type is not None:
       msg = Message(domain='ui', message='Check type is defined on line $line.'
                     , mapping={"line" : check_operation_line.getId()})
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
   else:
     if not check_number:
       msg = Message(domain='ui', message='Check is not defined on line $line.'
                     , mapping={"line" : check_operation_line.getId()})
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
 
     if check_type is None:
       msg = Message(domain='ui', message='Check type is not defined on line $line.'
                     , mapping={"line" : check_operation_line.getId()})
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
 
     seen_check_dict_key = (source_bank_account, check_type, check_number)
     seen_check = seen_check_dict.get(seen_check_dict_key)
     if seen_check is not None:
       msg = Message(domain='ui', message='Check on line $line is already used on line $oldline.'
                     , mapping={"line" : check_operation_line.getId(), "oldline": seen_check})
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
     seen_check_dict[seen_check_dict_key] = check_operation_line.getId()
 
     # Test check is valid based on date

@@ -26,10 +26,10 @@ total_price = transaction.getTotalPrice(portal_type=['Cash Delivery Line','Cash 
 
 if resource == 2:
   msg = Message(domain="ui", message="No Resource.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif amount != total_price:
   msg = Message(domain="ui", message="Amount differ from total price.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif resource <> 0 :
   msg = Message(domain="ui", message="Insufficient Balance.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)

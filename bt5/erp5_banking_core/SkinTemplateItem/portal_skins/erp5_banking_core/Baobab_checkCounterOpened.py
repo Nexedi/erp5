@@ -18,4 +18,4 @@ for counter_ob in counter_list:
     found = 1
 if found == 0:
   msg = Message(domain = "ui", message="Counter is not opened")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)

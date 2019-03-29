@@ -14,4 +14,4 @@ for document in document_list:
   message = Message(domain="ui", 
                 message="Sorry, the $portal_type (reference:$reference) is not finished",
                 mapping={'portal_type':portal_type,'reference':reference})
-  raise ValidationFailed,message
+  raise ValidationFailed(message)

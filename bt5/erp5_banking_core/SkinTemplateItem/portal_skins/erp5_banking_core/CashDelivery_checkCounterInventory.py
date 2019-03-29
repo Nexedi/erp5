@@ -51,7 +51,7 @@ activity_tool = context.portal_activities
 def checkActivities(source_counter):
   if activity_tool.countMessageWithTag(source_counter):
     msg = Message(domain='ui', message="There are operations pending for this vault that prevent form calculating its position. Please try again later.")
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)
 
 inventory_list = context.portal_simulation.getCurrentInventoryList(
                    #at_date=start_date,
@@ -85,7 +85,7 @@ for line in line_list :
     serialize_dict[source_counter] = 1
     if source_counter is None:
       msg = Message(domain="ui", message="No source counter define to check inventory.")
-      raise ValidationFailed, (msg,)
+      raise ValidationFailed(msg,)
     #context.log("CashDelivery_checkCounterInventory", "source_counter = %s" %source_counter)
     source_object = context.portal_categories.getCategoryValue(source_counter)
     source_object.serialize()
@@ -108,9 +108,9 @@ for line in line_list :
                                'letter': cell.getEmissionLetterTitle(),
                                'status': cell.getCashStatusTranslatedTitle(),
                                'variation':cell.getVariationTitle()})
-        raise ValidationFailed, (msg,)
+        raise ValidationFailed(msg,)
   else :
-    raise ValueError, 'This script must not be used on movements without cells. It is deprecated and dangerous, therefor it raises.'
+    raise ValueError('This script must not be used on movements without cells. It is deprecated and dangerous, therefor it raises.')
 #    inventory_value = context.portal_simulation.getCurrentInventory(section=source_counter, resource=line_resource)
 #    if inventory_value - line.getQuantity() < 0 :
 #      msg = Message(domain='ui', message='Insufficient balance for $resource, letter $letter, status $status and variation $variation', mapping={'resource':line.getResourceTranslatedTitle(),

@@ -7,7 +7,7 @@ vault = transaction.getSource()
 
 if ('encaisse_des_billets_et_monnaies'  not in vault):
    msg = Message(domain="ui", message="Invalid source.")
-   raise ValidationFailed, (msg,)
+   raise ValidationFailed(msg,)
 
 resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type='Monetary Recall Line')
 
@@ -25,10 +25,10 @@ total_price = transaction.getTotalPrice(portal_type=['Monetary Recall Line','Cas
 
 if resource == 2:
   msg = Message(domain="ui", message="No Resource.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif amount != total_price:
   msg = Message(domain="ui", message="Amount differ from total price.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 elif resource <> 0 :
   msg = Message(domain="ui", message="Insufficient Balance.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)

@@ -54,17 +54,17 @@ person_list=[person.getObject() for person in \
        context.portal_catalog(portal_type='Person',query=query)]
 
 if len(person_list) >1 :
-  raise ValidationFailed, "Error : There is more than one person with the "\
+  raise ValidationFailed("Error : There is more than one person with the "\
             " title '%s', birth date '%s' and birthplace '%s'" % (
                 request_eform.getTitle(),
                 request_eform.getOwnerBirthday(),
-                request_eform.getOwnerBirthplace())
+                request_eform.getOwnerBirthplace()))
 elif len(person_list) == 0:
-  raise ValidationFailed, "Error : There is nobody with the "\
+  raise ValidationFailed("Error : There is nobody with the "\
             " title '%s', birth date '%s' and birthplace '%s'" % (
                 request_eform.getTitle(),
                 request_eform.getOwnerBirthday(),
-                request_eform.getOwnerBirthplace())
+                request_eform.getOwnerBirthplace()))
 
 else:
   # Modify person based on properties filled in P2

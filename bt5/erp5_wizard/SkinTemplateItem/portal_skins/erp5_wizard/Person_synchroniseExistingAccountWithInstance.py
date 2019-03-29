@@ -14,4 +14,4 @@ if portal.WizardTool_isPersonReferencePresent(kw['reference']):
                          ignore_exceptions = 0,
                          **kw)
 else:
-  raise ValueError, "User does not exist yet"
+  raise ValueError("User does not exist yet")

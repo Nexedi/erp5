@@ -16,7 +16,7 @@ context.Baobab_checkCounterOpened(destination)
 
 if transaction.getResource() is None:
   msg = Message(domain="ui", message="No resource defined.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 # Check getBaobabSource and getBaobabDestination
 #transaction.Base_checkBaobabSourceAndDestination()
@@ -29,11 +29,11 @@ lettering = transaction.getGroupingReference()
 
 if lettering is None:
   msg = Message(domain='ui', message='No lettering defined.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 if destination is None:
   msg = Message(domain='ui', message='No counter defined.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 
 
@@ -43,4 +43,4 @@ cash_detail = transaction.getTotalPrice(portal_type = ['Cash Delivery Line', 'Ca
 
 if price != cash_detail:
   msg = Message(domain="ui", message="Amount differs from input.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)

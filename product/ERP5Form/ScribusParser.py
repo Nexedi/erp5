@@ -44,7 +44,7 @@ class ScribusParser:
     or the content of the file
     """
     if scribus_file_descriptor is None:
-      raise ValueError, "No Scribus file provided, please choose a Scibus Form"
+      raise ValueError("No Scribus file provided, please choose a Scibus Form")
 
     if type(scribus_file_descriptor) == 'str':
       data = scribus_file_descriptor

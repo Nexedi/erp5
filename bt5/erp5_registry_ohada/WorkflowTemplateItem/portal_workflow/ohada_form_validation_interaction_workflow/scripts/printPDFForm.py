@@ -9,7 +9,7 @@ form_pdf_portal_type = request_eform.getPortalType()
 pdf_view_name = '%s_view%sAsPdf' % (form_pdf_portal_type, form_pdf_portal_type)
 form_view_pdf = getattr(request_eform, pdf_view_name, None)
 if form_view_pdf is None:
-  raise ValidationFailed, 'PDF view %s not found' % pdf_view_name
+  raise ValidationFailed('PDF view %s not found' % pdf_view_name)
 
 signed_pdf_name = context.addBackgroundOnPdfFile(form_view_pdf.generatePDF(),
                                                  getattr(context,'signature.pdf'))
@@ -27,7 +27,7 @@ for form_bis in form_bis_list:
   view_name = '%s_view%sAsPdf' % (form_portal_type, form_portal_type)
   form_pdf_view = getattr(form_bis, view_name, None)
   if form_pdf_view is None:
-    raise ValidationFailed, 'PDF view %s not found' % form_pdf_view
+    raise ValidationFailed('PDF view %s not found' % form_pdf_view)
   form_bis_signed_pdf_name = context.addBackgroundOnPdfFile(form_pdf_view.generatePDF(),
                                                             getattr(context,'signature.pdf'))
   context.printFile(printer_name = printer_name,

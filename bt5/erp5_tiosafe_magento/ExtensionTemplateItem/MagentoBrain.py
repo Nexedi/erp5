@@ -230,7 +230,7 @@ class MagentoTransaction(MagentoBrain):
             elif line_type == 'Delivery':
               resource = integration_site.getDestinationCarrierValue()
             else:
-              raise ValueError, 'Try to work on "%s" which is an invalid type.' % line_type
+              raise ValueError('Try to work on "%s" which is an invalid type.' % line_type)
           # after the work on the line set the resource value which will be
           # render in the xml
           movement_dict['resource'] = resource_gid

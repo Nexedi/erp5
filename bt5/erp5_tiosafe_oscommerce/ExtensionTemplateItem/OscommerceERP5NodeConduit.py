@@ -105,7 +105,7 @@ class OscommerceERP5NodeConduit(TioSafeBaseConduit):
       if link_object is not None:
         document.setCareerSubordinationValue(link_object)
       else:
-        raise ValueError, "Impossible to find organisation %s in %s" %(organisation_gid, synchronization_list)
+        raise ValueError("Impossible to find organisation %s in %s" %(organisation_gid, synchronization_list))
     document.reindexObject()
     return []
 

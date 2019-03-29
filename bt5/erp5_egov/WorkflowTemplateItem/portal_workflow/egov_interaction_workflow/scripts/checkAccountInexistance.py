@@ -12,9 +12,9 @@ result = portal_catalog(portal_type='Organisation', vat_code=ninea)
 if len(result) > 1:
   msg = "Error : There is more than one company with the NINEA code ${code}"
   msg = translateString(msg, mapping=dict(code=ninea))
-  raise ValidationFailed, msg 
+  raise ValidationFailed(msg) 
 
 if len(result) == 1 and result[0].getObject().getReference():
   msg = "Error : A company with the NINEA code ${code} already exists and have already an account"
   msg = translateString(msg, mapping=dict(code=ninea))
-  raise ValidationFailed, msg
+  raise ValidationFailed(msg)

@@ -11,7 +11,7 @@ for assignment in assignment_list:
     rccm = current_object.getCorporateRegistrationCode()
     pers_result = context.ERP5RegistryOhada_getRelatedPersonList()
     if len(pers_result) < 1:
-      raise ValidationFailed, 'There is no Person corresponding to the corporate registration code %s' % rccm
+      raise ValidationFailed('There is no Person corresponding to the corporate registration code %s' % rccm)
     person = pers_result[0].getObject()
     #legal_form = person.getSocialForm()
   if assignment.getFunction()=='entreprise/associe' :

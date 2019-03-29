@@ -76,6 +76,6 @@ def _getZopeConfigurationFile(relative_path="", mode="r"):
   instance_home = getConfiguration().instancehome
   file_path = os.path.join(instance_home, relative_path)
   if not os.path.exists(file_path):
-    raise IOError, 'The file: %s does not exist.' % file_path
+    raise IOError('The file: %s does not exist.' % file_path)
 
   return open(file_path, mode)

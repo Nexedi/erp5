@@ -128,7 +128,7 @@ class UbercartResourceConduit(TioSafeResourceConduit):
     if delete_method is not None:
       return delete_method(product_id=object_id)
     else:
-      raise ValueError, 'Impossible to find a delete method named %s and object %s' %(delete_method_id, object.getPath(),)
+      raise ValueError('Impossible to find a delete method named %s and object %s' %(delete_method_id, object.getPath(),))
 
 
   def _updateXupdateUpdate(self, document=None, xml=None, previous_xml=None, **kw):
@@ -147,9 +147,9 @@ class UbercartResourceConduit(TioSafeResourceConduit):
     try:
       previous_value = previous_xml[0].text.encode("utf-8")
     except IndexError:
-      raise ValueError, 'Too little or too many value, only one is required for %s' % (
+      raise ValueError('Too little or too many value, only one is required for %s' % (
           previous_xml
-      )
+      ))
 
     if isinstance(previous_value, unicode):
       previous_value = previous_value.encode('utf-8')
@@ -269,9 +269,9 @@ class UbercartResourceConduit(TioSafeResourceConduit):
             previous_xml[0].text.encode("utf-8"),
         )
       except IndexError:
-        raise IndexError, 'Too little or too many value, only one is required for %s' % (
+        raise IndexError('Too little or too many value, only one is required for %s' % (
             previous_xml
-        )
+        ))
 
       # retrieve the current value to check if exists a conflict
       current_value = etree.XML(document.asXML()).xpath(tag)[0].text.encode("utf-8")

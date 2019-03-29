@@ -78,7 +78,7 @@ else:
       break
 
 if delivery.getSimulationState() != state:
-  raise ImplementationError, 'Delivery state is %s and not %s' % (delivery.getSimulationState(), state)
+  raise ImplementationError('Delivery state is %s and not %s' % (delivery.getSimulationState(), state))
 
 return "Delivery Created."
 

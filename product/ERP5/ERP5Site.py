@@ -441,8 +441,8 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
         pass
       else:
         if portal_activities.countMessage(path=ob.getPath())>0:
-          raise ActivityPendingError, 'Sorry, pending activities prevent ' \
-                         +  'changing id at this current stage'
+          raise ActivityPendingError('Sorry, pending activities prevent ' \
+                         +  'changing id at this current stage')
 
       # Search for categories that have to be updated in sub objects.
       ob._recursiveSetActivityAfterTag(ob)
@@ -1744,9 +1744,9 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       Creates a new content
     """
     if id is None:
-      raise ValueError, 'The id should not be None'
+      raise ValueError('The id should not be None')
     if portal_type is None:
-      raise ValueError, 'The portal_type should not be None'
+      raise ValueError('The portal_type should not be None')
     self.portal_types.constructContent(type_name=portal_type,
                                        container=self,
                                        id=id,

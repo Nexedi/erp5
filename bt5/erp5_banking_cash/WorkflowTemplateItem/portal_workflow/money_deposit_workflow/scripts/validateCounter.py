@@ -9,12 +9,12 @@ transaction.log('destination:',destination)
 amount = transaction.getSourceTotalAssetPrice()
 if amount is None:
   msg = Message(domain="ui", message="Sorry, you have to define a quantity.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 destination_payment = transaction.getDestinationPayment()
 if destination_payment is None:
   msg = Message(domain="ui", message="Sorry, you have to define an account.")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 var_state = transaction.getSimulationState()
 if var_state == 'confirmed': 
@@ -24,11 +24,11 @@ if var_state == 'confirmed':
 
   if amount != total_price:
     msg = Message(domain="ui", message="Amount differ from total price.")
-    raise ValidationFailed, (msg,)
+    raise ValidationFailed(msg,)
 
 if destination is None:
   msg = Message(domain='ui', message='No counter defined.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 
 # check we are in an opened accounting day

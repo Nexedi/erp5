@@ -11,16 +11,16 @@ date = transaction.getStartDate()
 source = transaction.getBaobabSource(None)
 if source is None:
   msg = Message(domain='ui', message='No counter defined.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 destination_payment = transaction.getDestinationPayment()
 if destination_payment is None:
   msg = Message(domain='ui', message='No account defined.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 if sum([len(x.getAggregateList()) for x in transaction.objectValues(portal_type=['Checkbook Delivery Line'])]) == 0:
   msg = Message(domain='ui', message='No checkbook selected for delivery.')
-  raise ValidationFailed, (msg,)  
+  raise ValidationFailed(msg,)  
 
 at_date = transaction.getStartDate()
 transaction.CheckbookDelivery_checkAggregateStockList(at_date=at_date, node_url = source)
@@ -44,13 +44,13 @@ for line in line_list:
     if aggregate.getPortalType()=='Check':
       if aggregate.getSimulationState() != 'draft':
         message = Message(domain='ui', message='Sorry, the check is not new')
-        raise ValidationFailed, (message,)
+        raise ValidationFailed(message,)
     if aggregate.getPortalType()=='Checkbook':
       if aggregate.getValidationState() != 'draft':
         message = Message(domain='ui', message='Sorry, the checkbook is not new')
-        raise ValidationFailed, (message,)
+        raise ValidationFailed(message,)
       for check in aggregate.objectValues(portal_type='Check'):
         if check.getSimulationState() != 'draft':
           message = Message(domain='ui',
             message='Sorry, there is a check wich is not in the new state inside the checkbook')
-          raise ValidationFailed, (message,)
+          raise ValidationFailed(message,)

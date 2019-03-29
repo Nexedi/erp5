@@ -17,4 +17,4 @@ at_date = transaction.getStartDate()
 transaction.CheckbookDelivery_checkAggregateStockList(at_date=at_date, node_url = source)
 
 if msg is not None:
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)

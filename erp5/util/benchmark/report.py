@@ -155,8 +155,8 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
             report_dict['results'].setdefault(stat.full_label, []).append(stat)
 
     if row_list != label_list:
-      raise AssertionError, "ERROR: Result labels: %s != %s" % \
-          (label_list, row_list)
+      raise AssertionError("ERROR: Result labels: %s != %s" % \
+          (label_list, row_list))
 
     iteration_index = 0
     for row_list in reader:

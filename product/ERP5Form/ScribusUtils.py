@@ -652,8 +652,8 @@ class ManageFiles:
           if os.path.exists(background_image):
             os.remove(background_image)
 
-        raise ValueError, 'Error: convert command failed with the following'\
-                          'error message : \n%s' % result[1]
+        raise ValueError('Error: convert command failed with the following'\
+                          'error message : \n%s' % result[1])
     finally:
       temp_pdf.close()
 
@@ -661,8 +661,8 @@ class ManageFiles:
     if not len(background_image_list):
       LOG('ScribusUtils.setBackgroundPictures :', ERROR, 'no background '\
           'image found')
-      raise ValueError, 'Error: ScribusUtils.setBackgroundPictures : '\
-                        'no background'
+      raise ValueError('Error: ScribusUtils.setBackgroundPictures : '\
+                        'no background')
 
     # get the real size of the first image
     # this could be usefull if the user only defined one dimention :
@@ -736,8 +736,8 @@ class ManageFiles:
     if command_output[0] != 0:
         LOG('ScribusUtils.getPageAttributes :', ERROR, 'pdfinfo command'\
             'failed with the following error message : \n%s' % command_output[1])
-        raise ValueError, 'Error: convert command failed with the following'\
-                          'error message : \n%s' % command_output[1]
+        raise ValueError('Error: convert command failed with the following'\
+                          'error message : \n%s' % command_output[1])
 
     # get the pdf page size
     rawstr = r'''

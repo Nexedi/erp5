@@ -18,14 +18,14 @@ if len(result) > 1:
   msg = translateString(msg,
       mapping=dict(title=context.getTitle(),
         email=context.getDefaultEmailText()))
-  raise ValidationFailed, msg
+  raise ValidationFailed(msg)
 
 if len(result) == 0:
   msg = "Error : No person with the title ${title} and the email ${email}"
   msg = translateString(msg,
       mapping=dict(title=context.getTitle(),
         email=context.getDefaultEmailText()))
-  raise ValidationFailed, msg
+  raise ValidationFailed(msg)
 
 person = result[0]
 

@@ -52,7 +52,7 @@ def generateBgFile(size_x, size_y):
   tmp_file.close()
 
   if not os.path.exists('/usr/bin/convert'):
-    raise ValueError, "convert command is not installed"
+    raise ValueError("convert command is not installed")
   convert_options = 'plasma:fractal -blur 0x5 -shade 120x45 -normalize'
   #convert_options = 'plasma:fractal'
   cmd = '/usr/bin/convert -size %sx%s %s jpg:%s' % (size_x, size_y, 

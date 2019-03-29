@@ -27,4 +27,4 @@ site = context.Baobab_getVaultSite(site)
 
 if context.portal_catalog.countResults(portal_type='Counter Date', start_date=date, site_id=site.getId(), simulation_state="open")[0][0] == 0:
   msg = Message(domain = "ui", message="Transaction not in the good counter date")
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)

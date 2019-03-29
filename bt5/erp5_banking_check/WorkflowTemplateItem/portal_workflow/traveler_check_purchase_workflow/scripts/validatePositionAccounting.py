@@ -7,7 +7,7 @@ date = transaction.getStartDate()
 source = transaction.getSource(None)
 if source is None:
   msg = Message(domain='ui', message='No counter defined.')
-  raise ValidationFailed, (msg,)
+  raise ValidationFailed(msg,)
 
 # check we don't change of user
 transaction.Baobab_checkSameUserVault(source)
@@ -28,7 +28,7 @@ for movement in movement_list:
     if item.getPortalType()=='Check':
       if item.getSimulationState()!='confirmed':
         msg = Message(domain = "ui", message="Sorry, one traveler check was not sale yet")
-        raise ValidationFailed, (msg,)
+        raise ValidationFailed(msg,)
       if item.getPrice() is not None:
         # then we must calculate the exchange value at the
         # time where the item was first delivered
@@ -40,11 +40,11 @@ for movement in movement_list:
                                     start_date=item.getStartDate())[0]
         if base_price is None:
           msg = Message(domain = "ui", message="Sorry, no valid price was found for this currency")
-          raise ValidationFailed, (msg,)
+          raise ValidationFailed(msg,)
         total_credit += base_price*item.getPrice()
       else:
         msg = Message(domain = "ui", message="Sorry, the price was not defined on some traveler checks")
-        raise ValidationFailed, (msg,)
+        raise ValidationFailed(msg,)
 
 if total_credit>0:
   total_credit = round(total_credit,0)
