@@ -40,7 +40,7 @@ class ERP5DeliveredNodeConduit(ERP5NodeConduit):
     stc = object.getPortalObject().sale_trade_condition_module.newContent(title="%s %s" %(site.getReference(), object.getTitle()),
                                                                         specialise=default_stc,
                                                                         destination=object.getRelativeUrl(),
-                                                                        version=0o01)
+                                                                        version='001')
     stc.validate()
 
   def _updateSaleTradeCondition(self, object, **kw):

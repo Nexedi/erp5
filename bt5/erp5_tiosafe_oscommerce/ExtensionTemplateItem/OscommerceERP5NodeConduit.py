@@ -58,7 +58,7 @@ class OscommerceERP5NodeConduit(TioSafeBaseConduit):
                                                                           destination=object.getRelativeUrl(),
                                                                           destination_decision=object.getRelativeUrl(),
                                                                           destination_administration=object.getRelativeUrl(),
-                                                                          version=0o01)
+                                                                          version='001')
     stc.validate()
 
   def afterCreateMethod(self, object, **kw):
