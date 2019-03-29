@@ -69,13 +69,13 @@
           if (data.data.rows.length === 0) {
             throw "Can not find jio_view action for portal type " + portal_type;
           }
-          return gadget.jio_get(data.data.rows[0].id)
-            .push(function (action_result) {
-              return gadget.jio_get(action_result.action)
-                .push(function (form_result) {
-                  return form_result.form_definition;
-                });
-            });
+          return gadget.jio_get(data.data.rows[0].id);
+        })
+        .push(function (action_result) {
+          return gadget.jio_get(action_result.action);
+        })
+        .push(function (form_result) {
+          return form_result.form_definition;
         });
     })
 
@@ -120,16 +120,16 @@
       return gadget.notifySubmitting()
         .push(function () {
           // this should be jio_getattachment (using target_url)
-          return gadget.jio_get(jio_key)
-            .push(function (document) {
-              var property;
-              for (property in content_dict) {
-                if (content_dict.hasOwnProperty(property)) {
-                  document[property] = content_dict[property];
-                }
-              }
-              return gadget.jio_put(jio_key, document);
-            });
+          return gadget.jio_get(jio_key);
+        })
+        .push(function (document) {
+          var property;
+          for (property in content_dict) {
+            if (content_dict.hasOwnProperty(property)) {
+              document[property] = content_dict[property];
+            }
+          }
+          return gadget.jio_put(jio_key, document);
         })
         .push(function () {
           return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
