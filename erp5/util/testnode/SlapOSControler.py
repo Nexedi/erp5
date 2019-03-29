@@ -278,7 +278,7 @@ class SlapOSControler(object):
       partition_path = os.path.join(instance_root, partition_reference)
       if not(os.path.exists(partition_path)):
         os.mkdir(partition_path)
-      os.chmod(partition_path, 0750)
+      os.chmod(partition_path, 0o750)
       computer.updateConfiguration(xml_marshaller.xml_marshaller.dumps({
            'address': config['ipv4_address'],
            'instance_root': instance_root,

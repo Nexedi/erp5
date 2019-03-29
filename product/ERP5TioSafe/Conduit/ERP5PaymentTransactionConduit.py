@@ -81,7 +81,7 @@ class ERP5PaymentTransactionConduit(TioSafeBaseConduit):
     # Create the STC
     stc = object.getPortalObject().sale_trade_condition_module.newContent(title=stc_title,
 		    specialise=default_stc,
-		    version=001)
+		    version=0o01)
     stc.validate()
 
     return stc
