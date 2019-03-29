@@ -66,7 +66,7 @@ class WorkflowSecurityConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       if self.filename[-suffix_len:] == suffix:
         workflow_id = self.filename[:-suffix_len]
       else:
-        raise "NoValidName"
+        raise ValueError("NoValidName")
 
       # Configure state permission
       view_permission_list = ['View']

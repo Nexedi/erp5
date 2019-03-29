@@ -78,7 +78,7 @@ class AccountingERP5IntegrationConduit(TioSafeBaseConduit):
         'PP', 'SA', 'SR', 'VP', 'VR'):
       return 'Payment Transaction'
     else:
-      raise "getObjectType: ERROR journal code unknow"
+      raise ValueError("getObjectType: ERROR journal code unknow")
       return
 
   def constructContent(self, object, object_id, portal_type):

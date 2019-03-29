@@ -272,7 +272,7 @@ class TestSaleOrderERP5Synchronization(testPrestashopMixin):
         self.assertEqual(round(line.getPrice(), 6), 6.672241)
         self.assertEqual(line.getPriceCurrencyValue(), currency)
       else:
-        raise 'A line has not been checked'
+        self.fail('A line has not been checked')
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
@@ -373,7 +373,7 @@ class TestSaleOrderERP5Synchronization(testPrestashopMixin):
         self.assertEqual(round(line.getPrice(), 6), 6.672241)
         self.assertEqual(line.getPriceCurrencyValue(), currency)
       else:
-        raise 'A line has not been checked'
+        self.fail('A line has not been checked')
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
@@ -527,7 +527,7 @@ class TestSaleOrderERP5Synchronization(testPrestashopMixin):
         self.assertEqual(round(line.getPrice(), 6), 6.672241)
         self.assertEqual(line.getPriceCurrencyValue(), currency)
       else:
-        raise 'A line has not been checked'
+        self.fail('A line has not been checked')
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
@@ -810,7 +810,7 @@ class TestSaleOrderERP5Synchronization(testPrestashopMixin):
         self.assertEqual(round(line.getPrice(), 6), 6.672241)
         self.assertEqual(line.getPriceCurrencyValue(), currency)
       else:
-        raise 'A line has not been checked'
+        self.fail('A line has not been checked')
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
@@ -912,7 +912,7 @@ class TestSaleOrderERP5Synchronization(testPrestashopMixin):
       else:
         self.assertTrue(line.getTitle() in ['Delivery', 'Stylo'])
 
-        raise 'A line has not been checked'
+        self.fail('A line has not been checked')
     # Check the accounting
     sale_packing_list = sale_order.getCausalityRelatedValue(
         portal_type='Sale Packing List',
@@ -959,7 +959,7 @@ class TestSaleOrderERP5Synchronization(testPrestashopMixin):
         self.assertEqual(line.getPrice(), 0.0)
         self.assertEqual(line.getTotalPrice(), 0.0)
       else:
-        raise 'The lines must contain VAT, Product or Delivery, nothing else.'
+        self.fail('The lines must contain VAT, Product or Delivery, nothing else.')
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),

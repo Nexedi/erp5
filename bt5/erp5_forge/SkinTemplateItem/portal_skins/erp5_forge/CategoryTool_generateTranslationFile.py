@@ -1,6 +1,7 @@
 """Return a po file from a spreadsheet of categories."""
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Document import newTempBase
+from zExceptions import Redirect
 
 # Initialise some general variables
 detailed_report_result = []
@@ -24,9 +25,9 @@ def invalid_category_spreadsheet_handler(message):
   # action taken when an invalid spreadsheet is provided.
   # we *raise* a Redirect, because we don't want the transaction to succeed
   # note, we could make a dialog parameter to allow import invalid spreadsheet:
-  raise 'Redirect', '%s/view?portal_status_message=%s' % (
+  raise Redirect('%s/view?portal_status_message=%s' % (
                          context.portal_categories.absolute_url(),
-                         message)
+                         message))
 
 category_list_mapping = context.Base_getCategoriesSpreadSheetMapping(import_file,
                                     invalid_spreadsheet_error_handler=invalid_category_spreadsheet_handler)
