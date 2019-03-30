@@ -266,7 +266,7 @@
 
       if (action === "render") {
         if ("urn:jio:properties_from_xmla.connection.json" === url) {
-          connection_path = p.split('/').slice(0, -1).join('/');
+          connection_path = p.split('/').slice(0, -2).join('/');
           g.props.xmla_connections[connection_path] = scope.split('_').slice(0, -1).join('_');
         }
         // action `render` fake change so do nothing
