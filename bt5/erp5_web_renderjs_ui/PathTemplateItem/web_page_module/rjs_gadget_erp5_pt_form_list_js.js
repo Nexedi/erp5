@@ -68,15 +68,12 @@
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
-    .declareAcquiredMethod("setSetting", "setSetting")
-    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
-    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
