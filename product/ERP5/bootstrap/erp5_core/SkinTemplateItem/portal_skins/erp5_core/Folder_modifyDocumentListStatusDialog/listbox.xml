@@ -12,8 +12,10 @@
               <list>
                 <string>count_method</string>
                 <string>default_params</string>
+                <string>editable</string>
                 <string>enabled</string>
                 <string>lines</string>
+                <string>list_method</string>
                 <string>selection_name</string>
               </list>
             </value>
@@ -106,6 +108,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -120,6 +126,12 @@
                 <item>
                     <key> <string>lines</string> </key>
                     <value> <int>100</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
@@ -179,6 +191,19 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>request/form_id</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>
