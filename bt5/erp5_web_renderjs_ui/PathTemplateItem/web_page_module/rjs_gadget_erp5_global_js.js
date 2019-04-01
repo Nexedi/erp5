@@ -1,5 +1,5 @@
 /*global window, RSVP, Array, isNaN, SimpleQuery, ComplexQuery, Query */
-/*jslint indent: 2, maxerr: 3, nomen: true, unparam: true */
+/*jslint indent: 2, maxerr: 3, nomen: true, unparam: true, continue: true */
 (function (window, RSVP, Array, isNaN, SimpleQuery, ComplexQuery, Query) {
   "use strict";
 
@@ -91,7 +91,7 @@
       }
       if (view === undefined) {
         // Action was not found.
-        return gadget.notifySubmitted({
+        return gadget.notifySubmittedClipboardAction({
           "message": "Action not handled."
         });
       }
@@ -99,7 +99,7 @@
 
     if (action_name === 'paste_document_list') {
       // Get the list of document uid from the internal clipboard
-      queue = gadget.getSetting('clipboard')
+      queue = gadget.getSettingClipboardAction('clipboard')
         .push(function (uid_list) {
           checked_uid_list = uid_list || [];
         });
@@ -114,22 +114,22 @@
           // Dialog listbox use catalog method, which may be different from the current select method
           // and so, it is mandatory to propagate a list of uid, otherwise, the dialog may display
           // an unexpected huge list of unrelated documents
-          return gadget.notifySubmitted({
+          return gadget.notifySubmittedClipboardAction({
             "message": "Nothing selected."
           });
         }
 
         if (action_name === 'copy_document_list') {
-          return gadget.setSetting('clipboard', checked_uid_list)
+          return gadget.setSettingClipboardAction('clipboard', checked_uid_list)
             .push(function () {
-              return gadget.notifySubmitted({
+              return gadget.notifySubmittedClipboardAction({
                 "message": "Copied.",
                 "status": "success"
               });
             });
         }
 
-        return gadget.redirect({
+        return gadget.redirectClipboardAction({
           command: 'display_dialog_with_history',
           options: {
             "jio_key": gadget.state.jio_key,
@@ -143,7 +143,21 @@
       });
   }
 
-  window.getListboxClipboardActionList = getListboxClipboardActionList;
+  function declareGadgetClassCanHandleListboxClipboardAction(gadget_klass) {
+    gadget_klass
+      .declareAcquiredMethod("setSettingClipboardAction", "setSetting")
+      .declareAcquiredMethod("getSettingClipboardAction", "getSetting")
+      .declareAcquiredMethod("redirectClipboardAction", "redirect")
+      .declareAcquiredMethod("notifySubmittedClipboardAction",
+                             "notifySubmitted")
+      // Handle listbox custom button
+      .allowPublicAcquisition("getListboxClipboardActionList",
+                              getListboxClipboardActionList)
+      .allowPublicAcquisition("triggerListboxClipboardAction",
+                              triggerListboxClipboardAction);
+  }
   window.triggerListboxClipboardAction = triggerListboxClipboardAction;
+  window.declareGadgetClassCanHandleListboxClipboardAction =
+    declareGadgetClassCanHandleListboxClipboardAction;
 
 }(window, RSVP, Array, isNaN, SimpleQuery, ComplexQuery, Query));
