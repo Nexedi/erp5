@@ -867,16 +867,10 @@
             var lines = gadget.state.lines,
               promise_list = [],
               url_promise_list = [],
-              allDocs_result = gadget.state.allDocs_result,
+              allDocs_result = JSON.parse(gadget.state.allDocs_result),
               counter,
               pagination_message = '',
               content_value;
-
-            if (gadget.state.show_line_selector) {
-              // Clone the allDocs result, to temporary modify
-              // the editable property of the cells on the fly
-              allDocs_result = JSON.parse(JSON.stringify(gadget.state.allDocs_result));
-            }
 
             column_list = JSON.parse(gadget.state.column_list_json);
             // for actual allDocs_result structure see ref:gadget_erp5_jio.js
@@ -1193,7 +1187,7 @@
       })
         .push(function (result) {
           return gadget.changeState({
-            allDocs_result: result
+            allDocs_result: JSON.stringify(result)
           });
 
         }, function (error) {
