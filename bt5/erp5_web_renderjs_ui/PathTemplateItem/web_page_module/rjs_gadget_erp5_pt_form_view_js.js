@@ -1,6 +1,8 @@
-/*global window, rJS, RSVP, calculatePageTitle, isEmpty */
+/*global window, rJS, RSVP, calculatePageTitle, isEmpty,
+         declareGadgetClassCanHandleListboxClipboardAction */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle, isEmpty) {
+(function (window, rJS, RSVP, calculatePageTitle, isEmpty,
+           declareGadgetClassCanHandleListboxClipboardAction) {
   "use strict";
 
   /** Return true if `field` resembles non-empty and non-editable field. */
@@ -161,4 +163,7 @@
         });
     });
 
-}(window, rJS, RSVP, calculatePageTitle, isEmpty));
+  declareGadgetClassCanHandleListboxClipboardAction(rJS(window));
+
+}(window, rJS, RSVP, calculatePageTitle, isEmpty,
+  declareGadgetClassCanHandleListboxClipboardAction));

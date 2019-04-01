@@ -1,8 +1,8 @@
-/*global window, rJS, RSVP, calculatePageTitle, triggerListboxClipboardAction,
-  getListboxClipboardActionList */
+/*global window, rJS, RSVP, calculatePageTitle,
+         declareGadgetClassCanHandleListboxClipboardAction */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle, triggerListboxClipboardAction,
-           getListboxClipboardActionList) {
+(function (window, rJS, RSVP, calculatePageTitle,
+           declareGadgetClassCanHandleListboxClipboardAction) {
   "use strict";
 
   rJS(window)
@@ -182,13 +182,9 @@
           }
         }); // page form handles failures well enough
 
-    }, false, true)
+    }, false, true);
 
-    // Handle listbox custom button
-    .allowPublicAcquisition("getListboxClipboardActionList",
-                            getListboxClipboardActionList)
-    .allowPublicAcquisition("triggerListboxClipboardAction",
-                            triggerListboxClipboardAction);
+  declareGadgetClassCanHandleListboxClipboardAction(rJS(window));
 
-}(window, rJS, RSVP, calculatePageTitle, triggerListboxClipboardAction,
-  getListboxClipboardActionList));
+}(window, rJS, RSVP, calculatePageTitle,
+  declareGadgetClassCanHandleListboxClipboardAction));
