@@ -1,8 +1,8 @@
 /*global window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
-         Query, QueryFactory, ensureArray */
+         Query, QueryFactory, ensureArray, triggerListboxClipboardAction */
 /*jslint nomen: true, indent: 2, maxerr: 3, continue: true */
 (function (window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
-           Query, QueryFactory, ensureArray) {
+           Query, QueryFactory, ensureArray, triggerListboxClipboardAction) {
   "use strict";
 
   function updateSearchQueryFromSelection(extended_search, checked_uid_list,
@@ -60,95 +60,6 @@
       });
     }
     return Query.objectToSearchText(search_query);
-  }
-
-  function triggerListboxClipboardAction(argument_list) {
-    var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
-      action_name = argument_list[0],
-      checked_uid_list = argument_list[1],
-      unchecked_uid_list = argument_list[2],
-      gadget = this,
-      extended_search = gadget.state.extended_search,
-      view,
-      i;
-
-    if (action_name === 'copy_document_list') {
-      if (checked_uid_list.length === 0) {
-        // If nothing is checked, use all unchecked values (same as xhtml style)
-        checked_uid_list = unchecked_uid_list;
-      }
-      if (checked_uid_list.length === 0) {
-        // XXX Queries do not correctly handle empty uid list
-        return gadget.redirect({
-          command: 'reload'
-        });
-      }
-      return gadget.setSetting('clipboard', checked_uid_list)
-        .push(function () {
-          return gadget.notifySubmitted({
-            "message": "Copied.",
-            "status": "success"
-          });
-        });
-    }
-
-    for (i = 0; i < action_list.length; i += 1) {
-      if (action_name === action_list[i].name) {
-        view = action_list[i].href;
-      }
-    }
-
-    if (checked_uid_list.length !== 0) {
-      // If nothing is checked, use original query
-      extended_search = updateSearchQueryFromSelection(
-        extended_search,
-        checked_uid_list,
-        'catalog.uid',
-        true
-      );
-    }
-
-    if (view === undefined) {
-      // Action was not found.
-      // Reload
-      return gadget.redirect({
-        command: 'reload'
-      });
-    }
-
-    if (action_name === 'paste_document_list') {
-      return gadget.getSetting('clipboard')
-        .push(function (uid_list) {
-          uid_list = uid_list || [];
-          if (uid_list.length === 0) {
-            // Nothing to paste, go away
-            uid_list = ['XXX'];
-          }
-          extended_search = updateSearchQueryFromSelection(
-            '',
-            uid_list,
-            'catalog.uid',
-            true
-          );
-          return gadget.redirect({
-            command: 'display_dialog_with_history',
-            options: {
-              "jio_key": gadget.state.jio_key,
-              "view": view,
-              "extended_search": extended_search
-            }
-          }, true);
-        });
-    }
-
-    return gadget.redirect({
-      command: 'display_dialog_with_history',
-      options: {
-        "jio_key": gadget.state.jio_key,
-        "view": view,
-        "extended_search": extended_search
-      }
-    }, true);
   }
 
   rJS(window)
@@ -457,4 +368,4 @@
     .allowPublicAcquisition("triggerListboxClipboardAction", triggerListboxClipboardAction);
 
 }(window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery, Query,
-  QueryFactory, ensureArray));
+  QueryFactory, ensureArray, triggerListboxClipboardAction));
