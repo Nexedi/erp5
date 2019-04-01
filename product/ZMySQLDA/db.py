@@ -530,7 +530,7 @@ class DB(TM):
         # already done it (in case that it plans to execute the returned query).
         with (nested if src__ else self.lock)():
             try:
-                old_list, old_set, old_default = self._getTableSchema(name)
+                old_list, old_set, old_default = self._getTableSchema("`%s`" % name)
             except ProgrammingError, e:
                 if e[0] != ER.NO_SUCH_TABLE or not create_if_not_exists:
                     raise
@@ -538,7 +538,7 @@ class DB(TM):
                     self.query(create_sql)
                 return create_sql
 
-            name_new = '_%s_new' % name
+            name_new = '`_%s_new`' % name
             self.query('CREATE TEMPORARY TABLE %s %s'
                 % (name_new, create_sql[m.end():]))
             try:
@@ -559,7 +559,7 @@ class DB(TM):
                   old_dict[column] = pos, spec
                   pos += 1
               else:
-                  q("DROP COLUMN " + column)
+                  q("DROP COLUMN `%s`" % column)
 
             for key in old_set - new_set:
               if "PRIMARY" in key:
@@ -574,26 +574,26 @@ class DB(TM):
                 try:
                     old = old_dict[column]
                 except KeyError:
-                    q("ADD COLUMN %s %s %s" % (column, spec, where))
+                    q("ADD COLUMN `%s` %s %s" % (column, spec, where))
                     column_list.append(column)
                 else:
                     if old != (pos, spec):
-                        q("MODIFY COLUMN %s %s %s" % (column, spec, where))
+                        q("MODIFY COLUMN `%s` %s %s" % (column, spec, where))
                         if old[1] != spec:
                             column_list.append(column)
                     pos += 1
-                where = "AFTER " + column
+                where = "AFTER `%s`" % column
 
             for key in new_set - old_set:
                 q("ADD " + key)
 
             if src:
-                src = "ALTER TABLE %s%s" % (name, ','.join("\n  " + q
+                src = "ALTER TABLE `%s`%s" % (name, ','.join("\n  " + q
                                                            for q in src))
                 if not src__:
                     self.query(src)
                     if column_list and initialize and self.query(
-                            "SELECT 1 FROM " + name, 1)[1]:
+                            "SELECT 1 FROM `%s`" % name, 1)[1]:
                         initialize(self, column_list)
                 return src
 

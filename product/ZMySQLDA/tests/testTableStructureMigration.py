@@ -39,12 +39,13 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     self.portal.erp5_sql_connection().query('DROP table if exists X')
+    self.portal.erp5_sql_connection().query('DROP table if exists `table`')
     self.commit()
 
   def query(self, q):
     return self.portal.erp5_sql_connection().query(q)
 
-  def check_upgrade_schema(self, previous_schema, new_schema):
+  def check_upgrade_schema(self, previous_schema, new_schema, table_name='X'):
     self.query(previous_schema)
     da = DA(
         id=self.id(),
@@ -55,7 +56,9 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
     self.assertTrue(da._upgradeSchema(src__=True))
     da._upgradeSchema()
     self.assertFalse(da._upgradeSchema(src__=True))
-    self.assertEqual(new_schema, self.query('SHOW CREATE TABLE `X`')[1][0][1])
+    self.assertEqual(
+        new_schema,
+        self.query('SHOW CREATE TABLE `%s`' % table_name)[1][0][1])
 
   def test_add_column(self):
     self.check_upgrade_schema(
@@ -170,3 +173,22 @@ class TestTableStructureMigrationTestCase(ERP5TypeTestCase):
                                  "Key 'idx_a' doesn't exist in table 'X'"):
       self.query("SELECT * FROM X USE INDEX (`idx_a`)")
 
+  def test_escape(self):
+    self.check_upgrade_schema(
+        dedent(
+            """\
+      CREATE TABLE `table` (
+        `drop` int(11) DEFAULT NULL,
+        `alter` int(11) DEFAULT NULL,
+        KEY `CASE` (`drop`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+        dedent(
+            """\
+      CREATE TABLE `table` (
+        `and` int(11) DEFAULT NULL,
+        `alter` varchar(255) COLLATE utf8_unicode_ci DEFAULT 'BETWEEN',
+        KEY `use` (`alter`)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci"""),
+        table_name='table')
+    self.query(
+        "SELECT `alter`, `and` FROM `table` USE INDEX (`use`)")
