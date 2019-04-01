@@ -1,10 +1,11 @@
-/*global window, rJS, RSVP, calculatePageTitle */
+/*global window, rJS, RSVP, calculatePageTitle,
+         declareGadgetClassCanHandleListboxClipboardAction */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle) {
+(function (window, rJS, RSVP, calculatePageTitle,
+           declareGadgetClassCanHandleListboxClipboardAction) {
   "use strict";
 
   rJS(window)
-
     .declareAcquiredMethod("submitContent", "submitContent")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("redirect", "redirect")
@@ -179,4 +180,7 @@
 
     }, false, true);
 
-}(window, rJS, RSVP, calculatePageTitle));
+  declareGadgetClassCanHandleListboxClipboardAction(rJS(window));
+
+}(window, rJS, RSVP, calculatePageTitle,
+  declareGadgetClassCanHandleListboxClipboardAction));
