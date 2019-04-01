@@ -1,10 +1,10 @@
 /*global window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
          Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
-         getListboxClipboardActionList*/
+         declareGadgetClassCanHandleListboxClipboardAction*/
 /*jslint nomen: true, indent: 2, maxerr: 3, continue: true */
 (function (window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
            Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
-           getListboxClipboardActionList) {
+           declareGadgetClassCanHandleListboxClipboardAction) {
   "use strict";
 
   function updateSearchQueryFromSelection(extended_search, checked_uid_list,
@@ -337,14 +337,10 @@
       }
 
       throw new Error('Unsupported triggerListboxSelectAction action: ' + action);
-    })
+    });
 
-    // Handle listbox custom button
-    .allowPublicAcquisition("getListboxClipboardActionList",
-                            getListboxClipboardActionList)
-    .allowPublicAcquisition("triggerListboxClipboardAction",
-                            triggerListboxClipboardAction);
+  declareGadgetClassCanHandleListboxClipboardAction(rJS(window));
 
 }(window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery, Query,
   QueryFactory, ensureArray, triggerListboxClipboardAction,
-  getListboxClipboardActionList));
+  declareGadgetClassCanHandleListboxClipboardAction));
