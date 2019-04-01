@@ -696,7 +696,7 @@
                 button_element.setAttribute('data-select-action', select_option_list[k].action);
                 button_element.setAttribute('name', 'SelectAction');
                 button_element.type = 'button';
-                button_element.setAttribute('class', 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left ' + gadget.state.hide_class);
+                button_element.setAttribute('class', 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left');
                 button_element.textContent = select_option_list[k].title;
                 div_element.appendChild(button_element);
               }
@@ -707,7 +707,7 @@
               button_element.setAttribute('data-rel', 'hide');
               button_element.setAttribute('name', 'CancelSelect');
               button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-times ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.setAttribute('class', 'ui-icon-times ui-btn-icon-left');
               button_element.textContent = translation_list[4];
               div_element.appendChild(button_element);
 
@@ -720,7 +720,7 @@
                 button_element.setAttribute('data-clipboard-action', select_option_list[k].action);
                 button_element.setAttribute('name', 'ClipboardAction');
                 button_element.type = 'button';
-                button_element.setAttribute('class', 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left ' + gadget.state.hide_class);
+                button_element.setAttribute('class', 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left');
                 button_element.textContent = select_option_list[k].title;
                 div_element.appendChild(button_element);
               }
@@ -731,7 +731,7 @@
               button_element.setAttribute('data-rel', 'hide');
               button_element.setAttribute('name', 'CancelSelect');
               button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-times ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.setAttribute('class', 'ui-icon-times ui-btn-icon-left');
               button_element.textContent = translation_list[4];
               div_element.appendChild(button_element);
 
@@ -762,11 +762,10 @@
               // Add Do button
               // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
               button_element = document.createElement('button');
-              button_element.disabled = gadget.state.disabled;
               button_element.setAttribute('data-rel', 'clipboard');
               button_element.setAttribute('name', 'Clipboard');
               button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-list-ul ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.setAttribute('class', 'ui-icon-list-ul ui-btn-icon-left ');
               button_element.textContent = translation_list[5];
               div_element.appendChild(button_element);
 
