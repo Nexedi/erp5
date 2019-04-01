@@ -1,8 +1,10 @@
 /*global window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
-         Query, QueryFactory, ensureArray, triggerListboxClipboardAction */
+         Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
+         getListboxClipboardActionList*/
 /*jslint nomen: true, indent: 2, maxerr: 3, continue: true */
 (function (window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
-           Query, QueryFactory, ensureArray, triggerListboxClipboardAction) {
+           Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
+           getListboxClipboardActionList) {
   "use strict";
 
   function updateSearchQueryFromSelection(extended_search, checked_uid_list,
@@ -338,34 +340,11 @@
     })
 
     // Handle listbox custom button
-    .allowPublicAcquisition("getListboxClipboardActionList", function getListboxClipboardActionList() {
-      var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
-        i,
-        result_list = [],
-        icon;
-      result_list.push({
-        title: 'Copy',
-        icon: 'copy',
-        action: 'copy_document_list'
-      });
-      for (i = 0; i < action_list.length; i += 1) {
-        if (action_list[i].name === 'delete_document_list') {
-          icon = 'trash-o';
-        } else if (action_list[i].name === 'paste_document_list') {
-          icon = 'paste';
-        } else {
-          continue;
-        }
-        result_list.push({
-          title: action_list[i].title,
-          icon: icon,
-          action: action_list[i].name
-        });
-      }
-      return result_list;
-    })
-
-    .allowPublicAcquisition("triggerListboxClipboardAction", triggerListboxClipboardAction);
+    .allowPublicAcquisition("getListboxClipboardActionList",
+                            getListboxClipboardActionList)
+    .allowPublicAcquisition("triggerListboxClipboardAction",
+                            triggerListboxClipboardAction);
 
 }(window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery, Query,
-  QueryFactory, ensureArray, triggerListboxClipboardAction));
+  QueryFactory, ensureArray, triggerListboxClipboardAction,
+  getListboxClipboardActionList));
