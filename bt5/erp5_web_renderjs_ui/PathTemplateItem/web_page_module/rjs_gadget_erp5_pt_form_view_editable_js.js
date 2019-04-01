@@ -6,10 +6,6 @@
   "use strict";
 
   rJS(window)
-
-    .declareAcquiredMethod("setSetting", "setSetting")
-    .declareAcquiredMethod("getSetting", "getSetting")
-    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("submitContent", "submitContent")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("redirect", "redirect")
