@@ -41,87 +41,79 @@
   }
 
   function triggerListboxClipboardAction(argument_list) {
-    var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
+    var gadget = this,
+      action_list = ensureArray(gadget.state.erp5_document._links.action_object_list_action || []),
       action_name = argument_list[0],
       checked_uid_list = argument_list[1],
       unchecked_uid_list = argument_list[2],
-      gadget = this,
-      extended_search = '',
       view,
-      i;
+      i,
+      queue;
 
-    if (action_name === 'copy_document_list') {
-      if (checked_uid_list.length === 0) {
-        // If nothing is checked, use all unchecked values (same as xhtml style)
-        checked_uid_list = unchecked_uid_list;
+    if (checked_uid_list.length === 0) {
+      // If nothing is checked, use all unchecked values (same as xhtml style)
+      checked_uid_list = unchecked_uid_list;
+    }
+
+    if (action_name !== 'copy_document_list') {
+      // Copy action is only done on javascript side
+      for (i = 0; i < action_list.length; i += 1) {
+        if (action_name === action_list[i].name) {
+          view = action_list[i].href;
+        }
       }
-      if (checked_uid_list.length === 0) {
-        // XXX Queries do not correctly handle empty uid list
-        return gadget.redirect({
-          command: 'reload'
+      if (view === undefined) {
+        // Action was not found.
+        return gadget.notifySubmitted({
+          "message": "Action not handled."
         });
       }
-      return gadget.setSetting('clipboard', checked_uid_list)
-        .push(function () {
-          return gadget.notifySubmitted({
-            "message": "Copied.",
-            "status": "success"
-          });
-        });
-    }
-
-    for (i = 0; i < action_list.length; i += 1) {
-      if (action_name === action_list[i].name) {
-        view = action_list[i].href;
-      }
-    }
-
-    if (checked_uid_list.length !== 0) {
-      // If nothing is checked, use original query
-      extended_search = createSearchQuery(
-        checked_uid_list,
-        'catalog.uid'
-      );
-    }
-
-    if (view === undefined) {
-      // Action was not found.
-      // Reload
-      return gadget.redirect({
-        command: 'reload'
-      });
     }
 
     if (action_name === 'paste_document_list') {
-      return gadget.getSetting('clipboard')
+      // Get the list of document uid from the internal clipboard
+      queue = gadget.getSetting('clipboard')
         .push(function (uid_list) {
-          uid_list = uid_list || [];
-          if (uid_list.length === 0) {
-            // Nothing to paste, go away
-            uid_list = ['XXX'];
-          }
-          return gadget.redirect({
-            command: 'display_dialog_with_history',
-            options: {
-              "jio_key": gadget.state.jio_key,
-              "view": view,
-              "extended_search": createSearchQuery(
-                uid_list,
-                'catalog.uid'
-              )
-            }
-          }, true);
+          checked_uid_list = uid_list || [];
         });
+    } else {
+      queue = new RSVP.Queue();
     }
 
-    return gadget.redirect({
-      command: 'display_dialog_with_history',
-      options: {
-        "jio_key": gadget.state.jio_key,
-        "view": view,
-        "extended_search": extended_search
-      }
-    }, true);
+    return queue
+      .push(function () {
+        if (checked_uid_list.length === 0) {
+          // Do not trigger action if the listbox was empty
+          // Dialog listbox use catalog method, which may be different from the current select method
+          // and so, it is mandatory to propagate a list of uid, otherwise, the dialog may display
+          // an unexpected huge list of unrelated documents
+          return gadget.notifySubmitted({
+            "message": "Nothing selected."
+          });
+        }
+
+        if (action_name === 'copy_document_list') {
+          return gadget.setSetting('clipboard', checked_uid_list)
+            .push(function () {
+              return gadget.notifySubmitted({
+                "message": "Copied.",
+                "status": "success"
+              });
+            });
+        }
+
+        return gadget.redirect({
+          command: 'display_dialog_with_history',
+          options: {
+            "jio_key": gadget.state.jio_key,
+            "view": view,
+            "extended_search": createSearchQuery(
+              checked_uid_list,
+              'catalog.uid'
+            )
+          }
+        }, true);
+      });
   }
   window.triggerListboxClipboardAction = triggerListboxClipboardAction;
 
