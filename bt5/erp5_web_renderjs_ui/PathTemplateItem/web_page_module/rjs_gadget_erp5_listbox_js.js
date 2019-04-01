@@ -872,6 +872,12 @@
               pagination_message = '',
               content_value;
 
+            if (gadget.state.show_line_selector) {
+              // Clone the allDocs result, to temporary modify
+              // the editable property of the cells on the fly
+              allDocs_result = JSON.parse(JSON.stringify(gadget.state.allDocs_result));
+            }
+
             column_list = JSON.parse(gadget.state.column_list_json);
             // for actual allDocs_result structure see ref:gadget_erp5_jio.js
             if (lines === 0) {
@@ -964,7 +970,7 @@
                   }
                   // note row's editable UID into gadget.props.listbox_uid_dict if exists to send it back to ERP5
                   // together with ListBox data. The listbox_uid_dict has quite surprising structure {key: <key>, value: <uid-array>}
-                  if (allDocs_result.data.rows[i].value['listbox_uid:list'] !== undefined) {
+                  if ((!gadget.state.show_line_selector) && (allDocs_result.data.rows[i].value['listbox_uid:list'] !== undefined)) {
                     gadget.props.listbox_uid_dict.key = allDocs_result.data.rows[i].value['listbox_uid:list'].key;
                     gadget.props.listbox_uid_dict.value.push(allDocs_result.data.rows[i].value['listbox_uid:list'].value);
                     // we could come up with better name than "value" for almost everything ^^
