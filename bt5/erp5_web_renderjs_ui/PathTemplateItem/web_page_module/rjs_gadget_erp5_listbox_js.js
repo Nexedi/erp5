@@ -696,7 +696,7 @@
                 button_element.setAttribute('data-select-action', select_option_list[k].action);
                 button_element.setAttribute('name', 'SelectAction');
                 button_element.type = 'button';
-                button_element.setAttribute('class', 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left ');// + gadget.state.hide_class);
+                button_element.setAttribute('class', 'ui-icon-' + select_option_list[k].icon + ' ui-btn-icon-left');
                 button_element.textContent = select_option_list[k].title;
                 div_element.appendChild(button_element);
               }
