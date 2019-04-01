@@ -20,29 +20,6 @@
     return;
   };
   var Module = {};
-  var initPyodide = new Promise((resolve, reject) => {
-    var postRunPromise = new Promise((resolve, reject) => {
-      Module.postRun = () => {
-        resolve();
-      };
-    });
-
-    Promise.all([ postRunPromise, ]).then(() => resolve());
-
-    let data_script = document.createElement('script');
-    data_script.src = `pyodide.asm.data.js`;
-
-    data_script.onload = (event) => {
-      let script = document.createElement('script');
-      script.src = `pyodide.asm.js`;
-      script.onload = () => {
-        window.pyodide = pyodide(Module);
-      };
-      document.head.appendChild(script);
-    };
-
-   document.head.appendChild(data_script);
-  });
 
   // Copied from jio
   function ajax(param) {
@@ -280,13 +257,14 @@
   }
 
   function loadPyodide() {
-      let wasm_promise = WebAssembly.compileStreaming(fetch(`pyodide.asm.wasm`));
-      Module.instantiateWasm = function (info, receiveInstance) {
-        wasm_promise
-        .then(module => WebAssembly.instantiate(module, info))
-        .then(instance => receiveInstance(instance));
-        return {};
-      };
+    let wasm_promise = WebAssembly.compileStreaming(fetch(`pyodide.asm.wasm`));
+    Module.instantiateWasm = function (info, receiveInstance) {
+      wasm_promise
+      .then(module => WebAssembly.instantiate(module, info))
+      .then(instance => receiveInstance(instance));
+      return {};
+    };
+    window.Module = Module;
   }
 
   function executePyCell(line_list) {
@@ -321,6 +299,19 @@
     }
   }
 
+  function pyodideSetting() {
+    return new RSVP.Promise(function (resolve, reject) {
+      window.pyodide = pyodide(Module);
+      var postRunPromise = new Promise((resolve, reject) => {
+        Module.postRun = () => {
+          resolve();
+        };
+      });
+      console.log("Setting postRun");
+      Promise.all([ postRunPromise, ]).then(() => resolve());
+    });
+  }
+
   function executeCell(cell) {
     if (cell._type === 'raw') {
       // Do nothing...
@@ -352,38 +343,27 @@
         queue.push(function() {
           console.log("Loading webassembly module");
           return loadPyodide();
-       })
-       .push(function () {
-          window.Module = Module;
-          console.log("WIndow Module");
-          console.log(window.Module);
-          console.log("Module");
-          console.log(Module);
-       })
-       .push(function () {
-           console.log("Prepare enter initPyodide");
-            return initPyodide;
-       });
-       is_pyodide_loaded = true;
-        /*
-        queue.push(function () {
+        })
+        .push(function () {
           console.log("Loading pyodide.asm.data.js");
           return loadJSResource(`pyodide.asm.data.js`);
-        });*/
-        /*
-        queue.push(function () {
+        })
+        .push(function () {
           console.log("Loading pyodide.asm.js");
           return loadJSResource('pyodide.asm.js');
+        })
+        .push(function () {
+          console.log("Prepare to set postRun and pyodide");
+          return pyodideSetting();
         });
-        */
+        is_pyodide_loaded = true;
       }
       console.log("Fuck!");
       queue.push(function () {
         console.log("Executing Python cell");
-        console.log(window.pyodide);
         return executePyCell(cell._line_list);
-     });
-     return queue;
+      });
+      return queue;
     }
     return executeUnknownCellType(cell);
   }
