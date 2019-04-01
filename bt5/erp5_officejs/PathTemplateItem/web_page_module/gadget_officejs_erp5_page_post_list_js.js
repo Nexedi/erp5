@@ -9,7 +9,8 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("isDesktopMedia", "isDesktopMedia")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getSetting", "getSetting")
 
     /////////////////////////////////////////////////////////////////
@@ -50,7 +51,7 @@
         },
         action: "Base_edit",
         update_action: "",
-        _links: { "type": { name: "" } }
+        _links: { "type": { name: "" }, "action_object_new_content_action": {"page": "ojs_add_post"} }
       },
       form_json = {
         erp5_document: {
@@ -90,7 +91,8 @@
     })
 
     .declareMethod("render", function () {
-      var gadget = this;
+      var gadget = this,
+          erp5_document;
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
@@ -99,25 +101,73 @@
           ]);
         })
         .push(function (result) {
+          erp5_document = result[1].erp5_document;
           return result[0].render(result[1]);
         })
+        // render the header
         .push(function () {
+          var url_for_parameter_list = [
+            {command: 'change', options: {page: "tab"}},
+            {command: 'change', options: {page: "action"}},
+            {command: 'history_previous'},
+            {command: 'selection_previous'},
+            {command: 'selection_next'},
+            {command: 'change', options: {page: "export"}},
+            {command: 'display', options: {}}
+          ];
+          if (erp5_document._links && erp5_document._links.action_object_new_content_action) {
+            url_for_parameter_list.push({command: 'change', options: erp5_document._links.action_object_new_content_action});
+          }
           return RSVP.all([
-            gadget.getUrlFor({command: "change", options: {"page": "ojs_add_post"}}),
+            gadget.getUrlForList(url_for_parameter_list),
+            gadget.isDesktopMedia(),
             gadget.getSetting('document_title_plural'),
             gadget.getSetting('upload_dict', false)
           ]);
         })
-        .push(function (result) {
-          var header = {
-            page_title: result[1],
-            filter_action: true,
-            add_url: result[0]
-          };
-          if (result[3]) {
-            header.upload_url = result[2];
+        .push(function (result_list) {
+          var is_form_list = true, //TODO: configuration must indicate if is a form or list view
+            url_list = result_list[0], header_dict;
+          if (is_form_list) {
+            header_dict = {
+              panel_action: true,
+              jump_url: "",
+              fast_input_url: "",
+              front_url: url_list[6],
+              filter_action: true,
+              page_title: result_list[2]
+            };
+            if (result_list[4]) {
+              header_dict.upload_url = result_list[3];
+            }
+          } else {
+            header_dict = {
+              selection_url: url_list[2],
+              previous_url: url_list[3],
+              next_url: url_list[4],
+              page_title: gadget.state.doc.title
+            };
+            if (false) { //TODO: configuration must indicate if there are more views
+              header_dict.tab_url = url_list[0];
+            }
+            if (gadget.state.editable === "true") {
+              header_dict.save_action = true;
+            }
           }
-          return gadget.updateHeader(header);
+          if (true) { //TODO: configuration must indicate if there are more actions
+            header_dict.actions_url = url_list[1];
+          }
+          if (url_list[7]) {
+            header_dict.add_url = url_list[7];
+          }
+          if (result_list[1]) {
+            header_dict.export_url = (
+              erp5_document._links.action_object_jio_report ||
+              erp5_document._links.action_object_jio_exchange ||
+              erp5_document._links.action_object_jio_print
+            ) ? url_list[5] : '';
+          }
+          return gadget.updateHeader(header_dict);
         });
     });
 }(window, rJS, RSVP));

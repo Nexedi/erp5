@@ -49,7 +49,8 @@
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("isDesktopMedia", "isDesktopMedia")
+    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod('getUrlParameter', 'getUrlParameter')
     .declareAcquiredMethod("updateHeader", "updateHeader")
@@ -168,6 +169,7 @@
     })
 
     .declareMethod("renderSubGadget", function (gadget, subgadget, form_json) {
+      var erp5_document = form_json.erp5_document;
       return subgadget.render({
         jio_key: gadget.state.jio_key,
         doc: gadget.state.doc,
@@ -185,44 +187,57 @@
           {command: 'history_previous'},
           {command: 'selection_previous'},
           {command: 'selection_next'},
-          {command: 'change', options: {page: "export"}}
+          {command: 'change', options: {page: "export"}},
+          {command: 'display', options: {}}
         ];
-        if (form_json.erp5_document._links.action_object_new_content_action) {
-          url_for_parameter_list.push({command: 'change', options: {
-            view: form_json.erp5_document._links.action_object_new_content_action.href,
-            editable: true
-          }});
+        erp5_document = form_json.erp5_document;
+        if (erp5_document._links && erp5_document._links.action_object_new_content_action) {
+          url_for_parameter_list.push({command: 'change', options: erp5_document._links.action_object_new_content_action});
         }
         return RSVP.all([
-          subgadget.getUrlForList(url_for_parameter_list),
-          subgadget.isDesktopMedia()
+          gadget.getUrlForList(url_for_parameter_list),
+          gadget.isDesktopMedia(),
+          gadget.getSetting('document_title_plural'),
+          gadget.getSetting('upload_dict', false)
         ]);
       })
       .push(function (result_list) {
-        var url_list = result_list[0],
+        var is_form_list = false, //TODO: configuration must indicate if is a form or list view
+          url_list = result_list[0], header_dict;
+        if (is_form_list) {
+          header_dict = {
+            panel_action: true,
+            jump_url: "",
+            fast_input_url: "",
+            front_url: url_list[6],
+            filter_action: true,
+            page_title: result_list[2]
+          };
+        } else {
           header_dict = {
             selection_url: url_list[2],
             previous_url: url_list[3],
             next_url: url_list[4],
             page_title: gadget.state.doc.title
           };
-        if (false) { //TODO: configuration must indicate if there are more views
-          header_dict.tab_url = url_list[0];
+          if (false) { //TODO: configuration must indicate if there are more views
+            header_dict.tab_url = url_list[0];
+          }
+          if (gadget.state.editable === "true") {
+            header_dict.save_action = true;
+          }
         }
         if (true) { //TODO: configuration must indicate if there are more actions
           header_dict.actions_url = url_list[1];
         }
-        if (url_list[6]) {
-          header_dict.add_url = url_list[6];
-        }
-        if (gadget.state.editable === "true") {
-          header_dict.save_action = true;
+        if (url_list[7]) {
+          header_dict.add_url = url_list[7];
         }
         if (result_list[1]) {
           header_dict.export_url = (
-            form_json.erp5_document._links.action_object_jio_report ||
-            form_json.erp5_document._links.action_object_jio_exchange ||
-            form_json.erp5_document._links.action_object_jio_print
+            erp5_document._links.action_object_jio_report ||
+            erp5_document._links.action_object_jio_exchange ||
+            erp5_document._links.action_object_jio_print
           ) ? url_list[5] : '';
         }
         return gadget.updateHeader(header_dict);
