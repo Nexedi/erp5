@@ -1,6 +1,6 @@
 /*global window, console, RSVP, document, URL, eval, XMLHttpRequest, marked, pyodide */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, initPyodide) {
+(function (window) {
   "use strict";
 
   var IODide = function createIODide() {
@@ -11,13 +11,38 @@
       this._line_list = line_list;
     },
     split_line_regex = /[\r\n|\n|\r]/,
-    cell_type_regexp = /^\%\% (\w+)$/;
+    cell_type_regexp = /^\%\% (\w+)$/,
+    is_pyodide_loaded = false;
 
-  window.iodide = new IODide();
+  window.xiodide = new IODide();
 
   IODide.prototype.addOutputHandler = function () {
     return;
   };
+  var Module = {};
+  var initPyodide = new Promise((resolve, reject) => {
+    var postRunPromise = new Promise((resolve, reject) => {
+      Module.postRun = () => {
+        resolve();
+      };
+    });
+
+    Promise.all([ postRunPromise, ]).then(() => resolve());
+
+    let data_script = document.createElement('script');
+    data_script.src = `pyodide.asm.data.js`;
+
+    data_script.onload = (event) => {
+      let script = document.createElement('script');
+      script.src = `pyodide.asm.js`;
+      script.onload = () => {
+        window.pyodide = pyodide(Module);
+      };
+      document.head.appendChild(script);
+    };
+
+   document.head.appendChild(data_script);
+  });
 
   // Copied from jio
   function ajax(param) {
@@ -254,22 +279,30 @@
     });
   }
 
+  function loadPyodide() {
+      let wasm_promise = WebAssembly.compileStreaming(fetch(`pyodide.asm.wasm`));
+      Module.instantiateWasm = function (info, receiveInstance) {
+        wasm_promise
+        .then(module => WebAssembly.instantiate(module, info))
+        .then(instance => receiveInstance(instance));
+        return {};
+      };
+  }
+
   function executePyCell(line_list) {
-    return new RSVP.Promise(function (resolve, reject) {
-      var result_text, code_text = line_list.join('\n');
-      try {
-        result_text = pyodide.runPython(line_list.join('\n'));
-      } catch (e) {
-        result_text = e.message;
-      }
+    var result_text, code_text = line_list.join('\n');
 
-      if (typeof(result_text) === 'undefined') {
-        result_text = 'undefined';
-      }
+    try {
+      result_text = pyodide.runPython(line_list.join('\n'));
+    } catch (e) {
+      result_text = e.message;
+    }
 
-      renderCodeblock(result_text, 'python');
-      resolve();
-    });
+    if (typeof(result_text) === 'undefined') {
+      result_text = 'undefined';
+    }
+
+    renderCodeblock(result_text, 'python');
   }
 
   function renderCodeblock(result_text, language) {
@@ -309,7 +342,48 @@
       return executeCssCell(cell._line_list);
     }
     if (cell._type === 'py') {
-      return executePyCell(cell._line_list);
+      console.log("Py cell");
+
+      console.log(is_pyodide_loaded);
+      var queue = new RSVP.Queue();
+
+      if (!is_pyodide_loaded) {
+        console.log("Loading pyodide");
+        queue.push(function() {
+          console.log("Loading webassembly module");
+          return loadPyodide();
+       })
+       .push(function () {
+          window.Module = Module;
+          console.log("WIndow Module");
+          console.log(window.Module);
+          console.log("Module");
+          console.log(Module);
+       })
+       .push(function () {
+           console.log("Prepare enter initPyodide");
+            return initPyodide;
+       });
+       is_pyodide_loaded = true;
+        /*
+        queue.push(function () {
+          console.log("Loading pyodide.asm.data.js");
+          return loadJSResource(`pyodide.asm.data.js`);
+        });*/
+        /*
+        queue.push(function () {
+          console.log("Loading pyodide.asm.js");
+          return loadJSResource('pyodide.asm.js');
+        });
+        */
+      }
+      console.log("Fuck!");
+      queue.push(function () {
+        console.log("Executing Python cell");
+        console.log(window.pyodide);
+        return executePyCell(cell._line_list);
+     });
+     return queue;
     }
     return executeUnknownCellType(cell);
   }
@@ -329,9 +403,6 @@
       i,
       queue = new RSVP.Queue();
 
-    queue.push(function () {
-      return initPyodide;
-    });
     for (i = 0; i < len; i += 1) {
       queue.push(deferCellExecution(cell_list[i]));
     }
@@ -352,4 +423,4 @@
 
   }, false);
 
-}(window, initPyodide));
+}(window));
