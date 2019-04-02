@@ -67,6 +67,14 @@
     return Query.objectToSearchText(search_query);
   }
 
+  function notifyTranslatedMessage(gadget, options) {
+    return gadget.getTranslationClipboardAction(options.message)
+      .push(function (translated_message) {
+        options.message = translated_message;
+        return gadget.notifySubmittedClipboardAction(options);
+      });
+  }
+
   function triggerListboxClipboardAction(argument_list) {
     var gadget = this,
       action_list = ensureArray(gadget.state.erp5_document._links.action_object_list_action || []),
@@ -91,8 +99,8 @@
       }
       if (view === undefined) {
         // Action was not found.
-        return gadget.notifySubmittedClipboardAction({
-          "message": "Action not handled."
+        return notifyTranslatedMessage(gadget, {
+          "message": "Action not handled"
         });
       }
     }
@@ -114,16 +122,16 @@
           // Dialog listbox use catalog method, which may be different from the current select method
           // and so, it is mandatory to propagate a list of uid, otherwise, the dialog may display
           // an unexpected huge list of unrelated documents
-          return gadget.notifySubmittedClipboardAction({
-            "message": "Nothing selected."
+          return notifyTranslatedMessage(gadget, {
+            "message": "Nothing selected"
           });
         }
 
         if (action_name === 'copy_document_list') {
           return gadget.setSettingClipboardAction('clipboard', checked_uid_list)
             .push(function () {
-              return gadget.notifySubmittedClipboardAction({
-                "message": "Copied.",
+              return notifyTranslatedMessage(gadget, {
+                "message": "Copied",
                 "status": "success"
               });
             });
@@ -145,6 +153,7 @@
 
   function declareGadgetClassCanHandleListboxClipboardAction(gadget_klass) {
     gadget_klass
+      .declareAcquiredMethod("getTranslationClipboardAction", "translate")
       .declareAcquiredMethod("setSettingClipboardAction", "setSetting")
       .declareAcquiredMethod("getSettingClipboardAction", "getSetting")
       .declareAcquiredMethod("redirectClipboardAction", "redirect")
