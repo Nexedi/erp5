@@ -1,6 +1,6 @@
-/*global document, window, rJS, RSVP */
+/*global document, window, rJS, RSVP, URLSearchParams */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (document, window, rJS, RSVP) {
+(function (document, window, rJS, RSVP, URLSearchParams) {
   "use strict";
 
   function renderField(field_id, field_definition, document) {
@@ -41,6 +41,21 @@
     return result;
   }
 
+  function getActionReference(view_url_parameters) {
+    var parser = document.createElement('a'), urlParams, action_reference;
+    if (view_url_parameters.indexOf("#!change?") !== -1) {
+      parser.href = window.location.origin + "/" + view_url_parameters.replace(/#!change?/g, 'change?');
+      urlParams = new URLSearchParams(parser.search);
+      action_reference = urlParams.get("n.action");
+    } else {
+      action_reference = view_url_parameters
+    }
+    if (action_reference === undefined || action_reference === null || action_reference === "view") {
+      action_reference = "jio_view";
+    }
+    return action_reference;
+  }
+
   rJS(window)
 
     /////////////////////////////////////////////////////////////////
@@ -63,12 +78,16 @@
 
     .declareMethod("getFormDefinition", function (portal_type) {
       var gadget = this,
-        parent = "portal_types/" + portal_type,
-        query = 'portal_type: "Action Information" AND reference: "jio_view" AND parent_relative_url: "' + parent + '"';
-      return gadget.jio_allDocs({query: query})
+        parent = "portal_types/" + portal_type;
+      return gadget.getUrlParameter("view")
+        .push(function (view_parameters) {
+          var action_reference = getActionReference(view_parameters),
+            query = 'portal_type: "Action Information" AND reference: "' + action_reference + '" AND parent_relative_url: "' + parent + '"';
+          return gadget.jio_allDocs({query: query});
+        })
         .push(function (data) {
           if (data.data.rows.length === 0) {
-            throw "Can not find jio_view action for portal type " + portal_type;
+            throw "Can not find action for portal type " + portal_type;
           }
           return gadget.jio_get(data.data.rows[0].id);
         })
@@ -183,7 +202,7 @@
       .push(function () {
         var url_for_parameter_list = [
           {command: 'change', options: {page: "tab"}},
-          {command: 'change', options: {page: "action"}},
+          {command: 'change', options: {page: "action_offline"}},
           {command: 'history_previous'},
           {command: 'selection_previous'},
           {command: 'selection_next'},
@@ -261,4 +280,4 @@
         });
     });
 
-}(document, window, rJS, RSVP));
+}(document, window, rJS, RSVP, URLSearchParams));
