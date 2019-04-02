@@ -1068,7 +1068,7 @@
                 nav_element.appendChild(fragment);
               })
               .push(function () {
-                var result_sum = (gadget.state.allDocs_result.sum || {}).rows || [], // render summary footer if available
+                var result_sum = (allDocs_result.sum || {}).rows || [], // render summary footer if available
                   summary = result_sum.map(function (row, row_index) {
                     var row_editability = row['listbox_uid:list'] !== undefined;
                     return {
