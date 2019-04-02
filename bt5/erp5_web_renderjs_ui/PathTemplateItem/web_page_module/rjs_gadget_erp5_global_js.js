@@ -1,6 +1,8 @@
-/*global window, RSVP, Array, isNaN, SimpleQuery, ComplexQuery, Query */
+/*global window, RSVP, Array, isNaN, SimpleQuery, ComplexQuery, Query,
+         ensureArray */
 /*jslint indent: 2, maxerr: 3, nomen: true, unparam: true, continue: true */
-(function (window, RSVP, Array, isNaN, SimpleQuery, ComplexQuery, Query) {
+(function (window, RSVP, Array, isNaN, SimpleQuery, ComplexQuery, Query,
+           ensureArray) {
   "use strict";
 
   window.calculatePageTitle = function (gadget, erp5_document) {
@@ -169,4 +171,4 @@
   window.declareGadgetClassCanHandleListboxClipboardAction =
     declareGadgetClassCanHandleListboxClipboardAction;
 
-}(window, RSVP, Array, isNaN, SimpleQuery, ComplexQuery, Query));
+}(window, RSVP, Array, isNaN, SimpleQuery, ComplexQuery, Query, ensureArray));
