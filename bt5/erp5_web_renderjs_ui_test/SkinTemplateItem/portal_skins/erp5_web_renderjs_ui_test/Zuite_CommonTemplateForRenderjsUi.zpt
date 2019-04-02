@@ -341,6 +341,12 @@
       <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
       <td></td>
     </tr>
+    <!-- Sadly, spinner currently is dropped before all DOM modifications are done -->
+    <tr>
+      <td>pause</td>
+      <td>100</td>
+      <td></td>
+    </tr>
     <tr>
       <td colspan="3"><p></p></td>
     </tr>
