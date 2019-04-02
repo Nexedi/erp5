@@ -133,7 +133,6 @@
               panel_action: true,
               jump_url: "",
               fast_input_url: "",
-              front_url: url_list[6],
               filter_action: true,
               page_title: result_list[2]
             };
