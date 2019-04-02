@@ -868,7 +868,7 @@
             var lines = gadget.state.lines,
               promise_list = [],
               url_promise_list = [],
-              allDocs_result = gadget.state.allDocs_result,
+              allDocs_result = JSON.parse(gadget.state.allDocs_result),
               counter,
               pagination_message = '',
               content_value;
@@ -965,7 +965,7 @@
                   }
                   // note row's editable UID into gadget.props.listbox_uid_dict if exists to send it back to ERP5
                   // together with ListBox data. The listbox_uid_dict has quite surprising structure {key: <key>, value: <uid-array>}
-                  if (allDocs_result.data.rows[i].value['listbox_uid:list'] !== undefined) {
+                  if ((!gadget.state.show_line_selector) && (allDocs_result.data.rows[i].value['listbox_uid:list'] !== undefined)) {
                     gadget.props.listbox_uid_dict.key = allDocs_result.data.rows[i].value['listbox_uid:list'].key;
                     gadget.props.listbox_uid_dict.value.push(allDocs_result.data.rows[i].value['listbox_uid:list'].value);
                     // we could come up with better name than "value" for almost everything ^^
@@ -1069,7 +1069,7 @@
                 nav_element.appendChild(fragment);
               })
               .push(function () {
-                var result_sum = (gadget.state.allDocs_result.sum || {}).rows || [], // render summary footer if available
+                var result_sum = (allDocs_result.sum || {}).rows || [], // render summary footer if available
                   summary = result_sum.map(function (row, row_index) {
                     var row_editability = row['listbox_uid:list'] !== undefined;
                     return {
@@ -1188,7 +1188,7 @@
       })
         .push(function (result) {
           return gadget.changeState({
-            allDocs_result: result
+            allDocs_result: JSON.stringify(result)
           });
 
         }, function (error) {
