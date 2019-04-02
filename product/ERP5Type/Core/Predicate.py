@@ -159,14 +159,17 @@ class Predicate(XMLObject):
         isMemberOf = context._getCategoryTool().isMemberOf
       with readOnlyTransactionCache():
         for c in membership_criterion_category_list:
-          bc = c.split('/', 1)[0]
+          bc, c_path = c.split('/', 1)
+          is_null = c_path == 'NULL'
           if tested_base_category_list is None or bc in tested_base_category_list:
             if bc in multimembership_criterion_base_category_list:
-              if not isMemberOf(context, c, strict_membership=strict_membership):
+              if (is_null and isMemberOf(context, bc, strict_membership=False)) or \
+                  not isMemberOf(context, c, strict_membership=strict_membership):
                 return 0
             elif bc in membership_criterion_base_category_list and \
                  not tested_base_category.get(bc):
               tested_base_category[bc] = \
+                (is_null and not isMemberOf(context, bc, strict_membership=False)) or \
                 isMemberOf(context, c, strict_membership=strict_membership)
       if 0 in tested_base_category.itervalues():
         return 0
@@ -248,7 +251,7 @@ class Predicate(XMLObject):
         getCategoryParameterDict(
           filterCategoryList(getBaseCategorySet(), getCategoryList()),
           strict_membership=strict_membership,
-          onMissing=lambda category: False,
+          onMissing=lambda category: category.split('/', 1)[1] == 'NULL',
         ),
       )
 

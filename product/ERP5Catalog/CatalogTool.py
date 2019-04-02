@@ -1170,7 +1170,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       for base_category_id, document_set in base_category_dict.iteritems():
         column = prefix + base_category_id + suffix
         category_query = SimpleQuery(**{
-          column: {document.getUid() for document in document_set},
+          column: {None if document is None else document.getUid() for document in document_set},
         })
         extra_query = onJoin(column)
         if extra_query is not None:

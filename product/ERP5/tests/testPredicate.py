@@ -65,6 +65,12 @@ class TestPredicateMixIn(ERP5TypeTestCase):
     self.createCategories()
     self.login()
 
+  def beforeTearDown(self):
+    self.portal.organisation_module.manage_delObjects(
+      ids=list(self.portal.organisation_module.objectIds())
+    )
+    self.tic()
+
   def playSequence(self, sequence_string, quiet=QUIET) :
     # don't commit between steps
     sequence = Sequence()
@@ -323,6 +329,21 @@ class TestPredicates(TestPredicateMixIn):
                 ['region/europe/western_europe/germany'])
     self.assertFalse(pred.test(doc))
 
+  def test_BasicCategoryNullMembership(self):
+    # if the document is any member of the base category, the predicate returns
+    # false
+    doc1 = self.createDocument()
+    doc2 = self.createDocument(region='europe/western_europe/france',)
+    self.tic()
+    pred = self.createPredicate(
+      membership_criterion_base_category_list=['region'],
+      membership_criterion_category_list=['region/NULL'])
+    self.assertTrue(pred.test(doc1))
+    self.assertFalse(pred.test(doc2))
+    self.assertItemsEqual(
+      [doc1],
+      [x.getObject() for x in pred.searchResults(portal_type='Organisation')]
+    )
 
   def test_NonExistantCategoryMembership(self):
     # the predicate also return false for non existant category and no error is
