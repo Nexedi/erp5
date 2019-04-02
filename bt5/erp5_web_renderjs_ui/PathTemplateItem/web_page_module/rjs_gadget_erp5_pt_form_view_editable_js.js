@@ -5,6 +5,9 @@
 
   rJS(window)
 
+    .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("submitContent", "submitContent")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("redirect", "redirect")
@@ -177,6 +180,36 @@
           }
         }); // page form handles failures well enough
 
-    }, false, true);
+    }, false, true)
+
+    // Handle listbox custom button
+    .allowPublicAcquisition("getListboxClipboardActionList", function getListboxClipboardActionList() {
+      var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
+        i,
+        result_list = [],
+        icon;
+      result_list.push({
+        title: 'Copy',
+        icon: 'copy',
+        action: 'copy_document_list'
+      });
+      for (i = 0; i < action_list.length; i += 1) {
+        if (action_list[i].name === 'delete_document_list') {
+          icon = 'trash-o';
+        } else if (action_list[i].name === 'paste_document_list') {
+          icon = 'paste';
+        } else {
+          continue;
+        }
+        result_list.push({
+          title: action_list[i].title,
+          icon: icon,
+          action: action_list[i].name
+        });
+      }
+      return result_list;
+    })
+
+    .allowPublicAcquisition("triggerListboxClipboardAction", triggerListboxClipboardAction);
 
 }(window, rJS, RSVP, calculatePageTitle));
