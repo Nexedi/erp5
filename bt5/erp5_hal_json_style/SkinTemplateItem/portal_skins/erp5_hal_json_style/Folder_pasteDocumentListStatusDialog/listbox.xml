@@ -12,6 +12,7 @@
               <list>
                 <string>count_method</string>
                 <string>default_params</string>
+                <string>editable</string>
                 <string>lines</string>
                 <string>list_method</string>
                 <string>selection_name</string>
@@ -98,6 +99,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
