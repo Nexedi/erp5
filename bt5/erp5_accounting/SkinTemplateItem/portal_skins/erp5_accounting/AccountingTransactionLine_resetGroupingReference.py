@@ -15,23 +15,25 @@ portal = context.getPortalObject()
 resetGroupingReference = portal.ERP5Site_resetAccountingTransactionLineGroupingReference
 if async:
   resetGroupingReference = portal.portal_simulation.activate(
+      activity='SQLQueue',
       after_tag='accounting_grouping_reference'
   ).ERP5Site_resetAccountingTransactionLineGroupingReference
 
-ungrouped_line_list = []
+ungrouped_line_set = set()
+grouping_reference = context.getGroupingReference()
 for (section_value, node_uid, mirror_section_uid) in (
   (context.getSourceSectionValue(), context.getSourceUid(), context.getDestinationSectionUid(),),
   (context.getDestinationSectionValue(), context.getDestinationUid(), context.getSourceSectionUid(),),
 ):
-  if section_value is not None:
+  if node_uid is not None and section_value is not None:
     section_value = section_value.Organisation_getMappingRelatedOrganisation()
     section_category = section_value.getGroup(base=True)
     if section_category:
-      ungrouped_line_list.extend(resetGroupingReference(
+      ungrouped_line_set.update(resetGroupingReference(
           section_category=section_category,
           node_uid=node_uid,
           mirror_section_uid=mirror_section_uid,
-          grouping_reference=context.getGroupingReference()
+          grouping_reference=grouping_reference
       ) or [])
+return list(ungrouped_line_set)
 
-return ungrouped_line_list
