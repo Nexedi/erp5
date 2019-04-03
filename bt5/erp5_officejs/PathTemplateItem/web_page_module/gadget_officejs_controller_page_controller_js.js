@@ -3,6 +3,8 @@
 (function (document, window, rJS, RSVP, URLSearchParams) {
   "use strict";
 
+  var default_view = "jio_view";
+
   function renderField(field_id, field_definition, document) {
     var key, raw_value, tales_expr, override, final_value, result = {};
     for (key in field_definition.values) {
@@ -42,16 +44,18 @@
   }
 
   function getActionReference(view_url_parameters) {
+    //TODO: check how to properly add a parameter to gadget render option
+    // and not within the view url-parameter
     var parser = document.createElement('a'), urlParams, action_reference;
     if (view_url_parameters.indexOf("#!change?") !== -1) {
       parser.href = window.location.origin + "/" + view_url_parameters.replace(/#!change?/g, 'change?');
       urlParams = new URLSearchParams(parser.search);
       action_reference = urlParams.get("n.action");
     } else {
-      action_reference = view_url_parameters
+      action_reference = view_url_parameters;
     }
     if (action_reference === undefined || action_reference === null || action_reference === "view") {
-      action_reference = "jio_view";
+      action_reference = default_view;
     }
     return action_reference;
   }
@@ -63,6 +67,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("jio_post", "jio_post")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("isDesktopMedia", "isDesktopMedia")
     .declareAcquiredMethod("getSetting", "getSetting")
@@ -71,20 +76,41 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+    .declareAcquiredMethod("redirect", "redirect")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("getFormDefinition", function (portal_type) {
-      var gadget = this,
-        parent = "portal_types/" + portal_type;
-      return gadget.getUrlParameter("view")
-        .push(function (view_parameters) {
-          var action_reference = getActionReference(view_parameters),
-            query = 'portal_type: "Action Information" AND reference: "' + action_reference + '" AND parent_relative_url: "' + parent + '"';
-          return gadget.jio_allDocs({query: query});
+    .declareMethod("handleAction", function (key, document, view_parameters) {
+      var gadget = this, jio_key = key, jio_document = document,
+          action_reference = getActionReference(view_parameters);
+      // This is the custom code to handle this specific reply action
+      // it should be somewhere else to keep the controller generic
+      if (action_reference == "reply") {
+        var doc = {
+            title: "Re: " + document.title,
+            portal_type: document.portal_type,
+            parent_relative_url: document.parent_relative_url
+          };
+        return gadget.jio_post(doc)
+        .push(function (id) {
+          jio_key = id;
+          return gadget.jio_get(jio_key);
         })
+        .push(function (created_doc) {
+          jio_document = created_doc;
+          return [jio_key, jio_document, action_reference];
+        });
+      }
+      return [jio_key, jio_document, action_reference];
+    })
+
+    .declareMethod("getFormDefinition", function (portal_type, action_reference) {
+      var gadget = this,
+        parent = "portal_types/" + portal_type,
+        query = 'portal_type: "Action Information" AND reference: "' + action_reference + '" AND parent_relative_url: "' + parent + '"';
+      return gadget.jio_allDocs({query: query})
         .push(function (data) {
           if (data.data.rows.length === 0) {
             throw "Can not find action for portal type " + portal_type;
@@ -153,26 +179,43 @@
         })
         .push(function () {
           return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
+        })
+        .push(function () {
+          return gadget.redirect({
+            command: 'display',
+            options: {
+              jio_key: jio_key,
+              editable: true
+            }
+          });
         });
     })
 
     .declareMethod("render", function (options) {
       var gadget = this,
-        child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
+        child_gadget_url = 'gadget_erp5_pt_form_view_editable.html',
+        document, action_reference;
       return gadget.jio_get(options.jio_key)
-        .push(function (document) {
+        .push(function (jio_document) {
+          document = jio_document;
           if (document.portal_type === undefined) {
             throw new Error('Can not display document: ' + options.jio_key);
           }
-          return gadget.getFormDefinition(document.portal_type)
+          return gadget.getUrlParameter("view");
+        })
+        .push(function (view_parameters) {
+          return gadget.handleAction(options.jio_key, document, view_parameters);
+        })
+        .push(function (result_list) {
+          return gadget.getFormDefinition(document.portal_type, result_list[2])//action_reference)
             .push(function (form_definition) {
               return gadget.changeState({
-                jio_key: options.jio_key,
-                doc: document,
+                jio_key: result_list[0],
+                doc: result_list[1],
                 child_gadget_url: child_gadget_url,
                 form_definition: form_definition,
                 editable: options.editable,
-                view: options.view
+                view: result_list[2]
               });
             });
         });
