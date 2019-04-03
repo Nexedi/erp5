@@ -79,9 +79,9 @@ try:
     strict_language = False
   if all_versions:
     if all_languages or not strict_language:
-      return search_context.searchResults(src__=src__, **kw)
+      result = search_context.searchResults(src__=src__, **kw)
     else:
-      return search_context.searchResults(src__=src__, language=language, **kw)
+      result = search_context.searchResults(src__=src__, language=language, **kw)
   else:
     group_by_list = set(kw.get('group_by_list', []))
     if all_languages:
@@ -95,12 +95,18 @@ try:
     kw.setdefault('select_dict', {}).update(
       (x.replace('.', '_') + '__ext__', x)
       for x in extra_column_set if not x.endswith('__score__'))
-    return context.SQLCatalog_zGetDocumentValueList(search_context=search_context,
+    result = context.SQLCatalog_zGetDocumentValueList(search_context=search_context,
                                                     language=language,
                                                     strict_language=strict_language,
                                                     all_languages=all_languages,
                                                     src__=src__,
                                                     kw=kw)
 
+  test_func = getattr(search_context, 'test', None)
+  if test_func is None:
+    return result
+  else:
+    result = [x.getObject() for x in result]
+    return [x for x in result if test_func(x)]
 except Unauthorized:
   return []
