@@ -2179,6 +2179,9 @@ try:
   if "_embedded" in hateoas.keys() and "_view" in hateoas["_embedded"].keys() and "my_action" in hateoas["_embedded"]["_view"].keys():
     if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/HTMLPost_viewAsJio' or hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/HTMLPost_view':
       hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_officejs_jio_connector/HTMLPost_viewAsJio'
+
+    if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/HTMLPost_viewReplyDialog':
+      hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_officejs_jio_connector/HTMLPost_viewReplyDialog'
 except:
   pass
 if hateoas == "":
