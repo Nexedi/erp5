@@ -329,6 +329,49 @@ class TestPredicates(TestPredicateMixIn):
                 ['region/europe/western_europe/germany'])
     self.assertFalse(pred.test(doc))
 
+  def test_BasicCategoryMultiMembership(self):
+    # if the document is not member of all categories, the predicate returns
+    # false
+    doc1 = self.createDocument(
+      group=('nexedi/storever', 'other'),
+    )
+    doc2 = self.createDocument(
+      group='nexedi/storever',
+    )
+    doc3 = self.createDocument(
+      group='other',
+    )
+    doc4 = self.createDocument()
+    self.tic()
+    single_pred = self.createPredicate(
+      membership_criterion_base_category_list=['group',],
+      membership_criterion_category_list=[
+        'group/nexedi/storever',
+        'group/other',
+      ],
+    )
+    multi_pred = self.createPredicate(
+      multimembership_criterion_base_category_list=['group',],
+      membership_criterion_category_list=[
+        'group/nexedi/storever',
+        'group/other',
+      ],
+    )
+    single_pred_result = [bool(single_pred.test(x)) for x in (doc1, doc2, doc3, doc4)]
+    multi_pred_result = [bool(multi_pred.test(x)) for x in (doc1, doc2, doc3, doc4)]
+    self.assertEqual(single_pred_result, [True, True, True, False])
+    self.assertEqual(multi_pred_result, [True, False, False, False])
+    self.assertItemsEqual(
+      [doc1, doc2, doc3],
+      [x.getObject() for x in single_pred.searchResults(portal_type='Organisation')]
+    )
+    # XXX Ideally, the following query should return [doc1] only, but
+    # currently not optimised.
+    self.assertItemsEqual(
+      [doc1, doc2, doc3],
+      [x.getObject() for x in multi_pred.searchResults(portal_type='Organisation')]
+    )
+
   def test_BasicCategoryNullMembership(self):
     # if the document is any member of the base category, the predicate returns
     # false
