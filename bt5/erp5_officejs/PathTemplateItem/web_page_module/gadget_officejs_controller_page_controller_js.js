@@ -88,11 +88,15 @@
       // This is the custom code to handle this specific reply action
       // it should be somewhere else to keep the controller generic
       if (action_reference == "reply") {
-        var doc = {
-            title: "Re: " + document.title,
-            portal_type: document.portal_type,
-            parent_relative_url: document.parent_relative_url
-          };
+        var doc, title = document.title;
+        if (! title.startsWith("Re: ")) {
+          title = "Re: " + document.title;
+        }
+        doc = {
+          title: title,
+          portal_type: document.portal_type,
+          parent_relative_url: document.parent_relative_url
+        };
         return gadget.jio_post(doc)
         .push(function (id) {
           jio_key = id;
@@ -113,7 +117,7 @@
       return gadget.jio_allDocs({query: query})
         .push(function (data) {
           if (data.data.rows.length === 0) {
-            throw "Can not find action for portal type " + portal_type;
+            throw "Can not find action " + action_reference + " for portal type " + portal_type;
           }
           return gadget.jio_get(data.data.rows[0].id);
         })
@@ -207,7 +211,7 @@
           return gadget.handleAction(options.jio_key, document, view_parameters);
         })
         .push(function (result_list) {
-          return gadget.getFormDefinition(document.portal_type, result_list[2])//action_reference)
+          return gadget.getFormDefinition(document.portal_type, result_list[2])
             .push(function (form_definition) {
               return gadget.changeState({
                 jio_key: result_list[0],
@@ -215,7 +219,11 @@
                 child_gadget_url: child_gadget_url,
                 form_definition: form_definition,
                 editable: options.editable,
-                view: result_list[2]
+                view: result_list[2],
+                //HARDCODED: following fields should be indicated by the configuration
+                has_more_views: false,
+                has_more_actions: result_list[2] == default_view,
+                is_form_list: false
               });
             });
         });
@@ -264,9 +272,8 @@
         ]);
       })
       .push(function (result_list) {
-        var is_form_list = false, //TODO: configuration must indicate if is a form or list view
-          url_list = result_list[0], header_dict;
-        if (is_form_list) {
+        var url_list = result_list[0], header_dict;
+        if (gadget.state.is_form_list) {
           header_dict = {
             panel_action: true,
             jump_url: "",
@@ -282,14 +289,14 @@
             next_url: url_list[4],
             page_title: gadget.state.doc.title
           };
-          if (false) { //TODO: configuration must indicate if there are more views
+          if (gadget.state.has_more_views) {
             header_dict.tab_url = url_list[0];
           }
           if (gadget.state.editable === "true") {
             header_dict.save_action = true;
           }
         }
-        if (true) { //TODO: configuration must indicate if there are more actions
+        if (gadget.state.has_more_actions) {
           header_dict.actions_url = url_list[1];
         }
         if (url_list[7]) {
