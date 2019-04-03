@@ -300,16 +300,18 @@
   }
 
   function pyodideSetting() {
-    return new RSVP.Promise(function (resolve, reject) {
-      window.pyodide = pyodide(Module);
-      var postRunPromise = new Promise((resolve, reject) => {
-        Module.postRun = () => {
-          resolve();
-        };
-      });
-      console.log("Setting postRun");
-      Promise.all([ postRunPromise, ]).then(() => resolve());
+    window.pyodide = pyodide(Module);
+    var defer = RSVP.defer(), promise=defer.promise;
+    console.log("Setting postRun");
+    window.pyodide.loadPackage = pyodideLoadPackage;
+
+    Module.postRun = defer.resolve;
+    promise.then(function() {
+      console.log("postRun get called");
     });
+
+    console.log("Setting postRun finished");
+    return defer.promise;
   }
 
   function executeCell(cell) {
