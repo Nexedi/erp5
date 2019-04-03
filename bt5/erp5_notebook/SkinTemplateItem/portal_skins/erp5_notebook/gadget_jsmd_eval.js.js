@@ -1,4 +1,4 @@
-/*global window, console, RSVP, document, URL, eval, XMLHttpRequest, marked, pyodide */
+/*global window, console, RSVP, document, URL, eval, XMLHttpRequest, marked, pyodide, WebAssembly, fetch*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window) {
   "use strict";
@@ -11,15 +11,16 @@
       this._line_list = line_list;
     },
     split_line_regex = /[\r\n|\n|\r]/,
-    cell_type_regexp = /^\%\% (\w+)$/,
-    is_pyodide_loaded = false;
+    cell_type_regexp = /^\%\% (\w+)\b/,
+    language_type_regexp = /\{[\S\s]+\}/,
+    is_pyodide_loaded = false,
+    Module = {};
 
-  window.xiodide = new IODide();
+  window.iodide = new IODide();
 
   IODide.prototype.addOutputHandler = function () {
     return;
   };
-  var Module = {};
 
   // Copied from jio
   function ajax(param) {
@@ -71,6 +72,7 @@
       len = line_list.length,
       current_line,
       current_type,
+      language_type,
       current_text_list,
       next_type,
       cell_list = [];
@@ -87,6 +89,15 @@
       next_type = current_line.match(cell_type_regexp);
       if (next_type) {
         // New type detexted
+        if (next_type[1] === 'code') {
+          // language detected
+          try {
+            language_type = JSON.parse(current_line.match(language_type_regexp)).language;
+          } catch (e) {
+            throw e;
+          }
+          next_type[1] = next_type[1] + '_' + language_type;
+        }
         pushNewCell();
         current_type = next_type;
         current_text_list = [];
@@ -256,37 +267,24 @@
     });
   }
 
-  function loadPyodide() {
-    let wasm_promise = WebAssembly.compileStreaming(fetch(`pyodide.asm.wasm`));
-    Module.instantiateWasm = function (info, receiveInstance) {
-      wasm_promise
-      .then(module => WebAssembly.instantiate(module, info))
-      .then(instance => receiveInstance(instance));
-      return {};
-    };
-    window.Module = Module;
+  function loadPyodide(info, receiveInstance) {
+    var queue = new RSVP.Queue();
+    queue.push(function () {
+      return WebAssembly.compileStreaming(fetch("pyodide.asm.wasm"));
+    })
+      .push(function (module) {
+        return WebAssembly.instantiate(module, info);
+      })
+      .push(function (instance) {
+        return receiveInstance(instance);
+      });
+    return queue;
   }
 
-  function executePyCell(line_list) {
-    var result_text, code_text = line_list.join('\n');
-
-    try {
-      result_text = pyodide.runPython(line_list.join('\n'));
-    } catch (e) {
-      result_text = e.message;
-    }
-
-    if (typeof(result_text) === 'undefined') {
-      result_text = 'undefined';
-    }
-
-    renderCodeblock(result_text, 'python');
-  }
-
-  function renderCodeblock(result_text, language) {
+  function renderCodeblock(result_text) {
     var div = document.createElement('div'),
-        pre = document.createElement('pre'),
-        result = document.createElement('code');
+      pre = document.createElement('pre'),
+      result = document.createElement('code');
     div.style.border = '1px solid #C3CCD0';
     div.style.margin = '40px 10px';
     div.style.paddingLeft = '10px';
@@ -299,23 +297,32 @@
     }
   }
 
+  function executePyCell(line_list) {
+    var result_text, code_text = line_list.join('\n');
+
+    try {
+      result_text = pyodide.runPython(code_text);
+    } catch (e) {
+      result_text = e.message;
+    }
+
+    renderCodeblock(result_text, 'python');
+  }
+
   function pyodideSetting() {
     window.pyodide = pyodide(Module);
-    var defer = RSVP.defer(), promise=defer.promise;
-    console.log("Setting postRun");
-    window.pyodide.loadPackage = pyodideLoadPackage;
+    var defer = RSVP.defer(), promise = defer.promise;
 
     Module.postRun = defer.resolve;
-    promise.then(function() {
+    promise.then(function () {
       console.log("postRun get called");
     });
 
-    console.log("Setting postRun finished");
     return defer.promise;
   }
 
   function executeCell(cell) {
-    if (cell._type === 'raw') {
+    if (['raw', 'meta', 'plugin'].indexOf(cell._type) !== -1) {
       // Do nothing...
       return;
     }
@@ -334,30 +341,37 @@
     if (cell._type === 'css') {
       return executeCssCell(cell._line_list);
     }
-    if (cell._type === 'py') {
-      console.log("Py cell");
+    if (cell._type === 'code_py') {
+      if (cell._line_list.length === 0) {
+        // empty block, do nothing.
+        return;
+      }
 
-      console.log(is_pyodide_loaded);
       var queue = new RSVP.Queue();
 
       if (!is_pyodide_loaded) {
         console.log("Loading pyodide");
-        queue.push(function() {
+        queue.push(function () {
           console.log("Loading webassembly module");
-          return loadPyodide();
+          Module.instantiateWasm = loadPyodide;
+          window.Module = Module;
         })
-        .push(function () {
-          console.log("Loading pyodide.asm.data.js");
-          return loadJSResource(`pyodide.asm.data.js`);
-        })
-        .push(function () {
-          console.log("Loading pyodide.asm.js");
-          return loadJSResource('pyodide.asm.js');
-        })
-        .push(function () {
-          console.log("Prepare to set postRun and pyodide");
-          return pyodideSetting();
-        });
+          .push(function () {
+            console.log("Loading pyodide.asm.data.js");
+            return loadJSResource('pyodide.asm.data.js');
+          })
+          .push(function () {
+            console.log("Loading pyodide.asm.js");
+            return loadJSResource('pyodide.asm.js');
+          })
+          .push(function () {
+            console.log("Delay the execution");
+            return RSVP.delay();
+          })
+          .push(function () {
+            console.log("Prepare to set postRun and pyodide");
+            return pyodideSetting();
+          });
         is_pyodide_loaded = true;
       }
       console.log("Fuck!");
