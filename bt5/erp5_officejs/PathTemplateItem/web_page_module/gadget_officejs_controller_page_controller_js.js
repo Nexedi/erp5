@@ -94,6 +94,8 @@
         }
         doc = {
           title: title,
+          //thread parent: same as base post
+          source_reference: document.source_reference,
           portal_type: document.portal_type,
           parent_relative_url: document.parent_relative_url
         };
@@ -163,6 +165,8 @@
     })
 
     .allowPublicAcquisition('submitContent', function (options) {
+      // NOTE: if we want to create the reply post when saving the reply
+      // (instead of when accessing reply action option), this is the place
       var gadget = this,
         jio_key = options[0],
         //target_url = options[1],
