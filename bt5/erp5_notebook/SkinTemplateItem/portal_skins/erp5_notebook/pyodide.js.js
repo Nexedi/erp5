@@ -108,7 +108,7 @@ var languagePluginLoader = new Promise((resolve, reject) => {
     });
 
     if (window.iodide !== undefined) {
-      // window.iodide.evalQueue.await([ promise ]);
+      window.iodide.evalQueue.await([ promise ]);
     }
 
     return promise;
