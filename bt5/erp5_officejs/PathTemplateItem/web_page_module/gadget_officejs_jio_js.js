@@ -62,6 +62,7 @@
 
   function processHateoasDict(raw_dict) {
     var raw_fields, type, parent, field_key, field_id, return_dict = {};
+    return_dict.raw_dict = raw_dict;
     try {
       /*jslint nomen: true*/
       raw_fields = raw_dict._embedded._view;
@@ -137,7 +138,7 @@
           }
         },
         sync_flag = "appcache-stored",
-        configuration_ids_dict = {};
+        configuration_ids_list = [];
       if (jio_options === undefined) {
         return;
       }
@@ -177,7 +178,7 @@
                               } else {
                                 promise_list.push(appcache_storage.getAttachment(origin_url, id, {"format": "json"}));
                               }
-                              configuration_ids_dict[String(i)] = id;
+                              configuration_ids_list[i] = id;
                               i += 1;
                             }
                           }
@@ -186,7 +187,7 @@
                         .push(function (content_list) {
                           var i, id, parser, urlParams, content, promise_list = [];
                           for (i = 0; i < content_list.length; i += 1) {
-                            id = configuration_ids_dict[String(i)];
+                            id = configuration_ids_list[i];
                             parser = document.createElement('a');
                             parser.href = id;
                             urlParams = new URLSearchParams(parser.search);
