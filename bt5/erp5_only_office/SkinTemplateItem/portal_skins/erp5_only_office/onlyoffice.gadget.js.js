@@ -182,6 +182,12 @@ DocsAPI.DocEditor.version = function () {
             Asc.editor._onUpdateDocumentCanSave();
             return gadget.changeState({changed: true});
           })
+          .push(function () {
+            return gadget.getDeclaredGadget("xmlawizard");
+          })
+          .push(function (g) {
+            return g.rerender();
+          })
           .push(undefined, function (e) {
             console.error(e);
           });
