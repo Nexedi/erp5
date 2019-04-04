@@ -329,6 +329,12 @@
     })
     .allowPublicAcquisition("notifyInvalid", function (arr, scope) {
     })
+    .declareMethod("rerender", function () {
+      return this.getDeclaredGadget("olap_wizard")
+        .push(function (gadget) {
+          return gadget.rerender();
+        });
+    })
     .declareMethod("render", function (opt) {
       var g = this;
       if (!opt) {
