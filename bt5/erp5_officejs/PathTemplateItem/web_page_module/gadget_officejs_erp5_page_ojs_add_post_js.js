@@ -28,6 +28,8 @@
         .push(function (result) {
           var doc = {
             title: "Untitled Document",
+            //TODO: this must be the parent thread reference (or 'base' post ref?)
+            source_reference: "some-fake-thread-id",
             portal_type: result[0],
             parent_relative_url: result[1]
           };
