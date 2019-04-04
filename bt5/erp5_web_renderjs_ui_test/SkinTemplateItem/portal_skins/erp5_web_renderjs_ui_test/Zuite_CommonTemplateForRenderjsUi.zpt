@@ -344,7 +344,7 @@
     <!-- Sadly, spinner currently is dropped before all DOM modifications are done -->
     <tr>
       <td>pause</td>
-      <td>100</td>
+      <td>1000</td>
       <td></td>
     </tr>
     <tr>
