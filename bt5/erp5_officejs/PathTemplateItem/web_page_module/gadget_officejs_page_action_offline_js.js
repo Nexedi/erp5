@@ -62,14 +62,16 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("updateHeader", "updateHeader")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (options) {
       var gadget = this,
+        action_info_list = [],
         erp5_document,
         document_title;
       return gadget.jio_get(options.jio_key)
@@ -79,19 +81,45 @@
           document_title = document.title;
           return gadget.jio_allDocs({query: query});
         })
-        //TODO: build all action urls with corresponding action reference (ignore view, jio_view, etc)
         .push(function (action_list) {
-          return gadget.getUrlFor({command: 'change', options: {page: "ojs_controller", action: "reply"}});
+          var path_for_jio_get_list = [], row;
+          for (row in action_list.data.rows) {
+            if (action_list.data.rows.hasOwnProperty(row)) {
+              path_for_jio_get_list.push(gadget.jio_get(action_list.data.rows[row].id));
+            }
+          }
+          return RSVP.all(path_for_jio_get_list);
         })
-        .push(function (url) {
-
-          //TODO temporarily hardcoded
-          var action_list = [{ href: url,
-          icon: null,
-          name: "reply",
-          title: "Reply" }];
-
+        .push(function (action_document_list) {
+          var url_for_parameter_list = [], i = 0,
+              action_key, action_doc;
+          for (action_key in action_document_list) {
+            action_doc = action_document_list[action_key];
+            url_for_parameter_list.push({command: 'change', options: {page: "ojs_controller", action: action_doc.reference}});
+            action_info_list[i] = { reference: action_doc.reference, title: action_doc.title};
+            i += 1;
+          }
+          return gadget.getUrlForList(url_for_parameter_list);
+        })
+        .push(function (url_list) {
+          var action_list = [], view_list = [], url, i, element;
+          for (i = 0; i < url_list.length; i += 1) {
+            element = { href: url_list[i],
+              icon: null,
+              name: action_info_list[i].reference,
+              title: action_info_list[i].title };
+            // TODO: maybe both view and jio_view should be ignored here
+            if (element.name != "view") {
+              if (element.name == "jio_view") {
+                view_list.push(element);
+              } else {
+                action_list.push(element);
+              }
+            }
+          }
+          // TODO: check other lists like clone or delete?
           return RSVP.all([
+            renderLinkList(gadget, "Views", "eye", view_list),
             renderLinkList(gadget, "Actions", "gear", action_list)
           ]);
         })
