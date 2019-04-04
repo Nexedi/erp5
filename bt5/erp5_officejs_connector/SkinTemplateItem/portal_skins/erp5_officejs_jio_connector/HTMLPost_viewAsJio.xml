@@ -76,6 +76,7 @@
                       <list>
                         <string>my_title</string>
                         <string>your_modification_date</string>
+                        <string>my_source_reference</string>
                       </list>
                     </value>
                 </item>
