@@ -289,7 +289,7 @@
     div.style.margin = '40px 10px';
     div.style.paddingLeft = '10px';
 
-    if (result_text !== 'undefined') {
+    if (result_text !== undefined) {
       result.innerHTML = result_text;
       pre.appendChild(result);
       div.appendChild(pre);
@@ -299,13 +299,11 @@
 
   function executePyCell(line_list) {
     var result_text, code_text = line_list.join('\n');
-
     try {
       result_text = pyodide.runPython(code_text);
     } catch (e) {
       result_text = e.message;
     }
-
     renderCodeblock(result_text, 'python');
   }
 
@@ -363,10 +361,6 @@
           .push(function () {
             console.log("Loading pyodide.asm.js");
             return loadJSResource('pyodide.asm.js');
-          })
-          .push(function () {
-            console.log("Delay the execution");
-            return RSVP.delay();
           })
           .push(function () {
             console.log("Prepare to set postRun and pyodide");
