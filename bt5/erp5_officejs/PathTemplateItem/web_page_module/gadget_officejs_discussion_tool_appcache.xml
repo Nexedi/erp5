@@ -223,6 +223,8 @@ officejs_logo_text_editor.png\n
 #discussion tool\n
 gadget_erp5_pt_form_view_editable.html\n
 gadget_erp5_pt_form_view_editable.js\n
+gadget_erp5_page_action_offline.html\n
+gadget_erp5_page_action_offline.js\n
 gadget_officejs_discussion_tool_router.html\n
 \n
 #needed for appcachestorage sync\n
@@ -737,7 +739,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>974.50440.32209.27835</string> </value>
+                <value> <string>974.51832.12674.16708</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -755,7 +757,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1554236822.32</float>
+                        <float>1554402100.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
