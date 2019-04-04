@@ -91,11 +91,7 @@
         // New type detexted
         if (next_type[1] === 'code') {
           // language detected
-          try {
-            language_type = JSON.parse(current_line.match(language_type_regexp)).language;
-          } catch (e) {
-            throw e;
-          }
+          language_type = JSON.parse(current_line.match(language_type_regexp)).language;
           next_type[1] = next_type[1] + '_' + language_type;
         }
         pushNewCell();
@@ -299,12 +295,8 @@
 
   function executePyCell(line_list) {
     var result_text, code_text = line_list.join('\n');
-    try {
-      result_text = pyodide.runPython(code_text);
-    } catch (e) {
-      result_text = e.message;
-    }
-    renderCodeblock(result_text, 'python');
+    result_text = pyodide.runPython(code_text);
+    renderCodeblock(result_text);
   }
 
   function pyodideSetting() {
@@ -350,27 +342,21 @@
       if (!is_pyodide_loaded) {
         console.log("Loading pyodide");
         queue.push(function () {
-          console.log("Loading webassembly module");
           Module.instantiateWasm = loadPyodide;
           window.Module = Module;
         })
           .push(function () {
-            console.log("Loading pyodide.asm.data.js");
             return loadJSResource('pyodide.asm.data.js');
           })
           .push(function () {
-            console.log("Loading pyodide.asm.js");
             return loadJSResource('pyodide.asm.js');
           })
           .push(function () {
-            console.log("Prepare to set postRun and pyodide");
             return pyodideSetting();
           });
         is_pyodide_loaded = true;
       }
-      console.log("Fuck!");
       queue.push(function () {
-        console.log("Executing Python cell");
         return executePyCell(cell._line_list);
       });
       return queue;
@@ -401,11 +387,6 @@
         console.info('JSMD executed.');
       }, function (error) {
         console.error(error);
-        // do not print the error page with a non-styled pre tag
-        // the Python error message will be displayed along with Python source code in above
-        if (error.message.startsWith('Traceback')) {
-          return;
-        }
         var pre = document.createElement('pre');
         pre.textContent = error;
         document.body.appendChild(pre);
