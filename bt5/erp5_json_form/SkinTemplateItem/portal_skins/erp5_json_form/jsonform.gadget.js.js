@@ -994,8 +994,12 @@
     })
     .declareMethod('rerender', function (opt) {
       var g = this,
-        gadget,
+        gadget = g.props.form_gadget,
         queue = RSVP.Queue();
+      opt = opt || {};
+      if (!opt.scope && !opt.path) {
+        opt.schema = opt.schema || g.state.schema;
+      }
       if (opt.scope) {
         queue
           .push(function () {
@@ -1022,11 +1026,8 @@
           return gadget.getContent();
         })
         .push(function (value) {
-          return gadget.rerender({
-            schema: opt.schema,
-            value: value,
-            ignore_incorrect: opt.ignore_incorrect
-          })
+          opt.value = value;
+          return gadget.rerender(opt)
             .push(function () {
               if (gadget.props.changed.length > 0) {
                 value = undefined;
