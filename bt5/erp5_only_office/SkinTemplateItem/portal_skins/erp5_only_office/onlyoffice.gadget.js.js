@@ -194,7 +194,12 @@ DocsAPI.DocEditor.version = function () {
       }
     })
     .allowPublicAcquisition("getRemoteSettings", function () {
-      return this.jio_getAttachment('/', 'remote_settings.json', {format: 'json'});
+      return this.jio_getAttachment('/', 'remote_settings.json', {format: 'json'})
+        .push(undefined, function (error) {
+          if (error.status_code === 404) {
+            return {};
+          }
+        });
     })
 
     // methods emulating Gateway used for connection with ooffice begin.
