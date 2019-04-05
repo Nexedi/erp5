@@ -23,19 +23,7 @@
   }
 
   function get_used_dimensions(g) {
-    var q;
-    if (g.props.init_value) {
-      q = RSVP.Queue()
-        .push(function () {
-          return g.props.init_value;
-        });
-    } else {
-      q = g.getDeclaredGadget("olap_wizard")
-        .push(function (gadget) {
-          return gadget.getContent();
-        });
-    }
-    return q
+    return g.getContent()
       .push(function (v) {
         var dimensions = [],
           key,
@@ -109,7 +97,7 @@
     }
 
     queue = make_request(urls[0])();
-    for (i = 1; i < settings.urls.length; i += 1) {
+    for (i = 1; i < urls.length; i += 1) {
       queue.push(undefined, make_request(urls[i]));
     }
     return queue;
@@ -336,22 +324,12 @@
         });
     })
     .declareMethod("render", function (opt) {
-      var g = this;
       if (!opt) {
         opt = {};
       }
-      g.props.init_value = opt.value;
-      return get_used_dimensions(g)
-        .push(function (v) {
-          g.props.used_dimensions = v;
-          return g.getDeclaredGadget("olap_wizard");
-        })
+      return this.getDeclaredGadget("olap_wizard")
         .push(function (gadget) {
           return gadget.render(opt);
-        })
-        .push(function () {
-          delete g.props.init_value;
-          delete g.props.used_dimensions;
         });
     })
     .declareMethod("getContent", function (path) {
@@ -498,20 +476,21 @@
       if ("urn:jio:choice.json" === url) {
         return new RSVP.Queue()
           .push(function () {
-            return g.getRemoteSettings();
+            return RSVP.all([
+              g.getRemoteSettings(),
+              g.getContent("/connection_name"),
+              g.getContent(path),
+              get_used_dimensions(g)
+            ]);
           })
-          .push(function (connections) {
+          .push(function (arr) {
             var connection_settings,
               choice_settings;
-            if (g.props.init_value) {
-              connection_settings =
-                connections[convertOnMultiLevel(g.props.init_value, "/connection_name")];
-              if (path !== "/columns/" && path !== "/rows/") {
-                choice_settings = convertOnMultiLevel(g.props.init_value, path);
-              }
-              return generateChoiceSchema(connection_settings, g.props.used_dimensions, choice_settings);
+            connection_settings = arr[0][arr[1]];
+            if (path !== "/columns/" && path !== "/rows/") {
+              choice_settings = arr[2];
             }
-            return {};
+            return generateChoiceSchema(connection_settings, arr[3], choice_settings);
           });
       }
       throw new Error("urn: '" + url + "' not supported");

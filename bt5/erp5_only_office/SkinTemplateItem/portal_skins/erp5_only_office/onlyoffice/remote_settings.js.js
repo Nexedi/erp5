@@ -216,19 +216,15 @@
     })
     .declareMethod("render", function (opt) {
       var gadget = this;
-      gadget.props.init_value = opt.value;
       return gadget.getDeclaredGadget("xmla_settings")
         .push(function (g) {
           return g.render(opt);
-        })
-        .push(function () {
-          delete gadget.props.init_value;
         });
     })
-    .declareMethod("getContent", function () {
+    .declareMethod("getContent", function (sub_path) {
       return this.getDeclaredGadget("xmla_settings")
         .push(function (g) {
-          return g.getContent();
+          return g.getContent(sub_path);
         });
     })
     .declareAcquiredMethod("notifyChange", "notifyChange")
@@ -293,18 +289,13 @@
       return g.notifyChange();
     })
     .allowPublicAcquisition("resolveExternalReference", function (arr) {
-      var g = this,
-        url = arr[0],
+      var url = arr[0],
         schema_path = arr[1],
-        path = arr[2];
+        path = arr[2],
+        connection_path = path.split('/').slice(0, -1).join('/');
       if ("urn:jio:properties_from_xmla.connection.json" === url) {
-        return new RSVP.Queue()
-          .push(function () {
-            var connection_path = path.split('/').slice(0, -1).join('/'),
-              settings;
-            if (g.props.init_value) {
-              settings = convertOnMultiLevel(g.props.init_value, connection_path);
-            }
+        return this.getContent(connection_path)
+          .push(function (settings) {
             return generateSchema(settings);
           });
       }
