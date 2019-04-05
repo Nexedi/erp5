@@ -423,21 +423,54 @@
   }
 
   function executePyCell(line_list) {
-    var result_text, code_text = line_list.join('\n');
-    result_text = pyodide.runPython(code_text);
-    renderCodeblock(result_text);
+    var result, code_text = line_list.join('\n');
+    result = pyodide.runPython(code_text);
+    console.log("Result is");
+    console.log(result);
+    renderCodeblock(result);
   }
 
   function pyodideSetting() {
     window.pyodide = pyodide(Module);
+    window.pyodide.loadPackage = pyodideLoadPackage;
+
     var defer = RSVP.defer(), promise = defer.promise;
 
     Module.postRun = defer.resolve;
     promise.then(function () {
       console.log("postRun get called");
+      delete window.Module;
     });
 
     return defer.promise;
+  }
+
+  function initPyodide() {
+    var queue = new RSVP.Queue();
+    queue.push(function () {
+      Module.instantiateWasm = loadPyodide;
+      window.Module = Module;
+    })
+    .push(function () {
+       return loadJSResource('pyodide.asm.data.js');
+    })
+    .push(function () {
+      return loadJSResource('pyodide.asm.js');
+    })
+    .push(function () {
+      return pyodideSetting();
+    })
+    .push(function () {
+      return fetch(`packages.json`)
+    })
+    .push(function (response) {
+      return response.json();
+    })
+    .push(function (json) {
+      window.pyodide.packages = json;
+      return;
+    });
+    return queue;
   }
 
   function executeCell(cell) {
@@ -471,18 +504,11 @@
       if (!is_pyodide_loaded) {
         console.log("Loading pyodide");
         queue.push(function () {
-          Module.instantiateWasm = loadPyodide;
-          window.Module = Module;
+          return initPyodide();
         })
-          .push(function () {
-            return loadJSResource('pyodide.asm.data.js');
-          })
-          .push(function () {
-            return loadJSResource('pyodide.asm.js');
-          })
-          .push(function () {
-            return pyodideSetting();
-          });
+        .push(function () {
+          return pyodideLoadPackage('matplotlib');
+        });
         is_pyodide_loaded = true;
       }
       queue.push(function () {
