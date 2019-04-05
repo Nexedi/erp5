@@ -311,6 +311,7 @@
             pointed_a
           ]
         };
+        console.error(err);
         return null; // schema part can't be null
       })
       .push(function (schema_part) {
@@ -897,6 +898,7 @@
       if (json_document !== undefined) {
         json_document = JSON.parse(json_document);
       }
+      g.props.init_value = json_document;
       if (g.state.schema !== undefined) {
         schema = JSON.parse(g.state.schema);
       }
@@ -987,6 +989,7 @@
           if (g.props.form_gadget.props.changed.length > 0) {
             g.notifyChange();
           }
+          delete g.props.init_value;
         })
         .push(undefined, function (err) {
           console.error(err);
@@ -1044,10 +1047,19 @@
       return expandSchemaForField(this, arr[0], arr[1], arr[2], arr[3]);
     })
 
+    .declareMethod('getContentMutex', function () {
+      return this.props.form_gadget.getContent();
+    }, {mutex: 'changestate'})
     .declareMethod('getContent', function (sub_path) {
       var g = this;
       if (g.state.editable) {
-        return g.props.form_gadget.getContent()
+        return RSVP.Queue()
+          .push(function () {
+            if (g.props.init_value) {
+              return g.props.init_value;
+            }
+            return g.getContentMutex();
+          })
           .push(function (value) {
             // Change the value state in place
             // This will prevent the gadget to be changed if
@@ -1067,6 +1079,6 @@
           });
       }
       return {};
-    }, {mutex: 'changestate'});
+    });
 
 }(window, document, Blob, rJS, RSVP, jIO));
