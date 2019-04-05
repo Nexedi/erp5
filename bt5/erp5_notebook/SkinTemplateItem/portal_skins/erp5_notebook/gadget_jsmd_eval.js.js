@@ -2,9 +2,41 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window) {
   "use strict";
-
+  function sideEffectDiv(sideEffectClass, reportSideEffect) {
+    // appends a side effect div to the side effect area
+    var div = document.createElement("div");
+    div.setAttribute("class", sideEffectClass);
+    if (reportSideEffect === false) {
+      div.setAttribute("style", "display:");
+    }
+    document.body.appendChild(div);
+    return div;
+  }
   var IODide = function createIODide() {
-    return;
+    var iodide = {
+      addOutputHandler: function (renderer) {
+        // TODO: seems this function was deprecated...
+      },
+      output: {
+        text: (s, reportSideEffect = false) => {
+          console.log("Inside output.text");
+          console.log(s);
+          for (const line of s.toString().split("\n")) {
+            const div = sideEffectDiv("side-effect-print", reportSideEffect);
+            div.innerText = line;
+          }
+        },
+        element: (nodeType, reportSideEffect = true) => {
+          console.log("Inside output.element");
+          const div = sideEffectDiv("side-effect-element", reportSideEffect);
+          const node = document.createElement(nodeType);
+          div.append(node);
+          console.log(node);
+          return node;
+        }
+      }
+    };
+    return iodide;
   },
     JSMDCell = function createJSMDCell(type, line_list) {
       this._type = type;
