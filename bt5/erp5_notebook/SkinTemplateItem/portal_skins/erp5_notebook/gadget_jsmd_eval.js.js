@@ -38,17 +38,24 @@
     };
     return iodide;
   },
-    JSMDCell = function createJSMDCell(type, line_list) {
-      this._type = type;
-      this._line_list = line_list;
-    },
-    split_line_regex = /[\r\n|\n|\r]/,
-    cell_type_regexp = /^\%\% (\w+)\b/,
-    language_type_regexp = /\{[\S\s]+\}/,
-    is_pyodide_loaded = false,
-    Module = {};
+  JSMDCell = function createJSMDCell(type, line_list) {
+    this._type = type;
+    this._line_list = line_list;
+  },
+  split_line_regex = /[\r\n|\n|\r]/,
+  cell_type_regexp = /^\%\% (\w+)\b/,
+  language_type_regexp = /\{[\S\s]+\}/,
+  is_pyodide_loaded = false,
+  Module = {},
+  packages,
+  loadedPackages = new Array(),
+  // Regexp for validating package name and URI
+  package_name_regexp = '[a-z0-9_][a-z0-9_\-]*',
+  package_uri_regexp = new RegExp('^https?://.*?(' + package_name_regexp + ').js$', 'i');
 
+  package_name_regexp = new RegExp('^' + package_name_regexp + '$', 'i');
   window.iodide = new IODide();
+
 
   IODide.prototype.addOutputHandler = function () {
     return;
@@ -95,6 +102,96 @@
     }, function () {
       xhr.abort();
     });
+  }
+
+  // Pyodide package loading
+  function _uri_to_package_name(package_uri) {
+    // Generate a unique package name from URI
+    if (package_name_regexp.test(package_uri)) {
+      return package_uri;
+    } else if (package_uri_regexp.test(package_uri)) {
+      let match = package_uri_regexp.exec(package_uri);
+      // Get the regexp group corresponding to the package name
+      return match[1];
+    } else {
+      return null;
+    }
+  }
+
+  function pyodideLoadPackage(names) {
+    // DFS to find all dependencies of the requested packages
+    let packages = window.pyodide.packages.dependencies;
+    let queue = new Array(names);
+    let toLoad = new Array();
+    while (queue.length) {
+      let package_uri = queue.pop();
+
+      const package_name = _uri_to_package_name(package_uri);
+
+      if (package_name == null) {
+        throw new Error(`Invalid package name or URI '${package_uri}'`);
+      } else if (package_name == package_uri) {
+        package_uri = 'default channel';
+      }
+
+      console.log(`Loading ${package_name} from ${package_uri}`);
+
+      if (package_name in loadedPackages) {
+        if (package_uri != loadedPackages[package_name]) {
+          throw new Error(
+              `URI mismatch, attempting to load package ` +
+              `${package_name} from ${package_uri} while it is already ` +
+              `loaded from ${loadedPackages[package_name]}!`);
+        }
+      } else {
+        toLoad[package_name] = package_uri;
+        if (packages.hasOwnProperty(package_name)) {
+          packages[package_name].forEach((subpackage) => {
+            if (!(subpackage in loadedPackages) && !(subpackage in toLoad)) {
+              queue.push(subpackage);
+            }
+          });
+        } else {
+          console.log(`Unknown package '${package_name}'`);
+        }
+      }
+    }
+
+    let promise = new Promise((resolve, reject) => {
+      if (Object.keys(toLoad).length === 0) {
+        resolve('No new packages to load');
+      }
+
+      pyodide.monitorRunDependencies = (n) => {
+        if (n === 0) {
+          for (let package_name in toLoad) {
+            loadedPackages[package_name] = toLoad[package_name];
+          }
+          delete pyodide.monitorRunDependencies;
+          const packageList = Array.from(Object.keys(toLoad)).join(', ');
+          resolve(`Loaded ${packageList}`);
+        }
+      };
+
+      for (let package_name in toLoad) {
+        let script = document.createElement('script');
+        let package_uri = toLoad[package_name];
+        if (package_uri == 'default channel') {
+          script.src = `${package_name}.js`;
+        } else {
+          script.src = `${package_uri}`;
+        }
+        script.onerror = (e) => { reject(e); };
+        document.body.appendChild(script);
+      }
+
+      // We have to invalidate Python's import caches, or it won't
+      // see the new files. This is done here so it happens in parallel
+      // with the fetching over the network.
+      window.pyodide.runPython('import importlib as _importlib\n' +
+                               '_importlib.invalidate_caches()\n');
+    });
+    return promise;
   }
 
   function parseJSMDCellList(jsmd) {
