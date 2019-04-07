@@ -103,16 +103,6 @@
     return queue;
   }
 
-  function print_content(gadget) {
-    return gadget.getDeclaredGadget("olap_wizard")
-      .push(function (g) {
-        return g.getContent();
-      })
-      .push(function (v) {
-        console.log(JSON.stringify(v));
-      });
-  }
-
   function discoverDimensions(schema, used_dimensions, opt) {
     return xmla_request_retry("discoverMDDimensions", opt)
       .push(undefined, function (error) {
@@ -364,7 +354,6 @@
         function rerender_once(connection_settings, sub_gadget) {
           return sub_gadget.getContent()
             .push(function (content) {
-              console.log(content);
               return generateChoiceSchema(connection_settings, used_diemensions, content);
             })
             .push(function (schema) {
@@ -376,7 +365,7 @@
             });
         }
 
-        queue
+        return queue
           .push(function () {
             return g.getDeclaredGadget("olap_wizard");
           })
@@ -392,7 +381,7 @@
               sub_gadget = arr[1];
             return rerender_once(connection_settings, sub_gadget)
               .push(function (changed) {
-                if (changed.length > 0) {
+                if (changed && changed.length > 0) {
                   if (changed.indexOf('/dimension') >= 0) {
                     return allRerender();
                   }
@@ -400,14 +389,10 @@
                 }
               })
               .push(function (changed) {
-                if (changed.length > 0) {
+                if (changed && changed.length > 0) {
                   return rerender_once(connection_settings, sub_gadget);
                 }
               });
-          })
-          .push(function () {
-            // return g.notifyChange();
-            return print_content(g);
           });
       }
 
@@ -420,7 +405,7 @@
             }));
           })
           .push(function () {
-            return [];
+            return g.notifyChange();
           });
       };
 
@@ -444,11 +429,13 @@
           if (relPath === "/dimension") {
             return allRerender();
           }
-          return rerender(s);
+          return rerender(s)
+            .push(function () {
+              return g.notifyChange();
+            });
         }
       }
-      // return g.notifyChange();
-      return print_content(g);
+      return g.notifyChange();
     })
     .allowPublicAcquisition("resolveExternalReference", function (arr) {
       var g = this,

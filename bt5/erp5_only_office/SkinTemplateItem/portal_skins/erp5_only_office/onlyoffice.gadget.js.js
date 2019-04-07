@@ -192,6 +192,18 @@ DocsAPI.DocEditor.version = function () {
             console.error(e);
           });
       }
+      if (scope === "xmlawizard") {
+        return this.getDeclaredGadget(scope)
+          .push(function (g) {
+            return g.getContent();
+          })
+          .push(function (data) {
+            console.log(JSON.stringify(data));
+          })
+          .push(undefined, function (e) {
+            console.error(e);
+          });
+      }
     })
     .allowPublicAcquisition("getRemoteSettings", function () {
       return this.jio_getAttachment('/', 'remote_settings.json', {format: 'json'})
