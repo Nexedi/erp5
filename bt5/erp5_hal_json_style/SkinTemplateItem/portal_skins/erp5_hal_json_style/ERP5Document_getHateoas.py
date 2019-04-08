@@ -1693,24 +1693,30 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if 'selection' not in catalog_kw:
         catalog_kw['selection'] = context.getPortalObject().portal_selections.getSelectionFor(selection_name, REQUEST)
 
-      for select in select_list:
-        # See Listbox.py getValueList --> getEditableField & getColumnAliasList method
-        # In short: there are Form Field definitions which names start with
-        # matching ListBox name - those are template fields to be rendered in
-        # cells with actual values defined by row and column
-        field_name = "{}_{}".format(listbox_field_id, select.replace(".", "_"))
-        if listbox_form.has_field(field_name, include_disabled=1):
-          editable_field_dict[select] = listbox_form.get_field(field_name, include_disabled=1)
+      # fill the proxy_field_stack
+      proxy_field_stack = [source_field]  # last of the stack should not be a proxy field
+      loop_protection_dict = {None: True, source_field: True}
+      field_stack_iteration = source_field
+      while field_stack_iteration.meta_type == "ProxyField":
+        next_iteration = field_stack_iteration.getTemplateField()
+        if next_iteration in loop_protection_dict:
+          break
+        loop_protection_dict[next_iteration] = True
+        field_stack_iteration = next_iteration
+        proxy_field_stack.append(field_stack_iteration)
 
-      # check if proxify
-      if source_field.meta_type == "ProxyField":
-        proxy_listbox_field_id = source_field.getRecursiveTemplateField().id
-        proxy_form = getattr(traversed_document, source_field.getRecursiveTemplateField().Base_aqInner().aq_parent.id)
-        for select in select_list:
-          # need also get editable field from proxy form
-          proxy_field_name = "{}_{}".format(proxy_listbox_field_id, select.replace(".", "_"))
+      # fill editable_field_dict
+      # See Products.ERP5Form.Listbox ListBoxRenderer.getEditableField method.
+      # This method can not be used directly as `source_field` is a ProxyField instance (not a ListBoxRenderer instance).
+      # It is unauthorized to import ListBoxRenderer.
+      for select in select_list:
+        for proxy_field in proxy_field_stack:
+          proxy_field_id = proxy_field.id
+          proxy_field_name = "{}_{}".format(proxy_field_id, select.replace(".", "_"))
+          proxy_form = getattr(traversed_document, proxy_field.Base_aqInner().aq_parent.id)
           if proxy_form.has_field(proxy_field_name, include_disabled=1):
             editable_field_dict[select] = proxy_form.get_field(proxy_field_name, include_disabled=1)
+            break
 
     # handle the case when list-scripts are ignoring `limit` - paginate for them
     if limit is not None:
