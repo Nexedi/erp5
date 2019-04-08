@@ -1383,6 +1383,21 @@ return context.getPortalObject().foo_module.contentValues()
   @createIndexedDocument()
   @changeSkin('Hal')
   def test_getHateoas_proxy_listbox_editable_field(self, **kw):
+    # For this test, we use/build this kind of a proxyfication target chain.
+    # ie FooModule_viewFooList.listbox targeting to Base_viewFieldLibrary.my_list_mode_listbox
+    requirement = """   ; FooModule_viewFooList.listbox ; Base_viewFieldLibrary.my_list_mode_listbox
+      id                ;               X               ;
+      title             ;                               ;
+      creation_date     ;                               ;                     X
+      modification_date ;               X               ;                     X
+    """
+    # checking test requirements
+    library_field_list = [raw_library_field.strip().split(".") for raw_library_field in requirement.split("\n", 1)[0].split(";")[1:]]
+    for row in [line.split(";") for line in requirement.split("\n")[1:]]:
+      for i, X in enumerate(row[1:]):
+        res = hasattr(getattr(self.portal.foo_module, library_field_list[i][0]), library_field_list[i][1] + "_" + row[0].strip())
+        assert res if X.strip() else not res, "{0[0]}.{0[1]}_{1} should{2} exist".format(library_field_list[i], row[0].strip(), " " if X.strip() else " not")
+
     self.portal.foo_module.FooModule_viewFooList.proxifyField({'listbox':'Base_viewFieldLibrary.my_list_mode_listbox'})
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
@@ -1397,10 +1412,53 @@ return context.getPortalObject().foo_module.contentValues()
     #editalble creation date is defined at proxy form
     # Test the listbox_uid parameter
     self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
+    self.assertEqual(result_dict['_embedded']['contents'][0]['id']['field_gadget_param']['type'], 'StringField')
+    self.assertEqual(result_dict['_embedded']['contents'][0]['title'], '')
     self.assertEqual(result_dict['_embedded']['contents'][0]['creation_date']['field_gadget_param']['type'], 'DateTimeField')
     self.assertEqual(result_dict['_embedded']['contents'][0]['modification_date']['field_gadget_param']['type'], 'DateTimeField')
     # There is a count method on this listbox
     self.assertEqual(result_dict['_embedded']['count'], 0)
+
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Test_listProducts', '*args, **kwargs', """
+return context.getPortalObject().foo_module.contentValues()
+""")
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoas_proxy_listbox_editable_field_with_target_chain(self, **kw):
+    # For this test, we use/build this kind of a proxyfication target chain.
+    # ie FooModule_viewFooList.listbox targeting to FooModule_viewFieldLibrary.my_list_mode_foo_title_listbox
+    # and FooModule_viewFieldLibrary.my_list_mode_foo_title_listbox targeting to Base_viewFieldLibrary.my_list_mode_listbox
+    requirement = """   ; FooModule_viewFooList.listbox ; FooModule_viewFieldLibrary.my_list_mode_foo_title_listbox ; Base_viewFieldLibrary.my_list_mode_listbox
+      id                ;               X               ;                                                           ;
+      title             ;                               ;                             X                             ;
+      creation_date     ;                               ;                                                           ;                      X
+      modification_date ;               X               ;                                                           ;                      X
+    """
+    # checking test requirements
+    library_field_list = [raw_library_field.strip().split(".") for raw_library_field in requirement.split("\n", 1)[0].split(";")[1:]]
+    for row in [line.split(";") for line in requirement.split("\n")[1:]]:
+      for i, X in enumerate(row[1:]):
+        res = hasattr(getattr(self.portal.foo_module, library_field_list[i][0]), library_field_list[i][1] + "_" + row[0].strip())
+        assert res if X.strip() else not res, "{0[0]}.{0[1]}_{1} should{2} exist".format(library_field_list[i], row[0].strip(), " " if X.strip() else " not")
+
+    self.portal.foo_module.FooModule_viewFooList.proxifyField({'listbox': 'FooModule_viewFieldLibrary.my_list_mode_foo_title_listbox'})
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      local_roles=["Assignor", "Assignee"],
+      list_method='Test_listProducts',
+      select_list=['id', 'title', 'creation_date', 'modification_date'],
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
+    self.assertEqual(result_dict['_embedded']['contents'][0]['id']['field_gadget_param']['type'], 'StringField')
+    self.assertEqual(result_dict['_embedded']['contents'][0]['title']['field_gadget_param']['type'], "StringField")
+    self.assertEqual(result_dict['_embedded']['contents'][0]['creation_date']['field_gadget_param']['type'], 'DateTimeField')
+    self.assertEqual(result_dict['_embedded']['contents'][0]['modification_date']['field_gadget_param']['type'], 'DateTimeField')
 
   @simulate('Base_getRequestUrl', '*args, **kwargs',
       'return "http://example.org/bar"')
