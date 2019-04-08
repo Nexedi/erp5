@@ -153,7 +153,7 @@
               header_dict.save_action = true;
             }
           }
-          if (true) { //TODO: configuration must indicate if there are more actions
+          if (false) { //TODO: configuration must indicate if there are more actions
             header_dict.actions_url = url_list[1];
           }
           if (url_list[7]) {

@@ -19,38 +19,21 @@
    * @param {Array} command_list - array of links obtained from ERP5 HATEOAS
    */
   function renderLinkList(gadget, title, icon, erp5_link_list) {
-    return gadget.getUrlParameter("extended_search")
-      .push(function (query) {
-        // obtain RJS links from ERP5 links
-        return RSVP.all(
-          erp5_link_list.map(function (erp5_link) {
-            return gadget.getUrlFor({
-              "command": 'change',
-              "options": {
-                "view": UriTemplate.parse(erp5_link.href).expand({query: query}),
-                "page": undefined
-              }
-            });
-          })
-        );
+    // prepare links for template (replace @href for RJS link)
+    return gadget.translateHtml(
+      table_template({
+        "definition_i18n": title,
+        "definition_title": title,
+        "definition_icon": icon,
+        "document_list": erp5_link_list.map(function (erp5_link, index) {
+          return {
+            "title": erp5_link.title,
+            "i18n": erp5_link.title,
+            "link": erp5_link_list[index].href
+          };
+        })
       })
-      .push(function (url_list) {
-        // prepare links for template (replace @href for RJS link)
-        return gadget.translateHtml(
-          table_template({
-            "definition_i18n": title,
-            "definition_title": title,
-            "definition_icon": icon,
-            "document_list": erp5_link_list.map(function (erp5_link, index) {
-              return {
-                "title": erp5_link.title,
-                "i18n": erp5_link.title,
-                "link": url_list[index]
-              };
-            })
-          })
-        );
-      });
+    );
   }
 
 
@@ -92,10 +75,14 @@
         })
         .push(function (action_document_list) {
           var url_for_parameter_list = [], i = 0,
-              action_key, action_doc;
+              page, action_key, action_doc;
           for (action_key in action_document_list) {
+            page = "handle_action";
             action_doc = action_document_list[action_key];
-            url_for_parameter_list.push({command: 'change', options: {page: "ojs_controller", action: action_doc.reference}});
+            if (action_doc.reference == "view" || action_doc.reference == "jio_view") {
+              page = "ojs_controller";
+            }
+            url_for_parameter_list.push({command: 'change', options: {page: page, action: action_doc.reference}});
             action_info_list[i] = { reference: action_doc.reference, title: action_doc.title};
             i += 1;
           }
