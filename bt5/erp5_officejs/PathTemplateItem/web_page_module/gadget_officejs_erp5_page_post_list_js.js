@@ -53,7 +53,7 @@
           },
           action: "Base_edit",
           update_action: "",
-          _links: { "type": { name: "" }, "action_object_new_content_action": {page: "ojs_add_post", my_source_reference: fake_thread_uid} }
+          _links: { "type": { name: "" }, "action_object_new_content_action": {page: "ojs_add_any_document", my_source_reference: fake_thread_uid} }
         },
         form_json = {
           erp5_document: {
