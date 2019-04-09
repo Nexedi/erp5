@@ -1,0 +1,4 @@
+notebook_module/notebook_test_purejs
+notebook_module/notebook_test_python_basic
+portal_tests/renderjs_ui_notebook_zuite
+portal_tests/renderjs_ui_notebook_zuite/**
