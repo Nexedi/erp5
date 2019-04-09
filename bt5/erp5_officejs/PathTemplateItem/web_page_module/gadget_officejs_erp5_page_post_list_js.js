@@ -18,48 +18,50 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("generateJsonRenderForm", function (gadget) {
+      //this will be the id of the thread that contains this post list
+      var fake_thread_uid = "thread-" + ("0000" + ((Math.random() * Math.pow(36, 4)) | 0).toString(36)).slice(-4),
       //hardcoded form_definition (this should come from erp5 form)
-      var form_definition = {
-        _debug: "traverse",
-        pt: "form_view",
-        title: "Post",
-        group_list: [[
-          "bottom",
-          [["my_listbox"]]
-        ]],
-        //this field_info is totally made up, but somewhere in the definition there must be
-        //information about the fields. So, foreach field: key->info
-        field_info_dict: {
-          "my_listbox": {
-            "column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
-            "show_anchor": 0,
-            "default_params": {},
-            "editable": 1,
-            "editable_column_list": [],
-            "key": "field_listbox",
-            "lines": 30,
-            "list_method": "portal_catalog",
-            // is this correct? the query should come from the form definition, right?
-            "query": "urn:jio:allDocs?query=portal_type%3A%22HTML Post%22",
-            "portal_type": [],
-            "search_column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
-            "sort_column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
-            "sort": [['modification_date', 'descending']],
-            "title": "Posts",
-            "type": "ListBox"
-          }
+        form_definition = {
+          _debug: "traverse",
+          pt: "form_view",
+          title: "Post",
+          group_list: [[
+            "bottom",
+            [["my_listbox"]]
+          ]],
+          //this field_info is totally made up, but somewhere in the definition there must be
+          //information about the fields. So, foreach field: key->info
+          field_info_dict: {
+            "my_listbox": {
+              "column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
+              "show_anchor": 0,
+              "default_params": {},
+              "editable": 1,
+              "editable_column_list": [],
+              "key": "field_listbox",
+              "lines": 30,
+              "list_method": "portal_catalog",
+              // is this correct? the query should come from the form definition, right?
+              "query": "urn:jio:allDocs?query=portal_type%3A%22HTML Post%22",
+              "portal_type": [],
+              "search_column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
+              "sort_column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
+              "sort": [['modification_date', 'descending']],
+              "title": "Posts",
+              "type": "ListBox"
+            }
+          },
+          action: "Base_edit",
+          update_action: "",
+          _links: { "type": { name: "" }, "action_object_new_content_action": {page: "ojs_add_post", my_source_reference: fake_thread_uid} }
         },
-        action: "Base_edit",
-        update_action: "",
-        _links: { "type": { name: "" }, "action_object_new_content_action": {"page": "ojs_add_post"} }
-      },
-      form_json = {
-        erp5_document: {
-          "_embedded": {"_view": {}},
-          "_links": {}
-        },
-        form_definition: form_definition
-      };
+        form_json = {
+          erp5_document: {
+            "_embedded": {"_view": {}},
+            "_links": {}
+          },
+          form_definition: form_definition
+        };
       for (var i = 0; i < form_definition.group_list.length; i++) {
         var fields = form_definition.group_list[i][1];
         for (var j = 0; j < fields.length; j++) {

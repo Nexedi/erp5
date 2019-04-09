@@ -16,7 +16,7 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod("render", function () {
+    .declareMethod("render", function (options) {
       var gadget = this, doc_id;
       return RSVP.Queue()
         .push(function () {
@@ -28,11 +28,17 @@
         .push(function (result) {
           var doc = {
             title: "Untitled Document",
-            //TODO: this must be the parent thread reference (or 'base' post ref?)
-            source_reference: "some-fake-thread-id",
             portal_type: result[0],
             parent_relative_url: result[1]
-          };
+          }, key, doc_key;
+          for (key in options) {
+            if (options.hasOwnProperty(key)) {
+              if (key.startsWith("my_")) {
+                doc_key = key.replace("my_", "");
+                doc[doc_key] = options[key];
+              }
+            }
+          }
           return gadget.jio_post(doc);
         })
         .push(function (id) {
