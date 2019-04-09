@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray */
+/*global window, rJS, RSVP, Handlebars */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray) {
+(function (window, rJS, RSVP, Handlebars) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -55,7 +55,6 @@
     .declareMethod("render", function (options) {
       var gadget = this,
         action_info_list = [],
-        erp5_document,
         document_title;
       return gadget.jio_get(options.jio_key)
         .push(function (document) {
@@ -75,29 +74,31 @@
         })
         .push(function (action_document_list) {
           var url_for_parameter_list = [], i = 0,
-              page, action_key, action_doc;
+            page, action_key, action_doc;
           for (action_key in action_document_list) {
-            page = "handle_action";
-            action_doc = action_document_list[action_key];
-            if (action_doc.reference == "view" || action_doc.reference == "jio_view") {
-              page = "ojs_controller";
+            if (action_document_list.hasOwnProperty(action_key)) {
+              page = "handle_action";
+              action_doc = action_document_list[action_key];
+              if (action_doc.reference === "view" || action_doc.reference === "jio_view") {
+                page = "ojs_controller";
+              }
+              url_for_parameter_list.push({command: 'change', options: {page: page, action: action_doc.reference}});
+              action_info_list[i] = { reference: action_doc.reference, title: action_doc.title};
+              i += 1;
             }
-            url_for_parameter_list.push({command: 'change', options: {page: page, action: action_doc.reference}});
-            action_info_list[i] = { reference: action_doc.reference, title: action_doc.title};
-            i += 1;
           }
           return gadget.getUrlForList(url_for_parameter_list);
         })
         .push(function (url_list) {
-          var action_list = [], view_list = [], url, i, element;
+          var action_list = [], view_list = [], i, element;
           for (i = 0; i < url_list.length; i += 1) {
             element = { href: url_list[i],
               icon: null,
               name: action_info_list[i].reference,
               title: action_info_list[i].title };
             // TODO: maybe both view and jio_view should be ignored here
-            if (element.name != "view") {
-              if (element.name == "jio_view") {
+            if (element.name !== "view") {
+              if (element.name === "jio_view") {
                 view_list.push(element);
               } else {
                 action_list.push(element);
@@ -125,4 +126,4 @@
       return;
     });
 
-}(window, rJS, RSVP, Handlebars, UriTemplate, calculatePageTitle, ensureArray));
+}(window, rJS, RSVP, Handlebars));

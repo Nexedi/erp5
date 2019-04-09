@@ -1,9 +1,7 @@
-/*global document, window, rJS, RSVP, URLSearchParams */
+/*global document, window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (document, window, rJS, RSVP, URLSearchParams) {
+(function (document, window, rJS, RSVP) {
   "use strict";
-
-  var default_view = "jio_view";
 
   function renderField(field_id, field_definition, document) {
     var key, raw_value, tales_expr, override, final_value, result = {};
@@ -155,25 +153,25 @@
     .declareMethod("render", function (options) {
       var gadget = this,
         child_gadget_url = 'gadget_erp5_pt_form_view_editable.html',
-        document, action_reference;
+        jio_document;
       return gadget.jio_get(options.jio_key)
-        .push(function (jio_document) {
-          document = jio_document;
-          if (document.portal_type === undefined) {
+        .push(function (result) {
+          jio_document = result;
+          if (jio_document.portal_type === undefined) {
             throw new Error('Can not display document: ' + options.jio_key);
           }
-          return gadget.getFormDefinition(document.portal_type, options.view)
+          return gadget.getFormDefinition(jio_document.portal_type, options.view)
             .push(function (form_definition) {
               return gadget.changeState({
                 jio_key: options.jio_key,
-                doc: document,
+                doc: jio_document,
                 child_gadget_url: child_gadget_url,
                 form_definition: form_definition,
                 editable: options.editable,
                 view: options.view,
                 //HARDCODED: following fields should be indicated by the configuration
                 has_more_views: false,
-                has_more_actions: options.view == "view",
+                has_more_actions: options.view === "view",
                 is_form_list: false
               });
             });
@@ -201,67 +199,67 @@
         form_json: form_json
       })
       // render the header
-      .push(function () {
-        var url_for_parameter_list = [
-          {command: 'change', options: {page: "tab"}},
-          {command: 'change', options: {page: "action_offline"}},
-          {command: 'history_previous'},
-          {command: 'selection_previous'},
-          {command: 'selection_next'},
-          {command: 'change', options: {page: "export"}},
-          {command: 'display', options: {}}
-        ];
-        erp5_document = form_json.erp5_document;
-        if (erp5_document._links && erp5_document._links.action_object_new_content_action) {
-          url_for_parameter_list.push({command: 'change', options: erp5_document._links.action_object_new_content_action});
-        }
-        return RSVP.all([
-          gadget.getUrlForList(url_for_parameter_list),
-          gadget.isDesktopMedia(),
-          gadget.getSetting('document_title_plural'),
-          gadget.getSetting('upload_dict', false)
-        ]);
-      })
-      .push(function (result_list) {
-        var url_list = result_list[0], header_dict;
-        if (gadget.state.is_form_list) {
-          header_dict = {
-            panel_action: true,
-            jump_url: "",
-            fast_input_url: "",
-            front_url: url_list[6],
-            filter_action: true,
-            page_title: result_list[2]
-          };
-        } else {
-          header_dict = {
-            selection_url: url_list[2],
-            previous_url: url_list[3],
-            next_url: url_list[4],
-            page_title: gadget.state.doc.title
-          };
-          if (gadget.state.has_more_views) {
-            header_dict.tab_url = url_list[0];
+        .push(function () {
+          var url_for_parameter_list = [
+            {command: 'change', options: {page: "tab"}},
+            {command: 'change', options: {page: "action_offline"}},
+            {command: 'history_previous'},
+            {command: 'selection_previous'},
+            {command: 'selection_next'},
+            {command: 'change', options: {page: "export"}},
+            {command: 'display', options: {}}
+          ];
+          erp5_document = form_json.erp5_document;
+          if (erp5_document._links && erp5_document._links.action_object_new_content_action) {
+            url_for_parameter_list.push({command: 'change', options: erp5_document._links.action_object_new_content_action});
           }
-          if (gadget.state.editable === "true") {
-            header_dict.save_action = true;
+          return RSVP.all([
+            gadget.getUrlForList(url_for_parameter_list),
+            gadget.isDesktopMedia(),
+            gadget.getSetting('document_title_plural'),
+            gadget.getSetting('upload_dict', false)
+          ]);
+        })
+        .push(function (result_list) {
+          var url_list = result_list[0], header_dict;
+          if (gadget.state.is_form_list) {
+            header_dict = {
+              panel_action: true,
+              jump_url: "",
+              fast_input_url: "",
+              front_url: url_list[6],
+              filter_action: true,
+              page_title: result_list[2]
+            };
+          } else {
+            header_dict = {
+              selection_url: url_list[2],
+              previous_url: url_list[3],
+              next_url: url_list[4],
+              page_title: gadget.state.doc.title
+            };
+            if (gadget.state.has_more_views) {
+              header_dict.tab_url = url_list[0];
+            }
+            if (gadget.state.editable === "true") {
+              header_dict.save_action = true;
+            }
           }
-        }
-        if (gadget.state.has_more_actions) {
-          header_dict.actions_url = url_list[1];
-        }
-        if (url_list[7]) {
-          header_dict.add_url = url_list[7];
-        }
-        if (result_list[1]) {
-          header_dict.export_url = (
-            erp5_document._links.action_object_jio_report ||
-            erp5_document._links.action_object_jio_exchange ||
-            erp5_document._links.action_object_jio_print
-          ) ? url_list[5] : '';
-        }
-        return gadget.updateHeader(header_dict);
-      });
+          if (gadget.state.has_more_actions) {
+            header_dict.actions_url = url_list[1];
+          }
+          if (url_list[7]) {
+            header_dict.add_url = url_list[7];
+          }
+          if (result_list[1]) {
+            header_dict.export_url = (
+              erp5_document._links.action_object_jio_report ||
+              erp5_document._links.action_object_jio_exchange ||
+              erp5_document._links.action_object_jio_print
+            ) ? url_list[5] : '';
+          }
+          return gadget.updateHeader(header_dict);
+        });
     })
 
     .onStateChange(function () {
@@ -281,4 +279,4 @@
         });
     });
 
-}(document, window, rJS, RSVP, URLSearchParams));
+}(document, window, rJS, RSVP));
