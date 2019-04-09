@@ -255,10 +255,13 @@
     var text = line_list.join('\n'),
       pre,
       br,
-      code;
+      code,
+      result;
 
     try {
-      return eval.call(window, text);
+      result = eval.call(window, text);
+      renderCodeblock(result);
+      return result;
     } catch (e) {
       console.error(e);
       pre = document.createElement('pre');
@@ -487,7 +490,7 @@
       // Do nothing...
       return;
     }
-    if (cell._type === 'js') {
+    if (cell._type === 'js' || cell._type === 'code_js') {
       return executeJSCell(cell._line_list);
     }
     if (cell._type === 'resource') {
