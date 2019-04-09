@@ -7324,6 +7324,47 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       self.assertEqual(True, method("aa/bb"))
       self.assertEqual(True, method("aa/bb/cc"))
 
+  def testRemovalOfUserIdOfPersonInExport(self):
+    '''
+      Checks that when a Business Template with a Person path is exported
+      the user_id is stripped and when it is installed a new one is created
+    '''
+    export_dir = tempfile.mkdtemp()
+    try:
+      sequence = Sequence()
+      self.stepCreateNewBusinessTemplate(sequence=sequence)
+      business_template = sequence.get("export_bt")
+      person_id = 'test_person'
+      person = self.portal.person_module.newContent(
+        id=person_id,
+        portal_type='Person'
+      )
+      self.assertTrue(person.hasUserId())
+      original_user_id = person.getUserId()
+      business_template.edit(template_path_list=['person_module/' + person.getId()])
+      business_template.build()
+      business_template.export(path=export_dir, local=True)
+      template_tool = self.portal.portal_templates
+      template_tool.manage_delObjects(business_template.getId())
+      self.portal.person_module.manage_delObjects(person_id)
+      person_xml_file = open(export_dir + '/PathTemplateItem/person_module/%s.xml' % person_id, mode='r')
+      person_xml = person_xml_file.read()
+      person_xml_file.close()
+      # Check that user_id is not exported
+      self.assertNotIn('>user_id<', person_xml)
+      self.assertNotIn('>%s<' % original_user_id, person_xml)
+      import_template = template_tool.download(url='file:' + export_dir)
+      self.assertEqual(import_template.getPortalType(), 'Business Template')
+      # Check that in installation a new user_id is created
+      import_template.install()
+      person_value = self.portal.person_module[person_id]
+      self.assertTrue(person_value.hasUserId())
+      new_user_id = person_value.getUserId()
+      self.assertNotEqual(new_user_id, original_user_id)
+      self.assertEqual(new_user_id[0], 'P')
+    finally:
+      shutil.rmtree(export_dir)
+
   def stepCreateDocumentComponentWhichTriggersAnOperationWhenSubDocumentIsAdded(
         self, sequence=None, **kw):
     from textwrap import dedent

@@ -642,7 +642,13 @@ class BaseTemplateItem(Implicit, Persistent):
     for attr in obj.__dict__.keys():
       if attr in attr_set or attr.startswith('_cache_cookie_'):
         delattr(obj, attr)
-
+    portal_type = getattr(obj, 'portal_type', None)
+    if portal_type is not None:
+      portal_type_value = self.getPortalObject().portal_types.get(portal_type, None)
+      if portal_type_value is not None \
+          and 'ERP5User' in portal_type_value.getTypePropertySheetList() \
+          and 'user_id' in obj.__dict__.keys():
+        delattr(obj, 'user_id')
     if classname == 'PDFForm':
       if not obj.getProperty('business_template_include_content', 1):
         obj.deletePdfContent()
@@ -1464,6 +1470,19 @@ class ObjectTemplateItem(BaseTemplateItem):
               l=local_role_dict.setdefault(userid, [])
               l.append('Owner')
         # END:part of ERP5Type.CopySupport.manage_afterClone
+        # Reset user_id if needed
+        portal_type = getattr(obj, 'portal_type', None)
+        if portal_type is not None:
+          portal_type_value = portal.portal_types.get(portal_type, None)
+          if portal_type_value is not None \
+              and 'ERP5User' in portal_type_value.getTypePropertySheetList():
+            aq_base(obj).user_id = '%s%i' % (
+              portal_type[0],
+              portal.portal_ids.generateNewId(
+                id_group='user_id',
+                id_generator='non_continuous_integer_increasing',
+              ),
+            )
         del obj.isIndexable
         if getattr(aq_base(obj), 'reindexObject', None) is not None:
           obj.reindexObject()
