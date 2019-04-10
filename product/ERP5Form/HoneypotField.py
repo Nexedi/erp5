@@ -29,16 +29,15 @@ class HoneypotValidator(Validator.Validator):
     """
     property_names = Validator.Validator.property_names
 
-    message_names = Validator.Validator.message_names + ['bot_submit']
-    bot_submit = 'A bot may try to submit.'
+    message_names = Validator.Validator.message_names + ['unexpected_value']
+    unexpected_value = 'Unexpected value'
 
     def validate(self, field, key, REQUEST):
       value = REQUEST.get(key, None)
-      default_value = field.get_value('default')
-      if value is None or value != default_value:
-        #this field is not sent or sent with value added by bot
-        self.raise_error('bot_submit', field)
-      return default_value
+      if value is None or value != '':
+        #this field is not sent or sent with value
+        self.raise_error('unexpected_value', field)
+      return value
 
 HoneypotValidatorInstance = HoneypotValidator()
 
