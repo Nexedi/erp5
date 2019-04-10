@@ -28,13 +28,28 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//iframe[contains(@src, 'gadget_jsmd_viewer.html')]//body</td>
+  <td>selectFrame</td>
+  <td>index=0</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//iframe[contains(@src, 'gadget_jsmd_viewer.html')]//iframe/h1[contains(@text, 'Notebook')]</td>
+  <td>//body//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>index=0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[contains(text(),'Notebook JSMD Viewer Test')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//code[contains(text(),'42')]</td>
   <td></td>
 </tr>
 </tbody></table>
