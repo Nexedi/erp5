@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,8 +10,11 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -49,8 +52,11 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -68,6 +74,10 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>creators</string> </key>
             <value>
               <tuple>
@@ -77,7 +87,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_add_any_document.js</string> </value>
+            <value> <string>gadget_officejs_create_document.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,7 +97,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_erp5_page_ojs_add_any_document_js</string> </value>
+            <value> <string>gadget_officejs_create_document_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -107,7 +117,7 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1455284351.49</float>
+                    <float>1455284351.46</float>
                     <string>UTC</string>
                   </tuple>
                 </state>
@@ -116,7 +126,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -126,7 +136,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Add Any Document JS</string> </value>
+            <value> <string>OfficeJS Create Document</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -192,7 +202,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>hide</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -218,7 +228,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1554903150.06</float>
+                        <float>1554830674.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -227,7 +237,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>hidden</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -263,7 +273,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>974.60340.48045.57105</string> </value>
+                <value> <string>974.61745.63686.35191</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -281,7 +291,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1554836734.22</float>
+                        <float>1554915049.41</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -338,7 +348,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1554830050.17</float>
+                        <float>1554830045.47</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

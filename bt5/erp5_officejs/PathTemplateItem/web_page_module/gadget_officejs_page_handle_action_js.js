@@ -21,36 +21,28 @@
 
     .declareMethod("render", function (options) {
       var gadget = this,
-        action_reference;
+        action_reference,
+        gadget_script;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.getUrlParameter("action"),
             gadget.getSetting('portal_type'),
-            gadget.getSetting('parent_relative_url')
+            gadget.getSetting('parent_relative_url'),
+            gadget.declareGadget("gadget_officejs_create_document.html")
           ]);
         })
-          .push(function (result) {
-            action_reference = result[0];
-            // This is the custom code to handle each specific action
-            // TODO: move to specific gadgets by name? e.g. page: "action_" + portal_type + action_ref
-            if (action_reference === "new_post") {
-              //TODO refactor doc creation to be reused by other actions (e.g. reply action)
-              // move to a js script?
-              var doc = {
-                title: "Untitled Document",
-                portal_type: result[1],
-                parent_relative_url: result[2]
-              }, key, doc_key;
-              for (key in options) {
-                if (options.hasOwnProperty(key)) {
-                  if (key.startsWith("my_")) {
-                    doc_key = key.replace("my_", "");
-                    doc[doc_key] = options[key];
-                  }
-                }
-              }
-              return gadget.jio_post(doc)
+        .push(function (result) {
+          var portal_type = result[1],
+            parent_relative_url = result[2];
+          action_reference = result[0];
+          gadget_script = result[3];
+          // This is the custom code to handle each specific action
+          // TODO: move to specific gadgets by name? e.g. page: "action_" + portal_type + action_ref
+          if (action_reference === "new_post") {
+            options.portal_type = portal_type;
+            options.parent_relative_url = parent_relative_url;
+            return gadget_script.createDocument(options)
               .push(function (id) {
                 return gadget.redirect({
                   command: 'display',
@@ -60,36 +52,32 @@
                   }
                 });
               });
-            }
-            if (action_reference == "reply") {
-              return gadget.jio_get(options.jio_key)
+          }
+          if (action_reference === "reply") {
+            return gadget.jio_get(options.jio_key)
               .push(function (document) {
-                var doc, title = document.title;
+                var title = document.title;
                 if (!title.startsWith("Re: ")) {
                   title = "Re: " + document.title;
                 }
-                doc = {
-                  title: title,
-                  //thread parent: same as base post
-                  source_reference: document.source_reference,
-                  portal_type: document.portal_type,
-                  parent_relative_url: document.parent_relative_url
-                };
-                return gadget.jio_post(doc)
-                  .push(function (id) {
-                    return gadget.redirect({
-                      command: "change",
-                      options: {
-                        page: undefined,
-                        jio_key: id,
-                        view: action_reference
-                      }
-                    });
-                  });
+                options.portal_type = document.portal_type;
+                options.parent_relative_url = document.parent_relative_url;
+                options.my_title = title;
+                options.my_source_reference = document.source_reference;
+                return gadget_script.createDocument(options);
+              })
+              .push(function (id) {
+                return gadget.redirect({
+                  command: "change",
+                  options: {
+                    page: undefined,
+                    jio_key: id,
+                    view: action_reference
+                  }
+                });
               });
-            } else {
-              throw "Action " + action_reference + " not implemented yet";
-            }
-          });
+          }
+          throw "Action " + action_reference + " not implemented yet";
+        });
     });
 }(window, rJS, RSVP));
