@@ -52,19 +52,13 @@ class TestHoneypotField(ERP5TypeTestCase):
       self.validator.validate, self.field, 'field_test_field',
       self.portal.REQUEST)
 
-  def test_raise_error_when_no_default_value_submit(self):
+  def test_raise_error_when_not_empty_value_submit(self):
     self.portal.REQUEST.set('field_test_field', 'test')
     self.assertRaises(ValidationError,
       self.validator.validate, self.field, 'field_test_field',
       self.portal.REQUEST)
    
-  def test_ok_when_default_value_submit(self):
-     self.field.values['default'] = 'test'
-     self.portal.REQUEST.set('field_test_field', 'test')
-     self.assertEqual('test', self.validator.validate(self.field, 'field_test_field',
-     self.portal.REQUEST))
-
-     self.field.values['default'] = ''
+  def test_ok_when_empty_value_submit(self):
      self.portal.REQUEST.set('field_test_field', '')
      self.assertEqual('', self.validator.validate(self.field, 'field_test_field',
      self.portal.REQUEST))
