@@ -10,11 +10,8 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -52,11 +49,8 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -198,7 +192,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>hide</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -224,7 +218,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1554830683.98</float>
+                        <float>1554903150.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -233,7 +227,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>hidden</string> </value>
             </item>
           </dictionary>
         </list>
@@ -269,7 +263,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>974.60334.56052.51848</string> </value>
+                <value> <string>974.60340.48045.57105</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +281,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1554830395.26</float>
+                        <float>1554836734.22</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

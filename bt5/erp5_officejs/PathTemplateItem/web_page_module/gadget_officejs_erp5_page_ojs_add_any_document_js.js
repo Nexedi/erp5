@@ -1,6 +1,6 @@
 /*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Blob) {
+(function (window, rJS, RSVP) {
   "use strict";
 
   rJS(window)
@@ -51,4 +51,4 @@
           });
         });
     });
-}(window, rJS, RSVP, Blob));
+}(window, rJS, RSVP));
