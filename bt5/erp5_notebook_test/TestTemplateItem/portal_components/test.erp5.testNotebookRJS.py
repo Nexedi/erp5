@@ -28,7 +28,7 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
 
-class TestRenderJSUICore(ERP5TypeFunctionalTestCase):
+class TestNotebookRJSUI(ERP5TypeFunctionalTestCase):
   foreground = 0
   run_only = "renderjs_ui_notebook_zuite"
 
@@ -44,5 +44,5 @@ class TestRenderJSUICore(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUICore))
+  suite.addTest(unittest.makeSuite(TestNotebookRJSUI))
   return suite
