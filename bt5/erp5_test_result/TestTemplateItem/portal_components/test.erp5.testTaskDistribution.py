@@ -493,6 +493,12 @@ class TestTaskDistribution(ERP5TypeTestCase):
         ['testFailing', 'testSlow', 'testFast'],
         [self.tool.startUnitTest(test_result_path)[1] for _ in range(3)])
 
+  def checkTestResultLine(self, test_result, expected):
+    line_list = test_result.objectValues(portal_type="Test Result Line")
+    found_list = [(x.getTitle(), x.getSimulationState()) for x in line_list]
+    found_list.sort(key=lambda x: x[0])
+    self.assertEqual(expected, found_list)
+
   def test_06b_restartStuckTest(self):
     """
     Check if a test result line is not stuck in 'started', if so, redraft
@@ -503,18 +509,13 @@ class TestTaskDistribution(ERP5TypeTestCase):
     test_result = self.portal.unrestrictedTraverse(test_result_path)
     line_url, _ = self.tool.startUnitTest(test_result_path)
     now = DateTime()
-    def checkTestResultLine(expected):
-      line_list = test_result.objectValues(portal_type="Test Result Line")
-      found_list = [(x.getTitle(), x.getSimulationState()) for x in line_list]
-      found_list.sort(key=lambda x: x[0])
-      self.assertEqual(expected, found_list)
-    checkTestResultLine([('testBar', 'started'), ('testFoo', 'draft')])
+    self.checkTestResultLine(test_result, [('testBar', 'started'), ('testFoo', 'draft')])
     self._callRestartStuckTestResultAlarm()
-    checkTestResultLine([('testBar', 'started'), ('testFoo', 'draft')])
+    self.checkTestResultLine(test_result, [('testBar', 'started'), ('testFoo', 'draft')])
     line_url, _ = self.tool.startUnitTest(test_result_path)
-    checkTestResultLine([('testBar', 'started'), ('testFoo', 'started')])
+    self.checkTestResultLine(test_result, [('testBar', 'started'), ('testFoo', 'started')])
     self._callRestartStuckTestResultAlarm()
-    checkTestResultLine([('testBar', 'started'), ('testFoo', 'started')])
+    self.checkTestResultLine(test_result, [('testBar', 'started'), ('testFoo', 'started')])
     # now let change history to do like if a test result line was started
     # a long time ago
     line = self.portal.restrictedTraverse(line_url)
@@ -522,9 +523,9 @@ class TestTaskDistribution(ERP5TypeTestCase):
       if history_line['action'] == 'start':
         history_line['time'] = now - 1
     self._callRestartStuckTestResultAlarm()
-    checkTestResultLine([('testBar', 'started'), ('testFoo', 'draft')])
+    self.checkTestResultLine(test_result, [('testBar', 'started'), ('testFoo', 'draft')])
     self.tool.stopUnitTest(line_url, {})
-    checkTestResultLine([('testBar', 'started'), ('testFoo', 'stopped')])
+    self.checkTestResultLine(test_result, [('testBar', 'started'), ('testFoo', 'stopped')])
 
   def test_07_reportTaskFailure(self):
     """
@@ -588,6 +589,50 @@ class TestTaskDistribution(ERP5TypeTestCase):
       self.assertEqual("started", test_result.getSimulationState())
       # We have a failure but with no recent activities on tests
       self.pinDateTime(now)
+      self.tool.reportTaskFailure(test_result_path, {}, "Node0")
+      self.assertEqual("failed", node.getSimulationState())
+      self.assertEqual("failed", test_result.getSimulationState())
+    finally:
+      self.unpinDateTime()
+
+  def test_07c_reportTaskFailureWithRedraftedTestResultLine(self):
+    """
+    Similar to above test.
+
+    But on the other hand, if a test result line is started many times (due to
+    automatic redraft), then this might just means we have issue of runTestSuite unable
+    to finish tests, or we might have just tests that can never be executed within timeout time.
+    In such case, it's better to mark test result as failed to give a chance to other test
+    suites to be executed
+    """
+    now = DateTime()
+    try:
+      self.pinDateTime(now - 1.0/24*8)
+      test_result_path, _ = self._createTestResult(test_list=['testFoo'])
+      test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+      self.checkTestResultLine(test_result, [('testFoo', 'draft')])
+      self.assertEqual("started", test_result.getSimulationState())
+      node, = test_result.objectValues(portal_type="Test Result Node",
+                                           sort_on=[("title", "ascending")])
+      self.assertEqual("started", node.getSimulationState())
+      self.tool.startUnitTest(test_result_path)
+      self.checkTestResultLine(test_result, [('testFoo', 'started')])
+      # We have a failure but with recent activities on tests
+      self.pinDateTime(now - 1.0/24*7.5)
+      self.tool.reportTaskFailure(test_result_path, {}, "Node0")
+      self.assertEqual("failed", node.getSimulationState())
+      self.assertEqual("started", test_result.getSimulationState())
+      self.checkTestResultLine(test_result, [('testFoo', 'started')])
+      # some hours later, test line is redrafted
+      self.pinDateTime(now - 1.0/24*3)
+      self._callRestartStuckTestResultAlarm()
+      self.checkTestResultLine(test_result, [('testFoo', 'draft')])
+      # Test is then relaunched
+      self.tool.startUnitTest(test_result_path)
+      self.checkTestResultLine(test_result, [('testFoo', 'started')])
+      # We have another failure but remains only test result line that was already
+      # redrafted, so we have to mark the test result as failed
+      self.pinDateTime(now - 1.0/24*2.5)
       self.tool.reportTaskFailure(test_result_path, {}, "Node0")
       self.assertEqual("failed", node.getSimulationState())
       self.assertEqual("failed", test_result.getSimulationState())

@@ -285,7 +285,13 @@ class TaskDistributionTool(BaseTool):
       for test_result_line in test_result.objectValues(
           portal_type="Test Result Line"):
         if test_result_line.getModificationDate() > recent_time:
-          break
+          # do not take into account redrafted lines, this means we already
+          # add issues with them
+          if len([x for x in portal.portal_workflow.getInfoFor(
+                  ob=test_result_line,
+                  name='history',
+                  wf_id='test_result_workflow') if x['action']=='redraft']) == 0:
+            break
       else:
         if test_result.getSimulationState() not in ('failed', 'cancelled'):
           test_result.fail()
