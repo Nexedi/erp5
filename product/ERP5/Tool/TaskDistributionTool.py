@@ -286,7 +286,7 @@ class TaskDistributionTool(BaseTool):
           portal_type="Test Result Line"):
         if test_result_line.getModificationDate() > recent_time:
           # do not take into account redrafted lines, this means we already
-          # add issues with them
+          # had issues with them
           if len([x for x in portal.portal_workflow.getInfoFor(
                   ob=test_result_line,
                   name='history',
