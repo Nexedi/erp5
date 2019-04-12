@@ -3034,22 +3034,6 @@ class Base( CopyContainer,
           return object.__of__(portal).__of__(self)
     raise AttributeError(id)
 
-  def _getAcquireLocalRoles(self):
-    """This method returns the value of acquire_local_roles of the object's
-    portal_type.
-      - True means local roles are acquired, which is the standard behavior of
-      Zope objects.
-      - False means that the role acquisition chain is cut.
-
-    The code to support this is on the user class, see
-    ERP5Type.patches.User and ERP5Type.patches.PropertiedUser .
-
-    This specific implementation of this method should only be reached when
-    processing an object with a missing portal type, otherwise portal type
-    class should hold such accessor.
-    """
-    return True
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'get_local_permissions')
   def get_local_permissions(self):

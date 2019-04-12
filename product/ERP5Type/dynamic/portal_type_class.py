@@ -45,6 +45,20 @@ from Products.ERP5Type.TransactionalVariable import TransactionalResource
 from zLOG import LOG, ERROR, INFO, WARNING, PANIC
 
 ACQUIRE_LOCAL_ROLE_GETTER_ID = '_getAcquireLocalRoles'
+ACQUIRE_LOCAL_ROLE_GETTER_DICT = {
+  acquire_local_role: type(
+    'GetAcquireLocalRolesMixIn',
+    (object, ),
+    {
+      ACQUIRE_LOCAL_ROLE_GETTER_ID: ConstantGetter(
+        id=ACQUIRE_LOCAL_ROLE_GETTER_ID,
+        key=None,
+        value=acquire_local_role,
+      ),
+    },
+  )
+  for acquire_local_role in (False, True)
+}
 
 def _importClass(classpath):
   try:
@@ -156,11 +170,7 @@ def generatePortalTypeClass(site, portal_type_name):
     interface_list = portal_type.getTypeInterfaceList()
     portal_type_category_list = portal_type.getTypeBaseCategoryList()
     attribute_dict['_categories'] = portal_type_category_list[:]
-    attribute_dict[ACQUIRE_LOCAL_ROLE_GETTER_ID] = ConstantGetter(
-      id=ACQUIRE_LOCAL_ROLE_GETTER_ID,
-      key=None,
-      value=bool(portal_type.getTypeAcquireLocalRole()),
-    )
+    acquire_local_role = bool(portal_type.getTypeAcquireLocalRole())
   else:
     LOG("ERP5Type.dynamic", WARNING,
         "Cannot find a portal type definition for '%s', trying to guess..."
@@ -186,6 +196,7 @@ def generatePortalTypeClass(site, portal_type_name):
 
     mixin_list = []
     interface_list = []
+    acquire_local_role = True
 
   if type_class is None:
     raise AttributeError('Document class is not defined on Portal Type ' + \
@@ -275,7 +286,12 @@ def generatePortalTypeClass(site, portal_type_name):
 
       mixin_class_list.append(mixin_class)
 
-  base_class_list = [klass] + accessor_holder_list + mixin_class_list
+  base_class_list = [klass] + accessor_holder_list + mixin_class_list + [
+    # _getAcquireLocalRoles is accessed by security machinery, so it needs to
+    # be fast: make it a ConstantGetter while we have access to portal_type
+    # configuration.
+    ACQUIRE_LOCAL_ROLE_GETTER_DICT[acquire_local_role],
+  ]
 
   interface_class_list = []
   if interface_list:
