@@ -247,6 +247,7 @@ shared = true
     logger.debug('Testnode.cleanUp')
     self.process_manager.killPreviousRun()
     self.process_manager.killall(self.working_directory)
+    self.process_manager.killall(self.config['slapos_directory'])
     self._cleanupLog()
     self._cleanupTemporaryFiles()
 
