@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -74,6 +74,10 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>creators</string> </key>
             <value>
               <tuple>
@@ -83,7 +87,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_create_document.js</string> </value>
+            <value> <string>gadget_officejs_common_utils.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +97,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_create_document_js</string> </value>
+            <value> <string>gadget_officejs_common_utils_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -113,7 +117,7 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1455284351.49</float>
+                    <float>1455284351.46</float>
                     <string>UTC</string>
                   </tuple>
                 </state>
@@ -122,7 +126,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -132,7 +136,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Create Document JS</string> </value>
+            <value> <string>OfficeJS Common Utils</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -224,7 +228,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1554912716.44</float>
+                        <float>1554830674.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -269,7 +273,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>974.61769.15176.41096</string> </value>
+                <value> <string>974.64532.61017.11673</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +291,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1554916400.71</float>
+                        <float>1555082263.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -344,7 +348,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1554830050.17</float>
+                        <float>1554830045.47</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

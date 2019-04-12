@@ -121,6 +121,7 @@ hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_o
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F1&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F2&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F3&view=view&appcache=1\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FPost%20Module%2F2&view=view&appcache=1\n
 \n
 NETWORK:\n
 *
@@ -284,7 +285,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1554293009.93</float>
+                        <float>1555088098.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

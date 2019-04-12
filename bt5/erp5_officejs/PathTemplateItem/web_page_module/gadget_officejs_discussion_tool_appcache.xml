@@ -221,19 +221,19 @@ gadget_officejs_setting.html\n
 officejs_logo_text_editor.png\n
 \n
 #discussion tool\n
+gadget_officejs_discussion_tool_router.html\n
 gadget_erp5_pt_form_view_editable.html\n
 gadget_erp5_pt_form_view_editable.js\n
 gadget_erp5_page_action_offline.html\n
 gadget_erp5_page_action_offline.js\n
-gadget_erp5_page_handle_action.html\n
-gadget_erp5_page_handle_action.js\n
-gadget_officejs_discussion_tool_router.html\n
 gadget_erp5_page_ojs_controller.html\n
 gadget_erp5_page_ojs_controller.js\n
 gadget_erp5_page_ojs_post_list.html\n
 gadget_erp5_page_ojs_post_list.js\n
-gadget_officejs_create_document.html\n
-gadget_officejs_create_document.js\n
+gadget_officejs_common_utils.html\n
+gadget_officejs_common_utils.js\n
+gadget_erp5_page_handle_action.html\n
+gadget_erp5_page_handle_action.js\n
 \n
 #needed for appcachestorage sync\n
 /\n
@@ -254,6 +254,7 @@ hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_o
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F1&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F2&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F3&view=view&appcache=1\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FPost%20Module%2F2&view=view&appcache=1\n
 \n
 gadget_erp5_field_listbox.html\n
 gadget_erp5_field_listbox.js\n
@@ -740,7 +741,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>974.61748.30410.53299</string> </value>
+                <value> <string>974.64716.44616.56832</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -758,7 +759,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1554916428.12</float>
+                        <float>1555095850.49</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
