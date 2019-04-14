@@ -1,7 +1,7 @@
 /*global window, rJS, RSVP, DocsAPI, console, document,
  Common, require, jIO, URL, FileReader, atob, ArrayBuffer,
  Uint8Array, XMLHttpRequest, Blob, Rusha, define,
- Uint8ClampedArray,
+ Uint8ClampedArray, Asc, History,
  TextDecoder, DesktopOfflineAppDocumentEndSave*/
 /*jslint nomen: true, maxlen:80, indent:2*/
 "use strict";
@@ -50,6 +50,154 @@ DocsAPI.DocEditor.version = function () {
       ia[i] = byteString.charCodeAt(i);
     }
     return new Blob([ab], {type: mimeString});
+  }
+
+  function printOlapTable(xmla_client, data) {
+    var Api = Asc.editor,
+      s = Api.GetActiveSheet(),
+      connection_name,
+      start_row,
+      start_column;
+
+    function endTransaction() {
+      s.worksheet.workbook.dependencyFormulas.unlockRecal();
+      History.EndTransaction();
+      Api._onUpdateAfterApplyChanges();
+      Api._onUpdateDocumentCanSave();
+    }
+
+    function setCell(row, col, value) {
+      // setValue on range
+      s.GetRangeByNumber(row, col).range._foreach(function (cell) {
+        cell.setValue(value);
+      });
+    }
+
+    function print_titles(levels, begin_row, begin_column, columns) {
+      var members = [],
+        member,
+        i,
+        m,
+        x,
+        z,
+        row,
+        col,
+        span,
+        repeats;
+
+      function amp_arr_length(amp, arr) {
+        if (arr.length === 0) {
+          return amp;
+        }
+        return amp * arr.length;
+      }
+
+      for (i = 0; i < levels.length; i += 1) {
+        members = levels[i];
+        span = levels.slice(i + 1).reduce(amp_arr_length, 1);
+        repeats = levels.slice(0, i).reduce(amp_arr_length, 1);
+        for (z = 0; z < repeats * members.length * span; z += (members.length * span)) {
+          for (m = 0; m < members.length; m += 1) {
+            member = members[m];
+            for (x = 0; x < span; x += 1) {
+              if (columns) {
+                row = begin_row + i;
+                col = begin_column + z + (m * span) + x;
+              } else {
+                row = begin_row + z + (m * span) + x;
+                col = begin_column + i;
+              }
+              setCell(row, col,
+                "=CUBEMEMBER(" + connection_name + ',"' + member.uname + '")');
+            }
+          }
+        }
+      }
+      return repeats * members.length * span;
+    }
+
+    return RSVP.Queue()
+      .push(function () {
+        // var active = s.GetActiveCell();
+        // var row = active.GetRow();
+        // var col = active.GetCol();
+        start_row = 0;
+        start_column = 0;
+        History.Create_NewPoint();
+
+        s.worksheet.workbook.dependencyFormulas.lockRecal();
+
+
+        // XXX use named ranges for cleaning space
+        s.worksheet.getRange3(0, 0, 100, 100).cleanAll();
+        // (new Asc.asc_CDefName(
+        //   "name111",
+        //   "Sheet1!$A$3:$D$13",
+        //   null, // or number of sheet
+        //   this.props.asc_getIsTable(),
+        //   false, // Hidden
+        //   false // locked
+        // ));
+        // rows titles
+
+        setCell(start_row, start_column, "Connection:");
+        setCell(start_row, start_column + 1, data.connection_name);
+        connection_name = "$B$1";
+        start_row += 2;
+
+        // XXX default absent in json schema
+        data.rows = data.rows || [];
+        data.columns = data.columns || [];
+
+        return RSVP.all([
+          RSVP.all(data.rows
+            .filter(function (i) {
+              return i.hasOwnProperty("level");
+            })
+            .map(function (i) {
+              return xmla_client
+                .getMembersOnLevel(data.connection_name, i.level);
+            })),
+          RSVP.all(data.columns
+            .filter(function (i) {
+              return i.hasOwnProperty("level");
+            })
+            .map(function (i) {
+              return xmla_client
+                .getMembersOnLevel(data.connection_name, i.level);
+            }))
+        ]);
+      })
+      .push(function (arr) {
+        var rows = arr[0],
+          columns = arr[1],
+          c,
+          c_len,
+          r,
+          r_len;
+
+        r_len = print_titles(rows, start_row + columns.length, start_column, false);
+        c_len = print_titles(columns, start_row, start_column + rows.length, true);
+
+        r_len = r_len + start_row + columns.length;
+        c_len = c_len + start_column + rows.length;
+        for (r = start_row + columns.length; r < r_len; r += 1) {
+          for (c = start_column + rows.length; c < c_len; c += 1) {
+            setCell(r, c,
+              "=CUBEVALUE(" + connection_name + ',' +
+              s.worksheet.getRange3(r, start_column, r, start_column + rows.length -1).getName() +
+              ',' +
+              s.worksheet.getRange3(start_row, c, start_row + columns.length - 1, c).getName() +
+              ')');
+          }
+        }
+
+        endTransaction();
+      })
+      .push(undefined, function (error) {
+        endTransaction();
+        throw error;
+      });
   }
 
   rJS(window)
@@ -167,13 +315,15 @@ DocsAPI.DocEditor.version = function () {
       return queue;
     })
     .allowPublicAcquisition("notifyChange", function (arr, scope) {
-      var gadget = this;
+      var gadget = this,
+        content;
       if (scope === "remote_settings") {
         return this.getDeclaredGadget(scope)
           .push(function (g) {
             return g.getContent();
           })
           .push(function (data) {
+            content = data;
             return gadget
               .jio_putAttachment('/', 'remote_settings.json', data);
           })
@@ -181,6 +331,12 @@ DocsAPI.DocEditor.version = function () {
             History.Create_NewPoint();
             Asc.editor._onUpdateDocumentCanSave();
             return gadget.changeState({changed: true});
+          })
+          .push(function () {
+            return gadget.getDeclaredGadget("xmla_client");
+          })
+          .push(function (g) {
+            return g.setConnectionsSettings(content);
           })
           .push(function () {
             return gadget.getDeclaredGadget("xmlawizard");
@@ -195,10 +351,16 @@ DocsAPI.DocEditor.version = function () {
       if (scope === "xmlawizard") {
         return this.getDeclaredGadget(scope)
           .push(function (g) {
-            return g.getContent();
+            return RSVP.all([
+              gadget.getDeclaredGadget("xmla_client"),
+              g.getContent()
+            ]);
           })
-          .push(function (data) {
-            console.log(JSON.stringify(data));
+          .push(function (arr) {
+            return printOlapTable(arr[0], arr[1]);
+          })
+          .push(function () {
+            return gadget.changeState({changed: true});
           })
           .push(undefined, function (e) {
             console.error(e);
@@ -431,7 +593,7 @@ DocsAPI.DocEditor.version = function () {
                 config[old_url] = [
                     new_url,
                     old_url
-                  ];
+                ];
               }
             }
           }
@@ -493,6 +655,12 @@ DocsAPI.DocEditor.version = function () {
           }
 
           return loadScript(app_url);
+        })
+        .push(function () {
+          // declare public gadgets only after configure requirejs
+          // public because xmla_client return not serialized data
+          return g.declareGadget('onlyoffice/xmla_client.html',
+            {scope: 'xmla_client', sandbox: "public"});
         })
         .push(undefined, function (error) {
           display_error(g, error);
@@ -562,9 +730,8 @@ DocsAPI.DocEditor.version = function () {
         .push(function (Editor_bin) {
           if (Editor_bin) {
             return zip.getAttachment('/', '/');
-          } else {
-            return new Blob();
           }
+          return new Blob();
         })
         .push(function (zip_blob) {
           return jIO.util.readBlobAsDataURL(zip_blob);

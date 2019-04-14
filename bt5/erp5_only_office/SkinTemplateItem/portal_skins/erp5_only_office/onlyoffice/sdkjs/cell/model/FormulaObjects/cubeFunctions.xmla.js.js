@@ -68,6 +68,7 @@ function (window, RSVP, Xmla, console) {
 
 	function xmla_request(func, prop) {
 		var xmla = new Xmla({async: true});
+		prop = JSON.parse(JSON.stringify(prop));
 		// return function () {
 		return new RSVP.Queue()
 			.push(function () {
@@ -85,30 +86,30 @@ function (window, RSVP, Xmla, console) {
 
 	function xmla_request_retry(func, settings) {
 		var queue,
-			urls = settings.urls,
+			urls = settings.urls || [""],
 			i;
 
 		function make_request(url) {
 			return function (error) {
 				settings.prop.url = url;
-                return xmla_request(func, settings.prop)
-                    .push(undefined, function (response) {
-                        // fix mondrian Internal and Sql errors
-                        if (response) {
-                            switch (response["code"]) {
-                                case "SOAP-ENV:Server.00HSBE02":
-                                case "SOAP-ENV:00UE001.Internal Error":
-                                    // rarely server error, so try again
-                                    return xmla_request(func, settings.prop);
-                            }
-                        }
-                        throw response;
-                    });
-            };
+				return xmla_request(func, settings.prop)
+					.push(undefined, function (response) {
+						// fix mondrian Internal and Sql errors
+						if (response) {
+							switch (response["code"]) {
+							case "SOAP-ENV:Server.00HSBE02":
+							case "SOAP-ENV:00UE001.Internal Error":
+								// rarely server error, so try again
+								return xmla_request(func, settings.prop);
+							}
+						}
+						throw response;
+					});
+			};
 		}
 
 		queue = make_request(urls[0])();
-		for (i = 1; i < settings.urls.length; i += 1) {
+		for (i = 1; i < urls.length; i += 1) {
 			queue.push(undefined, make_request(urls[i]));
 		}
 		return queue;
@@ -415,85 +416,8 @@ function (window, RSVP, Xmla, console) {
 		return execution_scheme.execute.promise;
 	}
 
-	function discover_members(connection, opt) {
-		return getProperties(connection)
-			.push(function (settings) {
-				var prop = settings.prop,
-					cached_member,
-					scheme = getExecutionScheme(connection);
-				prop.restrictions = {
-//      'CATALOG_NAME': 'FoodMart',
-					'CUBE_NAME': settings["cube"]
-				};
-				if (!opt) {
-					opt = {};
-				}
-				if (opt.member_uname) {
-					prop.restrictions["MEMBER_UNIQUE_NAME"] = opt.member_uname;
-				}
-				if (opt.level_uname) {
-					prop.restrictions["LEVEL_UNIQUE_NAME"] = opt.level_uname;
-				}
-				if (opt.tree_op) {
-					prop.restrictions["TREE_OP"] = opt.tree_op;
-				}
-				return xmla_request_retry("discoverMDMembers", settings)
-					.push(function (r) {
-						var ret = [],
-							uname,
-							level,
-							cached_member;
-						while (r.hasMoreRows()) {
-							uname = r["getMemberUniqueName"]();
-							level = r["getLevelUniqueName"]();
-							// we can check cache twice because fist check
-							// only if discover by member_uname
-							if (!scheme.members.hasOwnProperty(uname)) {
-								cached_member = {
-									uname: uname,
-									h: r["getHierarchyUniqueName"](),
-									level: r["getLevelUniqueName"](),
-									caption: r["getMemberCaption"](),
-									type: r["getMemberType"]()
-								};
-								scheme.members[uname] = cached_member;
-							} else {
-								cached_member = scheme.members[uname];
-							}
-							ret.push(cached_member);
-							r.nextRow();
-							if (!scheme.levels.hasOwnProperty(level)) {
-								scheme.levels[level] = discover_level(connection, scheme, level);
-							}
-						}
-						return ret;
-					});
-			});
-	}
-
-	function discover_level(connection, scheme, level) {
-		return discover_members(connection, {
-			level_uname: level
-		})
-			.push(function (members) {
-				var i;
-
-				function compare(a, b) {
-					if (a.uname < b.uname) {
-                        return -1;
-					}
-					if (a.uname > b.uname) {
-                        return 1;
-					}
-					return 0;
-				}
-
-				members.sort(compare);
-				for (i = 0; i < members.length; i += 1) {
-					members[i].level_index = i;
-				}
-				scheme.levels[level] = members;
-			});
+	function getXmlaClient() {
+		return Common.Gateway.getDeclaredGadget("xmla_client");
 	}
 
 	function discover_members_for_arguments(connection, members) {
@@ -511,16 +435,14 @@ function (window, RSVP, Xmla, console) {
 			if (member) {
 				promises
 					.push(
-						discover_members(connection, {
-							member_uname: member,
-							tree_op: 8
-						})
-							.push(function (members) {
-								var m;
-								if (members.length > 0) {
-									m = members[0];
-									check_interseption(m.h);
-									return m;
+						getXmlaClient()
+							.push(function (xmla_client) {
+								return xmla_client.getMember(connection, member);
+							})
+							.push(function (member) {
+								if (member) {
+									check_interseption(member.h);
+									return member;
 								} else {
 									throw "member not found";
 								}
@@ -577,7 +499,7 @@ function (window, RSVP, Xmla, console) {
 			caption;
 		return queue
 			.push(function (arg) {
-				connection = getCell(arg[0]);
+				connection = getCell(arg[0]).toString();
 				caption = getCell(arg[2]);
 				if (caption) {
 					caption = caption.getValue();
@@ -603,26 +525,21 @@ function (window, RSVP, Xmla, console) {
 			.push(undefined, error_handler(current_cell_id));
 	};
 	cCUBEMEMBER.prototype.changeOffsetElem = function (arg, offset) {
-		var connection = getCell(arg[0]),
-			scheme = getExecutionScheme(connection),
-			i,
-			elem,
-			member,
-			new_member,
-			level;
-		for (i = 0; i < arg.length; i += 1) {
-			elem = arg[i];
+		var connection_name = getCell(arg[0]).toString();
+		return RSVP.all(arg.slice(1).map(function (elem) {
 			if (cElementType.string === elem.type) {
-				member = scheme.members[elem.value];
-				if (member && (member.level_index >= 0)) {
-					level = scheme.levels[member.level];
-					new_member = level[member.level_index + offset.offsetCol + offset.offsetRow];
-					if (new_member) {
-						elem.value = new_member.uname;
-					}
-				}
+				return getXmlaClient()
+					.push(function (xmla_client) {
+						return 	xmla_client
+							.getMemberWithOffset(connection_name, elem.value, offset.offsetCol + offset.offsetRow);
+					})
+					.push(function (member) {
+						if (member) {
+							elem.value = member.uname;
+						}
+					});
 			}
-		}
+		}));
 	};
 	cCUBEMEMBER.prototype.getInfo = function () {
 		return {
@@ -695,7 +612,7 @@ function (window, RSVP, Xmla, console) {
 			waiter = AddCubeValueCalculate(current_cell_id);
 		return queue
 			.push(function (arg) {
-				connection = getCell(arg[0]);
+				connection = getCell(arg[0]).toString();
 				scheme = getExecutionScheme(connection);
 				return parseArgs(arg.slice(1))();
 			})
