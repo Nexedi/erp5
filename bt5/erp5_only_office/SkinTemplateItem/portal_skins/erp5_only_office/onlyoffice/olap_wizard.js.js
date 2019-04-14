@@ -172,10 +172,12 @@
         if (response && response.numRows > 0) {
           while (response.hasMoreRows()) {
             row = response.readAsObject();
-            arr.push({
-              const: row["LEVEL_UNIQUE_NAME"] || undefined,
-              title: row["LEVEL_NAME"] || undefined
-            });
+            if (row["LEVEL_TYPE"] !== 1) { // exclude all level type
+              arr.push({
+                const: row["LEVEL_UNIQUE_NAME"] || undefined,
+                title: row["LEVEL_NAME"] || undefined
+              });
+            }
             response.nextRow();
           }
         }
