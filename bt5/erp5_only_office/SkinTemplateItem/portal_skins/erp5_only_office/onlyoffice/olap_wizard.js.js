@@ -264,37 +264,6 @@
       });
   }
 
-  function decodeJsonPointer(_str) {
-    // https://tools.ietf.org/html/rfc6901#section-5
-    return _str.replace(/~1/g, '/').replace(/~0/g, '~');
-  }
-
-  function convertOnMultiLevel(d, key, value) {
-    var ii,
-      kk,
-      prev_value,
-      key_list = key.split("/");
-    for (ii = 1; ii < key_list.length; ii += 1) {
-      kk = decodeJsonPointer(key_list[ii]);
-      if (ii === key_list.length - 1) {
-        if (value !== undefined) {
-          prev_value = d[kk];
-          d[kk] = value[0];
-          return prev_value;
-        }
-        return d[kk];
-      }
-      if (!d.hasOwnProperty(kk)) {
-        if (value !== undefined) {
-          d[kk] = {};
-        } else {
-          return;
-        }
-      }
-      d = d[kk];
-    }
-  }
-
   rJS(window)
     .ready(function (g) {
       g.props = {};
