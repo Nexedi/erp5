@@ -769,7 +769,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     # Now let's create a test suite needing between 1 to 2 test nodes
     # Make sure additional work is added without moving other test suites
     self._createTestSuite(reference_correction=+3,
-                             priority=4, title='four')[0].getRelativeUrl()
+                             priority=2, title='four')[0].getRelativeUrl()
     check([test_node_zero, ["three", "four"]],
           [test_node_one, ["two", "four"]],
           [test_node_two, ["one"]])
@@ -782,23 +782,23 @@ class TestTaskDistribution(ERP5TypeTestCase):
           [test_node_two, ["one", "five"]])
     # Now let's create another test suite needing between 2 to 3 test nodes
     # and increase priority of one suite to make all test nodes almost satured
-    test_suite_five.setIntIndex(7)
+    test_suite_five.setIntIndex(3)
     self._createTestSuite(reference_correction=+5,
-                             priority=7, title='six')
+                             priority=3, title='six')
     check([test_node_zero, ["three", "four","five", "six"]],
           [test_node_one, ["two", "four", "five", "six"]],
           [test_node_two, ["one", "five", "six"]])
     # Then, check what happens if all nodes are more than saturated
     # with a test suite needing between 3 to 5 test nodes
     self._createTestSuite(reference_correction=+6,
-                             priority=9, title='seven')
+                             priority=5, title='seven')
     check([test_node_zero, ["three", "four", "five", "six"]],
           [test_node_one, ["two", "four", "five", "six"]],
           [test_node_two, ["one", "seven", "five", "six"]])
     # No place any more, adding more test suite has no consequence
     # we need 5*2 + 3*2  + 2*1 + 1*3 => 21 slots
     self._createTestSuite(reference_correction=+7,
-                             priority=9, title='height')
+                             priority=5, title='height')
     check([test_node_zero, ["three", "four", "five", "six"]],
           [test_node_one, ["two", "four", "five", "six"]],
           [test_node_two, ["one", "seven", "five", "six"]])
