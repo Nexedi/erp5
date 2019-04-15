@@ -147,6 +147,9 @@
         cache: {},
         connections: {}
       };
+    })
+    .declareMethod("render", function () {
+      var g = this;
       return g.getRemoteSettings()
         .push(function (settings) {
           return g.setConnectionsSettings(settings);

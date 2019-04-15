@@ -657,10 +657,10 @@ DocsAPI.DocEditor.version = function () {
           return loadScript(app_url);
         })
         .push(function () {
-          // declare public gadgets only after configure requirejs
-          // public because xmla_client return not serialized data
-          return g.declareGadget('onlyoffice/xmla_client.html',
-            {scope: 'xmla_client', sandbox: "public"});
+          return g.getDeclaredGadget("xmla_client");
+        })
+        .push(function (xmla_client) {
+          return xmla_client.render();
         })
         .push(undefined, function (error) {
           display_error(g, error);
