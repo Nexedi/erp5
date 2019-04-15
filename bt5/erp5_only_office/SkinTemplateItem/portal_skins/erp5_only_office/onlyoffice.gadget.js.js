@@ -174,7 +174,8 @@ DocsAPI.DocEditor.version = function () {
           c,
           c_len,
           r,
-          r_len;
+          r_len,
+          formula;
 
         r_len = print_titles(rows, start_row + columns.length, start_column, false);
         c_len = print_titles(columns, start_row, start_column + rows.length, true);
@@ -183,12 +184,13 @@ DocsAPI.DocEditor.version = function () {
         c_len = c_len + start_column + rows.length;
         for (r = start_row + columns.length; r < r_len; r += 1) {
           for (c = start_column + rows.length; c < c_len; c += 1) {
+            formula = "CUBEVALUE(" + connection_name + ',' +
+            s.worksheet.getRange3(r, start_column, r, start_column + rows.length -1).getName() +
+            ',' +
+            s.worksheet.getRange3(start_row, c, start_row + columns.length - 1, c).getName() +
+            ')';
             setCell(r, c,
-              "=CUBEVALUE(" + connection_name + ',' +
-              s.worksheet.getRange3(r, start_column, r, start_column + rows.length -1).getName() +
-              ',' +
-              s.worksheet.getRange3(start_row, c, start_row + columns.length - 1, c).getName() +
-              ')');
+              "=IF(ISTEXT(" + formula + '),0,' + formula + ')');
           }
         }
 
