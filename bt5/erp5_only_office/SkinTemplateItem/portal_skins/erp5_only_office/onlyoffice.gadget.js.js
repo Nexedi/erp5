@@ -129,7 +129,7 @@ DocsAPI.DocEditor.version = function () {
 
 
         // XXX use named ranges for cleaning space
-        s.worksheet.getRange3(0, 0, 100, 100).cleanAll();
+        s.worksheet.getRange3(0, 0, 10000, 10000).cleanAll();
         // (new Asc.asc_CDefName(
         //   "name111",
         //   "Sheet1!$A$3:$D$13",
