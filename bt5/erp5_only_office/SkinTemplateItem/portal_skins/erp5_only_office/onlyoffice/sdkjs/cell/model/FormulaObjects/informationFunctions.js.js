@@ -453,7 +453,8 @@
 			arg0 = arg0.getValue();
 		}
 
-		if (arg0 instanceof cString) {
+		if (arg0 instanceof cString ||
+			arg0.errorType === cErrorType.not_numeric) {
 			return new cBool(true);
 		} else {
 			return new cBool(false);
