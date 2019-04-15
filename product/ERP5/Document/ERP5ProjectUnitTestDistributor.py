@@ -43,15 +43,15 @@ TEST_SUITE_MAX = 4
 # more or less cores
 PRIORITY_MAPPING =  {
   # int_index: (min cores, max cores)
-   1: ( 3,  3),
-   2: ( 3,  3),
-   3: ( 3,  6),
-   4: ( 3,  6),
-   5: ( 3,  6),
-   6: ( 6,  9),
-   7: ( 6,  9),
-   8: ( 6,  9),
-   9: ( 9, 15),
+   1: (  3,  3),
+   2: (  3,  6),
+   3: (  6,  9),
+   4: (  6, 12),
+   5: (  9, 15),
+   6: (  9, 18),
+   7: ( 12, 18),
+   8: ( 15, 24),
+   9: ( 18, 30),
   }
 
 class ERP5ProjectUnitTestDistributor(XMLObject):
