@@ -1783,4 +1783,28 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="open_menu_panel">
+    <tr>
+      <td colspan="3"><b>Open Menu Panel</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-scope='header']//button[@data-i18n='Menu' and @type='submit']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[@data-gadget-scope='header']//button[@data-i18n='Menu' and @type='submit']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-scope='panel' and contains(@class, 'visible')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
 </tal:block>
