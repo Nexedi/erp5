@@ -26,6 +26,11 @@ def finalize(self):
     headers = self.headers
     body = self.body
 
+    # There's a bug in 'App.ImageFile.index_html': when it returns a 304 status
+    # code, 'Content-Length' is equal to a nonzero value.
+    if self.status == 304:
+      headers.pop('content-length', None)
+
     # set 204 (no content) status if 200 and response is empty
     # and not streaming
     if ('content-type' not in headers and
