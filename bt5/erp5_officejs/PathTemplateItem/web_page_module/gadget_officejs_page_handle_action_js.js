@@ -26,7 +26,8 @@
       var gadget = this,
         child_gadget_url = 'gadget_erp5_pt_form_view_editable.html',
         portal_type, parent_portal_type,
-        parent_relative_url, form_definition, action_type;
+        parent_relative_url, form_definition,
+        action_type, custom_code;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
@@ -60,7 +61,8 @@
                 // custom code will come from configuration side (action form)
                 if (action_type === "object_jio_js_script") {
                   if (form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script")) {
-                    eval(form_definition.fields_raw_properties.gadget_field_action_js_script.values.renderjs_extra[0][0]);
+                    custom_code = form_definition.fields_raw_properties.gadget_field_action_js_script.values.renderjs_extra[0];
+                    eval(custom_code[0]);
                   }
                 }
                 return gadget_utils.createDocument(doc_options);
@@ -84,30 +86,41 @@
               });
           }
           if (action_reference === "reply") {
-            var parent_document, child_document, child_jio_key;
-            return gadget.jio_get(options.jio_key)
+            return gadget_utils.getFormDefinition(parent_portal_type, action_reference)
               .push(function (result) {
-                parent_document = result;
-                return gadget_utils.getFormDefinition(parent_document.portal_type, action_reference);
-              })
-              .push(function (result) {
-                var title = parent_document.title;
                 form_definition = result;
-                if (!title.startsWith("Re: ")) {
-                  title = "Re: " + parent_document.title;
+                // custom code will come from configuration side (action form)
+                if (action_type === "object_jio_js_script") {
+                  if (form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script")) {
+                    custom_code = form_definition.fields_raw_properties.gadget_field_action_js_script.values.renderjs_extra[0];
+                    eval(custom_code[0]);
+                  }
                 }
-                return gadget.changeState({
-                  doc: {title: title},
-                  parent_document: parent_document,
-                  child_gadget_url: child_gadget_url,
-                  form_definition: form_definition,
-                  view: action_reference,
-                  //HARDCODED: following fields should be indicated by the configuration
-                  editable: true,
-                  has_more_views: false,
-                  has_more_actions: false,
-                  is_form_list: false
-                });
+                var parent_document, child_document, child_jio_key;
+                return gadget.jio_get(options.jio_key)
+                  .push(function (result) {
+                    parent_document = result;
+                    return gadget_utils.getFormDefinition(parent_document.portal_type, action_reference);
+                  })
+                  .push(function (result) {
+                    var title = parent_document.title;
+                    form_definition = result;
+                    if (!title.startsWith("Re: ")) {
+                      title = "Re: " + parent_document.title;
+                    }
+                    return gadget.changeState({
+                      doc: {title: title},
+                      parent_document: parent_document,
+                      child_gadget_url: child_gadget_url,
+                      form_definition: form_definition,
+                      view: action_reference,
+                      //HARDCODED: following fields should be indicated by the configuration
+                      editable: true,
+                      has_more_views: false,
+                      has_more_actions: false,
+                      is_form_list: false
+                    });
+                  });
               });
           }
           throw "Action " + action_reference + " not implemented yet";
@@ -147,7 +160,8 @@
           }
         }
         return gadget_utils.createDocument(document)
-        .push(function (jio_key) {
+        .push(function (id) {
+          jio_key = id;
           return gadget.notifySubmitting();
         })
         .push(function () {
