@@ -1,5 +1,6 @@
 /*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
+/*jslint evil: true */
 (function (document, window, rJS, RSVP) {
   "use strict";
 
@@ -25,12 +26,15 @@
       var gadget = this,
         child_gadget_url = 'gadget_erp5_pt_form_view_editable.html',
         portal_type, parent_portal_type,
-        parent_relative_url, form_definition;
+        parent_relative_url, form_definition, action_type;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.getUrlParameter("action"),
-            //maybe these settings should come as url parameters too
+            gadget.getUrlParameter("action_type"),
+            gadget.getUrlParameter("portal_type"),
+            gadget.getUrlParameter("parent_portal_type"),
+            gadget.getUrlParameter("parent_relative_url"),
             gadget.getSetting('portal_type'),
             gadget.getSetting('parent_relative_url'),
             gadget.getSetting('parent_portal_type'),
@@ -39,18 +43,26 @@
         })
         .push(function (result) {
           action_reference = result[0];
-          portal_type = result[1];
-          parent_relative_url = result[2];
-          parent_portal_type = result[3];
-          gadget_utils = result[4];
+          action_type = result[1];
+          portal_type = result[2] || result[5];
+          parent_portal_type = result[3] || result[6];
+          parent_relative_url = result[4] || result[7];
+          gadget_utils = result[8];
           // This is the custom code to handle each specific action
           if (action_reference === "new") {
             var doc_options = {};
             doc_options.portal_type = portal_type;
             doc_options.parent_relative_url = parent_relative_url;
-            return gadget_utils.getFormDefinition(parent_portal_type, action_reference)
+            // Temporarily hardcoded until new action in post module is fixed
+            return gadget_utils.getFormDefinition("HTML Post", "jio_view") //parent_portal_type, action_reference)
               .push(function (result) {
                 form_definition = result;
+                // custom code will come from configuration side (action form)
+                if (action_type === "object_jio_js_script") {
+                  if (form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script")) {
+                    eval(form_definition.fields_raw_properties.gadget_field_action_js_script.values.renderjs_extra[0][0]);
+                  }
+                }
                 return gadget_utils.createDocument(doc_options);
               })
               .push(function (jio_key) {

@@ -20,7 +20,16 @@
     .declareMethod("generateJsonRenderForm", function (gadget) {
       //this will be the id of the thread that contains this post list
       var fake_thread_uid = "thread-" + ("0000" + ((Math.random() * Math.pow(36, 4)) | 0).toString(36)).slice(-4),
-      //hardcoded form_definition (this should come from erp5 form)
+        // get these (portal_type, etc) from getSettings
+        action_info = {
+          page: "handle_action",
+          action: "new",
+          action_type: "object_jio_js_script",
+          portal_type: "HTML Post",
+          parent_portal_type: "Post Module",
+          my_source_reference: fake_thread_uid
+        },
+        //hardcoded form_definition (this should come from erp5 form)
         form_definition = {
           _debug: "traverse",
           pt: "form_view",
@@ -53,7 +62,7 @@
           },
           action: "Base_edit",
           update_action: "",
-          _links: { "type": { name: "" }, "action_object_new_content_action": {page: "handle_action", action: "new", my_source_reference: fake_thread_uid} }
+          _links: { "type": { name: "" }, "action_object_new_content_action": action_info }
         },
         form_json = {
           erp5_document: {

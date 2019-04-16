@@ -55,11 +55,12 @@
     .declareMethod("render", function (options) {
       var gadget = this,
         action_info_list = [],
-        document_title;
+        document_title, portal_type;
       return gadget.jio_get(options.jio_key)
         .push(function (document) {
           var parent = "portal_types/" + document.portal_type,
             query = 'portal_type: "Action Information" AND parent_relative_url: "' + parent + '"';
+          portal_type = document.portal_type;
           document_title = document.title;
           return gadget.jio_allDocs({query: query});
         })
@@ -74,7 +75,7 @@
         })
         .push(function (action_document_list) {
           var url_for_parameter_list = [], i = 0,
-            page, action_key, action_doc;
+            page, action_key, action_doc, action_settings;
           for (action_key in action_document_list) {
             if (action_document_list.hasOwnProperty(action_key)) {
               page = "handle_action";
@@ -82,7 +83,14 @@
               if (action_doc.reference === "view" || action_doc.reference === "jio_view") {
                 page = "ojs_controller";
               }
-              url_for_parameter_list.push({command: 'change', options: {page: page, action: action_doc.reference}});
+              action_settings = {
+                page: page,
+                action: action_doc.reference,
+                action_type: action_doc.action_type,
+                parent_portal_type: portal_type,
+                portal_type: portal_type
+              };
+              url_for_parameter_list.push({ command: 'change', options: action_settings });
               action_info_list[i] = { reference: action_doc.reference, title: action_doc.title};
               i += 1;
             }
