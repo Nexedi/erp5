@@ -13,8 +13,9 @@ def int2letter(i):
   d, m = divmod(i, 26)
   return int2letter(d - 1) + int2letter(m)
 
-new_id = portal.portal_ids.generateNewId(id_generator="uid", id_group="test_suite_reference")
-test_suite.setReference(int2letter(new_id))
+if test_suite.getReference() is None:
+  new_id = portal.portal_ids.generateNewId(id_generator="uid", id_group="test_suite_reference")
+  test_suite.setReference(int2letter(new_id))
 
 def generateRandomString(size):
   tab = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"  

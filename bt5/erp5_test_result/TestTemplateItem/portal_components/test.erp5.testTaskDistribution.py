@@ -164,6 +164,25 @@ class TestTaskDistribution(ERP5TypeTestCase):
     test_suite.invalidate()
     self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, test_suite, 'validate_action')
 
+  def test_02c_checkTestSuiteReference(self):
+    """
+    Make sure validation of test suite generate a reference, and revalidating
+    a test suite should not change reference
+    """
+    test_suite, = self._createTestSuite()
+    self.assertTrue(test_suite.getReference() != None)
+    self.tic()
+    test_suite.invalidate()
+    self.tic()
+    test_suite.setReference(None)
+    test_suite.validate()
+    reference = test_suite.getReference()
+    self.assertTrue(reference != None)
+    test_suite.invalidate()
+    self.tic()
+    test_suite.validate()
+    self.assertEqual(reference, test_suite.getReference())
+
   def _callOptimizeAlarm(self):
     self.portal.portal_alarms.task_distributor_alarm_optimize.activeSense()
     self.tic()
