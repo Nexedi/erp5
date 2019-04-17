@@ -67,9 +67,7 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>gadget_field_action_js_script</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
