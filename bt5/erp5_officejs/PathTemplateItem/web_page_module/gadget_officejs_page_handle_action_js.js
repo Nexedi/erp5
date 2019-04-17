@@ -24,80 +24,42 @@
     .declareMethod("render", function (options) {
       var gadget = this,
         child_gadget_url = 'gadget_erp5_pt_form_view_editable.html',
-        portal_type, parent_portal_type,
-        parent_relative_url, form_definition, action_code;
+        parent_portal_type, action_code;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.getUrlParameter("action"),
             gadget.getUrlParameter("action_type"),
-            gadget.getUrlParameter("portal_type"),
             gadget.getUrlParameter("parent_portal_type"),
-            gadget.getUrlParameter("parent_relative_url"),
-            gadget.getSetting('portal_type'),
             gadget.getSetting('parent_portal_type'),
-            gadget.getSetting('parent_relative_url'),
             gadget.declareGadget("gadget_officejs_common_utils.html")
           ]);
         })
         .push(function (result) {
           action_reference = result[0];
           action_type = result[1];
-          portal_type = result[2] || result[5];
-          parent_portal_type = result[3] || result[6];
-          parent_relative_url = result[4] || result[7];
-          gadget_utils = result[8];
-          // This is the custom code to handle each specific action
-          if (action_reference === "new") {
-            options.portal_type = portal_type;
-            options.parent_relative_url = parent_relative_url;
-            // Temporarily hardcoded until new action in post module is fixed
-            return gadget_utils.getFormDefinition("HTML Post", "jio_view") //parent_portal_type, action_reference)
-              .push(function (result) {
-                form_definition = result;
-                // custom code will come from configuration side (action form)
-                if (action_type === "object_jio_js_script") {
-                  if (form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script")) {
-                    action_code = form_definition.fields_raw_properties.gadget_field_action_js_script.values.renderjs_extra[0];
-                    eval(action_code[0]);
-                  }
+          parent_portal_type = result[2] || result[3];
+          gadget_utils = result[4];
+          return gadget_utils.getFormDefinition(parent_portal_type, action_reference)
+            .push(function (form_definition) {
+              if (action_type === "object_jio_js_script") {
+                if (form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script")) {
+                  action_code = form_definition.fields_raw_properties.gadget_field_action_js_script.values.renderjs_extra[0];
+                  return window.eval.call(window, '(function (gadget, gadget_utils, options,\
+                                                    action_reference, parent_portal_type,\
+                                                    form_definition, child_gadget_url, submit_code)\
+                                                    {' + action_code[0] + '})')
+                                                  (gadget, gadget_utils, options, action_reference, parent_portal_type, form_definition, child_gadget_url, action_code[1]);
                 }
-                return gadget_utils.createDocument(options);
-              })
-              .push(function (jio_key) {
-                return gadget.jio_get(jio_key)
-                .push(function (new_document) {
-                  return gadget.changeState({
-                    jio_key: jio_key,
-                    doc: new_document,
-                    child_gadget_url: child_gadget_url,
-                    form_definition: form_definition,
-                    view: action_reference,
-                    //HARDCODED: following fields should be indicated by the configuration
-                    editable: true,
-                    has_more_views: false,
-                    has_more_actions: true,
-                    is_form_list: false
-                  });
-                });
-              });
-          }
-          if (action_reference === "reply") {
-            return gadget_utils.getFormDefinition(parent_portal_type, action_reference)
-              .push(function (result) {
-                form_definition = result;
-                // custom code will come from configuration side (action form)
-                if (action_type === "object_jio_js_script") {
-                  if (form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script")) {
-                    action_code = form_definition.fields_raw_properties.gadget_field_action_js_script.values.renderjs_extra[0];
-                    return window.eval.call(window, '(function (gadget, options, action_reference, form_definition, child_gadget_url, submit_code)\
-                                                      {' + action_code[0] + '})')
-                                                    (gadget, options, action_reference, form_definition, child_gadget_url, action_code[1]);
-                  }
+                else {
+                  throw "Field 'gadget_field_action_js_script' missing in action \
+                        form. Please check '" + action_reference + "' action configuration.";
                 }
-              });
-          }
-          throw "Action " + action_reference + " not implemented yet";
+              } else {
+                throw "Action type must be 'object_jio_js_script'. Please check \
+                      '" + action_reference + "' action configuration.";
+              }
+            });
         });
     })
 
@@ -119,42 +81,10 @@
         jio_key = options[0],
         //target_url = options[1],
         content_dict = options[2],
-        property;
-      // This is the custom code to handle each specific action
-      if (action_reference === "reply") {
-        if (action_type === "object_jio_js_script") {
-          var submit_code = gadget.state.submit_code;
-          return window.eval.call(window, '(function (gadget, gadget_utils, content_dict)\
-                                            {' + submit_code + '})')(gadget, gadget_utils, content_dict);
-        }
-      }
-      if (action_reference === "new") {
-        return gadget.notifySubmitting()
-        .push(function () {
-          // this should be jio_getattachment (using target_url)
-          return gadget.jio_get(jio_key);
-        })
-        .push(function (document) {
-          var property;
-          for (property in content_dict) {
-            if (content_dict.hasOwnProperty(property)) {
-              document[property] = content_dict[property];
-            }
-          }
-          return gadget.jio_put(jio_key, document);
-        })
-        .push(function () {
-          return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
-        })
-        .push(function () {
-          return gadget.redirect({
-            command: 'display',
-            options: {
-              jio_key: jio_key,
-              editable: true
-            }
-          });
-        });
+        submit_code = gadget.state.submit_code;
+      if (action_type === "object_jio_js_script") {
+        return window.eval.call(window, '(function (gadget, gadget_utils, jio_key, content_dict)\
+                                          {' + submit_code + '})')(gadget, gadget_utils, jio_key, content_dict);
       }
     });
 }(document, window, rJS, RSVP));
