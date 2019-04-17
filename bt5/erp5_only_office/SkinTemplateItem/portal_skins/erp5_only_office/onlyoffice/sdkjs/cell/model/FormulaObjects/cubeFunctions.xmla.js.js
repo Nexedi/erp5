@@ -259,6 +259,8 @@ function (window, RSVP, Xmla, console) {
 				if (value.cube_value) {
 					array = value.cube_value;
 				} else {
+					// XXX split only member not part in member
+					// [Promotion].[Media Type].[Daily Paper, Radio, TV]
 					array = value.value.split(',');
 				}
 				if (array.length > 0) {
