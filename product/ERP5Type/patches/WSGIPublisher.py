@@ -1,4 +1,4 @@
-# Backport from Zope4
+# Backport (with modified code) from Zope4
 
 ##############################################################################
 #
@@ -19,16 +19,22 @@ from contextlib import closing
 from contextlib import contextmanager
 from io import BytesIO
 from io import IOBase
+import logging
 
+from six import binary_type
 from six import PY3
 from six import reraise
+from six import text_type
 from six.moves._thread import allocate_lock
 
 import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from Acquisition import aq_acquire
+from Acquisition import aq_inner
+from Acquisition import aq_parent
 from transaction.interfaces import TransientError
+from zExceptions import Redirect
 from zExceptions import Unauthorized
 from zExceptions import upgradeException
 from zope.component import queryMultiAdapter
@@ -38,12 +44,12 @@ from zope.globalrequest import setRequest
 from zope.publisher.skinnable import setDefaultSkin
 from zope.security.management import endInteraction
 from zope.security.management import newInteraction
-from ZPublisher import pubevents
-from ZPublisher.HTTPRequest import WSGIRequest
-from ZPublisher.HTTPResponse import WSGIResponse
+from Zope2.App.startup import validated_hook
+from ZPublisher import pubevents, Retry
+from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.Iterators import IUnboundStreamIterator
 from ZPublisher.mapply import mapply
-from ZPublisher.utils import recordMetaData
+from ZPublisher.WSGIPublisher import call_object, missing_name, WSGIResponse
 
 
 if sys.version_info >= (3, ):
@@ -57,32 +63,69 @@ _MODULE_LOCK = allocate_lock()
 _MODULES = {}
 
 
-def call_object(obj, args, request):
-    return obj(*args)
+AC_LOGGER = logging.getLogger('event.AccessControl')
+
+
+# From ZPublisher.utils
+def recordMetaData(object, request):
+    if hasattr(object, 'getPhysicalPath'):
+        path = '/'.join(object.getPhysicalPath())
+    else:
+        # Try hard to get the physical path of the object,
+        # but there are many circumstances where that's not possible.
+        to_append = ()
+
+        if hasattr(object, '__self__') and hasattr(object, '__name__'):
+            # object is a Python method.
+            to_append = (object.__name__,)
+            object = object.__self__
+
+        while object is not None and not hasattr(object, 'getPhysicalPath'):
+            if getattr(object, '__name__', None) is None:
+                object = None
+                break
+            to_append = (object.__name__,) + to_append
+            object = aq_parent(aq_inner(object))
+
+        if object is not None:
+            path = '/'.join(object.getPhysicalPath() + to_append)
+        else:
+            # As Jim would say, "Waaaaaaaa!"
+            # This may cause problems with virtual hosts
+            # since the physical path is different from the path
+            # used to retrieve the object.
+            path = request.get('PATH_INFO')
+
+    T = transaction.get()
+    T.note(safe_unicode(path))
+    auth_user = request.get('AUTHENTICATED_USER', None)
+    if auth_user:
+        auth_folder = aq_parent(auth_user)
+        if auth_folder is None:
+            AC_LOGGER.warning(
+                'A user object of type %s has no aq_parent.',
+                type(auth_user))
+            auth_path = request.get('AUTHENTICATION_PATH')
+        else:
+            auth_path = '/'.join(auth_folder.getPhysicalPath()[1:-1])
+        user_id = auth_user.getId()
+        user_id = safe_unicode(user_id) if user_id else u'None'
+        T.setUser(user_id, safe_unicode(auth_path))
+
+
+def safe_unicode(value):
+    if isinstance(value, text_type):
+        return value
+    elif isinstance(value, binary_type):
+        try:
+            value = text_type(value, 'utf-8')
+        except UnicodeDecodeError:
+            value = value.decode('utf-8', 'replace')
+    return value
 
 
 def dont_publish_class(klass, request):
     request.response.forbiddenError("class %s" % klass.__name__)
-
-
-def missing_name(name, request):
-    if name == 'self':
-        return request['PARENTS'][0]
-    request.response.badRequestError(name)
-
-
-def validate_user(request, user):
-    newSecurityManager(request, user)
-
-
-def set_default_debug_mode(debug_mode):
-    global _DEFAULT_DEBUG_MODE
-    _DEFAULT_DEBUG_MODE = debug_mode
-
-
-def set_default_authentication_realm(realm):
-    global _DEFAULT_REALM
-    _DEFAULT_REALM = realm
 
 
 def get_module_info(module_name='Zope2'):
@@ -95,7 +138,8 @@ def get_module_info(module_name='Zope2'):
         module = __import__(module_name)
         app = getattr(module, 'bobo_application', module)
         realm = _DEFAULT_REALM if _DEFAULT_REALM is not None else module_name
-        _MODULES[module_name] = info = (app, realm, _DEFAULT_DEBUG_MODE)
+        error_hook = getattr(module,'zpublisher_exception_hook', None)
+        _MODULES[module_name] = info = (app, realm, _DEFAULT_DEBUG_MODE, error_hook)
     return info
 
 
@@ -135,7 +179,7 @@ def _exc_view_created_response(exc, request, response):
 
 
 @contextmanager
-def transaction_pubevents(request, response, tm=transaction.manager):
+def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
     try:
         setDefaultSkin(request)
         newInteraction()
@@ -166,21 +210,44 @@ def transaction_pubevents(request, response, tm=transaction.manager):
             if request.environ.get('x-wsgiorg.throw_errors', False):
                 reraise(*exc_info)
 
-            # Handle exception view
-            exc_view_created = _exc_view_created_response(
-                exc, request, response)
+            if err_hook:
+                parents = request['PARENTS']
+                if parents:
+                    parents = parents[0]
+                retry = False
+                try:
+                    try:
+                        r = err_hook(parents, request, *exc_info)
+                        assert r is response
+                        exc_view_created = True
+                    except Retry:
+                        if request.supports_retry():
+                            retry = True
+                        else:
+                            r = err_hook(parents, request, *sys.exc_info())
+                            assert r is response
+                            exc_view_created = True
+                except (Redirect, Unauthorized):
+                    response.exception()
+                    exc_view_created = True
+                except BaseException as e:
+                    if e is not exc:
+                        raise
+                    exc_view_created = False
+            else:
+                # Handle exception view
+                exc_view_created = _exc_view_created_response(
+                    exc, request, response)
 
-            if isinstance(exc, Unauthorized):
-                # _unauthorized modifies the response in-place. If this hook
-                # is used, an exception view for Unauthorized has to merge
-                # the state of the response and the exception instance.
-                exc.setRealm(response.realm)
-                response._unauthorized()
-                response.setStatus(exc.getStatus())
+                if isinstance(exc, Unauthorized):
+                    # _unauthorized modifies the response in-place. If this hook
+                    # is used, an exception view for Unauthorized has to merge
+                    # the state of the response and the exception instance.
+                    exc.setRealm(response.realm)
+                    response._unauthorized()
+                    response.setStatus(exc.getStatus())
 
-            retry = False
-            if isinstance(exc, TransientError) and request.supports_retry():
-                retry = True
+                retry = isinstance(exc, TransientError) and request.supports_retry()
 
             notify(pubevents.PubBeforeAbort(request, exc_info, retry))
             tm.abort()
@@ -217,7 +284,7 @@ def publish(request, module_info):
     path = request.get('PATH_INFO')
     request['PARENTS'] = [obj]
 
-    obj = request.traverse(path, validated_hook=validate_user)
+    obj = request.traverse(path, validated_hook=validated_hook)
     notify(pubevents.PubAfterTraversal(request))
     recordMetaData(obj, request)
 
@@ -245,7 +312,7 @@ def load_app(module_info):
     try:
         yield (app, realm, debug_mode)
     finally:
-        if transaction.manager.manager._txn is not None:
+        if transaction.manager._txn is not None:
             # Only abort a transaction, if one exists. Otherwise the
             # abort creates a new transaction just to abort it.
             transaction.abort()
@@ -257,9 +324,10 @@ def publish_module(environ, start_response,
                    _response=None,
                    _response_factory=WSGIResponse,
                    _request=None,
-                   _request_factory=WSGIRequest,
+                   _request_factory=HTTPRequest,
                    _module_name='Zope2'):
     module_info = get_module_info(_module_name)
+    module_info, err_hook = module_info[:3], module_info[3]
     result = ()
 
     path_info = environ.get('PATH_INFO')
@@ -294,7 +362,7 @@ def publish_module(environ, start_response,
             setRequest(request)
             try:
                 with load_app(module_info) as new_mod_info:
-                    with transaction_pubevents(request, response):
+                    with transaction_pubevents(request, response, err_hook):
                         response = _publish(request, new_mod_info)
                 break
             except TransientError:
@@ -324,3 +392,6 @@ def publish_module(environ, start_response,
 
     # Return the result body iterable.
     return result
+
+
+sys.modules['ZPublisher.WSGIPublisher'] = sys.modules[__name__]
