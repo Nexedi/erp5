@@ -285,6 +285,9 @@
       return this.getDeclaredGadget("olap_wizard")
         .push(function (gadget) {
           return gadget.rerender();
+        })
+        .push(undefined, function (err) {
+          console.error(err);
         });
     })
     .declareMethod("render", function (opt) {
