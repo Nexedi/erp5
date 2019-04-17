@@ -1221,7 +1221,7 @@ class TemplateTool (BaseTool):
         'installBusinessTemplateListFromRepository')
     def installBusinessTemplateListFromRepository(self, template_list,
         only_different=True, update_catalog=False, activate=False,
-        install_dependency=False):
+        install_dependency=False, force_all=False):
       """Installs template_list from configured repositories by default only newest"""
       # XXX-Luke: This method could replace
       # TemplateTool_installRepositoryBusinessTemplateList while still being
@@ -1251,7 +1251,9 @@ class TemplateTool (BaseTool):
           if bt is not None and bt['revision'] == installed_bt5_dict.get(bt_id):
             continue
         bt_url = '%s/%s' % (repository, bt_id)
-        param_dict = dict(download_url=bt_url, only_different=only_different)
+        param_dict = dict(download_url=bt_url,
+                          only_different=only_different, 
+                          reinstall=force_all)
         param_dict["update_catalog"] = update_catalog
 
         if activate:
