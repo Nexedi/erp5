@@ -1030,14 +1030,10 @@
         })
         .push(function (value) {
           opt.value = value;
+          g.props.init_value = value;
           return gadget.rerender(opt)
             .push(function () {
-              if (gadget.props.changed.length > 0) {
-                value = undefined;
-              }
-              return gadget.reValidate(value, opt.schema);
-            })
-            .push(function () {
+              delete g.props.init_value;
               return gadget.props.changed;
             });
         });

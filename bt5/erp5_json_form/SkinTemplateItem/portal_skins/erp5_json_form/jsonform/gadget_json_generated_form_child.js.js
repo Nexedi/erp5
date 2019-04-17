@@ -2102,6 +2102,7 @@
     })
 
     .declareMethod('rerender', function (opt) {
+      this.props.rerender = true;
       var g = this,
         for_delete,
         root = g.element.querySelector('[data-json-path="/"]');
@@ -2143,9 +2144,10 @@
             }
             return el;
           });
-          return g.checkValidity(value);
+          return g.checkValidity(value, opt.schema);
         })
         .push(function () {
+          g.props.rerender = false;
           return g.element;
         });
     })
@@ -2196,21 +2198,25 @@
     .declareMethod('getSchema', function (json_document) {
       var g = this,
         schema_arr = g.props.schema_arr,
-        schema_path;
+        schema;
+      // XXX complex need simplify
       if (g.props.render_opt.selected_schema) {
-        schema_path = g.props.render_opt.selected_schema.schema_path;
+        schema = g.props.render_opt.selected_schema;
       } else {
         if (json_document !== undefined && !g.props.render_opt.top) {
-          schema_path = schemaArrFilteredByDocument(schema_arr, json_document)[0].schema_path;
-        } else if (schema_arr.schema_path) {
-          schema_path = schema_arr.schema_path;
+          schema = schemaArrFilteredByDocument(schema_arr, json_document)[0];
+        } else if (schema_arr.schema_path && !schema_arr.external_reference) {
+          schema = schema_arr;
         } else if (json_document !== undefined) {
-          schema_path = schemaArrFilteredByDocument(schema_arr, json_document)[0].schema_path;
+          schema = schemaArrFilteredByDocument(schema_arr, json_document)[0];
         } else {
-          schema_path = schema_arr[0].schema_path;
+          schema = schema_arr[0];
         }
       }
-      return g.rootGetSchema(schema_path);
+      if (schema_arr && schema_arr.external_reference) {
+        return schema;
+      }
+      return g.rootGetSchema(schema.schema_path);
     })
 
     .declareMethod('checkValidity', function (json_document, schema) {
@@ -2301,7 +2307,7 @@
     })
 
     .onLoop(function () {
-      if (this.props.needValidate) {
+      if (this.props.needValidate && !this.props.rerender) {
         return this.reValidate();
       }
     }, 500)
