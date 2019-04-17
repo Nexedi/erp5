@@ -1506,6 +1506,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         if REQUEST != None and response != None:
           for group in traversed_document.Form_getGroupTitleAndId():
             if 'hidden' in group['gid']:
+              for field in traversed_document.get_fields_in_group(group['goid']):
+                if field.id == "gadget_field_action_js_script":
+                  fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
               continue
             for field in traversed_document.get_fields_in_group(group['goid']):
               fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
