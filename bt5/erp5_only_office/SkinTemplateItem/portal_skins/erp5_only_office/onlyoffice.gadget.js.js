@@ -116,6 +116,10 @@ DocsAPI.DocEditor.version = function () {
       return repeats * members.length * span;
     }
 
+    if (!data.connection_name) {
+      return;
+    }
+
     return RSVP.Queue()
       .push(function () {
         // var active = s.GetActiveCell();
