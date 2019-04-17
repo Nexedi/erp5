@@ -261,6 +261,9 @@
       })
       .push(function () {
         return schema;
+      })
+      .push(undefined, function () {
+        return schema;
       });
   }
 
