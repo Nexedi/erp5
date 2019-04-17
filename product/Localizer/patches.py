@@ -28,7 +28,8 @@ from .itools.i18n import AcceptLanguageType
 
 # Import from Zope
 import Globals
-from ZPublisher import Publish, WSGIPublisher
+from ZPublisher import Publish
+from Products.ERP5Type.patches import WSGIPublisher
 from ZPublisher.HTTPRequest import HTTPRequest
 
 
