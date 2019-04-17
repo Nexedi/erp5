@@ -2185,6 +2185,9 @@ try:
 
     if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/HTMLPost_viewReplyDialog':
       hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_officejs_jio_connector/HTMLPost_viewReplyDialog'
+
+    if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/PostModule_newHTMLPost':
+      hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_post/PostModule_newHTMLPost'
 except:
   pass
 if hateoas == "":
