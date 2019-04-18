@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_mergeDeliveryList</string> </value>
+            <value> <string>DeliveryModule_mergeDeliveryList</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

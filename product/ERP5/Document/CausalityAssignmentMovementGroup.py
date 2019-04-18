@@ -41,7 +41,7 @@ class CausalityAssignmentMovementGroup(MovementGroup):
   def _getPropertyDict(self, movement, **kw):
     return self._addCausalityToEdit(movement)
 
-  def _separate(self, movement_list):
+  def _separate(self, movement_list, **kw):
     if not movement_list:
       return []
     property_dict = {}

@@ -101,7 +101,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
   security.declarePublic('build')
   def build(self, applied_rule_uid=None, movement_relative_url_list=None,
                   delivery_relative_url_list=None, movement_list=None,
-                  explanation=None, business_link=None, activate_kw=None, **kw):
+                  explanation=None, business_link=None, activate_kw=None,
+                  merge_delivery=None, **kw):
     """
       Build deliveries from a list of movements
 
@@ -136,13 +137,13 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         if not movement_list:
           return []
     # Collect
-    root_group_node = self.collectMovement(movement_list)
+    root_group_node = self.collectMovement(movement_list, merge_delivery=merge_delivery)
     # Build
     delivery_list = self.buildDeliveryList(
                        root_group_node,
                        delivery_relative_url_list=delivery_relative_url_list,
                        movement_list=movement_list, activate_kw=activate_kw,
-                       **kw)
+                       merge_delivery=merge_delivery, **kw)
     # Call a script after building
     self.callAfterBuildingScript(delivery_list, movement_list, **kw)
     return delivery_list
@@ -297,7 +298,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
   searchMovementList = UnrestrictedMethod(_searchMovementList)
 
   security.declarePrivate('collectMovement')
-  def collectMovement(self, movement_list):
+  def collectMovement(self, movement_list, merge_delivery=False):
     """
       group movements in the way we want. Thanks to this method, we are able
       to retrieve movement classed by order, resource, criterion,....
@@ -314,7 +315,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     root_group_node = MovementGroupNode(
       separate_method_name_list=separate_method_name_list,
       movement_group_list=movement_group_list,
-      last_line_movement_group=last_line_movement_group)
+      last_line_movement_group=last_line_movement_group,
+      merge_delivery=merge_delivery)
     root_group_node.append(movement_list)
     return root_group_node
 
@@ -396,14 +398,16 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     if update:
       delivery_to_update_list = [portal.restrictedTraverse(relative_url) for \
                                  relative_url in delivery_relative_url_list]
-      # Deliveries we are trying to update
-      delivery_select_method_id = self.getDeliverySelectMethodId()
-      if delivery_select_method_id not in ["", None]:
-        to_update_delivery_sql_list = getattr(self, delivery_select_method_id) \
-                                      (movement_list=movement_list)
-        delivery_to_update_list.extend([sql_delivery.getObject() \
-                                        for sql_delivery \
-                                        in to_update_delivery_sql_list])
+      # Only use select method when the list of delivery is not already provided
+      if len(delivery_to_update_list) == 0:
+        # Deliveries we are trying to update
+        delivery_select_method_id = self.getDeliverySelectMethodId()
+        if delivery_select_method_id not in ["", None]:
+          to_update_delivery_sql_list = getattr(self, delivery_select_method_id) \
+                                        (movement_list=movement_list)
+          delivery_to_update_list.extend([sql_delivery.getObject() \
+                                          for sql_delivery \
+                                          in to_update_delivery_sql_list])
     else:
       delivery_to_update_list = []
     # We do not want to update the same object more than twice in one
@@ -431,7 +435,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                             collect_order_list, movement_group_node_list=None,
                             delivery_to_update_list=None,
                             divergence_list=None,
-                            activate_kw=None, force_update=0, **kw):
+                            activate_kw=None, force_update=0,
+                            merge_delivery=None, **kw):
     """
       Build delivery from a list of movement
     """
@@ -457,7 +462,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                               delivery_to_update_list=delivery_to_update_list,
                               divergence_list=divergence_list,
                               activate_kw=activate_kw,
-                              force_update=force_update)
+                              force_update=force_update,
+                              merge_delivery=merge_delivery)
         delivery_list.extend(new_delivery_list)
         force_update = 0
     else:
@@ -467,9 +473,14 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         x for x in delivery_to_update_list \
         if x.getPortalType() == self.getDeliveryPortalType() and \
         not self._isUpdated(x, 'delivery')]
-      delivery, property_dict = self._findUpdatableObject(
-        delivery_to_update_list, movement_group_node_list,
-        divergence_list)
+      if merge_delivery:
+        # We must have only one delivery to update in the case of merge
+        delivery, = delivery_to_update_list
+        property_dict = {}
+      else:
+        delivery, property_dict = self._findUpdatableObject(
+          delivery_to_update_list, movement_group_node_list,
+          divergence_list)
 
       # if all deliveries are rejected in case of update, we update the
       # first one.

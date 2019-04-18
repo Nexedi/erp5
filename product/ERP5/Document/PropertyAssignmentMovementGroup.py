@@ -51,7 +51,7 @@ class PropertyAssignmentMovementGroup(MovementGroup):
     # We can always update.
     return True, property_dict
 
-  def _separate(self, movement_list):
+  def _separate(self, movement_list, **kw):
     if not movement_list:
       return []
 

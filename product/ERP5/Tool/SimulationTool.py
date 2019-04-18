@@ -33,6 +33,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 from Products.ERP5 import _dtmldir
 
@@ -2646,8 +2647,20 @@ class SimulationTool(BaseTool):
 
       return result
 
-    # Used for mergeDeliveryList.
-    class MergeDeliveryListError(Exception): pass
+    def _findBuilderForDelivery(self, delivery):
+      """
+      Find out the builder corresponding to a delivery by looking at the business process
+      """
+      builder = None
+      portal_type = delivery.getPortalType()
+      for business_link in delivery.asComposedDocument().objectValues(portal_type="Business Link"):
+        for business_link_builder in business_link.getDeliveryBuilderValueList():
+          if business_link_builder.getDeliveryPortalType() == portal_type:
+            builder = business_link_builder
+            break
+        if builder is not None:
+          break
+      return builder
 
     security.declareProtected( Permissions.ModifyPortalContent, 'mergeDeliveryList' )
     def mergeDeliveryList(self, delivery_list):
@@ -2656,246 +2669,102 @@ class SimulationTool(BaseTool):
         All delivery lines are merged into the first one.
         The first one is therefore called main_delivery here.
         The others are cancelled.
-        Return the main delivery.
       """
       # Sanity checks.
-      if len(delivery_list) == 0:
-        raise self.MergeDeliveryListError, "No delivery is passed"
-      elif len(delivery_list) == 1:
-        raise self.MergeDeliveryListError, "Only one delivery is passed"
-
-      main_delivery = delivery_list[0]
-      delivery_list = delivery_list[1:]
-
-      # Another sanity check. It is necessary for them to be identical in some attributes.
-      for delivery in delivery_list:
-        for attr in ('portal_type', 'simulation_state',
-                     'source', 'destination',
-                     'source_section', 'destination_section',
-                     'source_decision', 'destination_decision',
-                     'source_administration', 'destination_administration',
-                     'source_payment', 'destination_payment'):
-          main_value = main_delivery.getProperty(attr)
-          value = delivery.getProperty(attr)
-          if  main_value != value:
-            raise self.MergeDeliveryListError, \
-              "%s is not the same between %s and %s (%s and %s)" % (attr, delivery.getId(), main_delivery.getId(), value, main_value)
-
-      # One more sanity check. Check if discounts are the same, if any.
-      main_discount_list = main_delivery.contentValues(filter = {'portal_type': self.getPortalDiscountTypeList()})
-      for delivery in delivery_list:
-        discount_list = delivery.contentValues(filter = {'portal_type': self.getPortalDiscountTypeList()})
-        if len(main_discount_list) != len(discount_list):
-          raise self.MergeDeliveryListError, "Discount is not the same between %s and %s" % (delivery.getId(), main_delivery.getId())
-        for discount in discount_list:
-          for main_discount in main_discount_list:
-            if discount.getDiscount() == main_discount.getDiscount() \
-               and discount.getDiscountRatio() == main_discount.getDiscountRatio() \
-               and discount.getDiscountType() == main_discount.getDiscountType() \
-               and discount.getImmediateDiscount() == main_discount.getImmediateDiscount():
-              break
+      if not(len(delivery_list) >=2):
+        raise ValueError("Please select at least 2 deliveries")
+      portal= self.getPortalObject()
+      translateString = portal.Base_translateString
+      error_list = []
+      if len(delivery_list) > 1:
+        portal_type_set = set([x.getPortalType() for x in delivery_list])
+        if len(portal_type_set) != 1:
+          error_list.append(translateString("Please select only deliveries of same type"))
+        else:
+          portal_type, = portal_type_set
+          allowed_state_set = set(portal.getPortalReservedInventoryStateList() + \
+                                 portal.getPortalFutureInventoryStateList())
+          found_state_set = set([x.getSimulationState() for x in delivery_list])
+          if found_state_set.difference(allowed_state_set):
+            error_list.append(translateString("Found delivery having unexpected status for merge"))
           else:
-            raise self.MergeDeliveryListError, "Discount is not the same between %s and %s" % (delivery.getId(), main_delivery.getId())
+            # Allow to call a script to do custom checking conditions before merge
+            main_delivery = delivery_list[0]
+            check_merge_condition_method = main_delivery._getTypeBasedMethod("checkMergeConditionOnDeliveryList")
+            if check_merge_condition_method is not None:
+              error_list.extend(check_merge_condition_method(delivery_list=delivery_list))
+            if len(error_list) == 0:
+              # so far so good
+              # in delivery_list we have list of delivery to merge
+              simulation_movement_list = []
+              to_copy_delivery_line_list = [] # for lines not coming from upper simulation, thus
+                                              # created by hand should be manually added to main
+                                              # delivery since they are not coming from builder
+              for delivery in delivery_list:
+                line_id_to_delete_list = []
+                for movement in delivery.getMovementList():
+                  related_simulation_movement_list = movement.getDeliveryRelatedValueList()
+                  for simulation_movement in related_simulation_movement_list:
+                    # if we are on a root applied rule directly, so in the case of
+                    # a manually added line, we have to copy
+                    # the simulation movement into to main delivery
+                    if simulation_movement.getParentValue().getParentValue().getId() == "portal_simulation":
+                      # For manually added lines, make sure we have only one simulation movement
+                      assert len(related_simulation_movement_list) == 1
+                      if not(delivery is main_delivery):
+                        to_copy_delivery_line_list.append(movement)
+                    else:
+                      simulation_movement.setDeliveryValue(None)
+                      simulation_movement_list.append(simulation_movement)
+                      # Since we keep the main delivery, we remove existing lines already
+                      # coming from builder to let builder recreate them in the same time
+                      # as other ones (to possibly merge lines also)
+                      movement_id = movement.getId()
+                      if delivery is main_delivery and not(movement_id in line_id_to_delete_list):
+                        line_id_to_delete_list.append(movement.getId())
+                if line_id_to_delete_list:
+                  delivery.manage_delObjects(ids=line_id_to_delete_list)
+              # It is required to expand again simulation movement, because
+              # we unlinked them from delivery, so it is possible that some
+              # properties will change on simulation movement (mostly categories).
+              # By expanding again, we will avoid having many deliveries instead
+              # of one when doing "merge"
+              for simulation_movement in simulation_movement_list:
+                simulation_movement.expand(expand_policy='immediate')
 
-      # One more sanity check. Check if payment conditions are the same, if any.
-      main_payment_condition_list = main_delivery.contentValues(filter = {'portal_type': self.getPortalPaymentConditionTypeList()})
-      for delivery in delivery_list:
-        payment_condition_list = delivery.contentValues(filter = {'portal_type': self.getPortalPaymentConditionTypeList()})
-        if len(main_payment_condition_list) != len(payment_condition_list):
-          raise self.MergeDeliveryListError, "Payment Condition is not the same between %s and %s" % (delivery.getId(), main_delivery.getId())
-        for condition in payment_condition_list:
-          for main_condition in main_payment_condition_list:
-            if condition.getPaymentMode() == main_condition.getPaymentMode() \
-               and condition.getPaymentAdditionalTerm() == main_condition.getPaymentAdditionalTerm() \
-               and condition.getPaymentAmount() == main_condition.getPaymentAmount() \
-               and condition.getPaymentEndOfMonth() == main_condition.getPaymentEndOfMonth() \
-               and condition.getPaymentRatio() == main_condition.getPaymentRatio() \
-               and condition.getPaymentTerm() == main_condition.getPaymentTerm():
-              break
-          else:
-            raise self.MergeDeliveryListError, "Payment Condition is not the same between %s and %s" % (delivery.getId(), main_delivery.getId())
+              # activate builder
+              merged_builder = self._findBuilderForDelivery(main_delivery)
+              if merged_builder is None:
+                error_list.append(translateString("Unable to find builder"))
+              else:
+                merged_builder.build(movement_relative_url_list=[q.getRelativeUrl() for q in \
+                                     simulation_movement_list], merge_delivery=True,
+                                     delivery_relative_url_list=[main_delivery.getRelativeUrl()])
+              # Finally, copy all lines that were created manually on all deliveries except
+              # the main one
+              @UnrestrictedMethod
+              def setMainDeliveryModifiable(delivery):
+                # set causality state in such way we can modify delivery
+                delivery.diverge()
+              setMainDeliveryModifiable(main_delivery)
+              delivery_type_list = portal.getPortalDeliveryTypeList()
+              for delivery_line in to_copy_delivery_line_list:
+                delivery = delivery_line.getParentValue()
+                if not(delivery.getPortalType() in delivery_type_list):
+                  raise NotImplementedError("Merge of deliveries doe not yet handle case of cells")
+                copy_data = delivery.manage_copyObjects(ids=[delivery_line.getId()])
+                main_delivery.manage_pasteObjects(copy_data)
+              main_delivery.updateCausalityState()
 
-      # Make sure that all activities are flushed, to get simulation movements from delivery cells.
-      for delivery in delivery_list:
-        for order in delivery.getCausalityValueList(portal_type = self.getPortalOrderTypeList()):
-          for applied_rule in order.getCausalityRelatedValueList(portal_type = 'Applied Rule'):
-            applied_rule.flushActivity(invoke = 1)
-        for causality_related_delivery in delivery.getCausalityValueList(portal_type = self.getPortalDeliveryTypeList()):
-          for applied_rule in causality_related_delivery.getCausalityRelatedValueList(portal_type = 'Applied Rule'):
-            applied_rule.flushActivity(invoke = 1)
-
-      # Get a list of simulated movements and invoice movements.
-      main_simulated_movement_list = main_delivery.getSimulatedMovementList()
-      main_invoice_movement_list = main_delivery.getInvoiceMovementList()
-      simulated_movement_list = main_simulated_movement_list[:]
-      invoice_movement_list = main_invoice_movement_list[:]
-      for delivery in delivery_list:
-        simulated_movement_list.extend(delivery.getSimulatedMovementList())
-        invoice_movement_list.extend(delivery.getInvoiceMovementList())
-
-      #for movement in simulated_movement_list + invoice_movement_list:
-      #  parent = movement.aq_parent
-      #  LOG('mergeDeliveryList', 0, 'movement = %s, parent = %s, movement.getPortalType() = %s, parent.getPortalType() = %s' % (repr(movement), repr(parent), repr(movement.getPortalType()), repr(parent.getPortalType())))
-
-      LOG('mergeDeliveryList', 0, 'simulated_movement_list = %s, invoice_movement_list = %s' % (str(simulated_movement_list), str(invoice_movement_list)))
-      for main_movement_list, movement_list in \
-        ((main_simulated_movement_list, simulated_movement_list),
-         (main_invoice_movement_list, invoice_movement_list)):
-        root_group = self.collectMovement(movement_list,
-                                          check_order = 0,
-                                          check_path = 0,
-                                          check_date = 0,
-                                          check_criterion = 1,
-                                          check_resource = 1,
-                                          check_base_variant = 1,
-                                          check_variant = 1)
-        for criterion_group in root_group.group_list:
-          LOG('mergeDeliveryList dump tree', 0, 'criterion = %s, movement_list = %s, group_list = %s' % (repr(criterion_group.criterion), repr(criterion_group.movement_list), repr(criterion_group.group_list)))
-          for resource_group in criterion_group.group_list:
-            LOG('mergeDeliveryList dump tree', 0, 'resource = %s, movement_list = %s, group_list = %s' % (repr(resource_group.resource), repr(resource_group.movement_list), repr(resource_group.group_list)))
-            for base_variant_group in resource_group.group_list:
-              LOG('mergeDeliveryList dump tree', 0, 'base_category_list = %s, movement_list = %s, group_list = %s' % (repr(base_variant_group.base_category_list), repr(base_variant_group.movement_list), repr(base_variant_group.group_list)))
-              for variant_group in base_variant_group.group_list:
-                LOG('mergeDeliveryList dump tree', 0, 'category_list = %s, movement_list = %s, group_list = %s' % (repr(variant_group.category_list), repr(variant_group.movement_list), repr(variant_group.group_list)))
-
-        for criterion_group in root_group.group_list:
-          for resource_group in criterion_group.group_list:
-            for base_variant_group in resource_group.group_list:
-              # Get a list of categories.
-              category_dict = {}
-              for variant_group in base_variant_group.group_list:
-                for category in variant_group.category_list:
-                  category_dict[category] = 1
-              category_list = category_dict.keys()
-
-              # Try to find a delivery line.
-              delivery_line = None
-              for movement in base_variant_group.movement_list:
-                if movement in main_movement_list:
-                  if movement.aq_parent.getPortalType() in self.getPortalSimulatedMovementTypeList() \
-                    or movement.aq_parent.getPortalType() in self.getPortalInvoiceMovementTypeList():
-                    delivery_line = movement.aq_parent
-                  else:
-                    delivery_line = movement
-                  LOG('mergeDeliveryList', 0, 'delivery_line %s is found: criterion = %s, resource = %s, base_category_list = %s' % (repr(delivery_line), repr(criterion_group.criterion), repr(resource_group.resource), repr(base_variant_group.base_category_list)))
-                  break
-
-              if delivery_line is None:
-                # Not found. So create a new delivery line.
-                movement = base_variant_group.movement_list[0]
-                if movement.aq_parent.getPortalType() in self.getPortalSimulatedMovementTypeList() \
-                  or movement.aq_parent.getPortalType() in self.getPortalInvoiceMovementTypeList():
-                  delivery_line_type = movement.aq_parent.getPortalType()
-                else:
-                  delivery_line_type = movement.getPortalType()
-                delivery_line = main_delivery.newContent(portal_type = delivery_line_type,
-                                                         resource = resource_group.resource)
-                LOG('mergeDeliveryList', 0, 'New delivery_line %s is created: criterion = %s, resource = %s, base_category_list = %s' % (repr(delivery_line), repr(criterion_group.criterion), repr(resource_group.resource), repr(base_variant_group.base_category_list)))
-
-              # Update the base categories and categories.
-              #LOG('mergeDeliveryList', 0, 'base_category_list = %s, category_list = %s' % (repr(base_category_list), repr(category_list)))
-              delivery_line.setVariationBaseCategoryList(base_variant_group.base_category_list)
-              delivery_line.setVariationCategoryList(category_list)
-
-              object_to_update = None
-              for variant_group in base_variant_group.group_list:
-                if len(variant_group.category_list) == 0:
-                  object_to_update = delivery_line
-                else:
-                  for delivery_cell in delivery_line.contentValues():
-                    predicate_value_list = delivery_cell.getPredicateValueList()
-                    LOG('mergeDeliveryList', 0, 'delivery_cell = %s, predicate_value_list = %s, variant_group.category_list = %s' % (repr(delivery_cell), repr(predicate_value_list), repr(variant_group.category_list)))
-                    if len(predicate_value_list) == len(variant_group.category_list):
-                      for category in variant_group.category_list:
-                        if category not in predicate_value_list:
-                          break
-                      else:
-                        object_to_update = delivery_cell
-                        break
-
-                #LOG('mergeDeliveryList', 0, 'object_to_update = %s' % repr(object_to_update))
-                if object_to_update is not None:
-                  cell_price = object_to_update.getPrice() or 0.0
-                  cell_quantity = object_to_update.getQuantity() or 0.0
-                  cell_target_quantity = object_to_update.getNetConvertedTargetQuantity() or 0.0 # XXX What to do ?
-                  cell_total_price = cell_target_quantity * cell_price
-                  cell_category_list = list(object_to_update.getCategoryList())
-
-                  for movement in variant_group.movement_list:
-                    if movement in main_movement_list:
-                      continue
-                    LOG('mergeDeliveryList', 0, 'movement = %s' % repr(movement))
-                    cell_quantity += movement.getQuantity()
-                    cell_target_quantity += movement.getNetConvertedTargetQuantity()
-                    try:
-                      # XXX WARNING - ADD PRICED QUANTITY
-                      cell_price = movement.getPrice()
-                      cell_total_price += movement.getNetConvertedTargetQuantity() * cell_price
-                    except TypeError:
-                      cell_total_price = None
-                    for category in movement.getCategoryList():
-                      if category not in cell_category_list:
-                        cell_category_list.append(category)
-                    # Make sure that simulation movements point to an appropriate delivery line or
-                    # delivery cell.
-                    if hasattr(movement, 'getDeliveryRelatedValueList'):
-                      for simulation_movement in \
-                        movement.getDeliveryRelatedValueList(portal_type = 'Simulation Movement'):
-                        simulation_movement.setDeliveryValue(object_to_update)
-                        #simulation_movement.reindexObject()
-                    if hasattr(movement, 'getOrderRelatedValueList'):
-                      for simulation_movement in \
-                        movement.getOrderRelatedValueList(portal_type = 'Simulation Movement'):
-                        simulation_movement.setOrderValue(object_to_update)
-                        #simulation_movement.reindexObject()
-
-                  if cell_target_quantity != 0 and cell_total_price is not None:
-                    average_price = cell_total_price / cell_target_quantity
-                  else:
-                    average_price = 0
-
-                  LOG('mergeDeliveryList', 0, 'object_to_update = %s, cell_category_list = %s, cell_target_quantity = %s, cell_quantity = %s, average_price = %s' % (repr(object_to_update), repr(cell_category_list), repr(cell_target_quantity), repr(cell_quantity), repr(average_price)))
-                  object_to_update.setCategoryList(cell_category_list)
-                  if object_to_update.getPortalType() in self.getPortalSimulatedMovementTypeList():
-                    object_to_update.edit(target_quantity = cell_target_quantity,
-                                          quantity = cell_quantity,
-                                          price = average_price,
-                                          )
-                  elif object_to_update.getPortalType() in self.getPortalInvoiceMovementTypeList():
-                    # Invoices do not have target quantities, and the price never change.
-                    object_to_update.edit(quantity = cell_quantity,
-                                          price = cell_price,
-                                          )
-                  else:
-                    raise self.MergeDeliveryListError, "Unknown portal type %s" % str(object_to_update.getPortalType())
-                else:
-                  raise self.MergeDeliveryListError, "No object to update"
-
-      # Merge containers. Just copy them from other deliveries into the main.
-      for delivery in delivery_list:
-        container_id_list = delivery.contentIds(filter = {'portal_type': self.getPortalContainerTypeList()})
-        if len(container_id_list) > 0:
-          copy_data = delivery.manage_copyObjects(ids = container_id_list)
-          new_id_list = main_delivery.manage_pasteObjects(copy_data)
-
-      # Unify the list of causality.
-      causality_list = main_delivery.getCausalityValueList()
-      for delivery in delivery_list:
-        for causality in delivery.getCausalityValueList():
-          if causality not in causality_list:
-            causality_list.append(causality)
-      LOG("mergeDeliveryList", 0, "causality_list = %s" % str(causality_list))
-      main_delivery.setCausalityValueList(causality_list)
-
-      # Cancel deliveries.
-      for delivery in delivery_list:
-        LOG("mergeDeliveryList", 0, "cancelling %s" % repr(delivery))
-        delivery.cancel()
-
-      # Reindex the main delivery.
-      main_delivery.reindexObject()
-
-      return main_delivery
+              # Finally do cleanup
+              for delivery in delivery_list[1:]:
+                # cancel, delete - to disallow any user related operations on those deliveries
+                after_merge_method = delivery._getTypeBasedMethod('cleanDeliveryAfterMerge')
+                if after_merge_method is not None:
+                  after_merge_method()
+      else:
+        error_list.append(translateString("Please select at least two deliveries"))
+      return error_list
 
     #######################################################
     # Sequence

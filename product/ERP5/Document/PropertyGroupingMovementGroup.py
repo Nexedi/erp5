@@ -44,7 +44,7 @@ class PropertyGroupingMovementGroup(MovementGroup):
       return True, {}
     return False, {}
 
-  def _separate(self, movement_list):
+  def _separate(self, movement_list, **kw):
     if not movement_list:
       return []
 

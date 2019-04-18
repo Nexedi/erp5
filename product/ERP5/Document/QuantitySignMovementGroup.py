@@ -61,7 +61,7 @@ class QuantitySignMovementGroup(MovementGroup):
     property_dict['quantity_sign'] = cmp(quantity, 0)
     return property_dict
 
-  def _separate(self, movement_list):
+  def _separate(self, movement_list, **kw):
     if not movement_list:
       return []
 

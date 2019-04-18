@@ -81,12 +81,19 @@ class MovementGroup(XMLObject):
     # This method should be defined in sub classes.
     raise NotImplementedError
 
-  def _separate(self, movement_list):
+  def _separate(self, movement_list, merge_delivery=False, **kw):
     # By default, we separate movements by _getPropertyDict() values.
     # You can override this method in each MovementGroup class.
     tmp_dict = {}
+    first_property_dict = None
+    collect_order_group_id = self.getCollectOrderGroupId()
     for movement in movement_list:
-      property_dict = self._getPropertyDict(movement)
+      # We are in the case of merging of deliveries, thus if the movement
+      # is configured to not split, just take properties of the first movement
+      if merge_delivery and collect_order_group_id == "delivery":
+        property_dict = {}
+      else:
+        property_dict = self._getPropertyDict(movement, **kw)
       # XXX it can be wrong. we need a good way to get hash value, or
       # we should compare for all pairs.
       key = repr(property_dict)
@@ -96,11 +103,11 @@ class MovementGroup(XMLObject):
         tmp_dict[key] = [[movement], property_dict]
     return tmp_dict.values()
 
-  def separate(self, movement_list):
+  def separate(self, movement_list, **kw):
     # We sort group of simulation movements by their IDs.
     # DO NOT OVERRIDE THIS METHOD. Override _separate() instead.
     return sorted([[sorted(x[0], key=lambda x: x.getId()), x[1]] \
-                   for x in self._separate(movement_list)],
+                   for x in self._separate(movement_list, **kw)],
                   key=lambda x: x[0][0].getId())
 
   def isBranch(self):
