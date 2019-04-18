@@ -32,7 +32,7 @@
       var gadget = this,
         child_gadget_url = 'gadget_erp5_pt_form_view_editable.html',
         jio_document;
-      return gadget.declareGadget("gadget_officejs_common_utils.html")
+      return gadget.declareGadget("gadget_officejs_form_view.html")
       .push(function (result) {
         gadget_utils = result;
         return gadget.jio_get(options.jio_key);
