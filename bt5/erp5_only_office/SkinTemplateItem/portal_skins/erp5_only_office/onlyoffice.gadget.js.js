@@ -1,5 +1,5 @@
 /*global window, rJS, RSVP, DocsAPI, console, document,
- Common, require, jIO, URL, FileReader, atob, ArrayBuffer,
+ Common, AscCommon, require, jIO, URL, FileReader, atob, ArrayBuffer,
  Uint8Array, XMLHttpRequest, Blob, Rusha, define,
  Uint8ClampedArray, Asc, History,
  TextDecoder, DesktopOfflineAppDocumentEndSave*/
@@ -66,11 +66,21 @@ DocsAPI.DocEditor.version = function () {
       Api._onUpdateDocumentCanSave();
     }
 
-    function setCell(row, col, value) {
+    function setCell(row, col, value, row1, col1) {
       // setValue on range
       s.GetRangeByNumber(row, col).range._foreach(function (cell) {
         cell.setValue(value);
       });
+      if (typeof row1 === "number" && typeof col1 === "number") {
+        var range = s.worksheet.getRange3(row, col, row1, col1);
+        if (col1 !== col) {
+          range.setAlignHorizontal(AscCommon.align_Center);
+        }
+        if (row1 !== row) {
+          range.setAlignVertical(Asc.c_oAscVAlign.Top);
+        }
+        s.worksheet.mergeManager.add(range.bbox, 1);
+      }
     }
 
     function print_titles(levels, begin_row, begin_column, columns) {
@@ -78,6 +88,9 @@ DocsAPI.DocEditor.version = function () {
         member,
         i,
         m,
+        col1,
+        row1,
+        func,
         x,
         z,
         row,
@@ -99,7 +112,8 @@ DocsAPI.DocEditor.version = function () {
         for (z = 0; z < repeats * members.length * span; z += (members.length * span)) {
           for (m = 0; m < members.length; m += 1) {
             member = members[m];
-            for (x = 0; x < span; x += 1) {
+            func = "=CUBEMEMBER(" + connection_name + ',"' + member.uname + '")';
+            for (x = 1; x < span; x += 1) {
               if (columns) {
                 row = begin_row + i;
                 col = begin_column + z + (m * span) + x;
@@ -107,9 +121,30 @@ DocsAPI.DocEditor.version = function () {
                 row = begin_row + z + (m * span) + x;
                 col = begin_column + i;
               }
-              setCell(row, col,
-                "=CUBEMEMBER(" + connection_name + ',"' + member.uname + '")');
+              setCell(row, col, func);
             }
+            if (columns) {
+              row = begin_row + i;
+              col = begin_column + z + (m * span);
+              if (span > 1) {
+                row1 = row;
+                col1 = col + span - 1;
+              } else {
+                row1 = undefined;
+                col1 = undefined;
+              }
+            } else {
+              row = begin_row + z + (m * span);
+              col = begin_column + i;
+              if (span > 1) {
+                row1 = row + span - 1;
+                col1 = col;
+              } else {
+                row1 = undefined;
+                col1 = undefined;
+              }
+            }
+            setCell(row, col, func, row1, col1);
           }
         }
       }
