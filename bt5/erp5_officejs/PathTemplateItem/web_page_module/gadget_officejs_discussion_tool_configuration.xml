@@ -122,6 +122,7 @@ hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_p
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F1&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F2&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F3&view=view&appcache=1\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FPost%20Module%2F1&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FPost%20Module%2F2&view=view&appcache=1\n
 \n
 NETWORK:\n
@@ -268,7 +269,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>975.6474.59109.37017</string> </value>
+                <value> <string>975.6492.62515.52684</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -286,7 +287,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1555531977.23</float>
+                        <float>1555610260.52</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

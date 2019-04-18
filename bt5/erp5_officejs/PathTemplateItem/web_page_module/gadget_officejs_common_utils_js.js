@@ -86,7 +86,7 @@
       return gadget.jio_allDocs({query: query})
         .push(function (data) {
           if (data.data.rows.length === 0) {
-            throw "Can not find action " + action_reference + " for portal type " + portal_type;
+            throw "Can not find action '" + action_reference + "' for portal type '" + portal_type + "'";
           }
           return gadget.jio_get(data.data.rows[0].id);
         })
