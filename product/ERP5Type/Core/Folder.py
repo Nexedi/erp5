@@ -69,7 +69,8 @@ except ImportError:
   class HBTreeFolder2:
     pass
 from DateTime import DateTime
-from random import randint
+from random import randint, choice
+import string
 import os
 from zLOG import LOG, WARNING
 import warnings
@@ -274,6 +275,24 @@ class FolderMixIn(ExtensionClass.Base):
     current_date = DateTime().strftime('%Y%m%d')
     my_id = self._generateRandomId()
     return "%s.%03d-%s" %(current_date, node_number, my_id)
+
+  def _generatePerDayNodeNumberIdRandomString(self):
+    """
+    """
+    activity_tool = self.getPortalObject().portal_activities
+    node_list = list(activity_tool.getNodeList())
+    current_node = getCurrentNode()
+    try:
+      node_number = node_list.index(current_node) + 1
+    except ValueError:
+      # Not a processing node
+      node_number = 0
+    current_date = DateTime().strftime('%Y%m%d')
+    my_id = self._generateRandomId()
+    return "%s.%03d-%s-%s-%s" %(current_date, node_number,
+                                choice(string.ascii_lowercase),
+                                choice(string.ascii_lowercase),
+                                my_id)
 
   # Getter defines to address migration of a site to ZODB Property Sheets,
   # otherwise installing erp5_property_sheets fails in generateNewId() as
