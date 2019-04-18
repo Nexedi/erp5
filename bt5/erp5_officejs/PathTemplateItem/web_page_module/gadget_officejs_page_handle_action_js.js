@@ -22,9 +22,7 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
-      var gadget = this,
-        child_gadget_url = 'gadget_erp5_pt_form_view_editable.html',
-        parent_portal_type, action_code;
+      var gadget = this, parent_portal_type, action_code;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
@@ -32,7 +30,7 @@
             gadget.getUrlParameter("action_type"),
             gadget.getUrlParameter("parent_portal_type"),
             gadget.getSetting('parent_portal_type'),
-            gadget.declareGadget("gadget_officejs_common_utils.html")
+            gadget.declareGadget("gadget_officejs_form_view.html")
           ]);
         })
         .push(function (result) {
@@ -47,9 +45,9 @@
                   action_code = form_definition.fields_raw_properties.gadget_field_action_js_script.values.renderjs_extra[0];
                   return window.eval.call(window, '(function (gadget, gadget_utils, options,\
                                                     action_reference, parent_portal_type,\
-                                                    form_definition, child_gadget_url, submit_code)\
+                                                    form_definition, submit_code)\
                                                     {' + action_code[0] + '})')
-                                                  (gadget, gadget_utils, options, action_reference, parent_portal_type, form_definition, child_gadget_url, action_code[1]);
+                                                  (gadget, gadget_utils, options, action_reference, parent_portal_type, form_definition, action_code[1]);
                 }
                 else {
                   throw "Field 'gadget_field_action_js_script' missing in action \
