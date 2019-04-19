@@ -339,7 +339,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     # we commit, since usually we have a remote call only doing this
     (self.tic if tic else self.commit)()
     return result
-    
+
   def test_05_createTestResult(self):
     """
     We will check the method createTestResult of distributor
@@ -485,7 +485,6 @@ class TestTaskDistribution(ERP5TypeTestCase):
             ).stop(test_count=1, duration=1000)
     test_result.stop()
     self.tic()
-
     test_result_path, _ = self._createTestResult(
       test_list=['testSlow', 'testFast', 'testFailing'])
     # we run first the tests failing in previous run
@@ -584,12 +583,12 @@ class TestTaskDistribution(ERP5TypeTestCase):
       self.tool.startUnitTest(test_result_path)
       # We have a failure but with recent activities on tests
       self.pinDateTime(now - 1.0/24*1.5)
-      self.tool.reportTaskFailure(test_result_path, {}, "Node0")
+      self.distributor.reportTaskFailure(test_result_path, {}, "Node0")
       self.assertEqual("failed", node.getSimulationState())
       self.assertEqual("started", test_result.getSimulationState())
       # We have a failure but with no recent activities on tests
       self.pinDateTime(now)
-      self.tool.reportTaskFailure(test_result_path, {}, "Node0")
+      self.distributor.reportTaskFailure(test_result_path, {}, "Node0")
       self.assertEqual("failed", node.getSimulationState())
       self.assertEqual("failed", test_result.getSimulationState())
     finally:
@@ -602,8 +601,8 @@ class TestTaskDistribution(ERP5TypeTestCase):
     But on the other hand, if a test result line is started many times (due to
     automatic redraft), then this might just means we have issue of runTestSuite unable
     to finish tests, or we might have just tests that can never be executed within timeout time.
-    In such case, it's better to mark test result as failed to give a chance to other test
-    suites to be executed
+    In such case, it's better to mark test result as failed to give a chance to switch
+    to new revision
     """
     now = DateTime()
     try:
@@ -615,25 +614,24 @@ class TestTaskDistribution(ERP5TypeTestCase):
       node, = test_result.objectValues(portal_type="Test Result Node",
                                            sort_on=[("title", "ascending")])
       self.assertEqual("started", node.getSimulationState())
-      self.tool.startUnitTest(test_result_path)
+      self.distributor.startUnitTest(test_result_path, node_title="Node0")
       self.checkTestResultLine(test_result, [('testFoo', 'started')])
       # We have a failure but with recent activities on tests
+      # so do not mark the test result as failed
       self.pinDateTime(now - 1.0/24*7.5)
-      self.tool.reportTaskFailure(test_result_path, {}, "Node0")
+      self.distributor.reportTaskFailure(test_result_path, {}, "Node0")
       self.assertEqual("failed", node.getSimulationState())
       self.assertEqual("started", test_result.getSimulationState())
-      self.checkTestResultLine(test_result, [('testFoo', 'started')])
-      # some hours later, test line is redrafted
-      self.pinDateTime(now - 1.0/24*3)
-      self._callRestartStuckTestResultAlarm()
+      # test result line redrafted due to reportTaskFailure
       self.checkTestResultLine(test_result, [('testFoo', 'draft')])
       # Test is then relaunched
-      self.tool.startUnitTest(test_result_path)
+      self.pinDateTime(now - 1.0/24*7)
+      self.tool.startUnitTest(test_result_path, node_title="Node0")
       self.checkTestResultLine(test_result, [('testFoo', 'started')])
       # We have another failure but remains only test result line that was already
       # redrafted, so we have to mark the test result as failed
-      self.pinDateTime(now - 1.0/24*2.5)
-      self.tool.reportTaskFailure(test_result_path, {}, "Node0")
+      self.pinDateTime(now - 1.0/24*4)
+      self.distributor.reportTaskFailure(test_result_path, {}, "Node0")
       self.assertEqual("failed", node.getSimulationState())
       self.assertEqual("failed", test_result.getSimulationState())
     finally:
