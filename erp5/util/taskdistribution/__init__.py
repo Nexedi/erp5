@@ -139,10 +139,11 @@ class TestResultLineProxy(RPCRetry):
       Test name, as provided to TaskDistributor.createTestResult .
     """
     def __init__(self, proxy, retry_time, logger, test_result_line_path,
-            test_name):
+            test_name, node_title=None):
         super(TestResultLineProxy, self).__init__(proxy, retry_time, logger)
         self._test_result_line_path = test_result_line_path
         self._name = test_name
+        self._node_title = node_title
 
     def __repr__(self):
         return '<%s(%r, %r) at %x>' % (self.__class__.__name__,
@@ -191,7 +192,7 @@ class TestResultLineProxy(RPCRetry):
             self._logger.info('Extra parameters provided: %r', kw)
             status_dict.update(kw)
         self._retryRPC('stopUnitTest', (self._test_result_line_path,
-            binarize_args(status_dict)))
+            binarize_args(status_dict), self._node_title))
 
 class TestResultProxy(RPCRetry):
     """
@@ -246,7 +247,7 @@ class TestResultProxy(RPCRetry):
         if result:
             line_url, test_name = result
             result = TestResultLineProxy(self._proxy, self._retry_time,
-                self._logger, line_url, test_name)
+                self._logger, line_url, test_name, node_title=self._node_title)
         return result
 
     def reportFailure(self, date=None, command=None, stdout=None, stderr=None):

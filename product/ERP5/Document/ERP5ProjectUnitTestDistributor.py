@@ -436,22 +436,24 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     return test_suite
 
   security.declarePublic("startUnitTest")
-  def startUnitTest(self,test_result_path,exclude_list=()):
+  def startUnitTest(self, test_result_path, exclude_list=(), node_title=None):
     """
     Here this is only a proxy to the task distribution tool
     """
     LOG('ERP5ProjectUnitTestDistributor.startUnitTest', 0, test_result_path)
     portal = self.getPortalObject()
-    return portal.portal_task_distribution.startUnitTest(test_result_path,exclude_list)
+    return portal.portal_task_distribution.startUnitTest(test_result_path,exclude_list,
+                  node_title=node_title)
 
   security.declarePublic("stopUnitTest")
-  def stopUnitTest(self,test_path,status_dict):
+  def stopUnitTest(self,test_path,status_dict, node_title=None):
     """
     Here this is only a proxy to the task distribution tool
     """
     LOG('ERP5ProjectUnitTestDistributor.stop_unit_test', 0, test_path)
     portal = self.getPortalObject()
-    return portal.portal_task_distribution.stopUnitTest(test_path, status_dict)
+    return portal.portal_task_distribution.stopUnitTest(test_path, status_dict,
+                  node_title=node_title)
 
   security.declarePublic("generateConfiguration")
   def generateConfiguration(self, test_suite_title, batch_mode=0):

@@ -152,7 +152,7 @@ class TaskDistributionTool(BaseTool):
     catalog_kw = {'portal_type': 'Test Result',
                   'title': SimpleQuery(comparison_operator='=', title=test_title),
                   'sort_on': (("creation_date","descending"),),
-                  'query': NegatedQuery(SimpleQuery(simulation_state="cancelled")),
+                  'simulation_state': NegatedQuery(SimpleQuery(simulation_state="cancelled")),
                   'limit': 1}
     result_list = portal.test_result_module.searchFolder(**catalog_kw)
     if result_list:
@@ -182,6 +182,9 @@ class TaskDistributionTool(BaseTool):
             if reference_list_string is not None:
               if reference_list_string == test_result.getReference():
                 return
+              # If we are here, latest test result might be an old revision created
+              # by hand, then we should not test a newer revision already tested
+              catalog_kw['simulation_state'] = ["stopped", "public_stopped"]
               if portal.test_result_module.searchFolder(
                    reference=SimpleQuery(comparison_operator='=', reference=reference_list_string),
                    **catalog_kw):
@@ -214,7 +217,7 @@ class TaskDistributionTool(BaseTool):
     return test_result.getRelativeUrl(), revision
 
   security.declarePublic('startUnitTest')
-  def startUnitTest(self, test_result_path, exclude_list=()):
+  def startUnitTest(self, test_result_path, exclude_list=(), node_title=None):
     """(temporary)
       - test_result_path (string)
       - exclude_list (list of strings)
@@ -234,11 +237,14 @@ class TaskDistributionTool(BaseTool):
         state = line.getSimulationState()
         test = line.getRelativeUrl(), test
         if state == 'draft':
+          if node_title:
+            node = self._getTestNodeRelativeUrl(node_title)
+            line.setSource(node)
           line.start()
           return test
 
   security.declarePublic('stopUnitTest')
-  def stopUnitTest(self, test_path, status_dict):
+  def stopUnitTest(self, test_path, status_dict, node_title=None):
     """(temporary)
       - test_path (string)
       - status_dict (dict)
@@ -271,11 +277,20 @@ class TaskDistributionTool(BaseTool):
                                                           status_dict)))
     portal = self.getPortalObject()
     test_result = portal.restrictedTraverse(test_result_path)
-    node = self._getTestResultNode(test_result, node_title)
-    assert node is not None
-    node.fail(**status_dict)
-    for node in test_result.objectValues(portal_type='Test Result Node'):
-      if node.getSimulationState() != 'failed':
+    test_result_node = self._getTestResultNode(test_result, node_title)
+    assert test_result_node is not None
+    test_result_node.fail(**status_dict)
+    # Redraft all test result lines that were affected to that test node
+    # to allow immediate reexecution (useful in case of timeout raised
+    # by a runTestSuite process)
+    for line in test_result.objectValues(portal_type="Test Result Line"):
+      if line.getSimulationState() == "started" and line.getSourceTitle() == node_title:
+        line.redraft()
+    # If all test nodes failed, we would like to cancel the test result, giving
+    # opportunity to testnode to start working on a newer version of repository,
+    # possibly coming with a fix avoiding current failure
+    for test_result_node in test_result.objectValues(portal_type='Test Result Node'):
+      if test_result_node.getSimulationState() != 'failed':
         break
     else:
       # now check if we had recent work on test line, if so, this means
@@ -284,13 +299,13 @@ class TaskDistributionTool(BaseTool):
       recent_time = DateTime() - 1.0/24
       for test_result_line in test_result.objectValues(
           portal_type="Test Result Line"):
-        if test_result_line.getModificationDate() > recent_time:
+        if test_result_line.getModificationDate() >= recent_time:
           # do not take into account redrafted lines, this means we already
-          # had issues with them
+          # had issues with them (just one time, since we already redraft above)
           if len([x for x in portal.portal_workflow.getInfoFor(
                   ob=test_result_line,
                   name='history',
-                  wf_id='test_result_workflow') if x['action']=='redraft']) == 0:
+                  wf_id='test_result_workflow') if x['action']=='redraft']) <= 1:
             break
       else:
         if test_result.getSimulationState() not in ('failed', 'cancelled'):
