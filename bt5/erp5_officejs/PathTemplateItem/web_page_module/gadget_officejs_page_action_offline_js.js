@@ -55,7 +55,8 @@
     .declareMethod("render", function (options) {
       var gadget = this,
         action_info_list = [],
-        document_title, portal_type;
+        document_title,
+        portal_type;
       return gadget.jio_get(options.jio_key)
         .push(function (document) {
           var parent = "portal_types/" + document.portal_type,

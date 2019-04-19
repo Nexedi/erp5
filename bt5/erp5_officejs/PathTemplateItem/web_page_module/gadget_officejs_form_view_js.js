@@ -67,7 +67,9 @@
           title: "Untitled Document",
           portal_type: options.portal_type,
           parent_relative_url: options.parent_relative_url
-        }, key, doc_key, doc_id;
+        },
+        key,
+        doc_key;
       for (key in options) {
         if (options.hasOwnProperty(key)) {
           if (key.startsWith("my_")) {
@@ -133,7 +135,8 @@
 
     .declareMethod("renderGadget", function (target_gadget) {
       var fragment = document.createElement('div'),
-        gadget = this, form_json;
+        gadget = this,
+        form_json;
       return gadget.renderForm(target_gadget.state.form_definition, target_gadget.state.doc)
         .push(function (json) {
           form_json = json;
