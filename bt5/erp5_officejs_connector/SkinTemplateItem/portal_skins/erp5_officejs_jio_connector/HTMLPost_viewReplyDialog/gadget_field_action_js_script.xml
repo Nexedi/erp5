@@ -209,7 +209,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>python: field.restrictedTraverse(\'gadget_reply.html\').absolute_url()</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
