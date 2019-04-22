@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>gadget_reply.html</string> </value>
+            <value> <string>gadget_field_reply_action_js_script.js</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
