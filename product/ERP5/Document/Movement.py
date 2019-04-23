@@ -516,7 +516,9 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
 
   def _getAssetPrice(self,section,date):
     price = self.getPrice()
-    if section is None or not price:
+    if section is None or not price or getattr(
+      section.aq_base, 'getPriceCurrencyValue', None
+    ) is None:
       return price
     currency_value = self.getPriceCurrencyValue()
     if currency_value:
