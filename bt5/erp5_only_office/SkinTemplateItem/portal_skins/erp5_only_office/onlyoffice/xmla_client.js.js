@@ -5,6 +5,18 @@
   "use strict";
 
 
+  function getFromCache(cache, key) {
+    if (cache[key].hasOwnProperty("push") &&
+        typeof cache[key].push === "function") {
+      return cache[key]
+        .push(function () {
+          return cache[key];
+        });
+    } else {
+      return cache[key];
+    }
+  }
+
   function xmla_request(func, prop) {
     var xmla = new Xmla({async: true});
     prop = JSON.parse(JSON.stringify(prop));
@@ -54,89 +66,60 @@
     return queue;
   }
 
-  function discoverDimensions(schema, used_dimensions, opt) {
-    return xmla_request_retry("discoverMDDimensions", opt)
-      .push(undefined, function (error) {
-        console.log(error);
-      })
-      .push(function (response) {
-        var arr = [],
-          row;
-        if (response && response.numRows > 0) {
-          while (response.hasMoreRows()) {
-            row = response.readAsObject();
-            if (row["DIMENSION_TYPE"] !== 2) {
-              if (used_dimensions.indexOf(row["DIMENSION_UNIQUE_NAME"]) < 0) {
-                arr.push({
-                  const: row["DIMENSION_UNIQUE_NAME"] || undefined,
-                  title: row["DIMENSION_NAME"] || undefined
-                });
-              }
-            }
-            response.nextRow();
-          }
+  function request(g, function_name, settings, connection_name) {
+    var queue;
+    if (connection_name) {
+      queue = g.getConnectionSettings(connection_name);
+    } else {
+      queue = RSVP.Queue();
+    }
+    return queue
+      .push(function (connection_settings) {
+        if (!settings) {
+          settings = {};
         }
-        if (arr.length !== 0) {
-          schema.properties.dimension = {
-            title: " ",
-            oneOf: arr
-          };
+        if (!settings.prop) {
+          settings.prop = {};
         }
+        if (!settings.prop.restrictions) {
+          settings.prop.restrictions = {};
+        }
+        if (connection_settings) {
+          settings.urls = connection_settings.urls;
+          settings.prop.restrictions.CATALOG_NAME = connection_settings.properties.Catalog;
+          settings.prop.restrictions.CUBE_NAME = connection_settings.properties.Cube;
+        }
+        return xmla_request_retry(function_name, settings);
       });
   }
 
-  function  discoverHierarchies(schema, opt) {
-    return xmla_request_retry("discoverMDHierarchies", opt)
-      .push(undefined, function (error) {
-        console.log(error);
-      })
-      .push(function (response) {
-        var arr = [],
-          row;
-        if (response && response.numRows > 0) {
-          while (response.hasMoreRows()) {
-            row = response.readAsObject();
-            arr.push({
-              const: row["HIERARCHY_UNIQUE_NAME"] || undefined,
-              title: row["HIERARCHY_NAME"] || undefined
-            });
-            response.nextRow();
-          }
+  function levelDiscovery(g, connection_name, row) {
+    var level_uname = row["LEVEL_UNIQUE_NAME"],
+      cache = g.props.cache[connection_name],
+      queue,
+      LEVEL_CARDINALITY = row.LEVEL_CARDINALITY;
+    if (LEVEL_CARDINALITY < 0) {
+      // XXX LEVEL_CARDINALITY broken in saiku xmla
+      queue = g.getMembersOnLevel(connection_name, level_uname);
+    } else {
+      queue = RSVP.Queue();
+    }
+    queue
+      .push(function (members) {
+        var level;
+        if (LEVEL_CARDINALITY < 0 && members) {
+          LEVEL_CARDINALITY = members.length;
         }
-        if (arr.length !== 0) {
-          schema.properties.hierarchy = {
-            title: " ",
-            oneOf: arr
-          };
-        }
+        level = {
+          LEVEL_UNIQUE_NAME: row.LEVEL_UNIQUE_NAME,
+          LEVEL_TYPE: row.LEVEL_TYPE,
+          LEVEL_NAME: row.LEVEL_NAME || undefined,
+          LEVEL_CARDINALITY: LEVEL_CARDINALITY,
+        };
+        cache.levels[level_uname] = level;
+        return level;
       });
-  }
-
-  function discoverLevels(schema, opt) {
-    return xmla_request_retry("discoverMDLevels", opt)
-      .push(undefined, function (error) {
-        console.log(error);
-      })
-      .push(function (response) {
-        var arr = [],
-          row;
-        if (response && response.numRows > 0) {
-          while (response.hasMoreRows()) {
-            row = response.readAsObject();
-            arr.push({
-              const: row["LEVEL_UNIQUE_NAME"] || undefined,
-              title: row["LEVEL_NAME"] || undefined
-            });
-            response.nextRow();
-          }
-        }
-        if (arr.length !== 0) {
-          schema.properties.level = {
-            title: " ",
-            oneOf: arr
-          };
-        }
-      });
+    return queue;
   }
 
   rJS(window)
@@ -184,43 +167,92 @@
           if (m_dict[key] !== null) {
             g.props.cache[key] = {
               members: {},
-              levels: {}
+              levels: {},
+              membersOnLevel: {}
             };
             g.props.connections[key] = JSON.parse(m_dict[key]);
           }
         }
       }
     })
-    .declareMethod("request", function (function_name, settings, connection_name) {
-      var queue;
-      if (connection_name) {
-        queue = this.getConnectionSettings(connection_name);
-      } else {
-        queue = RSVP.Queue();
-      }
-      return queue
-        .push(function (connection_settings) {
-          if (!settings) {
-            settings = {};
+    .declareMethod("request", function (function_name, connection_name, settings) {
+      return request(this, function_name, settings, connection_name)
+        .push(function (response) {
+          var ret = [];
+          while (response.hasMoreRows()) {
+            ret.push(response.readAsObject());
+            response.nextRow();
           }
-          if (connection_settings) {
-            settings.urls = connection_settings.urls;
-            settings.prop.restrictions.CATALOG_NAME = connection_settings.properties.Catalog;
-            settings.prop.restrictions.CUBE_NAME = connection_settings.properties.Cube;
-          }
-          return xmla_request_retry(function_name, settings);
+          return ret;
         })
         .push(undefined, function (error) {
           console.error(error);
         });
     })
-    .declareMethod("getMembersOnLevel", function (connection_name, level_uname) {
+    .declareMethod("getLevel", function (connection_name, level_uname) {
+      var g = this,
+        cache = g.props.cache[connection_name],
+        queue;
+      if (cache.levels.hasOwnProperty(level_uname)) {
+        return getFromCache(cache.levels, level_uname);
+      }
+      queue = g.getLevels(connection_name, {
+        LEVEL_UNIQUE_NAME: level_uname
+      })
+        .push(function () {
+          return cache.levels[level_uname];
+        })
+        .push(undefined, function (err) {
+          console.error(err);
+        });
+      cache.levels[level_uname] = queue;
+      return queue;
+    })
+    .declareMethod("getLevels", function (connection_name, restrictions) {
       var g = this,
         cache = g.props.cache[connection_name];
-      if (cache.levels.hasOwnProperty(level_uname)) {
-        return cache.levels[level_uname];
+      return request(g, "discoverMDLevels", {
+        prop: {
+          restrictions: restrictions
+        }
+      }, connection_name)
+        .push(function (response) {
+          var ret = [],
+            row,
+            level,
+            level_uname;
+          if (response && response.numRows > 0) {
+            while (response.hasMoreRows()) {
+              row = response.readAsObject();
+              level_uname =  row["LEVEL_UNIQUE_NAME"];
+              if (cache.levels.hasOwnProperty(level_uname)) {
+                if (cache.levels[level_uname].hasOwnProperty("LEVEL_UNIQUE_NAME")) {
+                  level = cache.levels[level_uname];
+                } else {
+                  level = levelDiscovery(g, connection_name, row);
+                }
+              } else {
+                level = levelDiscovery(g, connection_name, row);
+                cache.levels[level_uname] = level;
+              }
+              ret.push(level);
+              response.nextRow();
+            }
+          }
+          return RSVP.all(ret);
+        })
+        .push(undefined, function (err) {
+          console.error(err);
+        });
+    })
+    .declareMethod("getMembersOnLevel", function (connection_name, level_uname) {
+      var g = this,
+        cache = g.props.cache[connection_name],
+        queue;
+      if (cache.membersOnLevel.hasOwnProperty(level_uname)) {
+        return getFromCache(cache.membersOnLevel, level_uname);
       }
-      return g.request("discoverMDMembers", {
+      queue = request(g,"discoverMDMembers", {
         prop: {
           restrictions: {
             LEVEL_UNIQUE_NAME: level_uname
@@ -231,7 +263,7 @@
           var uname,
             member,
             i,
-            level = [];
+            members = [];
           while (r.hasMoreRows()) {
             uname = r["getMemberUniqueName"]();
             if (level_uname !== r["getLevelUniqueName"]()) {
@@ -246,7 +278,7 @@
             };
             r.nextRow();
             cache.members[uname] = member;
-            level.push(member);
+            members.push(member);
           }
 
           function compare(a, b) {
@@ -259,21 +291,27 @@
             return 0;
           }
 
-          level.sort(compare);
-          for (i = 0; i < level.length; i += 1) {
-            level[i].level_index = i;
+          members.sort(compare);
+          for (i = 0; i < members.length; i += 1) {
+            members[i].level_index = i;
           }
-          cache.levels[level_uname] = level;
-          return level;
+          cache.membersOnLevel[level_uname] = members;
+          return members;
+        })
+        .push(undefined, function (err) {
+          console.error(err);
         });
-    }, {mutex: 'getMembersOnLevel'})
+      cache.membersOnLevel[level_uname] = queue;
+      return queue;
+    })
     .declareMethod("getMember", function (connection_name, memeber_uname) {
       var g = this,
-        cache = g.props.cache[connection_name];
+        cache = g.props.cache[connection_name],
+        queue;
       if (cache.members.hasOwnProperty(memeber_uname)) {
-        return cache.members[memeber_uname];
+        return getFromCache(cache.members, memeber_uname);
       }
-      return g.request("discoverMDMembers", {
+      queue = request(g, "discoverMDMembers", {
         prop: {
           restrictions: {
             MEMBER_UNIQUE_NAME: memeber_uname,
@@ -283,18 +321,25 @@
         }
       }, connection_name)
         .push(function (r) {
-          if (r.length === 0) {
+          if (r.rowCount() === 0) {
             return;
           }
           return g.getMembersOnLevel(connection_name, r["getLevelUniqueName"]());
         })
-        .push(function (level) {
-          if (!level) {
+        .push(function (members) {
+          if (!members) {
+            // cache.members[memeber_uname] = false;
             return;
           }
           return cache.members[memeber_uname];
+        })
+        .push(undefined, function (err) {
+          console.error(err);
+          // throw err;
         });
-    }, {mutex: 'getMember'})
+      cache.members[memeber_uname] = queue;
+      return queue;
+    })
     .declareMethod("getMemberWithOffset", function (connection_name, memeber_uname, offset) {
       var g = this,
         member;

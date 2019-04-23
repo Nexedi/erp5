@@ -1,26 +1,8 @@
 /*jslint nomen: true, maxlen: 200, indent: 2*/
-/*global rJS, console, window, document, RSVP, Xmla*/
+/*global rJS, console, window, document, RSVP*/
 
 (function (window, rJS) {
   "use strict";
-
-  function getCurrentConnectionSettings(g, gadget) {
-    var connections;
-    return RSVP.Queue()
-      .push(function () {
-        return g.getRemoteSettings();
-      })
-      .push(function (c) {
-        connections = c;
-        return gadget.getContent("/connection_name");
-      })
-      .push(function (connection_name) {
-        return connections[connection_name];
-      })
-      .push(undefined, function (err) {
-        console.error(err);
-      });
-  }
 
   function get_used_dimensions(g) {
     return g.getContent()
@@ -53,158 +35,86 @@
         return dimensions;
       });
   }
-
-  function xmla_request(func, prop) {
-    var xmla = new Xmla({async: true});
-    prop = JSON.parse(JSON.stringify(prop));
-    // return function () {
-    return new RSVP.Queue()
-      .push(function () {
-        return new RSVP.Promise(function (resolve, reject) {
-          prop.success = function (xmla, options, response) {
-            resolve(response);
-          };
-          prop.error = function (xmla, options, response) {
-            reject(response);
-          };
-          xmla[func](prop);
-        });
-      });
-  }
-
-  function xmla_request_retry(func, settings) {
-    var queue,
-      urls = settings.urls || [""],
-      i;
-
-    function make_request(url) {
-      return function (error) {
-        settings.prop.url = url;
-        return xmla_request(func, settings.prop)
-          .push(undefined, function (response) {
-            // fix mondrian Internal and Sql errors
-            if (response) {
-              switch (response["code"]) {
-              case "SOAP-ENV:Server.00HSBE02":
-              case "SOAP-ENV:00UE001.Internal Error":
-                // rarely server error, so try again
-                return xmla_request(func, settings.prop);
-              }
-            }
-            throw response;
-          });
-      };
-    }
-
-    queue = make_request(urls[0])();
-    for (i = 1; i < urls.length; i += 1) {
-      queue.push(undefined, make_request(urls[i]));
-    }
-    return queue;
-  }
-
-  function discoverDimensions(schema, used_dimensions, opt) {
-    return xmla_request_retry("discoverMDDimensions", opt)
+  function discoverDimensions(g, connection_name, used_dimensions) {
+    return g.request("discoverMDDimensions", connection_name)
       .push(undefined, function (error) {
         console.log(error);
       })
       .push(function (response) {
         var arr = [],
+          i,
           row;
-        if (response && response.numRows > 0) {
-          while (response.hasMoreRows()) {
-            row = response.readAsObject();
-            if (row["DIMENSION_TYPE"] !== 2) {
-              if (used_dimensions.indexOf(row["DIMENSION_UNIQUE_NAME"]) < 0) {
-                arr.push({
-                  const: row["DIMENSION_UNIQUE_NAME"] || undefined,
-                  title: row["DIMENSION_NAME"] || undefined
-                });
-              }
-            }
-            response.nextRow();
-          }
-        }
-        if (arr.length !== 0) {
-          schema.properties.dimension = {
-            title: " ",
-            oneOf: arr
-          };
-        }
-      });
-  }
-
-  function  discoverHierarchies(schema, opt) {
-    return xmla_request_retry("discoverMDHierarchies", opt)
-      .push(undefined, function (error) {
-        console.log(error);
-      })
-      .push(function (response) {
-        var arr = [],
-          row;
-        if (response && response.numRows > 0) {
-          while (response.hasMoreRows()) {
-            row = response.readAsObject();
+        for (i = 0; i < response.length; i += 1) {
+          row = response[i];
+          if (row["DIMENSION_TYPE"] !== 2 &&
+              used_dimensions.indexOf(row["DIMENSION_UNIQUE_NAME"]) < 0) {
             arr.push({
-              const: row["HIERARCHY_UNIQUE_NAME"] || undefined,
-              title: row["HIERARCHY_NAME"] || undefined
+              const: row["DIMENSION_UNIQUE_NAME"] || undefined,
+              title: row["DIMENSION_NAME"] || undefined
             });
-            response.nextRow();
           }
         }
-        if (arr.length !== 0) {
-          schema.properties.hierarchy = {
-            title: " ",
-            oneOf: arr
-          };
-        }
+        return arr;
       });
   }
 
-  function discoverLevels(schema, opt) {
-    return xmla_request_retry("discoverMDLevels", opt)
+  function discoverHierarchies(g, connection_name, opt) {
+    return g.request("discoverMDHierarchies", connection_name, opt)
       .push(undefined, function (error) {
         console.log(error);
       })
       .push(function (response) {
         var arr = [],
+          i,
           row;
-        if (response && response.numRows > 0) {
-          while (response.hasMoreRows()) {
-            row = response.readAsObject();
-            if (row["LEVEL_TYPE"] !== 1) { // exclude all level type
-              arr.push({
-                const: row["LEVEL_UNIQUE_NAME"] || undefined,
-                title: row["LEVEL_NAME"] || undefined
-              });
-            }
-            response.nextRow();
-          }
+        for (i = 0; i < response.length; i += 1) {
+          row = response[i];
+          arr.push({
+            const: row["HIERARCHY_UNIQUE_NAME"] || undefined,
+            title: row["HIERARCHY_NAME"] || undefined
+          });
         }
-        if (arr.length !== 0) {
-          schema.properties.level = {
-            title: " ",
-            oneOf: arr
-          };
-        }
+        return arr;
       });
   }
 
-  function generateChoiceSchema(connection_settings, used_dimensions, choice_settings) {
+  function discoverLevels(g, connection_name, opt) {
+    return g.getLevels(connection_name, opt)
+      .push(undefined, function (error) {
+        console.log(error);
+      })
+      .push(function (response) {
+        var arr = [],
+          i,
+          row;
+        for (i = 0; i < response.length; i += 1) {
+          row = response[i];
+          if (
+            row["LEVEL_CARDINALITY"] < 150 &&
+            row["LEVEL_TYPE"] !== 1 // exclude all level type
+          ) {
+            arr.push({
+              const: row["LEVEL_UNIQUE_NAME"] || undefined,
+              title: row["LEVEL_NAME"] || undefined
+            });
+          }
+        }
+        return arr;
+      });
+  }
+
+  function generateChoiceSchema(g, connection_name, used_dimensions, choice_settings) {
     var schema = {
       "type": "object",
       "additionalProperties": false,
       "properties": {}
     },
       current_dimension;
-    if (!connection_settings) {
+    if (!connection_name) {
       return new RSVP.Queue()
         .push(function () {
           return schema;
         });
-    }
-    if (!connection_settings.hasOwnProperty('properties')) {
-      connection_settings.properties = {};
     }
     if (!choice_settings) {
       choice_settings = {};
@@ -219,47 +129,46 @@
 
     return new RSVP.Queue()
       .push(function () {
-        var tasks = [discoverDimensions(schema, used_dimensions, {
-          urls: connection_settings.urls,
-          prop: {
-            restrictions: {
-              CATALOG_NAME: connection_settings.properties.Catalog,
-              CUBE_NAME: connection_settings.properties.Cube
-            }
-          }
-        })];
+        var tasks = [discoverDimensions(g, connection_name, used_dimensions)];
 
         if (choice_settings.dimension) {
           tasks.push(
-            discoverHierarchies(schema, {
-              urls: connection_settings.urls,
-              prop: {
-                restrictions: {
-                  CATALOG_NAME: connection_settings.properties.Catalog,
-                  CUBE_NAME: connection_settings.properties.Cube,
-                  DIMENSION_UNIQUE_NAME: choice_settings.dimension
-                }
+            discoverHierarchies(g, connection_name,{prop: {
+              restrictions: {
+                DIMENSION_UNIQUE_NAME: choice_settings.dimension
               }
-            })
+            }})
           );
         }
         if (choice_settings.hierarchy) {
-          tasks.push(discoverLevels(schema, {
-            urls: connection_settings.urls,
-            prop: {
-              restrictions: {
-                CATALOG_NAME: connection_settings.properties.Catalog,
-                CUBE_NAME: connection_settings.properties.Cube,
-                DIMENSION_UNIQUE_NAME: choice_settings.dimension,
-                HIERARCHY_UNIQUE_NAME: choice_settings.hierarchy
-              }
-            }
+          tasks.push(discoverLevels(g, connection_name, {
+            DIMENSION_UNIQUE_NAME: choice_settings.dimension,
+            HIERARCHY_UNIQUE_NAME: choice_settings.hierarchy
           }));
         }
 
         return RSVP.all(tasks);
       })
-      .push(function () {
+      .push(function (arr) {
+        if (arr[0].length !== 0) {
+          schema.properties.dimension = {
+            title: " ",
+            oneOf: arr[0]
+          };
+        }
+        if (arr[1] && arr[1].length !== 0) {
+          schema.properties.hierarchy = {
+            title: " ",
+            oneOf: arr[1]
+          };
+        }
+        if (arr[2] && arr[2].length !== 0) {
+          schema.properties.level = {
+            title: " ",
+            oneOf: arr[2]
+          };
+        }
+
         return schema;
       })
       .push(undefined, function () {
@@ -277,6 +186,8 @@
       });
     })
     .declareAcquiredMethod("getRemoteSettings", "getRemoteSettings")
+    .declareAcquiredMethod("request", "xmla_request")
+    .declareAcquiredMethod("getLevels", "xmla_getLevels")
     .allowPublicAcquisition("notifyValid", function (arr, scope) {
     })
     .allowPublicAcquisition("notifyInvalid", function (arr, scope) {
@@ -328,10 +239,10 @@
           queue = RSVP.Queue();
         }
 
-        function rerender_once(connection_settings, sub_gadget) {
+        function rerender_once(connection_name, sub_gadget) {
           return sub_gadget.getContent()
             .push(function (content) {
-              return generateChoiceSchema(connection_settings, used_diemensions, content);
+              return generateChoiceSchema(g, connection_name, used_diemensions, content);
             })
             .push(function (schema) {
               return gadget_settings.rerender({
@@ -349,25 +260,25 @@
           .push(function (gadget) {
             gadget_settings = gadget;
             return RSVP.all([
-              getCurrentConnectionSettings(g, gadget),
+              gadget.getContent("/connection_name"),
               gadget.getSubGadget(sub_scope)
             ]);
           })
           .push(function (arr) {
-            var connection_settings = arr[0],
+            var connection_name = arr[0],
               sub_gadget = arr[1];
-            return rerender_once(connection_settings, sub_gadget)
+            return rerender_once(connection_name, sub_gadget)
               .push(function (changed) {
                 if (changed && changed.length > 0) {
                   if (changed.indexOf('/dimension') >= 0) {
                     return allRerender();
                   }
-                  return rerender_once(connection_settings, sub_gadget);
+                  return rerender_once(connection_name, sub_gadget);
                 }
               })
               .push(function (changed) {
                 if (changed && changed.length > 0) {
-                  return rerender_once(connection_settings, sub_gadget);
+                  return rerender_once(connection_name, sub_gadget);
                 }
               });
           });
@@ -441,20 +352,18 @@
         return new RSVP.Queue()
           .push(function () {
             return RSVP.all([
-              g.getRemoteSettings(),
               g.getContent("/connection_name"),
               g.getContent(path),
               get_used_dimensions(g)
             ]);
           })
           .push(function (arr) {
-            var connection_settings,
-              choice_settings;
-            connection_settings = arr[0][arr[1]];
+            var choice_settings;
+
             if (path !== "/columns/" && path !== "/rows/") {
               choice_settings = arr[2];
             }
-            return generateChoiceSchema(connection_settings, arr[3], choice_settings);
+            return generateChoiceSchema(g, arr[0], arr[1], choice_settings);
           });
       }
       throw new Error("urn: '" + url + "' not supported");

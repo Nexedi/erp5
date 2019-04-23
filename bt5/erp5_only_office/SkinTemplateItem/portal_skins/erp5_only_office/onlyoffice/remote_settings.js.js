@@ -1,130 +1,80 @@
 /*jslint nomen: true, maxlen: 200, indent: 2*/
-/*global rJS, console, window, document, RSVP, Xmla*/
+/*global rJS, console, window, document, RSVP*/
 
 (function (window, rJS) {
   "use strict";
 
-  function xmla_request(func, prop) {
-    var xmla = new Xmla({async: true});
-    prop = JSON.parse(JSON.stringify(prop));
-    // return function () {
-    return new RSVP.Queue()
-      .push(function () {
-        return new RSVP.Promise(function (resolve, reject) {
-          prop.success = function (xmla, options, response) {
-            resolve(response);
-          };
-          prop.error = function (xmla, options, response) {
-            reject(response);
-          };
-          xmla[func](prop);
-        });
-      });
-  }
-
-  function xmla_request_retry(func, settings) {
-    var queue,
-      urls = settings.urls || [""],
-      i;
-
-    function make_request(url) {
-      return function (error) {
-        settings.prop.url = url;
-        return xmla_request(func, settings.prop)
-          .push(undefined, function (response) {
-            // fix mondrian Internal and Sql errors
-            if (response) {
-              switch (response["code"]) {
-              case "SOAP-ENV:Server.00HSBE02":
-              case "SOAP-ENV:00UE001.Internal Error":
-                // rarely server error, so try again
-                return xmla_request(func, settings.prop);
-              }
-            }
-            throw response;
+  function discoverDataSources(g, opt) {
+    return g.request("discoverDataSources", undefined, opt)
+      .push(undefined, function (error) {
+        console.log(error);
+      })
+      .push(function (response) {
+        if (!response) {
+          return;
+        }
+        var arr = [],
+          i,
+          row;
+        for (i = 0; i < response.length; i += 1) {
+          row = response[i];
+          arr.push({
+            const: row["DataSourceInfo"] || undefined,
+            title: row["DataSourceName"] || undefined,
+            description: row["DataSourceDescription"] || undefined
           });
-      };
-    }
-
-    queue = make_request(urls[0])();
-    for (i = 1; i < urls.length; i += 1) {
-      queue.push(undefined, make_request(urls[i]));
-    }
-    return queue;
+        }
+        return arr;
+      });
   }
 
-  function discoverDataSources(schema, opt) {
-    return xmla_request_retry("discoverDataSources", opt)
+  function discoverDBCatalogs(g, opt) {
+    return g.request("discoverDBCatalogs", undefined, opt)
       .push(undefined, function (error) {
         console.log(error);
       })
       .push(function (response) {
-        if (response && response.numRows > 0) {
-          schema.properties.DataSourceInfo = {
-            title: " ",
-            oneOf: []
-          };
-          var arr = schema.properties.DataSourceInfo.oneOf;
-          while (response.hasMoreRows()) {
-            arr.push({
-              const: response["getDataSourceInfo"]() || undefined,
-              title: response["getDataSourceName"]() || undefined,
-              description: response["getDataSourceDescription"]() || undefined
-            });
-            response.nextRow();
-          }
+        if (!response) {
+          return;
         }
+        var arr = [],
+          i,
+          row;
+        for (i = 0; i < response.length; i += 1) {
+          row = response[i];
+          arr.push({
+            const: row["CATALOG_NAME"] || undefined,
+            title: row["CATALOG_NAME"] || undefined
+          });
+        }
+        return arr;
       });
   }
 
-  function discoverDBCatalogs(schema, opt) {
-    return xmla_request_retry("discoverDBCatalogs", opt)
+  function discoverMDCubes(g, opt) {
+    return g.request("discoverMDCubes", undefined, opt)
       .push(undefined, function (error) {
         console.log(error);
       })
       .push(function (response) {
-        if (response && response.numRows > 0) {
-          schema.properties.Catalog = {
-            title: " ",
-            oneOf: []
-          };
-          var arr = schema.properties.Catalog.oneOf;
-          while (response.hasMoreRows()) {
-            arr.push({
-              const: response["getCatalogName"]() || undefined,
-              title: response["getCatalogName"]() || undefined
-            });
-            response.nextRow();
-          }
+        if (!response) {
+          return;
         }
+        var arr = [],
+          i,
+          row;
+        for (i = 0; i < response.length; i += 1) {
+          row = response[i];
+          arr.push({
+            const: row["CUBE_NAME"] || undefined,
+            title: row["CUBE_NAME"] || undefined
+          });
+        }
+        return arr;
       });
   }
 
-  function discoverMDCubes(schema, opt) {
-    return xmla_request_retry("discoverMDCubes", opt)
-      .push(undefined, function (error) {
-        console.log(error);
-      })
-      .push(function (response) {
-        if (response && response.numRows > 0) {
-          schema.properties.Cube = {
-            title: " ",
-            oneOf: []
-          };
-          var arr = schema.properties.Cube.oneOf;
-          while (response.hasMoreRows()) {
-            arr.push({
-              const: response["getCubeName"]() || undefined,
-              title: response["getCubeName"]() || undefined
-              // title: response["getCatalogName"]() || undefined
-            });
-            response.nextRow();
-          }
-        }
-      });
-  }
-
-  function generateSchema(settings) {
+  function generateSchema(g, settings) {
     var schema = {
       "type": "object",
       "additionalProperties": false,
@@ -147,11 +97,11 @@
     return new RSVP.Queue()
       .push(function () {
         return RSVP.all([
-          discoverDataSources(schema, {
+          discoverDataSources(g, {
             urls: settings.urls,
             prop: {}
           }),
-          discoverDBCatalogs(schema, {
+          discoverDBCatalogs(g, {
             urls: settings.urls,
             prop: {
               properties: {
@@ -159,7 +109,7 @@
               }
             }
           }),
-          discoverMDCubes(schema, {
+          discoverMDCubes(g, {
             urls: settings.urls,
             prop: {
               properties: {
@@ -170,39 +120,27 @@
           })
         ]);
       })
-      .push(function () {
+      .push(function (arr) {
+        if (arr[0] && arr[0].length !== 0) {
+          schema.properties.DataSourceInfo = {
+            title: " ",
+            oneOf: arr[0]
+          };
+        }
+        if (arr[1] && arr[1].length !== 0) {
+          schema.properties.Catalog = {
+            title: " ",
+            oneOf: arr[1]
+          };
+        }
+        if (arr[2] && arr[2].length !== 0) {
+          schema.properties.Cube = {
+            title: " ",
+            oneOf: arr[2]
+          };
+        }
         return schema;
       });
-  }
-
-  function decodeJsonPointer(_str) {
-    // https://tools.ietf.org/html/rfc6901#section-5
-    return _str.replace(/~1/g, '/').replace(/~0/g, '~');
-  }
-
-  function convertOnMultiLevel(d, key, value) {
-    var ii,
-      kk,
-      key_list = key.split("/");
-    for (ii = 1; ii < key_list.length; ii += 1) {
-      kk = decodeJsonPointer(key_list[ii]);
-      if (ii === key_list.length - 1) {
-        if (value !== undefined) {
-          d[kk] = value[0];
-        } else {
-          return d[kk];
-        }
-      } else {
-        if (!d.hasOwnProperty(kk)) {
-          if (value !== undefined) {
-            d[kk] = {};
-          } else {
-            return;
-          }
-        }
-        d = d[kk];
-      }
-    }
   }
 
   rJS(window)
@@ -210,6 +148,8 @@
       g.props = {};
       g.props.xmla_connections = {};
     })
+    .declareAcquiredMethod("request", "xmla_request")
+    .declareAcquiredMethod("getLevels", "xmla_getLevels")
     .allowPublicAcquisition("notifyValid", function (arr, scope) {
     })
     .allowPublicAcquisition("notifyInvalid", function (arr, scope) {
@@ -245,7 +185,7 @@
             return gadget.getContent(settings_path);
           })
           .push(function (settings) {
-            return generateSchema(settings);
+            return generateSchema(g, settings);
           })
           .push(function (schema) {
             return gadget_settings.rerender({
@@ -289,14 +229,15 @@
       return g.notifyChange();
     })
     .allowPublicAcquisition("resolveExternalReference", function (arr) {
-      var url = arr[0],
+      var g = this,
+        url = arr[0],
         schema_path = arr[1],
         path = arr[2],
         connection_path = path.split('/').slice(0, -1).join('/');
       if ("urn:jio:properties_from_xmla.connection.json" === url) {
         return this.getContent(connection_path)
           .push(function (settings) {
-            return generateSchema(settings);
+            return generateSchema(g, settings);
           });
       }
       throw new Error("urn: '" + url + "' not supported");
