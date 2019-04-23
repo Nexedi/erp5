@@ -442,12 +442,11 @@ class TestMovementGroupCommonAPI(MovementGroupTestCase):
   def test_separateMethod(self):
     """Make sure that _separate method works if argument is an empty list."""
     import Products.ERP5Type.Document
-    for name in Products.ERP5Type.Document.__dict__:
-      if name[0].isupper() and name.endswith('MovementGroup'):
-        module = getattr(Products.ERP5Type.Document, name)
-        class_ = getattr(module, name)
-        instance = class_('dummy')
-        self.assertEqual(instance._separate([]), [])
+    for portal_type in self.portal.portal_types.objectValues():
+      portal_type_id = portal_type.getId()
+      if portal_type_id.endswith("Movement Group"):
+        movement_group = self.builder.newContent(portal_type=portal_type_id)
+        self.assertEqual(movement_group._separate([]), [])
 
 class TestPropertyGroupingMovementGroup(MovementGroupTestCase):
 
