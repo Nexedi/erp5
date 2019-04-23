@@ -214,7 +214,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>superkato</string> </value>
+                <value> <string>ERP5TypeTestCase</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -228,7 +228,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>965.39086.65235.37700</string> </value>
+                <value> <string>975.14932.39176.42649</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -246,7 +246,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1523373335.9</float>
+                        <float>1556038383.15</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

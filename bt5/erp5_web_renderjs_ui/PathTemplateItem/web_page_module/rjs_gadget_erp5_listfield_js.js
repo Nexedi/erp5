@@ -12,7 +12,7 @@
       var field_json = options.field_json || {},
         item_list = ensureArray(field_json.items).map(function (item) {
           if (Array.isArray(item)) {return item; }
-          else {return [item, item]; }
+          return [item, item];
         }),
         state_dict = {
           value: getFirstNonEmpty(field_json.value, field_json['default'], ""),
@@ -28,7 +28,9 @@
           render_timestamp: new Date().getTime()
         };
       // first_item means to select the first item by default on empty value
-      if (isEmpty(state_dict.value) && (state_dict.first_item) && (!isEmpty(field_json.items))) {
+      if (isEmpty(state_dict.value) &&
+          state_dict.first_item &&
+          !isEmpty(field_json.items)) {
         state_dict.value = field_json.items[0][1];
       }
       return this.changeState(state_dict);
