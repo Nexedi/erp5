@@ -305,30 +305,28 @@
       property_name,
       parent_path,
       scope;
+    return RSVP.Queue()
+      .push(function () {
+        scope = generateUid(g);
+        parent_path = options.parent_path;
+        if (options.parent_type !== "array") {
+          property_name = options.property_name;
+          if (!property_name) {
+            property_name = input_element.value;
+          }
+          if (!property_name) {
+            throw new Error("can't create property without name");
+          }
+          if (g.props.objects[parent_path].hasOwnProperty(property_name) && g.props.objects[parent_path][property_name] !== "") {
+            throw new Error("you can't create property with existed name");
+          }
+          if (input_element) {
+            input_element.value = "";
+          }
+        }
 
-    scope = generateUid(g);
-    parent_path = options.parent_path;
-    if (options.parent_type !== "array") {
-      property_name = options.property_name;
-      if (!property_name) {
-        property_name = input_element.value;
-      }
-      if (!property_name) {
-        // XXX notify user
-        // you can't create property without property_name
-        return RSVP.Queue();
-      }
-      if (g.props.objects[parent_path].hasOwnProperty(property_name) && g.props.objects[parent_path][property_name] !== "") {
-        // XXX notify user
-        // you can't create property with existed property_name
-        return RSVP.Queue();
-      }
-      if (input_element) {
-        input_element.value = "";
-      }
-    }
-
-    return g.declareGadget('gadget_json_generated_form_child.html', {scope: scope})
+        return g.declareGadget('gadget_json_generated_form_child.html', {scope: scope});
+      })
       .push(function (form_gadget) {
         form_gadget.element.setAttribute("data-gadget-parent-scope",
           g.element.getAttribute("data-gadget-scope"));
@@ -663,18 +661,23 @@
                           return event(schema_alternatives[value[scope]].value);
                         })
                         .push(function (v) {
-                          notify.scope = v.scope;
-                          notify.path = v.path;
-                          if (rerender) {
-                            return rerender(g, schema_alternatives);
+                          if (v) {
+                            return RSVP.Queue()
+                              .push(function () {
+                                notify.scope = v.scope;
+                                notify.path = v.path;
+                                if (rerender) {
+                                  return rerender(g, schema_alternatives);
+                                }
+                                return render_options;
+                              })
+                              .push(function (render_options) {
+                                return g.render(render_options);
+                              })
+                              .push(function () {
+                                return gadget.rootNotifyChange(notify);
+                              });
                           }
-                          return render_options;
-                        })
-                        .push(function (render_options) {
-                          return g.render(render_options);
-                        })
-                        .push(function () {
-                          return gadget.rootNotifyChange(notify);
                         });
                     },
                     rerender: function () {
@@ -722,20 +725,25 @@
                   };
                   return event(schema_alternatives[0].value)
                     .push(function (v) {
-                      notify.scope = v.scope;
-                      notify.path = v.path;
-                      if (rerender) {
-                        return rerender(undefined, schema_alternatives);
+                      if (v) {
+                        return RSVP.Queue()
+                          .push(function () {
+                            notify.scope = v.scope;
+                            notify.path = v.path;
+                            if (rerender) {
+                              return rerender(undefined, schema_alternatives);
+                            }
+                            return true;
+                          })
+                          .push(function (r) {
+                            if (!r) {
+                              input.setAttribute("style", "display: none;");
+                            } else {
+                              input.removeAttribute("style");
+                            }
+                            return gadget.rootNotifyChange(notify);
+                          });
                       }
-                      return true;
-                    })
-                    .push(function (r) {
-                      if (!r) {
-                        input.setAttribute("style", "display: none;");
-                      } else {
-                        input.removeAttribute("style");
-                      }
-                      return gadget.rootNotifyChange(notify);
                     });
                 },
                 rerender: function () {
@@ -1269,7 +1277,11 @@
               type: value.type,
               schema_arr: [value]
             })
-              .push(element_append);
+              .push(element_append)
+              .push(undefined, function (err) {
+                // XXX notify user
+                console.error(err);
+              });
           });
         });
         return queue;
