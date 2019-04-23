@@ -43,7 +43,6 @@ from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.Document.Amount import Amount
 from Products.ERP5Type.Cache import transactional_cached
-from Acquisition import aq_base
 
 from zLOG import LOG, WARNING
 
@@ -517,10 +516,12 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
 
   def _getAssetPrice(self,section,date):
     price = self.getPrice()
-    if section is None or not price:
+    if section is None or not price or getattr(
+      section.aq_base, 'getPriceCurrencyValue', None
+    ) is None:
       return price
     currency_value = self.getPriceCurrencyValue()
-    if currency_value and getattr(aq_base(section), 'getPriceCurrency', None) is not None:
+    if currency_value:
       section_currency = section.getPriceCurrency()
       if section_currency:
         exchange_rate = getExchangeRate(

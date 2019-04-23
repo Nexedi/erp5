@@ -884,6 +884,7 @@ class TestInventory(InventoryAPITestCase):
                             resource=self.resource.getRelativeUrl(),
                             at_date=date_gmt_1)
 
+
 class TestInventoryList(InventoryAPITestCase):
   """Tests getInventoryList methods.
   """
@@ -1634,6 +1635,32 @@ class TestInventoryList(InventoryAPITestCase):
                   section_uid=self.section.getUid())
       self.assertTrue(result is not None)
       self.assertEqual(internal_data[cur]['after']['total_price'], round(result))
+
+  def test_TotalPriceIndexationWhenSectionIsPerson(self):
+    """
+      Checks that when source_section or destination_section is Person
+      total_price is indexed correctly.
+      Added after a bug that caused bad indexation in such cases
+    """
+    getInventoryList = self.getSimulationTool().getInventoryList
+    movement = self._makeMovement(quantity=1, price=5)
+    person_1 = self.portal.person_module.newContent(portal_type='Person')
+    person_2 = self.portal.person_module.newContent(portal_type='Person')
+    currency = self.portal.currency_module.newContent(
+      portal_type='Currency'
+    )
+    movement.edit(
+      source_section_value=person_1,
+      destination_section_value=person_2,
+      price_currency_value=currency,
+    )
+    self.tic()
+    inventory_list_1 = getInventoryList(section_uid=person_1.getUid())
+    self.assertEqual(len(inventory_list_1), 1)
+    self.assertEqual(inventory_list_1[0].total_price, -5.0)
+    inventory_list_2 = getInventoryList(section_uid=person_2.getUid())
+    self.assertEqual(len(inventory_list_2), 1)
+    self.assertEqual(inventory_list_2[0].total_price, 5.0)
 
 class TestMovementHistoryList(InventoryAPITestCase):
   """Tests Movement history list methods.
