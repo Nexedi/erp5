@@ -52,24 +52,25 @@
       }
       state.item_list = JSON.parse(this.state.item_list);
 
-      if (modification_dict.hasOwnProperty('editable')) {
-        if (this.state.editable) {
-          url = 'gadget_html5_select.html';
-        } else {
-          url = 'gadget_html5_element.html';
+      if (this.state.editable) {
+        url = 'gadget_html5_select.html';
+      } else {
+        url = 'gadget_html5_element.html';
 
-          item_list = state.item_list;
-          for (i = 0; i < item_list.length; i += 1) {
-            if (item_list[i][1] === this.state.value) {
-              text_content = item_list[i][0];
-            }
+        item_list = state.item_list;
+        for (i = 0; i < item_list.length; i += 1) {
+          if (item_list[i][1] === this.state.value) {
+            text_content = item_list[i][0];
           }
-          if (text_content === undefined) {
-            text_content = '??? (' + this.state.value + ')';
-          }
-          state.text_content = text_content;
-
         }
+        if (text_content === undefined) {
+          text_content = '??? (' + this.state.value + ')';
+        }
+        state.text_content = text_content;
+
+      }
+
+      if (modification_dict.hasOwnProperty('editable')) {
         result = this.declareGadget(url, {scope: 'sub'})
           .push(function (input) {
             // Clear first to DOM, append after to reduce flickering/manip

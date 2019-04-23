@@ -1,0 +1,79 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/0?editable=true</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//select[@name='field_my_local_title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//select[@name='field_my_local_title']</td>
+  <td>First title</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+<tr>
+  <td>click</td>
+  <td>//input[@name='editable']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<!-- Actual test -->
+<tr>
+  <td>assertTextPresent</td>
+  <td>First title</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[contains(@class, "active") and text()="View"]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>assertTextPresent</td>
+  <td>First title</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
