@@ -3,6 +3,19 @@
 (function (window, rJS, getFirstNonEmpty, ensureArray) {
   "use strict";
 
+  function generateTextContent(value, item_list) {
+    var i, text_content;
+    for (i = 0; i < item_list.length; i += 1) {
+      if (item_list[i][1] === value) {
+        text_content = item_list[i][0];
+      }
+    }
+    if (text_content === undefined) {
+      text_content = '??? (' + value + ')';
+    }
+    return text_content;
+  }
+
   rJS(window)
     .setState({
       tag: 'p'
@@ -41,8 +54,6 @@
         url,
         result,
         i,
-        text_content,
-        item_list,
         state = {};
 
       for (i in this.state) {
@@ -57,18 +68,8 @@
           url = 'gadget_html5_select.html';
         } else {
           url = 'gadget_html5_element.html';
-
-          item_list = state.item_list;
-          for (i = 0; i < item_list.length; i += 1) {
-            if (item_list[i][1] === this.state.value) {
-              text_content = item_list[i][0];
-            }
-          }
-          if (text_content === undefined) {
-            text_content = '??? (' + this.state.value + ')';
-          }
-          state.text_content = text_content;
-
+          state.text_content =
+            generateTextContent(this.state.value, state.item_list);
         }
         result = this.declareGadget(url, {scope: 'sub'})
           .push(function (input) {
@@ -81,6 +82,10 @@
           });
       } else {
         result = this.getDeclaredGadget('sub');
+        if (!this.state.editable) {
+          state.text_content =
+            generateTextContent(this.state.value, state.item_list);
+        }
       }
       return result
         .push(function (input) {
