@@ -121,6 +121,16 @@
     return queue;
   }
 
+  function row2member(row) {
+    return {
+      uname: row.getMemberUniqueName(),
+      level: row.getLevelUniqueName(),
+      h: row.getHierarchyUniqueName(),
+      caption: row.getMemberCaption(),
+      type: row.getMemberType()
+    };
+  }
+
   rJS(window)
     .ready(function () {
       var g = this;
@@ -269,13 +279,7 @@
             if (level_uname !== r["getLevelUniqueName"]()) {
               throw "xmla server fail";
             }
-            member = {
-              uname: uname,
-              level: level_uname,
-              h: r["getHierarchyUniqueName"](),
-              caption: r["getMemberCaption"](),
-              type: r["getMemberType"]()
-            };
+            member = row2member(r);
             r.nextRow();
             cache.members[uname] = member;
             members.push(member);
@@ -323,17 +327,12 @@
       }, connection_name)
         .push(function (r) {
           if (r.rowCount() === 0) {
-            return;
-          }
-          return g.getMembersOnLevel(connection_name, r["getLevelUniqueName"]());
-        })
-        .push(function (members) {
-          if (!members) {
             delete cache.members[memeber_uname];
-            // cache.members[memeber_uname] = false;
             return;
           }
-          return cache.members[memeber_uname];
+          var member = row2member(r);
+          cache.members[memeber_uname] = member;
+          return member;
         })
         .push(undefined, function (err) {
           delete cache.members[memeber_uname];
