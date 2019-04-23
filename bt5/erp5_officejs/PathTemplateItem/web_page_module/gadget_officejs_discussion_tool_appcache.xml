@@ -229,6 +229,10 @@ gadget_officejs_form_view.html\n
 gadget_officejs_form_view.js\n
 gadget_erp5_page_handle_action.html\n
 gadget_erp5_page_handle_action.js\n
+gadget_field_new_action_js_script.html\n
+gadget_field_new_action_js_script.js\n
+gadget_field_reply_action_js_script.html\n
+gadget_field_reply_action_js_script.js\n
 \n
 #needed for appcachestorage sync\n
 /\n
@@ -738,7 +742,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>975.7925.35634.50875</string> </value>
+                <value> <string>975.15178.25005.32409</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -756,7 +760,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1555618417.31</float>
+                        <float>1556053135.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -1,8 +1,8 @@
-/*global window, rJS, RSVP */
+/*global window, document, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 /*jslint evil: true */
 
-(function (window, rJS, RSVP) {
+(function (window, document, rJS, RSVP) {
   "use strict";
 
   var gadget_utils, action_reference, action_type, action_gadget;
@@ -24,7 +24,7 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
-      var gadget = this, parent_portal_type, action_code;
+      var gadget = this, parent_portal_type, action_gadget_url;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
@@ -44,13 +44,16 @@
             .push(function (form_definition) {
               if (action_type === "object_jio_js_script") {
                 if (form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script")) {
-                  // eval must be removed. use loaded action gadget from gadgetfield
-                  action_code = form_definition.fields_raw_properties.gadget_field_action_js_script.values.renderjs_extra[0];
-                  return window.eval.call(window, '(function (gadget, gadget_utils, options, action_reference, parent_portal_type, form_definition, submit_code) {' + action_code[0] + '})')(gadget, gadget_utils, options, action_reference, parent_portal_type, form_definition, action_code[1]);
-                  return form.getDeclaredGadget('gadget_field_action_js_script')
+                  action_gadget_url = form_definition.fields_raw_properties.gadget_field_action_js_script.values.gadget_url;
+                  var fragment = document.createElement('div');
+                  gadget.element.appendChild(fragment);
+                  return gadget.declareGadget(action_gadget_url, {
+                    scope: "action_field",
+                    element: fragment
+                  })
                     .push(function (declared_gadget) {
                       action_gadget = declared_gadget;
-                      action_gadget.handleRender(gadget, gadget_utils, options, action_reference, parent_portal_type, form_definition);
+                      return action_gadget.handleRender(gadget, gadget_utils, options, action_reference, parent_portal_type, form_definition);
                     });
                 } else {
                   throw "Field 'gadget_field_action_js_script' missing in action form. Please check '" + action_reference + "' action configuration.";
@@ -82,9 +85,7 @@
         content_dict = options[2],
         submit_code = gadget.state.submit_code;
       if (action_type === "object_jio_js_script") {
-        // eval must be removed. use loaded action gadget from gadgetfield
-        return window.eval.call(window, '(function (gadget, gadget_utils, jio_key, content_dict) {' + submit_code + '})')(gadget, gadget_utils, jio_key, content_dict);
         action_gadget.handleSubmit(gadget, gadget_utils, jio_key, content_dict);
       }
     });
-}(window, rJS, RSVP));
+}(window, document, rJS, RSVP));
