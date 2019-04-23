@@ -123,6 +123,7 @@ onlyoffice/web-apps/apps/common/main/lib/view_folder/RenameDialog.js
 onlyoffice/web-apps/apps/common/main/lib/view_folder/ReviewChanges.js
 onlyoffice/web-apps/apps/common/main/lib/view_folder/SearchDialog.js
 onlyoffice/web-apps/apps/common/main/lib/view_folder/RenderJSDialog.js
+onlyoffice/web-apps/apps/common/main/lib/view_folder/RenderJSPanel.js
 onlyoffice/web-apps/apps/css.js
 onlyoffice/web-apps/apps/documenteditor/main/app.js
 onlyoffice/web-apps/apps/documenteditor/main/app/collection/EquationGroups.js
