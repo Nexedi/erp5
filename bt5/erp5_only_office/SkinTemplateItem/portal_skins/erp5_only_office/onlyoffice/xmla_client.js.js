@@ -46,7 +46,7 @@
           .push(undefined, function (response) {
             // fix mondrian Internal and Sql errors
             if (response) {
-              switch (response["code"]) {
+              switch (response.code) {
               case "SOAP-ENV:Server.00HSBE02":
               case "SOAP-ENV:00UE001.Internal Error":
                 // rarely server error, so try again
@@ -93,7 +93,7 @@
   }
 
   function levelDiscovery(g, connection_name, row) {
-    var level_uname = row["LEVEL_UNIQUE_NAME"],
+    var level_uname = row.LEVEL_UNIQUE_NAME,
       cache = g.props.cache[connection_name],
       queue,
       LEVEL_CARDINALITY = row.LEVEL_CARDINALITY;
@@ -145,7 +145,7 @@
       return g.getRemoteSettings()
         .push(function (settings) {
           return g.setConnectionsSettings(settings);
-        })
+        });
     })
     .declareAcquiredMethod("getRemoteSettings", "getRemoteSettings")
     .declareMethod("getConnectionSettings", function (name) {
@@ -234,7 +234,7 @@
           if (response && response.numRows > 0) {
             while (response.hasMoreRows()) {
               row = response.readAsObject();
-              level_uname =  row["LEVEL_UNIQUE_NAME"];
+              level_uname =  row.LEVEL_UNIQUE_NAME;
               if (cache.levels.hasOwnProperty(level_uname)) {
                 if (cache.levels[level_uname].hasOwnProperty("LEVEL_UNIQUE_NAME")) {
                   level = cache.levels[level_uname];
@@ -262,7 +262,7 @@
       if (cache.membersOnLevel.hasOwnProperty(level_uname)) {
         return getFromCache(cache.membersOnLevel, level_uname);
       }
-      queue = request(g,"discoverMDMembers", {
+      queue = request(g, "discoverMDMembers", {
         prop: {
           restrictions: {
             LEVEL_UNIQUE_NAME: level_uname
@@ -275,8 +275,8 @@
             i,
             members = [];
           while (r.hasMoreRows()) {
-            uname = r["getMemberUniqueName"]();
-            if (level_uname !== r["getLevelUniqueName"]()) {
+            uname = r.getMemberUniqueName();
+            if (level_uname !== r.getLevelUniqueName()) {
               throw "xmla server fail";
             }
             member = row2member(r);
@@ -361,4 +361,3 @@
 
 
 }(window, rJS));
-
