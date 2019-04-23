@@ -40,6 +40,7 @@ define([
             iframe.width = '100%';
             iframe.height = (Common.Utils.innerHeight() - 80) + 'px';
             iframe.setAttribute("frameBorder", "0");
+            me.$el = $(sub_gadget.element);
           });
       } else {
         q = RSVP.Queue();
