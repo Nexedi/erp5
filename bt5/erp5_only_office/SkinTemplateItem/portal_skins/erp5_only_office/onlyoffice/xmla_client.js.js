@@ -12,9 +12,8 @@
         .push(function () {
           return cache[key];
         });
-    } else {
-      return cache[key];
     }
+    return cache[key];
   }
 
   function xmla_request(func, prop) {
@@ -203,6 +202,7 @@
           return cache.levels[level_uname];
         })
         .push(undefined, function (err) {
+          delete cache.levels[level_uname];
           console.error(err);
         });
       cache.levels[level_uname] = queue;
@@ -299,6 +299,7 @@
           return members;
         })
         .push(undefined, function (err) {
+          delete cache.membersOnLevel[level_uname];
           console.error(err);
         });
       cache.membersOnLevel[level_uname] = queue;
@@ -328,12 +329,14 @@
         })
         .push(function (members) {
           if (!members) {
+            delete cache.members[memeber_uname];
             // cache.members[memeber_uname] = false;
             return;
           }
           return cache.members[memeber_uname];
         })
         .push(undefined, function (err) {
+          delete cache.members[memeber_uname];
           console.error(err);
           // throw err;
         });
