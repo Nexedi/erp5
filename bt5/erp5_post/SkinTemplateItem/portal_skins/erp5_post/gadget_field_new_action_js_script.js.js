@@ -22,13 +22,7 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("render", function (options) {
-      console.log("GADGET FIELD RENDER METHOD!!!");
-      return;
-    })
-
     .declareMethod("handleRender", function (gadget, gadget_utils, options, action_reference, parent_portal_type, form_definition) {
-      console.log("GADGET FIELD handleRender METHOD!!!");
       var child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
       return RSVP.Queue()
         .push(function () {
@@ -67,7 +61,6 @@
     })
 
     .declareMethod("handleSubmit", function (gadget, gadget_utils, jio_key, content_dict) {
-      console.log("GADGET FIELD handleSubmit METHOD!!!");
       return gadget.notifySubmitting()
         .push(function () {
           return gadget.jio_get(jio_key);
@@ -94,9 +87,5 @@
           });
         });
     });
-
-    /*.onStateChange(function () {
-      return gadget_utils.renderGadget(this);
-    });*/
 
 }(window, rJS, RSVP));
