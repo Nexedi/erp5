@@ -83,7 +83,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/PostModule_newHTMLPost</string> </value>
+            <value> <string>portal_skins/erp5_post/PostModule_newHTMLPost</string> </value>
         </item>
       </dictionary>
     </pickle>
