@@ -83,10 +83,14 @@
         if (!settings.prop.restrictions) {
           settings.prop.restrictions = {};
         }
+        if (!settings.prop.properties) {
+          settings.prop.properties = {};
+        }
         if (connection_settings) {
           settings.urls = connection_settings.urls;
-          settings.prop.restrictions.CATALOG_NAME = connection_settings.properties.Catalog;
           settings.prop.restrictions.CUBE_NAME = connection_settings.properties.Cube;
+          settings.prop.properties.DataSourceInfo = connection_settings.properties.DataSourceInfo;
+          settings.prop.properties.Catalog = connection_settings.properties.Catalog;
         }
         return xmla_request_retry(function_name, settings);
       });
