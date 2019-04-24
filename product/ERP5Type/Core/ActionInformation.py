@@ -188,8 +188,11 @@ class CacheableAction(object):
 
   def cook(self, ec):
     param_dict = self.param_dict.copy()
-    action = self.action
-    param_dict['url'] = action is not None and action(ec) or ''
-    icon = self.icon
-    param_dict['icon'] = icon is not None and icon(ec) or ''
+    try:
+      action = self.action
+      param_dict['url'] = action is not None and action(ec) or ''
+      icon = self.icon
+      param_dict['icon'] = icon is not None and icon(ec) or ''
+    except:
+      pass
     return param_dict
