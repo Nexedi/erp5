@@ -247,6 +247,33 @@ class TestTaskDistribution(ERP5TypeTestCase):
                     [('COMP32-Node1',set([u'B1'])), ('COMP32-Node2',set([u'B0']))]],
                     "%r" % ([config1, config2],))
 
+  def processTest(self, test_title, revision, start_count=2, stop_count=2,
+                  node_title='Node0'):
+    """start_count: number of test line to start
+       stop_count: number of test line to stop
+    """
+    status_dict = {}
+    test_result_path, revision = self._createTestResult(revision=revision,
+      test_list=['testFoo', 'testBar'], test_title=test_title, node_title=node_title)
+    if start_count:
+      line_url, test = self.distributor.startUnitTest(test_result_path,
+                                                      node_title=node_title)
+    if start_count == 2:
+      next_line_url, next_test = self.distributor.startUnitTest(test_result_path,
+                                                                node_title=node_title)
+      self.assertEqual(set(['testFoo', 'testBar']), set([test, next_test]))
+    if stop_count:
+      self.distributor.stopUnitTest(line_url, status_dict, node_title=node_title)
+    if stop_count == 2:
+      self.tool.stopUnitTest(next_line_url, status_dict, node_title=node_title)
+    test_result = self.portal.restrictedTraverse(test_result_path)
+    self.assertEqual(test_result.getSimulationState(), "started")
+    self.tic()
+    if stop_count == 2:
+      self.assertEquals(test_result.getSimulationState(), "stopped")
+    else:
+      self.assertEquals(test_result.getSimulationState(), "started")
+
   def test_04b_startTestSuiteOrder(self):
     """
     When we have many test suites associated to one test nodes, the method
@@ -266,74 +293,193 @@ class TestTaskDistribution(ERP5TypeTestCase):
     # By default we have random order between test suites
     self.assertEquals(set(["test suite 1", "test suite 2", "test suite 3"]),
                       set(getTestSuiteList()))
+
     # Check that if test suite 1 and test suite 2 are recently processed,
     # then next work must be test suite 3
-    def processTest(test_title, revision, start_count=2, stop_count=2):
-      """start_count: number of test line to start
-         stop_count: number of test line to stop
-      """
-      status_dict = {}
-      test_result_path, revision = self._createTestResult(revision=revision,
-        test_list=['testFoo', 'testBar'], test_title=test_title)
-      if start_count:
-        line_url, test = self.tool.startUnitTest(test_result_path)
-      if start_count == 2:
-        next_line_url, next_test = self.tool.startUnitTest(test_result_path)
-        self.assertEqual(set(['testFoo', 'testBar']), set([test, next_test]))
-      if stop_count:
-        self.tool.stopUnitTest(line_url, status_dict)
-      if stop_count == 2:
-        self.tool.stopUnitTest(next_line_url, status_dict)
-      test_result = self.portal.restrictedTraverse(test_result_path)
-      self.assertEqual(test_result.getSimulationState(), "started")
-      self.tic()
-      if stop_count == 2:
-        self.assertEquals(test_result.getSimulationState(), "stopped")
-      else:
-        self.assertEquals(test_result.getSimulationState(), "started")
-
-    processTest("test suite 1", "r0=a")
+    self.processTest("test suite 1", "r0=a")
     self.tic()
     sleep(1) # needed because creation date sql value does not record millesecond
-    processTest("test suite 2", "r0=b")
+    self.processTest("test suite 2", "r0=b")
     self.tic()
     sleep(1)
     self.assertEquals(getTestSuiteList()[0], "test suite 3")
-    processTest("test suite 3", "r0=b")
+    self.processTest("test suite 3", "r0=b")
     # after test suite 3, we now have to process test suite 1
     # since it is the oldest one
     self.tic()
     sleep(1)
     self.assertEquals(getTestSuiteList()[0], "test suite 1")
-    processTest("test suite 1", "r0=c")
+    self.processTest("test suite 1", "r0=c")
     # after test suite 1, we now have to process test suite 2
     # since it is the oldest one
     self.tic()
     sleep(1)
     self.assertEquals(getTestSuiteList()[0], "test suite 2")
-    processTest("test suite 2", "r0=d")
+    self.processTest("test suite 2", "r0=d")
     self.tic()
     sleep(1)
     # now let's say for any reason test suite 1 has been done
-    processTest("test suite 1", "r0=e")
+    self.processTest("test suite 1", "r0=e")
     self.tic()
     sleep(1)
     # we should then have by order 3, 2, 1
     self.assertEquals(["test suite 3", "test suite 2", "test suite 1"],
                       getTestSuiteList())
     # now launch all test of test 3, even if they are not finished yet
-    processTest("test suite 3", "r0=f", stop_count=1)
+    self.processTest("test suite 3", "r0=f", stop_count=1)
     self.tic()
     sleep(1)
     self.assertEquals(["test suite 2", "test suite 1", "test suite 3"],
                       getTestSuiteList())
     # now launch partially tests of suite 2, it must have priority over
     # test 3, even if test 3 is older because all tests of test 3 are ongoing
-    processTest("test suite 2", "r0=g", start_count=1, stop_count=0)
+    self.processTest("test suite 2", "r0=g", start_count=1, stop_count=0)
     self.tic()
     sleep(1)
     self.assertEquals(["test suite 1", "test suite 2", "test suite 3"],
                       getTestSuiteList())
+
+  def test_04c_startTestSuiteOrderWithManyTestNodes(self):
+    """
+    When we have many test suites associated to many test nodes, the method
+    startTestSuite should not only take into account the age of latest test result,
+    but it should also give more test nodes to test suites having higher priority.
+    This avoid affecting all test nodes to a test suite having medium priority
+    while a test suite with high priority is waiting for more nodes to speed up.
+    """
+    for x in  range(10):
+      config_list = json.loads(self.distributor.startTestSuite(
+                             title="COMP%s-Node1" % x))
+    test_suite_list = self._createTestSuite(quantity=3)
+    test_suite_list[0].setIntIndex(1) # test suite 1
+    test_suite_list[1].setIntIndex(5) # test suite 2
+    test_suite_list[2].setIntIndex(9) # test suite 3
+    self.tic()
+
+    self._callOptimizeAlarm()
+    def getTestSuiteList(title):
+      config_list = json.loads(self.distributor.startTestSuite(
+                             title=title))
+      return ["%s" % x["test_suite_title"] for x in config_list]
+    now = DateTime()
+    try:
+      # Check test suite distribution. This is not the purpose of this test
+      # initially, distribution might later change if algorithm is modified.
+      # Though next steps of the test depends on distribution, thus we have
+      # to make sure test does not fails only due to a change of distribution
+      self.assertEquals(set(getTestSuiteList("COMP0-Node1")), set(["test suite 1", "test suite 2", "test suite 3"]))
+      self.assertEquals(set(getTestSuiteList("COMP1-Node1")), set(["test suite 2", "test suite 3"]))
+      self.assertEquals(set(getTestSuiteList("COMP2-Node1")), set(["test suite 2", "test suite 3"]))
+      self.assertEquals(set(getTestSuiteList("COMP3-Node1")), set(["test suite 2", "test suite 3"]))
+      # COMP4 as less than COMP5 only due to distribution algorithm, though
+      # this is not an issue at all
+      self.assertEquals(set(getTestSuiteList("COMP4-Node1")), set(["test suite 3"]))
+      self.assertEquals(set(getTestSuiteList("COMP5-Node1")), set(["test suite 2", "test suite 3"]))
+      self.assertEquals(set(getTestSuiteList("COMP6-Node1")), set(["test suite 3"]))
+      self.assertEquals(set(getTestSuiteList("COMP7-Node1")), set(["test suite 3"]))
+      self.assertEquals(set(getTestSuiteList("COMP8-Node1")), set(["test suite 3"]))
+      self.assertEquals(set(getTestSuiteList("COMP9-Node1")), set(["test suite 3"]))
+      # process some test to have old test result in database
+      self.processTest("test suite 1", "r0=a", node_title="COMP0-Node1")
+      self.pinDateTime(now + 1.0/86400)
+      self.processTest("test suite 2", "r0=a", node_title="COMP1-Node1")
+      self.pinDateTime(now + 2.0/86400)
+      self.processTest("test suite 3", "r0=a", node_title="COMP1-Node1")
+      # so by default, when no test is running, older test suite is given first
+      self.assertEquals(["test suite 1", "test suite 2", "test suite 3"],
+            getTestSuiteList("COMP0-Node1"))
+      self.assertEquals(["test suite 2", "test suite 3"],
+            getTestSuiteList("COMP5-Node1"))
+      # Start some work
+      self.pinDateTime(now + 3.0/86400)
+      self.processTest("test suite 2", "r0=b", node_title="COMP1-Node1", start_count=0, stop_count=0)
+      # COMP1-Node1 : test suite 2
+      # suite 1 is now the newest, it is checked last, test suite 3 has priority on test suite 2
+      # since no test is running for it
+      self.assertEquals(["test suite 1", "test suite 3", "test suite 2"],
+            getTestSuiteList("COMP0-Node1"))
+      self.assertEquals(["test suite 3", "test suite 2"],
+            getTestSuiteList("COMP5-Node1"))
+      # Now let's say test suite 3 is starting too
+      self.pinDateTime(now + 4.0/86400)
+      self.processTest("test suite 3", "r0=b", node_title="COMP6-Node1", start_count=0, stop_count=0)
+      # COMP1-Node1 : test suite 2
+      # COMP6-Node1 : test suite 3
+      # test suite 3 still should have the priority other test suite 2, because it
+      # has higher priority
+      self.assertEquals(["test suite 3", "test suite 2"],
+            getTestSuiteList("COMP5-Node1"))
+      # another test node working on test suite 3
+      self.processTest("test suite 3", "r0=b", node_title="COMP7-Node1", start_count=0, stop_count=0)
+      # COMP1-Node1 : test suite 2
+      # COMP6-Node1 : test suite 3
+      # COMP7-Node1 : test suite 3
+      # Now we have 2 testnodes for test suite 3, and only 1 for test suite 2, time to give
+      # more priority to test suite 2
+      self.assertEquals(["test suite 2", "test suite 3"],
+            getTestSuiteList("COMP5-Node1"))
+      self.assertEquals(["test suite 1", "test suite 2", "test suite 3"],
+            getTestSuiteList("COMP0-Node1"))
+      # so now a testnode working on test suite 2
+      self.processTest("test suite 2", "r0=b", node_title="COMP2-Node1", start_count=0, stop_count=0)
+      # COMP1-Node1 : test suite 2
+      # COMP2-Node1 : test suite 2
+      # COMP6-Node1 : test suite 3
+      # COMP7-Node1 : test suite 3
+      # Now we have 2 testnodes for test suite 3, and 2 for test suite 2, time to give
+      # more priority to test suite 3
+      self.assertEquals(["test suite 3", "test suite 2"],
+            getTestSuiteList("COMP5-Node1"))
+      self.processTest("test suite 3", "r0=b", node_title="COMP8-Node1", start_count=0, stop_count=0)
+      # COMP1-Node1 : test suite 2
+      # COMP2-Node1 : test suite 2
+      # COMP6-Node1 : test suite 3
+      # COMP7-Node1 : test suite 3
+      # COMP8-Node1 : test suite 3
+      # Now we have 3 testnodes for test suite 3, and 2 for test suite 2, test suite 3 still
+      # need priority due to higher priority
+      self.assertEquals(["test suite 3", "test suite 2"],
+            getTestSuiteList("COMP5-Node1"))
+      self.processTest("test suite 3", "r0=b", node_title="COMP9-Node1", start_count=0, stop_count=0)
+      # COMP1-Node1 : test suite 2
+      # COMP2-Node1 : test suite 2
+      # COMP6-Node1 : test suite 3
+      # COMP7-Node1 : test suite 3
+      # COMP8-Node1 : test suite 3
+      # COMP9-Node1 : test suite 3
+      # Now we have 4 testnodes for test suite 3, and 2 for test suite 2, test suite 2 will
+      # have again priority
+      self.assertEquals(["test suite 2", "test suite 3"],
+            getTestSuiteList("COMP5-Node1"))
+      self.assertEquals(["test suite 1", "test suite 2", "test suite 3"],
+            getTestSuiteList("COMP0-Node1"))
+      self.processTest("test suite 2", "r0=b", node_title="COMP3-Node1", start_count=0, stop_count=0)
+      # COMP1-Node1 : test suite 2
+      # COMP2-Node1 : test suite 2
+      # COMP3-Node1 : test suite 2
+      # COMP6-Node1 : test suite 3
+      # COMP7-Node1 : test suite 3
+      # COMP8-Node1 : test suite 3
+      # COMP9-Node1 : test suite 3
+      # Now we have 4 testnodes for test suite 3, and 3 for test suite 2, test suite 3 will
+      # have again priority
+      self.assertEquals(["test suite 3", "test suite 2"],
+            getTestSuiteList("COMP5-Node1"))
+      self.processTest("test suite 3", "r0=b", node_title="COMP4-Node1", start_count=0, stop_count=0)
+      # COMP1-Node1 : test suite 2
+      # COMP2-Node1 : test suite 2
+      # COMP3-Node1 : test suite 2
+      # COMP4-Node1 : test suite 3
+      # COMP6-Node1 : test suite 3
+      # COMP7-Node1 : test suite 3
+      # COMP8-Node1 : test suite 3
+      # COMP9-Node1 : test suite 3
+      self.assertEquals(["test suite 3", "test suite 2"],
+            getTestSuiteList("COMP5-Node1"))
+      self.assertEquals(["test suite 1", "test suite 3", "test suite 2"],
+            getTestSuiteList("COMP0-Node1"))
+    finally:
+      self.unpinDateTime()
 
   def _cleanupTestResult(self):
     self.tic()
