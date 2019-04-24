@@ -5,7 +5,8 @@
 (function (window, document, rJS, RSVP) {
   "use strict";
 
-  var gadget_utils, action_reference, action_type, action_gadget;
+  var common_utils_gadget_url = "gadget_officejs_common_utils.html",
+    gadget_utils, action_reference, action_type, action_gadget;
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -32,7 +33,7 @@
             gadget.getUrlParameter("action_type"),
             gadget.getUrlParameter("parent_portal_type"),
             gadget.getSetting('parent_portal_type'),
-            gadget.declareGadget("gadget_officejs_form_view.html")
+            gadget.declareGadget(common_utils_gadget_url)
           ]);
         })
         .push(function (result) {

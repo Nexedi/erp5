@@ -233,6 +233,8 @@ gadget_field_new_action_js_script.html\n
 gadget_field_new_action_js_script.js\n
 gadget_field_reply_action_js_script.html\n
 gadget_field_reply_action_js_script.js\n
+gadget_officejs_common_utils.html\n
+gadget_officejs_common_utils.js\n
 \n
 #needed for appcachestorage sync\n
 /\n
@@ -742,7 +744,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>975.15178.25005.32409</string> </value>
+                <value> <string>975.16181.55679.14097</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -760,7 +762,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1556053135.7</float>
+                        <float>1556114650.11</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
