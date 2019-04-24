@@ -115,7 +115,11 @@ class EntireQuery(object):
       ))
     self.group_by_list = [checkColumn(x) for x in group_by_list]
     self.select_dict = {
-      checkIdentifier(alias): checkSelectable(column)
+      # Ideally, keys should only satisfy checkIdentifier, but as SQLCatalog
+      # builds select_dict from select_list in which case keys equal values,
+      # so align with the lowest denominator: selectable also cover columns,
+      # which when there is no table name is an identifier.
+      checkSelectable(alias): checkSelectable(column)
       for alias, column in defaultDict(select_dict).iteritems()
     }
     # No need to sanitize, it's compared against columns and not included in SQL
