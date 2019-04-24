@@ -22,27 +22,35 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("handleRender", function (gadget, gadget_utils, options, action_reference, parent_portal_type, form_definition) {
-      var child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
-      return gadget.jio_get(options.jio_key)
-      .push(function (parent_document) {
-        var title = parent_document.title;
-        if (!title.startsWith('Re: ')) { title = 'Re: ' + parent_document.title; }
-        return gadget.changeState({
-          doc: {title: title},
-          parent_document: parent_document,
-          child_gadget_url: child_gadget_url,
-          form_definition: form_definition,
-          view: action_reference,
-          editable: true,
-          has_more_views: false,
-          has_more_actions: false,
-          is_form_list: false
+    .declareMethod("render", function (gadget) {
+      return gadget_utils.renderGadget(gadget);
+    })
+
+    .declareMethod("handleRender", function (gadget, options, action_reference, form_definition) {
+      return gadget.declareGadget("gadget_officejs_form_view.html")
+      .push(function (declared_gadget) {
+        gadget_utils = declared_gadget;
+        var child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
+        return gadget.jio_get(options.jio_key)
+        .push(function (parent_document) {
+          var title = parent_document.title;
+          if (!title.startsWith('Re: ')) { title = 'Re: ' + parent_document.title; }
+          return gadget.changeState({
+            doc: {title: title},
+            parent_document: parent_document,
+            child_gadget_url: child_gadget_url,
+            form_definition: form_definition,
+            view: action_reference,
+            editable: true,
+            has_more_views: false,
+            has_more_actions: false,
+            is_form_list: false
+          });
         });
       });
     })
 
-    .declareMethod("handleSubmit", function (gadget, gadget_utils, jio_key, content_dict) {
+    .declareMethod("handleSubmit", function (gadget, jio_key, content_dict) {
       var document = {
         my_title: gadget.state.doc.title,
         portal_type: gadget.state.parent_document.portal_type,
