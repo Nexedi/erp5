@@ -53,7 +53,7 @@
                   })
                     .push(function (declared_gadget) {
                       action_gadget = declared_gadget;
-                      return action_gadget.handleRender(gadget, gadget_utils, options, action_reference, parent_portal_type, form_definition);
+                      return action_gadget.handleRender(gadget, options, action_reference, form_definition);
                     });
                 } else {
                   throw "Field 'gadget_field_action_js_script' missing in action form. Please check '" + action_reference + "' action configuration.";
@@ -66,8 +66,9 @@
     })
 
     .onStateChange(function () {
-      return gadget_utils.renderGadget(this);
+      return action_gadget.render(this);
     })
+
     .allowPublicAcquisition('notifySubmit', function () {
       return this.triggerSubmit();
     })
@@ -85,7 +86,7 @@
         content_dict = options[2],
         submit_code = gadget.state.submit_code;
       if (action_type === "object_jio_js_script") {
-        action_gadget.handleSubmit(gadget, gadget_utils, jio_key, content_dict);
+        action_gadget.handleSubmit(gadget, jio_key, content_dict);
       }
     });
 }(window, document, rJS, RSVP));
