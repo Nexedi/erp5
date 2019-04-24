@@ -19,6 +19,12 @@
   rJS(window)
 
     .declareMethod('render', function render(options) {
+      var input = this.element.querySelector("input");
+      if (input) {
+        // force the state to have the current edited value
+        this.state.checked = input.checked;
+        this.state.value = input.value;
+      }
       return this.changeState({
         value: getFirstNonEmpty(options.value, ""),
         checked: options.checked,
