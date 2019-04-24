@@ -2182,15 +2182,12 @@ hateoas = calculateHateoas(is_portal=temp_is_portal, is_site_root=temp_is_site_r
                            default_param_json=default_param_json,
                            form_relative_url=form_relative_url,
                            extra_param_json=extra_param_json)
+
 # [HARDCODED] expresion string:${object_url} must be evaluated before return
 try:
   if "_embedded" in hateoas.keys() and "_view" in hateoas["_embedded"].keys() and "my_action" in hateoas["_embedded"]["_view"].keys():
     if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/HTMLPost_viewAsJio' or hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/HTMLPost_view':
       hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_officejs_jio_connector/HTMLPost_viewAsJio'
-    if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/HTMLPost_viewReplyDialog':
-      hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_officejs_jio_connector/HTMLPost_viewReplyDialog'
-    if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/PostModule_newHTMLPost':
-      hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_post/PostModule_newHTMLPost'
 except:
   pass
 if hateoas == "":
