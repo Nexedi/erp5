@@ -3,7 +3,8 @@
 (function (window, rJS, RSVP) {
   "use strict";
 
-  var parent_gadget, form_view_gadget;
+  var child_gadget_url = 'gadget_erp5_pt_form_view_editable.html',
+    form_view_gadget_url = "gadget_officejs_form_view.html";
 
   rJS(window)
 
@@ -12,6 +13,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("jio_post", "jio_post")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod('getUrlParameter', 'getUrlParameter')
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
@@ -22,28 +24,49 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("render", function (gadget) {
-      return form_view_gadget.renderGadget(gadget);
+    .declareMethod("createDocument", function (options) {
+      var gadget = this,
+        doc = {
+          title: "Untitled Document",
+          portal_type: options.portal_type,
+          parent_relative_url: options.parent_relative_url
+        },
+        key,
+        doc_key;
+      for (key in options) {
+        if (options.hasOwnProperty(key)) {
+          if (key.startsWith("my_")) {
+            doc_key = key.replace("my_", "");
+            doc[doc_key] = options[key];
+          }
+        }
+      }
+      return gadget.jio_post(doc);
     })
 
-    .declareMethod("handleRender", function (gadget, options, action_reference, form_definition) {
-      var child_gadget_url = 'gadget_erp5_pt_form_view_editable.html', this_gadget = this;
-      parent_gadget = gadget;
+    .declareMethod("render", function (parent_gadget) {
+      var gadget = this;
+      return gadget.declareGadget(form_view_gadget_url)
+      .push(function (form_view_gadget) {
+        return form_view_gadget.renderGadget(parent_gadget);
+      });
+    })
+
+    .declareMethod("handleRender", function (parent_gadget, options, action_reference, form_definition) {
+      var this_gadget = this;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
             parent_gadget.getUrlParameter('portal_type'),
             parent_gadget.getUrlParameter('parent_relative_url'),
             parent_gadget.getSetting('portal_type'),
-            parent_gadget.getSetting('parent_relative_url'),
-            parent_gadget.declareGadget("gadget_officejs_form_view.html")
+            parent_gadget.getSetting('parent_relative_url')
           ]);
         })
         .push(function (result) {
           if (result[0] !== undefined) {options.portal_type = result[0]; } else {options.portal_type = result[2]; }
           if (result[1] !== undefined) {options.parent_relative_url = result[1]; } else {options.parent_relative_url = result[3]; }
-          form_view_gadget = result[4];
-          return form_view_gadget.createDocument(options)
+          return this_gadget.createDocument(options)
             .push(function (jio_key) {
               return parent_gadget.jio_get(jio_key)
               .push(function (new_document) {
@@ -63,10 +86,10 @@
         });
     })
 
-    .declareMethod("handleSubmit", function (gadget, jio_key, content_dict) {
-      return gadget.notifySubmitting()
+    .declareMethod("handleSubmit", function (parent_gadget, jio_key, content_dict) {
+      return parent_gadget.notifySubmitting()
         .push(function () {
-          return gadget.jio_get(jio_key);
+          return parent_gadget.jio_get(jio_key);
         })
         .push(function (document) {
           var property;
@@ -75,13 +98,13 @@
               document[property] = content_dict[property];
             }
           }
-          return gadget.jio_put(jio_key, document);
+          return parent_gadget.jio_put(jio_key, document);
         })
         .push(function () {
-          return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
+          return parent_gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
         })
         .push(function () {
-          return gadget.redirect({
+          return parent_gadget.redirect({
             command: 'display',
             options: {
               jio_key: jio_key,
