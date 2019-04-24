@@ -4,19 +4,19 @@
 (function (window, rJS) {
   "use strict";
 
-  function get_used_dimensions(g) {
+  function get_used_hierarchies(g) {
     return g.getContent()
       .push(function (v) {
-        var dimensions = [],
+        var hierarchies = [],
           key,
-          dimension;
+          hierarchy;
         if (v) {
           if (v.columns) {
             for (key in v.columns) {
               if (v.columns.hasOwnProperty(key)) {
-                dimension = v.columns[key].dimension;
-                if (dimension) {
-                  dimensions.push(dimension);
+                hierarchy = v.columns[key].hierarchy;
+                if (hierarchy) {
+                  hierarchies.push(hierarchy);
                 }
               }
             }
@@ -24,42 +24,45 @@
           if (v.rows) {
             for (key in v.rows) {
               if (v.rows.hasOwnProperty(key)) {
-                dimension = v.rows[key].dimension;
-                if (dimension) {
-                  dimensions.push(dimension);
+                hierarchy = v.rows[key].hierarchy;
+                if (hierarchy) {
+                  hierarchies.push(hierarchy);
                 }
               }
             }
           }
         }
-        return dimensions;
+        return hierarchies;
       });
   }
-  function discoverDimensions(g, connection_name, used_dimensions) {
-    return g.request("discoverMDDimensions", connection_name)
+  function discoverDimensions(g, connection_name, used_hierarchies) {
+    return g.getHierarchies(connection_name)
       .push(undefined, function (error) {
         console.log(error);
       })
       .push(function (response) {
-        var arr = [],
+        var dimensions = {},
           i,
-          row;
+          row,
+          uname,
+          tasks = [];
         for (i = 0; i < response.length; i += 1) {
           row = response[i];
-          if (row["DIMENSION_TYPE"] !== 2 &&
-              used_dimensions.indexOf(row["DIMENSION_UNIQUE_NAME"]) < 0) {
-            arr.push({
-              const: row["DIMENSION_UNIQUE_NAME"] || undefined,
-              title: row["DIMENSION_NAME"] || undefined
-            });
+          uname = row.DIMENSION_UNIQUE_NAME;
+          if (!dimensions.hasOwnProperty(uname) &&
+              used_hierarchies.indexOf(row.HIERARCHY_UNIQUE_NAME) < 0 &&
+              row.DIMENSION_TYPE !== 2 // !measure
+          ) {
+            dimensions[uname] = true;
           }
         }
-        return arr;
-      });
-  }
-
-  function discoverHierarchies(g, connection_name, opt) {
-    return g.request("discoverMDHierarchies", connection_name, opt)
+        for (i in dimensions) {
+          if (dimensions.hasOwnProperty(i)) {
+            tasks.push(g.getDimension(connection_name, i))
+          }
+        }
+        return RSVP.all(tasks);
+      })
       .push(undefined, function (error) {
         console.log(error);
       })
@@ -70,9 +73,33 @@
         for (i = 0; i < response.length; i += 1) {
           row = response[i];
           arr.push({
-            const: row["HIERARCHY_UNIQUE_NAME"] || undefined,
-            title: row["HIERARCHY_NAME"] || undefined
+            const: row.DIMENSION_UNIQUE_NAME || undefined,
+            title: row.DIMENSION_NAME || undefined
           });
+        }
+        return arr;
+      });
+  }
+
+  function discoverHierarchies(g, connection_name, used_hierarchies, opt) {
+    return g.request("discoverMDHierarchies", connection_name, opt)
+      .push(undefined, function (error) {
+        console.log(error);
+      })
+      .push(function (response) {
+        var arr = [],
+          i,
+          row,
+          uname;
+        for (i = 0; i < response.length; i += 1) {
+          row = response[i];
+          uname = row.HIERARCHY_UNIQUE_NAME;
+          if (used_hierarchies.indexOf(uname) < 0) {
+            arr.push({
+              const: uname || undefined,
+              title: row.HIERARCHY_NAME || undefined
+            });
+          }
         }
         return arr;
       });
@@ -103,13 +130,13 @@
       });
   }
 
-  function generateChoiceSchema(g, connection_name, used_dimensions, choice_settings) {
+  function generateChoiceSchema(g, connection_name, used_hierarchies, choice_settings) {
     var schema = {
       "type": "object",
       "additionalProperties": false,
       "properties": {}
     },
-      current_dimension;
+      current_hierarchy;
     if (!connection_name) {
       return new RSVP.Queue()
         .push(function () {
@@ -119,25 +146,28 @@
     if (!choice_settings) {
       choice_settings = {};
     }
-    current_dimension = choice_settings.dimension;
-    if (current_dimension) {
-      used_dimensions = used_dimensions
-        .filter(function (d) {
-          return d !== current_dimension;
+
+    current_hierarchy = choice_settings.hierarchy;
+    if (current_hierarchy) {
+      used_hierarchies = used_hierarchies
+        .filter(function (h) {
+          return h !== current_hierarchy;
         });
     }
 
     return new RSVP.Queue()
       .push(function () {
-        var tasks = [discoverDimensions(g, connection_name, used_dimensions)];
+        var tasks = [discoverDimensions(g, connection_name, used_hierarchies)];
 
         if (choice_settings.dimension) {
           tasks.push(
-            discoverHierarchies(g, connection_name,{prop: {
-              restrictions: {
-                DIMENSION_UNIQUE_NAME: choice_settings.dimension
-              }
-            }})
+            discoverHierarchies(g, connection_name,
+              used_hierarchies,
+              {prop: {
+                restrictions: {
+                  DIMENSION_UNIQUE_NAME: choice_settings.dimension
+                }
+              }})
           );
         }
         if (choice_settings.hierarchy) {
@@ -187,6 +217,8 @@
     })
     .declareAcquiredMethod("getRemoteSettings", "getRemoteSettings")
     .declareAcquiredMethod("request", "xmla_request")
+    .declareAcquiredMethod("getDimension", "xmla_getDimension")
+    .declareAcquiredMethod("getHierarchies", "xmla_getHierarchies")
     .declareAcquiredMethod("getLevels", "xmla_getLevels")
     .allowPublicAcquisition("notifyValid", function (arr, scope) {
     })
@@ -222,7 +254,7 @@
         scope = arr[0].scope,
         relPath = arr[0].rel_path,
         action = arr[0].action,
-        used_diemensions,
+        used_hierarchy,
         url = arr[0].ref,
         allRerender,
         y;
@@ -230,10 +262,10 @@
       function rerender(sub_scope) {
         var queue,
           gadget_settings;
-        if (!used_diemensions) {
-          queue = get_used_dimensions(g)
+        if (!used_hierarchy) {
+          queue = get_used_hierarchies(g)
             .push(function (v) {
-              used_diemensions = v;
+              used_hierarchy = v;
             });
         } else {
           queue = RSVP.Queue();
@@ -242,7 +274,7 @@
         function rerender_once(connection_name, sub_gadget) {
           return sub_gadget.getContent()
             .push(function (content) {
-              return generateChoiceSchema(g, connection_name, used_diemensions, content);
+              return generateChoiceSchema(g, connection_name, used_hierarchy, content);
             })
             .push(function (schema) {
               return gadget_settings.rerender({
@@ -270,7 +302,7 @@
             return rerender_once(connection_name, sub_gadget)
               .push(function (changed) {
                 if (changed && changed.length > 0) {
-                  if (changed.indexOf('/dimension') >= 0) {
+                  if (changed.indexOf('/hierarchy') >= 0) {
                     return allRerender();
                   }
                   return rerender_once(connection_name, sub_gadget);
@@ -285,9 +317,9 @@
       }
 
       allRerender = function () {
-        return get_used_dimensions(g)
+        return get_used_hierarchies(g)
           .push(function (v) {
-            used_diemensions = v;
+            used_hierarchy = v;
             return RSVP.all(g.props.choices.map(function (q) {
               return rerender(q);
             }));
@@ -314,7 +346,7 @@
             g.props.choices.splice(y, 1);
             return allRerender();
           }
-          if (relPath === "/dimension") {
+          if (relPath === "/hierarchy") {
             return allRerender();
           }
           return rerender(s)
@@ -353,8 +385,8 @@
           .push(function () {
             return RSVP.all([
               g.getContent("/connection_name"),
-              g.getContent(path),
-              get_used_dimensions(g)
+              get_used_hierarchies(g),
+              g.getContent(path)
             ]);
           })
           .push(function (arr) {

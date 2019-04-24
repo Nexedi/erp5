@@ -434,6 +434,18 @@ DocsAPI.DocEditor.version = function () {
           console.error(err);
         });
     })
+    .allowPublicAcquisition("xmla_getDimension", function (arr) {
+      return this.getDeclaredGadget("xmla_client")
+        .push(function (g) {
+          return g.getDimension(arr[0], arr[1]);
+        });
+    })
+    .allowPublicAcquisition("xmla_getHierarchies", function (arr) {
+      return this.getDeclaredGadget("xmla_client")
+        .push(function (g) {
+          return g.getHierarchies(arr[0], arr[1]);
+        });
+    })
 
     // methods emulating Gateway used for connection with ooffice begin.
     .declareMethod('appReady', function () {

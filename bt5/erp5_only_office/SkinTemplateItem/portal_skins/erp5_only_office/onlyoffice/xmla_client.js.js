@@ -16,6 +16,22 @@
     return cache[key];
   }
 
+  function cached_queue(cache, key, func) {
+    if (cache.hasOwnProperty(key)) {
+      return getFromCache(cache, key);
+    }
+    var queue = func()
+      .push(undefined, function (err) {
+        delete cache[key];
+        console.error(err);
+      })
+      .push(function (value) {
+        cache[key] = value;
+      });
+    cache[key] = queue;
+    return queue;
+  }
+
   function xmla_request(func, prop) {
     var xmla = new Xmla({async: true});
     prop = JSON.parse(JSON.stringify(prop));
@@ -141,6 +157,7 @@
       console.log("xmla_client");
       g.props = {
         cache: {},
+        cache_flags: {},
         connections: {}
       };
     })
@@ -179,10 +196,13 @@
           delete g.props.connections[key];
           if (m_dict[key] !== null) {
             g.props.cache[key] = {
+              dimensions: {},
+              hierarchies: {},
               members: {},
               levels: {},
               membersOnLevel: {}
             };
+            g.props.cache_flags[key] = {};
             g.props.connections[key] = JSON.parse(m_dict[key]);
           }
         }
@@ -200,6 +220,66 @@
         })
         .push(undefined, function (error) {
           console.error(error);
+        });
+    })
+    .declareMethod("getDimension", function (connection_name, uname) {
+      var g = this;
+      return cached_queue(g.props.cache[connection_name].dimensions,
+        uname,
+        function () {
+          return request(g, "discoverMDDimensions", {
+            prop: {
+              restrictions: {
+                DIMENSION_UNIQUE_NAME: uname
+              }
+            }
+          }, connection_name)
+            .push(function (r) {
+              if (r.rowCount() === 0) {
+                throw new Error("dimension " + uname + " not found");
+              }
+              return r.readAsObject();
+            });
+        });
+    })
+    .declareMethod("getHierarchies", function (connection_name, restrictions) {
+      var g = this,
+        arr,
+        cache = g.props.cache[connection_name].hierarchies,
+        key;
+      if (!restrictions && g.props.cache_flags[connection_name].all_hierarchies) {
+        arr = [];
+        for (key in cache) {
+          if (cache.hasOwnProperty(key)) {
+            arr.push(cache[key]);
+          }
+        }
+        return arr;
+      }
+      return request(g, "discoverMDHierarchies", {
+        prop: {
+          restrictions: restrictions
+        }
+      }, connection_name)
+        .push(function (response) {
+          var row,
+            ret = [],
+            uname;
+          if (response && response.numRows > 0) {
+            while (response.hasMoreRows()) {
+              row = response.readAsObject();
+              uname = row.HIERARCHY_UNIQUE_NAME;
+              if (!cache.hasOwnProperty(uname)) {
+                cache[uname] = row;
+              }
+              ret.push(row);
+              response.nextRow();
+            }
+          }
+          if (!restrictions) {
+            g.props.cache_flags[connection_name].all_hierarchies = true;
+          }
+          return ret;
         });
     })
     .declareMethod("getLevel", function (connection_name, level_uname) {
