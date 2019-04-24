@@ -96,6 +96,20 @@
     return route(gadget, 'panel', 'render', [gadget.props.panel_argument_list]);
   }
 
+  function refreshHeaderAndPanel(gadget, refresh) {
+    var promise;
+    if (refresh) {
+      promise = route(gadget, "header", 'render',
+                      [gadget.props.header_argument_list]);
+    } else {
+      promise = updateHeader(gadget);
+    }
+    return RSVP.all([
+      promise,
+      updatePanel(gadget)
+    ]);
+  }
+
   function callJioGadget(gadget, method, param_list) {
     return route(gadget, 'jio_gadget', method, param_list);
   }
@@ -541,6 +555,7 @@
           if (result_list.length === 2) {
             gadget.props.header_argument_list.right_title = result_list[1];
           }
+          // return updateHeader(gadget);
         });
     })
 
@@ -548,6 +563,11 @@
       var gadget = this;
       initPanelOptions(gadget);
       gadget.props.panel_argument_list = param_list[0];
+    })
+
+    .allowPublicAcquisition('refreshHeaderAndPanel',
+                            function acquireRefreshHeaderAndPanel() {
+      return refreshHeaderAndPanel(this, true);
     })
 
     .allowPublicAcquisition('hidePanel', function hidePanel(param_list) {
@@ -730,10 +750,7 @@
               content_container.appendChild(main_gadget.element);
               element.appendChild(content_container);
 
-              return RSVP.all([
-                updateHeader(gadget),
-                updatePanel(gadget)
-              ]);
+              return refreshHeaderAndPanel(gadget);
               // XXX Drop notification
               // return header_gadget.notifyLoaded();
             }
@@ -745,10 +762,7 @@
             return page_gadget.render(gadget.state.options);
           })
           .push(function () {
-            return RSVP.all([
-              updateHeader(gadget),
-              updatePanel(gadget)
-            ]);
+            return refreshHeaderAndPanel(gadget);
           }));
       }
 

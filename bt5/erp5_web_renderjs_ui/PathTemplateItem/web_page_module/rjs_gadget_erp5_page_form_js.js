@@ -113,6 +113,7 @@ and handling data send&receive.
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("updatePanel", "updatePanel")
+    .declareAcquiredMethod("refreshHeaderAndPanel", "refreshHeaderAndPanel")
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
@@ -178,7 +179,8 @@ and handling data send&receive.
           erp5_document: undefined,
           erp5_form: undefined,
           url: undefined,
-          embedded: asBoolean(options.embedded)
+          embedded: asBoolean(options.embedded),
+          is_refresh: options.is_refresh || false
         };
 
       // options.editable differs when it comes from the erp5_launcher of FormBox - try to unify it here
@@ -277,7 +279,7 @@ and handling data send&receive.
         erp5_document = JSON.parse(gadget.state.erp5_document),
         erp5_form = JSON.parse(gadget.state.erp5_form);
 
-      if (modification_dict.hasOwnProperty('url')) {
+      if ((!gadget.state.is_refresh) || modification_dict.hasOwnProperty('url')) {
         queue = gadget.declareGadget(gadget.state.url, {scope: "fg"});
       } else {
         queue = gadget.getDeclaredGadget("fg");
@@ -300,7 +302,7 @@ and handling data send&receive.
           return page_template_gadget.render(sub_options);
         })
         .push(function () {
-          if (modification_dict.hasOwnProperty('url')) {
+          if ((!gadget.state.is_refresh) || modification_dict.hasOwnProperty('url')) {
             return page_template_gadget.getElement()
               .push(function (fragment) {
                 var element = gadget.element;
@@ -409,6 +411,7 @@ and handling data send&receive.
                 // We modify inplace state.options because render method uses and removes
                 // erp5_document hidden in its options.
                 options.erp5_document = erp5_document;
+                options.is_refresh = true;
                 return new RSVP.Queue()
                   .push(function () {
                     if (response_view._notification === undefined) {
@@ -430,6 +433,9 @@ and handling data send&receive.
                     }
                     */
                     return gadget.render(options);
+                  })
+                  .push(function () {
+                    return gadget.refreshHeaderAndPanel();
                   })
                   .push(function () {
                     // Make sure to return nothing (previous render can return
@@ -556,7 +562,8 @@ and handling data send&receive.
                       var erp5_document = JSON.parse(gadget.state.erp5_document);
                       erp5_document._embedded._view = response;
                       erp5_document._now = Date.now();
-                      return gadget.changeState({erp5_document: JSON.stringify(erp5_document)});
+                      return gadget.changeState({erp5_document: JSON.stringify(erp5_document),
+                                                 is_refresh: true});
                     });
                 }
               })
