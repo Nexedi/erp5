@@ -185,9 +185,12 @@
         "select_list": [catalog_index]
       })
         .push(function (result) {
+          if (!result.data.total_rows) {
+            return;
+          }
           return gadget.changeState({
             value_text: result.data.rows[0]
-              .value[catalog_index]
+                              .value[catalog_index]
           });
         })
         .push(function () {
@@ -251,8 +254,10 @@
           // User selected a document from a listbox
           if ((gadget.state.value_uid) && (!gadget.state.value_text)) {
             plane.className = SEARCHING_CLASS_STR;
-            return gadget.detachChangeState(gadget.state.value_uid,
-                                            gadget.state.catalog_index);
+            gadget.detachChangeState(gadget.state.value_uid,
+                                     gadget.state.catalog_index);
+            // return gadget.notifyChange();
+            return;
           }
 
 
