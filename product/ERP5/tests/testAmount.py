@@ -518,6 +518,37 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEqual(mvt.getSourceDebit(), -10)
     self.assertEqual(mvt.getSourceCredit(), 0)
 
+  def testSectionAssetPriceWhenSectionIsPerson(self):
+    """
+      Checks that when source_section or destination_section is Person
+      getXXXAssetPrice getters work correctly
+      Added after a bug that caused bad failure in such cases
+    """
+    movement = self._makeOne()
+    movement.edit(quantity=1, price=5)
+    person_1 = self.portal.person_module.newContent(portal_type='Person')
+    person_2 = self.portal.person_module.newContent(portal_type='Person')
+    currency = self.portal.currency_module.newContent(
+      portal_type='Currency'
+    )
+    movement.edit(
+      source_section_value=person_1,
+      destination_section_value=person_2,
+      price_currency_value=currency,
+    )
+    portal_type = movement.getPortalType()
+    self.assertIn(portal_type, ('My Movement', 'My Accounting Transaction Line'))
+    if portal_type == 'My Movement':
+      self.assertEqual(movement.getSourceAssetPrice(), 5.0)
+      self.assertEqual(movement.getDestinationAssetPrice(), 5.0)
+      self.assertEqual(movement.getSourceInventoriatedTotalAssetPrice(), -5.0)
+      self.assertEqual(movement.getDestinationInventoriatedTotalAssetPrice(), 5.0)
+    else:
+      # AccountingTransactionLine does not implement automatic currency conversion
+      self.assertEqual(movement.getSourceAssetPrice(), 1.0)
+      self.assertEqual(movement.getDestinationAssetPrice(), 1.0)
+      self.assertEqual(movement.getSourceInventoriatedTotalAssetPrice(), -1.0)
+      self.assertEqual(movement.getDestinationInventoriatedTotalAssetPrice(), 1.0)
 
 class TestAccountingTransactionLine(TestMovement):
   """Tests for Accounting Transaction Line class, which have an overloaded
