@@ -92,6 +92,35 @@ and handling data send&receive.
     }
   }
 
+  function ensureComparable(value, field_type) {
+    // For LinesField, getContent returns string, but we may give an array of strings to the render method.
+    if (field_type === "LinesField") { return value.join ? value.join("\n") : value; }
+    if (typeof value === "object") { return JSON.stringify(value); }
+    return value;
+  }
+
+  function updateErp5DocumentForAfterSave(new_erp5_document, submitted_content, current_content) {
+    var view = new_erp5_document._embedded._view,
+      content_key_list = Object.keys(current_content),
+      document_reference_dict = {},
+      document_key_list = Object.keys(view),
+      i = 0,
+      field = null,
+      key = "";
+    for (i = 0; i < document_key_list.length; i += 1) {
+      field = view[document_key_list[i]];
+      document_reference_dict[field.key] = field;
+    }
+    for (i = 0; i < content_key_list.length; i += 1) {
+      key = content_key_list[i];
+      if (document_reference_dict[key] &&
+          ensureComparable(submitted_content[key], document_reference_dict[key].type) ===
+          ensureComparable(document_reference_dict[key].default, document_reference_dict[key].type)) {
+        document_reference_dict[key].default = current_content[key];
+      }
+    }
+  }
+
   function warmupGadgetList(gadget, url_list) {
     var i;
     for (i = 0; i < url_list.length; i += 1) {
@@ -162,6 +191,10 @@ and handling data send&receive.
     })
     .allowPublicAcquisition('notifySubmit', function notifySubmit() {
       return this.triggerSubmit();
+    })
+    .allowPublicAcquisition("notifyChange", function notifyChange(argument_list) {
+      this.state.changing = true;
+      return this.notifyChange.apply(this, argument_list);
     })
     /**
      * Render obtain ERP5 Document and assigned Form Definition.
@@ -286,7 +319,8 @@ and handling data send&receive.
         .push(function (result) {
           page_template_gadget = result;
 
-          var sub_options = options.fg || {};
+          var sub_options = options.fg || {},
+            sub_queue = null;
 
           loadFormContent(gadget, erp5_document._embedded._view);
 
@@ -297,7 +331,23 @@ and handling data send&receive.
           sub_options.jio_key = options.jio_key; // jIO identifier of currently rendered ERP5 document
           sub_options.editable = options.editable; // form decides on editability of its fields
 
-          return page_template_gadget.render(sub_options);
+          if (gadget.state.changing && gadget.state.last_submitted_content) {
+            sub_queue = page_template_gadget.getContent()
+              .push(function (content) {
+                updateErp5DocumentForAfterSave(
+                  sub_options.erp5_document,
+                  JSON.parse(gadget.state.last_submitted_content),
+                  content
+                );
+                gadget.state.last_submitted_content = null;  // free some memory
+                gadget.state.changing = false;
+              });
+          }
+
+          return (sub_queue || new RSVP.Queue())
+            .push(function () {
+              return page_template_gadget.render(sub_options);
+            });
         })
         .push(function () {
           if (modification_dict.hasOwnProperty('url')) {
@@ -358,6 +408,13 @@ and handling data send&receive.
 
       return gadget.notifySubmitting()
         .push(function () {
+          return gadget.getDeclaredGadget("fg");
+        })
+        .push(function (sub_gadget) {
+          return sub_gadget.getContent();
+        })
+        .push(function (content) {
+          gadget.state.last_submitted_content = JSON.stringify(content);
           return gadget.jio_putAttachment(jio_key, target_url, content_dict);
         })
         .push(function (attachment) {

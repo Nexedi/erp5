@@ -1,0 +1,86 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/BarModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/bar_module/0?editable=true</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_bar_datetime_field_view" />
+
+<!-- Actual test -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='field_my_start_date']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeValue</td>
+  <td>//input[@name='field_my_start_date']</td>
+  <td>start_date_value</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_my_start_date']</td>
+  <td>2019-04-23T01:01:00</td>
+</tr>
+<tr>
+  <td>chooseOkOnNextConfirmation</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>  <!-- using go_to_bar_datetime_field_view, chooseOkOnNextConfirmation does not work -->
+  <td>//a[@class="active" and text()='DateTimeField']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_confirmation" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>pause</td> <!-- necessary to wait for field to be updated -->
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_my_start_date']</td>
+  <td>${start_date_value}</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
