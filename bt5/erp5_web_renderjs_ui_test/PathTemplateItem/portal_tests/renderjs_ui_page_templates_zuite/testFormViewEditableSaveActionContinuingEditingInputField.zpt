@@ -1,0 +1,62 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form View Editable Save Action Continuing Editing Input Field</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Form View Editable Save Action Continuing Editing Input Field, one Foo have empty short title which is edited, saved and edited during the saving process. New typed values should be kept.</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=true</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tr>
+  <td>type</td>
+  <td>field_my_short_title</td>
+  <td>Hello</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_short_title</td>
+  <td>World</td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<!-- saving should not prevent to continue to edit the document -->
+<tr>
+  <td>pause</td> <!-- necessary to wait for field to be updated -->
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_short_title</td>
+  <td>World</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/1/getShortTitle</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Hello</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
