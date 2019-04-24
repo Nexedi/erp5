@@ -303,6 +303,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     # sql server
     now = DateTime()
     from_date = now - 30
+    max_test_core_per_suite = max([x[1] for x in PRIORITY_MAPPING.values()])
     def getTestSuiteSortKey(test_suite):
       test_result_list = portal.portal_catalog(portal_type="Test Result",
                                           title=SimpleQuery(title=test_suite.getTitle()),
@@ -314,16 +315,27 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
                                           limit=1)
       if len(test_result_list):
         test_result = test_result_list[0].getObject()
-        key = test_result.getModificationDate().timeTime()
+        modification_date = test_result.getModificationDate().timeTime()
+        key = (1, modification_date)
         # if a test result has all it's tests already ongoing, it is not a
         # priority at all to process it, therefore push it at the end of the list
         if test_result.getSimulationState() == "started":
           result_line_list = test_result.objectValues(portal_type="Test Result Line")
+          check_priority = True
           if len(result_line_list):
             if len([x for x in result_line_list if x.getSimulationState() == "draft"]) == 0:
-              key = now.timeTime()
+              key = (1000, now.timeTime())
+              check_priority = False
+          if check_priority:
+            # calculate key[0] in such a way that more the test suite has high
+            # priority and the more test result lack test node, the lower is key[0]
+            # This allows to affect more test nodes to test suites with higher priority
+            wanted_test_core_quantity = PRIORITY_MAPPING[test_suite.getIntIndex()][1]
+            factor = max_test_core_per_suite / wanted_test_core_quantity
+            missing_quantity = wanted_test_core_quantity/3 - len(test_result.objectValues(portal_type="Test Result Node"))
+            key = (max_test_core_per_suite - missing_quantity * 3 * factor, modification_date)
       else:
-        key = random.random()
+        key = (0, random.random())
       return key
     test_suite_list.sort(key=getTestSuiteSortKey)
     return test_suite_list
