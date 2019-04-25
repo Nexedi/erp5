@@ -2194,9 +2194,12 @@ class TestZodbDocumentComponent(_TestZodbComponent):
   def _getValidSourceCode(self, class_name):
     return '''from Products.ERP5.Document.Person import Person
 
+class %sAnything:
+  pass
+
 class %s(Person):
   pass
-''' % class_name
+''' % (class_name, class_name)
 
   def testAtLeastOneClassNamedAfterReference(self):
     component = self._newComponent(
