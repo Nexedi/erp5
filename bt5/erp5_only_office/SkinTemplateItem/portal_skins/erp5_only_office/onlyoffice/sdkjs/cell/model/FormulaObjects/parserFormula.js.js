@@ -5506,6 +5506,8 @@ parserFormula.prototype.setFormula = function(formula) {
 		if (typeof value === "function") {
 			this.value = new cError(cErrorType.getting_data);
 			this.queue = true;
+			formula.ws.workbook.dependencyFormulas
+				.addToCleanCellCache(formula.ws.getId(), opt_bbox.r1, opt_bbox.c1);
 			this.lazy_value = function () {
 				formula.lazy_value = null;
 				formula.queue = value()
@@ -5513,10 +5515,6 @@ parserFormula.prototype.setFormula = function(formula) {
 						formula.value = ret;
 						formula.value.numFormat = numFormat;
 						formula._endCalculate();
-            // updateOnScreen cell
-            formula.ws.workbook.handlers.trigger("cleanCellCache",
-              formula.ws.getId(), {0: opt_bbox},
-              AscCommonExcel.c_oAscCanChangeColWidth.none);
 						formula.queue = false;
 						// formula.lazy_value = null;
 						return formula.value;

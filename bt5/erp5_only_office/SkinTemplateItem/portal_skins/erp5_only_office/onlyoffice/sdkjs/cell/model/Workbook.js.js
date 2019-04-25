@@ -967,10 +967,7 @@
 					tasks.push(lazy_value());
 				}
 			}
-			function end () {
-				//copy cleanCellCache to prevent recursion in trigger("cleanCellCache")
-				var tmpCellCache = dependency_graph.cleanCellCache;
-				dependency_graph.cleanCellCache = {};
+			function end (tmpCellCache) {
 				for (var i in tmpCellCache) {
 					dependency_graph.wb.handlers.trigger("cleanCellCache", i, {0: tmpCellCache[i]},
 						AscCommonExcel.c_oAscCanChangeColWidth.none);
@@ -981,11 +978,18 @@
 			if (tasks.length > 0) {
 				new RSVP.Queue()
 					.push(function () {
+						end(dependency_graph.cleanCellCache);
+					})
+					.push(function () {
 						return RSVP.all(tasks);
 					})
-					.push(end);
+					.push(function () {
+						end(dependency_graph.cleanCellCache);
+						dependency_graph.cleanCellCache = {};
+					});
 			} else {
-				end();
+				end(dependency_graph.cleanCellCache);
+				dependency_graph.cleanCellCache = {};
 			}
 		},
 		initOpen: function() {
