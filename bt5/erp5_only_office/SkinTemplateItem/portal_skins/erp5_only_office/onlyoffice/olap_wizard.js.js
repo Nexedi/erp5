@@ -46,14 +46,16 @@
           row,
           uname,
           tasks = [];
-        for (i = 0; i < response.length; i += 1) {
-          row = response[i];
-          uname = row.DIMENSION_UNIQUE_NAME;
-          if (!dimensions.hasOwnProperty(uname) &&
-              used_hierarchies.indexOf(row.HIERARCHY_UNIQUE_NAME) < 0 &&
-              row.DIMENSION_TYPE !== 2 // !measure
-          ) {
-            dimensions[uname] = true;
+        if (response) {
+          for (i = 0; i < response.length; i += 1) {
+            row = response[i];
+            uname = row.DIMENSION_UNIQUE_NAME;
+            if (!dimensions.hasOwnProperty(uname) &&
+                used_hierarchies.indexOf(row.HIERARCHY_UNIQUE_NAME) < 0 &&
+                row.DIMENSION_TYPE !== 2 // !measure
+            ) {
+              dimensions[uname] = true;
+            }
           }
         }
         for (i in dimensions) {
@@ -117,7 +119,7 @@
         for (i = 0; i < response.length; i += 1) {
           row = response[i];
           if (
-            row["LEVEL_CARDINALITY"] < 150 &&
+            row["LEVEL_CARDINALITY"] < 600 &&
             row["LEVEL_TYPE"] !== 1 // exclude all level type
           ) {
             arr.push({
