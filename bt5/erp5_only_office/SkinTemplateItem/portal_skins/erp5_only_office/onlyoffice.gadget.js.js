@@ -157,6 +157,7 @@ DocsAPI.DocEditor.version = function () {
 
     return RSVP.Queue()
       .push(function () {
+        var clean_range = s.worksheet.getRange3(0, 0, 10000, 10000);
         // var active = s.GetActiveCell();
         // var row = active.GetRow();
         // var col = active.GetCol();
@@ -166,9 +167,13 @@ DocsAPI.DocEditor.version = function () {
 
         s.worksheet.workbook.dependencyFormulas.lockRecal();
 
+        clean_range.cleanAll();
+        s.worksheet.workbook.handlers.trigger("cleanCellCache",
+          s.worksheet.getId(), {0: clean_range.bbox},
+          AscCommonExcel.c_oAscCanChangeColWidth.none);
+        AscCommonExcel.g_oVLOOKUPCache.clean();
+        AscCommonExcel.g_oHLOOKUPCache.clean();
 
-        // XXX use named ranges for cleaning space
-        s.worksheet.getRange3(0, 0, 10000, 10000).cleanAll();
         // (new Asc.asc_CDefName(
         //   "name111",
         //   "Sheet1!$A$3:$D$13",
