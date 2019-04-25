@@ -6,7 +6,10 @@
   "use strict";
 
   var common_utils_gadget_url = "gadget_officejs_common_utils.html",
-    gadget_utils, action_reference, action_type, action_gadget;
+    gadget_utils,
+    action_reference,
+    action_type,
+    action_gadget;
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -84,8 +87,7 @@
       var gadget = this,
         jio_key = options[0],
         //target_url = options[1],
-        content_dict = options[2],
-        submit_code = gadget.state.submit_code;
+        content_dict = options[2];
       if (action_type === "object_jio_js_script") {
         action_gadget.handleSubmit(gadget, jio_key, content_dict);
       }

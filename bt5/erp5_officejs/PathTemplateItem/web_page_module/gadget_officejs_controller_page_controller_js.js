@@ -32,7 +32,8 @@
 
     .declareMethod("render", function (options) {
       var gadget = this,
-        gadget_utils, jio_document;
+        gadget_utils,
+        jio_document;
       return gadget.declareGadget(common_utils_gadget_url)
         .push(function (result) {
           gadget_utils = result;

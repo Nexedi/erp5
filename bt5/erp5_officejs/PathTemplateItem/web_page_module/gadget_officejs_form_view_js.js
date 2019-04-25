@@ -1,4 +1,4 @@
-/*global window, rJS */
+/*global document, window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (document, window, rJS, RSVP) {
   "use strict";
