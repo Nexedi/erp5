@@ -243,7 +243,7 @@ class TestResultProxy(RPCRetry):
         do.
         """
         result = self._retryRPC('startUnitTest', (self._test_result_path,
-            binarize_args(exclude_list)))
+            binarize_args(exclude_list), self._node_title))
         if result:
             line_url, test_name = result
             result = TestResultLineProxy(self._proxy, self._retry_time,
