@@ -87,7 +87,6 @@
               action_settings = {
                 page: page,
                 action: action_doc.reference,
-                action_type: action_doc.action_type,
                 parent_portal_type: portal_type,
                 portal_type: portal_type
               };

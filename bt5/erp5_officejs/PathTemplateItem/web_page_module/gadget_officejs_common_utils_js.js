@@ -46,7 +46,8 @@
     .declareMethod("getFormDefinition", function (portal_type, action_reference) {
       var gadget = this,
         parent = "portal_types/" + portal_type,
-        query = 'portal_type: "Action Information" AND reference: "' + action_reference + '" AND parent_relative_url: "' + parent + '"';
+        query = 'portal_type: "Action Information" AND reference: "' + action_reference + '" AND parent_relative_url: "' + parent + '"',
+        action_type;
       return gadget.jio_allDocs({query: query})
         .push(function (data) {
           if (data.data.rows.length === 0) {
@@ -55,9 +56,11 @@
           return gadget.jio_get(data.data.rows[0].id);
         })
         .push(function (action_result) {
+          action_type = action_result.action_type;
           return gadget.jio_get(action_result.action);
         })
         .push(function (form_result) {
+          form_result.form_definition.action_type = action_type;
           return form_result.form_definition;
         });
     });

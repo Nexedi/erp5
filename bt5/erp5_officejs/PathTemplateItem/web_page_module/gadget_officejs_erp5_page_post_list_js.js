@@ -24,7 +24,6 @@
         action_info = {
           page: "handle_action",
           action: "new",
-          action_type: "object_jio_js_script",
           portal_type: "HTML Post",
           parent_portal_type: "Post Module",
           my_source_reference: fake_thread_uid

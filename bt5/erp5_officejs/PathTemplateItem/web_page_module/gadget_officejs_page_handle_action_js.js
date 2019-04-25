@@ -33,7 +33,6 @@
         .push(function () {
           return RSVP.all([
             gadget.getUrlParameter("action"),
-            gadget.getUrlParameter("action_type"),
             gadget.getUrlParameter("parent_portal_type"),
             gadget.getSetting('parent_portal_type'),
             gadget.declareGadget(common_utils_gadget_url)
@@ -41,11 +40,11 @@
         })
         .push(function (result) {
           action_reference = result[0];
-          action_type = result[1];
-          parent_portal_type = result[2] || result[3];
-          gadget_utils = result[4];
+          parent_portal_type = result[1] || result[2];
+          gadget_utils = result[3];
           return gadget_utils.getFormDefinition(parent_portal_type, action_reference)
             .push(function (form_definition) {
+              action_type = form_definition.action_type;
               if (action_type === "object_jio_js_script") {
                 if (form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script")) {
                   action_gadget_url = form_definition.fields_raw_properties.gadget_field_action_js_script.values.gadget_url;
