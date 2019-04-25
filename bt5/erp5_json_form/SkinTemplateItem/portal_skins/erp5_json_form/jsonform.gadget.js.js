@@ -991,6 +991,9 @@
           }
           delete g.props.init_value;
         })
+        .push(function () {
+          return true;
+        })
         .push(undefined, function (err) {
           console.error(err);
         });
