@@ -3,11 +3,6 @@
 (function (window, rJS) {
   "use strict";
 
-  var default_view = "jio_view",
-    common_utils_gadget_url = "gadget_officejs_common_utils.html",
-    form_view_gadget_url = "gadget_officejs_form_view.html",
-    child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
-
   rJS(window)
 
     /////////////////////////////////////////////////////////////////
@@ -32,6 +27,9 @@
 
     .declareMethod("render", function (options) {
       var gadget = this,
+        default_view = "jio_view",
+        common_utils_gadget_url = "gadget_officejs_common_utils.html",
+        child_gadget_url = 'gadget_erp5_pt_form_view_editable.html',
         gadget_utils,
         jio_document;
       return gadget.declareGadget(common_utils_gadget_url)
@@ -64,7 +62,7 @@
 
     .onStateChange(function () {
       var gadget = this;
-      return gadget.declareGadget(form_view_gadget_url)
+      return gadget.declareGadget("gadget_officejs_form_view.html")
         .push(function (form_view_gadget) {
           return form_view_gadget.renderGadget(gadget);
         });
