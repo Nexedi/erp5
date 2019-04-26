@@ -49,9 +49,9 @@ PRIORITY_MAPPING =  {
    4: (  6, 12),
    5: (  9, 15),
    6: (  9, 18),
-   7: ( 12, 18),
-   8: ( 15, 24),
-   9: ( 18, 30),
+   7: ( 12, 24),
+   8: ( 15, 30),
+   9: ( 18, 45),
   }
 
 class ERP5ProjectUnitTestDistributor(XMLObject):
@@ -331,7 +331,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
             # priority and the more test result lack test node, the lower is key[0]
             # This allows to affect more test nodes to test suites with higher priority
             wanted_test_core_quantity = PRIORITY_MAPPING[test_suite.getIntIndex()][1]
-            factor = max_test_core_per_suite / wanted_test_core_quantity
+            factor = float(max_test_core_per_suite) / wanted_test_core_quantity
             missing_quantity = wanted_test_core_quantity/3 - len(test_result.objectValues(portal_type="Test Result Node"))
             key = (max_test_core_per_suite - missing_quantity * 3 * factor, modification_date)
       else:
