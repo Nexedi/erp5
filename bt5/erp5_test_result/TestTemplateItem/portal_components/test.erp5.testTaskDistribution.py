@@ -328,13 +328,14 @@ class TestTaskDistribution(ERP5TypeTestCase):
     This avoid affecting all test nodes to a test suite having medium priority
     while a test suite with high priority is waiting for more nodes to speed up.
     """
-    for x in  range(10):
+    for x in range(10):
       config_list = json.loads(self.distributor.startTestSuite(
                              title="COMP%s-Node1" % x))
     test_suite_list = self._createTestSuite(quantity=3)
-    test_suite_list[0].setIntIndex(1) # test suite 1
-    test_suite_list[1].setIntIndex(5) # test suite 2
-    test_suite_list[2].setIntIndex(9) # test suite 3
+    test_suite_1, test_suite_2, test_suite_3 = test_suite_list
+    test_suite_list[0].setIntIndex(1) # test suite 1, up to 1 testnode
+    test_suite_list[1].setIntIndex(5) # test suite 2, up to 5 testnodes
+    test_suite_list[2].setIntIndex(8) # test suite 3, up to 10 testnodes
     self.tic()
 
     self._callOptimizeAlarm()
@@ -343,23 +344,24 @@ class TestTaskDistribution(ERP5TypeTestCase):
                              title=title))
       return ["%s" % x["test_suite_title"] for x in config_list]
     now = DateTime()
+    def affectTestSuite(node_title, test_suite_list):
+      test_node, = self.test_node_module.searchFolder(title=node_title)
+      test_node = test_node.getObject()
+      test_node.setAggregateValueList(test_suite_list)
     try:
-      # Check test suite distribution. This is not the purpose of this test
-      # initially, distribution might later change if algorithm is modified.
-      # Though next steps of the test depends on distribution, thus we have
-      # to make sure test does not fails only due to a change of distribution
-      self.assertEquals(set(getTestSuiteList("COMP0-Node1")), set(["test suite 1", "test suite 2", "test suite 3"]))
-      self.assertEquals(set(getTestSuiteList("COMP1-Node1")), set(["test suite 2", "test suite 3"]))
-      self.assertEquals(set(getTestSuiteList("COMP2-Node1")), set(["test suite 2", "test suite 3"]))
-      self.assertEquals(set(getTestSuiteList("COMP3-Node1")), set(["test suite 2", "test suite 3"]))
-      # COMP4 as less than COMP5 only due to distribution algorithm, though
-      # this is not an issue at all
-      self.assertEquals(set(getTestSuiteList("COMP4-Node1")), set(["test suite 3"]))
-      self.assertEquals(set(getTestSuiteList("COMP5-Node1")), set(["test suite 2", "test suite 3"]))
-      self.assertEquals(set(getTestSuiteList("COMP6-Node1")), set(["test suite 3"]))
-      self.assertEquals(set(getTestSuiteList("COMP7-Node1")), set(["test suite 3"]))
-      self.assertEquals(set(getTestSuiteList("COMP8-Node1")), set(["test suite 3"]))
-      self.assertEquals(set(getTestSuiteList("COMP9-Node1")), set(["test suite 3"]))
+      # Take a distribution that was calculated by alarm at some point. Though
+      # hardcode the distribution, because this is not the purpose of this test
+      # to check purpose algorithm
+      affectTestSuite("COMP0-Node1", [test_suite_1, test_suite_2, test_suite_3])
+      affectTestSuite("COMP1-Node1", [test_suite_2, test_suite_3])
+      affectTestSuite("COMP2-Node1", [test_suite_2, test_suite_3])
+      affectTestSuite("COMP3-Node1", [test_suite_2, test_suite_3])
+      affectTestSuite("COMP4-Node1", [test_suite_3])
+      affectTestSuite("COMP5-Node1", [test_suite_2, test_suite_3])
+      affectTestSuite("COMP6-Node1", [test_suite_3])
+      affectTestSuite("COMP7-Node1", [test_suite_3])
+      affectTestSuite("COMP8-Node1", [test_suite_3])
+      affectTestSuite("COMP9-Node1", [test_suite_3])
       # process some test to have old test result in database
       self.processTest("test suite 1", "r0=a", node_title="COMP0-Node1")
       self.pinDateTime(now + 1.0/86400)
