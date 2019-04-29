@@ -9,12 +9,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("getSetting", "getSetting")
-    .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("jio_get", "jio_get")
-    .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
-    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
-    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -38,9 +33,20 @@
 
     .declareMethod("render", function (options) {
       var gadget = this, action_reference;
-      return gadget.getUrlParameter("action")
-        .push(function (action_parameter) {
-          action_reference = action_parameter;
+      return RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.getUrlParameter('portal_type'),
+            gadget.getUrlParameter('parent_relative_url'),
+            gadget.getSetting('portal_type'),
+            gadget.getSetting('parent_relative_url'),
+            gadget.getUrlParameter("action")
+          ]);
+        })
+        .push(function (result) {
+          action_reference = result[4];
+          if (result[0] !== undefined) {options.portal_type = result[0]; } else {options.portal_type = result[2]; }
+          if (result[1] !== undefined) {options.parent_relative_url = result[1]; } else {options.parent_relative_url = result[3]; }
           return gadget.getActionFormDefinition(action_reference);
         })
         .push(function (form_definition) {
@@ -53,9 +59,9 @@
                 scope: "action_field",
                 element: fragment
               })
-                .push(function (action_gadget) {
-                  return action_gadget.handleRender(gadget, options, action_reference, form_definition);
-                });
+              .push(function (action_gadget) {
+                return action_gadget.render(options, action_reference, form_definition);
+              });
             }
           }
           // avoid crash if form doesn't have gadget_field_action_js_script or object_jio_js_script action
@@ -63,60 +69,12 @@
         });
     })
 
-    .onStateChange(function () {
-      var gadget = this;
-      return gadget.getUrlParameter("action")
-        .push(function (action_reference) {
-          return gadget.getActionFormDefinition(action_reference);
-        })
-        .push(function (form_definition) {
-          if (form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script")) {
-            var fragment = document.createElement('div'),
-              action_gadget_url = form_definition.fields_raw_properties.gadget_field_action_js_script.values.gadget_url;
-            gadget.element.appendChild(fragment);
-            return gadget.declareGadget(action_gadget_url, {
-              scope: "action_field",
-              element: fragment
-            })
-              .push(function (action_gadget) {
-                return action_gadget.render(gadget);
-              });
-          }
-        });
-    })
-
-    .allowPublicAcquisition('notifySubmit', function () {
-      return this.triggerSubmit();
-    })
     .declareMethod('triggerSubmit', function () {
-      return this.getDeclaredGadget('fg')
-        .push(function (gadget) {
-          return gadget.triggerSubmit();
-        });
-    })
-
-    .allowPublicAcquisition('submitContent', function (options) {
-      var gadget = this,
-        jio_key = options[0],
-        //target_url = options[1],
-        content_dict = options[2];
-      return gadget.getUrlParameter("action")
-        .push(function (action_reference) {
-          return gadget.getActionFormDefinition(action_reference);
-        })
-        .push(function (form_definition) {
-          if (form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script")) {
-            var fragment = document.createElement('div'),
-              action_gadget_url = form_definition.fields_raw_properties.gadget_field_action_js_script.values.gadget_url;
-            gadget.element.appendChild(fragment);
-            return gadget.declareGadget(action_gadget_url, {
-              scope: "action_field",
-              element: fragment
-            })
-              .push(function (action_gadget) {
-                return action_gadget.handleSubmit(gadget, jio_key, content_dict);
-              });
-          }
+      var gadget = this;
+      return gadget.getDeclaredGadget('action_field')
+        .push(function (action_gadget) {
+          return action_gadget.triggerSubmit();
         });
     });
+
 }(window, document, rJS, RSVP));
