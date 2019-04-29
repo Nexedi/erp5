@@ -7435,7 +7435,16 @@ return new Parser;
       return new Query(key_schema);
     }
     if (typeof object === "string") {
-      object = parseStringToObject(object);
+      try {
+        object = parseStringToObject(object);
+      } catch (error) {
+        if (error.hash && error.hash.expected &&
+            error.hash.expected.length === 1 &&
+            error.hash.expected[0] === "'QUOTE'") {
+          return new query_class_dict.simple({value: object});
+        }
+        throw error;
+      }
     }
     if (typeof (object || {}).type === "string" &&
         query_class_dict[object.type]) {
@@ -7445,6 +7454,13 @@ return new Parser;
                         "Argument 1 is not a search text or a parsable object");
   };
 
+  function sanitizeQueryValue(value) {
+    if (typeof value === "string") {
+      return value.replace(/((?:\\\\)*)\\$/, "$1");
+    }
+    return value;
+  }
+
   function objectToSearchText(query) {
     var i = 0,
       query_list = null,
@@ -7453,7 +7469,8 @@ return new Parser;
       common_key = "";
     if (query.type === "simple") {
       return (query.key ? query.key + ": " : "") +
-        (query.operator || "") + ' "' + query.value + '"';
+        (query.operator || "") +
+        ' "' + sanitizeQueryValue(query.value) + '"';
     }
     if (query.type === "complex") {
       query_list = query.query_list;
@@ -7484,7 +7501,7 @@ return new Parser;
         for (i = 0; i < query_list.length; i += 1) {
           string_list.push(
             (query_list[i].operator || "") +
-              ' "' + query_list[i].value + '"'
+              ' "' + sanitizeQueryValue(query_list[i].value) + '"'
           );
         }
       } else {
