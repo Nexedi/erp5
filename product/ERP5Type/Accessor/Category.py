@@ -27,6 +27,7 @@
 ##############################################################################
 
 
+from collections import OrderedDict
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Setter as BaseSetter, Getter as BaseGetter
 from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
@@ -98,8 +99,7 @@ class SetSetter(ListSetter):
       We should take care that the provided argument has no
       duplicate values
       """
-      if type(value) not in (set, frozenset):
-        value = frozenset(value)
+      value = tuple(OrderedDict.fromkeys(value))
       instance._setCategoryMembership(self._key, value,
                                       spec=kw.get('spec',()),
                                       filter=kw.get('filter', None),
@@ -164,7 +164,7 @@ class SetGetter(ListGetter):
     Gets a category value set
     """
     def __call__(self, instance, *args, **kw):
-      return list(set(ListGetter.__call__(self, instance, *args, **kw)))
+      return list(OrderedDict.fromkeys(ListGetter.__call__(self, instance, *args, **kw)))
 
 
 # ItemList is outdated XXX -> ItemList
