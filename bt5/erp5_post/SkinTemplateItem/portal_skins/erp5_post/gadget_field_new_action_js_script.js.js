@@ -49,12 +49,12 @@
               jio_key: jio_key,
               doc: new_document,
               child_gadget_url: 'gadget_erp5_pt_form_view_editable.html',
+              form_type: 'page',
               form_definition: form_definition,
               view: action_reference,
               editable: true,
               has_more_views: false,
-              has_more_actions: true,
-              is_form_list: false
+              has_more_actions: true
             });
           });
         });

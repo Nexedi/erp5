@@ -47,13 +47,13 @@
         return gadget.changeState({
           doc: {title: title},
           parent_document: parent_document,
-          child_gadget_url: 'gadget_erp5_pt_form_view_editable.html',
+          child_gadget_url: 'gadget_erp5_pt_form_dialog.html',
+          form_type: 'dialog',
           form_definition: form_definition,
           view: action_reference,
           editable: true,
           has_more_views: false,
-          has_more_actions: false,
-          is_form_list: false
+          has_more_actions: false
         });
       });
     })
