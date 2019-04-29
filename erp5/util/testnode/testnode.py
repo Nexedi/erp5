@@ -167,7 +167,12 @@ shared = true
            url=vcs_repository["url"])
         updater.checkout()
         revision_list.append((repository_id, updater.getRevision()))
-    except SubprocessError:
+    except SubprocessError as error:
+      # only limit to particular error, if we run that code for all errors,
+      # then if server having most repositories is down for some time, we would
+      # erase all repositories and facing later hours of downloads
+      if getattr(error, 'stderr', '').find('index file') >= 0:
+        rmtree(repository_path)
       logger.warning("Error while getting repository, ignoring this test suite",
                      exc_info=1)
       return False

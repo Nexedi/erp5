@@ -437,6 +437,38 @@ shared = true
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEqual(None, rev_list)
 
+  def test_05f_ResetCorruptedRepository(self):
+    """
+    It could happens that repository are corrupted, like when server is restarted
+    in the middle of a git checkout. So make sure testnode remove repositories
+    that are not working any longer.
+
+    Usual error is "index file smaller than expected".
+    We reproduce here a similar error "bad index file sha1 signature" which we
+    know how to reproduce
+    """
+    commit_dict = self.generateTestRepositoryList()
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertTrue(rev_list is not None)
+    rep0_clone_path = [x['repository_path'] for x in \
+                   node_test_suite.vcs_repository_list \
+                   if x['repository_path'].endswith("rep0")][0]
+    # truncate index file to reproduce error
+    index_file = open(os.path.join(rep0_clone_path, '.git', 'index'), 'a')
+    index_file.seek(1,2)
+    index_file.truncate()
+    index_file.close()
+    # we get rev list with corrupted repository, we get None, but in the same
+    # time the bad repository is deleted
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertEqual(None, rev_list)
+    # So next update should go fine
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertTrue(rev_list is not None)
+
   def test_06_checkRevision(self):
     """
     Check if we are able to restore older commit hash if master decide so
