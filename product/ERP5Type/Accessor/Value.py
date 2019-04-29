@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from collections import OrderedDict
 from operator import methodcaller
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Setter as BaseSetter, Getter as BaseGetter
 from zLOG import LOG
@@ -46,10 +47,11 @@ class SetSetter(BaseSetter):
       self._key = key
       self._warning = warning
 
-    def __call__(self, instance, *args, **kw):
+    def __call__(self, instance, value, *args, **kw):
       if self._warning:
         LOG("ERP5Type Deprecated Setter Id:",0, self._id)
-      instance._setValue(self._key, set(args[0]),
+      value = tuple(OrderedDict.fromkeys(value))
+      instance._setValue(self._key, value,
                                                 spec=kw.get('spec',()),
                                                 filter=kw.get('filter', None),
                                                 portal_type=kw.get('portal_type',()),
@@ -164,7 +166,7 @@ class SetGetter(ListGetter):
     """
     def __call__(self, instance, *args, **kw):
       r = ListGetter.__call__(self, instance, **kw)
-      return list(set(r)) if r or not args else args[0]
+      return list(OrderedDict.fromkeys(r)) if r or not args else args[0]
 
 
 def defMethodGetter(key, method=None):
