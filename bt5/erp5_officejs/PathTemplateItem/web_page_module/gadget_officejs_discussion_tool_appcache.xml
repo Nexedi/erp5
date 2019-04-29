@@ -219,6 +219,8 @@ officejs_logo_text_editor.png\n
 gadget_officejs_discussion_tool_router.html\n
 gadget_erp5_pt_form_view_editable.html\n
 gadget_erp5_pt_form_view_editable.js\n
+gadget_erp5_pt_form_dialog.html\n
+gadget_erp5_pt_form_dialog.js\n
 gadget_erp5_page_action_offline.html\n
 gadget_erp5_page_action_offline.js\n
 gadget_erp5_page_ojs_controller.html\n
@@ -744,7 +746,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>975.16181.55679.14097</string> </value>
+                <value> <string>975.23755.19438.47564</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -762,7 +764,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1556114650.11</float>
+                        <float>1556573144.76</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

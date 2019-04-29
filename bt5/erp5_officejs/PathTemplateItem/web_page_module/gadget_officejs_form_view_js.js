@@ -148,7 +148,7 @@
         })
         .push(function (result_list) {
           var url_list = result_list[0], header_dict;
-          if (gadget.state.is_form_list) {
+          if (gadget.state.form_type === 'list') {
             header_dict = {
               panel_action: true,
               jump_url: "",
@@ -156,6 +156,12 @@
               front_url: url_list[6],
               filter_action: true,
               page_title: result_list[2]
+            };
+          } else if (gadget.state.form_type === 'dialog') {
+            header_dict = {
+              page_title: gadget.state.doc.title,
+              //TODO: find correct url
+              cancel_url: url_list[6]
             };
           } else {
             header_dict = {
@@ -174,6 +180,7 @@
           if (gadget.state.has_more_actions) {
             header_dict.actions_url = url_list[1];
           }
+          //TODO: fix index (must be last index, not a number)
           if (url_list[7]) {
             header_dict.add_url = url_list[7];
           }

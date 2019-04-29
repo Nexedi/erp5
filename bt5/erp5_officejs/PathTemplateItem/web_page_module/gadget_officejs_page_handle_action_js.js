@@ -57,7 +57,8 @@
               gadget.element.appendChild(fragment);
               return gadget.declareGadget(action_gadget_url, {
                 scope: "action_field",
-                element: fragment
+                element: fragment/*,
+                sandbox: 'iframe'*/
               })
               .push(function (action_gadget) {
                 return action_gadget.render(options, action_reference, form_definition);
@@ -65,7 +66,7 @@
             }
           }
           // avoid crash if form doesn't have gadget_field_action_js_script or object_jio_js_script action
-          // render form without submit (and warn/inform user?)
+          // TODO: render form without submit (and warn/inform user?)
         });
     })
 

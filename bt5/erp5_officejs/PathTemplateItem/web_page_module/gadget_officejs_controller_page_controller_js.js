@@ -50,12 +50,12 @@
             doc: jio_document,
             child_gadget_url: child_gadget_url,
             form_definition: form_definition,
+            form_type: 'page',
             editable: false,
             view: options.view,
             //HARDCODED: following fields should be indicated by the configuration
             has_more_views: false,
-            has_more_actions: options.view === "view",
-            is_form_list: false
+            has_more_actions: options.view === "view"
           });
         });
     })
