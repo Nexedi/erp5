@@ -10,9 +10,6 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_post", "jio_post")
-    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
-    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
-    .declareAcquiredMethod("redirect", "redirect")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -21,7 +18,7 @@
     .declareMethod("createDocument", function (options) {
       var gadget = this,
         doc = {
-          title: "Untitled Document",
+          title: "Untitled Post",
           portal_type: options.portal_type,
           parent_relative_url: options.parent_relative_url
         },
@@ -38,74 +35,31 @@
       return gadget.jio_post(doc);
     })
 
-    .declareMethod("render", function (options, action_reference, form_definition) {
+    .declareMethod("preRenderDocument", function (parent_options) {
       var gadget = this;
-      return gadget.jio_get(options.jio_key)
+      return gadget.jio_get(parent_options.jio_key)
       .push(function (parent_document) {
         var title = parent_document.title;
         if (!title.startsWith('Re: ')) { title = 'Re: ' + parent_document.title; }
-        return gadget.changeState({
-          doc: {title: title},
-          parent_document: parent_document,
-          child_gadget_url: 'gadget_erp5_pt_form_dialog.html',
-          form_type: 'dialog',
-          form_definition: form_definition,
-          view: action_reference,
-          editable: true,
-          has_more_views: false,
-          has_more_actions: false
-        });
+        return {title: title,
+                source_reference: parent_document.source_reference};
       });
     })
 
-    .onStateChange(function () {
-      var gadget = this;
-      return gadget.declareGadget("gadget_officejs_form_view.html")
-      .push(function (form_view_gadget) {
-        return form_view_gadget.renderGadget(gadget);
-      });
-    })
-
-    .declareMethod('triggerSubmit', function () {
-      return this.getDeclaredGadget('fg')
-        .push(function (gadget) {
-          return gadget.triggerSubmit();
-        });
-    })
-
-    .allowPublicAcquisition('submitContent', function (options) {
-      var gadget = this,
-        jio_key = options[0],
-        //target_url = options[1],
-        content_dict = options[2],
-        document = {
-        my_title: gadget.state.doc.title,
-        portal_type: gadget.state.parent_document.portal_type,
-        parent_relative_url: gadget.state.parent_document.parent_relative_url,
-        my_source_reference: gadget.state.parent_document.source_reference
+    .declareMethod('handleSubmit', function (content_dict, parent_options) {
+      var document = {
+        my_title: parent_options.doc.title,
+        portal_type: parent_options.parent_options.portal_type,
+        parent_relative_url: parent_options.parent_options.parent_relative_url
       }, property;
+      delete content_dict.dialog_method;
       for (property in content_dict) {
         if (content_dict.hasOwnProperty(property)) {
           document['my_' + property] = content_dict[property];
         }
       }
-      return this.createDocument(document)
-      .push(function (id) {
-        jio_key = id;
-        return gadget.notifySubmitting();
-      })
-      .push(function () {
-        return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
-      })
-      .push(function () {
-        return gadget.redirect({
-          command: 'display',
-          options: {
-            jio_key: jio_key,
-            editable: true
-          }
-        });
-      });
+      document.my_source_reference = parent_options.doc.source_reference;
+      return this.createDocument(document);
     });
 
 }(window, rJS, RSVP));
