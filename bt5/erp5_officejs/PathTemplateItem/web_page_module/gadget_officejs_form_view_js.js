@@ -148,48 +148,50 @@
         })
         .push(function (result_list) {
           var url_list = result_list[0], header_dict;
-          if (gadget.state.form_type === 'list') {
-            header_dict = {
-              panel_action: true,
-              jump_url: "",
-              fast_input_url: "",
-              front_url: url_list[6],
-              filter_action: true,
-              page_title: result_list[2]
-            };
-          } else if (gadget.state.form_type === 'dialog') {
+          if (gadget.state.form_type === 'dialog') {
             header_dict = {
               page_title: gadget.state.doc.title,
               //TODO: find correct url
               cancel_url: url_list[6]
             };
           } else {
-            header_dict = {
-              selection_url: url_list[2],
-              previous_url: url_list[3],
-              next_url: url_list[4],
-              page_title: gadget.state.doc.title
-            };
-            if (gadget.state.has_more_views) {
-              header_dict.tab_url = url_list[0];
+            if (gadget.state.form_type === 'list') {
+              header_dict = {
+                panel_action: true,
+                jump_url: "",
+                fast_input_url: "",
+                front_url: url_list[6],
+                filter_action: true,
+                page_title: result_list[2]
+              };
+            } else {
+              header_dict = {
+                selection_url: url_list[2],
+                previous_url: url_list[3],
+                next_url: url_list[4],
+                page_title: gadget.state.doc.title
+              };
+              if (gadget.state.has_more_views) {
+                header_dict.tab_url = url_list[0];
+              }
+              if (gadget.state.editable) {
+                header_dict.save_action = true;
+              }
             }
-            if (gadget.state.editable) {
-              header_dict.save_action = true;
+            if (gadget.state.has_more_actions) {
+              header_dict.actions_url = url_list[1];
             }
-          }
-          if (gadget.state.has_more_actions) {
-            header_dict.actions_url = url_list[1];
-          }
-          //TODO: fix index (must be last index, not a number)
-          if (url_list[7]) {
-            header_dict.add_url = url_list[7];
-          }
-          if (result_list[1]) {
-            header_dict.export_url = (
-              erp5_document._links.action_object_jio_report ||
-              erp5_document._links.action_object_jio_exchange ||
-              erp5_document._links.action_object_jio_print
-            ) ? url_list[5] : '';
+            //TODO: fix index (must be last index, not a number)
+            if (url_list[7]) {
+              header_dict.add_url = url_list[7];
+            }
+            if (result_list[1]) {
+              header_dict.export_url = (
+                erp5_document._links.action_object_jio_report ||
+                erp5_document._links.action_object_jio_exchange ||
+                erp5_document._links.action_object_jio_print
+              ) ? url_list[5] : '';
+            }
           }
           return this_gadget.updateHeader(header_dict);
         });
