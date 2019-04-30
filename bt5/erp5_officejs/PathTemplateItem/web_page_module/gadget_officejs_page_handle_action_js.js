@@ -10,6 +10,9 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
+    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+    .declareAcquiredMethod("redirect", "redirect")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -32,7 +35,7 @@
     })
 
     .declareMethod("render", function (options) {
-      var gadget = this, action_reference;
+      var gadget = this, action_reference, valid_action;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
@@ -50,32 +53,97 @@
           return gadget.getActionFormDefinition(action_reference);
         })
         .push(function (form_definition) {
-          if (form_definition.action_type === "object_jio_js_script") {
-            if (form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script")) {
-              var fragment = document.createElement('div'),
-                action_gadget_url = form_definition.fields_raw_properties.gadget_field_action_js_script.values.gadget_url;
-              gadget.element.appendChild(fragment);
-              return gadget.declareGadget(action_gadget_url, {
-                scope: "action_field",
-                element: fragment/*,
-                sandbox: 'iframe'*/
-              })
-              .push(function (action_gadget) {
-                return action_gadget.render(options, action_reference, form_definition);
+          valid_action = form_definition.action_type === "object_jio_js_script" &&
+            form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script");
+          var fragment = document.createElement('div'),
+            action_gadget_url = form_definition.fields_raw_properties.gadget_field_action_js_script.values.gadget_url;
+          if (valid_action) {
+            gadget.element.appendChild(fragment);
+            return gadget.declareGadget(action_gadget_url, {
+              scope: "action_field",
+              element: fragment
+            })
+            .push(function (action_gadget) {
+              return action_gadget.preRenderDocument(options);
+            })
+            .push(function (doc) {
+              return gadget.changeState({
+                doc: doc,
+                parent_options: options,
+                child_gadget_url: 'gadget_erp5_pt_form_dialog.html',
+                form_type: 'dialog',
+                form_definition: form_definition,
+                view: action_reference,
+                valid_action: valid_action
               });
-            }
+            });
+          } else {
+            return gadget.changeState({
+              doc: {},
+              parent_options: options,
+              child_gadget_url: 'gadget_erp5_pt_form_dialog.html',
+              form_type: 'dialog',
+              form_definition: form_definition,
+              view: action_reference,
+              valid_action: valid_action
+            });
           }
-          // avoid crash if form doesn't have gadget_field_action_js_script or object_jio_js_script action
-          // TODO: render form without submit (and warn/inform user?)
         });
     })
 
-    .declareMethod('triggerSubmit', function () {
+    .onStateChange(function () {
       var gadget = this;
-      return gadget.getDeclaredGadget('action_field')
-        .push(function (action_gadget) {
-          return action_gadget.triggerSubmit();
+      return gadget.declareGadget("gadget_officejs_form_view.html")
+      .push(function (form_view_gadget) {
+        return form_view_gadget.renderGadget(gadget);
+      });
+    })
+
+    .declareMethod('triggerSubmit', function () {
+      return this.getDeclaredGadget('fg')
+        .push(function (gadget) {
+          return gadget.triggerSubmit();
         });
+    })
+
+    .allowPublicAcquisition('submitContent', function (options) {
+      var gadget = this,
+        //target_url = options[1],
+        content_dict = options[2],
+        fragment = document.createElement('div'),
+        action_gadget_url, jio_key;
+      if (gadget.state.valid_action) {
+        action_gadget_url = gadget.state.form_definition.fields_raw_properties.gadget_field_action_js_script.values.gadget_url;
+        gadget.element.appendChild(fragment);
+        return gadget.declareGadget(action_gadget_url, {
+          scope: "action_field",
+          element: fragment
+        })
+        .push(function (action_gadget) {
+          return action_gadget.handleSubmit(content_dict, gadget.state);
+        })
+        .push(function (id) {
+          jio_key = id;
+          return gadget.notifySubmitting();
+        })
+        .push(function () {
+          return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
+        })
+        .push(function () {
+          return gadget.redirect({
+            command: 'display',
+            options: {
+              jio_key: jio_key,
+              editable: true
+            }
+          });
+        });
+      } else {
+        return gadget.notifySubmitted({message: 'Could not perform this action: configuration error', status: 'fail'})
+        .push(function () {
+          return;
+        });
+      }
     });
 
 }(window, document, rJS, RSVP));
