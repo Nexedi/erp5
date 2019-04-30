@@ -1,5 +1,5 @@
 /*jslint nomen: true, maxlen: 200, indent: 2, maxerr: 100*/
-/*global window, document, URL, rJS, RSVP, jIO, tv4, location */
+/*global window, document, URL, rJS, RSVP, jIO, tv4, location, console */
 
 (function (window, document, location, rJS, RSVP, tv4) {
   "use strict";
@@ -773,20 +773,6 @@
       });
   }
 
-  function get_scope_path_from_element(gadget, element) {
-    var scope = element.getAttribute("data-gadget-scope");
-    return gadget.getDeclaredGadget(scope)
-      .push(function (g) {
-        return g.getJsonPath();
-      })
-      .push(function (path) {
-        return {
-          scope: scope,
-          path: path
-        };
-      });
-  }
-
   function render_array(gadget, schema, json_document, div_input, path, schema_path) {
     var input,
       array_path,
@@ -826,7 +812,10 @@
       if (child) {
         input.parentNode.insertBefore(child, input);
         div_input.removeAttribute("data-json-empty-array");
-        return get_scope_path_from_element(gadget, child);
+        return {
+          scope: child.getAttribute("data-gadget-scope"),
+          path: "/"
+        };
       }
     }
 
@@ -1426,7 +1415,10 @@
       if (child) {
         // insert additionalProperty before selector
         selector.element.parentNode.insertBefore(child, selector.element);
-        return get_scope_path_from_element(g, child);
+        return {
+          scope: child.getAttribute("data-gadget-scope"),
+          path: "/"
+        };
       }
     }
 
@@ -1834,12 +1826,28 @@
     })
     .declareAcquiredMethod("rNotifyChange", "rootNotifyChange")
     .declareMethod("rootNotifyChange", function (v) {
-      var g = this;
+      var g = this,
+        queue,
+        cur_scope = g.element.getAttribute("data-gadget-scope");
       this.props.needValidate = true;
-      return g.getJsonPath(v.path)
+      if (v.scope && v.scope !== cur_scope) {
+        queue = g.getDeclaredGadget(v.scope);
+      } else {
+        queue = new RSVP.Queue()
+          .push(function () {
+            return g;
+          });
+      }
+      if (!v.scope) {
+        v.scope = cur_scope;
+      }
+      return queue
+        .push(function (gadget) {
+          return gadget.getJsonPath(v.path);
+        })
         .push(function (p) {
-          return g.rNotifyChange({
-            scope: v.scope || g.element.getAttribute("data-gadget-scope"),
+          g.rNotifyChange({
+            scope: v.scope,
             rel_path: v.path,
             path: p,
             ref: g.props.schema_arr.external_reference,
@@ -2066,12 +2074,14 @@
         evt = arr[0],
         event_object;
       event_object = g.props.add_custom_data[sub_scope];
-      if (event_object && evt.type === "change") {
-        return event_object.event();
+      if (evt.type === "change") {
+        if (event_object) {
+          return event_object.event();
+        }
+        return g.rootNotifyChange({
+          path: evt.target.name
+        });
       }
-      return g.rootNotifyChange({
-        path: evt.target.name
-      });
     })
     .declareMethod('renderForm', function (options) {
       var g = this,
@@ -2161,6 +2171,10 @@
         .push(function () {
           g.props.rerender = false;
           return g.element;
+        })
+        .push(undefined, function (err) {
+          console.error(err);
+          throw err;
         });
     })
 

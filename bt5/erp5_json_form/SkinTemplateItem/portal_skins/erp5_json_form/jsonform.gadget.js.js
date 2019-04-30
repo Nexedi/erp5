@@ -1,5 +1,5 @@
 /*jslint nomen: true, maxlen: 200, indent: 2, maxerr: 100*/
-/*global window, document, URL, rJS, RSVP, jIO, Blob */
+/*global window, document, URL, rJS, RSVP, jIO, Blob, console*/
 
 (function (window, document, Blob, rJS, RSVP, jIO) {
   "use strict";
@@ -1009,7 +1009,7 @@
       if (opt.scope) {
         queue
           .push(function () {
-            return g.props.form_gadget.getDeclaredGadget(opt.scope);
+            return g.getSubGadget(opt.scope);
           })
           .push(function (ret) {
             gadget = ret;
