@@ -38,12 +38,12 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing Action' and contains(@href, '#!display_with_history_and_cancel') and contains(@href, 'do_nothing_action_jio')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Clone Document' and contains(@href, '#!display_with_history_and_cancel') and contains(@href, 'clone_document')]</td>
   <td></td>
 </tr>
 
 <!-- Follow one link -->
-<tal:block tal:define="click_configuration python: {'text': 'Do Nothing Action'}">
+<tal:block tal:define="click_configuration python: {'text': 'Clone Document'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
@@ -55,10 +55,10 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>Please do nothing Dialog</td>
+  <td>Clone Document</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/verify_is_non_editable_mode" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/verify_is_editable_mode" />
 
 </tbody></table>
 </body>
