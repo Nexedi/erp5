@@ -18,7 +18,8 @@
    * @param {string} icon - alias used in font-awesome iconset
    * @param {Array} command_list - array of links obtained from ERP5 HATEOAS
    */
-  function renderLinkList(gadget, jio_key, title, icon, erp5_link_list) {
+  function renderLinkList(gadget, jio_key, title, icon, erp5_link_list,
+                          editable) {
     return new RSVP.Queue()
       .push(function () {
         return RSVP.all(
@@ -27,7 +28,8 @@
               "command": 'display_with_history_and_cancel',
               "options": {
                 "jio_key": jio_key,
-                "view": erp5_link.href
+                "view": erp5_link.href,
+                "editable": editable
               }
             });
           })
@@ -86,7 +88,8 @@
           return RSVP.all([
             renderLinkList(gadget, options.jio_key, "Workflows", "random", transition_list),
             renderLinkList(gadget, options.jio_key, "Actions", "gear", action_list),
-            renderLinkList(gadget, options.jio_key, "Clone", "clone", clone_list),
+            // Stay in editable mode after cloning, as user will probably edit the new document
+            renderLinkList(gadget, options.jio_key, "Clone", "clone", clone_list, true),
             renderLinkList(gadget, options.jio_key, "Delete", "trash-o", delete_list)
           ]);
         })
