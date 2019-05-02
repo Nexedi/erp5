@@ -92,10 +92,17 @@
     })
 
     .onStateChange(function () {
-      var gadget = this;
-      return gadget.declareGadget("gadget_officejs_form_view.html")
+      var fragment = document.createElement('div'),
+        gadget = this,
+        options;
+      while (this.element.firstChild) {
+        this.element.removeChild(this.element.firstChild);
+      }
+      this.element.appendChild(fragment);
+      return gadget.declareGadget("gadget_officejs_form_view.html", {element: fragment,
+                                                                     scope: 'fg'})
       .push(function (form_view_gadget) {
-        return form_view_gadget.renderGadget(gadget);
+        return form_view_gadget.render(gadget.state);
       });
     })
 

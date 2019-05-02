@@ -95,40 +95,40 @@
       return form_json;
     })
 
-    .declareMethod("renderGadget", function (target_gadget) {
+    .declareMethod("render", function (options) {
       var fragment = document.createElement('div'),
         gadget = this,
         form_json;
-      return gadget.renderForm(target_gadget.state.form_definition, target_gadget.state.doc)
+      return gadget.renderForm(options.form_definition, options.doc)
         .push(function (json) {
           form_json = json;
-          while (target_gadget.element.firstChild) {
-            target_gadget.element.removeChild(target_gadget.element.firstChild);
+          while (gadget.element.firstChild) {
+            gadget.element.removeChild(gadget.element.firstChild);
           }
-          target_gadget.element.appendChild(fragment);
-          return target_gadget.declareGadget(target_gadget.state.child_gadget_url, {element: fragment, scope: 'fg'});
+          gadget.element.appendChild(fragment);
+          return gadget.declareGadget(options.child_gadget_url, {element: fragment, scope: 'fg'});
         })
         .push(function (form_gadget) {
-          return gadget.renderSubGadget(target_gadget, form_gadget, form_json);
+          return gadget.renderSubGadget(options, form_gadget, form_json);
         });
     })
 
-    .declareMethod("renderSubGadget", function (gadget, subgadget, form_json) {
+    .declareMethod("renderSubGadget", function (options, subgadget, form_json) {
       var this_gadget = this, erp5_document = form_json.erp5_document;
       return subgadget.render({
-        jio_key: gadget.state.jio_key,
-        doc: gadget.state.doc,
+        jio_key: options.jio_key,
+        doc: options.doc,
         erp5_document: form_json.erp5_document,
         form_definition: form_json.form_definition,
-        editable: gadget.state.editable,
-        view: gadget.state.view,
+        editable: options.editable,
+        view: options.view,
         form_json: form_json
       })
       // render the header
         .push(function () {
           var url_for_parameter_list = [
             {command: 'change', options: {page: "tab"}},
-            {command: 'change', options: {page: "action_offline", jio_key: gadget.state.jio_key}},
+            {command: 'change', options: {page: "action_offline", jio_key: options.jio_key}},
             {command: 'history_previous'},
             {command: 'selection_previous'},
             {command: 'selection_next'},
@@ -148,14 +148,14 @@
         })
         .push(function (result_list) {
           var url_list = result_list[0], header_dict;
-          if (gadget.state.form_type === 'dialog') {
+          if (options.form_type === 'dialog') {
             header_dict = {
-              page_title: gadget.state.doc.title,
+              page_title: options.doc.title,
               //TODO: find correct url
               cancel_url: url_list[6]
             };
           } else {
-            if (gadget.state.form_type === 'list') {
+            if (options.form_type === 'list') {
               header_dict = {
                 panel_action: true,
                 jump_url: "",
@@ -169,21 +169,20 @@
                 selection_url: url_list[2],
                 previous_url: url_list[3],
                 next_url: url_list[4],
-                page_title: gadget.state.doc.title
+                page_title: options.doc.title
               };
-              if (gadget.state.has_more_views) {
+              if (options.has_more_views) {
                 header_dict.tab_url = url_list[0];
               }
-              if (gadget.state.editable) {
+              if (options.editable) {
                 header_dict.save_action = true;
               }
             }
-            if (gadget.state.has_more_actions) {
+            if (options.has_more_actions) {
               header_dict.actions_url = url_list[1];
             }
-            //TODO: fix index (must be last index, not a number)
-            if (url_list[7]) {
-              header_dict.add_url = url_list[7];
+            if (url_list[url_list.length - 1]) {
+              header_dict.add_url = url_list[url_list.length - 1];
             }
             if (result_list[1]) {
               header_dict.export_url = (

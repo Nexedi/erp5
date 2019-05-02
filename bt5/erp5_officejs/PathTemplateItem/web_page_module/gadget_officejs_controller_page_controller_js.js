@@ -1,6 +1,6 @@
-/*global window, rJS */
+/*global window, rJS, document */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, rJS, document) {
   "use strict";
 
   rJS(window)
@@ -61,11 +61,18 @@
     })
 
     .onStateChange(function () {
-      var gadget = this;
-      return gadget.declareGadget("gadget_officejs_form_view.html")
+      var fragment = document.createElement('div'),
+        gadget = this,
+        options;
+      while (this.element.firstChild) {
+        this.element.removeChild(this.element.firstChild);
+      }
+      this.element.appendChild(fragment);
+      return gadget.declareGadget("gadget_officejs_form_view.html", {element: fragment,
+                                                                     scope: 'fg'})
         .push(function (form_view_gadget) {
-          return form_view_gadget.renderGadget(gadget);
+          return form_view_gadget.render(gadget.state);
         });
     });
 
-}(window, rJS));
+}(window, rJS, document));
