@@ -940,22 +940,112 @@
       });
   }
 
+  function create_layout(gadget, options, create_field) {
+    var div,
+      div_input;
+    return RSVP.Queue()
+      .push(function () {
+        var delete_button,
+          label,
+          label_text;
+        div = document.createElement("div");
+        div.setAttribute("class", "jsonformfield ui-field-contain");
+        if (options.schema.description) {
+          div.title = options.schema.description;
+        }
+        // if (property_name && !options.json_path) {
+        if (options.delete_button === true) {
+          delete_button = createElement("span",
+            {"class": "ui-btn-icon-top ui-icon-trash-o"}
+            );
+          gadget.props.delete_button = delete_button;
+          div.appendChild(delete_button);
+        } else if (options.top !== true) {
+          if (options.required) {
+            delete_button = createElement("span",
+              {"class": "ui-btn-icon-top ui-icon-circle"}
+              );
+            div.appendChild(delete_button);
+          } else {
+            delete_button = createElement("span");
+            delete_button.innerHTML = "&emsp;";
+            div.appendChild(delete_button);
+          }
+        }
+
+        label_text = [options.property_name, options.schema_ob.title]
+          .filter(function (v) { return v; })
+          .join(" ")
+          // use non-breaking hyphen
+          .replace(/-/g, "‑");
+        if (options.property_name || options.top) {
+          if (options.top) {
+            label = document.createElement("span");
+            label.textContent = label_text;
+            options.root.appendChild(label);
+          } else {
+            label = document.createElement("label");
+            label.textContent = label_text;
+            div.appendChild(label);
+          }
+        }
+
+        div_input = document.createElement("div");
+        div_input.setAttribute("id", gadget.element.getAttribute("data-gadget-scope") +
+                                     options.json_path + '/');
+        div_input.setAttribute("class", "input");
+        return div_input;
+      })
+      .push(function (div_input) {
+        return create_field(div_input);
+      })
+      .push(function (input) {
+        var span_info,
+          error_message;
+        if (input) {
+          // object and array excluded from
+          // gadget.props.inputs not contain values
+          gadget.props.inputs.push(input);
+          input.name = options.json_path;
+          input.required = options.required;
+          if (options.type_changed) {
+            input.setAttribute('data-origin-value', JSON.stringify(options.json_document));
+          }
+          // XXX for gui
+          //input.setAttribute("class", "slapos-parameter");
+          div_input.appendChild(input);
+        } else {
+          div.setAttribute("data-parent-scope", gadget.element.getAttribute("data-gadget-scope"));
+          div.setAttribute("data-json-path", options.json_path + '/');
+          div.setAttribute("data-json-type", options.type);
+          if (options.required) {
+            div.setAttribute("data-json-required", "true");
+          }
+        }
+
+        if (options.schema.info !== undefined) {
+          span_info = document.createElement("span");
+          span_info.textContent = options.schema.info;
+          div_input.appendChild(span_info);
+        }
+        error_message = document.createElement("span");
+        error_message.setAttribute("class", "error");
+        error_message.hidden = true;
+        div_input.appendChild(error_message);
+
+        div.appendChild(div_input);
+        return div;
+      });
+  }
+
   function render_field(gadget, property_name, path, schema_arr, json_document, root, options) {
     var type,
-      div,
-      delete_button,
-      label,
-      label_text,
-      div_input,
-      span_info,
-      error_message,
       input,
       schema,
       schema_path,
       schema_ob,
       first_path,
-      type_changed,
-      queue = RSVP.Queue();
+      type_changed;
 
     if (options.selected_schema) {
       schema_ob = options.selected_schema;
@@ -1101,112 +1191,41 @@
     // render input end
 
     // html layout render begin
-    div = document.createElement("div");
-    div.setAttribute("class", "jsonformfield ui-field-contain");
-    if (schema.description) {
-      div.title = schema.description;
-    }
-    // if (property_name && !first_path) {
-    if (options.delete_button === true) {
-      delete_button = createElement("span",
-        {"class": "ui-btn-icon-top ui-icon-trash-o"}
+    options.schema = schema;
+    options.schema_ob = schema_ob;
+    options.json_path = first_path;
+    options.json_document = json_document;
+    options.root = root;
+    options.property_name = property_name;
+    options.type_changed = type_changed;
+    return create_layout(gadget, options, function (div_input) {
+      var q;
+      if (input) {
+        return input;
+      }
+      if (type === "array") {
+        q = render_array(
+          gadget,
+          schema,
+          json_document,
+          div_input,
+          first_path + '/',
+          schema_path
         );
-      gadget.props.delete_button = delete_button;
-      div.appendChild(delete_button);
-    } else if (options.top !== true) {
-      if (options.required) {
-        delete_button = createElement("span",
-          {"class": "ui-btn-icon-top ui-icon-circle"}
-          );
-        div.appendChild(delete_button);
-      } else {
-        delete_button = createElement("span");
-        delete_button.innerHTML = "&emsp;";
-        div.appendChild(delete_button);
       }
-    }
-
-    label_text = [property_name, schema_ob.title]
-      .filter(function (v) { return v; })
-      .join(" ")
-      // use non-breaking hyphen
-      .replace(/-/g, "‑");
-    if (property_name || options.top) {
-      if (options.top) {
-        label = document.createElement("span");
-        label.textContent = label_text;
-        root.appendChild(label);
-      } else {
-        label = document.createElement("label");
-        label.textContent = label_text;
-        div.appendChild(label);
+      if (type === "object") {
+        q = render_object(
+          gadget,
+          schema,
+          json_document,
+          div_input,
+          first_path + '/',
+          schema_path
+        );
       }
-    }
-
-    div_input = document.createElement("div");
-    div_input.setAttribute("id", gadget.element.getAttribute("data-gadget-scope") + first_path + '/');
-    div_input.setAttribute("class", "input");
-
-    if (!input && type === "array") {
-      queue = render_array(
-        gadget,
-        schema,
-        json_document,
-        div_input,
-        first_path + '/',
-        schema_path
-      );
-    }
-
-    if (!input && type === "object") {
-      queue
-        .push(function () {
-          return render_object(
-            gadget,
-            schema,
-            json_document,
-            div_input,
-            first_path + '/',
-            schema_path
-          );
-        });
-    }
-
-    if (input) {
-      // object and array excluded from
-      // gadget.props.inputs not contain values
-      gadget.props.inputs.push(input);
-      input.name = first_path;
-      input.required = options.required;
-      if (type_changed) {
-        input.setAttribute('data-origin-value', JSON.stringify(json_document));
-      }
-      // XXX for gui
-      //input.setAttribute("class", "slapos-parameter");
-      div_input.appendChild(input);
-    } else {
-      div.setAttribute("data-parent-scope", gadget.element.getAttribute("data-gadget-scope"));
-      div.setAttribute("data-json-path", first_path + '/');
-      div.setAttribute("data-json-type", type);
-      if (options.required) {
-        div.setAttribute("data-json-required", "true");
-      }
-    }
-
-    if (schema.info !== undefined) {
-      span_info = document.createElement("span");
-      span_info.textContent = schema.info;
-      div_input.appendChild(span_info);
-    }
-    error_message = document.createElement("span");
-    error_message.setAttribute("class", "error");
-    error_message.hidden = true;
-    div_input.appendChild(error_message);
-    div.appendChild(div_input);
-    // html layout render end
-
-    return queue
-      .push(function () {
+      return q;
+    })
+      .push(function (div) {
         root.appendChild(div);
         return div;
       });
