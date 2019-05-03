@@ -195,6 +195,10 @@
         }
         if (arr[2] && arr[2].length !== 0) {
           schema.properties.level = {
+            // type: "array",
+            // items: {
+            //   oneOf: arr[2]
+            // }
             title: " ",
             oneOf: arr[2]
           };
@@ -202,7 +206,8 @@
 
         return schema;
       })
-      .push(undefined, function () {
+      .push(undefined, function (err) {
+        console.error(err);
         return schema;
       });
   }
@@ -258,6 +263,7 @@
         used_hierarchy,
         url = arr[0].ref,
         allRerender,
+        q,
         y;
 
       function rerender(sub_scope) {
@@ -324,39 +330,40 @@
             return RSVP.all(g.props.choices.map(function (q) {
               return rerender(q);
             }));
-          })
-          .push(function () {
-            return g.notifyChange();
           });
       };
 
-      if ("urn:jio:remote_connections.json" === url) {
-        return allRerender();
-      }
       if (action === "render") {
         if ("urn:jio:choice.json" === url) {
           g.props.choices.push(scope);
         }
-        // action `render` fake change so do nothing
-        return;
-      }
-      for (y = 0; y < g.props.choices.length; y += 1) {
-        s = g.props.choices[y];
-        if (scope.startsWith(s)) {
-          if (action === "delete") {
-            g.props.choices.splice(y, 1);
-            return allRerender();
+        // XXX action `render` fake change so do nothing
+      } else if ("urn:jio:remote_connections.json" === url) {
+        q = allRerender();
+      } else {
+        for (y = 0; y < g.props.choices.length; y += 1) {
+          s = g.props.choices[y];
+          if (scope.startsWith(s)) {
+            if (action === "delete") {
+              g.props.choices.splice(y, 1);
+              q = allRerender();
+            } else if (relPath === "/hierarchy") {
+              q = allRerender();
+            } else {
+              q = rerender(s);
+            }
           }
-          if (relPath === "/hierarchy") {
-            return allRerender();
-          }
-          return rerender(s)
-            .push(function () {
-              return g.notifyChange();
-            });
         }
       }
-      return g.notifyChange();
+      if (q) {
+        return q
+          .push(function () {
+            return g.notifyChange();
+          })
+          .push(undefined, function (err) {
+            console.log(err);
+          });
+      }
     })
     .allowPublicAcquisition("resolveExternalReference", function (arr) {
       var g = this,
