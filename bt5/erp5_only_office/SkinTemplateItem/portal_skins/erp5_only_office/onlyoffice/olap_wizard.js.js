@@ -1,5 +1,5 @@
 /*jslint nomen: true, maxlen: 200, indent: 2*/
-/*global rJS, console, window, document, RSVP*/
+/*global rJS, console, window, document, RSVP, URL*/
 
 (function (window, rJS) {
   "use strict";
@@ -53,14 +53,14 @@
             if (!dimensions.hasOwnProperty(uname) &&
                 used_hierarchies.indexOf(row.HIERARCHY_UNIQUE_NAME) < 0 &&
                 row.DIMENSION_TYPE !== 2 // !measure
-            ) {
+                ) {
               dimensions[uname] = true;
             }
           }
         }
         for (i in dimensions) {
           if (dimensions.hasOwnProperty(i)) {
-            tasks.push(g.getDimension(connection_name, i))
+            tasks.push(g.getDimension(connection_name, i));
           }
         }
         return RSVP.all(tasks);
@@ -118,13 +118,12 @@
           row;
         for (i = 0; i < response.length; i += 1) {
           row = response[i];
-          if (
-            row["LEVEL_CARDINALITY"] < 600 &&
-            row["LEVEL_TYPE"] !== 1 // exclude all level type
-          ) {
+          if (row.LEVEL_CARDINALITY < 600 &&
+              row.LEVEL_TYPE !== 1 // exclude all level type
+              ) {
             arr.push({
-              const: row["LEVEL_UNIQUE_NAME"] || undefined,
-              title: row["LEVEL_NAME"] || undefined
+              const: row.LEVEL_UNIQUE_NAME || undefined,
+              title: row.LEVEL_NAME || undefined
             });
           }
         }
@@ -391,13 +390,13 @@
               g.getContent(path)
             ]);
           })
-          .push(function (arr) {
+          .push(function (ret_arr) {
             var choice_settings;
 
             if (path !== "/columns/" && path !== "/rows/") {
-              choice_settings = arr[2];
+              choice_settings = ret_arr[2];
             }
-            return generateChoiceSchema(g, arr[0], arr[1], choice_settings);
+            return generateChoiceSchema(g, ret_arr[0], ret_arr[1], choice_settings);
           });
       }
       throw new Error("urn: '" + url + "' not supported");
