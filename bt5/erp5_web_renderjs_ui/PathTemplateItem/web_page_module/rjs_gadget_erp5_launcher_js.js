@@ -1,8 +1,8 @@
 /*globals window, document, RSVP, rJS,
-          URI, location, XMLHttpRequest, console, navigator, ProgressEvent*/
+          URI, location, XMLHttpRequest, console, navigator, Event*/
 /*jslint indent: 2, maxlen: 80*/
 (function (window, document, RSVP, rJS,
-           XMLHttpRequest, location, console, navigator, ProgressEvent) {
+           XMLHttpRequest, location, console, navigator, Event) {
   "use strict";
 
   var MAIN_SCOPE = "m",
@@ -826,4 +826,4 @@
     });
 
 }(window, document, RSVP, rJS,
-  XMLHttpRequest, location, console, navigator, ProgressEvent));
+  XMLHttpRequest, location, console, navigator, Event));
