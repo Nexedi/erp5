@@ -1134,14 +1134,41 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                      relative_url=None, restricted=None, list_method=None,
                      default_param_json=None, form_relative_url=None, extra_param_json=None):
 
+  if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
+    login_relative_url = site_root.getLayoutProperty("configuration_login", default="")
+    if (login_relative_url):
+      response.setHeader(
+        'WWW-Authenticate',
+        'X-Delegate uri="%s"' % (url_template_dict["login_template"] % {
+          "root_url": site_root.absolute_url(),
+          "login": login_relative_url
+        })
+      )
+    response.setStatus(401)
+    return ""
+
+  if (view is not None):
+    view = str(view)
+
   if relative_url:
-    try:
-      traversed_document = site_root.restrictedTraverse(str(relative_url))
-      if (view is not None):
-        view = str(view)
-      is_site_root = False
-    except:
-      raise NotImplementedError(relative_url)
+    is_site_root = False
+    if traversed_document is None:
+      traversed_document = site_root.restrictedTraverse(relative_url, None)
+      if (traversed_document is None):
+        response.setStatus(404)
+        return ""
+  elif traversed_document is None:
+    traversed_document = context
+
+  # Check if traversed_document is the site_root
+  if is_site_root is None:
+    is_site_root = (traversed_document.getPath() == site_root.getPath())
+  if is_portal is None:
+    is_portal = (traversed_document.getPath() == portal.getPath())
+
+  if mime_type != traversed_document.Base_handleAcceptHeader([mime_type]):
+    response.setStatus(406)
+    return ""
 
   # extra_param_json holds parameters for search interpreted by getHateoas itself
   # not by the list_method neither url_columns - only getHateoas
@@ -1189,24 +1216,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       'status': statusLevelToString(portal_status_level)
     }
 
-  if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
-    login_relative_url = site_root.getLayoutProperty("configuration_login", default="")
-    if (login_relative_url):
-      response.setHeader(
-        'WWW-Authenticate',
-        'X-Delegate uri="%s"' % (url_template_dict["login_template"] % {
-          "root_url": site_root.absolute_url(),
-          "login": login_relative_url
-        })
-      )
-    response.setStatus(401)
-    return ""
-
-  elif mime_type != traversed_document.Base_handleAcceptHeader([mime_type]):
-    response.setStatus(406)
-    return ""
-
-  elif (mode == 'root') or (mode == 'traverse'):
+  if (mode == 'root') or (mode == 'traverse'):
     ##
     # Render ERP Document with a `view` specified
     # `view` contains view's name and we extract view's URL (we suppose form ${object_url}/Form_view)
@@ -2108,22 +2118,8 @@ else:
 
 context.Base_prepareCorsResponse(RESPONSE=response)
 
-# Check if traversed_document is the site_root
-if relative_url:
-  temp_traversed_document = site_root.restrictedTraverse(relative_url, None)
-  if (temp_traversed_document is None):
-    response.setStatus(404)
-    return ""
-else:
-  temp_traversed_document = context
-
-temp_is_site_root = (temp_traversed_document.getPath() == site_root.getPath())
-temp_is_portal = (temp_traversed_document.getPath() == portal.getPath())
-
 response.setHeader('Content-Type', mime_type)
-hateoas = calculateHateoas(is_portal=temp_is_portal, is_site_root=temp_is_site_root,
-                           traversed_document=temp_traversed_document,
-                           relative_url=relative_url,
+hateoas = calculateHateoas(relative_url=relative_url,
                            REQUEST=REQUEST, response=response, view=view, mode=mode,
                            query=query, select_list=select_list, limit=limit, form=form,
                            restricted=restricted, list_method=list_method,
