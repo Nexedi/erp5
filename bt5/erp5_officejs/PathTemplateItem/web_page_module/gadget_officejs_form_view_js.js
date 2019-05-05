@@ -114,7 +114,7 @@
     })
 
     .declareMethod("renderSubGadget", function (options, subgadget, form_json) {
-      var this_gadget = this, erp5_document = form_json.erp5_document;
+      var this_gadget = this, erp5_document = form_json.erp5_document, add_url;
       return subgadget.render({
         jio_key: options.jio_key,
         doc: options.doc,
@@ -138,6 +138,7 @@
           erp5_document = form_json.erp5_document;
           if (erp5_document._links && erp5_document._links.action_object_new_content_action) {
             url_for_parameter_list.push({command: 'change', options: erp5_document._links.action_object_new_content_action});
+            add_url = true;
           }
           return RSVP.all([
             this_gadget.getUrlForList(url_for_parameter_list),
@@ -160,10 +161,12 @@
                 panel_action: true,
                 jump_url: "",
                 fast_input_url: "",
-                front_url: url_list[6],
                 filter_action: true,
                 page_title: result_list[2]
               };
+              if (!options.front_page) {
+                header_dict.front_url = url_list[6];
+              }
             } else {
               header_dict = {
                 selection_url: url_list[2],
@@ -181,7 +184,7 @@
             if (options.has_more_actions) {
               header_dict.actions_url = url_list[1];
             }
-            if (url_list[url_list.length - 1]) {
+            if (add_url) {
               header_dict.add_url = url_list[url_list.length - 1];
             }
             if (result_list[1]) {

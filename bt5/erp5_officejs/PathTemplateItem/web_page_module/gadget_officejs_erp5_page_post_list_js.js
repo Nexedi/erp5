@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP */
+/*global window, document, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, document, rJS, RSVP) {
   "use strict";
 
   rJS(window)
@@ -17,10 +17,9 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("generateJsonRenderForm", function (gadget) {
-      //this will be the id of the thread that contains this post list
+    //HARDCODED UNTIL form_def is stored in local storage
+    .declareMethod("getFormDefinition", function (gadget) {
       var fake_thread_uid = "thread-" + ("0000" + ((Math.random() * Math.pow(36, 4)) | 0).toString(36)).slice(-4),
-        // get these (portal_type, etc) from getSettings
         action_info = {
           page: "handle_action",
           action: "new",
@@ -28,7 +27,6 @@
           parent_portal_type: "Post Module",
           my_source_reference: fake_thread_uid
         },
-        //hardcoded form_definition (this should come from erp5 form)
         form_definition = {
           _debug: "traverse",
           pt: "form_view",
@@ -37,146 +35,91 @@
             "bottom",
             [["my_listbox"]]
           ]],
-          //this field_info is totally made up, but somewhere in the definition there must be
+          //this fields_raw_properties is totally made up, but somewhere in the definition there must be
           //information about the fields. So, foreach field: key->info
-          field_info_dict: {
+          fields_raw_properties: {
             "my_listbox": {
-              "column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
-              "show_anchor": 0,
-              "default_params": {},
-              "editable": 1,
-              "editable_column_list": [],
-              "key": "field_listbox",
-              "lines": 30,
-              "list_method": "portal_catalog",
-              // is this correct? the query should come from the form definition, right?
-              "query": "urn:jio:allDocs?query=portal_type%3A%22HTML Post%22",
-              "portal_type": [],
-              "search_column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
-              "sort_column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
-              "sort": [['modification_date', 'descending']],
-              "title": "Posts",
-              "type": "ListBox"
+              "type": "ListBox",
+              "key": "field_listbox", // or my_listbox ??
+              "values": {
+                "column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
+                "show_anchor": 0,
+                "default_params": {},
+                "editable": 1,
+                "editable_column_list": [],
+                //"key": "field_listbox",
+                "lines": 30,
+                "list_method": "portal_catalog",
+                // is this correct? the query should come from the form definition, right?
+                "query": "urn:jio:allDocs?query=portal_type%3A%22HTML Post%22",
+                "portal_type": [],
+                "search_column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
+                "sort_column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
+                "sort": [['modification_date', 'descending']],
+                "title": "Posts"
+                //"type": "ListBox"
+              },
+              "tales": {},
+              "overrides": {},
+              "message_values": {}
             }
           },
           action: "Base_edit",
           update_action: "",
           _links: { "type": { name: "" }, "action_object_new_content_action": action_info }
-        },
-        form_json = {
-          erp5_document: {
-            "_embedded": {"_view": {}},
-            "_links": {}
-          },
-          form_definition: form_definition
         };
-      for (var i = 0; i < form_definition.group_list.length; i++) {
-        var fields = form_definition.group_list[i][1];
-        for (var j = 0; j < fields.length; j++) {
-          var my_element = fields[j][0], element_id;
-          if (my_element.startsWith("my_")) {
-            element_id = my_element.replace("my_", "");
-          }
-          var field_info = form_definition.field_info_dict[my_element];
-          if (gadget.state.hasOwnProperty("doc") && gadget.state.doc.hasOwnProperty(element_id)) {
-            field_info["default"] = gadget.state.doc[element_id];
-          }
-          form_json.erp5_document._embedded._view[my_element] = field_info;
-          form_json.erp5_document._links = form_definition._links;
-        }
-      }
-      return form_json;
+      return form_definition;
     })
 
-    .allowPublicAcquisition('notifySubmit', function () {
-      return this.triggerSubmit();
+    .declareMethod("render", function (options) {
+      var gadget = this,
+        default_view = "jio_view",
+        common_utils_gadget_url = "gadget_officejs_common_utils.html",
+        child_gadget_url = 'gadget_erp5_pt_form_list.html';
+      return gadget.declareGadget(common_utils_gadget_url)
+        .push(function (gadget_utils) {
+          return gadget.getFormDefinition();
+          //return gadget_utils.getFormDefinition(jio_document.portal_type, default_view);
+        })
+        .push(function (form_definition) {
+          return gadget.changeState({
+            jio_key: options.jio_key,
+            child_gadget_url: child_gadget_url,
+            form_definition: form_definition,
+            form_type: 'list',
+            editable: false,
+            view: default_view,
+            front_page: true,
+            has_more_views: false, //this should come from form_def
+            has_more_actions: false //this should come from form_def
+          });
+        });
+    })
+
+    .onStateChange(function () {
+      var fragment = document.createElement('div'),
+        gadget = this,
+        options;
+      while (this.element.firstChild) {
+        this.element.removeChild(this.element.firstChild);
+      }
+      this.element.appendChild(fragment);
+      return gadget.declareGadget("gadget_officejs_form_view.html", {element: fragment,
+                                                                     scope: 'form_view'})
+        .push(function (form_view_gadget) {
+          return form_view_gadget.render(gadget.state);
+        });
     })
 
     .declareMethod("triggerSubmit", function () {
       var argument_list = arguments;
-      return this.getDeclaredGadget('form_list')
+      return this.getDeclaredGadget('form_view')
+        .push(function (view_gadget) {
+          return view_gadget.getDeclaredGadget('fg');
+        })
         .push(function (gadget) {
           return gadget.triggerSubmit.apply(gadget, argument_list);
         });
-    })
-
-    .declareMethod("render", function () {
-      var gadget = this,
-          erp5_document;
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.getDeclaredGadget('form_list'),
-            gadget.generateJsonRenderForm(gadget)
-          ]);
-        })
-        .push(function (result) {
-          erp5_document = result[1].erp5_document;
-          return result[0].render(result[1]);
-        })
-        // render the header
-        .push(function () {
-          var url_for_parameter_list = [
-            {command: 'change', options: {page: "tab"}},
-            {command: 'change', options: {page: "action"}},
-            {command: 'history_previous'},
-            {command: 'selection_previous'},
-            {command: 'selection_next'},
-            {command: 'change', options: {page: "export"}},
-            {command: 'display', options: {}}
-          ];
-          if (erp5_document._links && erp5_document._links.action_object_new_content_action) {
-            url_for_parameter_list.push({command: 'change', options: erp5_document._links.action_object_new_content_action});
-          }
-          return RSVP.all([
-            gadget.getUrlForList(url_for_parameter_list),
-            gadget.isDesktopMedia(),
-            gadget.getSetting('document_title_plural'),
-            gadget.getSetting('upload_dict', false)
-          ]);
-        })
-        .push(function (result_list) {
-          var is_form_list = true, //TODO: configuration must indicate if is a form or list view
-            url_list = result_list[0], header_dict;
-          if (is_form_list) {
-            header_dict = {
-              panel_action: true,
-              jump_url: "",
-              fast_input_url: "",
-              filter_action: true,
-              page_title: result_list[2]
-            };
-            if (result_list[4]) {
-              header_dict.upload_url = result_list[3];
-            }
-          } else {
-            header_dict = {
-              selection_url: url_list[2],
-              previous_url: url_list[3],
-              next_url: url_list[4],
-              page_title: gadget.state.doc.title
-            };
-            if (false) { //TODO: configuration must indicate if there are more views
-              header_dict.tab_url = url_list[0];
-            }
-            if (gadget.state.editable === "true") {
-              header_dict.save_action = true;
-            }
-          }
-          if (false) { //TODO: configuration must indicate if there are more actions
-            header_dict.actions_url = url_list[1];
-          }
-          if (url_list[7]) {
-            header_dict.add_url = url_list[7];
-          }
-          if (result_list[1]) {
-            header_dict.export_url = (
-              erp5_document._links.action_object_jio_report ||
-              erp5_document._links.action_object_jio_exchange ||
-              erp5_document._links.action_object_jio_print
-            ) ? url_list[5] : '';
-          }
-          return gadget.updateHeader(header_dict);
-        });
     });
-}(window, rJS, RSVP));
+
+}(window, document, rJS, RSVP));
