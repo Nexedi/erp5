@@ -47,7 +47,6 @@
                 "default_params": {},
                 "editable": 1,
                 "editable_column_list": [],
-                //"key": "field_listbox",
                 "lines": 30,
                 "list_method": "portal_catalog",
                 // is this correct? the query should come from the form definition, right?
@@ -57,7 +56,6 @@
                 "sort_column_list": [['title', 'Title'], ['modification_date', 'Modification Date']],
                 "sort": [['modification_date', 'descending']],
                 "title": "Posts"
-                //"type": "ListBox"
               },
               "tales": {},
               "overrides": {},
@@ -76,24 +74,30 @@
         default_view = "jio_view",
         common_utils_gadget_url = "gadget_officejs_common_utils.html",
         child_gadget_url = 'gadget_erp5_pt_form_list.html';
-      return gadget.declareGadget(common_utils_gadget_url)
-        .push(function (gadget_utils) {
-          return gadget.getFormDefinition();
-          //return gadget_utils.getFormDefinition(jio_document.portal_type, default_view);
+      return RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.getSetting('parent_portal_type'),
+            gadget.declareGadget("gadget_officejs_common_utils.html")
+          ]);
         })
-        .push(function (form_definition) {
-          return gadget.changeState({
-            jio_key: options.jio_key,
-            child_gadget_url: child_gadget_url,
-            form_definition: form_definition,
-            form_type: 'list',
-            editable: false,
-            view: default_view,
-            front_page: true,
-            has_more_views: false, //this should come from form_def
-            has_more_actions: false //this should come from form_def
+        .push(function (result) {
+            return gadget.getFormDefinition();
+            //return result[1].getFormDefinition(result[0], default_view);
+          })
+          .push(function (form_definition) {
+            return gadget.changeState({
+              jio_key: options.jio_key,
+              child_gadget_url: child_gadget_url,
+              form_definition: form_definition,
+              form_type: 'list',
+              editable: false,
+              view: default_view,
+              front_page: true,
+              has_more_views: false, //this should come from form_def
+              has_more_actions: false //this should come from form_def
+            });
           });
-        });
     })
 
     .onStateChange(function () {
