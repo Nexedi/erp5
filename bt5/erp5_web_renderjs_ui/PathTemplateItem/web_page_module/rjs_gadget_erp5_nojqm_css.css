@@ -1305,8 +1305,6 @@ div[data-gadget-scope='header'] .ui-header ul {
 /**********************************************
 * Gadget: float/integer field
 **********************************************/
-.floatfield p,
-.integerfield p,
 .floatfield input,
 .integerfield input {
   text-align: right;
@@ -1422,6 +1420,11 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
 }
 .document_table table a {
   color: #1F1F1F;
+}
+.document_table table .floatfield p,
+.document_table table .integerfield p {
+  text-align: right;
+  white-space: nowrap;
 }
 .document_table table tbody {
   animation: fadein 0.2s ease-out;

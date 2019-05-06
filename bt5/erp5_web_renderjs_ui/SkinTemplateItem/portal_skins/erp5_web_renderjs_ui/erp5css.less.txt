@@ -1527,12 +1527,17 @@ div[data-gadget-scope='header'] .ui-header {
 /**********************************************
 * Gadget: float/integer field
 **********************************************/
-.floatfield, .integerfield {
-  p, input {
-    text-align: right;
-    // Do not render float/integer on multiline
-    // as it make them unreadable
-    white-space: nowrap;
+.alignFloatValueOnTheRight() {
+  text-align: right;
+  // Do not render float/integer on multiline
+  // as it make them unreadable
+  white-space: nowrap;
+}
+@floatvalue-selector: .floatfield, .integerfield;
+
+@{floatvalue-selector} {
+  input {
+    .alignFloatValueOnTheRight();
   }
 }
 
@@ -1657,6 +1662,16 @@ div[data-gadget-scope='erp5_searchfield'] {
 
     a {
       color: @colorforeground;
+    }
+
+    @{floatvalue-selector} {
+      // Only align right the float value inside Listbox
+      // outside listbox, it is unpleasant to read
+      // and useless, as previous/next fields are probably not
+      // float/integer to compare
+      p {
+        .alignFloatValueOnTheRight();
+      }
     }
 
     tbody {
