@@ -407,10 +407,24 @@ def getFieldRawProperties(field, meta_type=None, key=None, key_prefix=None):
     "overrides": field.overrides,
     "message_values": field.message_values
   }
+  form_list_patch = False
   for key in field.values.keys():
     # sometimes, field.values returns a key as string and also as a tuple
     if type(key) is str:
       result["values"][key] = field.values[key]
+      if key == "columns":
+        form_list_patch = True
+  if form_list_patch:
+    try:
+      result["values"]["column_list"] = result["values"]["columns"]
+      result["values"]["sort_column_list"] = result["values"]["sort_columns"]
+      result["values"]["search_column_list"] = result["values"]["search_columns"]
+      portal_type = result["values"]["portal_type"][0][0] if result["values"]["portal_type"] else False
+      query = "portal_type%3A%22" + portal_type + "%22" if portal_type else ""
+      full_query = "urn:jio:allDocs?query=" + query
+      result["values"]["query"] = full_query
+    except:
+      log("error while patching form list definition")
   for key in field.tales.keys():
     if field.tales[key]:
       result["tales"][key] = str(field.tales[key])
@@ -2182,6 +2196,7 @@ hateoas = calculateHateoas(is_portal=temp_is_portal, is_site_root=temp_is_site_r
                            default_param_json=default_param_json,
                            form_relative_url=form_relative_url,
                            extra_param_json=extra_param_json)
+
 
 # [HARDCODED] expresion string:${object_url} must be evaluated before return
 try:
