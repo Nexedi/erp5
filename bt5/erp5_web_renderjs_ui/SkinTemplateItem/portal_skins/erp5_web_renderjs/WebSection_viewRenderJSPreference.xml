@@ -89,6 +89,7 @@
                         <string>my_configuration_frontpage_gadget_url</string>
                         <string>my_configuration_default_jio_document_page_gadget_url</string>
                         <string>my_configuration_stylesheet_url</string>
+                        <string>my_configuration_wallpaper_url</string>
                       </list>
                     </value>
                 </item>
