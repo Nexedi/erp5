@@ -24,6 +24,11 @@ onlyoffice/remote_settings.html
 onlyoffice/remote_settings.js
 onlyoffice/remote_settings.json
 onlyoffice/xmla_connection.json
+onlyoffice/olap_wizard.html
+onlyoffice/olap_wizard.js
+onlyoffice/olap_wizard.json
+onlyoffice/xmla_client.html
+onlyoffice/xmla_client.js
 onlyoffice/web-apps/apps/common/Analytics.js
 onlyoffice/web-apps/apps/common/Gateway.js
 onlyoffice/web-apps/apps/common/IrregularStack.js
