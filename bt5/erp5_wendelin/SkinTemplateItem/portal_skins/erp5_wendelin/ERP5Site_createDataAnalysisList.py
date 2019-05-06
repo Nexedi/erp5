@@ -1,5 +1,6 @@
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLCatalog import AndQuery, OrQuery, Query
+from Products.ERP5Type.Errors import UnsupportedWorkflowMethod
 
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
@@ -47,6 +48,7 @@ for movement in portal_catalog(query):
     validation_state = "validated",
     resource_relative_url = movement.getResource()))
   for transformation in transformation_list:
+    is_shared_data_analysis = False
     # Check if analysis already exists
     data_analysis = portal_catalog.getResultValue(
       portal_type="Data Analysis",
@@ -54,22 +56,35 @@ for movement in portal_catalog(query):
       causality_relative_url = delivery.getRelativeUrl())
     if data_analysis is not None:
       continue
-    # Create Analysis
-    data_analysis = portal.data_analysis_module.newContent(
-                  portal_type = "Data Analysis",
-                  title = transformation.getTitle(),
-                  reference = delivery.getReference(),
-                  start_date = delivery.getStartDate(),
-                  stop_date = delivery.getStopDate(),
-                  specialise_value_list = [transformation] + data_supply_list,
-                  causality_value = delivery,
-                  source = delivery.getSource(),
-                  source_section = delivery.getSourceSection(),
-                  source_project = delivery.getSourceProject(),
-                  destination = delivery.getDestination(),
-                  destination_section = delivery.getDestinationSection(),
-                  destination_project = delivery.getDestinationProject())
-
+    # for first level analysis check if same kind of data analysis with same project and same source already exists
+    # If yes, then later add additional input lines to this shared data analysis
+    if delivery.getPortalType() == "Data Ingestion":
+      data_analysis = portal_catalog.getResultValue(
+        portal_type="Data Analysis",
+        specialise_relative_url = transformation.getRelativeUrl(),
+        source_relative_url = delivery.getSource(),
+        destination_project_relative_url = delivery.getDestinationProject())
+    if data_analysis is not None:
+      data_analysis.setDefaultCausalityValue(delivery)
+      data_analysis.setSpecialiseValueSet(data_analysis.getSpecialiseValueList() + data_supply_list)
+      is_shared_data_analysis = True
+    else:
+      # Create Analysis
+      data_analysis = portal.data_analysis_module.newContent(
+                    portal_type = "Data Analysis",
+                    title = transformation.getTitle(),
+                    reference = delivery.getReference(),
+                    start_date = delivery.getStartDate(),
+                    stop_date = delivery.getStopDate(),
+                    specialise_value_list = [transformation] + data_supply_list,
+                    causality_value = delivery,
+                    source = delivery.getSource(),
+                    source_section = delivery.getSourceSection(),
+                    source_project = delivery.getSourceProject(),
+                    destination = delivery.getDestination(),
+                    destination_section = delivery.getDestinationSection(),
+                    destination_project = delivery.getDestinationProject())
+    data_analysis.checkConsistency(fixit=True)
     # create input and output lines
     for transformation_line in transformation.objectValues(
         portal_type=["Data Transformation Resource Line",
@@ -78,6 +93,9 @@ for movement in portal_catalog(query):
       quantity = transformation_line.getQuantity()
       if isinstance(quantity, tuple):
         quantity = quantity[0]
+      # In case of shared data anylsis only add additional input lines
+      if is_shared_data_analysis and quantity > -1:
+        continue
       aggregate_set = set()
       # manually add device to every line
       aggregate_set.add(movement.getAggregateDevice())
@@ -136,7 +154,6 @@ for movement in portal_catalog(query):
             aggregate_set.add(item.getRelativeUrl())
       # find other items such as device configuration and data configuration
       # from data ingestion and data supply
-      data_analysis.checkConsistency(fixit=True)
       composed = data_analysis.asComposedDocument()
       line_list = [l for l in delivery.objectValues(portal_type="Data Ingestion Line")]
       line_list +=  [l for l in composed.objectValues(portal_type="Data Supply Line")]
@@ -144,7 +161,7 @@ for movement in portal_catalog(query):
         if line.getResourceValue().getPortalType() == "Data Operation":
           aggregate_set.update(line.getAggregateList())
 
-      data_analysis.newContent(
+      data_analysis_line = data_analysis.newContent(
         portal_type = "Data Analysis Line",
         title = transformation_line.getTitle(),
         reference = transformation_line.getReference(),
@@ -155,5 +172,14 @@ for movement in portal_catalog(query):
         quantity_unit = transformation_line.getQuantityUnit(),
         use = transformation_line.getUse(),
         aggregate_set = aggregate_set)
-        
-    data_analysis.start()
+
+      # for intput lines of first level analysis set causality and specialise
+      if quantity < 0 and delivery.getPortalType() == "Data Ingestion":
+        data_analysis_line.edit(
+          causality_value = delivery,
+          specialise_value_list = data_supply_list)
+    data_analysis.checkConsistency(fixit=True)
+    try:
+      data_analysis.start()
+    except UnsupportedWorkflowMethod:
+      pass
