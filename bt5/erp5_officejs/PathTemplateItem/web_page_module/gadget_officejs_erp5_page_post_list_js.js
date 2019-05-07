@@ -22,15 +22,8 @@
         default_view = "jio_view",
         common_utils_gadget_url = "gadget_officejs_common_utils.html",
         child_gadget_url = 'gadget_erp5_pt_form_list.html',
-        //HARDCODED NEW ACTION INFORMATION - TODO: get like in action_offline gadget (refactor/reuse code)
-        fake_thread_uid = "thread-" + ("0000" + ((Math.random() * Math.pow(36, 4)) | 0).toString(36)).slice(-4),
-        action_info = {
-          page: "handle_action",
-          action: "new",
-          portal_type: "HTML Post",
-          parent_portal_type: "Post Module",
-          my_source_reference: fake_thread_uid
-        };
+        //In a future, the post list will be within a thread. For now:
+        fake_thread_uid = "thread-" + ("0000" + ((Math.random() * Math.pow(36, 4)) | 0).toString(36)).slice(-4);
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
@@ -39,21 +32,21 @@
           ]);
         })
         .push(function (result) {
-            return result[1].getFormDefinition(result[0], default_view);
+            return result[1].getFormDefinition(result[0], default_view, {source_reference: fake_thread_uid});
           })
           .push(function (form_definition) {
-            //HARDCODED ACTION INFORMATION
-            form_definition._links.action_object_new_content_action = action_info;
             return gadget.changeState({
               jio_key: options.jio_key,
+              //TODO child_gadget_url should be decided in utils.getFormDefinition based on form type
               child_gadget_url: child_gadget_url,
               form_definition: form_definition,
               form_type: 'list',
               editable: false,
               view: default_view,
               front_page: true,
-              has_more_views: false, //this should come from form_def
-              has_more_actions: false //this should come from form_def
+              //TODO: get following 2 values from form_def in utils.getFormDefinition
+              has_more_views: false,
+              has_more_actions: false
             });
           });
     })
