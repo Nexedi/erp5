@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_action_offline.js</string> </value>
+            <value> <string>gadget_erp5_page_action_officejs.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_action_offline_js</string> </value>
+            <value> <string>gadget_officejs_page_action_officejs_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -97,7 +97,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Action Offline JS</string> </value>
+            <value> <string>Gadget Officejs Action JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -228,7 +228,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>975.17662.57964.30634</string> </value>
+                <value> <string>975.36364.51513.30993</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -246,7 +246,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1556202301.34</float>
+                        <float>1557237896.05</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

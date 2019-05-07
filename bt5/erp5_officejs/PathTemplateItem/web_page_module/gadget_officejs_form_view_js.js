@@ -128,7 +128,7 @@
         .push(function () {
           var url_for_parameter_list = [
             {command: 'change', options: {page: "tab"}},
-            {command: 'change', options: {page: "action_offline", jio_key: options.jio_key}},
+            {command: 'change', options: {page: "action_officejs", jio_key: options.jio_key}},
             {command: 'history_previous'},
             {command: 'selection_previous'},
             {command: 'selection_next'},
