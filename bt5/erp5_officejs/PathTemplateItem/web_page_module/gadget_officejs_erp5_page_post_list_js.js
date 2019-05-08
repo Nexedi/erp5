@@ -3,6 +3,9 @@
 (function (window, document, rJS, RSVP) {
   "use strict";
 
+  //TODO rename this gadget as "front or main" gadget
+  //check if this can be done by the controller and use that gadget instead
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -22,6 +25,7 @@
         default_view = "jio_view",
         common_utils_gadget_url = "gadget_officejs_common_utils.html",
         child_gadget_url = 'gadget_erp5_pt_form_list.html',
+        portal_type,
         //In a future, the post list will be within a thread. For now:
         fake_thread_uid = "thread-" + ("0000" + ((Math.random() * Math.pow(36, 4)) | 0).toString(36)).slice(-4);
       return RSVP.Queue()
@@ -32,21 +36,20 @@
           ]);
         })
         .push(function (result) {
+            portal_type = result[0];
             return result[1].getFormDefinition(result[0], default_view, {source_reference: fake_thread_uid});
           })
           .push(function (form_definition) {
             return gadget.changeState({
               jio_key: options.jio_key,
+              portal_type: portal_type,
               //TODO child_gadget_url should be decided in utils.getFormDefinition based on form type
               child_gadget_url: child_gadget_url,
               form_definition: form_definition,
               form_type: 'list',
               editable: false,
               view: default_view,
-              front_page: true,
-              //TODO: get following 2 values from form_def in utils.getFormDefinition
-              has_more_views: false,
-              has_more_actions: false
+              front_page: true
             });
           });
     })

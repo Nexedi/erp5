@@ -128,7 +128,7 @@
         .push(function () {
           var url_for_parameter_list = [
             {command: 'change', options: {page: "tab"}},
-            {command: 'change', options: {page: "action_officejs", jio_key: options.jio_key}},
+            {command: 'change', options: {page: "action_officejs", jio_key: options.jio_key, portal_type: options.portal_type}},
             {command: 'history_previous'},
             {command: 'selection_previous'},
             {command: 'selection_next'},
@@ -165,6 +165,7 @@
                 page_title: result_list[2]
               };
               if (!options.front_page) {
+                header_dict.selection_url = url_list[2];
                 header_dict.front_url = url_list[6];
               }
             } else {
@@ -174,14 +175,14 @@
                 next_url: url_list[4],
                 page_title: options.doc.title
               };
-              if (options.has_more_views) {
+              if (options.form_definition.has_more_views) {
                 header_dict.tab_url = url_list[0];
               }
               if (options.editable) {
                 header_dict.save_action = true;
               }
             }
-            if (options.has_more_actions) {
+            if (options.form_definition.has_more_actions) {
               header_dict.actions_url = url_list[1];
             }
             if (add_url) {

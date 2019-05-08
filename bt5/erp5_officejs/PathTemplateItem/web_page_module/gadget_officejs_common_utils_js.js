@@ -1,7 +1,10 @@
-/*global window, rJS */
+/*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, rJS, RSVP) {
   "use strict";
+
+  // TODO: check if there are other categories that are 'views' and find a less hardcoded way to get this
+  var view_categories = ["object_view", "object_jio_view", "object_web_view", "object_list"];
 
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -43,13 +46,46 @@
       return gadget.jio_post(doc);
     })
 
+    .declareMethod("checkMoreActions", function (portal_type, action_category) {
+      var gadget = this,
+        has_more_dict = {views: {}, actions: {}},
+        query;
+      //if target action is a type of view, get all actions/views for the portal_type
+      if (view_categories.includes(action_category)) {
+        query = 'portal_type: "Action Information" AND parent_relative_url: "portal_types/' + portal_type + '"';
+        return gadget.jio_allDocs({query: query})
+          .push(function (action_list) {
+            var path_for_jio_get_list = [], row;
+            for (row in action_list.data.rows) {
+              if (action_list.data.rows.hasOwnProperty(row)) {
+                path_for_jio_get_list.push(gadget.jio_get(action_list.data.rows[row].id));
+              }
+            }
+            return RSVP.all(path_for_jio_get_list);
+          })
+          .push(function (action_document_list) {
+            var get_action_settings_list = [], page, action_key, action_doc;
+            for (action_key in action_document_list) {
+              if (action_document_list.hasOwnProperty(action_key)) {
+                action_doc = action_document_list[action_key];
+                if (view_categories.includes(action_doc.action_type)) {
+                  has_more_dict.has_more_views = true;
+                } else {
+                  has_more_dict.has_more_actions = true;
+                }
+              }
+            }
+            return has_more_dict;
+          });
+      }
+      return has_more_dict;
+    })
+
     .declareMethod("getFormDefinition", function (portal_type, action_reference, extra_params) {
       var gadget = this,
         parent = "portal_types/" + portal_type,
         query = 'portal_type: "Action Information" AND reference: "' + action_reference + '" AND parent_relative_url: "' + parent + '"',
-        action_type, action_title;
-      //TODO: check all actions to set has_more_views and has_more_actions flags in form def
-      //also check if there is a "new" action for object_list.action_info
+        action_type, action_title, form_definition;
       return gadget.jio_allDocs({query: query})
         .push(function (data) {
           if (data.data.rows.length === 0) {
@@ -63,22 +99,31 @@
           return gadget.jio_get(action_result.action);
         })
         .push(function (form_result) {
-          form_result.form_definition.action_type = action_type;
-          form_result.form_definition.title = action_title;
-          if (action_type === "object_list") {
-            //TODO: get child_portal_type from form_definition (listbox->portal_type).
-            var child_portal_type = "HTML Post",
-              action_info = {
+          form_definition = form_result.form_definition;
+          form_definition.action_type = action_type;
+          form_definition.title = action_title;
+          return gadget.checkMoreActions(portal_type, action_type);
+        })
+        .push(function (has_more_dict) {
+          //view and actions are managed by same actions-gadget-page
+          form_definition.has_more_views = false;
+          form_definition.has_more_actions = has_more_dict.has_more_actions;
+          //for backward compatibility (header add button - '+' icon)
+          if (extra_params && extra_params.source_reference) {
+            form_definition._links.action_object_new_content_action = {
               page: "handle_action",
+              title: "New Post",
               action: "new",
-              portal_type: child_portal_type,
-              parent_portal_type: portal_type,
-              my_source_reference: extra_params.source_reference
+              reference: "new",
+              action_type: "object_jio_js_script",
+              parent_portal_type: "Post Module",
+              portal_type: "HTML Post",
+              source_reference: extra_params.source_reference
             };
-            form_result.form_definition._links.action_object_new_content_action = action_info;
+            form_definition.has_more_actions = false;
           }
-          return form_result.form_definition;
+          return form_definition;
         });
     });
 
-}(window, rJS));
+}(window, rJS, RSVP));

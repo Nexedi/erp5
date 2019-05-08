@@ -48,14 +48,14 @@
           return gadget.changeState({
             jio_key: options.jio_key,
             doc: jio_document,
+            //TODO child_gadget_url should be decided in utils.getFormDefinition based on form type
             child_gadget_url: child_gadget_url,
             form_definition: form_definition,
             form_type: 'page',
             editable: false,
             view: options.view,
-            //HARDCODED: following fields should be indicated by the configuration
-            has_more_views: false,
-            has_more_actions: options.view === "view"
+            has_more_views: form_definition.has_more_views,
+            has_more_actions: form_definition.has_more_actions
           });
         });
     })
