@@ -55,30 +55,32 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("getActionSettings", function (action_doc, portal_type) {
-      var gadget = this, page = "handle_action", action_settings = {};
-      if (view_categories.includes(action_doc.action_type)) {
-        page = "ojs_controller";
+    .declareMethod("getHTMLElements", function (element_list) {
+      var gadget = this,
+        i = 0,
+        element_info_list = [],
+        url_for_parameter_list = [],
+        element_info;
+      for (var key in element_list) {
+        if (element_list.hasOwnProperty(key)) {
+          element_info = element_list[key];
+          url_for_parameter_list.push({ command: 'change', options: element_info });
+          element_info_list[i] = { reference: element_info.reference, title: element_info.title};
+          i += 1;
+        }
       }
-      action_settings = {
-        page: page,
-        title: action_doc.title,
-        action: action_doc.reference,
-        reference: action_doc.reference,
-        action_type: action_doc.action_type,
-        parent_portal_type: portal_type,
-        portal_type: portal_type
-      };
-      //TODO find a better way to handle "add" actions (how to get child portal type?)
-      //'parent' and 'child' portal_types will be in the custom code of action gadgets
-      if (action_doc.reference === "new") {
-        return gadget.getSetting('portal_type')
-        .push(function (child_portal_type) {
-          action_settings.portal_type = child_portal_type;
-          return action_settings;
+      return gadget.getUrlForList(url_for_parameter_list)
+        .push(function (url_list) {
+          var html_element_list = [], i, element;
+          for (i = 0; i < url_list.length; i += 1) {
+            element = { href: url_list[i],
+              icon: null,
+              name: element_info_list[i].reference,
+              title: element_info_list[i].title };
+            html_element_list.push(element);
+          }
+          return html_element_list;
         });
-      }
-      return action_settings;
     })
 
     .declareMethod("getAllActions", function (portal_type, action_category) {
@@ -96,15 +98,31 @@
           return RSVP.all(path_for_jio_get_list);
         })
         .push(function (action_document_list) {
-          var get_action_settings_list = [], page, action_key, action_doc;
+          var action_settings_list = [], page, action_key, action_doc;
           for (action_key in action_document_list) {
             if (action_document_list.hasOwnProperty(action_key)) {
-              get_action_settings_list.push(gadget.getActionSettings(action_document_list[action_key], portal_type));
+              action_doc = action_document_list[action_key];
+              page = "handle_action";
+              if (view_categories.includes(action_doc.action_type)) {
+                page = "ojs_controller";
+              }
+              //TODO (how to get child portal type?)
+              //'parent' and 'child' portal_types will be in the custom code of action gadgets
+              var child_portal_type = portal_type;
+              if (action_doc.reference === "new_html_post") {
+                child_portal_type = "HTML Post";
+              }
+              action_settings_list.push({
+                page: page,
+                title: action_doc.title,
+                action: action_doc.reference,
+                reference: action_doc.reference,
+                action_type: action_doc.action_type,
+                parent_portal_type: portal_type,
+                portal_type: child_portal_type
+              });
             }
           }
-          return RSVP.all(get_action_settings_list);
-        })
-        .push(function (action_settings_list) {
           for (var key in action_settings_list) {
             if (action_settings_list.hasOwnProperty(key)) {
               var action_settings = action_settings_list[key];
@@ -127,57 +145,29 @@
 
     .declareMethod("render", function (options) {
       var gadget = this,
-        url_for_parameter_list = [],
-        action_info_list = [],
-        action_info_dict = {},
         document_title;
       return gadget.jio_get(options.jio_key)
         .push(function (document) {
           document_title = document.title;
-          return gadget.getAllActions(document.portal_type, view_categories[0]);
+          return document.portal_type;
         }, function (error) {
           document_title = options.portal_type;
-          return gadget.getAllActions(options.portal_type, view_categories[0]);
+          return options.portal_type;
         })
-        .push(function (all_actions) {
-          var action_info, i = 0;
-          action_info_dict = all_actions;
-          //TODO refactor this (actions and views)
-          for (var action_key in action_info_dict.actions) {
-            if (action_info_dict.actions.hasOwnProperty(action_key)) {
-              action_info = action_info_dict.actions[action_key];
-              url_for_parameter_list.push({ command: 'change', options: action_info });
-              action_info_list[i] = { reference: action_info.reference, title: action_info.title};
-              i += 1;
-            }
-          }
-          for (var view_key in action_info_dict.views) {
-            if (action_info_dict.views.hasOwnProperty(view_key)) {
-              action_info = action_info_dict.views[view_key];
-              url_for_parameter_list.push({ command: 'change', options: action_info });
-              action_info_list[i] = { reference: action_info.reference, title: action_info.title};
-              i += 1;
-            }
-          }
-          return gadget.getUrlForList(url_for_parameter_list);
+        .push(function (portal_type) {
+          return gadget.getAllActions(portal_type, view_categories[0]);
         })
-        .push(function (url_list) {
-          var action_list = [], view_list = [], i, element;
-          for (i = 0; i < url_list.length; i += 1) {
-            element = { href: url_list[i],
-              icon: null,
-              name: action_info_list[i].reference,
-              title: action_info_list[i].title };
-            if (action_info_dict.views.hasOwnProperty(element.name)) {
-              view_list.push(element);
-            } else {
-              action_list.push(element);
-            }
-          }
-          // TODO: check other lists like clone or delete?
+        .push(function (action_info_dict) {
           return RSVP.all([
-            renderLinkList(gadget, "Views", "eye", view_list),
-            renderLinkList(gadget, "Actions", "gear", action_list)
+            gadget.getHTMLElements(action_info_dict.views),
+            gadget.getHTMLElements(action_info_dict.actions)
+          ]);
+        })
+          // TODO: check other lists like clone or delete?
+        .push(function (all_html_elements) {
+          return RSVP.all([
+            renderLinkList(gadget, "Views", "eye", all_html_elements[0]),
+            renderLinkList(gadget, "Actions", "gear", all_html_elements[1])
           ]);
         })
         .push(function (translated_html_link_list) {

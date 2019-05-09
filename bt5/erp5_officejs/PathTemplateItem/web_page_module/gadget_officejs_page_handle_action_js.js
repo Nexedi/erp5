@@ -60,7 +60,7 @@
     })
 
     .declareMethod("render", function (options) {
-      var gadget = this, action_reference, valid_action;
+      var gadget = this, action_reference;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
@@ -78,14 +78,24 @@
           return gadget.getActionFormDefinition(action_reference);
         })
         .push(function (form_definition) {
-          valid_action = form_definition.action_type === "object_jio_js_script" &&
-            form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script");
           var fragment = document.createElement('div'),
-            action_gadget_url = form_definition.fields_raw_properties.gadget_field_action_js_script.values.gadget_url,
+            action_gadget_url,
             form_info = getFormInfo(form_definition),
             form_type = form_info[0],
-            child_gadget_url = form_info[1];
+            child_gadget_url = form_info[1],
+            valid_action = form_definition.action_type === "object_jio_js_script" &&
+              form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script"),
+            state_options = {
+              doc: {},
+              parent_options: options,
+              child_gadget_url: child_gadget_url,
+              form_type: form_type,
+              form_definition: form_definition,
+              view: action_reference,
+              valid_action: valid_action
+            };
           if (valid_action) {
+            action_gadget_url = form_definition.fields_raw_properties.gadget_field_action_js_script.values.gadget_url;
             gadget.element.appendChild(fragment);
             return gadget.declareGadget(action_gadget_url, {
               scope: "action_field",
@@ -95,27 +105,11 @@
               return action_gadget.preRenderDocument(options);
             })
             .push(function (doc) {
-              return gadget.changeState({
-                doc: doc,
-                parent_options: options,
-                child_gadget_url: child_gadget_url,
-                form_type: form_type,
-                form_definition: form_definition,
-                view: action_reference,
-                valid_action: valid_action
-              });
+              state_options.doc = doc;
+              return gadget.changeState(state_options);
             });
           } else {
-            //TODO refactor this to avoid 2 calls almost identical
-            return gadget.changeState({
-              doc: {},
-              parent_options: options,
-              child_gadget_url: child_gadget_url,
-              form_type: form_type,
-              form_definition: form_definition,
-              view: action_reference,
-              valid_action: valid_action
-            });
+            return gadget.changeState(state_options);
           }
         });
     })

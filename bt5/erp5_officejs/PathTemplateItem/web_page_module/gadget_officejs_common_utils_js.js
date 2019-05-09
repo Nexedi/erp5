@@ -26,6 +26,7 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+
     .declareMethod("createDocument", function (options) {
       var gadget = this,
         doc = {
@@ -113,8 +114,8 @@
             form_definition._links.action_object_new_content_action = {
               page: "handle_action",
               title: "New Post",
-              action: "new",
-              reference: "new",
+              action: "new_html_post",
+              reference: "new_html_post",
               action_type: "object_jio_js_script",
               parent_portal_type: "Post Module",
               portal_type: "HTML Post",
