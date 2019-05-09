@@ -3,31 +3,6 @@
 (function (window, rJS, document) {
   "use strict";
 
-  // TODO: move this to common utils
-  function getFormInfo(form_definition) {
-    var child_gadget_url,
-      form_type,
-      action_category = form_definition.action_type;
-    switch (action_category) {
-    case 'object_list':
-      form_type = 'list';
-      child_gadget_url = 'gadget_erp5_pt_form_list.html';
-      break;
-    case 'object_dialog':
-      form_type = 'dialog';
-      child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
-      break;
-    case 'object_jio_js_script':
-      form_type = 'dialog';
-      child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
-      break;
-    default:
-      form_type = 'page';
-      child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
-    }
-    return [form_type, child_gadget_url];
-  }
-
   rJS(window)
 
     /////////////////////////////////////////////////////////////////
@@ -54,6 +29,7 @@
       var gadget = this,
         default_view = "jio_view",
         common_utils_gadget_url = "gadget_officejs_common_utils.html",
+        form_definition,
         gadget_utils,
         jio_document,
         portal_type,
@@ -83,9 +59,12 @@
           front_page = portal_type === parent_portal_type;
           return gadget_utils.getFormDefinition(portal_type, default_view);
         })
-        .push(function (form_definition) {
-          var form_info = getFormInfo(form_definition),
-            form_type = form_info[0],
+        .push(function (result) {
+          form_definition = result;
+          return gadget_utils.getFormInfo(form_definition);
+        })
+        .push(function (form_info) {
+          var form_type = form_info[0],
             child_gadget_url = form_info[1];
           return gadget.changeState({
             jio_key: options.jio_key,
@@ -103,8 +82,7 @@
 
     .onStateChange(function () {
       var fragment = document.createElement('div'),
-        gadget = this,
-        options;
+        gadget = this;
       while (this.element.firstChild) {
         this.element.removeChild(this.element.firstChild);
       }

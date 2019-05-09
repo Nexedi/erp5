@@ -27,6 +27,30 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
+    .declareMethod("getFormInfo", function (form_definition) {
+      var child_gadget_url,
+        form_type,
+        action_category = form_definition.action_type;
+      switch (action_category) {
+      case 'object_list':
+        form_type = 'list';
+        child_gadget_url = 'gadget_erp5_pt_form_list.html';
+        break;
+      case 'object_dialog':
+        form_type = 'dialog';
+        child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
+        break;
+      case 'object_jio_js_script':
+        form_type = 'dialog';
+        child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
+        break;
+      default:
+        form_type = 'page';
+        child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
+      }
+      return [form_type, child_gadget_url];
+    })
+
     .declareMethod("createDocument", function (options) {
       var gadget = this,
         doc = {

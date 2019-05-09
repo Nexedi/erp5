@@ -4,31 +4,6 @@
 (function (window, document, rJS, RSVP) {
   "use strict";
 
-  // TODO: move this to common utils
-  function getFormInfo(form_definition) {
-    var child_gadget_url,
-      form_type,
-      action_category = form_definition.action_type;
-    switch (action_category) {
-    case 'object_list':
-      form_type = 'list';
-      child_gadget_url = 'gadget_erp5_pt_form_list.html';
-      break;
-    case 'object_dialog':
-      form_type = 'dialog';
-      child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
-      break;
-    case 'object_jio_js_script':
-      form_type = 'dialog';
-      child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
-      break;
-    default:
-      form_type = 'page';
-      child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
-    }
-    return [form_type, child_gadget_url];
-  }
-
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -60,7 +35,7 @@
     })
 
     .declareMethod("render", function (options) {
-      var gadget = this, action_reference;
+      var gadget = this, action_reference, gadget_utils, form_definition;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
@@ -68,19 +43,24 @@
             gadget.getUrlParameter('parent_relative_url'),
             gadget.getSetting('portal_type'),
             gadget.getSetting('parent_relative_url'),
-            gadget.getUrlParameter("action")
+            gadget.getUrlParameter("action"),
+            gadget.declareGadget("gadget_officejs_common_utils.html")
           ]);
         })
         .push(function (result) {
           action_reference = result[4];
           if (result[0] !== undefined) {options.portal_type = result[0]; } else {options.portal_type = result[2]; }
           if (result[1] !== undefined) {options.parent_relative_url = result[1]; } else {options.parent_relative_url = result[3]; }
+          gadget_utils = result[5];
           return gadget.getActionFormDefinition(action_reference);
         })
-        .push(function (form_definition) {
+        .push(function (result) {
+          form_definition = result;
+          return gadget_utils.getFormInfo(form_definition);
+        })
+        .push(function (form_info) {
           var fragment = document.createElement('div'),
             action_gadget_url,
-            form_info = getFormInfo(form_definition),
             form_type = form_info[0],
             child_gadget_url = form_info[1],
             valid_action = form_definition.action_type === "object_jio_js_script" &&
