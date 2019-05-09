@@ -120,7 +120,7 @@
               portal_type: "HTML Post",
               source_reference: extra_params.source_reference
             };
-            form_definition.has_more_actions = false;
+            //form_definition.has_more_actions = false;
           }
           return form_definition;
         });

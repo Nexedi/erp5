@@ -25,13 +25,28 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
+    .declareMethod("getPortalType", function (jio_document, options) {
+      var gadget = this;
+      if (jio_document) {
+        if (jio_document.portal_type === undefined) {
+          throw new Error('Can not display document: ' + options.jio_key);
+        }
+        return jio_document.portal_type;
+      }
+      if (options.portal_type) {
+        return options.portal_type;
+      }
+      return gadget.getSetting('parent_portal_type');
+    })
+
     .declareMethod("render", function (options) {
       var gadget = this,
         default_view = "jio_view",
         common_utils_gadget_url = "gadget_officejs_common_utils.html",
         child_gadget_url = 'gadget_erp5_pt_form_view_editable.html',
         gadget_utils,
-        jio_document;
+        jio_document,
+        portal_type;
       return gadget.declareGadget(common_utils_gadget_url)
         .push(function (result) {
           gadget_utils = result;
@@ -39,21 +54,33 @@
         })
         .push(function (result) {
           jio_document = result;
-          if (jio_document.portal_type === undefined) {
-            throw new Error('Can not display document: ' + options.jio_key);
-          }
-          return gadget_utils.getFormDefinition(jio_document.portal_type, default_view);
+        }, function (error) {})
+        .push(function () {
+          return gadget.getPortalType(jio_document, options);
+        })
+        .push(function (result) {
+          portal_type = result;
+          return gadget_utils.getFormDefinition(portal_type, default_view);
         })
         .push(function (form_definition) {
+          var form_type = 'page', front_page = false;
+          if (form_definition.action_type === "object_list") {
+            form_type = 'list';
+            child_gadget_url = 'gadget_erp5_pt_form_list.html';
+            //TODO: when refactoring is done in ojs_post_list (front-page), this will come from options
+            front_page = true;
+          }
           return gadget.changeState({
             jio_key: options.jio_key,
             doc: jio_document,
+            portal_type: portal_type,
             //TODO child_gadget_url should be decided in utils.getFormDefinition based on form type
             child_gadget_url: child_gadget_url,
             form_definition: form_definition,
-            form_type: 'page',
+            form_type: form_type,
             editable: false,
             view: options.view,
+            front_page: front_page, //options.front_page
             has_more_views: form_definition.has_more_views,
             has_more_actions: form_definition.has_more_actions
           });

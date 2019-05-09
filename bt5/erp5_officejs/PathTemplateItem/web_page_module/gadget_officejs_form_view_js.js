@@ -114,7 +114,8 @@
     })
 
     .declareMethod("renderSubGadget", function (options, subgadget, form_json) {
-      var this_gadget = this, erp5_document = form_json.erp5_document, add_url;
+      var this_gadget = this, erp5_document = form_json.erp5_document,
+          page_title = options.portal_type, add_url;
       return subgadget.render({
         jio_key: options.jio_key,
         doc: options.doc,
@@ -135,6 +136,9 @@
             {command: 'change', options: {page: "export"}},
             {command: 'display', options: {}}
           ];
+          if (options.doc) {
+            page_title = options.doc.title;
+          }
           erp5_document = form_json.erp5_document;
           if (erp5_document._links && erp5_document._links.action_object_new_content_action) {
             url_for_parameter_list.push({command: 'change', options: erp5_document._links.action_object_new_content_action});
@@ -151,7 +155,7 @@
           var url_list = result_list[0], header_dict;
           if (options.form_type === 'dialog') {
             header_dict = {
-              page_title: options.doc.title,
+              page_title: page_title,
               //TODO: find correct url
               cancel_url: url_list[6]
             };
@@ -173,7 +177,7 @@
                 selection_url: url_list[2],
                 previous_url: url_list[3],
                 next_url: url_list[4],
-                page_title: options.doc.title
+                page_title: page_title
               };
               if (options.form_definition.has_more_views) {
                 header_dict.tab_url = url_list[0];

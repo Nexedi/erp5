@@ -70,6 +70,7 @@
         portal_type: portal_type
       };
       //TODO find a better way to handle "add" actions (how to get child portal type?)
+      //'parent' and 'child' portal_types will be in the custom code of action gadgets
       if (action_doc.reference === "new") {
         return gadget.getSetting('portal_type')
         .push(function (child_portal_type) {
@@ -116,6 +117,7 @@
           }
           //if portal_type has both view and jio_view, remove classic 'view'
           //TODO use action type instead of reference
+          //is the 'classic view' action needed at all here? -maybe don't add it in appcache manifest
           if (action_info_dict.views.hasOwnProperty("view") && action_info_dict.views.hasOwnProperty("jio_view")) {
             delete action_info_dict.views.view;
           }
