@@ -81,7 +81,7 @@
       return has_more_dict;
     })
 
-    .declareMethod("getFormDefinition", function (portal_type, action_reference, extra_params) {
+    .declareMethod("getFormDefinition", function (portal_type, action_reference, source_reference) {
       var gadget = this,
         parent = "portal_types/" + portal_type,
         query = 'portal_type: "Action Information" AND reference: "' + action_reference + '" AND parent_relative_url: "' + parent + '"',
@@ -109,7 +109,7 @@
           form_definition.has_more_views = false;
           form_definition.has_more_actions = has_more_dict.has_more_actions;
           //for backward compatibility (header add button - '+' icon)
-          if (extra_params && extra_params.source_reference) {
+          if (form_definition.action_type === "object_list") {
             form_definition._links.action_object_new_content_action = {
               page: "handle_action",
               title: "New Post",
@@ -118,7 +118,7 @@
               action_type: "object_jio_js_script",
               parent_portal_type: "Post Module",
               portal_type: "HTML Post",
-              source_reference: extra_params.source_reference
+              source_reference: source_reference
             };
             //form_definition.has_more_actions = false;
           }
