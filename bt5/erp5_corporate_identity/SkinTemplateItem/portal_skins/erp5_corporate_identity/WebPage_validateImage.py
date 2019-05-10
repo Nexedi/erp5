@@ -17,7 +17,10 @@ from zExceptions import NotFound
 if img_string is None or img_string == "":
   return img_string
 
-img_src = re.findall("src=['\"](.*?)['\"]", img_string)[0]
+img_src = re.findall("src=['\"](.*?)['\"]", img_string)
+if not len(img_src):
+  return img_string # There is no image source, return as is
+img_src = img_src[0]
 
 if img_src.startswith('data:image/'):
   return img_string
