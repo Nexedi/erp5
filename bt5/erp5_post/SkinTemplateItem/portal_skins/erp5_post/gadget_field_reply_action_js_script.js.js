@@ -15,51 +15,32 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("createDocument", function (options) {
-      var gadget = this,
-        doc = {
-          title: "Untitled Post",
-          portal_type: options.portal_type,
-          parent_relative_url: options.parent_relative_url
-        },
-        key,
-        doc_key;
-      for (key in options) {
-        if (options.hasOwnProperty(key)) {
-          if (key.startsWith("my_")) {
-            doc_key = key.replace("my_", "");
-            doc[doc_key] = options[key];
-          }
-        }
-      }
-      return gadget.jio_post(doc);
-    })
-
     .declareMethod("preRenderDocument", function (parent_options) {
       var gadget = this;
       return gadget.jio_get(parent_options.jio_key)
       .push(function (parent_document) {
         var title = parent_document.title;
         if (!title.startsWith('Re: ')) { title = 'Re: ' + parent_document.title; }
-        return {title: title,
-                source_reference: parent_document.source_reference};
+        return {
+          title: title,
+          parent_relative_url: parent_document.parent_relative_url,
+          portal_type: parent_document.portal_type,
+          source_reference: parent_document.source_reference
+        };
       });
     })
 
     .declareMethod('handleSubmit', function (content_dict, parent_options) {
-      var document = {
-        my_title: parent_options.doc.title,
-        portal_type: parent_options.parent_options.portal_type,
-        parent_relative_url: parent_options.parent_options.parent_relative_url
-      }, property;
+      var gadget = this,
+        document = parent_options.doc,
+        property;
       delete content_dict.dialog_method;
       for (property in content_dict) {
         if (content_dict.hasOwnProperty(property)) {
-          document['my_' + property] = content_dict[property];
+          document[property] = content_dict[property];
         }
       }
-      document.my_source_reference = parent_options.doc.source_reference;
-      return this.createDocument(document);
+      return gadget.jio_post(document);
     });
 
 }(window, rJS, RSVP));
