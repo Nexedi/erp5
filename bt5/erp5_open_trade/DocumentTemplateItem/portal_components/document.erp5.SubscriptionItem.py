@@ -176,6 +176,10 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
 
     return result
 
+  def updateExpandableRootSimulation(self):
+    """ Utility method to help use updateSimulation with SQLDict on activities """
+    self.updateSimulation(expand_root=1)
+
   # XXX BELOW HACKS
   def getResource(self):
     open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
