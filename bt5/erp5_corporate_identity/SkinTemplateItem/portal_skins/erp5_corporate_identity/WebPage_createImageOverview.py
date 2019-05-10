@@ -25,11 +25,11 @@ def setFigureAnchor(my_counter, my_title, my_href):
   ])
 
 # XXX single quotes?
-figure_abbreviation = "FIG"
+figure_abbreviation = "Figure"
 match_href = 'src="(.*?)"'
 match_content = 'alt="(.*?)"'
 figure_list = []
-figure_count = 1
+figure_count = 0
 figure_doubles = {}
 
 for figure in re.findall('(<img.*?/>)', document_content or ''):
