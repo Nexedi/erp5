@@ -83,7 +83,7 @@
         });
     })
 
-    .declareMethod("getAllActions", function (portal_type, action_category) {
+    .declareMethod("getAllActions", function (portal_type, action_category, options) {
       var gadget = this,
         action_info_dict = {views: {}, actions: {}},
         query = 'portal_type: "Action Information" AND parent_relative_url: "portal_types/' + portal_type + '"';
@@ -108,6 +108,7 @@
               }
               action_settings_list.push({
                 page: page,
+                jio_key: options.jio_key,
                 title: action_doc.title,
                 action: action_doc.reference,
                 reference: action_doc.reference,
@@ -128,7 +129,7 @@
           }
           //if portal_type has both view and jio_view, remove classic 'view'
           //TODO use action type instead of reference
-          //is the 'classic view' action needed at all here? -maybe don't add it in appcache manifest
+          //is the 'classic view' action needed at all here? -maybe it shouldn't be added in appcache manifest
           if (action_info_dict.views.hasOwnProperty("view") && action_info_dict.views.hasOwnProperty("jio_view")) {
             delete action_info_dict.views.view;
           }
@@ -148,7 +149,7 @@
           return options.portal_type;
         })
         .push(function (portal_type) {
-          return gadget.getAllActions(portal_type, view_categories[0]);
+          return gadget.getAllActions(portal_type, view_categories[0], options);
         })
         .push(function (action_info_dict) {
           return RSVP.all([
