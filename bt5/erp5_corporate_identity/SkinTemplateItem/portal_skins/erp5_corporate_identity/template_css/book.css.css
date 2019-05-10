@@ -159,9 +159,6 @@
 .ci-book tr {
   page-break-inside: avoid;
 }
-.ci-book img {
-  page-break-after: avoid;
-}
 .ci-book section:not(:last-child) {
   page-break-after: always;
   page-break-inside: always;
@@ -427,7 +424,7 @@
 /* opinionated align for content tables, overwrite in html if required */
 .ci-book table:not(.ci-book-header):not(.ci-book-footer):not(.ci-book-table) tbody td,
 .ci-book table:not(.ci-book-header):not(.ci-book-footer):not(.ci-book-table) tbody th {
-  text-align: left;
+  text-align: center;
 }
 /*
 .ci-book table:not(.ci-book-header):not(.ci-book-footer):not(.ci-book-table) tbody tr td:first-child,
@@ -744,11 +741,17 @@
   margin: 0 auto 0;
   padding-top: 20px;
   max-width: 240mm;
+  page-break-after: avoid;
+  width: 50%;
 }
+.ci-book .ci-book-img > img ~ span {
+  margin-left: 3cm;
+}
+
 .ci-book .ci-book-img + span {
-  text-align: center;
-  display: block;
+  margin-left: 3cm;
 }
+
 .ci-book table caption,
 .ci-book .ci-book-caption {
   text-align: center;
