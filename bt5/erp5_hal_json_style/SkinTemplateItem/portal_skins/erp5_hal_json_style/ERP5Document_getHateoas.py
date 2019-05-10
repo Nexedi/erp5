@@ -748,6 +748,15 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
 
     if (list_method_custom is not None):
       result["list_method_template"] = list_method_custom
+
+    # XXX COUSCOUS
+    # In the context of a POST, the lines must be synchronously calculated to keep track of the request values
+    if REQUEST.other['method'] != "GET":
+      result["couscous"] = json.loads(context.ERP5Document_getHateoas(REQUEST=REQUEST, mode='search'))
+    
+    
+
+
     return result
 
   if meta_type == "FormBox":
@@ -1550,9 +1559,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     #  > We simply do not use them. All Document selection is handled via passing
     #  > "query" parameter to Base_callDialogMethod or introspecting list_methods.
     #################################################
-    if REQUEST.other['method'] != "GET":
-      response.setStatus(405)
-      return ""
+    # COUSCOUS add a parameter
+    # if REQUEST.other['method'] != "GET":
+    #   response.setStatus(405)
+    #   return ""
 
     # set 'here' for field rendering which contain TALES expressions
     REQUEST.set('here', traversed_document)
