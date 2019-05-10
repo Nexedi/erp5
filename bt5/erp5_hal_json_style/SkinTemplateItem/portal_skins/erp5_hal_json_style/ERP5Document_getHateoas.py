@@ -378,7 +378,8 @@ def getFieldDefault(form, field, key, value=None):
 
   Previously we used Formulator.Field._get_default which is (for no reason) private.
   """
-  if value is None:
+  # if value is None:
+  if 1:
     value = REQUEST.form.get(field.id, REQUEST.form.get(key, MARKER))
     # use marker because default value can be intentionally empty string
     if value is MARKER:
@@ -429,7 +430,8 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
       result["default"] = getFieldDefault(form, field, key)
     else:
       # No need to calculate the field value if provided (used in Listbox)
-      result["default"] = value
+      result["default"] = getFieldDefault(form, field, key, value=value)
+      # result["default"] = value
 
   # start the actual "switch" on field's meta_type here
   if meta_type in ("ListField", "RadioField", "ParallelListField", "MultiListField"):
