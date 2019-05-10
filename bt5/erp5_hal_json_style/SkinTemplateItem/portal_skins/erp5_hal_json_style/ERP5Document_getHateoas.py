@@ -752,7 +752,12 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     # XXX COUSCOUS
     # In the context of a POST, the lines must be synchronously calculated to keep track of the request values
     if REQUEST.other['method'] != "GET":
-      result["couscous"] = json.loads(context.ERP5Document_getHateoas(REQUEST=REQUEST, mode='search'))
+      # raise NotImplementedError(REQUEST.get("%s_query_param_json" % field.id))
+      result["couscous"] = json.loads(
+        context.ERP5Document_getHateoas(REQUEST=REQUEST, mode='search',
+          **ensureDeserialized(byteify(json.loads(urlsafe_b64decode(REQUEST.get("%s_query_param_json" % field.id)))))
+          )
+      )
     
     
 
@@ -1564,6 +1569,18 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     #   response.setStatus(405)
     #   return ""
 
+    listbox_query_param_dict = {
+      'form_relative_url': form_relative_url,
+      'list_method': list_method,
+      'default_param_json': default_param_json,
+      'query': query,
+      'select_list': select_list,
+      'limit': limit,
+      'local_roles': local_roles,
+      'selection_domain': selection_domain,
+      'extra_param_json': extra_param_json
+    }
+
     # set 'here' for field rendering which contain TALES expressions
     REQUEST.set('here', traversed_document)
     # Put all items from extra_param_json into the REQUEST. It is the only
@@ -1763,6 +1780,14 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       '_sort_on': sort_on,
       '_embedded': {}
     })
+
+    # XXX COUSCOUS
+    result_dict['_embedded']['listbox_query_param_json'] = {
+      'key': "%s_query_param_json" % listbox_field_id,
+      'value': urlsafe_b64encode(
+        json.dumps(ensureSerializable(listbox_query_param_dict))
+      )
+    }
 
     Listbox_getBrainValue = traversed_document.Listbox_getBrainValue
     # Compatibility with Listbox.py ListMethodWrapper
