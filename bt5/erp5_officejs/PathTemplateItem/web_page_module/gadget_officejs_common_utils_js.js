@@ -51,26 +51,6 @@
       return [form_type, child_gadget_url];
     })
 
-    .declareMethod("createDocument", function (options) {
-      var gadget = this,
-        doc = {
-          title: "Untitled Document",
-          portal_type: options.portal_type,
-          parent_relative_url: options.parent_relative_url
-        },
-        key,
-        doc_key;
-      for (key in options) {
-        if (options.hasOwnProperty(key)) {
-          if (key.startsWith("my_")) {
-            doc_key = key.replace("my_", "");
-            doc[doc_key] = options[key];
-          }
-        }
-      }
-      return gadget.jio_post(doc);
-    })
-
     .declareMethod("checkMoreActions", function (portal_type, action_category) {
       var gadget = this,
         has_more_dict = {views: {}, actions: {}},
@@ -133,20 +113,6 @@
           //view and actions are managed by same actions-gadget-page
           form_definition.has_more_views = false;
           form_definition.has_more_actions = has_more_dict.has_more_actions;
-          //for backward compatibility (header add button - '+' icon)
-          if (form_definition.action_type === "object_list") {
-            form_definition._links.action_object_new_content_action = {
-              page: "handle_action",
-              title: "New Post",
-              action: "new_html_post",
-              reference: "new_html_post",
-              action_type: "object_jio_js_script",
-              parent_portal_type: "Post Module",
-              portal_type: "HTML Post",
-              source_reference: source_reference
-            };
-            //form_definition.has_more_actions = false;
-          }
           return form_definition;
         });
     });

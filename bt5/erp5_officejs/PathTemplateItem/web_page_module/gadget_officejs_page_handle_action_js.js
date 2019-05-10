@@ -24,13 +24,12 @@
         .push(function () {
           return RSVP.all([
             gadget.getUrlParameter("parent_portal_type"),
-            gadget.getSetting('parent_portal_type'),
             gadget.declareGadget("gadget_officejs_common_utils.html")
           ]);
         })
         .push(function (result) {
-          parent_portal_type = result[0] || result[1];
-          return result[2].getFormDefinition(parent_portal_type, action_reference);
+          parent_portal_type = result[0];
+          return result[1].getFormDefinition(parent_portal_type, action_reference);
         });
     })
 
@@ -41,17 +40,15 @@
           return RSVP.all([
             gadget.getUrlParameter('portal_type'),
             gadget.getUrlParameter('parent_relative_url'),
-            gadget.getSetting('portal_type'),
-            gadget.getSetting('parent_relative_url'),
             gadget.getUrlParameter("action"),
             gadget.declareGadget("gadget_officejs_common_utils.html")
           ]);
         })
         .push(function (result) {
-          action_reference = result[4];
-          if (result[0] !== undefined) {options.portal_type = result[0]; } else {options.portal_type = result[2]; }
-          if (result[1] !== undefined) {options.parent_relative_url = result[1]; } else {options.parent_relative_url = result[3]; }
-          gadget_utils = result[5];
+          if (result[0] !== undefined) { options.portal_type = result[0]; }
+          if (result[1] !== undefined) { options.parent_relative_url = result[1]; }
+          action_reference = result[2];
+          gadget_utils = result[3];
           return gadget.getActionFormDefinition(action_reference);
         })
         .push(function (result) {
@@ -67,7 +64,7 @@
               form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script"),
             state_options = {
               doc: {},
-              parent_options: options,
+              action_options: options,
               child_gadget_url: child_gadget_url,
               form_type: form_type,
               form_definition: form_definition,

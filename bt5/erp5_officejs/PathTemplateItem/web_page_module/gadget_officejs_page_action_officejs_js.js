@@ -106,20 +106,13 @@
               if (view_categories.includes(action_doc.action_type)) {
                 page = "ojs_controller";
               }
-              //TODO (how to get child portal type?)
-              //'parent' and 'child' portal_types will be in the custom code of action gadgets
-              var child_portal_type = portal_type;
-              if (action_doc.reference === "new_html_post") {
-                child_portal_type = "HTML Post";
-              }
               action_settings_list.push({
                 page: page,
                 title: action_doc.title,
                 action: action_doc.reference,
                 reference: action_doc.reference,
                 action_type: action_doc.action_type,
-                parent_portal_type: portal_type,
-                portal_type: child_portal_type
+                parent_portal_type: portal_type
               });
             }
           }
