@@ -1792,6 +1792,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     }
 
     Listbox_getBrainValue = traversed_document.Listbox_getBrainValue
+    field_errors = REQUEST.get('field_errors', {})
+
     # Compatibility with Listbox.py ListMethodWrapper
     can_check_local_property = list_method not in ('objectValues', 'contentValues')
     # now fill in `contents_list` with actual information
@@ -1882,6 +1884,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             listbox_form,
             value=default_field_value,
             key='field_%s_%s' % (editable_field.id, brain_uid))
+          # raise NotImplementedError(str(field_errors))
+          if field_errors.has_key('%s_%s' % (editable_field.id, brain_uid)):
+            contents_item[select]['field_gadget_param']["error_text"] = field_errors['%s_%s' % (editable_field.id, brain_uid)].error_text
 
 
         # Do not generate link for empty value, as it will not be clickable in UI
