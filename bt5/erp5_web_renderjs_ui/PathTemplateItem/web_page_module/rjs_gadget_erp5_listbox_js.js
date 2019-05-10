@@ -317,7 +317,8 @@
         cell_gadget_list: [],
         // ERP5 needs listbox_uid:list with UIDs of editable sub-documents
         // so it can search for them in REQUEST.form under <field.id>_<sub-document.uid>
-        listbox_uid_dict: {}
+        listbox_uid_dict: {},
+        listbox_query_param_json: undefined
       };
     })
 
@@ -478,7 +479,8 @@
                 }),
                 "total_rows": summary.length
               },
-              "count": count
+              "count": count,
+              "listbox_query_param_json": catalog_json._embedded.listbox_query_param_json
             };
             couscous = JSON.stringify(couscous);
           }
@@ -958,6 +960,9 @@
                   key: undefined,
                   value: []
                 };
+                gadget.props.listbox_query_param_json = allDocs_result.listbox_query_param_json;
+                // gadget.props.listbox_uid_dict.key = allDocs_result.data.rows[i].value['listbox_uid:list'].key;
+                // gadget.props.listbox_uid_dict.value.push(allDocs_result.data.rows[i].value['listbox_uid:list'].value);
                 // clear list of previous sub-gadgets
                 gadget.props.cell_gadget_list = [];
 
@@ -1273,6 +1278,7 @@
       return queue
         .push(function () {
           data[form_gadget.props.listbox_uid_dict.key] = form_gadget.props.listbox_uid_dict.value;
+          data[form_gadget.props.listbox_query_param_json.key] = form_gadget.props.listbox_query_param_json.value;
           return data;
         });
     }, {mutex: 'changestate'})
