@@ -49,40 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-kw = {}\n
-if params is None:\n
-  params = {}\n
-\n
-last_active_process = context.getLastActiveProcess()\n
-if not params.get(\'full\', False) and last_active_process is not None:\n
-  # fetch only objects modified since last alarm run\n
-  kw[\'indexation_timestamp\'] = \'>= %s\' % last_active_process.getStartDate().ISO()\n
-\n
-# register active process in order to have "windows" of last indexed objects\n
-context.newActiveProcess().getRelativeUrl()\n
-\n
-portal = context.getPortalObject()\n
-\n
-kw[\'portal_type\'] = portal.getPortalOpenOrderTypeList()\n
-\n
-portal.portal_catalog.searchAndActivate(\n
-  method_id=\'OpenOrder_updateSimulation\',\n
-#  method_kw={\'tag\': tag}, # XXX: Post merge compatibility, maybe OpenOrder_updateSimulation shall be reconfigured to being able to expand without activity (immediate expand)\n
-  packet_size=1, # As OpenOrder_updateSimulation can generate big transaction separate the calls\n
-  activate_kw={\'tag\':tag},\n
-  **kw # XXX: In one query put parents of last modified lines\n
-  )\n
-\n
-# make alarm run once at time\n
-context.activate(after_tag=tag).getId()\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>tag, fixit, params</string> </value>
         </item>
