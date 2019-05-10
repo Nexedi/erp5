@@ -423,6 +423,66 @@ if new_last_id_group is not None:
     for x in xrange(A_LOT_OF_KEY):
       self.assertEqual(0, sql_generator.last_max_id_dict[var_id % x].value)
 
+  def test_decentralised_ZODB_id_generator(self):
+    """
+    Check decentralised ID generator API, and migrating to it from portal_ids.
+    """
+    portal = self.portal
+    portal_ids = portal.portal_ids
+    container_container = portal.portal_simulation
+    container = container_container.newContent()
+    old_id_group = str((
+      'test_decentralised_ZODB_id_generator',
+      container.getPath(),
+    ))
+    new_id_group = 'test_decentralised_ZODB_id_generator'
+    latest_id_old_generator, = portal_ids.generateNewIdList(
+      id_group=old_id_group,
+      id_generator='zodb_continuous_increasing',
+      default=5,
+    )
+    # Test-internal sanity check
+    assert latest_id_old_generator == 5
+    first_id_new_generator, = container.generateIdList(
+      group=new_id_group,
+      onMissing=lambda: portal_ids.generateNewIdList(
+        id_group=old_id_group,
+        id_generator='zodb_continuous_increasing',
+        default=5,
+        poison=True,
+      )[0],
+    )
+    # migration is smealess
+    self.assertEqual(latest_id_old_generator + 1, first_id_new_generator)
+    # old generator is poisoned
+    self.assertRaises(
+      TypeError,
+      portal_ids.generateNewIdList,
+      id_group=old_id_group,
+      id_generator='zodb_continuous_increasing',
+    )
+    # copying container clears sequence state
+    copied_container_id_dict, = container_container.manage_pasteObjects(
+      container_container.manage_copyObjects([container.getId()]),
+    )
+    self.assertEqual(container_container[copied_container_id_dict['new_id']
+      ].generateIdList(new_id_group), [1])
+    # cloning container clears sequence state
+    self.assertEqual(container.Base_createCloneDocument(batch_mode=1,
+      ).generateIdList(new_id_group), [1])
+    # renaming container does not clear sequence state
+    container.setId(container.getId() + '_new_name')
+    self.assertEqual(
+      container.generateIdList(new_id_group),
+      [first_id_new_generator + 1],
+    )
+    # cutting container does not clear sequence state
+    cut_container_id_dict, = container_container.manage_pasteObjects(
+      container_container.manage_cutObjects([container.getId()]),
+    )
+    self.assertEqual(container_container[cut_container_id_dict['new_id']
+      ].generateIdList(new_id_group), [first_id_new_generator + 2])
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestIdTool))

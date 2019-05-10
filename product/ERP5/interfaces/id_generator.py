@@ -34,7 +34,7 @@ class IIdGenerator(Interface):
   Rounding tool interface
   """
 
-  def generateNewId(id_group=None, default=None):
+  def generateNewId(id_group=None, default=None, poison=False):
     """
     Generate the next id in the sequence of ids of a particular group
 
@@ -51,9 +51,15 @@ class IIdGenerator(Interface):
        If the default value is incompatible with the generator,
        ValueError will be raised.
 
+    poison (bool)
+      If True, return the next id in requested sequence, and permanently break
+      that sequence's state, so that no new id may be successfuly generated
+      from it. Useful to ensure seamless migration away from this generator,
+      without risking a (few) late generation from happening after migration
+      code already moved sequence's state elsewhere.
     """
 
-  def generateNewIdList(id_group=None, default=None, id_count=1):
+  def generateNewIdList(id_group=None, default=None, id_count=1, poison=False):
     """
     Generate a list of next ids in the sequence of ids of a particular group
 
@@ -75,6 +81,13 @@ class IIdGenerator(Interface):
        method should take as parameter the previously generated
        id (optional). By default, ids are managed like integers and
        are increased one by one
+
+    poison (bool)
+      If True, return the next id in requested sequence, and permanently break
+      that sequence's state, so that no new id may be successfuly generated
+      from it. Useful to ensure seamless migration away from this generator,
+      without risking a (few) late generation from happening after migration
+      code already moved sequence's state elsewhere.
     """
 
   def initializeGenerator():
