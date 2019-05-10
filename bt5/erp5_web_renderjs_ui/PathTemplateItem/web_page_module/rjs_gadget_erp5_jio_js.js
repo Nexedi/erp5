@@ -254,7 +254,8 @@
               }),
               "total_rows": summary.length
             },
-            "count": count
+            "count": count,
+            "listbox_query_param_json": catalog_json._embedded.listbox_query_param_json
           };
         });
     })
