@@ -415,7 +415,12 @@
             j,
             column_id,
             column_title,
-            not_concatenated_list = [field_json.column_list, (field_json.all_column_list || [])];
+            not_concatenated_list = [field_json.column_list, (field_json.all_column_list || [])],
+            couscous,
+            catalog_json,
+            data,
+            summary,
+            count;
           // Calculate the list of all displayable columns
           for (i = 0; i < not_concatenated_list.length; i += 1) {
             for (j = 0; j < not_concatenated_list[i].length; j += 1) {
@@ -441,6 +446,41 @@
           }
           if (displayed_column_item_list.length === 0) {
             displayed_column_item_list = field_json.column_list;
+          }
+
+          // XXX COUSCOUS
+          // COPY PASTE from rjs_gadget_erp5_jio_js
+          if (field_json.couscous !== undefined) {
+            catalog_json = field_json.couscous;
+            data = catalog_json._embedded.contents || [];
+            summary = catalog_json._embedded.sum || [];
+            count = catalog_json._embedded.count;
+            couscous = {
+              "data": {
+                "rows": data.map(function (item) {
+                  var uri = new URI(item._links.self.href);
+                  delete item._links;
+                  return {
+                    "id": uri.segment(2),
+                    "doc": {},
+                    "value": item
+                  };
+                }),
+                "total_rows": data.length
+              },
+              "sum": {
+                "rows": summary.map(function (item, index) {
+                  return {
+                    "id": '/#summary' + index, // this is obviously wrong. @Romain help please!
+                    "doc": {},
+                    "value": item
+                  };
+                }),
+                "total_rows": summary.length
+              },
+              "count": count
+            };
+            couscous = JSON.stringify(couscous);
           }
 
           return gadget.changeState({
@@ -483,7 +523,8 @@
 
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
-            allDocs_result: undefined,
+            // allDocs_result: undefined,
+            allDocs_result: couscous,
 
             // No error message
             has_error: false,
