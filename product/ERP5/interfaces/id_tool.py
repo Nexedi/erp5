@@ -34,7 +34,7 @@ class IIdTool(Interface):
   Id Tool interface
   """
 
-  def generateNewId(id_group=None, default=None, id_generator=None):
+  def generateNewId(id_group=None, default=None, id_generator=None, poison=False):
     """
     Generate the next id in the sequence of ids of a particular group
 
@@ -56,6 +56,13 @@ class IIdTool(Interface):
        reference. This is not mandatory, a default generator will exist.
        Only id generator of type application can be selected.
 
+    poison (bool)
+      If True, return the next id in requested sequence, and permanently break
+      that sequence's state, so that no new id may be successfuly generated
+      from it. Useful to ensure seamless migration away from this generator,
+      without risking a (few) late generation from happening after migration
+      code already moved sequence's state elsewhere.
+
     Example :
        my_new_id = portal_ids.generateNewId(id_group='sale_invoice',
                               default=100)
@@ -63,7 +70,7 @@ class IIdTool(Interface):
     """
 
   def generateNewIdList(id_group=None, default=None, id_count=1,
-      id_generator=None):
+      id_generator=None, poison=False):
     """
     Generate a list of next ids in the sequence of ids of a particular group
 
@@ -84,6 +91,13 @@ class IIdTool(Interface):
        Select an particular id generator (optional) by giving its
        reference. This is not mandatory, a default generator will exist.
        Only id generator of type application can be selected.
+
+    poison (bool)
+      If True, return the next id in requested sequence, and permanently break
+      that sequence's state, so that no new id may be successfuly generated
+      from it. Useful to ensure seamless migration away from this generator,
+      without risking a (few) late generation from happening after migration
+      code already moved sequence's state elsewhere.
 
     Example :
        my_new_id_list = portal_ids.generateNewIdList(id_group='sale_invoice',
