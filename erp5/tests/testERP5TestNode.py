@@ -443,9 +443,9 @@ shared = true
     in the middle of a git checkout. So make sure testnode remove repositories
     that are not working any longer.
 
-    Usual error is "index file smaller than expected".
-    We reproduce here a similar error "bad index file sha1 signature" which we
-    know how to reproduce
+    In this test, we cause an artificial corruption by truncating git
+    repository's index, then we call updateRevisionList to check that it can
+    recover from this corruption.
     """
     commit_dict = self.generateTestRepositoryList()
     test_node = self.getTestNode()
@@ -456,9 +456,9 @@ shared = true
     rep0_clone_path = [x['repository_path'] for x in \
                    node_test_suite.vcs_repository_list \
                    if x['repository_path'].endswith("rep0")][0]
-    # truncate index file to reproduce error
+    # simulate a data corruption on rep0's index
     index_file = open(os.path.join(rep0_clone_path, '.git', 'index'), 'a')
-    index_file.seek(1,2)
+    index_file.seek(10, os.SEEK_END)
     index_file.truncate()
     index_file.close()
     # we get rev list with corrupted repository, we get None, but in the same
