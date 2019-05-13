@@ -10,7 +10,10 @@ if len(delivery_list) < 2:
   qs = '?portal_status_message=Please+select+more+than+one+items.'
 else:
   ret_url = context.absolute_url() + '/' + form_id
-  qs = '?portal_status_message=Merged.'
-  context.portal_simulation.mergeDeliveryList(delivery_list)
+  error_list = context.portal_simulation.mergeDeliveryList(delivery_list)
+  if not error_list:
+    qs = '?portal_status_message=Merged.'
+  else:
+    qs = '?portal_status_message=%s' % (' '.join(error_list))
 
 return REQUEST.RESPONSE.redirect( ret_url + qs )
