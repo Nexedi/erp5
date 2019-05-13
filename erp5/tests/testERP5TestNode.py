@@ -460,6 +460,7 @@ shared = true
     index_file = open(os.path.join(rep0_clone_path, '.git', 'index'), 'a')
     index_file.seek(1,2)
     index_file.truncate()
+    index_file.write("corrupted")
     index_file.close()
     # we get rev list with corrupted repository, we get None, but in the same
     # time the bad repository is deleted
