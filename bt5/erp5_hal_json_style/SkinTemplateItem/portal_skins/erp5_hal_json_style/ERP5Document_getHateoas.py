@@ -378,8 +378,8 @@ def getFieldDefault(form, field, key, value=None):
 
   Previously we used Formulator.Field._get_default which is (for no reason) private.
   """
-  # if value is None:
-  if 1:
+  if value is None:
+  # if 1:
     value = REQUEST.form.get(field.id, REQUEST.form.get(key, MARKER))
     # use marker because default value can be intentionally empty string
     if value is MARKER:
@@ -1571,7 +1571,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     #   response.setStatus(405)
     #   return ""
 
-    listbox_query_param_dict = {
+    listbox_query_param_json = urlsafe_b64encode(json.dumps(ensureSerializable({
       'form_relative_url': form_relative_url,
       'list_method': list_method,
       'default_param_json': default_param_json,
@@ -1581,7 +1581,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       'local_roles': local_roles,
       'selection_domain': selection_domain,
       'extra_param_json': extra_param_json
-    }
+    })))
 
     # set 'here' for field rendering which contain TALES expressions
     REQUEST.set('here', traversed_document)
@@ -1782,14 +1782,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       '_sort_on': sort_on,
       '_embedded': {}
     })
-
-    # XXX COUSCOUS
-    result_dict['_embedded']['listbox_query_param_json'] = {
-      'key': "%s_query_param_json" % listbox_field_id,
-      'value': urlsafe_b64encode(
-        json.dumps(ensureSerializable(listbox_query_param_dict))
-      )
-    }
 
     Listbox_getBrainValue = traversed_document.Listbox_getBrainValue
     field_errors = REQUEST.get('field_errors', {})
@@ -2038,6 +2030,12 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
       if len(contents_stat_list) > 0:
         result_dict['_embedded']['sum'] = ensureSerializable(contents_stat_list)
+
+      # XXX COUSCOUS
+      result_dict['_embedded']['listbox_query_param_json'] = {
+        'key': "%s_query_param_json" % listbox_field_id,
+        'value': listbox_query_param_json
+      }
 
     # We should cleanup the selection if it exists in catalog params BUT
     # we cannot because it requires escalated Permission.'modifyPortal' so
