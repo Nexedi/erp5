@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_AcceleratedHTTPCacheManager__cacheid</string> </key>
-            <value> <string>140293738026600_1232739699.222134</string> </value>
+            <value> <string>139793752921944_1557734604.715313</string> </value>
         </item>
         <item>
             <key> <string>_settings</string> </key>
@@ -16,15 +16,15 @@
               <dictionary>
                 <item>
                     <key> <string>anonymous_only</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>interval</string> </key>
-                    <value> <int>3600</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>must_revalidate</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>notify_urls</string> </key>
@@ -38,18 +38,18 @@
                 </item>
                 <item>
                     <key> <string>stale_if_error_interval</string> </key>
-                    <value> <int>360000</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>stale_while_revalidate_interval</string> </key>
-                    <value> <int>360000</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>anonymous_http_cache</string> </value>
+            <value> <string>must_revalidate_http_cache</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
