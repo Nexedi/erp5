@@ -33,11 +33,13 @@ from functools import wraps
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.ZopeGuards import NullIter, guarded_getattr
 from Acquisition import aq_base, aq_parent, aq_inner
+from BTrees.Length import Length
 from OFS.Folder import Folder as OFSFolder
 from OFS.ObjectManager import ObjectManager, checkValidId
 from zExceptions import BadRequest
 from OFS.History import Historical
 import ExtensionClass
+from Persistence import Persistent
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 from Products.CMFCore.PortalFolder import ContentFilter
@@ -75,6 +77,7 @@ from zLOG import LOG, WARNING
 import warnings
 from urlparse import urlparse
 from Products.ERP5Type.Message import translateString
+from ZODB.POSException import ConflictError
 
 # Dummy Functions for update / upgrade
 def dummyFilter(object,REQUEST=None):
@@ -97,6 +100,57 @@ class ExceptionRaised(object):
         self.raised = True
         raise
     return wraps(func)(wrapper)
+
+# Above this many subobjects, migrate _count from Length to FragmentedLength
+# to accomodate concurrent accesses.
+FRAGMENTED_LENGTH_THRESHOLD = 1000
+class FragmentedLength(Persistent):
+  """
+  Drop-in replacement for BTrees.Length, which splits storage by zope node.
+  The intent is that per-node conflicts should be roughly constant, but adding
+  more nodes should not increase overall conflict rate.
+
+  Inherit from Persistent in order to be able to resolve our own conflicts
+  (first time a node touches an instance of this class), which should be a rare
+  event per-instance.
+  Contain BTrees.Length instances for intra-node conflict resolution
+  (inter-threads).
+  """
+  def __init__(self, legacy=None):
+    self._map = {}
+    if legacy is not None:
+      # Key does not matter as long as it is independent from the node
+      # constructing this instance.
+      self._map[None] = legacy
+
+  def set(self, new):
+    self._map.clear()
+    self.change(new)
+
+  def change(self, delta):
+    try:
+      self._map[getCurrentNode()].change(delta)
+    except KeyError:
+      self._map[getCurrentNode()] = Length(delta)
+      # _map is mutable, notify persistence that we have to be serialised.
+      self._p_changed = 1
+
+  def __call__(self):
+    return sum(x() for x in self._map.values())
+
+  @staticmethod
+  def _p_resolveConflict(old_state, current_state, my_state):
+    # Minimal implementation for sanity: only handle addition of one by "me" as
+    # long as current_state does not contain the same key. Anything else is a
+    # conflict.
+    try:
+      my_added_key, = set(my_state['_map']).difference(old_state['_map'])
+    except ValueError:
+      raise ConflictError
+    if my_added_key in current_state:
+      raise ConflictError
+    current_state['_map'][my_added_key] = my_state['_map'][my_added_key]
+    return current_state
 
 class FolderMixIn(ExtensionClass.Base):
   """A mixin class for folder operations, add content, delete content etc.
@@ -662,6 +716,25 @@ class Folder(OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
   # This is required for test_23_titleIsNotDefinedByDefault
   def __init__(self, id):
     self.id = id
+
+  @property
+  def _count(self):
+    count = self.__dict__.get('_count')
+    if isinstance(count, Length) and count() > FRAGMENTED_LENGTH_THRESHOLD:
+      count = self._count = FragmentedLength(count)
+    return count
+
+  @_count.setter
+  def _count(self, value):
+    if isinstance(value, Length) and value() > FRAGMENTED_LENGTH_THRESHOLD:
+      value = FragmentedLength(value)
+    self.__dict__['_count'] = value
+    self._p_changed = 1
+
+  @_count.deleter
+  def _count(self):
+    del self.__dict__['_count']
+    self._p_changed = 1
 
   security.declarePublic('newContent')
   def newContent(self, *args, **kw):
