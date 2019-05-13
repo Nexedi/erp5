@@ -68,6 +68,8 @@ def editListBox(listbox_field, listbox):
                 if listbox_field.has_value('global_attributes') \
                 else {}
 
+  # raise NotImplementedError(listbox)
+  # raise NotImplementedError(listbox.items())
   for item_url, item_value in listbox.items():
     item_value.update(global_attr)
     # Form: '' -> ERP5: None
