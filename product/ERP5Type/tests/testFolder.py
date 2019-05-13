@@ -28,11 +28,13 @@
 
 import unittest
 
+from BTrees.Length import Length
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.Cache import clearCache
+from Products.ERP5Type.Core.Folder import FragmentedLength, FRAGMENTED_LENGTH_THRESHOLD
 from AccessControl.ZopeGuards import guarded_getattr
 from zExceptions import Unauthorized
 
@@ -265,6 +267,34 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
               self.folder.absolute_url(relative=True), obj.getId()))
       self.assertTrue(obj.getId() in self.folder.objectIds())
       self.assertEqual(302, response.getStatus())
+
+    def test_fragmentedLength(self):
+      """Test Folder._count type and behaviour"""
+      type_list = ['Folder']
+      self._setAllowedContentTypesForFolderType(type_list)
+      folder = self.folder
+      folder_dict = folder.__dict__
+      folder.newContent(portal_type='Folder')
+      self.assertEqual(len(folder), 1)
+      self.assertIsInstance(folder_dict['_count'], Length)
+      original_length_oid = folder_dict['_count']._p_oid
+      for _ in xrange(FRAGMENTED_LENGTH_THRESHOLD - len(folder) - 1):
+        folder.newContent(portal_type='Folder')
+      self.assertEqual(len(folder), FRAGMENTED_LENGTH_THRESHOLD - 1)
+      self.assertIsInstance(folder_dict['_count'], Length)
+      # Generate 3 to completely clear the threshold, as we do not care whether
+      # the change happens when reaching the threshold or when going over it.
+      folder.newContent(portal_type='Folder')
+      folder.newContent(portal_type='Folder')
+      folder.newContent(portal_type='Folder')
+      self.assertEqual(len(folder), FRAGMENTED_LENGTH_THRESHOLD + 2)
+      fragmented_length = folder_dict['_count']
+      self.assertIsInstance(fragmented_length, FragmentedLength)
+      self.assertEqual(len(fragmented_length._map), 2, fragmented_length._map)
+      original_length = fragmented_length._map[None]
+      self.assertEqual(original_length_oid, original_length._p_oid)
+      self.assertGreater(original_length(), FRAGMENTED_LENGTH_THRESHOLD - 1)
+      self.assertGreater(len(folder), original_length())
 
 def test_suite():
   suite = unittest.TestSuite()
