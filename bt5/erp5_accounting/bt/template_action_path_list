@@ -31,6 +31,7 @@ Accounting Transaction Module | journal_from_selection
 Accounting Transaction Module | journal_report
 Accounting Transaction Module | jump_active_accounting_pref
 Accounting Transaction Module | jump_bank_accounts
+Accounting Transaction Module | merge_delivery_list
 Accounting Transaction Module | profit_and_loss_report
 Accounting Transaction Module | search_transactions
 Accounting Transaction Module | third_parties_export
