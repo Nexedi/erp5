@@ -68,13 +68,23 @@
   <td></td>
 </tr>
 <tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Actions"]</td>
+ <td></td>
+</tr>
+<tr>
+ <td>click</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Actions"]</td>
+ <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
-  <td>link=Add</td>
+  <td>link=New Post</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>link=Add</td>
+  <td>link=New Post</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
@@ -183,9 +193,9 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>link=Add</td>
-  <td></td>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Actions"]</td>
+ <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
