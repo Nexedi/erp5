@@ -140,10 +140,11 @@
             page_title = options.doc.title;
           }
           erp5_document = form_json.erp5_document;
-          if (erp5_document._links && erp5_document._links.action_object_new_content_action) {
+          //add elements must be done via actions, so no 'add' button
+          /*if (erp5_document._links && erp5_document._links.action_object_new_content_action) {
             url_for_parameter_list.push({command: 'change', options: erp5_document._links.action_object_new_content_action});
             add_url = true;
-          }
+          }*/
           return RSVP.all([
             this_gadget.getUrlForList(url_for_parameter_list),
             this_gadget.isDesktopMedia(),

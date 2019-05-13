@@ -61,9 +61,9 @@
         })
         .push(function (result) {
           form_definition = result;
-          //TODO: solve add button
-          //for backward compatibility (header add button - '+' icon)
-          if (form_definition.action_type === "object_list") {
+          //TODO: solve add button (header add button - '+' icon)
+          //solved: add elements must be done via actions
+          /*if (form_definition.action_type === "object_list") {
             form_definition._links.action_object_new_content_action = {
               page: "handle_action",
               title: "New Post",
@@ -73,7 +73,7 @@
               parent_portal_type: "Post Module",
               source_reference: "for-future-thread-id"
             };
-          }
+          }*/
           return gadget_utils.getFormInfo(form_definition);
         })
         .push(function (form_info) {
