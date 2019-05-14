@@ -753,11 +753,11 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
 
     # XXX COUSCOUS
     # In the context of a POST, the lines must be synchronously calculated to keep track of the request values
-    if REQUEST.other['method'] != "GET":
-      # raise NotImplementedError(REQUEST.get("%s_query_param_json" % field.id))
+    query_param_json = REQUEST.get("%s_query_param_json" % field.id, None)
+    if query_param_json is not None:
       result["couscous"] = json.loads(
         context.ERP5Document_getHateoas(REQUEST=REQUEST, mode='search',
-          **ensureDeserialized(byteify(json.loads(urlsafe_b64decode(REQUEST.get("%s_query_param_json" % field.id)))))
+          **ensureDeserialized(byteify(json.loads(urlsafe_b64decode(query_param_json))))
           )
       )
     
