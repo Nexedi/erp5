@@ -48,7 +48,7 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def _generateNewId(self, id_group, id_count=1, default=None):
+  def _generateNewId(self, id_group, id_count=1, default=None, poison=False):
     """
      Return the new_id from the last_id of the zodb
      Use int to store the last_id, use also a persistant mapping for to be
@@ -66,25 +66,25 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
     # Retrieve the last id and increment
     new_id = last_id_dict.get(id_group, default - 1) + id_count
     # Store the new_id in the dictionary
-    last_id_dict[id_group] = new_id
+    last_id_dict[id_group] = None if poison else new_id
     return new_id
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'generateNewId')
-  def generateNewId(self, id_group=None, default=None):
+  def generateNewId(self, id_group=None, default=None, poison=False):
     """
       Generate the next id in the sequence of ids of a particular group
     """
-    return self._generateNewId(id_group=id_group, default=default)
+    return self._generateNewId(id_group=id_group, default=default, poison=poison)
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'generateNewIdList')
-  def generateNewIdList(self, id_group=None, id_count=1, default=None):
+  def generateNewIdList(self, id_group=None, id_count=1, default=None, poison=False):
     """
       Generate a list of next ids in the sequence of ids of a particular group
     """
     new_id = 1 + self._generateNewId(id_group=id_group, id_count=id_count,
-                                     default=default)
+                                     default=default, poison=poison)
     return range(new_id - id_count, new_id)
 
   security.declareProtected(Permissions.ModifyPortalContent,

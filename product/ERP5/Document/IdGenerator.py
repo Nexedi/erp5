@@ -81,7 +81,8 @@ class IdGenerator(Base):
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'generateNewIdList')
-  def generateNewIdList(self, id_group=None, id_count=1, default=None):
+  def generateNewIdList(self, id_group=None, id_count=1, default=None,
+                        poison=False):
     """
       Generate a list of next ids in the sequence of ids of a particular group
       Store the last id on a database in the portal_ids table
@@ -94,7 +95,8 @@ class IdGenerator(Base):
       raise TypeError, 'id_group is not a string'
     return self._getLatestSpecialiseValue().generateNewIdList(id_group=id_group,
                                                               id_count=id_count,
-                                                              default=default)
+                                                              default=default,
+                                                              poison=poison)
 
   security.declareProtected(Permissions.ModifyPortalContent,
       'initializeGenerator')
