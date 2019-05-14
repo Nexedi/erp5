@@ -49,14 +49,12 @@ from Products.CMFActivity.ActivityTool import (
   cancelProcessShutdown, Message, getCurrentNode, getServerAddress)
 from _mysql_exceptions import OperationalError
 from Products.ZMySQLDA.db import DB
-from sklearn.externals.joblib.hashing import hash as joblib_hash
 import gc
 import random
 import threading
 import weakref
 import transaction
 from App.config import getConfiguration
-from asyncore import socket_map
 import socket
 
 class CommitFailed(Exception):
@@ -1552,7 +1550,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       organisation.activate(tag='foo', activity='SQLQueue').firstTest()
       organisation.activate(after_tag='foo', activity='SQLQueue').secondTest()
       self.commit()
-      import gc
       gc.disable()
       self.tic()
       gc.enable()
