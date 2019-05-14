@@ -58,7 +58,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
 
   last_max_id_dict = None
 
-  def _generateNewId(self, id_group, id_count=1, default=None):
+  def _generateNewId(self, id_group, id_count=1, default=None, poison=False):
     """
       Return the next_id with the last_id with the sql method
       Store the last id on a database in the portal_ids table
@@ -92,6 +92,8 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     try:
       # Tries of generate the new_id
       new_id = result_query[0]['LAST_INSERT_ID()']
+      if poison:
+        portal.IdTool_zSetLastId(id_group, None)
       # Commit the changement of new_id
       portal.IdTool_zCommit()
     except ProgrammingError, error:
@@ -114,6 +116,8 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         # Check the store interval to store the data
         if last_max_id_value <= new_id - (self.getStoreInterval() or 1):
           last_max_id.set(new_id)
+        if poison:
+          last_max_id.set(None)
     return new_id
 
   def _updateSqlTable(self):
@@ -141,20 +145,20 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'generateNewId')
-  def generateNewId(self, id_group=None, default=None):
+  def generateNewId(self, id_group=None, default=None, poison=False):
     """
       Generate the next id in the sequence of ids of a particular group
     """
-    return self._generateNewId(id_group=id_group, default=default)
+    return self._generateNewId(id_group=id_group, default=default, poison=poison)
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'generateNewIdList')
-  def generateNewIdList(self, id_group=None, id_count=1, default=None):
+  def generateNewIdList(self, id_group=None, id_count=1, default=None, poison=False):
     """
       Generate a list of next ids in the sequence of ids of a particular group
     """
     new_id = 1 + self._generateNewId(id_group=id_group, id_count=id_count,
-                                     default=default)
+                                     default=default, poison=poison)
     return range(new_id - id_count, new_id)
 
   security.declareProtected(Permissions.ModifyPortalContent,
