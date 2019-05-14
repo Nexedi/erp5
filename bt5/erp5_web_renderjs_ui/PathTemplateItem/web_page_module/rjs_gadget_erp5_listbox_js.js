@@ -416,12 +416,8 @@
             j,
             column_id,
             column_title,
-            not_concatenated_list = [field_json.column_list, (field_json.all_column_list || [])],
-            couscous,
-            catalog_json,
-            data,
-            summary,
-            count;
+            not_concatenated_list = [field_json.column_list, (field_json.all_column_list || [])];
+
           // Calculate the list of all displayable columns
           for (i = 0; i < not_concatenated_list.length; i += 1) {
             for (j = 0; j < not_concatenated_list[i].length; j += 1) {
@@ -447,42 +443,6 @@
           }
           if (displayed_column_item_list.length === 0) {
             displayed_column_item_list = field_json.column_list;
-          }
-
-          // XXX COUSCOUS
-          // COPY PASTE from rjs_gadget_erp5_jio_js
-          if (field_json.couscous !== undefined) {
-            catalog_json = field_json.couscous;
-            data = catalog_json._embedded.contents || [];
-            summary = catalog_json._embedded.sum || [];
-            count = catalog_json._embedded.count;
-            couscous = {
-              "data": {
-                "rows": data.map(function (item) {
-                  var uri = new URI(item._links.self.href);
-                  delete item._links;
-                  return {
-                    "id": uri.segment(2),
-                    "doc": {},
-                    "value": item
-                  };
-                }),
-                "total_rows": data.length
-              },
-              "sum": {
-                "rows": summary.map(function (item, index) {
-                  return {
-                    "id": '/#summary' + index, // this is obviously wrong. @Romain help please!
-                    "doc": {},
-                    "value": item
-                  };
-                }),
-                "total_rows": summary.length
-              },
-              "count": count,
-              "listbox_query_param_json": catalog_json._embedded.listbox_query_param_json
-            };
-            couscous = JSON.stringify(couscous);
           }
 
           return gadget.changeState({
@@ -525,8 +485,8 @@
 
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
-            // allDocs_result: undefined,
-            allDocs_result: couscous,
+            allDocs_result: undefined,
+            default_value: field_json.default,
 
             // No error message
             has_error: false,
@@ -1225,6 +1185,7 @@
       return gadget.jio_allDocs({
         // XXX Not jIO compatible, but until a better api is found...
         "list_method_template": this.state.list_method_template,
+        "default_value": this.state.default_value,
         "query": gadget.state.query_string,
         "limit": limit_options,
         "select_list": select_list,
