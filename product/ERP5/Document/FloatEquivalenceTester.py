@@ -117,14 +117,23 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
     # XXX we should use appropriate property sheets and getter methods
     # for these properties.
     # Maybe, but beware of default values of quantity when doing so
-    absolute_tolerance_min = self.getProperty('quantity_range_min')
+    tolerance_base = self.getProperty('tolerance_base')
+    # If torelance_base is None, check the divergece with epsilon-span by default
+    # If torelance_base is not None, we can use tolerance_base (absolute has priority)
+    if tolerance_base is None:
+      absolute_tolerance_min = self.getProperty('quantity_range_min') or -epsilon
+    else:
+      absolute_tolerance_min = self.getProperty('quantity_range_min')
     if absolute_tolerance_min is not None and \
        delta < (absolute_tolerance_min or - epsilon):
       return (
         prevision_value, decision_value,
         explanation_start + 'is less than ${value}.',
         getMappingDict(value=absolute_tolerance_min))
-    absolute_tolerance_max = self.getProperty('quantity_range_max')
+    if tolerance_base is None:
+      absolute_tolerance_max = self.getProperty('quantity_range_max') or epsilon 
+    else:
+      absolute_tolerance_max = self.getProperty('quantity_range_max')
     if absolute_tolerance_max is not None and \
        delta > (absolute_tolerance_max or epsilon):
       return (
@@ -132,7 +141,6 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
         explanation_start + 'is larger than ${value}.',
         getMappingDict(value=absolute_tolerance_max))
 
-    tolerance_base = self.getProperty('tolerance_base')
     base = None
     if tolerance_base == 'resource_quantity_precision':
       # Precision of this movement's resource base unit quantity
