@@ -67,7 +67,10 @@ MARKER = []
 COUNT_LIMIT = 1000
 
 if REQUEST is None:
+  recursive_call = True
   REQUEST = context.REQUEST
+else:
+  recursive_call = False
 
 if response is None:
   response = REQUEST.RESPONSE
@@ -749,7 +752,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     query_param_json = REQUEST.get("%s_query_param_json" % field.id, None)
     if (query_param_json is not None) and (response.getStatus() == 400):
       result["default"] = json.loads(
-        context.ERP5Document_getHateoas(REQUEST=REQUEST, mode='search',
+        context.ERP5Document_getHateoas(mode='search',
           **ensureDeserialized(byteify(json.loads(urlsafe_b64decode(query_param_json))))
           )
       )
@@ -1559,10 +1562,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     #  > We simply do not use them. All Document selection is handled via passing
     #  > "query" parameter to Base_callDialogMethod or introspecting list_methods.
     #################################################
-    # COUSCOUS add a parameter
-    # if REQUEST.other['method'] != "GET":
-    #   response.setStatus(405)
-    #   return ""
+    if (not recursive_call) and (REQUEST.other['method'] != "GET"):
+      response.setStatus(405)
+      return ""
 
     listbox_query_param_json = urlsafe_b64encode(json.dumps(ensureSerializable({
       'form_relative_url': form_relative_url,
