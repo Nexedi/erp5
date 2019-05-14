@@ -179,10 +179,10 @@ CREATE TABLE %s (
       return None, original_uid, [uid]
     return load
 
-  def getPriority(self, activity_tool, node):
-    return SQLDict.getPriority(self, activity_tool)
+  def getPriority(self, activity_tool, processing_node, node_set):
+    return SQLDict.getPriority(self, activity_tool, processing_node)
 
   def getReservedMessageList(self, db, date, processing_node,
-                             limit=None, group_method_id=None, node=None):
+                             limit=None, group_method_id=None, node_set=None):
     return SQLDict.getReservedMessageList(self, db,
       date, processing_node, limit, group_method_id)
