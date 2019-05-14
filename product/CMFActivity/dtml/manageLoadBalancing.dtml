@@ -219,6 +219,47 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
   </tr>
   <tr class="list-header">
     <td align="left" valign="top" colspan=2>
+      <div class="form-label">Node Families</div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan=2>
+      <div style="float: left;">
+        Available Nodes:<br />
+        <select name="family_new_node_list" size="10" multiple="multiple" style="width: 100%;">
+        <dtml-in getNodeList prefix="node">
+          <option value="<dtml-var node_item>"><dtml-var node_item></option>
+        </dtml-in>
+        </select><br/>
+        <input name="new_family_name" />
+        <button type="submit" class="form-element" name="manage_createFamily:method">Create Family</button>
+      </div>
+      <dtml-in getFamilyNameList prefix="family">
+      <div style="float: left; margin-left: 1em;">
+        <input value="<dtml-var family_item>" name="family_new_name_<dtml-var family_item>" />(#<dtml-var expr="getFamilyId(family_item)">)<br />
+        <select name="family_member_set_<dtml-var family_item>" size="10" multiple="multiple" style="width: 100%;">
+        <dtml-in expr="getFamilyNodeList(family_item) or ['(no members)']" prefix="node">
+          <option value="<dtml-var node_item>"><dtml-var node_item></option>
+        </dtml-in>
+        </select><br />
+        <button type="submit" class="form-element" name="manage_removeNodeSetFromFamily:method" value="<dtml-var family_item>">Remove Nodes</button>
+        <button type="submit" class="form-element" name="manage_addNodeSetToFamily:method" value="<dtml-var family_item>">Add Nodes</button>
+        <div style="border: 1px solid #F00;">
+        Danger zone:<br />
+        <button type="submit" class="form-element" name="manage_renameFamily:method" value="<dtml-var family_item>">Rename</button>
+        <button type="submit" class="form-element" name="manage_deleteFamily:method" value="<dtml-var family_item>">Delete</button>
+        </div>
+      </div>
+      </dtml-in>
+      <div style="clear: both"></div>
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr class="list-header">
+    <td align="left" valign="top" colspan=2>
       <div class="form-label">Subscribe/Unsubscribe from Timer Service</div>
     </td>
   </tr>

@@ -70,6 +70,8 @@ class ActiveObject(ExtensionClass.Base):
         - "": no node preference
         - None (default): let CMFActivity decide between the above 2 choice
                           (see ActivityTool.activateObject)
+        - the name of a family: Only processing nodes member of that family
+                                may execute this activity.
 
       at_date           --  request execution date for this activate call
                             (default: date of commit)

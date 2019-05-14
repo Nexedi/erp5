@@ -278,8 +278,8 @@ CREATE TABLE %s (
     return "SELECT 1 FROM %s WHERE %s LIMIT 1" % (
       self.sql_table, " AND ".join(where) or "1")
 
-  def getPriority(self, activity_tool, node=None):
-    if node is None:
+  def getPriority(self, activity_tool, processing_node, node_set=None):
+    if node_set is None:
       q = ("SELECT 3*priority, date FROM %s"
         " WHERE processing_node=0 AND date <= UTC_TIMESTAMP(6)"
         " ORDER BY priority, date LIMIT 1" % self.sql_table)
@@ -287,17 +287,19 @@ CREATE TABLE %s (
       subquery = ("(SELECT 3*priority{} as effective_priority, date FROM %s"
         " WHERE {} AND processing_node=0 AND date <= UTC_TIMESTAMP(6)"
         " ORDER BY priority, date LIMIT 1)" % self.sql_table).format
-      node = 'node=%s' % node
-      q = ("SELECT * FROM (%s UNION ALL %s UNION %s) as t"
+      node = 'node=%s' % processing_node
+      # "ALL" on all but one, to incur deduplication cost only once
+      q = ("SELECT * FROM (%s UNION ALL %s UNION ALL %s UNION %s) as t"
         " ORDER BY effective_priority, date LIMIT 1" % (
           subquery(-1, node),
           subquery('', 'node=0'),
-          subquery('+IF(node, IF(%s, -1, 1), 0)' % node, 1),
+          subquery('+IF(node, IF(%s, -1, 1), 0)' % node, 'node>=0'),
+          subquery(-1, 'node IN (%s)' % ','.join(map(str, node_set)) if node_set else 0),
         ))
     result = activity_tool.getSQLConnection().query(q, 0)[1]
     if result:
       return result[0]
-    return Queue.getPriority(self, activity_tool, node)
+    return Queue.getPriority(self, activity_tool, processing_node, node_set)
 
   def _retryOnLockError(self, method, args=(), kw={}):
     while True:
@@ -416,7 +418,7 @@ CREATE TABLE %s (
       where_kw['above_uid'] = line.uid
 
   def getReservedMessageList(self, db, date, processing_node, limit,
-                             group_method_id=None, node=None):
+                             group_method_id=None, node_set=None):
     """
       Get and reserve a list of messages.
       limit
@@ -436,7 +438,7 @@ CREATE TABLE %s (
     # for users and reduce the probability to do the same work several times
     # (think of an object that is modified several times in a short period of
     # time).
-    if node is None:
+    if node_set is None:
       result = Results(query(
         "SELECT * FROM %s WHERE processing_node=0 AND %s%s"
         " ORDER BY priority, date LIMIT %s FOR UPDATE" % args, 0))
@@ -447,13 +449,15 @@ CREATE TABLE %s (
       subquery = ("(SELECT *, 3*priority{} as effective_priority FROM %s"
         " WHERE {} AND processing_node=0 AND %s%s"
         " ORDER BY priority, date LIMIT %s FOR UPDATE)" % args).format
-      node = 'node=%s' % node
+      node = 'node=%s' % processing_node
       result = Results(query(
-        "SELECT * FROM (%s UNION ALL %s UNION %s) as t"
+        # "ALL" on all but one, to incur deduplication cost only once
+        "SELECT * FROM (%s UNION ALL %s UNION ALL %s UNION %s) as t"
         " ORDER BY effective_priority, date LIMIT %s"% (
             subquery(-1, node),
             subquery('', 'node=0'),
-            subquery('+IF(node, IF(%s, -1, 1), 0)' % node, 1),
+            subquery('+IF(node, IF(%s, -1, 1), 0)' % node, 'node>=0'),
+            subquery(-1, 'node IN (%s)' % ','.join(map(str, node_set)) if node_set else 0),
             limit), 0))
     if result:
       # Reserve messages.
@@ -478,7 +482,8 @@ CREATE TABLE %s (
       return m, uid, ()
     return load
 
-  def getProcessableMessageList(self, activity_tool, processing_node):
+  def getProcessableMessageList(self, activity_tool, processing_node,
+                                node_family_id_list):
     """
       Always true:
         For each reserved message, delete redundant messages when it gets
@@ -523,7 +528,7 @@ CREATE TABLE %s (
           result = Results(result)
         else:
           result = self.getReservedMessageList(db, now_date, processing_node,
-                                               1, node=processing_node)
+                                               1, node_set=node_family_id_list)
           if not result:
             break
         load = self.getProcessableMessageLoader(db, processing_node)
@@ -552,7 +557,7 @@ CREATE TABLE %s (
                 # adding more results from getReservedMessageList if the
                 # limit is not reached.
               or self.getReservedMessageList(db, now_date, processing_node,
-                limit, group_method_id, processing_node))
+                limit, group_method_id, node_family_id_list))
             for line in result:
               if line.uid in uid_to_duplicate_uid_list_dict:
                 continue
@@ -597,9 +602,11 @@ CREATE TABLE %s (
       raise
 
   # Queue semantic
-  def dequeueMessage(self, activity_tool, processing_node):
+  def dequeueMessage(self, activity_tool, processing_node,
+                     node_family_id_list):
     message_list, group_method_id, uid_to_duplicate_uid_list_dict = \
-      self.getProcessableMessageList(activity_tool, processing_node)
+      self.getProcessableMessageList(activity_tool, processing_node,
+        node_family_id_list)
     if message_list:
       # Remove group_id parameter from group_method_id
       if group_method_id is not None:
