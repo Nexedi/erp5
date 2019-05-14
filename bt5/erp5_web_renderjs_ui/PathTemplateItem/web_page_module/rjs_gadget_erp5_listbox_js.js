@@ -1278,7 +1278,11 @@
       return queue
         .push(function () {
           data[form_gadget.props.listbox_uid_dict.key] = form_gadget.props.listbox_uid_dict.value;
-          data[form_gadget.props.listbox_query_param_json.key] = form_gadget.props.listbox_query_param_json.value;
+          if (form_gadget.props.listbox_query_param_json !== undefined) {
+            // JSON query parameters are only sent when rendering an ERP5 Form
+            data[form_gadget.props.listbox_query_param_json.key] =
+              form_gadget.props.listbox_query_param_json.value;
+          }
           return data;
         });
     }, {mutex: 'changestate'})
