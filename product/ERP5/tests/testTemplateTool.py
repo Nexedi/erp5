@@ -32,6 +32,7 @@ import shutil
 import unittest
 import random
 import tempfile
+from xml.dom.minidom import getDOMImplementation
 from App.config import getConfiguration
 from Products.ERP5VCS.WorkingCopy import getVcsTool
 
@@ -273,7 +274,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEqual('Business Template', erp5_core.getPortalType())
 
   def test_getInstalledBusinessTemplate_not_installed(self):
-    self.assertEquals(None,
+    self.assertEqual(None,
      self.portal.portal_templates.getInstalledBusinessTemplate('not_installed'))
 
   def test_getInstalledBusinessTemplate_provision(self):
@@ -748,6 +749,91 @@ class TestTemplateTool(ERP5TypeTestCase):
             'Expected positions for %r: %r, got %r' % (bt[1],
                                                   expected_position_dict[bt[1]],
                                                   ordered_list.index(bt)))
+
+  def test_upgradeSite(self):
+    templates_tool = self.dummy_template_tool
+    repository = "dummy_repository"
+
+    # setup dummy repository to make unit test independant from any real
+    # repository. This function creates the bt5list XML of the repository and
+    # the minimum BT files.
+    def createBtAndAddToRepository(repository, xml, **kw):
+      bt_dir = "%s/%s/bt" % (repository, kw['title'])
+      if not os.path.exists(bt_dir):
+        os.makedirs(bt_dir)
+      with open("%s/title" % bt_dir, "wb") as f:
+        f.write(kw['title'])
+      template = xml.createElement('template')
+      template.setAttribute('id', kw['title'])
+      defaults = {
+        'copyright': "Copyright Test Template Tool",
+        'license': "GPL",
+        'title': kw['title'], # title is mandatory
+        'version': "1.0",
+        'revision': "1"
+      }
+      for el in ['copyright', 'version', 'revision', 'license', 'title']:
+        node = xml.createElement(el)
+        node.appendChild(xml.createTextNode(kw.get(el, defaults[el])))
+        template.appendChild(node)
+      for dep in kw.get('dependency_list', []):
+        node = xml.createElement('dependency')
+        node.appendChild(xml.createTextNode(dep))
+        template.appendChild(node)
+      xml.documentElement.appendChild(template)
+
+    def copyTestCoreBt(bt_name):
+      bt_path = "%s/%s" % (repository, bt_name)
+      available_bt, = self.portal.portal_templates.getRepositoryBusinessTemplateList(
+                        template_list=('test_core',)
+                      )
+      test_core_path = available_bt.repository + "/test_core"
+      print("COPYING from " + test_core_path)
+      if os.path.exists(bt_path):
+        shutil.rmtree(bt_path)
+      shutil.copytree(test_core_path, bt_path)
+
+    # bt4 and bt5 are copies of test_core
+    copyTestCoreBt("bt4")
+    copyTestCoreBt("bt5")
+    # create bt1..5 BT inside dummy_repository
+    repo_xml = getDOMImplementation().createDocument(None, "repository", None)
+    createBtAndAddToRepository(repository, repo_xml, title='bt1', dependency_list=('bt4',)),
+    createBtAndAddToRepository(repository, repo_xml, title='bt2'),
+    createBtAndAddToRepository(repository, repo_xml, title='bt3'),
+    createBtAndAddToRepository(repository, repo_xml, title='bt4'),
+    createBtAndAddToRepository(repository, repo_xml, title='bt5'),
+    with open("%s/bt5list" % repository,"wb") as repo_xml_fd:
+      repo_xml.writexml(repo_xml_fd)
+      repo_xml_fd.close()
+
+    # Install dummy_repository
+    templates_tool.repository_dict[repository] = None
+    templates_tool.updateRepositoryBusinessTemplateList([repository])
+
+    def getInstalledBtList():
+      return sorted([bt.getTitle() for bt in templates_tool.getInstalledBusinessTemplateList()])
+
+    # Install manually 2 BT
+    templates_tool.updateBusinessTemplateFromUrl("%s/bt2" % repository)
+    self.assertEqual(getInstalledBtList(), ['bt2'])
+    templates_tool.updateBusinessTemplateFromUrl("%s/bt3" % repository)
+    self.assertEqual(getInstalledBtList(), ['bt2', 'bt3'])
+
+    # First upgrade
+    templates_tool.upgradeSite(bt5_list=['bt1'], keep_bt5_id_set=['bt2'], delete_orphaned=True)
+    self.assertEqual(getInstalledBtList(), ['bt1', 'bt2', 'bt4'])
+    # test_file has been installed with bt4
+    erp5_test = self.portal.portal_skins['erp5_test']
+    self.assertTrue(erp5_test.hasObject('test_file'))
+
+    # Second upgrade
+    templates_tool.upgradeSite(bt5_list=['bt5'], keep_bt5_id_set=['bt2'], delete_orphaned=True)
+    self.assertEqual(getInstalledBtList(), ['bt2', 'bt5'])
+    # test_file is now installed with bt5
+    erp5_test = self.portal.portal_skins['erp5_test']
+    self.assertTrue(erp5_test.hasObject('test_file'))
+
 
 def test_suite():
   suite = unittest.TestSuite()
