@@ -1430,20 +1430,6 @@ class TemplateTool (BaseTool):
         LOG('upgradeSite', 0, message)
       dependency_list = [x[1] for x in \
         self.resolveBusinessTemplateListDependency(bt5_list)]
-      update_bt5_list = self.getRepositoryBusinessTemplateList(
-        template_list=dependency_list)
-      update_bt5_list.sort(key=lambda x: dependency_list.index(x.title))
-      for bt5 in update_bt5_list:
-        reinstall = bt5.title in deprecated_reinstall_set or bt5.force_install
-        if (not(reinstall) and bt5.version_state == 'present') or \
-            bt5.title in keep_bt5_id_set:
-          continue
-        append("Update %s business template in state %s%s" % \
-          (bt5.title, bt5.version_state, (reinstall and ' (reinstall)') or ''))
-        if not(dry_run):
-          bt5_url = "%s/%s" % (bt5.repository, bt5.title)
-          self.updateBusinessTemplateFromUrl(bt5_url, reinstall=reinstall,
-                                             update_catalog=update_catalog)
       if delete_orphaned:
         if keep_bt5_id_set is None:
           keep_bt5_id_set = set()
@@ -1461,6 +1447,20 @@ class TemplateTool (BaseTool):
           if not(dry_run):
             # XXX Here is missing parameters to really remove stuff
             bt.uninstall()
+      update_bt5_list = self.getRepositoryBusinessTemplateList(
+        template_list=dependency_list)
+      update_bt5_list.sort(key=lambda x: dependency_list.index(x.title))
+      for bt5 in update_bt5_list:
+        reinstall = bt5.title in deprecated_reinstall_set or bt5.force_install
+        if (not(reinstall) and bt5.version_state == 'present') or \
+            bt5.title in keep_bt5_id_set:
+          continue
+        append("Update %s business template in state %s%s" % \
+          (bt5.title, bt5.version_state, (reinstall and ' (reinstall)') or ''))
+        if not(dry_run):
+          bt5_url = "%s/%s" % (bt5.repository, bt5.title)
+          self.updateBusinessTemplateFromUrl(bt5_url, reinstall=reinstall,
+                                             update_catalog=update_catalog)
 
       return message_list
 
