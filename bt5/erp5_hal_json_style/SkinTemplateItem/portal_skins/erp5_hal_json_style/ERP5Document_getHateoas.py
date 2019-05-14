@@ -426,12 +426,12 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
   if "Field" in meta_type:
     # fields have default value and can be required (unlike boxes)
     result["required"] = field.get_value("required") if field.has_value("required") else None
-    if value is MARKER:
+    if (value is MARKER) or (response.getStatus() == 400):
       result["default"] = getFieldDefault(form, field, key)
     else:
       # No need to calculate the field value if provided (used in Listbox)
-      result["default"] = getFieldDefault(form, field, key, value=value)
-      # result["default"] = value
+      # result["default"] = getFieldDefault(form, field, key, value=value)
+      result["default"] = value
 
   # start the actual "switch" on field's meta_type here
   if meta_type in ("ListField", "RadioField", "ParallelListField", "MultiListField"):
