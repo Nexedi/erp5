@@ -373,17 +373,15 @@ def getFormRelativeUrl(form):
   )[0].relative_url
 
 
-def getFieldDefault(form, field, key, value=None):
+def getFieldDefault(form, field, key, value=MARKER):
   """Get available value for `field` preferably in python-object from REQUEST or from field's default.
 
   Previously we used Formulator.Field._get_default which is (for no reason) private.
   """
-  if value is None:
-  # if 1:
-    value = REQUEST.form.get(field.id, REQUEST.form.get(key, MARKER))
+  value = REQUEST.form.get(field.id, REQUEST.form.get(key, value))
+  if value is MARKER:
     # use marker because default value can be intentionally empty string
-    if value is MARKER:
-      value = field.get_value('default', request=REQUEST, REQUEST=REQUEST)
+    value = field.get_value('default', request=REQUEST, REQUEST=REQUEST)
     if field.has_value("unicode") and field.get_value("unicode") and isinstance(value, unicode):
       value = unicode(value, form.get_form_encoding())
   if getattr(value, 'translate', None) is not None:
@@ -426,12 +424,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
   if "Field" in meta_type:
     # fields have default value and can be required (unlike boxes)
     result["required"] = field.get_value("required") if field.has_value("required") else None
-    if (value is MARKER) or (response.getStatus() == 400):
-      result["default"] = getFieldDefault(form, field, key)
-    else:
-      # No need to calculate the field value if provided (used in Listbox)
-      # result["default"] = getFieldDefault(form, field, key, value=value)
-      result["default"] = value
+    result["default"] = getFieldDefault(form, field, key, value=value)
 
   # start the actual "switch" on field's meta_type here
   if meta_type in ("ListField", "RadioField", "ParallelListField", "MultiListField"):
