@@ -82,7 +82,8 @@ class Queue(object):
       activity_tool.deferredDeleteMessage(self, m)
     m.is_deleted = 1
 
-  def dequeueMessage(self, activity_tool, processing_node):
+  def dequeueMessage(self, activity_tool, processing_node,
+                     node_family_id_list):
     raise NotImplementedError
 
   def distribute(self, activity_tool, node_count):
@@ -187,7 +188,7 @@ class Queue(object):
     """
     pass
 
-  def getPriority(self, activity_tool, node):
+  def getPriority(self, activity_tool, processing_node, node_set):
     """
       Get priority from this queue.
       Lower number means higher priority value.
