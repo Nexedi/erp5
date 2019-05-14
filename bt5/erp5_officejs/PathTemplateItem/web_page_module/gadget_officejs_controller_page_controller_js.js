@@ -86,7 +86,8 @@
             child_gadget_url: child_gadget_url,
             form_definition: form_definition,
             form_type: form_type,
-            editable: false,
+            //TODO editable should come from getFormInfo(form_definition)
+            editable: true,
             view: options.view || default_view,
             front_page: front_page
           });
@@ -104,6 +105,31 @@
                                                                      scope: 'form_view'})
         .push(function (form_view_gadget) {
           return form_view_gadget.render(gadget.state);
+        });
+    })
+
+    .allowPublicAcquisition('notifySubmit', function () {
+      return this.triggerSubmit();
+    })
+    .allowPublicAcquisition('submitContent', function (param_list) {
+      var gadget = this,
+        //target_url = options[1],
+        content_dict = param_list[2];
+      return gadget.jio_get(gadget.state.jio_key)
+        .push(function (doc) {
+          var property;
+          for (property in content_dict) {
+            if (content_dict.hasOwnProperty(property)) {
+              doc[property] = content_dict[property];
+            }
+          }
+          return gadget.jio_put(gadget.state.jio_key, doc);
+        })
+        .push(function () {
+          return gadget.notifySubmitting();
+        })
+        .push(function () {
+          return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
         });
     })
 
