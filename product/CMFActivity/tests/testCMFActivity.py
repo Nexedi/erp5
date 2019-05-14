@@ -2499,6 +2499,108 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           self.assertEqual(o.getTitle(), title, (activities, expected))
         self.assertFalse(activity_tool.getMessageList())
 
+  def test_nodeFamilies(self):
+    """
+    Test node families, i.e. 'node' parameter of activate() beyond "", "same"
+    and None.
+    """
+    activity_tool = self.portal.portal_activities
+    node_id, = activity_tool.getNodeDict()
+    other = 'boo'
+    member = 'foo'
+    non_member = 'bar'
+    does_not_exist = 'baz'
+
+    # Family declaration API
+    self.assertItemsEqual(activity_tool.getFamilyNameList(), [])
+    self.assertRaises(
+        ValueError,
+        activity_tool.createFamily, 'same', # Reserved name
+    )
+    self.assertRaises(
+        TypeError,
+        activity_tool.createFamily, -5, # Not a string
+    )
+    activity_tool.createFamily(other)
+    self.assertRaises(
+        ValueError,
+        activity_tool.createFamily, other, # Exists
+    )
+    activity_tool.createFamily(member)
+    self.assertRaises(
+        ValueError,
+        activity_tool.renameFamily, other, member, # New name exists
+    )
+    self.assertRaises(
+        ValueError,
+        activity_tool.renameFamily, does_not_exist, member, # Old name does not exist
+    )
+    self.assertRaises(
+        TypeError,
+        activity_tool.renameFamily, other, -4, # New name not a string
+    )
+    activity_tool.deleteFamily(member)
+    # Silent success
+    activity_tool.deleteFamily(member)
+    activity_tool.createFamily(non_member)
+    self.assertItemsEqual(activity_tool.getFamilyNameList(), [other, non_member])
+
+    # API for node a-/di-ssociation with/from families
+    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [])
+    activity_tool.addNodeToFamily(node_id, other)
+    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
+    # Silent success
+    activity_tool.addNodeToFamily(node_id, other)
+    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
+    activity_tool.addNodeToFamily(node_id, non_member)
+    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other, non_member])
+    activity_tool.removeNodeFromFamily(node_id, non_member)
+    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
+    # Silent success
+    activity_tool.removeNodeFromFamily(node_id, non_member)
+    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
+    activity_tool.createFamily(does_not_exist)
+    activity_tool.addNodeToFamily(node_id, does_not_exist)
+    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other, does_not_exist])
+    activity_tool.deleteFamily(does_not_exist)
+    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [other])
+    self.assertItemsEqual(activity_tool.getFamilyNameList(), [other, non_member])
+    activity_tool.renameFamily(other, member)
+    self.assertItemsEqual(activity_tool.getFamilyNameList(), [member, non_member])
+    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [member])
+    activity_tool.createFamily(other)
+    activity_tool.addNodeToFamily(node_id, other)
+    self.assertItemsEqual(activity_tool.getFamilyNameList(), [member, non_member, other])
+    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [member, other])
+    activity_tool.deleteFamily(other)
+
+    self.assertItemsEqual(activity_tool.getFamilyNameList(), [member, non_member])
+    self.assertItemsEqual(activity_tool.getCurrentNodeFamilyNameSet(), [member])
+    o = self.getOrganisation()
+    for activity in 'SQLDict', 'SQLQueue':
+      # Sanity check.
+      self.assertEqual(self.getMessageList(activity), [])
+      self.assertRaises(
+        ValueError,
+        o.activate, activity=activity, node=does_not_exist,
+      )
+      for node, expected in (member, '1'), (non_member, '0'), ('', '1'), ('same', '1'):
+        o._setTitle('0')
+        o.activate(activity=activity, node=node)._setTitle('1')
+        self.commit()
+        self.ticOnce()
+        self.assertEqual(
+          o.getTitle(),
+          expected,
+          (activity, o.getTitle(), expected),
+        )
+        if expected == '0':
+          # The activity must still exist, waiting for a node of the
+          # appropriate family.
+          result = self.getMessageList(activity)
+          self.assertEqual(len(result), 1)
+          self.deleteMessageList(activity, result)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
