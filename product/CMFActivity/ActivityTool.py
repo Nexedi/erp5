@@ -50,8 +50,9 @@ from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base, aq_inner, aq_parent
 from ActivityBuffer import ActivityBuffer
 from ActivityRuntimeEnvironment import BaseMessage
-from zExceptions import ExceptionFormatter
+from zExceptions import ExceptionFormatter, Redirect
 from BTrees.OIBTree import OIBTree
+from BTrees.OOBTree import OOBTree
 from Zope2 import app
 from Products.ERP5Type.UnrestrictedMethod import PrivilegedUser
 from zope.site.hooks import setSite
@@ -650,6 +651,8 @@ class ActivityTool (BaseTool):
 
     distributingNode = ''
     _nodes = ()
+    _family_list = ()
+    _node_family_dict = None
     activity_creation_trace = False
     activity_tracking = False
     activity_timing_log = False
@@ -904,6 +907,203 @@ class ActivityTool (BaseTool):
         self._nodes = nodes = new_nodes
       return nodes
 
+    def _getNodeFamilyIdDict(self):
+      result = self._node_family_dict
+      if result is None:
+        result = self._node_family_dict = OOBTree()
+      return result
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'getCurrentNodeFamilyIdSet')
+    def getCurrentNodeFamilyIdSet(self):
+      """
+      Returns the tuple of family ids current node is member of.
+      """
+      return self._getNodeFamilyIdDict().get(getCurrentNode(), ())
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'getCurrentNodeFamilyNameSet')
+    def getCurrentNodeFamilyNameSet(self):
+      """
+      Returns the tuple of family names current node is member of.
+      """
+      return [
+        self._family_list[-x - 1]
+        for x in self._getNodeFamilyIdDict().get(getCurrentNode(), ())
+      ]
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'getFamilyId')
+    def getFamilyId(self, name):
+      """
+      Raises ValueError for unknown family names.
+      """
+      # First family is -1, second is -2, etc.
+      return -self._family_list.index(name) - 1
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'addNodeToFamily')
+    def addNodeToFamily(self, node_id, family_name):
+      """
+      Silently does nothing if node is already a member of family_name.
+      """
+      family_id = self.getFamilyId(family_name)
+      node_family_id_dict = self._getNodeFamilyIdDict()
+      family_id_list = node_family_id_dict.get(node_id, ())
+      if family_id not in family_id_list:
+        node_family_id_dict[node_id] = family_id_list + (family_id, )
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_addNodeSetToFamily')
+    def manage_addNodeSetToFamily(self, family_new_node_list, REQUEST):
+      """
+      Add selected nodes to family.
+      """
+      family_name = REQUEST['manage_addNodeSetToFamily']
+      if isinstance(family_new_node_list, basestring):
+        family_new_node_list = [family_new_node_list]
+      for node_id in family_new_node_list:
+        self.addNodeToFamily(node_id, family_name)
+      REQUEST.RESPONSE.redirect(
+        REQUEST.URL1 + '/manageLoadBalancing?manage_tabs_message=' +
+        urllib.quote('Nodes added to family.'),
+      )
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'removeNodeFromFamily')
+    def removeNodeFromFamily(self, node_id, family_name):
+      """
+      Silently does nothing if node is not member of family_name.
+      """
+      family_id = self.getFamilyId(family_name)
+      node_family_id_dict = self._getNodeFamilyIdDict()
+      family_id_list = node_family_id_dict.get(node_id, ())
+      if family_id in family_id_list:
+        node_family_id_dict[node_id] = tuple(
+          x
+          for x in family_id_list
+          if x != family_id
+        )
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_removeNodeSetFromFamily')
+    def manage_removeNodeSetFromFamily(self, REQUEST):
+      """
+      Remove selected nodes from family.
+      """
+      family_name = REQUEST['manage_removeNodeSetFromFamily']
+      node_to_remove_list = REQUEST['family_member_set_' + family_name]
+      if isinstance(node_to_remove_list, basestring):
+        node_to_remove_list = [node_to_remove_list]
+      for node_id in node_to_remove_list:
+        self.removeNodeFromFamily(node_id, family_name)
+      REQUEST.RESPONSE.redirect(
+        REQUEST.URL1 + '/manageLoadBalancing?manage_tabs_message=' +
+        urllib.quote('Nodes removed from family.'),
+      )
+
+    def _checkFamilyName(self, name):
+      if not isinstance(name, basestring):
+        raise TypeError('Name must be a string')
+      if name in self._family_list:
+        raise ValueError('Already in use')
+      if name in ('', 'same'):
+        raise ValueError('Reserved family name')
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'createFamily')
+    def createFamily(self, name):
+      """
+      Raises ValueError if family already exists.
+      """
+      self._checkFamilyName(name)
+      new_family_list = []
+      for existing_name in self._family_list:
+        if existing_name is None and name is not None:
+          new_family_list.append(name)
+          name = None
+        else:
+          new_family_list.append(existing_name)
+      if name is None:
+        # A free spot has been recycled.
+        self._family_list = tuple(new_family_list)
+      else:
+        # No free spot, append.
+        self._family_list += (name, )
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_createFamily')
+    def manage_createFamily(self, new_family_name, family_new_node_list, REQUEST):
+      """Create a family"""
+      redirect_url = REQUEST.URL1 + '/manageLoadBalancing?manage_tabs_message='
+      if isinstance(family_new_node_list, basestring):
+        family_new_node_list = [family_new_node_list]
+      try:
+        self.createFamily(new_family_name)
+        for node_id in family_new_node_list:
+          self.addNodeToFamily(node_id, new_family_name)
+      except ValueError as exc:
+        raise Redirect(redirect_url + urllib.quote(str(exc)))
+      REQUEST.RESPONSE.redirect(redirect_url + urllib.quote('Family created.'))
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'renameFamily')
+    def renameFamily(self, old_name, new_name):
+      """
+      Raises ValueError if old_name does not exist.
+      """
+      self._checkFamilyName(new_name)
+      family_list = self._family_list
+      if old_name not in family_list:
+        raise ValueError('Unknown family')
+      self._family_list = tuple(
+        new_name if x == old_name else x
+        for x in family_list
+      )
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_renameFamily')
+    def manage_renameFamily(self, REQUEST):
+      """Rename a family"""
+      redirect_url = REQUEST.URL1 + '/manageLoadBalancing?manage_tabs_message='
+      old_family_name = REQUEST['manage_renameFamily']
+      new_family_name = REQUEST['family_new_name_' + old_family_name]
+      try:
+        self.renameFamily(old_family_name, new_family_name)
+      except ValueError as exc:
+        raise Redirect(redirect_url + urllib.quote(str(exc)))
+      REQUEST.RESPONSE.redirect(redirect_url + urllib.quote('Family renamed.'))
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'deleteFamily')
+    def deleteFamily(self, name):
+      """
+      Raises ValueError if name does not exist.
+      """
+      for node_id in self._getNodeFamilyIdDict():
+        self.removeNodeFromFamily(node_id, name)
+      self._family_list = tuple(
+        None if x == name else x
+        for x in self._family_list
+      )
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_deleteFamily')
+    def manage_deleteFamily(self, REQUEST):
+      """Delete families"""
+      redirect_url = REQUEST.URL1 + '/manageLoadBalancing?manage_tabs_message='
+      family_name = REQUEST['manage_deleteFamily']
+      try:
+        self.deleteFamily(family_name)
+      except ValueError as exc:
+        raise Redirect(redirect_url + urllib.quote(str(exc)))
+      REQUEST.RESPONSE.redirect(redirect_url + urllib.quote('Family deleted'))
+
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'getFamilyNameList')
+    def getFamilyNameList(self):
+      """
+      Return the list of existing family names.
+      """
+      return [x for x in self._family_list if x is not None]
+
+    def getFamilyNodeList(self, family_name):
+      """
+      Return the list of node names in given family.
+      """
+      family_id = self.getFamilyId(family_name)
+      return [
+        x
+        for x, y in self._getNodeFamilyIdDict().items()
+        if family_id in y
+      ]
+
     def registerNode(self, node):
       node_dict = self.getNodeDict()
       if node not in node_dict:
@@ -1117,13 +1317,17 @@ class ActivityTool (BaseTool):
         #      getPriority does not see messages dequeueMessage would process.
         activity_list = activity_dict.values()
         def sort_key(activity):
-          return activity.getPriority(self, processing_node)
+          return activity.getPriority(self, processing_node,
+            node_family_id_set)
         while is_running_lock.acquire(0):
+          # May have changed since previous iteration.
+          node_family_id_set = self.getCurrentNodeFamilyIdSet()
           try:
             activity_list.sort(key=sort_key) # stable sort
             for i, activity in enumerate(activity_list):
               # Transaction processing is the responsability of the activity
-              if not activity.dequeueMessage(inner_self, processing_node):
+              if not activity.dequeueMessage(inner_self, processing_node,
+                node_family_id_set):
                 activity_list.append(activity_list.pop(i))
                 break
             else:
@@ -1222,7 +1426,8 @@ class ActivityTool (BaseTool):
         elif node == '':
           break
         elif node != 'same':
-          raise ValueError("Invalid node argument %r" % node)
+          kw['node'] = self.getFamilyId(node)
+          break
         try:
           kw['node'] = 1 + self.getNodeList(
             role=ROLE_PROCESSING).index(getCurrentNode())
