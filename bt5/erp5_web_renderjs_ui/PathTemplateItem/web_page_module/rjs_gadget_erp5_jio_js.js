@@ -120,7 +120,8 @@
     })
 
     .declareMethod('allDocs', function (options) {
-      var context = this;
+      var context = this,
+        queue;
       // throw new Error('do not use all docs');
 
       if (options.list_method_template === undefined) {
@@ -231,7 +232,18 @@
         );
       }
 
-      return triggerAllDocs()
+      function usePrecalculatedResult() {
+        return options.default_value;
+      }
+
+      if (options.default_value === undefined) {
+        queue = triggerAllDocs();
+      } else {
+        queue = new RSVP.Queue()
+          .push(usePrecalculatedResult);
+      }
+
+      return queue
         .push(function (catalog_json) {
           var data = catalog_json._embedded.contents || [],
             summary = catalog_json._embedded.sum || [],
@@ -259,7 +271,8 @@
               }),
               "total_rows": summary.length
             },
-            "count": count
+            "count": count,
+            "listbox_query_param_json": catalog_json._embedded.listbox_query_param_json
           };
         });
     })
