@@ -317,7 +317,8 @@
         cell_gadget_list: [],
         // ERP5 needs listbox_uid:list with UIDs of editable sub-documents
         // so it can search for them in REQUEST.form under <field.id>_<sub-document.uid>
-        listbox_uid_dict: {}
+        listbox_uid_dict: {},
+        listbox_query_param_json: undefined
       };
     })
 
@@ -416,6 +417,7 @@
             column_id,
             column_title,
             not_concatenated_list = [field_json.column_list, (field_json.all_column_list || [])];
+
           // Calculate the list of all displayable columns
           for (i = 0; i < not_concatenated_list.length; i += 1) {
             for (j = 0; j < not_concatenated_list[i].length; j += 1) {
@@ -484,6 +486,7 @@
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
             allDocs_result: undefined,
+            default_value: field_json.default,
 
             // No error message
             has_error: false,
@@ -917,6 +920,9 @@
                   key: undefined,
                   value: []
                 };
+                gadget.props.listbox_query_param_json = allDocs_result.listbox_query_param_json;
+                // gadget.props.listbox_uid_dict.key = allDocs_result.data.rows[i].value['listbox_uid:list'].key;
+                // gadget.props.listbox_uid_dict.value.push(allDocs_result.data.rows[i].value['listbox_uid:list'].value);
                 // clear list of previous sub-gadgets
                 gadget.props.cell_gadget_list = [];
 
@@ -1179,6 +1185,7 @@
       return gadget.jio_allDocs({
         // XXX Not jIO compatible, but until a better api is found...
         "list_method_template": this.state.list_method_template,
+        "default_value": this.state.default_value,
         "query": gadget.state.query_string,
         "limit": limit_options,
         "select_list": select_list,
@@ -1232,6 +1239,11 @@
       return queue
         .push(function () {
           data[form_gadget.props.listbox_uid_dict.key] = form_gadget.props.listbox_uid_dict.value;
+          if (form_gadget.props.listbox_query_param_json !== undefined) {
+            // JSON query parameters are only sent when rendering an ERP5 Form
+            data[form_gadget.props.listbox_query_param_json.key] =
+              form_gadget.props.listbox_query_param_json.value;
+          }
           return data;
         });
     }, {mutex: 'changestate'})
