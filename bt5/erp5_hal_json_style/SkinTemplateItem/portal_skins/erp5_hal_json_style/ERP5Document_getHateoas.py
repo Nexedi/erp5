@@ -1575,7 +1575,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       'limit': limit,
       'local_roles': local_roles,
       'selection_domain': selection_domain,
-      'extra_param_json': extra_param_json
+      'extra_param_json': extra_param_json,
+      'relative_url': relative_url,
+      'group_by': group_by,
+      'sort_on': sort_on
     })))
 
     # set 'here' for field rendering which contain TALES expressions
