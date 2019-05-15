@@ -53,32 +53,17 @@
 
     .declareMethod("checkMoreActions", function (portal_type, action_category) {
       var gadget = this,
+        //for now, views and actions are handle together via handle_action gadget
         has_more_dict = {views: {}, actions: {}},
         query;
-      //if target action is a type of view, get all actions/views for the portal_type
+      // get all actions/views for the portal_type, if target action is a type of view
+      // (exclude custom scripts and dialogs)
       if (view_categories.includes(action_category)) {
         query = 'portal_type: "Action Information" AND parent_relative_url: "portal_types/' + portal_type + '"';
         return gadget.jio_allDocs({query: query})
           .push(function (action_list) {
-            var path_for_jio_get_list = [], row;
-            for (row in action_list.data.rows) {
-              if (action_list.data.rows.hasOwnProperty(row)) {
-                path_for_jio_get_list.push(gadget.jio_get(action_list.data.rows[row].id));
-              }
-            }
-            return RSVP.all(path_for_jio_get_list);
-          })
-          .push(function (action_document_list) {
-            var get_action_settings_list = [], page, action_key, action_doc;
-            for (action_key in action_document_list) {
-              if (action_document_list.hasOwnProperty(action_key)) {
-                action_doc = action_document_list[action_key];
-                if (view_categories.includes(action_doc.action_type)) {
-                  has_more_dict.has_more_views = true;
-                } else {
-                  has_more_dict.has_more_actions = true;
-                }
-              }
+            if (action_list.data.rows.length > 0) {
+              has_more_dict.has_more_actions = true;
             }
             return has_more_dict;
           });

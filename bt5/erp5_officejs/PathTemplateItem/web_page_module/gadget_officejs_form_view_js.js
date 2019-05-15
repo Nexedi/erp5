@@ -187,7 +187,7 @@
                 header_dict.save_action = true;
               }
             }
-            if (options.form_definition.has_more_actions) {
+            if (options.form_definition.has_more_actions || options.form_definition.has_more_views) {
               header_dict.actions_url = url_list[1];
             }
             if (add_url) {
